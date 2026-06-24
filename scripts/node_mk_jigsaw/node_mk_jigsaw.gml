@@ -108,7 +108,7 @@ function Node_MK_Jigsaw(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 				else      draw_line(ox, oy, lx1, ly1);
 			}
 			
-		} else if(_conn == 1) {
+		} else if(conn == 1) {
 			draw_line_width(lx0 + px*ch, ly0 + py*ch, lx1 + px*ch,         ly1 + py*ch,         g);
 			draw_line_width(lx0 - px*g2, ly0 - py*g2, lx0 + px*ch + px*g2, ly0 + py*ch + py*g2, g);
 			draw_line_width(lx1 - px*g2, ly1 - py*g2, lx1 + px*ch + px*g2, ly1 + py*ch + py*g2, g);
