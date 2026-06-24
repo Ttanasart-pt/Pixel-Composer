@@ -540,7 +540,7 @@ function Node_Armature_Pose(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _params) { 
 		var _b = inputs[0].getValue();
-		if(!is(_b, __Bone) || !is(bonePose, __Bone)) return;
+		if(!is(_b, __Bone) || !is(bonePose, __Bone)) return false;
 		
 		var _hov  = noone;
 		var _bhov = anchor_selecting;
@@ -569,7 +569,7 @@ function Node_Armature_Pose(_x, _y, _group = noone) : Node(_x, _y, _group) const
 					_bhov = [ _bne, 2 ];
 			}
 			
-			var _selectMask = isNotUsingTool()? _sel * active * 0b111 : false;
+			var _selectMask = isNotUsingTool()? _sel * hover * 0b111 : false;
 			var aa  = .50 + .50 * _sel;
 			if(attributes.highlight_animation) 
 				aa *= .20 + .80 * _hig;
