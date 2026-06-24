@@ -486,8 +486,8 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			.setSettings(tool_pattern_settings)
 			.setToolObject(tool_fill_pattern);
 		
-		tool_gradient = new canvas_tool_with_selector( tool_fill_grad_obj,    tool_sel_magic );
-		tool_pattern  = new canvas_tool_with_selector( tool_fill_pattern_obj, tool_sel_magic );
+		tool_gradient = new canvas_tool_with_selector( tool_fill_grad_obj,    new canvas_tool_selection_magic(tool_attribute).setNode(self) );
+		tool_pattern  = new canvas_tool_with_selector( tool_fill_pattern_obj, new canvas_tool_selection_magic(tool_attribute).setNode(self) );
 		
 		node_tool_grad_patt = new NodeTool( [ "Gradient", "Pattern" ], [ THEME.canvas_tools_gradient, THEME.canvas_tools_pattern ] )
 				.setContext(self)
@@ -510,7 +510,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 				.setSettings(tool_fill_settings)
 				.setSetting(tool_layer)
 				.setSetting(tool_mirror)
-				.setToolObject(tool_sel_magic),
+				.setToolObject(new canvas_tool_selection_magic(tool_attribute).setNode(self)),
 			
 			new NodeTool( "Pencil",		  THEME.canvas_tools_pencil)
 				.setSetting(tool_channel)
@@ -737,11 +737,26 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		
 		rightTools_not_selection = [ 
 			-1,
-			new NodeTool( "Outline", THEME.canvas_tools_outline).setContext(self).setToolObject( new canvas_tool_with_selector(rtool_outline, tool_sel_magic) ).setSettings([tool_channel, tool_layer]),
-			new NodeTool( "Extrude", THEME.canvas_tools_extrude).setContext(self).setToolObject( new canvas_tool_with_selector(rtool_extrude, tool_sel_magic) ).setSettings([tool_channel, tool_layer]),
-			new NodeTool( "Inset",   THEME.canvas_tools_inset  ).setContext(self).setToolObject( new canvas_tool_with_selector(rtool_inset,   tool_sel_magic) ).setSettings([tool_channel, tool_layer]),
-			new NodeTool( "Skew",    THEME.canvas_tools_skew   ).setContext(self).setToolObject( new canvas_tool_with_selector(rtool_skew,    tool_sel_magic) ).setSettings([tool_channel, tool_layer]),
-			new NodeTool( "Corner",  THEME.canvas_tools_corner ).setContext(self).setToolObject( new canvas_tool_with_selector(rtool_corner,  tool_sel_magic) ).setSettings([tool_channel, tool_layer]),
+			new NodeTool( "Outline", THEME.canvas_tools_outline).setContext(self)
+				.setToolObject( new canvas_tool_with_selector(rtool_outline, new canvas_tool_selection_magic(tool_attribute).setNode(self)) )
+				.setSettings([tool_channel, tool_layer]),
+				
+			new NodeTool( "Extrude", THEME.canvas_tools_extrude).setContext(self)
+				.setToolObject( new canvas_tool_with_selector(rtool_extrude, new canvas_tool_selection_magic(tool_attribute).setNode(self)) )
+				.setSettings([tool_channel, tool_layer]),
+				
+			new NodeTool( "Inset",   THEME.canvas_tools_inset  ).setContext(self)
+				.setToolObject( new canvas_tool_with_selector(rtool_inset,   new canvas_tool_selection_magic(tool_attribute).setNode(self)) )
+				.setSettings([tool_channel, tool_layer]),
+				
+			new NodeTool( "Skew",    THEME.canvas_tools_skew   ).setContext(self)
+				.setToolObject( new canvas_tool_with_selector(rtool_skew,    new canvas_tool_selection_magic(tool_attribute).setNode(self)) )
+				.setSettings([tool_channel, tool_layer]),
+				
+			new NodeTool( "Corner",  THEME.canvas_tools_corner ).setContext(self)
+				.setToolObject( new canvas_tool_with_selector(rtool_corner,  new canvas_tool_selection_magic(tool_attribute).setNode(self)) )
+				.setSettings([tool_channel, tool_layer]),
+				
 		];
 		
 		rightTools_empty = [  ];
