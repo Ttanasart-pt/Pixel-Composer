@@ -1,5 +1,6 @@
 function Node_MK_Cable(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "MK Cables";
+	dimension_index = 19;
 	
 	newInput( 3, nodeValueSeed());
 	
@@ -196,7 +197,6 @@ function Node_MK_Cable(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	        	ny += _swamo * _drop * gravsy;
 	        }
 	        
-	        // if(i) draw_line_width2(ox, oy, nx, ny, ot, nt, true, oc, nc);
 	        if(i) {
 	        	_total_len += point_distance(ox, oy, nx, ny);
 	        	nl = _total_len;
@@ -218,6 +218,8 @@ function Node_MK_Cable(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 		
 	    draw_primitive_end();
 	}
+	
+	static getDimension = function() /*=>*/ {return inputs[19].getValue()};
 	
 	static processData = function(_outSurf, _data, _array_index) {
 		#region data
@@ -272,7 +274,6 @@ function Node_MK_Cable(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 			
 			inputs[22].setVisible(_type == 4);
 			inputs[23].setVisible(_type == 4);
-		
 		#endregion
 		
 		#region precalc
@@ -282,7 +283,6 @@ function Node_MK_Cable(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 			gravx = lengthdir_x(1, _grav); gravsx = lengthdir_x(1, _grav + 90);
 			gravy = lengthdir_y(1, _grav); gravsy = lengthdir_y(1, _grav + 90);
 		#endregion
-		
 		
 		surface_set_shader(_outSurf);
 			BLEND_OVERRIDE
