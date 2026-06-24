@@ -162,11 +162,11 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		var _dtype = getInputData(27);
 		
 		if(_dtype == 1) {
-			InputDrawOverlay(inputs[7].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _params));
+			drawOverlayInput(inputs[7].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _params));
 			
 		} else if(_dtype == 3) {
-			InputDrawOverlay(inputs[32].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my));
-			InputDrawOverlay(inputs[33].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my));
+			drawOverlayInput(inputs[32].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my));
+			drawOverlayInput(inputs[33].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my));
 		}
 		
 		return w_hovering;

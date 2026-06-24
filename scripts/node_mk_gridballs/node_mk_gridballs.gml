@@ -54,7 +54,7 @@ function Node_MK_GridBalls(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	attribute_surface_depth();
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _params) { 
-		InputDrawOverlay(inputs[8].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my));
+		drawOverlayInput(inputs[8].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my));
 		
 		return w_hovering;
 	}

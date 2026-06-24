@@ -33,9 +33,9 @@ function Node_Kisrhombille(_x, _y, _group = noone) : Node_Shader_Generator(_x, _
 	    var _px  = _x + _pos[0] * _s;
 	    var _py  = _y + _pos[1] * _s;
 	    
-	    InputDrawOverlay(inputs[4].drawOverlay(w_hoverable, active,  _x,  _y, _s, _mx, _my));
-	    InputDrawOverlay(inputs[6].drawOverlay(w_hoverable, active, _px, _py, _s, _mx, _my));
-	    InputDrawOverlay(inputs[5].drawOverlay(w_hoverable, active, _px, _py, _s, _mx, _my, 0, [ 1 + sqrt(3), sqrt(3) ] ));
+	    drawOverlayInput(inputs[4].drawOverlay(w_hoverable, active,  _x,  _y, _s, _mx, _my));
+	    drawOverlayInput(inputs[6].drawOverlay(w_hoverable, active, _px, _py, _s, _mx, _my));
+	    drawOverlayInput(inputs[5].drawOverlay(w_hoverable, active, _px, _py, _s, _mx, _my, 0, [ 1 + sqrt(3), sqrt(3) ] ));
 	    
 	    return w_hovering;
 	}

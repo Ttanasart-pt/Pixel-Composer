@@ -256,7 +256,7 @@ function Node_Path_Smooth(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 			
 			for(var i = input_fix_len; i < array_length(inputs); i++) {
 				var _inp = inputs[i];
-				var  hv  = InputDrawOverlay(_inp.drawOverlay(hover, _act, _x, _y, _s, _mx, _my, 3));
+				var  hv  = drawOverlayInput(_inp.drawOverlay(hover, _act, _x, _y, _s, _mx, _my, 3));
 				
 				_inp.overlay_draw_text = hv;
 				if(PANEL_INSPECTOR.prop_hover == _inp || PANEL_ANIMATION.value_hovering == _inp)

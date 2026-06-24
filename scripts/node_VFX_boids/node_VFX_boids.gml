@@ -45,7 +45,7 @@ function Node_VFX_Boids(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _params) { 
 		var _fol_pnt = getInputData(8);
 		
-		if(_fol_pnt) InputDrawOverlay(inputs[9].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my));
+		if(_fol_pnt) drawOverlayInput(inputs[9].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my));
 		return w_hovering;
 	}
 	

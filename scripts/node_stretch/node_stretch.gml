@@ -25,8 +25,8 @@ function Node_Stretch(_x, _y, _group = noone) : Node_Shader_Processor(_x, _y, _g
 		var cx = _x + _dim[0] * _anc[0] * _s;
 		var cy = _y + _dim[1] * _anc[1] * _s;
 		
-		InputDrawOverlay(inputs[shader_index+2].drawOverlay(hover, active, _x, _y, _s, _mx, _my, 1, _dim));
-		InputDrawOverlay(inputs[shader_index+0].drawOverlay(hover, active, cx, cy, _s, _mx, _my));
+		drawOverlayInput(inputs[shader_index+2].drawOverlay(hover, active, _x, _y, _s, _mx, _my, 1, _dim));
+		drawOverlayInput(inputs[shader_index+0].drawOverlay(hover, active, cx, cy, _s, _mx, _my));
 	}
 	
 }

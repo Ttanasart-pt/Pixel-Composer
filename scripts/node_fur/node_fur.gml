@@ -57,8 +57,8 @@ function Node_Fur(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) const
 		var px  = _x + pos[0] * _s;
 		var py  = _y + pos[1] * _s;
 		
-		InputDrawOverlay(inputs[15].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my));
-		InputDrawOverlay(inputs[16].drawOverlay(w_hoverable, active, px, py, _s, _mx, _my));
+		drawOverlayInput(inputs[15].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my));
+		drawOverlayInput(inputs[16].drawOverlay(w_hoverable, active, px, py, _s, _mx, _my));
 	}
 	
 	static processData = function(_outSurf, _data, _array_index = 0) { 

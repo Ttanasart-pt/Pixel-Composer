@@ -39,7 +39,7 @@ function Node_MK_Tree_Repulse(_x, _y, _group = noone) : Node(_x, _y, _group) con
 		
 		var _fall = getInputData(3);
 		
-		InputDrawOverlay(inputs[2].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my));
+		drawOverlayInput(inputs[2].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my));
 		inputs[2].drawOverlayFallOff(_x, _y, _s, _fall);
 	}
 	

@@ -74,10 +74,10 @@ function Node_Warp_Perspective(_x, _y, _group = noone) : Node_Processor(_x, _y, 
 		draw_line(br[0], br[1], tr[0], tr[1]);
 		draw_line(br[0], br[1], bl[0], bl[1]);
 		
-		InputDrawOverlay(inputs[tool * 4 + 2].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my));
-		InputDrawOverlay(inputs[tool * 4 + 3].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my));
-		InputDrawOverlay(inputs[tool * 4 + 4].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my));
-		InputDrawOverlay(inputs[tool * 4 + 5].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my));
+		drawOverlayInput(inputs[tool * 4 + 2].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my));
+		drawOverlayInput(inputs[tool * 4 + 3].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my));
+		drawOverlayInput(inputs[tool * 4 + 4].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my));
+		drawOverlayInput(inputs[tool * 4 + 5].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my));
 		
 		var dx = 0;
 		var dy = 0;
@@ -164,10 +164,10 @@ function Node_Warp_Perspective(_x, _y, _group = noone) : Node_Processor(_x, _y, 
 			}
 		}
 		
-		InputDrawOverlay(inputs[tool * 4 + 2].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my));
-		InputDrawOverlay(inputs[tool * 4 + 3].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my));
-		InputDrawOverlay(inputs[tool * 4 + 4].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my));
-		InputDrawOverlay(inputs[tool * 4 + 5].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my));
+		drawOverlayInput(inputs[tool * 4 + 2].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my));
+		drawOverlayInput(inputs[tool * 4 + 3].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my));
+		drawOverlayInput(inputs[tool * 4 + 4].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my));
+		drawOverlayInput(inputs[tool * 4 + 5].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my));
 		
 		return w_hovering;
 	}

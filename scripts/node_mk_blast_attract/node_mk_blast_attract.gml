@@ -40,12 +40,12 @@ function Node_MK_Blast_Attract(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	static getDimension = function() /*=>*/ {return is(inline_context, Node_MK_Blast_Inline)? inline_context.getDimension() : DEF_SURF};
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _params) {
-		InputDrawOverlay(inputs[ 3].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my));
+		drawOverlayInput(inputs[ 3].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my));
 		
 		var _useSel = getInputData( 5);
 		if(_useSel) {
 			var _fall = getInputData( 7);
-			InputDrawOverlay(inputs[6].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my));
+			drawOverlayInput(inputs[6].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my));
 			inputs[6].drawOverlayFallOff(_x, _y, _s, _fall);
 		}
 	}

@@ -79,7 +79,7 @@ function Node_FLIP_Spawner(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 			draw_surface_ext(_surf, _px - _sw * _s / 2, _py - _sh * _s / 2, _s, _s, 0, c_white, 0.5);
 		}
 		
-		InputDrawOverlay(inputs[2].drawOverlay(w_hoverable, active,  _x,  _y, _s, _mx, _my));
+		drawOverlayInput(inputs[2].drawOverlay(w_hoverable, active,  _x,  _y, _s, _mx, _my));
 		
 		return w_hovering;
 	}

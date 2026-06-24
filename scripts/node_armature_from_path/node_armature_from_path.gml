@@ -25,7 +25,7 @@ function Node_Armature_From_Path(_x, _y, _group = noone) : Node(_x, _y, _group) 
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _params) { 
 		var hovering = false;
-		InputDrawOverlay(inputs[0].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _params));
+		drawOverlayInput(inputs[0].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _params));
 		
 		attributes.hovering = hover;
 		attributes.focusing = active;

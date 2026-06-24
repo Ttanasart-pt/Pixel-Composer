@@ -39,7 +39,7 @@ function Node_VerletSim_Force(_x, _y, _group = noone) : Node(_x, _y, _group) con
 			_msh.draw(_x, _y, _s);
 		}
 		
-		InputDrawOverlay(inputs[1].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my));
+		drawOverlayInput(inputs[1].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my));
 		return w_hovering;
 	}
 	

@@ -42,7 +42,7 @@ function Node_pSystem_Attract(_x, _y, _group = noone) : Node(_x, _y, _group) con
 		
 		_parts.drawOverlay(hover, active, _x, _y, _s, _mx, _my, _params);
 		
-		InputDrawOverlay(inputs[5].drawOverlay(hover, active, _x, _y, _s, _mx, _my));
+		drawOverlayInput(inputs[5].drawOverlay(hover, active, _x, _y, _s, _mx, _my));
 	}
 	
 	static getDimension = function() { return is(inline_context, Node_pSystem_Inline)? inline_context.dimension : PROJ_SURF; }

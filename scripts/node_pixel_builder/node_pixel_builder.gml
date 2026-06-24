@@ -103,10 +103,10 @@ function Node_Pixel_Builder(_x, _y, _group = noone) : Node_Collection(_x, _y, _g
 		
 		for(var i = custom_input_index; i < array_length(inputs); i++) {
 			var _in = inputs[i];
-			InputDrawOverlay(_in.from.drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my));
+			drawOverlayInput(_in.from.drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my));
 		}
 		
-		InputDrawOverlay(inputs[0].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my));
+		drawOverlayInput(inputs[0].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my));
 		return w_hovering;
 	}
 	

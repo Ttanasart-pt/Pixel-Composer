@@ -62,8 +62,8 @@ function Node_Cross_Section(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 		draw_set_color(COLORS._main_accent);
 		draw_line(_x0, _y0, _x1, _y1);
 		
-		if(_iaxs == 0) InputDrawOverlay(inputs[2].drawOverlay(w_hoverable, active, cx, _y, _s, _mx, _my, -90, _dim[0] ));
-		else           InputDrawOverlay(inputs[2].drawOverlay(w_hoverable, active, _x, cy, _s, _mx, _my,   0, _dim[1] ));
+		if(_iaxs == 0) drawOverlayInput(inputs[2].drawOverlay(w_hoverable, active, cx, _y, _s, _mx, _my, -90, _dim[0] ));
+		else           drawOverlayInput(inputs[2].drawOverlay(w_hoverable, active, _x, cy, _s, _mx, _my,   0, _dim[1] ));
 	}
 	
 	static processData = function(_outSurf, _data, _array_index) {

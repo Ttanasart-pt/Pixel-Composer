@@ -110,7 +110,7 @@ function Node_Atlas_Affector(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 		
 		switch(_inf_shp) {
 			case 0 :
-				InputDrawOverlay(inputs[2].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my));
+				drawOverlayInput(inputs[2].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my));
 				var _inf_are  = getInputSingle(2);
 				
 				var cx = _x + _inf_are[0] * _s;
@@ -150,8 +150,8 @@ function Node_Atlas_Affector(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 				var _ox = _x + _inf_wori[0] * _s;
 				var _oy = _y + _inf_wori[1] * _s;
 				
-				InputDrawOverlay(inputs[3].drawOverlay(w_hoverable, active,  _x,  _y, _s, _mx, _my));
-				InputDrawOverlay(inputs[4].drawOverlay(w_hoverable, active, _ox, _oy, _s, _mx, _my));
+				drawOverlayInput(inputs[3].drawOverlay(w_hoverable, active,  _x,  _y, _s, _mx, _my));
+				drawOverlayInput(inputs[4].drawOverlay(w_hoverable, active, _ox, _oy, _s, _mx, _my));
 				
 				var _dx = lengthdir_x(9999, _inf_wrot);
 				var _dy = lengthdir_y(9999, _inf_wrot);

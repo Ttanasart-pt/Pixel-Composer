@@ -90,10 +90,10 @@ function Node_Path_Revolve(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 		draw_set_color(COLORS._main_accent);
 		draw_line_dashed(x0, y0, x1, y1);
 		
-		InputDrawOverlay(inputs[ 8].drawOverlay(hover, active, _x, _y, _s, _mx, _my));
-		InputDrawOverlay(inputs[ 9].drawOverlay(hover, active, px, py, _s, _mx, _my));
+		drawOverlayInput(inputs[ 8].drawOverlay(hover, active, _x, _y, _s, _mx, _my));
+		drawOverlayInput(inputs[ 9].drawOverlay(hover, active, px, py, _s, _mx, _my));
 		
-		InputDrawOverlay(inputs[ 0].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _params));
+		drawOverlayInput(inputs[ 0].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _params));
 	}
 	
 	static processData = function(_outData, _data, _array_index = 0) { 

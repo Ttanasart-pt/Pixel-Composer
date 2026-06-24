@@ -39,7 +39,7 @@ function Node_MK_Blast_Wave(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		var _useSel = getInputData( 5);
 		if(_useSel) {
 			var _fall = getInputData( 6);
-			InputDrawOverlay(inputs[6].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my));
+			drawOverlayInput(inputs[6].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my));
 			inputs[6].drawOverlayFallOff(_x, _y, _s, _fall);
 		}
 	}

@@ -75,7 +75,7 @@ function Node_Dither(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		var _cx = _x + _dim[0] / 2 * _s;
 		var _cy = _y + _dim[1] / 2 * _s;
 		
-		InputDrawOverlay(inputs[4].drawOverlay(w_hoverable, active, _cx, _cy, _s, _mx, _my, 0, _dim[0] / 2));
+		drawOverlayInput(inputs[4].drawOverlay(w_hoverable, active, _cx, _cy, _s, _mx, _my, 0, _dim[0] / 2));
 		
 		return w_hovering;
 	}

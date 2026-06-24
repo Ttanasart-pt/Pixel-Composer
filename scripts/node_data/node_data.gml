@@ -2811,7 +2811,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		if(project.graphDisplay.highlight) drawBranch();
 	}
 	
-	static InputDrawOverlay = function(hv) {
+	static drawOverlayInput = function(hv) {
 		hv = hv ?? false;
 		w_hovering  = w_hovering || bool(hv); 
 		w_hoverable = w_hoverable && !hv;
@@ -2831,7 +2831,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		
 		attribute_drawOverlay(hover, active);
 		for( var i = 0, n = array_length(preview_overlay_inputs); i < n; i++ ) 
-			InputDrawOverlay(preview_overlay_inputs[i].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my));
+			drawOverlayInput(preview_overlay_inputs[i].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my));
 		
 		return w_hovering;
 	}

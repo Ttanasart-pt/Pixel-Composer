@@ -48,7 +48,7 @@ function Node_MK_WireFrame(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 		draw_set_color(COLORS._main_accent);
 		draw_line_dashed(_cx, _cy, _ox, _oy);
 		
-		InputDrawOverlay(inputs[3].drawOverlay( w_hoverable, active, _cx, _cy, _s, _mx, _my ));
+		drawOverlayInput(inputs[3].drawOverlay( w_hoverable, active, _cx, _cy, _s, _mx, _my ));
 		
 	}
 	

@@ -164,13 +164,13 @@ function Node_Normal_Light(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 				draw_line(px, py, px2, py2);
 			}
 			
-			InputDrawOverlay(inputs[_ind + 1].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my));
-			InputDrawOverlay(inputs[_ind + 2].drawOverlay(w_hoverable, active, px, py, _s, _mx, _my));
-			InputDrawOverlay(inputs[_ind + 5].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my));
+			drawOverlayInput(inputs[_ind + 1].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my));
+			drawOverlayInput(inputs[_ind + 2].drawOverlay(w_hoverable, active, px, py, _s, _mx, _my));
+			drawOverlayInput(inputs[_ind + 5].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my));
 			
 		} else {
-			InputDrawOverlay(inputs[_ind + 1].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my));
-			InputDrawOverlay(inputs[_ind + 2].drawOverlay(w_hoverable, active, px, py, _s, _mx, _my));
+			drawOverlayInput(inputs[_ind + 1].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my));
+			drawOverlayInput(inputs[_ind + 2].drawOverlay(w_hoverable, active, px, py, _s, _mx, _my));
 		}
 		
 		return w_hovering;

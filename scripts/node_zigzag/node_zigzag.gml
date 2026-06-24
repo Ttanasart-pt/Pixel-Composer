@@ -46,9 +46,9 @@ function Node_Zigzag(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		var px  = _x + pos[0] * _s;
 		var py  = _y + pos[1] * _s;
 		
-		InputDrawOverlay(inputs[2].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my ));
-		InputDrawOverlay(inputs[8].drawOverlay(w_hoverable, active, px, py, _s, _mx, _my ));
-		InputDrawOverlay(inputs[1].drawOverlay(w_hoverable, active, px, py, _s, _mx, _my, rot, 1, 2 ));
+		drawOverlayInput(inputs[2].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my ));
+		drawOverlayInput(inputs[8].drawOverlay(w_hoverable, active, px, py, _s, _mx, _my ));
+		drawOverlayInput(inputs[1].drawOverlay(w_hoverable, active, px, py, _s, _mx, _my, rot, 1, 2 ));
 		
 		return w_hovering;
 	}

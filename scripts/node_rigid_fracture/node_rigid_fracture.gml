@@ -568,7 +568,7 @@ function Node_Rigid_Fracture(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 			draw_line(fx, fy, ox, oy);
 		}
 		
-		InputDrawOverlay(inputs[9].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my));
+		drawOverlayInput(inputs[9].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my));
 	}
 	
 	static update = function(_frame = CURRENT_FRAME) {

@@ -42,8 +42,8 @@ function Node_Rigid_Object_Segment(_x, _y, _group = noone) : Node(_x, _y, _group
 		draw_set_color(COLORS._main_accent);
 		draw_line(x0, y0, x1, y1);
 		
-		InputDrawOverlay(inputs[0].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my));
-		InputDrawOverlay(inputs[1].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my));
+		drawOverlayInput(inputs[0].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my));
+		drawOverlayInput(inputs[1].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my));
 		
 		return w_hovering;
 	}

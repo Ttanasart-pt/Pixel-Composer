@@ -49,7 +49,7 @@ function Node_pSystem_Follow_Path(_x, _y, _group = noone) : Node(_x, _y, _group)
 		_parts.drawOverlay(hover, active, _x, _y, _s, _mx, _my, _params);
 		
 		if(has(_path, "drawOverlay"))
-			InputDrawOverlay(_path.drawOverlay(hover, active, _x, _y, _s, _mx, _my, _params));
+			drawOverlayInput(_path.drawOverlay(hover, active, _x, _y, _s, _mx, _my, _params));
 	}
 	
 	static reset = function() {

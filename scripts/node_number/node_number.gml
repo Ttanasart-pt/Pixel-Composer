@@ -99,8 +99,8 @@ function Node_Number(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			
 			switch(draw_disp) {
 				case 0 : 
-				case 1 : InputDrawOverlay(inputs[0].drawOverlay(h, f, _gx, _gy, _s, _mx, _my, 0,   gs, gt)); break;
-				case 2 : InputDrawOverlay(inputs[0].drawOverlay(h, f, _gx, _gy, _s, _mx, _my, 64 * gs, gt)); break;
+				case 1 : drawOverlayInput(inputs[0].drawOverlay(h, f, _gx, _gy, _s, _mx, _my, 0,   gs, gt)); break;
+				case 2 : drawOverlayInput(inputs[0].drawOverlay(h, f, _gx, _gy, _s, _mx, _my, 64 * gs, gt)); break;
 			}
 			
 		} else {

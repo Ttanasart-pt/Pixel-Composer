@@ -187,8 +187,8 @@ function Node_2D_light(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 				draw_circle_dash(px, py, rad * _s, 1, 8);
 				draw_set_alpha(1);
 				
-				InputDrawOverlay(inputs[_ind + 1].drawOverlay( w_hoverable, active, _x, _y, _s, _mx, _my, 1       ));
-				InputDrawOverlay(inputs[_ind + 2].drawOverlay( w_hoverable, active, px, py, _s, _mx, _my, 0, 1, 1 ));
+				drawOverlayInput(inputs[_ind + 1].drawOverlay( w_hoverable, active, _x, _y, _s, _mx, _my, 1       ));
+				drawOverlayInput(inputs[_ind + 2].drawOverlay( w_hoverable, active, px, py, _s, _mx, _my, 0, 1, 1 ));
 				break;
 			
 			case LIGHT_SHAPE_2D.ellipse :
@@ -205,10 +205,10 @@ function Node_2D_light(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 				draw_ellipse_dash(px, py, rdx * _s, rdy * _s, 1, 8, ang);
 				draw_set_alpha(1);
 				
-				InputDrawOverlay(inputs[_ind +  1].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, 1            ));
-				InputDrawOverlay(inputs[_ind + 15].drawOverlay(w_hoverable, active, px, py, _s, _mx, _my, ang,    1, 1 ));
-				InputDrawOverlay(inputs[_ind + 16].drawOverlay(w_hoverable, active, px, py, _s, _mx, _my, ang+90, 1, 1 ));
-				InputDrawOverlay(inputs[_ind + 17].drawOverlay(w_hoverable, active, px, py, _s, _mx, _my, 64, 1        ));
+				drawOverlayInput(inputs[_ind +  1].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, 1            ));
+				drawOverlayInput(inputs[_ind + 15].drawOverlay(w_hoverable, active, px, py, _s, _mx, _my, ang,    1, 1 ));
+				drawOverlayInput(inputs[_ind + 16].drawOverlay(w_hoverable, active, px, py, _s, _mx, _my, ang+90, 1, 1 ));
+				drawOverlayInput(inputs[_ind + 17].drawOverlay(w_hoverable, active, px, py, _s, _mx, _my, 64, 1        ));
 				break;
 			
 			case LIGHT_SHAPE_2D.line      :
@@ -229,13 +229,13 @@ function Node_2D_light(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 				draw_line_dashed(px0, py0, px1, py1);
 				draw_set_alpha(1);
 				
-				InputDrawOverlay(inputs[_ind + 5].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, 1 ));
-				InputDrawOverlay(inputs[_ind + 6].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, 1 ));
+				drawOverlayInput(inputs[_ind + 5].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, 1 ));
+				drawOverlayInput(inputs[_ind + 6].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, 1 ));
 				break;
 				
 			case LIGHT_SHAPE_2D.saber     :
-				InputDrawOverlay(inputs[_ind + 5].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, 1 ));
-				InputDrawOverlay(inputs[_ind + 6].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, 1 ));
+				drawOverlayInput(inputs[_ind + 5].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, 1 ));
+				drawOverlayInput(inputs[_ind + 6].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, 1 ));
 				
 				var pos = current_data[_ind +  5];
 				var rad = current_data[_ind +  2];
@@ -251,8 +251,8 @@ function Node_2D_light(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 				draw_set_alpha(1);
 				
 				inputs[_ind + 21].overlay_text_valign = fa_bottom;
-				InputDrawOverlay(inputs[_ind +  2].drawOverlay(w_hoverable, active, px, py, _s, _mx, _my, 0, 1, 1 ));
-				InputDrawOverlay(inputs[_ind + 21].drawOverlay(w_hoverable, active, px, py, _s, _mx, _my, 0, 1, 1 ));
+				drawOverlayInput(inputs[_ind +  2].drawOverlay(w_hoverable, active, px, py, _s, _mx, _my, 0, 1, 1 ));
+				drawOverlayInput(inputs[_ind + 21].drawOverlay(w_hoverable, active, px, py, _s, _mx, _my, 0, 1, 1 ));
 				break;
 		}
 		

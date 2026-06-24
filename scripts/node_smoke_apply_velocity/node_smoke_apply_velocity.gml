@@ -55,7 +55,7 @@ function Node_Smoke_Apply_Velocity(_x, _y, _group = noone) : Node_Smoke(_x, _y, 
 			draw_ellipse(_px - sw, _py - sh, _px + sw, _py + sh, false);
 			draw_set_alpha(1);
 			
-			InputDrawOverlay(inputs[6].drawOverlay(w_hoverable, active, _px, _py, _s, _mx, _my));
+			drawOverlayInput(inputs[6].drawOverlay(w_hoverable, active, _px, _py, _s, _mx, _my));
 			
 		} else if(_typ == 1) {
 			if(is_surface(_mat)) {
@@ -68,13 +68,13 @@ function Node_Smoke_Apply_Velocity(_x, _y, _group = noone) : Node_Smoke(_x, _y, 
 			}
 		}
 		
-		InputDrawOverlay(inputs[2].drawOverlay(w_hoverable, active,  _x,  _y, _s, _mx, _my));
+		drawOverlayInput(inputs[2].drawOverlay(w_hoverable, active,  _x,  _y, _s, _mx, _my));
 		
 		var _vx = _px + _vel[0] * _s * 4;
 		var _vy = _py + _vel[1] * _s * 4;
 		draw_set_color(COLORS._main_accent);
 		draw_line_dashed(_px, _py, _vx, _vy);
-		InputDrawOverlay(inputs[3].drawOverlay(w_hoverable, active, _px, _py, _s, _mx, _my, 1, 4));
+		drawOverlayInput(inputs[3].drawOverlay(w_hoverable, active, _px, _py, _s, _mx, _my, 1, 4));
 		
 		return w_hovering;
 	}

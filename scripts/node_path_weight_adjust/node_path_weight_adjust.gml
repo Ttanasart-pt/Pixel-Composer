@@ -31,7 +31,7 @@ function Node_Path_Weight_Adjust(_x, _y, _group = noone) : Node(_x, _y, _group) 
 	temp_p = new __vec2P();
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _params) { 
-		if(has(curr_path, "drawOverlay")) InputDrawOverlay(curr_path.drawOverlay(hover, active, _x, _y, _s, _mx, _my, _params));
+		if(has(curr_path, "drawOverlay")) drawOverlayInput(curr_path.drawOverlay(hover, active, _x, _y, _s, _mx, _my, _params));
 		return w_hovering;
 	}
 	

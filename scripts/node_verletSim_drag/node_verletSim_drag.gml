@@ -56,10 +56,10 @@ function Node_VerletSim_Drag(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 		var _px = _ox + _pos[0] * _s;
 		var _py = _oy + _pos[1] * _s;
 		
-		InputDrawOverlay(inputs[2].drawOverlay(w_hoverable, active, _ox, _oy, _s, _mx, _my));
-		InputDrawOverlay(inputs[5].drawOverlay(w_hoverable, active, _px, _py, _s, _mx, _my));
+		drawOverlayInput(inputs[2].drawOverlay(w_hoverable, active, _ox, _oy, _s, _mx, _my));
+		drawOverlayInput(inputs[5].drawOverlay(w_hoverable, active, _px, _py, _s, _mx, _my));
 		
-		if(!_aAnc) InputDrawOverlay(inputs[4].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, 1));
+		if(!_aAnc) drawOverlayInput(inputs[4].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, 1));
 		
 		return w_hovering;
 	}

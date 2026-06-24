@@ -44,8 +44,8 @@ function Node_Straighten(_x, _y, _group = noone) : Node_Shader_Processor(_x, _y,
 				draw_set_color(COLORS._main_accent);
 				draw_line_dashed(p1x, p1y, p2x, p2y);
 				
-				InputDrawOverlay(inputs[i+ 1].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my));
-				InputDrawOverlay(inputs[i+ 2].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my));
+				drawOverlayInput(inputs[i+ 1].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my));
+				drawOverlayInput(inputs[i+ 2].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my));
 				break;
 			
 			case 1:
@@ -72,10 +72,10 @@ function Node_Straighten(_x, _y, _group = noone) : Node_Shader_Processor(_x, _y,
 				draw_set_color(COLORS._main_accent);
 				draw_line_dashed(p5x, p5y, p6x, p6y);
 				
-				InputDrawOverlay(inputs[i+ 3].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my));
-				InputDrawOverlay(inputs[i+ 4].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my));
-				InputDrawOverlay(inputs[i+ 5].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my));
-				InputDrawOverlay(inputs[i+ 6].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my));
+				drawOverlayInput(inputs[i+ 3].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my));
+				drawOverlayInput(inputs[i+ 4].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my));
+				drawOverlayInput(inputs[i+ 5].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my));
+				drawOverlayInput(inputs[i+ 6].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my));
 				break;
 		}
 		

@@ -36,7 +36,7 @@ function Node_Maze_Pattern(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	mask_samp = new Surface_Sampler_Grey();
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _params) { 
-		InputDrawOverlay(inputs[5].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my));
+		drawOverlayInput(inputs[5].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my));
 	}
 	
 	static processData = function(_outSurf, _data, _array_index = 0) { 

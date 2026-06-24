@@ -45,12 +45,12 @@ function Node_Wave_Interfere(_x, _y, _group = noone) : Node_Shader_Generator(_x,
 		    var _px  = _x + _pos[0] * _s;
 		    var _py  = _y + _pos[1] * _s;
 		    
-		    InputDrawOverlay(inputs[5].drawOverlay(w_hoverable, active,  _x,  _y, _s, _mx, _my));
-		    InputDrawOverlay(inputs[6].drawOverlay(w_hoverable, active, _px, _py, _s, _mx, _my));
+		    drawOverlayInput(inputs[5].drawOverlay(w_hoverable, active,  _x,  _y, _s, _mx, _my));
+		    drawOverlayInput(inputs[6].drawOverlay(w_hoverable, active, _px, _py, _s, _mx, _my));
 		    
 		} else if(_pat == 1) {
-		    InputDrawOverlay(inputs[12].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my));
-		    InputDrawOverlay(inputs[13].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my));
+		    drawOverlayInput(inputs[12].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my));
+		    drawOverlayInput(inputs[13].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my));
 			
 		}
 	    

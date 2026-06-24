@@ -70,12 +70,12 @@ function Node_Extends(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 			draw_set_color(COLORS._main_accent);
 			draw_line_dashed( px0, py0, px1, py1 );
 			
-			InputDrawOverlay(inputs[ 8].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my ));
-			InputDrawOverlay(inputs[ 9].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my ));
-			InputDrawOverlay(inputs[10].drawOverlay(w_hoverable, active, cx, cy, _s, _mx, _my, dr, 1, 1 ));
+			drawOverlayInput(inputs[ 8].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my ));
+			drawOverlayInput(inputs[ 9].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my ));
+			drawOverlayInput(inputs[10].drawOverlay(w_hoverable, active, cx, cy, _s, _mx, _my, dr, 1, 1 ));
 			
 			if(!_norm)
-				InputDrawOverlay(inputs[11].drawOverlay(w_hoverable, active, cx, cy, _s, _mx, _my ));
+				drawOverlayInput(inputs[11].drawOverlay(w_hoverable, active, cx, cy, _s, _mx, _my ));
 			
 		} else if(_type == 1) {
 			var _pnt1 = getInputSingle( 8);
@@ -84,15 +84,15 @@ function Node_Extends(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 			var cx = _x + _pnt1[0] * _s;
 			var cy = _y + _pnt1[1] * _s;
 			
-			InputDrawOverlay(inputs[ 8].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my ));
-			InputDrawOverlay(inputs[10].drawOverlay(w_hoverable, active, cx, cy, _s, _mx, _my, _dirr, 1, 1 ));
-			InputDrawOverlay(inputs[11].drawOverlay(w_hoverable, active, cx, cy, _s, _mx, _my ));
+			drawOverlayInput(inputs[ 8].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my ));
+			drawOverlayInput(inputs[10].drawOverlay(w_hoverable, active, cx, cy, _s, _mx, _my, _dirr, 1, 1 ));
+			drawOverlayInput(inputs[11].drawOverlay(w_hoverable, active, cx, cy, _s, _mx, _my ));
 		
 		} else if(_type == 2) {
 			var _norm = getInputSingle(15);
 			
 			if(!_norm)
-				InputDrawOverlay(inputs[13].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my ));
+				drawOverlayInput(inputs[13].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my ));
 		}
 	}
 	

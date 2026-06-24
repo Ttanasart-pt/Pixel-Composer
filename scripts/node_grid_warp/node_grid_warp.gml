@@ -487,7 +487,7 @@ function Node_Grid_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		#endregion
 		
 		if(isUsingTool("Edit Area"))
-			return InputDrawOverlay(inputs[4].drawOverlay(hover, active, _x, _y, _s, _mx, _my));
+			return drawOverlayInput(inputs[4].drawOverlay(hover, active, _x, _y, _s, _mx, _my));
 		
 		var hoverIndex = undefined;
 		

@@ -87,7 +87,7 @@ function Node_Track_Pixel(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 			draw_set_alpha(1);
 		}
 		
-		InputDrawOverlay(inputs[1].drawOverlay(hover, active, _x, _y, _s, _mx, _my));
+		drawOverlayInput(inputs[1].drawOverlay(hover, active, _x, _y, _s, _mx, _my));
 		
 		var _orig = getInputData( 1);
 		var _wind = getInputData( 2) * _s;

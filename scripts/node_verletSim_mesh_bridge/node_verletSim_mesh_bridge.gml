@@ -50,10 +50,10 @@ function Node_VerletSim_Mesh_Bridge(_x, _y, _group = noone) : Node(_x, _y, _grou
 			_msh.drawVertex(_x, _y, _s);
 		}
 		
-		InputDrawOverlay(inputs[0].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my));
+		drawOverlayInput(inputs[0].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my));
 		
 		for( var i = input_fix_len, n = array_length(inputs); i < n; i++ ) 
-			InputDrawOverlay(inputs[i].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my));	
+			drawOverlayInput(inputs[i].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my));	
 		
 		return w_hovering;
 	}

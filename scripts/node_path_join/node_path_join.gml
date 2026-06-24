@@ -84,7 +84,7 @@ function Node_Path_Join(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 			var _px = _x + _ptran[0] * _s; 
 			var _py = _y + _ptran[1] * _s; 
 			
-			InputDrawOverlay(_path.drawOverlay(hover, active, _px, _py, _s, _mx, _my, _params));
+			drawOverlayInput(_path.drawOverlay(hover, active, _px, _py, _s, _mx, _my, _params));
 		}
 		
 		return w_hovering;

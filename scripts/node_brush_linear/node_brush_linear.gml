@@ -34,8 +34,8 @@ function Node_Brush_Linear(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 		var _cx = _x + _dim[0] / 2 * _s;
 		var _cy = _y + _dim[1] / 2 * _s;
 		
-		InputDrawOverlay(inputs[2].drawOverlay(w_hoverable, active, _cx, _cy - ui(16), _s, _mx, _my));
-		InputDrawOverlay(inputs[4].drawOverlay(w_hoverable, active, _cx, _cy + ui(16), _s, _mx, _my));
+		drawOverlayInput(inputs[2].drawOverlay(w_hoverable, active, _cx, _cy - ui(16), _s, _mx, _my));
+		drawOverlayInput(inputs[4].drawOverlay(w_hoverable, active, _cx, _cy + ui(16), _s, _mx, _my));
 		
 		return w_hovering;
 	}

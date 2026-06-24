@@ -92,16 +92,16 @@ function Node_MK_Cable(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 				draw_circle_dash(_p1x, _p1y, _rad1*_s);
 				draw_circle_dash(_p2x, _p2y, _rad2*_s);
 				
-				InputDrawOverlay(inputs[1].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my));
-				InputDrawOverlay(inputs[2].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my));
+				drawOverlayInput(inputs[1].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my));
+				drawOverlayInput(inputs[2].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my));
 				
-				if(_rad1) InputDrawOverlay(inputs[ 9].drawOverlay(w_hoverable, active, _p1x, _p1y, _s, _mx, _my, 0, 1, 1));
-				if(_rad2) InputDrawOverlay(inputs[10].drawOverlay(w_hoverable, active, _p2x, _p2y, _s, _mx, _my, 0, 1, 1));
+				if(_rad1) drawOverlayInput(inputs[ 9].drawOverlay(w_hoverable, active, _p1x, _p1y, _s, _mx, _my, 0, 1, 1));
+				if(_rad2) drawOverlayInput(inputs[10].drawOverlay(w_hoverable, active, _p2x, _p2y, _s, _mx, _my, 0, 1, 1));
 				break;
 			
 			case 4 : 
-				InputDrawOverlay(inputs[22].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my));
-				InputDrawOverlay(inputs[23].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my));
+				drawOverlayInput(inputs[22].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my));
+				drawOverlayInput(inputs[23].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my));
 				break;
 		}
 		

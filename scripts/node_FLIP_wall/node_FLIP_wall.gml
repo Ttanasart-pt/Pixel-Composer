@@ -26,7 +26,7 @@ function Node_FLIP_Wall(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	static getDimension = function() { var d = getInputData(0); return instance_exists(d)? d.getSize() : [ 1, 1 ]; }
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _params) { 
-		InputDrawOverlay(inputs[1].drawOverlay(w_hoverable, active,  _x,  _y, _s, _mx, _my));
+		drawOverlayInput(inputs[1].drawOverlay(w_hoverable, active,  _x,  _y, _s, _mx, _my));
 		return w_hovering;
 	}
 	

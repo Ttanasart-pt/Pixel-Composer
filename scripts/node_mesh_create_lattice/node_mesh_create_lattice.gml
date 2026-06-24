@@ -29,7 +29,7 @@ function Node_Mesh_Create_Lattice(_x, _y, _group = noone) : Node(_x, _y, _group)
 			mesh.draw(_x, _y, _s);
 		}
 		
-		InputDrawOverlay(inputs[0].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my));
+		drawOverlayInput(inputs[0].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my));
 		
 		return w_hovering;
 	}

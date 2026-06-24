@@ -60,8 +60,8 @@ function Node_Line_2Points(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	attribute_surface_depth();
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _params) {
-		InputDrawOverlay(inputs[ 2].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my));
-		InputDrawOverlay(inputs[ 3].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my));
+		drawOverlayInput(inputs[ 2].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my));
+		drawOverlayInput(inputs[ 3].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my));
 	}
 	
 	static update = function() {

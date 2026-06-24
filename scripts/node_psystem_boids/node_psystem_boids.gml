@@ -54,7 +54,7 @@ function Node_pSystem_Boids(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		_parts.drawOverlay(hover, active, _x, _y, _s, _mx, _my, _params);
 		
 		if(_fol) {
-			InputDrawOverlay(inputs[13].drawOverlay(hover, active, _x, _y, _s, _mx, _my));
+			drawOverlayInput(inputs[13].drawOverlay(hover, active, _x, _y, _s, _mx, _my));
 		}
 	}
 	

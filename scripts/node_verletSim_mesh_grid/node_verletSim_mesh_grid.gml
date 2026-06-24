@@ -38,7 +38,7 @@ function Node_VerletSim_Mesh_Grid(_x, _y, _group = noone) : Node(_x, _y, _group)
 			_msh.drawVertex(_x, _y, _s);
 		}
 		
-		InputDrawOverlay(inputs[0].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my));
+		drawOverlayInput(inputs[0].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my));
 		
 		return w_hovering;
 	}

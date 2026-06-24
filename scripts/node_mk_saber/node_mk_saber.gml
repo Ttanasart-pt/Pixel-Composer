@@ -48,8 +48,8 @@ function Node_MK_Saber(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 		draw_set_color(COLORS._main_accent);
 		draw_line(_p1x, _p1y, _p2x, _p2y);
 		
-		InputDrawOverlay(inputs[1].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my));
-		InputDrawOverlay(inputs[2].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my));
+		drawOverlayInput(inputs[1].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my));
+		drawOverlayInput(inputs[2].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my));
 		
 		return w_hovering;
 	}

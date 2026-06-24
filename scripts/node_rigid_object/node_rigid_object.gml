@@ -369,8 +369,8 @@ function Node_Rigid_Object(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		var px  = _x + pos[0] * _s;
 		var py  = _y + pos[1] * _s;
 		
-		InputDrawOverlay(inputs[ 7].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my));
-		InputDrawOverlay(inputs[17].drawOverlay(w_hoverable, active, px, py, _s, _mx, _my));
+		drawOverlayInput(inputs[ 7].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my));
+		drawOverlayInput(inputs[17].drawOverlay(w_hoverable, active, px, py, _s, _mx, _my));
 		
 		var _shp = inputs[5].getValue();
 		var _pos = inputs[7].getValue();

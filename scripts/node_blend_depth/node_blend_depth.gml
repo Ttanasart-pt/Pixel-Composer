@@ -44,7 +44,7 @@ function Node_Blend_Depth(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 		var _ax = _x + _anc[0] * _dim[0] * _s;
 		var _ay = _y + _anc[1] * _dim[1] * _s;
 		
-		InputDrawOverlay(inputs[10].drawOverlay(w_hoverable, active, _ax, _ay, _s, _mx, _my));
+		drawOverlayInput(inputs[10].drawOverlay(w_hoverable, active, _ax, _ay, _s, _mx, _my));
 		return w_hovering;
 	}
 	

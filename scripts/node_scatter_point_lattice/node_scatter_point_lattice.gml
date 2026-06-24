@@ -42,7 +42,7 @@ function Node_Scatter_Point_Lattice(_x, _y, _group = noone) : Node_Processor(_x,
 			draw_line(x0, yy, x1, yy);
 		}
 		
-		InputDrawOverlay(inputs[1].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my));
+		drawOverlayInput(inputs[1].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my));
 		return w_hovering;
 	}
 	

@@ -38,7 +38,7 @@ function Node_Path_Shift(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		}
 		
 		PathDrawOverlay(self, _x, _y, _s);
-		InputDrawOverlay(inputs[1].drawOverlay(hover, active, _x, _y, _s, _mx, _my));
+		drawOverlayInput(inputs[1].drawOverlay(hover, active, _x, _y, _s, _mx, _my));
 		
 		return hovering;
 	}

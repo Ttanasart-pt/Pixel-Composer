@@ -108,7 +108,7 @@ function Node_Path_Extends(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	}
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _params) { 
-		InputDrawOverlay(outputs[0].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _params));
+		drawOverlayInput(outputs[0].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _params));
 		return w_hovering;
 	}
 	

@@ -55,8 +55,8 @@ function Node_Mirror(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		draw_line(dx0, dy0, dx1, dy1);
 		draw_arrow(_posx, _posy, dxp, dyp, ui(16));
 		
-		InputDrawOverlay(inputs[1].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my));
-		InputDrawOverlay(inputs[2].drawOverlay(w_hoverable, active, _posx, _posy, _s, _mx, _my));
+		drawOverlayInput(inputs[1].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my));
+		drawOverlayInput(inputs[2].drawOverlay(w_hoverable, active, _posx, _posy, _s, _mx, _my));
 		
 		return w_hovering;
 	}

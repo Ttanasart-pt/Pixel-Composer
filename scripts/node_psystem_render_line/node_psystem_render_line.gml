@@ -43,7 +43,7 @@ function Node_pSystem_Render_Line(_x, _y, _group = noone) : Node(_x, _y, _group)
 		_parts.drawOverlay(hover, active, _x, _y, _s, _mx, _my, _params);
 		
 		var _type  = getInputData(5);
-		if(_type == 3) InputDrawOverlay(inputs[6].drawOverlay(hover, active, _x, _y, _s, _mx, _my)); 
+		if(_type == 3) drawOverlayInput(inputs[6].drawOverlay(hover, active, _x, _y, _s, _mx, _my)); 
 	}
 	
 	static getDimension = function() { return is(inline_context, Node_pSystem_Inline)? inline_context.dimension : PROJ_SURF; }

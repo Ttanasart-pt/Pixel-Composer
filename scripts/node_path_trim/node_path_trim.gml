@@ -60,7 +60,7 @@ function Node_Path_Trim(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		var _outp = outputs[0].getValue();
 		if(!is_path(_outp)) return false;
 		
-		InputDrawOverlay(_outp.drawOverlay(hover, active, _x, _y, _s, _mx, _my, _params));
+		drawOverlayInput(_outp.drawOverlay(hover, active, _x, _y, _s, _mx, _my, _params));
 		return w_hovering;
 	}
 	

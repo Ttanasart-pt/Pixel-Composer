@@ -105,8 +105,8 @@ function Node_MK_Blast_Flame(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	static getDimension = function() /*=>*/ {return is(inline_context, Node_MK_Blast_Inline)? inline_context.getDimension() : DEF_SURF};
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _params) { 
-		InputDrawOverlay(inputs[ 4].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my));
-		InputDrawOverlay(inputs[15].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, 1));
+		drawOverlayInput(inputs[ 4].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my));
+		drawOverlayInput(inputs[15].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, 1));
 	}
 	
 	static update = function(_frame = CURRENT_FRAME) { 

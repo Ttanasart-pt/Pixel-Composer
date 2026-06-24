@@ -37,7 +37,7 @@ function Node_pSystem_Mask_Distance(_x, _y, _group = noone) : Node(_x, _y, _grou
 		var _pos   = getInputData(2);
 		var _dists = getInputData(3);
 		
-		InputDrawOverlay(inputs[2].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my));
+		drawOverlayInput(inputs[2].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my));
 		
 		var px = _x + _pos[0] * _s;
 		var py = _y + _pos[1] * _s;

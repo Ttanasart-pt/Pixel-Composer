@@ -66,7 +66,7 @@ function Node_MK_Rain(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 			var _y0 = _y + _grpRng * _s;
 			
 			draw_line_dashed(_x0, _y0, _x1, _y0);
-			InputDrawOverlay(inputs[19].drawOverlay(hover, active, _x + _dim[0] / 2 * _s, _y, _s, _mx, _my, -90));
+			drawOverlayInput(inputs[19].drawOverlay(hover, active, _x + _dim[0] / 2 * _s, _y, _s, _mx, _my, -90));
 		}
 	}
 	

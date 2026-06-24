@@ -37,7 +37,7 @@ function Node_De_Corner(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		var _cx = _x + _dim[0] / 2 * _s;
 		var _cy = _y + _dim[1] / 2 * _s;
 		
-		InputDrawOverlay(inputs[2].drawOverlay(w_hoverable, active, _x, _cy, _s, _mx, _my, 0, _dim[0]));
+		drawOverlayInput(inputs[2].drawOverlay(w_hoverable, active, _x, _cy, _s, _mx, _my, 0, _dim[0]));
 		
 		return w_hovering;
 	}

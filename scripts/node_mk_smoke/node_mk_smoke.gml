@@ -93,8 +93,8 @@ function Node_MK_Smoke(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 		var _type = getInputSingle(28);
 		
 		switch(_type) {
-			case 0 : InputDrawOverlay(inputs[ 7].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my)); break;
-			case 1 : InputDrawOverlay(inputs[29].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my)); break;
+			case 0 : drawOverlayInput(inputs[ 7].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my)); break;
+			case 1 : drawOverlayInput(inputs[29].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my)); break;
 		}
 	}
 	

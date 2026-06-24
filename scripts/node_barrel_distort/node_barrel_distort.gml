@@ -22,7 +22,7 @@ function Node_Barrel_Distort(_x, _y, _group = noone) : Node_Shader_Processor(_x,
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _params) { 
 		PROCESSOR_OVERLAY_CHECK
-		InputDrawOverlay(inputs[shader_index+1].drawOverlay(w_hoverable, active,  _x,  _y, _s, _mx, _my));
+		drawOverlayInput(inputs[shader_index+1].drawOverlay(w_hoverable, active,  _x,  _y, _s, _mx, _my));
 		return w_hovering;
 	}
 	

@@ -29,7 +29,7 @@ function Node_Interpret_Matrix(_x, _y, _group = noone) : Node_Processor(_x, _y, 
 	attribute_surface_depth();
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _params) { 
-		InputDrawOverlay(inputs[5].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, getDimension()));
+		drawOverlayInput(inputs[5].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, getDimension()));
 		return w_hovering;
 	}
 	

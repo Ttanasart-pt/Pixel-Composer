@@ -44,7 +44,7 @@ function Node_MK_Blast_Force(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 		var _useSel = getInputData( 7);
 		if(_useSel) {
 			var _fall = getInputData( 9);
-			InputDrawOverlay(inputs[8].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my));
+			drawOverlayInput(inputs[8].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my));
 			inputs[8].drawOverlayFallOff(_x, _y, _s, _fall);
 		}
 	}

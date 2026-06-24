@@ -43,10 +43,10 @@ function Node_Path_Anchor(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 		draw_line(px, py, c1x, c1y);
 		draw_line(px, py, c2x, c2y);
 		
-		InputDrawOverlay(inputs[0].drawOverlay(w_hoverable, !isUsingTool(0) && active, _x, _y, _s, _mx, _my));
-		InputDrawOverlay(inputs[1].drawOverlay(w_hoverable, active, px, py, _s, _mx, _my));
+		drawOverlayInput(inputs[0].drawOverlay(w_hoverable, !isUsingTool(0) && active, _x, _y, _s, _mx, _my));
+		drawOverlayInput(inputs[1].drawOverlay(w_hoverable, active, px, py, _s, _mx, _my));
 		
-		if(!_mir) InputDrawOverlay(inputs[2].drawOverlay(w_hoverable, active, px, py, _s, _mx, _my));
+		if(!_mir) drawOverlayInput(inputs[2].drawOverlay(w_hoverable, active, px, py, _s, _mx, _my));
 		else      draw_circle_prec(c2x, c2y, 4, false);
 		
 		return w_hovering;

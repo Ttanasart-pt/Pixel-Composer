@@ -46,7 +46,7 @@ function Node_Diffuse(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _params) { 
 		var _ftyp = getInputData(10);
 		
-		if(_ftyp == 0) InputDrawOverlay(inputs[19].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my));
+		if(_ftyp == 0) drawOverlayInput(inputs[19].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my));
 	}
 	
 	static update = function() {

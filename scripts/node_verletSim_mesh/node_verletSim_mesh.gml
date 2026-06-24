@@ -43,7 +43,7 @@ function Node_VerletSim_Mesh(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 			_msh.draw(_x, _y, _s);
 		}
 		
-		if(_uv) InputDrawOverlay(inputs[3].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my));
+		if(_uv) drawOverlayInput(inputs[3].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my));
 		return w_hovering;
 	}
 	

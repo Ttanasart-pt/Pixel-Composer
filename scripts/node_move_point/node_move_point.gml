@@ -35,9 +35,9 @@ function Node_Move_Point(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 		var _px  = _x + _anc[0] * _s;
 		var _py  = _y + _anc[1] * _s;
 		
-		InputDrawOverlay(inputs[2].drawOverlay(w_hoverable, active,  _x,  _y, _s, _mx, _my    ));
-		InputDrawOverlay(inputs[1].drawOverlay(w_hoverable, active,  _x,  _y, _s, _mx, _my, 1 ));
-		InputDrawOverlay(inputs[3].drawOverlay(w_hoverable, active, _px, _py, _s, _mx, _my    ));
+		drawOverlayInput(inputs[2].drawOverlay(w_hoverable, active,  _x,  _y, _s, _mx, _my    ));
+		drawOverlayInput(inputs[1].drawOverlay(w_hoverable, active,  _x,  _y, _s, _mx, _my, 1 ));
+		drawOverlayInput(inputs[3].drawOverlay(w_hoverable, active, _px, _py, _s, _mx, _my    ));
 		
 		return w_hovering;
 	}

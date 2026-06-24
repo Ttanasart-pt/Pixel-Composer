@@ -44,7 +44,7 @@ function Node_MK_Tree_Bush(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 			if(is(_t, __MK_Tree)) _t.drawOverlay(_x, _y, _s);
 		}
 		
-		InputDrawOverlay(inputs[0].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my));
+		drawOverlayInput(inputs[0].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my));
 	}
 	
 	static update = function() {

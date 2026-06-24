@@ -122,7 +122,7 @@ function Node_MK_Tree_Root(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		     if(_shp == 0) draw_rectangle_dashed(_px - _sw, _py - _sh, _px + _sw, _py + _sh);
 		else if(_shp == 1) draw_ellipse_dash(_px, _py, _sw, _sh);
 		
-		InputDrawOverlay(inputs[1].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, 1));
+		drawOverlayInput(inputs[1].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, 1));
 	}
 	
 	static update = function() {

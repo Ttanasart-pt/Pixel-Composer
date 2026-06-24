@@ -42,7 +42,7 @@ function Node_VerletSim_Mesh_Tear(_x, _y, _group = noone) : Node(_x, _y, _group)
 		_mesh.draw(_x, _y, _s);
 		
 		switch(_type) {
-			case 0 : InputDrawOverlay(inputs[2].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my)); break;
+			case 0 : drawOverlayInput(inputs[2].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my)); break;
 			case 2 :
 				var _edge = array_safe_get_fast(_mesh.vedges, getInputData(5));
 				if(_edge == 0) break;

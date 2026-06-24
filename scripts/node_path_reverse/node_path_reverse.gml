@@ -40,7 +40,7 @@ function Node_Path_Reverse(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	}
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _params) { 
-		InputDrawOverlay(outputs[0].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _params));
+		drawOverlayInput(outputs[0].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _params));
 	}
 	
 	static processData = function(_outData, _data, _array_index = 0) { 

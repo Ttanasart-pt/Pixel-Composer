@@ -25,7 +25,7 @@ function Node_Path_to_Curve(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	////- Node
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _params) { 
-		InputDrawOverlay(inputs[0].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _params));
+		drawOverlayInput(inputs[0].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _params));
 	}
 	
 	static update = function() {

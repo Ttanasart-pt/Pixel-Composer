@@ -38,7 +38,7 @@ function Node_MK_Blast_Gravity(_x, _y, _group = noone) : Node(_x, _y, _group) co
 		var _useSel = getInputData( 4);
 		if(_useSel) {
 			var _fall = getInputData( 6);
-			InputDrawOverlay(inputs[5].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my));
+			drawOverlayInput(inputs[5].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my));
 			inputs[5].drawOverlayFallOff(_x, _y, _s, _fall);
 		}
 	}

@@ -37,7 +37,7 @@ function Node_VerletSim_Collide(_x, _y, _group = noone) : Node(_x, _y, _group) c
 			_mesh.draw(_x, _y, _s);
 		}
 		
-		InputDrawOverlay(inputs[2].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my));
+		drawOverlayInput(inputs[2].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my));
 		return w_hovering;
 	}
 	

@@ -33,7 +33,7 @@ function Node_FLIP_Fill(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _params) { 
 		var _shp = getInputData(1);
 		
-		if(_shp == 0) InputDrawOverlay(inputs[3].drawOverlay(w_hoverable, active, _x,  _y, _s, _mx, _my));
+		if(_shp == 0) drawOverlayInput(inputs[3].drawOverlay(w_hoverable, active, _x,  _y, _s, _mx, _my));
 		
 		return w_hovering;
 	}

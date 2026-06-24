@@ -174,7 +174,7 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		
 		switch(_distType) {
 			case 0 : case 1 : case 2 :
-				InputDrawOverlay(inputs[ 5].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my));
+				drawOverlayInput(inputs[ 5].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my));
 				break;
 				
 			case 3 : 
@@ -245,11 +245,11 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 				break;
 			
 			case 4 : 
-				InputDrawOverlay(inputs[19].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _params));
+				drawOverlayInput(inputs[19].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _params));
 				break;
 		}
 		
-		InputDrawOverlay(inputs[29].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, current_data[1]));
+		drawOverlayInput(inputs[29].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, current_data[1]));
 		
 		return w_hovering;
 	}

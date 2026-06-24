@@ -37,7 +37,7 @@ function Node_MK_Tree_Inline(_x, _y, _group = noone) : Node_Collection_Inline(_x
 		var _cx  = _x + _dim[0] / 2 * _s;
 		var _cy  = _y + _dim[1] / 2 * _s;
 		
-		InputDrawOverlay(inputs[1].drawOverlay(w_hoverable, active, _cx, _cy, _s, _mx, _my ));
+		drawOverlayInput(inputs[1].drawOverlay(w_hoverable, active, _cx, _cy, _s, _mx, _my ));
 	}
 	
 	static update = function() {

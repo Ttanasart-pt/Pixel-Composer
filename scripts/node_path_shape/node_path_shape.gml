@@ -225,9 +225,9 @@ function Node_Path_Shape(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	    draw_line_dashed(x1, y1, x3, y3);
 	    draw_line_dashed(x3, y3, x0, y0);
 	    
-	    InputDrawOverlay(inputs[ 0].drawOverlay(w_hoverable, active,  _x,  _y, _s, _mx, _my));
-	    InputDrawOverlay(inputs[ 2].drawOverlay(w_hoverable, active, _px, _py, _s, _mx, _my));
-	    InputDrawOverlay(inputs[ 1].drawOverlay(w_hoverable, active, _px, _py, _s, _mx, _my, 0, [1,1], _rot));
+	    drawOverlayInput(inputs[ 0].drawOverlay(w_hoverable, active,  _x,  _y, _s, _mx, _my));
+	    drawOverlayInput(inputs[ 2].drawOverlay(w_hoverable, active, _px, _py, _s, _mx, _my));
+	    drawOverlayInput(inputs[ 1].drawOverlay(w_hoverable, active, _px, _py, _s, _mx, _my, 0, [1,1], _rot));
 	    
 	    return w_hovering;
 	}

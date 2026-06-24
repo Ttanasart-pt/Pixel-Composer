@@ -62,10 +62,10 @@ function Node_MK_Grass(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 		var _src = getInputSingle(2);
 		
 		switch(_src) {
-			case 0 : InputDrawOverlay(inputs[3].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my)); break;
+			case 0 : drawOverlayInput(inputs[3].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my)); break;
 			
 			case 2 :
-			case 3 : InputDrawOverlay(inputs[5].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my)); break;
+			case 3 : drawOverlayInput(inputs[5].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my)); break;
 		}
 		
 		return w_hovering;

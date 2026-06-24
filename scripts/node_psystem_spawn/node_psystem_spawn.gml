@@ -114,7 +114,7 @@ function Node_pSystem_Spawn(_x, _y, _group = noone) : Node(_x, _y, _group) const
 			case 0 : 
 				var _sh_shap = getInputData(7);
 				if(_sh_shap == 1) draw_ellipse(_area_x - _area_w, _area_y - _area_h, _area_x + _area_w, _area_y + _area_h, true);
-				InputDrawOverlay(inputs[8].drawOverlay(hover, active, _x, _y, _s, _mx, _my)); 
+				drawOverlayInput(inputs[8].drawOverlay(hover, active, _x, _y, _s, _mx, _my)); 
 				break;
 				
 			case 1 :
@@ -123,7 +123,7 @@ function Node_pSystem_Spawn(_x, _y, _group = noone) : Node(_x, _y, _group) const
 					case 0 : 
 					case 1 : 
 						if(_sh_bord == 1) draw_ellipse(_area_x - _area_w, _area_y - _area_h, _area_x + _area_w, _area_y + _area_h, true);
-						InputDrawOverlay(inputs[8].drawOverlay(hover, active, _x, _y, _s, _mx, _my)); 
+						drawOverlayInput(inputs[8].drawOverlay(hover, active, _x, _y, _s, _mx, _my)); 
 						break;
 					
 					case 2 : 
@@ -137,8 +137,8 @@ function Node_pSystem_Spawn(_x, _y, _group = noone) : Node(_x, _y, _group) const
 						
 						draw_line(_lx0, _ly0, _lx1, _ly1);
 						
-						InputDrawOverlay(inputs[26].drawOverlay(hover, active, _x, _y, _s, _mx, _my));
-						InputDrawOverlay(inputs[27].drawOverlay(hover, active, _x, _y, _s, _mx, _my));
+						drawOverlayInput(inputs[26].drawOverlay(hover, active, _x, _y, _s, _mx, _my));
+						drawOverlayInput(inputs[27].drawOverlay(hover, active, _x, _y, _s, _mx, _my));
 						break;
 				}
 		}

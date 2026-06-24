@@ -134,7 +134,7 @@ function Node_Path_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 	}
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _params) { 
-		InputDrawOverlay(outputs[0].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _params));
+		drawOverlayInput(outputs[0].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _params));
 		
 		var _ori = getInputSingle(4);
 		var ox = _x + _ori[0] * _s;
@@ -144,11 +144,11 @@ function Node_Path_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 		var  px  = ox + _pos[0] * _s;
 		var  py  = oy + _pos[1] * _s;
 		
-		InputDrawOverlay(inputs[1].drawOverlay(w_hoverable, active, ox, oy, _s, _mx, _my));
-		InputDrawOverlay(inputs[2].drawOverlay(w_hoverable, active, px, py, _s, _mx, _my));
+		drawOverlayInput(inputs[1].drawOverlay(w_hoverable, active, ox, oy, _s, _mx, _my));
+		drawOverlayInput(inputs[2].drawOverlay(w_hoverable, active, px, py, _s, _mx, _my));
 		
 		inputs[4].overlay_draw_text = false;
-		InputDrawOverlay(inputs[4].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, 1));
+		drawOverlayInput(inputs[4].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, 1));
 		return w_hovering;
 	}
 	

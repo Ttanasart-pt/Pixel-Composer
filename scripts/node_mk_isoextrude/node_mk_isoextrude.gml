@@ -58,7 +58,7 @@ function Node_MK_Isoextrude(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 		var _cx = _x + _dim[0] / 2 * _s;
 		var _cy = _y + _dim[1] / 2 * _s;
 		
-		InputDrawOverlay(inputs[7].drawOverlay(hover, active, _cx, _cy, _s, _mx, _my));
+		drawOverlayInput(inputs[7].drawOverlay(hover, active, _cx, _cy, _s, _mx, _my));
 	}
 	
 	static processData = function(_outData, _data, _array_index = 0) { 

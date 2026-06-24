@@ -39,9 +39,9 @@ function Node_Vignette(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 		var _cx = _x + _dim[0] / 2 * _s;
 		var _cy = _y + _dim[1] / 2 * _s;
 		
-		InputDrawOverlay(inputs[3].drawOverlay(w_hoverable, active, _cx, _cy, _s, _mx, _my,  90, _dim[0]/4 ));
-		InputDrawOverlay(inputs[2].drawOverlay(w_hoverable, active, _cx, _cy, _s, _mx, _my,   0            ));
-		InputDrawOverlay(inputs[5].drawOverlay(w_hoverable, active, _cx, _cy, _s, _mx, _my, -90, _dim[0]   ));
+		drawOverlayInput(inputs[3].drawOverlay(w_hoverable, active, _cx, _cy, _s, _mx, _my,  90, _dim[0]/4 ));
+		drawOverlayInput(inputs[2].drawOverlay(w_hoverable, active, _cx, _cy, _s, _mx, _my,   0            ));
+		drawOverlayInput(inputs[5].drawOverlay(w_hoverable, active, _cx, _cy, _s, _mx, _my, -90, _dim[0]   ));
 		
 		return w_hovering;
 	}

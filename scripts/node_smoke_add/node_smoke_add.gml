@@ -69,7 +69,7 @@ function Node_Smoke_Add(_x, _y, _group = noone) : Node_Smoke(_x, _y, _group) con
 			draw_ellipse(_px - sw, _py - sh, _px + sw, _py + sh, false);
 			draw_set_alpha(1);
 			
-			InputDrawOverlay(inputs[9].drawOverlay(w_hoverable, active, _px, _py, _s, _mx, _my));
+			drawOverlayInput(inputs[9].drawOverlay(w_hoverable, active, _px, _py, _s, _mx, _my));
 			
 		} else if(_typ == 1) {
 			if(is_surface(_mat)) {
@@ -82,7 +82,7 @@ function Node_Smoke_Add(_x, _y, _group = noone) : Node_Smoke(_x, _y, _group) con
 			}
 		}
 		
-		InputDrawOverlay(inputs[2].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my));
+		drawOverlayInput(inputs[2].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my));
 		
 		return w_hovering;
 	}

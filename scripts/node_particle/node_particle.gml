@@ -280,7 +280,7 @@ function Node_Particle(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 		var _src = getInputData(4);
 		
 		if(_src == 3) {
-			InputDrawOverlay(inputs[55].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _params));
+			drawOverlayInput(inputs[55].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _params));
 			
 		} else if(_src == 4) {
 			
@@ -290,7 +290,7 @@ function Node_Particle(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 			if(is_array(_spr)) _spr = _spr[0];
 			
 			var _flag = is(_spr, SurfaceAtlas)? 0b0001 : 0b0011;
-			InputDrawOverlay(inputs[3].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _flag));
+			drawOverlayInput(inputs[3].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _flag));
 		}
 		
 	}

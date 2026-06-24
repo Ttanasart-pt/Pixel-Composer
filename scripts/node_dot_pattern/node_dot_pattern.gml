@@ -52,9 +52,9 @@ function Node_Dotted(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		var _px  = _x + _pos[0] * _s;
 		var _py  = _y + _pos[1] * _s;
 		
-		InputDrawOverlay(inputs[14].drawOverlay(w_hoverable, active,  _x,  _y, _s, _mx, _my             ));
-		InputDrawOverlay(inputs[ 4].drawOverlay(w_hoverable, active, _px, _py, _s, _mx, _my             ));
-		InputDrawOverlay(inputs[ 2].drawOverlay(w_hoverable, active, _px, _py, _s, _mx, _my, _rot, 1, 2 ));
+		drawOverlayInput(inputs[14].drawOverlay(w_hoverable, active,  _x,  _y, _s, _mx, _my             ));
+		drawOverlayInput(inputs[ 4].drawOverlay(w_hoverable, active, _px, _py, _s, _mx, _my             ));
+		drawOverlayInput(inputs[ 2].drawOverlay(w_hoverable, active, _px, _py, _s, _mx, _my, _rot, 1, 2 ));
 		
 		return w_hovering;
 	}

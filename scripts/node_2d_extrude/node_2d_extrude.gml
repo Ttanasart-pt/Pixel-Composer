@@ -55,7 +55,7 @@ function Node_2D_Extrude(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _params) { 
 		var _path = getInputSingle(15);
 		if(is_path(_path)) {
-			InputDrawOverlay(inputs[15].drawOverlay( w_hoverable, active, _x, _y, _s, _mx, _my, _params ));
+			drawOverlayInput(inputs[15].drawOverlay( w_hoverable, active, _x, _y, _s, _mx, _my, _params ));
 			return;
 		}
 		
@@ -104,8 +104,8 @@ function Node_2D_Extrude(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 			anchor_drag_my  = _my;
 		}
 		
-		InputDrawOverlay(inputs[11].drawOverlay( w_hoverable, active,  _x,  _y, _s, _mx, _my, 1, _dim ));
-		InputDrawOverlay(inputs[12].drawOverlay( w_hoverable, active, _ax, _ay, _s, _mx, _my          ));
+		drawOverlayInput(inputs[11].drawOverlay( w_hoverable, active,  _x,  _y, _s, _mx, _my, 1, _dim ));
+		drawOverlayInput(inputs[12].drawOverlay( w_hoverable, active, _ax, _ay, _s, _mx, _my          ));
 		
 		return _hov;
 	}

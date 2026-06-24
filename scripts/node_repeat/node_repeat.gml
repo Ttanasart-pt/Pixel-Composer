@@ -293,7 +293,7 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		PROCESSOR_OVERLAY_CHECK
 		
 		var _hov = false;
-		InputDrawOverlay(inputs[9].hideLabel().drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my));
+		drawOverlayInput(inputs[9].hideLabel().drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my));
 		
 		var _pat  = current_data[3];
 		var _spos = current_data[9];
@@ -310,8 +310,8 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 				var _ry = py + _rpos[1] * _s;
 				
 				draw_line_dashed(px, py, _rx, _ry);
-				InputDrawOverlay(inputs[ 4].hideLabel().drawOverlay(w_hoverable, active, px, py, _s, _mx, _my));
-				InputDrawOverlay(inputs[33].hideLabel().drawOverlay(w_hoverable, active, px, py, _s, _mx, _my));
+				drawOverlayInput(inputs[ 4].hideLabel().drawOverlay(w_hoverable, active, px, py, _s, _mx, _my));
+				drawOverlayInput(inputs[33].hideLabel().drawOverlay(w_hoverable, active, px, py, _s, _mx, _my));
 				break;
 				
 			case 1 : // Grid
@@ -325,9 +325,9 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 				draw_line_dashed(px, py,  _rx,  _ry);
 				draw_line_dashed(px, py, _clx, _cly);
 				
-				InputDrawOverlay(inputs[ 4].hideLabel().drawOverlay(w_hoverable, active, px, py, _s, _mx, _my));
-				InputDrawOverlay(inputs[19].hideLabel().drawOverlay(w_hoverable, active, px, py, _s, _mx, _my));
-				InputDrawOverlay(inputs[33].hideLabel().drawOverlay(w_hoverable, active, px, py, _s, _mx, _my));
+				drawOverlayInput(inputs[ 4].hideLabel().drawOverlay(w_hoverable, active, px, py, _s, _mx, _my));
+				drawOverlayInput(inputs[19].hideLabel().drawOverlay(w_hoverable, active, px, py, _s, _mx, _my));
+				drawOverlayInput(inputs[33].hideLabel().drawOverlay(w_hoverable, active, px, py, _s, _mx, _my));
 				break;
 				
 			case 2 : // Circular
@@ -339,14 +339,14 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 				draw_line_dashed(px, py, _rx, _ry);
 				draw_circle_dash(px, py, _arad * _s);
 				
-				InputDrawOverlay(inputs[ 8].hideLabel().drawOverlay(w_hoverable, active, px, py, _s, _mx, _my, _srot, 1, 1));
-				InputDrawOverlay(inputs[32].hideLabel().drawOverlay(w_hoverable, active, px, py, _s, _mx, _my));
-				InputDrawOverlay(inputs[33].hideLabel().drawOverlay(w_hoverable, active,_rx,_ry, _s, _mx, _my));
+				drawOverlayInput(inputs[ 8].hideLabel().drawOverlay(w_hoverable, active, px, py, _s, _mx, _my, _srot, 1, 1));
+				drawOverlayInput(inputs[32].hideLabel().drawOverlay(w_hoverable, active, px, py, _s, _mx, _my));
+				drawOverlayInput(inputs[33].hideLabel().drawOverlay(w_hoverable, active,_rx,_ry, _s, _mx, _my));
 				break;
 		}
 		
-		InputDrawOverlay(inputs[31].hideLabel().drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, current_data[1]));
-		InputDrawOverlay(inputs[11].hideLabel().drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _params));
+		drawOverlayInput(inputs[31].hideLabel().drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, current_data[1]));
+		drawOverlayInput(inputs[11].hideLabel().drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _params));
 		
 		var _ani_amo = getInputAmount();
 		if(_ani_amo == 0) return w_hovering;
@@ -359,7 +359,7 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		
 		switch(_selc) {
 			case 1 : 
-				InputDrawOverlay(inputs[_ind + 9].hideLabel().drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my));
+				drawOverlayInput(inputs[_ind + 9].hideLabel().drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my));
 				break;
 				
 			case 2 :
@@ -376,8 +376,8 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 					cy + lengthdir_y(9999, _crot), 
 				)
 				
-				InputDrawOverlay(inputs[_ind + 16].hideLabel().drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my));
-				InputDrawOverlay(inputs[_ind + 17].hideLabel().drawOverlay(w_hoverable, active, cx, cy, _s, _mx, _my));
+				drawOverlayInput(inputs[_ind + 16].hideLabel().drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my));
+				drawOverlayInput(inputs[_ind + 17].hideLabel().drawOverlay(w_hoverable, active, cx, cy, _s, _mx, _my));
 				break;
 		}
 		

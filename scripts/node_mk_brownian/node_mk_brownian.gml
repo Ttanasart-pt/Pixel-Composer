@@ -55,7 +55,7 @@ function Node_MK_Brownian(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	static getDimension = function() /*=>*/ {return inputs[12].getValue()};
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _params) { 
-		InputDrawOverlay(inputs[3].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my));
+		drawOverlayInput(inputs[3].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my));
 		
 		return w_hovering;
 	}

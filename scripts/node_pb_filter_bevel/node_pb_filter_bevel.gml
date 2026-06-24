@@ -40,8 +40,8 @@ function Node_PB_FX_Bevel(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 		var _cx = _x + _dim[0] * _s / 2;
 		var _cy = _y + _dim[1] * _s / 2;
 		
-		InputDrawOverlay(inputs[1].drawOverlay(w_hoverable, active, _cx, _cy, _s, _mx, _my, 0, 2));
-		InputDrawOverlay(inputs[4].drawOverlay(w_hoverable, active, _cx, _cy, _s, _mx, _my));
+		drawOverlayInput(inputs[1].drawOverlay(w_hoverable, active, _cx, _cy, _s, _mx, _my, 0, 2));
+		drawOverlayInput(inputs[4].drawOverlay(w_hoverable, active, _cx, _cy, _s, _mx, _my));
 		
 		return w_hovering;
 	}
