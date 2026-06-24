@@ -11,6 +11,11 @@
         "date": "2026-06-24T08:13:15.076Z",
         "node": "MK Cable",
         "commit": "**MK Cable**: Fix node initialize with empty output."
+      },
+      {
+        "date": "2026-06-24T08:19:06.192Z",
+        "node": "MK Cable",
+        "commit": "**MK Cable**: Fix rendering error when using swing."
       }
     ]
   },

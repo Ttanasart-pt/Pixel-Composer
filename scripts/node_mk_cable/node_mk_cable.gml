@@ -161,7 +161,6 @@ function Node_MK_Cable(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 		var len  = point_distance( x0, y0, x1, y1);
 		var dir  = point_direction(x0, y0, x1, y1);
 	    var aa   = _ten * len / 2;
-	    var _isg = 1 / _segs;
 	    var ox, oy, ot, oc, oa, ol, ott;
 	    var nx, ny, nt, nc, na, nl, ntt;
 		var cc = draw_get_color();
@@ -176,6 +175,7 @@ function Node_MK_Cable(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 		var _total_len = 0;
 		ol = 0;
 		
+	    var _isg = 1 / _segs;
 	    for (var i = 0; i <= _segs; i++) {
 	        var t = i * _isg;
 	        var _drop = aa * sin(t * pi);
@@ -186,7 +186,6 @@ function Node_MK_Cable(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	        ny = lerp(y0, y1, t) + _drop * gravy;
 	        nt = max(1, _thk * (_thk_curved? thick_curve.get(t) : 1));
 	        nc = _col_graded? colorMultiply(cc, _colrMap.evalFast(t)) : cc;
-	        na = i? point_direction(ox, oy, nx, ny) : dir;
 	        
 	        if(_swng) {
 	        	var _phs   = swing_precal[c] + (CURRENT_FRAME / TOTAL_FRAMES) * _sfrq;
@@ -197,10 +196,12 @@ function Node_MK_Cable(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	        	ny += _swamo * _drop * gravsy;
 	        }
 	        
+	        na = i? point_direction(ox, oy, nx, ny) : dir;
+	        
 	        if(i) {
 	        	_total_len += point_distance(ox, oy, nx, ny);
 	        	nl = _total_len;
-	        	draw_line_width2_angle(ox, oy, nx, ny, ot, nt, oa - 90, na - 90, oc, nc, [ol,nl,0,1]);
+	        	draw_line_width2_angle(ox, oy, nx, ny, ot, nt, oa + 90, na + 90, oc, nc, [ol,nl,0,1]);
 	        	ol = nl;
 	        }
 	        
