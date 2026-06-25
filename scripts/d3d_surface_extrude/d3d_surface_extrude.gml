@@ -33,6 +33,7 @@ function __3dSurfaceExtrude(_surface = noone, _height = noone, _smooth = false) 
 		
 		var ww    = surface_get_width_safe(_surface);
 		var hh    = surface_get_height_safe(_surface);
+		
 		var hg_ww = surface_get_width_safe(_height);
 		var hg_hh = surface_get_height_safe(_height);
 		
@@ -67,7 +68,7 @@ function __3dSurfaceExtrude(_surface = noone, _height = noone, _smooth = false) 
 			
 				buffer_delete(height_buffer);
 			}
-		
+			
 			var surface_buffer = buffer_create(ww * hh * 4, buffer_fixed, 2);
 			buffer_get_surface(surface_buffer, _surface, 0);
 			buffer_seek(surface_buffer, buffer_seek_start, 0);
@@ -139,9 +140,9 @@ function __3dSurfaceExtrude(_surface = noone, _height = noone, _smooth = false) 
 		var fh  = 1 / hh;
 		
 		var ind = 0;
-		var i = 0, j = 0, n = 0;
+		var i = 0, j = 0, n = -1;
 		
-		array_foreach(VB, function(v) /*=>*/ { if(v != noone) vertex_delete_buffer(v); });
+		array_foreach(VB, function(v,i) /*=>*/ { if(v != noone) vertex_delete_buffer(v); return true; });
 		
 		var _bF = buffer_create(0, buffer_grow, 1); 
 		var _bB = buffer_create(0, buffer_grow, 1); 
@@ -154,12 +155,15 @@ function __3dSurfaceExtrude(_surface = noone, _height = noone, _smooth = false) 
 			sz = voxel_scale;
 		}
 		
-		repeat(hh * ww) {
-			i = floor(n / ww);
-			j = n % ww;
+		buffer_to_start(c_buff);
+		
+		var pxAmo = hh * ww;
+		repeat(pxAmo) {
 			n++;
+			i = n % ww;
+			j = floor(n / ww);
 			
-			if(buffer_read_at(c_buff, j * ww + i, buffer_u8) == 0) continue;
+			if(buffer_read_at(c_buff, n, buffer_u8) == 0) continue;
 			
 			var i0 = sw + i * tw;
 			var j0 = sh - j * th;
@@ -172,8 +176,8 @@ function __3dSurfaceExtrude(_surface = noone, _height = noone, _smooth = false) 
 			var ty0 =   j * fh;
 			var ty1 = ty0 + fh;
 			
-			var dep  = useH?         buffer_read_at(h_buff,  (round(i * hgtW) + round(j * hgtH) * hg_ww) * 2, buffer_u16) / 65536 * 0.5 : 0.5;
-			var depb = useH && back? buffer_read_at(hb_buff, (round(i * hgtW) + round(j * hgtH) * hg_ww) * 2, buffer_u16) / 65536 * 0.5 : dep;
+			var dep  = useH?         buffer_read_at(h_buff,  (round(j * hgtH) * hg_ww) + round(i * hgtW) * 2, buffer_u16) / 65536 * .5 : 0.5;
+			var depb = useH && back? buffer_read_at(hb_buff, (round(j * hgtH) * hg_ww) + round(i * hgtW) * 2, buffer_u16) / 65536 * .5 : dep;
 			depb = -depb;
 			
 			i0  *= sx; i1   *= sx;

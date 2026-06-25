@@ -36,14 +36,8 @@ function Node_3D_Mesh_Extrude(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, _gr
 	
 	////- Nodes
 	
-	toRefresh    = false;
-	temp_surface = [ noone ];
-	
-	insp1button = button(function() /*=>*/ { 
-		toRefresh = true;
-		triggerRender();
-		
-	}).setTooltip(__txt("Refresh"))
+	toRefresh   = false;
+	insp1button = button(function() /*=>*/ { toRefresh = true; triggerRender(); }).setTooltip(__txt("Refresh"))
 		.setIcon(THEME.refresh_icon, 1, COLORS._main_value_positive).iconPad(ui(6)).setBaseSprite(THEME.button_hide_fill);
 	
 	static processData = function(_output, _data, _array_index = 0, _frame = CURRENT_FRAME) {
@@ -79,18 +73,6 @@ function Node_3D_Mesh_Extrude(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, _gr
 		var _object = getObject(_array_index);
 		if(!is_surface(_surf)) return _object;
 		
-		var ww = surface_get_width(_surf);
-		var hh = surface_get_height(_surf);
-		var ss = max(ww, hh);
-		
-		temp_surface[0] = surface_verify(temp_surface[0], ss, ss);
-		surface_set_target(temp_surface[0]);
-			DRAW_CLEAR
-			BLEND_OVERRIDE
-			draw_surface(_surf, floor(ss / 2 - ww / 2), floor(ss / 2 - hh / 2));
-			BLEND_NORMAL
-		surface_reset_target();
-		
 		if(toRefresh) {
 			_object.destroy();
 			_object = new __3dSurfaceExtrude();
@@ -100,7 +82,7 @@ function Node_3D_Mesh_Extrude(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, _gr
 		_object.checkParameter({ 
 			smooth  : _smt,
 			
-			surface : temp_surface[0], 
+			surface : _surf, 
 			height  : _hght, 
 			
 			back     : _back,
