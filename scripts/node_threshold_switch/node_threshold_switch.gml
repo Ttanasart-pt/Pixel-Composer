@@ -33,9 +33,11 @@ function Node_Threshold_Switch(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	
 	newOutput(0, nodeValue_Output("Result", VALUE_TYPE.any, 0));
 	
+	b_add = button(function() /*=>*/ {return addInput()}).setIcon(THEME.add, 0, COLORS._main_value_positive).iconPad();
+	
 	input_display_list = [ 
 		[ "Selector",   false ], 2, 0, 1, 
-		[ "Thresholds", false ], size_adjust_tool
+		[ "Thresholds", false, noone, b_add ], 
 	]
 	
 	input_selecting = noone;
@@ -43,9 +45,10 @@ function Node_Threshold_Switch(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	////- Dynamic IO
 
 	function createNewInput(index = array_length(inputs)) {
-		var bDel = button(function() /*=>*/ {return node.deleteInput(index)}).setIcon(THEME.minus_16, 0, COLORS._main_icon);
+		var bDel = button(function() /*=>*/ {return node.deleteInput(index)}).setIcon(THEME.minus_16, 0, COLORS._main_icon)
+			.setHoverColor(COLORS._main_value_negative);
 		
-		inputs[index + 0] = nodeValue_Float("Value").setSideButton(bDel).setAnimable(false);
+		inputs[index + 0] = nodeValue_Float("Value", 0).setSideButton(bDel).setAnimable(false);
 		bDel.setContext(inputs[index + 0]);
 		
 		inputs[index + 1] = nodeValue("Value", self, CONNECT_TYPE.input, VALUE_TYPE.any, 0 ).setVisible(false, false);
@@ -118,6 +121,9 @@ function Node_Threshold_Switch(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	
 	////- Nodes
 	
+	frame_switch = false;
+	frames       = [];
+	
 	static onValueFromUpdate = function(index) {
 		if(LOADING || APPENDING) return;
 		if(index < 0) return;
@@ -151,16 +157,20 @@ function Node_Threshold_Switch(_x, _y, _group = noone) : Node(_x, _y, _group) co
 			var _res = getInputData(1);
 			
 			inputs[0].setVisible(_src == 0, _src == 0);
+			
+			frame_switch = _src == 1;
+			frames       = [];
 		#endregion
 		
 		var _typ = inputs[1].value_from? inputs[1].value_from.type : VALUE_TYPE.any;
 		var _sel = 0;
+		var _suf = "";
 		
 		inputs[1].setType(_typ);
 		
 		switch(_src) {
-			case 0 : _sel = _num;  break;
-			case 1 : _sel = frame; break;
+			case 0 : _sel = _num;    _suf = "value"; break;
+			case 1 : _sel = frame+1; _suf = "frame"; break;
 		}
 		
 		input_selecting = inputs[1];
@@ -171,10 +181,12 @@ function Node_Threshold_Switch(_x, _y, _group = noone) : Node(_x, _y, _group) co
 			var _thr = getInputData(i + 0);
 			var _val = getInputData(i + 1);
 			
-			_inp.setName($"{_thr} value");
+			array_push(frames, _thr);
+			
+			_inp.setName($"{_thr}");
 			if(_thr == "") continue;
 			
-			if(_sel > _thr) {
+			if(_sel >= _thr) {
 				input_selecting = inputs[i + 1];
 				_res = _val;
 				_typ = inputs[i + 1].value_from? inputs[i + 1].value_from.type : inputs[i + 1].type;
@@ -204,41 +216,36 @@ function Node_Threshold_Switch(_x, _y, _group = noone) : Node(_x, _y, _group) co
 		
 		var _sw = bbox.w - 16 * _s;
 		var _sh = junction_draw_hei_y * _s;
-		var selAble = inputs[0].value_from == noone;
 		
-		for( var i = 1; i < array_length(inputs); i += data_length ) {
-			if(!inputs[i].visible) continue;
+		for( var i = input_fix_len, n = array_length(inputs); i < n; i += data_length ) {
+			if(!inputs[i+1].visible) continue;
 			
-			var val = i == 1? "" : getInputData(i - 1);
-			var str = i == 1? "default" : string(getInputData(i - 1, ""));
-			if(str == "") continue;
+			var val = getInputData(i);
+			var str = string(val);
 			
-			var ss = min(_s * 0.4 / UI_SCALE, string_scale(str, _sw, _sh));
-			var sw = string_width(str) * ss;
-			var sh = string_height(str) * ss;
+			var ss  = min(_s * 0.4 / UI_SCALE, string_scale(str, _sw, _sh));
+			var sw  = string_width(str) * ss;
+			var sh  = string_height(str) * ss;
 			
-			var sx = bbox.x0 + 8 * _s;
-			var sy = inputs[i].y;
+			var sx  = bbox.x0 + 8 * _s;
+			var sy  = inputs[i+1].y;
 			
-			if(selAble) {
-				var lw = bbox.w - 8 * _s;
-				var lh = sh;
-				
-				var lx = sx - 4 * _s;
-				var ly = sy - lh/2;
-				
-				var hv = _hover && point_in_rectangle(_mx, _my, lx, ly, lx + lw, ly + lh);
-				
-				if(hv) {
-					draw_sprite_stretched_ext(THEME.box_r5_clr, 0, lx, ly, lw, lh, COLORS._main_icon, 1);
-					if(mouse_lpress(_focus)) inputs[0].setValue(val);
-				}
-				
-			}
-			
-			draw_set_color(value_color(inputs[i].type));
+			draw_set_color(value_color(inputs[i+1].type));
 			draw_text_transformed(sx, sy, str, ss, ss, 0);
 			
+		}
+	}
+	
+	////- Timeline
+	
+	static drawAnimationTimeline = function(_shf, _w, _h, _s) {
+		if(!frame_switch) return;
+		
+		draw_set_color(COLORS._main_icon);
+		
+		for( var i = 0, n = array_length(frames); i < n; i++ ) {
+			var _x = _shf + (frames[i]) * _s;
+			draw_line_width(_x, _h/2, _x, _h, 1);
 		}
 	}
 	

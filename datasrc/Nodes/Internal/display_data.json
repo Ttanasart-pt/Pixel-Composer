@@ -625,11 +625,13 @@
     {
         "name": "Filter", "nodes": [
             { "label": "Combine" },
+            { "label": "/Blend" },
             "Node_Blend",
+            "Node_UV_Blend", 
+            { "label": "/Channels" },
             "Node_Combine_RGB",
             "Node_Combine_HSV",
             "Node_Override_Channel",
-            "Node_UV_Blend", 
             
             { "label": "Blur" },
             { "label": "/Kernel-based" },

@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.5.004",
+    "changes": [
+      {
+        "date": "2026-06-25T01:40:25.111Z",
+        "node": "Threshold Switch] Frame mode now offsetted to match frame number. - [Threshold Switch",
+        "commit": "**Threshold Switch] Frame mode now offsetted to match frame number. - [Threshold Switch**: Add frame visual in timeline."
+      }
+    ]
+  },
+  {
     "version": "1.21.3.008",
     "changes": [
       {
