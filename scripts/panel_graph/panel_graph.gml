@@ -2050,10 +2050,23 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
         #endregion
         
         #region node_hovering
-	        if(pHOVER && node_hovering == noone) array_foreach(_node_draw, function(_n) /*=>*/ { 
+        	__hover_dist = infinity;
+        	
+	        if(pHOVER && node_hovering == noone) array_foreach(_node_draw, function(_n,i) /*=>*/ { 
 	        	_n.branch_drawing = false;
-	        	if(_n.pointIn(__gr_x, __gr_y, __mx, __my, __gr_s, __self))
-	                node_hovering = _n;
+	        	
+	        	if(_n.pointIn(__gr_x, __gr_y, __mx, __my, __gr_s, __self)) {
+	        		if(_n.hover_use_distance) {
+	        			var _dist = point_distance(__mx, __my, __gr_x + _n.x * __gr_s, __gr_y + _n.y * __gr_s);
+	        			if(_dist < __hover_dist) {
+	        				__hover_dist = _dist;
+	        				node_hovering = _n;
+	        			}
+	        			
+	        		} else 
+ 	                	node_hovering = _n;
+	        	}
+                return true;
 	        });
 	        
 	        if(node_hovering != noone) {
@@ -2423,15 +2436,17 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
 	        node_surface = surface_verify(node_surface, w, h);
 	        
 	        if(pHOVER)
-	        array_foreach(_node_draw, function(_n) /*=>*/ {
+	        array_foreach(_node_draw, function(_n,i) /*=>*/ {
 	            try { 
-	            	var hov = node_hovering == noone || node_hovering == _n;
-	            	if(!hov) return;
+	            	var hov = node_hovering == noone || node_hovering == _n || node_hovering.hover_use_distance;
+	            	if(!hov) return true;
 	            	
 	            	var _xx = __gr_x + _n.x * __gr_s;
 	                var _yy = __gr_y + _n.y * __gr_s;
 	                var val = _n.checkJunctions(_xx, _yy, __mx, __my, __gr_s, __gr_s <= 0.5 || !_n.attributes.show_preview);
 	                if(val) value_focus = val;
+	                
+	                return true;
 	            }
 	            catch(e) { log_warning("NODE DRAW", exception_print(e)); }
 	        });

@@ -103,6 +103,8 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		h       = PREFERENCES.node_def_height;
 		h_param = h;
 		
+		hover_use_distance = false;
+		
 		preserve_height_for_preview = false;
 		name_height    = 16;
 		auto_height    = true;

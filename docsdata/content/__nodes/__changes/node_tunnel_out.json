@@ -6,6 +6,11 @@
         "date": "2026-06-25T06:45:10.785Z",
         "node": "Tunnel Out",
         "commit": "**Tunnel Out**: Fix junction draw in the wrong place in minimized view."
+      },
+      {
+        "date": "2026-06-25T07:10:50.421Z",
+        "node": "",
+        "commit": "**Graph Panel**: Pin-shaped node (pin, array pin, tunnel io) now select based on distance to make selecting stack of pins more intuitive."
       }
     ]
   },

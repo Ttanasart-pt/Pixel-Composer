@@ -5,6 +5,8 @@ function Node_Tunnel_In(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	preview_draw = false;
 	set_default  = false;
 	
+	hover_use_distance = true;
+	radius = 24;
 	setDimension(32, 32);
 	
 	newInput( 0, nodeValue_Text( "Name", LOADING || APPENDING? "" : $"tunnel{struct_size(project.tunnels_in)}" ))
@@ -124,7 +126,7 @@ function Node_Tunnel_In(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		var xx =  x      * _s + _x;
 		var yy = (y + 8) * _s + _y;
 		
-		return point_in_circle(_mx, _my, xx, yy, _s * 24);
+		return point_in_circle(_mx, _my, xx, yy, _s * radius);
 	}
 	
 	static preDraw = function(_x, _y, _mx, _my, _s) {
@@ -172,7 +174,7 @@ function Node_Tunnel_In(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	}
 	
 	static checkJunctions = function(_x, _y, _mx, _my, _s, _fast = false) {
-		var _hov = point_in_circle(_mx, _my, _x, _y, _s * 24);
+		var _hov = point_in_circle(_mx, _my, _x, _y, _s * radius);
 		if(__hov != _hov) GraphRefresh();
 		__hov = _hov;
 		
@@ -232,7 +234,7 @@ function Node_Tunnel_In(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 			active_draw_index = -1;
 			draw_circle_ui(xx, yy, _r, .03, COLORS._main_accent, 1);
 			
-		} else if(__hov && !isHovering)
+		} else if(PANEL_GRAPH.node_hovering == self)
 			draw_circle_ui(xx, yy, _r, .03, COLORS._main_accent, .75);
 		
 		var aa = label_alpha * _color_get_alpha(label_color);

@@ -1,6 +1,9 @@
 function Node_Pin(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name     = "Pin";
 	doUpdate = doUpdateLite;
+	
+	hover_use_distance = true;
+	radius = 24;
 	setDimension(32, 32);
 	
 	auto_height      = false;
@@ -88,7 +91,7 @@ function Node_Pin(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		var xx =  x      * _s + _x;
 		var yy = (y + 8) * _s + _y;
 		
-		return point_in_circle(_mx, _my, xx, yy, _s * 24);
+		return point_in_circle(_mx, _my, xx, yy, _s * radius);
 	}
 	
 	static preDraw = function(_x, _y, _mx, _my, _s) {
@@ -110,7 +113,7 @@ function Node_Pin(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	static drawJunctionNames = function(_x, _y, _mx, _my, _s, _panel = noone) {}
 	
 	static checkJunctions = function(_x, _y, _mx, _my, _s, _fast = false) {
-		isHovering = point_in_circle(_mx, _my, _x, _y, _s * 24);
+		isHovering = point_in_circle(_mx, _my, _x, _y, _s * radius);
 		if(!isHovering) return noone;
 		
 		CURSOR_SPRITE = THEME.view_pan;

@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.5.004",
+    "changes": [
+      {
+        "date": "2026-06-25T07:10:50.404Z",
+        "node": "Graph Panel",
+        "commit": "**Graph Panel**: Pin-shaped node (pin, array pin, tunnel io) now select based on distance to make selecting stack of pins more intuitive."
+      }
+    ]
+  },
+  {
     "version": "1.21.0.2.007",
     "changes": [
       {
