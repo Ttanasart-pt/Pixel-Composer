@@ -47,6 +47,7 @@
 	
 	function __refreshPalette() {
 		PALETTES_FOLDER.refresh();
+		__refreshPaletteFav();
 	}
 	
 	function __refreshPaletteFav() {
@@ -73,6 +74,8 @@
 		
 		PALETTES_REC_DIR = new DirectoryObject("Recents");
 		array_insert(PALETTES_FOLDER.subDir, 1, PALETTES_REC_DIR);
+		
+		PALETTES_FAV_DIR.open = true;
 	}
 	
 	function __togglePaletteFav(_file) {
@@ -144,6 +147,7 @@
 	
 	function __refreshGradient() {
 		GRADIENTS_FOLDER.refresh();
+		__refreshGradientFav();
 	}
 	
 	function __refreshGradientFav() {
@@ -166,6 +170,8 @@
 		}
 		
 		array_insert(GRADIENTS_FOLDER.subDir, 0, GRADIENTS_FAV_DIR);
+		
+		GRADIENTS_FAV_DIR.open = true;
 	}
 	
 	function __toggleGradientFav(_file) {

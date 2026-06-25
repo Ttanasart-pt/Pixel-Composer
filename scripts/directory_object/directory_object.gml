@@ -206,7 +206,8 @@ function DirectoryObject(_path) constructor {
 		scanned  = true;
 		scanType = file_type;
 		
-		if(_subDir) subDir = [];
+		if(_subDir) 
+			subDir = [];
 		content = [];
 		
 		var _temp_name = [];
@@ -322,7 +323,8 @@ function DirectoryObject(_path) constructor {
 	////- Actions
 	
 	static refresh = function() {
-		scan(scanType, false);
+		scanned = false;
+		scan(scanType, true);
 	}
 	
 	static forEach = function(fn) {
@@ -340,8 +342,8 @@ function DirectoryObject(_path) constructor {
 		if(_recur) for( var i = 0, n = array_length(subDir); i < n; i++ ) subDir[i].sort(fn, true);
 	}
 	
-	static openAll  = function() /*=>*/ { open =  true; array_foreach(subDir, function(s) /*=>*/ {return s.openAll()});  }
-	static closeAll = function() /*=>*/ { open = false; array_foreach(subDir, function(s) /*=>*/ {return s.closeAll()}); }
+	static openAll  = function() /*=>*/ { open =  true; array_foreach(subDir, function(s,i) /*=>*/ {return s.openAll()});  }
+	static closeAll = function() /*=>*/ { open = false; array_foreach(subDir, function(s,i) /*=>*/ {return s.closeAll()}); }
 	
 	static destroy = function() { }
 	
