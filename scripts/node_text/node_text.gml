@@ -284,22 +284,9 @@ function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	attributes.debug_texture = false;
 	array_push(attributeEditors, Node_Attribute("Debug", function() /*=>*/ {return attributes.debug_texture}, function() /*=>*/ {return new checkBox(function() /*=>*/ {return toggleAttribute("debug_texture")})}));
 	
-	static getFontData = function(_oldFont, _path, _size, _aa, _sdf) {
+	static getFontData = function(f, _path, _size, _aa, _sdf) {
 		var _cKey = $"{_path}|{_size}|{_aa}|{_sdf}";
-		return NODE_FONT_CACHE_UV[$ _cKey];
-	}
-	
-	static generateFont = function(_oldFont, _path, _size, _aa, _sdf) {
-		if(PROJECT.animator.is_playing) return _oldFont;
-		if(!file_exists_empty(_path))   return _oldFont;
-		
-		var _cKey = $"{_path}|{_size}|{_aa}|{_sdf}";
-		if(has(NODE_FONT_CACHE, _cKey)) return NODE_FONT_CACHE[$ _cKey];
-		
-		font_add_enable_aa(_aa);
-		var f = font_add(_path, _size, false, false, 0, 0);
-		font_enable_sdf(f, _sdf)
-		NODE_FONT_CACHE[$ _cKey] = f;
+		if(has(NODE_FONT_CACHE_UV, _cKey)) return NODE_FONT_CACHE_UV[$ _cKey];
 		
 		var __info = font_get_info(f);
 		var __uvs  = {};
@@ -325,6 +312,20 @@ function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 			uv     : __uvs,
 		}
 		
+		return NODE_FONT_CACHE_UV[$ _cKey];
+	}
+	
+	static generateFont = function(_oldFont, _path, _size, _aa, _sdf) {
+		if(PROJECT.animator.is_playing) return _oldFont;
+		if(!file_exists_empty(_path))   return _oldFont;
+		
+		var _cKey = $"{_path}|{_size}|{_aa}|{_sdf}";
+		if(has(NODE_FONT_CACHE, _cKey)) return NODE_FONT_CACHE[$ _cKey];
+		
+		font_add_enable_aa(_aa);
+		var f = font_add(_path, _size, false, false, 0, 0);
+		font_enable_sdf(f, _sdf)
+		NODE_FONT_CACHE[$ _cKey] = f;
 		return f;
 	}
 	
@@ -394,7 +395,8 @@ function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 			var _trimR = _data[24];
 			var _trimF = _data[26];
 			
-			var _use_path = _path != noone && struct_has(_path, "getPointDistance");
+			var _use_path = is_path(_path);
+			var _use_text = is_surface(_tex);
 			
 			inputs[ 6].setVisible(_dimt == 0 || _lineW > 0 || _use_path);
 			inputs[34].setVisible(_dimt == 0 || _lineW > 0 || _use_path);
@@ -422,7 +424,7 @@ function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 			
 			if(is_string(_font))   { 
 			 	font    = generateFont(font, _font, _size, _aa, _sdfU); 
-				__fData = getFontData(font, _font, _size, _aa, _sdfU);
+			 	if(_use_text) __fData = getFontData(font, _font, _size, _aa, _sdfU);
 				__f     = font; 
 				
 			} else if(font_exists(_font)) 
@@ -438,7 +440,7 @@ function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 			if(str != "" && font_exists(font1)) { // fallback
 				fontData = font_get_info(font);
 				
-				__fData    = getFontData(font1, _font, _size, _aa, _sdfU);
+				if(_use_text) __fData = getFontData(font1, _font, _size, _aa, _sdfU);
 				__glpValid = true;
 				string_foreach(str, function(s, i) /*=>*/ { __glpValid = __glpValid && has(fontData.glyphs, s); });
 				if(!__glpValid) __f = font1; 
@@ -744,6 +746,8 @@ function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 				}
 				
 			} else {
+				var _drawLetters = true;//_wave || __colLtLen > 1;
+				
 				for( var i = 0, n = array_length(_str_lines); i < n; i++ ) {
 					var _str_line   = _str_lines[i];
 					var _line_width = _line_widths[i];
@@ -759,61 +763,66 @@ function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 						case 2 : tx = _sw - _padd[PADDING.right] - _line_width * _ss;	break;
 					}
 					
-					__temp_tx = tx;
-					__temp_ty = ty;
-				
-					string_foreach(_str_line, function(_chr, _ind) /*=>*/ {
-						var _tx = __temp_tx;
-						var _ty = __temp_ty;
+					if(!_drawLetters) {
+						draw_text_transformed(tx, ty, _str_line, _ss, _ss, 0);
 						
-						if(__wave) _ty += waveGet(_ind);
-						
-						var clti = __dwDataI;
-						switch(__colLtTyp) {
-							case 0  : clti = __dwDataI % __colLtLen;                break;
-							case 1  : clti = pingpong_value(__dwDataI, __colLtLen); break;
-							case 2  : clti = irandom(__colLtLen - 1);               break;
-						}
-						
-						var _clt = array_safe_get_fast(__colLt, clti);
-						var _c   = colorMultiply(__col, _clt);
-						draw_set_color(_c);
-						
-						_tx += __offx;
-						_ty += __offy;
-						var chw = string_width(_chr);
-						if(__mono) _tx += (__monoW - chw) / 2;
-						
-						if(__fData) {
-							var _guv = __fData.uv[$ _chr]
-							// if(_guv[0] == -1 || _guv[1] == -1) {
-								var _glp = font_cache_glyph(__f, ord(_chr));
-								_guv[0] = _glp.x;
-								_guv[1] = _glp.y;
-							// }
+					} else {
+						__temp_tx = tx;
+						__temp_ty = ty;
+					
+						string_foreach(_str_line, function(_chr, _ind) /*=>*/ {
+							var _tx = __temp_tx;
+							var _ty = __temp_ty;
 							
-							shader_set_uniform_f_array(uniform_texelData, _guv);
-						}
-						
-						draw_text_transformed(_tx, _ty, _chr, __temp_ss, __temp_ss, 0);
-						__dwData[__dwDataI++] = [_tx, _ty, _chr, __temp_ss, __temp_ss, 0];
-						
-						if(__outAtlas) array_push(__atlas, { 
-							char : _chr, 
-							x    : _tx, 
-							y    : _ty, 
-							rot  : 0,
-							sx   : __temp_ss, 
-							sy   : __temp_ss, 
+							if(__wave) _ty += waveGet(_ind);
 							
-							blend : _c,
-							halign: fa_left,
-							valign: fa_top, 
+							var clti = __dwDataI;
+							switch(__colLtTyp) {
+								case 0  : clti = __dwDataI % __colLtLen;                break;
+								case 1  : clti = pingpong_value(__dwDataI, __colLtLen); break;
+								case 2  : clti = irandom(__colLtLen - 1);               break;
+							}
+							
+							var _clt = array_safe_get_fast(__colLt, clti);
+							var _c   = colorMultiply(__col, _clt);
+							draw_set_color(_c);
+							
+							_tx += __offx;
+							_ty += __offy;
+							var chw = string_width(_chr);
+							if(__mono) _tx += (__monoW - chw) / 2;
+							
+							if(__fData) {
+								var _guv = __fData.uv[$ _chr]
+								// if(_guv[0] == -1 || _guv[1] == -1) {
+									var _glp = font_cache_glyph(__f, ord(_chr));
+									_guv[0] = _glp.x;
+									_guv[1] = _glp.y;
+								// }
+								
+								shader_set_uniform_f_array(uniform_texelData, _guv);
+							}
+							
+							draw_text_transformed(_tx, _ty, _chr, __temp_ss, __temp_ss, 0);
+							__dwData[__dwDataI++] = [_tx, _ty, _chr, __temp_ss, __temp_ss, 0];
+							
+							if(__outAtlas) array_push(__atlas, { 
+								char : _chr, 
+								x    : _tx, 
+								y    : _ty, 
+								rot  : 0,
+								sx   : __temp_ss, 
+								sy   : __temp_ss, 
+								
+								blend : _c,
+								halign: fa_left,
+								valign: fa_top, 
+							});
+							
+							__temp_tx += ((__mono? __monoW : chw) + __temp_trck) * __temp_ss;
 						});
-						
-						__temp_tx += ((__mono? __monoW : chw) + __temp_trck) * __temp_ss;
-					});
-				
+					}
+					
 					ty += (string_height(_str_line) + _line) * _ss;
 				}
 			}

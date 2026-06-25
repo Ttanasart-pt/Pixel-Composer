@@ -1672,14 +1672,14 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		return is_anim;
 	}
 	
-	__init_dynamic = true;
-	__value_from   = noone;
+	force_dynamic = true;
+	__value_from  = noone;
 	
 	static isDynamic = function() { 
-		if(__init_dynamic)             { __init_dynamic = false;      return true; }
-		if(value_from != __value_from) { __value_from   = value_from; return true; }
+		if(force_dynamic)              { force_dynamic = false;      return true; }
+		if(value_from != __value_from) { __value_from  = value_from; return true; }
 		
-		if(!node.project.animator.is_playing)              return true;
+		// if(!node.project.animator.is_playing)              return true;
 		if(value_from_loop && value_from_loop.loop_active) return true;
 		if(value_from != noone)                            return true;
 		if(instanceBase != undefined)                      return instanceBase.isDynamic();
@@ -1809,7 +1809,10 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		
 		var val = _getValue(_time, applyUnit, arrIndex, log);
 		
-		if(!accept_array && array_get_depth(val) > def_depth) { noti_warning($"{name} does not accept array data.", noone, node); return 0; }
+		if(!accept_array && array_get_depth(val) > def_depth) { 
+			noti_warning($"{name} does not accept array data.", noone, node); 
+			return 0; 
+		}
 		
 		if(type == VALUE_TYPE.surface || type == VALUE_TYPE.any) {
 			var _sval = array_valid(val)? val[0] : val;
@@ -2129,7 +2132,9 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	#macro setValueForceUpdate -9
 	static onSetValueDirect = undefined;
 	static setValueDirect = function(val = 0, _index = noone, record = true, time = NODE_CURRENT_FRAME, _render = true) {
-		is_modified = true;
+		is_modified   = true;
+		force_dynamic = true;
+		
 		var _upd = updateOnSet;
 		var _val = val;
 		var _rec = record && record_value;
@@ -2989,6 +2994,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	}
 	
 	static applyDeserialize = function(_map, scale = false, preset = false) {
+		force_dynamic = true;
 		if(_map == undefined) return;
 		if(_map == noone)     return;
 		if(!is_struct(_map))  return;

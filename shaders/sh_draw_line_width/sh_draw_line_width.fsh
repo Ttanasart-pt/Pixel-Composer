@@ -633,11 +633,8 @@ void main() {
 	} else if(capEnd == 1 && px.x > lineLength - wid) { 
 		float len = distance(px, vec2(lineLength - wid, wid));
 		if(len > wid) aa = 0.;
-		// aa = .5;
 	}
 	
-	gl_FragColor = v_vColour * texture2D(gm_BaseTexture, tx);
+	gl_FragColor = v_vColour * sampleTexture(gm_BaseTexture, tx);
 	gl_FragColor.a *= aa;
-	
-	// gl_FragColor = vec4(tx, 0., 1.);
 }

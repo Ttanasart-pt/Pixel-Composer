@@ -147,6 +147,7 @@ function Node_Processor(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 			
 			process_length[i]  = amo;
 			process_running[i] = process_amount;
+			return true;
 		});
 		
 		var amoMax = process_amount, i = 0;
@@ -178,6 +179,7 @@ function Node_Processor(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 			
 			l++;
 		}
+		
 	}
 	
 	static getInputsSimple = function(frame) {

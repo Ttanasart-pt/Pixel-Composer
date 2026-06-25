@@ -247,6 +247,7 @@ void main() {
 		mas.rgb *= mas.a;
 		gl_FragColor = col_cbh * mas + col * (vec4(1.) - mas);
 		gl_FragColor.a = col.a * mix(1., alp, mas.r);
+		
 	} else {
 		gl_FragColor = col_cbh;
 		gl_FragColor.a = col.a * alp;

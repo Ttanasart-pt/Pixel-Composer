@@ -63,23 +63,26 @@ function Node_Stack(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	}
 	
 	static update = function(frame = CURRENT_FRAME) {
-		var _axis = getInputData(0);
-		var _alig = getInputData(1);
-		var _spac = getInputData(2);
-		var _padd = getInputData(3);
-		var _blnd = getInputData(4);
-		
-		inputs[1].setVisible(_axis != 2);
-		inputs[2].setVisible(_axis != 2);
+		#region data
+			var _axis = getInputData( 0);
+			var _alig = getInputData( 1);
+			var _spac = getInputData( 2);
+			var _padd = getInputData( 3);
+			
+			var _blnd = getInputData( 4);
+			
+			inputs[1].setVisible(_axis != 2);
+			inputs[2].setVisible(_axis != 2);
+		#endregion
 		
 		var ww = 0;
 		var hh = 0;
 		
-		for( var i = input_fix_len; i < array_length(inputs); i++ ) {
+		for( var i = input_fix_len, n = array_length(inputs); i < n; i++ ) {
 			var _surf = getInputData(i);
 			if(!is_array(_surf)) _surf = [ _surf ];
 			
-			for( var j = 0; j < array_length(_surf); j++ ) {
+			for( var j = 0, m = array_length(_surf); j < m; j++ ) {
 				if(!is_surface(_surf[j])) continue;
 				var sw = surface_get_width_safe(_surf[j]);
 				var sh = surface_get_height_safe(_surf[j]);
@@ -121,11 +124,11 @@ function Node_Stack(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		var sy = 0;
 		var ai = 0;
 		
-		for( var i = input_fix_len; i < array_length(inputs); i++ ) {
+		for( var i = input_fix_len, n = array_length(inputs); i < n; i++ ) {
 			var _surf = getInputData(i);
 			if(!is_array(_surf)) _surf = [ _surf ];
 				
-			for( var j = 0; j < array_length(_surf); j++ ) {
+			for( var j = 0, m = array_length(_surf); j < m; j++ ) {
 				if(!is_surface(_surf[j])) continue;
 				var sw = surface_get_width_safe(_surf[j]);
 				var sh = surface_get_height_safe(_surf[j]);
@@ -152,8 +155,11 @@ function Node_Stack(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 				var px = sx + _padd[PADDING.left];
 				var py = sy + _padd[PADDING.top]
 					
+				px = round(px);
+				py = round(py);
+					
 				array_push(atlas, new SurfaceAtlas(_surf[j], sx, sy));
-				draw_transforms[ai++] = [ px, py, 1, 1, 0];
+				draw_transforms[ai++] = [px, py, 1, 1, 0];
 				
 				surface_set_shader(temp_surface[!ppind], noone, true, BLEND.over);
 					draw_surface_blend_ext(temp_surface[ppind], _surf[j], px, py, 1, 1, 0, c_white, 1, _blnd);

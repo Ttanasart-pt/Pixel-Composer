@@ -7,7 +7,7 @@ function __NodeValue_Bool(_name, _node, _value, _tooltip = "") : NodeValue(_name
 	
 	////- GET
 	
-	function toBool(a) { return is_array(a)? array_map(a, function(v) /*=>*/ {return toBool(v)}) : bool(a) };
+	function toBool(a) { return is_array(a)? array_map(a, function(v,i) /*=>*/ {return toBool(v)}) : bool(a) };
 	
 	static getValue = function(_time = NODE_CURRENT_FRAME, applyUnit = true, arrIndex = 0, useCache = false, log = false) { 
 		if(__tempValue != undefined) return __tempValue;

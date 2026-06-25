@@ -1,0 +1,12 @@
+[
+  {
+    "version": "1.21.5.004",
+    "changes": [
+      {
+        "date": "2026-06-25T06:41:09.588Z",
+        "node": "",
+        "commit": "**Inspector Panel**: Fix error when clicking text-type tooltip."
+      }
+    ]
+  }
+]

@@ -1165,13 +1165,14 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		__frame     = frame;
 		
 		array_foreach(inputs, function(_inp, i) /*=>*/ {
-			if(!is(_inp, NodeValue) || !_inp.isDynamic()) return;
+			if(!is(_inp, NodeValue) || !_inp.isDynamic()) return true;
 			
 			var val = _inp.getValue(__frame);
 			if(_inp.bypass_use) _inp.getBypassJunc().setValue(val);
 			
 			inputs_data[i] = val;
 			input_value_map[$ _inp.internalName] = val;
+			return true;
 		});
 	}
 	
@@ -1225,7 +1226,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			
 			if(frameInput.value_from != noone) frame = frameInput.getValue() - 1;
 			__frame = frame;
-			array_foreach(input_bypass, function(i) /*=>*/ {return i.setValue(i.from_junc.getValue(__frame))});
+			array_foreach(input_bypass, function(i,_) /*=>*/ {return i.setValue(i.from_junc.getValue(__frame))});
 			
 			if(attributes.update_graph) {
 				try      { update(frame); } 
@@ -1264,9 +1265,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			var sBase = surface_get_target();
 			
 			try { 
-				if(attributes.update_graph)
-					update(frame); 
-				
+				if(attributes.update_graph) update(frame); 
 			} catch(exception) {
 				var sCurr = surface_get_target();
 				while(surface_get_target() != sBase)
