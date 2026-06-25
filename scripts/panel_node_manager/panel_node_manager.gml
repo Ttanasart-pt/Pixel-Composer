@@ -433,10 +433,10 @@ function Panel_Nodes_Manager() : PanelContent() constructor {
 		var bx = w - edit_w - _pd;
 		var by = h - _pd - bh;
 		
-		draw_set_font(f_p3);
-		if(buttonTextInstant(true, THEME.button_def, bx, by, bw, bh, m, pHOVER, pFOCUS, "", "Scan Enums") == 2)
-			scanEnum();
-		by -= bh + ui(4);
+		// draw_set_font(f_p3);
+		// if(buttonTextInstant(true, THEME.button_def, bx, by, bw, bh, m, pHOVER, pFOCUS, "", "Scan Enums") == 2)
+		// 	scanEnum();
+		// by -= bh + ui(4);
 		
 	}
 	
