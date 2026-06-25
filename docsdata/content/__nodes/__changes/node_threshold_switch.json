@@ -6,6 +6,11 @@
         "date": "2026-06-25T01:40:25.111Z",
         "node": "Threshold Switch] Frame mode now offsetted to match frame number. - [Threshold Switch",
         "commit": "**Threshold Switch] Frame mode now offsetted to match frame number. - [Threshold Switch**: Add frame visual in timeline."
+      },
+      {
+        "date": "2026-06-25T02:16:39.251Z",
+        "node": "",
+        "commit": "**Threshold Switch**: Add interactive timeline widget for frame mode."
       }
     ]
   },

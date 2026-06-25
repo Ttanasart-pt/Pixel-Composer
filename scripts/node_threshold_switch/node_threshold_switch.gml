@@ -1,6 +1,7 @@
 function Node_Threshold_Switch(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name = "Threshold Switch";
 	setDimension(96, 48);
+	setAlwaysTimeline(new timelineItemNode_Threshold_Switch(self));
 	
 	newInput( 2, nodeValue_EButton( "Type", 0, [ "Number", "Frame" ] ));
 	newInput( 0, nodeValue_Float(   "Index" )).setVisible(true, true).rejectArray();
@@ -122,6 +123,7 @@ function Node_Threshold_Switch(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	////- Nodes
 	
 	frame_switch = false;
+	frame_active = undefined;
 	frames       = [];
 	
 	static onValueFromUpdate = function(index) {
@@ -158,8 +160,10 @@ function Node_Threshold_Switch(_x, _y, _group = noone) : Node(_x, _y, _group) co
 			
 			inputs[0].setVisible(_src == 0, _src == 0);
 			
-			frame_switch = _src == 1;
-			frames       = [];
+			update_on_frame = _src == 1;
+			frame_switch    = _src == 1;
+			frame_active    = undefined;
+			frames          = [];
 		#endregion
 		
 		var _typ = inputs[1].value_from? inputs[1].value_from.type : VALUE_TYPE.any;
@@ -187,6 +191,7 @@ function Node_Threshold_Switch(_x, _y, _group = noone) : Node(_x, _y, _group) co
 			if(_thr == "") continue;
 			
 			if(_sel >= _thr) {
+				frame_active    = _thr;
 				input_selecting = inputs[i + 1];
 				_res = _val;
 				_typ = inputs[i + 1].value_from? inputs[i + 1].value_from.type : inputs[i + 1].type;
@@ -253,3 +258,68 @@ function Node_Threshold_Switch(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	
 	static postApplyDeserialize = function() { refreshDynamicInput(); }
 }
+
+function timelineItemNode_Threshold_Switch(_node) : timelineItemNode(_node) constructor {
+	
+	dragging = undefined;
+	drag_sx  = 0;
+	drag_mx  = 0;
+	
+	static drawDopesheetOver = function(_x, _y, _s, _msx, _msy, _hover, _focus) {
+		if(!is(node, Node_Threshold_Switch)) return;
+		if(!node.attributes.show_timeline)   return;
+		if(!node.frame_switch)               return;
+		
+		var hovering = false;
+		
+		var y0 = _y;
+		var y1 = _y + h;
+		var cc = node.getColor();
+		if(cc == c_white || cc < 0) 
+			cc = COLORS._main_icon;
+		
+		for( var i = 0, n = array_length(node.frames); i < n; i++ ) {
+			var f0 = node.frames[i];
+			var f1 = i < n - 1? node.frames[i+1] : NODE_TOTAL_FRAMES;
+			
+			var f0x = _x + (f0 - .5) * _s;
+			var f1x = _x + (f1 - .5) * _s;
+			var fw  = f1x - f0x;
+			
+			var act = node.frame_active == f0;
+			var hov = _hover && point_in_rectangle(_msx, _msy, f0x, y0, f0x + _s, y1);
+			
+			draw_sprite_stretched_ext(THEME.box_r5, 0, f0x, y0, fw, h, cc, .2 + act * .1);
+			draw_sprite_stretched_add(THEME.box_r5, 0, f0x, y0, _s, h, cc, .2 + hov * .5);
+			
+			draw_sprite_stretched_ext(THEME.box_r5, 1, f0x, y0, fw, h, cc, .5 + act * .4);
+			
+			if(hov) hovering = true;
+			if(hov && mouse_lpress(_focus)) {
+				dragging = node.input_fix_len + i * node.data_length;
+				drag_sx  = f0;
+				drag_mx  = _msx;
+			}
+		}
+		
+		if(dragging != undefined) {
+			var dv = drag_sx + (_msx - drag_mx) / _s;
+			    dv = round(dv);
+			    
+			if(node.inputs[dragging].setValue(dv))
+				UNDO_HOLDING = true;
+				
+			if(mouse_lrelease()) {
+				dragging = undefined;
+				UNDO_HOLDING = false;
+			}
+		}
+		
+		return hovering;
+	}
+	
+	static onSerialize = function(_map) {
+		_map.type = "timelineItemNode_Threshold_Switch";
+	}
+}
+

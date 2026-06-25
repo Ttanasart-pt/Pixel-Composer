@@ -11,47 +11,47 @@ function Node_MK_Dialog(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	newInput(26, nodeValueSeed());
 	
 	////- =Text
-	newInput( 1, nodeValue_Text("Dialogs", [] )).setArrayDepth(1).setVisible(true, true);
-	newInput( 4, nodeValue_EScroll(  "Change Case", 0, [ "None", "Lowercase", "Uppercase", "Titlecase" ] ));
+	newInput( 1, nodeValue_Text(    "Dialogs", [] )).setArrayDepth(1).setVisible(true, true);
+	newInput( 4, nodeValue_EScroll( "Change Case", 0, [ "None", "Lowercase", "Uppercase", "Titlecase" ] ));
 	
 	////- =Output
 	newInput( 2, nodeValue_EScroll( "Output Dimension", 1, [ "Fixed", "Dynamic" ]));
 	newInput( 0, nodeValue_Dimension());
-	newInput( 3, nodeValue_Padding(     "Padding",          [0,0,0,0] ));
+	newInput( 3, nodeValue_Padding( "Padding",          [0,0,0,0] ));
 	
 	////- =Alignment
-	newInput(16, nodeValue_Int(          "Max Line Width",   0     ));
-	newInput(17, nodeValue_EButton(  "H Align",          0, array_create(3, THEME.inspector_text_halign)));
-	newInput(18, nodeValue_EButton(  "V Align",          0, array_create(3, THEME.inspector_text_valign)));
-	newInput( 9, nodeValue_Float(        "Line Height",      0     ));
+	newInput(16, nodeValue_Int(     "Max Line Width",   0     ));
+	newInput(17, nodeValue_EButton( "H Align",          0, array_create(3, THEME.inspector_text_halign)));
+	newInput(18, nodeValue_EButton( "V Align",          0, array_create(3, THEME.inspector_text_valign)));
+	newInput( 9, nodeValue_Float(   "Line Height",      0     ));
 	
 	////- =Font
 	newInput( 5, nodeValue_Font()).setVisible(true, false);
-	newInput( 6, nodeValue_Int(          "Size",             16    ));
-	newInput( 7, nodeValue_Bool(         "Anti-aliasing ",   false ));
+	newInput( 6, nodeValue_Int(     "Size",             16    ));
+	newInput( 7, nodeValue_Bool(    "Anti-aliasing ",   false ));
 	/* unused */ newInput( 8, nodeValue_Float(        "Letter Spacing",   0     ));
 	
 	////- =Rendering
 	/* unused */ newInput(10, nodeValue_Bool(         "Round Position",   true      ));
-	newInput(11, nodeValue_EButton(  "Blend Mode",       1, [ "Normal", "Alpha" ] ));
-	newInput(12, nodeValue_Color(        "Color",            ca_white  ));
-	newInput(13, nodeValue_Palette(      "Color by Letter", [ca_white] ))
+	newInput(11, nodeValue_EButton( "Blend Mode",       1, [ "Normal", "Alpha" ] ));
+	newInput(12, nodeValue_Color(   "Color",            ca_white  ));
+	newInput(13, nodeValue_Palette( "Color by Letter", [ca_white] ))
 		.setOptions("Select by:", "array_select", [ "Index Loop", "Index Ping-pong", "Random" ], THEME.array_select_type).iconPad();
 	
 	////- =Background
-	newInput(14, nodeValue_Bool(         "Render Background", false    ));
-	newInput(15, nodeValue_Color(        "BG Color",          ca_black ));
+	newInput(14, nodeValue_Bool(    "Render Background", false    ));
+	newInput(15, nodeValue_Color(   "BG Color",          ca_black ));
 	
 	////- =Timing
-	newInput(24, nodeValue_Float(       "Start Frame",        0  ));
+	newInput(24, nodeValue_Float(   "Start Frame",        0  ));
 	newInput(19, nodeValue_EScroll( "Duration Type",      0, [ "Fixed", "Letter Count", "Word Count (space)" ] ));
-	newInput(20, nodeValue_Float(       "Fixed Duration",     10 ));
-	newInput(21, nodeValue_Float(       "Multiply Duration",  1  ));
-	newInput(25, nodeValue_Float(       "Dialog Spacing",     0  ));
+	newInput(20, nodeValue_Float(   "Fixed Duration",     10 ));
+	newInput(21, nodeValue_Float(   "Multiply Duration",  1  ));
+	newInput(25, nodeValue_Float(   "Dialog Spacing",     0  ));
 	
 	////- =Manual Timer
-	newInput(22, nodeValue_Bool(        "Manual Timer", false ));
-	newInput(23, nodeValue_Struct(      "Manual Data",  []    )).setArrayDepth(1).setAnimable(false);
+	newInput(22, nodeValue_Bool(    "Manual Timer", false ));
+	newInput(23, nodeValue_Struct(  "Manual Data",  []    )).setArrayDepth(1).setAnimable(false);
 	
 	////- =Transition
 	// input 27

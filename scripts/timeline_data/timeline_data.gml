@@ -45,14 +45,9 @@ function timelineItem() constructor {
 			case "Folder" : return new timelineItemGroup().deserialize(_map);
 			case "Node"   : return new timelineItemNode(noone).deserialize(_map);
 			
-			case "timelineItemGroup_Canvas" :			return new timelineItemGroup_Canvas().deserialize(_map);
-			
-			case "timelineItemNode_Canvas" :			return new timelineItemNode_Canvas(noone).deserialize(_map);
-			case "timelineItemNode_Image_Animated" :	return new timelineItemNode_Image_Animated(noone).deserialize(_map);
-			case "timelineItemNode_Sequence_Anim" : 	return new timelineItemNode_Sequence_Anim(noone).deserialize(_map);
-			case "timelineItemNode_Image_gif" : 		return new timelineItemNode_Image_gif(noone).deserialize(_map);
-			case "timelineItemNode_MKDialog" : 		    return new timelineItemNode_MKDialog(noone).deserialize(_map);
-			case "timelineItemNode_PXC" : 		        return new timelineItemNode_PXC(noone).deserialize(_map);
+			default : 
+				var _ind = asset_get_index(_map.type);
+				if(_ind) return new _ind(noone).deserialize(_map);
 		}
 		
 		return self;
