@@ -58,6 +58,7 @@ function Panel_Notification() : PanelContent() constructor {
 		
 		var amo = ds_list_size(STATUSES);
 		var pad = THEME_VALUE.panel_notification_padding;
+		var lh  = line_get_height(f_p3, 6);
 		
 		draw_set_font(f_p3);
 		var timeW = string_width("00:00:00");
@@ -125,7 +126,7 @@ function Panel_Notification() : PanelContent() constructor {
 				}
 				
 				if(sprite_exists(ic)) {
-					var ss = (_h - ui(12)) / sprite_get_height(ic);
+					var ss = (lh - ui(6)) / sprite_get_height(ic);
 					draw_sprite_ext(ic, 1, ui(16), yy + _h / 2, ss, ss);
 				}
 				

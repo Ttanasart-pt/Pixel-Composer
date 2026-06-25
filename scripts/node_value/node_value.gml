@@ -1679,7 +1679,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		if(force_dynamic)              { force_dynamic = false;      return true; }
 		if(value_from != __value_from) { __value_from  = value_from; return true; }
 		
-		// if(!node.project.animator.is_playing)              return true;
+		if(!node.project.animator.is_playing)              return true;
 		if(value_from_loop && value_from_loop.loop_active) return true;
 		if(value_from != noone)                            return true;
 		if(instanceBase != undefined)                      return instanceBase.isDynamic();
