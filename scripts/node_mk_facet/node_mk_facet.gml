@@ -4,16 +4,19 @@ function Node_MK_Facet(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	////- =Output
 	newInput( 0, nodeValue_Dimension());
 	newInput( 2, nodeValue_Surface( "Background" ));
+	newInput(16, nodeValue_Surface( "Mask"       ));
 	
 	////- =Shape
-	newInput(11, nodeValue_EScroll( "Shape", 0, [ new scrollItem("Rectangle", s_node_shape_rectangle, 0), 
-	                                              new scrollItem("Ellipse",   s_node_shape_circle, 0),
-	                                              "Path" ] ));
-	newInput( 1, nodeValue_Area(   "Area", AREA_DEF_REF, false )).setUnitSimple();
-	newInput(12, nodeValue_Path(   "Path"           ));
-	newInput(13, nodeValue_Int(    "Sample",  32    ));
-	newInput(14, nodeValue_Bool(   "Reverse", false ));
-	newInput( 5, nodeValue_Slider( "Trim",    0     ));
+	newInput(11, nodeValue_EScroll(  "Shape", 0, [ 
+		new scrollItem( "Rectangle", s_node_shape_rectangle ), 
+	    new scrollItem( "Ellipse",   s_node_shape_circle    ),
+	    "Path",
+    ]));
+	newInput( 1, nodeValue_Area(     "Area", AREA_DEF_REF, false )).setUnitSimple();
+	newInput(12, nodeValue_Path(     "Path"           ));
+	newInput(13, nodeValue_Int(      "Sample",  32    ));
+	newInput(14, nodeValue_Bool(     "Reverse", false ));
+	newInput( 5, nodeValue_Slider(   "Trim",    0     ));
 	
 	////- =Render
 	newInput( 4, nodeValue_Palette(  "Base Color",   [ca_white] ));
@@ -26,7 +29,7 @@ function Node_MK_Facet(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	newInput( 3, nodeValue_Rotation( "Direction",     135      ));
 	newInput( 7, nodeValue_Float(    "Intensity",     1        ));
 	newInput(10, nodeValue_Float(    "Contrast",      1        ));
-	// 16
+	// 17
 	
 	newOutput( 0, nodeValue_Output( "Shaded",    VALUE_TYPE.surface, noone ));
 	newOutput( 1, nodeValue_Output( "Depth",     VALUE_TYPE.surface, noone ));
@@ -122,7 +125,7 @@ function Node_MK_Facet(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	});
 	
 	input_display_list = [ s_MKFX, 
-		[ "Output",        false ],  0,  2, 
+		[ "Output",        false ],  0,  2, 16, 
 		[ "Shape",         false ], 11,  1, 12, 13, 14,  5, 
 		[ "Facet",         false ],  facet_builder, 
 		[ "Render",        false ],  4,  8,  6, 15, 
@@ -193,6 +196,7 @@ function Node_MK_Facet(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 		#region data
 			var _dim  = _data[ 0];
 			var _bg   = _data[ 2];
+			var _mask = _data[16];
 			
 			var _shap = _data[11];
 			var _area = _data[ 1];
@@ -335,6 +339,9 @@ function Node_MK_Facet(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 		}
 		
 		surface_set_shader(_outData, sh_mk_facet_render);
+			shader_set_s( "mask",    _mask             );
+			shader_set_i( "useMask", is_surface(_mask) );
+			
 			shader_set_f( "depthBlend",   _dbln );
 			shader_set_f( "reflective",   _refl );
 			
