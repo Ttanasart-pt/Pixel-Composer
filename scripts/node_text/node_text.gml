@@ -403,7 +403,7 @@ function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 			inputs[ 9].setVisible(!_use_path  );
 			
 			inputs[14].setVisible( _use_path  );
-			inputs[ 7].setVisible( _dimt == 0 );
+			// inputs[ 7].setVisible( _dimt == 0 );
 			inputs[ 8].setVisible( _dimt == 0 );
 			
 			inputs[15].setVisible( _dimt == 0 && !_use_path && _font != "");

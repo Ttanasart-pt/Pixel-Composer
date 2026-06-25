@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.5.004",
+    "changes": [
+      {
+        "date": "2026-06-25T08:50:11.019Z",
+        "node": "Draw Text",
+        "commit": "**Draw Text**: H Align now available for dynamic dimension type."
+      }
+    ]
+  },
+  {
     "version": "1.21.3.008",
     "changes": [
       {

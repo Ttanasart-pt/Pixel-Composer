@@ -111,9 +111,7 @@ function NodeObject(_name, _node, _tooltip = "") constructor {
 	}
 	
 	static isDeprecated = function() {
-		INLINE 
 		if(IS_CMD) return self;
-		
 		deprecated = true;
 		return self;
 	}
@@ -199,12 +197,12 @@ function NodeObject(_name, _node, _tooltip = "") constructor {
 		gpu_set_tex_filter(false);
 				
 		if(new_node) {
-			draw_sprite_ui_uniform(THEME.node_new_badge, 0, _x + grid_width - ui(12), _y + ui(6),, COLORS._main_accent);
+			draw_sprite_ui_uniform(THEME.node_new_badge, 0, _x + grid_width - ui(12), _y + ui(6), 1, COLORS._main_accent);
 			draw_sprite_ui_uniform(THEME.node_new_badge, 1, _x + grid_width - ui(12), _y + ui(6));
 		}
 				
 		if(deprecated) {
-			draw_sprite_ui_uniform(THEME.node_deprecated_badge, 0, _x + grid_width - ui(12), _y + ui(6),, COLORS._main_value_negative);
+			draw_sprite_ui_uniform(THEME.node_deprecated_badge, 0, _x + grid_width - ui(12), _y + ui(6), 1, COLORS._main_value_negative);
 			draw_sprite_ui_uniform(THEME.node_deprecated_badge, 1, _x + grid_width - ui(12), _y + ui(6));
 		}
 		

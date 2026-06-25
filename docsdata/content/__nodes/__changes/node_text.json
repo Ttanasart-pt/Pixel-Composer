@@ -6,6 +6,11 @@
         "date": "2026-06-25T06:41:09.577Z",
         "node": "",
         "commit": "**Inspector Panel**: Fix error when clicking text-type tooltip."
+      },
+      {
+        "date": "2026-06-25T08:50:11.020Z",
+        "node": "",
+        "commit": "**Draw Text**: H Align now available for dynamic dimension type."
       }
     ]
   },
