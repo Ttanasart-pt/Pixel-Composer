@@ -1,6 +1,7 @@
 function Node_PB_FX_Shine(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Shine";
 	
+	////- =Surfaces
 	newInput( 0, nodeValue_Surface( "Surface" ));
 	newInput( 1, nodeValue_Surface( "Mask"    ));
 	
@@ -12,18 +13,23 @@ function Node_PB_FX_Shine(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	newInput( 6, nodeValue_Float(   "Slope",     1      ));
 	newInput( 3, nodeValue_Bool(    "Flip",      false  ));
 	
+	////- =Offset
+	newInput(11, nodeValue_Surface( "Offset"        ));
+	newInput(12, nodeValue_Range(   "Range", [0,.1] ));
+	
 	////- =Render
 	newInput( 2, nodeValue_Palette( "Colors",     [ca_white] ));
 	newInput(10, nodeValue_EScroll( "Blend Mode", 0, [ "Normal", "Additive", "Multiply" ] ));
 	newInput( 7, nodeValue_Slider(  "Intensity",  1          ));
-	// input 11
+	// 13
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
 	input_display_list = [ 
-		[ "Surface", false ],  0,  1, 
-	    [ "Shine",   false ],  8,  5,  4,  9,  6,  3, 
-	    [ "Render",  false ],  2, 10,  7, 
+		[ "Surfaces", false ],  0,  1, 
+	    [ "Shine",    false ],  8,  5,  4,  9,  6,  3, 
+	    [ "Offset",   false ], 11, 12, 
+	    [ "Render",   false ],  2, 10,  7, 
     ];
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _params) { }
@@ -40,6 +46,9 @@ function Node_PB_FX_Shine(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 		    var _slope = _data[ 6];
 		    var _inver = _data[ 3];
 		    
+		    var _offs  = _data[11];
+		    var _offr  = _data[12];
+		    
 		    var _color = _data[ 2];
 		    var _blend = _data[10];
 		    var _ints  = _data[ 7];
@@ -54,6 +63,10 @@ function Node_PB_FX_Shine(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	        
 	        shader_set_i("useMask",     is_surface(_mask));
 	        shader_set_s("mask",        _mask );
+	        
+	        shader_set_i("useOffset",   is_surface(_offs));
+	        shader_set_s("offset",      _offs );
+	        shader_set_2("offsetRange", _offr );
 	        
             shader_set_i("invAxis",     _invx  );
             shader_set_f("progress",    _progr );

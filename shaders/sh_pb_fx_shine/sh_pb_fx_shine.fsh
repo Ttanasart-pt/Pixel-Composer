@@ -13,6 +13,10 @@ uniform int   useSurf;
 uniform int   useMask;
 uniform sampler2D mask;
 
+uniform int   useOffset;
+uniform sampler2D offset;
+uniform vec2  offsetRange;
+
 uniform int   invAxis;
 uniform float progress;
 uniform int   side;
@@ -38,10 +42,16 @@ void main() {
 	if(useSurf == 1 && cc.a == 0.) return;
 	
 	float ints = intensity;
+	float prog = progress;
 	
 	if(useMask == 1) {
 		vec4 mm = texture2D(mask, v_vTexcoord);
 		ints *= (mm.r + mm.g + mm.b) / 3. * mm.a;
+	}
+	
+	if(useOffset == 1) {
+		vec4 of = texture2D(offset, v_vTexcoord);
+		prog += mix(offsetRange.x, offsetRange.y, (of.r + of.g + of.b) / 3. * of.a);
 	}
 	
 	vec2  px = floor(v_vTexcoord * dimension);
@@ -51,11 +61,11 @@ void main() {
 	
 	float ww = invAxis == 0? dimension.x : dimension.y;
 	float tw = ww + scaledWidth;
-	float ns = mix(-ww - tw, ww + tw, progress);
+	float ns = mix(-ww - tw, ww + tw, prog);
 	
 	if(straight == 1) {
-		if(side == 1) ns = mix(ww + scaledWidth, -scaledWidth, progress);
-		else          ns = mix(-scaledWidth, ww + scaledWidth, progress);
+		if(side == 1) ns = mix(ww + scaledWidth, -scaledWidth, prog);
+		else          ns = mix(-scaledWidth, ww + scaledWidth, prog);
 		
 	} else {
 		float dy = px.y / slope;
