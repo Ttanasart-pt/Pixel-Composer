@@ -168,7 +168,7 @@ function Node_Tunnel_Out(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	
 	static drawJunctionsFast = function(_x, _y, _mx, _my, _s) {
 		var s1 = _s * 1.5, s4 = _s * 4.0;
-		var jun = inputs[1];
+		var jun = outputs[0];
 		
 		draw_set_color(jun.custom_color ?? jun.draw_fg);
 		draw_rectangle(jun.x - s1, jun.y - s4, jun.x + s1, jun.y + s4, false);
