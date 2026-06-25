@@ -21,23 +21,25 @@ function Node_Dotted(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	
 	////- =Render
 	newInput( 7, nodeValue_Color(    "BG Color",        ca_black        ));
-	newInput( 6, nodeValue_EButton(  "Render Mode",     0, ["Pixel","AA","Smooth"]                ));
-	newInput(16, nodeValue_EButton(  "Dot Color Mode",  0, ["Solid","Palette","Random","Texture"] ));
+	newInput( 6, nodeValue_EButton(  "Render Mode",     0, [ "Pixel", "AA", "Smooth" ]                 ));
+	
+	newInput(22, nodeValue_EScroll(  "Blend Mode",      0, [ "Normal", "Additive" ]                    ));
+	newInput(16, nodeValue_EButton(  "Dot Color Mode",  0, [ "Solid", "Palette", "Random", "Texture" ] ));
 	newInput( 8, nodeValue_Color(    "Dot Color",       ca_white        )).setHotkeyAuto("C");
 	newInput(17, nodeValue_Palette(  "Palette"                          ));
 	newInput(18, nodeValue_Gradient( "Gradient",        gra_black_white ));
 	newInput(19, nodeValue_Surface(  "Texture"                          ));
 	newInput(12, nodeValue_Slider(   "Smoothness",     .1               ));
 	newInput(11, nodeValue_Slider(   "Intensity",       1               ));
-	// input 22
+	// 23
 	
-	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
+	newOutput( 0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
 	input_display_list = [ 20, 
-		["Output",     true], 0, 21, 22, 1, 
-		["Transform", false], 14, 4, 5, 
-		["Pattern",   false], 13, 2, 3, 15, 9, 10, 
-		["Render",    false], 7, 6, 16, 8, 17, 18, 19, 12, 11, 
+		[ "Output",     true ],  0, 21, 22,  1, 
+		[ "Transform", false ], 14,  4,  5, 
+		[ "Pattern",   false ], 13,  2,  3, 15,  9, 10, 
+		[ "Render",    false ],  7,  6, 22, 16,  8, 17, 18, 19, 12, 11, 
 	];
 	
 	////- Nodes
@@ -67,8 +69,9 @@ function Node_Dotted(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 			var _pposi  = _data[14];
 			var _space  = _data[15];
 			
-			var _color  = _data[ 6];
 			var _cbg    = _data[ 7];
+			var _color  = _data[ 6];
+			var _blnd   = _data[22];
 			var _aa     = _data[12];
 			var _ints   = _data[11];
 			
@@ -89,7 +92,7 @@ function Node_Dotted(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		
 		_outSurf = surface_verify(_outSurf, _dim[0], _dim[1], attrDepth());
 		
-		surface_set_shader(_outSurf, sh_dotted);
+		surface_set_shader(_outSurf, sh_dotted, true, BLEND.over);
 			shader_set_uv(_data[21], _data[22]);
 			
 			shader_set_f( "seed",      _seed   );
@@ -103,12 +106,13 @@ function Node_Dotted(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 			
 			shader_set_i( "pattern",   _pattn  );
 			
+			shader_set_i( "blendMode", _blnd   );
 			shader_set_i( "coloring",  _color  );
 			shader_set_f( "intensity", _ints   );
 			shader_set_f( "aa",        _aa     );
 			
 			shader_set_i( "colorMode", _cmode  );
-			shader_set_c( "color0",    _cbg    );
+			shader_set_c( "colorBG",   _cbg    );
 			shader_set_c( "color1",    _cdot   );
 			shader_set_s( "texture",   _text   );
 			

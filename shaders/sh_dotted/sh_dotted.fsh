@@ -200,9 +200,10 @@ uniform vec2      dothr;
 uniform int       dothrUseSurf;
 uniform sampler2D dothrSurf;
 
+uniform int   blendMode;
 uniform int   coloring;
 uniform int   colorMode;
-uniform vec4  color0;
+uniform vec4  colorBG;
 uniform vec4  color1;
 uniform sampler2D texture;
 
@@ -272,6 +273,16 @@ vec4 getD(vec2 _cen, vec2 _frc, vec2 _shf) {
 	return cc * intensity * getDist(tx, (_frc - _shf) * spacing); 
 }
 
+vec4 blend(vec4 bg, vec4 fg) {
+	float al = fg.a + bg.a * (1. - fg.a);
+	if(al == 0.) return vec4(0.);
+	
+	vec4 res = ((fg * fg.a) + (bg * bg.a * (1. - fg.a))) / al;
+	res.a = al;
+	
+	return res;
+}
+
 void main() {
 	#region params
 		float ang = angle.x;
@@ -296,7 +307,7 @@ void main() {
 	vec2 pos  = (vtx - position / dimension) * asp;
 	     pos *= mat2(cos(ang), -sin(ang), sin(ang), cos(ang));
 	      
-	vec4 cbg  = color0;
+	vec4 cbg  = colorBG;
 	vec4 dott = vec4(0.);
 	
 	vec2 span = ceil(amoMax / spacing);
@@ -335,8 +346,10 @@ void main() {
 		
 	}
 	
-	if(colorMode == 0)
-		gl_FragColor = cbg + color1 * dott.a;
-	else
-		gl_FragColor = cbg + dott;
+	vec4 cfg;
+	if(colorMode == 0) cfg = vec4(color1.rgb, color1.a * dott.a);
+	else cfg = dott;
+	
+	     if(blendMode == 0) gl_FragColor = blend(cbg, cfg);
+	else if(blendMode == 1) gl_FragColor = cbg + cfg;
 }
