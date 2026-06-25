@@ -296,9 +296,16 @@ function colorSelector(_onModify = noone) constructor {
 				
 				if(mouse_lrelease()) value_dragging = noone;
 			}
-		
-			draw_set_color(CDEF.main_black); draw_line_round(_bx, dty,       _bx, dty + wdh,       ui(7));
-			draw_set_color(_cc);             draw_line_round(_bx, dty+ui(2), _bx, dty + wdh-ui(2), ui(3));
+			
+			if(THEME_VALUE.panel_separation_type == "frame") {
+				draw_set_color(CDEF.main_black); draw_line_round(_bx, dty,       _bx, dty + wdh,       ui(7));
+				draw_set_color(_cc);             draw_line_round(_bx, dty+ui(2), _bx, dty + wdh-ui(2), ui(3));
+				
+			} else {
+				draw_set_color(CDEF.main_black); draw_line_width(_bx, dty,       _bx, dty + wdh,       ui(7));
+				draw_set_color(_cc);             draw_line_width(_bx, dty+ui(2), _bx, dty + wdh-ui(2), ui(3));
+				
+			}
 			
 		} else if(PREFERENCES.color_selector_slider_type == 1) {
 			var _amo = slot_amount;

@@ -6,6 +6,11 @@
         "date": "2026-06-24T23:56:04.128Z",
         "node": "MK Cable",
         "commit": "**MK Cable**: Fix oversampling/interpolation setting not applying"
+      },
+      {
+        "date": "2026-06-25T00:46:55.175Z",
+        "node": "MK Cable",
+        "commit": "**MK Cable**: Add line caps setting."
       }
     ]
   },

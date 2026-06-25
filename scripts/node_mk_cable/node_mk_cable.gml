@@ -41,12 +41,13 @@ function Node_MK_Cable(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	////- =Render
 	newInput( 6, nodeValue_Range(    "Thickness", [1,1], true )).setCurvable(20, CURVE_DEF_11, "Over Cable");
 	newInput( 7, nodeValue_Gradient( "Colors",    gra_white   )).setGradable(21, gra_white,    "Over Cable");
+	newInput(31, nodeValue_Bool(     "Cap",       true        ));
 	
 		////- =/Texture
 	newInput(28, nodeValue_Surface(  "Texture"                ));
 	newInput(29, nodeValue_Vec2(     "UV Position", [0,0]     ));
 	newInput(30, nodeValue_Vec2(     "UV Scale",    [1,1]     ));
-	// input 29
+	// 32
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
@@ -56,7 +57,7 @@ function Node_MK_Cable(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 		[ "Cable",          false     ],  5, 14,  4,  8, 
 		[ "Swing",          false, 11 ], 12, 13, 
 			[ "/End Swing", false, 24 ], 27, 25, 26, 
-		[ "Render",         false     ],  6, 20,  7, 21, 
+		[ "Render",         false     ],  6, 20,  7, 21, 31, 
 			[ "/Texture",   false     ], 28, 29, 30, 
 	];
 	
@@ -188,19 +189,21 @@ function Node_MK_Cable(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	        nc = _col_graded? colorMultiply(cc, _colrMap.evalFast(t)) : cc;
 	        
 	        if(_swng) {
-	        	var _phs   = swing_precal[c] + (CURRENT_FRAME / TOTAL_FRAMES) * _sfrq;
-	        	var _swamo = cos(_phs * 2 * pi) * _samp;
-	        	var _swamo = cos(_phs * 1 * pi) * _samp;
+	        	var _swphs = swing_precal[c] + (CURRENT_FRAME / TOTAL_FRAMES) * _sfrq;
+	        	var _swamo = cos(_swphs * pi) * _samp;
 	        	
 	        	nx += _swamo * _drop * gravsx;
 	        	ny += _swamo * _drop * gravsy;
 	        }
 	        
-	        na = i? point_direction(ox, oy, nx, ny) : dir;
+	        na = dir;
 	        
 	        if(i) {
 	        	_total_len += point_distance(ox, oy, nx, ny);
+	        	na = point_direction(ox, oy, nx, ny);
 	        	nl = _total_len;
+	        	
+	        	if(i == 1) oa = na;
 	        	draw_line_width2_angle(ox, oy, nx, ny, ot, nt, oa + 90, na + 90, oc, nc, [ol,nl,0,1]);
 	        	ol = nl;
 	        }
@@ -247,6 +250,7 @@ function Node_MK_Cable(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 			var _thks     = _data[ 6];
 			var _colr     = _data[ 7]; _colr.cache();
 			var _colrMap  = _data[21]; _colrMap.cache();
+			var _caps     = _data[31];
 			
 			var _swng     = _data[11];
 			var _swng_amp = _data[12];
@@ -293,8 +297,10 @@ function Node_MK_Cable(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 			
 			shader_set(sh_mk_cable_draw);
 			shader_set_interpolation(_linTex);
+			
 			shader_set_2( "uvPosition", _uvPos );
 			shader_set_2( "uvScale",    _uvSca );
+			shader_set_i( "caps",       _caps  );
 			
 			switch(_type) {
 				case 0 :

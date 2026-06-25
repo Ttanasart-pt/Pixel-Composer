@@ -52,7 +52,7 @@ function __PaletteColor(_color = c_black) constructor {
 		return self;
 	};
 	
-	onModify  = noone;
+	onModify = noone;
 	selector = new colorSelector(setColor);
 	selector.dropper_close  = false;
 	selector.discretize_pal = false;

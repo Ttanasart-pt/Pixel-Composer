@@ -335,6 +335,7 @@ varying vec4 v_vColour;
 
 uniform vec2 uvPosition;
 uniform vec2 uvScale;
+uniform int  caps;
 
 uniform float lineThickness;
 uniform float lineLength;
@@ -349,14 +350,15 @@ void main() {
 	float wid = lineThickness / 2.;
 	float aa  = 1.;
 	
-	if(px.x < wid) { // start cap
-		float len = distance(px, vec2(wid, wid));
-		if(len > wid) aa = 0.;
-		
-	} else if(px.x > lineLength - wid * 2.) { 
-		float len = distance(px, vec2(lineLength - wid * 2., wid));
-		if(len > wid) aa = 0.;
-		// aa = .5;
+	if(caps == 1) {
+		if(px.x < wid) { // start cap
+			float len = distance(px, vec2(wid, wid));
+			if(len > wid) aa = 0.;
+			
+		} else if(px.x > lineLength - wid) { 
+			float len = distance(px, vec2(lineLength - wid, wid));
+			if(len > wid) aa = 0.;
+		}
 	}
 	
 	gl_FragColor = v_vColour * sampleTexture(gm_BaseTexture, tx);
