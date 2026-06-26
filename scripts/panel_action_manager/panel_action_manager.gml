@@ -408,7 +408,9 @@ function Panel_Action_Manager() : PanelContent() constructor {
 						if(_fpath == "")
 							_fpath = filename_change_ext(action_selecting.filePath, ".png");
 						file_copy_override(_path, _fpath);
-						action_selecting.spr = sprite_add_center(_path, 1, false, false, 0, 0);
+						action_selecting.spr     = sprite_add_center(_path, 1, false, false, 0, 0);
+						action_selecting.sprPath = $"./{filename_name(_path)}";
+						action_selecting.save();
 					}
 				}
 			}

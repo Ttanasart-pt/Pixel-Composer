@@ -11,6 +11,11 @@
         "date": "2026-06-26T02:10:50.700Z",
         "node": "profiler",
         "commit": "**profiler**: Add bar chart mode."
+      },
+      {
+        "date": "2026-06-26T08:52:46.025Z",
+        "node": "",
+        "commit": "Node preview channel now saved between session."
       }
     ]
   },

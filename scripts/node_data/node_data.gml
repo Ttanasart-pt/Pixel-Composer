@@ -1059,7 +1059,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			var _ind = string(_in.value_from);
 			_io.map[$ _ind] = _in.value_from;
 			
-			if(!struct_has(_io.inputs, _ind))
+			if(!has(_io.inputs, _ind))
 				_io.inputs[$ _ind] = [];
 			array_push(_io.inputs[$ _ind], _in);
 		}
@@ -1076,7 +1076,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 				var _ind = string(_ou);
 				_io.map[$ _ind] = _ou;
 				
-				if(!struct_has(_io.outputs, _ind))
+				if(!has(_io.outputs, _ind))
 					_io.outputs[$ _ind] = [];
 				array_push(_io.outputs[$ _ind], _to);
 			}
@@ -1433,7 +1433,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		if(attributes.show_update_trigger && updatedInTrigger.value_from) {
 			_n = updatedInTrigger.value_from.node;
 			
-			if(!struct_has(prMp, _n.node_id)) {
+			if(!has(prMp, _n.node_id)) {
 				array_push(prev, _n);
 				prMp[$ _n.node_id] = 1;
 			}
@@ -1441,7 +1441,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		
 		if(frameInput.value_from != noone) {
 			_n = frameInput.value_from.node;
-			if(!struct_has(prMp, _n.node_id)) {
+			if(!has(prMp, _n.node_id)) {
 				array_push(prev, _n);
 				prMp[$ _n.node_id] = 1;
 			}
@@ -1452,7 +1452,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			
 			if(_in.value_from != noone) {
 				_n = _in.value_from.node;
-				if(!struct_has(prMp, _n.node_id)) {
+				if(!has(prMp, _n.node_id)) {
 					array_push(prev, _n);
 					prMp[$ _n.node_id] = 1;
 				}
@@ -1460,7 +1460,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 				
 			if(_in.value_from_loop != noone) {
 				_n = _in.value_from_loop;
-				if(!struct_has(prMp, _n.node_id)) {
+				if(!has(prMp, _n.node_id)) {
 					array_push(prev, _n);
 					prMp[$ _n.node_id] = 1;
 				}
@@ -1596,7 +1596,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		if(__getNodeChildList_cacheId != project.nodeTopoID) 
 			__getNodeChildList_cache = {};
 		
-		if(struct_has(__getNodeChildList_cache, _node)) return __getNodeChildList_cache[$ _node];
+		if(has(__getNodeChildList_cache, _node)) return __getNodeChildList_cache[$ _node];
 		
 		var _ind_self = array_find(project.nodeTopo, self);
 		var _ind_node = array_find(project.nodeTopo, _node);
@@ -3092,6 +3092,8 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			_map.x		 = x;
 			_map.y		 = y;
 			_map.type    = itype == noone? instanceof(self) : itype;
+			if(preview_channel != 0)
+				_map.prevCh  = preview_channel;
 			
 			if(group != noone)          _map.group = group.node_id;
 			if(inline_context != noone) _map.ictx  = inline_context.node_id;
@@ -3127,7 +3129,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			if(struct_try_get(attri, "show_update_trigger") == false) struct_remove(attri, "show_update_trigger");
 			if(struct_try_get(attri, "array_process")       == 0)     struct_remove(attri, "array_process");
 			
-			if(struct_has(attri, "use_project_dimension"))			  struct_remove(attri, "use_project_dimension");
+			if(has(attri, "use_project_dimension"))			  struct_remove(attri, "use_project_dimension");
 			
 			if(SERIALIZE_STRIP) {
 				struct_remove(attri, "show_timeline");
@@ -3210,7 +3212,9 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			renamed       = load_map[$ "renamed"]       ?? false;
 			renamedManual = load_map[$ "renamedManual"] ?? false;
 			
-			if(struct_has(load_map, "name")) setDisplayName(load_map.name);
+			preview_channel = load_map[$ "prevCh"] ?? 0;
+			
+			if(has(load_map, "name")) setDisplayName(load_map.name);
 			internalName = load_map[$ "iname"] ?? internalName;
 			if(internalName == "") resetInternalName();
 			
@@ -3285,7 +3289,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	}
 	
 	static inputBalance = function() { // Cross-version compatibility for dynamic input nodes
-		if(!struct_has(load_map, "data_length")) 
+		if(!has(load_map, "data_length")) 
 			return;
 		
 		var _input_fix_len  = load_map.input_fix_len;
@@ -3357,7 +3361,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			inputs[i].applyDeserialize(_inputs[i], load_scale, preset);
 		}
 		
-		if(struct_has(load_map, "outputs")) {
+		if(has(load_map, "outputs")) {
 			var _outputs = load_map.outputs;
 			var amo = min(array_length(outputs), array_length(_outputs));
 			
@@ -3365,7 +3369,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			repeat(amo) { i++; outputs[i].applyDeserialize(_outputs[i], load_scale, preset); }
 		}
 		
-		if(struct_has(load_map, "inspectInputs")) {
+		if(has(load_map, "inspectInputs")) {
 			var insInp = load_map.inspectInputs;
 			inspectInput1.applyDeserialize(insInp[0], load_scale, preset);
 			inspectInput2.applyDeserialize(insInp[1], load_scale, preset);
@@ -3375,7 +3379,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			if(array_length(insInp) > 4) frameInput.applyDeserialize(insInp[4], load_scale, preset);
 		}
 		
-		if(struct_has(load_map, "outputMeta")) {
+		if(has(load_map, "outputMeta")) {
 			var _outMeta = load_map.outputMeta;
 			var _amo = min(array_length(_outMeta), array_length(junc_meta));
 			var i = -1;
@@ -3413,7 +3417,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			
 			if(ds_map_exists(project.nodeMap, load_group)) {
 				var _grp = project.nodeMap[? load_group];
-				if(struct_has(_grp, "add")) _grp.add(self);
+				if(has(_grp, "add")) _grp.add(self);
 				else throw($"Group load failed. Node ID {load_group} is not a group.");
 				
 			} else throw($"Group load failed. Can't find node ID {load_group}");
@@ -3455,7 +3459,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		for( var i = 0, n = array_length(inputs); i < n;  i++ ) { inputs[i].cleanUp();  delete inputs[i];  }
 		for( var i = 0, n = array_length(outputs); i < n; i++ ) { outputs[i].cleanUp(); delete outputs[i]; }
 		
-		if(struct_has(self, "__blur_pass")) {
+		if(has(self, "__blur_pass")) {
 			surface_free_safe(__blur_pass[0]);
 			surface_free_safe(__blur_pass[1]);
 		}
