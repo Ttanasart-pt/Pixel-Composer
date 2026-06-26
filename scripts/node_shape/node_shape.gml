@@ -95,7 +95,6 @@ function Node_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	name   = "Draw Shape";
 	inputs = array_create(51);
 	
-	Node_Shape_Init();
 	onSurfaceSize = function() /*=>*/ {return getInputData(0, PROJ_SURF)};
 	
 	////- =Output
@@ -183,13 +182,9 @@ function Node_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	newInput(37, nodeValue_Bool(     "Opacity",          false                 ));
 	// 52
 	
-	/////////////////////////////////////////////
-	
-	newOutput(0, nodeValue_Output( "Colored", VALUE_TYPE.surface, noone ));
-	newOutput(1, nodeValue_Output( "Mask",    VALUE_TYPE.surface, noone ));
-	newOutput(2, nodeValue_Output( "Height",  VALUE_TYPE.surface, noone ));
-	
-	b_replace_fast = button(function() /*=>*/ { nodeReplace(self, nodeBuild("Node_Shape_Fast", x, y, group), true); }).setText("Switch to Fast version");
+	newOutput( 0, nodeValue_Output( "Colored", VALUE_TYPE.surface, noone ));
+	newOutput( 1, nodeValue_Output( "Mask",    VALUE_TYPE.surface, noone ));
+	newOutput( 2, nodeValue_Output( "Height",  VALUE_TYPE.surface, noone ));
 	
 	input_display_list = [ 
 		[ "Output",     false     ],  0, 50, 44, 45,  6, 51, 
@@ -210,14 +205,20 @@ function Node_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	#region ---- tools ----
 		tools = [ new NodeTool("Draw area", THEME.area_tool, "Node_Shape") ];
 		
-		tool_draw_mode = 0;
-		tool_draw_sx   = 0;
-		tool_draw_sy   = 0;
-		tool_draw_mx   = 0;
-		tool_draw_my   = 0;
+		tool_draw_mode  = 0;
+		tool_draw_sx    = 0;
+		tool_draw_sy    = 0;
+		tool_draw_mx    = 0;
+		tool_draw_my    = 0;
+		
+		corner_dragging = false;
+		corner_drag_sv  = 0;
+		corner_drag_mx  = 0;
+		corner_drag_my  = 0;
 	#endregion
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _params) { 
+		PROCESSOR_OVERLAY_CHECK
 		var _msx = (_mx - _x) / _s;
 		var _msy = (_my - _y) / _s;
 		
@@ -266,7 +267,354 @@ function Node_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 			return true;
 		}
 		
-		return Node_Shape_drawOverlay(hover, active, _x, _y, _s, _mx, _my, _params);
+		var _dim     = current_data[ 0];
+		var _shape   = current_data[ 2];
+		var _posMode = current_data[15];
+		var _rot     = current_data[19];
+		var _shaSca  = current_data[28]; if(!is_numeric(_shaSca)) return;
+		var _pos     = [ 0, 0 ];
+		var _sca     = [ 1, 1 ];
+		
+		switch(_shape) {
+			case "Line" : 
+			case "Arrow" : _shaSca = 1; break;
+		}
+		
+		switch(_posMode) {
+			case 0 : _pos = [ current_data[3][0], current_data[3][1] ];
+				     _sca = [ current_data[3][2], current_data[3][3] ]; break;
+				
+			case 1 : _pos = [ current_data[16][0], current_data[16][1] ];
+				     _sca = [ current_data[17][0], current_data[17][1] ]; break;
+				
+			case 2 : _pos = [ _dim[0] / 2, _dim[1] / 2 ];
+				     _sca = [ _dim[0] / 2, _dim[1] / 2 ]; break;
+		}
+		
+		var _rsca = [ _sca[0], _sca[1] ];
+		
+		_sca[0] *= _shaSca;
+		_sca[1] *= _shaSca;
+		
+		var _px = _x  + _pos[0] * _s;
+		var _py = _y  + _pos[1] * _s;
+			
+		var _x0 = _px - _sca[0] * _s;
+		var _y0 = _py - _sca[1] * _s;
+		var _x1 = _px + _sca[0] * _s;
+		var _y1 = _py + _sca[1] * _s;
+		
+		if(_posMode == 1) {
+			draw_set_color(COLORS._main_accent);
+			draw_rectangle_dashed(_x0, _y0, _x1, _y1);
+		}
+		
+		switch(_shape) {
+			case "Arrow" :
+			case "Line"	 :
+				var _p0 = current_data[32];
+				var _p1 = current_data[33];
+				var _th = current_data[34];
+				
+				var _p0x = _x + _p0[0] * _s;
+				var _p0y = _y + _p0[1] * _s;
+				
+				var _p1x = _x + _p1[0] * _s;
+				var _p1y = _y + _p1[1] * _s;
+				
+				var _paa = point_direction(_p0x, _p0y, _p1x, _p1y);
+				
+				if(_shape == "Arrow") {
+					var _ars = current_data[23];
+					var _arh = current_data[24];
+					
+					var _pds = _s * _sca[0] * 2;
+					var _phs = _s * _sca[0] * _ars * 2.;
+					
+					var _phx = _p1x + lengthdir_x(_ars * _pds, _paa + 180);
+					var _phy = _p1y + lengthdir_y(_ars * _pds, _paa + 180);
+					
+					var _pex = _phx + lengthdir_x(_arh * _phs, _paa -  90);
+					var _pey = _phy + lengthdir_y(_arh * _phs, _paa -  90);
+					
+					var _pcx = (_p0x + _phx) / 2;
+					var _pcy = (_p0y + _phy) / 2;
+					
+				} else {
+					var _pcx = (_p0x + _p1x) / 2;
+					var _pcy = (_p0y + _p1y) / 2;
+				}
+				
+				var _tx  = _pcx + lengthdir_x(_th * _s * _sca[0] * 2, _paa + 90);
+				var _ty  = _pcy + lengthdir_y(_th * _s * _sca[0] * 2, _paa + 90);
+				
+				draw_set_color(COLORS._main_accent);
+				draw_line_dashed(_p0x, _p0y, _p1x, _p1y);
+				draw_line_dashed(_pcx, _pcy, _tx, _ty);
+				
+				drawOverlayInput(inputs[32].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, 2));
+				drawOverlayInput(inputs[33].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, 2));
+				
+				drawOverlayInput(inputs[34].drawOverlay(w_hoverable, active, _pcx, _pcy, _s * _sca[0] * 2, _mx, _my, _paa + 90, 1, 1));
+				
+				if(_shape == "Arrow") {
+					draw_set_color(COLORS._main_accent);
+					draw_line_dashed(_phx, _phy, _pex, _pey);
+				
+					drawOverlayInput(inputs[23].drawOverlay(w_hoverable, active, _p1x, _p1y, _pds, _mx, _my, _paa + 180, 1, 1));
+					drawOverlayInput(inputs[24].drawOverlay(w_hoverable, active, _phx, _phy, _phs, _mx, _my, _paa -  90, 1, 1));
+				}
+				
+				return w_hovering;
+				
+			case "Half"	:
+				drawOverlayInput(inputs[40].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, 1));
+				return w_hovering;
+				
+			case "Trapezoid" : 
+				drawOverlayInput(inputs[38].drawOverlay(w_hoverable, active, _px, _y0, _s * _sca[0], _mx, _my, 0, 1, 1));
+				drawOverlayInput(inputs[39].drawOverlay(w_hoverable, active, _px, _y1, _s * _sca[0], _mx, _my, 0, 1, 1));
+				break;
+				
+			case "Parallelogram" : 
+				drawOverlayInput(inputs[22].drawOverlay(w_hoverable, active, _x0, _y1, _s * _sca[0] * 2, _mx, _my, 0, 1, 1));
+				break;
+				
+			case "Pie" : 
+				drawOverlayInput(inputs[8].drawOverlay(w_hoverable, active, _px, _py, _s, _mx, _my));
+				break;
+				
+			case "Arc" : 
+				var _inn = current_data[5];
+				var _ix  = _x1 - _inn * _s * _sca[0];
+				var _iy = _py;
+				
+				draw_set_color(COLORS._main_accent);
+				draw_line_dashed(_x1, _py, _ix, _iy);
+				
+				drawOverlayInput(inputs[ 8].drawOverlay(w_hoverable, active, _px, _py, _s, _mx, _my));
+				drawOverlayInput(inputs[ 5].drawOverlay(w_hoverable, active, _x1, _py, _s * _sca[0], _mx, _my, 180, 1, 1));
+				break;
+				
+			case "Donut" : 
+				var _inn = current_data[5];
+				var _ix  = _x1 - _inn * _s * _sca[0];
+				var _iy = _py;
+				
+				draw_set_color(COLORS._main_accent);
+				draw_line_dashed(_x1, _py, _ix, _iy);
+				
+				drawOverlayInput(inputs[ 5].drawOverlay(w_hoverable, active, _x1, _py, _s * _sca[0], _mx, _my, 180, 1, 1));
+				break;
+				
+			case "Crescent" : 
+				var _shf = current_data[ 5];
+				var _inn = current_data[13];
+				
+				var _ix = _x1 - _shf * _s * _sca[0] * _inn;
+				var _iy = _py - _inn * _sca[1] * _s;
+				
+				draw_set_color(COLORS._main_accent);
+				draw_line_dashed(_px, _py, _px, _iy);
+				
+				drawOverlayInput(inputs[ 5].drawOverlay(w_hoverable, active, _x1, _py, _s * _sca[0] * _inn, _mx, _my, 180, 1, 1));
+				drawOverlayInput(inputs[13].drawOverlay(w_hoverable, active, _px, _py, _s * _sca[1], _mx, _my,  90, 1, 1));
+				break;
+				
+			case "Disk Segment" : 
+				drawOverlayInput(inputs[13].drawOverlay(w_hoverable, active, _px, _y0, _s * _sca[1] * 2, _mx, _my, -90, 1, 1));
+				break;
+				
+			case "Squircle" : 
+				var _fact = current_data[31];
+				
+				var _ix = _px + _fact * _s * _sca[0] / 4;
+				
+				draw_set_color(COLORS._main_accent);
+				draw_line_dashed(_px, _py, _ix, _py);
+				
+				drawOverlayInput(inputs[31].drawOverlay(w_hoverable, active, _px, _py, _s * _sca[0] / 4, _mx, _my, 0, 1, 1));
+				break;
+				
+			case "Regular Polygon" : 
+				var _side = current_data[4];
+				
+				var _iy = _py - _side * _s * _sca[1] / 12;
+				
+				draw_set_color(COLORS._main_accent);
+				draw_line_dashed(_px, _py, _px, _iy);
+				
+				drawOverlayInput(inputs[4].drawOverlay(w_hoverable, active, _px, _py, _s * _sca[1] / 12, _mx, _my, 90, 1, 1));
+				break;
+				
+			case "Star" : 
+				var _side = current_data[4];
+				var _inn  = current_data[5];
+				
+				var _ix = _px + _inn * _s * _sca[0];
+				var _iy = _py;
+				
+				var _sy = _py - _side * _s * _sca[1] / 12;
+				
+				draw_set_color(COLORS._main_accent);
+				draw_line_dashed(_px, _py, _ix, _iy);
+				draw_line_dashed(_px, _py, _px, _sy);
+				
+				drawOverlayInput(inputs[4].drawOverlay(w_hoverable, active, _px, _py, _s * _sca[1] / 12, _mx, _my, 90, 1, 1));
+				drawOverlayInput(inputs[5].drawOverlay(w_hoverable, active, _px, _py, _s * _sca[0], _mx, _my, 0, 1, 1));
+				break;
+				
+			case "Cross" : 
+				drawOverlayInput(inputs[13].drawOverlay(w_hoverable, active, _px, _py, _s * _sca[0], _mx, _my, 0, 1, 1));
+				break;
+				
+			case "Teardrop" : 
+				var _r0 = current_data[ 5];
+				var _r1 = current_data[13];
+				
+				var _ty0 = _py - _sca[1] * _s * .5;
+				var _ty1 = _py + _sca[1] * _s * .5;
+				
+				draw_set_color(COLORS._main_accent);
+				draw_circle_dash(_px, _ty1, _r0 * _s * _sca[0]);
+				draw_circle_dash(_px, _ty0, _r1 * _s * _sca[0]);
+				
+				drawOverlayInput(inputs[ 5].drawOverlay(w_hoverable, active, _px, _ty1, _s * _sca[0], _mx, _my, 0, 1, 1));
+				drawOverlayInput(inputs[13].drawOverlay(w_hoverable, active, _px, _ty0, _s * _sca[0], _mx, _my, 0, 1, 1));
+				break;
+				
+			case "Leaf" : 
+				var _r0 = current_data[ 5];
+				var _r1 = current_data[13];
+				
+				var _ty0 = _py - _sca[1] * _s * .5;
+				var _ty1 = _py + _sca[1] * _s * .5;
+				
+				draw_set_color(COLORS._main_accent);
+				draw_line_dashed(_px, _ty0, _px + _r0 * _s * _sca[0], _ty0);
+				draw_line_dashed(_px, _ty1, _px + _r1 * _s * _sca[0], _ty1);
+				
+				drawOverlayInput(inputs[ 5].drawOverlay(w_hoverable, active, _px, _ty0, _s * _sca[0], _mx, _my, 0, 1, 1));
+				drawOverlayInput(inputs[13].drawOverlay(w_hoverable, active, _px, _ty1, _s * _sca[0], _mx, _my, 0, 1, 1));
+				break;
+				
+			case "Gear" : 
+				var _inn = current_data[13];
+				var _tam = current_data[25];
+				
+				var _sy = _py - _tam * _s * _sca[1] / 12;
+				var _sx = _px + _inn * _s * _sca[0];
+				
+				draw_set_color(COLORS._main_accent);
+				draw_line_dashed(_px, _py, _px, _sy);
+				draw_line_dashed(_px, _py, _sx, _py);
+				
+				drawOverlayInput(inputs[25].drawOverlay(w_hoverable, active, _px, _py, _s * _sca[1] / 12, _mx, _my, 90, 1, 1 ));
+				drawOverlayInput(inputs[13].drawOverlay(w_hoverable, active, _px, _py, _s * _sca[0],      _mx, _my,  0, 1, 1 ));
+				drawOverlayInput(inputs[27].drawOverlay(w_hoverable, active, _px, _py, _s,                _mx, _my           ));
+				drawOverlayInput(inputs[26].drawOverlay(w_hoverable, active, _px, _py, _s * _sca[0],      _mx, _my,  1       ));
+				break;
+				
+			case "Triangle" : 
+				var _p0 = current_data[32];
+				var _p1 = current_data[33];
+				var _p2 = current_data[35];
+				
+				var _p0x = _x + _p0[0] * _s;
+				var _p0y = _y + _p0[1] * _s;
+				
+				var _p1x = _x + _p1[0] * _s;
+				var _p1y = _y + _p1[1] * _s;
+				
+				var _p2x = _x + _p2[0] * _s;
+				var _p2y = _y + _p2[1] * _s;
+				
+				draw_set_color(COLORS._main_accent);
+				draw_line_dashed(_p0x, _p0y, _p1x, _p1y);
+				draw_line_dashed(_p0x, _p0y, _p2x, _p2y);
+				draw_line_dashed(_p1x, _p1y, _p2x, _p2y);
+				
+				drawOverlayInput(inputs[32].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my));
+				drawOverlayInput(inputs[33].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my));
+				drawOverlayInput(inputs[35].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my));
+				break;
+				
+		}
+		
+		if(inputs[7].show_in_inspector) drawOverlayInput(inputs[7].drawOverlay(w_hoverable, active, _px, _py, _s, _mx, _my));
+		
+		if(inputs[9].show_in_inspector) { // corner
+			var aa = -45;
+			var ar = 90;
+			
+				 if(_sca[0] < 0 && _sca[1] < 0) { aa =  135; ar = -90; }
+			else if(_sca[0] < 0 && _sca[1] > 0) { aa = -135; ar =   0; }
+			else if(_sca[0] > 0 && _sca[1] < 0) { aa =   45; ar = 180; }
+			
+			var side = max(abs(_sca[0]), abs(_sca[1]));
+			var cnr = .2 * _s * side;
+			var cnx = _x0 + lengthdir_x(cnr, aa);
+			var cny = _y0 + lengthdir_y(cnr, aa);
+			var _r  = ui(PREVIEW_OVERLAY_RAD);
+			var _hv = w_hoverable && point_in_circle(_mx, _my, cnx, cny, _r)
+			if(_hv) { w_hoverable = false; w_hovering  = true; }
+			
+			draw_anchor(_hv || corner_dragging, cnx, cny, _r, 2);
+			if(_hv && mouse_lpress(active)) {
+				corner_dragging = true;
+				corner_drag_sv  = current_data[9];
+				corner_drag_mx  = _mx;
+				corner_drag_my  = _my;
+			}
+			
+			if(corner_dragging) {
+				var dx  = _mx - corner_drag_mx;
+				var dy  = _my - corner_drag_my;
+				var axs = abs(dx) > abs(dy);
+				var dv = axs? dx : dy;
+				
+				var cr = clamp(corner_drag_sv + dv / _s / side, 0., 1.);
+				if(inputs[9].setValue(cr)) UNDO_HOLDING = true;
+				
+				if(mouse_lrelease()) {
+					corner_dragging = false;
+					UNDO_HOLDING    = false;
+				}
+			}
+			
+			// var _max_s = max(abs(_sca[0]), abs(_sca[1])) * 2 / _shaSca;
+			// var _corr  = current_data[9] * _s * _max_s;
+			// var _cor   = _corr / sqrt(2);
+			
+			// var cx = _x0 + lengthdir_x(_corr, aa);
+			// var cy = _y0 + lengthdir_y(_corr, aa);
+			
+			// draw_set_color(COLORS._main_accent);
+			// draw_arc(cx, cy, _cor, ar, ar + 90);
+			
+			// drawOverlayInput(inputs[9].drawOverlay(w_hoverable, active, _x0, _y0, _s, _mx, _my, aa, _max_s, 2));
+		} // corner
+		
+		switch(_posMode) {
+			case 0 : 
+				drawOverlayInput(inputs[3].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my));
+				break;
+			
+			case 1 : 
+				drawOverlayInput(inputs[16].drawOverlay(w_hoverable, active,  _x,  _y, _s, _mx, _my));
+				drawOverlayInput(inputs[17].drawOverlay(w_hoverable, active, _px, _py, _s, _mx, _my));
+				break;
+		}
+		
+		#region shape scale
+			// var _rx1 = _px + _rsca[0] * _s;
+			// var _ry1 = _py + _rsca[1] * _s;
+			// var _ll  = point_distance(_px, _py, _rx1, _ry1) / _s;
+			var _ll  = _rsca[0];
+			drawOverlayInput(inputs[28].drawOverlay(w_hoverable, active, _px, _py, _s, _mx, _my, 0, _ll, 0));
+		#endregion
+		
+		return w_hovering;
 	}
 	
 	static processData = function(_outData, _data, _array_index) {
@@ -690,6 +1038,8 @@ function Node_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 		return _outData;
 	}
 	
+	////- Serialize
+	
 	static postDeserialize = function() {
 		if(CLONING) return;
 		
@@ -728,363 +1078,3 @@ global.node_shape_keys_204 = [
 	-1, "Line", "Arrow", 
 	-1, "Teardrop", "Leaf", "Heart", "Gear", 
 ];
-
-function Node_Shape_Init() {
-	corner_dragging = false;
-	corner_drag_sv  = 0;
-	corner_drag_mx  = 0;
-	corner_drag_my  = 0;
-}
-
-function Node_Shape_drawOverlay(hover, active, _x, _y, _s, _mx, _my, _params) { 
-	PROCESSOR_OVERLAY_CHECK
-	
-	var _dim     = current_data[ 0];
-	var _shape   = current_data[ 2];
-	var _posMode = current_data[15];
-	var _rot     = current_data[19];
-	var _shaSca  = current_data[28]; if(!is_numeric(_shaSca)) return;
-	var _pos     = [ 0, 0 ];
-	var _sca     = [ 1, 1 ];
-	
-	switch(_shape) {
-		case "Line" : 
-		case "Arrow" : _shaSca = 1; break;
-	}
-	
-	switch(_posMode) {
-		case 0 : _pos = [ current_data[3][0], current_data[3][1] ];
-			     _sca = [ current_data[3][2], current_data[3][3] ]; break;
-			
-		case 1 : _pos = [ current_data[16][0], current_data[16][1] ];
-			     _sca = [ current_data[17][0], current_data[17][1] ]; break;
-			
-		case 2 : _pos = [ _dim[0] / 2, _dim[1] / 2 ];
-			     _sca = [ _dim[0] / 2, _dim[1] / 2 ]; break;
-	}
-	
-	var _rsca = [ _sca[0], _sca[1] ];
-	
-	_sca[0] *= _shaSca;
-	_sca[1] *= _shaSca;
-	
-	var _px = _x  + _pos[0] * _s;
-	var _py = _y  + _pos[1] * _s;
-		
-	var _x0 = _px - _sca[0] * _s;
-	var _y0 = _py - _sca[1] * _s;
-	var _x1 = _px + _sca[0] * _s;
-	var _y1 = _py + _sca[1] * _s;
-	
-	if(_posMode == 1) {
-		draw_set_color(COLORS._main_accent);
-		draw_rectangle_dashed(_x0, _y0, _x1, _y1);
-	}
-	
-	switch(_shape) {
-		case "Arrow" :
-		case "Line"	 :
-			var _p0 = current_data[32];
-			var _p1 = current_data[33];
-			var _th = current_data[34];
-			
-			var _p0x = _x + _p0[0] * _s;
-			var _p0y = _y + _p0[1] * _s;
-			
-			var _p1x = _x + _p1[0] * _s;
-			var _p1y = _y + _p1[1] * _s;
-			
-			var _paa = point_direction(_p0x, _p0y, _p1x, _p1y);
-			
-			if(_shape == "Arrow") {
-				var _ars = current_data[23];
-				var _arh = current_data[24];
-				
-				var _pds = _s * _sca[0] * 2;
-				var _phs = _s * _sca[0] * _ars * 2.;
-				
-				var _phx = _p1x + lengthdir_x(_ars * _pds, _paa + 180);
-				var _phy = _p1y + lengthdir_y(_ars * _pds, _paa + 180);
-				
-				var _pex = _phx + lengthdir_x(_arh * _phs, _paa -  90);
-				var _pey = _phy + lengthdir_y(_arh * _phs, _paa -  90);
-				
-				var _pcx = (_p0x + _phx) / 2;
-				var _pcy = (_p0y + _phy) / 2;
-				
-			} else {
-				var _pcx = (_p0x + _p1x) / 2;
-				var _pcy = (_p0y + _p1y) / 2;
-			}
-			
-			var _tx  = _pcx + lengthdir_x(_th * _s * _sca[0] * 2, _paa + 90);
-			var _ty  = _pcy + lengthdir_y(_th * _s * _sca[0] * 2, _paa + 90);
-			
-			draw_set_color(COLORS._main_accent);
-			draw_line_dashed(_p0x, _p0y, _p1x, _p1y);
-			draw_line_dashed(_pcx, _pcy, _tx, _ty);
-			
-			drawOverlayInput(inputs[32].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, 2));
-			drawOverlayInput(inputs[33].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, 2));
-			
-			drawOverlayInput(inputs[34].drawOverlay(w_hoverable, active, _pcx, _pcy, _s * _sca[0] * 2, _mx, _my, _paa + 90, 1, 1));
-			
-			if(_shape == "Arrow") {
-				draw_set_color(COLORS._main_accent);
-				draw_line_dashed(_phx, _phy, _pex, _pey);
-			
-				drawOverlayInput(inputs[23].drawOverlay(w_hoverable, active, _p1x, _p1y, _pds, _mx, _my, _paa + 180, 1, 1));
-				drawOverlayInput(inputs[24].drawOverlay(w_hoverable, active, _phx, _phy, _phs, _mx, _my, _paa -  90, 1, 1));
-			}
-			
-			return w_hovering;
-			
-		case "Half"	:
-			drawOverlayInput(inputs[40].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, 1));
-			return w_hovering;
-			
-		case "Trapezoid" : 
-			drawOverlayInput(inputs[38].drawOverlay(w_hoverable, active, _px, _y0, _s * _sca[0], _mx, _my, 0, 1, 1));
-			drawOverlayInput(inputs[39].drawOverlay(w_hoverable, active, _px, _y1, _s * _sca[0], _mx, _my, 0, 1, 1));
-			break;
-			
-		case "Parallelogram" : 
-			drawOverlayInput(inputs[22].drawOverlay(w_hoverable, active, _x0, _y1, _s * _sca[0] * 2, _mx, _my, 0, 1, 1));
-			break;
-			
-		case "Pie" : 
-			drawOverlayInput(inputs[8].drawOverlay(w_hoverable, active, _px, _py, _s, _mx, _my));
-			break;
-			
-		case "Arc" : 
-			var _inn = current_data[5];
-			var _ix  = _x1 - _inn * _s * _sca[0];
-			var _iy = _py;
-			
-			draw_set_color(COLORS._main_accent);
-			draw_line_dashed(_x1, _py, _ix, _iy);
-			
-			drawOverlayInput(inputs[ 8].drawOverlay(w_hoverable, active, _px, _py, _s, _mx, _my));
-			drawOverlayInput(inputs[ 5].drawOverlay(w_hoverable, active, _x1, _py, _s * _sca[0], _mx, _my, 180, 1, 1));
-			break;
-			
-		case "Donut" : 
-			var _inn = current_data[5];
-			var _ix  = _x1 - _inn * _s * _sca[0];
-			var _iy = _py;
-			
-			draw_set_color(COLORS._main_accent);
-			draw_line_dashed(_x1, _py, _ix, _iy);
-			
-			drawOverlayInput(inputs[ 5].drawOverlay(w_hoverable, active, _x1, _py, _s * _sca[0], _mx, _my, 180, 1, 1));
-			break;
-			
-		case "Crescent" : 
-			var _shf = current_data[ 5];
-			var _inn = current_data[13];
-			
-			var _ix = _x1 - _shf * _s * _sca[0] * _inn;
-			var _iy = _py - _inn * _sca[1] * _s;
-			
-			draw_set_color(COLORS._main_accent);
-			draw_line_dashed(_px, _py, _px, _iy);
-			
-			drawOverlayInput(inputs[ 5].drawOverlay(w_hoverable, active, _x1, _py, _s * _sca[0] * _inn, _mx, _my, 180, 1, 1));
-			drawOverlayInput(inputs[13].drawOverlay(w_hoverable, active, _px, _py, _s * _sca[1], _mx, _my,  90, 1, 1));
-			break;
-			
-		case "Disk Segment" : 
-			drawOverlayInput(inputs[13].drawOverlay(w_hoverable, active, _px, _y0, _s * _sca[1] * 2, _mx, _my, -90, 1, 1));
-			break;
-			
-		case "Squircle" : 
-			var _fact = current_data[31];
-			
-			var _ix = _px + _fact * _s * _sca[0] / 4;
-			
-			draw_set_color(COLORS._main_accent);
-			draw_line_dashed(_px, _py, _ix, _py);
-			
-			drawOverlayInput(inputs[31].drawOverlay(w_hoverable, active, _px, _py, _s * _sca[0] / 4, _mx, _my, 0, 1, 1));
-			break;
-			
-		case "Regular Polygon" : 
-			var _side = current_data[4];
-			
-			var _iy = _py - _side * _s * _sca[1] / 12;
-			
-			draw_set_color(COLORS._main_accent);
-			draw_line_dashed(_px, _py, _px, _iy);
-			
-			drawOverlayInput(inputs[4].drawOverlay(w_hoverable, active, _px, _py, _s * _sca[1] / 12, _mx, _my, 90, 1, 1));
-			break;
-			
-		case "Star" : 
-			var _side = current_data[4];
-			var _inn  = current_data[5];
-			
-			var _ix = _px + _inn * _s * _sca[0];
-			var _iy = _py;
-			
-			var _sy = _py - _side * _s * _sca[1] / 12;
-			
-			draw_set_color(COLORS._main_accent);
-			draw_line_dashed(_px, _py, _ix, _iy);
-			draw_line_dashed(_px, _py, _px, _sy);
-			
-			drawOverlayInput(inputs[4].drawOverlay(w_hoverable, active, _px, _py, _s * _sca[1] / 12, _mx, _my, 90, 1, 1));
-			drawOverlayInput(inputs[5].drawOverlay(w_hoverable, active, _px, _py, _s * _sca[0], _mx, _my, 0, 1, 1));
-			break;
-			
-		case "Cross" : 
-			drawOverlayInput(inputs[13].drawOverlay(w_hoverable, active, _px, _py, _s * _sca[0], _mx, _my, 0, 1, 1));
-			break;
-			
-		case "Teardrop" : 
-			var _r0 = current_data[ 5];
-			var _r1 = current_data[13];
-			
-			var _ty0 = _py - _sca[1] * _s * .5;
-			var _ty1 = _py + _sca[1] * _s * .5;
-			
-			draw_set_color(COLORS._main_accent);
-			draw_circle_dash(_px, _ty1, _r0 * _s * _sca[0]);
-			draw_circle_dash(_px, _ty0, _r1 * _s * _sca[0]);
-			
-			drawOverlayInput(inputs[ 5].drawOverlay(w_hoverable, active, _px, _ty1, _s * _sca[0], _mx, _my, 0, 1, 1));
-			drawOverlayInput(inputs[13].drawOverlay(w_hoverable, active, _px, _ty0, _s * _sca[0], _mx, _my, 0, 1, 1));
-			break;
-			
-		case "Leaf" : 
-			var _r0 = current_data[ 5];
-			var _r1 = current_data[13];
-			
-			var _ty0 = _py - _sca[1] * _s * .5;
-			var _ty1 = _py + _sca[1] * _s * .5;
-			
-			draw_set_color(COLORS._main_accent);
-			draw_line_dashed(_px, _ty0, _px + _r0 * _s * _sca[0], _ty0);
-			draw_line_dashed(_px, _ty1, _px + _r1 * _s * _sca[0], _ty1);
-			
-			drawOverlayInput(inputs[ 5].drawOverlay(w_hoverable, active, _px, _ty0, _s * _sca[0], _mx, _my, 0, 1, 1));
-			drawOverlayInput(inputs[13].drawOverlay(w_hoverable, active, _px, _ty1, _s * _sca[0], _mx, _my, 0, 1, 1));
-			break;
-			
-		case "Gear" : 
-			var _inn = current_data[13];
-			var _tam = current_data[25];
-			
-			var _sy = _py - _tam * _s * _sca[1] / 12;
-			var _sx = _px + _inn * _s * _sca[0];
-			
-			draw_set_color(COLORS._main_accent);
-			draw_line_dashed(_px, _py, _px, _sy);
-			draw_line_dashed(_px, _py, _sx, _py);
-			
-			drawOverlayInput(inputs[25].drawOverlay(w_hoverable, active, _px, _py, _s * _sca[1] / 12, _mx, _my, 90, 1, 1 ));
-			drawOverlayInput(inputs[13].drawOverlay(w_hoverable, active, _px, _py, _s * _sca[0],      _mx, _my,  0, 1, 1 ));
-			drawOverlayInput(inputs[27].drawOverlay(w_hoverable, active, _px, _py, _s,                _mx, _my           ));
-			drawOverlayInput(inputs[26].drawOverlay(w_hoverable, active, _px, _py, _s * _sca[0],      _mx, _my,  1       ));
-			break;
-			
-		case "Triangle" : 
-			var _p0 = current_data[32];
-			var _p1 = current_data[33];
-			var _p2 = current_data[35];
-			
-			var _p0x = _x + _p0[0] * _s;
-			var _p0y = _y + _p0[1] * _s;
-			
-			var _p1x = _x + _p1[0] * _s;
-			var _p1y = _y + _p1[1] * _s;
-			
-			var _p2x = _x + _p2[0] * _s;
-			var _p2y = _y + _p2[1] * _s;
-			
-			draw_set_color(COLORS._main_accent);
-			draw_line_dashed(_p0x, _p0y, _p1x, _p1y);
-			draw_line_dashed(_p0x, _p0y, _p2x, _p2y);
-			draw_line_dashed(_p1x, _p1y, _p2x, _p2y);
-			
-			drawOverlayInput(inputs[32].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my));
-			drawOverlayInput(inputs[33].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my));
-			drawOverlayInput(inputs[35].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my));
-			break;
-			
-	}
-	
-	if(inputs[7].show_in_inspector) drawOverlayInput(inputs[7].drawOverlay(w_hoverable, active, _px, _py, _s, _mx, _my));
-	
-	if(inputs[9].show_in_inspector) { // corner
-		var aa = -45;
-		var ar = 90;
-		
-			 if(_sca[0] < 0 && _sca[1] < 0) { aa =  135; ar = -90; }
-		else if(_sca[0] < 0 && _sca[1] > 0) { aa = -135; ar =   0; }
-		else if(_sca[0] > 0 && _sca[1] < 0) { aa =   45; ar = 180; }
-		
-		var side = max(abs(_sca[0]), abs(_sca[1]));
-		var cnr = .2 * _s * side;
-		var cnx = _x0 + lengthdir_x(cnr, aa);
-		var cny = _y0 + lengthdir_y(cnr, aa);
-		var _r  = ui(PREVIEW_OVERLAY_RAD);
-		var _hv = w_hoverable && point_in_circle(_mx, _my, cnx, cny, _r)
-		if(_hv) { w_hoverable = false; w_hovering  = true; }
-		
-		draw_anchor(_hv || corner_dragging, cnx, cny, _r, 2);
-		if(_hv && mouse_lpress(active)) {
-			corner_dragging = true;
-			corner_drag_sv  = current_data[9];
-			corner_drag_mx  = _mx;
-			corner_drag_my  = _my;
-		}
-		
-		if(corner_dragging) {
-			var dx  = _mx - corner_drag_mx;
-			var dy  = _my - corner_drag_my;
-			var axs = abs(dx) > abs(dy);
-			var dv = axs? dx : dy;
-			
-			var cr = clamp(corner_drag_sv + dv / _s / side, 0., 1.);
-			if(inputs[9].setValue(cr)) UNDO_HOLDING = true;
-			
-			if(mouse_lrelease()) {
-				corner_dragging = false;
-				UNDO_HOLDING    = false;
-			}
-		}
-		
-		// var _max_s = max(abs(_sca[0]), abs(_sca[1])) * 2 / _shaSca;
-		// var _corr  = current_data[9] * _s * _max_s;
-		// var _cor   = _corr / sqrt(2);
-		
-		// var cx = _x0 + lengthdir_x(_corr, aa);
-		// var cy = _y0 + lengthdir_y(_corr, aa);
-		
-		// draw_set_color(COLORS._main_accent);
-		// draw_arc(cx, cy, _cor, ar, ar + 90);
-		
-		// drawOverlayInput(inputs[9].drawOverlay(w_hoverable, active, _x0, _y0, _s, _mx, _my, aa, _max_s, 2));
-	} // corner
-	
-	switch(_posMode) {
-		case 0 : 
-			drawOverlayInput(inputs[3].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my));
-			break;
-		
-		case 1 : 
-			drawOverlayInput(inputs[16].drawOverlay(w_hoverable, active,  _x,  _y, _s, _mx, _my));
-			drawOverlayInput(inputs[17].drawOverlay(w_hoverable, active, _px, _py, _s, _mx, _my));
-			break;
-	}
-	
-	#region shape scale
-		// var _rx1 = _px + _rsca[0] * _s;
-		// var _ry1 = _py + _rsca[1] * _s;
-		// var _ll  = point_distance(_px, _py, _rx1, _ry1) / _s;
-		var _ll  = _rsca[0];
-		drawOverlayInput(inputs[28].drawOverlay(w_hoverable, active, _px, _py, _s, _mx, _my, 0, _ll, 0));
-	#endregion
-	
-	return w_hovering;
-}

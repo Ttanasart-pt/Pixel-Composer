@@ -1,0 +1,6 @@
+{
+    "name":          "Draw Rectangle",
+    "spr":           "s_node_shape_rectangle",
+    "baseNode":      "Node_Shape_Rectangle",
+    "pxc_version":    121050,
+}

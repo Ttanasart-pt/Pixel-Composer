@@ -78,81 +78,84 @@ function Panel_Notification() : PanelContent() constructor {
 			var _h = ui(12) + string_height_ext(noti.txt, -1, txw);
 			_h += pad * 2;
 			
+			var _draw = yy >= -_h && yy <= sp_noti.h;
+			if(!_draw) {
+				yy += _h + ui(2);
+				hh += _h + ui(2);
+				continue;
+			}
+		
 			if(i) {
-				draw_set_color(COLORS._main_icon);
-				draw_set_alpha(.15);
+				draw_set_color_alpha(COLORS._main_icon, .15);
 				draw_line(ui(16), yy - ui(1), _w - ui(16), yy - ui(1));
 				draw_set_alpha(1);
 			}
 			
-			if(yy >= -_h && yy <= sp_noti.h) {
+			if(pHOVER && pHOVER && point_in_rectangle(_m[0], _m[1], 0, yy, _w, yy + _h)) {
+				sp_noti.hover_content = true;
+				draw_sprite_stretched_ext(THEME.box_r2, 0, 0, yy, _w, _h, CDEF.main_dkblack, 1);
 				
-				if(pHOVER && pHOVER && point_in_rectangle(_m[0], _m[1], 0, yy, _w, yy + _h)) {
-					sp_noti.hover_content = true;
-					draw_sprite_stretched_ext(THEME.box_r2, 0, 0, yy, _w, _h, CDEF.main_dkblack, 1);
-					
-					if(noti.tooltip != "")
-						TOOLTIP = noti.tooltip;
-				
-					if(noti.onClick != noone && mouse_lpress(pFOCUS))
-						noti.onClick(noti.param);
-				
-					if(mouse_rpress(pFOCUS))
-						noti_selecting = noti;
-				}
-				
-				if(noti.life_max > 0) {
-					var _nwx = sp_noti.w - ui(12) - ui(40);
-					var _nw  = _nwx * noti.life / noti.life_max;
-				
-					draw_sprite_stretched_ext(THEME.box_r2, 0, ui(40), yy, _nw, _h, CDEF.main_mdblack, 1);
-				}
+				if(noti.tooltip != "")
+					TOOLTIP = noti.tooltip;
 			
-				if(noti.icon_end != noone)
-					draw_sprite_ui(noti.icon_end, 1, _w - ui(24), yy + _h / 2,,,, COLORS._main_icon);
+				if(noti.onClick != noone && mouse_lpress(pFOCUS))
+					noti.onClick(noti.param);
 			
-				var ic = noti.icon;
-				if(is_method(noti.icon)) {
-					noti.icon = noti.icon();
-					ic = noti.icon;
+				if(mouse_rpress(pFOCUS))
+					noti_selecting = noti;
+			}
+			
+			if(noti.life_max > 0) {
+				var _nwx = sp_noti.w - ui(12) - ui(40);
+				var _nw  = _nwx * noti.life / noti.life_max;
+			
+				draw_sprite_stretched_ext(THEME.box_r2, 0, ui(40), yy, _nw, _h, CDEF.main_mdblack, 1);
+			}
+		
+			if(noti.icon_end != noone)
+				draw_sprite_ui(noti.icon_end, 1, _w - ui(24), yy + _h / 2, 1, 1, 0, COLORS._main_icon);
+		
+			var ic = noti.icon;
+			if(is_method(noti.icon)) {
+				noti.icon = noti.icon();
+				ic = noti.icon;
+			}
+			
+			if(noti.icon == noone) {
+				switch(noti.type) {
+					case NOTI_TYPE.log :	 ic = THEME.noti_icon_log;     break;	
+					case NOTI_TYPE.warning : ic = THEME.noti_icon_warning; break;	
+					case NOTI_TYPE.error :	 ic = THEME.noti_icon_error;   break;	
 				}
+			}
+			
+			if(sprite_exists(ic)) {
+				var ss = (lh - ui(6)) / sprite_get_height(ic);
+				draw_sprite_ext(ic, 1, ui(16), yy + _h / 2, ss, ss);
+			}
+			
+			var tx = ui(32);
+			
+			if(show_time) {
+				tx += timeW + ui(8);
+			
+				draw_set_text(f_p3, fa_right, fa_top, COLORS._main_text_sub_inner);
+				draw_text_line(round(tx - ui(4)), round(yy + ui(6)), noti.time, -1, txw);
+			}
+			
+			draw_set_text(f_p3, fa_left, fa_top, COLORS._main_text_inner);
+			draw_text_line(round(tx + ui(4)), round(yy + ui(6)), noti.txt, -1, txw);
+			
+			if(noti.amount > 1) {
+				draw_set_text(f_p1, fa_center, fa_center, COLORS._main_text);
+				var bw = max( ui(32), string_width(noti.amount) + ui(10) );
+				var bh = ui(28);
 				
-				if(noti.icon == noone) {
-					switch(noti.type) {
-						case NOTI_TYPE.log :	 ic = THEME.noti_icon_log;     break;	
-						case NOTI_TYPE.warning : ic = THEME.noti_icon_warning; break;	
-						case NOTI_TYPE.error :	 ic = THEME.noti_icon_error;   break;	
-					}
-				}
+				var bx = _w - ui(0) - bw;
+				var by = yy + ui(0) + ui(1);
 				
-				if(sprite_exists(ic)) {
-					var ss = (lh - ui(6)) / sprite_get_height(ic);
-					draw_sprite_ext(ic, 1, ui(16), yy + _h / 2, ss, ss);
-				}
-				
-				var tx = ui(32);
-				
-				if(show_time) {
-					tx += timeW + ui(8);
-				
-					draw_set_text(f_p3, fa_right, fa_top, COLORS._main_text_sub_inner);
-					draw_text_line(round(tx - ui(4)), round(yy + ui(6)), noti.time, -1, txw);
-				}
-				
-				draw_set_text(f_p3, fa_left, fa_top, COLORS._main_text_inner);
-				draw_text_line(round(tx + ui(4)), round(yy + ui(6)), noti.txt, -1, txw);
-				
-				if(noti.amount > 1) {
-					draw_set_text(f_p1, fa_center, fa_center, COLORS._main_text);
-					var bw = max( ui(32), string_width(noti.amount) + ui(10) );
-					var bh = ui(28);
-					
-					var bx = _w - ui(0) - bw;
-					var by = yy + ui(0) + ui(1);
-					
-					draw_set_text(f_p1, fa_center, fa_center, COLORS._main_text_accent);
-					draw_text(round(bx + bw / 2), round(by + bh / 2), noti.amount);
-				}
+				draw_set_text(f_p1, fa_center, fa_center, COLORS._main_text_accent);
+				draw_text(round(bx + bw / 2), round(by + bh / 2), noti.amount);
 			}
 			
 			yy += _h + ui(2);

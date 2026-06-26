@@ -20,12 +20,12 @@ function APPEND(_path, context = PANEL_GRAPH.getCurrentContext()) {
 	return node_create;
 }
 
-function __APPEND_MAP(_map, context = PANEL_GRAPH.getCurrentContext(), appended_list = [], _connect_outside = false, _scale = true) {
+function __APPEND_MAP(_map, context = PANEL_GRAPH.getCurrentContext(), appended_list = [], _connect_outside = false, _scale = true, _default = false) {
 	static log   = false;
 	UNDO_HOLDING = true;
 	PROJECT.migrationError = [];
 	
-	if(struct_has(_map, "version")) {
+	if(has(_map, "version")) {
 		var _v = _map.version;
 		LOADING_VERSION = _v;
 		
@@ -35,7 +35,7 @@ function __APPEND_MAP(_map, context = PANEL_GRAPH.getCurrentContext(), appended_
 		}
 	}
 	
-	if(!struct_has(_map, "nodes")) return noone;
+	if(!has(_map, "nodes")) return noone;
 	var _node_list	  = _map.nodes;
 	var node_create   = [];
 	
@@ -85,7 +85,7 @@ function __APPEND_MAP(_map, context = PANEL_GRAPH.getCurrentContext(), appended_
 		for(var i = 0; i < _append_len; i++) {
 			var _node = appended_list[i];
 			_node.applyDeserialize();
-			_node.setAllDefault();
+			if(_default) _node.setAllDefault();
 		}
 		
 	} catch(e) {
@@ -154,11 +154,11 @@ function __APPEND_MAP(_map, context = PANEL_GRAPH.getCurrentContext(), appended_
 	UNDO_HOLDING = false;
 	APPENDING    = false;
 	
-	if(struct_has(_map, "metadata")) {
+	if(has(_map, "metadata")) {
 		var meta = _map.metadata;
 		for( var i = 0; i < array_length(node_create); i++ ) {
 			var _node = node_create[i];
-			if(!struct_has(_node, "metadata")) continue;
+			if(!has(_node, "metadata")) continue;
 			
 			_node.metadata.deserialize(meta, true);
 		}
@@ -167,7 +167,7 @@ function __APPEND_MAP(_map, context = PANEL_GRAPH.getCurrentContext(), appended_
 	refreshNodeMap();
 	RENDER_ALL_REORDER
 	
-	if(struct_has(_map, "timelines")) {
+	if(has(_map, "timelines")) {
 		var _time = new timelineItemGroup().deserialize(_map.timelines);
 		array_append(PROJECT.timelines.contents, _time.contents);
 	}

@@ -708,7 +708,7 @@ function nodeClone(_nodes, _ctx = PANEL_GRAPH.getCurrentContext()) {
     
     CLONING     = true;
     APPEND_LIST = __APPEND_MAP(_map, _ctx, APPEND_LIST, false);
-    recordAction(ACTION_TYPE.collection_loaded, array_clone(APPEND_LIST));
+    recordAction(ACTION_TYPE.collection_loaded, array_clone(APPEND_LIST, 1));
     CLONING     = false;
     
     return APPEND_LIST;

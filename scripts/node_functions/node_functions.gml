@@ -7,8 +7,8 @@
 		dragging_sy = 0;
 		dragging_mx = 0;
 		dragging_my = 0;
-		rot_anc_x = 0;
-		rot_anc_y = 0;	
+		rot_anc_x   = 0;
+		rot_anc_y   = 0;	
 	}
 	
 	function node_draw_transform_box(active, _x, _y, _s, _mx, _my, _posInd, _rotInd, _scaInd, _scaUnit = false) {

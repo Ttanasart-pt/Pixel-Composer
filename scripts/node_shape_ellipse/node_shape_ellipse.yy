@@ -1,9 +1,9 @@
 {
   "$GMScript":"v1",
-  "%Name":"node_shape_rectangle",
+  "%Name":"node_shape_ellipse",
   "isCompatibility":false,
   "isDnD":false,
-  "name":"node_shape_rectangle",
+  "name":"node_shape_ellipse",
   "parent":{
     "name":"shapes",
     "path":"folders/nodes/data/generator/drawer/shape/shapes.yy",
