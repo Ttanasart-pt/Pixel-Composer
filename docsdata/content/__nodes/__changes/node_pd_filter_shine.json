@@ -21,6 +21,11 @@
         "date": "2026-06-26T04:18:36.708Z",
         "node": "Shine",
         "commit": "**Shine**: Keep Alpha option."
+      },
+      {
+        "date": "2026-06-26T07:12:39.519Z",
+        "node": "",
+        "commit": "Mask input now has an option to only use alpha channel as mask value."
       }
     ]
   },

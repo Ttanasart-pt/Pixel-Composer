@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.5.005",
+    "changes": [
+      {
+        "date": "2026-06-26T07:33:42.325Z",
+        "node": "Tile",
+        "commit": "**Tile**: Fix incorrect output when shifting with pattern."
+      }
+    ]
+  },
+  {
     "version": "1.21.5.003",
     "changes": [
       {

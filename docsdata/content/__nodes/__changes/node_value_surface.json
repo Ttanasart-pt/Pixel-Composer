@@ -1,5 +1,20 @@
 [
   {
+    "version": "1.21.5.005",
+    "changes": [
+      {
+        "date": "2026-06-26T07:12:39.576Z",
+        "node": "",
+        "commit": "Mask input now has an option to only use alpha channel as mask value."
+      },
+      {
+        "date": "2026-06-26T07:33:42.332Z",
+        "node": "",
+        "commit": "**Tile**: Fix incorrect output when shifting with pattern."
+      }
+    ]
+  },
+  {
     "version": "1.21.0.2.004",
     "changes": [
       {

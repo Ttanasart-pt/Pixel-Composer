@@ -11,6 +11,11 @@
         "date": "2026-06-26T04:05:56.848Z",
         "node": "Spherize",
         "commit": "**Spherize**: Add re-Normalize radius option."
+      },
+      {
+        "date": "2026-06-26T07:12:39.559Z",
+        "node": "",
+        "commit": "Mask input now has an option to only use alpha channel as mask value."
       }
     ]
   },

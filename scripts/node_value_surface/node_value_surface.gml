@@ -5,7 +5,7 @@
 	}
 	
 	global.SURFACE_UV_JUNC = {
-		icon:  function() /*=>*/ {return THEME.node_junction_surface_ext},
+		icon:  function() /*=>*/ {return THEME.node_junction_surface_uv},
 		color: function() /*=>*/ {return #ff6b97},
 	}
 	

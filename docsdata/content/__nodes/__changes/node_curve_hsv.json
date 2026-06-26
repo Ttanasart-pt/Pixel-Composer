@@ -8,15 +8,5 @@
         "commit": "Mask input now has an option to only use alpha channel as mask value."
       }
     ]
-  },
-  {
-    "version": "1.21.2.009",
-    "changes": [
-      {
-        "date": "2026-05-30T05:10:43.517Z",
-        "node": "Curve",
-        "commit": "**Curve**: Fix curve evaluate error at black pixel."
-      }
-    ]
   }
 ]

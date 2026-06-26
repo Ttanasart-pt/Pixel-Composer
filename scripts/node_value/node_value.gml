@@ -2673,7 +2673,8 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		_s /= 2 * THEME_SCALE;
 		
 		if(custom_icon != undefined) {
-			__draw_sprite_ext(custom_icon, _hov, x, y, _s, _s, 0, c_white, _aa * (1 - is_dummy * .3));
+			var mirx = connect_type == CONNECT_TYPE.output? -1 : 1;
+			__draw_sprite_ext(custom_icon, _hov, x, y, _s * mirx, _s, 0, c_white, _aa * (1 - is_dummy * .3));
 			
 		} else if(is_dummy) {
 			if(ghost_hover == noone) __draw_sprite_ext(THEME.node_junction_add, _hov, x, y, _s, _s, 0, c_white, _aa * (.5 + .5 * _hov));

@@ -23,7 +23,7 @@ function Node_Tile(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	newInput( 7, nodeValue_Slider(   "Shift",      0    ));
 	
 	////- =Pattern
-	newInput(11, nodeValue_EScroll( "Pattern", 0, [ "Noone", "Flip Grid", "90 Polar Rotation" ] )).setPieMenu();
+	newInput(11, nodeValue_EScroll( "Pattern", 0, [ "None", "Flip Grid", "90 Polar Rotation" ] )).setPieMenu();
 	// input 13
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
