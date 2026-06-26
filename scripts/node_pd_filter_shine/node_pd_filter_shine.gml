@@ -2,8 +2,10 @@ function Node_PB_FX_Shine(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	name = "Shine";
 	
 	////- =Surfaces
-	newInput( 0, nodeValue_Surface( "Surface" ));
-	newInput( 1, nodeValue_Surface( "Mask"    ));
+	newInput( 0, nodeValue_Surface( "Surface"    ));
+	newInput( 1, nodeValue_Surface( "Mask"       ));
+	newInput(14, nodeValue_Surface( "UV Map"     ));
+	newInput(15, nodeValue_Slider(  "UV Mix", 1  ));
 	
 	////- =Shine
 	newInput( 8, nodeValue_EButton( "Axis",      0, [ "X", "Y" ]  ));
@@ -21,12 +23,12 @@ function Node_PB_FX_Shine(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	newInput( 2, nodeValue_Palette( "Colors",     [ca_white] ));
 	newInput(10, nodeValue_EScroll( "Blend Mode", 0, [ "Normal", "Additive", "Multiply" ] ));
 	newInput( 7, nodeValue_Slider(  "Intensity",  1          ));
-	// 14
+	// 16
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
 	input_display_list = [ 
-		[ "Surfaces", false ],  0,  1, 
+		[ "Surfaces", false ],  0,  1, 14, 15, 
 	    [ "Shine",    false ],  8,  5,  4,  9,  6, 13,  3, 
 	    [ "Offset",   false ], 11, 12, 
 	    [ "Render",   false ],  2, 10,  7, 
@@ -59,6 +61,8 @@ function Node_PB_FX_Shine(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	    var _dim     = _useSurf? surface_get_dimension(_surf) : getDimension();
 	    
 	    surface_set_shader(_outSurf, sh_pb_fx_shine);
+	    	shader_set_uv(_data[14], _data[15]);
+	    
 	        shader_set_2("dimension",   _dim);
 	        shader_set_i("useSurf",     _useSurf);
 	        

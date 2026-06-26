@@ -38,6 +38,8 @@ function Node_Spherize(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 		[ "Rendering", false ], 16, 17, 
 	];
 	
+	////- Node
+	
 	attribute_surface_depth();
 	attribute_oversample();
 	attribute_interpolation();
@@ -81,18 +83,18 @@ function Node_Spherize(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 		
 		surface_set_shader(_outSurf, sh_spherize);
 		shader_set_interpolation(_surf);
-			shader_set_dim("dimension",  _surf);
-			shader_set_i("sampleMode",   _samp);
-			shader_set_2("center",       _cent);
-			shader_set_2("position",     _posi);
-			shader_set_f("rotation",     degtorad(_rota));
-			shader_set_f("trim",         _trim);
+			shader_set_dim( "dimension", _surf           );
+			shader_set_i( "sampleMode",  _samp           );
+			shader_set_2( "center",      _cent           );
+			shader_set_2( "position",    _posi           );
+			shader_set_f( "rotation",    degtorad(_rota) );
+			shader_set_f( "trim",        _trim           );
 			
-			shader_set_2("uvoffset",     _uoff);
-			shader_set_2("uvscale",      _usca);
+			shader_set_2( "uvoffset",      _uoff );
+			shader_set_2( "uvscale",       _usca );
 			
-			shader_set_f_map("strength", _data[2], _data[11], inputs[2]);
-			shader_set_f_map("radius",   _data[3], _data[12], inputs[3]);
+			shader_set_m( "strength", _data[2], _data[11], inputs[2] );
+			shader_set_m( "radius",   _data[3], _data[12], inputs[3] );
 			
 			draw_surface_safe(_surf);
 		surface_reset_shader();

@@ -6,6 +6,11 @@
         "date": "2026-06-26T03:48:14.185Z",
         "node": "",
         "commit": "**Shine**: Add Slope curve."
+      },
+      {
+        "date": "2026-06-26T03:56:34.431Z",
+        "node": "Spherize",
+        "commit": "**Spherize**: Fix oversampling not applying."
       }
     ]
   },

@@ -166,7 +166,7 @@ void main() {
 	float dist = sqrt(abs(d));
 	
 	vec2  sptx = cen + mix(uv, uv / dist, str);
-	      sptx = fract((.5 + (sptx - .5) / uvscale) - uvoffset);
+	      sptx = (.5 + (sptx - .5) / uvscale) - uvoffset;
 	vec4  c    = sampleTexture(gm_BaseTexture, sptx);
 	
 	gl_FragColor = vec4(0.);
