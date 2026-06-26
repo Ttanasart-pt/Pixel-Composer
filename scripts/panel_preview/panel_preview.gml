@@ -489,6 +489,9 @@ function Panel_Preview() : PanelContent() constructor {
             var _ind = sbChannelIndex[i];
             node.preview_channel = _ind; 
             node.setHeight();
+            
+            if(resetViewOnDoubleClick) 
+            	do_fullView = true;
         });
         
         sbChannelIndex  = [];
@@ -842,6 +845,9 @@ function Panel_Preview() : PanelContent() constructor {
         if(_chanInfd < 0 ) { node.preview_channel = _chanList[0]; return; }
         _chanInfd = (_chanInfd + (_forward? 1 : -1) + _chanAmo) % _chanAmo;
         node.preview_channel = _chanList[_chanInfd];
+        
+        if(resetViewOnDoubleClick) 
+        	do_fullView = true;
     }
     
     ////- VIEW
