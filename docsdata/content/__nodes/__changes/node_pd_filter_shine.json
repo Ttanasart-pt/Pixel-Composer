@@ -11,6 +11,11 @@
         "date": "2026-06-26T03:56:34.431Z",
         "node": "Spherize",
         "commit": "**Spherize**: Fix oversampling not applying."
+      },
+      {
+        "date": "2026-06-26T04:06:06.675Z",
+        "node": "Shine",
+        "commit": "**Shine**: Add UV input."
       }
     ]
   },
