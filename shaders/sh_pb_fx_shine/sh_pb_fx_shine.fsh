@@ -201,9 +201,11 @@ uniform int   slope_amount;
 
 uniform int   blendMode; 
 uniform float intensity; 
+uniform int   keepAlpha; 
 
 void main() {
 	vec4 cc = useSurf == 1? texture2D(gm_BaseTexture, v_vTexcoord) : vec4(0.);
+	vec4 bc = cc;
 	gl_FragColor = cc;
 	
 	if(useSurf == 1 && cc.a == 0.) return;
@@ -270,5 +272,6 @@ void main() {
 		os   = ns;
 	}
 	
+	if(keepAlpha == 1) cc.a = bc.a;
 	gl_FragColor = cc;
 }

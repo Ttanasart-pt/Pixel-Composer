@@ -16,6 +16,11 @@
         "date": "2026-06-26T04:06:06.675Z",
         "node": "Shine",
         "commit": "**Shine**: Add UV input."
+      },
+      {
+        "date": "2026-06-26T04:18:36.708Z",
+        "node": "Shine",
+        "commit": "**Shine**: Keep Alpha option."
       }
     ]
   },

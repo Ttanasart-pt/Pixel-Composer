@@ -23,7 +23,8 @@ function Node_PB_FX_Shine(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	newInput( 2, nodeValue_Palette( "Colors",     [ca_white] ));
 	newInput(10, nodeValue_EScroll( "Blend Mode", 0, [ "Normal", "Additive", "Multiply" ] ));
 	newInput( 7, nodeValue_Slider(  "Intensity",  1          ));
-	// 16
+	newInput(16, nodeValue_Bool(    "Keep Alpha", false      ));
+	// 17
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
@@ -31,7 +32,7 @@ function Node_PB_FX_Shine(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 		[ "Surfaces", false ],  0,  1, 14, 15, 
 	    [ "Shine",    false ],  8,  5,  4,  9,  6, 13,  3, 
 	    [ "Offset",   false ], 11, 12, 
-	    [ "Render",   false ],  2, 10,  7, 
+	    [ "Render",   false ],  2, 10,  7, 16, 
     ];
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _params) { }
@@ -55,6 +56,7 @@ function Node_PB_FX_Shine(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 		    var _color = _data[ 2];
 		    var _blend = _data[10];
 		    var _ints  = _data[ 7];
+		    var _keep  = _data[16];
 	    #endregion
 	    
 	    var _useSurf = is_surface(_surf);
@@ -90,6 +92,7 @@ function Node_PB_FX_Shine(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
             shader_set_palette( _color, "shineColor", "shineColorAmo" );
             shader_set_i("blendMode",   _blend );
             shader_set_f("intensity",   _ints  );
+            shader_set_i("keepAlpha",   _keep  );
 			
 			if(_useSurf) draw_surface_safe(_surf);
 			else draw_empty();

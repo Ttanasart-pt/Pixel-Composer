@@ -2029,6 +2029,7 @@
     {"name":"node_value_sdf","order":7,"path":"scripts/node_value_sdf/node_value_sdf.yy",},
     {"name":"node_value_slider_range","order":17,"path":"scripts/node_value_slider_range/node_value_slider_range.yy",},
     {"name":"node_value_slider","order":4,"path":"scripts/node_value_slider/node_value_slider.yy",},
+    {"name":"node_value_static","order":5,"path":"scripts/node_value_static/node_value_static.yy",},
     {"name":"node_value_struct","order":8,"path":"scripts/node_value_struct/node_value_struct.yy",},
     {"name":"node_value_surface","order":6,"path":"scripts/node_value_surface/node_value_surface.yy",},
     {"name":"node_value_text","order":8,"path":"scripts/node_value_text/node_value_text.yy",},
