@@ -457,27 +457,27 @@ function Panel_Preview() : PanelContent() constructor {
         tool_ry_to   = 0;
         tool_ry_max  = 0;
         
-        tool_current   = noone;
-        toolbar_width  = ui(32);
-        toolbar_height = ui(32);
-        topbar_height  = ui(32);
+        tool_current     = noone;
+        toolbar_width    = ui(32);
+        toolbar_height   = ui(32);
+        topbar_height    = ui(32);
         
-         tool_hovering      = noone;
-        _tool_hovering      = noone;
+         tool_hovering   = noone;
+        _tool_hovering   = noone;
         
-        tool_side_draw_l    = false;
-        tool_side_draw_r    = false;
-        tool_side_draw_t    = false;
-        tool_side_draw_b    = false;
+        tool_side_draw_l = false;
+        tool_side_draw_r = false;
+        tool_side_draw_t = false;
+        tool_side_draw_b = false;
         
-        overlay_hovering    = false;
-        view_hovering       = false;
+        overlay_hovering = false;
+        view_hovering    = false;
         
-        tool_show_key       = false;
-        tool_clearable      = false;
-        tool_clearKey       = FUNCTIONS[$ string_to_var2("Preview", "Clear tool")];
+        tool_show_key    = false;
+        tool_clearable   = false;
+        tool_clearKey    = FUNCTIONS[$ string_to_var2("Preview", "Clear tool")];
         
-        hk_editing          = noone;
+        hk_editing       = noone;
         
         sbChannel = new scrollBox([], function(i) /*=>*/ {
             var node = __getNodePreview();

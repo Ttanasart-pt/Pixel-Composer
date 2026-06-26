@@ -48,9 +48,9 @@ function Node_Image_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		var _spd = getInputData(8);
 		TOTAL_FRAMES = max(1, _spd == 0? 1 : ceil(array_length(_atl) / _spd));
 		
-	}).setText("Sync Frames");
+	}).setText("Match Project Frames");
 	
-	newInput(15, nodeValue_Bool(       "Flatten Array", true ));
+	newInput(15, nodeValue_Bool(    "Flatten Array",       true  ));
 		
 	////- =Filter
 	newInput(12, nodeValue_Bool(    "Filter empty output", false ));
