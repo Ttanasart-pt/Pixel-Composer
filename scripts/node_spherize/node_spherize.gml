@@ -23,18 +23,19 @@ function Node_Spherize(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	newInput(14, nodeValue_Rotation( "Rotation",   0      )).setHotkey("R").setPieMenu();
 	newInput( 2, nodeValue_Slider(   "Strength",   1      )).setHotkey("S").setMappable(11).setPieMenu();
 	newInput( 3, nodeValue_Slider(   "Radius",    .2      )).setMappable(12).setPieMenu();
+	newInput(18, nodeValue_Bool(     "Normalize", false   ));
 	newInput(13, nodeValue_Slider(   "Trim Edge",  0      )).setPieMenu();
 	
 	////- =Rendering
 	newInput(16, nodeValue_Vec2( "Texture Offset", [0,0]  ));
 	newInput(17, nodeValue_Vec2( "Texture Scale",  [1,1]  ));
-	// input 17
+	// 19
 		
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
 	input_display_list = [ 7, 8, 
 		[ "Surfaces",   true ], 0, 5, 6, 9, 10, 
-		[ "Spherize",  false ], 1, 15, 14, 2, 11, 3, 12, 13, 
+		[ "Spherize",  false ], 1, 15, 14, 2, 11, 3, 12, 18, 13, 
 		[ "Rendering", false ], 16, 17, 
 	];
 	
@@ -74,6 +75,7 @@ function Node_Spherize(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 			
 			var _cent = _data[ 1];
 			var _posi = _data[15];
+			var _norm = _data[18];
 			var _trim = _data[13];
 			var _rota = _data[14];
 			
@@ -88,6 +90,7 @@ function Node_Spherize(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 			shader_set_2( "center",      _cent           );
 			shader_set_2( "position",    _posi           );
 			shader_set_f( "rotation",    degtorad(_rota) );
+			shader_set_i( "norm",        _norm           );
 			shader_set_f( "trim",        _trim           );
 			
 			shader_set_2( "uvoffset",      _uoff );

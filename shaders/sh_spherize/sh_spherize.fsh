@@ -143,6 +143,7 @@ uniform vec2      strength;
 uniform int       strengthUseSurf;
 uniform sampler2D strengthSurf;
 
+uniform int   norm;
 uniform float trim;
 uniform float rotation;
 
@@ -162,8 +163,10 @@ void main() {
 	vec2  tx   = v_vTexcoord - position / dimension;
 	vec2  cen  = center / dimension;
 	vec2  uv   = (tx - cen) * mat2(cos(rotation), - sin(rotation), sin(rotation), cos(rotation));
-	float d    = 1. - dot(uv, uv) / rad;
-	float dist = sqrt(abs(d));
+	highp float d    = 1. - dot(uv, uv) / rad;
+	highp float dist = sqrt(abs(d));
+	
+	if(norm == 1) dist /= rad;
 	
 	vec2  sptx = cen + mix(uv, uv / dist, str);
 	      sptx = (.5 + (sptx - .5) / uvscale) - uvoffset;

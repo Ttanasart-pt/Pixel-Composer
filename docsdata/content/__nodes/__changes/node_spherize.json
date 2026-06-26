@@ -6,6 +6,11 @@
         "date": "2026-06-26T03:56:34.438Z",
         "node": "",
         "commit": "**Spherize**: Fix oversampling not applying."
+      },
+      {
+        "date": "2026-06-26T04:05:56.848Z",
+        "node": "Spherize",
+        "commit": "**Spherize**: Add re-Normalize radius option."
       }
     ]
   },

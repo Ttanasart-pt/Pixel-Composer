@@ -221,7 +221,9 @@ void main() {
 		prog += mix(offsetRange.x, offsetRange.y, (of.r + of.g + of.b) / 3. * of.a);
 	}
 	
-	vec2  px = floor(getUV(v_vTexcoord) * dimension);
+	float alp = 1.;
+	vec2  px  = getUVA(v_vTexcoord, alp) * dimension;
+	ints *= alp;
 	
 	      px = invAxis == 0? px.xy : px.yx;
 	float ww = invAxis == 0? dimension.x : dimension.y;
