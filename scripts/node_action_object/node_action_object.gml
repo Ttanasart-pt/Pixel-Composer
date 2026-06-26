@@ -147,13 +147,12 @@ function NodeAction() constructor {
 		
 		location	= struct_try_get(map, "location", noone);
 		
-		if(struct_has(map, "sprPath")) {
+		if(has(map, "sprPath")) {
 			var _path = string_replace(map.sprPath, "./", filename_dir(path) + "/");
 			
 			if(file_exists_empty(_path)) {
 				sprPath = _path;
-				spr = sprite_add(_path, 1, false, false, 0, 0);
-				sprite_set_offset(spr, sprite_get_width(spr) / 2, sprite_get_height(spr) / 2);
+				spr = sprite_add_center(_path, 1, false, false, 0, 0);
 			}
 		}
 	

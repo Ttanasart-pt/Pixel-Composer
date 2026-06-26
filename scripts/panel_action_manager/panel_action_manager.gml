@@ -389,16 +389,30 @@ function Panel_Action_Manager() : PanelContent() constructor {
 				if(_node) _surf = _node.getPreviewValues();
 			}
 			
-			if(is_surface(_surf))
-				draw_surface_fit(_surf, _wx + _ths / 2, _wy + _ths / 2, _thm, _thm);
+			draw_surface_fit(_surf, _wx + _ths / 2, _wy + _ths / 2, _thm, _thm);
+			draw_sprite_stretched(THEME.box_r2_clr, 1, _wx, _wy, _ths, _ths);
 			
 		} else if(action_selecting != undefined) {
 			var spr = action_selecting.spr;
 			if(sprite_exists(spr)) 
 				draw_sprite_fit(spr, 0, _wx + _ths / 2, _wy + _ths / 2, _thm, _thm);
+				
+			draw_sprite_stretched(THEME.box_r2_clr, 1, _wx, _wy, _ths, _ths);
+			if(_hov) {
+				draw_sprite_stretched_add(THEME.box_r2_clr, 1, _wx, _wy, _ths, _ths, c_white, .3);
+				if(mouse_lpress(pFOCUS)) {
+					print(action_selecting);
+					var _path = get_open_filename_compat("Image (.png)|.png", ""); key_release();
+					if(file_exists_empty(_path)) {
+						var _fpath = action_selecting.sprPath;
+						if(_fpath == "")
+							_fpath = filename_change_ext(action_selecting.filePath, ".png");
+						file_copy_override(_path, _fpath);
+						action_selecting.spr = sprite_add_center(_path, 1, false, false, 0, 0);
+					}
+				}
+			}
 		}
-		draw_sprite_stretched(THEME.box_r2_clr, 1, _wx, _wy, _ths, _ths);
-		if(_hov) draw_sprite_stretched_add(THEME.box_r2_clr, 1, _wx, _wy, _ths, _ths, c_white, .25);
 		
 		////- =Buttons
 		

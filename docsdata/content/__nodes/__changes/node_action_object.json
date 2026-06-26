@@ -6,6 +6,11 @@
         "date": "2026-06-26T08:26:32.208Z",
         "node": "Action Editor",
         "commit": "**Action Editor**: Fix adding action now automatically update action list."
+      },
+      {
+        "date": "2026-06-26T08:43:13.246Z",
+        "node": "Action Manager",
+        "commit": "**Action Manager**: Add the ability to change thumbnail"
       }
     ]
   },
