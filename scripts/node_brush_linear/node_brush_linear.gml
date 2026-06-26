@@ -58,7 +58,7 @@ function Node_Brush_Linear(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 		surface_reset_shader();
 		
 		__process_mask_modifier(_data);
-		_outSurf = mask_apply(_data[0], _outSurf, _data[7], _data[8]);
+		_outSurf = mask_apply_input(_data[0], _outSurf, _data[7], _data[8], inputs[7]);
 		_outSurf = channel_apply(_data[0], _outSurf, _data[9]);
 		
 		return _outSurf;

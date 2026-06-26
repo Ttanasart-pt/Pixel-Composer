@@ -114,7 +114,7 @@ function Node_Threshold(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		surface_reset_shader();
 		
 		__process_mask_modifier(_data);
-		_outSurf = mask_apply(_data[0], _outSurf, _data[4], _data[5]);
+		_outSurf = mask_apply_input(_data[0], _outSurf, _data[4], _data[5], inputs[4]);
 		_outSurf = channel_apply(_data[0], _outSurf, _data[10]);
 		
 		return _outSurf;

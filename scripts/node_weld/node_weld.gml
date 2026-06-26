@@ -67,7 +67,7 @@ function Node_Weld(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		surface_reset_shader();
 		
 		__process_mask_modifier(_data);
-		_outSurf = mask_apply(_surf1, _outSurf, _data[7], _data[2]);
+		_outSurf = mask_apply_input(_surf1, _outSurf, _data[7], _data[2], inputs[7]);
 		_outSurf = channel_apply(_surf1, _outSurf, _data[4]);
 		
 		return _outSurf; 

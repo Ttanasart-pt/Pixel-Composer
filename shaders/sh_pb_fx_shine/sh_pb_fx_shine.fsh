@@ -174,7 +174,8 @@ uniform vec2  dimension;
 uniform int   useSurf;
 
 uniform int   useMask;
-uniform sampler2D mask;
+uniform int   maskAlpha;
+uniform sampler2D maskSurface;
 
 uniform int   useOffset;
 uniform sampler2D offset;
@@ -214,8 +215,8 @@ void main() {
 	float prog = progress;
 	
 	if(useMask == 1) {
-		vec4 mm = texture2D(mask, v_vTexcoord);
-		ints *= (mm.r + mm.g + mm.b) / 3. * mm.a;
+		vec4 mm = texture2D(maskSurface, v_vTexcoord);
+		ints *= maskAlpha == 1? mm.a : (mm.r + mm.g + mm.b) / 3. * mm.a;
 	}
 	
 	if(useOffset == 1) {

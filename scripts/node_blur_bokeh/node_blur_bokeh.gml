@@ -107,7 +107,7 @@ function Node_Blur_Bokeh(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 		surface_reset_shader();
 		
 		__process_mask_modifier(_data);
-		_outSurf = mask_apply(_surf, _outSurf, _data[2], _data[3]);
+		_outSurf = mask_apply_input(_surf, _outSurf, _data[2], _data[3], inputs[2]);
 		_outSurf = channel_apply(_surf, _outSurf, _data[5]);
 		
 		return _outSurf;

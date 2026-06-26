@@ -68,8 +68,7 @@ function Node_PB_FX_Shine(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	        shader_set_2("dimension",   _dim);
 	        shader_set_i("useSurf",     _useSurf);
 	        
-	        shader_set_i("useMask",     is_surface(_mask));
-	        shader_set_s("mask",        _mask );
+	        shader_set_mask( _mask, inputs[1] );
 	        
 	        shader_set_i("useOffset",   is_surface(_offs));
 	        shader_set_s("offset",      _offs );

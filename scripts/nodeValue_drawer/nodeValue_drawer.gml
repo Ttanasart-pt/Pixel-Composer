@@ -570,6 +570,7 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 			jun.inspector_h = editBoxH;
 			jun.visible_in_inspector = true;
 			
+			wid.junction = jun;
 			_widH = wid.drawParam(param) ?? 0;
 			if(breakLine) _widH += ui(4);
 			else          _widH -= lb_h;
@@ -580,7 +581,6 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 			lbHov = lbHov && !hvWid;
 			
 			mbRight = mbRight && wid.right_click_block;
-		
 		}
 	#endregion
 	

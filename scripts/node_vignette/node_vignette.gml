@@ -71,7 +71,7 @@ function Node_Vignette(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 		surface_reset_shader();
 		
 		__process_mask_modifier(_data);
-		_outSurf = mask_apply(_surf, _outSurf, _data[11], _data[12]);
+		_outSurf = mask_apply_input(_surf, _outSurf, _data[11], _data[12], inputs[11]);
 		
 		return _outSurf;
 	}

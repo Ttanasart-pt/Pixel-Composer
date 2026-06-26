@@ -1005,9 +1005,8 @@ function Node_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 			
 			shader_set_f("dimension",   _dim    );
 			
-			shader_set_s("maskSurface",  _mask             );
-			shader_set_i("useMask",      is_surface(_mask) );
-			shader_set_i("multiplyAlpha",_mulpA            );
+			shader_set_mask(_mask, inputs[50] );
+			shader_set_i("multiplyAlpha",_mulpA );
 			
 			shader_set_i("drawBG",      _bg     );
 			shader_set_i("bgBlend",     _bgBlnd );

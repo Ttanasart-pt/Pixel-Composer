@@ -55,7 +55,7 @@ function Node_Alpha_Cutoff(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 		surface_reset_target();
 		
 		__process_mask_modifier(_data);
-		_outSurf = mask_apply(_data[0], _outSurf, _data[2], _data[3]);
+		_outSurf = mask_apply_input(_data[0], _outSurf, _data[2], _data[3], inputs[2]);
 		
 		return _outSurf;
 	}

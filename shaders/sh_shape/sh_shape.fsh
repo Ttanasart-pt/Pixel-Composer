@@ -173,8 +173,9 @@ uniform int sides;
 uniform int tile;
 
 uniform sampler2D maskSurface;
-uniform int       useMask;
-uniform int       multiplyAlpha;
+uniform int   useMask;
+uniform int   maskAlpha;
+uniform int   multiplyAlpha;
 
 uniform int       drawBG;
 uniform sampler2D bgSurf;
@@ -649,8 +650,8 @@ void main() {
 	vec4 fgPixel = drawDF == 1? gl_FragData[2] : baseColor;
 	     
 	if(useMask == 1) {
-		vec4  mask = texture2D(maskSurface, v_vTexcoord);
-		float alph = (mask.r + mask.g + mask.b) / 3. * mask.a;
+		vec4  msk  = texture2D(maskSurface, v_vTexcoord);
+		float alph = maskAlpha == 1? msk.a : (msk.r + msk.g + msk.b) / 3. * msk.a;
 		fgPixel *= alph;
 	}
 	

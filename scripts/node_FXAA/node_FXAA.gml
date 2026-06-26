@@ -68,7 +68,7 @@ function Node_FXAA(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		surface_reset_shader();
 		
 		__process_mask_modifier(_data);
-		_outData[0] = mask_apply(_data[0], _outData[0], _mask, _mix);
+		_outData[0] = mask_apply_input(_data[0], _outData[0], _mask, _mix, inputs[5]);
 		_outData[0] = channel_apply(_data[0], _outData[0], _data[4]);
 		
 		return _outData;

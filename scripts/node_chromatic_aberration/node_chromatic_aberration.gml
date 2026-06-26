@@ -95,7 +95,7 @@ function Node_Chromatic_Aberration(_x, _y, _group = noone) : Node_Processor(_x, 
 		surface_reset_shader();
 		
 		__process_mask_modifier(_data);
-		_outSurf = mask_apply(_surf, _outSurf, _data[10], _data[11]);
+		_outSurf = mask_apply_input(_surf, _outSurf, _data[10], _data[11], inputs[10]);
 		
 		return _outSurf;
 	}

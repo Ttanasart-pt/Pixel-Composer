@@ -74,7 +74,7 @@ function Node_Skew(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		surface_reset_shader();
 		
 		__process_mask_modifier(_data);
-		_outSurf = mask_apply(_surf, _outSurf, _data[6], _data[7]);
+		_outSurf = mask_apply_input(_surf, _outSurf, _data[6], _data[7], inputs[6]);
 		_outSurf = channel_apply(_surf, _outSurf, _data[9]);
 		
 		return _outSurf;

@@ -1,15 +1,17 @@
 function surfaceBox(_onModify, _def_path = "") : widget() constructor {
 	onModify = _onModify;	
 	def_path = _def_path;
+	junction = undefined;
 	
 	open_rx = 0;
 	open_ry = 0;
 	
-	align = fa_center;
+	align        = fa_center;
 	display_data = {};
 	current_data = noone;
 	
 	cb_atlas_crop = new checkBox(function() /*=>*/ { display_data.atlas_crop = !display_data.atlas_crop; });
+	cb_mask_alpha = new checkBox(function() /*=>*/ { junction.attributes.mask_alpha_only = !junction.attributes.mask_alpha_only; junction.node.triggerRender(); });
 	
 	static trigger = function() {
 		var _assetBox = new Panel_Asset_Selector(function(v) /*=>*/ {return onModify(v)}, current_data, def_path);
@@ -191,6 +193,28 @@ function surfaceBox(_onModify, _def_path = "") : widget() constructor {
 			}
 			
 			h -= ui(4);
+		}
+		
+		if(is(junction, __NodeValue_Surface)) {
+			switch(junction.surfaceType) {
+				case "mask" :
+					var wgx = _x;
+					var wgy = _y + _h + ui(4)
+					var wgw = _w;
+					var wgh = ui(20);
+					
+					draw_set_text(f_p3, fa_left, fa_center, COLORS._main_text_sub);
+					draw_text_add(wgx, wgy + wgh / 2, __txt("Alpha"));
+					
+					wgx += ui(40);
+					wgw -= ui(40);
+					
+					cb_mask_alpha.setFocusHover(iactive, ihover);
+					cb_mask_alpha.draw(wgx, wgy, wgw, wgh, junction.attributes.mask_alpha_only, _m);
+					
+					h += ui(4) + wgh;
+					break;
+			}
 		}
 		
 		resetFocus();

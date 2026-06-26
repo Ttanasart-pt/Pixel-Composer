@@ -161,6 +161,14 @@
 		return t;
 	}
 	
+	function shader_set_mask(_mask, _input = noone) {
+		shader_set_i( "useMask",     is_surface(_mask));
+    	shader_set_s( "maskSurface", _mask );
+    	
+    	if(_input != noone)
+			shader_set_i( "maskAlpha", _input.attributes.mask_alpha_only);
+	}
+	
 	function shader_set_surface_dimension(uniform, surface) {
 		
 		var shader = shader_current();

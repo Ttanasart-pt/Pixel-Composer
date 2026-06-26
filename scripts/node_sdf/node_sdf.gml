@@ -118,7 +118,7 @@ function Node_SDF(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) const
 			draw_surface_safe(temp_surface[bg]);
 		surface_reset_shader();
 		
-		_outSurf = mask_apply(inSurf, _outSurf, _data[9], _data[10]);
+		_outSurf = mask_apply_input(inSurf, _outSurf, _data[9], _data[10], inputs[9]);
 		_outSurf = channel_apply(inSurf, _outSurf, _data[8]);
 		
 		return _outSurf;

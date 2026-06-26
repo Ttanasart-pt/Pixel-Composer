@@ -136,8 +136,8 @@ function Node_Outline(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		
 		__process_mask_modifier(_data);
 		
-		_outData[0] = mask_apply(surf, _outData[0], _data[9], _data[10]);
-		_outData[1] = mask_apply(surf, _outData[1], _data[9], _data[10]);
+		_outData[0] = mask_apply_input(surf, _outData[0], _data[9], _data[10], inputs[9]);
+		_outData[1] = mask_apply_input(surf, _outData[1], _data[9], _data[10], inputs[9]);
 		
 		return _outData;
 	}

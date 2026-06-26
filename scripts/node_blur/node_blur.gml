@@ -160,7 +160,7 @@ function Node_Blur(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		BLEND_NORMAL
 		
 		__process_mask_modifier(_data);
-		_outSurf = mask_apply(_data[0], _outSurf, _mask, _mix);
+		_outSurf = mask_apply_input(_data[0], _outSurf, _mask, _mix, inputs[5]);
 		_outSurf = channel_apply(_data[0], _outSurf, _data[8]);
 		
 		return _outSurf;
