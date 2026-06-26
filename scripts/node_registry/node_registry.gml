@@ -557,7 +557,7 @@ function __read_node_display_folder(dir) {
 	}
 	file_find_close();
 	
-	array_foreach(_dirs, function(d) /*=>*/ {return __read_node_display_folder(d)});
+	array_foreach(_dirs, function(d,i) /*=>*/ {return __read_node_display_folder(d)});
 }
 
 function __initNodes(unzip = true) { 

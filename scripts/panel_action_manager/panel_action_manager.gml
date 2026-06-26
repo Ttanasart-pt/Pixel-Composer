@@ -2,8 +2,8 @@ function Panel_Action_Manager() : PanelContent() constructor {
 	title = __txt("Action Manager");
 	showHeader = true;
 	
-	w     = min(WIN_W, ui(800));
-	h     = ui(400);
+	w     = min(WIN_W, ui(1000));
+	h     = ui(600);
 	min_w = ui(640);
 	min_h = ui(320);
 	auto_pin = true;
@@ -54,7 +54,9 @@ function Panel_Action_Manager() : PanelContent() constructor {
 		cat_index = v; 
 	}).setFont(f_p2).setAlign(fa_left).setHorizontal(true).setPadding(ui(16)).setPaddingItem(ui(4));
 	
-	sc_action_list = new scrollPane(1, 1, function(_y, _m) {
+	////- Scroll pane
+	
+	sc_action_list = new scrollPane(0, 0, function(_y, _m) /*=>*/ {
 		draw_clear_alpha(COLORS.panel_bg_clear_inner, 1);
 		var _w = sc_action_list.surface_w;
 		var _h = sc_action_list.surface_h;
@@ -106,7 +108,7 @@ function Panel_Action_Manager() : PanelContent() constructor {
 		return hh;
 	});
 	
-	sc_action_content = new scrollPane(1, 1, function(_y, _m) {
+	sc_action_content = new scrollPane(0, 0, function(_y, _m) /*=>*/ {
 		draw_clear_alpha(COLORS.panel_bg_clear_inner, 1);
 		if(action_selecting == undefined) return 0;
 		
@@ -151,7 +153,7 @@ function Panel_Action_Manager() : PanelContent() constructor {
 		return hh;
 	});
 	
-	sc_action_creating = new scrollPane(1, 1, function(_y, _m) {
+	sc_action_creating = new scrollPane(0, 0, function(_y, _m) /*=>*/ {
 		draw_clear_alpha(COLORS.panel_bg_clear_inner, 1);
 		var _w  = sc_action_creating.surface_w;
 		var _h  = ui(16);
@@ -275,79 +277,7 @@ function Panel_Action_Manager() : PanelContent() constructor {
 		return _h;
 	});
 	
-	function setAction(act) {
-		action_selecting = act;
-		cat_index = array_find(cat_value, action_selecting.location);
-	}
-	
-	function newAction(_nodes) { 
-		action_selecting = new NodeAction();
-		creating = true;
-		rawNodes = [];
-		
-		if(array_empty(_nodes)) { close(); return; }
-		
-		var _nmap = {};
-		var _minx = _nodes[0].x;
-		var _miny = _nodes[0].y;
-		
-		for (var i = 0, n = array_length(_nodes); i < n; i++) {
-			var _n = _nodes[i];
-			rawNodes[i] = { node: _n, expanded: false };
-			_nmap[$ _n.node_id] = i;
-			
-			_minx = min(_minx, _n.x);
-			_miny = min(_miny, _n.y);
-		}
-		
-		for (var i = 0, n = array_length(_nodes); i < n; i++) {
-			var _n    = _nodes[i];
-			var _idT  = i;
-			var _vals = {};
-			
-			for(var j = 0; j < array_length(_n.inputs); j++) {
-				var _in = _n.inputs[j];
-				var _vf = _in.value_from;
-				_vals[$ j] = {};
-				
-				if(_vf != noone && !struct_has(_nmap, _vf.node.node_id))
-					action_selecting.inputNode = i;
-				
-				if(_vf == noone || !struct_has(_nmap, _vf.node.node_id)) {
-					var _vl = _in.getValue(, false);
-					if(!isEqual(_vl, _in.def_val))
-						_vals[$ j].value = _vl;
-					continue;
-				}
-				
-				var _idF = _nmap[$ _vf.node.node_id];
-				
-				array_push(action_selecting.connections, {
-					from: _idF,
-					fromIndex: _vf.index,
-					
-					to: _idT,
-					toIndex: j,
-				});
-			}
-			
-			for(var j = 0; j < array_length(_n.outputs); j++) {
-				var _ou = _n.outputs[j];
-				var _vt = _ou.getJunctionTo();
-				
-				for( var k = 0, m = array_length(_vt); k < m; k++ )
-					if(!struct_has(_nmap, _vt[k].node.node_id)) action_selecting.outputNode = i;
-			}
-			
-			action_selecting.nodes[i] = {
-				node: instanceof(_n), 
-				x   : _n.x - _minx,
-				y   : _n.y - _miny,
-				setValues : _vals,
-			};
-			
-		}
-	}
+	////- Draw
 	
 	function drawContent(panel) {
 		draw_clear_alpha(COLORS.panel_bg_clear, 0);
@@ -450,6 +380,7 @@ function Panel_Action_Manager() : PanelContent() constructor {
 		draw_text_add(_tx, _wy + _wh / 2, __txt("Thumbnail"));
 		var _ths = ui(80);
 		var _thm = _ths - ui(4);
+		var _hov = pHOVER && point_in_rectangle(mx, my, _wx, _wy, _wx + _ths, _wy + _ths);
 		draw_sprite_stretched_ext(THEME.box_r2_clr, 0, _wx, _wy, _ths, _ths, COLORS._main_icon_light);
 		if(creating) {
 			var _surf = PANEL_PREVIEW.getNodePreviewSurface();
@@ -463,9 +394,11 @@ function Panel_Action_Manager() : PanelContent() constructor {
 			
 		} else if(action_selecting != undefined) {
 			var spr = action_selecting.spr;
-			if(sprite_exists(spr)) draw_sprite_fit(spr, 0, _wx + _ths / 2, _wy + _ths / 2, _thm, _thm);
+			if(sprite_exists(spr)) 
+				draw_sprite_fit(spr, 0, _wx + _ths / 2, _wy + _ths / 2, _thm, _thm);
 		}
 		draw_sprite_stretched(THEME.box_r2_clr, 1, _wx, _wy, _ths, _ths);
+		if(_hov) draw_sprite_stretched_add(THEME.box_r2_clr, 1, _wx, _wy, _ths, _ths, c_white, .25);
 		
 		////- =Buttons
 		
@@ -543,4 +476,83 @@ function Panel_Action_Manager() : PanelContent() constructor {
 			
 		}
 	}
+	
+	////- Actions
+	
+	function setAction(act) {
+		action_selecting = act;
+		cat_index = array_find(cat_value, action_selecting.location);
+	}
+	
+	function newAction(_nodes) { 
+		action_selecting = new NodeAction();
+		creating = true;
+		rawNodes = [];
+		
+		if(array_empty(_nodes)) { close(); return; }
+		
+		var _nmap = {};
+		var _minx = _nodes[0].x;
+		var _miny = _nodes[0].y;
+		
+		for (var i = 0, n = array_length(_nodes); i < n; i++) {
+			var _n = _nodes[i];
+			rawNodes[i] = { node: _n, expanded: false };
+			_nmap[$ _n.node_id] = i;
+			
+			_minx = min(_minx, _n.x);
+			_miny = min(_miny, _n.y);
+		}
+		
+		for (var i = 0, n = array_length(_nodes); i < n; i++) {
+			var _n    = _nodes[i];
+			var _idT  = i;
+			var _vals = {};
+			
+			for(var j = 0; j < array_length(_n.inputs); j++) {
+				var _in = _n.inputs[j];
+				var _vf = _in.value_from;
+				_vals[$ j] = {};
+				
+				if(_vf != noone && !struct_has(_nmap, _vf.node.node_id))
+					action_selecting.inputNode = i;
+				
+				if(_vf == noone || !struct_has(_nmap, _vf.node.node_id)) {
+					var _vl = _in.getValue(, false);
+					if(!isEqual(_vl, _in.def_val))
+						_vals[$ j].value = _vl;
+					continue;
+				}
+				
+				var _idF = _nmap[$ _vf.node.node_id];
+				
+				array_push(action_selecting.connections, {
+					from: _idF,
+					fromIndex: _vf.index,
+					
+					to: _idT,
+					toIndex: j,
+				});
+			}
+			
+			for(var j = 0; j < array_length(_n.outputs); j++) {
+				var _ou = _n.outputs[j];
+				var _vt = _ou.getJunctionTo();
+				
+				for( var k = 0, m = array_length(_vt); k < m; k++ )
+					if(!struct_has(_nmap, _vt[k].node.node_id)) action_selecting.outputNode = i;
+			}
+			
+			action_selecting.nodes[i] = {
+				node: instanceof(_n), 
+				x   : _n.x - _minx,
+				y   : _n.y - _miny,
+				setValues : _vals,
+			};
+			
+		}
+		
+		
+	}
+	
 }

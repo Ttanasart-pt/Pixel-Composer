@@ -6,6 +6,11 @@
         "date": "2026-06-26T01:26:40.228Z",
         "node": "",
         "commit": "Fix freeze when duplicating some nodes."
+      },
+      {
+        "date": "2026-06-26T08:26:32.208Z",
+        "node": "",
+        "commit": "**Action Editor**: Fix adding action now automatically update action list."
       }
     ]
   },

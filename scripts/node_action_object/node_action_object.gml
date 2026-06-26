@@ -178,13 +178,11 @@ function NodeAction_manager() : NodeAction() constructor {
 }
 
 function __initNodeActions(_update = false) {
-	// if(_update) {
-	// 	array_resize(NODE_ACTION_LIST, 0);
-	// 	array_push(NODE_ACTION_LIST, new NodeAction_create());
-	// 	array_push(NODE_ACTION_LIST, new NodeAction_manager());
+	if(_update) {
+		array_resize(NODE_ACTION_LIST, 2);
 		
-	// } else 
-	NODE_ACTION_LIST = [ new NodeAction_create(), new NodeAction_manager() ];
+	} else 
+		NODE_ACTION_LIST = [ new NodeAction_create(), new NodeAction_manager() ];
 	
 	var root = $"{DIRECTORY}Nodes/Actions";
 	directory_verify(root);
