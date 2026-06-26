@@ -746,7 +746,8 @@ function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 				}
 				
 			} else {
-				var _drawLetters = true;//_wave || __colLtLen > 1;
+				var _drawLetters = _wave || __colLtLen > 1;
+				var _drawLetters = true;
 				
 				for( var i = 0, n = array_length(_str_lines); i < n; i++ ) {
 					var _str_line   = _str_lines[i];

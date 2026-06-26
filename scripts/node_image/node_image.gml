@@ -28,12 +28,20 @@ function Node_Image(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name  = "Image";
 	color = COLORS.node_blend_input;
 	
-	newInput( 0, nodeValue_FPath( "Path" )).setDisplay(VALUE_DISPLAY.path_load, { filter: FILE_SEL_IMAGE }).rejectArray();
+	newInput( 0, nodeValue_FPath(    "Path" )).setDisplay(VALUE_DISPLAY.path_load, { filter: FILE_SEL_IMAGE }).rejectArray();
 	newInput( 1, nodeValue_IPadding( "Padding", [0, 0, 0, 0] ));
+	// 2
 		
 	newOutput( 0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone ));
 	newOutput( 1, nodeValue_Output("Path",        VALUE_TYPE.path,    ""    )).setVisible(true, true);
 	newOutput( 2, nodeValue_Output("Dimension",   VALUE_TYPE.integer, [1,1] )).setDisplay(VALUE_DISPLAY.vector);
+	
+	b_splice = button(function() /*=>*/ {return autoSplice()}).setText(__txt("Auto Splice"));
+	
+	input_display_list = [ 
+		[ "Path",  false ],  0, 
+		[ "Image", false ],  1, b_splice, 
+	];
 	
 	////- Node
 	
@@ -74,28 +82,6 @@ function Node_Image(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	
 	insp1button = button(function() /*=>*/ { updatePaths(path_get(getInputData(0))); triggerRender(); }).setTooltip(__txt("Refresh"))
 		.setIcon(THEME.refresh_icon, 1, COLORS._main_value_positive).iconPad(ui(6)).setBaseSprite(THEME.button_hide_fill);
-	
-	static spliceImage = function() {
-		if(!attributes.check_splice) return;
-		attributes.check_splice = false;
-		
-		if(LOADING || APPENDING) return;
-		if(string_pos("strip", display_name) == 0) return;
-		
-		var sep_pos = string_pos("strip", display_name) + 5;
-		var sep     = string_copy(display_name, sep_pos, string_length(display_name) - sep_pos + 1);
-		var amo		= toNumber(string_digits(sep));
-		if(amo == 0) return;
-		
-		var ww = sprite_get_width(spr) / amo;
-		var hh = sprite_get_height(spr);
-				
-		var _splice = nodeBuild("Node_Image_Sheet", x + w + 64, y);
-		_splice.inputs[0].setFrom(outputs[0], false);
-		_splice.inputs[1].setValue([ ww, hh ]);
-		_splice.inputs[2].setValue(amo);
-		_splice.inputs[3].setValue([ amo, 1 ]);
-	}
 	
 	static step = function() {
 		var path = path_get(getInputData(0));
@@ -147,6 +133,52 @@ function Node_Image(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		inputs[0].setValue(path); 
 		check_directory_redirector(path);
 	}
+	
+	////- Actions
+	
+	static autoSplice = function() { 
+		if(!sprite_exists(spr)) return;
+		
+		var sw = sprite_get_width(spr);
+		var sh = sprite_get_height(spr);
+		var ss = gcd(sw, sh);
+		
+		var aw = sw / ss;
+		var ah = sh / ss;
+		
+		var _splice = nodeBuild("Node_Image_Sheet", x + w + 64, y);
+		
+		_splice.inputs[0].setFrom(outputs[0], false);
+		_splice.inputs[1].setValue([ss,ss]);
+		_splice.inputs[2].setValue(aw*ah);
+		_splice.inputs[3].setValue([aw,ah]);
+		_splice.inputs[7].setValue(0);
+		
+		_splice.preview_channel = 1;
+	}
+		
+	static spliceImage = function() {
+		if(!attributes.check_splice) return;
+		attributes.check_splice = false;
+		
+		if(LOADING || APPENDING) return;
+		if(string_pos("strip", display_name) == 0) return;
+		
+		var sep_pos = string_pos("strip", display_name) + 5;
+		var sep     = string_copy(display_name, sep_pos, string_length(display_name) - sep_pos + 1);
+		var amo		= toNumber(string_digits(sep));
+		if(amo == 0) return;
+		
+		var ww = sprite_get_width(spr) / amo;
+		var hh = sprite_get_height(spr);
+				
+		var _splice = nodeBuild("Node_Image_Sheet", x + w + 64, y);
+		_splice.inputs[0].setFrom(outputs[0], false);
+		_splice.inputs[1].setValue([ ww, hh ]);
+		_splice.inputs[2].setValue(amo);
+		_splice.inputs[3].setValue([ amo, 1 ]);
+	}
+	
 	
 	////- Cache
 	

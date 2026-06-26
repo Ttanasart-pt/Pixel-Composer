@@ -3,4 +3,5 @@
     "spr":           "s_node_shape_ellipse",
     "baseNode":      "Node_Shape_Ellipse",
     "pxc_version":    121050,
+    "alias":          ["circle"],
 }
