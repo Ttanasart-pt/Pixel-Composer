@@ -6,6 +6,11 @@
         "date": "2026-06-26T03:22:11.341Z",
         "node": "",
         "commit": "**Image**: Add Auto Splice button."
+      },
+      {
+        "date": "2026-06-26T03:48:14.179Z",
+        "node": "Shine",
+        "commit": "**Shine**: Add Slope curve."
       }
     ]
   },

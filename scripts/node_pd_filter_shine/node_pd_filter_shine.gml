@@ -10,7 +10,7 @@ function Node_PB_FX_Shine(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	newInput( 5, nodeValue_Slider(  "Progress", .5      ));
 	newInput( 4, nodeValue_Float(   "Shines",   [2,1,1] )).setDisplay(VALUE_DISPLAY.number_array);
 	newInput( 9, nodeValue_Float(   "Scale",     1      ));
-	newInput( 6, nodeValue_Float(   "Slope",     1      ));
+	newInput( 6, nodeValue_Float(   "Slope",     1      )).setCurvable(13, CURVE_DEF_11);
 	newInput( 3, nodeValue_Bool(    "Flip",      false  ));
 	
 	////- =Offset
@@ -21,13 +21,13 @@ function Node_PB_FX_Shine(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	newInput( 2, nodeValue_Palette( "Colors",     [ca_white] ));
 	newInput(10, nodeValue_EScroll( "Blend Mode", 0, [ "Normal", "Additive", "Multiply" ] ));
 	newInput( 7, nodeValue_Slider(  "Intensity",  1          ));
-	// 13
+	// 14
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
 	input_display_list = [ 
 		[ "Surfaces", false ],  0,  1, 
-	    [ "Shine",    false ],  8,  5,  4,  9,  6,  3, 
+	    [ "Shine",    false ],  8,  5,  4,  9,  6, 13,  3, 
 	    [ "Offset",   false ], 11, 12, 
 	    [ "Render",   false ],  2, 10,  7, 
     ];
@@ -44,6 +44,7 @@ function Node_PB_FX_Shine(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 		    var _shine = _data[ 4];
 		    var _scale = _data[ 9];
 		    var _slope = _data[ 6];
+		    var _slopC = _data[13];
 		    var _inver = _data[ 3];
 		    
 		    var _offs  = _data[11];
@@ -76,9 +77,11 @@ function Node_PB_FX_Shine(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
             shader_set_i("shineAmount", array_length(_shine) );
             shader_set_f("shinesWidth", array_sum(_shine)    );
             
-            shader_set_f("scale",       _scale);
-            shader_set_f("slope",       _slope);
-            shader_set_i("straight",    _slope == 0);
+            shader_set_f("scale",          _scale);
+            shader_set_f("slope",          _slope);
+            shader_set_i("slopeUseCurve",  inputs[ 6].attributes.curved);
+            shader_set_curve("slope",      _slopC);
+            shader_set_i("straight",       _slope == 0);
             
             shader_set_palette( _color, "shineColor", "shineColorAmo" );
             shader_set_i("blendMode",   _blend );

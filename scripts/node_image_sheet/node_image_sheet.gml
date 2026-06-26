@@ -53,9 +53,9 @@ function Node_Image_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	newInput(15, nodeValue_Bool(       "Flatten Array", true ));
 		
 	////- =Filter
-	newInput(12, nodeValue_Bool(        "Filter empty output", false ));
+	newInput(12, nodeValue_Bool(    "Filter empty output", false ));
 	newInput(13, nodeValue_EScroll( "Filtered Pixel",      0, [ "Transparent", "Color" ]));
-	newInput(14, nodeValue_Color(       "Filtered Color",      ca_black ));
+	newInput(14, nodeValue_Color(   "Filtered Color",      ca_black ));
 	//16
 	
 	newOutput(0, nodeValue_Output( "Surface Out", VALUE_TYPE.surface, noone ));
