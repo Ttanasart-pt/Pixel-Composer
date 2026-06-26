@@ -781,8 +781,8 @@
 	function surface_clone(surface, destination = noone, format = noone) {
 		INLINE
 	
-		if(is(surface, dynaSurf)) 
-			return surface.clone();
+		if(is(surface, dynaSurf)) return surface;
+			// return surface.clone();
 		if(!is_surface(surface)) return noone;
 		
 		if(format != noone && !surface_format_is_supported(format)) format = surface_rgba8unorm;

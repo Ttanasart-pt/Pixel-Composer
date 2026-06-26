@@ -63,13 +63,18 @@ function Panel_Profile_Render() : PanelContent() constructor {
 		node_render_rtim_type = {};
 		node_render_time_amo  = {};
 		node_render_time_type_sorted = [];
-		pie_selecting = noone;
+		
+		display_type  = 0;
+		sum_selecting = noone;
+		
+		b_display = new buttonGroup([ "Pie", "Bar" ], function(i) /*=>*/ { display_type = i; } );
 		
 		function summarize() {
 			count_render_event    = 0;
 			count_message_event   = 0;
 			node_render_time      = 0;
 			node_render_rtime     = 0;
+			node_render_mtime     = 0;
 			node_render_time_type = {};
 			node_render_rtim_type = {};
 			node_render_time_amo  = {};
@@ -86,6 +91,7 @@ function Panel_Profile_Render() : PanelContent() constructor {
 					    
 					    node_render_time  += _report.time;
 					    node_render_rtime += _report.renderTime;
+					    node_render_mtime  = max(node_render_mtime, _report.renderTime);
 						
 						count_render_event++;
 						
@@ -128,7 +134,7 @@ function Panel_Profile_Render() : PanelContent() constructor {
 	tb_content = textBox_Text(function(str) /*=>*/ { filter_content_string = str;               }).setFont(f_p3).setAutoUpdate().setEmpty()
 	
 	function draw_surface_debug(surf, xx, yy, w, h, color = c_white, alpha = 1) {
-		if(!is_surface(surf)) {
+		if(!is_just_surface(surf)) {
 			draw_sprite_stretched_add(THEME.box_r2, 1, xx, yy, w, h, c_white, .15);
 			draw_set_text(f_p3, fa_center, fa_center, COLORS._main_text_sub);
 			draw_text_add(xx + w / 2, yy + h / 2, string(surf));
@@ -277,6 +283,11 @@ function Panel_Profile_Render() : PanelContent() constructor {
 	    var _hov = sc_profile_detail.hover;
 	    var _foc = sc_profile_detail.active;
 	    
+	    var rx = sc_profile_detail.rx;
+	    var ry = sc_profile_detail.ry;
+	    
+	    var hg = ui(20);
+	    
 	    if(report_selecting == noone) {
 	        if(run == 0) {
     	        draw_set_text(f_p2, fa_left, fa_top, COLORS._main_text_sub);
@@ -290,12 +301,11 @@ function Panel_Profile_Render() : PanelContent() constructor {
 	        draw_set_text(f_p2, fa_left, fa_top, COLORS._main_text_sub);
 	        draw_text_add(_tx, _ty, $"{count_render_event} render events");
 	        
-	        _ty += ui(20); _h += ui(20);
+	        _ty += hg; _h += hg;
 	        draw_text_add(_tx, _ty, $"Render time : {render_time / 1000}ms  ({node_render_time} / {render_time})");
 	        
 	        _ty += ui(28); _h += ui(28);
 	        
-	        var _a = 90;
 	        var pr = ui(120);
 	        var px = ui(16) + pr;
 	        var py = max(ui(8), _ty) + pr;
@@ -345,10 +355,65 @@ function Panel_Profile_Render() : PanelContent() constructor {
 	        	}
 	        	
         	}
-        	_ty += ui(20); _h += ui(20);
+        	_ty += hg; _h += hg;
 	        
-	        var _pie_selecting = noone;
+	        var bh = ui(24);
+	        b_display.setFocusHover(pFOCUS, pHOVER);
+	        b_display.draw(px - pr, py - pr, pr * 2, bh, display_type, _m, rx, ry);
+	        py += bh + ui(8);
 	        
+	        if(display_type == 0) {
+	        	var _a = 90;
+	        	
+		        for( var i = 0, n = array_length(node_render_time_type_sorted); i < n; i++ ) {
+		        	var _timn = node_render_time_type_sorted[i];
+		        	var _node = _timn.node;
+		        	var _colr = _timn.color;
+		        	var _amo  = _timn.amount;
+		        	var _time = _timn.time;
+		        	var _rtm  = _timn.rtime;
+		        	
+		        	var _as = _rtm / node_render_rtime * 360;
+		        	var _at = _a + _as;
+		        	draw_set_color(_colr);
+		        	if(sum_selecting != noone) draw_set_alpha(.25 + .75 * (_node == sum_selecting));
+		        	draw_circle_angle(px, py, pr, _a, _at);
+		        	draw_set_alpha(1);
+		        	_a = _at;
+		        }
+		        
+	        } else if(display_type == 1) {
+	        	var dx0 = px - pr;
+	        	var dx1 = px + pr;
+	        	var dy0 = py - pr;
+	        	var dy1 = py + pr;
+	        	
+	        	var ps  = pr * 2;
+	        	
+	        	for( var i = 0, n = array_length(node_render_time_type_sorted); i < n; i++ ) {
+		        	var _timn = node_render_time_type_sorted[i];
+		        	var _node = _timn.node;
+		        	var _colr = _timn.color;
+		        	var _amo  = _timn.amount;
+		        	var _time = _timn.time;
+		        	var _rtm  = _timn.rtime;
+		        	
+		        	var _as = _rtm / node_render_mtime;
+		        	draw_set_color(_colr);
+		        	if(sum_selecting != noone) draw_set_alpha(.25 + .75 * (_node == sum_selecting));
+		        	
+		        	var bw = ps / n;
+		        	var bh = _as * ps;
+		        	var bx = dx0 + bw * i;
+		        	var by = dy1 - bh;
+		        	
+		        	draw_rectangle(bx, by, bx + bw, by + bh, false);
+		        	draw_set_alpha(1);
+		        }
+		        
+	        }
+	        
+	        var _sum_selecting = noone;
 	        for( var i = 0, n = array_length(node_render_time_type_sorted); i < n; i++ ) {
 	        	var _timn = node_render_time_type_sorted[i];
 	        	var _node = _timn.node;
@@ -357,19 +422,11 @@ function Panel_Profile_Render() : PanelContent() constructor {
 	        	var _time = _timn.time;
 	        	var _rtm  = _timn.rtime;
 	        	
-	        	var _as = _rtm / node_render_rtime * 360;
-	        	var _at = _a + _as;
-	        	draw_set_color(_colr);
-	        	if(pie_selecting != noone) draw_set_alpha(0.25 + 0.75 * (_node == pie_selecting));
-	        	draw_circle_angle(px, py, pr, _a, _at);
-	        	draw_set_alpha(1);
-	        	_a = _at;
-	        	
 	        	if(_ty >= -16 && _ty <= _hh + 16) {
-		        	draw_set_text(f_p3, fa_right, fa_top, COLORS._main_text_sub);
+	        		draw_set_text(f_p3, fa_right, fa_top, COLORS._main_text_sub);
 		        	draw_text_add(tx_amo + ui(40 - 8),  _ty, _amo);
 		        	
-		        	draw_set_color(_node == pie_selecting? COLORS._main_text_accent : COLORS._main_text);
+		        	draw_set_color(_node == sum_selecting? COLORS._main_text_accent : COLORS._main_text);
 		        	draw_set_halign(fa_left);
 		        	draw_text_add(tx_name, _ty, _node);
 		        	
@@ -379,16 +436,29 @@ function Panel_Profile_Render() : PanelContent() constructor {
 		        	draw_text_add(tx_pern + ui(80 - 8), _ty, round(_time / _amo));
 		        	draw_text_add(tx_rtim + ui(80 - 8), _ty, _rtm);
 		        	
-		        	if(_hov && point_in_rectangle(_m[0], _m[1], tx_amo, _ty, _ww, _ty + ui(20) - 1))
-		        		_pie_selecting = _node;
+		        	var _as   = _rtm / node_render_mtime;
+		        	var bar_x = tx_rtim + ui(80 - 8) + ui(8);
+		        	var bar_w = _ww - bar_x;
+		        	
+		        	var bx = bar_x;
+		        	var by = _ty;
+		        	
+		        	var bw = bar_w * _as;
+		        	
+		        	draw_set_color_alpha(_colr, .75 + .25 * (_node == sum_selecting || sum_selecting == noone));
+		        	draw_rectangle(bx, by, bx + bw, by + hg, false);
+		        	draw_set_alpha(1);
+		        	
+		        	if(_hov && point_in_rectangle(_m[0], _m[1], tx_amo, _ty, _ww, _ty + hg - 1))
+		        		_sum_selecting = _node;
 	        	}
 	        	
-	        	_ty += ui(20); _h += ui(20);
+	        	_ty += hg; _h += hg;
 	        }
+		        
+	        sum_selecting = _sum_selecting;
 	        
-	        pie_selecting = _pie_selecting;
-	        
-	        _ty += ui(20); _h += ui(20);
+	        _ty += hg; _h += hg;
 	        
             return _h;
 	    }
@@ -437,7 +507,7 @@ function Panel_Profile_Render() : PanelContent() constructor {
 		        var _v = _inputs[i];
 		        
 		        var _type = _j.type;
-		        var _wh   = ui(20);
+		        var _wh   = hg;
 		        
 		        if(filter_content_string != "" && string_pos(string_lower(filter_content_string), string_lower(_j.name)) == 0) continue;
 		        
@@ -480,7 +550,7 @@ function Panel_Profile_Render() : PanelContent() constructor {
 		        var _v = _outputs[i];
 		        
 		        var _type = _j.type;
-		        var _wh   = ui(20);
+		        var _wh   = hg;
 		        
 		        if(filter_content_string != "" && string_pos(string_lower(filter_content_string), string_lower(_j.name)) == 0) continue;
 		        
@@ -544,7 +614,7 @@ function Panel_Profile_Render() : PanelContent() constructor {
 	        
 		    _ty += ui(32); _h += ui(48);
 		    
-	        var _qh = ui(20);
+	        var _qh = hg;
 	        var _qx = ui(8);
 	        var _qy = _ty;
 	        var _qhh = _qh;
@@ -586,7 +656,7 @@ function Panel_Profile_Render() : PanelContent() constructor {
 	        
 		    _ty += ui(32); _h += ui(48);
 		    
-	        var _qh  = ui(20);
+	        var _qh  = hg;
 	        var _qx  = ui(8);
 	        var _qy  = _ty;
 	        var _qhh = _qh;

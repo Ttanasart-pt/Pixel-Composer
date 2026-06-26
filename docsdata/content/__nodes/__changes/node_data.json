@@ -6,6 +6,11 @@
         "date": "2026-06-26T01:26:40.215Z",
         "node": "",
         "commit": "Fix freeze when duplicating some nodes."
+      },
+      {
+        "date": "2026-06-26T02:10:50.700Z",
+        "node": "profiler",
+        "commit": "**profiler**: Add bar chart mode."
       }
     ]
   },

@@ -3710,6 +3710,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		_report.type       = "render";
 		_report.node       = self;
 		_report.inputs     = array_create(array_length(inputs));
+		_report.outputs    = array_create(array_length(outputs));
 		
 		for( var i = 0, n = array_length(inputs); i < n; i++ ) {
 			var _j = inputs[i];
@@ -3719,7 +3720,6 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 				_report.inputs[i] = surface_array_clone(_report.inputs[i]);
 		}
 		
-		_report.outputs = array_create(array_length(outputs));
 		for( var i = 0, n = array_length(outputs); i < n; i++ ) {
 			var _j = outputs[i];
 			_report.outputs[i] = _j.getValue();
