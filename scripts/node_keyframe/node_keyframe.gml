@@ -599,7 +599,8 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 	
 	static removeKey = function(key, upd = true) {
 		if(array_length(values) > 1) array_remove(values, key);
-		else						 prop.is_anim = false;
+		else						 prop.setAnim(false);
+		
 		if(upd) updateKeyMap();
 	}
 	
