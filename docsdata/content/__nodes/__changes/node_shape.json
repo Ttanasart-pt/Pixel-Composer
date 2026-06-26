@@ -11,6 +11,11 @@
         "date": "2026-06-26T07:12:39.549Z",
         "node": "",
         "commit": "Mask input now has an option to only use alpha channel as mask value."
+      },
+      {
+        "date": "2026-06-26T08:07:52.728Z",
+        "node": "",
+        "commit": "**Transform Image**: Fix duplicated 2D preview."
       }
     ]
   },
