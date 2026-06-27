@@ -142,12 +142,14 @@ function canvas_tool_shape(_shape) : canvas_tool() constructor {
 		if(mouse_holding) {
 			updated = true;
 			
-			surface_set_shader(drawing_surface, noone, true, BLEND.maximum);
+			surface_set_shader(drawing_surface, noone, true);
+				BLEND_MAX_ALPHA
 				draw_shape(false);
 			surface_reset_shader();
 		
 			if(mouse_lrelease()) {
-				surface_set_shader(drawing_surface, noone, true, BLEND.maximum);
+				surface_set_shader(drawing_surface, noone, true);
+					BLEND_MAX_ALPHA
 					draw_shape(true);
 				surface_reset_shader();
 				

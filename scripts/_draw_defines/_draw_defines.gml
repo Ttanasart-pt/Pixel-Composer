@@ -15,6 +15,7 @@
 	#macro BLEND_ALPHA_MAX  gpu_set_blendmode(bm_normal); gpu_set_blendequation_sepalpha(bm_eq_min, bm_max);
 	
 	#macro BLEND_MAX        gpu_set_blendmode(bm_normal); gpu_set_blendequation(bm_eq_max);
+	#macro BLEND_MAX_ALPHA  gpu_set_blendmode_ext_sepalpha(bm_src_alpha, bm_inv_src_alpha, bm_one, bm_one); gpu_set_blendequation_sepalpha(bm_eq_add, bm_eq_max);
 	#macro BLEND_MIN        gpu_set_blendmode(bm_normal); gpu_set_blendequation_sepalpha(bm_eq_min, bm_add);
 	
 	#macro BLEND_MULTIPLY	gpu_set_blendmode_ext(bm_dest_colour, bm_zero);

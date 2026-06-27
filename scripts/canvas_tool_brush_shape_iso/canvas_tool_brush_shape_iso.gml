@@ -29,11 +29,10 @@ function canvas_tool_shape_iso(_shape, _toolAttr) : canvas_tool() constructor {
 		if(mouse_holding) {
 			updated = true;
 			
-			surface_set_shader(drawing_surface, noone, true, BLEND.maximum);
-			
+			surface_set_shader(drawing_surface, noone, true);
+				BLEND_MAX_ALPHA
 					 if(_ang == 0) canvas_draw_iso_cube( brush, mouse_points, subtool);
 				else if(_ang == 1) canvas_draw_diag_cube(brush, mouse_points, subtool);
-				
 			surface_reset_shader();
 		}
 		

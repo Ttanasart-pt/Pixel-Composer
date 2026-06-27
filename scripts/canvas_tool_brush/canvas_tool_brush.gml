@@ -301,7 +301,8 @@ function canvas_tool_brush(_eraser = false, _toolAttr = undefined) : canvas_tool
 						              abs(mouse_cur_ty - mouse_las_draw_y) > 1;
 						
 						if(_drawPx) {
-							surface_set_shader(drawing_surface, noone, false, BLEND.maximum);
+							surface_set_shader(drawing_surface, noone, false);
+								BLEND_MAX_ALPHA
 								_drawnStep += draw_point_px_wrap(true, mouse_pre_draw_x, mouse_pre_draw_y);
 								
 								var _drawLn = abs(mouse_pre_draw_x - mouse_las_draw_x) > 1 || 
@@ -319,7 +320,8 @@ function canvas_tool_brush(_eraser = false, _toolAttr = undefined) : canvas_tool
 						}
 						
 					} else {
-						surface_set_shader(drawing_surface, noone, false, BLEND.maximum);
+						surface_set_shader(drawing_surface, noone, false);
+							BLEND_MAX_ALPHA
 							_drawnStep += draw_point_wrap(true);
 							_drawnStep += draw_line_wrap(true);
 						surface_reset_shader();
@@ -329,7 +331,8 @@ function canvas_tool_brush(_eraser = false, _toolAttr = undefined) : canvas_tool
 					}
 					
 				} else {
-					surface_set_shader(drawing_surface, noone, false, BLEND.maximum);
+					surface_set_shader(drawing_surface, noone, false);
+						BLEND_MAX_ALPHA
 						_drawnStep += draw_line_wrap(true);
 					surface_reset_shader();
 					
@@ -396,11 +399,11 @@ function canvas_tool_brush(_eraser = false, _toolAttr = undefined) : canvas_tool
 	static drawPreview = function(hover, active, _x, _y, _s, _mx, _my) {
 		if(isEraser) draw_set_color(c_white);
 		
-		BLEND_MAX
+		BLEND_MAX_ALPHA
 			if(mouse_pre_draw_x != undefined && mouse_pre_draw_y != undefined && key_mod_press(SHIFT))
 				draw_line_wrap(false);	
 				
-			else //if(!mouse_holding) 
+			else
 				draw_point_wrap(false);
 		BLEND_NORMAL
 	}
