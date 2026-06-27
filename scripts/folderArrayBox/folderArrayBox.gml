@@ -33,7 +33,6 @@ function folderArrayBox(_arr, _onModify) : widget() constructor {
 	}
 	
 	static draw = function(_x, _y, _w, _h, _arr, _m) {
-		
 		x = _x;
 		y = _y;
 		w = _w;

@@ -81,25 +81,23 @@ function paddingBox(_onModify, _unit = noone) : widget() constructor {
 		var _bs = min(_h, ui(32));
 		if(hide == 0) draw_sprite_stretched_ext(THEME.textbox, 3, x, y, w, h, boxColor, 1);
 		
-		if((_w - _bs) / 2 > ui(64)) {
-			b_link.setFocusHover(active, hover);
-			b_link.icon_index = linked;
-			b_link.icon_blend = linked? COLORS._main_accent : COLORS._main_icon;
-			b_link.tooltip = linked? __txt("Unlink values") : __txt("Link values");
+		b_link.setFocusHover(active, hover);
+		b_link.icon_index = linked;
+		b_link.icon_blend = linked? COLORS._main_accent : COLORS._main_icon;
+		b_link.tooltip = linked? __txt("Unlink values") : __txt("Link values");
+	
+		var _bx = _x;
+		var _by = _y + _h / 2 - _bs / 2;
 		
-			var _bx = _x;
-			var _by = _y + _h / 2 - _bs / 2;
-			
-			if(hide == 0) draw_sprite_stretched_ext(THEME.textbox, 3, _bx, _y, _bs, h, CDEF.main_mdwhite, 1);
-			b_link.draw(_bx, _by, _bs, _bs, _m, THEME.button_hide_fill);
-			
-			_w -= _bs;
-			_x += _bs;
-			
-			if(unit != noone && unit.reference != noone) {
-				unit.triggerButton.setFocusHover(iactive, ihover);			
-				unit.draw(_bx, _by + _h, _bs, _bs, _m);
-			}
+		if(hide == 0) draw_sprite_stretched_ext(THEME.textbox, 3, _bx, _y, _bs, h, CDEF.main_mdwhite, 1);
+		b_link.draw(_bx, _by, _bs, _bs, _m, THEME.button_hide_fill);
+		
+		_w -= _bs;
+		_x += _bs;
+		
+		if(unit != noone && unit.reference != noone) {
+			unit.triggerButton.setFocusHover(iactive, ihover);			
+			unit.draw(_bx, _by + _h, _bs, _bs, _m);
 		}
 		
 		if(hide == 0) draw_sprite_stretched_ext(THEME.textbox, 0, x, y, w, h, boxColor, 0.5 + 0.5 * interactable);	

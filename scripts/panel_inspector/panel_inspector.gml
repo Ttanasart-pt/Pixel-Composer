@@ -621,8 +621,18 @@ function Panel_Inspector() : PanelContent() constructor {
         if(jun.connect_type == CONNECT_TYPE.output) 
         	return menuCall("inspector_value_output", menuItems_gen("inspector_value_output"));
         
-        var _menuItem = menuItems_gen("inspector_value_input");
-       
+        var _menuItem = [];
+        
+        if(wdgt) {
+    		var _widget = jun.getEditWidget();
+        	if(_widget && !array_empty(_widget.context_menu)) {
+        		array_append(_menuItem, _widget.context_menu);
+        		array_push(  _menuItem, -1);
+        	}
+        }
+        
+        array_append(_menuItem, menuItems_gen("inspector_value_input"));
+        
         if(jun.globalExtractable()) {
     		array_push(_menuItem, menuItemShelf(__txt("panel_inspector_use_global", "Use Globalvar"), function(_dat) /*=>*/ { 
     			var arr = [];
@@ -642,14 +652,6 @@ function Panel_Inspector() : PanelContent() constructor {
         if(jun.isAnimable() && !array_empty(jun.anim_presets)) {
         	array_push(_menuItem, -1);
         	array_push(_menuItem, MENU_ITEMS.inspector_quick_anim);
-        }
-        
-        if(wdgt) {
-        	var _widget = jun.getEditWidget();
-        	if(_widget && !array_empty(_widget.context_menu)) {
-        		array_push(  _menuItem, -1);
-        		array_append(_menuItem, _widget.context_menu);
-        	}
         }
         
         return menuCall("inspector_value_input", _menuItem);

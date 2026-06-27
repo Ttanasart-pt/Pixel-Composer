@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.5.006",
+    "changes": [
+      {
+        "date": "2026-06-27T02:42:48.807Z",
+        "node": "Inspector Panel",
+        "commit": "**Inspector Panel**: Remove auto-hide control buttons (hide link/unit buttons when widget width got too low)."
+      }
+    ]
+  },
+  {
     "version": "1.21.rc12",
     "changes": [
       {

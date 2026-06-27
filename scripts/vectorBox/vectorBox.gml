@@ -4,32 +4,44 @@ enum DIMENSION {
 }
 
 function vectorBox(_size, _onModify, _unit = noone) : widget() constructor {
-	size     = _size;
-	onModify = _onModify;
-	unit	 = _unit;
+	#region data
+		size     = _size;
+		onModify = _onModify;
+		unit	 = _unit;
+		
+		linkable      = true;
+		per_line      = false;
+		current_value = [];
+		linked        = false;
+		side_button   = noone;
+		display_data  = noone;
+		
+		link_inactive_color = noone;
+		tooltip	= new tooltipSelector("Axis", [ __txt("Independent"), __txt("Linked") ]);
+		
+		context_menu = [];
+		
+		// if(linkable)      array_push(context_menu, menuItem(__txt("Link Axis"), () => toggleLink()).setToggle(() => linked));
+		// if(unit != noone) array_push(context_menu, unit.contextMenu);
+	#endregion
 	
-	linkable      = true;
-	per_line      = false;
-	current_value = [];
-	linked        = false;
-	side_button   = noone;
+	#region scaling
+		scaleDrag    = false;
+		scaleDrag_mx = 0;
+		scaleDrag_my = 0;
+		scaleDrag_ss = 0;
+	#endregion
 	
-	link_inactive_color = noone;
+	#region array
+		array_expanding   = true;
+		array_expand_h    = ui(16);
+		array_display_max = 16;
+		array_editing     = false;
+		array_focusing    = undefined;
+		array_hovering    = undefined;
+		array_adding      = false;
+	#endregion
 	
-	scaleDrag = false;
-	scaleDrag_mx = 0;
-	scaleDrag_my = 0;
-	scaleDrag_ss = 0;
-	
-	array_expanding   = true;
-	array_expand_h    = ui(16);
-	array_display_max = 16;
-	array_editing     = false;
-	array_focusing    = undefined;
-	array_hovering    = undefined;
-	array_adding      = false;
-	
-	tooltip	= new tooltipSelector("Axis", [ __txt("Independent"), __txt("Linked") ]);
 	
 	onModifyIndex = function(val, index) { 
 		if(!is_callable(onModify)) return false;
@@ -69,6 +81,18 @@ function vectorBox(_size, _onModify, _unit = noone) : widget() constructor {
 	static setBoxColor = function(_v) /*=>*/ { for(var i = 0; i < 4; i++) tb[i].setBoxColor(_v); return self; }
 	static setFont     = function(_f) /*=>*/ { for(var i = 0; i < 4; i++) tb[i].setFont(_f);     return self; }
 	static setLinkInactiveColor = function(_c) /*=>*/ { link_inactive_color = _c;                return self; }
+	
+	static toggleLink = function() /*=>*/ {
+		if(display_data == noone) return;
+		
+		linked = !linked;
+		if(is_struct(display_data))
+			display_data.linked = linked;
+	
+		if(linked) 
+		for( var i = 0; i < size; i++ )
+			onModify(current_value[0], i);
+	}
 	
 	////- Draw
 	
@@ -133,6 +157,7 @@ function vectorBox(_size, _onModify, _unit = noone) : widget() constructor {
 		tooltip.index = linked;
 		current_value = _data;
 		array_editing = false;
+		display_data  = _display_data;
 		
 		var d = array_get_depth(_data);
 		
@@ -258,64 +283,51 @@ function vectorBox(_size, _onModify, _unit = noone) : widget() constructor {
 		
 		if(!per_line && hide == 0) draw_sprite_stretched_ext(THEME.textbox, 3, x, y, w, h, boxColor, 1);
 		
-		if((_w - bs) / _sz > ui(48)) {
-			if(side_button) {
-				if(!per_line && hide == 0) draw_sprite_stretched_ext(THEME.textbox, 3, bx, _y, bs, _h, CDEF.main_mdwhite, 1);
-				
-				if(is(side_button, buttonAnchor)) 
-					side_button.index = round(array_safe_get(_data, 0) * 2 + array_safe_get(_data, 1) * 6);
-				
-				side_button.setFocusHover(active, hover);
-				side_button.draw(bx, by, bs, bs, _m, THEME.button_hide_fill);
-				bx -= bs;
-				_w -= bs;
-			}
+		if(side_button) {
+			if(!per_line && hide == 0) draw_sprite_stretched_ext(THEME.textbox, 3, bx, _y, bs, _h, CDEF.main_mdwhite, 1);
 			
-			if(unit != noone && unit.reference != noone) {
-				if(!per_line && hide == 0) draw_sprite_stretched_ext(THEME.textbox, 3, bx, _y, bs, _h, CDEF.main_mdwhite, 1);
-				
-				unit.triggerButton.setFocusHover(iactive, ihover);
-				unit.draw(bx, by, bs, bs, _m);
-				bx -= bs;
-				_w -= bs;
-			}
+			if(is(side_button, buttonAnchor)) 
+				side_button.index = round(array_safe_get(_data, 0) * 2 + array_safe_get(_data, 1) * 6);
 			
-			if(front_button && front_button.visible) {
-				if(!per_line && hide == 0) draw_sprite_stretched_ext(THEME.textbox, 3, _x, _y, bs, _h, CDEF.main_mdwhite, 1);
-				front_button.setFocusHover(iactive, ihover);
-				front_button.draw(_x, by, bs, bs, _m, THEME.button_hide_fill);
-				
-				_x += bs;
-				_w -= bs;
-			}
+			side_button.setFocusHover(active, hover);
+			side_button.draw(bx, by, bs, bs, _m, THEME.button_hide_fill);
+			bx -= bs;
+			_w -= bs;
+		}
+	
+		if(unit != noone && unit.reference != noone) {
+			if(!per_line && hide == 0) draw_sprite_stretched_ext(THEME.textbox, 3, bx, _y, bs, _h, CDEF.main_mdwhite, 1);
 			
+			unit.triggerButton.setFocusHover(iactive, ihover);
+			unit.draw(bx, by, bs, bs, _m);
+			bx -= bs;
+			_w -= bs;
 		}
 		
-		if((_w - bs) / _sz > ui(48)) {
-			if(linkable) {
-				var _icon_blend = linked? COLORS._main_accent : (link_inactive_color == noone? COLORS._main_icon : link_inactive_color);
-				var bx = _x;
+		if(front_button && front_button.visible) {
+			if(!per_line && hide == 0) draw_sprite_stretched_ext(THEME.textbox, 3, _x, _y, bs, _h, CDEF.main_mdwhite, 1);
+			front_button.setFocusHover(iactive, ihover);
+			front_button.draw(_x, by, bs, bs, _m, THEME.button_hide_fill);
+			
+			_x += bs;
+			_w -= bs;
+		}
+		
+		if(linkable) {
+			var _icon_blend = linked? COLORS._main_accent : (link_inactive_color == noone? COLORS._main_icon : link_inactive_color);
+			var bx = _x;
+			
+			if(!per_line && hide == 0) draw_sprite_stretched_ext(THEME.textbox, 3, bx, _y, bs, _h, CDEF.main_mdwhite, 1);
+			var b  = buttonInstant_Pad(THEME.button_hide_fill, bx, by, bs, bs, _m, hover, active, tooltip, THEME.value_link, linked, _icon_blend);
+			
+			var tg = false;
+			if(b == 1 && key_mod_press(SHIFT) && MOUSE_WHEEL != 0) tg = true;
+			if(b == 2) tg = true;
 				
-				if(!per_line && hide == 0) draw_sprite_stretched_ext(THEME.textbox, 3, bx, _y, bs, _h, CDEF.main_mdwhite, 1);
-				var b  = buttonInstant_Pad(THEME.button_hide_fill, bx, by, bs, bs, _m, hover, active, tooltip, THEME.value_link, linked, _icon_blend);
-				
-				var tg = false;
-				if(b == 1 && key_mod_press(SHIFT) && MOUSE_WHEEL != 0) tg = true;
-				if(b == 2) tg = true;
-					
-				if(tg) {
-					linked = !linked;
-					if(is_struct(_display_data))
-						_display_data.linked = linked;
-				
-					if(linked) 
-					for( var i = 0; i < _sz; i++ )
-						onModify(_data[0], i);
-				}
-				
-				_x += bs;
-				_w -= bs;
-			}
+			if(tg) toggleLink();
+			
+			_x += bs;
+			_w -= bs;
 		}
 		
 		var ww = per_line? _w : _w / _sz;

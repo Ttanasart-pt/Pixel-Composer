@@ -100,24 +100,22 @@ function quarternionBox(_junc, _onModify) : widget() constructor {
 		if(hide == 0) draw_sprite_stretched_ext(THEME.textbox, 3, x, y, w, h, boxColor, 1);
 		
 		var bs = min(_h, ui(32));
-		if((_w - bs) / 2 > ui(64)) {
-			var bx = _x + _w - bs;
-			var by = _y + _h / 2 - bs / 2;
-			var tg = false;
-			tooltip.index = _disp;
+		var bx = _x + _w - bs;
+		var by = _y + _h / 2 - bs / 2;
+		var tg = false;
+		tooltip.index = _disp;
+		
+		if(hide == 0) draw_sprite_stretched_ext(THEME.textbox, 3, bx, _y, bs, _h, CDEF.main_mdwhite, 1);
+		var b = buttonInstant_Pad(THEME.button_hide_fill, bx, by, bs, bs, _m, ihover, iactive, tooltip, THEME.unit_angle, _disp, c_white);
+		if(b == 1 && key_mod_press(SHIFT) && MOUSE_WHEEL != 0) tg = true;
+		if(b == 2) tg = true;
 			
-			if(hide == 0) draw_sprite_stretched_ext(THEME.textbox, 3, bx, _y, bs, _h, CDEF.main_mdwhite, 1);
-			var b = buttonInstant_Pad(THEME.button_hide_fill, bx, by, bs, bs, _m, ihover, iactive, tooltip, THEME.unit_angle, _disp, c_white);
-			if(b == 1 && key_mod_press(SHIFT) && MOUSE_WHEEL != 0) tg = true;
-			if(b == 2) tg = true;
-				
-			if(tg) {
-				junction.setAttribute("angle_display", (_disp + 1) % 2);
-				onModify(current_value[0], 0);
-				clickable = false;
-			}
-			_w -= bs;
+		if(tg) {
+			junction.setAttribute("angle_display", (_disp + 1) % 2);
+			onModify(current_value[0], 0);
+			clickable = false;
 		}
+		_w -= bs;
 		
 		current_unit = _attr.angle_display;
 			

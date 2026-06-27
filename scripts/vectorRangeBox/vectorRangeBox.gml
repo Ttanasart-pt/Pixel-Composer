@@ -107,64 +107,62 @@ function vectorRangeBox(_size, _type, _onModify, _unit = noone) : widget() const
 		var bs = min(_h, ui(32));
 		if(hide == 0) draw_sprite_stretched_ext(THEME.textbox, 3, x, y, w, h, boxColor, 1);
 		
-		if((_w - bs) / 2 > ui(64)) {
-			if(side_button) {
-				var bx = _x + _w - bs;
-				
-				if(hide == 0) draw_sprite_stretched_ext(THEME.textbox, 3, bx, _y, bs, h, CDEF.main_mdwhite, 1);
-				side_button.setFocusHover(active, hover);
-				side_button.draw(bx, _y + _h / 2 - bs / 2, bs, bs, _m, THEME.button_hide_fill);
-				_w -= bs;
-			}
+		if(side_button) {
+			var bx = _x + _w - bs;
 			
-			if(side_button2) {
-				var bx = _x + _w - bs;
-				
-				if(hide == 0) draw_sprite_stretched_ext(THEME.textbox, 3, bx, _y, bs, h, CDEF.main_mdwhite, 1);
-				side_button2.setFocusHover(active, hover);
-				side_button2.draw(bx, _y + _h / 2 - bs / 2, bs, bs, _m, THEME.button_hide_fill);
-				_w -= bs;
-			}
-			
-			var bx = _x;
-			var by = _y + _h / 2 - bs / 2;
-			var bc = linked? COLORS._main_accent : COLORS._main_icon;
-			
-			if(hide == 0) draw_sprite_stretched_ext(THEME.textbox, 3, bx, _y, bs * 2, h, CDEF.main_mdwhite, 1);
-			if(buttonInstant_Pad(THEME.button_hide_fill, bx, by, bs, bs, _m, hover, active, __txt("Link axis"), THEME.value_link, linked, bc) == 2) {
-				linked = !linked;
-				_display_data.linked = linked;
-				
-				if(linked) {
-					if(dim >= 1) { onModifyIndex(_data[0], 0); onModifyIndex(_data[1], 1); }
-					if(dim >= 2) { onModifyIndex(_data[0], 2); onModifyIndex(_data[1], 3); }
-					if(dim >= 3) { onModifyIndex(_data[0], 4); onModifyIndex(_data[1], 5); }
-				}
-			}
-			
-			bx += bs;
-			
-			tooltip_ranged.index = ranged;
-			var b  = buttonInstant_Pad(THEME.button_hide_fill, bx, by, bs, bs, _m, hover, active, tooltip_ranged, THEME.value_range, ranged);
-			var tg = false;
-			if(b == 1 && key_mod_press(SHIFT) && MOUSE_WHEEL != 0) tg = true;
-			if(b == 2) tg = true;
-			
-			if(tg) {
-				ranged = !ranged;
-				_display_data.ranged = ranged;
-				
-				if(!ranged) {
-					if(dim >= 1) { onModifyIndex(_data[0], 1); }
-					if(dim >= 2) { onModifyIndex(_data[2], 3); }
-					if(dim >= 3) { onModifyIndex(_data[4], 5); }
-				}
-			}
-			
-			_x += bs * 2;
-			_w -= bs * 2;
+			if(hide == 0) draw_sprite_stretched_ext(THEME.textbox, 3, bx, _y, bs, h, CDEF.main_mdwhite, 1);
+			side_button.setFocusHover(active, hover);
+			side_button.draw(bx, _y + _h / 2 - bs / 2, bs, bs, _m, THEME.button_hide_fill);
+			_w -= bs;
 		}
 		
+		if(side_button2) {
+			var bx = _x + _w - bs;
+			
+			if(hide == 0) draw_sprite_stretched_ext(THEME.textbox, 3, bx, _y, bs, h, CDEF.main_mdwhite, 1);
+			side_button2.setFocusHover(active, hover);
+			side_button2.draw(bx, _y + _h / 2 - bs / 2, bs, bs, _m, THEME.button_hide_fill);
+			_w -= bs;
+		}
+	
+		var bx = _x;
+		var by = _y + _h / 2 - bs / 2;
+		var bc = linked? COLORS._main_accent : COLORS._main_icon;
+		
+		if(hide == 0) draw_sprite_stretched_ext(THEME.textbox, 3, bx, _y, bs * 2, h, CDEF.main_mdwhite, 1);
+		if(buttonInstant_Pad(THEME.button_hide_fill, bx, by, bs, bs, _m, hover, active, __txt("Link axis"), THEME.value_link, linked, bc) == 2) {
+			linked = !linked;
+			_display_data.linked = linked;
+			
+			if(linked) {
+				if(dim >= 1) { onModifyIndex(_data[0], 0); onModifyIndex(_data[1], 1); }
+				if(dim >= 2) { onModifyIndex(_data[0], 2); onModifyIndex(_data[1], 3); }
+				if(dim >= 3) { onModifyIndex(_data[0], 4); onModifyIndex(_data[1], 5); }
+			}
+		}
+		
+		bx += bs;
+		
+		tooltip_ranged.index = ranged;
+		var b  = buttonInstant_Pad(THEME.button_hide_fill, bx, by, bs, bs, _m, hover, active, tooltip_ranged, THEME.value_range, ranged);
+		var tg = false;
+		if(b == 1 && key_mod_press(SHIFT) && MOUSE_WHEEL != 0) tg = true;
+		if(b == 2) tg = true;
+		
+		if(tg) {
+			ranged = !ranged;
+			_display_data.ranged = ranged;
+			
+			if(!ranged) {
+				if(dim >= 1) { onModifyIndex(_data[0], 1); }
+				if(dim >= 2) { onModifyIndex(_data[2], 3); }
+				if(dim >= 3) { onModifyIndex(_data[4], 5); }
+			}
+		}
+		
+		_x += bs * 2;
+		_w -= bs * 2;
+	
 		var ww = _w / dim;
 		
 		if(hide == 0) draw_sprite_stretched_ext(THEME.textbox, 0, x, y, w, h, boxColor, 0.5 + 0.5 * interactable);	

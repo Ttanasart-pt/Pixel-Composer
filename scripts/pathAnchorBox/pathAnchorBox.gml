@@ -193,5 +193,5 @@ function pathAnchorBox(_onModify) : widget() constructor {
 		return _n; 
 	}
 	
-	static free  = function() { array_foreach(tb, function(t) /*=>*/ {return t.free()}); }
+	static free  = function() { array_foreach(tb, function(t,i) /*=>*/ {return t.free()}); }
 }
