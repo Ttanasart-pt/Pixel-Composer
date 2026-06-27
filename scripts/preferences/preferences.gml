@@ -654,7 +654,14 @@
 #endregion
 
 #region command palette
-	function prefOpenKey(key)       { dialogPanelCall(new Panel_Preference().goto(key));                        }
+	function prefOpenKey(key) { dialogPanelCall(new Panel_Preference().goto(key)); }
+	function prefOpenHotkey(key) {
+		var _panel = new Panel_Preference();
+		_panel.page_current = 4;
+		_panel.setSearch($"key:{key}");
+		dialogPanelCall(_panel);
+	}
+	
 	function __regFnPref(name, key) { registerLFunction("Preference", name, "", 0, function(k) /*=>*/ {return prefOpenKey(k)}, key); }
 	
 	function __fnInit_Preference() {

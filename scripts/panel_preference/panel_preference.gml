@@ -1442,6 +1442,7 @@ function Panel_Preference() : PanelContent() constructor {
     		hotkeyContext = [];
     		hotkeyArray   = [];
     		hotkeyNames   = [];
+    		hotkeyKeyName = [];
     		
     		array_push(hotkeyContext, { context: -1, list: hk_general_list } );
     		array_push(hotkeyArray,   "Settings" );
@@ -1451,7 +1452,8 @@ function Panel_Preference() : PanelContent() constructor {
     			var _list = hk_general_list[i];
     			_names[i] = string_lower(_list[0]);
     		}
-			array_push(hotkeyNames, _names);
+			array_push(hotkeyNames,   _names);
+			array_push(hotkeyKeyName, []);
     		
 	    	for( var i = 0, n = array_length(HOTKEY_CONTEXT); i < n; i++ ) {
 	    		var ctx  = HOTKEY_CONTEXT[i];
@@ -1532,18 +1534,25 @@ function Panel_Preference() : PanelContent() constructor {
 	    	
 	    	for( var i = 1, n = array_length(hotkeyContext); i < n; i++ ) {
 	    		var _ctx = hotkeyContext[i];
-	    		if(_ctx == -1) { hotkeyNames[i] = []; continue; }
+	    		if(_ctx == -1) { 
+	    			hotkeyNames[i]   = []; 
+	    			hotkeyKeyName[i] = []; 
+	    			continue; 
+	    		}
 	    		
 	    		var _list  = _ctx.list;
 	    		var _names = [];
+	    		var _kname = [];
 	    		
 	    		for (var j = 0, m = array_length(_list); j < m; j++) {
     				var _hk   = _list[j];
-    				var _name = __txt(_hk.name);
-    				_names[j] = _name;
+    				
+    				_names[j] = string_lower(__txt(_hk.name));
+    				_kname[j] = string_lower(_hk.getKeyName());
 	    		}
 	    		
-				hotkeyNames[i] = _names;
+				hotkeyNames[i]   = _names;
+				hotkeyKeyName[i] = _kname;
 	    	}
 	    	
 	    	hk_page = 0;
@@ -1600,13 +1609,20 @@ function Panel_Preference() : PanelContent() constructor {
     			if(_searching) {
     				aa = .25;
     				
-    				var _names = hotkeyNames[i];
-    				for( var j = 0, m = array_length(_names); j < m; j++ ) {
-    					var _contain = string_pos(_search, _names[j]);
-	    			    if(_contain) {
-	    			    	aa = 1;
-	    			    	break;
-	    			    }
+    				if(search_type == "key") {
+    					var _names = hotkeyKeyName[i];
+    					for( var j = 0, m = array_length(_names); j < m; j++ ) {
+	    					var _contain = _search == _names[j];
+		    			    if(_contain) { aa = 1; break; }
+	    				}
+	    				
+    				} else {
+    					var _names = hotkeyNames[i];
+    					for( var j = 0, m = array_length(_names); j < m; j++ ) {
+	    					var _contain = string_pos(_search, _names[j]);
+		    			    if(_contain) { aa = 1; break; }
+	    				}
+	    				
     				}
     			}
     			
@@ -1646,7 +1662,7 @@ function Panel_Preference() : PanelContent() constructor {
     			var _wdgt = _l[1];
     			var _gett = _l[2];
     			
-    			if(_search != "") {
+    			if(_search != "" && search_type == "") {
                  	var _filtered = string_pos(_search, string_lower(_name)) == 0;
     			    if(_filtered) continue;
 				}
@@ -1724,9 +1740,17 @@ function Panel_Preference() : PanelContent() constructor {
     			var keyTxt = hotkey.getKeyName();
     			
     			if(_search != "") {
-                 	var _filtered = string_pos(_search, string_lower(name))   == 0 
-    			                 && string_pos(_search, string_lower(keyTxt)) == 0;
-    			    if(_filtered) continue;
+    				var _include = false;
+    				
+    				if(search_type == "key") {
+    					_include |= _search == string_lower(keyTxt);
+    					
+    				} else {
+	                 	_include |= string_pos(_search, string_lower(name))   != 0 
+	    			    _include |= _search == string_lower(keyTxt);
+    				}
+    			    
+    			    if(!_include) continue;
 				}
     			
     			if(hotkey_focus == hotkey) sp_hotkey.scroll_y_to = -hh;
@@ -2105,11 +2129,22 @@ function Panel_Preference() : PanelContent() constructor {
     #endregion
     
     #region Search
-    	tb_search   = textBox_Text(function(str) /*=>*/ { search_text = str; }).setFont(f_p2).setAlign(fa_left).setSearch();
+    	tb_search   = textBox_Text(function(str) /*=>*/ {return setSearch(str)}).setFont(f_p2).setAlign(fa_left).setSearch();
     	search_text = "";
+    	search_type = "";
     	contents    = {};
     	goto_item   = noone;
     	goto_item_highlight = 0;
+    	
+    	function setSearch(txt) {
+    		search_text = txt;
+			search_type = "";
+    		
+    		if(string_starts_with(txt, "key:")) {
+    			search_text = string_replace(search_text, "key:", "");
+    			search_type = "key";
+    		}
+    	}
     	
     	var _pref_lists = [ pref_global, pref_appr, pref_node ];
     	
@@ -2535,5 +2570,4 @@ function Panel_Preference() : PanelContent() constructor {
 	static onClose = function() {
 	    ds_list_destroy(pref_global);
 	}
-	
 }

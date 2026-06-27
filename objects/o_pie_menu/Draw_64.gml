@@ -323,7 +323,8 @@ var mdis = point_distance( x, y, mouse_mx, mouse_my);
 	if(edit) {
 		instance_destroy(_p_dialog);
 		onActivate();
-		menuItemEdit(menu_id, true);
+		if(onEdit) onEdit(onEditParam);
+		else menuItemEdit(menu_id, true);
 		deactivate();
 	}
 	

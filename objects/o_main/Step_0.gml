@@ -67,11 +67,13 @@ if(!LOADING && PROJECT.active && !PROJECT.safeMode) { //node step
 					if(PREFERENCES.hotkey_use_pie) {
 						var pie = pieMenuCall($"hotkey.multi_{currK}", menus);
 						if(pie) {
-							pie.editable = false;
+							pie.onEdit = function(hk) /*=>*/ {return prefOpenHotkey(hk)};
+							pie.onEditParam = currK;
 							pie.activate_key_release = true;
 						}
 						
 					} else {
+						array_push(menus, menuItem(__txt("Edit Hotkey") + "...", function(hk) /*=>*/ {return prefOpenHotkey(hk)}).setParam(currK))
 						var _menu = menuCall($"hotkey.multi_{currK}", menus);
 						_menu.editable = false;
 					}

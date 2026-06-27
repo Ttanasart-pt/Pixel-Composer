@@ -118,13 +118,6 @@ function Panel_MenuItems_Editor(_menuId, _pie = false) : PanelContent() construc
 		
 	#endregion
 	
-	#region custom items
-		is_hotkey = string_starts_with(menuId, "hotkey.");
-		if(is_hotkey) {
-			
-		}
-	#endregion
-	
 	function drawGroup(hover, focus, _menu, xx, yy, ww, _m, _cont = false) {
 		if(has(_menu, "name")) return drawSubmenu(   hover, focus, _menu, xx, yy, ww, _m, _cont );
 		if(has(_menu, "cond")) return drawCondition( hover, focus, _menu, xx, yy, ww, _m, _cont );

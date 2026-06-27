@@ -7,7 +7,10 @@ with(o_pie_menu) { if(self != other) active = false; }
 	
 	menu_id  = "";
 	menus    = [];
-	editable = true;
+	
+	editable      = true;
+	onEdit        = undefined;
+	onEditParam   = undefined;
 	
 	name_width = ui(32);
 	pie_size   = 0;
@@ -27,7 +30,7 @@ with(o_pie_menu) { if(self != other) active = false; }
 	selectable = true;
 	anim_prog  = 0;
 	
-	selecting = false;
+	selecting  = false;
 	
 	mouse_tx = mouse_mx;
 	mouse_ty = mouse_my;
