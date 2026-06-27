@@ -823,6 +823,7 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 					for( var i = 0, n = array_length(anchor_select); i < n; i++ ) {
 						var _a = anchor_select[i];
 						if(_a == drag_point) continue;
+						if(input_fix_len + _a >= array_length(inputs)) break;
 						
 						var _inp = inputs[input_fix_len + _a];
 						var _onc = drag_point_data[input_fix_len + _a];

@@ -1348,17 +1348,18 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		if(global.FLAG.render == 1) LOG($"Trigger render for {getFullName()}");
 		
 		if(resetSelf) resetRender(false);
+		
 		if(renderAll) RENDER_ALL
-		else          RENDER_PARTIAL
+		else {
+			array_push(RENDER_LEAF, self);
+			RENDER_PARTIAL
+		}
 		
 		if(!IS_PLAYING) {
 			if(is(group, Node_Collection)) group.triggerRender();
-			else array_foreach(getNextNodesRaw(), function(n) /*=>*/ {return n.triggerRender()});
 			
-		} else {
-			for( var i = 0, n = array_length(inputs); i < n; i++ )
-				inputs[i].__init_dynamic = true;
-		}
+		} else if(!array_empty(inputs))
+			array_foreach(inputs, function(n,i) /*=>*/ { n.__init_dynamic = true; return true; })
 		
 		LOG_BLOCK_END
 	}

@@ -11,25 +11,20 @@ enum RENDER_TYPE {
 	globalvar LIVE_UPDATE; LIVE_UPDATE         = false;
 	globalvar RENDERING; RENDERING           = undefined;
 	globalvar WILL_RENDERING; WILL_RENDERING      = undefined;
+	globalvar RENDER_LEAF; RENDER_LEAF         = [];
 	
 	#macro RENDER_ALL             RenderAll();
 	#macro RENDER_ALL_REORDER     RenderAllReorder();
 	#macro RENDER_PARTIAL         RenderPartial();
 	#macro RENDER_PARTIAL_REORDER RenderPartialReorder();
 	
-	function RenderAll() { 
-		UPDATE |= RENDER_TYPE.full; 
-	}
-	
+	function RenderAll() { UPDATE |= RENDER_TYPE.full; }
 	function RenderAllReorder() { 
 		UPDATE |= RENDER_TYPE.full;    
 		UPDATE_RENDER_ORDER = true; 
 	}
 	
-	function RenderPartial() { 
-		UPDATE |= RENDER_TYPE.partial; 
-	}
-	
+	function RenderPartial() { UPDATE |= RENDER_TYPE.partial; }
 	function RenderPartialReorder() { 
 		UPDATE |= RENDER_TYPE.partial; 
 		UPDATE_RENDER_ORDER = true; 
@@ -196,11 +191,14 @@ enum RENDER_TYPE {
 		renderIndex = 0;
 		renderQueue = [];
 		
+		logFlag = global.FLAG.render;
+		// logFlag = 1;
+		
 		static init = function() {
 			LOG_END
 			
 			LOG_BLOCK_START
-			if(global.FLAG.render) LOG($"============================== RENDER START [{partial? "PARTIAL" : "FULL"}] [frame {GLOBAL_CURRENT_FRAME}] ==============================");
+			if(logFlag) LOG($"============================== RENDER START [{partial? "PARTIAL" : "FULL"}] [frame {GLOBAL_CURRENT_FRAME}] ==============================");
 			
 			project.preRender();
 			t  = get_timer();
@@ -213,31 +211,40 @@ enum RENDER_TYPE {
 			nodeCounts  = array_length(project.nodeTopo);
 			
 			if(reset_all) {
-				if(global.FLAG.render == 1) LOG($"xxxxxxxxxx Resetting {array_length(project.nodeTopo)} nodes xxxxxxxxxx");
+				if(logFlag == 1) LOG($"xxxxxxxxxx Resetting {array_length(project.nodeTopo)} nodes xxxxxxxxxx");
 				array_foreach(project.allNodes, function(n,i) /*=>*/ {return n.setRenderStatus(false)});
 			}
 			
 			// get leaf node
-			if(global.FLAG.render == 1) LOG($"----- Finding leaf from {array_length(project.nodeTopo)} nodes -----");
+			if(logFlag == 1) LOG($"----- Finding leaf from {array_length(project.nodeTopo)} nodes -----");
 			
-			array_foreach(project.nodeTopo, function(n) /*=>*/ { 
+			array_foreach(project.nodeTopo, function(n,i) /*=>*/ { 
 				n.passiveDynamic = false;
 				n.render_time    = 0;
+				return true;
 			});
 			
-			array_foreach(project.nodeTopo, function(n) /*=>*/ { 
-				var _isLeaf = __nodeIsRenderLeaf(n);
+			if(partial && !array_empty(RENDER_LEAF)) {
+				for( var i = 0, n = array_length(RENDER_LEAF); i < n; i++ ) 
+					array_push(renderQueue, RENDER_LEAF[i]);
+				renderQueue = array_unique(renderQueue);
 				
-				if(!_isLeaf) { 
-					profile_log(3, $"Not Leaf: {n.getFullName()} [{_isLeaf}]");
-					if(n.passiveDynamic) n.forwardPassiveDynamic();
-					return; 
-				}
-				
-				profile_log(2, $"Leaf: {n.getFullName()}");
-				array_push(renderQueue, n);
-				n.forwardPassiveDynamic();
-			});
+			} else {
+				array_foreach(project.nodeTopo, function(n,i) /*=>*/ { 
+					var _isLeaf = __nodeIsRenderLeaf(n);
+					
+					if(!_isLeaf) { 
+						profile_log(3, $"Not Leaf: {n.getFullName()} [{_isLeaf}]");
+						if(n.passiveDynamic) n.forwardPassiveDynamic();
+						return true; 
+					}
+					
+					profile_log(2, $"Leaf: {n.getFullName()}");
+					array_push(renderQueue, n);
+					n.forwardPassiveDynamic();
+					return true; 
+				});
+			}
 			
 			if(PROFILER_STAT) {
 				var ll = "";
@@ -248,11 +255,10 @@ enum RENDER_TYPE {
 			}
 			
 			leaf_time = get_timer() - t;
-			if(global.FLAG.render >= 1) LOG($"Get leaf complete: found {array_length(renderQueue)} leaves in {(get_timer() - t) / 1000} ms."); t = get_timer();
-			if(global.FLAG.render == 1) LOG("================== Start rendering ==================");
+			if(logFlag >= 1) LOG($"Get leaf complete: found {array_length(renderQueue)} leaves in {(get_timer() - t) / 1000} ms."); t = get_timer();
+			if(logFlag == 1) LOG("================== Start rendering ==================");
 		}
 		
-		// I thought rendering from topo list would be faster. But in reality it's around the same speed. what?
 		static renderList = function(_maxDuration = PREFERENCES.render_max_time) {
 			var _time_frame = get_timer();
 			var _rendered   = 0;
@@ -279,7 +285,7 @@ enum RENDER_TYPE {
 			try {
 				while(array_length(renderQueue)) {
 					LOG_BLOCK_START
-					// if(global.FLAG.render == 1) print($"➤➤➤➤➤➤ CURRENT RENDER QUEUE {renderQueue}");
+					// if(logFlag == 1) print($"➤➤➤➤➤➤ CURRENT RENDER QUEUE {renderQueue}");
 					
 					var rendering  = array_shift(renderQueue);
 					var renderable = rendering.isRenderable();
@@ -334,13 +340,17 @@ enum RENDER_TYPE {
 		static postRender = function() {
 			render_time /= 1000;
 				
-			if(global.FLAG.renderTime || global.FLAG.render >= 1) LOG($"=== RENDER FRAME {GLOBAL_CURRENT_FRAME} COMPLETE IN {(get_timer() - t1) / 1000} ms ===\n");
-			if(global.FLAG.render > 1) LOG($"=== RENDER SUMMARY STA ===");
-			if(global.FLAG.render > 1) LOG($"  total time:  {(get_timer() - t1) / 1000} ms");
-			if(global.FLAG.render > 1) LOG($"  leaf:        {leaf_time / 1000} ms");
-			if(global.FLAG.render > 1) LOG($"  render loop: {(get_timer() - t) / 1000} ms");
-			if(global.FLAG.render > 1) LOG($"  render only: {render_time} ms");
-			if(global.FLAG.render > 1) LOG($"=== RENDER SUMMARY END ===");
+			if(global.FLAG.renderTime || logFlag >= 1) 
+				LOG($"=== RENDER FRAME {GLOBAL_CURRENT_FRAME} COMPLETE IN {(get_timer() - t1) / 1000} ms ===\n");
+				
+			if(logFlag > 1) {
+				LOG($"=== RENDER SUMMARY STA ===");
+				LOG($"  total time:  {(get_timer() - t1) / 1000} ms");
+				LOG($"  leaf:        {leaf_time / 1000} ms");
+				LOG($"  render loop: {(get_timer() - t) / 1000} ms");
+				LOG($"  render only: {render_time} ms");
+				LOG($"=== RENDER SUMMARY END ===");
+			}
 			
 			// print("\n============== render stat ==============");
 			// print($"Get value hit: {global.getvalue_hit}");
@@ -411,7 +421,8 @@ enum RENDER_TYPE {
 			
 			var _ren = new RenderObject(_project, _partial, _runAction);
 			var _fin = _ren.render(PREFERENCES.render_max_time);
-			RENDERING = _fin? undefined : _ren;
+			RENDERING   = _fin? undefined : _ren;
+			RENDER_LEAF = [];
 			
 			return RENDERING;
 		}

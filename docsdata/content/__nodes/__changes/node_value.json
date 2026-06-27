@@ -6,6 +6,11 @@
         "date": "2026-06-27T01:01:33.291Z",
         "node": "",
         "commit": "**Group**: Fix incorrect connection when ungrouping a group."
+      },
+      {
+        "date": "2026-06-27T07:12:26.367Z",
+        "node": "",
+        "commit": "Reduce the number of nodes to be rendered while editing."
       }
     ]
   },

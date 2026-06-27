@@ -430,7 +430,7 @@ function Project() constructor {
 		}
 		
 		animator.is_simulating = array_any(allNodes, function(a,i) /*=>*/ {return a.is_simulation});
-		array_foreach(allNodes, function(n,i) /*=>*/ { if(n.active) n.stepBegin(); });
+		array_foreach(allNodes, function(n,i) /*=>*/ { if(n.active) n.stepBegin(); return true; });
 	}
 	
 	static step = function() {

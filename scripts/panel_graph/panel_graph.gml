@@ -4143,6 +4143,7 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
         	_drag = false;
         }
         
+        // print(_select, _drag, node);
         if(_select) selectDragNode(node, _drag);
         connect_related = noone;
         return node;
