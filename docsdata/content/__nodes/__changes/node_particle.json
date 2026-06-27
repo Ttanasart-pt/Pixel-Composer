@@ -6,6 +6,11 @@
         "date": "2026-06-27T07:31:08.624Z",
         "node": "",
         "commit": "**Particle**: Add path loop option."
+      },
+      {
+        "date": "2026-06-27T08:03:31.195Z",
+        "node": "Particle",
+        "commit": "**Particle**: Path deviation now a floating value with curve modifier."
       }
     ]
   },
