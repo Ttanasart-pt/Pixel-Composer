@@ -96,8 +96,7 @@ function Node_Particle(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 	newInput(66, nodeValue_Range2(  "Path Range",    [0,0,1,1]    ));
 	newInput(80, nodeValue_Range(   "Range Shift",   [0,0]        ));
 	newInput(81, nodeValue_Curve(   "Path Speed",    CURVE_DEF_01 ));
-	newInput(83, nodeValue_Float(   "Deviation",      0           )).setCurvable(47, CURVE_DEF_11);
-	// newInput(47, nodeValue_Curve(   "Deviation",     CURVE_DEF_11 ));
+	newInput(83, nodeValue_Float(   "Deviation",      1           )).setCurvable(47, CURVE_DEF_11);
 	
 	////- =Physics
 	newInput(57, nodeValue_Bool(    "Use Physics",  false                     ));

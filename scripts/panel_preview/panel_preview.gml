@@ -2190,16 +2190,22 @@ function Panel_Preview() : PanelContent() constructor {
         }
         
         if(_ps0) { // outline
-            if(PROJECT.previewGrid.pixel && canvas_s >= 16) {
-                
+        	var pxAlways = PROJECT.previewGrid.pixelAlway;
+        	var pxScale  = PROJECT.previewGrid.pixelScale;
+        	var pxUse    = PROJECT.previewGrid.pixel;	
+        	
+            if(pxUse && (pxAlways || canvas_s >= pxScale)) {
                 var gw = preview_surface_width  / canvas_s;
                 var gh = preview_surface_height / canvas_s;
                 
                 var cx = canvas_x;
                 var cy = canvas_y;
                 
-                draw_set_color(PROJECT.previewGrid.color);
-                draw_set_alpha(PROJECT.previewGrid.opacity * 0.5 * clamp((canvas_s - 16) / 16, 0, 1));
+                var cc = PROJECT.previewGrid.pixelColor;
+                var _a = pxAlways? 1 : (.5 * clamp((canvas_s - pxScale) / pxScale, 0, 1));
+                var aa = PROJECT.previewGrid.pixelAlpha * _a;
+                
+                draw_set_color_alpha(cc, aa);
                 
                 for( var i = 1; i < gw; i++ ) {
                     var _xx = cx + i * canvas_s;

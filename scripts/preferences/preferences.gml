@@ -244,12 +244,17 @@
 			PREFERENCES.project_animation_framerate = 30;
 			
 			PREFERENCES.project_previewGrid = {
-				show	: false,
-				snap	: false,
-				size	: [ 16, 16 ],
-				opacity : 0.5,
-				color   : cola(#6d6d81),
-				pixel   : false,
+				show	   : false,
+				snap	   : false,
+				size	   : [ 16, 16 ],
+				opacity    : .5,
+				color      : cola(#6d6d81),
+				
+				pixel      : false,
+				pixelAlway : false,
+				pixelScale : 16,
+				pixelAlpha : .5,
+				pixelColor : cola(#6d6d81),
 				
 				d3_show    : true, 
 				d3_opacity : .75, 

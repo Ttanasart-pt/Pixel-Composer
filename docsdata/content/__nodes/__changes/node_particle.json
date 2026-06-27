@@ -11,6 +11,11 @@
         "date": "2026-06-27T08:03:31.195Z",
         "node": "Particle",
         "commit": "**Particle**: Path deviation now a floating value with curve modifier."
+      },
+      {
+        "date": "2026-06-27T08:25:29.894Z",
+        "node": "Preview Panel",
+        "commit": "**Preview Panel**: Add settings for controlling pixel grid display."
       }
     ]
   },

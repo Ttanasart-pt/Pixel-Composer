@@ -454,7 +454,7 @@ function __part(_node) : __particleObject() constructor {
 			if(pathLoop) _pathPrg = frac(_pathPrg);
 			else         _pathPrg = clamp(_pathPrg, 0., .999);
 			
-			var _pathDiv = pathDivC.getFast(_pathPrg) * pathDiv;
+			var _pathDiv = pathDiv == 0? 0 : pathDivC.getFast(_pathPrg) * pathDiv;
 			
 			pathPos = path.getPointRatio(_pathPrg, pathIndex, pathPos);
 			drawx   = pathPos.x + drawx * _pathDiv;
