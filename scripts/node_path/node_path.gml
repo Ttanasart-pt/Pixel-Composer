@@ -766,7 +766,7 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 			if(mouse_lrelease()) {
 				transform_type = 0;
 				UNDO_HOLDING   = false;
-				RENDER_ALL
+				RenderAll();
 			}
 			
 		} else if(drag_point > -1) { 
@@ -1522,7 +1522,7 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 						for( var i = input_fix_len, n = array_length(inputs); i < n; i++ )
 							drag_point_data[i] = array_clone(inputs[i].getValue());
 							
-						RENDER_ALL
+						RenderAll();
 					}
 				}
 				

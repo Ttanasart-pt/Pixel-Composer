@@ -13,11 +13,6 @@ enum RENDER_TYPE {
 	globalvar WILL_RENDERING; WILL_RENDERING      = undefined;
 	globalvar RENDER_LEAF; RENDER_LEAF         = [];
 	
-	#macro RENDER_ALL             RenderAll();
-	#macro RENDER_ALL_REORDER     RenderAllReorder();
-	#macro RENDER_PARTIAL         RenderPartial();
-	#macro RENDER_PARTIAL_REORDER RenderPartialReorder();
-	
 	function RenderAll() { UPDATE |= RENDER_TYPE.full; }
 	function RenderAllReorder() { 
 		UPDATE |= RENDER_TYPE.full;    

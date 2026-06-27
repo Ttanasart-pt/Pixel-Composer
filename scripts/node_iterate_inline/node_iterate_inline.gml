@@ -113,7 +113,7 @@ function Node_Iterate_Inline(_x, _y, _group = noone) : Node_Collection_Inline(_x
 		var _itc    = inputs[0].getValue();
 		if(!loop_active) _itc = 0;
 		
-		if(_itc != iteration_count) RENDER_ALL_REORDER
+		if(_itc != iteration_count) RenderAllReorder();
 		
 		iteration_count = _itc;
 		iterated        = 0;

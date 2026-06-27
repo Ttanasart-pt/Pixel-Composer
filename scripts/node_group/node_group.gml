@@ -17,7 +17,7 @@ function Node_Group(_x, _y, _group = noone) : Node_Collection(_x, _y, _group) co
 		
 		if(_upd) {
 			updateInstance();
-			run_in(1, function() /*=>*/ { RENDER_ALL_REORDER });
+			run_in(1, function() /*=>*/ { RenderAllReorder(); });
 		}
 		return self; 
 	}

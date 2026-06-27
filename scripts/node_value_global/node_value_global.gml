@@ -95,13 +95,13 @@ function variable_editor(nodeVal) constructor {
 		type_index = v;
 		disp_index = 0;
 		refreshInput();
-		RENDER_ALL
+		RenderAll();
 	}).setTextColor(CDEF.main_mdwhite).setUpdateHover(false).setIconPadding(ui(8));
 	
 	sc_disp  = new scrollBox(global.GLOBALVAR_DISPLAY[0], function(v) /*=>*/ {
 		disp_index = v;
 		refreshInput();
-		RENDER_ALL
+		RenderAll();
 	}).setTextColor(CDEF.main_mdwhite).setUpdateHover(false).setIconPadding(ui(8));
 	
 	type_index = 0; _type_index = 0;

@@ -165,7 +165,7 @@ function __APPEND_MAP(_map, context = PANEL_GRAPH.getCurrentContext(), appended_
 	}
 	
 	refreshNodeMap();
-	RENDER_ALL_REORDER
+	RenderAllReorder();
 	
 	if(has(_map, "timelines")) {
 		var _time = new timelineItemGroup().deserialize(_map.timelines);

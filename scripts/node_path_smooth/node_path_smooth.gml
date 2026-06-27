@@ -289,7 +289,7 @@ function Node_Path_Smooth(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 					resetDisplayList();
 				}
 				
-				RENDER_ALL
+				RenderAll();
 			}
 		}
 		

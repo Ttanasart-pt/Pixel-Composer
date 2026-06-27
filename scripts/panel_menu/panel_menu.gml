@@ -4,7 +4,7 @@
     function global_project_close_all() { CALL("close_project_all"); for( var i = array_length(PROJECTS) - 1; i >= 0; i-- ) closeProject(PROJECTS[i]);   }
     function global_theme_reload()      { CALL("reload_theme");      loadGraphic(PREFERENCES.theme); resetPanel();                                       }
     
-    function global_render_all()        { CALL("render_all");        RENDER_ALL_REORDER                                                                  }
+    function global_render_all()        { CALL("render_all");        RenderAllReorder();                                                                  }
     function global_export_all()        { 
         for (var i = 0, n = array_length(PROJECT.allNodes); i < n; i++) {
             var node = PROJECT.allNodes[i];

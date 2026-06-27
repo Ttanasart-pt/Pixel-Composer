@@ -677,7 +677,7 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
 		topbar_widget_dim = new vectorBox(2, function(v,i) /*=>*/ { 
 			PROJECT.attributes.surface_dimension[i] = v; 
 			PROJECT_ATTRIBUTES.surface_dimension = array_clone(PROJECT.attributes.surface_dimension);
-			RENDER_ALL 
+			RenderAll(); 
 		}).setFont(f_p3);
 		
 		topbar_int = new tooltipSelector(__txt("Interpolation"), [ __txt("Pixel"), __txt("Bilinear")  ]);
@@ -1423,7 +1423,7 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
             autoPanTo(area_x, area_y, _targ.slide_speed * .75, _gs);
             
         _targ.slideInit();
-        RENDER_ALL_REORDER
+        RenderAllReorder();
     }
     
     ////- Context
@@ -4478,7 +4478,7 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
         _to.inputs[0].updateColor();
         _ti.inputs[1].updateColor();
         
-        run_in(1, function() /*=>*/ { RENDER_ALL_REORDER });
+        run_in(1, function() /*=>*/ { RenderAllReorder(); });
     }
     
     ////- Group
@@ -4722,7 +4722,7 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
         }
         
         node_hover.clearInputCache();
-        RENDER_PARTIAL
+        RenderPartial();
     } 
     
     function doRename() {
@@ -5120,7 +5120,7 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
     		 project.graphBGIndexData = undefined;
     	else project.graphBGIndexData = [ n, i ]
 		
-		RENDER_ALL
+		RenderAll();
     }
     
     ////- Pie Menu

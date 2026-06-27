@@ -1151,7 +1151,7 @@ function Node_Path_3D(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 			
 			if(mouse_lrelease()) {
 				drag_point = -1;
-				RENDER_ALL
+				RenderAll();
 				UNDO_HOLDING = false;
 			}
 		}
@@ -1452,7 +1452,7 @@ function Node_Path_3D(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 				drag_point_sy = mAdj.y;
 				drag_point_sz = mAdj.z;
 				
-				RENDER_ALL
+				RenderAll();
 			}
 		}
 		

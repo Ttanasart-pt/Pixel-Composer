@@ -282,7 +282,7 @@ function Project() constructor {
 		static setAttribute = function(_k,_v) /*=>*/ {
 			attributes[$ _k]         = _v;
 			PROJECT_ATTRIBUTES[$ _k] = _v;
-			RENDER_ALL 
+			RenderAll(); 
 			return true;
 		}
 		
@@ -290,7 +290,7 @@ function Project() constructor {
 			var _v = !attributes[$ _k];
 			attributes[$ _k]         = _v;
 			PROJECT_ATTRIBUTES[$ _k] = _v;
-			RENDER_ALL 
+			RenderAll(); 
 			return true;
 		}
 		
@@ -300,7 +300,7 @@ function Project() constructor {
 					function(val, index) /*=>*/ { 
 						attributes.surface_dimension[index] = val; 
 						PROJECT_ATTRIBUTES.surface_dimension = array_clone(attributes.surface_dimension);
-						RENDER_ALL 
+						RenderAll(); 
 						return true; 
 						
 					}).setLink(), 
@@ -335,7 +335,7 @@ function Project() constructor {
 					} 
 				],
 				
-				[ "Palette", "palette", new buttonPalette(function(pal) /*=>*/ { setPalette(pal); RENDER_ALL return true; }), 
+				[ "Palette", "palette", new buttonPalette(function(pal) /*=>*/ { setPalette(pal); RenderAll(); return true; }), 
 					function(junc) /*=>*/ {
 						if(!is(junc, NodeValue)) return;
 						if(junc.type != VALUE_TYPE.color || junc.display_type != VALUE_DISPLAY.palette) return;

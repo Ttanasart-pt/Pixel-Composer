@@ -170,7 +170,7 @@ if(os_is_paused()) OS_PAUSED = true;
 	} else if(WILL_RENDERING != undefined) Render(WILL_RENDERING.project, WILL_RENDERING.partial);
 	
 	if(!surface_exists(watcher_surface)) {
-		RENDER_ALL
+		RenderAll();
 		watcher_surface = surface_create(1, 1);
 	}
 	

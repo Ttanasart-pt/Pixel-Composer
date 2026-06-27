@@ -1,0 +1,12 @@
+[
+  {
+    "version": "1.21.5.006",
+    "changes": [
+      {
+        "date": "2026-06-27T07:31:08.635Z",
+        "node": "",
+        "commit": "**Particle**: Add path loop option."
+      }
+    ]
+  }
+]

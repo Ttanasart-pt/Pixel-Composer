@@ -156,7 +156,7 @@ function Node_WAV_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 				b_sync.text = $"Sync ({frm} frames)";
 			}
 			
-			RENDER_ALL_REORDER
+			RenderAllReorder();
 		}
 		
 		if(attributes.file_checker && file_exists_empty(path_current)) {

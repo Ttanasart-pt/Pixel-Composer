@@ -2216,7 +2216,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		
 		if(_render) { // This part used to have !NODE_IS_PLAYING
 			if(is(node, Node_Global)) {
-				RENDER_ALL
+				RenderAll();
 				
 			} else {
 				if(!NODE_IS_PLAYING) node.project.immediate_render = node;
@@ -2397,7 +2397,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 			node.project.setModified();
 		}
 		
-		RENDER_PARTIAL_REORDER
+		RenderPartialReorder();
 		
 		if(onSetFrom != noone)			onSetFrom(_valueFrom);
 		if(_valueFrom.onSetTo != noone) _valueFrom.onSetTo(self);
@@ -2430,7 +2430,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		node.project.setModified();
 		if(PANEL_GRAPH) PANEL_GRAPH.connection_draw_update = true;
 						
-		RENDER_ALL_REORDER
+		RenderAllReorder();
 		
 		return false;
 	}

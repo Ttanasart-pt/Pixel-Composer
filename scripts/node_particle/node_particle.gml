@@ -92,10 +92,11 @@ function Node_Particle(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 	////- =Follow Path
 	newInput(45, nodeValue_Bool(    "Follow Path",   false        ));
 	newInput(46, nodeValue_Path(    "Path"                        ));
-	newInput(66, nodeValue_Range2(  "Range",         [0,0,1,1]    ));
+	newInput(66, nodeValue_Range2(  "Path Range",    [0,0,1,1]    ));
 	newInput(80, nodeValue_Range(   "Range Shift",   [0,0]        ));
 	newInput(81, nodeValue_Curve(   "Path Speed",    CURVE_DEF_01 ));
 	newInput(47, nodeValue_Curve(   "Deviation",     CURVE_DEF_11 ));
+	newInput(82, nodeValue_Bool(    "Path Loop",     true         ));
 	
 	////- =Physics
 	newInput(57, nodeValue_Bool(     "Use Physics",  false                     ));
@@ -133,16 +134,17 @@ function Node_Particle(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 	newInput(25, nodeValue_Int(      "Boundary Data", []   )).setArrayDepth(1).setVisible(false, true);
 	newInput(31, nodeValue_Surface(  "Atlas",         []   )).setArrayDepth(1);
 	newInput(48, nodeValue_Trigger(  "Reset Seed"          ))
-	//input 82
+	// 83
 	
 	newOutput( 0, nodeValue_Output( "Surface Out", VALUE_TYPE.surface,  noone ));
 	newOutput( 1, nodeValue_Output( "Data",        VALUE_TYPE.particle, []    ));
 	
 	array_foreach(inputs, function(inp, i) /*=>*/ { 
-		if(i == 6 || i == 8) return; 
-		if(inp.type == VALUE_TYPE.gradient) return; 
+		if(i == 6 || i == 8) return true; 
+		if(inp.type == VALUE_TYPE.gradient) return true; 
 		
 		inp.rejectArray(); 
+		return true; 
 	}, 1);
 	
 	dynaDraw_parameter = new Inspector_Custom_Renderer(function(_x, _y, _w, _m, _hover, _focus) {
@@ -200,12 +202,14 @@ function Node_Particle(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 		
 		__inspc(ui(6), true, false, ui(3)), 
 		
-		[ "Follow Path",  true, 45 ], 46, 66, 80, 81, 47, 
+		[ "Follow Path",  true, 45 ], 46, 66, 80, 81, 47, 82, 
 		[ "Physics",      true, 57 ], 54,  7, 
 			[ "/Gravity", false    ], 19, 33, 
 			[ "/Turning", false    ], 34, 35, 36, 
+			
 		[ "Ground",       true, 37 ], 38, 63, 
 			[ "/Bounce",  false    ], 39, 40, 
+			
 		[ "Wiggles",      true, 58 ], 20, 41, 42, 43, 
 		
 	];
@@ -380,6 +384,7 @@ function Node_Particle(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 			var _path       	= inputs_data[46];
 			var _pathRange      = inputs_data[66];
 			var _pathRangeShf   = inputs_data[80];
+			var _pathLoop       = inputs_data[82];
 			
 			var _use_phy     	= inputs_data[57];
 			var _accel      	= inputs_data[ 7];
@@ -558,7 +563,7 @@ function Node_Particle(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 					random_range(_pathRange[2], _pathRange[3]) + _path_range_shift 
 				];
 				
-				part.setPath( _path, _path_range, curve_path_spd, curve_path_div );
+				part.setPath( _path, _path_range, curve_path_spd, curve_path_div, _pathLoop );
 			#endregion
 			
 			#region Physics

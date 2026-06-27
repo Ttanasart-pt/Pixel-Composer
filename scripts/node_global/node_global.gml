@@ -12,7 +12,7 @@ function Node_Global(_x = 0, _y = 0) : __Node_Base(_x, _y) constructor {
 	anim_priority      = -999;
 	
 	static isActiveDynamic = function(frame = CURRENT_FRAME) /*=>*/ {return true}
-	static valueUpdate     = function(index) /*=>*/ { RENDER_ALL }
+	static valueUpdate     = function(index) /*=>*/ { RenderAll(); }
 	
 	////- Inputs
 	
@@ -42,7 +42,7 @@ function Node_Global(_x = 0, _y = 0) : __Node_Base(_x, _y) constructor {
 		}
 		
 		_val.name = _name;
-		RENDER_ALL
+		RenderAll();
 		return true;
 	}
 	

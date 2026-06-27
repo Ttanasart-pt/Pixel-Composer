@@ -134,7 +134,7 @@ switch(load_process) {
     // break;
     
     // case 7 : 
-        RENDER_ALL_REORDER
+        RenderAllReorder();
         
         LOADING = false;
         PROJECT.modified = false;
@@ -182,6 +182,6 @@ switch(load_process) {
     	if(PANEL_ANIMATION) PANEL_ANIMATION.resetView();
     	GraphRefresh(); 
     	
-    	RENDER_ALL_REORDER
+    	RenderAllReorder();
     });
 }

@@ -6,6 +6,11 @@
         "date": "2026-06-27T07:12:26.361Z",
         "node": "",
         "commit": "Reduce the number of nodes to be rendered while editing."
+      },
+      {
+        "date": "2026-06-27T07:31:08.585Z",
+        "node": "Particle",
+        "commit": "**Particle**: Add path loop option."
       }
     ]
   },

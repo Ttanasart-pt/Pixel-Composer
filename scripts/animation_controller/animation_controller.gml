@@ -76,7 +76,7 @@ function AnimationManager(_project = PROJECT) constructor {
 		if(frame_progress) {
 			PANEL_ANIMATION.previous_move = current_frame - _c;
 			last_time = 0;
-			RENDER_ALL
+			RenderAll();
 		}
 	}
 	
@@ -134,7 +134,7 @@ function AnimationManager(_project = PROJECT) constructor {
 		play_direction = 1;
 		real_time      = 0;
 		
-		RENDER_ALL
+		RenderAll();
 	}
 	
 	static render = function() {

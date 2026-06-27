@@ -75,7 +75,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			if(!LOCALE_DEF || TESTING) renamed = true;
 		});
 		
-		RENDER_PARTIAL_REORDER
+		RenderPartialReorder();
 	}
 	
 	#region ---- Display ----
@@ -1349,10 +1349,10 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		
 		if(resetSelf) resetRender(false);
 		
-		if(renderAll) RENDER_ALL
+		if(renderAll) RenderAll();
 		else {
 			array_push(RENDER_LEAF, self);
-			RENDER_PARTIAL
+			RenderPartial();
 		}
 		
 		if(!IS_PLAYING) {
@@ -3620,7 +3620,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		if(group)  group.refreshNodes();
 		if(record) recordAction(ACTION_TYPE.node_delete, self).setRef(self);
 		
-		RENDER_ALL_REORDER
+		RenderAllReorder();
 	}
 	
 	static onRestore = undefined
@@ -3634,7 +3634,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		if(onRestore != undefined) onRestore();
 		if(group) group.refreshNodes();
 		
-		RENDER_ALL_REORDER
+		RenderAllReorder();
 	}
 	
 	static droppable = function(dragObj) {
