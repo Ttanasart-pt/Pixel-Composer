@@ -419,11 +419,12 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	
 	////- =Output
 	newInput( 0, nodeValue_IPadding( "Padding", [0,0,0,0] ));
-	newInput( 1, nodeValue_EScroll(  "Output dimension", COMPOSE_OUTPUT_SCALING.first, [ "First surface", "Largest surface", "Constant" ]));
+	newInput( 1, nodeValue_EScroll(  "Output Dimension", COMPOSE_OUTPUT_SCALING.first, [ "First surface", "Largest surface", "Constant" ]));
 	newInput( 2, nodeValue_Dimension()).setVisible(false);
 	
 	////- =Rendering
 	newInput( 3, nodeValue_Bool( "Round Position", false ));
+	// 4
 	
 	newOutput(0, nodeValue_Output( "Surface Out", VALUE_TYPE.surface, noone ));
 	newOutput(1, nodeValue_Output( "Atlas data",  VALUE_TYPE.atlas,   []    ));
@@ -1763,36 +1764,41 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	static getDimension = function(arr = 0) { 
 		if(getInputAmount() == 0) return PROJ_SURF;
 		
-		var _pad  = getInputSingle(0, arr);
-		var _dimt = getInputSingle(1, arr);
-		var _dim  = getInputSingle(2, arr);
-		var base  = getInputSingle(input_fix_len, arr);
+		var padd = getInputSingle(0, arr);
+		var dimt = getInputSingle(1, arr);
 		
-		var ww = 0, hh = 0;
+		var ww = 0;
+		var hh = 0;
 		
-		switch(_dimt) {
+		switch(dimt) {
 			case COMPOSE_OUTPUT_SCALING.first :
+				var base = getInputSingle(input_fix_len, arr);
 				ww = surface_get_width_safe(base);
 				hh = surface_get_height_safe(base);
 				break;
 				
 			case COMPOSE_OUTPUT_SCALING.largest :
-				for(var i = input_fix_len; i < array_length(inputs) - data_length; i += data_length) {
-					var _s = getInputSingle(i, arr);
-					ww = max(ww, surface_get_width_safe(_s));
-					hh = max(hh, surface_get_height_safe(_s));
+				var _amo = getInputAmount();
+				
+				for( var i = 0; i < _amo; i++ ) {
+					var _ind = input_fix_len + i * data_length;
+					var _srf = getInputSingle(_ind, arr);
+					ww = max(ww, surface_get_width_safe(_srf));
+					hh = max(hh, surface_get_height_safe(_srf));
 				}
+				
 				break;
 				
 			case COMPOSE_OUTPUT_SCALING.constant :	
+				var _dim = getInputSingle(2, arr);
 				ww = _dim[0];
 				hh = _dim[1];
 				break;
 		}
 		
-		ww += _pad[0] + _pad[2];
-		hh += _pad[1] + _pad[3];
-	
+		ww += padd[0] + padd[2];
+		hh += padd[1] + padd[3];
+		
 		return [ ww, hh ];
 	} 
 	

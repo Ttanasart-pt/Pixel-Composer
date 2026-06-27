@@ -145,7 +145,7 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	static exitGroup = function() {}
 	
 	static onAdd = function(_node) /*=>*/ {}
-	static add   = function(_node) {
+	static add   = function(_node) /*=>*/ {
 		array_push(getNodeList(), _node);
 		var list = _node.group == noone? project.nodes : _node.group.getNodeList();
 		if(NOT_LOAD) array_remove(list, _node);
@@ -159,11 +159,11 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		onAdd(_node);
 	}
 	
-	static onRemove = function(_node) {}
-	static remove = function(_node) {
-		var _hide = _node.destroy_when_upgroup;
+	static onRemove = function(_node) /*=>*/ {}
+	static remove   = function(_node) /*=>*/ {
+		var _destroy = _node.destroy_when_upgroup;
 		
-		if(!_hide) {
+		if(!_destroy) {
 			var node_list = getNodeList();
 			var list = group == noone? project.nodes : group.getNodeList();
 			
@@ -173,11 +173,11 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		
 		recordAction(ACTION_TYPE.group_removed, self, _node);
 		
-		if(struct_has(_node, "onUngroup"))
+		if(has(_node, "onUngroup"))
 			_node.onUngroup();
-			
-		if(_hide) _node.disable();
-		else      _node.group = group;
+		
+		if(_destroy) _node.disable();
+		else         _node.group = group;
 		
 		will_refresh = true;
 		node_length  = array_length(nodes);
@@ -891,42 +891,96 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		return _group;
 	}
 	
-	function upgroupNode(collection, record = true) {
+	function ungroupNode(collection, record = true) {
 		UNDO_HOLDING  = true;
-		var _content  = [], _deleted = [];
+		var _content  = [];
+		var _deleted  = [];
 		var _node_arr = collection.getNodeList();
 		var _conn_to  = collection.getJunctionTos();
 		
-		var _cx = 0, _cy = 0;
-		var _nn = 0;
-		
-		for (var i = 0, n = array_length(_node_arr); i < n; i++) {
-			var _node = _node_arr[i];
-			if(!_node.selectable) continue;
+		#region position
+			var _cx = 0;
+			var _cy = 0;
+			var _nn = 0;
 			
-			_cx += _node.x;
-			_cy += _node.y;
-			_nn++;
-		}
-		
-		if(_nn) {
-			_cx = collection.x - _cx / _nn;
-			_cy = collection.y - _cy / _nn;
-		}
-		
-		for (var i = array_length(_node_arr) - 1; i >= 0; i--) {
-			var remNode    = _node_arr[i];
-				remNode.x += _cx;
-				remNode.y += _cy;
-			
-			if(remNode.destroy_when_upgroup) {
-				var _vto = remNode.getJunctionTos();
-				array_push(_deleted, { node: remNode, value_to : _vto });
-			} else
-				array_push(_content, remNode);
+			for (var i = 0, n = array_length(_node_arr); i < n; i++) {
+				var _node = _node_arr[i];
+				if(!_node.selectable || _node.is_group_io) continue;
 				
-			collection.remove(remNode);
+				_cx += _node.x;
+				_cy += _node.y;
+				_nn++;
+			}
+			
+			if(_nn) {
+				_cx = collection.x - _cx / _nn;
+				_cy = collection.y - _cy / _nn;
+			}
+		#endregion
+		
+		var _connIMap = {};
+		var _connOMap = {};
+		
+		for( var i = 0, n = array_length(collection.inputs); i < n; i++ ) {
+			var _inps    = collection.inputs[i];
+			var _nodeIn  = _inps.from;
+			var _valFrom = _inps.value_from;
+			
+			_connIMap[$ _nodeIn.node_id] = _valFrom;
 		}
+		
+		for( var i = 0, n = array_length(collection.outputs); i < n; i++ ) {
+			var _outp    = collection.outputs[i];
+			var _nodeIn  = _outp.from;
+			var _valTo   = _outp.getJunctionTo();
+			
+			_connOMap[$ _nodeIn.node_id] = _valTo;
+		}
+		
+		var parentList = collection.group == noone? collection.project.nodes : collection.group.getNodeList();
+		for( var i = 0, n = array_length(_node_arr); i < n; i++ ) {
+			var _node = _node_arr[i];
+			if(_node.is_group_io) continue;
+			
+			_node.group = collection.group;
+			_node.x += _cx;
+			_node.y += _cy;
+			
+			for( var j = 0, m = array_length(_node.inputs); j < m; j++ ) {
+				var _inp  = _node.inputs[j];
+				var _valF = _inp.value_from;
+				if(_valF == noone) continue;
+				
+				if(has(_connIMap, _valF.node.node_id)) 
+					_inp.setFrom(_connIMap[$ _valF.node.node_id]);
+			}
+			
+			for( var j = 0, m = array_length(_node.outputs); j < m; j++ ) {
+				var _out  = _node.outputs[j];
+				var _valT = _out.getJunctionTo();
+				if(array_empty(_valT)) continue;
+				
+				for( var k = 0, p = array_length(_valT); k < p; k++ ) {
+					var _conTo = _valT[k];
+					if(has(_connOMap, _conTo.node.node_id)) {
+						var _outTo = _connOMap[$ _conTo.node.node_id];
+						
+						for( var m = 0, q = array_length(_outTo); m < q; m++ )
+							_outTo[m].setFrom(_out);
+					}
+				}
+			}
+			
+			array_push(parentList, _node);
+			if(_node.destroy_when_upgroup) {
+				var _vto = _node.getJunctionTos();
+				array_push(_deleted, { node: _node, value_to : _vto });
+				
+			} else 
+				array_push(_content, _node);
+		}
+		
+		collection.nodes = [];
 		
 		collection.destroy();
 		UNDO_HOLDING = false;

@@ -4492,7 +4492,7 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
         if(_node == noone) return;
         if(!is(_node, Node_Collection) || !_node.ungroupable) return;
     
-        upgroupNode(_node);
+        ungroupNode(_node);
     } 
 	
 	function doGroupRemoveInstance() {

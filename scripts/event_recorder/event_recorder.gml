@@ -123,7 +123,7 @@ function Action(_type, _object, _data) constructor {
 				break;
 				
 			case ACTION_TYPE.group :
-				upgroupNode(obj, false);
+				ungroupNode(obj, false);
 				break;
 				
 			case ACTION_TYPE.ungroup :
@@ -243,7 +243,7 @@ function Action(_type, _object, _data) constructor {
 				break;
 				
 			case ACTION_TYPE.ungroup :
-				upgroupNode(obj, false);
+				ungroupNode(obj, false);
 				break;
 				
 			case ACTION_TYPE.collection_loaded :

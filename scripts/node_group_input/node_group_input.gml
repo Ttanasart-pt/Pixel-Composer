@@ -469,7 +469,7 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		
 		force_requeue = false;
 		__temp_frame  = frame;
-		return inParent.isActiveDynamic(frame) || array_any(inputs, function(inp) /*=>*/ {return inp.isActiveDynamic(__temp_frame)});
+		return inParent.isActiveDynamic(frame) || array_any(inputs, function(inp,_) /*=>*/ {return inp.isActiveDynamic(__temp_frame)});
 	}
 	
 	static visibleCheck = function() {
