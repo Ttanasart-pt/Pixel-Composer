@@ -43,18 +43,18 @@ function Panel_MenuItems_Editor(_menuId, _pie = false) : PanelContent() construc
 			if(_cat == -1) continue;
 			
 			__cat = string_lower(_cat) + "_";
-			cat_contents[$ _cat] = array_filter(_menus, function(v) /*=>*/ {return string_starts_with(v, __cat)});
+			cat_contents[$ _cat] = array_filter(_menus, function(v,i) /*=>*/ {return string_starts_with(v, __cat)});
 		}
 		
-		cat_contents[$ "Graph"]  = array_filter(_menus, function(v) /*=>*/ {return string_starts_with(v, "graph_") && !string_starts_with(v, "graph_add_")});
-		cat_contents[$ "Node"]   = array_filter(_menus, function(v) /*=>*/ {return string_starts_with(v, "graph_add_")});
-		cat_contents[$ "Panel"]  = array_filter(_menus, function(v) /*=>*/ {return string_ends_with(v, "_panel")});
-		cat_contents[$ "Global"] = array_filter(_menus, function(v) /*=>*/ { return !string_starts_with(v, "animation")  && 
-			                                                            !string_starts_with(v, "collection") &&
-			                                                            !string_starts_with(v, "graph")      &&
-			                                                            !string_starts_with(v, "inspector")  &&
-			                                                            !string_starts_with(v, "preset")     &&
-			                                                            !string_starts_with(v, "preview") 
+		cat_contents[$ "Graph"]  = array_filter(_menus, function(v,i) /*=>*/ {return string_starts_with(v, "graph_") && !string_starts_with(v, "graph_add_")});
+		cat_contents[$ "Node"]   = array_filter(_menus, function(v,i) /*=>*/ {return string_starts_with(v, "graph_add_")});
+		cat_contents[$ "Panel"]  = array_filter(_menus, function(v,i) /*=>*/ {return string_ends_with(v, "_panel")});
+		cat_contents[$ "Global"] = array_filter(_menus, function(v,i) /*=>*/ { return !string_starts_with(v, "animation")  && 
+			                                                              !string_starts_with(v, "collection") &&
+			                                                              !string_starts_with(v, "graph")      &&
+			                                                              !string_starts_with(v, "inspector")  &&
+			                                                              !string_starts_with(v, "preset")     &&
+			                                                              !string_starts_with(v, "preview") 
 		                                                       } );
 		
 		sc_types = new scrollBox(categories, function(i) /*=>*/ { category_page = i; setSearch(); }).setFont(f_p3);
@@ -91,10 +91,13 @@ function Panel_MenuItems_Editor(_menuId, _pie = false) : PanelContent() construc
 			var _s   = string_trim_start(string_lower(s), ["-"]);
 			
 			for( var i = 0, n = array_length(all_menu); i < n; i++ ) {
-				var _a = all_menu[i];
-				var _match = bool(string_pos(_s, string_lower(_a)));
-				if(_inv) _match = !_match;
+				var _a    = all_menu[i];
+				var _mObj = MENU_ITEMS[$ _a];
 				
+				var _match = bool( string_pos(_s, string_lower(_a))         ) 
+				          || bool( string_pos(_s, string_lower(_mObj.name)) );
+				
+				if(_inv) _match = !_match;
 				if(_match) array_push(_filt, _a);
 			}
 			
