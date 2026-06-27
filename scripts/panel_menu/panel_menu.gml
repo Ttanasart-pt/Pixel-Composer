@@ -732,7 +732,7 @@ function Panel_Menu() : PanelContent() constructor {
                             var bc = [ COLORS._main_icon, CDEF.yellow ];
                             var b  = buttonInstant(bspr, bx, by, bw, bh, m, pHOVER, true, "", bp, 0, bc);
                             if(b) _draggable = false;
-                            if(b == -2) winMan_Minimize();
+                            if(b == 2) winMan_Minimize();
                             break;
                             
                         case WINDOW_ACTION.Fullscreen:
