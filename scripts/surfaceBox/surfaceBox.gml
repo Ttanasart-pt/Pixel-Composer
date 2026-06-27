@@ -195,7 +195,7 @@ function surfaceBox(_onModify, _def_path = "") : widget() constructor {
 			h -= ui(4);
 		}
 		
-		if(junction.connect_type == CONNECT_TYPE.input && is(junction, __NodeValue_Surface)) {
+		if(is(junction, __NodeValue_Surface) && junction.connect_type == CONNECT_TYPE.input) {
 			switch(junction.surfaceType) {
 				case "mask" :
 					var wgx = _x;

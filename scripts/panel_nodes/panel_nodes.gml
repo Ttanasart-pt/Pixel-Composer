@@ -120,7 +120,7 @@ function Panel_Nodes() : PanelContent() constructor {
 		for( var i = 0, n = array_length(_item.children); i < n; i++ ) 
 			selectNodeTree(_item.children[i], _arr);
 		
-		PANEL_GRAPH.nodes_selecting = array_map(array_unique(_arr), function(a) /*=>*/ {return a.node});
+		PANEL_GRAPH.nodes_selecting = array_map(array_unique(_arr), function(a,i) /*=>*/ {return a.node});
 	}
 	
 	function drawNodeTree(_item, _x0, _x1, _y, _m, _bg = true) {

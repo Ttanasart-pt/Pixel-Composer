@@ -31,7 +31,7 @@ function __NodeValue_Color(_name, _node, _value, _tooltip = "") : NodeValue(_nam
 		__f = from.value;
 		__t = to.value;
 		__i = KeyframeInterpolate(from, to, rat);
-		return merge_color(__f, __t, __i);
+		return merge_color_rgba(__f, __t, __i);
 	}
 	
 	static arrayLength = arrayLengthSimple;

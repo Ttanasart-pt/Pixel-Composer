@@ -124,6 +124,19 @@ function timelineItemNode(_node) : timelineItem() constructor {
 			node.toggleAttribute("timeline_hide");
 		bx += bs + 1;
 		
+		////- =Right Buttons
+		
+		var tx = lx + lw - ui(7);
+		var tt = __txt("panel_animation_goto", "Go to node");
+
+		var brx = tx - ui(9);
+		var by  = _y + ui(1);
+		var bs  = ui(18);
+		var bc  = COLORS._main_icon_light;
+		
+		if(buttonInstant(noone, brx, by, bs, bs, _m, hover, focus, tt, THEME.animate_node_go, 0, bc, .75) == 2)
+			graphFocusNode(node);
+			
 		////- =Name
 		
 		var txx = bx + ui(2);
@@ -156,6 +169,8 @@ function timelineItemNode(_node) : timelineItem() constructor {
 			var tw = string_width(nodeName);
 			
 			draw_set_color(itHover == self? COLORS._main_text_accent : COLORS._main_text);
+			var scis = gpu_get_scissor();
+			gpu_set_scissor(txx, _y, brx - txx, h);
 			
 			if(nameType == 0 || nameType == 1 || !node.renamed) {
 				draw_set_alpha(0.6);
@@ -167,21 +182,9 @@ function timelineItemNode(_node) : timelineItem() constructor {
 			draw_set_alpha(1);
 			if(nameType == 0 || nameType == 2) 
 				draw_text_add(txx, _y + h / 2 - ui(2), node.display_name);
+			gpu_set_scissor(scis);
 		}
 		
-		////- =Right Buttons
-		
-		var tx = lx + lw - ui(7);
-		var tt = __txt("panel_animation_goto", "Go to node");
-
-		var bx = tx - ui(9);
-		var by = _y + ui(1);
-		var bs = ui(18);
-		var bc = col == -1? COLORS._main_icon_light : col;
-		
-		if(buttonInstant(noone, bx, by, bs, bs, _m, hover, focus, tt, THEME.animate_node_go, 0, bc, 0.4) == 2)
-			graphFocusNode(node);
-			
 		return res;
 	}
 	

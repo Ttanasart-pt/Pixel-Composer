@@ -407,7 +407,6 @@ function Panel_Menu() : PanelContent() constructor {
         var _action    = true//OS == os_windows;
         var _draggable = pHOVER && pFOCUS;
         
-        
         draw_clear_alpha(COLORS.panel_bg_clear, 1);
         var hori = w > h;
         var font = f_p3;

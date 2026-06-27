@@ -128,7 +128,7 @@ function Node_Gradient(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 			shader_set_m( "shift",  _data[5], _data[12], inputs[5] );
 			shader_set_m( "scale",  _data[9], _data[13], inputs[9] );
 			
-			if(is_surface(_msk)) draw_surface_stretched_ext(_msk, 0, 0, _sw, _sh, c_white, 1);
+			if(is_surface(_msk)) draw_surface_stretched_safe(_msk, 0, 0, _sw, _sh, c_white, 1);
 			else                 draw_empty();
 		surface_reset_shader();
 		
