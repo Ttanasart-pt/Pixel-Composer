@@ -16,10 +16,10 @@
 #endregion
 
 function Panel_Presets(_node) : PanelContent() constructor {
-	title  = __txt("Presets");
-	w      = ui(240);
-	h      = ui(400);
-	anchor = ANCHOR.left | ANCHOR.top;
+	title    = __txt("Presets");
+	w        = ui(240);
+	h        = ui(400);
+	anchor   = ANCHOR.left | ANCHOR.top;
 	
 	defPres  = noone;
 	node     = _node;
@@ -28,11 +28,10 @@ function Panel_Presets(_node) : PanelContent() constructor {
 	
 	adding   = false;
 	add_txt  = "";
-	tb_add   = new textBox(TEXTBOX_INPUT.text, function(txt) /*=>*/ { 
+	tb_add   = textBox_Text(function(txt) /*=>*/ { 
 		adding  = false; 
 		add_txt = txt; 
 		if(txt == "") return;
-		
 		newPresetFromNode(txt); 
 	});
 	
@@ -51,11 +50,16 @@ function Panel_Presets(_node) : PanelContent() constructor {
 			
 			-1,
 			menuItem(__txt("Edit Hotkey"),  function() /*=>*/ { 
-				var _hk    = __fnGraph_BuildNode($"{nodeType}>{selecting_preset.name}");
-				hk_editing = _hk.modify();
+				var _key    = $"{nodeType}>{selecting_preset.name}";
+				var _hotkey = __fnGraph_BuildNode(_key);
+				hk_editing  = _hotkey.modify();
 			}),
-			menuItem(__txt("Reset Hotkey"), function() /*=>*/ { if(is_struct(hk_selecting)) hk_selecting.reset(true) }, THEME.refresh_20)
-				.setActive(is_struct(hk_selecting) && hk_selecting.isModified()),
+			
+			menuItem(__txt("Remove Hotkey"), function() /*=>*/ { 
+				var _key    = $"{nodeType}>{selecting_preset.name}";
+				struct_remove(GRAPH_ADD_NODE_MAPS, _key);
+				
+			}, THEME.cross).setActive(is_struct(hk_selecting) && hk_selecting.isModified()),
 		];
 		
 		context_def    = [

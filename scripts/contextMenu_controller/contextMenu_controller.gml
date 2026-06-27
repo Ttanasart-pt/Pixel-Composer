@@ -228,6 +228,7 @@ function menuCall(menu_id = "", menu = [], _x = 0, _y = 0, align = fa_left, _pie
 	FOCUS_BEFORE = FOCUS;
 	
 	var dia = dialogCall(o_dialog_menubox, _x, _y);
+	menu    = array_clone(menu, 1);
 	
 	if(menu_id != "" && ds_map_exists(CONTEXT_MENU_CALLBACK, menu_id)) {
 		var callbacks = CONTEXT_MENU_CALLBACK[? menu_id];
@@ -253,6 +254,8 @@ function pieMenuCall(menu_id = "", menu = [], _x = 0, _y = 0) {
 	_y = _y == 0? mouse_my : _y;
 	
 	var dia = instance_create(_x, _y, o_pie_menu);
+	menu    = array_clone(menu, 1);
+	
 	if(menu_id != "" && ds_map_exists(CONTEXT_MENU_CALLBACK, menu_id)) {
 		var callbacks = CONTEXT_MENU_CALLBACK[? menu_id];
 		
