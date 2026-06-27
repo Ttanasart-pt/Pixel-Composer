@@ -116,6 +116,8 @@ function Node_Blend(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	
 	fg_transforms = [];
 	
+	////- Draw
+	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _params) { 
 		var _surf = outputs[0].getValue();
 		if(is_array(_surf)) _surf = array_safe_get_fast(_surf, preview_index);
@@ -178,6 +180,8 @@ function Node_Blend(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 			return array_safe_get(fg_transforms, preview_index, noone);
 		return noone;
 	}
+	
+	////- Process
 	
 	static processData_prebatch  = function() {
 		var _back = getInputSingle(0);
@@ -320,7 +324,7 @@ function Node_Blend(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 		surface_set_shader(_output, noone);
 			if(!is_surface(_fore)) draw_surface_safe(_backDraw);
 			else {
-				try { draw_surface_blend(_backDraw, _foreDraw, _type, _opacity, _pre_alp, _mask); }
+				try { draw_surface_blend(_backDraw, _foreDraw, _type, _opacity, _pre_alp, _mask, 0, inputs[4].attributes.mask_alpha_only); }
 				catch(e) { noti_warning(e, noone, self); }
 			}
 		surface_reset_shader();

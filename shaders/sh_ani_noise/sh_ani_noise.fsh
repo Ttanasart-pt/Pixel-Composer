@@ -81,7 +81,7 @@ void main() {
 	
 	vec2 vtx = getUV(v_vTexcoord);
 	vec2 ntx = vtx * vec2(1., dimension.y / dimension.x);
-	vec2 pos = (ntx - position) * mat2(cos(ang), - sin(ang), sin(ang), cos(ang));
+	vec2 pos = (ntx - position / dimension) * mat2(cos(ang), - sin(ang), sin(ang), cos(ang));
 	
 	float yy = floor(pos.y * nsy);
 	float xx = (pos.x + random(vec2(1., yy), seed)) * nsx;

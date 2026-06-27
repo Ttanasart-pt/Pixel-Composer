@@ -44,12 +44,12 @@ enum BLEND_MODE {
 
 global.node_blend_keys = array_create_ext(array_length(BLEND_TYPES), function(i) /*=>*/ {return string_lower(BLEND_TYPES[i])});
 
-function draw_surface_blend(background, foreground, blend = BLEND_MODE.normal, alpha = 1, _pre_alp = false, _mask = 0, tile = 0) {
+function draw_surface_blend(background, foreground, blend = BLEND_MODE.normal, alpha = 1, _pre_alp = false, _mask = 0, tile = 0, _maskAlpha = false) {
 	if(!is_surface(background)) return;
 	
 	var sh = sh_blend_normal;
 	switch(blend) {
-		case BLEND_MODE.normal :       sh = sh_blend_normal        break;
+		case BLEND_MODE.normal :       sh = sh_blend_normal;       break;
 		case BLEND_MODE.replace :      sh = sh_blend_replace;      break;
 		
 		case BLEND_MODE.multiply :     sh = sh_blend_multiply;     break;
@@ -60,7 +60,6 @@ function draw_surface_blend(background, foreground, blend = BLEND_MODE.normal, a
 		case BLEND_MODE.add :          sh = sh_blend_add;          break;
 		case BLEND_MODE.screen :       sh = sh_blend_screen;       break;
 		case BLEND_MODE.color_dodge :  sh = sh_blend_color_dodge;  break;
-		// case BLEND_MODE. :             sh = sh_blend_linear_dodge; break;
 		case BLEND_MODE.maximum :      sh = sh_blend_max;          break;
 		
 		case BLEND_MODE.overlay :      sh = sh_blend_overlay;      break;
@@ -100,8 +99,11 @@ function draw_surface_blend(background, foreground, blend = BLEND_MODE.normal, a
 		
 		shader_set(sh);
 		shader_set_s( "fore",          foreground           );
+		
 		shader_set_s( "mask",          _mask                );
 		shader_set_i( "useMask",       is_surface(_mask)    );
+		shader_set_i( "maskAlpha",     _maskAlpha           );
+		
 		shader_set_f( "dimension",     bgw / fgw, bgh / fgh ); 
 		shader_set_f( "opacity",       alpha                );
 		shader_set_i( "preserveAlpha", _pre_alp             );

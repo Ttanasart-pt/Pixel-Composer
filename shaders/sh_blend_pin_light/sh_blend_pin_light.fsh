@@ -1,6 +1,3 @@
-//
-// Simple passthrough fragment shader
-//
 varying vec2 v_vTexcoord;
 varying vec4 v_vColour;
 
@@ -8,16 +5,18 @@ uniform vec2 dimension;
 uniform int tile_type;
 
 uniform int useMask;
-uniform int preserveAlpha;
+uniform int maskAlpha;
 uniform sampler2D mask;
-uniform sampler2D fore;
-uniform float opacity;
 
 float sampleMask() {
 	if(useMask == 0) return 1.;
 	vec4 m = texture2D( mask, v_vTexcoord );
-	return (m.r + m.g + m.b) / 3. * m.a;
+	return maskAlpha == 1? m.a : (m.r + m.g + m.b) / 3. * m.a;
 }
+
+uniform int preserveAlpha;
+uniform sampler2D fore;
+uniform float opacity;
 
 vec4 maxx(vec4 a, vec4 b) { return vec4(max(a.r, b.r), max(a.g, b.g), max(a.b, b.b), max(a.a, b.a)); }
 vec4 minn(vec4 a, vec4 b) { return vec4(min(a.r, b.r), min(a.g, b.g), min(a.b, b.b), min(a.a, b.a)); }

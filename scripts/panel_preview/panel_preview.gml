@@ -201,8 +201,8 @@
 	        registerFunction(p, "Popup",            		"", n, function() /*=>*/ { create_preview_window(PANEL_PREVIEW.getNodePreview());         }).setMenu("preview_popup",          THEME.node_goto_thin    )
 	        registerFunction(p, "Grid Settings...",         "", n, function() /*=>*/ { PANEL_PREVIEW.subDialogCall(new Panel_Preview_Grid_Setting())  })
 	        	.setMenu("preview_grid_settings",  THEME.icon_grid_setting )
-	        	.setSpriteInd( function() /*=>*/ {return PROJECT.previewGrid.show} )
-	        	.setColorFn(   function() /*=>*/ {return PROJECT.previewGrid.show? COLORS._main_accent : COLORS._main_icon} )
+	        	.setSpriteInd( function() /*=>*/ {return PROJECT.previewGrid.show || PROJECT.previewGrid.pixel} )
+	        	.setColorFn(   function() /*=>*/ {return PROJECT.previewGrid.show || PROJECT.previewGrid.pixel? COLORS._main_accent : COLORS._main_icon} )
 	        	
 	        registerFunction(p, "Onion Skin Settings...",   "", n, function() /*=>*/ { PANEL_PREVIEW.subDialogCall(new Panel_Preview_Onion_Setting()) })
 	        	.setMenu("preview_onion_settings", THEME.onion_skin )
@@ -2208,12 +2208,18 @@ function Panel_Preview() : PanelContent() constructor {
                 draw_set_color_alpha(cc, aa);
                 
                 for( var i = 1; i < gw; i++ ) {
-                    var _xx = cx + i * canvas_s;
+                    var _xx = round(cx + i * canvas_s);
+                    if(_xx < 0) continue;
+                    if(_xx > w) break;
+                    
                     draw_line(_xx, cy, _xx, cy + preview_surface_height);
                 }
-            
+            	
                 for( var i = 1; i < gh; i++ ) {
-                    var _yy = cy + i * canvas_s;
+                    var _yy = round(cy + i * canvas_s);
+                    if(_yy < 0) continue;
+                    if(_yy > h) break;
+                    
                     draw_line(cx, _yy - 1, cx + preview_surface_width, _yy - 1);
                 }
                 

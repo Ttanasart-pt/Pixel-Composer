@@ -5,16 +5,18 @@ uniform vec2 dimension;
 uniform int tile_type;
 
 uniform int useMask;
-uniform int preserveAlpha;
+uniform int maskAlpha;
 uniform sampler2D mask;
-uniform sampler2D fore;
-uniform float opacity;
 
 float sampleMask() {
 	if(useMask == 0) return 1.;
 	vec4 m = texture2D( mask, v_vTexcoord );
-	return (m.r + m.g + m.b) / 3. * m.a;
+	return maskAlpha == 1? m.a : (m.r + m.g + m.b) / 3. * m.a;
 }
+
+uniform int preserveAlpha;
+uniform sampler2D fore;
+uniform float opacity;
 
 void main() {
 	vec4 _col0 = texture2D( gm_BaseTexture, v_vTexcoord );

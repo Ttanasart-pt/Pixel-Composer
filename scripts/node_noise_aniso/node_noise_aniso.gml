@@ -16,15 +16,15 @@ function Node_Noise_Aniso(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	
 	////- =Noise
 	newInput( 2, nodeValueSeed()).setPieMenu();
-	newInput( 1, nodeValue_Float(    "X Amount",  2     )).setMappable(6).setPieMenu();
-	newInput( 5, nodeValue_Float(    "Y Amount",  16    )).setMappable(7).setPieMenu();
-	newInput( 3, nodeValue_Vec2(     "Position", [0,0]  )).setHotkey("G").setUnitSimple().setPieMenu();
-	newInput( 4, nodeValue_Rotation( "Rotation",  0     )).setHotkey("R").setMappable(8).setPieMenu();
-	newInput(12, nodeValue_Bool(     "Tile",      false ));
+	newInput( 1, nodeValue_Float( "X Amount",  2     )).setMappable(6).setPieMenu();
+	newInput( 5, nodeValue_Float( "Y Amount",  16    )).setMappable(7).setPieMenu();
+	newInput( 3, nodeValue_Vec2(  "Position", [0,0]  )).setHotkey("G").setUnitSimple().setPieMenu();
+	newInput( 4, nodeValue_Rot(   "Rotation",  0     )).setHotkey("R").setMappable(8).setPieMenu();
+	newInput(12, nodeValue_Bool(  "Tile",      false ));
 	
 	////- =Rendering
-	newInput(15, nodeValue_SliRange( "Level",         [0,1] ));
-	newInput( 9, nodeValue_EScroll( "Render Mode", 0, [ "Blend", "Waterfall" ] ));
+	newInput(15, nodeValue_SliRange( "Level",      [0,1] ));
+	newInput( 9, nodeValue_EScroll(  "Render Mode", 0, [ "Blend", "Waterfall" ] ));
 	newInput(10, nodeValueSeed());
 	// input 16
 	
@@ -53,11 +53,15 @@ function Node_Noise_Aniso(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	
 	static processData = function(_outSurf, _data, _array_index) {
 		#region data
-			var _dim = _data[ 0];
-			var _pos = _data[ 3];
+			var _dim    = _data[ 0];
+			var _pos    = _data[ 3];
 			
-			var _lvl = _data[15];
-			var _mod = _data[ 9];
+			var _sed    = _data[ 2];
+			var _tile   = _data[12];
+			
+			var _lvl    = _data[15];
+			var _mod    = _data[ 9];
+			var _sedClr = _data[10];
 		
 			inputs[10].setVisible(_mod == 0);
 		#endregion
@@ -67,18 +71,18 @@ function Node_Noise_Aniso(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 		surface_set_shader(_outSurf, sh_ani_noise);
 			shader_set_uv(_data[13], _data[14]);
 			
-			shader_set_2("dimension",   _dim);
-			shader_set_f("position",	_pos[0] / _dim[0], _pos[1] / _dim[1]);
-			shader_set_f("seed",		_data[2]);
-			shader_set_f("colrSeed",	_data[10]);
-			shader_set_i("tile",	    _data[12]);
+			shader_set_2( "dimension", _dim    );
+			shader_set_2( "position",  _pos    );
+			shader_set_f( "seed",      _sed    );
+			shader_set_f( "colrSeed",  _sedClr );
+			shader_set_i( "tile",      _tile   );
 			
-			shader_set_2("level",       _lvl);
-			shader_set_f_map("noiseX",  _data[1], _data[6], inputs[1]);
-			shader_set_f_map("noiseY",  _data[5], _data[7], inputs[5]);
-			shader_set_f_map("angle",	_data[4], _data[8], inputs[4]);
+			shader_set_m( "noiseX",    _data[1], _data[6], inputs[1]);
+			shader_set_m( "noiseY",    _data[5], _data[7], inputs[5]);
+			shader_set_m( "angle",     _data[4], _data[8], inputs[4]);
 			
-			shader_set_i("mode",		_mod);
+			shader_set_2( "level",     _lvl    );
+			shader_set_i( "mode",      _mod    );
 			
 			draw_sprite_stretched(s_fx_pixel, 0, 0, 0, _dim[0], _dim[1]);
 		surface_reset_shader();

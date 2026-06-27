@@ -21,7 +21,7 @@ enum RENDER_TYPE {
 	
 	function RenderPartial() { UPDATE |= RENDER_TYPE.partial; }
 	function RenderPartialReorder() { 
-		UPDATE |= RENDER_TYPE.partial; 
+		UPDATE |= RENDER_TYPE.full; 
 		UPDATE_RENDER_ORDER = true; 
 	}
 	
