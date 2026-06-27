@@ -6,6 +6,11 @@
         "date": "2026-06-27T01:01:33.286Z",
         "node": "",
         "commit": "**Group**: Fix incorrect connection when ungrouping a group."
+      },
+      {
+        "date": "2026-06-27T01:15:37.113Z",
+        "node": "",
+        "commit": "**Group**: Fix crash when trying to group nodes with multiple connections to the same junction."
       }
     ]
   },

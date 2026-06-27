@@ -101,6 +101,7 @@ function Node_Group_Output(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	}
 	
 	static update = function() {
+		if(outParent == undefined) return;
 		outParent.name = display_name; 
 		
 		var _in0 = inputs[0];

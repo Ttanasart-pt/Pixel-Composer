@@ -809,6 +809,7 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 			for( var i = 0, n = array_length(_inKey); i < n; i++ ) {
 				var _frm = _io.map[$ _inKey[i]];
 				var _tos = _io.inputs[$ _inKey[i]];
+				if(_frm == undefined || _tos == undefined) continue;
 				
 				_x = 0
 				_y = 0;
@@ -856,11 +857,13 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 			for( var i = 0, n = array_length(_otKey); i < n; i++ ) {
 				var _frm = _io.map[$ _otKey[i]];
 				var _tos = _io.outputs[$ _otKey[i]];
+				if(_frm == undefined || _tos == undefined) continue;
 				
 				var _conn = false;
 				for( var j = 0, m = array_length(_group.outputs); j < m; j++ ) {
 					var _oup = _group.outputs[j];
-					if(_oup.from.value_from == _frm) {
+					
+					if(_oup.from.inputs[0].value_from == _frm) {
 						for( var k = 0; k < p; k++ )
 							_tos[k].setFrom(_oup);
 						
@@ -873,15 +876,13 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 				
 				_x = value_snap(_frm.node.x + _frm.node.w + 64, 32);
 				_y = value_snap(_frm.node.y, 32);
-				 m = array_length(_tos);
 				
 				var _n = new Node_Group_Output(_x, _y, _group);
 				_n.inputs[0].setFrom(_frm);
 				
-				for( var j = 0; j < m; j++ ) {
-					var _to = _tos[j];
-					_to.setFrom(_n.outParent);
-				}
+				for( var j = 0, m = array_length(_tos); j < m; j++ )
+					_tos[j].setFrom(_n.outParent);
+				
 			}
 		}
 		
@@ -940,7 +941,10 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		var parentList = collection.group == noone? collection.project.nodes : collection.group.getNodeList();
 		for( var i = 0, n = array_length(_node_arr); i < n; i++ ) {
 			var _node = _node_arr[i];
-			if(_node.is_group_io) continue;
+			if(_node.is_group_io) {
+				_node.disable();
+				continue;
+			}
 			
 			_node.group = collection.group;
 			_node.x += _cx;
@@ -965,8 +969,8 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 					if(has(_connOMap, _conTo.node.node_id)) {
 						var _outTo = _connOMap[$ _conTo.node.node_id];
 						
-						for( var m = 0, q = array_length(_outTo); m < q; m++ )
-							_outTo[m].setFrom(_out);
+						for( var r = 0, q = array_length(_outTo); r < q; r++ )
+							_outTo[r].setFrom(_out);
 					}
 				}
 			}
