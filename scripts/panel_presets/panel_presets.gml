@@ -44,6 +44,12 @@ function Panel_Presets(_node) : PanelContent() constructor {
 	__initPresets();
 	
 	#region ++++ menu ++++
+		menu_removeHotkey = menuItem(__txt("Remove Hotkey"), function() /*=>*/ { 
+			var _key    = $"{nodeType}>{selecting_preset.name}";
+			struct_remove(GRAPH_ADD_NODE_MAPS, _key);
+			
+		}, THEME.cross);
+	
 		context_menu = [
 			MENU_ITEMS.preset_replace,
 			MENU_ITEMS.preset_delete,
@@ -55,11 +61,7 @@ function Panel_Presets(_node) : PanelContent() constructor {
 				hk_editing  = _hotkey.modify();
 			}),
 			
-			menuItem(__txt("Remove Hotkey"), function() /*=>*/ { 
-				var _key    = $"{nodeType}>{selecting_preset.name}";
-				struct_remove(GRAPH_ADD_NODE_MAPS, _key);
-				
-			}, THEME.cross).setActive(is_struct(hk_selecting) && hk_selecting.isModified()),
+			menu_removeHotkey,
 		];
 		
 		context_def    = [
@@ -117,6 +119,7 @@ function Panel_Presets(_node) : PanelContent() constructor {
 				
 				if(mouse_rpress(pFOCUS)) {
 					selecting_preset = preset;
+					menu_removeHotkey.setActive(false);
 					menuCall("preset_window_menu", context_menu);
 				}
 			}
@@ -176,6 +179,7 @@ function Panel_Presets(_node) : PanelContent() constructor {
 				if(mouse_rpress(pFOCUS)) {
 					selecting_preset = preset;
 					hk_selecting     = GRAPH_ADD_NODE_MAPS[$ fName];
+					menu_removeHotkey.setActive(has(GRAPH_ADD_NODE_MAPS, fName));
 					dia = menuCall("preset_window_menu", context_menu);
 				}
 			}

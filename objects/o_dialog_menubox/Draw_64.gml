@@ -163,7 +163,7 @@ DIALOG_WINCLEAR1
 						);
 					}
 					
-					if(menu_id != "" && !array_empty(menuItems_get(menu_id))) {
+					if(editable && menu_id != "" && !array_empty(menuItems_get(menu_id))) {
 						if(!array_empty(context_menu_settings)) array_push(context_menu_settings, -1);
 						
 						array_push(context_menu_settings, menuItem(__txt("Edit Items") + "...", function(_mid) /*=>*/ { 

@@ -66,10 +66,15 @@ if(!LOADING && PROJECT.active && !PROJECT.safeMode) { //node step
 					
 					if(PREFERENCES.hotkey_use_pie) {
 						var pie = pieMenuCall($"hotkey.multi_{currK}", menus);
-						if(pie) pie.activate_key_release = true;
+						if(pie) {
+							pie.editable = false;
+							pie.activate_key_release = true;
+						}
 						
-					} else
-						menuCall($"hotkey.multi_{currK}", menus);
+					} else {
+						var _menu = menuCall($"hotkey.multi_{currK}", menus);
+						_menu.editable = false;
+					}
 					
 					HOTKEY_ACT = true;
 				}

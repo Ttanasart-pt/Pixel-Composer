@@ -5,8 +5,9 @@ with(o_pie_menu) { if(self != other) active = false; }
 	depth       = -9999;
 	context_str = "Pie";
 	
-	menu_id = "";
-	menus   = [];
+	menu_id  = "";
+	menus    = [];
+	editable = true;
 	
 	name_width = ui(32);
 	pie_size   = 0;

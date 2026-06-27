@@ -639,12 +639,14 @@
         NEW_VERSION = false;
         
         asyncCall(http_get(DOWNLOAD_LINKS), function(_param, _data) /*=>*/ {
+            var sta  = _data[? "status"];
             var res  = _data[? "result"];
+            if(sta < 0) return;
+            
 			var vers = json_try_parse(res, []);
+			if(array_invalid(vers)) return;
 			
-			if(array_empty(vers)) return;
-			
-			var  d = vers[0];
+			var  d = array_safe_get(vers, 0);
 			var _v = floor(d[$ "buildNumber"] ?? 0);
 			NEW_VERSION = _v > BUILD_NUMBER;
         });

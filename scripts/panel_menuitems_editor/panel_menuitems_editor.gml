@@ -1,10 +1,15 @@
-function menuItemEdit(_mid, _pie = false) { dialogPanelCall(new Panel_MenuItems_Editor(_mid, _pie)); }
+function menuItemEdit(_mid, _pie = false) { 
+	var pan = new Panel_MenuItems_Editor(_mid, _pie);
+	dialogPanelCall(pan); 
+	return pan;
+}
+	
 function menuItemReset(_mid) { variable_struct_remove(PREFERENCES_MENUITEMS, _mid); PREF_SAVE(); }
 
 function Panel_MenuItems_Editor(_menuId, _pie = false) : PanelContent() constructor {
 	title  = __txt("Editing") + ": " + _menuId;
 	menuId = _menuId;
-	menu   = variable_clone(menuItems_get(menuId));
+	menu   = variable_clone(menuItems_get(menuId), 1);
 	pie    = _pie;
 	auto_pin = true;
 	
@@ -113,6 +118,13 @@ function Panel_MenuItems_Editor(_menuId, _pie = false) : PanelContent() construc
 		
 	#endregion
 	
+	#region custom items
+		is_hotkey = string_starts_with(menuId, "hotkey.");
+		if(is_hotkey) {
+			
+		}
+	#endregion
+	
 	function drawGroup(hover, focus, _menu, xx, yy, ww, _m, _cont = false) {
 		if(has(_menu, "name")) return drawSubmenu(   hover, focus, _menu, xx, yy, ww, _m, _cont );
 		if(has(_menu, "cond")) return drawCondition( hover, focus, _menu, xx, yy, ww, _m, _cont );
@@ -213,7 +225,7 @@ function Panel_MenuItems_Editor(_menuId, _pie = false) : PanelContent() construc
 		
 		return _hov;
 	}
-
+	
 	sp_current_list = new scrollPane(list_w, h - padding * 2, function(_y, _m) {
 		draw_clear_alpha(COLORS.panel_bg_clear_inner, 1);
 		var sw  = sp_current_list.surface_w;
@@ -236,7 +248,8 @@ function Panel_MenuItems_Editor(_menuId, _pie = false) : PanelContent() construc
 			hoverI = 0;
 		}
 		
-		for( var i = 0, n = array_length(menu); i < n; i++ ) {
+		var menuAmo = array_length(menu);
+		for( var i = 0; i < menuAmo; i++ ) {
 			var _menu = menu[i];
 			
 			if(!is_struct(_menu)) { // string

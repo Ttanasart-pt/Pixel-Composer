@@ -11,6 +11,8 @@ event_inherited();
 	
 	menu_id   = "";
 	menu      = 1;
+	editable  = true;
+	
 	align     = fa_left;
 	tooltips  = [];
 	show_icon = false;

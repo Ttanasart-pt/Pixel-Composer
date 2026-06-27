@@ -181,7 +181,7 @@ var mdis = point_distance( x, y, mouse_mx, mouse_my);
 			}
 		}
 		
-		if(_hovL && menu_id != "") {
+		if(_hovL && editable && menu_id != "") {
 			draw_sprite_ui(THEME.gear_16, 0, sx, sy, 1, 1, 0, sHov? COLORS._main_icon_light : COLORS._main_icon, .5 + sHov * .5);
 			if(sHov) {
 				selectable = false;
