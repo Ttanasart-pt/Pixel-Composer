@@ -6,6 +6,11 @@
         "date": "2026-06-28T07:32:23.818Z",
         "node": "",
         "commit": "**Graph Panel**: Node wrangler connect now show junction name."
+      },
+      {
+        "date": "2026-06-28T08:15:44.953Z",
+        "node": "",
+        "commit": "**Graph Panel**: Fix adding connection with hotkey not update output junction visibility."
       }
     ]
   },

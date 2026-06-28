@@ -407,7 +407,7 @@ function __read_node_directory(dir) {
 	}
 	file_find_close();
 	
-	array_foreach(_dirs, function(d) /*=>*/ {return __read_node_directory(d)});
+	array_foreach(_dirs, function(d,i) /*=>*/ {return __read_node_directory(d)});
 }
 
 function __read_node_folder(dir) {

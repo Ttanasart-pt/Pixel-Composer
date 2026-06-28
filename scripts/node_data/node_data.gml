@@ -947,10 +947,10 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		
 		outputDisplayList = [];
 		
-		array_foreach(outputs, function(jun) /*=>*/ { if(jun.isVisible()) array_push(outputDisplayList, jun);                 });
-		array_foreach(inputs,  function(jun) /*=>*/ { if(jun.bypass_use)  array_push(outputDisplayList, jun.getBypassJunc()); });
+		array_foreach(outputs, function(jun,i) /*=>*/ { if(jun.isVisible()) array_push(outputDisplayList, jun);                 return true; });
+		array_foreach(inputs,  function(jun,i) /*=>*/ { if(jun.bypass_use)  array_push(outputDisplayList, jun.getBypassJunc()); return true; });
 		
-		if(attributes.outp_meta) array_foreach(junc_meta, function(jun) /*=>*/ { if(jun.isVisible()) array_push(outputDisplayList, jun); });
+		if(attributes.outp_meta) array_foreach(junc_meta, function(jun,i) /*=>*/ { if(jun.isVisible()) array_push(outputDisplayList, jun); return true; });
 	}
 	
 	static onIOValidate = function() {

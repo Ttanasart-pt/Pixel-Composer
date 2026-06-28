@@ -4106,15 +4106,9 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
 	    	
 	    	case "Node_Transform" : 
 	    		if(sOut) switch(sOut.type) {
-    				case VALUE_TYPE.d3Mesh  : 
-    				case VALUE_TYPE.d3Scene : 
-						_nodeType = "Node_3D_Transform";
-						break;
-						
-    				case VALUE_TYPE.pathnode : 
-    					_nodeType = "Node_Path_Transform";
-						break;
-						
+    				case VALUE_TYPE.d3Mesh   : 
+    				case VALUE_TYPE.d3Scene  : _nodeType = "Node_3D_Transform";   break;
+    				case VALUE_TYPE.pathnode : _nodeType = "Node_Path_Transform"; break;
     			}
 	    		
 	    		node  = doNewNode(_nodeType);
@@ -4123,7 +4117,6 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
 	    	
 	    	default : 
 	    		node  = doNewNode(_nodeType, true); 
-	    		_drag = _select; 
 	    		_conn = true;
 	    		break;
     	}
@@ -4156,7 +4149,6 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
         	_drag = false;
         }
         
-        // print(_select, _drag, node);
         if(_select) selectDragNode(node, _drag);
         connect_related = noone;
         return node;

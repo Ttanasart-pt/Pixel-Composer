@@ -31,9 +31,11 @@ function Node_PB_FX_Shine(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	input_display_list = [ 
 		[ "Surfaces", false ],  0,  1, 14, 15, 
 	    [ "Shine",    false ],  8,  5,  4,  9,  6, 13,  3, 
-	    [ "Offset",   false ], 11, 12, 
+	    [ "Offset",    true ], 11, 12, 
 	    [ "Render",   false ],  2, 10,  7, 16, 
     ];
+	
+	////- Node
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _params) { }
 	

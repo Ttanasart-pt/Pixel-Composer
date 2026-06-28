@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.5.007",
+    "changes": [
+      {
+        "date": "2026-06-28T08:15:44.959Z",
+        "node": "",
+        "commit": "**Graph Panel**: Fix adding connection with hotkey not update output junction visibility."
+      }
+    ]
+  },
+  {
     "version": "1.21.5.006",
     "changes": [
       {
