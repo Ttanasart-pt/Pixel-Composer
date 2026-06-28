@@ -118,6 +118,7 @@ function MenuWidget(_name, _widget, _getter, _param = undefined) constructor {
 	getter     = _getter;
 	param      = _param;
 	
+	color      = c_white; static setColor = function(c) /*=>*/ { color = c; return self; }
 }
 
 function menuButton(_spr, _onClick, _tooltip = "", _step = noone) constructor {
@@ -125,6 +126,8 @@ function menuButton(_spr, _onClick, _tooltip = "", _step = noone) constructor {
 	onClick = _onClick;
 	tooltip = _tooltip;
 	step    = _step;
+	
+	color      = c_white; static setColor = function(c) /*=>*/ { color = c; return self; }
 }
 
 function MenuItem_Sort(_name, _func, _spr = noone, _hotkey = noone, _toggle = noone, _params = noone) : MenuItem(_name, _func, _spr, _hotkey, _toggle, _params) constructor {

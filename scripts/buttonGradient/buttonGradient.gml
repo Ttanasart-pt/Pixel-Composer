@@ -1,42 +1,44 @@
 function buttonGradient(_onModify, dialog = noone) : widget() constructor {
-	onModify     = _onModify;
-	parentDialog = dialog;
-	
-	current_gradient = undefined;
-	edit_gradient    = undefined;
-	
-	expanded         = false;
-	drag_color_index = -1;
-	edit_color_index = -1;
-	edit_color_mx    =  0;
-	edit_color_sx    =  0;
-	
-	hover_index      = 0;
-	rightclick_index = undefined;
-	
-	b_quick_pick  = button(function() /*=>*/ {
-		var pick = instance_create(mouse_mx, mouse_my, o_dialog_color_quick_pick);
-		pick.onModify = function(c) /*=>*/ { onModify(new gradientObject(c)); }
-	}).setIcon(THEME.color_wheel).iconPad(ui(6)).setActivatePress();
-	
-	context_menu = [
-		menuWidget(__txt("Position"), textBox_Number(function(_t) /*=>*/ {
-			var _grad = current_gradient.clone();
-			_grad.keys[rightclick_index].time = clamp(_t, 0, 1);
-			_grad.refresh();
-			onModify(_grad);
-			
-		}).setFont(f_p4), function() /*=>*/ {return current_gradient.keys[rightclick_index].time}),
+	#region data
+		onModify     = _onModify;
+		parentDialog = dialog;
 		
-		menuItem(__txt("Delete Anchor"), function() /*=>*/ {
-			var _grad = current_gradient.clone();
-			if(array_length(_grad.keys) > 1) {
-				array_delete(_grad.keys, rightclick_index, 1);
+		current_gradient = undefined;
+		edit_gradient    = undefined;
+		
+		expanded         = false;
+		drag_color_index = -1;
+		edit_color_index = -1;
+		edit_color_mx    =  0;
+		edit_color_sx    =  0;
+		
+		hover_index      = 0;
+		rightclick_index = undefined;
+		
+		b_quick_pick  = button(function() /*=>*/ {
+			var pick = instance_create(mouse_mx, mouse_my, o_dialog_color_quick_pick);
+			pick.onModify = function(c) /*=>*/ { onModify(new gradientObject(c)); }
+		}).setIcon(THEME.color_wheel).iconPad(ui(6)).setActivatePress();
+		
+		context_menu_key = [
+			menuWidget(__txt("Position"), textBox_Number(function(_t) /*=>*/ {
+				var _grad = current_gradient.clone();
+				_grad.keys[rightclick_index].time = clamp(_t, 0, 1);
 				_grad.refresh();
 				onModify(_grad);
-			}
-		})
-	]
+				
+			}).setFont(f_p4), function() /*=>*/ {return current_gradient.keys[rightclick_index].time}),
+			
+			menuItem(__txt("Delete Anchor"), function() /*=>*/ {
+				var _grad = current_gradient.clone();
+				if(array_length(_grad.keys) > 1) {
+					array_delete(_grad.keys, rightclick_index, 1);
+					_grad.refresh();
+					onModify(_grad);
+				}
+			})
+		]
+	#endregion
 	
 	static trigger = function() {
 		var dialog = dialogCall(o_dialog_gradient, WIN_W / 2, WIN_H / 2);
@@ -230,7 +232,7 @@ function buttonGradient(_onModify, dialog = noone) : widget() constructor {
 					
 					if(mouse_rpress(active)) {
 						rightclick_index = _hi;
-						menuCall("", context_menu);
+						menuCall("", context_menu_key);
 					}
 					
 				} else if(point_in_rectangle(_m[0], _m[1], _ggx, _cy, _ggx + _ggw, _cy + _ch)) {
