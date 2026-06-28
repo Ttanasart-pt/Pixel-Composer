@@ -11,6 +11,11 @@
         "date": "2026-06-28T08:59:38.439Z",
         "node": "",
         "commit": "**Shine**: Add mask output."
+      },
+      {
+        "date": "2026-06-28T10:27:25.162Z",
+        "node": "",
+        "commit": "**Graph Panel**: Adding node with hotkey while dragging value now won't open new node for connection."
       }
     ]
   },

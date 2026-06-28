@@ -6,7 +6,6 @@ function Node_Tunnel_In(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	set_default  = false;
 	
 	hover_use_distance = true;
-	radius = 24;
 	setDimension(32, 32);
 	
 	newInput( 0, nodeValue_Text( "Name", LOADING || APPENDING? "" : $"tunnel{struct_size(project.tunnels_in)}" ))

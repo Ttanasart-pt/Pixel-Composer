@@ -735,6 +735,7 @@ function Node_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 			inputs[21].setVisible(false);
 			inputs[38].setVisible(false);
 			inputs[39].setVisible(false);
+			inputs[52].setVisible(false);
 			inputs[40].setVisible(false);
 			inputs[22].setVisible(false);
 			inputs[23].setVisible(false);

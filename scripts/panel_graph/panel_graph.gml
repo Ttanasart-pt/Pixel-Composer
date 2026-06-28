@@ -2555,10 +2555,18 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
 	                    if(!PREFERENCES.panel_graph_show_control && _node.is_controller) continue;
 	                    if(is(_node, Node_Frame) && !nodes_select_frame)                 continue;
 	                    
-	                    var _x = (_node.x + graph_x) * graph_s;
-	                    var _y = (_node.y + graph_y) * graph_s;
-	                    var _w = (_node.w) * graph_s;
-	                    var _h = (_node.h + _node.showMeta() * 16) * graph_s;
+	                    if(_node.hover_use_distance) {
+	                    	var _w = _node.radius * graph_s;
+		                    var _h = _node.radius * graph_s;
+	                    	var _x = (_node.x + graph_x) * graph_s - _w / 2;
+		                    var _y = (_node.y + graph_y) * graph_s - _h / 2;
+		                    
+	                    } else {
+		                    var _x = (_node.x + graph_x) * graph_s;
+		                    var _y = (_node.y + graph_y) * graph_s;
+		                    var _w = (_node.w) * graph_s;
+		                    var _h = (_node.h + _node.showMeta() * 16) * graph_s;
+	                    }
 	                    
 	                    var _sel = _w && _h && rectangle_in_rectangle(_x, _y, _x + _w, _y + _h, nodes_select_mx, nodes_select_my, mx, my);
 	                    var _selecting = array_exists(nodes_selecting, _node);
@@ -4156,18 +4164,31 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
     
     function doBlend(_base = "") {
     	var _ty = _base == ""? "Node_Blend" : _base;
+    	var _nd = undefined;
+    	var _jj = undefined;
     	
-        if(array_empty(nodes_selecting) || array_empty(nodes_selecting[0].outputs)) {
-        	var _node = nodeBuild(_ty, mouse_grid_x, mouse_grid_y, getCurrentContext());
-        	    _node.skipDefault();
-        	return _node;
-        }
+    	if(value_dragging != noone) {
+    		_jj = value_dragging;
+    		_nd = _jj.node;
+    		
+    		value_dragging = noone;
+    		
+    	} else {
+	        if(array_empty(nodes_selecting) || array_empty(nodes_selecting[0].outputs)) {
+	        	var _node = nodeBuild(_ty, mouse_grid_x, mouse_grid_y, getCurrentContext());
+	        	    _node.skipDefault();
+	        	return _node;
+	        }
+	    	
+	    	_nd = nodes_selecting[0];
+	    	_jj = _nd.outputs[0];
+	    	var _ty = _base;
+    	}
     	
-    	var _jj = nodes_selecting[0].outputs[0];
-    	var _ty = _base;
+    	if(!is(_jj, NodeValue)) return;
     	
     	if(_base == "") {
-				 if(value_bit(_jj.type) & (1 << 15) || is(nodes_selecting[0], Node_Path)) return doCompose();
+				 if(value_bit(_jj.type) & (1 << 15) || is(_nd, Node_Path)) return doCompose();
 			else if(value_bit(_jj.type) & (1 <<  3)) return doCompose();
 			else if(value_bit(_jj.type) & (1 << 29)) return doCompose();
 			else if(value_bit(_jj.type) & (1 <<  1)) _ty = "Node_Math";
@@ -4176,9 +4197,9 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
 			
     	} 
     	
-        if(array_length(nodes_selecting) == 1) {
-	        var _nodex = nodes_selecting[0].x + 160;
-	        var _nodey = nodes_selecting[0].y;
+        if(array_length(nodes_selecting) <= 1) {
+	        var _nodex = _nd.x + 160;
+	        var _nodey = _nd.y;
 	        var _blend = nodeBuild(_ty, _nodex, _nodey, getCurrentContext());
 	            _blend.skipDefault();
             
@@ -4190,8 +4211,8 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
         	return _blend;
         }
         
-        var _n0 = nodes_selecting[0].y < nodes_selecting[1].y? nodes_selecting[0] : nodes_selecting[1];
-        var _n1 = nodes_selecting[0].y < nodes_selecting[1].y? nodes_selecting[1] : nodes_selecting[0];
+        var _n0 = _nd.y < nodes_selecting[1].y? _nd : nodes_selecting[1];
+        var _n1 = _nd.y < nodes_selecting[1].y? nodes_selecting[1] : _nd;
         
         if(_ty == "") return noone;
         
@@ -4233,55 +4254,77 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
     } 
     
     function doCompose(_base = "") { //
-    	var _ty = _base == ""? "Node_Composite" : _base;
+    	var _ty   = _base == ""? "Node_Composite" : _base;
+    	var _nd   = undefined;
+    	var _jj   = undefined;
+    	var _drag = value_dragging != noone;
     	
-        if(array_empty(nodes_selecting) || array_empty(nodes_selecting[0].outputs)) {
-        	var _compose = nodeBuild(_ty, mouse_grid_x, mouse_grid_y, getCurrentContext());
-        	    _compose.skipDefault();
-        	    
-        	nodes_selecting = [];
-        	return _compose;
-        }
-    	
-    	var _jj = nodes_selecting[0].outputs[0];
+    	if(value_dragging != noone) {
+    		_jj = value_dragging;
+    		_nd = _jj.node;
+    		
+    		value_dragging = noone;
+    		
+    	} else {
+	        if(array_empty(nodes_selecting) || array_empty(nodes_selecting[0].outputs)) {
+	        	var _compose = nodeBuild(_ty, mouse_grid_x, mouse_grid_y, getCurrentContext());
+	        	    _compose.skipDefault();
+	        	    
+	        	nodes_selecting = [];
+	        	return _compose;
+	        }
+	    	
+	    	_nd = nodes_selecting[0];
+	    	_jj = _nd.outputs[0];
+	    	var _ty = _base;
+    	}
     	
     	if(_base == "") {
-	    	     if(value_bit(_jj.type) & (1 << 15) || is(nodes_selecting[0], Node_Path)) _ty = "Node_Path_Array";
+	    	     if(value_bit(_jj.type) & (1 << 15) || is(_nd, Node_Path)) _ty = "Node_Path_Array";
 			else if(value_bit(_jj.type) & (1 <<  5))   _ty = "Node_Composite";
 			else if(value_bit(_jj.type) & (1 <<  3))   _ty = "Node_Logic";
 			else if(value_bit(_jj.type) & (1 <<  1))   _ty = "Node_Statistic";
 			else if(value_bit(_jj.type) & (1 << 29))   _ty = "Node_3D_Scene";
     	}
     	
-        var cx   = nodes_selecting[0].x;
+        var cx   = _nd.x;
         var cy   = 0;
         var pr   = ds_priority_create();
         var amo  = array_length(nodes_selecting);
         var len  = 0;
         
-        for(var i = 0; i < amo; i++) {
-            var _node = nodes_selecting[i];
-            if(array_empty(_node.outputs)) continue;
+        if(_drag) {
+        	cx  = max(cx, _nd.x);
+            cy += _nd.y;
             
-            var _jj = _node.outputs[0];
-            
-            switch(_ty) {
-	        	case "Node_Composite" : if((value_bit(_jj.type) & (1 <<  5)) == 0) continue; break;
-	        	case "Node_Logic"     : if((value_bit(_jj.type) & (1 <<  3)) == 0) continue; break;
-	        	case "Node_Statistic" : if((value_bit(_jj.type) & (1 <<  1)) == 0) continue; break;
-	        	case "Node_3D_Scene"  : if((value_bit(_jj.type) & (1 << 29)) == 0) continue; break;
-	        	
-	        	case "Node_Path_Array": 
-	        		if(is(nodes_selecting[0], Node_Path)) _jj = _node.outputs[1];
-	        		if((value_bit(_jj.type) & (1 << 15)) == 0) continue; 
-        		break;
-	        }
-            
-            cx = max(cx, _node.x);
-            cy += _node.y;
-            
-            ds_priority_add(pr, _jj, _node.y);
+            ds_priority_add(pr, _jj, _nd.y);
             len++;
+            
+        } else {
+	        for(var i = 0; i < amo; i++) {
+	            var _node = nodes_selecting[i];
+	            if(array_empty(_node.outputs)) continue;
+	            
+	            var _jj = _node.outputs[0];
+	            
+	            switch(_ty) {
+		        	case "Node_Composite" : if((value_bit(_jj.type) & (1 <<  5)) == 0) continue; break;
+		        	case "Node_Logic"     : if((value_bit(_jj.type) & (1 <<  3)) == 0) continue; break;
+		        	case "Node_Statistic" : if((value_bit(_jj.type) & (1 <<  1)) == 0) continue; break;
+		        	case "Node_3D_Scene"  : if((value_bit(_jj.type) & (1 << 29)) == 0) continue; break;
+		        	
+		        	case "Node_Path_Array": 
+		        		if(is(nodes_selecting[0], Node_Path)) _jj = _node.outputs[1];
+		        		if((value_bit(_jj.type) & (1 << 15)) == 0) continue; 
+	        		break;
+		        }
+	            
+	            cx  = max(cx, _node.x);
+	            cy += _node.y;
+	            
+	            ds_priority_add(pr, _jj, _node.y);
+	            len++;
+	        }
         }
         
         cx = cx + 160;
@@ -4290,25 +4333,37 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
         var _compose = nodeBuild(_ty, cx, cy, getCurrentContext());
             _compose.skipDefault();
         
-        repeat(len) {
-            var _outp = ds_priority_delete_min(pr);
-            _compose.addInput(_outp);
-        }
+        repeat(len) _compose.addInput(ds_priority_delete_min(pr));
         
         nodes_selecting = [];
         ds_priority_destroy(pr);
-        
         return _compose;
     } 
 
-    function doArray() { //
-        if(array_empty(nodes_selecting)) {
-        	var _node = nodeBuild("Node_Array", mouse_grid_x, mouse_grid_y, getCurrentContext());
-        	    _node.skipDefault();
-        	return _node;
-        }
+    function doArray() { 
+    	var _nd   = undefined;
+    	var _jj   = undefined;
+    	var _drag = value_dragging != noone;
     	
-        var cx  = nodes_selecting[0].x;
+    	if(value_dragging != noone) {
+    		_jj = value_dragging;
+    		_nd = _jj.node;
+    		
+    		value_dragging = noone;
+    		
+    	} else {
+	        if(array_empty(nodes_selecting) || array_empty(nodes_selecting[0].outputs)) {
+	        	var _node = nodeBuild("Node_Array", mouse_grid_x, mouse_grid_y, getCurrentContext());
+        	        _node.skipDefault();
+        		return _node;
+	        }
+	    	
+	    	_nd = nodes_selecting[0];
+	    	_jj = _nd.outputs[0];
+	    	var _ty = _base;
+    	}
+    	
+        var cx  = _nd.x;
         var cy  = 0;
         var pr  = ds_priority_create();
         var amo = array_length(nodes_selecting);

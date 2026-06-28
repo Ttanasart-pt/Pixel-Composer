@@ -3,7 +3,6 @@ function Node_Pin(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	doUpdate = doUpdateLite;
 	
 	hover_use_distance = true;
-	radius = 24;
 	setDimension(32, 32);
 	
 	auto_height      = false;

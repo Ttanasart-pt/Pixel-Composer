@@ -104,6 +104,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		h_param = h;
 		
 		hover_use_distance = false;
+		radius  = 24;
 		
 		preserve_height_for_preview = false;
 		name_height    = 16;
@@ -1354,7 +1355,8 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		
 		if(renderAll) RenderAll();
 		else {
-			array_push(RENDER_LEAF, self);
+			if(!IS_PLAYING)
+				array_push(RENDER_LEAF, self);
 			RenderPartial();
 		}
 		
