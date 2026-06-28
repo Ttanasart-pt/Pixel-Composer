@@ -207,9 +207,8 @@ uniform int   keepAlpha;
 void main() {
 	vec4 cc = useSurf == 1? texture2D(gm_BaseTexture, v_vTexcoord) : vec4(0.);
 	vec4 bc = cc;
-	gl_FragColor = cc;
-	
-	if(useSurf == 1 && cc.a == 0.) return;
+	gl_FragData[0] = cc;
+	gl_FragData[1] = vec4(0.);
 	
 	float ints = intensity;
 	float prog = progress;
@@ -255,6 +254,8 @@ void main() {
 	float filTotal = float(shineColorAmo);
 	bool  fill     = true;
 	
+	vec4 shineCol  = vec4(0.);
+	
 	for(int i = 0; i < shineAmount; i++) {
 		float _shine = shines[i];
 		ns += _shine * scale;
@@ -262,6 +263,7 @@ void main() {
 		if(fill) filIndex++;
 		if(fill && px.x > os && px.x <= ns) {
 			vec4 colr = shineColor[int(filTotal - mod(filIndex, filTotal) - 1.)];
+			shineCol = colr;
 			
 			     if(blendMode == 0) cc = mix(cc,      colr, ints);
 			else if(blendMode == 1) cc = mix(cc, cc + colr, ints);
@@ -273,6 +275,13 @@ void main() {
 		os   = ns;
 	}
 	
-	if(keepAlpha == 1) cc.a = bc.a;
-	gl_FragColor = cc;
+	gl_FragData[1] = shineCol;
+	
+	if(useSurf == 1 && bc.a == 0.) {
+		gl_FragData[0] = vec4(0.);
+		
+	} else {
+		if(keepAlpha == 1) cc.a = bc.a;
+		gl_FragData[0] = cc;
+	}
 }

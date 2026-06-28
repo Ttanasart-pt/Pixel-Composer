@@ -141,7 +141,7 @@ function Node_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	newInput(32, nodeValue_Vec2(     "Point 1",       [ 0, 0]                  )).setUnitSimple().hideLabel();
 	newInput(33, nodeValue_Vec2(     "Point 2",       [ 1, 1]                  )).setUnitSimple().hideLabel();
 	newInput(35, nodeValue_Vec2(     "Point 3",       [ 1, 0]                  )).setUnitSimple().hideLabel();
-	newInput(52, nodeValue_Vec2(     "Point 4",       [ 1, 1]                  )).setUnitSimple().hideLabel();
+	newInput(52, nodeValue_Vec2(     "Point 4",       [.6,.2]                  )).setUnitSimple().hideLabel();
 	newInput(40, nodeValue_Vec2(     "Half Point",    [.5,.5]                  )).setUnitSimple().hideLabel();
 	newInput(34, nodeValue_Slider(   "Thickness",      .1                      )).hideLabel();
 	

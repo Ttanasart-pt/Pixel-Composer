@@ -6,6 +6,11 @@
         "date": "2026-06-28T08:15:44.953Z",
         "node": "",
         "commit": "**Graph Panel**: Fix adding connection with hotkey not update output junction visibility."
+      },
+      {
+        "date": "2026-06-28T08:59:38.438Z",
+        "node": "",
+        "commit": "**Shine**: Add mask output."
       }
     ]
   },

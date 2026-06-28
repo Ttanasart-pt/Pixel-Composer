@@ -26,7 +26,8 @@ function Node_PB_FX_Shine(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	newInput(16, nodeValue_Bool(    "Keep Alpha", false      ));
 	// 17
 	
-	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
+	newOutput( 0, nodeValue_Output( "Surface Out", VALUE_TYPE.surface, noone ));
+	newOutput( 1, nodeValue_Output( "Mask",        VALUE_TYPE.surface, noone )).setCustomData(global.SURFACE_MASK_JUNC);
 	
 	input_display_list = [ 
 		[ "Surfaces", false ],  0,  1, 14, 15, 
@@ -39,7 +40,7 @@ function Node_PB_FX_Shine(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _params) { }
 	
-	static processData = function(_outSurf, _data, _array_index = 0) { 
+	static processData = function(_outData, _data, _array_index = 0) { 
 		#region data
 		    var _surf  = _data[ 0];
 		    var _mask  = _data[ 1];
@@ -64,41 +65,40 @@ function Node_PB_FX_Shine(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	    var _useSurf = is_surface(_surf);
 	    var _dim     = _useSurf? surface_get_dimension(_surf) : getDimension();
 	    
-	    surface_set_shader(_outSurf, sh_pb_fx_shine);
+	    surface_set_shader(_outData, sh_pb_fx_shine);
 	    	shader_set_uv(_data[14], _data[15]);
 	    
-	        shader_set_2("dimension",   _dim);
-	        shader_set_i("useSurf",     _useSurf);
+	        shader_set_2( "dimension",   _dim      );
+	        shader_set_i( "useSurf",     _useSurf  );
+	        shader_set_mask( _mask,      inputs[1] );
 	        
-	        shader_set_mask( _mask, inputs[1] );
+	        shader_set_i( "useOffset",   is_surface(_offs) );
+	        shader_set_s( "offset",      _offs     );
+	        shader_set_2( "offsetRange", _offr     );
 	        
-	        shader_set_i("useOffset",   is_surface(_offs));
-	        shader_set_s("offset",      _offs );
-	        shader_set_2("offsetRange", _offr );
-	        
-            shader_set_i("invAxis",     _invx  );
-            shader_set_f("progress",    _progr );
-            shader_set_i("side",        _inver );
+            shader_set_i( "invAxis",     _invx     );
+            shader_set_f( "progress",    _progr    );
+            shader_set_i( "side",        _inver    );
             
-            shader_set_f("shines",      _shine );
-            shader_set_i("shineAmount", array_length(_shine) );
-            shader_set_f("shinesWidth", array_sum(_shine)    );
+            shader_set_f( "shines",      _shine                          );
+            shader_set_i( "shineAmount", array_length(_shine)            );
+            shader_set_f( "shinesWidth", array_sum(_shine)               );
             
-            shader_set_f("scale",          _scale);
-            shader_set_f("slope",          _slope);
-            shader_set_i("slopeUseCurve",  inputs[ 6].attributes.curved);
-            shader_set_curve("slope",      _slopC);
-            shader_set_i("straight",       _slope == 0);
+            shader_set_f( "scale",          _scale                       );
+            shader_set_f( "slope",          _slope                       );
+            shader_set_i( "slopeUseCurve",  inputs[ 6].attributes.curved );
+            shader_set_curve( "slope",      _slopC                       );
+            shader_set_i( "straight",       _slope == 0                  );
             
-            shader_set_palette( _color, "shineColor", "shineColorAmo" );
-            shader_set_i("blendMode",   _blend );
-            shader_set_f("intensity",   _ints  );
-            shader_set_i("keepAlpha",   _keep  );
+            shader_set_palette( _color, "shineColor", "shineColorAmo"    );
+            shader_set_i( "blendMode",   _blend                          );
+            shader_set_f( "intensity",   _ints                           );
+            shader_set_i( "keepAlpha",   _keep                           );
 			
 			if(_useSurf) draw_surface_safe(_surf);
 			else draw_empty();
 	    surface_reset_shader();
 	    
-	    return _outSurf; 
+	    return _outData; 
 	}
 }

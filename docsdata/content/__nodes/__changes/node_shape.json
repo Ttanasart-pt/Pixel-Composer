@@ -6,6 +6,11 @@
         "date": "2026-06-28T08:36:07.862Z",
         "node": "Draw Shape",
         "commit": "**Draw Shape**: New Quadrilateral shape."
+      },
+      {
+        "date": "2026-06-28T08:59:38.439Z",
+        "node": "",
+        "commit": "**Shine**: Add mask output."
       }
     ]
   },
