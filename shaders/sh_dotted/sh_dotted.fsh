@@ -304,7 +304,7 @@ void main() {
 	
 	vec2 vtx  = getUV(v_vTexcoord);
 	vec2 asp  = vec2(dimension.x / dimension.y, 1.);
-	vec2 pos  = (vtx - position / dimension) * asp;
+	vec2 pos  = (vtx - position / dimension);
 	     pos *= mat2(cos(ang), -sin(ang), sin(ang), cos(ang));
 	      
 	vec4 cbg  = colorBG;

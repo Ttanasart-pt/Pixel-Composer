@@ -177,7 +177,7 @@ function NodeObject(_name, _node, _tooltip = "") constructor {
 		if(_node == noone)  return _node;
 		
 		_node.name = name;
-		_node.postBuild();
+		if(_node.postBuild) _node.postBuild();
 		recordAction(ACTION_TYPE.node_added, _node).setRef(_node);
 		
 		return _node;

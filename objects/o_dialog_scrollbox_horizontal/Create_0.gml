@@ -273,7 +273,7 @@ event_inherited();
 				}
 			
 				if(selecting == i) {
-					draw_sprite_stretched_ext(THEME.textbox, 3, _lx, _ly, _dw, hght, COLORS.dialog_menubox_highlight, 1);
+					draw_sprite_stretched_ext(THEME.box_r2, 0, _lx, _ly, _dw, hght, COLORS.dialog_menubox_highlight, .1);
 				
 					if(sc_content.active && (mouse_lpress(_hov) || KEYBOARD_ENTER)) {
 						initVal = i;

@@ -149,7 +149,7 @@ doRefocus();
 				}
 			
 				if(selecting == i) {
-					draw_sprite_stretched_ext(THEME.textbox, 3, 0, _ly, _dw, hght, COLORS.dialog_menubox_highlight, 1);
+					draw_sprite_stretched_ext(THEME.box_r2, 0, 0, _ly, _dw, hght, COLORS.dialog_menubox_highlight, .1);
 					
 					if(_active && (mouse_lpress() || KEYBOARD_ENTER)) {
 						initVal = searchIndex == undefined? i : array_safe_get_fast(searchIndex, i, 0);

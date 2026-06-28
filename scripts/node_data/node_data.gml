@@ -315,9 +315,12 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	#endregion
 	
 	#region ---- Preview ----
-		show_input_name  = false;
-		show_output_name = false;
-	
+		show_input_name        = false;
+		show_output_name       = false;
+		
+		show_input_name_force  = false;
+		show_output_name_force = false;
+
 		inspecting	     = false;
 		previewing	     = 0;
 		
@@ -2414,12 +2417,14 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		var y0 = attributes.show_preview? yy + name_height * _s : yy;
 		var y1 = yy + h * _s;
 		
-		var _hov = _panel.pHOVER && (_panel.node_hovering == noone || _panel.node_hovering == self);
-		show_input_name  = _hov;
-		show_output_name = _hov;
+		show_input_name   = show_input_name  && point_in_rectangle(_mx, _my, xx - (    12) * _s, y0, xx + (    12) * _s, y1);
+		show_output_name  = show_output_name && point_in_rectangle(_mx, _my, xx + (w - 12) * _s, y0, xx + (w + 12) * _s, y1);
 		
-		show_input_name  = show_input_name  && point_in_rectangle(_mx, _my, xx - (    12) * _s, y0, xx + (    12) * _s, y1);
-		show_output_name = show_output_name && point_in_rectangle(_mx, _my, xx + (w - 12) * _s, y0, xx + (w + 12) * _s, y1);
+		show_input_name  |= show_input_name_force;
+		show_output_name |= show_output_name_force;
+		
+		show_input_name_force  = false;
+		show_output_name_force = false;
 		
 		if(_panel.value_dragging && _panel.node_hovering == self) {
 			if(_panel.value_dragging.connect_type == CONNECT_TYPE.input)  show_output_name = true;
@@ -2431,13 +2436,13 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		__my = _my;
 		
 		if(show_input_name) {
-			array_foreach(inputDisplayList, function(i) /*=>*/ { i.drawNameBG(__s);           });
-			array_foreach(inputDisplayList, function(i) /*=>*/ { i.drawName(__s, __mx, __my); });
+			array_foreach(inputDisplayList, function(i,_) /*=>*/ {return i.drawNameBG(__s)});
+			array_foreach(inputDisplayList, function(i,_) /*=>*/ {return i.drawName(__s, __mx, __my)});
 		}
 		
 		if(show_output_name) {
-			array_foreach(outputDisplayList, function(i) /*=>*/ { i.drawNameBG(__s);           });
-			array_foreach(outputDisplayList, function(i) /*=>*/ { i.drawName(__s, __mx, __my); });
+			array_foreach(outputDisplayList, function(i,_) /*=>*/ {return i.drawNameBG(__s)});
+			array_foreach(outputDisplayList, function(i,_) /*=>*/ {return i.drawName(__s, __mx, __my)});
 		}
 		
 		if(insp1show() && _panel.pHOVER && point_in_circle(_mx, _my, inspectInput1.x, inspectInput1.y, 10 * _s)) {
@@ -3454,8 +3459,9 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	
 	////- CLEAN UP
 	
-	static cleanUp = function() {
-		onCleanUp();
+	static onCleanUp = undefined
+	static cleanUp   = function() {
+		if(onCleanUp) onCleanUp();
 		
 		for( var i = 0, n = array_length(inputs); i < n;  i++ ) { inputs[i].cleanUp();  delete inputs[i];  }
 		for( var i = 0, n = array_length(outputs); i < n; i++ ) { outputs[i].cleanUp(); delete outputs[i]; }
@@ -3469,8 +3475,6 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		surface_array_free(cache_result);
 		surface_array_free(preview_cache);
 	}
-	
-	static onCleanUp = function() {}
 	
 	////- ACTION
 	
@@ -3703,9 +3707,9 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		return false;
 	}
 	
-	////- MISC
+	static postBuild  = undefined
 	
-	static postBuild  = function() {}
+	////- MISC
 	
 	nextn = [];
 	static generateNodeRenderReport = function(_queue) {

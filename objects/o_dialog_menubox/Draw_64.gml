@@ -99,7 +99,7 @@ DIALOG_WINCLEAR1
 		
 		if(selecting == i) {
 			if(_menuItem.active) 
-				draw_sprite_stretched_add(THEME.box_r2, 0, dialog_x, yy, dialog_w, _h, COLORS.dialog_menubox_highlight, .1);
+				draw_sprite_stretched_add(THEME.box_r2, 0, dialog_x, floor(yy), dialog_w, floor(_h), COLORS.dialog_menubox_highlight, .1);
 			
 			if(_hovering_ch) {
 				if(_lclick && is(_menuItem, MenuItem) && _menuItem.active) {
@@ -239,6 +239,7 @@ DIALOG_WINCLEAR1
 				if(_hv) {
 					if(_tlp != "") TOOLTIP = _tlp;
 					draw_sprite_stretched_add(THEME.box_r2, 0, _bx - _sw/2, _by - _sh/2, _sw, _sh, COLORS.dialog_menubox_highlight, .1);
+					draw_sprite_stretched_add(THEME.box_r2, 1, _bx - _sw/2, _by - _sh/2, _sw, _sh, COLORS.dialog_menubox_highlight, .5);
 					
 					if(mouse_lpress(sFOCUS)) {
 						DIALOG_POSTDRAW
