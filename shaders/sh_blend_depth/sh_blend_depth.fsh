@@ -30,13 +30,18 @@ void main() {
 	vec2 tx1  = (v_vTexcoord - anchor_1) * rot1 / scale_1 + anchor_1 - position_1 / dimension;
 	
 	vec4  s1 = texture2D(surface_1, tx1);
-	vec4  D1 = use_depth_1 == 1? texture2D(depth_1, tx1) : vec4(.5, .5, .5, 1.);
+	float d1;
 	
-	float d1 = (D1.x + D1.y + D1.z) / 3. * D1.a;
-	      d1 = mix(range_1.x, range_1.y, d1);
+	if(use_depth_1 == 1) {
+		vec4 D1 = texture2D(depth_1, tx1);
+		d1 = (D1.x + D1.y + D1.z) / 3. * D1.a;
+		d1 = mix(range_1.x, range_1.y, d1);
+		
+	} else
+		d1 = mix(range_1.x, range_1.y, tx1.y);
 	
 	gl_FragData[0] = s1;
-	gl_FragData[1] = D1;
+	gl_FragData[1] = vec4(vec3(d1), 1.);
 	
 	if(surface_2_use == 0) return;
 	
@@ -44,10 +49,15 @@ void main() {
 	vec2 tx2  = (v_vTexcoord - anchor_2) * rot2 / scale_2 + anchor_2 - position_2 / dimension;
 	
 	vec4  s2 = texture2D(surface_2, tx2);
-	vec4  D2 = use_depth_2 == 1? texture2D(depth_2, tx2) : vec4(.5, .5, .5, 1.);
+	float d2;
 	
-	float d2 = (D2.x + D2.y + D2.z) / 3. * D2.a;
-	      d2 = mix(range_2.x, range_2.y, d2);
+	if(use_depth_2 == 1) {
+		vec4 D2 = texture2D(depth_2, tx2);
+		d2 = (D2.x + D2.y + D2.z) / 3. * D2.a;
+		d2 = mix(range_2.x, range_2.y, d2);
+		      
+	} else
+		d2 = mix(range_2.x, range_2.y, tx2.y);
 	
 	if(s2.a == 0.) return;
 	

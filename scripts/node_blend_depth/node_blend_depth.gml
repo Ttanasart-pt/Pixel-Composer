@@ -22,7 +22,7 @@ function Node_Blend_Depth(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	newInput(11, nodeValue_Anchor(  "Anchor 2",   [.5,.5] ));
 	newInput(12, nodeValue_Rot(     "Rotation 2",   0     ));
 	newInput(13, nodeValue_Vec2(    "Scale 2",    [1,1]   ));
-	// input 14
+	// 14
 	 
 	newOutput( 0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone)).setDrawGroup(2);
 	newOutput( 1, nodeValue_Output("Depth Out",   VALUE_TYPE.surface, noone)).setDrawGroup(2);
