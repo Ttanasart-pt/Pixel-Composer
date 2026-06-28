@@ -1,6 +1,6 @@
-#region create
+#region Global
 	global.node_shape_types = [ 
-		    "Rectangle", "Diamond", "Trapezoid", "Parallelogram", "Half", 
+		    "Rectangle", "Diamond", "Trapezoid", "Parallelogram", "Quadrilateral", "Half", 
 		-1, "Triangle", 
 		-1, "Ellipse", "Arc", "Donut", "Crescent", "Disk Segment", "Pie", "Squircle", "Superellipse", 
 		-1, "Regular Polygon", "Star", "Cross", "Rounded Cross",  
@@ -141,6 +141,7 @@ function Node_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	newInput(32, nodeValue_Vec2(     "Point 1",       [ 0, 0]                  )).setUnitSimple().hideLabel();
 	newInput(33, nodeValue_Vec2(     "Point 2",       [ 1, 1]                  )).setUnitSimple().hideLabel();
 	newInput(35, nodeValue_Vec2(     "Point 3",       [ 1, 0]                  )).setUnitSimple().hideLabel();
+	newInput(52, nodeValue_Vec2(     "Point 4",       [ 1, 1]                  )).setUnitSimple().hideLabel();
 	newInput(40, nodeValue_Vec2(     "Half Point",    [.5,.5]                  )).setUnitSimple().hideLabel();
 	newInput(34, nodeValue_Slider(   "Thickness",      .1                      )).hideLabel();
 	
@@ -180,7 +181,7 @@ function Node_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	newInput(29, nodeValue_Curve(    "Curve",            CURVE_DEF_01          ));
 	newInput(20, nodeValue_SliRange( "Level",            [0,1]                 ));
 	newInput(37, nodeValue_Bool(     "Opacity",          false                 ));
-	// 52
+	// 53
 	
 	newOutput( 0, nodeValue_Output( "Colored", VALUE_TYPE.surface, noone ));
 	newOutput( 1, nodeValue_Output( "Mask",    VALUE_TYPE.surface, noone )).setCustomData(global.SURFACE_MASK_JUNC);
@@ -190,7 +191,7 @@ function Node_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 		[ "Output",     false     ],  0, 50, 44, 45,  6, 51, 
 		[ "Background", false     ],  1, 11, 46, 47, 
 		[ "Transform",  false     ], 15,  3, 16, 17, 19, 28, 
-		[ "Shape",	    false     ],  2, 32, 33, 35, 40, 34, 49, 48,  9,  4, 13,  5,  7,  8, 
+		[ "Shape",	    false     ],  2, 32, 33, 35, 52, 40, 34, 49, 48,  9,  4, 13,  5,  7,  8, 
 		                             38, 39, 22, 23, 24, 25, 26, 27, 43, 30, 31, 36, 
 		[ "Deform",	     true     ], 41, 42, 
 		[ "Render",	     true     ], 10, 18,
@@ -378,6 +379,36 @@ function Node_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 				
 			case "Parallelogram" : 
 				drawOverlayInput(inputs[22].drawOverlay(w_hoverable, active, _x0, _y1, _s * _sca[0] * 2, _mx, _my, 0, 1, 1));
+				break;
+				
+			case "Quadrilateral" : 
+				var _p0 = current_data[32];
+				var _p1 = current_data[33];
+				var _p2 = current_data[35];
+				var _p3 = current_data[52];
+				
+				var _p0x = _x + _p0[0] * _s;
+				var _p0y = _y + _p0[1] * _s;
+				
+				var _p1x = _x + _p1[0] * _s;
+				var _p1y = _y + _p1[1] * _s;
+				
+				var _p2x = _x + _p2[0] * _s;
+				var _p2y = _y + _p2[1] * _s;
+				
+				var _p3x = _x + _p3[0] * _s;
+				var _p3y = _y + _p3[1] * _s;
+				
+				draw_set_color(COLORS._main_accent);
+				draw_line_dashed(_p0x, _p0y, _p1x, _p1y);
+				draw_line_dashed(_p1x, _p1y, _p2x, _p2y);
+				draw_line_dashed(_p2x, _p2y, _p3x, _p3y);
+				draw_line_dashed(_p3x, _p3y, _p0x, _p0y);
+				
+				drawOverlayInput(inputs[32].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my));
+				drawOverlayInput(inputs[33].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my));
+				drawOverlayInput(inputs[35].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my));
+				drawOverlayInput(inputs[52].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my));
 				break;
 				
 			case "Pie" : 
@@ -768,7 +799,22 @@ function Node_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 					shader_set_i("shape",  12);
 					shader_set_f("parall", _data[22]);
 					break;
+				
+				case "Quadrilateral":
+					inputs[ 9].setVisible(true);
 					
+					inputs[32].setVisible(true);
+					inputs[33].setVisible(true);
+					inputs[35].setVisible(true);
+					inputs[52].setVisible(true);
+					
+					shader_set_i("shape", 24);
+					shader_set_2("triangle_p0", _data[32]); 
+					shader_set_2("triangle_p1", _data[33]);
+					shader_set_2("triangle_p2", _data[35]);
+					shader_set_2("triangle_p3", _data[52]);
+					break;
+				
 				case "Half":
 					inputs[40].setVisible(true);
 					

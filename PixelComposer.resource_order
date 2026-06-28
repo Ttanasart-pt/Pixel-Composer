@@ -3667,6 +3667,7 @@
     {"name":"s_node_shape_pie","order":20,"path":"sprites/s_node_shape_pie/s_node_shape_pie.yy",},
     {"name":"s_node_shape_poly_type","order":2,"path":"sprites/s_node_shape_poly_type/s_node_shape_poly_type.yy",},
     {"name":"s_node_shape_polygon","order":25,"path":"sprites/s_node_shape_polygon/s_node_shape_polygon.yy",},
+    {"name":"s_node_shape_quadrilateral","order":40,"path":"sprites/s_node_shape_quadrilateral/s_node_shape_quadrilateral.yy",},
     {"name":"s_node_shape_rectangle","order":3,"path":"sprites/s_node_shape_rectangle/s_node_shape_rectangle.yy",},
     {"name":"s_node_shape_sdf","order":6,"path":"sprites/s_node_shape_sdf/s_node_shape_sdf.yy",},
     {"name":"s_node_shape_squircle","order":38,"path":"sprites/s_node_shape_squircle/s_node_shape_squircle.yy",},

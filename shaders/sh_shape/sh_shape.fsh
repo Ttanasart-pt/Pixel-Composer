@@ -230,6 +230,7 @@ uniform float thickness;
 uniform vec2  triangle_p0;
 uniform vec2  triangle_p1;
 uniform vec2  triangle_p2;
+uniform vec2  triangle_p3;
 
 uniform vec4 baseColor;
 uniform int  cornerShape;
@@ -569,6 +570,31 @@ float sdTriangle( in vec2 p, in vec2 p0, in vec2 p1, in vec2 p2 ) {
                       
     return -sqrt(d.x) * sign(d.y);
 }
+
+float sdQuadrilateral( in vec2 p, in vec2 p0, in vec2 p1, in vec2 p2, in vec2 p3 ) {
+    float d = dot(p-p0,p-p0);
+    float s = 1.;
+    int   N = 4;
+    
+    vec2 v[4];
+    v[0] = p0;
+    v[1] = p1;
+    v[2] = p2;
+    v[3] = p3;
+    
+    for( int i = 0, j = N-1; i < N; j = i, i++ ) {
+        vec2 e = v[j] - v[i];
+        vec2 w =    p - v[i];
+        vec2 b = w - e * clamp( dot(w, e) / dot(e,e), 0., 1. );
+        d = min( d, dot(b, b) );
+        
+        bvec3 c = bvec3(p.y >= v[i].y, p.y < v[j].y, e.x * w.y > e.y * w.x);
+        if( all(c) || all(not(c)) ) s *= -1.0;  
+    }
+    
+    return s * sqrt(d);
+}
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 void main() {
@@ -622,6 +648,14 @@ void main() {
 		vec2 pt2 = (triangle_p2 / dimension - center) * 2.;
 		
 		d = sdTriangle(coord, pt0, pt1, pt2) - corner;
+	}
+	else if(shape == 24) { 
+		vec2 pt0 = (triangle_p0 / dimension - center) * 2.;
+		vec2 pt1 = (triangle_p1 / dimension - center) * 2.;
+		vec2 pt2 = (triangle_p2 / dimension - center) * 2.;
+		vec2 pt3 = (triangle_p3 / dimension - center) * 2.;
+		
+		d = sdQuadrilateral(coord, pt0, pt1, pt2, pt3) - corner;
 	}
 	
 	float cc = 0.;
