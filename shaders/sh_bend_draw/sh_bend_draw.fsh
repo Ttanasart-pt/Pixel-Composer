@@ -1,5 +1,4 @@
 #pragma use(sampler_ext)
-
 #region -- sampler_ext -- [1780129853.1967175]
 	uniform int  interpolation;
 	uniform vec2 sampleDimension;

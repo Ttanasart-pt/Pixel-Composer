@@ -319,7 +319,7 @@ function Node_Blend(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 		var _osurf  = _oatl? _outSurf.getSurface() : _outSurf;
 		var _output = surface_verify(_osurf, ww, hh, cDep);
 		
-		_mask = mask_modify(_mask, _mskInv, _mskFea);
+		_mask = mask_modify(_mask, _mskInv, _mskFea, inputs[4].attributes.mask_alpha_only);
 		
 		surface_set_shader(_output, noone);
 			if(!is_surface(_fore)) draw_surface_safe(_backDraw);

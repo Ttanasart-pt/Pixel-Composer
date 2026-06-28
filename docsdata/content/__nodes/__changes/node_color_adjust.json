@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.5.007",
+    "changes": [
+      {
+        "date": "2026-06-28T04:25:52.352Z",
+        "node": "",
+        "commit": "**Blend**: Fix alpha-only mask not apply invert"
+      }
+    ]
+  },
+  {
     "version": "1.21.5.003",
     "changes": [
       {

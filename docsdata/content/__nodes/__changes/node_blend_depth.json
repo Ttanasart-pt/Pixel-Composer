@@ -6,6 +6,11 @@
         "date": "2026-06-28T01:49:53.290Z",
         "node": "Blend Depth",
         "commit": "**Blend Depth**: When no depth surface connected node now use Y value as depth."
+      },
+      {
+        "date": "2026-06-28T04:25:52.344Z",
+        "node": "",
+        "commit": "**Blend**: Fix alpha-only mask not apply invert"
       }
     ]
   },

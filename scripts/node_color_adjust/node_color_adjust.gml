@@ -178,7 +178,7 @@ function Node_Color_adjust(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 		#endregion
 		
 		#region surface adjust
-			_m = mask_modify(_m, _mskInv, _mskFea);
+			_m = mask_modify(_m, _mskInv, _mskFea, inputs[8].attributes.mask_alpha_only);
 			
 			surface_set_shader(_baseSurf, sh_color_adjust, true, BLEND.over);
 				shader_set_surface("param0", temp_surface[0]);

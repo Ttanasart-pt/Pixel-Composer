@@ -24,13 +24,14 @@ function __process_mask_modifier(data) {
 	__mask_feather = data[__mask_mod_index + 1];
 }
 
-function mask_modify(mask, invert = false, feather = 0) {
+function mask_modify(mask, invert = false, feather = 0, alpha = 0) {
 	if(!is_surface(mask) || (!invert && feather == 0)) return mask;
 	
 	__temp_mask = surface_verify(__temp_mask, surface_get_width(mask), surface_get_height(mask));
 	
 	surface_set_shader(__temp_mask, sh_mask_invert);
-		shader_set_i("invert", invert);
+		shader_set_i( "invert", invert );
+		shader_set_i( "alpha",  alpha  );
 		draw_surface_safe(mask);
 	surface_reset_shader();
 	

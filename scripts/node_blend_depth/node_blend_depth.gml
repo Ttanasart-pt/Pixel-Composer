@@ -36,6 +36,9 @@ function Node_Blend_Depth(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	
 	////- Nodes
 	
+	attribute_interpolation(true, true);
+	attribute_oversample();
+	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _params) { 
 		var _dim = getDimension();
 		var _pos = getInputData(10);
@@ -78,6 +81,7 @@ function Node_Blend_Depth(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 		var _useS2 = is_surface(_surf2);
 		
 		surface_set_shader(_outData, sh_blend_depth);
+			shader_set_interpolation(_surf1);
 			shader_set_2( "dimension",     getDimension() );
 			
 			shader_set_s( "surface_1",     _surf1 );
