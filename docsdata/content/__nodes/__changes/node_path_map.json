@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.5.007",
+    "changes": [
+      {
+        "date": "2026-06-28T01:38:53.638Z",
+        "node": "Map Path",
+        "commit": "**Map Path**: Change to Array processor."
+      }
+    ]
+  },
+  {
     "version": "1.21.5.003",
     "changes": [
       {

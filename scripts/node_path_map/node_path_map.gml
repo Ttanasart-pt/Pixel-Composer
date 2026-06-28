@@ -1,4 +1,4 @@
-function Node_Path_Map(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
+function Node_Path_Map(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Map Path";
 	
 	////- =Output
@@ -65,39 +65,39 @@ function Node_Path_Map(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 			drawOverlayInput(inputs[i].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _params));	
 	}
 		
-	static update = function() {
+	static processData = function(_outSurf, _data, _array_index = 0) { 
 		#region data
-			var _path  = getInputData(0);
-			if(_path == noone) return;
+			var _path  = _data[ 0]
+			if(!is_path(_path)) return _outSurf;
 			
-			var _dim   = getInputData( 1);
+			var _dim   = _data[ 1];
 			
-			var _sub   = getInputData( 3);
-			var _reso  = getInputData(13);
+			var _sub   = _data[ 3];
+			var _reso  = _data[13];
 			
-		    var _pos   = getInputData( 8);
-		    var _anc   = getInputData( 9);
-		    var _rot   = getInputData(10);
-		    var _sca   = getInputData(11);
+		    var _pos   = _data[ 8];
+		    var _anc   = _data[ 9];
+		    var _rot   = _data[10];
+		    var _sca   = _data[11];
 		    
-		    var _wave  = getInputData(14);
-		    var _wFre  = getInputData(15);
-		    var _wFreC = getInputData(18), _wFreCurve = inputs[15].attributes.curved? new curveMap(_wFreC, _reso) : undefined;
-		    var _wAmp  = getInputData(16);
-		    var _wAmpC = getInputData(19), _wAmpCurve = inputs[16].attributes.curved? new curveMap(_wAmpC, _reso) : undefined;
-		    var _wPha  = getInputData(17);
+		    var _wave  = _data[14];
+		    var _wFre  = _data[15];
+		    var _wFreC = _data[18], _wFreCurve = inputs[15].attributes.curved? new curveMap(_wFreC, _reso) : undefined;
+		    var _wAmp  = _data[16];
+		    var _wAmpC = _data[19], _wAmpCurve = inputs[16].attributes.curved? new curveMap(_wAmpC, _reso) : undefined;
+		    var _wPha  = _data[17];
 		    
-		    var _wDir  = getInputData(20);
-		    var _wGra  = getInputData(21);
+		    var _wDir  = _data[20];
+		    var _wGra  = _data[21];
 		    
-		    var _blnd  = getInputData(22);
-			var _surf  = getInputData( 2);
-			var _uvP   = getInputData( 7);
-			var _uvS   = getInputData( 6);
+		    var _blnd  = _data[22];
+			var _surf  = _data[ 2];
+			var _uvP   = _data[ 7];
+			var _uvS   = _data[ 6];
 			
-			var _rng   = getInputData(12);
-			var _sft   = getInputData( 4);
-			var _inv   = getInputData( 5);
+			var _rng   = _data[12];
+			var _sft   = _data[ 4];
+			var _inv   = _data[ 5];
 		#endregion
 		
 		var _pathData = [];
@@ -145,12 +145,9 @@ function Node_Path_Map(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 			_pnt[i] = _p;
 		}
 		
-		var _out = outputs[0].getValue();
-		    _out = surface_verify(_out, _dim[0], _dim[1], attrDepth());
-		
 		var _ind = 0;
 		
-		surface_set_shader(_out, sh_path_map_render);
+		surface_set_shader(_outSurf, sh_path_map_render);
 			shader_set_interpolation(_surf);
 			
 			draw_set_color(c_white);
@@ -290,6 +287,6 @@ function Node_Path_Map(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 			
 		surface_reset_shader();
 		
-		outputs[0].setValue(_out);
+		return _outSurf;
 	}
 } 
