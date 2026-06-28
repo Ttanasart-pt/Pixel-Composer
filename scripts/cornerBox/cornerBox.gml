@@ -1,32 +1,40 @@
 function cornerBox(_onModify, _unit = noone) : widget() constructor {
-	onModify = _onModify;
-	unit     = _unit;
-	linked   = false;
-	b_link   = button(function() /*=>*/ { linked = !linked; }).setIcon(THEME.value_link).iconPad();
-	
-	onModifyIndex = function(val, index) { 
-		if(linked) {
-			for( var i = 0; i < 4; i++ )
-				onModify(toNumber(val), i); 
-			return;
+	#region data
+		onModify = _onModify;
+		unit     = _unit;
+		linked   = false;
+		b_link   = button(function() /*=>*/ { linked = !linked; }).setIcon(THEME.value_link).iconPad();
+		
+		onModifyIndex = function(val, index) { 
+			if(linked) {
+				for( var i = 0; i < 4; i++ )
+					onModify(toNumber(val), i); 
+				return;
+			}
+			onModify(toNumber(val), index); 
 		}
 		
-		onModify(toNumber(val), index); 
-	}
+		onModifySingle[0] = function(v) /*=>*/ {return onModifyIndex(v, 0)};
+		onModifySingle[1] = function(v) /*=>*/ {return onModifyIndex(v, 1)};
+		onModifySingle[2] = function(v) /*=>*/ {return onModifyIndex(v, 2)};
+		onModifySingle[3] = function(v) /*=>*/ {return onModifyIndex(v, 3)};
+		
+		for(var i = 0; i < 4; i++) {
+			tb[i] = textBox_Number(onModifySingle[i]);
+			tb[i].slidable = true;
+			tb[i].hide     = true;
+		}
+		
+		tb[1].labelAlign = fa_right;
+		tb[3].labelAlign = fa_right;
+	#endregion
 	
-	onModifySingle[0] = function(v) /*=>*/ {return onModifyIndex(v, 0)};
-	onModifySingle[1] = function(v) /*=>*/ {return onModifyIndex(v, 1)};
-	onModifySingle[2] = function(v) /*=>*/ {return onModifyIndex(v, 2)};
-	onModifySingle[3] = function(v) /*=>*/ {return onModifyIndex(v, 3)};
+	#region menu
+		context_menu = [];
+		array_push(context_menu, menuItem(__txt("Link Axis"), function() /*=>*/ {return function() /*=>*/ { linked = !linked }}).setToggle(function() /*=>*/ {return linked}));
+	#endregion
 	
-	for(var i = 0; i < 4; i++) {
-		tb[i] = textBox_Number(onModifySingle[i]);
-		tb[i].slidable       = true;
-		tb[i].hide           = true;
-	}
-	
-	tb[1].labelAlign = fa_right;
-	tb[3].labelAlign = fa_right;
+	////- Setters
 	
 	static setInteract = function(interactable = noone) { 
 		self.interactable = interactable;
@@ -50,6 +58,8 @@ function cornerBox(_onModify, _unit = noone) : widget() constructor {
 		return false;
 	}
 	
+	////- Draw
+	
 	static fetchHeight = function(params) { return params.h * 2; }
 	static drawParam   = function(params) { 
 		setParam(params);
@@ -69,7 +79,7 @@ function cornerBox(_onModify, _unit = noone) : widget() constructor {
 		
 		b_link.icon_index = linked;
 		b_link.icon_blend = linked? COLORS._main_accent : COLORS._main_icon;
-		b_link.tooltip = linked? __txt("Unlink values") : __txt("Link values");
+		b_link.tooltip    = linked? __txt("Unlink values") : __txt("Link values");
 	
 		var _bx = _x;
 		var _by = _y + _h / 2 - _bs / 2;
@@ -115,6 +125,8 @@ function cornerBox(_onModify, _unit = noone) : widget() constructor {
 		
 		return h;
 	}
+	
+	////- Actions
 	
 	static clone = function() {
 		var cln = new cornerBox(onModify, unit);

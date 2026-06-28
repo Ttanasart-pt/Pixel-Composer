@@ -1,20 +1,26 @@
 function rotator(_onModify, _step = -1) : widget() constructor {
-	onModify    = _onModify;
-	valStep	    = _step;
-	side_button = noone;
+	#region data
+		onModify    = _onModify;
+		valStep	    = _step;
+		side_button = noone;
+		
+		scale    = 1;
+		hoverRot = false;
+		dragging = noone;
+		drag_sv  = 0;
+		halign   = fa_center;
+		
+		tb_value = textBox_Number(function(v) /*=>*/ {return onModify(v)});
+		tb_value.quickedit = 1;
+	#endregion
 	
-	scale    = 1;
-	hoverRot = false;
-	dragging = noone;
-	drag_sv  = 0;
-	halign   = fa_center;
-	
-	tb_value = textBox_Number(function(v) /*=>*/ {return onModify(v)});
-	tb_value.quickedit = 1;
+	////- Setters
 	
 	static setInteract = function(i=noone) /*=>*/ { interactable = i; tb_value.interactable = i; }
 	static register    = function(p=noone) /*=>*/ { tb_value.register(p); }
 	static isHovering  = function() /*=>*/ {return hoverRot || tb_value.hovering};
+	
+	////- Draw
 	
 	static drawParam  = function(params) /*=>*/ { 
 		setParam(params);
@@ -135,6 +141,8 @@ function rotator(_onModify, _step = -1) : widget() constructor {
 		
 		return h;
 	}
+	
+	////- Actions
 	
 	static clone = function() /*=>*/ {return new rotator(onModify, valStep)};
 	static free  = function() /*=>*/ { tb_value.free(); }

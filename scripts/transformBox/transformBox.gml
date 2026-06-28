@@ -7,26 +7,30 @@ enum TRANSFORM {
 }
 
 function transformBox(_onModify) : widget() constructor {
-	always_break_line  = true;
-	onModify = _onModify;
+	#region data
+		always_break_line  = true;
+		onModify = _onModify;
+		
+		onModifySingle[TRANSFORM.pos_x] = function(val) /*=>*/ { onModify(val, TRANSFORM.pos_x); }
+		onModifySingle[TRANSFORM.pos_y] = function(val) /*=>*/ { onModify(val, TRANSFORM.pos_y); }
+		onModifySingle[TRANSFORM.rot  ] = function(val) /*=>*/ { onModify(val, TRANSFORM.rot  ); } //unused
+		onModifySingle[TRANSFORM.sca_x] = function(val) /*=>*/ { onModify(val, TRANSFORM.sca_x); }
+		onModifySingle[TRANSFORM.sca_y] = function(val) /*=>*/ { onModify(val, TRANSFORM.sca_y); }
+		
+		rot = new rotator(function(val) /*=>*/ { onModify(val, TRANSFORM.rot); });
+		
+		labels = [ "x", "y", "rot", "sx", "sy" ];
+		
+		for(var i = 0; i < 5; i++) {
+			tb[i] = textBox_Number(onModifySingle[i]);
+			tb[i].slidable = true;
+			tb[i].label    = labels[i];
+		}
+		
+		rot.tb_value.label = "rot";
+	#endregion
 	
-	onModifySingle[TRANSFORM.pos_x] = function(val) /*=>*/ { onModify(val, TRANSFORM.pos_x); }
-	onModifySingle[TRANSFORM.pos_y] = function(val) /*=>*/ { onModify(val, TRANSFORM.pos_y); }
-	onModifySingle[TRANSFORM.rot  ] = function(val) /*=>*/ { onModify(val, TRANSFORM.rot  ); } //unused
-	onModifySingle[TRANSFORM.sca_x] = function(val) /*=>*/ { onModify(val, TRANSFORM.sca_x); }
-	onModifySingle[TRANSFORM.sca_y] = function(val) /*=>*/ { onModify(val, TRANSFORM.sca_y); }
-	
-	rot = new rotator(function(val) /*=>*/ { onModify(val, TRANSFORM.rot); });
-	
-	labels = [ "x", "y", "rot", "sx", "sy" ];
-	
-	for(var i = 0; i < 5; i++) {
-		tb[i] = new textBox(TEXTBOX_INPUT.number, onModifySingle[i]);
-		tb[i].slidable = true;
-		tb[i].label    = labels[i];
-	}
-	
-	rot.tb_value.label = "rot";
+	////- Setters
 	
 	static setInteract = function(interactable = noone) {
 		self.interactable = interactable;
@@ -48,6 +52,8 @@ function transformBox(_onModify) : widget() constructor {
 		for( var i = 0, n = array_length(tb); i < n; i++ ) if(tb[i].isHovering()) return true;
 		return hovering;
 	}
+	
+	////- Draw
 	
 	static drawParam = function(params) {
 		setParam(params);
@@ -167,6 +173,8 @@ function transformBox(_onModify) : widget() constructor {
 		
 		return h;
 	}
+	
+	////- Action
 	
 	static clone = function() {
 		var cln = new transformBox(onModify);

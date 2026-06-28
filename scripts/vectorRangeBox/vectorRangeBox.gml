@@ -1,48 +1,56 @@
 function vectorRangeBox(_size, _type, _onModify, _unit = noone) : widget() constructor {
-	size     = _size;
-	dim      = ceil(_size / 2);
-	type     = _type;
-	onModify = _onModify;
-	unit	 = _unit;
-	
-	linked   = false;
-	ranged   = false;
-	
-	disp_h = 0;
-	
-	rangeDrag = false;
-	rangeDrag_mx = 0;
-	rangeDrag_my = 0;
-	rangeDrag_ss = 0;
-	
-	tooltip_ranged = new tooltipSelector("Value Type", [ __txt("widget_range_constant", "Constant"), __txt("widget_range_random", "Random Range") ]);
-	
-	onModifyIndex = function(val, index) { 
-		var v = toNumber(val);
+	#region data
+		size     = _size;
+		dim      = ceil(_size / 2);
+		type     = _type;
+		onModify = _onModify;
+		unit	 = _unit;
 		
-		if(!linked && ranged) return onModify(v, index);
-		var modi = false;
+		linked   = false;
+		ranged   = false;
 		
-		if(linked && !ranged) {
-			for( var i = 0; i < size; i++ ) {
-				var m = onModify(v, i); modi = modi || m;
+		disp_h = 0;
+		
+		rangeDrag = false;
+		rangeDrag_mx = 0;
+		rangeDrag_my = 0;
+		rangeDrag_ss = 0;
+		
+		tooltip_ranged = new tooltipSelector("Value Type", [ __txt("widget_range_constant", "Constant"), __txt("widget_range_random", "Random Range") ]);
+		
+		onModifyIndex = function(val, index) { 
+			var v = toNumber(val);
+			
+			if(!linked && ranged) return onModify(v, index);
+			var modi = false;
+			
+			if(linked && !ranged) {
+				for( var i = 0; i < size; i++ ) {
+					var m = onModify(v, i); modi = modi || m;
+				}
+				
+			} else if(linked) {
+				if(dim >= 1) { var m = onModify(v, 0 + (index % 2)); modi = modi || m; }
+				if(dim >= 2) { var m = onModify(v, 2 + (index % 2)); modi = modi || m; }
+				if(dim >= 3) { var m = onModify(v, 4 + (index % 2)); modi = modi || m; }
+				
+			} else if(!ranged) {
+				var m = onModify(v, index + 0); modi = modi || m;
+				var m = onModify(v, index + 1); modi = modi || m;
 			}
 			
-		} else if(linked) {
-			if(dim >= 1) { var m = onModify(v, 0 + (index % 2)); modi = modi || m; }
-			if(dim >= 2) { var m = onModify(v, 2 + (index % 2)); modi = modi || m; }
-			if(dim >= 3) { var m = onModify(v, 4 + (index % 2)); modi = modi || m; }
-			
-		} else if(!ranged) {
-			var m = onModify(v, index + 0); modi = modi || m;
-			var m = onModify(v, index + 1); modi = modi || m;
+			return modi;
 		}
 		
-		return modi;
-	}
+		axis = [ "min", "max" ];
+		extras = -1;
+	#endregion
 	
-	axis = [ "min", "max" ];
-	extras = -1;
+	#region menu
+		context_menu = [];
+		array_push(context_menu, menuItem(__txt("Link Axis"), function() /*=>*/ {return function() /*=>*/ { linked = !linked }}).setToggle(function() /*=>*/ {return linked}));
+		array_push(context_menu, menuItem(__txt("Use Range"), function() /*=>*/ {return function() /*=>*/ { ranged = !ranged }}).setToggle(function() /*=>*/ {return ranged}));
+	#endregion
 	
 	////- Textbox
 	

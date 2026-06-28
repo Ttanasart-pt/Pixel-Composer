@@ -7,32 +7,34 @@ enum ROTATOR_RANDOM_TYPE {
 }
 
 function rotatorRandom(_onModify) : widget() constructor {
-	onModify = _onModify;
-	
-	dragging_index = -1;
-	dragging = false;
-	drag_sv  = 0;
-	drag_dat = [ 0, 0, 0, 0, 0 ];
-	
-	knob_hovering = noone;
-	
-	rangeDrag = false;
-	rangeDrag_mx = 0;
-	rangeDrag_my = 0;
-	rangeDrag_ss = 0;
-	
-	mode = 0;
-	tb_min_0 = textBox_Number(function(v) /*=>*/ {return onModify(v, 1)}).setHide(true);
-	tb_max_0 = textBox_Number(function(v) /*=>*/ {return onModify(v, 2)}).setHide(true);
-	tb_min_1 = textBox_Number(function(v) /*=>*/ {return onModify(v, 3)}).setHide(true);
-	tb_max_1 = textBox_Number(function(v) /*=>*/ {return onModify(v, 4)}).setHide(true);
-	
-	tooltip  = new tooltipSelector("Mode", [
-		__txt("widget_rotator_random_range",        "Range"), 
-		__txt("widget_rotator_random_span",         "Span"), 
-		__txt("widget_rotator_random_double_range", "Double Range"), 
-		__txt("widget_rotator_random_double_span",  "Double Span")
-	]);
+	#region data
+		onModify = _onModify;
+		
+		dragging_index = -1;
+		dragging = false;
+		drag_sv  = 0;
+		drag_dat = [ 0, 0, 0, 0, 0 ];
+		
+		knob_hovering = noone;
+		
+		rangeDrag = false;
+		rangeDrag_mx = 0;
+		rangeDrag_my = 0;
+		rangeDrag_ss = 0;
+		
+		mode = 0;
+		tb_min_0 = textBox_Number(function(v) /*=>*/ {return onModify(v, 1)}).setHide(true);
+		tb_max_0 = textBox_Number(function(v) /*=>*/ {return onModify(v, 2)}).setHide(true);
+		tb_min_1 = textBox_Number(function(v) /*=>*/ {return onModify(v, 3)}).setHide(true);
+		tb_max_1 = textBox_Number(function(v) /*=>*/ {return onModify(v, 4)}).setHide(true);
+		
+		tooltip  = new tooltipSelector("Mode", [
+			__txt("widget_rotator_random_range",        "Range"), 
+			__txt("widget_rotator_random_span",         "Span"), 
+			__txt("widget_rotator_random_double_range", "Double Range"), 
+			__txt("widget_rotator_random_double_span",  "Double Span")
+		]);
+	#endregion
 	
 	////- Set
 	

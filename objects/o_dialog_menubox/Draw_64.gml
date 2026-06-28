@@ -46,7 +46,7 @@ DIALOG_WINCLEAR1
 			var _wh = _whg   - ui(8);
 			
 			if(sHOVER && point_in_rectangle(mouse_mx, mouse_my, dialog_x, yy + 1, dialog_x + dialog_w, yy + _whg - 1)) {
-				draw_sprite_stretched_ext(THEME.textbox, 3, dialog_x, yy, dialog_w, _whg, COLORS.dialog_menubox_highlight);
+				draw_sprite_stretched_add(THEME.box_r2, 0, dialog_x, yy, dialog_w, _whg, COLORS.dialog_menubox_highlight, .1);
 				selecting = i;
 			}
 			
@@ -80,8 +80,11 @@ DIALOG_WINCLEAR1
 		
 		var label = _menuItem.name;
 		var _h    = is(_menuItem, MenuItemGroup)? hght * 2 : hght;
-		var cc    = _menuItem[$ "color"] ?? c_white;
+		var _col  = _menuItem[$ "color"] ?? c_white;
 		var _key  = _menuItem.hoykeyObject;
+		
+		if(_col != c_white)
+			draw_sprite_stretched_ext(THEME.box_r2, 0, dialog_x, floor(yy), dialog_w, floor(_h), _col, .1);
 		
 		if(_key == noone && _menuItem.hotkey != noone) {
 			_key = find_hotkey(_menuItem.hotkey[0], _menuItem.hotkey[1]);
@@ -95,7 +98,8 @@ DIALOG_WINCLEAR1
 		}
 		
 		if(selecting == i) {
-			if(_menuItem.active && cc == c_white) cc = COLORS.dialog_menubox_highlight;
+			if(_menuItem.active) 
+				draw_sprite_stretched_add(THEME.box_r2, 0, dialog_x, yy, dialog_w, _h, COLORS.dialog_menubox_highlight, .1);
 			
 			if(_hovering_ch) {
 				if(_lclick && is(_menuItem, MenuItem) && _menuItem.active) {
@@ -180,8 +184,6 @@ DIALOG_WINCLEAR1
 			}
 		} 
 		
-		if(cc != c_white) draw_sprite_stretched_ext(THEME.textbox, 3, dialog_x, yy, dialog_w, _h, cc);
-		
 		var _hx = dialog_x + dialog_w - ui(16);
 		var _hy = yy + hght / 2 + ui(2);
 			
@@ -236,8 +238,7 @@ DIALOG_WINCLEAR1
 				
 				if(_hv) {
 					if(_tlp != "") TOOLTIP = _tlp;
-					draw_sprite_stretched_ext(THEME.textbox, 3, _bx - _sw/2, _by - _sh/2, _sw, _sh, COLORS.dialog_menubox_highlight, 1);
-					draw_sprite_stretched_ext(THEME.textbox, 2, _bx - _sw/2, _by - _sh/2, _sw, _sh, COLORS.dialog_menubox_highlight, 1);
+					draw_sprite_stretched_add(THEME.box_r2, 0, _bx - _sw/2, _by - _sh/2, _sw, _sh, COLORS.dialog_menubox_highlight, .1);
 					
 					if(mouse_lpress(sFOCUS)) {
 						DIALOG_POSTDRAW

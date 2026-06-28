@@ -6,38 +6,47 @@ enum PADDING {
 }
 
 function paddingBox(_onModify, _unit = noone) : widget() constructor {
-	onModify = _onModify;
-	unit	 = _unit;
-	
-	linked = false;
-	b_link = button(function() /*=>*/ { linked = !linked; }).setIcon(THEME.value_link).iconPad();
-	
-	onModifyIndex = function(val, index) { 
-		if(linked) {
-			for( var i = 0; i < 4; i++ )
-				onModify(toNumber(val), i); 
-			return;
+	#region data
+		onModify = _onModify;
+		unit	 = _unit;
+		
+		linked = false;
+		b_link = button(function() /*=>*/ { linked = !linked; }).setIcon(THEME.value_link).iconPad();
+		
+		onModifyIndex = function(val, index) { 
+			if(linked) {
+				for( var i = 0; i < 4; i++ )
+					onModify(toNumber(val), i); 
+				return;
+			}
+			
+			onModify(toNumber(val), index); 
 		}
 		
-		onModify(toNumber(val), index); 
-	}
+		onModifySingle[0] = function(val) /*=>*/ { onModifyIndex(val, 0); }
+		onModifySingle[1] = function(val) /*=>*/ { onModifyIndex(val, 1); }
+		onModifySingle[2] = function(val) /*=>*/ { onModifyIndex(val, 2); }
+		onModifySingle[3] = function(val) /*=>*/ { onModifyIndex(val, 3); }
+		
+		for(var i = 0; i < 4; i++) {
+			tb[i] = new textBox(TEXTBOX_INPUT.number, onModifySingle[i]);
+			tb[i].slidable = true;
+			tb[i].hide     = true;
+		}
+		
+		tb[2].label = "l";
+		tb[0].label = "r";
+						  
+		tb[1].label = "t";
+		tb[3].label = "b";
+	#endregion
 	
-	onModifySingle[0] = function(val) /*=>*/ { onModifyIndex(val, 0); }
-	onModifySingle[1] = function(val) /*=>*/ { onModifyIndex(val, 1); }
-	onModifySingle[2] = function(val) /*=>*/ { onModifyIndex(val, 2); }
-	onModifySingle[3] = function(val) /*=>*/ { onModifyIndex(val, 3); }
+	#region menu
+		context_menu = [];
+		array_push(context_menu, menuItem(__txt("Link Axis"), function() /*=>*/ {return function() /*=>*/ { linked = !linked }}).setToggle(function() /*=>*/ {return linked}));
+	#endregion
 	
-	for(var i = 0; i < 4; i++) {
-		tb[i] = new textBox(TEXTBOX_INPUT.number, onModifySingle[i]);
-		tb[i].slidable = true;
-		tb[i].hide     = true;
-	}
-	
-	tb[2].label = "l";
-	tb[0].label = "r";
-					  
-	tb[1].label = "t";
-	tb[3].label = "b";
+	////- Setters
 	
 	static setInteract = function(interactable = noone) { 
 		self.interactable   = interactable;
@@ -63,6 +72,8 @@ function paddingBox(_onModify, _unit = noone) : widget() constructor {
 		for( var i = 0, n = array_length(tb); i < n; i++ ) if(tb[i].isHovering()) return true;
 		return false;
 	}
+	
+	////- Draw
 	
 	static fetchHeight = function(params) { return params.h * 2; }
 	static drawParam   = function(params) { 
@@ -127,6 +138,8 @@ function paddingBox(_onModify, _unit = noone) : widget() constructor {
 		
 		return h;
 	}
+	
+	////- Action
 	
 	static clone = function() { 
 		var cln = new paddingBox(onModify, unit);

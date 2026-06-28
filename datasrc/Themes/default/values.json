@@ -70,7 +70,7 @@
         "dialog_notification_bg_hover": "main_ltgrey",
         "dialog_notification_bg": "main_grey",
         "dialog_notification_icon_bg": "main_white",
-        "dialog_menubox_highlight": "main_white",
+        "dialog_menubox_highlight": "main_dark",
         "dialog_lua_ref_bg_args": "main_ltgrey",
         "dialog_lua_ref_bg_hover": ["main_white", "main_ltgrey", 0.5],
         "dialog_lua_ref_bg": "main_white",

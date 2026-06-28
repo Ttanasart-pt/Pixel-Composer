@@ -1,39 +1,48 @@
 function matrixGrid(_type, _onModify, _unit = noone) : widget() constructor {
-	type     = _type;
-	size	 = [1, 1];
-	vsize    = 0;
-	onModify = _onModify;
-	unit	 = _unit;
-	current_data = undefined;
-	
-	tb     = [];
-	linked = false;
-	tbsize = new vectorBox(2, function(v,i) /*=>*/ { 
-		if(current_data == undefined) return;
+	#region data
+		type     = _type;
+		size	 = [1, 1];
+		vsize    = 0;
+		onModify = _onModify;
+		unit	 = _unit;
+		current_data = undefined;
 		
-		_size    = [size[0], size[1]]; 
-		_size[i] = max(1, v); 
-		setSize(_size); 
+		tb     = [];
+		linked = false;
+		tbsize = new vectorBox(2, function(v,i) /*=>*/ { 
+			if(current_data == undefined) return;
+			
+			_size    = [size[0], size[1]]; 
+			_size[i] = max(1, v); 
+			setSize(_size); 
+			
+			current_data.setSize(_size);
+			onModify(current_data.raw[0], 0); 
+		});
+			
+		b_link = button(function() /*=>*/ { linked = !linked; }).setIcon(THEME.value_link).iconPad();
 		
-		current_data.setSize(_size);
-		onModify(current_data.raw[0], 0); 
-	});
-		
-	b_link = button(function() /*=>*/ { linked = !linked; }).setIcon(THEME.value_link).iconPad();
-	
-	onModifyIndex = function(val, index) { 
-		var modi = false;
-		
-		if(linked) {
-			for( var i = 0; i < vsize; i++ ) 
-				modi = onModify(toNumber(val), i) || modi;
-			return modi;
+		onModifyIndex = function(val, index) { 
+			var modi = false;
+			
+			if(linked) {
+				for( var i = 0; i < vsize; i++ ) 
+					modi = onModify(toNumber(val), i) || modi;
+				return modi;
+			}
+			
+			return onModify(toNumber(val), index); 
 		}
 		
-		return onModify(toNumber(val), index); 
-	}
+		extras = -1;
+	#endregion
 	
-	extras = -1;
+	#region menu
+		context_menu = [];
+		array_push(context_menu, menuItem(__txt("Link Axis"), function() /*=>*/ {return function() /*=>*/ { linked = !linked }}).setToggle(function() /*=>*/ {return linked}));
+	#endregion
+	
+	////- Setters
 	
 	static setSize = function(_size) {
 		if(!is_array(_size)) _size = [ _size, _size ];
@@ -79,6 +88,8 @@ function matrixGrid(_type, _onModify, _unit = noone) : widget() constructor {
 		for( var i = 0, n = vsize; i < n; i++ ) if(tb[i].isHovering()) return true;
 		return false;
 	}
+	
+	////- Draw
 	
 	static fetchHeight = function(params) { 
 		if(is(params.data, Matrix)) setSize(params.data.size); 
@@ -176,6 +187,8 @@ function matrixGrid(_type, _onModify, _unit = noone) : widget() constructor {
 		
 		return h;
 	}
+	
+	////- Actions
 	
 	static clone = function() {
 		var cln = new matrixGrid(type, onModify, unit);

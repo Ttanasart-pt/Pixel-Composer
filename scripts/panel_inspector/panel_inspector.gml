@@ -623,15 +623,18 @@ function Panel_Inspector() : PanelContent() constructor {
         
         var _menuItem = [];
         
+        array_append(_menuItem, menuItems_gen("inspector_value_input"));
+        
         if(wdgt) {
     		var _widget = jun.getEditWidget();
         	if(_widget && !array_empty(_widget.context_menu)) {
+        		for( var i = 0, n = array_length(_widget.context_menu); i < n; i++ )
+        			_widget.context_menu[i].setColor(COLORS._main_accent)
+        		
         		array_append(_menuItem, _widget.context_menu);
         		array_push(  _menuItem, -1);
         	}
         }
-        
-        array_append(_menuItem, menuItems_gen("inspector_value_input"));
         
         if(jun.globalExtractable()) {
     		array_push(_menuItem, menuItemShelf(__txt("panel_inspector_use_global", "Use Globalvar"), function(_dat) /*=>*/ { 

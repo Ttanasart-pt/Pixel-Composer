@@ -1,123 +1,129 @@
 function areaBox(_onModify, _unit = noone) : widget() constructor {
-	onModify = _onModify;
-	unit	 = _unit;
-	onSurfaceSize = -1;
-	
-	link_value	 = false;
-	current_data = [ 0, 0, 0, 0 ];
-	adjust_shape = true;
-	mode		 = AREA_MODE.area;
-	tooltip		 = new tooltipSelector("Area type", [
-		__txt("widget_area_center_Span", "Center + Span"),
-		__txt("widget_area_padding",     "Padding"),
-		__txt("widget_area_two_points",  "Two points"),
-	]);
-	
-	onModifySingle[0] = function(val) {
-		var v = toNumber(val);
-		var m = onModify(v, 0);
+	#region data
+		onModify = _onModify;
+		unit	 = _unit;
+		onSurfaceSize = -1;
 		
-		if(!link_value) return m;
+		linked       = false;
+		current_data = [ 0, 0, 0, 0 ];
+		adjust_shape = true;
+		mode         = AREA_MODE.area;
+		tooltip      = new tooltipSelector("Area type", [
+			__txt("widget_area_center_Span", "Center + Span"),
+			__txt("widget_area_padding",     "Padding"),
+			__txt("widget_area_two_points",  "Two points"),
+		]);
 		
-		switch(mode) {
-			case AREA_MODE.area : 
-				m = onModify(v, 1) || m;
-				break;
+		onModifySingle[0] = function(val) /*=>*/ {
+			var v = toNumber(val);
+			var m = onModify(v, 0);
 			
-			case AREA_MODE.two_point : 
-				m = onModify(v, 1) || m;
-				break;
+			if(!linked) return m;
 			
-			case AREA_MODE.padding : 
-				m = onModify(v, 1) || m;
-				m = onModify(v, 2) || m;
-				m = onModify(v, 3) || m;
-				break;
-		}
-		
-		return m;
-	}
-	
-	onModifySingle[1] = function(val) {
-		var v = toNumber(val);
-		var m = onModify(v, 1);
-		
-		if(!link_value) return m;
-		
-		switch(mode) {
-			case AREA_MODE.area : 
-				m = onModify(v, 0) || m;
-				break;
-			
-			case AREA_MODE.two_point : 
-				m = onModify(v, 0) || m;
-				break;
-			
-			case AREA_MODE.padding : 
-				m = onModify(v, 0) || m;
-				m = onModify(v, 2) || m;
-				m = onModify(v, 3) || m;
-				break;
-		}
-		
-		return m;
-	}
-	
-	onModifySingle[2] = function(val) {
-		var v = toNumber(val);
-		var m = onModify(v, 2);
-		
-		if(!link_value) return m;
-		
-		switch(mode) {
-			case AREA_MODE.area : 
-				m = onModify(v, 3) || m;
-				break;
-			
-			case AREA_MODE.two_point : 
-				m = onModify(v, 3) || m;
-				break;
-			
-			case AREA_MODE.padding : 
-				m = onModify(v, 0) || m;
-				m = onModify(v, 1) || m;
-				m = onModify(v, 3) || m;
-				break;
-		}
-		
-		return m;
-	}
-	
-	onModifySingle[3] = function(val) {
-		var v = toNumber(val);
-		var m = onModify(v, 3);
+			switch(mode) {
+				case AREA_MODE.area : 
+					m = onModify(v, 1) || m;
+					break;
 				
-		if(!link_value) return m;
-		
-		switch(mode) {
-			case AREA_MODE.area : 
-				m = onModify(v, 2) || m;
-				break;
+				case AREA_MODE.two_point : 
+					m = onModify(v, 1) || m;
+					break;
+				
+				case AREA_MODE.padding : 
+					m = onModify(v, 1) || m;
+					m = onModify(v, 2) || m;
+					m = onModify(v, 3) || m;
+					break;
+			}
 			
-			case AREA_MODE.two_point : 
-				m = onModify(v, 2) || m;
-				break;
+			return m;
+		}
+		onModifySingle[1] = function(val) /*=>*/ {
+			var v = toNumber(val);
+			var m = onModify(v, 1);
 			
-			case AREA_MODE.padding : 
-				m = onModify(v, 0) || m;
-				m = onModify(v, 1) || m;
-				m = onModify(v, 2) || m;
-				break;
+			if(!linked) return m;
+			
+			switch(mode) {
+				case AREA_MODE.area : 
+					m = onModify(v, 0) || m;
+					break;
+				
+				case AREA_MODE.two_point : 
+					m = onModify(v, 0) || m;
+					break;
+				
+				case AREA_MODE.padding : 
+					m = onModify(v, 0) || m;
+					m = onModify(v, 2) || m;
+					m = onModify(v, 3) || m;
+					break;
+			}
+			
+			return m;
+		}
+		onModifySingle[2] = function(val) /*=>*/ {
+			var v = toNumber(val);
+			var m = onModify(v, 2);
+			
+			if(!linked) return m;
+			
+			switch(mode) {
+				case AREA_MODE.area : 
+					m = onModify(v, 3) || m;
+					break;
+				
+				case AREA_MODE.two_point : 
+					m = onModify(v, 3) || m;
+					break;
+				
+				case AREA_MODE.padding : 
+					m = onModify(v, 0) || m;
+					m = onModify(v, 1) || m;
+					m = onModify(v, 3) || m;
+					break;
+			}
+			
+			return m;
+		}
+		onModifySingle[3] = function(val) /*=>*/ {
+			var v = toNumber(val);
+			var m = onModify(v, 3);
+					
+			if(!linked) return m;
+			
+			switch(mode) {
+				case AREA_MODE.area : 
+					m = onModify(v, 2) || m;
+					break;
+				
+				case AREA_MODE.two_point : 
+					m = onModify(v, 2) || m;
+					break;
+				
+				case AREA_MODE.padding : 
+					m = onModify(v, 0) || m;
+					m = onModify(v, 1) || m;
+					m = onModify(v, 2) || m;
+					break;
+			}
+			
+			return m;
 		}
 		
-		return m;
-	}
+		for(var i = 0; i < 4; i++) {
+			tb[i] = textBox_Number(onModifySingle[i]);
+			tb[i].slidable = true;
+			tb[i].hide     = true;
+		}
+	#endregion
+		
+	#region menu
+		context_menu = [];
+		array_push(context_menu, menuItem(__txt("Link Axis"), function() /*=>*/ {return function() /*=>*/ { linked = !linked }}).setToggle(function() /*=>*/ {return linked}));
+	#endregion
 	
-	for(var i = 0; i < 4; i++) {
-		tb[i] = new textBox(TEXTBOX_INPUT.number, onModifySingle[i]);
-		tb[i].slidable = true;
-		tb[i].hide     = true;
-	}
+	////- Setters
 	
 	static setInteract = function(interactable = noone) {
 		self.interactable = interactable;
@@ -214,6 +220,8 @@ function areaBox(_onModify, _unit = noone) : widget() constructor {
 		return _mode;
 	}
 	
+	////- Draw
+	
 	static fetchHeight = function(params) { return params.h * 2; }
 	static drawParam   = function(params) {
 		setParam(params);
@@ -250,12 +258,12 @@ function areaBox(_onModify, _unit = noone) : widget() constructor {
 			unit.draw(_bx, _y, _bs, _bs, _m);
 		}
 		
-		var cc    = link_value? COLORS._main_accent : COLORS._main_icon;
+		var cc    = linked? COLORS._main_accent : COLORS._main_icon;
 		var _btxt = __txt("Link values");
 		var _bby  = _y + _bs;
 	
-		if(buttonInstant_Pad(THEME.button_hide_fill, _bx, _bby, _bs, _bs, _m, hover, active, _btxt, THEME.value_link, link_value, cc) == 2)
-			link_value = !link_value;
+		if(buttonInstant_Pad(THEME.button_hide_fill, _bx, _bby, _bs, _bs, _m, hover, active, _btxt, THEME.value_link, linked, cc) == 2)
+			linked = !linked;
 		
 		_bx -= _bs;
 		_w  -= _bs;
@@ -403,6 +411,8 @@ function areaBox(_onModify, _unit = noone) : widget() constructor {
 		
 		return h;
 	} 
+	
+	////- Action
 	
 	static clone = function() { 
 		var cln = new areaBox(onModify, unit);

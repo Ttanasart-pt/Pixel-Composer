@@ -1,20 +1,31 @@
 function pathAnchorBox(_onModify) : widget() constructor {
-	onModify = _onModify;
-	unit	 = noone;
-	animated = false;
+	#region data
+		onModify = _onModify;
+		unit	 = noone;
+		animated = false;
+		
+		onModifySingle[0] = function(val) /*=>*/ {return onModify(toNumber(val), 0)};
+		onModifySingle[1] = function(val) /*=>*/ {return onModify(toNumber(val), 1)};
+		onModifySingle[2] = function(val) /*=>*/ {return onModify(toNumber(val), 2)};
+		onModifySingle[3] = function(val) /*=>*/ {return onModify(toNumber(val), 3)};
+		onModifySingle[4] = function(val) /*=>*/ {return onModify(toNumber(val), 4)};
+		onModifySingle[5] = function(val) /*=>*/ {return onModify(toNumber(val), 5)};
+		
+		onModifySingle[6] = function(val) /*=>*/ {return onModify(toNumber(val), 6)}; //3d
+		onModifySingle[7] = function(val) /*=>*/ {return onModify(toNumber(val), 7)};
+		onModifySingle[8] = function(val) /*=>*/ {return onModify(toNumber(val), 8)};
+		
+		for(var i = 0; i < 9; i++) tb[i] = textBox_Number(onModifySingle[i]).setPrecision(2).setHide(1);
+	#endregion
 	
-	onModifySingle[0] = function(val) /*=>*/ {return onModify(toNumber(val), 0)};
-	onModifySingle[1] = function(val) /*=>*/ {return onModify(toNumber(val), 1)};
-	onModifySingle[2] = function(val) /*=>*/ {return onModify(toNumber(val), 2)};
-	onModifySingle[3] = function(val) /*=>*/ {return onModify(toNumber(val), 3)};
-	onModifySingle[4] = function(val) /*=>*/ {return onModify(toNumber(val), 4)};
-	onModifySingle[5] = function(val) /*=>*/ {return onModify(toNumber(val), 5)};
+	#region menu
+		context_menu = [];
+		
+		if(unit != noone && unit.reference) 
+			array_push(context_menu, unit.contextMenu);
+	#endregion
 	
-	onModifySingle[6] = function(val) /*=>*/ {return onModify(toNumber(val), 6)}; //3d
-	onModifySingle[7] = function(val) /*=>*/ {return onModify(toNumber(val), 7)};
-	onModifySingle[8] = function(val) /*=>*/ {return onModify(toNumber(val), 8)};
-	
-	for(var i = 0; i < 9; i++) tb[i] = new textBox(TEXTBOX_INPUT.number, onModifySingle[i]).setPrecision(2).setHide(1);
+	////- Setters
 	
 	static setInteract = function(interactable = noone) { 
 		self.interactable = interactable;
@@ -36,6 +47,8 @@ function pathAnchorBox(_onModify) : widget() constructor {
 			if(tb[i].isHovering()) return true;
 		return false;
 	}
+	
+	////- Draw
 	
 	static fetchHeight = function(params) { return params.h * 2 + 6; }
 	static drawParam   = function(params) {
@@ -84,7 +97,6 @@ function pathAnchorBox(_onModify) : widget() constructor {
 			
 			return h;
 		}
-		
 		
 		if(unit != noone && unit.reference != noone) {
 			var bx = _x + _w - _bw;
@@ -172,7 +184,6 @@ function pathAnchorBox(_onModify) : widget() constructor {
 			tb[6].draw(_tx + _tw * 0, _ty, _tw, _th, _data[6], _m);
 			tb[7].draw(_tx + _tw * 1, _ty, _tw, _th, _data[7], _m);
 			tb[8].draw(_tx + _tw * 2, _ty, _tw, _th, _data[8], _m);
-			
 		}
 		
 		var _linked = array_safe_get(_data, _li);
@@ -186,6 +197,8 @@ function pathAnchorBox(_onModify) : widget() constructor {
 		resetFocus();
 		return h;
 	}
+	
+	////- Action
 	
 	static clone = function() { 
 		var _n = new pathAnchorBox(onModify, unit); 

@@ -4,47 +4,51 @@ enum QUARTERNION_DISPLAY {
 }
 
 function quarternionBox(_junc, _onModify) : widget() constructor {
-	junction      = _junc;
-	onModify      = _onModify;
-	current_value = [ 0, 0, 0, 0 ];
-	current_unit  = QUARTERNION_DISPLAY.quarterion;
-	
-	onModifyIndex = function(val, index) { 
-		var v = toNumber(val);
+	#region data
+		junction      = _junc;
+		onModify      = _onModify;
+		current_value = [ 0, 0, 0, 0 ];
+		current_unit  = QUARTERNION_DISPLAY.quarterion;
 		
-		if(current_unit == QUARTERNION_DISPLAY.quarterion) {
-			return onModify(v, index); 
+		onModifyIndex = function(val, index) { 
+			var v = toNumber(val);
 			
-		} else {
-			var v  = toNumber(val);
-			var qv = [
-				current_value[0], 
-				current_value[1], 
-				current_value[2], 
-			];
-			
-			qv[index] = v;
-			return onModify(qv);
+			if(current_unit == QUARTERNION_DISPLAY.quarterion) {
+				return onModify(v, index); 
+				
+			} else {
+				var v  = toNumber(val);
+				var qv = [
+					current_value[0], 
+					current_value[1], 
+					current_value[2], 
+				];
+				
+				qv[index] = v;
+				return onModify(qv);
+			}
 		}
-	}
+		
+		size    = 4;
+		axis    = [ "x", "y", "z", "w" ];
+		tooltip = new tooltipSelector("Angle type", [__txt("Quaternion"), __txt("Euler")]);
+		
+		disp_w    = noone;
+		clickable = true;
+		
+		onModifySingle[0] = function(val) /*=>*/ {return onModifyIndex(val, 0)};
+		onModifySingle[1] = function(val) /*=>*/ {return onModifyIndex(val, 1)};
+		onModifySingle[2] = function(val) /*=>*/ {return onModifyIndex(val, 2)};
+		onModifySingle[3] = function(val) /*=>*/ {return onModifyIndex(val, 3)};
+		
+		for(var i = 0; i < 4; i++) {
+			tb[i] = textBox_Number(onModifySingle[i]);
+			tb[i].slidable = true;
+			tb[i].label    = axis[i];
+		}
+	#endregion
 	
-	size    = 4;
-	axis    = [ "x", "y", "z", "w" ];
-	tooltip = new tooltipSelector("Angle type", [__txt("Quaternion"), __txt("Euler")]);
-	
-	disp_w    = noone;
-	clickable = true;
-	
-	onModifySingle[0] = function(val) { return onModifyIndex(val, 0); }
-	onModifySingle[1] = function(val) { return onModifyIndex(val, 1); }
-	onModifySingle[2] = function(val) { return onModifyIndex(val, 2); }
-	onModifySingle[3] = function(val) { return onModifyIndex(val, 3); }
-	
-	for(var i = 0; i < 4; i++) {
-		tb[i] = new textBox(TEXTBOX_INPUT.number, onModifySingle[i]);
-		tb[i].slidable = true;
-		tb[i].label    = axis[i];
-	}
+	////- Setters
 	
 	static setInteract = function(interactable) { 
 		self.interactable = interactable;
@@ -69,6 +73,8 @@ function quarternionBox(_junc, _onModify) : widget() constructor {
 			current_value[i] = toNumber(tb[i]._input_text);
 		}
 	}
+	
+	////- Draw
 	
 	static drawParam = function(params) {
 		setParam(params);
@@ -143,6 +149,8 @@ function quarternionBox(_junc, _onModify) : widget() constructor {
 		
 		return _h;
 	}
+	
+	////- Actions
 	
 	static clone = function() /*=>*/ {return new quarternionBox(junction, onModify)};
 	

@@ -6,7 +6,7 @@ function Node_UV_Blend(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	newInput( 1, nodeValue_Surface( "UV fg" )).setCustomData(global.SURFACE_UV_JUNC);
 	
 	////- =Blending
-	newInput( 3, nodeValue_Surface( "Blend mask" ));
+	newInput( 3, nodeValue_Surface( "Mask"       ));
 	newInput( 2, nodeValue_Slider(  "Amount", .5 ));
 	// 4
 	

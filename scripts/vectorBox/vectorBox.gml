@@ -18,11 +18,15 @@ function vectorBox(_size, _onModify, _unit = noone) : widget() constructor {
 		
 		link_inactive_color = noone;
 		tooltip	= new tooltipSelector("Axis", [ __txt("Independent"), __txt("Linked") ]);
-		
+	#endregion
+	
+	#region menu
 		context_menu = [];
 		
-		// if(linkable)      array_push(context_menu, menuItem(__txt("Link Axis"), () => toggleLink()).setToggle(() => linked));
-		// if(unit != noone) array_push(context_menu, unit.contextMenu);
+		if(linkable)
+			array_push(context_menu, menuItem(__txt("Link Axis"), function() /*=>*/ {return toggleLink()}).setToggle(function() /*=>*/ {return linked}));
+		if(unit != noone && unit.reference) 
+			array_push(context_menu, unit.contextMenu);
 	#endregion
 	
 	#region scaling
@@ -41,7 +45,6 @@ function vectorBox(_size, _onModify, _unit = noone) : widget() constructor {
 		array_hovering    = undefined;
 		array_adding      = false;
 	#endregion
-	
 	
 	onModifyIndex = function(val, index) { 
 		if(!is_callable(onModify)) return false;

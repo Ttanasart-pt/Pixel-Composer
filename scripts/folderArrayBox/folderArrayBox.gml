@@ -1,28 +1,34 @@
 function folderArrayBox(_arr, _onModify) : widget() constructor {
-	onModify = _onModify;
-	array    = _arr;
-	adding   = false;
-	
-	editing = noone;
-	tb_edit = new textBox(TEXTBOX_INPUT.text, function(str) /*=>*/ { 
-		if(editing == noone) { adding = false; return false; }
+	#region data
+		onModify = _onModify;
+		array    = _arr;
+		adding   = false;
 		
-		array[editing] = str;
-		if(str == "") {
-			array_delete(array, editing, 1);
-			editing = noone;
-		}
+		editing = noone;
+		tb_edit = textBox_Text(function(str) /*=>*/ { 
+			if(editing == noone) { adding = false; return false; }
+			
+			array[editing] = str;
+			if(str == "") {
+				array_delete(array, editing, 1);
+				editing = noone;
+			}
+			
+			adding = false;
+			onModify();
+			return true; 
+		}).setSlide(false).setEmpty();
 		
-		adding = false;
-		onModify();
-		return true; 
-	}).setSlide(false).setEmpty();
+		tb_edit.onDeactivate = function() /*=>*/ { editing = noone; }
+		
+		_hovering = false;
+	#endregion
 	
-	tb_edit.onDeactivate = function() /*=>*/ { editing = noone; }
-	
-	_hovering = false;
+	////- Setters
 	
 	static setFont = function(_font) { font = _font; tb_edit.font = _font; return self;  }
+	
+	////- Draw
 	
 	static fetchHeight = function(params) { return (params.h + ui(4)) * (array_length(params.data) + !adding) - ui(4); }
 	static drawParam   = function(params) {
@@ -122,6 +128,8 @@ function folderArrayBox(_arr, _onModify) : widget() constructor {
 		
 		return h;
 	}
+	
+	////- Actions
 	
 	static clone = function() {
 		var cln = new pathArrayBox(target, data, onClick);

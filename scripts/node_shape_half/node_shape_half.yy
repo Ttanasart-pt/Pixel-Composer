@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"node_shape_half",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"node_shape_half",
+  "parent":{
+    "name":"shapes",
+    "path":"folders/nodes/data/generator/drawer/shape/shapes.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

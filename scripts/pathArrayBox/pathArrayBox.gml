@@ -1,20 +1,27 @@
 function pathArrayBox(_target, _data, _onClick) : widget() constructor {
-	target  = _target;
-	data    = _data;
-	onClick = _onClick;
-	
-	openPath = button(function() {
-		var path = get_open_filenames_compat(data[0], data[1]);
-		key_release();
-		if(path == "") return noone;
+	#region data
+		target  = _target;
+		data    = _data;
+		onClick = _onClick;
 		
-		var paths = string_splice(path, "\n");
-		onClick(paths);
-	}).setIcon(THEME.button_path_icon, 0, COLORS._main_icon).iconPad();
+		openPath = button(function() {
+			var path = get_open_filenames_compat(data[0], data[1]);
+			key_release();
+			if(path == "") return noone;
+			
+			var paths = string_splice(path, "\n");
+			onClick(paths);
+			
+		}).setIcon(THEME.button_path_icon, 0, COLORS._main_icon).iconPad();
+	#endregion
+		
+	////- Setters
 	
 	static trigger = function() { 
 		dialogPanelCall(new Panel_Image_Array_Editor(target));
 	}
+	
+	////- Draw
 	
 	static drawParam = function(params) {
 		setParam(params);
@@ -86,6 +93,8 @@ function pathArrayBox(_target, _data, _onClick) : widget() constructor {
 		
 		return h;
 	}
+	
+	////- Action
 	
 	static clone = function() { return new pathArrayBox(target, data, onClick); }
 }

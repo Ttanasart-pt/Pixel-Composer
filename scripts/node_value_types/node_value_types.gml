@@ -580,6 +580,7 @@ function nodeValueUnit(__nodeValue) constructor {
 	reference   = noone;
 	modeTrigger = function(upd = true) /*=>*/ { 
 		mode = !mode; 
+		contextMenu.name = mode == VALUE_UNIT.constant? __txt("Relative Unit") : __txt("Pixel Unit");
 		
 		_nodeValue.is_modified    = true;
 		_nodeValue.node.project.setModified();
@@ -604,6 +605,7 @@ function nodeValueUnit(__nodeValue) constructor {
 	  .setTooltip(tooltip, function() /*=>*/ {return mode});
 	
 	contextMenu = menuItem(__txt("Toggle Unit"), function() /*=>*/ {return modeTrigger()});
+	contextMenu.name = mode == VALUE_UNIT.constant? __txt("Relative Unit") : __txt("Pixel Unit");
 	
 	static setMode = function(type) {
 		if((type == "constant" || type == VALUE_UNIT.constant)  && mode == VALUE_UNIT.constant) return;
@@ -613,6 +615,8 @@ function nodeValueUnit(__nodeValue) constructor {
 		_nodeValue.cache_value[0] = false;
 		_nodeValue.unitConvert(mode);
 		_nodeValue.node.triggerRender();
+		
+		contextMenu.name = mode == VALUE_UNIT.constant? __txt("Relative Unit") : __txt("Pixel Unit");
 	}
 	
 	static draw = function(_x, _y, _w, _h, _m) {

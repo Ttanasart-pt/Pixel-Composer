@@ -1,0 +1,12 @@
+{
+  "$GMShader":"",
+  "%Name":"sh_shape_half",
+  "name":"sh_shape_half",
+  "parent":{
+    "name":"shapes",
+    "path":"folders/nodes/data/generator/drawer/shape/shapes.yy",
+  },
+  "resourceType":"GMShader",
+  "resourceVersion":"2.0",
+  "type":1,
+}

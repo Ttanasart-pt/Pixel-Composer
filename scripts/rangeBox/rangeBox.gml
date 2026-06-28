@@ -1,37 +1,44 @@
 function rangeBox(_onModify) : widget() constructor {
-	onModify = _onModify;
-	linked   = false;
-	disp_w   = 0;
-	extras   = -1;
-	
-	rangeDrag = false;
-	rangeDrag_mx = 0;
-	rangeDrag_my = 0;
-	rangeDrag_ss = 0;
-	
-	tooltip	 = new tooltipSelector("Value Type", [
-		__txt("widget_range_random",   "Random Range"),
-		__txt("widget_range_constant", "Constant"),
-	]);
-	
-	onModifyIndex = function(val, _i) /*=>*/ { 
-		var modi = false;
+	#region data
+		onModify = _onModify;
+		linked   = false;
+		disp_w   = 0;
+		extras   = -1;
 		
-		if(linked) {
-			modi = onModify(toNumber(val), 0) || modi;
-			modi = onModify(toNumber(val), 1) || modi;
-			return modi;
+		rangeDrag = false;
+		rangeDrag_mx = 0;
+		rangeDrag_my = 0;
+		rangeDrag_ss = 0;
+		
+		tooltip	 = new tooltipSelector("Value Type", [
+			__txt("widget_range_random",   "Random Range"),
+			__txt("widget_range_constant", "Constant"),
+		]);
+		
+		onModifyIndex = function(val, _i) /*=>*/ { 
+			var modi = false;
+			
+			if(linked) {
+				modi = onModify(toNumber(val), 0) || modi;
+				modi = onModify(toNumber(val), 1) || modi;
+				return modi;
+			}
+			
+			return onModify(toNumber(val), _i); 
 		}
 		
-		return onModify(toNumber(val), _i); 
-	}
+		labels = [ "min", "max" ];
+		onModifySingle[0] = function(v) /*=>*/ {return onModifyIndex(toNumber(v), 0)};
+		onModifySingle[1] = function(v) /*=>*/ {return onModifyIndex(toNumber(v), 1)};
+		
+		tb[0] = textBox_Number(onModifySingle[0]).setHide(true).setLabel(labels[0]);
+		tb[1] = textBox_Number(onModifySingle[1]).setHide(true).setLabel(labels[1]);
+	#endregion
 	
-	labels = [ "min", "max" ];
-	onModifySingle[0] = function(v) /*=>*/ {return onModifyIndex(toNumber(v), 0)};
-	onModifySingle[1] = function(v) /*=>*/ {return onModifyIndex(toNumber(v), 1)};
-	
-	tb[0] = textBox_Number(onModifySingle[0]).setHide(true).setLabel(labels[0]);
-	tb[1] = textBox_Number(onModifySingle[1]).setHide(true).setLabel(labels[1]);
+	#region menu
+		context_menu = [];
+		array_push(context_menu, menuItem(__txt("Link Axis"), function() /*=>*/ {return function() /*=>*/ { linked = !linked }}).setToggle(function() /*=>*/ {return linked}));
+	#endregion
 	
 	////- Set
 	

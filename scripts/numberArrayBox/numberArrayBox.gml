@@ -1,19 +1,22 @@
 function numberArrayBox(_onModify) : widget() constructor {
-	onModify      = _onModify;
-	current_value = [];
-	onModifyValue = function() /*=>*/ {return onModify(current_value)};
+	#region data
+		onModify      = _onModify;
+		current_value = [];
+		onModifyValue = function() /*=>*/ {return onModify(current_value)};
+		
+		editing = noone;
+		
+		tb = textBox_Number(function(v) /*=>*/ {
+		    if(editing == noone) return;
+		    
+		    current_value = array_clone(current_value);
+		    current_value[editing] = v;
+		    onModify(current_value);
+		});
+		tb.onDeactivate = function() /*=>*/ { editing = noone; }
+	#endregion
 	
-	editing = noone;
-	
-	tb = textBox_Number(function(v) /*=>*/ {
-	    if(editing == noone) return;
-	    
-	    current_value = array_clone(current_value);
-	    current_value[editing] = v;
-	    onModify(current_value);
-	});
-	
-	tb.onDeactivate = function() /*=>*/ { editing = noone; }
+	////- Setters
 	
 	static setFont    = function(_f) /*=>*/ { tb.setFont(_f); return self; }
 	static isHovering = function() /*=>*/ {return tb.isHovering()};
@@ -100,6 +103,8 @@ function numberArrayBox(_onModify) : widget() constructor {
 		resetFocus();
 		return h;
 	}
+	
+	////- Actions
 	
 	static clone = function() /*=>*/ {return new numberArrayBox(onModify)};
 
