@@ -60,11 +60,12 @@ void main() {
         pos *= amplitude;
     }
     
-    pos.x = applyLevel(pos.x);
-    pos.y = applyLevel(pos.y);
-    
-	if(mode == 0) col += length(mod(pos, 2.) - 1.);
+	if(mode == 0) col    += length(mod(pos, 2.) - 1.);
 	else          col.xy += abs(mod(pos, 2.) - 1.);
+	
+	col.r = applyLevel(col.r);
+	col.g = applyLevel(col.g);
+	col.b = applyLevel(col.b);
 	
     gl_FragColor = col;
 }
