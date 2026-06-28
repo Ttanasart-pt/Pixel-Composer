@@ -3063,8 +3063,8 @@ function Panel_Animation_Dopesheet() {
 	            
 	            if(_ctrl) {
 	                var _fr = round((mx - bar_x - timeline_shift) / timeline_scale) - 1;
-	                
-	            	if(animator_hovering != noone && key_hover == noone) {
+	                   
+	            	if(animator_hovering != noone && key_hover == noone && _fr >= 0) {
 		                var _kx = (_fr + 1) * timeline_scale + timeline_shift;
 		                var _ky = animator_hovering.y;
 		                draw_sprite_ui_uniform(THEME.add, 0, _kx, _ky, .5, COLORS._main_value_positive, 1);

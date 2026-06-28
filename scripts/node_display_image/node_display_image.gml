@@ -27,14 +27,17 @@ function Node_Display_Image(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	name		= "Display Image";
 	auto_height	= false;
 	
-	newInput(0, nodeValue_FPath( "Path")).setVisible(false).setDisplay(VALUE_DISPLAY.path_load, { filter: FILE_SEL_IMAGE }).rejectArray();
-	newInput(1, nodeValue_Vec2( "Position", [x,y] )).rejectArray();
-	newInput(2, nodeValue_Vec2( "Scale",    [1,1] )).rejectArray();
-	newInput(3, nodeValue_Bool( "Smooth transform", true )).rejectArray();
+	newInput(0, nodeValue_FPath( "Path" )).setVisible(false, false)
+		.setDisplay(VALUE_DISPLAY.path_load, { filter: FILE_SEL_IMAGE }).rejectArray();
+	newInput(1, nodeValue_Vec2(  "Position",         [x,y] )).rejectArray();
+	newInput(2, nodeValue_Vec2(  "Scale",            [1,1] )).rejectArray();
+	newInput(3, nodeValue_Bool(  "Smooth Transform",  true )).rejectArray();
 	
-	input_display_list = [ 0,
-		["Display", false], 1, 2, 3, 
-	]
+	input_display_list = [  0,
+		[ "Display", false ],  1,  2,  3, 
+	];
+	
+	////- Node
 	
 	spr = noone;
 	path_current = "";
@@ -49,17 +52,6 @@ function Node_Display_Image(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	sca_dx = 1;
 	sca_dy = 1;
 	
-	static move = function(_x, _y, _s) {
-		if(x == _x && y == _y) return;
-		if(!LOADING) PROJECT.setModified();
-		
-		x = _x;
-		y = _y;
-		
-		if(inputs[1].setValue([ _x, _y ]))
-			UNDO_HOLDING = true;
-	}
-	
 	insp1button = button(function() /*=>*/ {
 		var path = getInputData(0);
 		if(path == "") return;
@@ -68,6 +60,9 @@ function Node_Display_Image(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		
 	}).setTooltip(__txt("Refresh"))
 		.setIcon(THEME.refresh_icon, 1, COLORS._main_value_positive).iconPad(ui(6)).setBaseSprite(THEME.button_hide_fill);
+	static insp1show = function() /*=>*/ {return false};
+	
+	////- Update
 	
 	function updatePaths(path) {
 		path = path_get(path);
@@ -95,6 +90,21 @@ function Node_Display_Image(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		return false;
 	}
 	
+	static move = function(_x, _y) {
+		moved = true;
+		if(x == _x && y == _y) return;
+		
+		x = _x;
+		y = _y;
+		
+		pos_x = _x;
+		pos_y = _y;
+		
+		if(inputs[1].setValue([ _x, _y ]))
+			UNDO_HOLDING = true;
+		if(!LOADING) PROJECT.setModified();
+	}
+	
 	static update = function(frame = CURRENT_FRAME) {
 		var path = getInputData(0);
 		var posi = getInputData(1);
@@ -111,6 +121,8 @@ function Node_Display_Image(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		sca_x = scal[0];
 		sca_y = scal[1];
 	}
+	
+	////- Draw
 	
 	static drawNodeBase = function(xx, yy, _s) {
 		if(!spr || !sprite_exists(spr)) return;
