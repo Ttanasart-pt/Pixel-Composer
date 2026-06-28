@@ -4095,7 +4095,7 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
 			_preset   = _sp[1];
     	}
     	
-    	var node  = noone;
+    	var  node = noone;
         var _drag = false;
         var _conn = false;
         
@@ -4119,12 +4119,12 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
     				case VALUE_TYPE.pathnode : _nodeType = "Node_Path_Transform"; break;
     			}
 	    		
-	    		node  = doNewNode(_nodeType);
+	    		 node = doNewNode(_nodeType);
 	    		_conn = true;
 	    		break;
 	    	
 	    	default : 
-	    		node  = doNewNode(_nodeType, true); 
+	    		 node = doNewNode(_nodeType, true); 
 	    		_conn = true;
 	    		break;
     	}
@@ -4290,7 +4290,6 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
         var cx   = _nd.x;
         var cy   = 0;
         var pr   = ds_priority_create();
-        var amo  = array_length(nodes_selecting);
         var len  = 0;
         
         if(_drag) {
@@ -4301,6 +4300,7 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
             len++;
             
         } else {
+        	var amo = array_length(nodes_selecting);
 	        for(var i = 0; i < amo; i++) {
 	            var _node = nodes_selecting[i];
 	            if(array_empty(_node.outputs)) continue;
@@ -4366,18 +4366,27 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
         var cx  = _nd.x;
         var cy  = 0;
         var pr  = ds_priority_create();
-        var amo = array_length(nodes_selecting);
         var len = 0;
         
-        for(var i = 0; i < amo; i++) {
-            var _node = nodes_selecting[i];
-            if(array_length(_node.outputs) == 0) continue;
+        if(_drag) {
+        	cx  = max(cx, _nd.x);
+            cy += _nd.y;
             
-            cx = max(cx, _node.x);
-            cy += _node.y;
-            
-            ds_priority_add(pr, _node, _node.y);
+            ds_priority_add(pr, _jj, _nd.y);
             len++;
+            
+        } else {
+	        var amo = array_length(nodes_selecting);
+	        for(var i = 0; i < amo; i++) {
+	            var _node = nodes_selecting[i];
+	            if(array_length(_node.outputs) == 0) continue;
+	            
+	            cx  = max(cx, _node.x);
+	            cy += _node.y;
+	            
+	            ds_priority_add(pr, _node, _node.y);
+	            len++;
+	        }
         }
         
         cx = cx + 160;

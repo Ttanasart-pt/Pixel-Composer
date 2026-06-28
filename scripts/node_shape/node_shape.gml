@@ -15,35 +15,36 @@
 	]);
 	
 	global.node_shape_types_map = {};
-	global.node_shape_types_map[$ "Rectangle"]       = new scrollItem("Rectangle",       s_node_shape_rectangle    );
-	global.node_shape_types_map[$ "Diamond"]         = new scrollItem("Diamond",         s_node_shape_diamond      );
-	global.node_shape_types_map[$ "Trapezoid"]       = new scrollItem("Trapezoid",       s_node_shape_trapezoid    );
-	global.node_shape_types_map[$ "Parallelogram"]   = new scrollItem("Parallelogram",   s_node_shape_paral        );
-	global.node_shape_types_map[$ "Half"]            = new scrollItem("Half",            s_node_shape_half         );
+	global.node_shape_types_map[$ "Rectangle"]       = new scrollItem("Rectangle",       s_node_shape_rectangle     );
+	global.node_shape_types_map[$ "Diamond"]         = new scrollItem("Diamond",         s_node_shape_diamond       );
+	global.node_shape_types_map[$ "Trapezoid"]       = new scrollItem("Trapezoid",       s_node_shape_trapezoid     );
+	global.node_shape_types_map[$ "Parallelogram"]   = new scrollItem("Parallelogram",   s_node_shape_paral         );
+	global.node_shape_types_map[$ "Quadrilateral"]   = new scrollItem("Quadrilateral",   s_node_shape_quadrilateral );
+	global.node_shape_types_map[$ "Half"]            = new scrollItem("Half",            s_node_shape_half          );
 	
-	global.node_shape_types_map[$ "Triangle"]        = new scrollItem("Triangle",        s_node_shape_triangle     );
+	global.node_shape_types_map[$ "Triangle"]        = new scrollItem("Triangle",        s_node_shape_triangle      );
 	
-	global.node_shape_types_map[$ "Ellipse"]         = new scrollItem("Ellipse",         s_node_shape_circle       );
-	global.node_shape_types_map[$ "Arc"]             = new scrollItem("Arc",             s_node_shape_arc          );
-	global.node_shape_types_map[$ "Donut"]           = new scrollItem("Donut",           s_node_shape_donut        );
-	global.node_shape_types_map[$ "Crescent"]        = new scrollItem("Crescent",        s_node_shape_crescent     );
-	global.node_shape_types_map[$ "Disk Segment"]    = new scrollItem("Disk Segment",    s_node_shape_disk_segment );
-	global.node_shape_types_map[$ "Pie"]             = new scrollItem("Pie",             s_node_shape_pie          );
-	global.node_shape_types_map[$ "Squircle"]        = new scrollItem("Squircle",        s_node_shape_squircle     );
-	global.node_shape_types_map[$ "Superellipse"]    = new scrollItem("Superellipse",    s_node_shape_superelli    );
+	global.node_shape_types_map[$ "Ellipse"]         = new scrollItem("Ellipse",         s_node_shape_circle        );
+	global.node_shape_types_map[$ "Arc"]             = new scrollItem("Arc",             s_node_shape_arc           );
+	global.node_shape_types_map[$ "Donut"]           = new scrollItem("Donut",           s_node_shape_donut         );
+	global.node_shape_types_map[$ "Crescent"]        = new scrollItem("Crescent",        s_node_shape_crescent      );
+	global.node_shape_types_map[$ "Disk Segment"]    = new scrollItem("Disk Segment",    s_node_shape_disk_segment  );
+	global.node_shape_types_map[$ "Pie"]             = new scrollItem("Pie",             s_node_shape_pie           );
+	global.node_shape_types_map[$ "Squircle"]        = new scrollItem("Squircle",        s_node_shape_squircle      );
+	global.node_shape_types_map[$ "Superellipse"]    = new scrollItem("Superellipse",    s_node_shape_superelli     );
 	
-	global.node_shape_types_map[$ "Regular Polygon"] = new scrollItem("Regular Polygon", s_node_shape_hexagon      );
-	global.node_shape_types_map[$ "Star"]            = new scrollItem("Star",            s_node_shape_star         );
-	global.node_shape_types_map[$ "Cross"]           = new scrollItem("Cross",           s_node_shape_cross        );
-	global.node_shape_types_map[$ "Rounded Cross"]   = new scrollItem("Rounded Cross",   s_node_shape_cross_round  );
+	global.node_shape_types_map[$ "Regular Polygon"] = new scrollItem("Regular Polygon", s_node_shape_hexagon       );
+	global.node_shape_types_map[$ "Star"]            = new scrollItem("Star",            s_node_shape_star          );
+	global.node_shape_types_map[$ "Cross"]           = new scrollItem("Cross",           s_node_shape_cross         );
+	global.node_shape_types_map[$ "Rounded Cross"]   = new scrollItem("Rounded Cross",   s_node_shape_cross_round   );
 	
-	global.node_shape_types_map[$ "Line"]            = new scrollItem("Line",            s_node_shape_line         );
-	global.node_shape_types_map[$ "Arrow"]           = new scrollItem("Arrow",           s_node_shape_arrow        );
+	global.node_shape_types_map[$ "Line"]            = new scrollItem("Line",            s_node_shape_line          );
+	global.node_shape_types_map[$ "Arrow"]           = new scrollItem("Arrow",           s_node_shape_arrow         );
 	
-	global.node_shape_types_map[$ "Teardrop"]        = new scrollItem("Teardrop",        s_node_shape_teardrop     );
-	global.node_shape_types_map[$ "Leaf"]            = new scrollItem("Leaf",            s_node_shape_leaf         );
-	global.node_shape_types_map[$ "Heart"]           = new scrollItem("Heart",           s_node_shape_heart        );
-	global.node_shape_types_map[$ "Gear"]            = new scrollItem("Gear",            s_node_shape_gear         );
+	global.node_shape_types_map[$ "Teardrop"]        = new scrollItem("Teardrop",        s_node_shape_teardrop      );
+	global.node_shape_types_map[$ "Leaf"]            = new scrollItem("Leaf",            s_node_shape_leaf          );
+	global.node_shape_types_map[$ "Heart"]           = new scrollItem("Heart",           s_node_shape_heart         );
+	global.node_shape_types_map[$ "Gear"]            = new scrollItem("Gear",            s_node_shape_gear          );
 	
 	function Node_create_Shape(_x, _y, _group = noone, _param = {}) {
 		var quer = _param[$ "query"]; var query = (is_struct(quer) && quer[$ "type"] == "alias"? quer[$ "value"] : "") ?? "";
