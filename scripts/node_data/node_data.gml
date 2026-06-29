@@ -3361,6 +3361,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	
 	static applyDeserialize = function(preset = false) {
 		preApplyDeserialize();
+		if(!has(load_map, "inputs")) return;
 		
 		var _inputs = load_map.inputs;
 		var amo = min(array_length(inputs), array_length(_inputs));
@@ -3399,7 +3400,6 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		}
 		
 		postApplyDeserialize();
-		
 	}
 	
 	static preApplyDeserialize  = function() /*=>*/ {}
