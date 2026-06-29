@@ -2236,6 +2236,11 @@ function Panel_Preview() : PanelContent() constructor {
     } // DRAW PREVIEW CONTENT
     
     static drawNodeGrid = function() {
+    	if(!is(previewing_node, Node)) return;
+    	
+    	var _bypass = previewing_node[$ "bypass_grid"] ?? false;
+    	if(_bypass) return; 
+    	
         if(!PROJECT.previewGrid.show) return;
         
         var _gw = PROJECT.previewGrid.size[0] * canvas_s;
@@ -4406,7 +4411,7 @@ function Panel_Preview() : PanelContent() constructor {
             }
         } // Draw Overlay
         
-        if(!(previewing_node[$ "bypass_grid"] ?? false)) drawNodeGrid();
+        drawNodeGrid();
         
         if(d3_active == NODE_3D.none) drawSplitView();
         drawDataArray();
