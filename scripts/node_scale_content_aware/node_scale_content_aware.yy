@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"node_scale_content_aware",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"node_scale_content_aware",
+  "parent":{
+    "name":"transform",
+    "path":"folders/nodes/data/transform.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

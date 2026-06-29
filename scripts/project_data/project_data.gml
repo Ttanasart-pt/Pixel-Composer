@@ -75,7 +75,6 @@ function Project() constructor {
 	nodeMap	    = ds_map_create();
 	nodeNameMap = ds_map_create();
 	nodeTopoID  = "";
-	immediate_render = undefined;
 	
 	pathInputs  = [];
 	
@@ -422,11 +421,6 @@ function Project() constructor {
 				
 				_n.renderActive = point_in_rectangle(_n.x, _n.y, x0, y0, x1, y1);
 			}
-		}
-		
-		if(immediate_render != undefined) {
-			immediate_render.doUpdate();
-			immediate_render = undefined;
 		}
 		
 		animator.is_simulating = array_any(allNodes, function(a,i) /*=>*/ {return a.is_simulation});

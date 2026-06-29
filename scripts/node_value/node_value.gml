@@ -2218,8 +2218,6 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 				RenderAll();
 				
 			} else {
-				if(!NODE_IS_PLAYING) node.project.immediate_render = node;
-				
 				node.valueUpdate(index);
 				node.triggerRender();
 				node.clearCacheForward();

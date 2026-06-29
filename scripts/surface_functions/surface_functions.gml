@@ -1,242 +1,3 @@
-#region CPP
-/*[cpp]
-	#include <cstddef>
-	#include <cstdint>
-	
-	struct pixel {
-		uint8_t r;
-		uint8_t g;
-		uint8_t b;
-		uint8_t a;
-	};
-	
-	struct range {
-	    double min;
-		double max;
-	};
-	
-	struct rangePosition {
-	    double min;
-		double max;
-	    uint16_t minx;
-	    uint16_t miny;
-	    uint16_t maxx;
-	    uint16_t maxy;
-	};
-	
-	cfunction double surface_is_empty_c(void* pixelArrayBuffer, double _size, double _emptyMode) {
-	    pixel* pixelArray = (pixel*)pixelArrayBuffer;
-		size_t size       = (size_t)_size;
-		int emptyMode     = (int)_emptyMode;
-		
-	    size_t i = 0;
-	    size_t limit = size & ~3ULL; // Multiple of 4
-	
-	    switch(emptyMode) {
-	        case 0 :
-	            for (; i < limit; i += 4) {
-	                if (pixelArray[i].a != 0 || pixelArray[i+1].a != 0 ||
-	                    pixelArray[i+2].a != 0 || pixelArray[i+3].a != 0)
-	                    return 0;
-	            }
-	            for (; i < size; ++i) {
-	                if (pixelArray[i].a != 0) return 0;
-	            }
-	        break;
-	
-	        case 1 :
-	            for (; i < limit; i += 4) {
-	                if (pixelArray[i].r != 0 || pixelArray[i].g != 0 || pixelArray[i].b != 0 ||
-	                    pixelArray[i+1].r != 0 || pixelArray[i+1].g != 0 || pixelArray[i+1].b != 0 ||
-	                    pixelArray[i+2].r != 0 || pixelArray[i+2].g != 0 || pixelArray[i+2].b != 0 ||
-	                    pixelArray[i+3].r != 0 || pixelArray[i+3].g != 0 || pixelArray[i+3].b != 0)
-	                    return 0;
-	            }
-	            for (; i < size; ++i) {
-	                if (pixelArray[i].r != 0 || pixelArray[i].g != 0 || pixelArray[i].b != 0)
-	                    return 0;
-	            }
-	        break;
-	    }
-	
-	    return 1;
-	}
-	
-	cfunction double surface_is_color_c(void* pixelArrayBuffer, double _size, void* _color) {
-	    pixel* pixelArray = (pixel*)pixelArrayBuffer;
-		size_t size       = (size_t)_size;
-	    pixel* color      = (pixel*)_color;
-		
-	    size_t i = 0;
-	    size_t limit = size & ~3ULL; // Multiple of 4
-        
-        uint8_t red   = color->r;
-        uint8_t green = color->g;
-        uint8_t blue  = color->b;
-        uint8_t alpha = color->a;
-
-        for(; i<size; i++) {
-            if (pixelArray[i].r != red || pixelArray[i].g != green || pixelArray[i].b != blue || pixelArray[i].a != alpha)
-                return 0;
-        }
-	     
-	    return 1;
-	}
-	
-	cfunction double surface_get_nonempty_c(void* pixelArrayBuffer, void* outputBuffer, double width, double height) {
-		pixel*    pixelArray  = (pixel*)pixelArrayBuffer;
-		uint16_t* outputArray = (uint16_t*)outputBuffer;
-	
-		size_t widthInt  = (size_t)width;
-		size_t heightInt = (size_t)height;
-		size_t size      = widthInt * heightInt;
-	
-	    int amount = 0;
-	    int index  = 0;
-	
-		for (size_t i = 0; i < size; ++i) {
-			if (pixelArray[i].a == 0) continue;
-	
-			outputArray[index++] = (uint16_t)(i % widthInt);
-			outputArray[index++] = (uint16_t)(i / widthInt);
-		    amount++;
-	    }
-		
-	    return amount;
-	}
-	
-	cfunction double surface_get_white_c(void* pixelArrayBuffer, double width, double height) {
-		pixel* pixelArray = (pixel*)pixelArrayBuffer;
-		size_t widthInt   = (size_t)width;
-		size_t heightInt  = (size_t)height;
-		size_t size       = widthInt * heightInt;
-		
-	    int amount = 0;
-	    
-		for (size_t i = 0; i < size; ++i) {
-			if (pixelArray[i].r == 0) continue;
-			amount++;
-	    }
-		
-	    return amount;
-	}
-	
-	cfunction double surface_get_range_c(void* pixelArrayBuffer, void* outputBuffer, double width, double height) {
-		pixel*    pixelArray  = (pixel*)pixelArrayBuffer;
-		uint16_t* outputArray = (uint16_t*)outputBuffer;
-	
-		size_t widthInt  = (size_t)width;
-		size_t heightInt = (size_t)height;
-		size_t size      = widthInt * heightInt;
-	
-		range* outputRange = (range*)outputArray;
-	
-		double _min =  999999;
-		double _max = -999999;
-		
-		for (size_t i = 0; i < size; ++i) {
-			if (pixelArray[i].a == 0) continue;
-	
-			double value = (double)(pixelArray[i].r + pixelArray[i].g + pixelArray[i].b) / 3.0;
-	
-			_min = value < _min ? value : _min;
-			_max = value > _max ? value : _max;
-	    }
-	
-		outputRange->min = _min;
-		outputRange->max = _max;
-		
-	    return 0;
-	}
-	
-	cfunction double surface_get_boundingbox_c(void* pixelArrayBuffer, void* outputBuffer, double width, double height) {
-		pixel*  pixelArray  = (pixel*)pixelArrayBuffer;
-		double* outputArray = (double*)outputBuffer;
-	
-		size_t widthInt  = (size_t)width;
-		size_t heightInt = (size_t)height;
-		size_t size      = widthInt * heightInt;
-	
-		double minX = widthInt;
-		double minY = heightInt;
-		double maxX = -1;
-		double maxY = -1;
-	
-		for (size_t i = 0; i < size; ++i) {
-			if (pixelArray[i].a == 0) continue;
-	
-			double x = (double)(i % widthInt);
-			double y = (double)(i / widthInt);
-			
-			minX = x < minX? x : minX;
-			minY = y < minY? y : minY;
-			maxX = x > maxX? x : maxX;
-			maxY = y > maxY? y : maxY;
-	    }
-	
-		if (maxX == -1 || maxY == -1) {
-			outputArray[0] = 0;
-			outputArray[1] = 0;
-			outputArray[2] = 0;
-			outputArray[3] = 0;
-			return 0;
-		}
-		
-		outputArray[0] = (double)minX;
-		outputArray[1] = (double)minY;
-		outputArray[2] = (double)(maxX - minX + 1);
-		outputArray[3] = (double)(maxY - minY + 1);
-		
-	    return 1;
-	}
-	
-	cfunction double surface_get_min_max_c(void* pixelArrayBuffer, void* outputBuffer, double width, double height) {
-		pixel*    pixelArray  = (pixel*)pixelArrayBuffer;
-		uint16_t* outputArray = (uint16_t*)outputBuffer;
-	
-		size_t widthInt  = (size_t)width;
-		size_t heightInt = (size_t)height;
-		size_t size      = widthInt * heightInt;
-		
-		rangePosition* outputRange = (rangePosition*)outputArray;
-	
-		double _min =  999999;
-		double _max = -999999;
-	
-		uint16_t min_x = 0, min_y = 0;
-		uint16_t max_x = 0, max_y = 0;
-		size_t of = (size_t)outputRange->min;
-		
-		for (size_t i = 0; i < size; ++i) {
-			size_t ix = (i + of) % size;
-			double vr = (double)(pixelArray[ix].r);
-			double vg = (double)(pixelArray[ix].g);
-	
-			if(vr < _min) {
-				_min = vr;
-				min_x = (uint16_t)(ix % widthInt);
-				min_y = (uint16_t)(ix / widthInt);
-			}
-	
-			if(vg > _max) {
-				_max = vg;
-				max_x = (uint16_t)(ix % widthInt);
-				max_y = (uint16_t)(ix / widthInt);
-			}
-		}
-	
-		outputRange->min = _min;
-		outputRange->max = _max;
-		outputRange->minx = min_x;
-		outputRange->miny = min_y;
-		outputRange->maxx = max_x;
-		outputRange->maxy = max_y;
-		
-		return 0;
-	}
-*/
-#endregion
-
 #region ==================================== DRAW ====================================
 
 	function draw_surface_safe(surface, _x = 0, _y = 0) {
@@ -1136,3 +897,242 @@
 	}
 
 #endregion ================================= SERIALIZE =================================
+
+#region CPP
+/*[cpp]
+	#include <cstddef>
+	#include <cstdint>
+	
+	struct pixel {
+		uint8_t r;
+		uint8_t g;
+		uint8_t b;
+		uint8_t a;
+	};
+	
+	struct range {
+	    double min;
+		double max;
+	};
+	
+	struct rangePosition {
+	    double min;
+		double max;
+	    uint16_t minx;
+	    uint16_t miny;
+	    uint16_t maxx;
+	    uint16_t maxy;
+	};
+	
+	cfunction double surface_is_empty_c(void* pixelArrayBuffer, double _size, double _emptyMode) {
+	    pixel* pixelArray = (pixel*)pixelArrayBuffer;
+		size_t size       = (size_t)_size;
+		int emptyMode     = (int)_emptyMode;
+		
+	    size_t i = 0;
+	    size_t limit = size & ~3ULL; // Multiple of 4
+	
+	    switch(emptyMode) {
+	        case 0 :
+	            for (; i < limit; i += 4) {
+	                if (pixelArray[i].a != 0 || pixelArray[i+1].a != 0 ||
+	                    pixelArray[i+2].a != 0 || pixelArray[i+3].a != 0)
+	                    return 0;
+	            }
+	            for (; i < size; ++i) {
+	                if (pixelArray[i].a != 0) return 0;
+	            }
+	        break;
+	
+	        case 1 :
+	            for (; i < limit; i += 4) {
+	                if (pixelArray[i].r != 0 || pixelArray[i].g != 0 || pixelArray[i].b != 0 ||
+	                    pixelArray[i+1].r != 0 || pixelArray[i+1].g != 0 || pixelArray[i+1].b != 0 ||
+	                    pixelArray[i+2].r != 0 || pixelArray[i+2].g != 0 || pixelArray[i+2].b != 0 ||
+	                    pixelArray[i+3].r != 0 || pixelArray[i+3].g != 0 || pixelArray[i+3].b != 0)
+	                    return 0;
+	            }
+	            for (; i < size; ++i) {
+	                if (pixelArray[i].r != 0 || pixelArray[i].g != 0 || pixelArray[i].b != 0)
+	                    return 0;
+	            }
+	        break;
+	    }
+	
+	    return 1;
+	}
+	
+	cfunction double surface_is_color_c(void* pixelArrayBuffer, double _size, void* _color) {
+	    pixel* pixelArray = (pixel*)pixelArrayBuffer;
+		size_t size       = (size_t)_size;
+	    pixel* color      = (pixel*)_color;
+		
+	    size_t i = 0;
+	    size_t limit = size & ~3ULL; // Multiple of 4
+        
+        uint8_t red   = color->r;
+        uint8_t green = color->g;
+        uint8_t blue  = color->b;
+        uint8_t alpha = color->a;
+
+        for(; i<size; i++) {
+            if (pixelArray[i].r != red || pixelArray[i].g != green || pixelArray[i].b != blue || pixelArray[i].a != alpha)
+                return 0;
+        }
+	     
+	    return 1;
+	}
+	
+	cfunction double surface_get_nonempty_c(void* pixelArrayBuffer, void* outputBuffer, double width, double height) {
+		pixel*    pixelArray  = (pixel*)pixelArrayBuffer;
+		uint16_t* outputArray = (uint16_t*)outputBuffer;
+	
+		size_t widthInt  = (size_t)width;
+		size_t heightInt = (size_t)height;
+		size_t size      = widthInt * heightInt;
+	
+	    int amount = 0;
+	    int index  = 0;
+	
+		for (size_t i = 0; i < size; ++i) {
+			if (pixelArray[i].a == 0) continue;
+	
+			outputArray[index++] = (uint16_t)(i % widthInt);
+			outputArray[index++] = (uint16_t)(i / widthInt);
+		    amount++;
+	    }
+		
+	    return amount;
+	}
+	
+	cfunction double surface_get_white_c(void* pixelArrayBuffer, double width, double height) {
+		pixel* pixelArray = (pixel*)pixelArrayBuffer;
+		size_t widthInt   = (size_t)width;
+		size_t heightInt  = (size_t)height;
+		size_t size       = widthInt * heightInt;
+		
+	    int amount = 0;
+	    
+		for (size_t i = 0; i < size; ++i) {
+			if (pixelArray[i].r == 0) continue;
+			amount++;
+	    }
+		
+	    return amount;
+	}
+	
+	cfunction double surface_get_range_c(void* pixelArrayBuffer, void* outputBuffer, double width, double height) {
+		pixel*    pixelArray  = (pixel*)pixelArrayBuffer;
+		uint16_t* outputArray = (uint16_t*)outputBuffer;
+	
+		size_t widthInt  = (size_t)width;
+		size_t heightInt = (size_t)height;
+		size_t size      = widthInt * heightInt;
+	
+		range* outputRange = (range*)outputArray;
+	
+		double _min =  999999;
+		double _max = -999999;
+		
+		for (size_t i = 0; i < size; ++i) {
+			if (pixelArray[i].a == 0) continue;
+	
+			double value = (double)(pixelArray[i].r + pixelArray[i].g + pixelArray[i].b) / 3.0;
+	
+			_min = value < _min ? value : _min;
+			_max = value > _max ? value : _max;
+	    }
+	
+		outputRange->min = _min;
+		outputRange->max = _max;
+		
+	    return 0;
+	}
+	
+	cfunction double surface_get_boundingbox_c(void* pixelArrayBuffer, void* outputBuffer, double width, double height) {
+		pixel*  pixelArray  = (pixel*)pixelArrayBuffer;
+		double* outputArray = (double*)outputBuffer;
+	
+		size_t widthInt  = (size_t)width;
+		size_t heightInt = (size_t)height;
+		size_t size      = widthInt * heightInt;
+	
+		double minX = widthInt;
+		double minY = heightInt;
+		double maxX = -1;
+		double maxY = -1;
+	
+		for (size_t i = 0; i < size; ++i) {
+			if (pixelArray[i].a == 0) continue;
+	
+			double x = (double)(i % widthInt);
+			double y = (double)(i / widthInt);
+			
+			minX = x < minX? x : minX;
+			minY = y < minY? y : minY;
+			maxX = x > maxX? x : maxX;
+			maxY = y > maxY? y : maxY;
+	    }
+	
+		if (maxX == -1 || maxY == -1) {
+			outputArray[0] = 0;
+			outputArray[1] = 0;
+			outputArray[2] = 0;
+			outputArray[3] = 0;
+			return 0;
+		}
+		
+		outputArray[0] = (double)minX;
+		outputArray[1] = (double)minY;
+		outputArray[2] = (double)(maxX - minX + 1);
+		outputArray[3] = (double)(maxY - minY + 1);
+		
+	    return 1;
+	}
+	
+	cfunction double surface_get_min_max_c(void* pixelArrayBuffer, void* outputBuffer, double width, double height) {
+		pixel*    pixelArray  = (pixel*)pixelArrayBuffer;
+		uint16_t* outputArray = (uint16_t*)outputBuffer;
+	
+		size_t widthInt  = (size_t)width;
+		size_t heightInt = (size_t)height;
+		size_t size      = widthInt * heightInt;
+		
+		rangePosition* outputRange = (rangePosition*)outputArray;
+	
+		double _min =  999999;
+		double _max = -999999;
+	
+		uint16_t min_x = 0, min_y = 0;
+		uint16_t max_x = 0, max_y = 0;
+		size_t of = (size_t)outputRange->min;
+		
+		for (size_t i = 0; i < size; ++i) {
+			size_t ix = (i + of) % size;
+			double vr = (double)(pixelArray[ix].r);
+			double vg = (double)(pixelArray[ix].g);
+	
+			if(vr < _min) {
+				_min = vr;
+				min_x = (uint16_t)(ix % widthInt);
+				min_y = (uint16_t)(ix / widthInt);
+			}
+	
+			if(vg > _max) {
+				_max = vg;
+				max_x = (uint16_t)(ix % widthInt);
+				max_y = (uint16_t)(ix / widthInt);
+			}
+		}
+	
+		outputRange->min = _min;
+		outputRange->max = _max;
+		outputRange->minx = min_x;
+		outputRange->miny = min_y;
+		outputRange->maxx = max_x;
+		outputRange->maxy = max_y;
+		
+		return 0;
+	}
+*/
+#endregion

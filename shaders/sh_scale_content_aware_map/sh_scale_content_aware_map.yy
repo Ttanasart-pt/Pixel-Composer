@@ -1,0 +1,12 @@
+{
+  "$GMShader":"",
+  "%Name":"sh_scale_content_aware_map",
+  "name":"sh_scale_content_aware_map",
+  "parent":{
+    "name":"scale_content_aware_map",
+    "path":"folders/nodes/data/transform/scale_content_aware_map.yy",
+  },
+  "resourceType":"GMShader",
+  "resourceVersion":"2.0",
+  "type":1,
+}

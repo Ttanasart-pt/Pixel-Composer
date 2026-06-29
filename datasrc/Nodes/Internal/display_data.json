@@ -590,6 +590,7 @@
             "Node_Scale",
             "Node_Downscale",
             "Node_Scale_Algo",
+            "Node_Scale_Content_Aware",
             "Node_Offset",
             "Node_Align_Content",
             "Node_Background",
