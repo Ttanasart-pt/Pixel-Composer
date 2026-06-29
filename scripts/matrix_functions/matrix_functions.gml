@@ -72,3 +72,6 @@ function matrix_compose(matrices) {
         mat = matrix_multiply(mat, argument[i]);
     return mat;
 }
+
+function matrix_transform_set(trans) { matrix_set(matrix_world, trans);           }
+function matrix_transform_reset()    { matrix_set(matrix_world, MATRIX_IDENTITY); }

@@ -76,7 +76,7 @@ function Node_MK_Blast_Gravity(_x, _y, _group = noone) : Node(_x, _y, _group) co
 				if(_useSel) _strn *= area_get_point_influence(_selArea, _selFall, _falCurv, _flm.x, _flm.y);
 				if(_strn == 0) continue;
 				
-				var _dirr = rotation_random_eval_fast(_dirrs);
+				var _dirr = rotation_random_eval(_dirrs,, j);
 				var _lif  = max(0, _flm.life);
 				var _len  = _strn * _lif * _lif;
 				

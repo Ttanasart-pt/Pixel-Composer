@@ -56,13 +56,13 @@ function Node_Particle(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 	newInput(67, nodeValue_Toggle(   "Wrap",                  0, [ "X", "Y" ]   ))
 	
 	////- =Rotation
-	newInput( 8, nodeValue_RotRand(  "Initial Rotation",     [0,0,0,0,0]        ));
+	newInput( 8, nodeValue_RotRand(  "Initial Rotation",     ROTRAN_DEF_0        ));
 	newInput(15, nodeValue_Bool(     "Rotate by Direction",   false             )).setTooltip("Make the particle rotates to follow its movement.");
 	
 		////- =/Animated
 	newInput(68, nodeValue_EScroll(  "Rotation Type",         0, [ "Speed", "Fix Relative", "Fix Angle" ] )).setTooltip("Rotation method:\n\t- Speed: Add rotation angle per frame.\n\t- Fix Relative: Lerp to angle ralative to orignal angle.\n\t- Fix target: Lerp to fix angle.");
-	newInput( 9, nodeValue_RotRand(  "Rotational Speed",     [0,0,0,0,0]        )).setCurvable(59, CURVE_DEF_11, "Over Lifespan");
-	newInput(69, nodeValue_RotRand(  "Target Angle",         [0,0,0,0,0]        )).setCurvable(70, CURVE_DEF_01, "Over Lifespan");
+	newInput( 9, nodeValue_RotRand(  "Rotational Speed",     ROTRAN_DEF_0        )).setCurvable(59, CURVE_DEF_11, "Over Lifespan");
+	newInput(69, nodeValue_RotRand(  "Target Angle",         ROTRAN_DEF_0        )).setCurvable(70, CURVE_DEF_01, "Over Lifespan");
 	
 		////- =/Snap
 	newInput(61, nodeValue_Float(     "Snap Rotation",         0                 ));
@@ -507,21 +507,21 @@ function Node_Particle(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 			part.params = custom_parameter_map;
 			
 			#region Rotation
-				var _rot = rotation_random_eval_fast(is_array(_rotation[0])? _rotation[i] : _rotation);
+				var _rot = rotation_random_eval(is_array(_rotation[0])? _rotation[i] : _rotation,, spawn_index);
 				
 				switch(_rotation_type) {
 					case 0 : 
-						var _rot_spd  = rotation_random_eval_fast(_rotation_speed);
+						var _rot_spd  = rotation_random_eval(_rotation_speed,, spawn_index);
 						part.setRotation(  _rot, _rot_spd, curve_rotate, _rotation_snap, _follow ); 
 						break;
 					
 					case 1 : 
-						var _rot_tar = rotation_random_eval_fast(_rotation_targ);
+						var _rot_tar = rotation_random_eval(_rotation_targ,, spawn_index);
 						part.setRotationTarget( _rot, _rot + _rot_tar, curve_rotateF, _rotation_snap ); 
 						break;
 						
 					case 2 : 
-						var _rot_tar = rotation_random_eval_fast(_rotation_targ);
+						var _rot_tar = rotation_random_eval(_rotation_targ,, spawn_index);
 						part.setRotationTarget( _rot, _rot_tar, curve_rotateF, _rotation_snap ); 
 						break;
 				}
@@ -569,7 +569,8 @@ function Node_Particle(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 			
 			#region Physics
 				var _dirs = is_array(_direction[0])? _direction[i] : _direction;
-				var _dirr = _directionType == 0? rotation_random_eval_fast(_dirs) : rotation_random_eval_uniform(_dirs, i / (_amo - 1));
+				var _dirr = _directionType == 0? rotation_random_eval(_dirs,, spawn_index) : 
+				                                 rotation_random_eval_uniform(_dirs, i / (_amo - 1));
 				if(_directCenter) {
 					var _pointDir = point_direction(_spawn_area[0], _spawn_area[1], xx, yy);
 					    _pointDir = lerp(_directRange[0], _directRange[1], _pointDir / 360);

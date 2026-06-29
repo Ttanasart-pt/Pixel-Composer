@@ -18,7 +18,7 @@ function Node_MK_Smoke(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	
 		////- =/Initial State
 	newInput( 2, nodeValue_Range(    "Lifespan",   [64,64], true     ));
-	newInput( 3, nodeValue_RotRand(  "Direction",  [0,0,0,0,0]       ));
+	newInput( 3, nodeValue_RotRand(  "Direction",  ROTRAN_DEF_0       ));
 	
 		////- =/Scaling
 	newInput(32, nodeValue_SliRange( "Life Scale",  [1,1] ));
@@ -199,7 +199,7 @@ function Node_MK_Smoke(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 				random_set_seed(_seed + i * 1000);
 				
 				var _prog = 0, _fprog = 0;
-				var _dirr = rotation_random_eval_fast(_dirrs);
+				var _dirr = rotation_random_eval(_dirrs,, i);
 				
 				var ox = _spawnPoints[i][0], nx;
 				var oy = _spawnPoints[i][1], ny;

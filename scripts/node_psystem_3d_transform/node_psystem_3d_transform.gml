@@ -20,7 +20,7 @@ function Node_pSystem_3D_Transform(_x, _y, _group = noone) : Node_3D(_x, _y, _gr
 	////- =Vector Move
 	/*UNUSED*/ newInput(15, nodeValue_Bool(  "Do Vector Move", false ));
 	/*UNUSED*/ newInput( 9, nodeValue_Range( "Speed", [0,0],   true  )).setCurvable(10, CURVE_DEF_11, "Over Lifespan"); 
-	/*UNUSED*/ newInput(11, nodeValue_Rotation_Random( "Direction", ROTATION_RANDOM_DEF_0_360 ));
+	/*UNUSED*/ newInput(11, nodeValue_Rotation_Random( "Direction", ROTRAN_DEF_360 ));
 	
 	////- =Rotation
 	newInput(16, nodeValue_Bool(        "Do Rotate",  false ));

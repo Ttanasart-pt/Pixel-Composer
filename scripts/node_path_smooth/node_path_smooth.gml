@@ -152,7 +152,7 @@ function Node_Path_Smooth(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 			return out;
 		}
 		
-		if(loop) _dist = safe_mod(_dist, lengthTotal, MOD_NEG.wrap);
+		if(loop) _dist = safe_mod(_dist, lengthTotal, true);
 		else     _dist = clamp(_dist, 0, lengthTotal);
 		
 		if(anchorSize == 0) return out;

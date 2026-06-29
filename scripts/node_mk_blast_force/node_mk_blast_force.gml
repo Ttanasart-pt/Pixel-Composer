@@ -19,7 +19,7 @@ function Node_MK_Blast_Force(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	
 	////- =Vector
 	newInput( 2, nodeValue_Range(   "Strength",  [0,1]       ));
-	newInput( 3, nodeValue_RotRand( "Direction", [0,0,0,0,0] ));
+	newInput( 3, nodeValue_RotRand( "Direction", ROTRAN_DEF_0 ));
 	
 	////- =Fixed Curve
 	newInput( 4, nodeValue_Bool(  "Fixed Curve", false        ));
@@ -86,7 +86,7 @@ function Node_MK_Blast_Force(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 				if(_useSel) _strn *= area_get_point_influence(_selArea, _selFall, _falCurv, _flm.x, _flm.y);
 				if(_strn == 0) continue;
 				
-				var _dirr = rotation_random_eval_fast(_dirrs);
+				var _dirr = rotation_random_eval(_dirrs,, j);
 				var _life = max(0, _flm.life);
 				
 				var _len;

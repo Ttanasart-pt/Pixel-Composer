@@ -112,7 +112,7 @@ function Node_Path_Builder(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 			return out;
 		}
 		
-		if(path_loop) _dist = safe_mod(_dist, lengthTotal[ind], MOD_NEG.wrap);
+		if(path_loop) _dist = safe_mod(_dist, lengthTotal[ind], true);
 		
 		var _anchor = anchors[ind];
 		var ansize  = array_length(_anchor);

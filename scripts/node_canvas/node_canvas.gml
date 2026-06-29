@@ -62,7 +62,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	newInput(21, nodeValue_EButton( "Brush Type",          0, ["Line", "Stamp"]     ));
 	newInput( 6, nodeValue_Surface( "Brush Surface"                                 )).setVisible(true, false);
 	newInput(15, nodeValue_Range(   "Brush Distance",      [1,1], { linked : true } ));
-	newInput(17, nodeValue_RotRand( "Random Direction",    [0,0,0,0,0]              ));
+	newInput(17, nodeValue_RotRand( "Random Direction",    ROTRAN_DEF_0              ));
 	newInput(16, nodeValue_Bool(    "Rotate by Direction", false                    ));
 	
 		////- =/Animated

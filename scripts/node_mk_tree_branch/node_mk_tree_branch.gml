@@ -290,7 +290,7 @@ function Node_MK_Tree_Branch(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 				var _reflected = false;
 				
 				switch(_angT) {
-					case 0 : _angle = rotation_random_eval(_ang);                                                         break;
+					case 0 : _angle = rotation_random_eval(_ang,, j);                                                     break;
 					case 1 : _angle = rotation_random_eval_uniform(_ang, j / (_amo - 1));                                 break;
 					case 2 : _angle = ori[2] + random_range(_sprd[0], _sprd[1]) * (curve_sprd? curve_sprd.get(crat) : 1); break;
 				}

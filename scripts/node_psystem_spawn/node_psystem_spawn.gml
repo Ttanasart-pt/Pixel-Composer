@@ -41,7 +41,7 @@ function Node_pSystem_Spawn(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	newInput(20, nodeValue_Range(   "Velocity",         [0,0], true    ));
 	
 	////- =Rotation
-	newInput(14, nodeValue_RotRand( "Rotation", ROTATION_RANDOM_DEF_0_360 ));
+	newInput(14, nodeValue_RotRand( "Rotation", ROTRAN_DEF_360 ));
 	
 	////- =Scale
 	newInput(15, nodeValue_Vec2_Range( "Scale", [1,1,1,1], true ));
@@ -204,7 +204,7 @@ function Node_pSystem_Spawn(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		repeat(_spawn_amount) {
 			random_set_seed(_seed + spawn_index * 128);
 			
-			var _rot = rotation_random_eval(_in_rota);
+			var _rot = rotation_random_eval(_in_rota,, spawn_index);
 			
 			var _sx = random_range(_in_scal[0], _in_scal[1]);
 			var _sy = random_range(_in_scal[2], _in_scal[3]);
@@ -322,7 +322,7 @@ function Node_pSystem_Spawn(_x, _y, _group = noone) : Node(_x, _y, _group) const
 			_px += _ox;
 			_py += _oy;
 			
-			var _dirr_curr = rotation_random_eval(_in_dirr);
+			var _dirr_curr = rotation_random_eval(_in_dirr,, spawn_index);
 			var _velo_curr = random_range(_in_velo[0], _in_velo[1]);
 			
 			var _vx = lengthdir_x(_velo_curr, _dirr_curr);

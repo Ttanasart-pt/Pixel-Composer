@@ -10,8 +10,7 @@ function Node_Path_Spiral(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	
 	////- =Spiral
 	newInput( 1, nodeValue_Float( "Frequency",  4));
-	newInput( 2, nodeValue_Float( "Amplitude",  4));
-	newInput( 5, nodeValue_Curve( "Amplitude Over Length",  CURVE_DEF_11));
+	newInput( 2, nodeValue_Float( "Amplitude",  4)).setCurvable( 5, CURVE_DEF_11);
 	
 	newInput( 3, nodeValue_Slider(   "Spiral",    .75, [-2,2,.01]));
 	newInput( 4, nodeValue_Rotation( "Phase",      0));
@@ -20,8 +19,8 @@ function Node_Path_Spiral(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	newOutput(0, nodeValue_Output("Path", VALUE_TYPE.pathnode, noone));
 	
 	input_display_list = [ 
-		[ "Path",    true ], 0, 6, 7, 
-		[ "Spiral", false ], 1, 2, 5, 3, 4, 
+		[ "Path",    true ],  0,  6,  7, 
+		[ "Spiral", false ],  1,  2,  5,  3,  4, 
 	];
 	
 	////- Nodes

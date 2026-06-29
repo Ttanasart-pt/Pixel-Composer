@@ -34,7 +34,7 @@ function Node_MK_Blast_Flame(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	newInput(11, nodeValue_Range(   "Speed",     [.2,.6]            )).setMappableRange( 9, "Group Varience", THEME.mk_blast_group);
 	newInput(39, nodeValue_Curve(   "Movemenet Curve", CURVE_DEF_01 ));
 	newInput(24, nodeValue_Range(   "Friction",  [0,0]              )).setMappableRange(42, "Group Varience", THEME.mk_blast_group);;
-	newInput(12, nodeValue_RotRand( "Direction", [0,0,0,0,0]        ));
+	newInput(12, nodeValue_RotRand( "Direction", ROTRAN_DEF_0        ));
 	newInput(22, nodeValue_Range(   "Gravity",   [0,0]              ));
 	
 	////- =Rotation
@@ -203,7 +203,7 @@ function Node_MK_Blast_Flame(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 			_prg = curve_grInt.get(_prg);
 			
 			var _spd = random_range(_speed[0], _speed[1]);
-			var _dir = rotation_random_eval(_dirr);
+			var _dir = rotation_random_eval(_dirr,, a);
 			
 			var _spFrm = irandom_range(_spwFrm[0], _spwFrm[1]);
 			

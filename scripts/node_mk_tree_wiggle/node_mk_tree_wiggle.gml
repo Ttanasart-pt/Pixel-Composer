@@ -55,7 +55,7 @@ function Node_MK_Tree_Wiggle(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 			var _segs = _tr.segments;
 			var _totl = _tr.totalLength;
 			var _wstr = random_range(_strn[0], _strn[1]);
-			var _ang  = rotation_random_eval(_angr);
+			var _ang  = rotation_random_eval(_angr,, i);
 			
 			var _fspd = round(random_range(_sped[0], _sped[1]));
 			

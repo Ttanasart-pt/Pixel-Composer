@@ -119,13 +119,13 @@ function Node_MK_Grass(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 			inputs[24].setVisible(_src == 4);
 			inputs[25].setVisible(_src == 4);
 			
-			if(!is_surface(_surf)) return _outSurf;
-			
 			sizeSampler.setSurface(_sizeMap);
 		#endregion
 			
+		var useSurf = is_surface(_surf);
+		
 		random_set_seed(_seed);
-		var _dim = surface_get_dimension(_surf);
+		var _dim = useSurf? surface_get_dimension(_surf) : DEF_SURF;
 		temp_surface[0] = surface_verify(temp_surface[0], _dim[0], _dim[1], surface_rgba32float);
 		temp_surface[1] = surface_verify(temp_surface[1], _dim[0], _dim[1], surface_rgba32float);
 		temp_surface[2] = surface_verify(temp_surface[2], _dim[0], _dim[1], surface_rgba32float);
@@ -163,7 +163,7 @@ function Node_MK_Grass(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 				var _itr = _src == 2? max(_dim[0], _dim[1]) / 2 : 1;
 				var _bg  = 0;
 				
-				var _baseColor = surface_getpixel_ext(_surf, _pick[0], _pick[1]);
+				var _baseColor = useSurf? surface_getpixel_ext(_surf, _pick[0], _pick[1]) : 0;
 				
 				draw_set_color(c_white);
 				surface_set_shader(temp_surface[0], noone); draw_point(_pick[0]-1, _pick[1]-1); surface_reset_shader();
@@ -190,7 +190,8 @@ function Node_MK_Grass(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 					shader_set_c( "sampleColor", _sam_colr );
 					shader_set_f( "threshold",   _sam_thrs );
 					
-					draw_surface_safe(_surf); 
+					if(useSurf) draw_surface_safe(_surf); 
+					else        draw_empty();
 				surface_reset_shader();
 				
 				break;
@@ -243,7 +244,8 @@ function Node_MK_Grass(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 				
 				_color.shader_submit();
 				
-				draw_surface_safe(_surf);
+				if(useSurf) draw_surface_safe(_surf); 
+				else        draw_surface_safe(temp_surface[0]); 
 				surface_reset_shader();
 				
 			} else {
@@ -347,7 +349,8 @@ function Node_MK_Grass(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 				
 					_color.shader_submit();
 					
-					draw_surface_safe(_surf);
+					if(useSurf) draw_surface_safe(_surf); 
+					else        draw_surface_safe(temp_surface[0]); 
 				surface_reset_shader();
 			}
 		#endregion

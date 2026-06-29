@@ -23,7 +23,7 @@ DIALOG_WINCLEAR1
 	
 	var to_del = noone;
 	
-	for( var i = 0; i < array_length(menu); i++ ) {
+	for( var i = 0, n = array_length(menu); i < n; i++ ) {
 		var _menuItem = menu[i];
 		
 		if(is_string(_menuItem)) {
@@ -219,8 +219,8 @@ DIALOG_WINCLEAR1
 					_str = _sprs;
 					draw_set_text(font, fa_center, fa_center, COLORS._main_text);
 					
-					_sw = string_width(_str) + ui(12);
-					_sh = string_height(_str) + ui(8);
+					// _sw = string_width(_str) + ui(12);
+					// _sh = string_height(_str) + ui(8);
 					
 				} else {
 					if(is_array(_sprs)) {
@@ -230,8 +230,8 @@ DIALOG_WINCLEAR1
 						
 					} else _spr = _sprs;
 					
-					_sw = sprite_get_width(_spr);
-					_sh = sprite_get_height(_spr);
+					// _sw = sprite_get_width(_spr);
+					// _sh = sprite_get_height(_spr);
 				}
 				
 				var _hv = _hovering_ch && point_in_rectangle(mouse_mx, mouse_my, _bx - _sw/2, _by - _sh/2, _bx + _sw/2, _by + _sh/2);

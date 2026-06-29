@@ -49,13 +49,13 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	newInput(67, nodeValue_Toggle(   "Wrap",                  0, [ "X", "Y" ]   ))
 	
 	////- =Rotation
-	newInput( 8, nodeValue_RotRand(  "Initial Rotation",     [0,0,0,0,0]        ));
+	newInput( 8, nodeValue_RotRand(  "Initial Rotation",     ROTRAN_DEF_0        ));
 	newInput(15, nodeValue_Bool(     "Rotate by Direction",   false             )).setTooltip("Make the particle rotates to follow its movement.");
 	
 		////- =/Animated
 	newInput(68, nodeValue_EScroll(  "Rotation Type",         0, [ "Speed", "Fix Relative", "Fix Angle" ] )).setTooltip("Rotation method:\n\t- Speed: Add rotation angle per frame.\n\t- Fix Relative: Lerp to angle ralative to orignal angle.\n\t- Fix target: Lerp to fix angle.");
-	newInput( 9, nodeValue_RotRand(  "Rotational Speed",     [0,0,0,0,0]        )).setCurvable(59, CURVE_DEF_11, "Over Lifespan");
-	newInput(69, nodeValue_RotRand(  "Target Angle",         [0,0,0,0,0]        )).setCurvable(70, CURVE_DEF_01, "Over Lifespan");
+	newInput( 9, nodeValue_RotRand(  "Rotational Speed",     ROTRAN_DEF_0        )).setCurvable(59, CURVE_DEF_11, "Over Lifespan");
+	newInput(69, nodeValue_RotRand(  "Target Angle",         ROTRAN_DEF_0        )).setCurvable(70, CURVE_DEF_01, "Over Lifespan");
 	
 		////- =/Snap
 	newInput(61, nodeValue_Float(    "Snap Rotation",         0                 ));

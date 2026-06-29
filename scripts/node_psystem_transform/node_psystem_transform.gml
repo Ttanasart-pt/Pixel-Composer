@@ -21,7 +21,7 @@ function Node_pSystem_Transform(_x, _y, _group = noone) : Node(_x, _y, _group) c
 	newInput(15, nodeValue_Bool(    "Do Vector Move", false       ));
 	newInput(19, nodeValue_Bool(    "Vector Impulse", false       ));
 	newInput( 9, nodeValue_Range(   "Speed",          [0,0], true )).setCurvable(10, CURVE_DEF_11, "Over Lifespan"); 
-	newInput(11, nodeValue_RotRand( "Direction", ROTATION_RANDOM_DEF_0_360 ));
+	newInput(11, nodeValue_RotRand( "Direction", ROTRAN_DEF_360 ));
 	
 	////- =Rotation
 	newInput(16, nodeValue_Bool(    "Do Rotate", false ));
@@ -89,11 +89,13 @@ function Node_pSystem_Transform(_x, _y, _group = noone) : Node(_x, _y, _group) c
 		var _partAmo   = _parts.maxCursor;
 		var _partBuff  = _parts.buffer;
 		var _off = 0;
+		var _ind = 0;
 		
 		repeat(_partAmo) {
 			var _start = _off;
 			buffer_seek(_partBuff, buffer_seek_start, _start);
 			_off += global.pSystem_data_length;
+			_ind++;
 			
 			var _mask   = use_mask? buffer_read(_masks, buffer_f32) : 1; if(_mask <= 0) continue;
 			var _act    = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.active, buffer_bool );
@@ -134,7 +136,7 @@ function Node_pSystem_Transform(_x, _y, _group = noone) : Node(_x, _y, _group) c
 				if(_impl) _sped_cur *= bool(_lif == 0);
 				
 				if(_sped_cur != 0) {
-					var _dirr_cur = rotation_random_eval(_dirr);
+					var _dirr_cur = rotation_random_eval(_dirr,, _ind);
 					_vx += lengthdir_x(_sped_cur, _dirr_cur) * _mask;
 					_vy += lengthdir_y(_sped_cur, _dirr_cur) * _mask;
 				}

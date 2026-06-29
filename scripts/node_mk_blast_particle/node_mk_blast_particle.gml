@@ -28,7 +28,7 @@ function Node_MK_Blast_Particle(_x, _y, _group = noone) : Node(_x, _y, _group) c
 	////- =Movement
 	newInput( 8, nodeValue_Range(   "Speed",     [0,0]       ));
 	newInput( 9, nodeValue_Range(   "Friction",  [0,0]       ));
-	newInput(10, nodeValue_RotRand( "Direction", [0,0,0,0,0] ));
+	newInput(10, nodeValue_RotRand( "Direction", ROTRAN_DEF_0 ));
 	newInput(11, nodeValue_Range(   "Gravity",   [0,0]       ));
 	
 	////- =Rotation
@@ -256,7 +256,7 @@ function Node_MK_Blast_Particle(_x, _y, _group = noone) : Node(_x, _y, _group) c
 				
 				_flm.speed     = random_range(_speed[0], _speed[1]);
 				_flm.friction  = random_range(_fract[0], _fract[1]);
-				_flm.direction = _pDir + rotation_random_eval(_direct);
+				_flm.direction = _pDir + rotation_random_eval(_direct,, g);
 				
 				_flm.gravity    = random_range(_gravity[0], _gravity[1]);
 				_flm.gravityDir = _gDir;

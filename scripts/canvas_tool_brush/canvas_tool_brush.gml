@@ -226,12 +226,12 @@ function canvas_tool_brush(_eraser = false, _toolAttr = undefined) : canvas_tool
 		
 		if(brush.tileMode & 0b01) {
 			warp_block_x = floor(mouse_cur_x / draw_w);
-			mouse_cur_tx = safe_mod(mouse_cur_tx, draw_w, MOD_NEG.wrap); 
+			mouse_cur_tx = safe_mod(mouse_cur_tx, draw_w, true); 
 		}
 		
 		if(brush.tileMode & 0b10) {
 			warp_block_y = floor(mouse_cur_y / draw_h);
-			mouse_cur_ty = safe_mod(mouse_cur_ty, draw_h, MOD_NEG.wrap); 
+			mouse_cur_ty = safe_mod(mouse_cur_ty, draw_h, true); 
 		}
 		
 		brush_warp = warp_block_x != warp_block_px || warp_block_y != warp_block_py;

@@ -42,7 +42,7 @@ function Node_MK_Flame(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 			var _cres_offs = [4,6];
 			
 			var _speed = [.2, .6];
-			var _dirr  = ROTATION_RANDOM_DEF_0_360;
+			var _dirr  = ROTRAN_DEF_360;
 			
 			var _persp = [2,2];
 			
@@ -60,7 +60,7 @@ function Node_MK_Flame(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 			var _prg = a / (_amoun - 1);
 			
 			var _spd = random_range(_speed[0], _speed[1]);
-			var _dir = rotation_random_eval(_dirr);
+			var _dir = rotation_random_eval(_dirr,, a);
 			
 			var _lifeT = irandom_range(_life[0],  _life[1]);
 			var _spFrm = irandom_range(_spawn[0], _spawn[1]);

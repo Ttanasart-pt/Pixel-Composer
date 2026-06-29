@@ -1,7 +1,6 @@
 function nodeValue(_name, _node, _connect, _type, _value, _tooltip = "") { return new NodeValue(_name, _node, _connect, _type, _value, _tooltip); }
 
 function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constructor {
-	
 	#region ---- Main ----
 		active = true;
 		from   = noone;

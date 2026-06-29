@@ -67,7 +67,7 @@ function Node_MK_Brownian(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 		py = irandom_range( area_y0, area_y1 );
 		
 		var spd = random_range(_sped[0], _sped[1]);
-		var dir = rotation_random_eval(_dire);
+		var dir = rotation_random_eval(_dire,, ind);
 		var dis = random_range(_dirs[0], _dirs[1]);
 		var dia = random_range(_dira[0], _dira[1]);
 		

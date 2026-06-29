@@ -11,18 +11,18 @@ function rotatorRandom(_onModify) : widget() constructor {
 		onModify = _onModify;
 		
 		dragging_index = -1;
-		dragging = false;
-		drag_sv  = 0;
-		drag_dat = [ 0, 0, 0, 0, 0 ];
+		dragging       = false;
+		drag_sv        = 0;
+		drag_dat       = ROTRAN_DEF_0;
 		
-		knob_hovering = noone;
+		knob_hovering  = noone;
 		
-		rangeDrag = false;
-		rangeDrag_mx = 0;
-		rangeDrag_my = 0;
-		rangeDrag_ss = 0;
+		rangeDrag      = false;
+		rangeDrag_mx   = 0;
+		rangeDrag_my   = 0;
+		rangeDrag_ss   = 0;
 		
-		mode = 0;
+		mode     = 0;
 		tb_min_0 = textBox_Number(function(v) /*=>*/ {return onModify(v, 1)}).setHide(true);
 		tb_max_0 = textBox_Number(function(v) /*=>*/ {return onModify(v, 2)}).setHide(true);
 		tb_min_1 = textBox_Number(function(v) /*=>*/ {return onModify(v, 3)}).setHide(true);
@@ -33,6 +33,11 @@ function rotatorRandom(_onModify) : widget() constructor {
 			__txt("widget_rotator_random_span",         "Span"), 
 			__txt("widget_rotator_random_double_range", "Double Range"), 
 			__txt("widget_rotator_random_double_span",  "Double Span")
+		]);
+		
+		mode_tooltip  = new tooltipSelector("Double Select", [
+			__txt("Random"), 
+			__txt("Index"), 
 		]);
 	#endregion
 	
@@ -103,16 +108,15 @@ function rotatorRandom(_onModify) : widget() constructor {
 		w = _w;
 		h = _data[0] > 1? _h * 2 : _h;
 		
-		if(array_any(_data, function(a) /*=>*/ {return !is_real(a)})) return;
+		// if(array_any(_data, (a,i) => !is_real(a))) return;
 		
-		_data    = array_verify(_data, 5);
+		_data    = array_verify(_data, ROTRAN_LENGTH);
 		_data[0] = clamp(_data[0], 0, ROTATOR_RANDOM_TYPE.length - 1);
 		mode     = _data[0];
 		
-		var _bs = min(_h, ui(32));
-		
 		if(hide == 0) draw_sprite_stretched_ext(THEME.textbox, 3, x, y, w, h, boxColor, 1);
 		
+		var _bs = min(_h, ui(32));
 		if(side_button) {
 			var bx = _x + _w - _bs;
 			
@@ -143,7 +147,7 @@ function rotatorRandom(_onModify) : widget() constructor {
 					if(key_mod_press(SHIFT) && MOUSE_WHEEL < 0) mode = setMode(_data, (mode + 1)     % 4);
 				}
 				if(b == 2) mode = setMode(_data, (mode + 1) % 4);
-		
+				
 				_tw -= _bs;
 			}
 			
@@ -508,6 +512,12 @@ function rotatorRandom(_onModify) : widget() constructor {
 					shader_reset();
 				}
 				
+				var _bx = _x + _w - _bs;
+				var _by = _y + _h + _h / 2 - _bs / 2;
+				var _dmode = array_safe_get_fast(_data, 5);
+				mode_tooltip.index = _dmode;
+				var b = buttonInstant_Pad(noone, _bx, _by, _bs, _bs, _m, hover, active, mode_tooltip, THEME.rotator_random_double_mode, _dmode, [ COLORS._main_icon, c_white ]);
+				if(b == 2) onModify(!_dmode, 5);
 				break;
 				
 			case ROTATOR_RANDOM_TYPE.double_span : 
@@ -605,6 +615,12 @@ function rotatorRandom(_onModify) : widget() constructor {
 					shader_reset();
 				}
 				
+				var _bx = _x + _w - _bs;
+				var _by = _y + _h + _h / 2 - _bs / 2;
+				var _dmode = array_safe_get_fast(_data, 5);
+				mode_tooltip.index = _dmode;
+				var b = buttonInstant_Pad(noone, _bx, _by, _bs, _bs, _m, hover, active, mode_tooltip, THEME.rotator_random_double_mode, _dmode, [ COLORS._main_icon, c_white ]);
+				if(b == 2) onModify(!_dmode, 5);
 				break;
 		}
 		

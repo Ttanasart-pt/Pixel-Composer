@@ -1,22 +1,7 @@
-enum MOD_NEG {
-	_default,
-	wrap
-}
-
 function safe_div(numb, divv) { return divv == 0? 0 : numb / divv; }
-
 function posi_mod(numb, modd) { return ((numb % modd) + modd) % modd; }
-
-function safe_mod(numb, modd, _neg = MOD_NEG._default) {
-	INLINE
-	
-	var _md = modd == 0? 0 : numb % modd;
-	if(_md < 0)
-	switch(_neg) {
-		case MOD_NEG.wrap : _md += modd; break;
-	}
-	
-	return _md;
+function safe_mod(numb, modd, _wrap = false) {
+	return modd == 0? 0 : (numb % modd) + (numb < 0) * _wrap * modd;
 }
 
 //!#mfunc mod_inc {"args":["val"," range"],"order":[0,0,1]}

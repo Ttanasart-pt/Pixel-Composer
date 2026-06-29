@@ -35,7 +35,7 @@ function Node_Strand_Create(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	////- =Strand
 	newInput( 2, nodeValue_Range(   "Length",      [4,4], true     ));
 	newInput( 3, nodeValue_Int(     "Segment",      4              ));
-	newInput(18, nodeValue_RotRand( "Direction",   ROTATION_RANDOM_DEF_0_360 ));
+	newInput(18, nodeValue_RotRand( "Direction",   ROTRAN_DEF_360 ));
 	newInput( 4, nodeValue_Slider(  "Elasticity",  .05             )).setTooltip("Length preservation, the higher the value the easier it is to stretch each segment.");
 	newInput( 8, nodeValue_Slider(  "Spring",      .8              ));
 	newInput( 9, nodeValue_Slider(  "Structure",   .2              )).setTooltip("The ability to keep its original shape.");
@@ -603,7 +603,7 @@ function Node_Strand_Create(_x, _y, _group = noone) : Node(_x, _y, _group) const
 				case 0 :
 					sx  = _pos[0];
 					sy  = _pos[1];
-					dir = _rnd? rotation_random_eval_fast(_direct, _sed++) : 360 * prog;
+					dir = _rnd? rotation_random_eval(_direct, _sed++, i) : 360 * prog;
 					break;
 					
 				case 1 : 
@@ -626,7 +626,7 @@ function Node_Strand_Create(_x, _y, _group = noone) : Node(_x, _y, _group) const
 					var _p = strands.mesh.getRandomPoint(_sed); _sed += 5;
 					sx  = _pos[0] + _p.x;
 					sy  = _pos[1] + _p.y;
-					dir = rotation_random_eval_fast(_direct, _sed++);
+					dir = rotation_random_eval(_direct, _sed++, i);
 					break;
 			}
 			

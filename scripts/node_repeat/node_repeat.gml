@@ -77,7 +77,7 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	////- =Rotation
 	newInput(33, nodeValue_Rotation( "Base Rotation",     0          ));
 	newInput( 5, nodeValue_RotRange( "Repeat Rotation",  [0,0]       ));
-	newInput(20, nodeValue_RotRand(  "Random Rotation",  [0,0,0,0,0] ));
+	newInput(20, nodeValue_RotRand(  "Random Rotation",  ROTRAN_DEF_0 ));
 	
 	////- =Scale
 	newInput(29, nodeValue_Bool(   "Uniform Scale",  true     ));
@@ -650,7 +650,7 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 			posx += random_range(_pran[0], _pran[1]);
 			posy += random_range(_pran[2], _pran[3]);
 			
-			rot  += rotation_random_eval(_rran);
+			rot  += rotation_random_eval(_rran,, i);
 			
 			scax *= random_range(_sran[0], _sran[1]);
 			scay *= random_range(_sran[2], _sran[3]);

@@ -225,10 +225,12 @@ function draw_ellipse_dash(cx, cy, ww, hh, th = 1, dash = 8, ang = 0, shift = 0)
 		shader_set_2( "worldPos",   [cx, cy]);
 		shader_set_f( "dash",       dash);
 		
+		matrix_transform_set(matrix_transform_2d(cx, cy, ang, 1, 1));
+		
 		for(var i = 0; i <= step; i++) {
 			var an = i * astp;
-			var px = cx + lengthdir_x(ww, an);
-			var py = cy + lengthdir_y(hh, an);
+			var px = lengthdir_x(ww, an);
+			var py = lengthdir_y(hh, an);
 		
 			if(i) {
 				shader_set_f( "dashShift",  shft);
@@ -241,6 +243,7 @@ function draw_ellipse_dash(cx, cy, ww, hh, th = 1, dash = 8, ang = 0, shift = 0)
 			_py = py;
 		}
 		
+		matrix_transform_reset();
 	shader_reset();
 }
 

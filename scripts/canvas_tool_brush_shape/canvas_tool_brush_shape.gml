@@ -87,9 +87,9 @@ function canvas_tool_shape(_shape) : canvas_tool() constructor {
 			return;
 		}
 		
-		var _x0t = safe_mod(_x0, draw_w, MOD_NEG.wrap); 
+		var _x0t = safe_mod(_x0, draw_w, true); 
 		var _x1t = _x1 + (_x0t - _x0); 
-		var _y0t = safe_mod(_y0, draw_w, MOD_NEG.wrap); 
+		var _y0t = safe_mod(_y0, draw_w, true); 
 		var _y1t = _y1 + (_y0t - _y0); 
 		
 		if(_bx0 == _bx1 && _by0 == _by1) {
@@ -136,8 +136,8 @@ function canvas_tool_shape(_shape) : canvas_tool() constructor {
 		draw_w = surface_get_width(drawing_surface);
 		draw_h = surface_get_height(drawing_surface);
 		
-		if(brush.tileMode & 0b01) mouse_cur_tx = safe_mod(mouse_cur_tx, draw_w, MOD_NEG.wrap); 
-		if(brush.tileMode & 0b10) mouse_cur_ty = safe_mod(mouse_cur_ty, draw_h, MOD_NEG.wrap); 
+		if(brush.tileMode & 0b01) mouse_cur_tx = safe_mod(mouse_cur_tx, draw_w, true); 
+		if(brush.tileMode & 0b10) mouse_cur_ty = safe_mod(mouse_cur_ty, draw_h, true); 
 		
 		if(mouse_holding) {
 			updated = true;

@@ -277,7 +277,7 @@ function Node_MK_Tree_Root(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 			var _amou   = random_range(_segs[0], _segs[1]);
 			
 			var _length = random_range(_len[0], _len[1]);
-			var _angle  = rotation_random_eval(_ang);
+			var _angle  = rotation_random_eval(_ang,, i);
 			
 			var _wiggA  = random_range(_wigA[0], _wigA[1]);
 			var _wiggF  = random_range(_wigF[0], _wigF[1]);

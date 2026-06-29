@@ -94,8 +94,10 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	newInput(10, nodeValue_Gradient( "Color over Length",    gra_white ));
 	newInput(24, nodeValue_Gradient( "Random Blend",         gra_white ));
 	newInput(15, nodeValue_Bool(     "Span Color over Path", false     )).setTooltip("Apply the full 'color over length' to the trimmed path.");
+	
+		////- =/Weight
 	newInput(37, nodeValue_Gradient( "Color Weight",         gra_white ));
-	newInput(38, nodeValue_Vec2(     "Color Range",          [0,1]     ));
+	newInput(38, nodeValue_Vec2(     "Color Weight Range",   [0,1]     ));
 	
 		////- =/Texture
 	newInput(18, nodeValue_Surface(  "Texture" ));
@@ -123,7 +125,8 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		[ "Line Cap",      false     ], 13, 43, 
 			[ "/Textured", false     ], 40, 41, 42, 60, 61, 
 			
-		[ "Color",         false     ], 10, 24, 15, 37, 38, 
+		[ "Color",         false     ], 10, 24, 15, 
+			[ "/Weight",    true     ], 37, 38, 
 			[ "/Texture",   true     ], 18, 21, 22, 23, 29, 
 		
 		[ "Render",         true     ], 34, 

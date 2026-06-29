@@ -1654,7 +1654,7 @@ function Node_Path_3D(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 		}
 		
 		var loop = getInputData(1);
-		if(loop) _dist = safe_mod(_dist, lengthTotal, MOD_NEG.wrap);
+		if(loop) _dist = safe_mod(_dist, lengthTotal, true);
 		
 		var ansize = array_length(inputs) - input_fix_len;
 		if(ansize == 0) return out;

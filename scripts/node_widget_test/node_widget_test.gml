@@ -9,7 +9,7 @@ function Node_Widget_Test(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	newInput( 3, nodeValue_Vec2_Range(   "vectorRangeBox", [0,0,0,0]                      ));
 	newInput( 4, nodeValue_Rotation(     "rotator",         0                             ));
 	newInput( 5, nodeValue_RotRange(     "rotatorRange",   [0,0]                          ));
-	newInput( 6, nodeValue_RotRand(      "rotatorRandom",  [0,0,0,0,0]                    ));
+	newInput( 6, nodeValue_RotRand(      "rotatorRandom",  ROTRAN_DEF_0                    ));
 	newInput( 7, nodeValue_Slider(       "slider",          0                             ));
 	newInput( 8, nodeValue_Slider_Range( "sliderRange",    [0,0]                          ));
 	newInput( 9, nodeValue_Area(         "areaBox",        DEF_AREA                       ));

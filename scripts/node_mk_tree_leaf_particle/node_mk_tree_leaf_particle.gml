@@ -161,7 +161,7 @@ function Node_MK_Tree_Leaf_Particle(_x, _y, _group = noone) : Node(_x, _y, _grou
 					_l.fall = true;
 					
 					var _fallSpeed = random_range(_flsp[0], _flsp[1]);
-					var _fallDirr  = rotation_random_eval(_fldr, _iseed);
+					var _fallDirr  = rotation_random_eval(_fldr, _iseed, i);
 					
 					_l.vx = lengthdir_x(_fallSpeed, _fallDirr);
 					_l.vy = lengthdir_y(_fallSpeed, _fallDirr);

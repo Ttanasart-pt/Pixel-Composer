@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.5.008",
+    "changes": [
+      {
+        "date": "2026-06-29T03:21:27.226Z",
+        "node": "",
+        "commit": "Add \"index\" mode for double rotation randomizer."
+      }
+    ]
+  },
+  {
     "version": "1.21.5.006",
     "changes": [
       {

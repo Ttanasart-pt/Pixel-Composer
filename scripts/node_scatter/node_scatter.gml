@@ -45,7 +45,7 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		////- =/Source
 	newInput( 6, nodeValue_EScroll(  "Source",  5, [ "Area", "Border", "Map", "Points Array", "Path", "Full image" ] ));
 	newInput( 5, nodeValue_Area(     "Area",          DEF_AREA_REF, { onSurfaceSize } )).setUnitSimple();
-	newInput(13, nodeValue_Surface(  "Distribution Map" ));
+	newInput(13, nodeValue_Surface(  "Distribution Map"    ));
 	newInput(14, nodeValue_Vector(   "Points Array",    [] )).setAnimable(false).setArrayDepth(1);
 	newInput(17, nodeValue_Text(     "Extra Value",     [] ))
 		.setTooltip("Apply the third and later values in each data point (if exist) on given properties.")
@@ -62,7 +62,7 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	newInput(46, nodeValue_Int(      "Attempt",         8      ));
 	
 		////- =/Path
-	newInput(19, nodeValue_Path( "Path" ));
+	newInput(19, nodeValue_Path(     "Path" ));
 	newInput(38, nodeValue_EButton(  "Spacing",           0, [ "After", "Between", "Around" ] ));
 	newInput(20, nodeValue_Bool(     "Rotate Along Path", true ));
 	newInput(45, nodeValue_Range(    "Path Range",       [0,1] ));
@@ -78,11 +78,11 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	newInput(37, nodeValue_Bool(   "Exact",           false     ));
 	
 	////- =Rotation
-	newInput(48, nodeValue_Rotation( "Rotation",           0          ));
+	newInput(48, nodeValue_Rotation( "Rotation",           0           ));
 	newInput( 7, nodeValue_Bool(     "Point at Center",    false, "Rotate each copy to face the spawn center."));
-	newInput( 4, nodeValue_RotRand(  "Random Angle",      [0,0,0,0,0] ));
-	newInput(52, nodeValue_RotRand(  "Offset Angle",      [0,0,0,0,0] )).setMappableConst(53);
-	newInput(32, nodeValue_Rotation( "Rotate per Radius",  0          ));
+	newInput( 4, nodeValue_RotRand(  "Random Angle",      ROTRAN_DEF_0 ));
+	newInput(52, nodeValue_RotRand(  "Offset Angle",      ROTRAN_DEF_0 )).setMappableConst(53);
+	newInput(32, nodeValue_Rotation( "Rotate per Radius",  0           ));
 	
 	////- =Scale
 	newInput( 3, nodeValue_Range2(  "Scale",             [1,1,1,1], { linked : true } )).setMappableConst(43);
@@ -703,7 +703,7 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 				_y -= lengthdir_y(shrRad, shrAng);
 				
 				////- =Rotation
-				var _r  = (_pint? point_direction(_area[0], _area[1], _x, _y) : 0) + rotation_random_eval_fast(_rota, _csed++);
+				var _r  = (_pint? point_direction(_area[0], _area[1], _x, _y) : 0) + rotation_random_eval(_rota, _csed++, i);
 				    _r += _rotation;
 				    
 				if(iRot > 1 && _v != noone)
@@ -721,7 +721,7 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 				}
 				
 				var v = rotOffSamp.active? rotOffSamp.getPixelNorm(_x, _y) : 1;
-				_r   += rotation_random_eval_fast(rotOff, _csed++) * v;
+				_r   += rotation_random_eval(rotOff, _csed++, i) * v;
 				
 				////- =Scale
 				if(iSca > 1 && _v != noone) {

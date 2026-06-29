@@ -260,6 +260,7 @@
     "recent_24":                          { "path": "./icon/s_recent_24.png",                               "s": 1, "x": 12, "y": 12 },
     "rigidSim":                           { "path": "./icon/s_rigidsim.png",                                "s": 1, "x":  8, "y":  8 },
     "rotator_random_mode":                { "path": "./icon/s_rotator_random_mode.png",                     "s": 4, "x": 12, "y": 12 },
+    "rotator_random_double_mode":         { "path": "./icon/s_rotator_random_double_mode.png",              "s": 2, "x": 12, "y": 12 },
     "save_auto":                          { "path": "./icon/s_icon_save_auto.png",                          "s": 1, "x": 12, "y": 12 },
     "save":                               { "path": "./icon/s_icon_save.png",                               "s": 1, "x": 12, "y": 12 },
     "scissor":                            { "path": "./icon/s_scissor.png",                                 "s": 1, "x": 12, "y": 12 },

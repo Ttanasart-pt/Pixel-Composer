@@ -362,7 +362,7 @@ function Node_MK_Fall(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 						case MKFALL_LEAF_SHAPE.surface :
 							var _dr0 = point_direction(_p1[0], _p1[1], _p0[0], _p0[1]);
 							var _dr2 = point_direction(_p1[0], _p1[1], _p2[0], _p2[1]);
-							var _rot = rotation_random_eval_fast(_lrot);
+							var _rot = rotation_random_eval(_lrot,, i);
 							
 							var __r = _dr2 + _rot;
 							
