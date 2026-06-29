@@ -110,7 +110,7 @@ function Node_Grid(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 			
 			var _tex_mode = _mode == 3 || _mode == 4;
 			
-			inputs[ 5].setVisible(_mode == 0 || _mode == 1);
+			inputs[ 5].setVisible(_mode != 2);
 			inputs[ 3].setVisible(_mode == 0 || _mode == 3 || _mode == 4);
 			inputs[24].setVisible(_mode == 2);
 			inputs[26].setVisible(_mode == 1);

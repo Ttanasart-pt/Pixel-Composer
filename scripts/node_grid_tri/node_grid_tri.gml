@@ -91,7 +91,7 @@ function Node_Grid_Tri(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 		var _col_gap  = _data[6];
 		var _tex_mode = _mode == 2 || _mode == 3;
 		
-		inputs[ 5].setVisible(_mode == 0);
+		inputs[ 5].setVisible(_mode != 1);
 		inputs[ 6].setVisible(_mode != 1);
 		inputs[20].setVisible(_mode == 1);
 		
@@ -102,19 +102,18 @@ function Node_Grid_Tri(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 			shader_set_uv(_data[23], _data[24]);
 		    shader_set_interpolation(_sam);
 		    
-			shader_set_f("position",  _pos[0] / _dim[0], _pos[1] / _dim[1]);
-			shader_set_f("dimension", _dim[0], _dim[1]);
+			shader_set_f( "position",  _pos[0] / _dim[0], _pos[1] / _dim[1]);
+			shader_set_f( "dimension", _dim[0], _dim[1]);
 			
-			shader_set_f_map("scale", _data[2], _data[11], inputs[2]);
-			shader_set_f_map("width", _data[3], _data[12], inputs[3]);
-			shader_set_f_map("angle", _data[4], _data[13], inputs[4]);
+			shader_set_m( "scale", _data[2], _data[11], inputs[2]);
+			shader_set_m( "width", _data[3], _data[12], inputs[3]);
+			shader_set_m( "angle", _data[4], _data[13], inputs[4]);
 			
-			shader_set_f("seed",      _sed);
-			shader_set_i("mode",      _mode);
-			shader_set_i("aa",        _aa);
-			shader_set_color("gapCol",_col_gap);
-			
-			shader_set_2("level",          _data[20]);
+			shader_set_f( "seed",      _sed      );
+			shader_set_i( "mode",      _mode     );
+			shader_set_i( "aa",        _aa       );
+			shader_set_c( "gapCol",    _col_gap  );
+			shader_set_2( "level",     _data[20] );
 			
 			shader_set_i( "textureTransform", _data[14] );
 			shader_set_f( "textureSeed",      _data[15] );

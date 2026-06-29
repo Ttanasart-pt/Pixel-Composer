@@ -435,9 +435,10 @@ void main() {
 	}
 	
 	vec4 colr;
+	vec4 base = gradientEval(random(fract(fract(sqSt) + 1.)));
 	
 	if(mode == 0) {
-		colr = gradientEval(random(fract(fract(sqSt) + 1.)));
+		colr = base;
 		
 	} else if(mode == 3) {
 		vec2 uv = fract(_pos * sca);
@@ -465,11 +466,11 @@ void main() {
 			uv -= tpos;
 		}
 		
-		colr = sampleTexture( gm_BaseTexture, uv );
+		colr = sampleTexture( gm_BaseTexture, uv ) * base;
 		
 	} else if(mode == 4) {
 		vec2 uv = fract(sqSt);
-		colr = sampleTexture( gm_BaseTexture, uv );
+		colr = sampleTexture( gm_BaseTexture, uv ) * base;
 	}
 	
 	float _aa = 4. / max(dimension.x, dimension.y);

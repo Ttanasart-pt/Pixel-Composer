@@ -279,13 +279,15 @@ void main() {
 		return;
 	}
 	
+	vec2 uv = tri.xy / sca / vec2(dimension.x / dimension.y, c30);
+	     uv = fract(fract(uv) + 1.);
+	vec4 base = gradientEval(random(uv));
+	
 	if(mode == 0) {
-		vec2 uv = tri.xy / sca / vec2(dimension.x / dimension.y, c30);
-		     uv = fract(fract(uv) + 1.);
-		colr = gradientEval(random(uv));
+		colr = base;
 		
 	} else if(mode == 2) {
-		vec2 uv  = (_pos * vec2(1., c30) - tri.xy) + vec2(.5, 0.);
+		uv = (_pos * vec2(1., c30) - tri.xy) + vec2(.5, 0.);
 		
 		if(textureTransform == 1) {
 			float rx  = random(floor(tri.xy) + textureSeed / 100.);
@@ -312,11 +314,11 @@ void main() {
 			uv -= tpos;
 		}
 		
-		colr = sampleTexture( gm_BaseTexture, uv );
+		colr = sampleTexture( gm_BaseTexture, uv ) * base;
 		
 	} else if(mode == 3) {
-		vec2 uv = clamp(tri.xy / sca / vec2(dimension.x / dimension.y, c30), 0., 1.);
-		colr = sampleTexture( gm_BaseTexture, uv );
+		uv   = clamp(tri.xy / sca / vec2(dimension.x / dimension.y, c30), 0., 1.);
+		colr = sampleTexture( gm_BaseTexture, uv ) * base;
 	}
 	
 	float _aa = 3. / max(dimension.x, dimension.y);

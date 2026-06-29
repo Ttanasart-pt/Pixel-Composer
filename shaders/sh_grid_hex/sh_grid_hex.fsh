@@ -288,18 +288,19 @@ void main() {
 		return;
 	}
 	
+	vec2 uv = hc.zw / sca;
+	     uv = fract(fract(uv) + 1.);
+	
+	float tileY = floor(sca.y * 4. / 3.);
+	uv.y = mod(floor(uv.y * (tileY + 1.)), tileY) / tileY;
+	vec4 base = gradientEval(random(uv));
+	
 	if(mode == 0) {
-		vec2 uv = hc.zw / sca;
-		     uv = fract(fract(uv) + 1.);
-		
-		float tileY = floor(sca.y * 4. / 3.);
-		uv.y = mod(floor(uv.y * (tileY + 1.)), tileY) / tileY;
-		
-		colr = gradientEval(random(uv));
+		colr = base;
 		
 	} else if(mode == 2) {
 		vec2 dx = hc.zw;
-		vec2 uv = _pos - dx + vec2(0.5, 0.5);
+		uv = _pos - dx + vec2(0.5, 0.5);
 		
 		if(textureTransform == 1) { // lmao wtf is this code?
 			float rx = random(dx + textureSeed / 100.);
@@ -332,11 +333,11 @@ void main() {
 			uv -= tpos;
 		}
 		
-		colr = sampleTexture( gm_BaseTexture, uv );
+		colr = sampleTexture( gm_BaseTexture, uv ) * base;
 		
 	} else if(mode == 3) {
-		vec2 uv = clamp(abs(hc.zw) / sca / vec2(dimension.x / dimension.y, 1.), 0., 1.);
-		colr = sampleTexture( gm_BaseTexture, uv );
+		uv   = clamp(abs(hc.zw) / sca / vec2(dimension.x / dimension.y, 1.), 0., 1.);
+		colr = sampleTexture( gm_BaseTexture, uv ) * base;
 	}
 	
 	float _aa = 3. / max(dimension.x, dimension.y);

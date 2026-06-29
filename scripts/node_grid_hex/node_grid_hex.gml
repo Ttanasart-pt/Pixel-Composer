@@ -88,7 +88,7 @@ function Node_Grid_Hex(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 		var _col_gap  = _data[6];
 		var _tex_mode = _mode == 2 || _mode == 3;
 		
-		inputs[ 5].setVisible(_mode == 0);
+		inputs[ 5].setVisible(_mode != 1);
 		inputs[ 6].setVisible(_mode != 1);
 		inputs[20].setVisible(_mode == 1);
 		
@@ -106,10 +106,10 @@ function Node_Grid_Hex(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 			shader_set_f_map("angle", _data[ 3], _data[12], inputs[3]);
 			shader_set_f_map("thick", _data[ 4], _data[13], inputs[4]);
 			
-			shader_set_f( "seed",   _data[ 8] );
-			shader_set_i( "mode",   _mode     );
-			shader_set_i( "aa",     _data[10] );
-			shader_set_c( "gapCol", _col_gap  );
+			shader_set_f( "seed",     _data[ 8] );
+			shader_set_i( "mode",     _mode     );
+			shader_set_i( "aa",       _data[10] );
+			shader_set_c( "gapCol",   _col_gap  );
 			
 			shader_set_i( "textureTransform", _data[14] );
 			shader_set_f( "textureSeed",      _data[15] );
