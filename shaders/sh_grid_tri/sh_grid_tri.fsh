@@ -317,7 +317,7 @@ void main() {
 		colr = sampleTexture( gm_BaseTexture, uv ) * base;
 		
 	} else if(mode == 3) {
-		uv   = clamp(tri.xy / sca / vec2(dimension.x / dimension.y, c30), 0., 1.);
+		uv   = fract(tri.xy / sca / vec2(dimension.x / dimension.y, c30) + .5);
 		colr = sampleTexture( gm_BaseTexture, uv ) * base;
 	}
 	
