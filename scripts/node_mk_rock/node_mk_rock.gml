@@ -14,7 +14,7 @@ function Node_MK_Rock(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	newInput(41, nodeValue_Rotation( "Rotation",      0         ));
 	
 	////- =Rock
-	newInput(37, nodeValue_EScroll(  "Shape",        0, [ "Ellipse", "Quadrilateral", "Diamond", "Polygon", "Surface" ] ));
+	newInput(37, nodeValue_EScroll(  "Shape",        0, [ "Ellipse", "Rectangle", "Quadrilateral", "Polygon", "Surface" ] ));
 	newInput(40, nodeValue_Range(    "Sides",       [4,6]       ));
 	newInput(43, nodeValue_Surface(  "Surface"                  ));
 	newInput( 3, nodeValue_Range(    "Size",        [4,8]       ));
@@ -135,40 +135,51 @@ function Node_MK_Rock(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		pebh = round(pebh);
 		pebs = round(pebs);
 		
-		temp_surface[0] = surface_verify(temp_surface[0], pebw, pebh);
+		var ss = max(pebw, pebh);
+
+		var cx = ss / 2;
+		var cy = ss / 2;
+		
+		var extx = random_range(shear[0], shear[1]);
+		    extx *= shear_curve.get(index);
+		
+		var exty = -1;
+		
+		var pd  = 1 + ceil(abs(extx) * pebs);
+		var pw2 = pebw + pd * 2;
+		var ph2 = pebh + pd * 2;
+		
+		temp_surface[0] = surface_verify(temp_surface[0], ss, ss);
 		surface_set_shader(temp_surface[0], noone);
 			draw_set_color(baseC);
 			
 			switch(shape) {
 				case 0 :
-					draw_ellipse(-1, -1, pebw-1, pebh-1, false); 
+					draw_ellipse(-1, -1, ss-1, ss-1, false); 
 					break;
 					
 				case 1 :
 					draw_rectangle_points(
-						random_range(-1,     pebw/2), random_range(-1,     pebh/2), 
-						random_range(pebw/2, pebw),   random_range(-1,     pebh/2), 
-						random_range(-1,     pebw/2), random_range(pebh/2, pebh), 
-						random_range(pebw/2, pebw),   random_range(pebh/2, pebh), 
+						cx + lengthdir_x(cx, rot +   0), cy + lengthdir_y(cx, rot +   0),
+						cx + lengthdir_x(cx, rot +  90), cy + lengthdir_y(cx, rot +  90),
+						cx + lengthdir_x(cx, rot + 270), cy + lengthdir_y(cx, rot + 270),
+						cx + lengthdir_x(cx, rot + 180), cy + lengthdir_y(cx, rot + 180),
 						false);
 					break;
 					
 				case 2 :
 					draw_rectangle_points(
-						pebw/2-1, 0-1,
-						pebw-1,   pebh/2-1,
-						0-1,      pebh/2-1,
-						pebw/2-1, pebh-1,
+						random_range(-1,   ss/2), random_range(-1,   ss/2), 
+						random_range(ss/2, ss),   random_range(-1,   ss/2), 
+						random_range(-1,   ss/2), random_range(ss/2, ss), 
+						random_range(ss/2, ss),   random_range(ss/2, ss), 
 						false);
 					break;
 					
 				case 3 : 
 					var _polySide = irandom_range(sides[0], sides[1]);
-					var _ang = random(360);
+					var _ang = rot + random(360);
 					var _ast = 360 / _polySide;
-					
-					var cx = pebw / 2;
-					var cy = pebh / 2;
 					
 					for( var i = 0; i < _polySide; i++ ) {
 						var a0 = _ang + i * _ast;
@@ -186,7 +197,11 @@ function Node_MK_Rock(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 					
 				case 4 : 
 					if(!is_just_surface(shape_surf)) break;
-					draw_surface_stretched_ext(shape_surf, 0, 0, pebw, pebh, baseC, 1);
+					var surf_w = surface_get_width(shape_surf);
+					var surf_h = surface_get_height(shape_surf);
+					var __p = point_rotate(0, 0, ss / 2, ss / 2, rot)
+					
+					draw_surface_ext(shape_surf, __p[0], __p[1], ss / surf_w, ss / surf_h, rot, baseC, 1);
 					break;
 			}
 			
@@ -196,33 +211,23 @@ function Node_MK_Rock(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 				BLEND_ADD
 				gpu_set_colorwriteenable(1,1,1,0);
 				draw_set_color_alpha(shine_col, _color_get_a(shine_col));
-				draw_ellipse(-1+1, -1, pebw * shineSca, pebh * shineSca, false);
+				draw_ellipse(-1+1, -1, ss * shineSca, ss * shineSca, false);
 				draw_set_alpha(1);
 				gpu_set_colorwriteenable(1,1,1,1);
 				BLEND_NORMAL
 			}
 		surface_reset_shader();
 		
-		var extx = random_range(shear[0], shear[1]);
-		extx *= shear_curve.get(index);
-		
-		var exty = -1;
-		
-		var pd  = 1 + ceil(abs(extx) * pebs);
-		var pw2 = pebw + pd * 2;
-		var ph2 = pebh + pd * 2;
-		
 		temp_surface[1] = surface_verify(temp_surface[1], pw2, ph2);
-		surface_set_shader(temp_surface[1], sh_mk_rock_pabble_face);
-			shader_set_2( "dimension", [pw2, ph2] );
-			shader_set_f( "angle",     random_range(dirr_range[0], dirr_range[1]) );
-			draw_surface(temp_surface[0], pd, pd);
+		surface_set_shader(temp_surface[1]);
+			draw_surface_stretched(temp_surface[0], pd, pd, pebw, pebh);
 		surface_reset_shader();
 		
 		temp_surface[2] = surface_verify(temp_surface[2], pw2, ph2);
-		surface_set_shader(temp_surface[2]);
-			var __p = point_rotate(0, 0, pw2/2, ph2/2, rot);
-			draw_surface_ext(temp_surface[1], __p[0], __p[1], 1, 1, rot, c_white, 1);
+		surface_set_shader(temp_surface[2], sh_mk_rock_pabble_face);
+			shader_set_2( "dimension", [pw2, ph2] );
+			shader_set_f( "angle",     random_range(dirr_range[0], dirr_range[1]) );
+			draw_surface(temp_surface[1], 0, 0);
 		surface_reset_shader();
 		
 		temp_surface[3] = surface_verify(temp_surface[3], pw2, ph2+pebs); surface_clear(temp_surface[3]);
