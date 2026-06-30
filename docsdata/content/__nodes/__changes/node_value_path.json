@@ -6,6 +6,11 @@
         "date": "2026-06-30T00:20:02.903Z",
         "node": "",
         "commit": "**Stagger**: Fix node auto-clear old surface."
+      },
+      {
+        "date": "2026-06-30T00:42:36.948Z",
+        "node": "",
+        "commit": "Fix dynamic inputs node not refresh junction visibility when connected."
       }
     ]
   },

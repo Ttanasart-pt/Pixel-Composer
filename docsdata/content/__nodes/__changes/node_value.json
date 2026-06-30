@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.5.009",
+    "changes": [
+      {
+        "date": "2026-06-30T00:42:36.948Z",
+        "node": "",
+        "commit": "Fix dynamic inputs node not refresh junction visibility when connected."
+      }
+    ]
+  },
+  {
     "version": "1.21.5.008",
     "changes": [
       {

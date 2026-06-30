@@ -2374,19 +2374,18 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		}
 		
 		node.valueUpdate(index, _o);
-		node.refreshNodeDisplay();
-		
 		_valueFrom.node.resetRender(false);
-		_valueFrom.node.refreshNodeDisplay();
 		
 		if(_update && connect_type == CONNECT_TYPE.input) {
 			node.valueFromUpdate(index);
 			node.triggerRender();
 			node.clearCacheForward();
 			
-			
 			if(PANEL_GRAPH) PANEL_GRAPH.connection_draw_update = true;
 		}
+		
+		node.refreshNodeDisplay();
+		_valueFrom.node.refreshNodeDisplay();
 		
 		cache_array[0] = false;
 		cache_value[0] = false;
