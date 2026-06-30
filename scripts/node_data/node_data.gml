@@ -3364,10 +3364,11 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		if(!has(load_map, "inputs")) return;
 		
 		var _inputs = load_map.inputs;
-		var amo = min(array_length(inputs), array_length(_inputs));
+		var _inpAmo = min(array_length(inputs), array_length(_inputs));
 		
 		var i = -1;
-		repeat(amo) { i++;
+		repeat(_inpAmo) { 
+			i++;
 			if(_inputs[i] == noone) continue;
 			if(preset == 2 && !inputs[i].set_default) continue;
 			
@@ -3376,27 +3377,29 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		
 		if(has(load_map, "outputs")) {
 			var _outputs = load_map.outputs;
-			var amo = min(array_length(outputs), array_length(_outputs));
+			var _outAmo  = min(array_length(outputs), array_length(_outputs));
 			
 			var i = -1;
-			repeat(amo) { i++; outputs[i].applyDeserialize(_outputs[i], load_scale, preset); }
+			repeat(_outAmo) { i++; outputs[i].applyDeserialize(_outputs[i], load_scale, preset); }
 		}
 		
 		if(has(load_map, "inspectInputs")) {
-			var insInp = load_map.inspectInputs;
-			inspectInput1.applyDeserialize(insInp[0], load_scale, preset);
-			inspectInput2.applyDeserialize(insInp[1], load_scale, preset);
+			var _insInp = load_map.inspectInputs;
+			var _insAmo = array_length(_insInp);
 			
-			if(array_length(insInp) > 2) updatedInTrigger.applyDeserialize(insInp[2], load_scale, preset);
-			if(array_length(insInp) > 3) updatedOutTrigger.applyDeserialize(insInp[3], load_scale, preset);
-			if(array_length(insInp) > 4) frameInput.applyDeserialize(insInp[4], load_scale, preset);
+			inspectInput1.applyDeserialize(_insInp[0], load_scale, preset);
+			inspectInput2.applyDeserialize(_insInp[1], load_scale, preset);
+			
+			if(_insAmo > 2) updatedInTrigger.applyDeserialize(_insInp[2], load_scale, preset);
+			if(_insAmo > 3) updatedOutTrigger.applyDeserialize(_insInp[3], load_scale, preset);
+			if(_insAmo > 4) frameInput.applyDeserialize(_insInp[4], load_scale, preset);
 		}
 		
 		if(has(load_map, "outputMeta")) {
 			var _outMeta = load_map.outputMeta;
-			var _amo = min(array_length(_outMeta), array_length(junc_meta));
+			var _amoMeta = min(array_length(_outMeta), array_length(junc_meta));
 			var i = -1;
-			repeat(amo) { i++; junc_meta[i].applyDeserialize(_outMeta[i], load_scale, preset); }
+			repeat(_amoMeta) { i++; junc_meta[i].applyDeserialize(_outMeta[i], load_scale, preset); }
 		}
 		
 		postApplyDeserialize();

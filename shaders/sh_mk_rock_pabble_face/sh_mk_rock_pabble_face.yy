@@ -1,0 +1,12 @@
+{
+  "$GMShader":"",
+  "%Name":"sh_mk_rock_pabble_face",
+  "name":"sh_mk_rock_pabble_face",
+  "parent":{
+    "name":"mk_rock",
+    "path":"folders/nodes/data/MKFX/generator/mk_rock.yy",
+  },
+  "resourceType":"GMShader",
+  "resourceVersion":"2.0",
+  "type":1,
+}

@@ -623,8 +623,6 @@ function Panel_Inspector() : PanelContent() constructor {
         
         var _menuItem = [];
         
-        array_append(_menuItem, menuItems_gen("inspector_value_input"));
-        
         if(wdgt) {
     		var _widget = jun.getEditWidget();
         	if(_widget && !array_empty(_widget.context_menu)) {
@@ -635,6 +633,8 @@ function Panel_Inspector() : PanelContent() constructor {
         		array_push(  _menuItem, -1);
         	}
         }
+        
+        array_append(_menuItem, menuItems_gen("inspector_value_input"));
         
         if(jun.globalExtractable()) {
     		array_push(_menuItem, menuItemShelf(__txt("panel_inspector_use_global", "Use Globalvar"), function(_dat) /*=>*/ { 
@@ -1211,8 +1211,8 @@ function Panel_Inspector() : PanelContent() constructor {
                 var righ = array_safe_get_fast(jun, 3, noone);
                 
                 if(subk) {
-                	var lbw = con_w  - ui(2) - (togl != noone) * (segHei - ui(8)) - (righ != noone) * ui(24);
-	                var lbx = _x     + ui(2) + (togl != noone) * (segHei - ui(8));
+                	var lbw = con_w  - ui(2) - (togl != noone) * (segHei) - (righ != noone) * ui(24);
+	                var lbx = _x     + ui(2) + (togl != noone) * (segHei);
 	                var lbh = segHei - ui(6);
 	                
                 } else {

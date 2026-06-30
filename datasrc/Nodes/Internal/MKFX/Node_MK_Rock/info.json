@@ -1,6 +1,6 @@
 {
     "name":          "MK Rock",
-    "spr":           "s_node_mk_saber",
+    "spr":           "s_node_mk_rock",
     "baseNode":      "Node_MK_Rock",
     "pxc_version":    121040,
 }
