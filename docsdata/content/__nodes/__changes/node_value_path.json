@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.5.009",
+    "changes": [
+      {
+        "date": "2026-06-30T00:20:02.903Z",
+        "node": "",
+        "commit": "**Stagger**: Fix node auto-clear old surface."
+      }
+    ]
+  },
+  {
     "version": "1.21.4.004",
     "changes": [
       {

@@ -2,7 +2,9 @@ function nodeValue_Vec2( _name, _value, _data = {}) { return new __NodeValue_Vec
 function nodeValue_IVec2(_name, _value, _data = {}) { return new __NodeValue_IVec2(_name, self, _value, _data); }
 
 function __NodeValue_Vec2(_name, _node, _value, _data = {}) : NodeValue(_name, _node, CONNECT_TYPE.input, VALUE_TYPE.float, _value, "") constructor {
+	if(is_bool(_data)) _data = {linked: _data};
 	setDisplay(VALUE_DISPLAY.vector, _data);
+	
 	preview_hotkey_spr = THEME.tools_2d_move;
 	def_length         = 2;
 	

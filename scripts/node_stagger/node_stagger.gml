@@ -42,7 +42,7 @@ function Node_Stagger(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 			var _ovfl = _data[ 4];
 		#endregion
 		
-		var _time = CURRENT_FRAME;
+		var _time = _frame;
 		if(_time < 0) return _output;
 		
 		if(_frame != target_frame && !IS_FIRST_FRAME) return _output;
@@ -52,24 +52,29 @@ function Node_Stagger(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		var _stps = floor(process_amount / _step);
 		var _frtm = _time - eval_curve_x(_curv, floor(_aind / _step) / _stps) * _amnt * _stps;
 		    _frtm = round(_frtm);
-			
-		if(_ovfl == 1) _frtm = clamp(_frtm, 1, TOTAL_FRAMES - 1);
-			
-		var _sw = surface_get_width_safe(_surf);
-		var _sh = surface_get_height_safe(_surf);
+		
+		switch(_ovfl) {
+			case 0 : _frtm = _frtm; break;
+			case 1 : _frtm = clamp(_frtm, 0, TOTAL_FRAMES - 1); break;
+		}
+		
+		var _sw  = surface_get_width_safe(_surf);
+		var _sh  = surface_get_height_safe(_surf);
 		
 		surf_cache[_array_index][_time] = surface_verify(surf_cache[_array_index][_time], _sw, _sh);
-		surface_set_shader(surf_cache[_array_index][_time]);
+		var cArr = surf_cache[_array_index];
+		
+		surface_set_shader(cArr[_time]);
 			draw_surface_safe(_surf);
 		surface_reset_shader();
 		
 		_output = surface_verify(_output, _sw, _sh);
 		surface_set_shader(_output);
 			if(0 <= _frtm && _frtm < TOTAL_FRAMES) {
-				draw_surface_safe(surf_cache[_array_index][_frtm]);
+				draw_surface_safe(cArr[_frtm]);
 				
-				surface_free(surf_cache[_array_index][_frtm]);
-				surf_cache[_array_index][_frtm] = 0;
+				// surface_free(cArr[_frtm]);
+				// cArr[_frtm] = 0;
 			}
 		surface_reset_shader();
 		

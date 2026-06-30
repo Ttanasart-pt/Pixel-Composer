@@ -5,14 +5,16 @@ function Node_Scale_Content_Aware(_x, _y, _group = noone) : Node_Processor(_x, _
 	newInput( 0, nodeValue_Surface( "Surface In" ));
 	
 	////- =Scale
-	newInput( 1, nodeValue_Vec2( "Scale", [1,1], true ));
-	// 2
+	newInput( 2, nodeValue_EButton(   "Type",         0, [ "Downscale", "Scale to Size" ] ));
+	newInput( 1, nodeValue_Vec2(      "Scale",       [1,1], true ));
+	newInput( 3, nodeValue_Dimension( "Target Size", [1,1], true ));
+	// 4
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
 	input_display_list = [ 
 		[ "Surface", false ],  0, 
-		[ "Scale",   false ],  1, 
+		[ "Scale",   false ],  2,  1,  3, 
 	];
 	
 	////- Nodes
@@ -192,13 +194,34 @@ function Node_Scale_Content_Aware(_x, _y, _group = noone) : Node_Processor(_x, _
 		#region data
 			var _surf = _data[ 0];
 			
+			var _type = _data[ 2];
 			var _scal = _data[ 1];
+			var _targ = _data[ 3];
+			
+			inputs[ 1].setVisible(_type == 0);
+			inputs[ 3].setVisible(_type == 1);
 			
 			if(!is_just_surface(_surf)) return _outSurf;
 		#endregion
 		
+		var _sw = surface_get_width(_surf);
+		var _sh = surface_get_height(_surf);
+		
+		if(_type == 0) {
+			var _sx = clamp(_scal[0], 0, 1);
+			var _sy = clamp(_scal[1], 0, 1);
+			
+		} else {
+			var _sx = clamp(_targ[0] / _sw, 0, 1);
+			var _sy = clamp(_targ[1] / _sh, 0, 1);
+			
+		}
+		
+		var scw = ceil(_sw * _sx);
+		var sch = ceil(_sh * _sy);
+		
 		if(OS != os_windows) {
-			temp_surface[3] = scaleX(temp_surface[3], _surf, _scal[0]);
+			temp_surface[3] = scaleX(temp_surface[3], _surf, _sx);
 			
 			var sw = surface_get_width(  temp_surface[3] );
 			var sh = surface_get_height( temp_surface[3] ); 
@@ -207,7 +230,7 @@ function Node_Scale_Content_Aware(_x, _y, _group = noone) : Node_Processor(_x, _
 			surface_set_shader(temp_surface[4], sh_sample, true, BLEND.over);
 				draw_surface_ext(temp_surface[3], sh, 0, 1, 1, -90, c_white, 1);
 			surface_reset_shader();
-			temp_surface[5] = scaleX(temp_surface[5], temp_surface[4], _scal[1]);
+			temp_surface[5] = scaleX(temp_surface[5], temp_surface[4], _sy);
 			
 			var sw = surface_get_width(  temp_surface[5] );
 			var sh = surface_get_height( temp_surface[5] );
@@ -219,15 +242,6 @@ function Node_Scale_Content_Aware(_x, _y, _group = noone) : Node_Processor(_x, _
 			
 			return _outSurf;
 		}
-		
-		var _sw = surface_get_width(_surf);
-		var _sh = surface_get_height(_surf);
-		
-		var _sx = clamp(_scal[0], 0, 1);
-		var _sy = clamp(_scal[1], 0, 1);
-		
-		var scw = ceil(_sw * _sx);
-		var sch = ceil(_sh * _sy);
 		
 		var _sbuf = buffer_from_surface(_surf, false);
 		var _obuf = buffer_create(_sw * _sh * 4, buffer_fixed, 1);

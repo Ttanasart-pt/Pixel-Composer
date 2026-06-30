@@ -54,6 +54,8 @@ function __NodeValue_FPath(_name, _node, _value, _tooltip = "") : NodeValue(_nam
 				
 			case VALUE_DISPLAY.path_array: 
 				var paths = animator.getValue();
+				print(paths)
+				
 				if(is_array(paths)) {
 					for( var i = 0, n = array_length(paths); i < n; i++ ) {
 						if(file_exists_empty(path_get(paths[i]))) continue;

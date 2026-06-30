@@ -2,6 +2,7 @@ function nodeValue_Vec3(  _name, _value, _data = {} ) { return new __NodeValue_V
 function nodeValue_IVec3( _name, _value, _data = {} ) { return new __NodeValue_IVec3( _name, self, _value, _data ); }
 
 function __NodeValue_Vec3(_name, _node, _value, _data = {}) : __NodeValue_Array(_name, _node, _value, "", 3) constructor {
+	if(is_bool(_data)) _data = {linked: _data};
 	setDisplay(VALUE_DISPLAY.vector, _data);
 	
 	extract_node = "Node_Vector3";
