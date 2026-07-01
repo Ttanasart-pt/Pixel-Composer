@@ -206,10 +206,9 @@ function Node_Scale_Content_Aware(_x, _y, _group = noone) : Node_Processor(_x, _
 		
 		var scw = ceil(_sw * _sx);
 		var sch = ceil(_sh * _sy);
+		if(scw < 1 || sch < 1) return _outSurf;
 		
-		var useGML = OS != os_windows; 
-		    // useGML = true;
-		
+		var useGML = false;//OS != os_windows; 
 		if(useGML) {
 			temp_surface[3] = scaleX(temp_surface[3], _surf, _sx, _seam);
 			

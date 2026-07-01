@@ -93,8 +93,8 @@ function Node_Spherize(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 			shader_set_i( "norm",        _norm           );
 			shader_set_f( "trim",        _trim           );
 			
-			shader_set_2( "uvoffset",      _uoff );
-			shader_set_2( "uvscale",       _usca );
+			shader_set_2( "uvoffset",    _uoff );
+			shader_set_2( "uvscale",     _usca );
 			
 			shader_set_m( "strength", _data[2], _data[11], inputs[2] );
 			shader_set_m( "radius",   _data[3], _data[12], inputs[3] );
