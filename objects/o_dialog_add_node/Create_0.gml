@@ -10,10 +10,8 @@ event_inherited();
 	
 	context_str       = "Add Node";
 	title             = "Add node";
-	node_target_x	  = 0;
-	node_target_y	  = 0;
-	node_target_x_raw = 0;
-	node_target_y_raw = 0;
+	node_target_x	  = undefined;
+	node_target_y	  = undefined;
 	
 	junction_called   = noone;
 	node_replace      = noone;
@@ -283,6 +281,9 @@ event_inherited();
 		var _inputs   = [];
 		var _outputs  = [];
 		
+		var nodex = node_target_x ?? PANEL_GRAPH.mouse_grid_x;
+		var nodey = node_target_y ?? PANEL_GRAPH.mouse_grid_y;
+		
 		if(is(_node, NodeObject)) {
 			var _context = context ?? PANEL_GRAPH.getCurrentContext();
 			var _skipc   = false;
@@ -292,7 +293,7 @@ event_inherited();
 				_skipc   = true;
 			}
 			
-			_new_node = _node.build(node_target_x, node_target_y, _context, _param, _skipc);
+			_new_node = _node.build(nodex, nodey, _context, _param, _skipc);
 			if(!_new_node) return;
 			if(_new_node.set_default) _new_node.resetDefault()
 			
@@ -323,7 +324,7 @@ event_inherited();
 			}
 			
 		} else if(is(_node, NodeAction)) {  // NOT IMPLEMENTED
-			var _dat = _node.build(node_target_x, node_target_y,, _param);
+			var _dat = _node.build(nodex, nodey,, _param);
 			if(_dat == noone) return;
 			
 			var _node_in  = _dat[$ "inputNode"]  ?? noone;
@@ -351,8 +352,8 @@ event_inherited();
 					context.addNode(_new_list[i]);
 			}
 			
-			var shx = tx - node_target_x;
-			var shy = ty - node_target_y;
+			var shx = tx - nodex;
+			var shy = ty - nodey;
 			
 			for( var i = 0; i < array_length(_new_list); i++ ) {
 				_new_list[i].x -= shx;

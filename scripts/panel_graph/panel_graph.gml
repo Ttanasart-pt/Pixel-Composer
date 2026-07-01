@@ -2912,11 +2912,7 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
         connect_related = noone;
         
         if(pFOCUS) {
-	        with(dia) {    
-	            node_target_x     = other.mouse_grid_x;
-	            node_target_y     = other.mouse_grid_y;
-	            node_target_x_raw = other.mouse_grid_x;
-	            node_target_y_raw = other.mouse_grid_y;
+	        with(dia) {
 	            junction_called   = conn;
 	            
 	            resetPosition();
@@ -2976,11 +2972,9 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
     	var _dia = dialogCall(o_dialog_add_node, mouse_mx + 8, mouse_my + 8, { context: ctx });
         
         with(_dia) {    
-            node_target_x     = _target.x;
-            node_target_y     = _target.y;
-            node_target_x_raw = _target.x;
-            node_target_y_raw = _target.y;
-            node_replace      = _target;
+            node_target_x = _target.x;
+            node_target_y = _target.y;
+            node_replace  = _target;
             
             resetPosition();
             alarm[0] = 1;

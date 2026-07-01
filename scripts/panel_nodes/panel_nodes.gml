@@ -432,8 +432,6 @@ function Panel_Nodes() : PanelContent() constructor {
         with(_dia) {
         	node_target_x     = _nx;
             node_target_y     = _ny;
-            node_target_x_raw = _nx;
-            node_target_y_raw = _ny;
             junction_called   = _fFrom;
             
             resetPosition();
