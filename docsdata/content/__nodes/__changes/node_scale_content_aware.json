@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.5.010",
+    "changes": [
+      {
+        "date": "2026-07-01T04:37:20.269Z",
+        "node": "",
+        "commit": "**Randomizer Panel**: Fix crash when loading older project."
+      }
+    ]
+  },
+  {
     "version": "1.21.5.009",
     "changes": [
       {

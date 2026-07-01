@@ -178,7 +178,7 @@ function Node_MK_Rock(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 					
 				case 3 : 
 					var _polySide = irandom_range(sides[0], sides[1]);
-					var _ang = rot + random(360);
+					var _ang = rot;
 					var _ast = 360 / _polySide;
 					
 					for( var i = 0; i < _polySide; i++ ) {

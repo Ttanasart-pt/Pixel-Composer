@@ -165,8 +165,8 @@ function Project_Randomizer_Value(_val = undefined) constructor {
 		
 		type     = _m[$ "type"]   ?? type;
 		
-		palette  = _m[$ "palt"]   ?? palt;
-		gradient = _m[$ "grad"]   ?? grad;
+		palette  = _m[$ "palt"]   ?? palette;
+		gradient = _m[$ "grad"]   ?? gradient;
 		if(gradient != 0) gradient = new gradientObject().deserialize(gradient);
 		
 		min_val = _m[$ "min_val"] ?? min_val;
@@ -208,7 +208,6 @@ function Project_Randomizer() constructor {
 		values = array_create(array_length(_m.values));
 		for( var i = 0, n = array_length(_m.values); i < n; i++ )
 			values[i] = new Project_Randomizer_Value().deserialize(_m.values[i]);
-			
 		return self;
 	}
 }
