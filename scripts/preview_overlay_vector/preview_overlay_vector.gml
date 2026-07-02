@@ -35,16 +35,23 @@ function preview_overlay_vector(interact, active, _x, _y, _s, _mx, _my, _type = 
 		_ny = PANEL_PREVIEW.snapY(_ny);
 		
 		if(key_mod_press(SHIFT)) {
-			if(abs(_mx - drag_mx) > abs(_my - drag_my)) 
-				_ny = drag_ry;
-			else
-				_nx = drag_rx;
-			
-			var _sax = drag_sx * _s * _scale[0] + _x;
-			var _say = drag_sy * _s * _scale[1] + _y;
-	
-			draw_set_color(COLORS._main_accent);
-			draw_line(_sax, _say, _x + _nx * _s * _scale[0], _y + _ny * _s * _scale[1]);
+			if(preview_edit_shift_uniform) {
+				var nmax = max(_nx, _ny);
+				_nx = nmax;
+				_ny = nmax;
+				
+			} else {
+				if(abs(_mx - drag_mx) > abs(_my - drag_my)) 
+					_ny = drag_ry;
+				else
+					_nx = drag_rx;
+				
+				var _sax = drag_sx * _s * _scale[0] + _x;
+				var _say = drag_sy * _s * _scale[1] + _y;
+		
+				draw_set_color(COLORS._main_accent);
+				draw_line(_sax, _say, _x + _nx * _s * _scale[0], _y + _ny * _s * _scale[1]);
+			}
 		}
 		
 		if(key_mod_press(CTRL)) {

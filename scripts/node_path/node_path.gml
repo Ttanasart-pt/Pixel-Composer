@@ -402,7 +402,7 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	////- =Sampling
 	newInput( 0, nodeValue_Slider(  "Sample Path", 0 )).setTooltip("Sample position from path.");
 	newInput( 2, nodeValue_EScroll( "Sample Mode", 0, ["Entire line", "Segment"])).rejectArray();
-	// Inputs 4
+	// 4
 	
 	newOutput( 0, nodeValue_Output( "Position out", VALUE_TYPE.float,    [0,0] )).setVisible(false).setDisplay(VALUE_DISPLAY.vector);
 	newOutput( 1, nodeValue_Output( "Path data",    VALUE_TYPE.pathnode, noone ));

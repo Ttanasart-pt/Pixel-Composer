@@ -76,12 +76,14 @@ function Node_Path_Shape(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	// input 18
 	
 	newOutput(0, nodeValue_Output("Path data", VALUE_TYPE.pathnode, noone ));
-		
+	
 	input_display_list = [
 		[ "Transform", false ],  0,  2,  1, 
 		[ "Shape",     false ],  3, 16,  4,  5,  6,  7,  8,  9, 12, 10, 15, 18, 11, 13, 17, 
 		[ "Detail",    false ], 14, 
 	];
+	
+	inputs[1].preview_edit_shift_uniform = true;
 	
 	////- Path
 	

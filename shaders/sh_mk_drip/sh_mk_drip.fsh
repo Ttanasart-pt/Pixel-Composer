@@ -132,95 +132,106 @@
 varying vec2 v_vTexcoord;
 varying vec4 v_vColour;
 
-uniform sampler2D mask;
-uniform int    useMask;
+uniform float seed;
 
-uniform vec2  dimension;
-uniform float angle;
-uniform float extDistance;
-uniform float shift;
-uniform int   wrap;
+uniform vec2 dimension;
 
-uniform vec2  anchor;
-uniform vec2  rotations;
-uniform float scale_curve[CURVE_MAX];
-uniform int   scale_amount;
+uniform sampler2D original;
 
-uniform int   useExpath;
-uniform float expathData[1024];
-uniform int   expathSample;
+uniform float dripDirection;
+uniform float dripDistance;
+uniform float dripThreshold;
 
-uniform int   depthOrder;
+uniform float thickness;
+uniform float thickness_curve[CURVE_MAX];
+uniform int   thickness_amount;
+
+uniform int   dripping;
+uniform float dripFreq;
+uniform vec2  dripAmpli;
+uniform float dripAmpli_curve[CURVE_MAX];
+uniform int   dripAmpli_amount;
+
+uniform float dripPhase;
+uniform float dripTime;
+
+#define PI 3.14159265359
+#define TAU 6.283185307179586
+
+float random( in vec2 st ) { return fract(sin(dot(st, vec2(12.9898, 78.233 + seed / 10000.))) * 43758.5453123); }
+vec2 random2( in vec2 st ) { return fract(sin(vec2(dot(st, vec2(127.1, 311.7 + seed / 10000.)), 
+                                                   dot(st, vec2(269.5 + seed / 10000., 183.3)))) * 43758.5453); }
 
 void main() {
-	vec2 tx  = 1. / dimension;
-	vec2 shf = vec2(cos(angle), -sin(angle)) * tx;
+	vec2 tx = 1. / dimension;
 	
-	float dist = extDistance;
-	if(useMask == 1) {
-		vec4  mm = texture2D(mask, v_vTexcoord);	
-		float ms = (mm.x + mm.y + mm.z) / 3. * mm.a;
-		dist = floor(dist * ms + .5);
-	}
+	vec4 base = texture2D(gm_BaseTexture, v_vTexcoord);
+	vec4 colr = base;
 	
-	vec4 res = vec4(0.);
+	float maxDrip = dripDistance;
+	float rota    = radians(dripDirection);
+	
+	vec2  dripVec  = vec2(cos(rota), -sin(rota));
+	float dripStep = maxDrip * dimension.x;
+	float thkInv   = 1. - thickness;
+	
 	gl_FragColor = vec4(0.);
 	
-	if(useExpath == 0) {
-		vec2 vt  = v_vTexcoord - shift * shf * dist;
-		vec4 cc  = texture2D(gm_BaseTexture, vt);
-		
-		if(cc.a != 0. && depthOrder == 0) {
-			gl_FragColor = vec4(-1.); 
-			return;
-		}
-		
-		for(float i = 1.; i <= dist; i += .5) {
-			vec2 px = vt - shf * i;
-			if(wrap == 1) px = fract(fract(px) + 1.);
-			
-			float pg   = i / dist;
-	        float scal = curveEval(scale_curve, scale_amount, pg);
-	        float ang  = radians(mix(rotations.x, rotations.y, pg));
-	        mat2  rot  = mat2(cos(ang), - sin(ang), sin(ang), cos(ang));
-	        px = anchor + (px - anchor) / scal * rot;
-	        
-			vec4 sp = texture2D(gm_BaseTexture, px);
-			if(sp.a != 0.) { 
-				res = vec4(i, px, 1.); 
-				if(depthOrder == 0)
-					break; 
-			}
-		}
-		
-	} else {
-		vec2 vt  = v_vTexcoord - shift * shf * dist;
-		vec4 cc  = texture2D(gm_BaseTexture, vt);
-		
-		if(cc.a != 0. && depthOrder == 0) {
-			gl_FragColor = vec4(-1.); 
-			return;
-		}
-		
-		for(int i = 0; i < expathSample; i++) {
-			vec2 px = vt - vec2(expathData[i * 2 + 0], expathData[i * 2 + 1]);
-			
-			float pg   = float(i) / float(expathSample);
-	        float scal = curveEval(scale_curve, scale_amount, pg);
-	        float ang  = radians(mix(rotations.x, rotations.y, pg));
-	        mat2  rot  = mat2(cos(ang), - sin(ang), sin(ang), cos(ang));
-	        px = anchor + (px - anchor) / scal * rot;
-	        
-			vec4 sp = texture2D(gm_BaseTexture, px);
-			if(sp.a != 0.) { 
-				res = vec4(i, px, 1.); 
-				if(depthOrder == 0)
-					break; 
-			}
-			
-		}
-		
+	if(base.a > 0.) {
+		vec4 edge = texture2D(gm_BaseTexture, v_vTexcoord + dripVec * tx);
+		if(edge.a == 0.) gl_FragColor = texture2D(original, v_vTexcoord);
+		return;
 	}
 	
-	gl_FragColor = res;
+	bool  isDrip  = false;
+	float dripLen = 0.;
+	float samThk  = thkInv;
+	vec2  dripPos;
+	vec4  dripCol;
+	
+	for(float i = 0.; i < dripStep; i++) {
+		vec2  _dripPos = v_vTexcoord - dripVec * i * tx;
+		vec4  _dripCol = texture2D(gm_BaseTexture, _dripPos);
+		float _samThk  = _dripCol.r * _dripCol.a;
+		
+		if(_samThk < 0.) break;
+		
+		if(_samThk > samThk) {
+			isDrip  = true;
+			dripLen = i;
+			
+			dripPos = _dripPos;
+			dripCol = _dripCol;
+			samThk  = _samThk;
+		}
+	}
+	
+	vec4  origColor = texture2D(original, dripPos);
+	
+	if(!isDrip) {
+		gl_FragColor = vec4(origColor.rgb, 0.);
+		return;
+	}
+	
+	float dripPrg   = 1. - dripLen / dripStep;
+	float dripCurve = curveEval(thickness_curve, thickness_amount, 1. - dripPrg);
+	
+	float samThkNrm = (samThk - thkInv) / thickness;
+	float dripDens  = samThkNrm * 2. * dripCurve;
+	
+	vec2 dripCel = dripCol.gb;
+	
+	if(dripping == 1) {
+		float dripProg  = dripPhase + dripPrg * dripFreq + dripTime;
+		      dripProg += random(dripCel);
+		
+		float dripAmp  = curveEval(dripAmpli_curve, dripAmpli_amount, 1. - dripPrg) * mix(dripAmpli.x, dripAmpli.y, random(dripCel + 0.1651));
+		float dripAnim = 1. - (sin(dripProg * TAU) + 1.) / 2. * dripAmp;
+		
+		dripDens *= dripAnim;
+	}
+	
+	float dripDraw  = step(dripThreshold, dripDens);
+	
+	gl_FragColor = vec4(origColor.rgb, dripDraw);
 }

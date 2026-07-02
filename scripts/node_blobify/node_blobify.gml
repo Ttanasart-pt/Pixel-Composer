@@ -13,7 +13,7 @@ function Node_Blobify(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	////- =Blobify
 	newInput(11, nodeValue_EScroll( "Shape",      0, [ 
 		new scrollItem("Circle",  s_node_shape_circle), 
-		new scrollItem("Diamond", s_node_shape_misc, 0), 
+		new scrollItem("Diamond", s_node_shape_diamond), 
 		new scrollItem("Square",  s_node_shape_rectangle),
 	] )).setPieMenu();
 	
@@ -24,12 +24,13 @@ function Node_Blobify(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	
 	////- =Rendering
 	newInput(10, nodeValue_Slider( "Smoothness", 0 ));
-	// input 14
+	newInput(14, nodeValue_Bool(   "Inverted",   false ));
+	// 15
 	
 	input_display_list = [ 1, 9, 
 		[ "Surface",   false ],  0,  5,  6,  7,  8, 
 		[ "Blobify",   false ], 11,  2,  4,  3, 12, 13, 
-		[ "Rendering", false ], 10, 
+		[ "Rendering", false ], 10, 14,  
 	]
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
@@ -63,6 +64,7 @@ function Node_Blobify(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 			var _kepa = _data[13];
 			
 			var _smth = _data[10];
+			var _invt = _data[14];
 		#endregion
 		
 		var _dim = surface_get_dimension(_surf);
@@ -75,6 +77,7 @@ function Node_Blobify(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 			shader_set_i( "shape",      _shap );
 			shader_set_i( "fade",       _fade );
 			shader_set_i( "keepAlpha",  _kepa );
+			shader_set_i( "invert",     _invt );
 			
 			shader_set_f( "threshold",  _thr  );
 			shader_set_f( "smoothness", _smth );

@@ -1465,6 +1465,7 @@
             "Node_MK_GridFlip",
             "Node_MK_Grass",
             "Node_MK_Subpixel",
+            "Node_MK_Drip",
             
             { "label": "Animation" },
             "Node_MK_Delay_Machine",

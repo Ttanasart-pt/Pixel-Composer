@@ -1,0 +1,12 @@
+{
+  "$GMShader":"",
+  "%Name":"sh_mk_drip",
+  "name":"sh_mk_drip",
+  "parent":{
+    "name":"mk_drip",
+    "path":"folders/nodes/data/MKFX/filter/mk_drip.yy",
+  },
+  "resourceType":"GMShader",
+  "resourceVersion":"2.0",
+  "type":1,
+}

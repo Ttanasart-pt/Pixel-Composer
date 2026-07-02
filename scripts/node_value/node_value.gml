@@ -369,6 +369,8 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		preview_hotkey_mx = 0;
 		preview_hotkey_my = 0;
 		
+		preview_edit_shift_uniform = false;
+		
 		topbar_editWidget       = undefined;
 		topbar_editWidget_width = undefined;
 		

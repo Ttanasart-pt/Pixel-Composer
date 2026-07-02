@@ -57,6 +57,7 @@ uniform sampler2D radiusSurf;
 uniform int   shape;
 uniform int   fade;
 uniform int   keepAlpha;
+uniform int   invert;
 
 uniform float threshold;
 uniform float smoothness;
@@ -77,6 +78,7 @@ void main() {
 	float da = 0.;
 	
 	vec4 base = sampleTexture( gm_BaseTexture, v_vTexcoord );
+	if(invert == 1) base = 1. - base;
 	
 	if(shape == 0) {
 		float aStep = TAU / 64.;
@@ -87,6 +89,8 @@ void main() {
 				vec2  sx = v_vTexcoord + vec2(cos(j), sin(j)) * tx * i;
 				vec4  c  = sampleTexture( gm_BaseTexture, sx );
 				float s  = fade == 1? 1. - i / rad : 1.;
+				
+				if(invert == 1) c = 1. - c;
 				
 				cc += c   * s;
 				da += c.a * s;
@@ -103,6 +107,8 @@ void main() {
 			vec4  c  = sampleTexture( gm_BaseTexture, sx );
 			float s  = fade == 1? 1. - max(abs(i), abs(j)) / rad : 1.;
 			
+			if(invert == 1) c = 1. - c;
+				
 			cc += c   * s;
 			da += c.a * s;
 			dv += s;
@@ -116,6 +122,8 @@ void main() {
 			vec2  sx = v_vTexcoord + vec2(i, j) * tx;
 			vec4  c  = sampleTexture( gm_BaseTexture, sx );
 			float s  = fade == 1? 1. - (abs(i) + abs(j)) / rad : 1.;
+			
+			if(invert == 1) c = 1. - c;
 			
 			cc += c   * s;
 			da += c.a * s;
@@ -136,5 +144,6 @@ void main() {
 	
 	if(keepAlpha == 1) res.a = base.a;
 	
+	if(invert == 1) res = 1. - res;
 	gl_FragColor = res;
 }

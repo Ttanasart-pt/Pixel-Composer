@@ -198,7 +198,7 @@ void main() {
 	if(light == 1) strn = strn < 0.001? 10000. : 1. / strn;
 	
 	vec4 col = samp * strn;
-	     col = mix(col * color, col, strn);
+	     col = mix(col * (light == 1? 1. - color : color), col, strn);
 	
     gl_FragColor = vec4(col.rgb, samp.a);
 }
