@@ -151,6 +151,8 @@ uniform int   useExpath;
 uniform float expathData[1024];
 uniform int   expathSample;
 
+uniform int   depthOrder;
+
 void main() {
 	vec2 tx  = 1. / dimension;
 	vec2 shf = vec2(cos(angle), -sin(angle)) * tx;
@@ -162,12 +164,17 @@ void main() {
 		dist = floor(dist * ms + .5);
 	}
 	
+	vec4 res = vec4(0.);
+	gl_FragColor = vec4(0.);
+	
 	if(useExpath == 0) {
 		vec2 vt  = v_vTexcoord - shift * shf * dist;
 		vec4 cc  = texture2D(gm_BaseTexture, vt);
 		
-		gl_FragColor = vec4(0.);
-		if(cc.a != 0.) { gl_FragColor = vec4(-1.); return; }
+		if(cc.a != 0. && depthOrder == 0) {
+			gl_FragColor = vec4(-1.); 
+			return;
+		}
 		
 		for(float i = 1.; i <= dist; i += .5) {
 			vec2 px = vt - shf * i;
@@ -180,15 +187,21 @@ void main() {
 	        px = anchor + (px - anchor) / scal * rot;
 	        
 			vec4 sp = texture2D(gm_BaseTexture, px);
-			if(sp.a != 0.) { gl_FragColor = vec4(i, px, 1.); return; }
+			if(sp.a != 0.) { 
+				res = vec4(i, px, 1.); 
+				if(depthOrder == 0)
+					break; 
+			}
 		}
 		
 	} else {
 		vec2 vt  = v_vTexcoord - shift * shf * dist;
 		vec4 cc  = texture2D(gm_BaseTexture, vt);
 		
-		gl_FragColor = vec4(0.);
-		if(cc.a != 0.) { gl_FragColor = vec4(-1.); return; }
+		if(cc.a != 0. && depthOrder == 0) {
+			gl_FragColor = vec4(-1.); 
+			return;
+		}
 		
 		for(int i = 0; i < expathSample; i++) {
 			vec2 px = vt - vec2(expathData[i * 2 + 0], expathData[i * 2 + 1]);
@@ -200,9 +213,15 @@ void main() {
 	        px = anchor + (px - anchor) / scal * rot;
 	        
 			vec4 sp = texture2D(gm_BaseTexture, px);
-			if(sp.a != 0.) { gl_FragColor = vec4(i, px, 1.); return; }
+			if(sp.a != 0.) { 
+				res = vec4(i, px, 1.); 
+				if(depthOrder == 0)
+					break; 
+			}
 			
 		}
 		
 	}
+	
+	gl_FragColor = res;
 }

@@ -6,10 +6,11 @@ function Node_2D_Extrude(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	newInput( 9, nodeValue_Surface(  "Mask"       ));
 	
 	////- =Extrude
-	newInput( 1, nodeValue_Rotation( "Angle",     0             )).setPieMenu();
-	newInput( 2, nodeValue_Float(    "Distance", .5             )).setUnitSimple().setPieMenu();
-	newInput( 8, nodeValue_Slider(   "Shift",     0, [-1,1,.01] )).setUnitSimple().setPieMenu();
-	newInput( 7, nodeValue_Bool(     "Wrap",      false         ));
+	newInput( 1, nodeValue_Rotation( "Angle",       0             )).setPieMenu();
+	newInput( 2, nodeValue_Float(    "Distance",   .5             )).setUnitSimple().setPieMenu();
+	newInput( 8, nodeValue_Slider(   "Shift",       0, [-1,1,.01] )).setUnitSimple().setPieMenu();
+	newInput( 7, nodeValue_Bool(     "Wrap",        false         ));
+	newInput(18, nodeValue_EScroll(  "Depth Order", 1, [ "Minimum", "Maximum" ] ));
 	
 		////- =/Path
 	newInput(15, nodeValue_Path( "Path"                     ));
@@ -30,14 +31,14 @@ function Node_2D_Extrude(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	newInput( 5, nodeValue_Bool(  "Highlight",       false    ));
 	newInput(14, nodeValue_Float( "Highlight Width", 1        ));
 	newInput( 6, nodeValue_Color( "Highlight Color", ca_white ));
-	// input 18
+	// 19
 	
 	newOutput( 0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone)).setDrawGroup(0);
 	newOutput( 1, nodeValue_Output("Depth",       VALUE_TYPE.surface, noone)).setDrawGroup(0);
 	
 	input_display_list = [
 	    [ "Surface",   false    ],  0,  9, 
-	    [ "Extrude",   false    ],  1,  2,  8,  7, 
+	    [ "Extrude",   false    ],  1,  2,  8,  7, 18, 
 	    	[ "/Path", false    ], 15, 16, 
 		[ "Transform", false    ], 11, 12, 13, 
 	    [ "Render",    false    ],  3,  4, 10, 17, 
@@ -112,30 +113,31 @@ function Node_2D_Extrude(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	
 	static processData = function(_outData, _data, _array_index = 0) { 
 		#region data
-		    var _surf = _data[ 0];
-		    var _mask = _data[ 9], _use_mask = is_surface(_mask);
+		    var _surf  = _data[ 0];
+		    var _mask  = _data[ 9], _use_mask = is_surface(_mask);
 		    
-		    var _ang  = _data[ 1];
-		    var _dist = _data[ 2];
-		    var _shft = _data[ 8];
-		    var _wrap = _data[ 7];
-		    var _path = _data[15];
-		    var _pthr = _data[16];
+		    var _ang   = _data[ 1];
+		    var _dist  = _data[ 2];
+		    var _shft  = _data[ 8];
+		    var _wrap  = _data[ 7];
+		    var _depth = _data[18];
+		    var _path  = _data[15];
+		    var _pthr  = _data[16];
 		    
-			var _anch = _data[11];
-			var _rota = _data[12];
-			var _scal = _data[13];
+			var _anch  = _data[11];
+			var _rota  = _data[12];
+			var _scal  = _data[13];
 			
-		    var _grad = _data[ 3];
-		    var _clne = _data[ 4];
-		    var _deth = _data[10];
-		    var _draw = _data[17];
+		    var _grad  = _data[ 3];
+		    var _clne  = _data[ 4];
+		    var _deth  = _data[10];
+		    var _draw  = _data[17];
 		    
-		    var _high = _data[ 5];
-		    var _hgwd = _data[14];
-		    var _hgcl = _data[ 6];
+		    var _high  = _data[ 5];
+		    var _hgwd  = _data[14];
+		    var _hgcl  = _data[ 6];
 		    
-		    var _dim  = surface_get_dimension(_surf);
+		    var _dim   = surface_get_dimension(_surf);
 	    #endregion
 	    
 	    var _usePath = is_path(_path);
@@ -175,6 +177,7 @@ function Node_2D_Extrude(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 			shader_set_i( "useExpath",    _usePath );
 			shader_set_f( "expathData",   _points  );
 			shader_set_i( "expathSample", _pthr    );
+			shader_set_i( "depthOrder",   _depth   );
 			
 			shader_set_2( "anchor",      _anch );
 			shader_set_2( "rotations",   _rota );

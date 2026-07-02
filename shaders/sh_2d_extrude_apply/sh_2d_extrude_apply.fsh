@@ -189,14 +189,13 @@ void main() {
 	vec4  extData   = texture2D(extrudeMap, v_vTexcoord);
 	float extrude   = extData.r;
 	
-	baseColor.a = baseColor.a > 0.? 1. : 0.;
+	vec4  resColor  = baseColor;
 	
-	if(drawBase == 0) {
-		gl_FragData[0] = vec4(0.);
-		if(baseColor.a > 0.) return;
-	}
+	resColor.a = resColor.a > 0.? 1. : 0.;
 	
-	gl_FragData[0]  = baseColor;
+	if(drawBase == 0) resColor = vec4(0.);
+	
+	gl_FragData[0]  = resColor;
 	gl_FragData[1]  = vec4(vec3(extrude == -1.? 0. : 1.), 1.);
 	
 	if(highlight == 1) {
