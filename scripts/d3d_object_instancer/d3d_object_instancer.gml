@@ -90,12 +90,13 @@ function __3dObjectInstancer() : __3dObject() constructor {
 		}
 	}
 	
+	pcBuffer = undefined;
+	vcBuffer = undefined;
+	
 	static submitVertex_HLSL = function(_sc = noone, _sh = noone) {
 		if(!is(_sc, __3dScene)) return;
 			
 		d3d11_shader_override_vs(vs);
-		var pcBuffer = undefined;
-		var vcBuffer = undefined;
 		var acBuffer = [];
 		
 		if(_sh == sh_d3d_geometry) {
@@ -103,54 +104,63 @@ function __3dObjectInstancer() : __3dObject() constructor {
 			
 		} else {
 			d3d11_shader_override_ps(ps);
-				
-			d3d11_cbuffer_begin();
+			
+			var pcBuffer_new = pcBuffer == undefined;
+			if(pcBuffer_new) d3d11_cbuffer_begin();
+			
 			var _buffer = buffer_create(1, buffer_grow, 1); buffer_to_start(_buffer);
 			var _cbSize = 0;
 			_sc.fixArray();
 			
-			_cbSize += cbuffer_write_fs( _buffer, _sc.camera.position.toArray() );
-			_cbSize += cbuffer_write_i(  _buffer, _sc.gammaCorrection     );
+			_cbSize += cbuffer_write_fs( _buffer, _sc.camera.position.toArray(), pcBuffer_new );
+			_cbSize += cbuffer_write_i(  _buffer, _sc.gammaCorrection,           pcBuffer_new );
 			
-			_cbSize += cbuffer_write_c(  _buffer, _sc.lightAmbient        );
+			_cbSize += cbuffer_write_c(  _buffer, _sc.lightAmbient,              pcBuffer_new );
 			
-			_cbSize += cbuffer_write_i(  _buffer, _sc.lightDir_count      );
-			_cbSize += cbuffer_write_i(  _buffer, _sc.lightPnt_count      );
-			_cbSize += cbuffer_write_i(  _buffer, 0 );
-			_cbSize += cbuffer_write_i(  _buffer, 0 );
+			_cbSize += cbuffer_write_i(  _buffer, _sc.lightDir_count,            pcBuffer_new );
+			_cbSize += cbuffer_write_i(  _buffer, _sc.lightPnt_count,            pcBuffer_new );
+			_cbSize += cbuffer_write_i(  _buffer, 0,                             pcBuffer_new );
+			_cbSize += cbuffer_write_i(  _buffer, 0,                             pcBuffer_new );
 			
-			_cbSize += cbuffer_write_fs( _buffer, _sc._lightDir_direction );
-			_cbSize += cbuffer_write_fs( _buffer, _sc._lightDir_color     );
-			_cbSize += cbuffer_write_fs( _buffer, _sc._lightDir_intensity );
+			_cbSize += cbuffer_write_fs( _buffer, _sc._lightDir_direction,       pcBuffer_new );
+			_cbSize += cbuffer_write_fs( _buffer, _sc._lightDir_color,           pcBuffer_new );
+			_cbSize += cbuffer_write_fs( _buffer, _sc._lightDir_intensity,       pcBuffer_new );
 			
-			_cbSize += cbuffer_write_fs( _buffer, _sc._lightPnt_position  );
-			_cbSize += cbuffer_write_fs( _buffer, _sc._lightPnt_color     );
-			_cbSize += cbuffer_write_fs( _buffer, _sc._lightPnt_intensity );
-			_cbSize += cbuffer_write_fs( _buffer, _sc._lightPnt_radius    );
+			_cbSize += cbuffer_write_fs( _buffer, _sc._lightPnt_position,        pcBuffer_new );
+			_cbSize += cbuffer_write_fs( _buffer, _sc._lightPnt_color,           pcBuffer_new );
+			_cbSize += cbuffer_write_fs( _buffer, _sc._lightPnt_intensity,       pcBuffer_new );
+			_cbSize += cbuffer_write_fs( _buffer, _sc._lightPnt_radius,          pcBuffer_new );
+				
+			if(pcBuffer_new) {
+				if(_cbSize % 4) d3d11_cbuffer_add_float(4 - _cbSize % 4);
+				pcBuffer = d3d11_cbuffer_end();
+			}
 			
-			if(_cbSize % 4) d3d11_cbuffer_add_float(4 - _cbSize % 4);
-			var pcBuffer = d3d11_cbuffer_end();
 			buffer_resize(_buffer, d3d11_cbuffer_get_size(pcBuffer));
 			d3d11_cbuffer_update(pcBuffer, _buffer);
 			buffer_delete(_buffer);
 			
 			d3d11_shader_set_cbuffer_ps(10, pcBuffer);
-			
 		}
 		
 		//////////////////////////////////////////////////////////////////////////////////////////////
 		
-		d3d11_cbuffer_begin();
+		var vcBuffer_new = vcBuffer == undefined;
+		if(vcBuffer_new) d3d11_cbuffer_begin();
+		
 		var _buffer = buffer_create(1, buffer_grow, 1); buffer_to_start(_buffer);
 		var _cbSize = 0;
 		
-		_cbSize += cbuffer_write_fs( _buffer, objectTransform.matTran );
-		_cbSize += cbuffer_write_fs( _buffer, _sc.camera.position.toArray());
-		_cbSize += cbuffer_write_f(  _buffer, _sc.camera.view_near );
-		_cbSize += cbuffer_write_f(  _buffer, _sc.camera.view_far  );
+		_cbSize += cbuffer_write_fs( _buffer, objectTransform.matTran,       vcBuffer_new );
+		_cbSize += cbuffer_write_fs( _buffer, _sc.camera.position.toArray(), vcBuffer_new );
+		_cbSize += cbuffer_write_f(  _buffer, _sc.camera.view_near,          vcBuffer_new );
+		_cbSize += cbuffer_write_f(  _buffer, _sc.camera.view_far,           vcBuffer_new );
 		
-		if(_cbSize % 4) d3d11_cbuffer_add_float(4 - _cbSize % 4);
-		var vcBuffer = d3d11_cbuffer_end();
+		if(vcBuffer_new) {
+			if(_cbSize % 4) d3d11_cbuffer_add_float(4 - _cbSize % 4);
+			vcBuffer = d3d11_cbuffer_end();
+		}
+		
 		buffer_resize(_buffer, d3d11_cbuffer_get_size(vcBuffer));
 		d3d11_cbuffer_update(vcBuffer, _buffer);
 		buffer_delete(_buffer);
@@ -171,7 +181,6 @@ function __3dObjectInstancer() : __3dObject() constructor {
 			submitCbuffer(b);
 			
 			for( var i = 0, n = array_length(VB); i < n; i++ ) {
-				
 				var _mat = materials[i];
 				var _tex = _mat.texture;
 				
@@ -228,8 +237,6 @@ function __3dObjectInstancer() : __3dObject() constructor {
 		transform.clearMatrix();
 		matrix_set(matrix_world, matrix_build_identity());
 		
-		if(pcBuffer != undefined) d3d11_cbuffer_destroy(pcBuffer);
-		if(vcBuffer != undefined) d3d11_cbuffer_destroy(vcBuffer);
 		for( var i = 0, n = array_length(acBuffer); i < n; i++ ) 
 			d3d11_cbuffer_destroy(acBuffer[i]);
 		
