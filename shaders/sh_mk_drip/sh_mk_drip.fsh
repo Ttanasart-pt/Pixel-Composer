@@ -138,7 +138,9 @@ uniform vec2 dimension;
 
 uniform sampler2D original;
 
+uniform int       dripType;
 uniform float     dripDirection;
+uniform vec2      dripCenter;
 
 uniform vec2      dripDistance;
 uniform int       dripDistanceUseMap;
@@ -164,7 +166,7 @@ uniform float dripTime;
 
 float random( in vec2 st ) { return fract(sin(dot(st, vec2(12.9898, 78.233 + seed / 10000.))) * 43758.5453123); }
 vec2 random2( in vec2 st ) { return fract(sin(vec2(dot(st, vec2(127.1, 311.7 + seed / 10000.)), 
-                                                   dot(st, vec2(269.5 + seed / 10000., 183.3)))) * 43758.5453); }
+                                                   dot(st, vec2(269.5 + seed / 10000., 183.3)) )) * 43758.5453); }
 
 void main() {
 	vec2 tx = 1. / dimension;
@@ -173,16 +175,23 @@ void main() {
 	vec4 colr = base;
 	
 	float maxDrip = max(dripDistance.x, dripDistance.y);
-	float rota    = radians(dripDirection);
+	vec2  dripVec;
 	
-	vec2  dripVec  = vec2(cos(rota), -sin(rota));
+	if(dripType == 0) {
+		float rota = radians(dripDirection);
+		dripVec = vec2(cos(rota), -sin(rota));
+		
+	} else if(dripType == 1) {
+		vec2 targ = dripCenter * tx;
+		vec2 dirr = targ - v_vTexcoord;
+		dripVec = normalize(-dirr);
+	}
+	
 	float dripStep = maxDrip * dimension.x;
 	
 	gl_FragColor = vec4(0.);
 	
 	if(base.a > 0.) {
-		// vec4 edge = texture2D(gm_BaseTexture, v_vTexcoord + dripVec * tx);
-		// if(edge.a == 0.) 
 		gl_FragColor = texture2D(original, v_vTexcoord);
 		return;
 	}
@@ -259,4 +268,5 @@ void main() {
 	float dripDraw  = step(currThr, dripDens);
 	
 	gl_FragColor = vec4(origColor.rgb, dripDraw);
+	// gl_FragColor = vec4(dripDens, dripDens, dripDens, dripDraw);
 }

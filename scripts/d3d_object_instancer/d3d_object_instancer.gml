@@ -68,6 +68,8 @@ function __3dObjectInstancer() : __3dObject() constructor {
 	
 	static generateNormal = function(_s = normal_draw_size) {}
 	
+	////- Submit
+	
 	static submitShadow = function(_sc = {}, object = noone) /*=>*/ {}
 	static submitSel	= function(_sc = noone, _sh = noone) /*=>*/ { submit(_sc, _sh); }
 	static submitShader = function(_sc = noone, _sh = noone) /*=>*/ { submit(_sc, _sh); }
@@ -92,6 +94,9 @@ function __3dObjectInstancer() : __3dObject() constructor {
 		if(!is(_sc, __3dScene)) return;
 			
 		d3d11_shader_override_vs(vs);
+		var pcBuffer = undefined;
+		var vcBuffer = undefined;
+		var acBuffer = [];
 		
 		if(_sh == sh_d3d_geometry) {
 			d3d11_shader_override_ps(gs);
@@ -124,12 +129,12 @@ function __3dObjectInstancer() : __3dObject() constructor {
 			_cbSize += cbuffer_write_fs( _buffer, _sc._lightPnt_radius    );
 			
 			if(_cbSize % 4) d3d11_cbuffer_add_float(4 - _cbSize % 4);
-			var cbuff = d3d11_cbuffer_end();
-			buffer_resize(_buffer, d3d11_cbuffer_get_size(cbuff));
-			d3d11_cbuffer_update(cbuff, _buffer);
+			var pcBuffer = d3d11_cbuffer_end();
+			buffer_resize(_buffer, d3d11_cbuffer_get_size(pcBuffer));
+			d3d11_cbuffer_update(pcBuffer, _buffer);
 			buffer_delete(_buffer);
 			
-			d3d11_shader_set_cbuffer_ps(10, cbuff);
+			d3d11_shader_set_cbuffer_ps(10, pcBuffer);
 			
 		}
 		
@@ -145,12 +150,12 @@ function __3dObjectInstancer() : __3dObject() constructor {
 		_cbSize += cbuffer_write_f(  _buffer, _sc.camera.view_far  );
 		
 		if(_cbSize % 4) d3d11_cbuffer_add_float(4 - _cbSize % 4);
-		var cbuff = d3d11_cbuffer_end();
-		buffer_resize(_buffer, d3d11_cbuffer_get_size(cbuff));
-		d3d11_cbuffer_update(cbuff, _buffer);
+		var vcBuffer = d3d11_cbuffer_end();
+		buffer_resize(_buffer, d3d11_cbuffer_get_size(vcBuffer));
+		d3d11_cbuffer_update(vcBuffer, _buffer);
 		buffer_delete(_buffer);
 		
-		d3d11_shader_set_cbuffer_vs(11, cbuff);
+		d3d11_shader_set_cbuffer_vs(11, vcBuffer);
 		
 		preSubmitVertex(_sc);
 		transform.submitMatrix();
@@ -192,6 +197,8 @@ function __3dObjectInstancer() : __3dObject() constructor {
 				
 				if(_cbSize % 4) d3d11_cbuffer_add_float(4 - _cbSize % 4);
 				var cbuff = d3d11_cbuffer_end();
+				array_push(acBuffer, cbuff);
+				
 				buffer_resize(_buffer, d3d11_cbuffer_get_size(cbuff));
 				d3d11_cbuffer_update(cbuff, _buffer);
 				buffer_delete(_buffer);
@@ -220,6 +227,11 @@ function __3dObjectInstancer() : __3dObject() constructor {
 		
 		transform.clearMatrix();
 		matrix_set(matrix_world, matrix_build_identity());
+		
+		if(pcBuffer != undefined) d3d11_cbuffer_destroy(pcBuffer);
+		if(vcBuffer != undefined) d3d11_cbuffer_destroy(vcBuffer);
+		for( var i = 0, n = array_length(acBuffer); i < n; i++ ) 
+			d3d11_cbuffer_destroy(acBuffer[i]);
 		
 		postSubmitVertex(_sc);
 	}
@@ -308,7 +320,8 @@ function __3dObjectInstancer() : __3dObject() constructor {
 		
 	}
 	
-		
+	////- Action
+	
 	static clone = function(_vertex = true) {}
 	
 	static destroy = function() {}

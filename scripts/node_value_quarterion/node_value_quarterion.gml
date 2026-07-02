@@ -1,3 +1,4 @@
+#macro nodeValue_Quat nodeValue_Quaternion
 function nodeValue_Quaternion(_name, _value = [0,0,0,1], _tooltip = "") { return new __NodeValue_Quaternion(_name, self, _value, _tooltip); }
 
 function __NodeValue_Quaternion(_name, _node, _value, _tooltip = "") : __NodeValue_Array(_name, _node, _value, _tooltip, 4) constructor {

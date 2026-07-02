@@ -1,5 +1,6 @@
 function Node_3D_Instancer(_x, _y, _group = noone) : Node_3D(_x, _y, _group) constructor {
-	name = "3D Instancer";
+	name   = "3D Instancer";
+	object = undefined;
 	
 	newInput( 9, nodeValueSeed());
 	
@@ -7,44 +8,44 @@ function Node_3D_Instancer(_x, _y, _group = noone) : Node_3D(_x, _y, _group) con
 	newInput( 0, nodeValue_D3Mesh( "Mesh" ));
 	
 	////- =Objects
-	newInput(16, nodeValue_Vec3(        "Starting Position", [0,0,0]    ));
-	newInput(17, nodeValue_Quaternion(  "Starting Rotation" ));
-	newInput(18, nodeValue_Vec3(        "Starting Scale",    [1,1,1]    ));
+	newInput(16, nodeValue_Vec3(    "Starting Position", [0,0,0]    ));
+	newInput(17, nodeValue_Quat(    "Starting Rotation"             ));
+	newInput(18, nodeValue_Vec3(    "Starting Scale",    [1,1,1]    ));
 	
 	////- =Repeat
-	newInput(19, nodeValue_EScroll(     "Pattern",      0, __enum_array_gen([ "Linear", "Grid", "Circular"], s_node_repeat_axis) )).rejectArray();
-	newInput( 1, nodeValue_Int(         "Amounts",      1 ));
-	newInput(20, nodeValue_IVec3(       "Grid",         [2,2,1] ));
-	newInput(21, nodeValue_Float(       "Radius",       1       ));
-	newInput(22, nodeValue_Bool(        "Look At Center", false ));
+	newInput(19, nodeValue_EScroll( "Pattern",        0, __enum_array_gen([ "Linear", "Grid", "Circular"], s_node_repeat_axis) )).rejectArray();
+	newInput( 1, nodeValue_Int(     "Amounts",        1       ));
+	newInput(20, nodeValue_IVec3(   "Grid",          [2,2,1]  ));
+	newInput(21, nodeValue_Float(   "Radius",         1       ));
+	newInput(22, nodeValue_Bool(    "Look At Center", false   ));
 	
 	////- =Path
 	newInput(23, nodeValue_Path(    "Shift Path"            )).setExtractNode("Node_Path_3D");
-	newInput(27, nodeValue_Range(       "Path Range",   [0,1]   ));
-	newInput(24, nodeValue_Bool(        "Follow Path",  false   ));
+	newInput(27, nodeValue_Range(   "Path Range",   [0,1]   ));
+	newInput(24, nodeValue_Bool(    "Follow Path",  false   ));
 	
 	////- =Transform Data
-	newInput( 2, nodeValue_Vec3(        "Positions", [[0,0,0]] )).setArrayDepth(1);
-	newInput( 3, nodeValue_Vec3(        "Rotations", [[0,0,0]] )).setArrayDepth(1);
-	newInput( 4, nodeValue_Vec3(        "Scales",    [[1,1,1]] )).setArrayDepth(1);
-	newInput( 5, nodeValue_Vec3(        "Normal",    [[0,0,0]] )).setArrayDepth(1);
+	newInput( 2, nodeValue_Vec3(    "Positions", [[0,0,0]] )).setArrayDepth(1);
+	newInput( 3, nodeValue_Vec3(    "Rotations", [[0,0,0]] )).setArrayDepth(1);
+	newInput( 4, nodeValue_Vec3(    "Scales",    [[1,1,1]] )).setArrayDepth(1);
+	newInput( 5, nodeValue_Vec3(    "Normal",    [[0,0,0]] )).setArrayDepth(1);
 	
 	////- =Shift
-	newInput(13, nodeValue_Vec3(        "Shift Position",   [1,0,0]   ));
-	newInput(25, nodeValue_Vec3(        "Shift Position Y", [0,1,0]   ));
-	newInput(26, nodeValue_Vec3(        "Shift Position Z", [0,0,1]   ));
-	newInput(14, nodeValue_Quaternion(  "Shift Rotation" ));
-	newInput(15, nodeValue_Vec3(        "Shift Scale",      [0,0,0]   ));
+	newInput(13, nodeValue_Vec3(    "Shift Position",   [1,0,0]   ));
+	newInput(25, nodeValue_Vec3(    "Shift Position Y", [0,1,0]   ));
+	newInput(26, nodeValue_Vec3(    "Shift Position Z", [0,0,1]   ));
+	newInput(14, nodeValue_Quat(    "Shift Rotation"              ));
+	newInput(15, nodeValue_Vec3(    "Shift Scale",      [0,0,0]   ));
 	
 	////- =Scatter
-	newInput( 6, nodeValue_Vec3_Range(  "Position Scatter", array_create(6,0) ));
-	newInput( 7, nodeValue_Vec3_Range(  "Rotation Scatter", array_create(6,0) ));
-	newInput( 8, nodeValue_Vec3_Range(  "Scale Scatter",    array_create(6,0) ));
-	newInput(10, nodeValue_Bool(        "Scale Uniform",    true              ));
+	newInput( 6, nodeValue_Range3(  "Position Scatter", array_create(6,0) ));
+	newInput( 7, nodeValue_Range3(  "Rotation Scatter", array_create(6,0) ));
+	newInput( 8, nodeValue_Range3(  "Scale Scatter",    array_create(6,0) ));
+	newInput(10, nodeValue_Bool(    "Scale Uniform",    true              ));
 	
 	////- =Render
-	newInput(12, nodeValue_Palette(     "Colors Per Index", [ca_white] )).setOptions("Select by:", "array_select", [ "Index Loop", "Index Ping-pong", "Random" ], THEME.array_select_type).iconPad();
-	newInput(11, nodeValue_Gradient(    "Random Colors",    gra_white  ));
+	newInput(12, nodeValue_Palette( "Colors Per Index", [ca_white] )).setOptions("Select by:", "array_select", [ "Index Loop", "Index Ping-pong", "Random" ], THEME.array_select_type).iconPad();
+	newInput(11, nodeValue_Gradient("Random Colors",    gra_white  ));
 	// 28
 	
 	newOutput(0, nodeValue_Output("Mesh", VALUE_TYPE.d3Mesh, noone));
@@ -141,15 +142,16 @@ function Node_3D_Instancer(_x, _y, _group = noone) : Node_3D(_x, _y, _group) con
 			
 			if(_amo <= 0) return noone;
 			
-			var _res = new __3dObjectInstancer();
+			if(object == undefined)
+				object = new __3dObjectInstancer();
 			
-			_res.instance_amount = _amo;
-			_res.objectTransform = _obj.transform;
-			_res.objectTransform.applyMatrix();
+			object.instance_amount = _amo;
+			object.objectTransform = _obj.transform;
+			object.objectTransform.applyMatrix();
 			
 			var _flat_vb = d3d_flattern(_obj);
-			_res.VB = _flat_vb.VB;
-			_res.materials = _flat_vb.materials;
+			object.VB = _flat_vb.VB;
+			object.materials = _flat_vb.materials;
 		#endregion
 		
 		#region data 
@@ -200,7 +202,7 @@ function Node_3D_Instancer(_x, _y, _group = noone) : Node_3D(_x, _y, _group) con
 			var batch_count = ceil(_amo / INSTANCE_BATCH_SIZE);
 			var batch_id     = 0;
 			
-			_res.batch_count = batch_count;
+			object.batch_count = batch_count;
 			
 			repeat(batch_count) {
 				var _buffer = buffer_create(1, buffer_grow, 1);
@@ -330,13 +332,13 @@ function Node_3D_Instancer(_x, _y, _group = noone) : Node_3D(_x, _y, _group) con
 				}
 				
 				_amo -= INSTANCE_BATCH_SIZE;
-				_res.setBuffer(_buffer, batch_id, _amo_batch);
+				object.setBuffer(_buffer, batch_id, _amo_batch);
 				batch_id++;
 				
 				buffer_delete(_buffer);
 			}
 		#endregion
 		
-		return _res;
+		return object;
 	}
 }

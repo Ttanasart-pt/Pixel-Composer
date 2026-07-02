@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.6.001",
+    "changes": [
+      {
+        "date": "2026-07-02T09:34:05.218Z",
+        "node": "",
+        "commit": "**3D Instancer**: Fix memory leak on rendering."
+      }
+    ]
+  },
+  {
     "version": "1.21.4.008",
     "changes": [
       {

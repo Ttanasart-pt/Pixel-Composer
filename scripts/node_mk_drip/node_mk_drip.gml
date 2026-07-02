@@ -14,10 +14,12 @@ function Node_MK_Drip(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	newInput(18, nodeValue_SliRange( "Level",     [0,1] ));
 	
 	////- =Fluid
+	newInput(23, nodeValue_EScroll(  "Type",       0, [ "Linear", "Point" ] ));
 	newInput( 4, nodeValue_Rotation( "Direction", -90             ));
+	newInput(24, nodeValue_Vec2(     "Center",    [.50,.50]       )).setUnitSimple();
 	newInput( 5, nodeValue_Range(    "Distance",  [.25,.25], true )).setMappableConst(19);
 	newInput( 6, nodeValue_Range(    "Thickness", [.20,.20], true )).setCurvable( 7, CURVE_DEF_11 );
-	newInput( 8, nodeValue_Range(    "Threshold", [0,0],     true ));
+	newInput( 8, nodeValue_Range(    "Threshold", [.20,.20], true ));
 	
 	////- =Drip
 	newInput(10, nodeValue_Bool(     "Dripping",   false ));
@@ -33,14 +35,14 @@ function Node_MK_Drip(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	
 	////- =Rendering
 	newInput(17, nodeValue_Color(    "Blend",   ca_white ));
-	// 23
+	// 25
 	
 	newOutput( 0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
 	input_display_list = [ 3, 
 		[ "Surface",   false     ],  0,  1, 
 		[ "Source",    false     ],  2,  9, 15, 18, 
-		[ "Fluid",     false     ],  4,  5, 19,  6,  7,  8,
+		[ "Fluid",     false     ], 23,  4, 24,  5, 19,  6,  7,  8,
 		[ "Dripping",  false, 10 ], 11, 12, 16, 13, 14, 
 		[ "Blobify",   false, 22 ], 20, 21, 
 		[ "Rendering", false     ], 17, 
@@ -51,6 +53,9 @@ function Node_MK_Drip(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	temp_surface = [ noone, noone, noone ];
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _params) {
+		var _type = getInputSingle(23);
+		
+		if(_type == 1) drawOverlayInput(inputs[24].drawOverlay(hover, active, _x, _y, _s, _mx, _my));
 	}
 	
 	static processData = function(_outSurf, _data, _array_index = 0) { 
@@ -65,7 +70,10 @@ function Node_MK_Drip(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 			var _rand  = _data[15];
 			var _levl  = _data[18];
 			
+			var _type  = _data[23];
 			var _dirr  = _data[ 4];
+			var _pont  = _data[24];
+			
 			var _dist  = _data[ 5];
 			var _distM = _data[19];
 			var _thck  = _data[ 6];
@@ -84,6 +92,9 @@ function Node_MK_Drip(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 			var _bThr  = _data[21];
 			
 			var _colr  = _data[17];
+			
+			inputs[ 4].setVisible(_type == 0);
+			inputs[24].setVisible(_type == 1);
 			
 			if(!is_surface(_surf)) return _outSurf;
 		#endregion
@@ -113,7 +124,10 @@ function Node_MK_Drip(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 			shader_set_s( "original",      _surf  );
 			shader_set_f( "seed",          _seed  );
 			
-			shader_set_f( "dripDirection",    _dirr  );
+			shader_set_i( "dripType",      _type  );
+			shader_set_f( "dripDirection", _dirr  );
+			shader_set_f( "dripCenter",    _pont  );
+			
 			shader_set_2( "dripDistance",     _dist  );
 			shader_set_i( "dripDistanceUseMap", inputs[5].attributes.mapped );
 			shader_set_s( "dripDistanceMap",  _distM );

@@ -11,6 +11,11 @@
         "date": "2026-07-02T07:17:29.387Z",
         "node": "any",
         "commit": "Introduced"
+      },
+      {
+        "date": "2026-07-02T09:34:05.214Z",
+        "node": "",
+        "commit": "**3D Instancer**: Fix memory leak on rendering."
       }
     ]
   }
