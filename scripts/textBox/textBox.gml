@@ -969,7 +969,8 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 				else                   draw_sprite_stretched(THEME.textbox, sprite_index, x, y, w, h);
 			}
 			
-			editText();
+			if(sliding != 2)
+				editText();
 			
 			if(!typing && undoable && (ds_stack_empty(undo_stack) || ds_stack_top(undo_stack)[0] != _input_text)) {
 				ds_stack_push(undo_stack, [_input_text, cursor, cursor_select]);
