@@ -55,9 +55,10 @@ function Node_Outline(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	
 	////- =Blend
 	newInput( 3, nodeValue_Bool(    "Blend",           false, "Blend outline color with the original color." ));
+	newInput(22, nodeValue_EScroll( "Blend Mode",      0, [ "Normal", "Multiply", "Screen", "Additive" ] ));
 	newInput( 4, nodeValue_Slider(  "Blend alpha",     1 )).setMappable(16);
-	newInput( 7, nodeValue_EScroll( "Oversample mode", 0, [ "Empty", "Clamp", "Repeat" ] ));
-	// 22
+	newInput( 7, nodeValue_EScroll( "Oversample Mode", 0, [ "Empty", "Clamp", "Repeat" ] ));
+	// 23
 	
 	newOutput(0, nodeValue_Output( "Surface Out", VALUE_TYPE.surface, noone ));
 	newOutput(1, nodeValue_Output( "Outline",     VALUE_TYPE.surface, noone ));
@@ -66,7 +67,7 @@ function Node_Outline(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		[ "Surfaces",  true    ],  0, 21,  9, 10, 13, 14, 
 		[ "Outline",  false    ],  5, 18,  1, 15,  8, 17, 12, 19, 
 		[ "Render",   false    ],  2,  6, 20, 
-		[ "Blend",     true, 3 ],  4, 16,
+		[ "Blend",     true, 3 ], 22,  4, 16,
 	];
 	
 	attribute_surface_depth();
@@ -101,6 +102,7 @@ function Node_Outline(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 			var hres = _data[20];
 			
 			var blnd = _data[ 3];
+			var bmod = _data[22];
 		
 			inputs[1].setType(alis? VALUE_TYPE.float : VALUE_TYPE.integer);
 		#endregion
@@ -126,10 +128,12 @@ function Node_Outline(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 			shader_set_i( "profile",     prof );
 			shader_set_i( "side",        side ); 
 			shader_set_i( "is_aa",       alis );
-			shader_set_i( "is_blend",    blnd );
 			shader_set_i( "sampleMode",  samp );
 			shader_set_i( "crop_border", crop );
 			shader_set_f( "alphaThers",  thrs );
+			
+			shader_set_i( "blendOrig",   blnd );
+			shader_set_i( "blendMode",   bmod );
 			
 			draw_surface_safe(surf);
 		surface_reset_shader();

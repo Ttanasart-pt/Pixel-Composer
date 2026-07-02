@@ -65,8 +65,10 @@ uniform float alphaThers;
 uniform int	  side;
 uniform int	  crop_border;
 uniform int	  is_aa;
-uniform int	  is_blend;
 uniform int	  filter[9];
+
+uniform int	  blendOrig;
+uniform int	  blendMode;
 
 uniform vec2      blend_alpha;
 uniform int       blend_alphaUseSurf;
@@ -135,6 +137,17 @@ void checkPixel(vec2 px, vec2 p) {
 		closetDistance = dist;
 		closetColor    = sam;
 	}
+}
+
+vec4 mixColor(vec4 bg, vec4 fg, float amount) {
+	vec4 res;
+	
+	     if(blendMode == 0) res = fg;
+	else if(blendMode == 1) res = bg * fg;
+	else if(blendMode == 2) res = 1. - (1. - bg) * (1. - fg);
+	else if(blendMode == 3) res = bg + fg;
+	
+	return mix(bg, res, amount);
 }
 
 void main() {
@@ -282,7 +295,7 @@ void main() {
 	
 	if(_aa == 0.) return;
 	
-	if(is_blend == 0) {
+	if(blendOrig == 0) {
 		vec4 bcol = vec4(borderColor.rgb, borderColor.a * _aa);
 		
 		if(borderSide == 0) {
@@ -299,14 +312,14 @@ void main() {
 		
 	} else {
 		if(borderSide == 0) {
-			vec4 blendBord   = mix(baseColor, borderColor, bld);
+			vec4 blendBord   = mixColor(baseColor, borderColor, bld);
 		         blendBord.a = baseColor.a;
 		    
 			resultColor   = blendBord;
 			resultOutline = blendBord;
 			
 		} else {
-			vec4 blendBord   = mix(closetColor, borderColor, bld);
+			vec4 blendBord   = mixColor(closetColor, borderColor, bld);
 		         blendBord.a = _aa;
 		    
 			resultColor    = blendBord;
