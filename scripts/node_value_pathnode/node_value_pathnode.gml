@@ -9,7 +9,9 @@ function __NodeValue_Path(_name, _node, _value, _tooltip = "") : __NodeValue_Obj
 		if(expUse) return -1;
 		
 		var _path = getValue();
-		if(has(_path, "drawOverlay")) return _path.drawOverlay(hover, active, _x, _y, _s, _mx, _my, _params);
+		if(!is_path(_path)) return -1;
+		
+		return _path.drawOverlay(hover, active, _x, _y, _s, _mx, _my, _params);
 	}
 	
 }

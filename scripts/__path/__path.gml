@@ -12,7 +12,7 @@ function Path(_node) constructor {
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _params) { 
 		if(!is(node, Node)) return false;
 		
-		var hv = node.drawOverlay(hover, active, _x, _y, _s, _mx, _my, _params);
+		var hv = node.doDrawOverlay(hover, active, _x, _y, _s, _mx, _my, _params);
 		return (hv ?? false) || node.w_hovering;
 	}
 	

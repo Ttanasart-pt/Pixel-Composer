@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.6.001",
+    "changes": [
+      {
+        "date": "2026-07-02T01:23:10.884Z",
+        "node": "Preview Panel",
+        "commit": "**Preview Panel**: Fix nested path not receive input."
+      }
+    ]
+  },
+  {
     "version": "1.21.4",
     "changes": [
       {
