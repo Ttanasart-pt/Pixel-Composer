@@ -57,17 +57,18 @@
 				
 		#region IO
 					
-			PREFERENCES.double_click_delay				= 0.25;
-			PREFERENCES.mouse_wheel_speed				= 1.00;
+			PREFERENCES.double_click_delay              = 0.25;
+			PREFERENCES.mouse_wheel_speed               = 1.00;
 			
-			PREFERENCES.pen_pool_delay					= 1;
-			PREFERENCES.slider_lock_mouse				= os_type == os_windows;
+			PREFERENCES.pen_pool_delay                  = 1;
+			PREFERENCES.slider_lock_mouse               = os_type == os_windows;
 			
-			PREFERENCES.keyboard_repeat_start			= 0.50;
-			PREFERENCES.keyboard_repeat_speed			= 0.10;
-			PREFERENCES.keyboard_double_delay			= 0.25;
-			PREFERENCES.keyboard_check_sweep			= true;
-			PREFERENCES.keyboard_capture_raw			= true;
+			PREFERENCES.keyboard_repeat_start           = 0.50;
+			PREFERENCES.keyboard_repeat_speed           = 0.10;
+			PREFERENCES.keyboard_double_delay           = 0.25;
+			PREFERENCES.keyboard_check_sweep            = true;
+			PREFERENCES.keyboard_capture_raw            = true;
+			PREFERENCES.keyboard_capture_direct         = false;
 			
 			PREFERENCES.file_watcher_delay              = 0.1;
 			

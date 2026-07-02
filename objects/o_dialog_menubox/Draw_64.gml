@@ -344,12 +344,12 @@ DIALOG_WINCLEAR1
 		if(keyboard_check_pressed(vk_escape)) hk_editing = noone;
 			
 	} else if(sFOCUS) {
-		if(KEYBOARD_PRESSED == vk_up) {
+		if(key_input_press(vk_up)) {
 			selecting--;
 			if(selecting < 0) selecting = array_length(menu) - 1;
 		}
 			
-		if(KEYBOARD_PRESSED == vk_down)
+		if(key_input_press(vk_down))
 			selecting = safe_mod(selecting + 1, array_length(menu));
 		
 		if(keyboard_check_pressed(vk_escape)) {

@@ -240,14 +240,14 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 	////- Edit
 	
 	static onKey = function(key) {
-		if(KEYBOARD_PRESSED == vk_left) {
+		if(key_input_press(vk_left)) {
 			if(key_mod_press(SHIFT)) {
 				if(cursor_select == -1)
 					cursor_select = cursor;
 			}
 			
 			if(cursor_select == -1)
-				move_cursor(-1);
+				moveCursor(-1);
 			else {
 				cursor = min(cursor, cursor_select);
 				cursor_select = -1;
@@ -262,14 +262,14 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 			}
 		}
 				
-		if(KEYBOARD_PRESSED == vk_right) {
+		if(key_input_press(vk_right)) {
 			if(key_mod_press(SHIFT)) {
 				if(cursor_select == -1)
 					cursor_select = cursor;
 			}
 			
 			if(cursor_select == -1)
-				move_cursor(1);
+				moveCursor(1);
 			else {
 				cursor = max(cursor, cursor_select);
 				cursor_select = -1;
@@ -317,7 +317,7 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 		return false;
 	}
 	
-	static move_cursor = function(delta) {
+	static moveCursor = function(delta) {
 		var ll = string_length(_input_text) + 1;
 		cursor = safe_mod(cursor + delta + ll, ll);
 		typing = 100;
@@ -378,7 +378,7 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 				}
 				
 				if(keyboard_check_pressed(vk_escape) || KEYBOARD_ENTER) {
-				} else if(KEYBOARD_PRESSED == vk_backspace) {
+				} else if(key_input_press(vk_backspace)) {
 					if(cursor_select == -1) {
 						var str_before, str_after;
 						
@@ -410,9 +410,9 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 					
 					modified      = true;
 					cursor_select = -1;
-					move_cursor(-1);
+					moveCursor(-1);
 					
-				} else if(KEYBOARD_PRESSED == vk_delete || (keyboard_check_pressed(ord("X")) && key_mod_press(CTRL) && cursor_select != -1)) {
+				} else if(key_input_press(vk_delete) || (keyboard_check_pressed(ord("X")) && key_mod_press(CTRL) && cursor_select != -1)) {
 					if(cursor_select == -1) {
 						var str_before	= string_copy(_input_text, 1, cursor);
 						var str_after	= string_copy(_input_text, cursor + 2, string_length(_input_text) - cursor - 1);
@@ -437,7 +437,7 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 						var str_after	= string_copy(_input_text, cursor + 1, string_length(_input_text) - cursor);
 						
 						_input_text		= str_before + ch + str_after;
-						move_cursor(string_length(ch));
+						moveCursor(string_length(ch));
 						
 					} else {
 						var str_before	= string_copy(_input_text, 1, minc);
@@ -457,16 +457,16 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 			keyboard_lastkey = -1;
 		#endregion
 		
-		if(KEYBOARD_PRESSED == vk_left)  onKey(vk_left);
-		if(KEYBOARD_PRESSED == vk_right) onKey(vk_right);
+		if(key_input_press(vk_left))  onKey(vk_left);
+		if(key_input_press(vk_right)) onKey(vk_right);
 		
 		if(input == TEXTBOX_INPUT.number) {
 			var _inc = 1;
 			if(key_mod_press(CTRL)) _inc *= 10;
 			if(key_mod_press(ALT))  _inc /= 10;
 			
-			if(KEYBOARD_PRESSED == vk_up)   { _input_text = string(toNumber(_input_text) + _inc); apply(); }
-			if(KEYBOARD_PRESSED == vk_down) { _input_text = string(toNumber(_input_text) - _inc); apply(); }
+			if(key_input_press(vk_up))   { _input_text = string(toNumber(_input_text) + _inc); apply(); }
+			if(key_input_press(vk_down)) { _input_text = string(toNumber(_input_text) - _inc); apply(); }
 		}
 		
 		if(modified) {
@@ -484,14 +484,14 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 				if(cursor_select == -1)
 					cursor_select = cursor;
 			} else  cursor_select = -1;
-			move_cursor(-cursor);
+			moveCursor(-cursor);
 			
 		} else if(keyboard_check_pressed(vk_end)) {
 			if(key_mod_press(SHIFT)) {
 				if(cursor_select == -1)
 					cursor_select = cursor;
 			} else  cursor_select = -1;
-			move_cursor(string_length(_input_text) - cursor);
+			moveCursor(string_length(_input_text) - cursor);
 			
 		} else if(keyboard_check_pressed(vk_escape)) {
 			reset();

@@ -73,8 +73,8 @@ event_inherited();
 		}
 		
 		if(sFOCUS) {
-			if(KEYBOARD_PRESSED == vk_up)   selecting = safe_mod(selecting + amo - 1, amo);
-			if(KEYBOARD_PRESSED == vk_down) selecting = safe_mod(selecting + amo + 1, amo);
+			if(key_input_press(vk_up))   selecting = safe_mod(selecting + amo - 1, amo);
+			if(key_input_press(vk_down)) selecting = safe_mod(selecting + amo + 1, amo);
 			
 			if(keyboard_check_pressed(vk_escape)) 
 				instance_destroy();

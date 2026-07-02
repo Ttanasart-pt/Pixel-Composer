@@ -158,6 +158,12 @@ function Panel_Preference() : PanelContent() constructor {
     		));
     		
     		ds_list_add(pref_global, new __Panel_Linear_Setting_Item_Preference(
+    			__txt("pref_keyboard_capture_direct", "Direct Key Capture"),
+    			"keyboard_capture_direct",
+    			new checkBox(function() /*=>*/ {return prefToggle("keyboard_capture_direct")})
+    		));
+    		
+    		ds_list_add(pref_global, new __Panel_Linear_Setting_Item_Preference(
     			__txt("pref_expand_hovering_panel", "Expand hovering panel"),
     			"expand_hover",
     			new checkBox(function() /*=>*/ {return prefToggle("expand_hover")})

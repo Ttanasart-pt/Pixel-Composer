@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.6.001",
+    "changes": [
+      {
+        "date": "2026-07-02T00:14:07.619Z",
+        "node": "Preference",
+        "commit": "**Preference**: Add \"Direct Key Capture\" option to use default keyboard input method."
+      }
+    ]
+  },
+  {
     "version": "1.21.5.005",
     "changes": [
       {

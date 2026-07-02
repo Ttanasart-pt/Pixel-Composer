@@ -71,8 +71,8 @@ void main() {
 	vec2 repeatSize = surfDimension + spacing;
 	vec2 tileId     = floor(tx / repeatSize);
 	
-	     if(shiftAxis == 0) { if(mod(tileId.y, 2.) >= 1.) tx.x += surfDimension * shiftAlt; } 
-	else if(shiftAxis == 1) { if(mod(tileId.x, 2.) >= 1.) tx.y += surfDimension * shiftAlt; }
+	     if(shiftAxis == 0) { if(mod(tileId.y, 2.) >= 1.) tx.x += surfDimension.x * shiftAlt; } 
+	else if(shiftAxis == 1) { if(mod(tileId.x, 2.) >= 1.) tx.y += surfDimension.y * shiftAlt; }
 	
 	     tileId = floor(tx / repeatSize);
 	vec2 tilePx = tx - floor(tx / repeatSize) * repeatSize;

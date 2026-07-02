@@ -193,7 +193,7 @@ function key_press(_key, _mod = MOD_KEY.none, _hold = false) {
 		case vk_right : 
 		case vk_up    : 
 		case vk_down  : 
-			_keyPress = _key == KEYBOARD_PRESSED; 
+			_keyPress = key_input_press(_key) 
 			break;
 		
 		case noone : _keyPress = true; break;
@@ -201,4 +201,8 @@ function key_press(_key, _mod = MOD_KEY.none, _hold = false) {
 	}
 	
 	return _keyPress && _modPress;
+}
+
+function key_input_press(_key) {
+	return PREFERENCES.keyboard_capture_direct? keyboard_check_pressed(_key) : KEYBOARD_PRESSED == _key;
 }

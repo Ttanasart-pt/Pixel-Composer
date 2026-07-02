@@ -440,7 +440,7 @@ function textArea(_input, _onModify) : textInput(_input, _onModify) constructor 
 					modified   = true;
 					ds_stack_push(undo_stack, [_input_text, cursor, cursor_select]);
 					
-				} else if(KEYBOARD_PRESSED == vk_backspace) {
+				} else if(key_input_press(vk_backspace)) {
 					if(cursor_select == -1) {
 						var str_before, str_after;
 						
@@ -478,7 +478,7 @@ function textArea(_input, _onModify) : textInput(_input, _onModify) constructor 
 					move_cursor(-1);
 					modified = true;
 					
-				} else if(KEYBOARD_PRESSED == vk_delete || (keyboard_check_pressed(ord("X")) && key_mod_press(CTRL) && cursor_select != -1)) {
+				} else if(key_input_press(vk_delete) || (keyboard_check_pressed(ord("X")) && key_mod_press(CTRL) && cursor_select != -1)) {
 					if(cursor_select == -1) {
 						var str_before	= string_copy(_input_text, 1, cursor);
 						var str_after	= string_copy(_input_text, cursor + 2, string_length(_input_text) - cursor - 1);
@@ -549,10 +549,10 @@ function textArea(_input, _onModify) : textInput(_input, _onModify) constructor 
 		if(auto_update && (keyboard_check_pressed(vk_anykey) || modified))
 			apply();
 			
-		if(KEYBOARD_PRESSED == vk_left)  onKey(vk_left);
-		if(KEYBOARD_PRESSED == vk_right) onKey(vk_right);
-		if(KEYBOARD_PRESSED == vk_up)    onKey(vk_up);
-		if(KEYBOARD_PRESSED == vk_down)  onKey(vk_down);
+		if(key_input_press(vk_left))  onKey(vk_left);
+		if(key_input_press(vk_right)) onKey(vk_right);
+		if(key_input_press(vk_up))    onKey(vk_up);
+		if(key_input_press(vk_down))  onKey(vk_down);
 		
 		if(keyboard_check_pressed(vk_home)) {
 			if(key_mod_press(SHIFT)) {
