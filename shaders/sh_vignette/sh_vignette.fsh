@@ -134,6 +134,7 @@ varying vec2 v_vTexcoord;
 varying vec4 v_vColour;
 
 uniform int   light;
+uniform vec4  color;
 
 uniform vec2      dimension;
 uniform vec2      center;
@@ -195,5 +196,9 @@ void main() {
 	if(strength_curve_use == 1) strn = curveEval(strength_curve, strength_amount, strn);
 	
 	if(light == 1) strn = strn < 0.001? 10000. : 1. / strn;
-    gl_FragColor = vec4(samp.rgb * strn, samp.a);
+	
+	vec4 col = samp * strn;
+	     col = mix(col * color, col, strn);
+	
+    gl_FragColor = vec4(col.rgb, samp.a);
 }

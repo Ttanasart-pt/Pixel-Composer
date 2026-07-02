@@ -17,15 +17,16 @@ function Node_Vignette(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	newInput( 4, nodeValue_Slider( "Exponent",  .25 )).setPieMenu();
 	
 	////- =Render
-	newInput( 6, nodeValue_Bool( "Lighten", false )).setPieMenu();
-	// input 16
+	newInput( 6, nodeValue_Bool(  "Lighten", false    )).setPieMenu();
+	newInput(16, nodeValue_Color( "Color",   ca_white ));
+	// 17
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
 	input_display_list = [ 1, 
 		[ "Surfaces", false ],  0, 11, 12, 13, 14, 
 		[ "Vignette", false ],  5,  7,  2,  8,  3,  9, 10, 
-		[ "Render",   false ],  6, 
+		[ "Render",   false ],  6, 16, 
 	]
 	
 	////- Node
@@ -56,16 +57,19 @@ function Node_Vignette(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 			var _strn = _data[ 3];
 			
 			var _ligh = _data[ 6];
+			var _colr = _data[16];
 		#endregion
 		
 		surface_set_shader(_outSurf, sh_vignette);
-			shader_set_f_map("smoothness", _smot, _data[7], inputs[5] );
-			shader_set_f_map("exposure",   _expo, _data[8], inputs[2] );
-			shader_set_f_map("strength",   _strn, _data[9], inputs[3], _data[10] );
+			shader_set_m( "smoothness", _smot, _data[7], inputs[5] );
+			shader_set_m( "exposure",   _expo, _data[8], inputs[2] );
+			shader_set_m( "strength",   _strn, _data[9], inputs[3], _data[10] );
 			
 			shader_set_2( "dimension", surface_get_dimension(_outSurf) );
 			shader_set_2( "center",    _cent );
+			
 			shader_set_i( "light",     _ligh );
+			shader_set_c( "color",     _colr );
 			
 			draw_surface_safe(_surf);
 		surface_reset_shader();
