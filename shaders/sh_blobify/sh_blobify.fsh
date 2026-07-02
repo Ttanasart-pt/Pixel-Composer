@@ -133,7 +133,6 @@ void main() {
 	}
 	
 	cc /= dv;
-	// cc /= da;
 	
 	vec4  res    = cc;
 	float bright = (cc.r + cc.g + cc.b) / 3. * cc.a; 

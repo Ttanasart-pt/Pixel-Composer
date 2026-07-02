@@ -6,6 +6,11 @@
         "date": "2026-07-02T06:30:56.364Z",
         "node": "Preview Panel",
         "commit": "**Preview Panel**: Array index textbox now clamped."
+      },
+      {
+        "date": "2026-07-02T07:17:29.387Z",
+        "node": "any",
+        "commit": "Introduced"
       }
     ]
   }

@@ -138,8 +138,12 @@ uniform vec2 dimension;
 
 uniform sampler2D original;
 
-uniform float dripDirection;
-uniform vec2  dripDistance;
+uniform float     dripDirection;
+
+uniform vec2      dripDistance;
+uniform int       dripDistanceUseMap;
+uniform sampler2D dripDistanceMap;
+
 uniform vec2  dripThreshold;
 
 uniform vec2  thickness;
@@ -177,8 +181,9 @@ void main() {
 	gl_FragColor = vec4(0.);
 	
 	if(base.a > 0.) {
-		vec4 edge = texture2D(gm_BaseTexture, v_vTexcoord + dripVec * tx);
-		if(edge.a == 0.) gl_FragColor = texture2D(original, v_vTexcoord);
+		// vec4 edge = texture2D(gm_BaseTexture, v_vTexcoord + dripVec * tx);
+		// if(edge.a == 0.) 
+		gl_FragColor = texture2D(original, v_vTexcoord);
 		return;
 	}
 	
@@ -201,7 +206,14 @@ void main() {
 		
 		float _thres   = mix(dripThreshold.x, dripThreshold.y, random(dripCel + 0.2683));
 		float _currThk = mix(thickness.x,     thickness.y,     random(dripCel + 0.9836));
-		float _currDis = mix(dripDistance.x,  dripDistance.y,  random(dripCel + 0.6985));
+		
+		float _currDisFac = random(dripCel + 0.6985);
+		if(dripDistanceUseMap == 1) {
+			vec4 drpDis = texture2D(dripDistanceMap, dripCel);
+			_currDisFac = (drpDis.r + drpDis.g + drpDis.b) / 3. * drpDis.a;
+		}
+			
+		float _currDis    = mix(dripDistance.x,  dripDistance.y,  _currDisFac);
 		
 		if(_samThk < 0.) break;
 		if(_samThk > _thres && _samThk > samThk && _samThk > _currThk) {

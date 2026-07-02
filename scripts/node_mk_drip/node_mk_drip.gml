@@ -15,7 +15,7 @@ function Node_MK_Drip(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	
 	////- =Fluid
 	newInput( 4, nodeValue_Rotation( "Direction", -90             ));
-	newInput( 5, nodeValue_Range(    "Distance",  [.25,.25], true ));
+	newInput( 5, nodeValue_Range(    "Distance",  [.25,.25], true )).setMappableConst(19);
 	newInput( 6, nodeValue_Range(    "Thickness", [.20,.20], true )).setCurvable( 7, CURVE_DEF_11 );
 	newInput( 8, nodeValue_Range(    "Threshold", [0,0],     true ));
 	
@@ -26,17 +26,23 @@ function Node_MK_Drip(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	newInput(13, nodeValue_Float(    "Phase",      0     ));
 	newInput(14, nodeValue_Float(    "Speed",      1     ));
 	
+	////- =Blobify
+	newInput(22, nodeValue_Bool(     "Use Blobify", 0    ));
+	newInput(20, nodeValue_Float(    "Blobify",     0    ));
+	newInput(21, nodeValue_Slider(   "Threshold",  .5    ));
+	
 	////- =Rendering
 	newInput(17, nodeValue_Color(    "Blend",   ca_white ));
-	// 19
+	// 23
 	
 	newOutput( 0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
 	input_display_list = [ 3, 
 		[ "Surface",   false     ],  0,  1, 
 		[ "Source",    false     ],  2,  9, 15, 18, 
-		[ "Fluid",     false     ],  4,  5,  6,  7,  8,
+		[ "Fluid",     false     ],  4,  5, 19,  6,  7,  8,
 		[ "Dripping",  false, 10 ], 11, 12, 16, 13, 14, 
+		[ "Blobify",   false, 22 ], 20, 21, 
 		[ "Rendering", false     ], 17, 
 	];
 	
@@ -61,6 +67,7 @@ function Node_MK_Drip(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 			
 			var _dirr  = _data[ 4];
 			var _dist  = _data[ 5];
+			var _distM = _data[19];
 			var _thck  = _data[ 6];
 			var _thckC = _data[ 7];
 			var _thrs  = _data[ 8];
@@ -71,6 +78,10 @@ function Node_MK_Drip(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 			var _amplC = _data[16];
 			var _phas  = _data[13];
 			var _sped  = _data[14];
+			
+			var _bUse  = _data[22];
+			var _blob  = _data[20];
+			var _bThr  = _data[21];
 			
 			var _colr  = _data[17];
 			
@@ -98,12 +109,15 @@ function Node_MK_Drip(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		surface_reset_shader();
 		
 		surface_set_shader(temp_surface[1], sh_mk_drip);
-			shader_set_2( "dimension", _dim  );
-			shader_set_s( "original",  _surf );
-			shader_set_f( "seed",      _seed );
+			shader_set_2( "dimension",     _dim   );
+			shader_set_s( "original",      _surf  );
+			shader_set_f( "seed",          _seed  );
 			
-			shader_set_f( "dripDirection", _dirr  );
-			shader_set_2( "dripDistance",  _dist  );
+			shader_set_f( "dripDirection",    _dirr  );
+			shader_set_2( "dripDistance",     _dist  );
+			shader_set_i( "dripDistanceUseMap", inputs[5].attributes.mapped );
+			shader_set_s( "dripDistanceMap",  _distM );
+			
 			shader_set_2( "dripThreshold", _thrs  );
 			shader_set_2( "thickness",     _thck  );
 			shader_set_curve( "thickness", _thckC );
@@ -118,9 +132,25 @@ function Node_MK_Drip(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 			draw_surface( temp_surface[0], 0, 0 );
 		surface_reset_shader();
 		
+		if(_bUse) {
+			surface_set_shader(temp_surface[2], sh_mk_drip_round);
+				shader_set_2( "dimension",  _dim   );
+				shader_set_f( "radius",     _blob  );
+				shader_set_f( "threshold",  _bThr  );
+				
+				draw_surface( temp_surface[1], 0, 0 );
+			surface_reset_shader();
+			
+		} else {
+			surface_set_shader(temp_surface[2]);
+				draw_surface( temp_surface[1], 0, 0 );
+			surface_reset_shader();
+			
+		}
+		
 		surface_set_shader(_outSurf, sh_sample, true, BLEND.normal);
+			draw_surface_ext( temp_surface[2], 0, 0, 1, 1, 0, _colr, 1);
 			draw_surface( _surf, 0, 0 );
-			draw_surface_ext( temp_surface[1], 0, 0, 1, 1, 0, _colr, 1);
 		surface_reset_shader();
 		
 		return _outSurf;
