@@ -426,7 +426,7 @@ function Panel_Preview() : PanelContent() constructor {
     		var _node = getNodePreview();
     		if(!is(_node, Node)) return;
     		
-    		_node.preview_index = round(i);
+    		_node.preview_index = max(0, round(i));
             if(resetViewOnDoubleClick) 
             	do_fullView = true;
             GraphRefresh();

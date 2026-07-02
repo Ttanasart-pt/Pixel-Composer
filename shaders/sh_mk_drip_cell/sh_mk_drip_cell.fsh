@@ -6,6 +6,7 @@ uniform float seed;
 uniform vec2  dimension;
 uniform float scale;
 uniform vec2  offset;
+uniform vec2  level;
 
 uniform float randomness;
 
@@ -42,6 +43,7 @@ void main() {
     }
     
     float drip = clamp(1. - m_dist, 0., 1.);
+	      drip = mix(level.x, level.y, drip);
 	
 	gl_FragColor = vec4(drip, cell, base.a);
 }

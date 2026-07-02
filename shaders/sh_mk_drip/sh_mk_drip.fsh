@@ -139,10 +139,10 @@ uniform vec2 dimension;
 uniform sampler2D original;
 
 uniform float dripDirection;
-uniform float dripDistance;
-uniform float dripThreshold;
+uniform vec2  dripDistance;
+uniform vec2  dripThreshold;
 
-uniform float thickness;
+uniform vec2  thickness;
 uniform float thickness_curve[CURVE_MAX];
 uniform int   thickness_amount;
 
@@ -168,12 +168,11 @@ void main() {
 	vec4 base = texture2D(gm_BaseTexture, v_vTexcoord);
 	vec4 colr = base;
 	
-	float maxDrip = dripDistance;
+	float maxDrip = max(dripDistance.x, dripDistance.y);
 	float rota    = radians(dripDirection);
 	
 	vec2  dripVec  = vec2(cos(rota), -sin(rota));
 	float dripStep = maxDrip * dimension.x;
-	float thkInv   = 1. - thickness;
 	
 	gl_FragColor = vec4(0.);
 	
@@ -185,38 +184,52 @@ void main() {
 	
 	bool  isDrip  = false;
 	float dripLen = 0.;
-	float samThk  = thkInv;
 	vec2  dripPos;
 	vec4  dripCol;
+	
+	float samThk  = 0.;
+	float currThk = samThk;
+	float currThr = 0.;
+	float currDis = 0.;
 	
 	for(float i = 0.; i < dripStep; i++) {
 		vec2  _dripPos = v_vTexcoord - dripVec * i * tx;
 		vec4  _dripCol = texture2D(gm_BaseTexture, _dripPos);
+		
 		float _samThk  = _dripCol.r * _dripCol.a;
+		vec2  dripCel  = _dripCol.gb;
+		
+		float _thres   = mix(dripThreshold.x, dripThreshold.y, random(dripCel + 0.2683));
+		float _currThk = mix(thickness.x,     thickness.y,     random(dripCel + 0.9836));
+		float _currDis = mix(dripDistance.x,  dripDistance.y,  random(dripCel + 0.6985));
 		
 		if(_samThk < 0.) break;
-		
-		if(_samThk > samThk) {
+		if(_samThk > _thres && _samThk > samThk && _samThk > _currThk) {
 			isDrip  = true;
-			dripLen = i;
+			dripLen = 1. - i / dripStep * (maxDrip / _currDis);
 			
 			dripPos = _dripPos;
 			dripCol = _dripCol;
 			samThk  = _samThk;
+			
+			currThk = _currThk;
+			currThr = _thres;
+			currDis = _currDis;
 		}
 	}
 	
 	vec4  origColor = texture2D(original, dripPos);
 	
-	if(!isDrip) {
+	if(!isDrip || dripLen < 0. || dripLen > 1.) {
 		gl_FragColor = vec4(origColor.rgb, 0.);
 		return;
 	}
 	
-	float dripPrg   = 1. - dripLen / dripStep;
+	float dripPrg   = dripLen;
 	float dripCurve = curveEval(thickness_curve, thickness_amount, 1. - dripPrg);
 	
-	float samThkNrm = (samThk - thkInv) / thickness;
+	float thkInv    = 1. - currThk;
+	float samThkNrm = (samThk - thkInv) / currThk;
 	float dripDens  = samThkNrm * 2. * dripCurve;
 	
 	vec2 dripCel = dripCol.gb;
@@ -231,7 +244,7 @@ void main() {
 		dripDens *= dripAnim;
 	}
 	
-	float dripDraw  = step(dripThreshold, dripDens);
+	float dripDraw  = step(currThr, dripDens);
 	
 	gl_FragColor = vec4(origColor.rgb, dripDraw);
 }

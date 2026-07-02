@@ -1,0 +1,12 @@
+[
+  {
+    "version": "1.21.6.001",
+    "changes": [
+      {
+        "date": "2026-07-02T06:30:56.364Z",
+        "node": "Preview Panel",
+        "commit": "**Preview Panel**: Array index textbox now clamped."
+      }
+    ]
+  }
+]
