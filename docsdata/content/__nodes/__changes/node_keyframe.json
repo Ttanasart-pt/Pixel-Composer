@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.6.003",
+    "changes": [
+      {
+        "date": "2026-07-03T23:54:00.975Z",
+        "node": "Animation Panel",
+        "commit": "**Animation Panel**: Fix alt+drag to duplicate key sync easing."
+      }
+    ]
+  },
+  {
     "version": "1.21.6.002",
     "changes": [
       {

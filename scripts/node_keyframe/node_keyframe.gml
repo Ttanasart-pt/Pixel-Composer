@@ -41,17 +41,19 @@ function valueKey(_time, _value, _anim = noone, _in = 0, _ot = 0) constructor {
 		anim  = _anim;
 		ratio = 0;
 		
+		curveMode     = false;
+		
 		color         = c_white;
 		colorUnselect = undefined;
 		colorSelect   = undefined;
 		
-		ease_y_lock = true;
-		ease_in	    = [_in, 1];
-		ease_out    = [_ot, 0];
+		ease_y_lock   = true;
+		ease_in	      = [_in, 1];
+		ease_out      = [_ot, 0];
 		
-		var _int = anim? anim.prop.key_inter : CURVE_TYPE.linear;
-		ease_in_type  = _int;
-		ease_out_type = _int;
+		var _interpol = anim? anim.prop.key_inter : CURVE_TYPE.linear;
+		ease_in_type  = _interpol;
+		ease_out_type = _interpol;
 		dopesheet_x   = 0;
 		dopesheet_s   = true;
 		freeze        = false;
@@ -69,15 +71,22 @@ function valueKey(_time, _value, _anim = noone, _in = 0, _ot = 0) constructor {
 		return self;
 	}
 	
+	static copyValue = function(target) {
+		type          = target.type;
+		color         = target.color;
+		
+		curveMode     = target.curveMode;
+		ease_in       = [ target.ease_in[0],  target.ease_in[1]  ];
+		ease_out      = [ target.ease_out[0], target.ease_out[1] ];
+		ease_in_type  = target.ease_in_type;
+		ease_out_type = target.ease_out_type;
+		
+		return self;
+	}
+	
 	static clone = function(target = noone) {
 		var val = has(value, "clone")? value.clone() : value;
-		var key = new valueKey(time, val, target);
-		key.type          = type;
-		key.color         = color;
-		key.ease_in       = [ ease_in[0],  ease_in[1]  ];
-		key.ease_out      = [ ease_out[0], ease_out[1] ];
-		key.ease_in_type  = ease_in_type;
-		key.ease_out_type = ease_out_type;
+		var key = new valueKey(time, val, target).copyValue(self);
 		
 		return key;
 	}
@@ -97,12 +106,8 @@ function valueKey(_time, _value, _anim = noone, _in = 0, _ot = 0) constructor {
 		
 		if(_anim == noone) _anim = anim;
 		
-		var key = new valueKey(time + shift, value, _anim);
-		key.type          = type;
-		key.ease_in       = ease_in;
-		key.ease_out      = ease_out;
-		key.ease_in_type  = ease_in_type;
-		key.ease_out_type = ease_out_type;
+		var key = new valueKey(time + shift, value, _anim).copyValue(self);
+		
 		array_push(_anim.values, key);
 		_anim.setKeyTime(key, time + shift, removeDup);
 		
@@ -653,14 +658,15 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 				
 			}
 			
-			_value_list[1] = val;
-			_value_list[2] = _v.ease_in;
-			_value_list[3] = _v.ease_out;
-			_value_list[4] = _v.ease_in_type;
-			_value_list[5] = _v.ease_out_type;
-			_value_list[6] = _v.ease_y_lock;
-			_value_list[7] = _v.driverObject? _v.driverObject.serialize() : 0;
-			_value_list[8] = _v.color;
+			_value_list[ 1] = val;
+			_value_list[ 2] = _v.ease_in;
+			_value_list[ 3] = _v.ease_out;
+			_value_list[ 4] = _v.ease_in_type;
+			_value_list[ 5] = _v.ease_out_type;
+			_value_list[ 6] = _v.ease_y_lock;
+			_value_list[ 7] = _v.driverObject? _v.driverObject.serialize() : 0;
+			_value_list[ 8] = _v.color;
+			_value_list[ 9] = _v.curveMode;
 			
 			if(_v.driverObject != undefined)    _comp = false;
 			if(prop.type == VALUE_TYPE.trigger) _comp = false;
@@ -713,15 +719,16 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 			var _klen     = array_length(_keyframe);
 			var _type     = 0;
 			
-			var timeData      = _klen > 0? _keyframe[0] :  0;
-			var value		  = _klen > 1? _keyframe[1] :  0;
-			var ease_in		  = _klen > 2? _keyframe[2] : [0,1];
-			var ease_out	  = _klen > 3? _keyframe[3] : [0,0];
-			var ease_in_type  = _klen > 4? _keyframe[4] :  0;
-			var ease_out_type = _klen > 5? _keyframe[5] :  0;
-			var ease_y_lock   = _klen > 6? _keyframe[6] :  1;
-			var driver        = _klen > 7? _keyframe[7] :  0;
-			var color         = _klen > 8? _keyframe[8] :  c_white;
+			var timeData      = _klen > 0? _keyframe[ 0] :  0;
+			var value		  = _klen > 1? _keyframe[ 1] :  0;
+			var ease_in		  = _klen > 2? _keyframe[ 2] : [0,1];
+			var ease_out	  = _klen > 3? _keyframe[ 3] : [0,0];
+			var ease_in_type  = _klen > 4? _keyframe[ 4] :  0;
+			var ease_out_type = _klen > 5? _keyframe[ 5] :  0;
+			var ease_y_lock   = _klen > 6? _keyframe[ 6] :  1;
+			var driver        = _klen > 7? _keyframe[ 7] :  0;
+			var color         = _klen > 8? _keyframe[ 8] :  c_white;
+			var curveM        = _klen > 9? _keyframe[ 9] :  false;
 			
 			if(is_array(timeData)) {
 				_type = timeData[0];
@@ -808,6 +815,8 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 			var vk = new valueKey(_time, _val, self);
 			vk.type          = _type;
 			vk.color         = color;
+			
+			vk.curveMode     = curveM;
 			vk.ease_in[0]    = ease_in[0];
 			vk.ease_in[1]    = ease_in[1];
 			vk.ease_out[0]   = ease_out[0];
