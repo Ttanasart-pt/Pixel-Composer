@@ -135,10 +135,13 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 		y     = 0;
 		h     = 0;
 		
-		key_map = array_create(NODE_TOTAL_FRAMES);
+		key_map      = array_create(NODE_TOTAL_FRAMES);
 		key_map_mode = KEYFRAME_END.hold;
 		
-		animate_frames = [];
+		value_delta     = 0;
+		animate_frames  = [];
+		
+		hovering = false;
 		
 		if(_prop.type != VALUE_TYPE.trigger) array_push(values, new valueKey(0, _val, self));
 		
@@ -445,6 +448,8 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 	}
 	
 	static setValue = function(_val = 0, _record = true, _time = NODE_CURRENT_FRAME, ease_in = 0, ease_out = 0) {
+		
+		value_delta     = 0;
 		
 		if(prop.type == VALUE_TYPE.trigger) {
 			if(!prop.is_anim) {

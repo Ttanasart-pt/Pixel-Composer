@@ -514,6 +514,9 @@ function Panel_Animation() : PanelContent() constructor {
         var _sel    = PANEL_GRAPH.nodes_selecting;
         var _selAny = array_length(_sel) > 0;
         
+        var _prpHv  = PANEL_INSPECTOR.prop_hover;
+        var _prpAny = _prpHv == noone;
+        
         for( var i = 0, n = array_length(folder.contents); i < n; i++ ) {
             var _cont = folder.contents[i];
             if(!_cont.active) continue;
@@ -563,11 +566,12 @@ function Panel_Animation() : PanelContent() constructor {
                 var _fullSize = !_selAny || _node.is_selecting;
                 for( var j = 0, m = array_length(_anim); j < m; j++ ) {
                 	var keys = _anim[j].values;
+                	var keyf = _fullSize && (_prpAny || _prpHv == _anim[j].prop);
                 	
                 	for( var k = 0, p = array_length(keys); k < p; k++ ) {
                 		var key = keys[k];
                 		key.dopesheet_x = (key.time + 1) * timeline_scale + timeline_shift;
-                		key.dopesheet_s = _fullSize;
+                		key.dopesheet_s = keyf;
                 	}
                 	
                 	array_append(timeline_keys, keys);
@@ -817,7 +821,7 @@ function Panel_Animation() : PanelContent() constructor {
         for( var i = 0, n = array_length(timeline_keys); i < n; i++ ) {
         	var key = timeline_keys[i];
         	var ks  = key.dopesheet_s? THEME.timeline_keyframe : THEME.timeline_key_empty;
-        	var ka  = .75 + key.dopesheet_s * .25;
+        	var ka  = .55 + key.dopesheet_s * .25;
         	
         	draw_sprite_ui_uniform(ks, 0, key.dopesheet_x, ky, 1, key.color, ka);
         }

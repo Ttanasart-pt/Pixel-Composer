@@ -65,6 +65,14 @@ function Panel_Animation_Setting() : Panel_Linear_Setting() constructor {
 			"panel_animation_quan_scale", 
 		),
 		
+		new __Panel_Linear_Setting_Item(
+			__txt("Analyze Mode"),
+			new checkBox(function() /*=>*/ { PANEL_ANIMATION.animation_analyze = !PANEL_ANIMATION.animation_analyze; }),
+			function( ) /*=>*/   {return PANEL_ANIMATION.animation_analyze},
+			function(v) /*=>*/ { PANEL_ANIMATION.animation_analyze = v; },
+			false,
+		),
+		
 	];
 	
 	setHeight();

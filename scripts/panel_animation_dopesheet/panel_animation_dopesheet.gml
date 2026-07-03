@@ -66,6 +66,8 @@
     function panel_animation_region_create()           { CALL("animation_region_create");           PANEL_ANIMATION.region_create(); }
     function panel_animation_region_clear()            { CALL("animation_region_clear");            PANEL_ANIMATION.region_clear();  }
     
+    function panel_animation_analyze_toggle()          { CALL("animation_analyze_toggle");          PANEL_ANIMATION.animation_analyze = !PANEL_ANIMATION.animation_analyze; }
+    
 	function __fnInit_Dopesheet() {
 		var an = "Animation";
 		var n  = MOD_KEY.none;
@@ -280,6 +282,8 @@ function Panel_Animation_Dopesheet() {
         
         tooltip_action      = "";
         tooltip_action_time = 0;
+        
+        animation_analyze   = false;
     #endregion
     
     #region ---- Graph ----
@@ -1101,7 +1105,7 @@ function Panel_Animation_Dopesheet() {
         var aa   = 1;
         
         var mmx = msx;
-        var mmy = msy - (key_y + ui(8));
+        var mmy = msy - (key_y + ui(6));
         
         var _gy_val_min = prop.attributes.graph_range[0];
 		var _gy_val_max = prop.attributes.graph_range[1];
@@ -1368,6 +1372,8 @@ function Panel_Animation_Dopesheet() {
         
         draw_set_alpha(1);
         
+        var rr = ui(8);
+        
         if(modulate_animator == noone)
         for(var i = 0; i < kamo; i++) { // draw key
             var key = animator.values[i];
@@ -1399,7 +1405,7 @@ function Panel_Animation_Dopesheet() {
                     draw_line(ix, iy, px, py);
                     draw_sprite_ui_uniform(THEME.circle, 0, ix, iy, .75, _hv? COLORS._main_accent : cc, aa);
                     
-                    if(point_in_circle(mmx, mmy, ix, iy, 4)) {
+                    if(point_in_circle(mmx, mmy, ix, iy, rr)) {
                         _graph_key_hover       = key;
                         _graph_key_hover_index = KEYFRAME_DRAG_TYPE.ease_in;
                         
@@ -1418,7 +1424,7 @@ function Panel_Animation_Dopesheet() {
                     draw_line(px, py, ox, oy);
                     draw_sprite_ui_uniform(THEME.circle, 0, ox, oy, .75, _hv? COLORS._main_accent : cc, aa);
                     
-                    if(point_in_circle(mmx, mmy, ox, oy, 4)) {
+                    if(point_in_circle(mmx, mmy, ox, oy, rr)) {
                         _graph_key_hover       = key;
                         _graph_key_hover_index = KEYFRAME_DRAG_TYPE.ease_out;
                         
@@ -1437,7 +1443,7 @@ function Panel_Animation_Dopesheet() {
                 
                 draw_sprite_ui_uniform(THEME.timeline_keyframe, 0, px, py, 1, _hv? COLORS._main_accent : cc, aa);
                 
-                if(point_in_circle(mmx, mmy, px, py, 5)) {
+                if(point_in_circle(mmx, mmy, px, py, ui(10))) {
                 	TOOLTIP = v[j];
                 	
                     _graph_key_hover       = key;
@@ -1452,6 +1458,10 @@ function Panel_Animation_Dopesheet() {
         } // draw key
         
         draw_set_alpha(1);
+        
+        // draw_set_color(c_red);
+        // draw_line(mmx - 8, mmy, mmx + 8, mmy)
+        // draw_line(mmx, mmy - 8, mmx, mmy + 8)
         
         if(modulate_animator == animator) drawDopesheet_Graph_Line_Modulate(mmx, mmy, _gy0, _gy1);
     }
@@ -1578,11 +1588,7 @@ function Panel_Animation_Dopesheet() {
 			if(edit) {
 				if(is_real(KEYBOARD_NUMBER))
 					range[graph_range_edit_side] = KEYBOARD_NUMBER;
-				// else {
-				// 	if(graph_range_edit_side == 0) rmin = "-";
-				// 	else rmax = "-";
-				// }
-					
+				
 				if(key_press(vk_enter)) {
 					graph_range_editing = undefined;
 					
@@ -1640,6 +1646,8 @@ function Panel_Animation_Dopesheet() {
         
         var key_hover   = noone;
         var key_list    = animator.values;
+        
+        var rr = ui(8);
         
         if((animator.prop.on_end == KEYFRAME_END.loop || animator.prop.on_end == KEYFRAME_END.ping) && array_length(key_list) > 1) {
             var keyframe_s = animator.prop.loop_range == -1? key_list[0].time : key_list[array_length(key_list) - 1 - animator.prop.loop_range].time;
@@ -1705,7 +1713,7 @@ function Panel_Animation_Dopesheet() {
 	            var key = key_list[k];
 	            _nx = key.dopesheet_x;
 	            
-	            if(k && _ok.freeze) draw_line_width(_ox, _cy, _nx, _cy, ui(12));
+	            if(!animator.hovering && k && _ok.freeze) draw_line_width(_ox, _cy, _nx, _cy, ui(12));
 	            
 	            _ok = key;
 	            _ox = _nx;
@@ -1730,7 +1738,7 @@ function Panel_Animation_Dopesheet() {
                 	draw_set_alpha(1);
                 }
                 
-                if(pHOVER && point_in_circle(msx, msy, _tx, prop_dope_y, ui(6))) {
+                if(pHOVER && point_in_circle(msx, msy, _tx, prop_dope_y, rr)) {
                     key_hover = key;
                     draw_sprite_ui_uniform(THEME.timeline_key_ease, 0, _tx, prop_dope_y, 1, COLORS.panel_animation_keyease_selected);
                     if(mouse_lpress(pFOCUS) && !key_mod_press(SHIFT)) {
@@ -1755,7 +1763,7 @@ function Panel_Animation_Dopesheet() {
                 	draw_set_alpha(1);
                 }
                     
-                if(pHOVER && point_in_circle(msx, msy, _tx, prop_dope_y, ui(6))) {
+                if(pHOVER && point_in_circle(msx, msy, _tx, prop_dope_y, rr)) {
                     key_hover = key;
                     draw_sprite_ui_uniform(THEME.timeline_key_ease, 1, _tx, prop_dope_y, 1, COLORS.panel_animation_keyease_selected);
                     if(mouse_lpress(pFOCUS) && !key_mod_press(SHIFT)) {
@@ -1763,6 +1771,7 @@ function Panel_Animation_Dopesheet() {
                         keyframe_drag_type = KEYFRAME_DRAG_TYPE.ease_out;
                         keyframe_dragging_mx = mx;
                     }
+                    
                 } else
                     draw_sprite_ui_uniform(THEME.timeline_key_ease, 1, _tx, prop_dope_y, 1, COLORS.panel_animation_keyease_unselected);
             }
@@ -1771,8 +1780,62 @@ function Panel_Animation_Dopesheet() {
         return key_hover;
     }
 	
+    function drawDopesheet_Graph_Analyze(animator, msx, msy) {
+        var _py   = animator.y;
+        var _famo = TOTAL_FRAMES;
+        
+        var ov = animator.getValue(0);
+        var nv;
+        
+        var y0 = _py - ui(4);
+        var y1 = _py + ui(4);
+        var x0 = timeline_shift + .5 * timeline_scale;
+        var x1;
+        
+    	draw_set_alpha(1);
+        
+        var  delMax = animator.value_delta;
+        var _delMax = 0;
+        
+        var valArr = is_array(ov);
+        var valLen = array_safe_length(ov);
+        
+        var oc = undefined;
+        var nc = undefined;
+        
+        for( var i = 1; i <= _famo; i++ ) {
+        	nv = animator.getValue(i);
+        	x1 = x0 + timeline_scale;
+        	
+        	var delt = 0;
+        	if(valArr) {
+        		for( var j = 0; j < valLen; j++ )
+        			delt += sqr(ov[j] - nv[j]);
+        		delt = sqrt(delt);
+        		
+        	} else 
+        		delt = abs(nv - ov);
+        	_delMax = max(_delMax, delt);
+        	
+        	if(delMax > 0) {
+        		var _delDraw = delt / delMax;
+        		// nc = make_color_grey(_delDraw);
+        		nc = get_delta_gradient(_delDraw);
+        		oc = oc ?? nc;
+	        	draw_rectangle_color(x0, y0, x1-1, y1, oc, nc, nc, oc, false);
+	        	oc = nc;
+        	}
+        	
+        	x0 = x1;
+        	ov = nv;
+        }
+        
+        draw_set_alpha(1);
+        
+        animator.value_delta = _delMax;
+    }
+    
     function drawDopesheet_Graph() {
-    	
         var msx = mx - bar_x;
         var msy = my - ui(8);
         
@@ -1809,13 +1872,18 @@ function Panel_Animation_Dopesheet() {
                 var _dy   = prop.y;
                 
                 if(isGraphable(_prop)) {
-                    var _graph_show = _prop.sep_axis? array_any(_prop.attributes.show_graphs, function(v) /*=>*/ {return v == true}) : _prop.attributes.show_graph;
+                    var _graph_show = _prop.sep_axis? array_any(_prop.attributes.show_graphs, function(v,i) /*=>*/ {return v == true}) : _prop.attributes.show_graph;
                     if(_graph_show) drawDopesheet_Graph_Prop(_prop, _dy, msx, msy);
                 }
                     
                 var _anims = prop.animations;
                 for( var k = 0, o = array_length(_anims); k < o; k++ ) {
-                    var key = drawDopesheet_Graph_BG(_anims[k], msx, msy);
+                	var _anim = _anims[k];
+                	
+                    if(animation_analyze && _anim.hovering) 
+                    	drawDopesheet_Graph_Analyze(_anim, msx, msy);
+                    
+                    var key = drawDopesheet_Graph_BG(_anim, msx, msy);
                     if(key != noone) key_hover = key;
                     
                     _dy = _anims[k].y;
@@ -1957,6 +2025,13 @@ function Panel_Animation_Dopesheet() {
     }
     
     ////- Draw Animator
+    
+    function get_delta_gradient(val) {
+    	if(val < .25) return merge_color(CDEF.dkgrey, CDEF.red,    (val - .00) * 4);
+    	if(val < .50) return merge_color(CDEF.red,    CDEF.orange, (val - .25) * 4);
+    	if(val < .75) return merge_color(CDEF.orange, CDEF.yellow, (val - .50) * 4);
+    	              return merge_color(CDEF.yellow, CDEF.lime,   (val - .75) * 4);
+    }
     
     function drawDopesheet_AnimatorKeys(_cont, animator, msx, msy) {
         var _node      = _cont.node;
@@ -2791,15 +2866,17 @@ function Panel_Animation_Dopesheet() {
                     
                     var _anims = prop.animations;
                     for( var k = 0, p = array_length(_anims); k < p; k++ ) {
-                    	var ph = max(ui(18), _anims[k].h);
-                        _anims[k].y = key_y;
+                    	var _anim = _anims[k];
+                    	var  ph   = max(ui(18), _anim.h);
+                        _anim.y   = key_y;
+                        
+                        var _vFocus = animator_focusing != noone && _prop == animator_focusing.prop;
+                        var _vHover = animator_hovering != noone && _prop == animator_hovering.prop;
+                        _anim.hovering = _vHover;
                         
                         if(_item.color_cur > -1) {
                             draw_set_color(c0);
                             draw_rectangle(0, key_y - ui(10), bar_total_shift, key_y + ui(10), false);
-                            
-                            var _vFocus = animator_focusing != noone && _prop == animator_focusing.prop;
-                            var _vHover = animator_hovering != noone && _prop == animator_hovering.prop;
                             
                         	     if(_vFocus) draw_sprite_stretched_ext(THEME.box_r2, 0, 0, key_y - ui(8), bar_total_shift, ui(16), c1);
                             else if(_vHover) draw_sprite_stretched_ext(THEME.box_r2, 0, 0, key_y - ui(8), bar_total_shift, ui(16), c1, .9);
@@ -2810,7 +2887,7 @@ function Panel_Animation_Dopesheet() {
                         _cont.h     += ph;
                     }
                     
-                    var _graph_show = _prop.sep_axis? array_any(_prop.attributes.show_graphs, function(v) /*=>*/ {return v == true}) : _prop.attributes.show_graph;
+                    var _graph_show = _prop.sep_axis? array_any(_prop.attributes.show_graphs, function(v,i) /*=>*/ {return v == true}) : _prop.attributes.show_graph;
                     if(_graph_show && _prop.type != VALUE_TYPE.color) {
                         draw_set_color(c1);
                         draw_rectangle(0, key_y - ui(10), bar_total_shift, key_y + ui(_prop.attributes.graph_h) - ui(2), false);
@@ -2865,7 +2942,8 @@ function Panel_Animation_Dopesheet() {
         	region_hovering       = noone;
         	value_hovering        = animator_hovering? animator_hovering.prop : noone;
         	
-        	var _len   = array_length(timeline_contents);
+        	var _len = array_length(timeline_contents);
+        	var _anim, _key;
         	
         	timeline_snap_points = array_verify(timeline_snap_points, _len + 1);
         	timeline_snap_line   = [];
@@ -2979,8 +3057,8 @@ function Panel_Animation_Dopesheet() {
                 }
 	            
                 for( var j = 0, m = array_length(_anims); j < m; j++ ) {
-                    var _anim = _anims[j];
-                    var _key  = drawDopesheet_AnimatorKeys(_cont, _anim, msx, msy);
+                    _anim = _anims[j];
+                    _key = drawDopesheet_AnimatorKeys(_cont, _anim, msx, msy);
                     if(_key != noone) key_hover = _key;
                 }
                 
