@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.6.002",
+    "changes": [
+      {
+        "date": "2026-07-03T07:56:21.374Z",
+        "node": "Trail",
+        "commit": "**Trail**: Add Color per Frame property."
+      }
+    ]
+  },
+  {
     "version": "1.21.4.009",
     "changes": [
       {

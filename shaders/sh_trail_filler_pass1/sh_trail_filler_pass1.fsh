@@ -9,12 +9,13 @@ uniform sampler2D currFrame;
 uniform vec2  dimension;
 uniform float range;
 uniform float alpha;
+uniform vec4  color;
 
 vec4 sampP( vec2 p ) { return texture2D( prevFrame, p ); }
 vec4 sampC( vec2 p ) { return texture2D( currFrame, p ); }
 
 void main() {
-	gl_FragData[0] = vec4(0.);
+	gl_FragColor = vec4(0.);
 	
 	float cThr = 0.02;
 	vec2  tx   = 1. / dimension;
@@ -45,8 +46,9 @@ void main() {
 		
 		for(float i = 0.; i <= r2; i++) {
 			if(c0.a > 0. && c1.a > 0.) {
-				c0.a = alpha;
-				gl_FragData[0] = c0;
+				c0   *= color;
+				c0.a *= alpha;
+				gl_FragColor = c0;
 				return;
 			}
 			
