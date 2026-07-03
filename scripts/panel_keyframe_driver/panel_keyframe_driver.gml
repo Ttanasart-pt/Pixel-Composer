@@ -38,6 +38,8 @@ function Panel_Keyframe_Driver() : PanelContent() constructor {
 		driver      = undefined;
 		drivers     = [];
 		driverMulti = false;
+		
+		button_pref_res = false;
 	#endregion
 	
 	#region properties
@@ -84,7 +86,7 @@ function Panel_Keyframe_Driver() : PanelContent() constructor {
 		
 		driverProp = {
 			KeyDriver_Linear : [
-				new item(  __txt("Speed"),    tNum(function(v) /*=>*/ {return setValue("speed", v)}), function() /*=>*/ {return driver.speed} ),
+				new item(  __txt("Speed"),    tNum(function(v) /*=>*/ {return setValue("speed", v)}), function() /*=>*/ {return driver.speed}, function(v) /*=>*/ {return setValue("speed", v)}, function() /*=>*/ {return 1} ),
 			],
 			
 			KeyDriver_Wiggle : [
@@ -96,34 +98,34 @@ function Panel_Keyframe_Driver() : PanelContent() constructor {
 					function() /*=>*/ {return driver.seed} 
 				),
 				
-				new item( __txt("Sep Axis"),  new checkBox(function(v) /*=>*/ {return toggleValue("sep_axis")}),  function() /*=>*/ {return driver.sep_axis}  ),
-				new item( __txt("Frequency"), tNum(function(v) /*=>*/ {return setValue("frequency", v)}),         function() /*=>*/ {return driver.frequency} ),
-				new item( __txt("Amplitude"), tNum(function(v) /*=>*/ {return setValue("amplitude", v)}),         function() /*=>*/ {return driver.amplitude} ),
-				new item( __txt("Octave"),    tNum(function(v) /*=>*/ {return setValue("octave", round(v))}),     function() /*=>*/ {return driver.octave}    ),
-				new item( __txt("Smooth"),    tNum(function(v) /*=>*/ {return setValue("smooth", clamp(v,0,1))}), function() /*=>*/ {return driver.smooth}    ),
+				new item( __txt("Sep Axis"),  new checkBox(function(v) /*=>*/ {return toggleValue("sep_axis")}),  function() /*=>*/ {return driver.sep_axis},  function(v) /*=>*/ {return setValue("sep_axis",  v)}, function() /*=>*/ {return false} ),
+				new item( __txt("Frequency"), tNum(function(v) /*=>*/ {return setValue("frequency", v)}),         function() /*=>*/ {return driver.frequency}, function(v) /*=>*/ {return setValue("frequency", v)}, function() /*=>*/  {return 4} ),
+				new item( __txt("Amplitude"), tNum(function(v) /*=>*/ {return setValue("amplitude", v)}),         function() /*=>*/ {return driver.amplitude}, function(v) /*=>*/ {return setValue("amplitude", v)}, function() /*=>*/  {return 1} ),
+				new item( __txt("Octave"),    tNum(function(v) /*=>*/ {return setValue("octave", round(v))}),     function() /*=>*/ {return driver.octave},    function(v) /*=>*/ {return setValue("octave",    v)}, function() /*=>*/  {return 2} ),
+				new item( __txt("Smooth"),    tNum(function(v) /*=>*/ {return setValue("smooth", clamp(v,0,1))}), function() /*=>*/ {return driver.smooth},    function(v) /*=>*/ {return setValue("smooth",    v)}, function() /*=>*/  {return 0} ),
 			],
 			
 			KeyDriver_Sine   : [
-				new item( __txt("Frequency"), tNum(function(v) /*=>*/ {return setValue("frequency", v)}),         function() /*=>*/ {return driver.frequency} ),
-				new item( __txt("Amplitude"), tNum(function(v) /*=>*/ {return setValue("amplitude", v)}),         function() /*=>*/ {return driver.amplitude} ),
-				new item( __txt("Phase"),     tNum(function(v) /*=>*/ {return setValue("phase", v)}),             function() /*=>*/ {return driver.phase}     ),
-				new item( __txt("Smooth"),    tNum(function(v) /*=>*/ {return setValue("smooth", clamp(v,0,1))}), function() /*=>*/ {return driver.smooth}    ),
+				new item( __txt("Frequency"), tNum(function(v) /*=>*/ {return setValue("frequency", v)}),         function() /*=>*/ {return driver.frequency}, function(v) /*=>*/ {return setValue("frequency", v)}, function() /*=>*/  {return 4} ),
+				new item( __txt("Amplitude"), tNum(function(v) /*=>*/ {return setValue("amplitude", v)}),         function() /*=>*/ {return driver.amplitude}, function(v) /*=>*/ {return setValue("amplitude", v)}, function() /*=>*/  {return 1} ),
+				new item( __txt("Phase"),     tNum(function(v) /*=>*/ {return setValue("phase", v)}),             function() /*=>*/ {return driver.phase},     function(v) /*=>*/ {return setValue("phase",     v)}, function() /*=>*/  {return 0} ),
+				new item( __txt("Smooth"),    tNum(function(v) /*=>*/ {return setValue("smooth", clamp(v,0,1))}), function() /*=>*/ {return driver.smooth},    function(v) /*=>*/ {return setValue("smooth",    v)}, function() /*=>*/  {return 0} ),
 			],
 			
 			KeyDriver_Snap   : [
-				new item( __txt("Snap"),      tNum(function(v) /*=>*/ {return setValue("snapSize", v)}),          function() /*=>*/ {return driver.snapSize}  ),
+				new item( __txt("Snap"),      tNum(function(v) /*=>*/ {return setValue("snapSize", v)}),          function() /*=>*/ {return driver.snapSize},  function(v) /*=>*/ {return setValue("snapSize",  v)}, function() /*=>*/  {return 1} ),
 			],
 			
 			KeyDriver_Bounce : [
-				new item( __txt("Amount"),    tNum(function(v) /*=>*/ {return setValue("amount", round(v), 1)}),  function() /*=>*/ {return driver.amount}    ),
-				new item( __txt("Spacing"),   tNum(function(v) /*=>*/ {return setValue("amplitude", v, 1)}),      function() /*=>*/ {return driver.amplitude} ),
-				new item( __txt("Curve"),     tNum(function(v) /*=>*/ {return setValue("steepness", v, 1)}),      function() /*=>*/ {return driver.steepness} ),
+				new item( __txt("Amount"),    tNum(function(v) /*=>*/ {return setValue("amount", round(v), 1)}),  function() /*=>*/ {return driver.amount},    function(v) /*=>*/ {return setValue("amount",    v)}, function() /*=>*/  {return 3} ),
+				new item( __txt("Spacing"),   tNum(function(v) /*=>*/ {return setValue("amplitude", v, 1)}),      function() /*=>*/ {return driver.amplitude}, function(v) /*=>*/ {return setValue("amplitude", v)}, function() /*=>*/ {return .5} ),
+				new item( __txt("Curve"),     tNum(function(v) /*=>*/ {return setValue("steepness", v, 1)}),      function() /*=>*/ {return driver.steepness}, function(v) /*=>*/ {return setValue("steepness", v)}, function() /*=>*/  {return 2} ),
 			],
 			
 			KeyDriver_Elastic : [
-				new item( __txt("Amount"),    tNum(function(v) /*=>*/ {return setValue("amount", round(v), 1)}),  function() /*=>*/ {return driver.amount}    ),
-				new item( __txt("Spacing"),   tNum(function(v) /*=>*/ {return setValue("amplitude", v, 1)}),      function() /*=>*/ {return driver.amplitude} ),
-				new item( __txt("Curve"),     tNum(function(v) /*=>*/ {return setValue("steepness", v, 1)}),      function() /*=>*/ {return driver.steepness} ),
+				new item( __txt("Amount"),    tNum(function(v) /*=>*/ {return setValue("amount", round(v), 1)}),  function() /*=>*/ {return driver.amount},    function(v) /*=>*/ {return setValue("amount",    v)}, function() /*=>*/  {return 3} ),
+				new item( __txt("Spacing"),   tNum(function(v) /*=>*/ {return setValue("amplitude", v, 1)}),      function() /*=>*/ {return driver.amplitude}, function(v) /*=>*/ {return setValue("amplitude", v)}, function() /*=>*/ {return .5} ),
+				new item( __txt("Curve"),     tNum(function(v) /*=>*/ {return setValue("steepness", v, 1)}),      function() /*=>*/ {return driver.steepness}, function(v) /*=>*/ {return setValue("steepness", v)}, function() /*=>*/  {return 2} ),
 			],
 		}
 		
@@ -173,6 +175,7 @@ function Panel_Keyframe_Driver() : PanelContent() constructor {
 		var wh = prop_height - ui(6);
 		
 		var _bs = ui(32);
+		var _cc = [ COLORS._main_icon, COLORS._main_icon_light ];
 		
 		var _hov = false;
 		if(bg_y && _hover) draw_sprite_stretched_ext(THEME.prop_selecting, 0, ui(4), bg_y, _w - ui(8), th, COLORS._main_accent);
@@ -247,6 +250,7 @@ function Panel_Keyframe_Driver() : PanelContent() constructor {
 				var _text = _prop.name;
 				var _data = _prop.data;
 				var _widg = _prop.editWidget;
+				var _defg = _prop.getDefault;
 				if(is_callable(_data)) _data = _data();
 				
 				_widg.setFocusHover(_focus, _hover);
@@ -265,6 +269,28 @@ function Panel_Keyframe_Driver() : PanelContent() constructor {
 				var _x1  = _w - ui(4);
 				var _wdw = ww - ui(4);
 				
+				if(_defg != noone) {
+					var bw = ui(24);
+					var bx = _x1 - bw;
+					var by = yy;
+					var _defVal = _defg();
+					
+					if(isEqual(_data, _defVal))
+						draw_sprite_ui(THEME.refresh_16, 0, bx + bw / 2, by + th / 2, 1, 1, 0, COLORS._main_icon_dark);
+					else {
+						var bt = __txt("Reset");
+						var bs = THEME.refresh_16;
+						var b  = buttonInstant(noone, bx, by, bw, th, _m, _hover, _focus, bt, bs, 0, _cc, .75);
+						
+						if(b == 2) button_pref_res = true;
+						if(b == 1 && button_pref_res) {
+							_prop.onEdit(_defVal);
+						}
+					}
+					
+					_wdw -= bw + ui(4);
+				}
+				
 				var params = new widgetParam(_x1 - ww, yy + th / 2 - wh / 2, _wdw, wh, _data, undefined, _m, _rx, _ry).setFont(font);
 				if(is(_widg, checkBox)) { 
 					params.s = wh;
@@ -278,6 +304,10 @@ function Panel_Keyframe_Driver() : PanelContent() constructor {
 				hh += th;
 				continue;
 			}
+		}
+		
+		if(mouse_lrelease()) {
+			button_pref_res = false;
 		}
 		
 		bg_a = lerp_float(bg_a, _hov, 2);
