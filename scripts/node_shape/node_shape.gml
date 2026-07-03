@@ -638,12 +638,11 @@ function Node_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 				break;
 		}
 		
-		#region shape scale
-			// var _rx1 = _px + _rsca[0] * _s;
-			// var _ry1 = _py + _rsca[1] * _s;
-			// var _ll  = point_distance(_px, _py, _rx1, _ry1) / _s;
+		#region shape transform
 			var _ll  = _rsca[0];
+			drawOverlayInput(inputs[19].drawOverlay(w_hoverable, active, _px, _py, _s, _mx, _my));
 			drawOverlayInput(inputs[28].drawOverlay(w_hoverable, active, _px, _py, _s, _mx, _my, 0, _ll, 0));
+			
 		#endregion
 		
 		return w_hovering;
