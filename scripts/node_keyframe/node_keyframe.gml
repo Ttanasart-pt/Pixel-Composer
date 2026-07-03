@@ -53,6 +53,7 @@ function valueKey(_time, _value, _anim = noone, _in = 0, _ot = 0) constructor {
 		ease_in_type  = _int;
 		ease_out_type = _int;
 		dopesheet_x   = 0;
+		dopesheet_s   = true;
 		freeze        = false;
 		
 		driverObject  = undefined;

@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.6.002",
+    "changes": [
+      {
+        "date": "2026-07-03T08:47:18.684Z",
+        "node": "Animation Panel",
+        "commit": "**Animation Panel**: Keyframe summary now highlight keyframes of the selected node."
+      }
+    ]
+  },
+  {
     "version": "1.21.5.005",
     "changes": [
       {

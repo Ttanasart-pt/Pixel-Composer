@@ -531,12 +531,12 @@ function Panel_Animation() : PanelContent() constructor {
             
             if(is(_cont, timelineItemNode)) {
                 var _node = _cont.node;
-                if(!is_struct(_node))                              continue;
-                if(_node.instanceBase != undefined)                continue;
-                if(!show_hidden && _node.attributes.timeline_hide) continue;
+                if(!is_struct(_node))                                   continue;
+                if(_node.instanceBase != undefined)                     continue;
+                if(!show_hidden && _node.attributes.timeline_hide)      continue;
                 
-                if(view_context == 1 && !_node.isChildOf(_ctx))    continue;
-                if(view_context == 2 && _node.group != _ctx)       continue;
+                if(view_context == 1 && !_node.isChildOf(_ctx))         continue;
+                if(view_context == 2 && _node.group != _ctx)            continue;
                 
                 if(view_context == 3 && _selAny && !_node.is_selecting) continue;
                 
@@ -560,8 +560,18 @@ function Panel_Animation() : PanelContent() constructor {
                 
                 array_push(timeline_contents, _content);
                 
-                for( var j = 0, m = array_length(_anim); j < m; j++ )
-                    array_append(timeline_keys, _anim[j].values);
+                var _fullSize = !_selAny || _node.is_selecting;
+                for( var j = 0, m = array_length(_anim); j < m; j++ ) {
+                	var keys = _anim[j].values;
+                	
+                	for( var k = 0, p = array_length(keys); k < p; k++ ) {
+                		var key = keys[k];
+                		key.dopesheet_x = (key.time + 1) * timeline_scale + timeline_shift;
+                		key.dopesheet_s = _fullSize;
+                	}
+                	
+                	array_append(timeline_keys, keys);
+                }
                 
             } else if(is(_cont, timelineItemGroup)) {
             	if(!show_hidden && _cont.timeline_hide) continue;
@@ -589,8 +599,6 @@ function Panel_Animation() : PanelContent() constructor {
         timeline_keys     = [];
         
         getTimelineContentFolder(PROJECT.timelines);
-        
-        array_foreach(timeline_keys, function(k) /*=>*/ { k.dopesheet_x = (k.time + 1) * timeline_scale + timeline_shift; });
     }
     
     function toggleMarker(_frame = __selecting_frame) {
@@ -805,10 +813,14 @@ function Panel_Animation() : PanelContent() constructor {
         	inspecting.drawAnimationTimeline(timeline_shift, bar_w, bar_h, timeline_scale);
         
         var ky = ui(12) + (bar_h - ui(12)) / 2;
-        var ks = THEME.timeline_keyframe;
         
-        for( var i = 0, n = array_length(timeline_keys); i < n; i++ )
-        	draw_sprite_ui_uniform(ks, 0, timeline_keys[i].dopesheet_x, ky, 1, timeline_keys[i].color, .75);
+        for( var i = 0, n = array_length(timeline_keys); i < n; i++ ) {
+        	var key = timeline_keys[i];
+        	var ks  = key.dopesheet_s? THEME.timeline_keyframe : THEME.timeline_key_empty;
+        	var ka  = .75 + key.dopesheet_s * .25;
+        	
+        	draw_sprite_ui_uniform(ks, 0, key.dopesheet_x, ky, 1, key.color, ka);
+        }
         	
         BLEND_MULTIPLY
         draw_sprite_stretched(THEME.ui_panel, 0, 0, 0, timeline_w, timeline_h);

@@ -25,8 +25,8 @@ function Node_Trail(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	newInput( 5, nodeValue_Bool( "Blend Color", true, "Blend color between two pixel smoothly."));
 	
 	////- =Rendering
-	newInput( 6, nodeValue_Curve(    "Alpha", CURVE_DEF_11 ));
-	newInput( 7, nodeValue_Gradient( "Color", gra_white    ));
+	newInput( 7, nodeValue_Gradient( "Color per Frame", gra_white    ));
+	newInput( 6, nodeValue_Curve(    "Alpha per Frame", CURVE_DEF_11 ));
 	// 8
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
@@ -34,12 +34,12 @@ function Node_Trail(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	input_display_list = [
 		[ "Surfaces",   true ],  0, 
 		[ "Trail",     false ],  1,  2,  3, 
-		[ "Rendering", false ],  6,  7, 
+		[ "Rendering", false ],  7,  6, 
 	];
 	
 	////- Node
 	
-	temp_surface = array_create(5);
+	temp_surface = array_create(3);
 	
 	attribute_surface_depth();
 	
