@@ -70,15 +70,15 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 		}
 		
 		draw_set_font(_font);
-		var ds_w = jun.node.inspector_pad_label ?? string_width(dispName);
-		var lb_w = ds_w + padx + ui(4);
-		var fr   = _input? jun.value_from_loop : array_safe_get_fast(jun.value_to_loop, 0);
+		var ds_w  = jun.node.inspector_pad_label ?? string_width(dispName);
+		var lb_w  = ds_w + padx + ui(4);
 		
-		var conn = _input? jun.hasJunctionFrom() : jun.hasJunctionTo();
+		var feedb = _input? jun.value_from_loop : array_safe_get_fast(jun.value_to_loop, 0);
+		var conn  = _input? jun.hasJunctionFrom() : jun.hasJunctionTo();
 		
-		if(fr) { // Feedback / Loop
-			var ss = fr.icon;
-			var cc = fr.color;
+		if(feedb) { // Feedback / Loop
+			var ss = feedb.icon;
+			var cc = feedb.color;
 			
 			var _hov = _hover && point_in_circle(_m[0], _m[1], butx, lb_y, bs / 2);
 			draw_sprite_ui_uniform(ss, 0, butx, lb_y, ics, cc, .8 + .2 * _hov);
@@ -89,15 +89,32 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 				
 				if(mouse_rpress(_focus)) jun.inspector_loopDetail = !jun.inspector_loopDetail;
 			}
+		
+		} else if(conn) { // Connected
+			var index = 2;
+			var cc    = COLORS._main_accent;
+			var _hov  = _hover && point_in_circle(_m[0], _m[1], butx, lb_y, bs / 2);
+			
+			draw_sprite_ui_uniform(THEME.animate_clock, index, butx, lb_y, ics, cc, .8 + .2 * _hov);
+			
+			if(_hov) {
+				mbRight = false;
+				cHov    = true;
+				
+				draw_sprite_ui_uniform(THEME.animate_clock, index, butx, lb_y, ics, index == 2? COLORS._main_accent : c_white, 1);
+				
+				if(_input) {
+					TOOLTIP = __txt("panel_inspector_link", "Connected");
+					if(mouse_rpress(_focus))
+						jun.removeFrom();
+				}
+			}
 			
 		} else if(_input && jun.isAnimable() && !jun.expUse) { // Animation
-			var index = conn? 2 : jun.is_anim;
+			var index = jun.is_anim;
+			var cc    = jun.is_anim? COLORS._main_value_positive : c_white;
+			var _hov  = _hover && point_in_circle(_m[0], _m[1], butx, lb_y, bs / 2);
 			
-			var cc = c_white;
-			if(jun.is_anim) cc = COLORS._main_value_positive;
-			if(index == 2)  cc = COLORS._main_accent;
-			
-			var _hov = _hover && point_in_circle(_m[0], _m[1], butx, lb_y, bs / 2);
 			draw_sprite_ui_uniform(THEME.animate_clock, index, butx, lb_y, ics, cc, .8 + .2 * _hov);
 			
 			if(_hov) {
@@ -108,17 +125,11 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 					jun.setAnim(anim_hold, true);
 					
 				draw_sprite_ui_uniform(THEME.animate_clock, index, butx, lb_y, ics, index == 2? COLORS._main_accent : c_white, 1);
-				TOOLTIP = conn? __txt("panel_inspector_remove_link", "Remove Connection") : 
-				                __txt("panel_inspector_toggle_anim", "Toggle Animation");
+				TOOLTIP = __txt("panel_inspector_toggle_anim", "Toggle Animation");
 						
 				if(mouse_lpress(_focus)) {
-					if(jun.value_from != noone)
-						jun.removeFrom();
-						
-					else {
-						jun.setAnim(!jun.is_anim, true);
-						anim_hold = jun.is_anim;
-					}
+					jun.setAnim(!jun.is_anim, true);
+					anim_hold = jun.is_anim;
 				}
 				
 				if(mouse_rpress(_focus)) jun.inspector_timeline = !jun.inspector_timeline;
@@ -205,10 +216,10 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 			cc = expValid? COLORS._main_value_positive : COLORS._main_value_negative;
 		}
 		
-		if(jun.is_anim)                  cc = COLORS._main_value_positive;
-		if(jun.hasJunctionFrom())        cc = COLORS._main_accent;
-		if(is(fr, Node_Feedback_Inline)) cc = COLORS.node_blend_feedback;
-		if(is(fr, Node_Iterate_Inline))  cc = COLORS.node_blend_loop;
+		if(jun.is_anim)                     cc = COLORS._main_value_positive;
+		if(jun.hasJunctionFrom())           cc = COLORS._main_accent;
+		if(is(feedb, Node_Feedback_Inline)) cc = COLORS.node_blend_feedback;
+		if(is(feedb, Node_Iterate_Inline))  cc = COLORS.node_blend_loop;
 		
 		if(jun.color != -1) {
 			draw_sprite_ui(THEME.timeline_color, 1, lb_x + ui(8), lb_y, 1, 1, 0, jun.color, 1);
