@@ -20,8 +20,12 @@ event_inherited();
 	params   = undefined;
 	tb_name  = textBox_Text(function(txt) /*=>*/ { 
 		if(wait) return;
+		
 		onModify(txt, params); 
+		WIDGET_CURRENT = undefined;
+		
 		instance_destroy(); 
+		
 	}).setEmpty();
 	
 	function setLabel(l)  { label    = l; return self; }
@@ -30,8 +34,12 @@ event_inherited();
 	
 	function activate(_initText = "") {
 		text = _initText;
-		tb_name.activate(text);
-		tb_name.mouse_lhold = true;
+		
+		run_in(1, function() /*=>*/ {
+			setFocus(self.id);
+			tb_name.activate(text);
+			tb_name.mouse_lhold = true;
+		});
 		
 		return self;
 	}

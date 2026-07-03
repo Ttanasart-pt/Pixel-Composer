@@ -1,5 +1,4 @@
 function __3dLightPoint() : __3dLight() constructor {
-	color     = c_white;
 	intensity = 1;
 	radius    = 10;
 	

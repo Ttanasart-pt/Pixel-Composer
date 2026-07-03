@@ -59,6 +59,10 @@
 	global.GLOBALVAR_DISPLAY_MAP[$ "Read"]           = VALUE_DISPLAY.path_load;
 	global.GLOBALVAR_DISPLAY_MAP[$ "Write"]          = VALUE_DISPLAY.path_save;
 	
+	global.GLOBALVAR_DISPLAY_STR_MAP = {};
+	var arr = struct_get_names(global.GLOBALVAR_DISPLAY_MAP);
+	for( var i = 0, n = array_length(arr); i < n; i++ )
+		global.GLOBALVAR_DISPLAY_STR_MAP[$ global.GLOBALVAR_DISPLAY_MAP[$ arr[i]]] = arr[i];
 #endregion
 
 function nodeValue_Global(_name) { return new NodeValue_Global(_name, self ); }
@@ -79,6 +83,20 @@ function NodeValue_Global(_name, _node) : NodeValue(_name, _node, CONNECT_TYPE.i
 		return self;
 	}
 	
+	static refreshTypeIndex = function() {
+		var tind = array_find(global.GLOBALVAR_TYPES, type);
+		if(tind == -1) return;
+		
+		if(!has(global.GLOBALVAR_DISPLAY_STR_MAP, display_type)) return;
+		
+		var dkey = global.GLOBALVAR_DISPLAY_STR_MAP[$ display_type];
+		var darr = global.GLOBALVAR_DISPLAY[tind];
+		var dind = array_find(darr, dkey);
+		
+		editor.type_index = tind; 
+		editor.disp_index = max(0, dind);
+	}
+	
 	static dragValue = function() /*=>*/ { DRAGGING = { type: "Globalvar", data: name }; }
 }
 
@@ -96,13 +114,13 @@ function variable_editor(nodeVal) constructor {
 		disp_index = 0;
 		refreshInput();
 		RenderAll();
-	}).setTextColor(CDEF.main_mdwhite).setUpdateHover(false).setIconPadding(ui(8));
+	}).setUpdateHover(false).setIconPadding(ui(8));
 	
 	sc_disp  = new scrollBox(global.GLOBALVAR_DISPLAY[0], function(v) /*=>*/ {
 		disp_index = v;
 		refreshInput();
 		RenderAll();
-	}).setTextColor(CDEF.main_mdwhite).setUpdateHover(false).setIconPadding(ui(8));
+	}).setUpdateHover(false).setIconPadding(ui(8));
 	
 	type_index = 0; _type_index = 0;
 	disp_index = 0; _disp_index = 0;

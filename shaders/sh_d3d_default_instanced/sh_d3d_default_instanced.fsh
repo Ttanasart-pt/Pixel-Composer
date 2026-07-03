@@ -1,6 +1,6 @@
 #pragma use(d3d_default_fragment)
 
-#region -- d3d_default_fragment -- [1781570476.0357]
+#region -- d3d_default_fragment -- [1783054598.938985]
 #ifdef _YY_HLSL11_
 	#extension GL_OES_standard_derivatives : enable
 #endif
@@ -94,6 +94,8 @@ uniform int use_8bit;
 	uniform int mat_pbr_roughness_use_map;
 
 	uniform sampler2D mat_pbr_properties_map; // .r = metalic, .g = roughness
+
+	uniform vec4  obj_color;
 #endregion
 
 #region ---- Uniform Rendering ----
@@ -676,6 +678,8 @@ void main() {
 		final_color.rgb *= light_effect;
 	#endregion
 	
+	final_color *= obj_color;
+
 	if(show_wireframe == 1 && wireframe_shade == 0) final_color = wireframeCalc(final_color);
 	
 	if(final_color.a > 0.) {

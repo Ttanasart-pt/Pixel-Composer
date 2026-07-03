@@ -139,6 +139,7 @@
 	            __txt("All"),
 	            __txt("Current and Children"),
 	            __txt("Current Only"),
+	            __txt("Selection Only"),
 	        ]))
         	
         registerFunction(an, "Override Keyframe", "", n, panel_animation_toggle_KeyframeOverride)

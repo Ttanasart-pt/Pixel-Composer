@@ -16,11 +16,11 @@ function Node_Global(_x = 0, _y = 0) : __Node_Base(_x, _y) constructor {
 	
 	////- Inputs
 	
-	function createValue() {
+	function createValue(_name = undefined) {
 		var _ind   = array_length(inputs);
 		while(inputExist($"NewValue{_ind}")) _ind++;
 		
-		var _key = $"NewValue{_ind}";
+		var _key = _name ?? $"NewValue{_ind}";
 		var _inp = nodeValue_Global(_key);
 		array_push(inputs, _inp);
 		valueUpdate();

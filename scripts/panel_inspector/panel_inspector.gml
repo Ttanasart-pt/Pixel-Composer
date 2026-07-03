@@ -636,6 +636,9 @@ function Panel_Inspector() : PanelContent() constructor {
         
         array_append(_menuItem, menuItems_gen("inspector_value_input"));
         
+        if(jun.connect_type == CONNECT_TYPE.input && jun.value_from != noone)
+        	array_push(_menuItem, menuItem(__txt("Disconnect"), function() /*=>*/ {return __dialog_junction.removeFrom()}));
+        
         if(jun.globalExtractable()) {
     		array_push(_menuItem, menuItemShelf(__txt("panel_inspector_use_global", "Use Globalvar"), function(_dat) /*=>*/ { 
     			var arr = [];
@@ -643,10 +646,25 @@ function Panel_Inspector() : PanelContent() constructor {
             		var _glInp = PROJECT.globalNode.inputs[i];
             		if(!typeCompatible(_glInp.type, __dialog_junction.type)) continue;
             		
-            		array_push(arr, menuItem(_glInp.name, function(d) /*=>*/ { __dialog_junction.setExpression(d.name); })).setParam({ name : _glInp.name });
+            		array_push(arr, menuItem(_glInp.name, function(d) /*=>*/ {return __dialog_junction.setExpression(d.name)})).setParam({ name : _glInp.name });
             	}
+            	
+            	array_push(arr, -1, menuItem(__txt("New Globalvar..."), function() /*=>*/ {
+            		var tb = textboxCall("globalvar", function(txt) /*=>*/ {
+            			if(txt == "") return;
+            			
+            			var _inp = PROJECT.globalNode.createValue(txt);
+            			_inp.setType(__dialog_junction.type);
+            			_inp.setDisplay(__dialog_junction.display_type, __dialog_junction.display_data);
+            			_inp.refreshTypeIndex();
+            			
+            			__dialog_junction.setExpression(txt);
+            		});
+            	}, THEME.add));
+            	
                 return submenuCall(_dat, arr);
             }));
+            
         	array_push(_menuItem, MENU_ITEMS.inspector_extract_global);
         }
         
@@ -1270,8 +1288,9 @@ function Panel_Inspector() : PanelContent() constructor {
 	                
 	                if(!showAll) {
 	                	var _anim = _aniMap[$ currSec] ?? false;
-	                	var cc = _anim? COLORS._main_value_positive : COLORS._main_icon;
+	                	var cc = !subk && _anim? COLORS._main_value_positive : COLORS._main_icon;
 	                	var ss = subk? .8 : 1;
+	                	
 	                	draw_sprite_ui(THEME.arrow, !coll * 3, lbx + ui(16 + subk * 2), yy + lbh / 2, ss, ss, 0, cc, 1);
 	                }
 	                

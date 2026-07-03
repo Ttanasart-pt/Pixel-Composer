@@ -511,6 +511,9 @@ function Panel_Animation() : PanelContent() constructor {
         var _ind = 0;
         var _ctx = PANEL_GRAPH.getCurrentContext();
         
+        var _sel    = PANEL_GRAPH.nodes_selecting;
+        var _selAny = array_length(_sel) > 0;
+        
         for( var i = 0, n = array_length(folder.contents); i < n; i++ ) {
             var _cont = folder.contents[i];
             if(!_cont.active) continue;
@@ -534,6 +537,8 @@ function Panel_Animation() : PanelContent() constructor {
                 
                 if(view_context == 1 && !_node.isChildOf(_ctx))    continue;
                 if(view_context == 2 && _node.group != _ctx)       continue;
+                
+                if(view_context == 3 && _selAny && !_node.is_selecting) continue;
                 
                 var _anim = [];
                 var _prop = [];
@@ -1133,8 +1138,8 @@ function Panel_Animation() : PanelContent() constructor {
     function newFolder() { PROJECT.timelines.addItem(new timelineItemGroup()); }
     
     function toggleNodeNameType(_d=1) { node_name_type = (node_name_type + _d + 3) % 3; }
-    function toggleNodeLabel()        { show_nodes     = !show_nodes;     }
-    function toggleViewContext()      { view_context   = (view_context + 1) % 3; }
+    function toggleNodeLabel()        { show_nodes     = !show_nodes;                   }
+    function toggleViewContext()      { view_context   = (view_context + 1) % 4;        }
     function toggleKeyframeOverride() { PREFERENCES.panel_animation_key_override = !PREFERENCES.panel_animation_key_override; }
     function toggleOnionSkin()        { PROJECT.onion_skin.enabled = !PROJECT.onion_skin.enabled; }
 }

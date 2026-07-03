@@ -47,6 +47,8 @@ function __3dObject() : __3dInstance() constructor {
 	WVB    = noone;
 	name   = UUID_generate();
 	
+	color  = c_white;
+	
 	edges  = [];
 	EB     = [];
 	
@@ -293,6 +295,8 @@ function __3dObject() : __3dInstance() constructor {
 					shader_set_f("mat_texScale",   [1,1] );
 				}
 			}
+			
+			shader_set_c("obj_color", color );
 			
 			var _mat = array_safe_get_fast(VBM, i, undefined);
 			if(is_array(_mat)) { matrix_stack_push(_mat); matrix_set(matrix_world, matrix_stack_top()); }

@@ -244,7 +244,8 @@ function hotkey_draw(keyStr, _x, _y, _status = 0) {
 function hotkey_serialize() {
 	var _context = [];
 	for(var i = 0, n = array_length(HOTKEY_CONTEXT); i < n; i++) {
-		var ll = HOTKEYS[$ HOTKEY_CONTEXT[i]];
+		var cn = HOTKEY_CONTEXT[i];
+		var ll = HOTKEYS[$ cn];
 		
 		for(var j = 0, m = array_length(ll); j < m; j++) {
 			var _hk = ll[j];

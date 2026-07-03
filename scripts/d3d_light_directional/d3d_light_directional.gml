@@ -4,7 +4,6 @@ function __3dLightDirectional() : __3dLight() constructor {
 	render_type = pr_linelist;
 	VB			= build();
 	
-	color     = c_white;
 	intensity = 1;
 	transform.position.set(4, 0, 0);
 	transform.scale.set(0.6);

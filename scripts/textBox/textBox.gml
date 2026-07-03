@@ -34,6 +34,8 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 		
 		clearable    = false;
 		refresh_text = false;
+		
+		apply_on_deactivate = true;
 	#endregion
 	
 	#region slide
@@ -177,6 +179,7 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 	static setAutoupdate = function(  ) /*=>*/ { auto_update = true;  return self; }
 	static setClearable  = function(  ) /*=>*/ { clearable   = true;  return self; }
 	static setDeactivate = function(_d) /*=>*/ { onDeactivate = _d;   return self; }
+	static setApplyDeactivate = function(_d) /*=>*/ { apply_on_deactivate = _d;   return self; }
 	
 	static setSearch = function(pl = __txt("Search") + "...") /*=>*/ {
 		no_empty    = false;
@@ -217,13 +220,15 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 		return self;
 	}
 	
-	static deactivate = function() {
+	static deactivate = function(_apply = true) {
 		if(WIDGET_CURRENT != self) return;
 		
-		apply();
-		if(is_callable(onRelease))
-			apply(true);
-			
+		if(apply_on_deactivate) {
+			apply();
+			if(is_callable(onRelease))
+				apply(true);
+		}
+		
 		WIDGET_CURRENT = undefined;
 		UNDO_HOLDING   = false;
 		
