@@ -4424,7 +4424,7 @@ function Panel_Preview() : PanelContent() constructor {
 			if(key_press(vk_escape)) hk_editing = noone;
 		}
 		
-        drawMinimap();
+        if(d3_active == NODE_3D.none) drawMinimap();
         drawActionTooltip();
         
         ////////////////////////////////// Actions //////////////////////////////////
