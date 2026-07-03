@@ -3750,7 +3750,8 @@ function Panel_Preview() : PanelContent() constructor {
         var mini_hover = false;
         if(pHOVER && point_in_rectangle(mx, my, mx0, my0, mx1, my1)) {
             mouse_on_preview = false;
-            mini_hover = true;
+            hoveringContent  = false;
+            mini_hover       = true;
         }
         
         var hover = mini_hover && !point_in_rectangle(mx, my, mx0, my0, mx0 + ui(16), my0 + ui(16)) && !minimap_dragging;
@@ -3831,7 +3832,7 @@ function Panel_Preview() : PanelContent() constructor {
         draw_sprite_stretched_add(THEME.ui_panel, 1, mx0, my0, minimap_w, minimap_h, COLORS.panel_graph_minimap_outline, .5);
         
         if(minimap_dragging) {
-            mouse_on_graph = false;
+            mouse_on_preview = false;
             var sw = minimap_drag_sx + minimap_drag_mx - mx;
             var sh = minimap_drag_sy + minimap_drag_my - my;
             
