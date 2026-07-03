@@ -5,8 +5,13 @@
 		drag_type   = -1;
 		dragging_sx = 0;
 		dragging_sy = 0;
+		
 		dragging_mx = 0;
 		dragging_my = 0;
+		
+		dragging_cx = 0;
+		dragging_cy = 0;
+		
 		rot_anc_x   = 0;
 		rot_anc_y   = 0;	
 	}
@@ -44,6 +49,7 @@
 					var p = [ _pos[0], _pos[1] ];
 					_pos = inputs[_posInd].unit.apply(p);
 				}
+				
 			} else if(drag_type == 1) {
 				var aa = point_direction(rot_anc_x, rot_anc_y, _mx, _my);
 				var da = angle_difference(dragging_mx, aa);
@@ -54,9 +60,13 @@
 					_rot = dragging_sx - da;
 			
 				if(inputs[_rotInd].setValue(_rot))
-					UNDO_HOLDING = true;	
+					UNDO_HOLDING = true;
+					
 			} else if(drag_type == 2) {
-				var _p = point_rotate(_mx - dragging_mx, _my - dragging_my, 0, 0, -_rot);
+				var mdx = dragging_sx + (_mx - dragging_mx) - dragging_cx;
+				var mdy = dragging_sy + (_my - dragging_my) - dragging_cy;
+				
+				var _p = point_rotate(mdx, mdy, 0, 0, -_rot);
 				_sca[0] = _p[0] / _s;
 				_sca[1] = _p[1] / _s;
 				
@@ -115,7 +125,7 @@
 			if(point_in_circle(_mx, _my, prx, pry, 12)) 
 				hovering = 1;
 				
-			if(point_in_circle(_mx, _my, pd3x, pd3y, 12)) 
+			if(point_in_circle(_mx, _my, psx, psy, 12)) 
 				hovering = 2;
 		}
 		
@@ -136,7 +146,8 @@
 		if(drag_type > -1) return;
 		
 		if(mouse_lpress(active)) {
-			drag_type	= hovering;
+			drag_type = hovering;
+			
 			if(hovering == 0) {
 				dragging_sx = _pos[0];
 				dragging_sy = _pos[1];
@@ -150,10 +161,13 @@
 				dragging_mx = point_direction(rot_anc_x, rot_anc_y, _mx, _my);
 				
 			} else if(hovering == 2) { //sca
-				dragging_sx = _sca[0];
-				dragging_sy = _sca[1];
-				dragging_mx	= _x + _pos[0] * _s;
-				dragging_my	= _y + _pos[1] * _s;
+				dragging_sx = pd3x;
+				dragging_sy = pd3y;
+				dragging_cx	= _x + _pos[0] * _s;
+				dragging_cy	= _y + _pos[1] * _s;
+				dragging_mx	= _mx;
+				dragging_my	= _my;
+				
 			}
 		}
 	}

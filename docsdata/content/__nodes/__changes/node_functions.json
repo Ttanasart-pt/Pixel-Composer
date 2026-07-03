@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.6.002",
+    "changes": [
+      {
+        "date": "2026-07-03T05:59:02.182Z",
+        "node": "Preview Panel",
+        "commit": "**Preview Panel**: Fix offsetted scale gizmo in transform gizmo."
+      }
+    ]
+  },
+  {
     "version": "1.21.5.005",
     "changes": [
       {
