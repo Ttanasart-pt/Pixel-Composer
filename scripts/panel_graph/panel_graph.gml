@@ -4354,7 +4354,7 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
 	    	
 	    	_nd = nodes_selecting[0];
 	    	_jj = _nd.outputs[0];
-	    	var _ty = _base;
+	    	
     	}
     	
         var cx  = _nd.x;

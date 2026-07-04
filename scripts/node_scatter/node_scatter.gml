@@ -46,7 +46,7 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	newInput( 6, nodeValue_EScroll(  "Source",  5, [ "Area", "Border", "Map", "Points Array", "Path", "Full image" ] ));
 	newInput( 5, nodeValue_Area(     "Area",          DEF_AREA_REF, { onSurfaceSize } )).setUnitSimple();
 	newInput(13, nodeValue_Surface(  "Distribution Map"    ));
-	newInput(14, nodeValue_Vector(   "Points Array",    [] )).setAnimable(false).setArrayDepth(1);
+	newInput(14, nodeValue_Vec2(     "Points Array",    [] )).setAnimable(false).setArrayDepth(1);
 	newInput(17, nodeValue_Text(     "Extra Value",     [] ))
 		.setTooltip("Apply the third and later values in each data point (if exist) on given properties.")
 		.setDisplay(VALUE_DISPLAY.text_array, { data: [ "Scale", "Rotation", "Color", "Alpha", "Array Index", "Depth" ] });

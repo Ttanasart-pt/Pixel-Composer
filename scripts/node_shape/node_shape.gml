@@ -113,7 +113,7 @@ function Node_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	newInput(47, nodeValue_EScroll( "BG Blend Mode", 0, [ "Override", "Max", "Additive", "Multiply", "Substract" ] ));
 	
 	////- =Transform
-	newInput(15, nodeValue_EScroll(  "Positioning Mode",    2, [ "Area", "Center + Scale", "Full Image" ]))
+	newInput(15, nodeValue_EScroll(  "Positioning Mode",    1, [ "Area", "Center + Scale", "Full Image" ]))
 	newInput( 3, nodeValue_Area(     "Position",          DEF_AREA_REF, { onSurfaceSize, useShape : false })).setUnitSimple();
 	newInput(16, nodeValue_Vec2(     "Center",            [.5,.5] )).setHotkey("G").setUnitSimple();
 	newInput(17, nodeValue_Vec2(     "Half Size",         [.5,.5] )).setUnitSimple();

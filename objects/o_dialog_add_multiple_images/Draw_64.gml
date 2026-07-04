@@ -5,7 +5,7 @@ DIALOG_DRAW_BG
 	
 #region base UI
 	draw_set_text(f_p2, fa_left, fa_top, COLORS._main_text_sub);
-	draw_text(dialog_x + ui(20), dialog_y + ui(8), __txt("add_images_title_images", "Import multiple images as"));
+	draw_text(dialog_x + ui(20), dialog_y + ui(8), __txt("add_images_title_images", "Import Directory as"));
 #endregion
 
 #region nodes
@@ -14,7 +14,7 @@ DIALOG_DRAW_BG
 	var grid_space = ui(16);
 	var grid_width = grid_size + grid_space;
 	
-	for(var i = 0; i < array_length(nodes); i++) {
+	for(var i = 0, n = array_length(nodes); i < n; i++) {
 		var _node = nodes[i];
 		var xx    = dialog_x + ui(32) + i * grid_width;
 		var yy    = dialog_y + title_h + ui(16);
@@ -37,8 +37,8 @@ DIALOG_DRAW_BG
 				
 				switch(_node.node) {
 					case Node_Image :
-						for( var i = 0, n = array_length(path_arr); i < n; i++ )  {
-							var path = path_arr[i];
+						for( var j = 0, m = array_length(path_arr); j < m; j++ )  {
+							var path = path_arr[j];
 							var _n   = Node_create_Image_path(nx, ny, path);
 							    _n.skipDefault();
 							ny += 160;
@@ -46,8 +46,8 @@ DIALOG_DRAW_BG
 						break;
 						
 					case Node_Canvas :
-						for( var i = 0, n = array_length(path_arr); i < n; i++ )  {
-							var path = path_arr[i];
+						for( var j = 0, m = array_length(path_arr); j < m; j++ )  {
+							var path = path_arr[j];
 							var _canvas = nodeBuild("Node_Canvas", nx, ny);
 							_canvas.skipDefault();
 							_canvas.loadImagePath(path);
