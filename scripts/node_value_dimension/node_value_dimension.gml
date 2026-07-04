@@ -67,7 +67,7 @@ function __NodeValue_Dimension(_node, value, _name = "Dimension") : __NodeValue_
 		editWidget.setSuffix(attributes.use_project_dimension? "x" : "");
 	}
 	
-	/////============== GET =============
+	////- GET
 	
 	static getValue = function(_time = NODE_CURRENT_FRAME, applyUnit = true, arrIndex = 0, useCache = false, log = false) { 
 		if(__tempValue != undefined) return __tempValue;
@@ -161,7 +161,7 @@ function __NodeValue_Dimension(_node, value, _name = "Dimension") : __NodeValue_
 		return animator.getValue(_time);
 	}
 	
-	/////============== SET =============
+	////- SET
 	
 	static setValue = function(val = 0, record = true, time = NODE_CURRENT_FRAME, _update = true) { //// Set value
 		switch(attributes.use_project_dimension) {
@@ -190,7 +190,18 @@ function __NodeValue_Dimension(_node, value, _name = "Dimension") : __NodeValue_
 		if(editWidget)  editWidget.setSuffix(attributes.use_project_dimension? "x" : "");
 	}
 	
+	////- DESERIALIZE
+	
 	static postApplyDeserialize = function() {
+		if(LOADING_VERSION < 1_21_06_0) {
+			var dval = animator.values[0].value;
+			
+			if(PREFERENCES.node_def_dim_unit == 0 && dval[0] == 1 && dval[1] == 1) {
+				attributes.use_project_dimension = 1;
+				return;
+			}
+		}
+		
 		if(attributes.use_project_dimension && ((LOADING_VERSION < 1_20_01_3 && is_modified) || (LOADING_VERSION < 1_18_00))) {
 			for( var i = 0, n = array_length(animator.values); i < n; i++ ) {
 				var v = animator.values[i];
