@@ -3,7 +3,7 @@ function __NodeValue_Padding(_name, _node, _value, _tooltip = "") : NodeValue(_n
 	setDisplay(VALUE_DISPLAY.padding);
 	def_length = 4;
 	
-	/////============== GET =============
+	////- GET 
 	
 	static valueProcess = function(value, nodeFrom = undefined, applyUnit = true, arrIndex = 0) {
 		var typeFrom = nodeFrom == undefined? VALUE_TYPE.any : nodeFrom.type;
@@ -51,6 +51,21 @@ function __NodeValue_Padding(_name, _node, _value, _tooltip = "") : NodeValue(_n
 		
 		return animator.getValue(_time);
 	}
+
+	////- ANIMATOR
+	
+	static lerpAnimKeys = function(from, to, rat) {
+		__f = from.value;
+		__t = to.value;
+		__i = KeyframeInterpolate(from, to, rat);
+		return [
+			lerp(__f[0], __t[0], __i),
+			lerp(__f[1], __t[1], __i),
+			lerp(__f[2], __t[2], __i),
+			lerp(__f[3], __t[3], __i),
+		];
+	}
+	
 }
 
 function   nodeValue_IPadding(_name, _value, _tooltip = "") { return new __NodeValue_IPadding(_name, self, _value, _tooltip); }

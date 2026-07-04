@@ -56,6 +56,15 @@ function __NodeValue_Enum_Scroll(_name, _node, _value, _data) : NodeValue(_name,
 	
 	static arrayLength = arrayLengthSimple;
 	
+	////- ANIMATOR
+	
+	static lerpAnimKeys = function(from, to, rat) {
+		__f = from.value;
+		__t = to.value;
+		__i = KeyframeInterpolate(from, to, rat);
+		return lerp(__f, __t, __i);
+	}
+	
 	////- Serialize
 	
 	options_histories = [];

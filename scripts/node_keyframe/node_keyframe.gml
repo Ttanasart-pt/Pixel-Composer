@@ -30,7 +30,6 @@ enum DRIVER_TYPE { none, linear, wiggle, sine }
 		
 		return eval_curve_segment_x(0, eox, eoy, eix, eiy, 1, rat);
 	}
-	
 #endregion
 
 function valueKey(_time, _value, _anim = noone, _in = 0, _ot = 0) constructor {

@@ -96,6 +96,18 @@ function __NodeValue_Vec2(_name, _node, _value, _data = {}) : NodeValue(_name, _
 		return true;
 	}
 	
+	////- ANIMATOR
+	
+	static lerpAnimKeys = function(from, to, rat) {
+		__f = from.value;
+		__t = to.value;
+		__i = KeyframeInterpolate(from, to, rat);
+		return [
+			lerp(__f[0], __t[0], __i),
+			lerp(__f[1], __t[1], __i),
+		];
+	}
+	
 	////- DRAW
 	
 	path_point_drag = undefined;

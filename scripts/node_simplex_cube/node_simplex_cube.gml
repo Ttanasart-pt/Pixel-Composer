@@ -1,5 +1,5 @@
 function Node_Simplex_Cube(_x, _y, _group = noone) : Node_Shader_Generator(_x, _y, _group) constructor {
-	name = "Simplex Cube";
+	name   = "Simplex Cube";
 	shader = sh_simplex_cube;
 	
 	newInput( 7, nodeValueSeed()).setShaderProp("seed");

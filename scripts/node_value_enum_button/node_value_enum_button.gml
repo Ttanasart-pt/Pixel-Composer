@@ -9,15 +9,15 @@ function __NodeValue_Enum_Button(_name, _node, _value, _data) : NodeValue(_name,
 	
 	topbar_editWidget_width = ui(160);
 	
-	/////============== Display =============
+	////- Display
 	
 	static setChoices = function(_ch) { setDisplay(VALUE_DISPLAY.enum_button, { data: _ch }); return self; }
 	
-	/////============== CONNECT =============
+	////- CONNECT
 	
 	static isConnectableStrict = function() /*=>*/ {return false};
 	
-	/////============== GET =============
+	////- GET
 	
 	static getValue = function(_time = NODE_CURRENT_FRAME, applyUnit = true, arrIndex = 0, useCache = false, log = false) { 
 		if(__tempValue != undefined) return __tempValue;
@@ -41,4 +41,14 @@ function __NodeValue_Enum_Button(_name, _node, _value, _data) : NodeValue(_name,
 	}
 	
 	static arrayLength = arrayLengthSimple;
+	
+	////- ANIMATOR
+	
+	static lerpAnimKeys = function(from, to, rat) {
+		__f = from.value;
+		__t = to.value;
+		__i = KeyframeInterpolate(from, to, rat);
+		return lerp(__f, __t, __i);
+	}
+	
 }

@@ -6,9 +6,6 @@ function __NodeValue_Number(_name, _node, _type, _value, _tooltip = "") : NodeVa
 		__f = from.value;
 		__t = to.value;
 		__i = KeyframeInterpolate(from, to, rat);
-		var _af = array_safe_length(__f, -1);
-		var _at = array_safe_length(__t, -1);
-		
 		return lerp(__f, __t, __i);
 	}
 	

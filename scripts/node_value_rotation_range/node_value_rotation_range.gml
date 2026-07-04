@@ -14,4 +14,16 @@ function __NodeValue_Rotation_Range(_name, _node, _value, _tooltip = "") : __Nod
 		return preview_overlay_rotation_range(hover, active, _x, _y, _s, _mx, _my, _rad, _type);
 	}
 	
+	////- ANIMATOR
+	
+	static lerpAnimKeys = function(from, to, rat) {
+		__f = from.value;
+		__t = to.value;
+		__i = KeyframeInterpolate(from, to, rat);
+		return [
+			lerp(__f[0], __t[0], __i),
+			lerp(__f[1], __t[1], __i),
+		];
+	}
+	
 }

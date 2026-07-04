@@ -5,15 +5,15 @@ function __NodeValue_Enum_String(_name, _node, _value, _data) : NodeValue(_name,
 	if(_data != noone) setDisplay(VALUE_DISPLAY.enum_string, _data);
 	topbar_editWidget_width = ui(160);
 	
-	/////============== SET =============
+	////- SET 
 	
 	static setChoices = function(_ch) { setDisplay(VALUE_DISPLAY.enum_string, _ch); return self; }
 	
-	/////============== CONNECT =============
+	////- CONNECT 
 	
 	static isConnectableStrict = function() /*=>*/ {return false};
 	
-	/////============== GET =============
+	////- GET 
 	
 	static getValue = function(_time = NODE_CURRENT_FRAME, applyUnit = true, arrIndex = 0, useCache = false, log = false) { 
 		if(__tempValue != undefined) return __tempValue;
@@ -33,7 +33,7 @@ function __NodeValue_Enum_String(_name, _node, _value, _data) : NodeValue(_name,
 	
 	static arrayLength = arrayLengthSimple;
 	
-	/////============ Serialize ===========
+	////- Serialize
 	
 	options_histories = [];
 	

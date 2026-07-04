@@ -39,6 +39,15 @@ function __NodeValue_Rotation(_name, _node, _value, _tooltip = "") : NodeValue(_
 	
 	static arrayLength = arrayLengthSimple;
 	
+	////- ANIMATOR
+	
+	static lerpAnimKeys = function(from, to, rat) {
+		__f = from.value;
+		__t = to.value;
+		__i = KeyframeInterpolate(from, to, rat);
+		return lerp(__f, __t, __i);
+	}
+	
 	////- Draw
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _rad = 64, _type = 0) { 

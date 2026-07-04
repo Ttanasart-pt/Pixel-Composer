@@ -14,6 +14,19 @@ function __NodeValue_Vec3(_name, _node, _value, _data = {}) : __NodeValue_Array(
 		[ "Current to One ", [noone, [1,[1,1,1]]] ], 
 	];
 	
+	////- ANIMATOR
+	
+	static lerpAnimKeys = function(from, to, rat) {
+		__f = from.value;
+		__t = to.value;
+		__i = KeyframeInterpolate(from, to, rat);
+		return [
+			lerp(__f[0], __t[0], __i),
+			lerp(__f[1], __t[1], __i),
+			lerp(__f[2], __t[2], __i),
+		];
+	}
+	
 }
 
 function __NodeValue_IVec3(_name, _node, _value, _data = {}) : NodeValue(_name, _node, CONNECT_TYPE.input, VALUE_TYPE.integer, _value, "") constructor {

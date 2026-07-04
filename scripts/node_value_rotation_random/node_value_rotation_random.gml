@@ -9,6 +9,8 @@ function __NodeValue_Rotation_Random(_name, _node, _value, _tooltip = "") : __No
 	setDisplay(VALUE_DISPLAY.rotation_random);
 	def_length = ROTRAN_LENGTH;
 	
+	////- Get
+	
 	static getValue = function(_time = NODE_CURRENT_FRAME, applyUnit = true, arrIndex = 0, useCache = false, log = false) {
 		if(__tempValue != undefined) return __tempValue;
 		
@@ -23,6 +25,25 @@ function __NodeValue_Rotation_Random(_name, _node, _value, _tooltip = "") : __No
 		
 		return _array_verify(val, ROTRAN_LENGTH);
 	}
+	
+	////- ANIMATOR
+	
+	static lerpAnimKeys = function(from, to, rat) {
+		__f = from.value;
+		__t = to.value;
+		__i = KeyframeInterpolate(from, to, rat);
+		return [
+			lerp(__f[0], __t[0], __i),
+			
+			lerp(__f[1], __t[1], __i),
+			lerp(__f[2], __t[2], __i),
+			lerp(__f[3], __t[3], __i),
+			lerp(__f[4], __t[4], __i),
+			
+			lerp(__f[5], __t[5], __i),
+		];
+	}
+	
 }
 
 // rotation_random_eval

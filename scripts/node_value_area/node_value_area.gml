@@ -99,6 +99,23 @@ function __NodeValue_Area(_name, _node, _value, _data = {}) : NodeValue(_name, _
 		return animator.getValue(_time);
 	}
 	
+	////- ANIMATOR
+	
+	static lerpAnimKeys = function(from, to, rat) {
+		__f = from.value;
+		__t = to.value;
+		__i = KeyframeInterpolate(from, to, rat);
+		return [
+			lerp(__f[0], __t[0], __i),
+			lerp(__f[1], __t[1], __i),
+			lerp(__f[2], __t[2], __i),
+			lerp(__f[3], __t[3], __i),
+			
+			lerp(__f[4], __t[4], __i),
+			lerp(__f[5], __t[5], __i),
+		];
+	}
+	
 	////- DRAW
 	
 	__preview_bbox = noone;

@@ -122,7 +122,7 @@ uniform vec2  renderLevel;
 #endregion
 
 float noise3D(vec3 p) {
-	return fract(sin(dot(p ,vec3(12.9898,78.233,128.852))) * 43758.5453)*2.0-1.0;
+	return fract(sin(dot(p ,vec3(12.9898, 78.233, 128.852 + seed / 10000.))) * 43758.5453) * 2. - 1.;
 }
 
 float simplex3D(vec3 p) {
