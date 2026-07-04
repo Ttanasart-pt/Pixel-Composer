@@ -1,8 +1,8 @@
 import os
 import re
 
-srcDir = "../../EXE"
-trgDir = "../releases"
+srcDir = "D:/Project/MakhamDev/LTS-PixelComposer/EXE"
+trgDir = "D:/Project/MakhamDev/LTS-PixelComposer/PixelComposer/releases"
 
 notes = []
 
@@ -43,7 +43,7 @@ def getVersionName(path):
         
     return None
 
-print("\n==== Updating release notes... ====\n")
+print(f"\n==== Updating {len(notes)} release notes... ====\n")
 
 for note in notes:
     v = getVersionName(note)

@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.6.003",
+    "changes": [
+      {
+        "date": "2026-07-04T01:19:20.651Z",
+        "node": "",
+        "commit": "**Simplex Noise Cube**: Fix seed value not working."
+      }
+    ]
+  },
+  {
     "version": "1.21.4.008",
     "changes": [
       {
