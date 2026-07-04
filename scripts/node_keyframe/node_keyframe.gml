@@ -41,8 +41,6 @@ function valueKey(_time, _value, _anim = noone, _in = 0, _ot = 0) constructor {
 		anim  = _anim;
 		ratio = 0;
 		
-		curveMode     = false;
-		
 		color         = c_white;
 		colorUnselect = undefined;
 		colorSelect   = undefined;
@@ -63,7 +61,6 @@ function valueKey(_time, _value, _anim = noone, _in = 0, _ot = 0) constructor {
 	
 	static calcRatio = function( ) /*=>*/ { ratio = time / (anim.node.project.animator.frames_total - 1); return self; }
 	static setTime   = function(t) /*=>*/ { time  = t; return self; }
-	
 	static setColor  = function(c) /*=>*/ {
 		color = c;
 		colorUnselect = undefined;
@@ -71,11 +68,12 @@ function valueKey(_time, _value, _anim = noone, _in = 0, _ot = 0) constructor {
 		return self;
 	}
 	
+	////- Actions
+	
 	static copyValue = function(target) {
 		type          = target.type;
 		color         = target.color;
 		
-		curveMode     = target.curveMode;
 		ease_in       = [ target.ease_in[0],  target.ease_in[1]  ];
 		ease_out      = [ target.ease_out[0], target.ease_out[1] ];
 		ease_in_type  = target.ease_in_type;
@@ -127,18 +125,17 @@ function valueKey(_time, _value, _anim = noone, _in = 0, _ot = 0) constructor {
 
 function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 	#region ---- main ----
-		suffix      = "";
-		values	    = [];
-		//staticValue = 0;
+		suffix   = "";
+		values	 = [];
 		
 		length   = 1;
 		sep_axis = _sep_axis;
 		
-		index = 0;           static setIndex = function(i) /*=>*/ { index = i; return self; }
-		prop  = _prop;
-		node  = prop.node;
-		y     = 0;
-		h     = 0;
+		index    = 0;
+		prop     = _prop;
+		node     = prop.node;
+		y        = 0;
+		h        = 0;
 		
 		key_map      = array_create(NODE_TOTAL_FRAMES);
 		key_map_mode = KEYFRAME_END.hold;
@@ -149,7 +146,6 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 		hovering = false;
 		
 		if(_prop.type != VALUE_TYPE.trigger) array_push(values, new valueKey(0, _val, self));
-		
 	#endregion
 	
 	////- Getters
@@ -394,6 +390,8 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 	static onUndo = function() /*=>*/ { updateKeyMap(); prop.triggerSetFrom(); };
 	
 	////- Setters
+	
+	static setIndex = function(i) /*=>*/ { index = i; return self; }
 	
 	static setKeyTime = function(_key, _time, _replace = true, record = false) {
 		if(!array_exists(values, _key))	    return 0;
@@ -666,7 +664,6 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 			_value_list[ 6] = _v.ease_y_lock;
 			_value_list[ 7] = _v.driverObject? _v.driverObject.serialize() : 0;
 			_value_list[ 8] = _v.color;
-			_value_list[ 9] = _v.curveMode;
 			
 			if(_v.driverObject != undefined)    _comp = false;
 			if(prop.type == VALUE_TYPE.trigger) _comp = false;
@@ -816,7 +813,6 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 			vk.type          = _type;
 			vk.color         = color;
 			
-			vk.curveMode     = curveM;
 			vk.ease_in[0]    = ease_in[0];
 			vk.ease_in[1]    = ease_in[1];
 			vk.ease_out[0]   = ease_out[0];

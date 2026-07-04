@@ -1382,7 +1382,8 @@ function Panel_Inspector() : PanelContent() constructor {
 	                    var _ani = subk? (_aniMap[$ currSec] ?? 0) : 0;
 	                    
 	                    while(j < amoIn) {
-	                        var j_jun = _inspecting.input_display_list[j];
+	                        var j_jun = array_safe_get_fast(_inspecting.input_display_list, j, noone);
+	                        if(j_jun == noone) break;
 	                        
 	                        if(is_array(j_jun)) {
 	                        	if(subk) break;

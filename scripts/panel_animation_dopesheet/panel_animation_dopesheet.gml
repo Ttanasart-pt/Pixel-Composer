@@ -1662,7 +1662,7 @@ function Panel_Animation_Dopesheet() {
             draw_set_alpha(1);
         }
         
-        if(is(animator.prop, __NodeValue_Active)) { //draw active region
+        if(is(animator.prop, __NodeValue_Active)) { // Draw active region
 	        var _ox = timeline_shift, _nx;
         	var _y1 = timeline_shift + GLOBAL_TOTAL_FRAMES * timeline_scale;
         	var _ov, _nv;
@@ -1683,7 +1683,7 @@ function Panel_Animation_Dopesheet() {
         	
         	draw_set_alpha(1);
         	
-        } else if(animator.prop.type == VALUE_TYPE.boolean) { //draw boolean true region
+        } else if(animator.prop.type == VALUE_TYPE.boolean) { // Draw boolean true region
         	var _ox = timeline_shift, _nx;
         	var _y1 = timeline_shift + GLOBAL_TOTAL_FRAMES * timeline_scale;
         	var _ov, _nv;
@@ -1722,7 +1722,7 @@ function Panel_Animation_Dopesheet() {
         	draw_set_alpha(1);
         }
         
-        for( var k = 0, n = array_length(key_list); k < n; k++ ) { //draw easing
+        for( var k = 0, n = array_length(key_list); k < n; k++ ) { // Draw easing
             var key = key_list[k];
             var t   = key.dopesheet_x;
         	
@@ -1750,7 +1750,7 @@ function Panel_Animation_Dopesheet() {
                 } else 
                     draw_sprite_ui_uniform(THEME.timeline_key_ease, 0, _tx, prop_dope_y, 1, COLORS.panel_animation_keyease_unselected);
             } 
-                        
+            
             if(key.ease_out_type == CURVE_TYPE.bezier) {
                 var _tx = t + key.ease_out[0] * timeline_scale * 2;
             	draw_set_color(COLORS.panel_animation_keyframe_ease_line);

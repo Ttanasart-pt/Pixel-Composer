@@ -263,6 +263,8 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		timelineWidget           = undefined;
 		attributes.timeline_hide = false;
 		
+		curveMode = false;
+		
 		static getTimelineWidget = function() {
 			if(is(timelineWidget, widget)) return timelineWidget;
 			
@@ -2948,9 +2950,10 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		if(is_anim)          _map.anim       = is_anim;
 		if(ign_array)        _map.ign_array  = ign_array;
 		
-		_map.def_val = def_val;
-		_map.unit    = unit.mode;
-		_map.r       = animator.serialize(scale);
+		_map.curveMode = curveMode;
+		_map.def_val   = def_val;
+		_map.unit      = unit.mode;
+		_map.r         = animator.serialize(scale);
 		
 		if(sep_axis && animVector) {
 			var _anims = getAnimators();
@@ -3022,6 +3025,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		expression = _map[$ "global_key"] ?? "";
 		expTree    = expression == ""? noone : evaluateFunctionList(expression); 
 		
+		curveMode  = _map[$ "curveMode"]  ?? curveMode;
 		def_val    = _map[$ "def_val"]    ?? def_val;
 		sep_axis   = _map[$ "sep_axis"]   ?? sep_axis;
 		favorited  = _map[$ "favorited"]  ?? favorited;

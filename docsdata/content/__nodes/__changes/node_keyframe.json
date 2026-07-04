@@ -6,6 +6,11 @@
         "date": "2026-07-03T23:54:00.975Z",
         "node": "Animation Panel",
         "commit": "**Animation Panel**: Fix alt+drag to duplicate key sync easing."
+      },
+      {
+        "date": "2026-07-04T00:54:19.234Z",
+        "node": "",
+        "commit": "**Inspector Panel**: Fix potential error when on section."
       }
     ]
   },

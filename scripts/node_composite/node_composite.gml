@@ -699,11 +699,15 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 				hoverIndex = ind;
 				if(layer_dragging != noone) {
 					draw_set_color(COLORS._main_accent);
-					if(layer_dragging > ind)
-						draw_line_width(_x + ui(16), _cy + lh + 2, _x + _w - ui(16), _cy + lh + ui(2), 2);
+					if(layer_dragging > ind) {
+						var ly = _cy + lh + ui(2);
+						draw_line_width(_x + ui(16), ly, _x + _w - ui(16), ly, 2);
 						
-					else if(layer_dragging < ind)
-						draw_line_width(_x + ui(16), _cy - 2, _x + _w - ui(16), _cy - ui(2), 2);
+					} else if(layer_dragging < ind) {
+						var ly = _cy - ui(2);
+						draw_line_width(_x + ui(16), ly, _x + _w - ui(16), ly, 2);
+						
+					}
 				}
 			}
 			

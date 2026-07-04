@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.6.003",
+    "changes": [
+      {
+        "date": "2026-07-04T00:54:19.241Z",
+        "node": "",
+        "commit": "**Inspector Panel**: Fix potential error when on section."
+      }
+    ]
+  },
+  {
     "version": "1.21.6.001",
     "changes": [
       {
