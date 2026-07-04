@@ -63,14 +63,14 @@ function Node_Bevel(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 		#endregion
 		
 		surface_set_shader(_outSurf, _hig? sh_bevel_highp : sh_bevel);
-			shader_set_i("sampleMode", getAttribute("oversample"));
+			shader_set_i( "sampleMode", getAttribute("oversample") );
 			
-			shader_set_f("dimension",  _dim);
-			shader_set_f_map("height", _hei, _data[11], inputs[1]);
-			shader_set_2("shift",      _shf);
-			shader_set_2("scale",      _sca);
-			shader_set_i("slope",      _slp);
-			shader_set_curve("slope",  _data[13], inputs[4]);
+			shader_set_f( "dimension",  _dim );
+			shader_set_m( "height",     _hei, _data[11], inputs[1] );
+			shader_set_2( "shift",      _shf );
+			shader_set_2( "scale",      _sca );
+			shader_set_i( "slope",      _slp );
+			shader_set_curve("slope",  _data[13], inputs[4] );
 			
 			draw_surface_safe(_surf);
 		surface_reset_shader();
