@@ -1,7 +1,8 @@
 varying vec2 v_vTexcoord;
 varying vec4 v_vColour;
 
-uniform sampler2D bg, fg;
+uniform sampler2D bg;
+uniform sampler2D fg;
 
 void main() {
     vec4 _bc = texture2D(bg, v_vTexcoord);

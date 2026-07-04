@@ -1374,6 +1374,8 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		weight_hover    = _weight_hover;
 		anchor_focus    = undefined;
 		
+		if(anchor_hover > -1) _HIGHLIGHT_PROP = inputs[input_fix_len + anchor_hover];
+		
 		/////////////////////////////////////////////////////// TOOLS ///////////////////////////////////////////////////////
 		
 		if(_tooln == "Edit Control point") hovering = true;

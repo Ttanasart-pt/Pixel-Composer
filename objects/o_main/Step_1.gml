@@ -138,6 +138,8 @@ if(os_is_paused()) OS_PAUSED = true;
 	with(_p_dialog) doResize();
 	with(_p_dialog) doDrag();
 	
+	 HIGHLIGHT_PROP = _HIGHLIGHT_PROP;
+	_HIGHLIGHT_PROP = undefined;
 #endregion
 
 #region auto save

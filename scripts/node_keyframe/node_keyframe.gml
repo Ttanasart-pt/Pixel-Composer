@@ -9,7 +9,7 @@ enum DRIVER_TYPE { none, linear, wiggle, sine }
 		
 		var eox = from.ease_out[0];
 		var eoy = from.ease_out[1];
-		    
+	    
 		var eix = to.ease_in[0];
 		var eiy = to.ease_in[1];
 		
@@ -450,8 +450,7 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 	}
 	
 	static setValue = function(_val = 0, _record = true, _time = NODE_CURRENT_FRAME, ease_in = 0, ease_out = 0) {
-		
-		value_delta     = 0;
+		value_delta = 0;
 		
 		if(prop.type == VALUE_TYPE.trigger) {
 			if(!prop.is_anim) {
@@ -509,8 +508,12 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 					if(_record) recordAction_variable_change(_key, "value", _key.value, $"{prop.name}")
 						.setRef(node).setTrigger(function() /*=>*/ {return onUndo()});
 					_key.value = _val;
+					
+					checkFreeze();
 					return true;
 				}
+				
+				checkFreeze();
 				return false;
 				
 			} else if(_key.time > _time) {
@@ -519,6 +522,7 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 				if(_record) recordAction(ACTION_TYPE.array_insert, values, [k, i, $"Add '{prop.name}'' keyframe" ])
 					.setRef(node).setTrigger(function() /*=>*/ {return onUndo()});
 				updateKeyMap();
+				
 				return true;
 			}
 		}
@@ -603,13 +607,48 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 			key_map[i] = infinity;
 	}
 	
-	static insertKey = function(_key, _index) { array_insert(values, _index, _key); }
+	static toggleKey_Add = function(_time = NODE_CURRENT_FRAME) {
+		for( var i = 0, n = array_length(values); i < n; i++ ) {
+			if(values[i].time == _time)
+				return;
+		}
+		
+		setValue(variable_clone(getValue(_time)), true, _time);
+	}
+	
+	static toggleKey_Remove = function(_time = NODE_CURRENT_FRAME) {
+		for( var i = 0, n = array_length(values); i < n; i++ ) {
+			if(values[i].time == _time) {
+				array_delete(values, i, 1);
+				return;
+			}
+		}
+		
+	}
+	
+	static toggleKey = function(_time = NODE_CURRENT_FRAME) {
+		for( var i = 0, n = array_length(values); i < n; i++ ) {
+			if(values[i].time == _time) {
+				array_delete(values, i, 1);
+				return -1;
+			}
+		}
+		
+		setValue(variable_clone(getValue(_time)), true, _time);
+		return 1;
+	}
+	
+	static insertKey = function(_key, _index) { 
+		array_insert(values, _index, _key); 
+		return self;
+	}
 	
 	static removeKey = function(key, upd = true) {
 		if(array_length(values) > 1) array_remove(values, key);
 		else						 prop.setAnim(false);
 		
 		if(upd) updateKeyMap();
+		return self;
 	}
 	
 	////- Serialize

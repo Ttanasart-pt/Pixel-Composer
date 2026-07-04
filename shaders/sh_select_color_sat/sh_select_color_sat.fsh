@@ -1,7 +1,10 @@
 varying vec2 v_vTexcoord;
 varying vec4 v_vColour;
 
-uniform float satMinS, satMinE, satMaxS, satMaxE;
+uniform float satMinS;
+uniform float satMinE;
+uniform float satMaxS;
+uniform float satMaxE;
 
 vec3 hsv2rgb(vec3 c) {
     vec4 K = vec4(1.0, 2.0 / 3.0, 1.0 / 3.0, 3.0);

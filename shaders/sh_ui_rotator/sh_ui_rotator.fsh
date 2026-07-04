@@ -1,7 +1,8 @@
 varying vec2 v_vTexcoord;
 varying vec4 v_vColour;
 
-uniform vec4  c0, c1;
+uniform vec4  c0;
+uniform vec4  c1;
 uniform float angle;
 uniform vec2  mouse;
 uniform float mouseProg;

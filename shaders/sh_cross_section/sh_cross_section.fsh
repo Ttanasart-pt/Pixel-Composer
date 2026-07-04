@@ -4,7 +4,8 @@ varying vec4 v_vColour;
 uniform sampler2D histogram;
 
 uniform vec2  dimension;
-uniform int   iAxis, oAxis;
+uniform int   iAxis;
+uniform int   oAxis;
 uniform float position;
 
 uniform int   aa;

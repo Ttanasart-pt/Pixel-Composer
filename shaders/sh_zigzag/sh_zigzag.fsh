@@ -47,7 +47,8 @@ uniform vec2      angle;
 uniform int       angleUseSurf;
 uniform sampler2D angleSurf;
 
-uniform vec4 col1, col2;
+uniform vec4 col1;
+uniform vec4 col2;
 
 void main() {
 	#region params

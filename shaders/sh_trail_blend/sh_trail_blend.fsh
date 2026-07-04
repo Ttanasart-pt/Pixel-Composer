@@ -1,7 +1,9 @@
 varying vec2 v_vTexcoord;
 varying vec4 v_vColour;
 
-uniform sampler2D bg, fg;
+uniform sampler2D bg;
+uniform sampler2D fg;
+
 uniform float alpha;
 uniform vec4  color;
 

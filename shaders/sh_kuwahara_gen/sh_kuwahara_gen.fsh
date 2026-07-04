@@ -50,8 +50,10 @@
 varying vec2 v_vTexcoord;
 varying vec4 v_vColour;
 
-uniform vec2 dimension;
-uniform float hardness, sharpness, zeroCrossing;
+uniform vec2  dimension;
+uniform float hardness;
+uniform float sharpness;
+uniform float zeroCrossing;
 
 uniform vec2      radius;
 uniform int       radiusUseSurf;

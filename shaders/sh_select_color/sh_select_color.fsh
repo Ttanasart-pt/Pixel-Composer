@@ -1,9 +1,23 @@
 varying vec2 v_vTexcoord;
 varying vec4 v_vColour;
 
-uniform float hueShift, hueMinS, hueMinE, hueMaxS, hueMaxE;
-uniform float satShift, satMinS, satMinE, satMaxS, satMaxE;
-uniform float valShift, valMinS, valMinE, valMaxS, valMaxE;
+uniform float hueShift;
+uniform float hueMinS;
+uniform float hueMinE;
+uniform float hueMaxS;
+uniform float hueMaxE;
+
+uniform float satShift;
+uniform float satMinS;
+uniform float satMinE;
+uniform float satMaxS;
+uniform float satMaxE;
+
+uniform float valShift;
+uniform float valMinS;
+uniform float valMinE;
+uniform float valMaxS;
+uniform float valMaxE;
 
 uniform int alpha;
 

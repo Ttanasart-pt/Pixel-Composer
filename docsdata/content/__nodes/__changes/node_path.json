@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.6.003",
+    "changes": [
+      {
+        "date": "2026-07-04T04:10:57.800Z",
+        "node": "",
+        "commit": "**Animation Panel**: Add click & drag for keyframe addition."
+      }
+    ]
+  },
+  {
     "version": "1.21.6.001",
     "changes": [
       {

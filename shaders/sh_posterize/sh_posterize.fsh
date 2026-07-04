@@ -3,7 +3,8 @@ varying vec4 v_vColour;
 
 uniform float colors;
 uniform int   alpha;
-uniform vec3  cMin, cMax;
+uniform vec3  cMin;
+uniform vec3  cMax;
 
 uniform vec2      gamma;
 uniform int       gammaUseSurf;

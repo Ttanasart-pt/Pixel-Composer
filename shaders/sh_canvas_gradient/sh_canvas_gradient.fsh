@@ -4,7 +4,8 @@ varying vec4 v_vColour;
 uniform sampler2D maskSurface;
 
 uniform vec2  dimension;
-uniform vec2  p0, p1;
+uniform vec2  p0;
+uniform vec2  p1;
 uniform vec4  color;
 
 uniform int   dithering;

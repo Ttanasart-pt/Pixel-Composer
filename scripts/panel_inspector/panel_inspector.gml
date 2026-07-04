@@ -856,8 +856,10 @@ function Panel_Inspector() : PanelContent() constructor {
         contentPane.setFocusHover(pFOCUS, pHOVER);
         contentPane.drawOffset(pad * 2, top_bar_h + pad, mx, my);
         
-        if(prop_hover != noone)
+        if(prop_hover != noone) {
+        	_HIGHLIGHT_PROP = prop_hover;
         	ds_stack_push(FOCUS_STACK, "Property");
+        }
         
         /// focus 
         var _foc = PANEL_GRAPH.getFocusingNode();
@@ -1568,7 +1570,7 @@ function Panel_Inspector() : PanelContent() constructor {
                     propRightClick(jun, widHov);
             } 
             
-            if(PANEL_ANIMATION && PANEL_ANIMATION.value_hovering == jun) {
+            if(HIGHLIGHT_PROP == jun) {
             	showHig = true;
             	prop_selecting_y_to = wdy - _y;
             	prop_selecting_h_to = wdh;
@@ -1897,6 +1899,7 @@ function Panel_Inspector() : PanelContent() constructor {
     		case "Settings":   return drawNodeAttribute(_x, _y, _w, _m, _inspecting, _flag);
     		case "Log":        return drawNodeLog(_x, _y, _w, _m, _inspecting, _flag);
     	}
+    	
     	return 0;
     }
     

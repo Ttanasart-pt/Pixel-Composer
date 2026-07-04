@@ -65,6 +65,9 @@ gml_pragma("UnityBuild", "true");
 	
 	globalvar CURRENT_COLOR; CURRENT_COLOR       = ca_white;
 	globalvar CURRENT_COLOR_2; CURRENT_COLOR_2     = ca_black;
+	
+	globalvar  HIGHLIGHT_PROP;  HIGHLIGHT_PROP     = undefined;
+	globalvar _HIGHLIGHT_PROP; _HIGHLIGHT_PROP     = undefined;
 #endregion
 
 #region input

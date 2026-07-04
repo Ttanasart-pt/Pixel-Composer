@@ -109,14 +109,6 @@ function pathAnchorBox(_onModify) : widget() constructor {
 		}
 		
 		if(array_length(_data) < 9) {
-			tb[0].setLabel("x");
-			tb[1].setLabel("y");
-			
-			tb[2].setLabel("dx0");
-			tb[3].setLabel("dy0");
-			tb[4].setLabel("dx1");
-			tb[5].setLabel("dy1");
-			
 			var dx0 = array_safe_get_fast(_data, 2);
 			var dy0 = array_safe_get_fast(_data, 3);
 			var dx1 = array_safe_get_fast(_data, 4);
@@ -128,6 +120,9 @@ function pathAnchorBox(_onModify) : widget() constructor {
 			_th = _h;
 			
 			if(hide == 0) draw_sprite_stretched(THEME.textbox, 3, _tx, _ty, _w, _th);
+			tb[0].setLabel("x");
+			tb[1].setLabel("y");
+			
 			tb[0].draw(_tx,       _ty, _tw, _th, _data[0], _m);
 			tb[1].draw(_tx + _tw, _ty, _tw, _th, _data[1], _m);
 			
@@ -136,28 +131,23 @@ function pathAnchorBox(_onModify) : widget() constructor {
 			_tw = _w2 / 2;
 			
 			if(hide == 0) draw_sprite_stretched(THEME.textbox, 3, _tx, _ty, _w2, _th);
+			// tb[2].setLabel("dx0");
+			// tb[3].setLabel("dy0");
+			
 			tb[2].draw(_tx + _tw * 0, _ty, _tw, _th, dx0, _m);
 			tb[3].draw(_tx + _tw * 1, _ty, _tw, _th, dy0, _m);
 			
 			_tx = _x + _w - _w2;
 			
 			if(hide == 0) draw_sprite_stretched(THEME.textbox, 3, _tx, _ty, _w2, _th);
+			
+			// tb[4].setLabel("dx1");
+			// tb[5].setLabel("dy1");
+			
 			tb[4].draw(_tx + _tw * 0, _ty, _tw, _th, dx1, _m);
 			tb[5].draw(_tx + _tw * 1, _ty, _tw, _th, dy1, _m);
 			
 		} else {
-			tb[0].setLabel("x");
-			tb[1].setLabel("y");
-			tb[2].setLabel("z");
-			
-			tb[3].setLabel("dx0");
-			tb[4].setLabel("dy0");
-			tb[5].setLabel("dz0");
-			
-			tb[6].setLabel("dx1");
-			tb[7].setLabel("dy1");
-			tb[8].setLabel("dz1");
-			
 			_li = 9;
 			_tx = _x;
 			_ty = _y;
@@ -165,6 +155,10 @@ function pathAnchorBox(_onModify) : widget() constructor {
 			_th = _h;
 			
 			if(hide == 0) draw_sprite_stretched(THEME.textbox, 3, _tx, _ty, _w, _th);
+			tb[0].setLabel("x");
+			tb[1].setLabel("y");
+			tb[2].setLabel("z");
+			
 			tb[0].draw(_tx + _tw * 0, _ty, _tw, _th, _data[0], _m);
 			tb[1].draw(_tx + _tw * 1, _ty, _tw, _th, _data[1], _m);
 			tb[2].draw(_tx + _tw * 2, _ty, _tw, _th, _data[2], _m);
@@ -174,6 +168,10 @@ function pathAnchorBox(_onModify) : widget() constructor {
 			_tw = _w2 / 3;
 			
 			if(hide == 0) draw_sprite_stretched(THEME.textbox, 3, _tx, _ty, _w2, _th);
+			// tb[3].setLabel("dx0");
+			// tb[4].setLabel("dy0");
+			// tb[5].setLabel("dz0");
+			
 			tb[3].draw(_tx + _tw * 0, _ty, _tw, _th, _data[3], _m);
 			tb[4].draw(_tx + _tw * 1, _ty, _tw, _th, _data[4], _m);
 			tb[5].draw(_tx + _tw * 2, _ty, _tw, _th, _data[5], _m);
@@ -181,6 +179,10 @@ function pathAnchorBox(_onModify) : widget() constructor {
 			_tx = _x + _w - _w2;
 			
 			if(hide == 0) draw_sprite_stretched(THEME.textbox, 3, _tx, _ty, _w2, _th);
+			// tb[6].setLabel("dx1");
+			// tb[7].setLabel("dy1");
+			// tb[8].setLabel("dz1");
+			
 			tb[6].draw(_tx + _tw * 0, _ty, _tw, _th, _data[6], _m);
 			tb[7].draw(_tx + _tw * 1, _ty, _tw, _th, _data[7], _m);
 			tb[8].draw(_tx + _tw * 2, _ty, _tw, _th, _data[8], _m);

@@ -21,6 +21,11 @@
         "date": "2026-07-04T01:33:38.010Z",
         "node": "",
         "commit": "Improve keyframe interpolation performance."
+      },
+      {
+        "date": "2026-07-04T04:10:57.794Z",
+        "node": "Animation Panel",
+        "commit": "**Animation Panel**: Add click & drag for keyframe addition."
       }
     ]
   },
