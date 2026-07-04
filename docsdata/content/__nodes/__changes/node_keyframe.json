@@ -16,6 +16,11 @@
         "date": "2026-07-04T01:19:20.571Z",
         "node": "Simplex Noise Cube",
         "commit": "**Simplex Noise Cube**: Fix seed value not working."
+      },
+      {
+        "date": "2026-07-04T01:33:38.010Z",
+        "node": "",
+        "commit": "Improve keyframe interpolation performance."
       }
     ]
   },

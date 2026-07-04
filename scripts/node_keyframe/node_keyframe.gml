@@ -74,7 +74,7 @@ function valueKey(_time, _value, _anim = noone, _in = 0, _ot = 0) constructor {
 		color         = target.color;
 		
 		ease_in       = [ target.ease_in[0],  target.ease_in[1]  ];
-		ease_out      = [ target.ease_out[0], target.ease_out[1] ];
+		ease_out      = [ target.ease_out[0], target.ease_out[1] ]; 
 		ease_in_type  = target.ease_in_type;
 		ease_out_type = target.ease_out_type;
 		
