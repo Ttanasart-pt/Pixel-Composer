@@ -6,6 +6,11 @@
         "date": "2026-07-04T01:19:20.640Z",
         "node": "",
         "commit": "**Simplex Noise Cube**: Fix seed value not working."
+      },
+      {
+        "date": "2026-07-04T08:18:19.189Z",
+        "node": "",
+        "commit": "**Shadow**: Add option to delete original surface from shadow output."
       }
     ]
   },

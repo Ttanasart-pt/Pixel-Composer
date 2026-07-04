@@ -11,6 +11,11 @@
         "date": "2026-07-04T01:48:05.404Z",
         "node": "",
         "commit": "Dimension value now always store unit."
+      },
+      {
+        "date": "2026-07-04T08:18:19.180Z",
+        "node": "",
+        "commit": "**Shadow**: Add option to delete original surface from shadow output."
       }
     ]
   },

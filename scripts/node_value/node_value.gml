@@ -1151,8 +1151,8 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 				switch(display_type) { 
 					case VALUE_DISPLAY._default :	
 						editWidget = new textBox(_txt, function(val) /*=>*/ {return setValueInspector(val)});
+						editWidget.unit = display_data[$ "unit"] ?? editWidget.unit;
 						
-						if(has(display_data, "unit"))         editWidget.unit = display_data.unit;
 						if(has(display_data, "front_button")) editWidget.setFrontButton(display_data.front_button);
 						
 						_ext = "Node_Number";
@@ -1170,22 +1170,18 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 						break;
 						
 					case VALUE_DISPLAY.vector :		
-						var val = animator.getValue();
-						var len = array_length(val);
+						var len = display_data[$ "length"] ?? array_length(def_val);
 						
-						if(len <= 4) {
-							editWidget = new vectorBox(len, function(val, i) /*=>*/ {return setValueInspector(val, i)}, unit );
-							
-							if(has(display_data, "label"))    editWidget.axis     = display_data.label;
-							if(has(display_data, "linkable")) editWidget.linkable = display_data.linkable;
-							if(has(display_data, "per_line")) editWidget.per_line = display_data.per_line;
-							if(has(display_data, "linked"))   editWidget.linked   = display_data.linked;
-							
-							switch(len) {
-								case 2 : _ext = [ "Node_Vector2", "Node_Path" ]; break;
-								case 3 : _ext = "Node_Vector3";                  break;
-								case 4 : _ext = "Node_Vector4";                  break;
-							}
+						editWidget = new vectorBox(len, function(val, i) /*=>*/ {return setValueInspector(val, i)}, unit );
+						editWidget.axis     = display_data[$ "label"]    ?? editWidget.axis;
+						editWidget.linkable = display_data[$ "linkable"] ?? editWidget.linkable;
+						editWidget.per_line = display_data[$ "per_line"] ?? editWidget.per_line;
+						editWidget.linked   = display_data[$ "linked"]   ?? editWidget.linked;
+						
+						switch(len) {
+							case 2 : _ext = [ "Node_Vector2", "Node_Path" ]; break;
+							case 3 : _ext = "Node_Vector3";                  break;
+							case 4 : _ext = "Node_Vector4";                  break;
 						}
 						
 						for( var i = 0, n = animVector; i < n; i++ )

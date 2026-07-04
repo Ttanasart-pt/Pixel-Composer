@@ -3,6 +3,8 @@ function nodeValue_IVec2(_name, _value, _data = {}) { return new __NodeValue_IVe
 
 function __NodeValue_Vec2(_name, _node, _value, _data = {}) : NodeValue(_name, _node, CONNECT_TYPE.input, VALUE_TYPE.float, _value, "") constructor {
 	if(is_bool(_data)) _data = {linked: _data};
+	
+	_data.length = 2;
 	setDisplay(VALUE_DISPLAY.vector, _data);
 	
 	preview_hotkey_spr = THEME.tools_2d_move;
@@ -59,7 +61,7 @@ function __NodeValue_Vec2(_name, _node, _value, _data = {}) : NodeValue(_name, _
 		switch(_d) {
 			case 0: return valueProcess([val,val], nod, applyUnit, arrIndex);
 			case 1: return valueProcess( val,      nod, applyUnit, arrIndex);
-			case 2: return array_map(val, function(v, i) /*=>*/ {return valueProcess(array_verify_new(v, 2), __nod, __applyUnit, __arrIndex)}); 
+			case 2: return array_map(val, function(v, i) /*=>*/ {return valueProcess(array_verify_min_new(v, 2), __nod, __applyUnit, __arrIndex)}); 
 		}
 		
 		return val;

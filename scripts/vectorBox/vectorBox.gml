@@ -266,7 +266,9 @@ function vectorBox(_size, _onModify, _unit = noone) : widget() constructor {
 			
 			return h;
 			
-		} else if(d < 1 || d > 2) {
+		} 
+		
+		if(d < 1 || d > 2) {
 			if(hide == 0) draw_sprite_stretched_ext(THEME.textbox, 3, _x, _y, _w, _h, boxColor,  1);
 			if(hide == 0) draw_sprite_stretched_ext(THEME.textbox, 0, _x, _y, _w, _h, boxColor, .5);	
 			

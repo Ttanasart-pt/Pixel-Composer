@@ -62,7 +62,7 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	newInput(46, nodeValue_Int(      "Attempt",         8      ));
 	
 		////- =/Path
-	newInput(19, nodeValue_Path(     "Path" ));
+	newInput(19, nodeValue_Path(     "Path"                    ));
 	newInput(38, nodeValue_EButton(  "Spacing",           0, [ "After", "Between", "Around" ] ));
 	newInput(20, nodeValue_Bool(     "Rotate Along Path", true ));
 	newInput(45, nodeValue_Range(    "Path Range",       [0,1] ));
@@ -112,10 +112,17 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	newOutput(0, nodeValue_Output( "Surface Out", VALUE_TYPE.surface, noone ));
 	newOutput(1, nodeValue_Output( "Atlas Data",  VALUE_TYPE.atlas,   []    )).setVisible(false).rejectArrayProcess();
 	
+	b_scatter_manual = button(function() /*=>*/ {
+		inputs[ 6].setValue(3);
+		inputs[17].setValue([ "Rotation", "Scale" ]);
+	}).setIcon(THEME.pencil, 0, COLORS._main_value_positive).iconPad().setTooltip(__txt("Manual mode"));
+	
 	input_display_list = [ 10, 
 		[ "Output",       false ],  1, 
 		[ "Surfaces",      true ],  0, 15, 24, 25, 26, 27, 
-		[ "Scatter",      false ],  6,  5, 13, 14, 17,  9, 35,
+		[ "Scatter",      false, noone, b_scatter_manual ], 
+		                            6,  5, 13, 14, 17,  9, 35,
+		                            
 			[ "/Amount",  false ], 31,  2, 30, 44, 46, 
 			[ "/Path",     true ], 19, 38, 20, 45, 21, 22, 
 		[ "Position",     false ], 40, 33, 50, 51, 36, 49,  39, 37, 
@@ -172,81 +179,80 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		var msx = (_mx - _x) / _s;
 		var msy = (_my - _y) / _s;
 		
-		switch(_distType) {
-			case 0 : case 1 : case 2 :
-				drawOverlayInput(inputs[ 5].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my));
-				break;
-				
-			case 3 : 
-				tools = [ tool_addP, tool_subP ];
-				
-				if(inputs[14].value_from != noone) return w_hovering;
-				var _points = current_data[14];
-				
-				var hv = undefined;
-				for( var i = 0, n = array_length(_points); i < n; i++ ) {
-					var p  = _points[i];
-					var px = _x + p[0] * _s;
-					var py = _y + p[1] * _s;
-					
-					var hov = hover && point_in_circle(_mx, _my, px, py, ui(8));
-					draw_anchor(hov, px, py);
-					if(hov) {
-						w_hovering = true;
-						hv = i;
-					}
-				}
-				
-				var t = PANEL_PREVIEW.tool_current;
-				if(t == tool_addP) {
-					if(mouse_lpress(active)) {
-						array_push(_points, [msx, msy]);
-						triggerRender();
-					}
-					
-				} else if(t == tool_subP) {
-					if(hv != undefined && mouse_lpress(active)) {
-						array_delete(_points, hv, 1);
-						triggerRender();
-					}
-					
-				} else {
-					if(hv != undefined && mouse_lpress(active)) {
-						var p  = _points[hv];
-						
-						point_editing    = hv;
-						point_editing_sx = p[0];
-						point_editing_sy = p[1];
-						point_editing_mx = _mx;
-						point_editing_my = _my;
-					}
-					
-				}
-				
-				if(point_editing != undefined) {
-					var dx = (_mx - point_editing_mx) / _s;
-					var dy = (_my - point_editing_my) / _s;
-					
-					p = _points[point_editing];
-					p[0] = point_editing_sx + dx;
-					p[1] = point_editing_sy + dy;
-					if(key_mod_press(CTRL)) {
-						p[0] = round(p[0]);
-						p[1] = round(p[1]);
-					}
-					
-					if(MOUSE_MOVED) triggerRender();
-					
-					if(mouse_lrelease()) {
-						UNDO_HOLDING  = false;
-						point_editing = undefined;
-					}
-				}
-				break;
+		if(_distType == 3) {
+			tools = [ tool_addP, tool_subP ];
 			
-			case 4 : 
-				drawOverlayInput(inputs[19].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _params));
-				break;
+			if(inputs[14].value_from != noone) return w_hovering;
+			var _points = current_data[14];
+			
+			var hv = undefined;
+			for( var i = 0, n = array_length(_points); i < n; i++ ) {
+				var p  = _points[i];
+				var px = _x + p[0] * _s;
+				var py = _y + p[1] * _s;
+				
+				var hov = hover && point_in_circle(_mx, _my, px, py, ui(8));
+				draw_anchor(hov, px, py);
+				if(hov) {
+					w_hovering = true;
+					hv = i;
+				}
+			}
+			
+			var t = PANEL_PREVIEW.tool_current;
+			
+			if(t == tool_addP) {
+				if(mouse_lpress(active)) {
+					array_push(_points, [msx, msy]);
+					inputs[14].setValue(_points);
+				}
+				
+			} else if(t == tool_subP) {
+				if(hv != undefined && mouse_lpress(active)) {
+					array_delete(_points, hv, 1);
+					inputs[14].setValue(_points);
+				}
+				
+			} else {
+				if(hv != undefined && mouse_lpress(active)) {
+					var p  = _points[hv];
+					
+					point_editing    = hv;
+					point_editing_sx = p[0];
+					point_editing_sy = p[1];
+					point_editing_mx = _mx;
+					point_editing_my = _my;
+				}
+				
+			}
+			
+			if(point_editing != undefined) {
+				var dx = (_mx - point_editing_mx) / _s;
+				var dy = (_my - point_editing_my) / _s;
+				
+				p = _points[point_editing];
+				p[0] = point_editing_sx + dx;
+				p[1] = point_editing_sy + dy;
+				if(key_mod_press(CTRL)) {
+					p[0] = round(p[0]);
+					p[1] = round(p[1]);
+				}
+				
+				if(MOUSE_MOVED) {
+					inputs[14].setValue(_points);
+					triggerRender();
+				}
+				
+				if(mouse_lrelease()) {
+					UNDO_HOLDING  = false;
+					point_editing = undefined;
+				}
+			}
+		}
+		
+		switch(_distType) {
+			case 0: case 1: case 2: drawOverlayInput(inputs[ 5].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my));          break;
+			case 4:                 drawOverlayInput(inputs[19].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _params)); break;
 		}
 		
 		drawOverlayInput(inputs[29].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, current_data[1]));

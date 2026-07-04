@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.6.003",
+    "changes": [
+      {
+        "date": "2026-07-04T08:18:19.174Z",
+        "node": "",
+        "commit": "**Shadow**: Add option to delete original surface from shadow output."
+      }
+    ]
+  },
+  {
     "version": "1.21.5.005",
     "changes": [
       {

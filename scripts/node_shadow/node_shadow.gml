@@ -27,15 +27,19 @@ function Node_Shadow(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	newInput(11, nodeValue_EButton( "Positioning",     0, [ "Shift", "Light" ] ));
 	newInput( 3, nodeValue_Vec2(    "Shift",          [0,0] )).setUnitSimple(false).hideLabel().setPieMenu();
 	newInput(12, nodeValue_Vec2(    "Light Position", [0,0] )).setUnitSimple().hideLabel().setPieMenu();
-	// input 15
+	
+	////- =Rendering
+	newInput(15, nodeValue_Bool(    "Remove Original",  true ));
+	// 16
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	newOutput(1, nodeValue_Output("Shadow Only", VALUE_TYPE.surface, noone));
 	
 	input_display_list = [ 8, 
-		[ "Surfaces",  true ],  0,  6,  7,  9, 10, 
-		[ "Shadow",   false ], 14,  1,  2, 13,  4,  5, 
-		[ "Position", false ], 11,  3, 12, 
+		[ "Surfaces",   true ],  0,  6,  7,  9, 10, 
+		[ "Shadow",    false ], 14,  1,  2, 13,  4,  5, 
+		[ "Position",  false ], 11,  3, 12, 
+		[ "Rendering", false ], 15, 
 	];
 	
 	////- Node
@@ -97,6 +101,8 @@ function Node_Shadow(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 			var _lgh    = _data[12];
 			var _dim    = surface_get_dimension(_surf);
 			
+			var _remOri = _data[15];
+			
 			inputs[ 3].setVisible(_posi == 0);
 			inputs[12].setVisible(_posi == 1);
 			
@@ -141,6 +147,13 @@ function Node_Shadow(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 			
 			draw_surface_safe(_surf);
 		surface_reset_shader();
+		
+		if(_remOri) {
+			surface_set_shader(_outShad, noone, false);
+				BLEND_SUBTRACT
+				draw_surface(_surf, 0, 0);
+			surface_reset_shader();
+		}
 		
 		__process_mask_modifier(_data);
 		_outSurf = mask_apply_input(_surf, _outSurf, _data[6], _data[7], inputs[6]);

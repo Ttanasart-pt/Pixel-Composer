@@ -3,6 +3,8 @@ function nodeValue_IVec3( _name, _value, _data = {} ) { return new __NodeValue_I
 
 function __NodeValue_Vec3(_name, _node, _value, _data = {}) : __NodeValue_Array(_name, _node, _value, "", 3) constructor {
 	if(is_bool(_data)) _data = {linked: _data};
+	
+	_data.length = 3;
 	setDisplay(VALUE_DISPLAY.vector, _data);
 	
 	extract_node = "Node_Vector3";

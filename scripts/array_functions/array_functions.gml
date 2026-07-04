@@ -35,6 +35,15 @@
 	function array_valid(arr)   { INLINE return  is_array(arr) && array_length(arr) > 0;  }
 	function array_invalid(arr) { INLINE return !is_array(arr) || array_length(arr) == 0; }
 	
+	function array_verify_min_new(arr, length) { INLINE
+		if(!is_array(arr)) return array_create(length);
+		if(array_length(arr) >= length) return arr;
+		
+		arr = array_clone(arr, 1);
+		array_resize(arr, length);
+		return arr;
+	}
+	
 	function array_verify_new(arr, length) { INLINE
 		if(!is_array(arr)) return array_create(length);
 		if(array_length(arr) == length) return arr;
