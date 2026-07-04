@@ -2809,7 +2809,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		
 		inspecting = false;
 		previewing = 0;
-	}
+	} 
 	static drawBranch  = function(_depth = 0) {
 		if(branch_drawing) return;
 		branch_drawing = true;

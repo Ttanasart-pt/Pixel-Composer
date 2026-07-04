@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.6.003",
+    "changes": [
+      {
+        "date": "2026-07-04T01:50:57.546Z",
+        "node": "",
+        "commit": "Updated save version to 121060."
+      }
+    ]
+  },
+  {
     "version": "1.21.5.009",
     "changes": [
       {
