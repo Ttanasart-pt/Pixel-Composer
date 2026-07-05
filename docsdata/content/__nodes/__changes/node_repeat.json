@@ -6,6 +6,11 @@
         "date": "2026-07-05T03:44:09.438Z",
         "node": "Repeat",
         "commit": "**Repeat**: Add circular patten aspect ratio, angle."
+      },
+      {
+        "date": "2026-07-05T05:34:01.277Z",
+        "node": "",
+        "commit": "**2D Extrude**: Add highlight intensity control."
       }
     ]
   },

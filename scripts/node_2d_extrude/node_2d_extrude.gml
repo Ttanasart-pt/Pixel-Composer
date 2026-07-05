@@ -10,7 +10,7 @@ function Node_2D_Extrude(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	newInput( 2, nodeValue_Float(    "Distance",   .5             )).setUnitSimple().setPieMenu();
 	newInput( 8, nodeValue_Slider(   "Shift",       0, [-1,1,.01] )).setUnitSimple().setPieMenu();
 	newInput( 7, nodeValue_Bool(     "Wrap",        false         ));
-	newInput(18, nodeValue_EScroll(  "Depth Order", 1, [ "Minimum", "Maximum" ] ));
+	newInput(18, nodeValue_EScroll(  "Depth Order", 0, [ "Minimum", "Maximum" ] ));
 	
 		////- =/Path
 	newInput(15, nodeValue_Path( "Path"                     ));
@@ -28,10 +28,11 @@ function Node_2D_Extrude(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	newInput(17, nodeValue_Bool(     "Draw Original", true       ));
 	
 	////- =Highlight
-	newInput( 5, nodeValue_Bool(  "Highlight",       false    ));
-	newInput(14, nodeValue_Float( "Highlight Width", 1        ));
-	newInput( 6, nodeValue_Color( "Highlight Color", ca_white ));
-	// 19
+	newInput( 5, nodeValue_Bool(   "Highlight", false    ));
+	newInput(14, nodeValue_Float(  "Width",     1        ));
+	newInput( 6, nodeValue_Color(  "Color",     ca_white ));
+	newInput(19, nodeValue_Slider( "Intensity", 1        ));
+	// 20
 	
 	newOutput( 0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone)).setDrawGroup(0);
 	newOutput( 1, nodeValue_Output("Depth",       VALUE_TYPE.surface, noone)).setDrawGroup(0);
@@ -42,7 +43,7 @@ function Node_2D_Extrude(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	    	[ "/Path", false    ], 15, 16, 
 		[ "Transform", false    ], 11, 12, 13, 
 	    [ "Render",    false    ],  3,  4, 10, 17, 
-	    [ "Highlight", false, 5 ], 14,  6, 
+	    [ "Highlight", false, 5 ], 14,  6, 19, 
     ];
 	
     ////- Nodes
@@ -136,6 +137,7 @@ function Node_2D_Extrude(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 		    var _high  = _data[ 5];
 		    var _hgwd  = _data[14];
 		    var _hgcl  = _data[ 6];
+		    var _hgin  = _data[19];
 		    
 		    var _dim   = surface_get_dimension(_surf);
 	    #endregion
@@ -204,6 +206,7 @@ function Node_2D_Extrude(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	        shader_set_i( "highlight",      _high );
 	        shader_set_f( "highlightWidth", _hgwd );
 	        shader_set_c( "highlightColor", _hgcl );
+	        shader_set_f( "highlightInten", _hgin );
 	        
 	    	draw_surface_safe(_surf);
 	    surface_reset_shader();

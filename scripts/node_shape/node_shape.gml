@@ -195,7 +195,7 @@ function Node_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 		[ "Shape",	    false     ],  2, 32, 33, 35, 52, 40, 34, 49, 48,  9,  4, 13,  5,  7,  8, 
 		                             38, 39, 22, 23, 24, 25, 26, 27, 43, 30, 31, 36, 
 		[ "Deform",	     true     ], 41, 42, 
-		[ "Render",	     true     ], 10, 18,
+		[ "Render",	    false     ], 10, 18,
 		[ "Height",	     true, 12 ], 29, 20, 37,  
 	];
 	

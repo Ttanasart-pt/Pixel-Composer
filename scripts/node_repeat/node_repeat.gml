@@ -47,10 +47,10 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	
 	////- =Pattern
 	newInput( 3, nodeValue_EScroll(  "Pattern", 0, __enum_array_gen([ "Linear", "Grid", "Circular"], s_node_repeat_axis) ));
-	
-		////- =/Pattern
 	newInput( 9, nodeValue_Vec2(     "Start Position",  [.5,.5] )).setHotkey("G").setUnitSimple();
 	newInput(32, nodeValue_Rotation( "Start Rotation",   0      )).setHotkey("R");
+	
+		////- =/Pattern
 	newInput(22, nodeValue_Anchor(   "Global Anchor",   [ 0, 0] ));
 	newInput(45, nodeValue_Rotation( "Global Rotation",  0      ));
 	newInput( 7, nodeValue_RotRange( "Angle Range",     [0,360] ));
@@ -208,12 +208,10 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		return _h + ui(32);
 	});
 	
-	b_gridFill = button(function() /*=>*/ {return gridFill()}).setIcon(THEME.fill, 0, COLORS._main_icon).setTooltip("Fill");
-	
 	input_display_list = [ 17, 
 		[ "Surfaces",      true ],  0, 35, 36, 37,  1, 16, 
-		[ "Pattern",      false ],  3,  
-			[ "/Pattern", false ],  9, 32, 22, 45,  7,  8, 49, 50, 
+		[ "Pattern",      false ],  3,  9, 32,
+			[ "/Pattern", false ], 22, 45,  7,  8, 49, 50, 
 			[ "/Repeat",  false ],  2, 18,
 			
 		[ "Path",          true ], 11, 12, 13, 40, 
@@ -231,6 +229,8 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	setDynamicInput(18, false);
 	
 	////- Nodes
+	
+	b_gridFill = button(function() /*=>*/ {return gridFill()}).setIcon(THEME.fill, 0, COLORS._main_icon).setTooltip("Fill");
 	
 	output_dimension = [];
 	surface_atlases  = [];

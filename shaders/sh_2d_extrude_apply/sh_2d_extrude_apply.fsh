@@ -160,6 +160,7 @@ uniform int   drawBase;
 uniform int   highlight;
 uniform float highlightWidth;
 uniform vec4  highlightColor;
+uniform float highlightInten;
 
 uniform sampler2D mask;
 uniform int    useMask;
@@ -206,7 +207,7 @@ void main() {
 		    float e2 = texture2D(extrudeMap, v_vTexcoord + vec2(0., hgc.y)).r;
 		    
 		    if(e1 > 0. || e2 > 0.) {
-		        gl_FragData[0] = mix(gl_FragData[0], vec4(highlightColor.rgb, gl_FragData[0].a), highlightColor.a);
+		        gl_FragData[0] = mix(gl_FragData[0], vec4(highlightColor.rgb, gl_FragData[0].a), highlightColor.a * highlightInten);
 		        gl_FragData[1] = vec4(vec3(mix(depth.x, depth.y, 0.)), 1.);
 	    		return;
 		    }
