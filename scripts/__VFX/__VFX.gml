@@ -123,7 +123,8 @@ function __part(_node) : __particleObject() constructor {
 	
 	////- Render
 	
-	arr_type = 0;
+	arr_type  = 0;
+	draw_type = 0;
 	
 	drawx   = 0; drawy   = 0;
 	drawsx  = 0; drawsy  = 0;
@@ -142,7 +143,7 @@ function __part(_node) : __particleObject() constructor {
 	anim_stre  = false;
 	anim_len   = 1;
 	
-	line_draw = 1;
+	line_draw  = 1;
 	
 	////- Physics
 	
@@ -460,6 +461,31 @@ function __part(_node) : __particleObject() constructor {
 			drawx   = pathPos.x + drawx * _pathDiv;
 			drawy   = pathPos.y + drawy * _pathDiv;
 		}
+		
+		if(draw_type == PARTICLE_RENDER_TYPE.line) {
+			#region color
+				var cc = (col == -1)? 0xFF000000 : col.evalFast(lifeRat);
+				    cc = colorMultiply(blend, cc);
+				alp_draw = alp * (alp_fade == noone? 1 : alp_fade.getFast(lifeRat)) * _color_get_alpha(cc);
+				
+				if(life_incr) {
+					blend_history[life_incr - 1] = cc;
+					alp_history[life_incr - 1]   = alp_draw;
+				}
+				
+				currColor = cola(cc, alp_draw);
+			#endregion
+			
+			var scCurve = scT == noone? 1 : scT.getFast(lifeRat);
+			scx = drawsx * scCurve;
+			scy = drawsy * scCurve;
+				
+			if(life_incr) {
+				scx_history[life_incr - 1] = scx;
+				scy_history[life_incr - 1] = scy;
+			}
+		
+		}
 	}
 	
 	////- Draw
@@ -478,52 +504,19 @@ function __part(_node) : __particleObject() constructor {
 		var _trail_len = _trail_ed - _trail_st;
 		if(_trail_len <= 0) return;
 		
-		var lifeRat = clamp(1 - life / life_total, 0, 1);
-		var scCurve = scT == noone? 1 : scT.getFast(lifeRat);
-		scx = drawsx * scCurve;
-		scy = drawsy * scCurve;
-		
-		var _xx = drawx ?? 0;
-		var _yy = drawy ?? 0;
-		var _rr = drawrot;
-		_rr = value_snap(_rr, rotSnap);
-		
-		if(exact) {
-			_xx = round(_xx);
-			_yy = round(_yy);
-		}
-		
-		#region color
-			var cc = (col == -1)? 0xFF000000 : col.evalFast(lifeRat);
-			    cc = colorMultiply(blend, cc);
-			alp_draw = alp * (alp_fade == noone? 1 : alp_fade.getFast(lifeRat)) * _color_get_alpha(cc);
-			
-			if(life_incr) {
-				blend_history[life_incr - 1] = cc;
-				alp_history[life_incr - 1]   = alp_draw;
-			}
-			
-			currColor = cola(cc, alp_draw);
-		#endregion
-		
 		var  _ox,  _nx,  _oy,  _ny;
 		var _osx, _nsx, _osy, _nsy;
 		var  _oc,  _nc,  _oa,  _na;
 		
-		if(life_incr) {
-			scx_history[life_incr - 1] = scx;
-			scy_history[life_incr - 1] = scy;
-		}
-		
 		for( var j = 0; j < _trail_len; j++ ) {
 			var _index = _trail_st + j;
 			
-			_nx  = x_history[    _index];
-			_ny  = y_history[    _index];
-			_nsx = scx_history[  _index];
-			_nsy = scy_history[  _index];
-			_nc  = blend_history[_index];
-			_na  = alp_history[  _index];
+			_nx  = x_history[     _index ];
+			_ny  = y_history[     _index ];
+			_nsx = scx_history[   _index ];
+			_nsy = scy_history[   _index ];
+			_nc  = blend_history[ _index ];
+			_na  = alp_history[   _index ];
 			
 			if(j) {
 				draw_set_color(_nc);

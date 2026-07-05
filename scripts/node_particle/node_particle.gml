@@ -381,6 +381,9 @@ function Node_Particle(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 		
 		//////////////////////////////////////////////////////////////////////////////
 		
+			var _rtype      	= inputs_data[75];
+			var _llife      	= inputs_data[76];
+			
 			var _path       	= inputs_data[46];
 			var _pathLoop       = inputs_data[82];
 			var _pathRange      = inputs_data[66];
@@ -503,8 +506,9 @@ function Node_Particle(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 			var _lif = irandom_range(_life[0], _life[1]);
 			part.create(_spr, xx, yy, _lif, _warp & 0b01, _warp & 0b10);
 			part.seed = irandom_range(100000, 999999);
+			
 			part.setSpriteAnimation(random_range(_anim_speed[0], _anim_speed[1]), _anim_stre, _anim_end, _arr_type);
-			part.params = custom_parameter_map;
+			part.params    = custom_parameter_map;
 			
 			#region Rotation
 				var _rot = rotation_random_eval(is_array(_rotation[0])? _rotation[i] : _rotation,, spawn_index);
@@ -598,6 +602,11 @@ function Node_Particle(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 				part.setWiggle( _use_wig, wiggle_maps );
 			#endregion
 			
+			#region Rendering
+				part.draw_type = _rtype;
+				part.line_draw = _llife;
+			#endregion
+			
 			spawn_index  = safe_mod(spawn_index + 1, attributes.part_amount);
 			parts_runner = safe_mod(parts_runner + 1, attributes.part_amount);
 			spawn_total++;
@@ -641,8 +650,6 @@ function Node_Particle(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 		var _bg    = inputs[74].getValue(_time);
 		
 		var _type  = inputs[75].getValue(_time);
-		var _llife = inputs[76].getValue(_time);
-		
 		var _sortY = inputs[78].getValue(_time);
 		
 		if(is_surface(_bg)) _dim = surface_get_dimension(_bg);
@@ -664,7 +671,6 @@ function Node_Particle(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 					break;
 			}
 			
-			__llife = _llife;
 			__exact = _exact;
 			__dimw  = _dim[0];
 			__dimh  = _dim[1];
@@ -678,7 +684,7 @@ function Node_Particle(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 					break;
 					
 				case PARTICLE_RENDER_TYPE.line : 
-					array_foreach(parts, function(p,i) /*=>*/ { p.line_draw = __llife; p.drawLine(__exact, __dimw, __dimh); return true; });
+					array_foreach(parts, function(p,i) /*=>*/ {return p.drawLine(__exact, __dimw, __dimh)});
 					break;
 			}
 			
