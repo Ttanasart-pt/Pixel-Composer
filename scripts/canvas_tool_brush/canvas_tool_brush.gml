@@ -10,10 +10,10 @@ function canvas_tool_brush(_eraser = false, _toolAttr = undefined) : canvas_tool
 	mouse_cur_ty = 0;
 	mouse_pre_x  = 0;
 	mouse_pre_y  = 0;
-	mouse_pre_draw_x = undefined;
-	mouse_pre_draw_y = undefined;
-	mouse_las_draw_x = undefined;
-	mouse_las_draw_y = undefined;
+	mouse_pre_draw_x = undefined; _mouse_pre_draw_x = undefined;
+	mouse_pre_draw_y = undefined; _mouse_pre_draw_y = undefined;
+	mouse_las_draw_x = undefined; _mouse_las_draw_x = undefined;
+	mouse_las_draw_y = undefined; _mouse_las_draw_y = undefined;
 	
 	mouse_line_drawing = false;
 	mouse_line_x0 = 0;
@@ -115,28 +115,61 @@ function canvas_tool_brush(_eraser = false, _toolAttr = undefined) : canvas_tool
 		return _step;
 	}
 	
+	static draw_line_px = function(_x0, _y0, _x1, _y1) {
+		// randomize(); draw_set_color(COLORS.labels[irandom(array_length(COLORS.labels) - 1)]); print(_x0, _y0, _x1, _y1);
+		
+		var dx =  abs(_x1 - _x0);
+	    var dy = -abs(_y1 - _y0);
+	
+	    var sx = sign(_x1 - _x0);
+	    var sy = sign(_y1 - _y0);
+	
+	    var err = dx + dy;
+	
+	    while (true) {
+	        draw_point(_x0, _y0);
+			if (_x0 == _x1 && _y0 == _y1) break;
+	
+	        var e2 = 2 * err;
+	
+	        if (e2 >= dy) {
+	        	if(_x0 == _x1) break;
+	        	
+	            err += dy;
+	            _x0 += sx;
+	        }
+	
+	        if (e2 <= dx) {
+	        	if(_y0 == _y1) break;
+	        	
+	            err += dx;
+	            _y0 += sy;
+	        }
+	    }
+	}
+	
 	static draw_line_px_wrap = function(_draw = true, _x0 = mouse_pre_draw_x, _y0 = mouse_pre_draw_y, _x1 = mouse_cur_tx, _y1 = mouse_cur_ty) {
 		var _step = 0;
 		
-		if(!brush_warp) draw_line(_x0, _y0, _x1, _y1);
+		if(!brush_warp) draw_line_px(_x0, _y0, _x1, _y1);
 		else {
 			if(warp_block_x > warp_block_px) {
-				draw_line(_x0, _y0, draw_w + _x1, _y1);
-				draw_line(_x0 - draw_w, _y0, _x1, _y1);
+				draw_line_px(_x0, _y0, draw_w + _x1, _y1);
+				draw_line_px(_x0 - draw_w, _y0, _x1, _y1);
 				
 			} else if(warp_block_x < warp_block_px) {
-				draw_line(_x0, _y0, _x1 - draw_w, _y1);
-				draw_line(draw_w + _x0, _y0, _x1, _y1);
+				draw_line_px(_x0, _y0, _x1 - draw_w, _y1);
+				draw_line_px(draw_w + _x0, _y0, _x1, _y1);
 				
 			}
 			
 			if(warp_block_y > warp_block_py) {
-				draw_line(_x0, _y0, _x1, draw_h + _y1);
-				draw_line(_x0, _y0 - draw_h, _x1, _y1);
+				draw_line_px(_x0, _y0, _x1, draw_h + _y1);
+				draw_line_px(_x0, _y0 - draw_h, _x1, _y1);
 				
 			} else if(warp_block_y < warp_block_py) {
-				draw_line(_x0, _y0, _x1, _y1 - draw_h);
-				draw_line(_x0, draw_h + _y0, _x1, _y1);
+				draw_line_px(_x0, _y0, _x1, _y1 - draw_h);
+				draw_line_px(_x0, draw_h + _y0, _x1, _y1);
 				
 			}
 		}
@@ -287,29 +320,31 @@ function canvas_tool_brush(_eraser = false, _toolAttr = undefined) : canvas_tool
 			
 			warp_block_px = warp_block_x;
 			warp_block_py = warp_block_y;
-		}
 			
+		} 
+		
+		var _1px = !brush.use_surface && brush.dist_min == brush.dist_max && brush.dist_min == 1;
+		
 		if(mouse_holding) { // Drawing
 			if(active) {
-				var _1px = !brush.use_surface && brush.dist_min == brush.dist_max && brush.dist_min == 1;
 				var _drawnSpeed = 0;
 				var _drawnStep  = 0;
 				
 				if(_1px) {
 					if(tool_attribute.pixelPerfect && !isEraser) {
-						var _drawPx = abs(mouse_cur_tx - mouse_las_draw_x) > 1 || 
-						              abs(mouse_cur_ty - mouse_las_draw_y) > 1;
+						var _drawPx = abs(mouse_cur_tx - mouse_las_draw_x) > 1 || abs(mouse_cur_ty - mouse_las_draw_y) > 1;
 						
 						if(_drawPx) {
 							surface_set_shader(drawing_surface, noone, false);
 								BLEND_MAX_ALPHA
-								_drawnStep += draw_point_px_wrap(true, mouse_pre_draw_x, mouse_pre_draw_y);
-								
-								var _drawLn = abs(mouse_pre_draw_x - mouse_las_draw_x) > 1 || 
-								              abs(mouse_pre_draw_y - mouse_las_draw_y) > 1;
-								if(_drawLn)
-									_drawnStep += draw_line_px_wrap(true, mouse_las_draw_x, mouse_las_draw_y, 
-									                                      mouse_pre_draw_x, mouse_pre_draw_y);
+												
+								_mouse_pre_draw_x = mouse_pre_draw_x;
+								_mouse_pre_draw_y = mouse_pre_draw_y;
+								_mouse_las_draw_x = mouse_las_draw_x;
+								_mouse_las_draw_y = mouse_las_draw_y;
+
+								 _drawnStep += draw_line_px_wrap(true, mouse_las_draw_x, mouse_las_draw_y, mouse_pre_draw_x, mouse_pre_draw_y);
+								// _drawnStep += draw_point_px_wrap(true, mouse_pre_draw_x, mouse_pre_draw_y);
 							surface_reset_shader();
 							
 							updated = true;
@@ -384,6 +419,13 @@ function canvas_tool_brush(_eraser = false, _toolAttr = undefined) : canvas_tool
 			}
 			
 			if(mouse_lrelease()) {
+				if(_1px && tool_attribute.pixelPerfect && !isEraser) {
+					surface_set_shader(drawing_surface, noone, false);
+						BLEND_MAX_ALPHA
+						draw_point_px_wrap(true, mouse_pre_draw_x, mouse_pre_draw_y);
+					surface_reset_shader();
+				}
+				
 				mouse_holding = false;
 				apply_draw_surface();
 			}

@@ -2,8 +2,9 @@ function Node_Shard_Noise(_x, _y, _group = noone) : Node_Shader_Generator(_x, _y
 	name   = "Shard Noise";
 	shader = sh_noise_shard;
 	
-	////- =Output
 	newInput( 3, nodeValueSeed()).setShaderProp("seed");
+	
+	////- =Output
 	newInput(11, nodeValue_Surface( "UV Map"     ));
 	newInput(12, nodeValue_Slider(  "UV Mix", 1  ));
 	newInput(10, nodeValue_Surface( "Mask"       ));
@@ -21,8 +22,8 @@ function Node_Shard_Noise(_x, _y, _group = noone) : Node_Shader_Generator(_x, _y
 	newInput(13, nodeValue_SliRange( "Level",    [0,1] )).setShaderProp("level");
 	// input 14
 	
-	input_display_list = [
-		[ "Output",      true ],  0,  3, 11, 12, 10, 
+	input_display_list = [ 3, 
+		[ "Output",      true ],  0,  11, 12, 10, 
 		[ "Noise",      false ],  5,  8,  4,  7, 
 		[ "Transform",  false ],  1,  9,  2,  6, 
 		[ "Rendering",  false ], 13, 

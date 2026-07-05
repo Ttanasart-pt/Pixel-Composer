@@ -27,3 +27,8 @@ function draw_line_width_infinite(x0, y0, x1, y1, w = 1) {
 	
 	draw_line_width(xx0, yy0, xx1, yy1, w);
 }
+
+function draw_line_cross(_x, _y, _r) {
+	draw_line(_x-_r, _y, _x+_r, _y);
+	draw_line(_x, _y-_r, _x, _y+_r);
+}

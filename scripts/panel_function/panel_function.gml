@@ -94,7 +94,8 @@
 			
 			for( var i = 0, n = array_length(cont); i < n; i++ ) {
 				var _content = cont[i];
-				var _key = is_struct(_content)? _content.name : _content;
+				var _key = is_struct(_content)? _content[$ "name"] : _content;
+				if(_key == undefined) continue;
 				
 				var _pnCont = getPanelFromName(_key, true);
 				if(_pnCont == noone) continue; 
