@@ -6,6 +6,11 @@
         "date": "2026-07-05T05:34:01.276Z",
         "node": "2D Extrude",
         "commit": "**2D Extrude**: Add highlight intensity control."
+      },
+      {
+        "date": "2026-07-05T06:15:38.558Z",
+        "node": "Repeat",
+        "commit": "**Repeat**: Add option to offset position by part origin."
       }
     ]
   },

@@ -164,17 +164,17 @@ function Node_2D_Extrude(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 			}
 	    }
 	    
-	    temp_surface[0] = surface_verify(temp_surface[0], _dim[0], _dim[1], surface_r16float);
+	    temp_surface[0] = surface_verify(temp_surface[0], _dim[0], _dim[1], surface_rgba16float);
 	    
 	    surface_set_shader(temp_surface[0], sh_2d_extrude);
-	        shader_set_dim( "dimension",  _surf     );
-	        shader_set_s(   "mask",       _mask     );
-	        shader_set_i(   "useMask",    _use_mask );
+	        shader_set_2( "dimension",  _dim     );
+	        shader_set_s( "mask",       _mask     );
+	        shader_set_i( "useMask",    _use_mask );
 	        
-			shader_set_f(   "shift",       _shft / _dim[0] );
-			shader_set_f(   "angle",       degtorad(_ang)  );
-			shader_set_f(   "extDistance", _dist           );
-			shader_set_i(   "wrap",        _wrap           );
+			shader_set_f( "shift",       _shft / _dim[0] );
+			shader_set_f( "angle",       degtorad(_ang)  );
+			shader_set_f( "extDistance", _dist           );
+			shader_set_i( "wrap",        _wrap           );
 			
 			shader_set_i( "useExpath",    _usePath );
 			shader_set_f( "expathData",   _points  );
@@ -189,17 +189,17 @@ function Node_2D_Extrude(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	    surface_reset_shader();
 	    
 	    surface_set_shader(_outData, sh_2d_extrude_apply);
-	    	shader_set_dim( "dimension",    _surf           );
-	    	shader_set_s(   "extrudeMap",   temp_surface[0] );
-	    	shader_set_s(   "mask",         _mask           );
-	        shader_set_i(   "useMask",      _use_mask       );
-	        shader_set_i(   "drawBase",     _draw           );
+	    	shader_set_2( "dimension",    _dim           );
+	    	shader_set_s( "extrudeMap",   temp_surface[0] );
+	    	shader_set_s( "mask",         _mask           );
+	        shader_set_i( "useMask",      _use_mask       );
+	        shader_set_i( "drawBase",     _draw           );
 	        
-	    	shader_set_2(   "depth",        _deth  );
-	    	shader_set_f(   "angle",        degtorad(_ang)  );
-			shader_set_f(   "extDistance",  _dist           );
-			shader_set_f(   "shift",        _shft / _dim[0] );
-			shader_set_i(   "wrap",         _wrap           );
+	    	shader_set_2( "depth",        _deth  );
+	    	shader_set_f( "angle",        degtorad(_ang)  );
+			shader_set_f( "extDistance",  _dist           );
+			shader_set_f( "shift",        _shft / _dim[0] );
+			shader_set_i( "wrap",         _wrap           );
 			
 			_grad.shader_submit();
 			shader_set_i( "cloneColor",     _clne );
