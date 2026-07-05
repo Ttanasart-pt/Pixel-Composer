@@ -20,7 +20,6 @@ function Node_Scale(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	newInput( 1, nodeValue_Float(   "Scale",            1         )).setPieMenu();
 	newInput( 3, nodeValue_Vec2(    "Target Dimension", PROJ_SURF )).setUnitSimple(false).setPieMenu();
 	newInput( 6, nodeValue_EButton( "Fit Mode",         0, [ "Stretch", "Keep Aspect Minimum", "Keep Aspect Maximum" ] ));
-	
 	newInput( 5, nodeValue_Bool(    "Move Atlas",       true      ));
 	// inputs 6
 		
