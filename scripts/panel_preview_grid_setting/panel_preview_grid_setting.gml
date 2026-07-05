@@ -98,7 +98,7 @@ function Panel_Preview_Grid_Setting() : Panel_Linear_Setting() constructor {
 		
 		new __Panel_Linear_Setting_Item(
 			__txt("Pixel Grid Color"),
-			new buttonColor(function(color) /*=>*/ { previewGrid.pixelColor = pixelColor; }, self),
+			new buttonColor(function(color) /*=>*/ { previewGrid.pixelColor = color; }, self),
 			function( ) /*=>*/   {return previewGrid.pixelColor},
 			function(v) /*=>*/ { previewGrid.pixelColor = v; },
 			PREFERENCES.project_previewGrid.pixelColor,

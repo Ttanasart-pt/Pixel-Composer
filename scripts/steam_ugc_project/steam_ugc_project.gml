@@ -39,10 +39,12 @@ function steam_ugc_create_project() {
 			noti_status($"Steam Workshop: Project uploaded [id: {_fid}]", THEME.workshop_upload, COLORS._main_value_positive)
 				.setOnClick(function(fid) /*=>*/ { dialogPanelCall(new Panel_Steam_Workshop().navigate({ type: "fileid", fileid: fid })) },
 					"View in Workshop...", THEME.steam_invert_24, _fid);
-					
+			
 			PANEL_MENU.setNotiIcon(THEME.workshop_upload);
 			UGC_subscribe_item(_fid);
 			HUB_link_file_id(_fid);
+			
+			SAVE();
 			
 		}, { fileid: _fid });
 		
