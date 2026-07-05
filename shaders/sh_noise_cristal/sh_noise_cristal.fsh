@@ -87,7 +87,6 @@ vec3 Oilnoise(in vec2 pos, in vec3 RGB) {
     }
     
     result = pow(result, 4.504);
-    result = applyLevel(result);
     
     return clamp( RGB / abs1d(dot(q, vec2(-0.240, 0.))) * .5 / result, vec3(0.), vec3(1.));
 }
@@ -97,5 +96,10 @@ void main() {
     vec2 ntx = vtx * vec2(1., dimension.y / dimension.x);
     vec2 pos = ntx * scale + position;
     vec3 col = Oilnoise(pos, color.rgb * gamma);
+    
+    col.r = applyLevel(col.r);
+    col.g = applyLevel(col.g);
+    col.b = applyLevel(col.b);
+    
     gl_FragColor = vec4(col, 1.0);
 }
