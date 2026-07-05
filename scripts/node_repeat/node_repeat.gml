@@ -46,24 +46,26 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		.setTooltip("Whether to select image from an array in order, at random, or spread each image to its own output.");
 	
 	////- =Pattern
+	newInput( 3, nodeValue_EScroll(  "Pattern", 0, __enum_array_gen([ "Linear", "Grid", "Circular"], s_node_repeat_axis) ));
 	
 		////- =/Pattern
-	newInput( 3, nodeValue_EScroll(  "Pattern",          0, __enum_array_gen([ "Linear", "Grid", "Circular"], s_node_repeat_axis) ));
 	newInput( 9, nodeValue_Vec2(     "Start Position",  [.5,.5] )).setHotkey("G").setUnitSimple();
 	newInput(32, nodeValue_Rotation( "Start Rotation",   0      )).setHotkey("R");
 	newInput(22, nodeValue_Anchor(   "Global Anchor",   [ 0, 0] ));
 	newInput(45, nodeValue_Rotation( "Global Rotation",  0      ));
 	newInput( 7, nodeValue_RotRange( "Angle Range",     [0,360] ));
 	newInput( 8, nodeValue_Float(    "Radius",          .25     )).setUnitSimple();
+	newInput(49, nodeValue_Slider(   "Circular Ratio",   1      ))
+	newInput(50, nodeValue_Rotation( "Circular Angle",   0      ))
 	
-		////- =/Amounr
+		////- =/Repeat
 	newInput( 2, nodeValue_Int(      "Amount",           4      ));
 	newInput(18, nodeValue_Int(      "Column",           4      ));
 	
 	////- =Path
-	newInput(11, nodeValue_Path( "Path",            noone   )).setTooltip("Make each copy follow along path.");
-	newInput(12, nodeValue_SliRange( "Path Range",      [0,1]   )).setTooltip("Range of the path to follow.");
-	newInput(13, nodeValue_Float(    "Path Shift",       0      ));
+	newInput(11, nodeValue_Path(     "Path",              noone )).setTooltip("Make each copy follow along path.");
+	newInput(12, nodeValue_SliRange( "Path Range",        [0,1] )).setTooltip("Range of the path to follow.");
+	newInput(13, nodeValue_Float(    "Path Shift",         0    ));
 	newInput(40, nodeValue_Bool(     "Rotate Along Path", false ));
 	
 	////- =Position
@@ -101,7 +103,7 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	newInput(24, nodeValue_Vec2(     "Animator scale",     [0,0]        ));
 	newInput(25, nodeValue_Curve(    "Animator falloff",   CURVE_DEF_10 ));
 	newInput(27, nodeValue_Color(    "Animator blend",     ca_white     ));
-	// input 49
+	// 51
 	
 	newOutput( 0, nodeValue_Output( "Surface Out", VALUE_TYPE.surface, noone ));
 	newOutput( 1, nodeValue_Output( "Atlas Data",  VALUE_TYPE.atlas,   []    )).setVisible(false).rejectArrayProcess();
@@ -210,8 +212,10 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	
 	input_display_list = [ 17, 
 		[ "Surfaces",      true ],  0, 35, 36, 37,  1, 16, 
-		[ "Pattern",      false ],  3,  9, 32, 22, 45,  7,  8, 
+		[ "Pattern",      false ],  3,  
+			[ "/Pattern", false ],  9, 32, 22, 45,  7,  8, 49, 50, 
 			[ "/Repeat",  false ],  2, 18,
+			
 		[ "Path",          true ], 11, 12, 13, 40, 
 		[ "Position",     false ],  4, 38, 26, 19, 39, 15, 44, 
 		[ "Rotation",     false ], 33,  5, 20, 
@@ -433,6 +437,8 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 			
 			var _aran = _data[ 7];
 			var _arad = _data[ 8];
+			var _crat = _data[49];
+			var _cang = _data[50];
 			
 			var _path = _data[11];
 			var _prng = _data[12];
@@ -460,6 +466,9 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 			inputs[3].getEditWidget().setSideButton(_pat == 1? b_gridFill : noone);
 			
 			inputs[45].setVisible(_pat <= 1);
+			inputs[49].setVisible(_pat == 2);
+			inputs[50].setVisible(_pat == 2);
+			
 			inputs[41].setVisible(!_scaUni);
 			inputs[42].setVisible(!_scaUni && _rscaY_curved);
 			inputs[ 6].name = _scaUni? "Scale" : "Scale X";
@@ -621,8 +630,14 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 				
 				case 2 :
 					var aa = _srot + lerp(_aran[0], _aran[1], st);
-					posx = _spos[0] + lengthdir_x(_arad, aa);
-					posy = _spos[1] + lengthdir_y(_arad, aa);
+					
+					var dx = lengthdir_x(_arad, aa);
+					var dy = lengthdir_y(_arad, aa) * _crat;
+					
+					__temp_p = point_rotate_origin(dx, dy, _cang, __temp_p);
+					
+					posx = _spos[0] + __temp_p[0];
+					posy = _spos[1] + __temp_p[1];
 					break;
 			}
 			
