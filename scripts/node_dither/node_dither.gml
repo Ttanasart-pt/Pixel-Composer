@@ -120,8 +120,8 @@ function Node_Dither(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		var _dim = surface_get_dimension(_surf);
 		
 		surface_set_shader(_outSurf, sh_dither);
-			shader_set_2( "dimension", _dim );
-			shader_set_i( "type",      _typ );
+			shader_set_2( "dimension", _dim  );
+			shader_set_i( "type",      _typ  );
 			shader_set_i( "mapMode",   _mmap );
 			
 			switch(_typ) {
@@ -165,18 +165,19 @@ function Node_Dither(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 			}
 			
 			if(_mode == 0) {
-				shader_set_f_map("contrast",   _con, _data[5], inputs[4]);
+				shader_set_m( "contrast",   _con, _data[5], inputs[4]);
 				
-				shader_set_i("colorMode", _cmode );
-				shader_set_f("steps",     _step  );
-				shader_set_f("rsteps",    _rstep );
-				shader_set_f("gsteps",    _gstep );
-				shader_set_f("bsteps",    _bstep );
-				shader_set_f("palette",   paletteToArray(_pal) );
-				shader_set_i("keys",      array_length(_pal)   );
+				shader_set_i( "colorMode", _cmode );
+				shader_set_f( "steps",     _step  );
+				shader_set_f( "rsteps",    _rstep );
+				shader_set_f( "gsteps",    _gstep );
+				shader_set_f( "bsteps",    _bstep );
 				
-				shader_set_i("invert",    _inv   );
-				shader_set_2("scale",     _sca   );
+				shader_set_f( "palette",   paletteToArray(_pal) );
+				shader_set_i( "keys",      array_length(_pal)   );
+				
+				shader_set_i( "invert",    _inv   );
+				shader_set_2( "scale",     _sca   );
 			}
 			
 			draw_surface_safe(_surf);

@@ -68,6 +68,7 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	newInput(13, nodeValue_Float(    "Path Shift",            0    ));
 	newInput(40, nodeValue_Bool(     "Rotate Along Path",    false ));
 	newInput(51, nodeValue_Bool(     "Offset Path Position", false ));
+	newInput(52, nodeValue_Bool(     "Offset Path Rotation", false ));
 	
 	////- =Position
 	newInput( 4, nodeValue_Vec2(     "Shift Position",  [.5,0]     )).setUnitSimple().setCurvable(38, CURVE_DEF_11, "Over Copy");
@@ -104,7 +105,7 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	newInput(24, nodeValue_Vec2(     "Animator scale",     [0,0]        ));
 	newInput(25, nodeValue_Curve(    "Animator falloff",   CURVE_DEF_10 ));
 	newInput(27, nodeValue_Color(    "Animator blend",     ca_white     ));
-	// 52
+	// 53
 	
 	newOutput( 0, nodeValue_Output( "Surface Out", VALUE_TYPE.surface, noone ));
 	newOutput( 1, nodeValue_Output( "Atlas Data",  VALUE_TYPE.atlas,   []    )).setVisible(false).rejectArrayProcess();
@@ -215,7 +216,7 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 			[ "/Pattern", false ], 22, 45,  7,  8, 49, 50, 
 			[ "/Repeat",  false ],  2, 18,
 			
-		[ "Path",          true ], 11, 12, 13, 40, 51, 
+		[ "Path",          true ], 11, 12, 13, 40, 51, 52, 
 		[ "Position",     false ],  4, 38, 26, 19, 39, 15, 44, 
 		[ "Rotation",     false ], 33,  5, 20, 
 		[ "Scale",        false ], 29,  6, 10, 41, 42, 21, 
@@ -446,6 +447,7 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 			var _prsh = _data[13];
 			var _pfol = _data[40];
 			var _poff = _data[51];
+			var _prot = _data[52];
 			
 			var _palCopy      = _data[48], _palCopyLen = array_length(_palCopy);
 			var _grad         = _data[14];
@@ -583,12 +585,21 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		
 		var _pth_ox = 0;
 		var _pth_oy = 0;
+		var _pth_an = 0;
 		
 		var _pathValid = is_path(_path);
-		if(_poff && _pathValid) {
-			var _p = _path.getPointRatio(0);
-			_pth_ox = _p.x;
-			_pth_oy = _p.y;
+		if(_pathValid) {
+			var _p0 = _path.getPointRatio(0);
+			
+			if(_poff) {
+				_pth_ox = _p.x;
+				_pth_oy = _p.y;
+			}
+			
+			if(_prot) {
+				var _p1 = _path.getPointRatio(.01);
+				_pth_an = point_direction(_p0.x, _p0.y, _p1.x, _p1.y);
+			}
 		}
 		
 		repeat(_amo) {
@@ -618,7 +629,7 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 							var _p1 = _path.getPointRatio(clamp(rat + _st / 2, 0, .999));
 							
 							var _dir = point_direction(_p0.x, _p0.y, _p1.x, _p1.y);
-							rot += _dir;
+							rot += angle_difference(_dir, _pth_an);
 						}
 						
 					} else {

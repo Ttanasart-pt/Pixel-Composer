@@ -133,7 +133,7 @@ void main() {
 			
 			if(dif <= 0.001) {
 				exactColor = true;
-				_col = p_col;
+				_col.rgb = p_col.rgb;
 				
 			} else if(dif < closet1_value) {
 				closet2_value = closet1_value;

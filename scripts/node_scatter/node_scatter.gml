@@ -872,6 +872,12 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 			
 			var i = 0;
 			
+			var tlx = _tile & 0b01;
+			var tly = _tile & 0b10;
+			var tla = tlx && tly;
+			var sortOverlay  = [];
+			var sortUnderlay = [];
+				
 			repeat(_sct_len) {
 				var _atl = _sct[i++];
 				
@@ -889,10 +895,6 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 				
 				if(_tile == 0) continue;
 				
-				var tlx = _tile & 0b01;
-				var tly = _tile & 0b10;
-				var tla = tlx && tly;
-				
 				var _sw = _atl.w * _scx;
 				var _sh = _atl.h * _scy;
 				
@@ -906,18 +908,63 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 					if(tla && (_x > _ww-_sw || _y > _hh-_sh)) surf.draw(_x - _ww, _y - _hh, _scx, _scy, _r, clr, alp);
 					
 				} else {
-					if(tlx && _x < _sw)                       draw_surface_ext(surf, _x + _ww, _y,       _scx, _scy, _r, clr, alp);
-					if(tly && _y < _sh)                       draw_surface_ext(surf,       _x, _y + _hh, _scx, _scy, _r, clr, alp);
-					if(tla && _x < _sw && _y < _sh)           draw_surface_ext(surf, _x + _ww, _y + _hh, _scx, _scy, _r, clr, alp);
+					if(tlx && _x < _sw)
+						draw_surface_ext(surf, _x + _ww, _y, _scx, _scy, _r, clr, alp);
+						
+					if(tly && _y < _sh) {
+						draw_surface_ext(surf, _x, _y + _hh, _scx, _scy, _r, clr, alp);
+					    if(sortY) array_push(sortOverlay, [surf, _x, _y + _hh, _scx, _scy, _r, clr, alp]); 
+					}
+						
+					if(tla) {
+						if(_x < _sw && _y < _sh) {
+							draw_surface_ext(surf, _x + _ww, _y + _hh, _scx, _scy, _r, clr, alp);
+						    if(sortY) array_push(sortOverlay, [surf, _x + _ww, _y + _hh, _scx, _scy, _r, clr, alp]); 
+						}
+						
+						if(_x > _ww-_sw && _y < _sh) {
+							draw_surface_ext(surf, _x - _ww, _y + _hh, _scx, _scy, _r, clr, alp);
+						    if(sortY) array_push(sortOverlay, [surf, _x - _ww, _y + _hh, _scx, _scy, _r, clr, alp]); 
+						}
+					}
 					
-					if(tlx && _x > _ww-_sw)                   draw_surface_ext(surf, _x - _ww, _y,       _scx, _scy, _r, clr, alp);
-					if(tly && _y > _hh-_sh)                   draw_surface_ext(surf, _x,       _y - _hh, _scx, _scy, _r, clr, alp);
-					if(tla && (_x > _ww-_sw || _y > _hh-_sh)) draw_surface_ext(surf, _x - _ww, _y - _hh, _scx, _scy, _r, clr, alp);
+					if(tlx && _x > _ww-_sw)
+						draw_surface_ext(surf, _x - _ww, _y,       _scx, _scy, _r, clr, alp);
+						
+					if(tly && _y > _hh-_sh) {
+						if(!sortY) draw_surface_ext(surf, _x, _y - _hh, _scx, _scy, _r, clr, alp);
+						else array_push(sortUnderlay, [surf, _x, _y - _hh, _scx, _scy, _r, clr, alp]);
+					}
+					
+					if(tla) {
+						if(_x < _sw || _y > _hh-_sh) {
+							if(!sortY) draw_surface_ext(surf, _x + _ww, _y - _hh, _scx, _scy, _r, clr, alp);
+							else array_push(sortUnderlay, [surf, _x + _ww, _y - _hh, _scx, _scy, _r, clr, alp]);
+						}
+						
+						if(_x > _ww-_sw && _y < _sh) {
+							draw_surface_ext(surf, _x - _ww, _y + _hh, _scx, _scy, _r, clr, alp);
+						    if(sortY) array_push(sortOverlay, [surf, _x - _ww, _y + _hh, _scx, _scy, _r, clr, alp]); 
+						}
+					}
 				}
+			}
+			
+			for( var i = 0, n = array_length(sortOverlay); i < n; i++ ) {
+				var _s = sortOverlay[i];
+				draw_surface_ext(_s[0], _s[1], _s[2], _s[3], _s[4], _s[5], _s[6], _s[7]);
 			}
 			
 			BLEND_NORMAL
 			gpu_set_blendequation(bm_eq_add);
+			
+			gpu_set_blendmode_ext_sepalpha(bm_inv_dest_alpha, bm_dest_alpha, bm_src_alpha, bm_dest_alpha);
+			for( var i = 0, n = array_length(sortUnderlay); i < n; i++ ) {
+				var _s = sortUnderlay[i];
+				draw_surface_ext(_s[0], _s[1], _s[2], _s[3], _s[4], _s[5], _s[6], _s[7]);
+			}
+			
+			BLEND_NORMAL
 			gpu_set_tex_filter(false);
 		surface_reset_shader(); 
 		

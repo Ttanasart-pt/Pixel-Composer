@@ -16,6 +16,11 @@
         "date": "2026-07-05T06:15:38.559Z",
         "node": "",
         "commit": "**Repeat**: Add option to offset position by part origin."
+      },
+      {
+        "date": "2026-07-05T07:45:21.287Z",
+        "node": "",
+        "commit": "**Dither**: Fix exact color match drawn with full alpha."
       }
     ]
   },
