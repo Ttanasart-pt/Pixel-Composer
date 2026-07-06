@@ -26,17 +26,35 @@ function Node_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	newInput( 4, nodeValue_Vec2( "Bottom Right", [ 1, 1 ] )).hideLabel().setUnitSimple();
 	
 	////- =Render
-	newInput(12, nodeValue_Vec2(   "UV Position", [0,0] ));
-	newInput(11, nodeValue_Vec2(   "UV Scale",    [1,1] ));
-	newInput( 8, nodeValue_Toggle( "Tile",   0, [ "X", "Y" ] ));
-	// 13
+	newInput(12, nodeValue_Vec2(   "UV Position",  [0,0]            ));
+	newInput(11, nodeValue_Vec2(   "UV Scale",     [1,1]            ));
+	newInput( 8, nodeValue_Toggle( "Tile",          0, [ "X", "Y" ] ));
+	newInput(14, nodeValue_Bool(   "Draw Original", false           ));
+	// 15
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
+	b_reset_area = button(function() /*=>*/ {
+		var _area = getInputSingle(13);
+		
+		var x0 = _area[0] - _area[2];
+		var y0 = _area[1] - _area[3];
+		var x1 = _area[0] + _area[2];
+		var y1 = _area[1] + _area[3];
+		
+		inputs[ 1].setValue([x0, y0]);
+		inputs[ 2].setValue([x1, y0]);
+		inputs[ 3].setValue([x0, y1]);
+		inputs[ 4].setValue([x1, y1]);
+		
+	}).setIcon(THEME.refresh_icon, 1, COLORS._main_value_positive).iconPad(ui(6)).setTooltip(__txt("Reset to Area"));
+	
 	input_display_list = [  5,
 		[ "Surfaces", false ],  0, 10,  6,  7,  9, 
-		[ "Warp",     false ],  1,  2,  3,  4, 
-		[ "Render",   false ], 12, 11,  8, 
+		[ "Area",     false ], 13, 
+		[ "Warp",     false, noone, b_reset_area ],  1,  2,  3,  4, 
+		[ "Render",   false ], 12, 11,  8, 14, 
+		
 	];
 	
 	pie_junctions = [ inputs[4], inputs[2], inputs[1], inputs[3] ];
@@ -46,14 +64,19 @@ function Node_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	attribute_surface_depth();
 	attribute_interpolation(false, true);
 
-	drag_side = -1;
-	drag_mx   = 0;
-	drag_my   = 0;
-	drag_s    = [[0, 0], [0, 0]];
-	
 	attributes.initalset = LOADING || APPENDING;
 	
-	warp_surface = array_create(2);
+	#region tool
+		tool_area = new NodeTool( "Edit Area", THEME.area_tool );
+		tools     = [ tool_area ];
+	
+		drag_side = -1;
+		drag_mx   = 0;
+		drag_my   = 0;
+		drag_s    = [[0, 0], [0, 0]];
+	#endregion
+	
+	temp_surface = array_create(2);
 	
 	static getDimension = function(arr = 0) {
 		var _surfF  = getInputSingle(0);
@@ -107,6 +130,20 @@ function Node_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, params) {
 		PROCESSOR_OVERLAY_CHECK
 		
+		if(isUsingTool(tool_area)) {
+			drawOverlayInput(inputs[13].drawOverlay(hover, active, _x, _y, _s, _mx, _my));
+			return;
+		} else {
+			var _area = getInputSingle(13);
+			var x0 = _x + (_area[0] - _area[2]) * _s;
+			var y0 = _y + (_area[1] - _area[3]) * _s;
+			var x1 = _x + (_area[0] + _area[2]) * _s;
+			var y1 = _y + (_area[1] + _area[3]) * _s;
+			
+			draw_set_color(COLORS._main_icon);
+			draw_rectangle(x0, y0, x1, y1, true);
+		}
+		
 		var _surf = outputs[0].getValue();
 		if(is_array(_surf)) {
 			if(array_length(_surf) == 0) return;
@@ -125,30 +162,6 @@ function Node_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		var trY = _y + current_data[2][1] * _s;
 		var blY = _y + current_data[3][1] * _s;
 		var brY = _y + current_data[4][1] * _s;
-		
-		#region preview
-			// var sw = surface_get_width(_surf)  * _s;
-			// var sh = surface_get_height(_surf) * _s;
-			
-			// warp_surface[0] = surface_verify(warp_surface[0], params.w, params.h);
-			// warp_surface[1] = surface_verify(warp_surface[1], sw, sh);
-			
-			// surface_set_target(warp_surface[1]);
-			// 	draw_clear(c_black);
-			// 	draw_set_color(c_dkgrey);
-				
-			// 	for(var i = 0; i <= 1; i += 0.125) {
-			// 		draw_line_width(0, i * sh, sw, i * sh, 2);
-			// 		draw_line_width(i * sw, 0, i * sw, sh, 2);
-			// 	}
-			// surface_reset_target();
-			
-			// warpSurface( warp_surface[0], warp_surface[1], warp_surface[1], params.w, params.h, [tlX, tlY], [trX, trY], [blX, blY], [brX, brY], true );
-			
-			// BLEND_ADD
-			// 	draw_surface_safe(warp_surface[0]);
-			// BLEND_NORMAL
-		#endregion
 		
 		draw_set_color(COLORS._main_accent);
 		draw_set_alpha(.5);
@@ -370,13 +383,16 @@ function Node_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	
 	static processData = function(_outSurf, _data, _array_index) {
 		#region data
-			
 			var _dimTyp = _data[ 6];
 			var _dim    = _data[ 7];
 			var _sdim   = _data[ 9];
 			
+			var _area   = _data[13];
+			
 			var _surfF  = _data[ 0];
 			var _surfB  = is_surface(_data[10])? _data[10] : _surfF;
+			
+			var area     = _data[13];
 			
 			var tl      = _data[ 1];
 			var tr      = _data[ 2];
@@ -386,6 +402,7 @@ function Node_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 			var uvPos   = _data[12];
 			var uvSca   = _data[11];
 			var tile    = _data[ 8];
+			var dOrig   = _data[14];
 			
 			inputs[7].setVisible(_dimTyp == 1);
 			inputs[8].setVisible(true);
@@ -394,9 +411,17 @@ function Node_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 			if(!is_surface(_surfF)) return _outSurf;
 		#endregion
 		
+		var x0 = _area[0] - _area[2];
+		var y0 = _area[1] - _area[3];
+		var x1 = _area[0] + _area[2];
+		var y1 = _area[1] + _area[3];
+		
 		shader_set(sh_warp_4points);
 			shader_set_2( "uvPosition", uvPos );
 			shader_set_2( "uvScale",    uvSca );
+			
+			shader_set_2( "position",   [ x0, y0 ] );
+			shader_set_2( "scale",      [ x1 - x0, y1 - y0 ] );
 		shader_reset();
 		
 		var sw = 1;
@@ -405,7 +430,7 @@ function Node_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		switch(_dimTyp) {
 			case 0 : sw = surface_get_width_safe(_surfF);
 				     sh = surface_get_height_safe(_surfF); break;
-				
+			
 			case 1 : sw = _dim[0];
 				     sh = _dim[1]; break;
 				
@@ -413,9 +438,18 @@ function Node_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 				     sh = _sdim[1] * surface_get_height_safe(_surfF); break;
 		}
 		
+		temp_surface[0] = surface_verify(temp_surface[0], sw, sh, attrDepth());
+		temp_surface[0] = warpSurface(temp_surface[0], _surfF, _surfB, sw, sh, tl, tr, bl, br, tile);
+		
 		_outSurf = surface_verify(_outSurf, sw, sh, attrDepth());
-		_outSurf = warpSurface(_outSurf, _surfF, _surfB, sw, sh, tl, tr, bl, br, tile);
+		surface_set_shader(_outSurf);
+			if(dOrig) draw_surface(_surfF, 0, 0);
+			draw_surface(temp_surface[0], 0, 0);
+		surface_reset_shader();
 		
 		return _outSurf;
 	}
+	
+	static getPreviewValues = function() { return isUsingTool(tool_area)? inputs[0].getValue() : outputs[0].getValue(); }
+	
 }

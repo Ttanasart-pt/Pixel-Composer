@@ -346,14 +346,22 @@ uniform int  flip;
 uniform vec2 uvPosition;
 uniform vec2 uvScale;
 
+uniform vec2 position;
+uniform vec2 scale;
+
 float unmix( float st, float ed, float val) { return (val - st) / (ed - st); }
 
 // 2 1
 // 3 0
 
 void main() {
-	float px = v_vTexcoord.x;
-	float py = v_vTexcoord.y;
+	vec2 pos = position / dimension;
+	vec2 sca = scale    / dimension;
+	
+	vec2 tx = v_vTexcoord;
+	
+	float px = tx.x;
+	float py = tx.y;
 	float u, v;
 	vec2 uv, _p;
 	
@@ -400,7 +408,7 @@ void main() {
 		if(flip != side) discard;
 	
 	} else {
-		vec2 p = v_vTexcoord;
+		vec2 p = tx;
 		vec2 A = (_p3 - _p0) - (_p2 - _p1);
 	    vec2 B = (_p0 - _p1);
 	    vec2 C = (_p2 - _p1);
@@ -432,9 +440,11 @@ void main() {
 	if(tileX) uv.x = fract(1. + fract(uv.x));
 	if(tileY) uv.y = fract(1. + fract(uv.y));
 	
-	if(uv.x >= 0. && uv.y >= 0. && uv.x <= 1. && uv.y <= 1.) {
-		vec2 suv = fract(uv * uvScale - uvPosition);
-		gl_FragColor = texture2Dintp( gm_BaseTexture, suv );
-		
-	} else discard;
+	if(uv.x < 0. || uv.y < 0. || uv.x > 1. || uv.y > 1.) 
+		discard;
+	
+	vec2 suv = fract(uv * uvScale - uvPosition);
+	     suv = (suv * sca + pos);
+	
+	gl_FragColor = texture2Dintp( gm_BaseTexture, suv );
 }

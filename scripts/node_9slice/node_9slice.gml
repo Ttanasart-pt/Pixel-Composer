@@ -44,12 +44,13 @@ function Node_9Slice(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	drag_dim_mx = 0;
 	drag_dim_my = 0;
 	
-	tools = [ new NodeTool( "Preview Original", THEME.tools_image ) ];
+	tool_orig = new NodeTool( "Preview Original", THEME.tools_image );
+	tools     = [ tool_orig ];
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _params) { 
 		PROCESSOR_OVERLAY_CHECK
 		
-		var _dim    = isUsingTool("Preview Original")? surface_get_dimension(getInputSingle(0)) : current_data[1];
+		var _dim    = isUsingTool(tool_orig)? surface_get_dimension(getInputSingle(0)) : current_data[1];
 		var _splice	= array_create(array_length(current_data[2]));
 		
 		for( var i = 0, n = array_length(current_data[2]); i < n; i++ )
@@ -216,7 +217,7 @@ function Node_9Slice(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		return _outData;
 	}
 	
-	static getPreviewValues = function() { return isUsingTool("Preview Original")? inputs[0].getValue() : outputs[0].getValue(); }
+	static getPreviewValues = function() { return isUsingTool(tool_orig)? inputs[0].getValue() : outputs[0].getValue(); }
 	
 	////- Clean Up
 	
