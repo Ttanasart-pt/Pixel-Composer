@@ -17,13 +17,13 @@ function Node_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	newInput( 9, nodeValue_Vec2( "Relative Dimension", [ 1, 1 ] ));
 	
 	////- =Area
-	newInput(13, nodeValue_Area( "Area", DEF_AREA_REF )).setUnitSimple();
+	newInput(13, nodeValue_Area( "Area",    DEF_AREA_REF )).setUnitSimple();
 	
 	////- =Warp
-	newInput( 1, nodeValue_Vec2( "Top Left",     [ 0, 0 ] )).hideLabel().setUnitSimple();
-	newInput( 2, nodeValue_Vec2( "Top Right",    [ 1, 0 ] )).hideLabel().setUnitSimple();
-	newInput( 3, nodeValue_Vec2( "Bottom Left",  [ 0, 1 ] )).hideLabel().setUnitSimple();
-	newInput( 4, nodeValue_Vec2( "Bottom Right", [ 1, 1 ] )).hideLabel().setUnitSimple();
+	newInput( 1, nodeValue_Vec2( "Top Left",       [0,0] )).hideLabel().setUnitSimple();
+	newInput( 2, nodeValue_Vec2( "Top Right",      [1,0] )).hideLabel().setUnitSimple();
+	newInput( 3, nodeValue_Vec2( "Bottom Left",    [0,1] )).hideLabel().setUnitSimple();
+	newInput( 4, nodeValue_Vec2( "Bottom Right",   [1,1] )).hideLabel().setUnitSimple();
 	
 	////- =Render
 	newInput(12, nodeValue_Vec2(   "UV Position",  [0,0]            ));

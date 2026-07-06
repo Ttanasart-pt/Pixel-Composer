@@ -515,10 +515,10 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		weight_drag_mx = 0;
 		weight_drag_my = 0;
 		
-		anchor_freeze   = 0;
-		anchor_hovering = undefined;
-		anchor_focus    = undefined;
-		anchor_select   = [];
+		anchor_freeze     = 0;
+		anchor_hovering   = undefined;
+		anchor_focus      = undefined;
+		anchor_select     = [];
 		anchor_select_map = {};
 	#endregion
 	
@@ -1329,7 +1329,6 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 				}
 				
 				var _type = anchor_focus == i? 2 : 1;
-				
 				draw_anchor(_anHov, xx, yy, ui(PREVIEW_OVERLAY_RAD), _type);
 				
 				if(attributes.display_name || _anHov) {

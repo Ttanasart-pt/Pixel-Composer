@@ -414,6 +414,8 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		tool_attribute	= {};
 		
 		topbar_settings = [];
+		
+		hotkey_displays = [];
 	#endregion
 	
 	#region ---- 3D ----

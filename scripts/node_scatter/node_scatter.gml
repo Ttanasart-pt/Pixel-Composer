@@ -167,6 +167,18 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		point_editing_sy = 0;
 		point_editing_mx = 0;
 		point_editing_my = 0;
+		point_editing_cx = 0;
+		point_editing_cy = 0;
+		point_edit_value = [];
+		
+		anchor_freeze    = 0;
+		point_select     = undefined;
+		point_selecting  = [];
+		
+		point_sel_edit   = undefined;
+		
+		hk_rotate = [ THEME.tools_2d_rotate, "R" ];
+		hk_scale  = [ THEME.tools_2d_scale,  "S" ];
 	#endregion
 	
 	static getDimension = function() { return getInputData(1, PROJ_SURF); }
@@ -176,8 +188,13 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		
 		tools = [];
 		var _distType = current_data[6];
+		
+		var panel = _params[$ "panel"] ?? noone;
 		var msx = (_mx - _x) / _s;
 		var msy = (_my - _y) / _s;
+		
+		preview_select_surface = _distType != 3;
+		hotkey_displays = [];
 		
 		if(_distType == 3) {
 			tools = [ tool_addP, tool_subP ];
@@ -185,45 +202,72 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 			if(inputs[14].value_from != noone) return w_hovering;
 			var _points = current_data[14];
 			
-			var hv = undefined;
+			var  hv = undefined;
+			var _cx = 0;
+			var _cy = 0;
+			
 			for( var i = 0, n = array_length(_points); i < n; i++ ) {
 				var p  = _points[i];
 				var px = _x + p[0] * _s;
 				var py = _y + p[1] * _s;
 				
+				_cx += px;
+				_cy += py;
+
 				var hov = hover && point_in_circle(_mx, _my, px, py, ui(8));
-				draw_anchor(hov, px, py);
+				var _type = 1;
+				
+				if(point_editing == i || point_select  == i) 
+					_type = 2;
+				
+				draw_anchor(hov, px, py, ui(PREVIEW_OVERLAY_RAD), _type);
+				
 				if(hov) {
 					w_hovering = true;
 					hv = i;
 				}
 			}
 			
-			var t = PANEL_PREVIEW.tool_current;
+			if(n) {
+				_cx /= n;
+				_cy /= n;
+			}
 			
-			if(t == tool_addP) {
-				if(mouse_lpress(active)) {
-					array_push(_points, [msx, msy]);
-					inputs[14].setValue(_points);
-				}
-				
-			} else if(t == tool_subP) {
-				if(hv != undefined && mouse_lpress(active)) {
-					array_delete(_points, hv, 1);
-					inputs[14].setValue(_points);
-				}
-				
-			} else {
-				if(hv != undefined && mouse_lpress(active)) {
-					var p  = _points[hv];
+			var _show_selecting = false;
+			
+			switch(PANEL_PREVIEW.tool_current) {
+				case tool_addP:
+					if(mouse_lpress(active)) {
+						array_push(_points, [msx, msy]);
+						inputs[14].setValue(_points);
+						triggerRender();
+					}
+					break;
 					
-					point_editing    = hv;
-					point_editing_sx = p[0];
-					point_editing_sy = p[1];
-					point_editing_mx = _mx;
-					point_editing_my = _my;
-				}
-				
+				case tool_subP:
+					if(hv != undefined && mouse_lpress(active)) {
+						array_delete(_points, hv, 1);
+						inputs[14].setValue(_points);
+						triggerRender();
+					}
+					break;
+					
+				default:
+					_show_selecting = true;
+					if(hv != undefined && mouse_lpress(active)) {
+						var p  = _points[hv];
+						
+						if(array_empty(point_selecting))
+							point_selecting  = [hv];
+							
+						point_editing    = hv;
+						point_editing_sx = p[0];
+						point_editing_sy = p[1];
+						point_editing_mx = _mx;
+						point_editing_my = _my;
+						
+						point_edit_value = variable_clone(_points);
+					}
 			}
 			
 			if(point_editing != undefined) {
@@ -233,9 +277,25 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 				p = _points[point_editing];
 				p[0] = point_editing_sx + dx;
 				p[1] = point_editing_sy + dy;
+				
 				if(key_mod_press(CTRL)) {
 					p[0] = round(p[0]);
 					p[1] = round(p[1]);
+				}
+				
+				for( var i = 0, n = array_length(point_selecting); i < n; i++ ) {
+					var _pedit = point_selecting[i];
+					if(_pedit == point_editing) continue;
+					
+					var p = _points[_pedit];
+					p[0] = point_edit_value[_pedit][0] + dx;
+					p[1] = point_edit_value[_pedit][1] + dy;
+						
+					if(key_mod_press(CTRL)) {
+						p[0] = round(p[0]);
+						p[1] = round(p[1]);
+					}
+					
 				}
 				
 				if(MOUSE_MOVED) {
@@ -248,6 +308,112 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 					point_editing = undefined;
 				}
 			}
+			
+			if(array_length(point_selecting)) {
+				var _dim = getDimension();
+				hotkey_displays = [ hk_rotate, hk_scale ];
+				
+				switch(point_sel_edit) {
+					case 0 : // rotate
+						var r0 = point_direction(point_editing_cx, point_editing_cy, point_editing_mx, point_editing_my);
+						var r1 = point_direction(point_editing_cx, point_editing_cy, _mx, _my);
+						var rd = angle_difference(r1, r0);
+						
+						point_editing_mx = _mx;
+						point_editing_my = _my;
+						
+						for( var i = 0, n = array_length(point_selecting); i < n; i++ ) {
+							var _a = point_selecting[i];
+							var p  = _points[_a];
+							p[2] = array_safe_get(p, 2, 0) + rd;
+						}
+						
+						inputs[14].setValue(_points);
+						triggerRender();
+						
+						if(mouse_lpress()) {
+							anchor_freeze  = 1;
+							point_sel_edit = undefined;
+							UNDO_HOLDING   = false;
+						}
+						break;
+						
+					case 1 : // scale
+						var s0 = point_distance(point_editing_cx, point_editing_cy, point_editing_mx, point_editing_my);
+						var s1 = point_distance(point_editing_cx, point_editing_cy, _mx, _my);
+						var sd = s1 / s0;
+						
+						for( var i = 0, n = array_length(point_selecting); i < n; i++ ) {
+							var _a = point_selecting[i];
+							var p  = _points[_a];
+							p[3] = array_safe_get(point_edit_value[_a], 3, 1) * sd;
+						}
+						
+						inputs[14].setValue(_points);
+						triggerRender();
+						
+						if(mouse_lpress()) {
+							anchor_freeze  = 1;
+							point_sel_edit = undefined;
+							UNDO_HOLDING   = false;
+						}
+						break;
+				}
+				
+				if(active) {
+					if(key_press(ord("R"))) {
+						point_sel_edit   = 0;
+						point_editing_mx = _mx;
+						point_editing_my = _my;
+						point_editing_cx = _cx;
+						point_editing_cy = _cy;
+						point_edit_value = variable_clone(_points);
+						
+					} else if(key_press(ord("S"))) {
+						point_sel_edit   = 1;
+						point_editing_mx = _mx;
+						point_editing_my = _my;
+						point_editing_cx = _cx;
+						point_editing_cy = _cy;
+						point_edit_value = variable_clone(_points);
+						
+					}
+				}
+			}
+			
+			if(_show_selecting) {
+				if(panel != noone && anchor_freeze == 0 && panel.selection_selecting && hv == undefined) {
+					var sx0 = panel.selection_x0;
+					var sy0 = panel.selection_y0;
+					var sx1 = panel.selection_x1;
+					var sy1 = panel.selection_y1;
+					
+					point_selecting = [];
+					
+					for( var i = 0, n = array_length(_points); i < n; i++ ) {
+						var p = _points[i];
+						
+						if(point_in_rectangle(p[0], p[1], sx0, sy0, sx1, sy1))
+							array_push(point_selecting, i);
+					}
+					
+				}
+				
+				if(mouse_lrelease()) 
+					anchor_freeze = 0;
+				
+				for( var i = 0, n = array_length(point_selecting); i < n; i++ ) {
+					var _a = point_selecting[i];
+					var p  = _points[_a];
+					
+					var ax = _x + p[0] * _s;
+					var ay = _y + p[1] * _s;
+					
+					draw_anchor(0, ax, ay, ui(8), 2);
+				}
+				
+			}
+			
 		}
 		
 		switch(_distType) {
@@ -628,12 +794,12 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 						break;
 						
 					case NODE_SCATTER_DIST.data : 
-						var mapdat = array_safe_get_fast(_distData, i);
-						if(!is_array(mapdat)) continue;
-						_v = mapdat;
+						var cusdat = array_safe_get_fast(_distData, i);
+						if(!is_array(cusdat)) continue;
+						_v = cusdat;
 						
-						_x = array_safe_get_fast(mapdat, 0);
-						_y = array_safe_get_fast(mapdat, 1);
+						_x = array_safe_get_fast(cusdat, 0);
+						_y = array_safe_get_fast(cusdat, 1);
 						break;
 						
 					case NODE_SCATTER_DIST.path : 

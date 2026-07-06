@@ -1523,6 +1523,33 @@ function Panel_Preview() : PanelContent() constructor {
             tool_y_max  += ts + 1;
         }
         
+        for( var i = 0, n = array_length(_node.hotkey_displays); i < n; i++ ) {
+        	var _hk  = _node.hotkey_displays[i];
+        	var _spr = _hk[0];
+        	var _str = _hk[1];
+        	
+            var _x0  = xx - ts2;
+            var _y0  = yy - ts2;
+            var _x1  = xx + ts2;
+            var _y1  = yy + ts2;
+            
+        	draw_sprite_colored(_spr, 0, xx, yy);
+        	
+        	draw_set_text(f_p4, fa_right, fa_bottom, COLORS._main_text);
+        	var hkw = string_width(_str)  + ui(4);
+        	var hkh = string_height(_str) + ui(0);
+        	
+        	var _hkx0 = _x1 - hkw;
+        	var _hky0 = _y1 - hkh;
+        	
+        	draw_sprite_stretched_ext(THEME.ui_panel, 0, _hkx0, _hky0, hkw, hkh, COLORS.panel_bg_clear_inner);
+        	draw_text_add(_hkx0 + hkw - ui(2), _hky0 + hkh - ui(0), _str);
+            	
+        	if(hori) xx += ts + 1;
+        	else     yy += ts + 1;
+            tool_y_max  += ts + 1;
+        }
+        
         if(_node.drawPreviewToolbar != noone) {
         	draw_set_color(COLORS.panel_separator);
     		if(hori) {
