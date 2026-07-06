@@ -262,8 +262,8 @@ function Node_Blend(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 		var _foreDraw = temp_surface[1];
 		fg_transforms[_array_index] = [ 0, 0, 1 ];
 		
-		surface_set_shader(_backDraw, noone,, BLEND.over);
-			draw_surface_safe(_back);
+		surface_set_shader(_backDraw, noone, true, BLEND.over);
+			draw_surface_stretched_safe(_back, 0, 0, ww, hh);
 		surface_reset_shader();
 		
 		if(_fill == NODE_BLEND_FILL.none || _atlas) {

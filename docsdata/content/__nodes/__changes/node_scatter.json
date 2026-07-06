@@ -6,6 +6,11 @@
         "date": "2026-07-06T10:00:37.870Z",
         "node": "",
         "commit": "**Scatter**: Add manual points rotation/scale control."
+      },
+      {
+        "date": "2026-07-06T23:58:02.896Z",
+        "node": "",
+        "commit": "**Blend**: Fix bg not fill to custom dimension if no foreground provided."
       }
     ]
   },

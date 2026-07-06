@@ -1533,6 +1533,24 @@ function Panel_Preview() : PanelContent() constructor {
             var _x1  = xx + ts2;
             var _y1  = yy + ts2;
             
+            if(i == 0) {
+	            draw_set_color(COLORS.panel_separator);
+	    		if(hori) {
+	    			var lx = _x0 + ui(4);
+	            	if(_spFrm) draw_line_width(lx, tyy + ui(4), lx, tyy + thh - ui(4), 2);
+	                else       draw_line(      lx, tyy,         lx, tyy + thh - 1);
+	                
+	            } else {
+	            	var ly = _y0 + ui(4);
+	                if(_spFrm) draw_line_width(txx + ui(4), ly, txx + tww - ui(4), ly, 2);
+	                else       draw_line(      txx,         ly, txx + tww - 1,     ly);
+	            }
+	            
+	            if(hori) xx += ui(8);
+	            else     yy += ui(8);
+	            tool_y_max  += ui(8);
+            }
+            
         	draw_sprite_colored(_spr, 0, xx, yy);
         	
         	draw_set_text(f_p4, fa_right, fa_bottom, COLORS._main_text);

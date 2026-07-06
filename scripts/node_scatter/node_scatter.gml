@@ -169,6 +169,7 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		point_editing_my = 0;
 		point_editing_cx = 0;
 		point_editing_cy = 0;
+		point_editing_ss = 0;
 		point_edit_value = [];
 		
 		anchor_freeze    = 0;
@@ -318,6 +319,7 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 						var r0 = point_direction(point_editing_cx, point_editing_cy, point_editing_mx, point_editing_my);
 						var r1 = point_direction(point_editing_cx, point_editing_cy, _mx, _my);
 						var rd = angle_difference(r1, r0);
+						point_editing_ss += rd;
 						
 						point_editing_mx = _mx;
 						point_editing_my = _my;
@@ -325,7 +327,10 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 						for( var i = 0, n = array_length(point_selecting); i < n; i++ ) {
 							var _a = point_selecting[i];
 							var p  = _points[_a];
-							p[2] = array_safe_get(p, 2, 0) + rd;
+							p[2] = array_safe_get(point_edit_value[_a], 2, 0) + point_editing_ss;
+							
+							if(key_mod_press(SHIFT)) 
+								p[2] = value_snap(p[2], 15);
 						}
 						
 						inputs[14].setValue(_points);
@@ -363,6 +368,7 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 				if(active) {
 					if(key_press(ord("R"))) {
 						point_sel_edit   = 0;
+						point_editing_ss = 0;
 						point_editing_mx = _mx;
 						point_editing_my = _my;
 						point_editing_cx = _cx;
@@ -402,6 +408,7 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 				if(mouse_lrelease()) 
 					anchor_freeze = 0;
 				
+				var rotRad = ui(20);
 				for( var i = 0, n = array_length(point_selecting); i < n; i++ ) {
 					var _a = point_selecting[i];
 					var p  = _points[_a];
@@ -410,6 +417,16 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 					var ay = _y + p[1] * _s;
 					
 					draw_anchor(0, ax, ay, ui(8), 2);
+					
+					var _sl = array_length(p);
+					if(array_length(p) >= 2) {
+						draw_set_color(COLORS._main_accent);
+						draw_circle(ax, ay, rotRad, true);
+						
+						var rx = ax + lengthdir_x(rotRad, p[2]);
+						var ry = ay + lengthdir_y(rotRad, p[2]);
+						draw_circle(rx, ry, ui(4), false);
+					}
 				}
 				
 			}
