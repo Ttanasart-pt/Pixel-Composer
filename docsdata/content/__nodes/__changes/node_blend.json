@@ -6,6 +6,11 @@
         "date": "2026-07-06T23:58:02.889Z",
         "node": "Blend",
         "commit": "**Blend**: Fix bg not fill to custom dimension if no foreground provided."
+      },
+      {
+        "date": "2026-07-07T00:43:59.953Z",
+        "node": "Blend",
+        "commit": "**Blend**: Fix relative unit not use custom dimension."
       }
     ]
   },

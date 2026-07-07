@@ -183,6 +183,47 @@ function Node_Blend(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	
 	////- Process
 	
+	static getDimension = function() {
+		var _swap    = getInputSingle(15);
+		var _back	 = _swap? getInputSingle(1) : getInputSingle(0);
+		var _fore	 = _swap? getInputSingle(0) : getInputSingle(1);
+		var _mask	 = getInputSingle(4);
+		var _outp	 = getInputSingle(6);
+		var _out_dim = getInputSingle(7);
+		
+		var ww = 1;
+		var hh = 1;
+		
+		switch(_outp) {
+			case NODE_BLEND_OUTPUT.background :
+				ww = surface_get_width_safe(_back);
+				hh = surface_get_height_safe(_back);
+				break;
+				
+			case NODE_BLEND_OUTPUT.foreground :
+				ww = surface_get_width_safe(_fore);
+				hh = surface_get_height_safe(_fore);
+				break;
+				
+			case NODE_BLEND_OUTPUT.mask :
+				ww = surface_get_width_safe(_mask);
+				hh = surface_get_height_safe(_mask);
+				break;
+				
+			case NODE_BLEND_OUTPUT.maximum :
+				ww = max(surface_get_width_safe(_back),  surface_get_width_safe(_fore),  surface_get_width_safe(_mask));
+				hh = max(surface_get_height_safe(_back), surface_get_height_safe(_fore), surface_get_height_safe(_mask));
+				break;
+				
+			case NODE_BLEND_OUTPUT.constant :
+				ww = _out_dim[0];
+				hh = _out_dim[1];
+				break;
+		}
+		
+		return [ww,hh];
+	}
+	
 	static processData_prebatch  = function() {
 		var _back = getInputSingle(0);
 		var _fore = getInputSingle(1);
@@ -220,40 +261,13 @@ function Node_Blend(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 			var _valign  = _data[11];
 			
 			var cDep    = attrDepth();
+			
+			var _atlas  = is(_fore, SurfaceAtlas);
 		#endregion
 		
-		#region dimension
-			var ww = 1;
-			var hh = 1;
-			var _atlas = is(_fore, SurfaceAtlas);
-			
-			switch(_outp) {
-				case NODE_BLEND_OUTPUT.background :
-					ww = surface_get_width_safe(_back);
-					hh = surface_get_height_safe(_back);
-					break;
-					
-				case NODE_BLEND_OUTPUT.foreground :
-					ww = surface_get_width_safe(_fore);
-					hh = surface_get_height_safe(_fore);
-					break;
-					
-				case NODE_BLEND_OUTPUT.mask :
-					ww = surface_get_width_safe(_mask);
-					hh = surface_get_height_safe(_mask);
-					break;
-					
-				case NODE_BLEND_OUTPUT.maximum :
-					ww = max(surface_get_width_safe(_back),  surface_get_width_safe(_fore),  surface_get_width_safe(_mask));
-					hh = max(surface_get_height_safe(_back), surface_get_height_safe(_fore), surface_get_height_safe(_mask));
-					break;
-					
-				case NODE_BLEND_OUTPUT.constant :
-					ww = _out_dim[0];
-					hh = _out_dim[1];
-					break;
-			}
-		#endregion
+		var _dim = getDimension();
+		var  ww  = _dim[0];
+		var  hh  = _dim[1];
 		
 		temp_surface[0] = surface_verify(temp_surface[0], ww, hh, cDep);
 		temp_surface[1] = surface_verify(temp_surface[1], ww, hh, cDep);
