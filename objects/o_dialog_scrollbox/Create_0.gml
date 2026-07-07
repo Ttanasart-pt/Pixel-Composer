@@ -193,7 +193,7 @@ doRefocus();
 				draw_sprite_ext(_txt, i, _dw / 2, _yy);
 			
 			if(is(_val, scrollItem)) {
-				if(_val.spr) {
+				if(sprite_exists(_val.spr)) {
 					var _ss = _sca? (hght - ui(8)) / sprite_get_height(_val.spr) : 1;
 					
 					gpu_set_tex_filter(true);
@@ -201,7 +201,7 @@ doRefocus();
 					gpu_set_tex_filter(false);
 				}
 				
-				if(_val.surface) {
+				if(is_just_surface(_val.surface)) {
 					var srf = _val.surface;
 					var _sw = surface_get_width(srf);
 					var _sh = surface_get_height(srf);

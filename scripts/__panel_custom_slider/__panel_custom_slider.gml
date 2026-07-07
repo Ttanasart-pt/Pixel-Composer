@@ -78,7 +78,8 @@ function Panel_Custom_Slider(_data) : Panel_Custom_Element(_data) constructor {
 		var hov = elementHover;
 		
 		if(input_junc) {
-			_currVal = toNumber(input_junc.showValue());
+			var _showVal = input_junc.showValue();
+			_currVal = toNumber(_showVal);
 			_currRan = (_currVal - range[0]) / (range[1] - range[0]);
 			_currRan = clamp(_currRan, 0, 1);
 		}

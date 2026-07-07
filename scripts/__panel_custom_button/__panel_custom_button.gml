@@ -131,7 +131,8 @@ function Panel_Custom_Button(_data) : Panel_Custom_Element(_data) constructor {
 				input_junc.setValue(_outVal);
 			}
 			
-			if(isSetValue) input_junc.setValue(setValue);
+			if(input_junc && isSetValue) 
+				input_junc.setValue(setValue);
 		}
 		
 		if(displayContent && _outVal != undefined) {
