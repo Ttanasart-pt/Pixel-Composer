@@ -107,7 +107,7 @@ function AnimationManager(_project = PROJECT) constructor {
 	static isFirstFrame  = function() /*=>*/ {return current_frame == getFirstFrame()};
 	static isLastFrame   = function() /*=>*/ {return current_frame == getLastFrame()};
 	
-	static animationStart = function() /*=>*/ {return array_foreach(PROJECT.allNodes, function(n) /*=>*/ {return n.onAnimationStart()})};
+	static animationStart = function() /*=>*/ {return array_foreach(PROJECT.allNodes, function(n,i) /*=>*/ {return n.onAnimationStart()})};
 	
 	static useRange = function() /*=>*/ {return frame_range_start != undefined && frame_range_end != undefined};
 	
@@ -115,12 +115,14 @@ function AnimationManager(_project = PROJECT) constructor {
 		is_playing     = !is_playing;
 		frame_progress = true;
 		last_time      = 0;
+		play_direction = 1;
 	}
 	
 	static pause  = function() {
 		is_playing     = false;
 		frame_progress = true;
 		last_time      = 0;
+		play_direction = 1;
 	}
 	
 	static play   = function() {
@@ -131,8 +133,8 @@ function AnimationManager(_project = PROJECT) constructor {
 		is_playing     = true;
 		frame_progress = true;
 		last_time      = 0;
-		play_direction = 1;
 		real_time      = 0;
+		play_direction = 1;
 		
 		RenderAll();
 	}
@@ -146,6 +148,8 @@ function AnimationManager(_project = PROJECT) constructor {
 		frame_progress = true;
 		last_time      = 0;
 		real_time      = 0;
+		play_direction = 1;
+		
 		PROJECT.onRenderingStart();
 	}
 	
@@ -153,13 +157,15 @@ function AnimationManager(_project = PROJECT) constructor {
 		is_playing     = true;
 		frame_progress = true;
 		last_time      = 0;
+		play_direction = 1;
 	}
 	
 	static stop   = function() {
 		firstFrame();
 		
-		is_playing = false;
-		last_time  = 0;
+		is_playing     = false;
+		last_time      = 0;
+		play_direction = 1;
 	}
 	
 	static step   = function() {
@@ -209,8 +215,10 @@ function AnimationManager(_project = PROJECT) constructor {
 			}
 			
 		} else if(current_frame <= 0) {
-			if(playback == ANIMATOR_END.pingpong)
+			if(playback == ANIMATOR_END.pingpong) {
+				setFrame(0);
 				play_direction = 1;
+			}
 		}
 	}
 	
