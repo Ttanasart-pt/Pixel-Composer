@@ -429,10 +429,10 @@ function Node_Path_Revolve(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 						var p3x = p1[2] + p3dx * rax + p3dy * rbx;
 						var p3y = p1[3] + p3dx * ray + p3dy * rby;
 					
-						var p0u = (j + 0) / (_sub - 1), p0v = (i + 0) / (_pres - 1);
-						var p1u = (j + 0) / (_sub - 1), p1v = (i + 1) / (_pres - 1);
-						var p2u = (j + 1) / (_sub - 1), p2v = (i + 0) / (_pres - 1);
-						var p3u = (j + 1) / (_sub - 1), p3v = (i + 1) / (_pres - 1);
+						var p0u = (j + 0) / (_sub), p0v = (i + 0) / (_pres - 1);
+						var p1u = (j + 0) / (_sub), p1v = (i + 1) / (_pres - 1);
+						var p2u = (j + 1) / (_sub), p2v = (i + 0) / (_pres - 1);
+						var p3u = (j + 1) / (_sub), p3v = (i + 1) / (_pres - 1);
 					
 						draw_vertex_texture(p0x, p0y, p0u, p0v);
 						draw_vertex_texture(p1x, p1y, p1u, p1v);

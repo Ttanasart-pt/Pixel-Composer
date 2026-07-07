@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.6.005",
+    "changes": [
+      {
+        "date": "2026-07-07T06:23:37.845Z",
+        "node": "Revolve Path",
+        "commit": "**Revolve Path**: Fix U coordinate goes above 1 causing texture to wrap more than once."
+      }
+    ]
+  },
+  {
     "version": "1.21.5.003",
     "changes": [
       {
