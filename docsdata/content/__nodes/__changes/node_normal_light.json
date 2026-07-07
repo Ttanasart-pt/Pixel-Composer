@@ -6,6 +6,11 @@
         "date": "2026-07-07T02:52:39.742Z",
         "node": "",
         "commit": "**Normal Light**: Fix sun type not rendering."
+      },
+      {
+        "date": "2026-07-07T02:56:40.172Z",
+        "node": "Normal Light",
+        "commit": "**Normal Light**: Remove range control from sun type."
       }
     ]
   },

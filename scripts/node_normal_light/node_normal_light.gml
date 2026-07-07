@@ -143,6 +143,7 @@ function Node_Normal_Light(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 		dynamic_input_inspecting = clamp(dynamic_input_inspecting, 0, getInputAmount() - 1);
 		var _ind = input_fix_len + dynamic_input_inspecting * data_length;
 		
+		var dim  = getDimension();
 		var typ  = current_data[_ind + 0];
 		var pos  = current_data[_ind + 1];
 		var rad  = current_data[_ind + 2];
@@ -150,9 +151,12 @@ function Node_Normal_Light(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 		var py   = _y + pos[1] * _s;
 		
 		draw_set_color(COLORS._main_accent);
-		draw_set_alpha(0.5);
-		draw_circle_dash(px, py, rad * _s, 1, 8);
-		draw_set_alpha(1);
+		if(typ == 1) {
+			var cx = _x + dim[0] / 2 * _s;
+			var cy = _y + dim[1] / 2 * _s;
+			draw_line_dashed(cx, cy, px, py);
+		} else 
+			draw_circle_dash(px, py, rad * _s, 1, 8);
 		
 		if(typ == 2 || typ == 3) {
 			if(typ == 2) {
@@ -170,7 +174,8 @@ function Node_Normal_Light(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 			
 		} else {
 			drawOverlayInput(inputs[_ind + 1].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my));
-			drawOverlayInput(inputs[_ind + 2].drawOverlay(w_hoverable, active, px, py, _s, _mx, _my));
+			if(typ != 1)
+				drawOverlayInput(inputs[_ind + 2].drawOverlay(w_hoverable, active, px, py, _s, _mx, _my));
 		}
 		
 		return w_hovering;
@@ -248,6 +253,8 @@ function Node_Normal_Light(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 			
 			inputs[_ind + 5].setVisible(_ltype == 2 || _ltype == 3);
 			inputs[_ind + 8].setVisible(_ltype == 2 || _ltype == 3);
+			inputs[_ind + 2].setVisible(_ltype != 1);
+			
 			inputs[_ind + 6].setVisible(_ltype == 2);
 			
 			inputs[_ind + 9].setVisible(_ltype != 1);
