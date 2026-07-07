@@ -1276,7 +1276,7 @@ function Panel_Preview() : PanelContent() constructor {
         if(thov) {
         	canvas_hover = false;
         	mouse_on_preview = 0;
-        	if(mouse_rpress(pFOCUS)) menuCall("", [ MENU_ITEMS.preview_toggle_tool_l ]);
+        	if(mouse_rpress(pFOCUS)) menuCall("", [ MENU_ITEMS.preview_toggle_left_tool ]);
         }
         
         if(pFOCUS && key_mod_double(ALT)) tool_show_key = !tool_show_key;
@@ -1641,7 +1641,7 @@ function Panel_Preview() : PanelContent() constructor {
         if(thov) {
         	canvas_hover = false;
         	mouse_on_preview = 0;
-        	if(mouse_rpress(pFOCUS)) menuCall("", [ MENU_ITEMS.preview_toggle_tool_r ]);
+        	if(mouse_rpress(pFOCUS)) menuCall("", [ MENU_ITEMS.preview_toggle_right_tool ]);
         }
         
         var __tool_show_key = tool_show_key || hk_editing != noone || key_mod_press(ALT);
