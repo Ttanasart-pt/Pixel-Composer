@@ -6,6 +6,11 @@
         "date": "2026-07-07T02:18:36.432Z",
         "node": "2D Extrude",
         "commit": "**2D Extrude**: Add Extrude only output."
+      },
+      {
+        "date": "2026-07-07T02:52:39.734Z",
+        "node": "Normal Light",
+        "commit": "**Normal Light**: Fix sun type not rendering."
       }
     ]
   },

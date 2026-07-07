@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.6.005",
+    "changes": [
+      {
+        "date": "2026-07-07T02:52:39.742Z",
+        "node": "",
+        "commit": "**Normal Light**: Fix sun type not rendering."
+      }
+    ]
+  },
+  {
     "version": "1.21.5.003",
     "changes": [
       {

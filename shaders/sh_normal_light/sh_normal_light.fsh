@@ -1,7 +1,6 @@
 #pragma use(curve)
 
 #region -- curve -- [1780117484.3465736]
-
     #ifdef _YY_HLSL11_ 
         #define CURVE_MAX  512
     #else 
@@ -188,6 +187,8 @@ void main() {
 	vec4  lightClr = lightColor;
 	float brightness;
 	
+	bool useAttn = true;
+	
 	if(lightType == 0) {
 		vec3 lig   = lightPos - curr;
 		lightDir   = normalize(lig); 
@@ -202,6 +203,8 @@ void main() {
 	} else if(lightType == 1) {
 		lightDir    = normalize(lightPos - vec3(0.5, 0.5, 0.)); 
 		lightDir.x *= -1.;
+		brightness  = 1.;
+		useAttn     = false;
 		
 	} else if(lightType == 2) {
 		float t = 0.;
@@ -223,10 +226,12 @@ void main() {
 	}
 	
 	brightness = max(0., brightness);
-		 if(atten == 0) brightness = pow(brightness, 2.);
-	else if(atten == 1) brightness = 1. - pow(1. - brightness, 2.);
-	else if(atten == 2) brightness = brightness;
-	else if(atten == 3) brightness = curveEval(attenCurve_curve, attenCurve_amount, brightness);
+	if(useAttn) {
+			 if(atten == 0) brightness = pow(brightness, 2.);
+		else if(atten == 1) brightness = 1. - pow(1. - brightness, 2.);
+		else if(atten == 2) brightness = brightness;
+		else if(atten == 3) brightness = curveEval(attenCurve_curve, attenCurve_amount, brightness);
+	}
 	
 	brightness *= lightIntensity;
 	if(band > 0.) brightness = ceil(brightness * band) / band;

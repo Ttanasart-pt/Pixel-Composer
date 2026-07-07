@@ -60,8 +60,8 @@ function Node_Outline(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	newInput( 7, nodeValue_EScroll( "Oversample Mode", 0, [ "Empty", "Clamp", "Repeat" ] ));
 	// 23
 	
-	newOutput(0, nodeValue_Output( "Surface Out", VALUE_TYPE.surface, noone ));
-	newOutput(1, nodeValue_Output( "Outline",     VALUE_TYPE.surface, noone ));
+	newOutput( 0, nodeValue_Output( "Surface Out", VALUE_TYPE.surface, noone ));
+	newOutput( 1, nodeValue_Output( "Outline",     VALUE_TYPE.surface, noone ));
 	
 	input_display_list = [ 11, 
 		[ "Surfaces",  true    ],  0, 21,  9, 10, 13, 14, 
@@ -70,10 +70,10 @@ function Node_Outline(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		[ "Blend",     true, 3 ], 22,  4, 16,
 	];
 	
+	////- Node
+	
 	attribute_surface_depth();
 	attribute_oversample();
-	
-	////- Node
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _params) { 
 		PROCESSOR_OVERLAY_CHECK

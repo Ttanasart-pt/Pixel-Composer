@@ -43,7 +43,7 @@ function Node_2D_Extrude(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	
 	newOutput( 0, nodeValue_Output("Surface Out",  VALUE_TYPE.surface, noone)).setDrawGroup(0);
 	newOutput( 1, nodeValue_Output("Depth",        VALUE_TYPE.surface, noone)).setDrawGroup(0);
-	newOutput( 2, nodeValue_Output("Extrude Only", VALUE_TYPE.surface, noone)).setDrawGroup(0);
+	newOutput( 2, nodeValue_Output("Extrude Only", VALUE_TYPE.surface, noone));
 	
 	input_display_list = [
 	    [ "Surface",   false    ],  0,  9, 

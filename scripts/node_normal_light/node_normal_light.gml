@@ -250,7 +250,8 @@ function Node_Normal_Light(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 			inputs[_ind + 8].setVisible(_ltype == 2 || _ltype == 3);
 			inputs[_ind + 6].setVisible(_ltype == 2);
 			
-			inputs[_ind +10].setVisible(_lattn == 3);
+			inputs[_ind + 9].setVisible(_ltype != 1);
+			inputs[_ind +10].setVisible(_ltype != 1 && _lattn == 3);
 			
 			inputs[_ind +11].setVisible(_ltype == 0);
 			inputs[_ind +12].setVisible(_ltype == 0);
