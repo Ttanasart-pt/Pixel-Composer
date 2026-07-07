@@ -4,11 +4,11 @@ function Panel_Custom_Knob(_data) : Panel_Custom_Element(_data) constructor {
 	icon = THEME.panel_icon_element_knob;
 	modifyContent = false;
 	
-	bind_input = new JuncLister(data, "Input", CONNECT_TYPE.input);
+	bind_input = new JuncLister(data, "Input", CONNECT_TYPE.input).setValueType(VALUE_TYPE.float);
 	
-	bg_output    = new JuncLister(data, "Idle",   CONNECT_TYPE.output);
-	hover_output = new JuncLister(data, "Hover",  CONNECT_TYPE.output);
-	press_output = new JuncLister(data, "Press",  CONNECT_TYPE.output);
+	bg_output    = new JuncLister(data, "Idle",   CONNECT_TYPE.output).setValueType(VALUE_TYPE.surface);
+	hover_output = new JuncLister(data, "Hover",  CONNECT_TYPE.output).setValueType(VALUE_TYPE.surface);
+	press_output = new JuncLister(data, "Press",  CONNECT_TYPE.output).setValueType(VALUE_TYPE.surface);
 	
 	style = 1;
 	color = COLORS._main_icon_light;

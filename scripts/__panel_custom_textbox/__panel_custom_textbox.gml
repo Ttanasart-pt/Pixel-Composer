@@ -6,11 +6,11 @@ function Panel_Custom_Textbox(_data) : Panel_Custom_Element(_data) constructor {
 	
 	textbox = textBox_Text(function(t) /*=>*/ { onModify(t); }).setEmpty().setHide(3);
 	
-	bind_input = new JuncLister(data, "Input", CONNECT_TYPE.input);
+	bind_input   = new JuncLister(data, "Input", CONNECT_TYPE.input).setValueType(VALUE_TYPE.text);
 	
-	bg_output    = new JuncLister(data, "BG",     CONNECT_TYPE.output);
-	hover_output = new JuncLister(data, "Hover",  CONNECT_TYPE.output);
-	press_output = new JuncLister(data, "Select", CONNECT_TYPE.output);
+	bg_output    = new JuncLister(data, "BG",     CONNECT_TYPE.output).setValueType(VALUE_TYPE.surface);
+	hover_output = new JuncLister(data, "Hover",  CONNECT_TYPE.output).setValueType(VALUE_TYPE.surface);
+	press_output = new JuncLister(data, "Select", CONNECT_TYPE.output).setValueType(VALUE_TYPE.surface);
 	type = 0;
 	
 	style  = 0;

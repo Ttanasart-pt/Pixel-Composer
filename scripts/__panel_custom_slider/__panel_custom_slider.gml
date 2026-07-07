@@ -3,12 +3,12 @@ function Panel_Custom_Slider(_data) : Panel_Custom_Element(_data) constructor {
 	name = "Slider";
 	icon = THEME.panel_icon_element_slider;
 	
-	bind_input   = new JuncLister(data, "Input",   CONNECT_TYPE.input);
+	bind_input   = new JuncLister(data, "Input",   CONNECT_TYPE.input).setValueType(VALUE_TYPE.float);
 	
-	slot_output  = new JuncLister(data, "Slot BG", CONNECT_TYPE.output, false, true); slot_color  = c_white;
-	knob_output  = new JuncLister(data, "Knob BG", CONNECT_TYPE.output, false, true); knob_color  = c_white;
-	hover_output = new JuncLister(data, "Hover",   CONNECT_TYPE.output, false, true); 
-	press_output = new JuncLister(data, "Press",   CONNECT_TYPE.output, false, true); 
+	slot_output  = new JuncLister(data, "Slot BG", CONNECT_TYPE.output, false, true).setValueType(VALUE_TYPE.surface); slot_color  = c_white;
+	knob_output  = new JuncLister(data, "Knob BG", CONNECT_TYPE.output, false, true).setValueType(VALUE_TYPE.surface); knob_color  = c_white;
+	hover_output = new JuncLister(data, "Hover",   CONNECT_TYPE.output, false, true).setValueType(VALUE_TYPE.surface); 
+	press_output = new JuncLister(data, "Press",   CONNECT_TYPE.output, false, true).setValueType(VALUE_TYPE.surface); 
 	
 	slot_pbox = new __pbBox();
 	slot_pbox.anchor_x_type = PB_AXIS_ANCHOR.bounded;
@@ -22,11 +22,11 @@ function Panel_Custom_Slider(_data) : Panel_Custom_Element(_data) constructor {
 	knob_pbox.anchor_h =  1; knob_pbox.anchor_h_fract =  true;
 	knob_bbox = [0,0,1,1];
 	
-	style  = 1;
-	color  = COLORS._main_icon_light;
-	direct = 0;
-	range  = [0,1]; clamp_to_range = false;
-	vstep  = 0;
+	style    = 1;
+	color    = COLORS._main_icon_light;
+	direct   = 0;
+	range    = [0,1]; clamp_to_range = false;
+	vstep    = 0;
 	
 	dragging = false;
 	dragg_ss = 0;

@@ -9,9 +9,9 @@ function Panel_Custom_Button(_data) : Panel_Custom_Element(_data) constructor {
 	bind_action = new JuncLister(data, "Action", CONNECT_TYPE.input);
 	bind_output = new JuncLister(data, "Output", CONNECT_TYPE.output);
 	
-	bg_output    = new JuncLister(data, "Idle",   CONNECT_TYPE.output, false, true);
-	hover_output = new JuncLister(data, "Hover",  CONNECT_TYPE.output, false, true);
-	press_output = new JuncLister(data, "Press",  CONNECT_TYPE.output, false, true);
+	bg_output    = new JuncLister(data, "Idle",   CONNECT_TYPE.output, false, true).setValueType(VALUE_TYPE.surface);
+	hover_output = new JuncLister(data, "Hover",  CONNECT_TYPE.output, false, true).setValueType(VALUE_TYPE.surface);
+	press_output = new JuncLister(data, "Press",  CONNECT_TYPE.output, false, true).setValueType(VALUE_TYPE.surface);
 	
 	isSetValue = false;
 	setValue   = 0;

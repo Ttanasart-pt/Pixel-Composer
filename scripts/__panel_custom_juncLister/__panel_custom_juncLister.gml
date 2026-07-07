@@ -5,6 +5,8 @@ function JuncLister(_data, _name, _type = CONNECT_TYPE.input, _widget = false, _
 	type = _type;
 	mode = "node";
 	
+	valType = VALUE_TYPE.any;
+	
 	sprite  = _sprite;
 	visible = true;
 	
@@ -21,11 +23,7 @@ function JuncLister(_data, _name, _type = CONNECT_TYPE.input, _widget = false, _
 	////- Sprite
 	
 	spriteMode = false;
-	spr = undefined;
-	
-	if(sprite) {
-		spr = new Panel_Custom_Sprite(name);
-	}
+	spr = sprite? new Panel_Custom_Sprite(name) : undefined;
 	
 	////- Editors
 	
@@ -172,6 +170,8 @@ function JuncLister(_data, _name, _type = CONNECT_TYPE.input, _widget = false, _
 		juncOutListName = [];
 		for( var i = 0, n = array_length(node.outputs); i < n; i++ ) {
 			var _juncOut = node.outputs[i];
+			if(!typeCompatible(_juncOut.type, valType)) continue;
+			
 			juncOutList[i]     = _juncOut;
 			juncOutListName[i] = new scrollItem(_juncOut.name, THEME.node_junctions_single, _juncOut.type, c_white)
 				.setTextColor(_juncOut.show_in_inspector? COLORS._main_text : COLORS._main_text_sub);
@@ -191,6 +191,8 @@ function JuncLister(_data, _name, _type = CONNECT_TYPE.input, _widget = false, _
 		if(node.input_display_list == -1) {
 			for( var i = 0, n = array_length(node.inputs); i < n; i++ ) {
 				var _juncIn = node.inputs[i];
+				if(!typeCompatible(_juncIn.type, valType)) continue;
+				
 				juncInList[i]     = _juncIn;
 				juncInListName[i] = new scrollItem(_juncIn.name, THEME.node_junctions_single, _juncIn.type, c_white)
 					.setTextColor(_juncIn.show_in_inspector? COLORS._main_text : COLORS._main_text_sub);
@@ -209,6 +211,8 @@ function JuncLister(_data, _name, _type = CONNECT_TYPE.input, _widget = false, _
 				if(!is_real(_i)) continue;
 				
 				var _juncIn = node.inputs[_i];
+				if(!typeCompatible(_juncIn.type, valType)) continue;
+				
 				juncInList[ind]     = _juncIn;
 				juncInListName[ind] = new scrollItem(_juncIn.name, THEME.node_junctions_single, _juncIn.type, c_white);
 				ind++;
@@ -231,21 +235,7 @@ function JuncLister(_data, _name, _type = CONNECT_TYPE.input, _widget = false, _
 	
 	////- Get Set
 	
-	static getEditWidget = function() {
-		if(is(editWidget, widget)) return editWidget;
-		
-		var junc = getJunction();
-		if(!is(junc, NodeValue)) return editWidget;
-		
-		var _map = junc.editWidgetMap;
-		if(!has(_map, ID)) {
-			var wid = junc.getEditWidget();
-			_map[$ ID] = wid.clone();
-		}
-			
-		editWidget = _map[$ ID];
-		return editWidget;
-	}
+	static setValueType = function(_type) { valType = _type; return self; }
 	
 	static setGlobalKey = function(_key) {
 		globalKey = _key;
@@ -264,6 +254,22 @@ function JuncLister(_data, _name, _type = CONNECT_TYPE.input, _widget = false, _
 		editWidget = undefined;
 		
 		return self;
+	}
+	
+	static getEditWidget = function() {
+		if(is(editWidget, widget)) return editWidget;
+		
+		var junc = getJunction();
+		if(!is(junc, NodeValue)) return editWidget;
+		
+		var _map = junc.editWidgetMap;
+		if(!has(_map, ID)) {
+			var wid = junc.getEditWidget();
+			_map[$ ID] = wid.clone();
+		}
+			
+		editWidget = _map[$ ID];
+		return editWidget;
 	}
 	
 	static getNode = function() {

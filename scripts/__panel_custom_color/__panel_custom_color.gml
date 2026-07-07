@@ -6,8 +6,9 @@ function Panel_Custom_Color(_data) : Panel_Custom_Element(_data) constructor {
 	selector = new colorSelector(function(c) /*=>*/ {return onModify(c)});
 	selector.show_textbox = false;
 	
-	bind_input = new JuncLister(data, "Input", CONNECT_TYPE.input);
-	bg_output  = new JuncLister(data, "BG",    CONNECT_TYPE.output);
+	bind_input = new JuncLister(data, "Input", CONNECT_TYPE.input).setValueType(VALUE_TYPE.color);
+	
+	bg_output  = new JuncLister(data, "BG",    CONNECT_TYPE.output).setValueType(VALUE_TYPE.surface);
 	
 	array_append(editors, [
 		[ "Value Binding", false ], 

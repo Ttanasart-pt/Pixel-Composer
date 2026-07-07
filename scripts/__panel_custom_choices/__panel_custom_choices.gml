@@ -5,7 +5,8 @@ function Panel_Custom_Choices(_data) : Panel_Custom_Element(_data) constructor {
 	modifyContent = false;
 	
 	bind_input = new JuncLister(data, "Input", CONNECT_TYPE.input);
-	bg_output  = new JuncLister(data, "BG",    CONNECT_TYPE.output);
+	
+	bg_output  = new JuncLister(data, "BG",    CONNECT_TYPE.output).setValueType(VALUE_TYPE.surface);
 	
 	array_append(editors, [
 		[ "Value Binding", false ], 
