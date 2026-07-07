@@ -3064,7 +3064,7 @@ function Panel_Preview() : PanelContent() constructor {
     	draw_sprite_stretched_ext(THEME.tool_side, 0, x0, y0, arw, hh+2, COLORS._main_icon_light);
 		BLEND_NORMAL
     	
-        var hovering = pHOVER && point_in_rectangle(mx, my, x0, x1, y0, y1);
+        var hovering = pHOVER && point_in_rectangle(mx, my, x0, y0, x1, y1);
         if(hovering) {
         	mouse_on_preview = false;
             canvas_hover     = false;

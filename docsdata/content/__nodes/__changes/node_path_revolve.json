@@ -6,6 +6,11 @@
         "date": "2026-07-07T06:23:37.845Z",
         "node": "Revolve Path",
         "commit": "**Revolve Path**: Fix U coordinate goes above 1 causing texture to wrap more than once."
+      },
+      {
+        "date": "2026-07-07T06:27:13.108Z",
+        "node": "Preview Panel",
+        "commit": "**Preview Panel**: Fix incorrect array selector interactable area."
       }
     ]
   },
