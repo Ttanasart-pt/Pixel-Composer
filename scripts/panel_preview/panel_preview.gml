@@ -3066,7 +3066,7 @@ function Panel_Preview() : PanelContent() constructor {
     	
         var hovering = pHOVER && point_in_rectangle(mx, my, x0, y0, x1, y1);
         if(hovering) {
-        	mouse_on_content  = false;
+        	mouse_on_content = false;
         	mouse_on_preview = false;
             canvas_hover     = false;
             

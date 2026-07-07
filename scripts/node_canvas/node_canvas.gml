@@ -1541,7 +1541,12 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 				DRAW_CLEAR
 				if(selection.is_selected) selection.drawMask(hover, active, _x, _y, _s, _mx, _my);
 				
-				if(!current_brush.sizing && _tool) {
+				if(current_brush.sizing) {
+					var _dx = _x + (current_brush.sizing_dx - floor(bs/2)) * _s;
+					var _dy = _y + (current_brush.sizing_dy - floor(bs/2)) * _s;
+					draw_surface_ext(global.canvas_brush_surface, _dx, _dy, _s, _s, 0, c_white, 1);
+					
+				} else if(_tool) {
 					_tool.drawMask(hover, active, _x, _y, _s, _mx, _my);
 					
 					if(_tool.drawBrushMask) {
