@@ -333,8 +333,8 @@ function Panel_Preview() : PanelContent() constructor {
     	selection_x1 = 0; 
     	selection_y1 = 0; 
     	
-    	hoveringContent = false;
-        hoveringGizmo   = false;
+    	mouse_on_content = false;
+        mouse_on_gizmo   = false;
     #endregion
     
     #region ---- preview ----
@@ -3066,6 +3066,7 @@ function Panel_Preview() : PanelContent() constructor {
     	
         var hovering = pHOVER && point_in_rectangle(mx, my, x0, y0, x1, y1);
         if(hovering) {
+        	mouse_on_content  = false;
         	mouse_on_preview = false;
             canvas_hover     = false;
             
@@ -3345,7 +3346,7 @@ function Panel_Preview() : PanelContent() constructor {
         	}
         }
         
-        hoveringGizmo = _hovering;
+        mouse_on_gizmo = _hovering;
     }
     
     static drawNodeActions = function(active, _node) {
@@ -3367,14 +3368,14 @@ function Panel_Preview() : PanelContent() constructor {
         
         overActive = active && overHover && !graph_nav;
         overHover  = overHover && !key_mod_press(CTRL);
-        hoveringContent = overHover;
+        mouse_on_content = overHover;
         
         var _params = { w, h, toolbar_height };
             _params.panel = self;
             _params.scene = d3_scene;
         
         overlay_hovering = false;
-        hoveringGizmo    = false;
+        mouse_on_gizmo    = false;
         
         if(!gizmo_show) return;
     
@@ -3386,7 +3387,7 @@ function Panel_Preview() : PanelContent() constructor {
 	                _sny = PROJECT.previewSetting.d3_tool_snap_rotation;
 	            }
 	            
-	            hoveringGizmo = _node.drawOverlay3D(overActive, mx, my, _params) ?? true;
+	            mouse_on_gizmo = _node.drawOverlay3D(overActive, mx, my, _params) ?? true;
 	            break;
         }
         
@@ -3458,7 +3459,7 @@ function Panel_Preview() : PanelContent() constructor {
     		}
     	}
         
-        hoveringGizmo = _node.doDrawOverlay(overHover, overActive, _ovx, _ovy, _ovs, mx, my, _params);
+        mouse_on_gizmo = _node.doDrawOverlay(overHover, overActive, _ovx, _ovy, _ovs, mx, my, _params);
     }
     
     static drawNodeToolOverlay = function(_node) {
@@ -3709,7 +3710,7 @@ function Panel_Preview() : PanelContent() constructor {
             var sx = w * splitPosition;
             
             if(mouse_on_preview && point_in_rectangle(mx, my, sx - ui(4), 0, sx + ui(4), h)) {
-            	hoveringContent = false;
+            	mouse_on_content = false;
                 draw_line_width(sx, 0, sx, h, 2);
                 
                 if(mouse_lpress(pFOCUS)) {
@@ -3732,7 +3733,7 @@ function Panel_Preview() : PanelContent() constructor {
             var sy = h * splitPosition;
             
             if(mouse_on_preview && point_in_rectangle(mx, my, 0, sy - ui(4), w, sy + ui(4))) {
-                hoveringContent = false;
+                mouse_on_content = false;
             	draw_line_width(0, sy, w, sy, 2);
             	
                 if(mouse_lpress(pFOCUS)) {
@@ -3795,7 +3796,7 @@ function Panel_Preview() : PanelContent() constructor {
         var mini_hover = false;
         if(pHOVER && point_in_rectangle(mx, my, mx0, my0, mx1, my1)) {
             mouse_on_preview = false;
-            hoveringContent  = false;
+            mouse_on_content  = false;
             mini_hover       = true;
         }
         
@@ -3922,7 +3923,7 @@ function Panel_Preview() : PanelContent() constructor {
 			mmy = value_snap(mmy, _sny);
     	}
     	
-    	if(hoveringContent && !hoveringGizmo) { // clear selection
+    	if(mouse_on_content && !mouse_on_gizmo) { // clear selection
         	if(mouse_lpress(pFOCUS)) {
         		selection_active    = false;
         		selection_selecting = 1;
@@ -4443,7 +4444,7 @@ function Panel_Preview() : PanelContent() constructor {
 				drawToolsRight(toolNode);
 				
             } else {
-            	hoveringContent = true;
+            	mouse_on_content = true;
             	if(tool_current != noone) {
 	                var _tobj = tool_current.getToolObject();
 	        		if(has(_tobj, "disable")) _tobj.disable();
