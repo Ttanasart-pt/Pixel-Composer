@@ -68,8 +68,11 @@ function canvas_tool_node(_canvas, _node) : canvas_tool() constructor {
 		for( var i = 0, n = array_length(nodeObject.inputs); i < n; i++ ) {
 			var _in = nodeObject.inputs[i];
 			
-			if(inputSurface   == noone && _in.type == VALUE_TYPE.surface) inputSurface = _in;
-			if(inputDimension == noone && _in.name == "Dimension")      inputDimension = _in;
+			if(inputSurface == noone && is(_in, __NodeValue_Surface) && _in.surfaceType == "") 
+				inputSurface = _in;
+				
+			if(inputDimension == noone && is(_in, __NodeValue_Dimension))
+				inputDimension = _in;
 				
 			if(_in.type == VALUE_TYPE.color && setColor) {
 				_in.setValue(CURRENT_COLOR);
@@ -156,7 +159,6 @@ function canvas_tool_node(_canvas, _node) : canvas_tool() constructor {
 	}
 	
 	static step = function(hover, active, _x, _y, _s, _mx, _my) {
-		
 		var _px, _py, _pw, _ph;
 		
 		if(applySelection) {
@@ -177,7 +179,7 @@ function canvas_tool_node(_canvas, _node) : canvas_tool() constructor {
 		var _dy = _y + _py * _s;
 		
 		if(inputSurface)   inputSurface.setValue(targetSurface);
-		if(inputDimension) inputDimension.setValue(targetSurface);
+		if(inputDimension) inputDimension.setValue(surface_get_dimension(targetSurface));
 		
 		if(is(nodeObject, Node_Collection)) RenderList(nodeObject.nodes);
 		else nodeObject.doUpdate();
