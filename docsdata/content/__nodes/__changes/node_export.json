@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.6.005",
+    "changes": [
+      {
+        "date": "2026-07-07T00:48:22.231Z",
+        "node": "Export",
+        "commit": "**Export**: Final dimension preview with surface array will show dimension of the first surface in the array."
+      }
+    ]
+  },
+  {
     "version": "1.21.5.003",
     "changes": [
       {

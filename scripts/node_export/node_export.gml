@@ -1073,9 +1073,18 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			
 			if(inputs[8].editWidget) inputs[8].editWidget.setSuffix(inputs[8].attributes.unit? "x" : "");
 			
-			var sw = scal * surface_get_width_safe(surf);
-			var sh = scal * surface_get_height_safe(surf);
-			export_scale_label.text = $"Final Dimension [{sw} x {sh}] px";
+			if(is_surface(surf)) {
+				var sw = scal * surface_get_width_safe(surf);
+				var sh = scal * surface_get_height_safe(surf);
+				export_scale_label.text = $"Final Dimension [{sw} x {sh}] px";
+				
+			} else if(is_array(surf)) {
+				var surf0 = array_safe_get(surf, 0);
+				var sw = scal * surface_get_width_safe(surf0);
+				var sh = scal * surface_get_height_safe(surf0);
+				export_scale_label.text = $"Final Dimension [{sw} x {sh}]* px";
+				
+			}
 		#endregion
 		
 		#region visiblity
