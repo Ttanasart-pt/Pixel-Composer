@@ -10,6 +10,7 @@ function __Node_Base(_x, _y) constructor {
 	inputs          = [];
 	outputs         = [];
 	input_value_map = {};
+	instanceBase    = undefined;
 	
 	is_selecting    = false;
 	active_index	= -1;
@@ -24,10 +25,13 @@ function __Node_Base(_x, _y) constructor {
 	#region ---- Attributes ----
 		parameters = {};
 		attributes = {
-			update_graph:        true,
-			show_update_trigger: false,
-			show_timeline:       false,
-			color: -1,
+			update_graph :         true,
+			show_update_trigger : false,
+			show_timeline :       false,
+			timeline_hide :       false, 
+			timeline_override :   false, 
+			
+			color : -1,
 		};
 		
 		attributes_properties = [["Attributes", true]];

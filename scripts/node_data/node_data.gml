@@ -57,7 +57,6 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		onDoubleClick = -1;
 		is_controller = false;
 		is_instancer  = false;
-		instanceBase  = undefined;
 		
 		static setParam = function() /*=>*/ {return false};
 	#endregion
@@ -391,9 +390,6 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		timeline_item    = new timelineItemNode(self);
 		anim_priority    = array_length(project.allNodes);
 		is_anim_timeline = false;
-		
-		attributes.timeline_hide     = false;
-		attributes.timeline_override = false;
 		
 		timeline_content_snap      = { points: [] }
 		timeline_content_snap.node = self;

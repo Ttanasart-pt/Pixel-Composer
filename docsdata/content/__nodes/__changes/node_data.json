@@ -6,6 +6,11 @@
         "date": "2026-07-06T10:00:37.856Z",
         "node": "Scatter",
         "commit": "**Scatter**: Add manual points rotation/scale control."
+      },
+      {
+        "date": "2026-07-07T10:32:44.300Z",
+        "node": "",
+        "commit": "Fix error when animating global variable."
       }
     ]
   },
