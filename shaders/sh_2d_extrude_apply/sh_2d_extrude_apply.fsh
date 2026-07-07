@@ -196,8 +196,9 @@ void main() {
 	
 	if(drawBase == 0) resColor = vec4(0.);
 	
-	gl_FragData[0]  = resColor;
-	gl_FragData[1]  = vec4(vec3(extrude == -1.? 0. : 1.), 1.);
+	gl_FragData[0] = resColor;
+	gl_FragData[1] = vec4(vec3(extrude == -1.? 0. : 1.), 1.);
+	gl_FragData[2] = vec4(0.);
 	
 	if(highlight == 1) {
 		if(highlightWidth > 0. && extrude == -1.) {
@@ -228,8 +229,11 @@ void main() {
 	}
 	
 	float prog = extrude / dist;
-	gl_FragData[0] = blendColor(gl_FragData[0], gradientEval(prog));
+	vec4  colr = gradientEval(prog);
+	
+	gl_FragData[0] = blendColor(gl_FragData[0], colr);
 	gl_FragData[1] = vec4(vec3(mix(depth.x, depth.y, prog)), 1.);
+	gl_FragData[2] = colr;
 	
 	if(cloneColor == 0) return;
 	
@@ -239,4 +243,6 @@ void main() {
 	vec4 cColor = texture2D(gm_BaseTexture, pos);
 	if(cloneColor == 1) gl_FragData[0] *= cColor;
 	if(cloneColor == 2) gl_FragData[0] += cColor;
+	
+	gl_FragData[2] = cColor;
 }

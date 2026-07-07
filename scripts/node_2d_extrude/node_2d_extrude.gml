@@ -1,3 +1,10 @@
+#region create
+	FN_NODE_CONTEXT_INVOKE {
+		addHotkey("Node_2D_Extrude", "Angle > Rotate CCW","R", MOD_KEY.none, function() /*=>*/ { GRAPH_FOCUS _n.inputs[1].setValue((_n.inputs[1].getValue() + 90) % 360);    });
+		addHotkey("Node_2D_Extrude", "Distance > Set", KEY_GROUP.numeric, 0, function() /*=>*/ { GRAPH_FOCUS_NUMBER _n.inputs[2].setValueDirect(toDecimal(KEYBOARD_NUMBER)); });
+	});
+#endregion
+
 function Node_2D_Extrude(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "2D Extrude";
 	
@@ -13,8 +20,8 @@ function Node_2D_Extrude(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	newInput(18, nodeValue_EScroll(  "Depth Order", 0, [ "Minimum", "Maximum" ] ));
 	
 		////- =/Path
-	newInput(15, nodeValue_Path( "Path"                     ));
-	newInput(16, nodeValue_Int(  "Path Resolution", 32      ));
+	newInput(15, nodeValue_Path(     "Path"                     ));
+	newInput(16, nodeValue_Int(      "Path Resolution", 32      ));
 	
 	////- =Transform
 	newInput(11, nodeValue_Anchor(   "Anchor"                          ));
@@ -28,14 +35,15 @@ function Node_2D_Extrude(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	newInput(17, nodeValue_Bool(     "Draw Original", true       ));
 	
 	////- =Highlight
-	newInput( 5, nodeValue_Bool(   "Highlight", false    ));
-	newInput(14, nodeValue_Float(  "Width",     1        ));
-	newInput( 6, nodeValue_Color(  "Color",     ca_white ));
-	newInput(19, nodeValue_Slider( "Intensity", 1        ));
+	newInput( 5, nodeValue_Bool(     "Highlight", false    ));
+	newInput(14, nodeValue_Float(    "Width",     1        ));
+	newInput( 6, nodeValue_Color(    "Color",     ca_white ));
+	newInput(19, nodeValue_Slider(   "Intensity", 1        ));
 	// 20
 	
-	newOutput( 0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone)).setDrawGroup(0);
-	newOutput( 1, nodeValue_Output("Depth",       VALUE_TYPE.surface, noone)).setDrawGroup(0);
+	newOutput( 0, nodeValue_Output("Surface Out",  VALUE_TYPE.surface, noone)).setDrawGroup(0);
+	newOutput( 1, nodeValue_Output("Depth",        VALUE_TYPE.surface, noone)).setDrawGroup(0);
+	newOutput( 2, nodeValue_Output("Extrude Only", VALUE_TYPE.surface, noone)).setDrawGroup(0);
 	
 	input_display_list = [
 	    [ "Surface",   false    ],  0,  9, 
