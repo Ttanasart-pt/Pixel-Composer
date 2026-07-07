@@ -56,6 +56,8 @@ function NodeTool(_name = "", _spr = noone, _contextString = instanceof(other)) 
 		return self;
 	}
 	
+	static addWidget = function(_w) { array_push(settings, ["",_w]); return self; }
+	
 	////- Toggle
 	
 	static toggle = function(index = 0) {

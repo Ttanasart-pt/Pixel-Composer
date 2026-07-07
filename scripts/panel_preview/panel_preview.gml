@@ -1204,6 +1204,20 @@ function Panel_Preview() : PanelContent() constructor {
     
     static onFullScreen = function() { fullView(); }
     
+    static getPreviewArea = function() {
+    	var x0 = 0;
+    	var y0 = topbar_height;
+    	var x1 = w;
+    	var y1 = h - toolbar_height;
+    	
+        x0 += tool_side_draw_l * toolbar_width;
+        x1 -= tool_side_draw_r * toolbar_width;
+        y0 += tool_side_draw_t * toolbar_width;
+        y1 -= tool_side_draw_b * toolbar_width;
+        
+    	return [x0, y0, x1, y1];
+    }
+    
     ////- TOOL
     
     static clearSelection = function() {

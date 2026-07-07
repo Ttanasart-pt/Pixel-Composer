@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.6.005",
+    "changes": [
+      {
+        "date": "2026-07-07T09:53:39.527Z",
+        "node": "",
+        "commit": "**Canvas] Mirror position is now adjustable.  - [Canvas**: Mirror now won't automatically adjust to selection area."
+      }
+    ]
+  },
+  {
     "version": "1.21.rc3",
     "changes": [
       {

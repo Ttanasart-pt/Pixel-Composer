@@ -344,6 +344,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		
 		tool_attribute.channel       = [ true, true, true, true ];
 		tool_attribute.mirror        = [ false, false, false ];
+		tool_attribute.mirror_pos    = [.5,.5];
 		tool_attribute.drawLayer     = 0;
 		tool_attribute.pickColor     = c_white;
 		tool_attribute.stamp         = false;
@@ -367,6 +368,13 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		tool_attribute.pattern_pos   = [ 0, 0 ];
 		tool_attribute.pattern_mod   = 4;
 
+		tool_mirror_hovering = false;
+		tool_mirror_dragging = undefined;
+		tool_mirror_dragg_sx = undefined;
+		tool_mirror_dragg_sy = undefined;
+		tool_mirror_dragg_mx = undefined;
+		tool_mirror_dragg_my = undefined;
+		
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		
 		fill_pattern_data = [ "Solid", 
@@ -412,8 +420,11 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 									.setTooltips( [ "Draw on top", "Draw behind", "Draw inside" ] )
 									.setCollapse(false);
 		
-		tool_mirror_edit    = new checkBoxGroup( THEME.canvas_mirror, function(v,i) /*=>*/ { tool_attribute.mirror[i] = v; })
-									.setTooltips( [ "Mirror diagonal", "Mirror", "Mirror" ] );
+		tool_mirror_edit    = new checkBoxGroup( THEME.canvas_mirror, function(v,i) /*=>*/ { tool_attribute.mirror[i]  = v; }).setTooltips( [ "Mirror diagonal", "Mirror", "Mirror" ] );
+		tool_mirror_reset   = button( function() /*=>*/ { tool_attribute.mirror_pos = [.5,.5]; })
+									.setBaseSprite(noone)
+									.setIcon(THEME.refresh_icon, 0, COLORS._main_icon).iconPad()
+									.setTooltip(__txt("Reset Mirror"))
 		
 		tool_size_edit      = textBox_Number(function(v) /*=>*/ { tool_attribute.size = max(1, round(v)); })
 									.setSlideType(true)
@@ -502,14 +513,14 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			new NodeTool( "Selection",	[ THEME.canvas_tools_selection_rectangle, THEME.canvas_tools_selection_circle, THEME.canvas_tools_freeform_selection, THEME.canvas_tools_selection_brush ])
 				.setSetting(tool_channel)
 				.setSetting(tool_layer)
-				.setSetting(tool_mirror)
+				.setSetting(tool_mirror).addWidget(tool_mirror_reset)
 				.setToolObject([ tool_sel_rectangle, tool_sel_ellipse, tool_sel_freeform, tool_sel_brush ]),
 			
 			new NodeTool( "Magic Selection", THEME.canvas_tools_magic_selection )
 				.setSetting(tool_channel)
 				.setSettings(tool_fill_settings)
 				.setSetting(tool_layer)
-				.setSetting(tool_mirror)
+				.setSetting(tool_mirror).addWidget(tool_mirror_reset)
 				.setToolObject(new canvas_tool_selection_magic(tool_attribute).setNode(self)),
 			
 			new NodeTool( "Pencil",		  THEME.canvas_tools_pencil)
@@ -519,28 +530,28 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 				.setSetting(tool_pixelp)
 				.setSetting(tool_bg_stamp)
 				.setSetting(tool_layer)
-				.setSetting(tool_mirror)
+				.setSetting(tool_mirror).addWidget(tool_mirror_reset)
 				.setToolObject(tool_brush),
 			
 			new NodeTool( "Eraser",		  THEME.canvas_tools_eraser)
 				.setSetting(tool_channel)
 				.setSetting(tool_size)
 				.setSetting(tool_layer)
-				.setSetting(tool_mirror)
+				.setSetting(tool_mirror).addWidget(tool_mirror_reset)
 				.setToolObject(tool_eraser),
 					
 			new NodeTool( "Rectangle",	[ THEME.canvas_tools_rect,  THEME.canvas_tools_rect_fill  ])
 				.setSetting(tool_channel)
 				.setSetting(tool_size)
 				.setSetting(tool_layer)
-				.setSetting(tool_mirror)
+				.setSetting(tool_mirror).addWidget(tool_mirror_reset)
 				.setToolObject(tool_rectangle),
 					
 			new NodeTool( "Ellipse",	[ THEME.canvas_tools_ellip, THEME.canvas_tools_ellip_fill ])
 				.setSetting(tool_channel)
 				.setSetting(tool_size)
 				.setSetting(tool_layer)
-				.setSetting(tool_mirror)
+				.setSetting(tool_mirror).addWidget(tool_mirror_reset)
 				.setToolObject(tool_ellipse),
 			
 			new NodeTool( "Iso Cube",	[ THEME.canvas_tools_iso_cube, THEME.canvas_tools_iso_cube_wire, THEME.canvas_tools_iso_cube_fill ])
@@ -548,14 +559,14 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 				.setSetting(tool_size)
 				.setSetting(tool_iso_settings)
 				.setSetting(tool_layer)
-				.setSetting(tool_mirror)
+				.setSetting(tool_mirror).addWidget(tool_mirror_reset)
 				.setToolObject(tool_iso_cube),
 			
 			new NodeTool( "Curve",		  THEME.canvas_tool_curve_icon)
 				.setSetting(tool_channel)
 				.setSetting(tool_size)
 				.setSetting(tool_layer)
-				.setSetting(tool_mirror)
+				.setSetting(tool_mirror).addWidget(tool_mirror_reset)
 				.setSetting([ "", tool_curve_buttons, 0, tool_attribute ])
 				.setToolObject(tool_curve_bez),
 			
@@ -563,7 +574,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 				.setSetting(tool_channel)
 				.setSetting(tool_size)
 				.setSetting(tool_layer)
-				.setSetting(tool_mirror)
+				.setSetting(tool_mirror).addWidget(tool_mirror_reset)
 				.setToolObject(tool_freeform),
 					
 			new NodeTool( "Fill",		  THEME.canvas_tools_bucket)
@@ -1023,16 +1034,17 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			temp_surface[0] = surface_verify(temp_surface[0], _spw, _sph);
 			_tmp = temp_surface[0];
 			
-			surface_set_shader(_tmp, noone, true, BLEND.over);
+			surface_set_shader(_tmp, sh_canvas_apply_draw_canvas, true, BLEND.over);
+				shader_set_2( "dimension",  _dim );
+				shader_set_i( "useMask",    true );
+				shader_set_s( "mask",       selection.selection_mask );
+				
+				shader_set_i( "mirrorDiag", tool_attribute.mirror[0]  );
+				shader_set_i( "mirrorX",    tool_attribute.mirror[1]  );
+				shader_set_i( "mirrorY",    tool_attribute.mirror[2]  );
+				shader_set_2( "mirrorPos",  tool_attribute.mirror_pos );
+				
 				draw_surface(drawing_surface, -_spx, -_spy);
-				
-				BLEND_ALPHA
-					if(tool_attribute.mirror[1]) draw_surface_ext_safe(drawing_surface, _spx * 2 + _spw - _spx, -_spy, -1, 1);
-					if(tool_attribute.mirror[2]) draw_surface_ext_safe(drawing_surface, -_spx, _spy * 2 + _sph - _spy, 1, -1);
-					if(tool_attribute.mirror[1] && tool_attribute.mirror[2]) draw_surface_ext_safe(drawing_surface, _spx * 2 + _spw - _spx, _spy * 2 + _sph - _spy, -1, -1);
-				
-				BLEND_MULTIPLY
-					draw_surface_safe(selection.selection_mask);
 			surface_reset_shader();
 			
 			_can = selection.selection_surface;
@@ -1040,20 +1052,16 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		} else {
 			_tmp = surface_create(_dim[0], _dim[1]);
 			
-			surface_set_shader(_tmp, noone, true, BLEND.over);
-				draw_surface_safe(drawing_surface);
+			surface_set_shader(_tmp, sh_canvas_apply_draw_canvas, true, BLEND.over);
+				shader_set_2( "dimension",  _dim  );
+				shader_set_i( "useMask",    false );
 				
-				BLEND_ALPHA
-					if(tool_attribute.mirror[0] == false) {
-						if(tool_attribute.mirror[1]) draw_surface_ext_safe(drawing_surface, _dim[0], 0, -1, 1);
-						if(tool_attribute.mirror[2]) draw_surface_ext_safe(drawing_surface, 0, _dim[1], 1, -1);
-						if(tool_attribute.mirror[1] && tool_attribute.mirror[2]) draw_surface_ext_safe(drawing_surface, _dim[0], _dim[1], -1, -1);
-						
-					} else {
-						if(tool_attribute.mirror[1]) draw_surface_ext_safe(drawing_surface, _dim[0], _dim[1], -1, 1, -90);
-						if(tool_attribute.mirror[2]) draw_surface_ext_safe(drawing_surface,       0,       0, -1, 1,  90);
-						if(tool_attribute.mirror[1] && tool_attribute.mirror[2]) draw_surface_ext_safe(drawing_surface, _dim[0], _dim[1], 1, 1, 180);
-					}
+				shader_set_i( "mirrorDiag", tool_attribute.mirror[0]  );
+				shader_set_i( "mirrorX",    tool_attribute.mirror[1]  );
+				shader_set_i( "mirrorY",    tool_attribute.mirror[2]  );
+				shader_set_2( "mirrorPos",  tool_attribute.mirror_pos );
+				
+				draw_surface_safe(drawing_surface);
 			surface_reset_shader();
 		}
 		
@@ -1266,8 +1274,15 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		preview_surface_sample = isNotUsingTool();
 		
 		#region parameters
+			var ihover  = hover;
+			var iactive = active;
+			if(tool_mirror_hovering) {
+				hover  = false;
+				active = false;
+			}
+			
 			var hovering = isUsingTool();
-			var _panel   = _params[$ "panel"] ?? noone;
+			var _panel   = _params[$ "panel"] ?? PANEL_PREVIEW;
 			var _dim     = attributes.dimension;
 			var __3d     = _panel && _panel.d3_active == NODE_3D.polygon;
 			
@@ -1464,30 +1479,17 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 				var mry  = tool_attribute.mirror[2];
 				var alp  = _color_get_alpha(CURRENT_COLOR);
 				
-				draw_surface_ext_safe(dsrf, 0, 0, 1, 1, 0, c_white, alp);
-				
-				if(selection.is_selected) {
-					var _spx = selection.selection_position[0];
-					var _spy = selection.selection_position[1];
-					var _spw = selection.selection_size[0];
-					var _sph = selection.selection_size[1];
+				shader_set(sh_canvas_apply_draw_canvas);
+					shader_set_2( "dimension",  _dim  );
+					shader_set_i( "useMask",    false );
 					
-					if(mrx)        draw_surface_ext_safe(dsrf, _spx * 2 + _spw,               0, -1,  1, 0, c_white, alp);
-					if(mry)        draw_surface_ext_safe(dsrf,               0, _spy * 2 + _sph,  1, -1, 0, c_white, alp);
-					if(mrx && mry) draw_surface_ext_safe(dsrf, _spx * 2 + _spw, _spy * 2 + _sph, -1, -1, 0, c_white, alp);
+					shader_set_i( "mirrorDiag", tool_attribute.mirror[0]  );
+					shader_set_i( "mirrorX",    tool_attribute.mirror[1]  );
+					shader_set_i( "mirrorY",    tool_attribute.mirror[2]  );
+					shader_set_2( "mirrorPos",  tool_attribute.mirror_pos );
 					
-				} else {
-					if(tool_attribute.mirror[0] == false) {
-						if(mrx)        draw_surface_ext_safe(dsrf, _dim[0],       0, -1,  1, 0, c_white, alp);
-						if(mry)        draw_surface_ext_safe(dsrf,       0, _dim[1],  1, -1, 0, c_white, alp);
-						if(mrx && mry) draw_surface_ext_safe(dsrf, _dim[0], _dim[1], -1, -1, 0, c_white, alp);
-						
-					} else {
-						if(mrx)        draw_surface_ext_safe(dsrf, _dim[0], _dim[1], -1, 1, -90, c_white, alp);
-						if(mry)        draw_surface_ext_safe(dsrf,       0,       0, -1, 1,  90, c_white, alp);
-						if(mrx && mry) draw_surface_ext_safe(dsrf, _dim[0], _dim[1],  1, 1, 180, c_white, alp);
-					}
-				}
+					draw_surface_ext_safe(dsrf, 0, 0, 1, 1, 0, c_white, alp);
+				shader_reset();
 				
 				draw_set_color(CURRENT_COLOR);
 				
@@ -1562,40 +1564,118 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			drawToolOutline();
 			
 			draw_set_color(COLORS._main_accent);
-			if(selection.is_selected) {
-				var _spx = selection.selection_position[0];
-				var _spy = selection.selection_position[1];
-				var _spw = selection.selection_size[0];
-				var _sph = selection.selection_size[1];
+			
+			var bbox = _panel.getPreviewArea();
+			
+			var sw = _dim[0] * _s;
+			var sh = _dim[1] * _s;
+			
+			var _xc = _x + sw * tool_attribute.mirror_pos[0];
+			var _yc = _y + sh * tool_attribute.mirror_pos[1];
+			
+			tool_mirror_hovering = false;
+			
+			if(tool_attribute.mirror[0]) { // diag
+				if(tool_attribute.mirror[1]) {
+					var _dir = point_direction(_dim[0]/2, _dim[1]/2, _dim[0], _dim[1]);
+					
+					var _rx0 = _xc + lengthdir_x(9999, _dir);
+					var _ry0 = _yc + lengthdir_y(9999, _dir);
+					
+					var _rx1 = _xc - lengthdir_x(9999, _dir);
+					var _ry1 = _yc - lengthdir_y(9999, _dir);
 				
-				var _x0 = _x + _spx * _s;
-				var _x1 = _x + (_spx + _spw) * _s;
-				var _xc = _x + (_spx + _spw / 2) * _s;
+					draw_line(_rx0, _ry1, _rx1, _ry0);
+				}
 				
-				var _y0 = _y + _spy * _s;
-				var _y1 = _y + (_spy + _sph) * _s;
-				var _yc = _y + (_spy + _sph / 2) * _s;
+				if(tool_attribute.mirror[2]) {
+					var _dir = point_direction(_dim[0]/2, _dim[1]/2, _dim[0], _dim[1]);
+					
+					var _lx0 = _xc + lengthdir_x(9999, _dir);
+					var _ly0 = _yc + lengthdir_y(9999, _dir);
+					
+					var _lx1 = _xc - lengthdir_x(9999, _dir);
+					var _ly1 = _yc - lengthdir_y(9999, _dir);
+					
+					draw_line(_lx0, _ly0, _lx1, _ly1);
+				}
 				
-				if(tool_attribute.mirror[1]) draw_line(_xc, _y0, _xc, _y1);
-				if(tool_attribute.mirror[2]) draw_line(_x0, _yc, _x1, _yc);
+				if(tool_attribute.mirror[1] || tool_attribute.mirror[2]) {
+					var hv = ihover && point_in_circle(_mx, _my, _xc, _yc, ui(10));
+					draw_anchor(hv || tool_mirror_dragging == 1, _xc, _yc, ui(10), 2);
+					tool_mirror_hovering |= hv;
+					
+					if(tool_mirror_dragging == undefined && hv && mouse_lpress(iactive)) {
+						tool_mirror_dragging = 1;
+						tool_mirror_dragg_sx = tool_attribute.mirror_pos[0];
+						tool_mirror_dragg_sy = tool_attribute.mirror_pos[1];
+						tool_mirror_dragg_mx = _mx;
+						tool_mirror_dragg_my = _my;
+					}
+				}
+				
+				if(tool_mirror_dragging == 1) {
+					tool_mirror_hovering = true;
+					tool_attribute.mirror_pos[0] = tool_mirror_dragg_sx + (_mx - tool_mirror_dragg_mx) / sw;
+					tool_attribute.mirror_pos[1] = tool_mirror_dragg_sy + (_my - tool_mirror_dragg_my) / sh;
+					if(mouse_lrelease()) tool_mirror_dragging = undefined;
+				}
 				
 			} else {
-				var _x0 = _x;
-				var _x1 = _x + _dim[0] * _s;
-				var _xc = _x + _dim[0] / 2 * _s;
-				
-				var _y0 = _y;
-				var _y1 = _y + _dim[1] * _s;
-				var _yc = _y + _dim[1] / 2 * _s;
-				
-				if(tool_attribute.mirror[0] == false) {
-					if(tool_attribute.mirror[1]) draw_line(_xc, _y0, _xc, _y1);
-					if(tool_attribute.mirror[2]) draw_line(_x0, _yc, _x1, _yc);
 					
-				} else {
-					if(tool_attribute.mirror[1]) draw_line(_x0, _y1, _x1, _y0);
-					if(tool_attribute.mirror[2]) draw_line(_x0, _y0, _x1, _y1);
+				var _x0 = bbox[0];
+				var _y0 = bbox[1];
+				
+				var _x1 = bbox[2];
+				var _y1 = bbox[3];
+			
+				var hx = _x0 + ui(12);
+				var hy = _y0 + ui(12);
+				
+				if(tool_attribute.mirror[1]) {
+					draw_line(_xc, _y0, _xc, _y1);
+					
+					var hv = ihover && point_in_circle(_mx, _my, _xc, hy, ui(10));
+					draw_anchor(hv || tool_mirror_dragging == 1, _xc, hy, ui(10), 2);
+					tool_mirror_hovering |= hv;
+					
+					if(tool_mirror_dragging == undefined && hv && mouse_lpress(iactive)) {
+						tool_mirror_dragging = 1;
+						tool_mirror_dragg_sx = tool_attribute.mirror_pos[0];
+						tool_mirror_dragg_sy = tool_attribute.mirror_pos[1];
+						tool_mirror_dragg_mx = _mx;
+						tool_mirror_dragg_my = _my;
+					}
 				}
+				
+				if(tool_attribute.mirror[2]) {
+					draw_line(_x0, _yc, _x1, _yc);
+					
+					var hv = ihover && point_in_circle(_mx, _my, hx, _yc, ui(10));
+					draw_anchor(hv, hx, _yc, ui(10), 2);
+					tool_mirror_hovering |= hv;
+					
+					if(tool_mirror_dragging == undefined && hv && mouse_lpress(iactive)) {
+						tool_mirror_dragging = 2;
+						tool_mirror_dragg_sx = tool_attribute.mirror_pos[0];
+						tool_mirror_dragg_sy = tool_attribute.mirror_pos[1];
+						tool_mirror_dragg_mx = _mx;
+						tool_mirror_dragg_my = _my;
+					}
+				}
+				
+				if(tool_mirror_dragging == 1) {
+					tool_mirror_hovering = true;
+					tool_attribute.mirror_pos[0] = tool_mirror_dragg_sx + (_mx - tool_mirror_dragg_mx) / sw;
+					if(mouse_lrelease()) tool_mirror_dragging = undefined;
+				}
+				
+				if(tool_mirror_dragging == 2) {
+					tool_mirror_hovering = true;
+					tool_attribute.mirror_pos[1] = tool_mirror_dragg_sy + (_my - tool_mirror_dragg_my) / sh;
+					if(mouse_lrelease()) tool_mirror_dragging = undefined;
+				}
+				
 			}
 			
 			if(_tool) _tool.drawPostOverlay(hover, active, _x, _y, _s, _mx, _my);

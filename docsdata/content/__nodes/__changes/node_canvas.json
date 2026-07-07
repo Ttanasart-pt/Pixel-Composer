@@ -6,6 +6,11 @@
         "date": "2026-07-07T07:43:51.474Z",
         "node": "Canvas",
         "commit": "**Canvas**: Add brush border when resizing."
+      },
+      {
+        "date": "2026-07-07T09:53:39.522Z",
+        "node": "Canvas] Mirror position is now adjustable.  - [Canvas",
+        "commit": "**Canvas] Mirror position is now adjustable.  - [Canvas**: Mirror now won't automatically adjust to selection area."
       }
     ]
   },

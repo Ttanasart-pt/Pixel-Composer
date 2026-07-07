@@ -109,7 +109,7 @@ function buttonClass(_onClick, _icon = noone) : widget() constructor {
 		var b = colorMultiply(blend, _blend);
 		
 		if(hovering) {
-			draw_sprite_stretched_ext(spr, toggled? 2 : 1, _x, _y, _w, _h, b, 1);
+			if(spr) draw_sprite_stretched_ext(spr, toggled? 2 : 1, _x, _y, _w, _h, b, 1);
 			
 			if(!activate_on_press && pressed && mouse_lrelease(active))
 				trigger();
@@ -120,8 +120,8 @@ function buttonClass(_onClick, _icon = noone) : widget() constructor {
 			}
 				
 			if(mouse_lclick(active)) {
-				draw_sprite_stretched_ext(spr, 2, _x, _y, _w, _h, b, 1);
-				draw_sprite_stretched_ext(spr, 3, _x, _y, _w, _h, COLORS._main_accent, 1);
+				if(spr) draw_sprite_stretched_ext(spr, 2, _x, _y, _w, _h, b, 1);
+				if(spr) draw_sprite_stretched_ext(spr, 3, _x, _y, _w, _h, COLORS._main_accent, 1);
 			}
 			if(tooltip != "") {
 				var ttip = is_method(tooltip)? tooltip() : tooltip;
@@ -138,7 +138,7 @@ function buttonClass(_onClick, _icon = noone) : widget() constructor {
 			if(onWDown != undefined && key_mod_press(SHIFT) && MOUSE_WHEEL < 0) onWDown();
 
 		} else {
-			draw_sprite_stretched_ext(spr, toggled? 2 : 0, _x, _y, _w, _h, b, 1);
+			if(spr) draw_sprite_stretched_ext(spr, toggled? 2 : 0, _x, _y, _w, _h, b, 1);
 			if(mouse_lpress()) deactivate();
 		}
 		

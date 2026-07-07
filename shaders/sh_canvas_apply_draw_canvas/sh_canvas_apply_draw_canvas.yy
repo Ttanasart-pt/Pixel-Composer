@@ -1,0 +1,12 @@
+{
+  "$GMShader":"",
+  "%Name":"sh_canvas_apply_draw_canvas",
+  "name":"sh_canvas_apply_draw_canvas",
+  "parent":{
+    "name":"canvas_shaders",
+    "path":"folders/nodes/data/canvas/canvas_shaders.yy",
+  },
+  "resourceType":"GMShader",
+  "resourceVersion":"2.0",
+  "type":1,
+}
