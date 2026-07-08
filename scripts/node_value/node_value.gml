@@ -472,6 +472,9 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		return self;
 	}
 	
+	static useInstance = function() { return node.instanceBase && value_from == noone; } 
+	static getInstance = function() { return node.instanceBase.inputs[index];          } 
+	
 	////- NAME
 	
 	static getName = function() /*=>*/ {return name_custom? name : __txt_junction_name(instanceof(node), connect_type, lIndex, name)};
@@ -955,7 +958,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	static setAnimable = function(_anim = false) { animable = _anim; return self; } 
 	
 	static isAnimable = function() {
-		if(instanceBase != undefined) return instanceBase.isAnimable();
+		if(useInstance()) return getInstance().isAnimable();
 		
 		if(type == VALUE_TYPE.PCXnode)				 return false;
 		if(display_type == VALUE_DISPLAY.text_array) return false;
@@ -1017,12 +1020,12 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		if(onSetAnim != undefined) onSetAnim();
 	}
 	
-	static getAnim = function() { return instanceBase != undefined? instanceBase.is_anim : is_anim; }
+	static getAnim = function() { return useInstance()? getInstance().is_anim : is_anim; }
 	
 	static isAnimated = function() {
 		if(value_from_loop && value_from_loop.loop_active) return true;
-		if(value_from != noone)       return value_from.node.isAnimated();
-		if(instanceBase != undefined) return instanceBase.isAnimated();
+		if(value_from != noone) return value_from.node.isAnimated();
+		if(useInstance())       return getInstance().isAnimated();
 		return is_anim;
 	}
 	
@@ -1654,8 +1657,8 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		INLINE
 		
 		if(value_from_loop && value_from_loop.loop_active) return true;
-		if(value_from != noone)       return false;
-		if(instanceBase != undefined) return instanceBase.isActiveDynamic();
+		if(value_from != noone) return false;
+		if(useInstance())       return getInstance().isActiveDynamic();
 		
 		if(expUse) {
 			if(!is_struct(expTree)) return false;
@@ -1678,10 +1681,10 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		if(force_dynamic)              { force_dynamic = false;      return true; }
 		if(value_from != __value_from) { __value_from  = value_from; return true; }
 		
+		if(useInstance())                                  return getInstance().isDynamic();
 		if(!node.project.animator.is_playing)              return true;
 		if(value_from_loop && value_from_loop.loop_active) return true;
 		if(value_from != noone)                            return true;
-		if(instanceBase != undefined)                      return instanceBase.isDynamic();
 		
 		if(expUse) {
 			if(!is_struct(expTree)) return false;
@@ -1861,7 +1864,12 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		else if(value_from && value_from != self)
 			value_from.getValueRecursive(arr, _time);
 			
-		else {
+		else if(useInstance()) {
+			getInstance().getValueRecursive(arr);
+			arr[1] = self;
+			return;
+			
+		} else {
 			arr[0] = __getAnimValue(_time);
 			arr[1] = self;
 		}
@@ -1933,6 +1941,8 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	show_val      = [];
 	show_val_curr = undefined;
 	static showValue = function() {
+		if(useInstance()) return getInstance().showValue();
+		
 		var val = 0;
 		
 		if(value_from != noone || expUse) 

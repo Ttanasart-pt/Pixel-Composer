@@ -22,6 +22,34 @@ function draw_rectangle_dashed(x0, y0, x1, y1, th = 1, dash = 8, shift = 0) {
 	shader_reset();
 }
 
+function draw_rectangle_dashed_ext(x0, y0, x1, y1, rot, th = 1, dash = 8, shift = 0) {
+	var cx = (x0 + x1) / 2;
+	var cy = (y0 + y1) / 2;
+	
+	shader_set(sh_ui_line_dashed);
+		shader_set_2( "worldPos",   [x0, y0]);
+		shader_set_f( "dash",       dash);
+		shader_set_f( "dashShift",  shift);
+		
+		matrix_set(matrix_world, matrix_compose(
+			matrix_transform_2d( -cx, -cy,   0 ),
+			matrix_transform_2d(   0,   0, rot ),
+			matrix_transform_2d(  cx,  cy,   0 ),
+		));
+		
+		shader_set_f( "direction",  degtorad(0));
+		draw_line_width(x0 - th / 2, y0, x1 + th / 2, y0, th);
+		draw_line_width(x0 - th / 2, y1, x1 + th / 2, y1, th);
+		
+		shader_set_f( "direction",  degtorad(90));
+		draw_line_width(x0, y0 - th / 2, x0, y1 + th / 2, th);
+		draw_line_width(x1, y0 - th / 2, x1, y1 + th / 2, th);
+		
+		matrix_set(matrix_world, MATRIX_IDENTITY);
+		
+	shader_reset();
+}
+
 function draw_rectangle_dashed_bg(x0, y0, x1, y1, th = 1, dash = 8, shift = 0, _bg = c_black, _fg = c_white) {
 	draw_set_color(_bg);
 	draw_line_width(x0 - th / 2, y0, x1 + th / 2, y0, th);

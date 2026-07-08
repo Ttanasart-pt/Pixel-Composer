@@ -1332,17 +1332,19 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	
 	static isAnimated = function(frame = CURRENT_FRAME) {
 		if(update_on_frame) return true;
-		return array_any(inputs, function(inp) /*=>*/ {return inp.getAnim()});
+		if(instanceBase)    return instanceBase.isAnimated();
+		
+		return array_any(inputs, function(inp,i) /*=>*/ {return inp.getAnim()});
 	}
 	
 	static isActiveDynamic = function(frame = CURRENT_FRAME) {
-		if(update_on_frame)           return true;
-		if(!rendered)                 return true;
-		if(instanceBase != undefined) return true;
+		if(update_on_frame) return true;
+		if(!rendered)       return true;
+		if(instanceBase)    return true;
 		
 		force_requeue = false;
 		__temp_frame  = frame;
-		return array_any(inputs, function(inp) /*=>*/ {return inp.isActiveDynamic(__temp_frame)});
+		return array_any(inputs, function(inp,i) /*=>*/ {return inp.isActiveDynamic(__temp_frame)});
 	}
 	
 	static triggerRender = function(resetSelf = true) {
@@ -1363,6 +1365,9 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			
 		} else if(!array_empty(inputs))
 			array_foreach(inputs, function(n,i) /*=>*/ { n.__init_dynamic = true; return true; })
+		
+		for( var i = 0, n = array_length(instanceChild); i < n; i++ ) 
+			instanceChild[i].triggerRender(resetSelf);
 		
 		LOG_BLOCK_END
 	}
@@ -2064,7 +2069,11 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		if(FILTER_ANIMATION && !isAnimated()) 
 			aa = .25;
 		
-		if(icon) {
+		var ic = icon;
+		if(instanceBase) 
+			ic = THEME.node_instance_icon;
+		
+		if(ic) {
 			var _icx = tx + 6 * _s;
 			var _ics = _s / THEME_SCALE * .8;
 			var _icc = icon_blend ?? getColor();
@@ -2073,8 +2082,9 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			
 			BLEND_ALPHA_MULP
 			gpu_set_texfilter(true);
-			draw_sprite_ext(icon, 0, _icx, ty, _ics, _ics, 0, _icc, .75 * aa);
-			if(sprite_get_number(icon) > 1) draw_sprite_ext(icon, 1, _icx, ty, _ics, _ics, 0, c_white, .8);
+			draw_sprite_ext(ic, 0, _icx, ty, _ics, _ics, 0, _icc, .75 * aa);
+			if(sprite_get_number(ic) > 1) 
+				draw_sprite_ext(ic, 1, _icx, ty, _ics, _ics, 0, c_white, .8);
 			BLEND_NORMAL
 			gpu_set_texfilter(false);
 			
@@ -2953,7 +2963,20 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	
 	////- INSTANCE
 	
-	static setInstance = function(n) /*=>*/ { instanceBase = n.instanceBase ?? n; return self; }
+	static setInstance = function(n = undefined) /*=>*/ { 
+		if(instanceBase) array_remove(instanceBase.instanceChild, self);
+		
+		if(n == undefined) {
+			instanceBase = n;
+			return;
+		}
+		
+		instanceBase = n.instanceBase ?? n; 
+		if(instanceBase) 
+			array_push(instanceBase.instanceChild, self);
+			
+		return self; 
+	}
 	
 	////- CACHE
 	
@@ -3434,9 +3457,10 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 				else throw($"Group load failed. Node ID {load_group} is not a group.");
 				
 			} else throw($"Group load failed. Can't find node ID {load_group}");
-			
-			instanceBase = ds_map_exists(project.nodeMap, load_inst)? project.nodeMap[? load_inst] : undefined;
 		}
+		
+		if(ds_map_exists(project.nodeMap, load_inst))
+			setInstance(project.nodeMap[? load_inst])
 		
 		onLoadGroup();
 	}

@@ -190,7 +190,7 @@
         registerFunction(g, "Delete (merge)",        vk_delete, n, panel_graph_delete_merge  ).setMenu("graph_delete_merge",    THEME.cross)
     
         registerFunction(g, "Duplicate",             "D", c, panel_graph_duplicate           ).setMenu("graph_duplicate",       THEME.duplicate)
-        registerFunction(g, "Create Instance",       "D", a, panel_graph_instance            ).setMenu("graph_instance",        THEME.duplicate)
+        registerFunction(g, "Instance",              "D", a, panel_graph_instance            ).setMenu("graph_instance",        THEME.instance_icon)
         registerFunction(g, "Copy",                  "C", c, panel_graph_copy                ).setMenu("graph_copy",            THEME.copy)
         registerFunction(g, "Paste",                 "V", c, panel_graph_paste               ).setMenu("graph_paste",           THEME.paste)
         registerFunction(g, "Mass Connect",          "",  n, panel_graph_mass_connect        ).setMenu("graph_mass_connect",    THEME.obj_auto_organize)
@@ -1129,8 +1129,9 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
 	    	"graph_rename", 
 	    	"graph_delete_merge", 
 	    	"graph_delete_break", 
-	    	"graph_duplicate", 
 	    	"graph_copy",
+	    	"graph_duplicate", 
+	    	"graph_instance", 
 	    	-1, 
 	    	"graph_replace_node", 
 	    	"graph_add_Node_Transform", 
@@ -4619,10 +4620,12 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
     }
 
     function doInstance() {
-        var node = getFocusingNode();
-        if(!is(node, Node_Group)) return;
+        var node  = getFocusingNode();
+    	var _cons = asset_get_index(instanceof(node));
+    	if(!_cons) return;
     	
-        var _nodeNew  = new Node_Group(0, 0, PANEL_GRAPH.getCurrentContext()).setInstance(node);
+        var _nodeNew  = new _cons(0, 0, PANEL_GRAPH.getCurrentContext())
+        	.setInstance(node);
     	
         nodes_selecting = [_nodeNew];
         node_dragging = _nodeNew;

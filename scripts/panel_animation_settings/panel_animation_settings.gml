@@ -1,11 +1,14 @@
 function Panel_Animation_Setting() : Panel_Linear_Setting() constructor {
 	title = __txt("animation_settings", "Animation Settings");
 	w = ui(380);
+
+	hotkey_play   = find_hotkey("", "Play/Pause");
+	hotkey_resume = find_hotkey("", "Resume");
 	
 	properties = [
 		
 		new __Panel_Linear_Setting_Item(
-			__txt("Show Frames"),
+			__txt("Show Frames Preview"),
 			new checkBox(function() /*=>*/ { PANEL_ANIMATION.timeline_frame = !PANEL_ANIMATION.timeline_frame; }),
 			function( ) /*=>*/   {return PANEL_ANIMATION.timeline_frame},
 			function(v) /*=>*/ { PANEL_ANIMATION.timeline_frame = v; },
@@ -71,6 +74,29 @@ function Panel_Animation_Setting() : Panel_Linear_Setting() constructor {
 			function( ) /*=>*/   {return PANEL_ANIMATION.animation_analyze},
 			function(v) /*=>*/ { PANEL_ANIMATION.animation_analyze = v; },
 			false,
+		),
+		
+		-1,
+		
+		new __Panel_Linear_Setting_Item(
+			__txt("Spacebar Action"),
+			new buttonGroup( [ "Stop", "Resume", "..." ], 
+				function(i) /*=>*/ {
+					switch(i) {
+						case 0 : hotkey_play.set(vk_space, MOD_KEY.none);
+							     hotkey_resume.set(vk_space, MOD_KEY.shift); break;
+						
+						case 1 : hotkey_play.set(vk_space, MOD_KEY.shift);
+							     hotkey_resume.set(vk_space, MOD_KEY.none);  break;
+					}
+					PREF_SAVE();
+				}),
+					
+			function() /*=>*/ {
+				if(hotkey_play.getKeyName()   == "Space") return 0;
+				if(hotkey_resume.getKeyName() == "Space") return 1;
+				return 2;
+			},
 		),
 		
 	];

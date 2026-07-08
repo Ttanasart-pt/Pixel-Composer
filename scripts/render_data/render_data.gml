@@ -83,7 +83,7 @@ enum RENDER_TYPE {
 					var _to = _node.outputs[j].getJunctionTo();
 					
 					if(_global) _isLeaf = _isLeaf &&  array_empty(_to);
-					else        _isLeaf = _isLeaf && !array_any(_to, function(_val) /*=>*/ {return array_exists(__temp_nodes, _val.node)});
+					else        _isLeaf = _isLeaf && !array_any(_to, function(_val,i) /*=>*/ {return array_exists(__temp_nodes, _val.node)});
 					
 					if(!_isLeaf) break;
 				}
@@ -121,7 +121,7 @@ enum RENDER_TYPE {
 		var amo = array_length(_project.allNodes);
 		var _t  = get_timer();
 		
-		array_foreach(_project.allNodes, function(n) /*=>*/ { if(is(n, Node_Collection)) n.refreshNodes(); });
+		array_foreach(_project.allNodes, function(n,i) /*=>*/ { if(is(n, Node_Collection)) n.refreshNodes(); return true; });
 		
 		// print("========== NodeTopoSort ==========")
 		_project.nodeTopo = [];
@@ -129,7 +129,7 @@ enum RENDER_TYPE {
 		_project.nodeTopo = array_unique(_project.nodeTopo);
 		// print($"Node TOPO:\n{_project.nodeTopo}")
 		
-		array_foreach(_project.allNodes, function(n) /*=>*/ { if(is(n, Node_Group)) n.updateInstance(); });
+		array_foreach(_project.allNodes, function(n,i) /*=>*/ { if(is(n, Node_Group)) n.updateInstance(); return true; });
 		
 		_project.nodeTopoID = UUID_generate();
 		// print($"+++++++ Topo Sort Completed: {array_length(_project.nodeTopo)}/{amo} nodes sorted in {(get_timer() - _t) / 1000} ms +++++++");
@@ -433,7 +433,7 @@ enum RENDER_TYPE {
 	}
 	
 	function __renderListReset(arr) { 
-		array_foreach(arr, function(a) /*=>*/ { a.setRenderStatus(false); if(has(a, "nodes")) __renderListReset(a.nodes); });
+		array_foreach(arr, function(a,i) /*=>*/ { a.setRenderStatus(false); if(has(a, "nodes")) __renderListReset(a.nodes); return true; });
 	}
 	
 	function RenderList(arr) {

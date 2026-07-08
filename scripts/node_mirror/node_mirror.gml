@@ -1,6 +1,8 @@
 #region
 	FN_NODE_CONTEXT_INVOKE {
 		addHotkey("Node_Mirror", "Angle > Rotate CCW", "R", MOD_KEY.none, function() /*=>*/ { GRAPH_FOCUS _n.inputs[2].setValue((_n.inputs[2].getValue() + 90) % 360); });
+		addHotkey("Node_Mirror", "Flip > Toggle",      "F", MOD_KEY.none, function() /*=>*/ { GRAPH_FOCUS _n.inputs[5].setValue(!_n.inputs[5].getValue());             });
+		addHotkey("Node_Mirror", "Both Side > Toggle", "S", MOD_KEY.none, function() /*=>*/ { GRAPH_FOCUS _n.inputs[4].setValue(!_n.inputs[4].getValue());             });
 	});
 #endregion
 

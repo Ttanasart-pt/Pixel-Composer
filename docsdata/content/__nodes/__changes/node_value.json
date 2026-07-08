@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.6.006",
+    "changes": [
+      {
+        "date": "2026-07-08T02:54:57.068Z",
+        "node": "",
+        "commit": "Add node-level instancing."
+      }
+    ]
+  },
+  {
     "version": "1.21.6.003",
     "changes": [
       {

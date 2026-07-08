@@ -308,7 +308,7 @@ function Node_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 		
 		if(_posMode == 1) {
 			draw_set_color(COLORS._main_accent);
-			draw_rectangle_dashed(_x0, _y0, _x1, _y1);
+			draw_rectangle_dashed_ext(_x0, _y0, _x1, _y1, _rot);
 		}
 		
 		switch(_shape) {
@@ -577,18 +577,24 @@ function Node_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 		
 		if(inputs[9].show_in_inspector) { // corner
 			var aa = -45;
-			var ar = 90;
 			
-				 if(_sca[0] < 0 && _sca[1] < 0) { aa =  135; ar = -90; }
-			else if(_sca[0] < 0 && _sca[1] > 0) { aa = -135; ar =   0; }
-			else if(_sca[0] > 0 && _sca[1] < 0) { aa =   45; ar = 180; }
+				 if(_sca[0] < 0 && _sca[1] < 0) { aa =  135; }
+			else if(_sca[0] < 0 && _sca[1] > 0) { aa = -135; }
+			else if(_sca[0] > 0 && _sca[1] < 0) { aa =   45; }
+			
+			aa += _rot;
+			
+			var dir = point_direction(_px, _py, _x0, _y0);
+			var dis = point_distance( _px, _py, _x0, _y0);
+			var crx = _px + lengthdir_x(dis, dir + _rot);
+			var cry = _py + lengthdir_y(dis, dir + _rot);
 			
 			var side = max(abs(_sca[0]), abs(_sca[1]));
-			var cnr = .2 * _s * side;
-			var cnx = _x0 + lengthdir_x(cnr, aa);
-			var cny = _y0 + lengthdir_y(cnr, aa);
-			var _r  = ui(PREVIEW_OVERLAY_RAD);
-			var _hv = w_hoverable && point_in_circle(_mx, _my, cnx, cny, _r)
+			var cnr  = .2 * _s * side;
+			var cnx  = crx + lengthdir_x(cnr, aa);
+			var cny  = cry + lengthdir_y(cnr, aa);
+			var _r   = ui(PREVIEW_OVERLAY_RAD);
+			var _hv  = w_hoverable && point_in_circle(_mx, _my, cnx, cny, _r)
 			if(_hv) { w_hoverable = false; w_hovering  = true; }
 			
 			draw_anchor(_hv || corner_dragging, cnx, cny, _r, 2);
@@ -613,36 +619,23 @@ function Node_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 					UNDO_HOLDING    = false;
 				}
 			}
-			
-			// var _max_s = max(abs(_sca[0]), abs(_sca[1])) * 2 / _shaSca;
-			// var _corr  = current_data[9] * _s * _max_s;
-			// var _cor   = _corr / sqrt(2);
-			
-			// var cx = _x0 + lengthdir_x(_corr, aa);
-			// var cy = _y0 + lengthdir_y(_corr, aa);
-			
-			// draw_set_color(COLORS._main_accent);
-			// draw_arc(cx, cy, _cor, ar, ar + 90);
-			
-			// drawOverlayInput(inputs[9].drawOverlay(w_hoverable, active, _x0, _y0, _s, _mx, _my, aa, _max_s, 2));
 		} // corner
 		
 		switch(_posMode) {
 			case 0 : 
-				drawOverlayInput(inputs[3].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my));
+				drawOverlayInput(inputs[ 3].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my));
 				break;
 			
 			case 1 : 
 				drawOverlayInput(inputs[16].drawOverlay(w_hoverable, active,  _x,  _y, _s, _mx, _my));
-				drawOverlayInput(inputs[17].drawOverlay(w_hoverable, active, _px, _py, _s, _mx, _my));
+				drawOverlayInput(inputs[17].drawOverlay(w_hoverable, active, _px, _py, _s, _mx, _my, 0, [1,1], _rot));
 				break;
 		}
 		
 		#region shape transform
 			var _ll  = _rsca[0];
 			drawOverlayInput(inputs[19].drawOverlay(w_hoverable, active, _px, _py, _s, _mx, _my));
-			drawOverlayInput(inputs[28].drawOverlay(w_hoverable, active, _px, _py, _s, _mx, _my, 0, _ll, 0));
-			
+			drawOverlayInput(inputs[28].drawOverlay(w_hoverable, active, _px, _py, _s, _mx, _my, _rot, _ll, 0));
 		#endregion
 		
 		return w_hovering;

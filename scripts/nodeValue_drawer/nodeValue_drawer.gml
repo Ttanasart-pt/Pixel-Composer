@@ -23,6 +23,9 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 		var _viewSpac = viewMode == INSP_VIEW_MODE.spacious;
 		var _input    = jun.connect_type == CONNECT_TYPE.input;
 		
+		if(_input && jun.useInstance())
+		     jun      = jun.getInstance();
+		
 		var _font     = _viewSpac? f_p2 : f_p3;
 		var breakLine = _viewSpac || jun.expUse;
 		var mbRight   = true;

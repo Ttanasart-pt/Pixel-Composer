@@ -1053,6 +1053,34 @@ function Panel_Inspector() : PanelContent() constructor {
     		hh += _lbh + ui(4);
     	}
     	
+    	if(_inspecting.instanceBase) {
+    		var _lbh = ui(24);
+    		
+    		draw_sprite_stretched_ext(THEME.box_r5_clr, 0, _x, _y, _w, _lbh, COLORS._main_accent, 1);
+    		draw_sprite_stretched_add(THEME.box_r5, 1, _x, _y, _w, _lbh, c_white, .1);
+    		draw_set_text(f_p4, fa_left, fa_center, COLORS._main_text);
+    		
+    		var _txt = $"{__txt("Instanced")}: {_inspecting.instanceBase.getDisplayName()}";
+    		
+    		draw_sprite_ui(THEME.node_instance_icon, 0, _x + _lbh/2, _y + _lbh/2, 1, 1, 0, c_white, 1);
+    		draw_text_add(_x + _lbh + ui(8), _y + _lbh/2, _txt);
+    		
+    		var bs = _lbh;
+    		var bx = _x + _w - bs;
+    		var by = _y;
+    		
+    		if(buttonInstant_Pad(noone, bx, by, bs, bs, _m, _hover, _focus, __txt("Uninstance"), THEME.node_instance_remove, 0, c_white, .8, ui(6)) == 2) 
+    			_inspecting.setInstance();
+    		
+    		var _hov = _hover && point_in_rectangle(_m[0], _m[1], _x, _y, _x + _w - bs, _y + _lbh);
+    		if(_hov) {
+    			draw_sprite_stretched_add(THEME.box_r5, 1, _x, _y, _w, _lbh, c_white, .2);
+    			if(mouse_lpress(_focus)) panelFocusNode(_inspecting.instanceBase);
+    		}
+    		
+    		hh += _lbh + ui(4)
+    	}
+    	
         var con_w   = _w 
         var con_h   = contentPane.surface_h;
         
@@ -2025,13 +2053,19 @@ function Panel_Inspector() : PanelContent() constructor {
         tb_node_name.draw(tb_x, tb_y, tb_w, tb_h, txt, m);
         
         if(is(inspecting, Node) && inspectGroup == 0) {
+        	draw_set_font(f_h5);
+        	var icx = tb_x + tb_w / 2 - string_width(txt) / 2 - tb_h / 2;
+	        var icy = tb_y + tb_h / 2;
+	        
         	var _col = inspecting.attributes.color;
         	if(_col != -1) {
-        		draw_set_font(f_h5);
-        		var colx = tb_x + tb_w / 2 - string_width(txt) / 2 - tb_h / 2;
-        		var coly = tb_y + tb_h / 2;
-        		
-        		draw_sprite_ui(THEME.timeline_color, 1, colx, coly, 1, 1, 0, _col, 1);
+        		draw_sprite_ui(THEME.timeline_color, 1, icx, icy, 1, 1, 0, _col, 1);
+        		icx -= tb_h / 2 + ui(4);
+        	}
+        	
+        	if(inspecting.instanceBase) {
+        		draw_sprite_ui(THEME.node_instance_icon, 0, icx, icy, 1, 1, 0, c_white, 1);
+        		icx -= tb_h / 2 + ui(4);
         	}
         }
         

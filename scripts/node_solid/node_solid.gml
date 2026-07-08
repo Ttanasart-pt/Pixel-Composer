@@ -58,10 +58,11 @@ function Node_Solid(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 		}
 		
 		surface_set_shader(_outSurf, sh_solid);
-			shader_set_i("useMask", _maskUse);
-			shader_set_i("useFg",   is_surface(_fg));
-			shader_set_c("color",   _col);
-			shader_set_s("fg",      _fg);
+			shader_set_i( "useMask",   _maskUse );
+			shader_set_i( "maskAlpha", inputs[3].attributes.mask_alpha_only );
+			shader_set_i( "useFg",     is_surface(_fg));
+			shader_set_c( "color",     _col );
+			shader_set_s( "fg",        _fg  );
 			
 			if(_maskUse) 
 				 draw_surface_stretched_ext(_msk, 0, 0, _dim[0], _dim[1], c_white, 1);

@@ -2,6 +2,7 @@ varying vec2 v_vTexcoord;
 varying vec4 v_vColour;
 
 uniform int  useMask;
+uniform int  maskAlpha;
 uniform vec4 color;
 
 uniform int  useFg;
@@ -18,7 +19,7 @@ void main() {
 	     
 	if(useMask == 1) {
 		vec4 mask = texture2D( gm_BaseTexture, v_vTexcoord );
-		float msk = (mask.r + mask.g + mask.b) / 3. * mask.a;
+		float msk = maskAlpha == 1? mask.a : (mask.r + mask.g + mask.b) / 3. * mask.a;
 		res.a *= msk;
 	}
 	

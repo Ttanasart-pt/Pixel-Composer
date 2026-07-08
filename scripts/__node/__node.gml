@@ -10,7 +10,9 @@ function __Node_Base(_x, _y) constructor {
 	inputs          = [];
 	outputs         = [];
 	input_value_map = {};
+	
 	instanceBase    = undefined;
+	instanceChild   = [];
 	
 	is_selecting    = false;
 	active_index	= -1;
