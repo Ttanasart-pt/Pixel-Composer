@@ -113,7 +113,7 @@ function Node_MK_Delay_Machine(_x, _y, _group = noone) : Node(_x, _y, _group) co
 				var sy = 1 + _tsca[1] * tt;
 				
 				var p = point_rotate(sw/2 - sw*sx/2, sh/2 - sh*sy/2, sw/2, sh/2, rr);
-				draw_surface_ext(_s, p[0], p[1], sx, sy, rr, cc, aa);
+				draw_surface_ext(_s, px + p[0], py + p[1], sx, sy, rr, cc, aa);
 			}
 			
 		surface_reset_shader();

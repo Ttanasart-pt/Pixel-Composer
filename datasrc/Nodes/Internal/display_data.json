@@ -709,6 +709,7 @@
             "Node_2D_light",
             "Node_Shadow_Cast",
             "Node_2D_Extrude",
+            "Node_Emboss",
             { "label": "/Animation" },
             "Node_Interlaced",
             "Node_Trail",

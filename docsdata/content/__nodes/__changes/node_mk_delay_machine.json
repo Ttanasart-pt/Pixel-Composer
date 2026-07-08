@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.6.006",
+    "changes": [
+      {
+        "date": "2026-07-08T05:15:33.227Z",
+        "node": "MK Delay Machine",
+        "commit": "**MK Delay Machine**: Fix position value doesn't do anything."
+      }
+    ]
+  },
+  {
     "version": "1.21.0.2",
     "changes": [
       {
