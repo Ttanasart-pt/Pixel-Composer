@@ -1355,7 +1355,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		__temp_frame  = frame;
 		if(array_any(inputs, function(inp,i) /*=>*/ {return inp.isActiveDynamic(__temp_frame)}))
 			return true;
-			
+		
 		var _rs = animation_range_start;
 		var _re = animation_range_end;
         if(animation_range_start != infinity && animation_range_start != animation_range_end)
