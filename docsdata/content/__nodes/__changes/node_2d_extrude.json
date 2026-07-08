@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.6.006",
+    "changes": [
+      {
+        "date": "2026-07-08T04:37:33.782Z",
+        "node": "2D Extrude",
+        "commit": "**2D Extrude**: Add separate outputs for extruded part and original part."
+      }
+    ]
+  },
+  {
     "version": "1.21.6.005",
     "changes": [
       {

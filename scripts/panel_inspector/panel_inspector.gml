@@ -1060,10 +1060,10 @@ function Panel_Inspector() : PanelContent() constructor {
     		draw_sprite_stretched_add(THEME.box_r5, 1, _x, _y, _w, _lbh, c_white, .1);
     		draw_set_text(f_p4, fa_left, fa_center, COLORS._main_text);
     		
-    		var _txt = $"{__txt("Instanced")}: {_inspecting.instanceBase.getDisplayName()}";
+    		var _txt = $"{__txt("Instance of")}: {_inspecting.instanceBase.getDisplayName()}";
     		
     		draw_sprite_ui(THEME.node_instance_icon, 0, _x + _lbh/2, _y + _lbh/2, 1, 1, 0, c_white, 1);
-    		draw_text_add(_x + _lbh + ui(8), _y + _lbh/2, _txt);
+    		draw_text_add(_x + _lbh, _y + _lbh/2, _txt);
     		
     		var bs = _lbh;
     		var bx = _x + _w - bs;
