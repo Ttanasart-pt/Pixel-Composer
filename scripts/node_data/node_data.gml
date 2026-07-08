@@ -365,6 +365,10 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	#endregion
 	
 	#region ---- Rendering ------
+		animation_range_update = false;
+		animation_range_start  = undefined;
+		animation_range_end    = undefined;
+		
 		rendered         = false;
 		update_on_frame  = false;
 		render_timer     = 0;
@@ -602,6 +606,11 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		if(toRefreshNodeDisplay) {
 			refreshNodeDisplay();
 			toRefreshNodeDisplay = false;
+		}
+		
+		if(animation_range_update) {
+			refreshAnimationRange();
+			animation_range_update = false;
 		}
 	}
 	
@@ -1344,7 +1353,15 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		
 		force_requeue = false;
 		__temp_frame  = frame;
-		return array_any(inputs, function(inp,i) /*=>*/ {return inp.isActiveDynamic(__temp_frame)});
+		if(array_any(inputs, function(inp,i) /*=>*/ {return inp.isActiveDynamic(__temp_frame)}))
+			return true;
+			
+		var _rs = animation_range_start;
+		var _re = animation_range_end;
+        if(animation_range_start != infinity && animation_range_start != animation_range_end)
+        	return frame >= animation_range_start && frame <= animation_range_end;
+        
+        return false;
 	}
 	
 	static triggerRender = function(resetSelf = true) {
@@ -1618,6 +1635,36 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		__getNodeChildList_cache[$ _node] = _arr;
 		__getNodeChildList_cacheId = project.nodeTopoID;
 		return _arr;
+	}
+	
+	static refreshAnimationRange = function() {
+		animation_range_start =  infinity;
+		animation_range_end   = -infinity;
+		
+		for( var i = 0, n = array_length(inputs); i < n; i++ ) {
+			var _input = inputs[i];
+			if(!_input.is_anim) continue;
+			
+	        if(_input.on_end != KEYFRAME_END.hold) {
+	        	animation_range_start = min(animation_range_start, 0);
+				animation_range_end   = max(animation_range_end, TOTAL_FRAMES);
+				continue;
+	        }
+	        
+			var _anims = _input.sep_axis? _input.getAnimators() : [_input.animator];
+		    for( var j = 0, m = array_length(_anims); j < m; j++ ) {
+		        var _anim  = _anims[j];
+		        
+		        for(var k = 0, p = array_length(_anim.values); k < p; k++) {
+		            animation_range_start = min(animation_range_start, _anim.values[k].time);
+		    		animation_range_end   = max(animation_range_end,   _anim.values[k].time);
+		    		
+		    		if(k == p - 1 && _anim.values[k].driverObject != undefined)
+		    			animation_range_end = max(animation_range_end, TOTAL_FRAMES);
+		        }
+		    }
+		}
+		
 	}
 	
 	static onAnimationStart = function() { if(use_cache == CACHE_USE.auto && !isAllCached()) clearCache(); }
@@ -3423,6 +3470,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			repeat(_amoMeta) { i++; junc_meta[i].applyDeserialize(_outMeta[i], load_scale, preset); }
 		}
 		
+		refreshAnimationRange();
 		postApplyDeserialize();
 	}
 	

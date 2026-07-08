@@ -186,9 +186,6 @@ uniform int   deboss;
 uniform vec2      intensity;
 uniform int       intensityUseSurf;
 uniform sampler2D intensitySurf;
-uniform float     intensity_curve[CURVE_MAX];
-uniform int       intensity_curve_use;
-uniform int       intensity_amount;
 
 uniform int       useheightMap;
 uniform sampler2D heightMap;
@@ -235,16 +232,14 @@ void main() {
 			float prg = 1. - float(i - 1) / float(height);
 			float heightI = prg;
 			
-			if(intensity_curve_use == 1)
-				heightI = curveEval(intensity_curve, intensity_amount, prg);
-			
 			vec4  samp   = useheightMap == 1? sampleTexture(heightMap,      v_vTexcoord + offset * float(i)) : 
 				                              sampleTexture(gm_BaseTexture, v_vTexcoord + offset * float(i));
 			float sampBr = bright(samp);
 			
 			totalW += heightI;
 			if((deboss == 0 && sampBr < baseBr) || (deboss == 1 && sampBr > baseBr)) {
-				light += doNormal == 1? lightI * heightI : sign(lightI) * heightI;
+				heightI *= abs(sampBr - baseBr);
+				light   += doNormal == 1? lightI * heightI : sign(lightI) * heightI;
 				break;
 			}
 		}

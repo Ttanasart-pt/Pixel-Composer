@@ -2403,11 +2403,16 @@ function Panel_Animation_Dopesheet() {
 	            if(mouse_lrelease(pFOCUS)) prop.on_end = safe_mod(prop.on_end + 1, sprite_get_number(THEME.prop_on_end));
 	            if(mouse_lpress(pFOCUS)) on_end_dragging_anim = prop;
 	            
-	            if(on_end_dragging_anim != noone) 
+	            if(on_end_dragging_anim != noone) {
 	            	prop.on_end = on_end_dragging_anim.on_end;
+	            	_node.animation_range_update = true;
+	            }
 	            
-	    		if(key_mod_press(SHIFT) && MOUSE_WHEEL != 0)
+	    		if(key_mod_press(SHIFT) && MOUSE_WHEEL != 0) {
 	    			prop.on_end = (prop.on_end + sign(MOUSE_WHEEL) + sprite_get_number(THEME.prop_on_end)) % sprite_get_number(THEME.prop_on_end);
+	    			_node.animation_range_update = true;
+	    		}
+	    		
 	        } else
 	            draw_sprite_ui_uniform(THEME.prop_on_end, prop.on_end, tx, ty, 1, on_end_dragging_anim == prop? COLORS._main_accent : COLORS._main_icon);
 	        tx -= tw;
@@ -2997,19 +3002,13 @@ function Panel_Animation_Dopesheet() {
                 	timeline_snap_points[i] = _node.timeline_content_snap;
                 	
                 } else {
-	                var _keyFirst   =  infinity;
-	        		var _keyLast    = -infinity;
-	                
-	                for( var j = 0, m = array_length(_anims); j < m; j++ ) {
-	                    var _anim  = _anims[j];
-				        
-				        for(var k = 0, p = array_length(_anim.values); k < p; k++) {
-				            _keyFirst = min(_keyFirst, _anim.values[k].dopesheet_x);
-				    		_keyLast  = max(_keyLast,  _anim.values[k].dopesheet_x);
-				        }
-	                }
-	                
-	                if(_keyFirst != infinity && _keyFirst != _keyLast) { // Animation Area
+	                var _rs = _node.animation_range_start;
+	        		var _re = _node.animation_range_end;
+	                	
+	                if(_rs != infinity && _rs != _re) { // Animation Area
+	                	var _keyFirst = (_rs + 1) * timeline_scale + timeline_shift;
+	        			var _keyLast  = (_re + 1) * timeline_scale + timeline_shift;
+	                	
 	                	var _ex0 = _keyFirst;
 	                	var _ex1 = _keyLast;
 	                	var _ey0 = _cont.y + ui(10) - ui(8);

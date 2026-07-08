@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.6.006",
+    "changes": [
+      {
+        "date": "2026-07-08T08:52:50.483Z",
+        "node": "",
+        "commit": "Improve animation performance."
+      }
+    ]
+  },
+  {
     "version": "1.21.6.003",
     "changes": [
       {

@@ -6,6 +6,11 @@
         "date": "2026-07-08T02:54:57.068Z",
         "node": "",
         "commit": "Add node-level instancing."
+      },
+      {
+        "date": "2026-07-08T08:52:50.483Z",
+        "node": "",
+        "commit": "Improve animation performance."
       }
     ]
   },

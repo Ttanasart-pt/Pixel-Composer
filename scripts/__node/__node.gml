@@ -47,6 +47,8 @@ function __Node_Base(_x, _y) constructor {
 		is_anim_timeline = false;
 		
 		static refreshTimeline = function() {
+			refreshAnimationRange();
+			
 			var _pre_anim = is_anim_timeline;
 			var _cur_anim = anim_timeline || attributes.show_timeline;
 			

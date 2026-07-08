@@ -446,6 +446,7 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 			
 		array_push(values, _key);
 		if(_replace) updateKeyMap();
+		node.animation_range_update = true;
 		return 1;
 	}
 	
@@ -532,6 +533,7 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 			.setRef(node).setTrigger(function() /*=>*/ {return onUndo()});
 		array_push(values, k);
 		updateKeyMap();
+		
 		return true;
 	}
 	
@@ -605,6 +607,8 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 		
 		for( var i = max(0, _keyIndex); i < _len; i++ ) 
 			key_map[i] = infinity;
+			
+		node.animation_range_update = true;
 	}
 	
 	static toggleKey_Add = function(_time = NODE_CURRENT_FRAME) {
