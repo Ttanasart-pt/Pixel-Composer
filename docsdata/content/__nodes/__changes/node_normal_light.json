@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.6.007",
+    "changes": [
+      {
+        "date": "2026-07-09T01:37:51.858Z",
+        "node": "Normal Light",
+        "commit": "**Normal Light**: Now work without normal map connected, why don't you just use 2d light node for that I don't know."
+      }
+    ]
+  },
+  {
     "version": "1.21.6.005",
     "changes": [
       {

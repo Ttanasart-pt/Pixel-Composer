@@ -12,7 +12,7 @@ function Node_Normal_Light(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	newInput( 4, nodeValue_Surface( "Height map" ));
 	// input 6
 	
-	typeListStr = ["Point", "Sun", "Line", "Spot"];
+	typeListStr = [ "Point", "Sun", "Line", "Spot" ];
 	typeList    = __enum_array_gen(typeListStr, s_node_normal_light_type);
 	attnList    = __enum_array_gen([ "Quadratic", "Invert quadratic", "Linear", "Custom" ], s_node_curve_type);
 	
@@ -21,7 +21,7 @@ function Node_Normal_Light(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 		dynamic_input_inspecting = getInputAmount();
 		
 		////- =Shape
-		newInput(i+ 0, nodeValue_EScroll( "Type", 0, typeList ));
+		newInput(i+ 0, nodeValue_EScroll( "Type",          0, typeList ));
 		newInput(i+ 1, nodeValue_Vec2(    "Position",     [0,0]    )).setUnitSimple();
 		newInput(i+ 7, nodeValue_Float(   "Distance",      0       ));
 		newInput(i+ 5, nodeValue_Vec2(    "End Position", [0,0]    )).setUnitSimple();
@@ -122,7 +122,6 @@ function Node_Normal_Light(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 		new Inspector_Spacer(8, true),
 		new Inspector_Spacer(2, false, false),
 		lights_renderer, 
-		[ "Lights", false ], 
 	];
 	
 	setDynamicInput(15, false);
@@ -209,8 +208,11 @@ function Node_Normal_Light(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 		
 		surface_set_shader(_ligSurf, sh_normal_light, false, BLEND.add);
 			shader_set_s( "normalMap",        _map              );
+			shader_set_i( "useNormalMap",     is_surface(_map)  );
+			
 			shader_set_s( "heightMap",        _hmap             );
 			shader_set_i( "useHeightMap",     is_surface(_hmap) );
+			
 			shader_set_f( "normalHeight",     _hei              );
 			shader_set_f( "dimension",        _dim              );
 			
@@ -278,10 +280,10 @@ function Node_Normal_Light(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 		}
 		
 		surface_set_shader(_outSurf, sh_normal_light_apply);
-			shader_set_surface("baseSurface",  _surf);
-			shader_set_surface("lightSurface", _ligSurf);
-			shader_set_color("ambient", _amb);
-			shader_set_i("keepAlpha",   _alph);
+			shader_set_s( "baseSurface",  _surf    );
+			shader_set_s( "lightSurface", _ligSurf );
+			shader_set_c( "ambient",      _amb     );
+			shader_set_i( "keepAlpha",    _alph    );
 			
 			draw_empty();
 		surface_reset_shader();

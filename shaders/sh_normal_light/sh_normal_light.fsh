@@ -137,8 +137,11 @@ varying vec4 v_vColour;
 uniform vec2  dimension;
 
 uniform sampler2D normalMap;
+uniform int   useNormalMap;
+
 uniform sampler2D heightMap;
 uniform int   useHeightMap;
+
 uniform float normalHeight;
 
 uniform vec4  ambiance;
@@ -236,7 +239,7 @@ void main() {
 	brightness *= lightIntensity;
 	if(band > 0.) brightness = ceil(brightness * band) / band;
 	
-	float d = max(dot(normal, lightDir), 0.0);
+	float d = useNormalMap == 1? max(dot(normal, lightDir), 0.0) : 1.;
 	diffuse = d * lightClr.rgb * lightClr.a * brightness;
 	gl_FragColor = vec4(diffuse, 1.);
 }
