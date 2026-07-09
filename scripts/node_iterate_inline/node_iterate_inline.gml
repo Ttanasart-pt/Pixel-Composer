@@ -102,7 +102,6 @@ function Node_Iterate_Inline(_x, _y, _group = noone) : Node_Collection_Inline(_x
 	
 	static getValue = function(arr) {
 		INLINE
-		
 		arr[@ 0] = value_buffer;
 		arr[@ 1] = junc_out;
 	}

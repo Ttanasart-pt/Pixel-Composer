@@ -807,7 +807,7 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 						
 					case 3 :
 						if(anim_sampler[j].active) 
-							_inf = 1 - anim_sampler[j].getPixel(round(_x), round(_y));
+							_inf = 1 - anim_sampler[j].getPixelDirectClamp(round(_x), round(_y));
 						break;
 						
 				}
