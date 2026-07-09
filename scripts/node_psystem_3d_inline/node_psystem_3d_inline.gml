@@ -31,7 +31,7 @@ function Node_pSystem_3D_Inline(_x, _y, _group = noone) : Node_Collection_Inline
 		addNode(output);
 	}
 	
-	static getNextNodes = function(checkLoop = false) { return __nodeLeafList(nodes); }
+	static getNextNodes = function() { return __nodeLeafList(nodes); }
 	
 	static reset = function() {
 		array_foreach(nodes, function(n) /*=>*/ { if(struct_has(n, "reset")) n.reset(); });

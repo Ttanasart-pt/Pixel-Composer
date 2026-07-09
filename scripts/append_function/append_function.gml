@@ -144,12 +144,8 @@ function __APPEND_MAP(_map, context = PANEL_GRAPH.getCurrentContext(), appended_
 	}
 	printIf(log, $"Conflict time: {current_time - t}"); t = current_time;
 	
-	try {
-		for(var i = 0; i < _append_len; i++)
-			appended_list[i].postLoad();
-	} catch(e) {
-		log_warning("APPEND, connect", exception_print(e));
-	}
+	try { for(var i = 0; i < _append_len; i++) appended_list[i].postLoad(); } 
+	catch(e) { log_warning("APPEND, connect", exception_print(e)); }
 	
 	UNDO_HOLDING = false;
 	APPENDING    = false;
@@ -171,6 +167,9 @@ function __APPEND_MAP(_map, context = PANEL_GRAPH.getCurrentContext(), appended_
 		var _time = new timelineItemGroup().deserialize(_map.timelines);
 		array_append(PROJECT.timelines.contents, _time.contents);
 	}
+	
+	try { for(var i = 0; i < _append_len; i++) appended_list[i].afterLoad(); } 
+	catch(e) { log_warning("APPEND, connect", exception_print(e)); }
 	
 	for(var i = 0; i < _append_len; i++)
 		appended_list[i].onValueRefresh();

@@ -220,8 +220,15 @@ enum RENDER_TYPE {
 			});
 			
 			if(partial && !array_empty(RENDER_LEAF)) {
-				for( var i = 0, n = array_length(RENDER_LEAF); i < n; i++ ) 
+				for( var i = 0, n = array_length(RENDER_LEAF); i < n; i++ )
 					array_push(renderQueue, RENDER_LEAF[i]);
+				
+				for( var i = 0, n = array_length(project.nodeTopo); i < n; i++ ) {
+					var _node = project.nodeTopo[i];
+					if(is(_node, Node_Collection_Inline) || is(_node, Node_Feedback_Inline))
+						array_push(renderQueue, _node);
+				}
+				
 				renderQueue = array_unique(renderQueue);
 				
 			} else {

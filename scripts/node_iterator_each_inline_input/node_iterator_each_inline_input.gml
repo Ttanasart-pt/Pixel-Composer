@@ -8,7 +8,6 @@ function Node_Iterator_Each_Inline_Input(_x, _y, _group = noone) : Node(_x, _y, 
 	loopable = false;
 	clonable = false;
 	
-	parameters.inline_draw_input = true;
 	inline_input         = false;
 	manual_ungroupable	 = false;
 	

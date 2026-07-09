@@ -38,8 +38,6 @@ function Node_Iterate_Sort_Inline(_x, _y, _group = noone) : Node_Collection_Inli
 		return false;
 	}
 	
-	// static getNextNodes = function(checkLoop = false) { return output_node.getNextNodes(); }
-	
 	static refreshMember = function() {
 		nodes = [];
 		

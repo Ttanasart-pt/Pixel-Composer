@@ -1681,23 +1681,6 @@ function Panel_Inspector() : PanelContent() constructor {
             	hh += _tlh + ui(8);
             }
             
-            // Loop detail
-            var frNode = jun.connect_type == CONNECT_TYPE.input? jun.value_from_loop : array_safe_get_fast(jun.value_to_loop, 0);
-            if(frNode && jun.inspector_loopDetail) {
-            	var _tlx = _x + ui(4);
-            	var _tly = _y + hh;
-            	var _tlw = con_w - ui(8);
-            	var _tlh = frNode.inspector_draw_height;
-            	
-        		draw_sprite_stretched_ext(THEME.ui_panel_bg, 2, _tlx, _tly, _tlw, _tlh, COLORS.panel_animation_timeline_blend, .5);
-        		draw_sprite_stretched_add(THEME.ui_panel,    1, _tlx, _tly, _tlw, _tlh, COLORS._main_icon, .25);
-        		
-        		var _flg = INSPECTOR_FLAG.input_only;
-        		var _fhh = drawNodeProperties(_x + ui(4), _tly + ui(4), _w - ui(8), _m, frNode, _flg) + ui(2);
-        		frNode.inspector_draw_height = _fhh;
-        		
-            	hh += _fhh + ui(8);
-            }
         }
         
         	 if(_cAll ==  1) section_expand_all();  

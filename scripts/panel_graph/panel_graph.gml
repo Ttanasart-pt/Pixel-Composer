@@ -2217,17 +2217,6 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
 	                            	THEME.cross, noone, noone, { juncTo: _to }));
 	                        }
 	                        
-	                        for( var i = 0, n = array_length(value_focus.value_to_loop); i < n; i++ ) {
-	                            if(!sep) { array_push(menu, -1); sep = true; }
-	                            
-	                            var _to = value_focus.value_to_loop[i];
-	                            var _lb = $"[{_to.junc_in.node.display_name}] {_to.junc_in.getName()}";
-	                            var mit = menuItem(_lb, function(data) /*=>*/ {return data.node.destroy()}, _to.icon_24)
-	                            	.setParam({ node: _to })
-	                            	.setColor(_to.color);
-	                            array_push(menu, mit);
-	                        }
-	                        
 	                    } else {
 	                        var sep = false;
 	                        if(value_focus.value_from) {
@@ -2236,17 +2225,6 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
 	                            var _jun = value_focus.value_from;
 	                            var _lb  = $"[{_jun.node.display_name}] {_jun.getName()}";
 	                            array_push(menu, menuItem(_lb, function() /*=>*/ { __junction_hovering.removeFrom(); }, THEME.cross));
-	                        }
-	                            
-	                        if(value_focus.value_from_loop) {
-	                            if(!sep) { array_push(menu, -1); sep = true; }
-	                            
-	                            var frm  = value_focus.value_from_loop;
-	                            var _jun = frm.junc_out;
-	                            var _lb  = $"[{_jun.node.display_name}] {_jun.getName()}";
-	                            var mit  = menuItem(_lb, function() /*=>*/ {return __junction_hovering.removeFromLoop()}, frm.icon_24)
-	                            	.setColor(frm.color);
-	                            array_push(menu, mit);
 	                        }
 	                    }
 	                    
@@ -2717,9 +2695,6 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
                              _connect[1].node.loopable && _connect[2].node.loopable;
         
         if(_connect[0] == -7 && _loopable) {
-            if(_connect[1].value_from_loop != noone)
-                _connect[1].value_from_loop.destroy();
-			
             var menu = [
                 menuItem("Feedback", function(d) /*=>*/ { 
                     var _n = nodeBuild("Node_Feedback_Inline", 0, 0);

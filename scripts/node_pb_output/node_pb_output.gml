@@ -42,8 +42,7 @@ function Node_PB_Output(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	
 	////- Rendering
 	
-	static getNextNodes = function(checkLoop = false) {
-		if(checkLoop) return;
+	static getNextNodes = function() {
 		var _out = group.outputs[0];
 		
 		var nodes = [];

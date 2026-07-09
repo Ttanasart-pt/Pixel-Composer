@@ -75,25 +75,9 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 		draw_set_font(_font);
 		var ds_w  = jun.node.inspector_pad_label ?? string_width(dispName);
 		var lb_w  = ds_w + padx + ui(4);
-		
-		var feedb = _input? jun.value_from_loop : array_safe_get_fast(jun.value_to_loop, 0);
 		var conn  = _input? jun.hasJunctionFrom() : jun.hasJunctionTo();
 		
-		if(feedb) { // Feedback / Loop
-			var ss = feedb.icon;
-			var cc = feedb.color;
-			
-			var _hov = _hover && point_in_circle(_m[0], _m[1], butx, lb_y, bs / 2);
-			draw_sprite_ui_uniform(ss, 0, butx, lb_y, ics, cc, .8 + .2 * _hov);
-			
-			if(_hov) {
-				mbRight = false;
-				cHov    = true;
-				
-				if(mouse_rpress(_focus)) jun.inspector_loopDetail = !jun.inspector_loopDetail;
-			}
-		
-		} else if(conn) { // Connected
+		if(conn) { // Connected
 			var index = 2;
 			var cc    = COLORS._main_accent;
 			var _hov  = _hover && point_in_circle(_m[0], _m[1], butx, lb_y, bs / 2);
@@ -221,8 +205,6 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 		
 		if(jun.is_anim)                     cc = COLORS._main_value_positive;
 		if(jun.hasJunctionFrom())           cc = COLORS._main_accent;
-		if(is(feedb, Node_Feedback_Inline)) cc = COLORS.node_blend_feedback;
-		if(is(feedb, Node_Iterate_Inline))  cc = COLORS.node_blend_loop;
 		
 		if(jun.color != -1) {
 			draw_sprite_ui(THEME.timeline_color, 1, lb_x + ui(8), lb_y, 1, 1, 0, jun.color, 1);

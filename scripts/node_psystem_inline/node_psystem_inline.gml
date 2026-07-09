@@ -32,7 +32,7 @@ function Node_pSystem_Inline(_x, _y, _group = noone) : Node_Collection_Inline(_x
 		addNode(output);
 	}
 	
-	// static getNextNodes = function(checkLoop = false) { return __nodeLeafList(nodes); }
+	// static getNextNodes = function() { return __nodeLeafList(nodes); }
 	
 	static reset = function() {
 		array_foreach(nodes, function(n) /*=>*/ { if(has(n, "reset")) n.reset(); });

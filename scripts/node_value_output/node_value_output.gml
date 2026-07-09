@@ -26,10 +26,6 @@ function __NodeValue_Output(_name, _node, _type, _value, _tooltip = "") : NodeVa
 	
 	static setValue = function(val = 0, record = true, time = NODE_CURRENT_FRAME, _update = true) {
 		output_value = val;
-		
-		for( var i = 0, n = array_length(value_to_loop); i < n; i++ )
-			value_to_loop[i].updateValue();
-		
 		return true;
 	}
 	

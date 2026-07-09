@@ -61,10 +61,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		connect_type_bitmask = undefined; static setTypeBitmask = function(b) /*=>*/ { connect_type_bitmask = b; return self; }
 	
 		value_from        = noone;
-		value_from_loop   = noone;
-		
 		value_to          = [];
-		value_to_loop     = [];
 		
 		accept_array      = true;
 		array_depth       = 0;
@@ -1023,7 +1020,6 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	static getAnim = function() { return useInstance()? getInstance().is_anim : is_anim; }
 	
 	static isAnimated = function() {
-		if(value_from_loop && value_from_loop.loop_active) return true;
 		if(value_from != noone) return value_from.node.isAnimated();
 		if(useInstance())       return getInstance().isAnimated();
 		return is_anim;
@@ -1655,8 +1651,6 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	
 	static isActiveDynamic = function() {
 		INLINE
-		
-		if(value_from_loop && value_from_loop.loop_active) return true;
 		if(value_from != noone) return false;
 		if(useInstance())       return getInstance().isActiveDynamic();
 		
@@ -1683,7 +1677,6 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		
 		if(useInstance())                                  return getInstance().isDynamic();
 		if(!node.project.animator.is_playing)              return true;
-		if(value_from_loop && value_from_loop.loop_active) return true;
 		if(value_from != noone)                            return true;
 		
 		if(expUse) {
@@ -1858,10 +1851,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	}
 	
 	static getValueRecursive = function(arr = __curr_get_val, _time = NODE_CURRENT_FRAME) {
-		if(value_from_loop && value_from_loop.bypassConnection() && value_from_loop.junc_out)
-			value_from_loop.getValue(arr);
-		
-		else if(value_from && value_from != self)
+		if(value_from && value_from != self)
 			value_from.getValueRecursive(arr, _time);
 			
 		else if(useInstance()) {
@@ -2444,11 +2434,6 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		return false;
 	}
 	
-	static removeFromLoop = function(_remove_list = true) {
-		if(value_from_loop != noone) value_from_loop.destroy();
-		node.project.setModified();
-	}
-	
 	static checkConnection = function(_remove_list = true) {
 		if(value_from == noone) return;
 		if(value_from.node.active) return;
@@ -2472,7 +2457,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	
 	static getJunctionTo = function() { return array_filter(value_to, function(v,_) /*=>*/ {return v.value_from == self && v.node.active}); }
 	
-	static hasJunctionFrom = function() /*=>*/ {return value_from != noone || value_from_loop != noone};
+	static hasJunctionFrom = function() /*=>*/ {return value_from != noone};
 	static hasJunctionTo   = function() /*=>*/ {return array_length(getJunctionTo())};
 	
 	static removeTo = function() {

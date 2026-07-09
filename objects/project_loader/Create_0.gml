@@ -3,7 +3,7 @@ load_step    = 0;
 load_total   = 0;
 create_list  = [];
 
-if(struct_has(content, "version")) {
+if(has(content, "version")) {
 	var _v = content.version;
 	
 	PROJECT.version = _v;

@@ -13,7 +13,7 @@ function Node_Iterate_Each_File_Inline_Output(_x, _y, _group = noone) : Node(_x,
 	
 	newInput(0, nodeValue_Surface("Value Out")).setVisible(true, true);
 	
-	static getNextNodes = function(checkLoop = false) {
+	static getNextNodes = function() {
 		if(loop.bypassNextNode())
 			return loop.getNextNodes();
 		return getNextNodesRaw();

@@ -1,7 +1,7 @@
 
 switch(load_process) {
     case 1 : 
-        if(!struct_has(content, "nodes")) {
+        if(!has(content, "nodes")) {
             LOADING = false;
             
             log_warning("LOAD", "Cannot read node data.");
@@ -45,7 +45,7 @@ switch(load_process) {
     case 2 : 
         ds_queue_clear(CONNECTION_CONFLICT);
         
-        try      { array_foreach(create_list, function(n) /*=>*/ {return n.loadGroup()} ); } 
+        try      { array_foreach(create_list, function(n,i) /*=>*/ {return n.loadGroup()} ); } 
         catch(e) { log_warning("LOAD, group", exception_print(e));    }
         
         printIf(log, $" > Load group : {(get_timer() - t1) / 1000} ms"); t1 = get_timer();
@@ -53,7 +53,7 @@ switch(load_process) {
     // break;
     
     // case 3 : 
-        try      { array_foreach(create_list, function(n) /*=>*/ {return n.postDeserialize()} ); } 
+        try      { array_foreach(create_list, function(n,i) /*=>*/ {return n.postDeserialize()} ); } 
         catch(e) { log_warning("LOAD, deserialize", exception_print(e));    }
         
         printIf(log, $" > Deserialize: {(get_timer() - t1) / 1000} ms"); t1 = get_timer();
@@ -85,9 +85,9 @@ switch(load_process) {
     
     // case 5 : 
         try {
-        	array_foreach(create_list, function(n) /*=>*/ {return n.preConnect()}  );
-        	array_foreach(create_list, function(n) /*=>*/ {return n.connect()}     );
-        	array_foreach(create_list, function(n) /*=>*/ {return n.postConnect()} );
+        	array_foreach(create_list, function(n,i) /*=>*/ {return n.preConnect()}  );
+        	array_foreach(create_list, function(n,i) /*=>*/ {return n.connect()}     );
+        	array_foreach(create_list, function(n,i) /*=>*/ {return n.postConnect()} );
         	
         } catch(e) {
         	log_warning("LOAD, connect", exception_print(e));
@@ -120,12 +120,12 @@ switch(load_process) {
     // break;
     
     // case 6 : 
-        try      { array_foreach(create_list, function(n) /*=>*/ {return n.postLoad()});  } 
+        try      { array_foreach(create_list, function(n,i) /*=>*/ {return n.postLoad()});  } 
         catch(e) { log_warning("LOAD, connect", exception_print(e)); }
         
         printIf(log, $" > Post load : {(get_timer() - t1) / 1000} ms"); t1 = get_timer();
     
-        try      { array_foreach(create_list, function(n) /*=>*/ {return n.clearInputCache()}); } 
+        try      { array_foreach(create_list, function(n,i) /*=>*/ {return n.clearInputCache()}); } 
         catch(e) { log_warning("LOAD, connect", exception_print(e));       }
         
         load_noti.progress = 0.95;
@@ -152,7 +152,7 @@ switch(load_process) {
 		
         printIf(log, $" > Refresh map : {(get_timer() - t1) / 1000} ms"); t1 = get_timer();
         
-        if(struct_has(content, "timelines") && !array_empty(content.timelines.contents))
+        if(has(content, "timelines") && !array_empty(content.timelines.contents))
         	PROJECT.timelines.deserialize(content.timelines);
         
         printIf(log, $" > Timeline : {(get_timer() - t1) / 1000} ms"); t1 = get_timer();
@@ -167,7 +167,7 @@ switch(load_process) {
         
         printIf(log, $"========== Load {array_length(PROJECT.allNodes)} nodes completed in {(get_timer() - t0) / 1000} ms ==========");
         
-        if((PROJECT.load_layout || PREFERENCES.save_layout) && struct_has(content, "layout"))
+        if((PROJECT.load_layout || PREFERENCES.save_layout) && has(content, "layout"))
         	loadPanelStruct(content.layout.panel);
         
         array_remove(STATS_PROGRESS, load_noti);
@@ -177,11 +177,13 @@ switch(load_process) {
     
     if(!array_empty(PROJECT.migrationError)) dialogPanelCall(new Panel_Migration_Error(PROJECT), WIN_W / 2, WIN_H * 2/3);
     
+    try      { array_foreach(PROJECT.allNodes, function(n,i) /*=>*/ {return n.afterLoad()});  } 
+    catch(e) { log_warning("LOAD, afterLoad", exception_print(e)); }
+        
     run_in(2, function() /*=>*/ { 
     	if(PANEL_PREVIEW)   PANEL_PREVIEW.fullView();
     	if(PANEL_ANIMATION) PANEL_ANIMATION.resetView();
     	GraphRefresh(); 
-    	
     	RenderAllReorder();
     });
 }

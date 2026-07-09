@@ -33,32 +33,26 @@ function Node_Iterate_Each_Inline(_x, _y, _group = noone) : Node_Collection_Inli
 		}
 	}
 	
-	static getIterationCount = function() {
-		var _arr = input_node.inputs[0].getValue();
-		return array_length(_arr);
-	}
+	static getIterationCount = function() /*=>*/ {return array_safe_length(input_node.inputs[0].getValue())};
+	static bypassNextNode    = function() /*=>*/ {return iterated < getIterationCount()}; // Used by output to decided what node to render next
 	
-	static bypassNextNode = function() {
-		return iterated < getIterationCount();
-	}
-	
-	static getNextNodes = function(checkLoop = false) {
+	static getNextNodes = function() {
 		LOG_BLOCK_START	
 		if(global.FLAG.render == 1) LOG("[outputNextNode] Get next node from inline iterate");
 		
 		resetRender();
 		var _nodes = __nodeLeafList(nodes);
-		logNodeDebug($"Loop restart: iteration {iterated} : {array_length(_nodes)} leaf", 2);
-		
 		array_push_unique(_nodes, input_node);
 		iterated++;
 		
 		LOG_BLOCK_END
-		
+		logNodeDebug($"Loop restart: iteration {iterated} : {array_length(_nodes)} leaf", 2);
 		return _nodes;
 	}
 	
 	static refreshMember = function() {
+		input_node  = noone;
+		output_node = noone;
 		nodes = [];
 		
 		for( var i = 0, n = array_length(attributes.members); i < n; i++ ) {

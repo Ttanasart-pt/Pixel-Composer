@@ -49,9 +49,9 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		if(NOT_LOAD) array_push(_group == noone? project.nodes : _group.getNodeList(), self);
 		array_push(project.allNodes, self);
 		
-		inline_input         = true;
-		inline_output        = true;
-		inline_context       = noone;
+		inline_input   = true;
+		inline_output  = true;
+		inline_context = noone;
 		
 		search_match  = -9999;
 		onDoubleClick = -1;
@@ -1483,45 +1483,15 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 					prMp[$ _n.node_id] = 1;
 				}
 			}
-				
-			if(_in.value_from_loop != noone) {
-				_n = _in.value_from_loop;
-				if(!has(prMp, _n.node_id)) {
-					array_push(prev, _n);
-					prMp[$ _n.node_id] = 1;
-				}
-			}
 		}
 		
 		if(onGetPreviousNodes) onGetPreviousNodes(prev);
 		return prev;
 	}
 	
-	__nextNodes       = noone;
-	__nextNodesToLoop = noone;
+	__nextNodes = noone;
 	
-	static getNextNodes = function(checkLoop = false) {
-		if(checkLoop) { 
-			if(__nextNodesToLoop != noone && __nextNodesToLoop.bypassNextNode()) 
-				__nextNodesToLoop.getNextNodes(); 
-			return; 
-		}
-		
-		__nextNodesToLoop = noone;
-		for( var i = 0, n = array_length(outputs); i < n; i++ ) {
-			var _ot = outputs[i];
-			if(is(_ot, NodeValue) && !_ot.forward) continue;
-			
-			for( var j = 0, m = array_length(_ot.value_to_loop); j < m; j++ ) {
-				var _to = _ot.value_to_loop[j];
-				if(!_to.active) continue;
-				
-				__nextNodesToLoop = _to;
-				if(!_to.bypassNextNode()) continue;
-				return _to.getNextNodes();
-			}
-		}
-		
+	static getNextNodes = function() {
 		if(__nextNodes != noone) return __nextNodes;
 		var nodes = [];
 		
@@ -1573,13 +1543,6 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			if(!is(_ot, NodeValue)) continue;
 			if(!_ot.forward || _ot.type == VALUE_TYPE.node) continue;
 			
-			for( var j = 0, n = array_length(_ot.value_to_loop); j < n; j++ ) {
-				var _to = _ot.value_to_loop[j];
-				if(!_to.active || !_to.bypassNextNode()) continue;
-				
-				return _to.getNextNodes();
-			}
-		
 			var _tos = _ot.getJunctionTo();
 			for( var j = 0; j < array_length(_tos); j++ )
 				array_push(nodes, _tos[j].node);
@@ -3421,6 +3384,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			var _supp  = array_safe_get_fast(global.SURFACE_FORMAT_SUPP, _depth, true);
 			if(!_supp) attributes.color_depth = PREFERENCES.node_default_depth;
 		}
+		
 	}
 	
 	static doDeserialize   = function(m) /*=>*/ {}
@@ -3535,6 +3499,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	static preConnect  = function() /*=>*/ {}
 	static postConnect = function() /*=>*/ {}
 	static postLoad    = function() /*=>*/ {}
+	static afterLoad   = function() /*=>*/ {}
 	
 	////- CLEAN UP
 	
@@ -3615,39 +3580,6 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			}
 		}
 		
-		for( var i = 0, n = array_length(inputs); i < n; i++ ) {
-			var _i = inputs[i];
-			if(_i.value_from_loop != noone && has(val_to_map, _i.type)) {
-				var val_to_conn = val_to_map[$ _i.type];
-				var val_to_node = val_to_conn.node;
-				
-				if(val_to_node != self && inline_context && val_to_node.inline_context == inline_context) {
-					if(record) {
-						
-						recordAction(ACTION_TYPE.custom, function(data, _undo) /*=>*/ { 
-							var ictx = data.inlineCtx;
-							var jout = ictx.junc_in;
-							var jatt = [ ictx.attributes.junc_in[0], ictx.attributes.junc_in[1] ];
-							
-							ictx.junc_in            = data.inlineCtx_juncout;
-							ictx.attributes.junc_in = [ data.inlineCtx_attrout[0], data.inlineCtx_attrout[1] ];
-							
-							data.inlineCtx_juncout = jout;
-							data.inlineCtx_attrout = jatt;
-							
-						}, { 
-							inlineCtx: inline_context, 
-							inlineCtx_juncout: inline_context.junc_in, 
-							inlineCtx_attrout: [ inline_context.attributes.junc_in[0], inline_context.attributes.junc_in[1] ], 
-						});
-					}
-					
-					inline_context.junc_in            = val_to_conn;
-					inline_context.attributes.junc_in = [ val_to_conn.node.node_id, val_to_conn.index ];
-				}
-			}
-		}
-		
 		for( var i = 0, n = array_length(outputs); i < n; i++ ) {
 			var jun = outputs[i];
 			
@@ -3661,36 +3593,6 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 					_vt.setFrom(val_from_map[$ _vt.type]);
 				else
 					_vt.removeFrom(false);
-			}
-			
-			if(_merge && !array_empty(jun.value_to_loop) && has(val_from_map, jun.type)) {
-				var val_from_conn = val_from_map[$ jun.type];
-				var val_from_node = val_from_conn.node;
-				
-				if(val_from_node != self && inline_context && val_from_node.inline_context == inline_context)
-				for( var j = 0, m = array_length(jun.value_to_loop); j < m; j++ ) {
-					if(record) {
-						recordAction(ACTION_TYPE.custom, function(data, _undo) /*=>*/ { 
-							var ictx = data.inlineCtx;
-							var jout = ictx.junc_out;
-							var jatt = [ ictx.attributes.junc_out[0], ictx.attributes.junc_out[1] ];
-							
-							ictx.junc_out            = data.inlineCtx_juncout;
-							ictx.attributes.junc_out = [ data.inlineCtx_attrout[0], data.inlineCtx_attrout[1] ];
-							
-							data.inlineCtx_juncout = jout;
-							data.inlineCtx_attrout = jatt;
-							
-						}, { 
-							inlineCtx: inline_context, 
-							inlineCtx_juncout: inline_context.junc_out, 
-							inlineCtx_attrout: [ inline_context.attributes.junc_out[0], inline_context.attributes.junc_out[1] ], 
-						});
-					}
-					
-					inline_context.junc_out            = val_from_conn;
-					inline_context.attributes.junc_out = [ val_from_conn.node.node_id, val_from_conn.index ];
-				}
 			}
 			
 			jun.value_to = [];

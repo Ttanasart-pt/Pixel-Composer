@@ -22,7 +22,7 @@ function Node_Group_Output(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		
 		rendered = result;
 		if(result && group) {
-			var _allRendered = array_all(group.outputs, function(o) /*=>*/ {return o.from.rendered});
+			var _allRendered = array_all(group.outputs, function(o,i) /*=>*/ {return o.from.rendered});
 			if(_allRendered)
 				group.setRenderStatus(result);
 		}
@@ -30,27 +30,12 @@ function Node_Group_Output(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	
 	static onValueUpdate = function(index = 0) { if(is_undefined(outParent)) return; }
 	
-	static getNextNodes = function(checkLoop = false) {
-		return is(group, Node_Collection)? group.getNextNodesExternal(checkLoop) : [];
+	static getNextNodes = function() {
+		return is(group, Node_Collection)? group.getNextNodesExternal() : [];
 	}
 	
-	static __getNextNodes = function(checkLoop = false) {
+	static __getNextNodes = function() {
 		if(is_undefined(outParent)) return [];
-		if(checkLoop) {
-			if(__nextNodesToLoop != noone && __nextNodesToLoop.bypassNextNode()) 
-				__nextNodesToLoop.getNextNodes(); 
-			return; 
-		}
-		
-		__nextNodesToLoop = noone;
-		for( var j = 0, m = array_length(outParent.value_to_loop); j < m; j++ ) {
-			var _to = outParent.value_to_loop[j];
-			if(!_to.active) continue;
-			
-			__nextNodesToLoop = _to;
-			if(!_to.bypassNextNode()) continue;
-			return _to.getNextNodes();
-		}
 		
 		LOG_BLOCK_START
 		var nodes = [];

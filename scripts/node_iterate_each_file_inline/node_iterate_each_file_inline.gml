@@ -52,7 +52,7 @@ function Node_Iterate_Each_File_Inline(_x, _y, _group = noone) : Node_Collection
 	static getIterationCount = function() /*=>*/ {return array_length(paths)};
 	static bypassNextNode    = function() /*=>*/ {return iterated < getIterationCount()};
 	
-	static getNextNodes = function(checkLoop = false) {
+	static getNextNodes = function() {
 		LOG_BLOCK_START	
 		if(global.FLAG.render == 1) LOG("[outputNextNode] Get next node from inline iterate");
 		

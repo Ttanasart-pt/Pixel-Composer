@@ -279,9 +279,9 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 			render_time = array_reduce(getNodeList(), function(val, node) /*=>*/ { val += node.render_time; return val; }, 0);
 	}
 	
-	static getNextNodes = function(checkLoop = false) { return isPure? getNextNodesExternal(checkLoop) : getNextNodesInternal(checkLoop); } 
+	static getNextNodes = function() { return isPure? getNextNodesExternal() : getNextNodesInternal(); } 
 	
-	static getNextNodesInternal = function(checkLoop = false) { //get node inside the group
+	static getNextNodesInternal = function() { //get node inside the group
 		LOG_BLOCK_START
 		if(global.FLAG.render == 1) LOG($"→→→→→ Call get next node from group: {getInternalName()}");
 		
@@ -307,31 +307,10 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		return _nodes;
 	}
 	
-	static getNextNodesExternal = function(checkLoop = false) { //get node connected to the parent object
+	static getNextNodesExternal = function() { //get node connected to the parent object
 		if(!rendered) return [];
 		if(global.FLAG.render == 1) LOG($"Checking next node external for {getInternalName()}");
 		LOG_BLOCK_START
-		
-		if(checkLoop) { 
-			if(__nextNodesToLoop != noone && __nextNodesToLoop.bypassNextNode()) 
-				__nextNodesToLoop.getNextNodes(); 
-			return; 
-		}
-		
-		__nextNodesToLoop = noone;
-		for( var i = 0, n = array_length(outputs); i < n; i++ ) {
-			var _ot = outputs[i];
-			if(is(_ot, NodeValue) && !_ot.forward) continue;
-			
-			for( var j = 0, m = array_length(_ot.value_to_loop); j < m; j++ ) {
-				var _to = _ot.value_to_loop[j];
-				if(!_to.active) continue;
-				
-				__nextNodesToLoop = _to;
-				if(!_to.bypassNextNode()) continue;
-				return _to.getNextNodes();
-			}
-		}
 		
 		var nextNodes = [];
 		for( var i = 0, n = array_length(outputs); i < n; i++ ) {
@@ -710,16 +689,6 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 				
 				_idmap[$ _n.node_id] = _n;
 				array_push(_ctx_nodes, _n.inline_context);
-				
-				for( var j = 0, m = array_length(_n.inputs); j < m; j++ ) {
-					var ji = _n.inputs[j].value_from_loop;
-					if(ji) array_push(_lop_nodes, ji);
-				}
-				
-				for( var j = 0, m = array_length(_n.outputs); j < m; j++ ) {
-					var ji = _n.outputs[j].value_to_loop;
-					array_append(_lop_nodes, ji);
-				}
 				
 				_selIO = _selIO || !_n.inline_input || !_n.inline_output;
 			}

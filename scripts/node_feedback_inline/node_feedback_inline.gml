@@ -3,95 +3,73 @@ function Node_Feedback_Inline(_x, _y, _group = noone) : Node(_x, _y, _group) con
 	color   = COLORS.node_blend_feedback;
 	icon    = THEME.feedback;
 	icon_24 = THEME.feedback_24;
+	update_on_frame = true;
 	
 	w = 0;
 	h = 0;
 	
 	is_root         = false;
 	selectable      = false;
-	update_on_frame = true;
-	loop_active     = true;
+	feedback_active = true;
+	feedback_frame  = 0;
 	
 	newInput( 0, nodeValue_Bool( "Active", true ));
 	
-	attributes.junc_in  = [ "", 0 ];
-	attributes.junc_out = [ "", 0 ];
+	attributes.junc_in  = [0,0];
+	attributes.junc_out = [0,0];
 	
-	junc_in  = noone;
-	junc_out = noone;
+	attributes.node_in  = "";
+	attributes.node_out = "";
 	
-	value_buffer   = undefined;
-	buffered_frame = noone;
+	input_node  = noone;
+	output_node = noone;
 	
 	////- Rendering
 	
-	static bypassConnection = function() /*=>*/ {return value_buffer != undefined};
-	static bypassNextNode   = function() /*=>*/ {return false};
-	static getNextNode      = function() /*=>*/ {return []};
-	
 	static connectJunctions = function(jFrom, jTo) {
-		junc_in  = jFrom.is_dummy? jFrom.dummy_get() : jFrom;
-		junc_out = jTo;
+		var nfrom = jFrom.node;
+		var nto   = jTo.node;
 		
-		attributes.junc_in  = [ junc_in .node.node_id, junc_in .index ];
-		attributes.junc_out = [ junc_out.node.node_id, junc_out.index ];
-		scanJunc();
+		var input  = nodeBuild("Node_Feedback_Inline_Input",  nfrom.x - 32 - 96,  nfrom.y);
+		var output = nodeBuild("Node_Feedback_Inline_Output", nto.x + nto.w + 32, nto.y);
 		
+		input.inputs[0].setFrom(jFrom.value_from);
+		jFrom.setFrom(input.outputs[0]);
+		output.inputs[0].setFrom(jTo);
+		
+		input_node  = input;
+		output_node = output;
+		
+		input_node.loop  = self;
+		output_node.loop = self;
+		
+		attributes.node_in  = input_node.node_id;
+		attributes.node_out = output_node.node_id;
 		return self;
 	}
 	
-	static scanJunc = function() {
-		if(CLONING) {
-			attributes.junc_in[0]  = GetAppendID(attributes.junc_in[0]);
-			attributes.junc_out[0] = GetAppendID(attributes.junc_out[0]);
-		}
-		
-		var node_i = PROJECT.nodeMap[? attributes.junc_in[0]];
-		var node_o = PROJECT.nodeMap[? attributes.junc_out[0]];
-		
-		junc_in  = node_i? node_i.inputs[attributes.junc_in[1]]   : noone;
-		junc_out = node_o? node_o.outputs[attributes.junc_out[1]] : noone;
-		
-		if(junc_in)  { 
-			junc_in.value_from_loop = self;
-			junc_in.node.refreshNodeDisplay();
-		}
-			
-		if(junc_out) { 
-			array_push(junc_out.value_to_loop, self);
-			junc_out.node.refreshNodeDisplay();
-		}
-	}
-	
-	static updateValue = function() {
-		if(!loop_active) return;
-		if(!IS_PLAYING && !project.animator.force_progress && CURRENT_FRAME != 0 && CURRENT_FRAME != buffered_frame + 1) return;
-		
-		var type = junc_out.type;
-		var val  = junc_out.getValue();
-		
-		switch(type) {
-			case VALUE_TYPE.surface : 
-				surface_array_free(value_buffer);
-				value_buffer = surface_array_clone(val);
-				break;
-				
-			default : value_buffer = variable_clone(val);
-		}
-		
-		buffered_frame = CURRENT_FRAME;
-	}
-	
-	static getValue = function(arr) {
-		INLINE
-		
-		arr[@ 0] = value_buffer;
-		arr[@ 1] = junc_out;
-	}
-	
 	static update = function() {
-		if(IS_FIRST_FRAME) value_buffer = undefined;
-		loop_active = inputs[0].getValue();
+		if(input_node == noone || output_node == noone) {
+			if(input_node)  input_node.destroy();
+			if(output_node) output_node.destroy();
+			destroy();
+			return;
+		}
+		
+		var _active = inputs[0].getValue();
+		
+		if(IS_FIRST_FRAME) {
+			feedback_active = false;
+			feedback_frame  = CURRENT_FRAME + 1;
+			
+		} else if(CURRENT_FRAME == feedback_frame) {
+			feedback_active = true;
+			feedback_frame  = CURRENT_FRAME + 1;
+			
+		} else {
+			feedback_active = false;
+			feedback_frame  = FIRST_FRAME;
+		}
 	}
 	
 	////- Draw
@@ -99,27 +77,47 @@ function Node_Feedback_Inline(_x, _y, _group = noone) : Node(_x, _y, _group) con
 	static drawDimension = undefined
 	static drawBadge     = function(_x, _y, _s) {}
 	
-	static drawConnections = function(params = {}) {
-		if( junc_out == noone    ||  junc_in == noone)    return undefined;
-		if(!junc_out.node.active || !junc_in.node.active) return undefined;
-		
-		params.dashed = true; params.loop   = true;
-		drawJuncConnection(junc_out, junc_in, params);
-		params.dashed = false; params.loop   = false;
-		
-		return undefined;
-	}
-	
 	static drawNode = function(_draw, _x, _y, _mx, _my, _s) {}
 	
 	static pointIn = function(_x, _y, _mx, _my, _s) { return false; }
 	
+	static drawConnections = function(params = {}, _draw = true) {
+		var hovering = undefined;
+		params.dashed = true; params.loop   = true;
+		if(input_node && output_node) drawJuncConnection(output_node.outputs[0], input_node.inputs[0], params);
+		params.dashed = false; params.loop   = false;
+		return undefined;
+	}
+	
 	////- Action
 	
-	static postDeserialize = function() { scanJunc(); }
-		
-	static onDestroy = function() {
-		if(junc_in)  junc_in.value_from_loop = noone;
-		if(junc_out) array_remove(junc_out.value_to_loop, self);
+	static onDestroy = function() { 
+		if(input_node)  input_node.destroy(); 
+		if(output_node) output_node.destroy(); 
 	}
+	
+	////- Serialize
+	
+	static postLoad = function() /*=>*/ {
+		if(LOADING_VERSION < 1_21_06_1) return;
+		
+		input_node  = project.nodeMap[? attributes[$ "node_in"]  ?? ""];
+		output_node = project.nodeMap[? attributes[$ "node_out"] ?? ""];
+		
+		if(input_node)  input_node.loop  = self;
+		if(output_node) output_node.loop = self;
+	}
+	
+	static afterLoad = function() /*=>*/ {
+		if(LOADING_VERSION >= 1_21_06_1) return;
+		
+		var node_in  = project.nodeMap[? attributes.junc_in[0]];
+		var node_out = project.nodeMap[? attributes.junc_out[0]];
+		
+		var junc_in  = node_in?  array_safe_get(node_in.inputs,   attributes.junc_in[1])  : noone;
+		var junc_out = node_out? array_safe_get(node_out.outputs, attributes.junc_out[1]) : noone;
+		
+		if(junc_in && junc_out) connectJunctions(junc_in, junc_out);
+	}
+	
 }

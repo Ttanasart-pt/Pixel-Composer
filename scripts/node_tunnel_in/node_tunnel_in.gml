@@ -100,7 +100,7 @@ function Node_Tunnel_In(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		value_validation[VALIDATION.error] = error_notification != noone;
 	}
 	
-	static getNextNodes = function(checkLoop = false) {
+	static getNextNodes = function() {
 		var _key  = inputs[0].getValue();
 		var nodes = project.tunnels_out[$ _key];
 		if(!array_valid(nodes)) return [];

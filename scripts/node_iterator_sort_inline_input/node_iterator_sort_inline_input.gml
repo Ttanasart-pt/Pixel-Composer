@@ -21,7 +21,7 @@ function Node_Iterator_Sort_Inline_Input(_x, _y, _group = noone) : Node(_x, _y, 
 	
 	static onGetPreviousNodes = function(arr) /*=>*/ { array_push(arr, loop); }
 	
-	static getNextNodes = function(checkLoop = false) { return [ loop.output_node ]; }
+	static getNextNodes = function() { return [ loop.output_node ]; }
 	
 	static update = function() {
 		if(startSort) {
