@@ -200,7 +200,7 @@ function Panel_Curve_Presets(_curve, _onModify = undefined) : PanelContent() con
 			
 			var cc = COLORS._main_value_positive;
 			if(buttonInstant_Pad(bb, bx, by, bs, bs, m, pHOVER, pFOCUS, "Add to Preset", THEME.add, 0, cc, 1, ui(6)) == 2) {
-				fileNameCall(context.path, function(f) /*=>*/ {
+				fileNameCall(context.path, "curve", function(f) /*=>*/ {
 					if(f == "") return;
 					
 					f = filename_ext_verify(f, ".json");
@@ -212,7 +212,7 @@ function Panel_Curve_Presets(_curve, _onModify = undefined) : PanelContent() con
 			
 			var cc = COLORS._main_icon;
 			if(buttonInstant_Pad(bb, bx, by, bs, bs, m, pHOVER, pFOCUS, "New Folder", THEME.dFolder_add, 0, cc, 1, ui(2)) == 2) {
-				fileNameCall(context.path, function(f) /*=>*/ {
+				fileNameCall(context.path, "folder", function(f) /*=>*/ {
 					if(f == "") return;
 					
 					directory_create(f);

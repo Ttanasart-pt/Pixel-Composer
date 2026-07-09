@@ -67,7 +67,7 @@ function __PaletteColor(_color = c_black) constructor {
 	menu_add_target = "";
 	menu_add = [
 		menuItem(__txt("Current Palette"), function() /*=>*/ {
-			fileNameCall(menu_add_target == ""? DIRECTORY + "Palettes/" : menu_add_target, function(txt) /*=>*/ {
+			fileNameCall(menu_add_target == ""? DIRECTORY + "Palettes/" : menu_add_target, "palette", function(txt) /*=>*/ {
 				var file = file_text_open_write(txt + ".hex");
 				for(var i = 0; i < array_length(palette); i++)
 					file_text_write_string(file,  $"{color_get_hex(palette[i])}\n");

@@ -286,10 +286,11 @@ function submenuCall(_data = undefined, menu = [], menu_id = "") {
 	return dia;
 }
 
-function fileNameCall(path, onModify, _x = mouse_mx + 8, _y = mouse_my + 8) {
+function fileNameCall(path, fname, onModify, _x = mouse_mx + 8, _y = mouse_my + 8) {
 	var dia = dialogCall(o_dialog_file_name, _x, _y)
 		.setModify(onModify)
-		.setPath(string_trim_end(path, [ "\\", "/" ]) + "/");
+		.setPath(string_trim_end(path, [ "\\", "/" ]) + "/")
+		.activate(fname);
 	
 	return dia;
 }

@@ -28,7 +28,7 @@ function Panel_Palette() : PanelContent() constructor {
 			}),
 			
 			menuItem(__txt("Lospec") + "...", function() /*=>*/ {
-				fileNameCall("", function(txt) /*=>*/ { addPalette_LoSpec(txt); }).setName("Palette")
+				fileNameCall("", "palette", function(txt) /*=>*/ { addPalette_LoSpec(txt); }).setName("Palette")
 			}),
 		]);
 	});
@@ -160,7 +160,7 @@ function Panel_Palette() : PanelContent() constructor {
 			if(_hov && mouse_lrelease()) {
 				__save_palette_data = DRAGGING.data;
 				
-				fileNameCall($"{DIRECTORY}Palettes", function (_path) {
+				fileNameCall($"{DIRECTORY}Palettes", "palette", function(_path) /*=>*/ {
 					if(filename_ext(_path) != ".hex") _path += ".hex";
 					
 					var _str = palette_string_hex(__save_palette_data, false);

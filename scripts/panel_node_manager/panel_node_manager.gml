@@ -317,7 +317,7 @@ function Panel_Nodes_Manager() : PanelContent() constructor {
 		if(selectDir != noone) {
 			draw_set_font(f_p2);
 			if(buttonTextInstant(true, THEME.button_def, bx, by, bw, bh, m, pHOVER, pFOCUS, "", "Add Node") == 2) {
-				fileNameCall("", function(txt) /*=>*/ {
+				fileNameCall("", "node", function(txt) /*=>*/ {
 					if(txt == "") return;
 					var _inode = string_trim(txt, ["/"])
 					var _lnode = string_lower(_inode);

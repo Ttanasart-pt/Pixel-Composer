@@ -205,7 +205,7 @@ function Panel_Asset_Selector(_onSet, _currData = undefined, _defPath = "") : Pa
 			
 			var cc = iss? COLORS._main_value_positive : COLORS._main_icon_dark;
 			if(buttonInstant_Pad(bb, bx, by, bs, bs, m, iss && pHOVER, pFOCUS, "Add to Asset", THEME.add, 0, cc, 1, ui(8)) == 2) {
-				fileNameCall(context.path, function(f) /*=>*/ {
+				fileNameCall(context.path, "asset", function(f) /*=>*/ {
 					if(f == "") return;
 					
 					f = filename_ext_verify(f, ".png");
@@ -217,7 +217,7 @@ function Panel_Asset_Selector(_onSet, _currData = undefined, _defPath = "") : Pa
 			
 			var cc = COLORS._main_icon;
 			if(buttonInstant_Pad(bb, bx, by, bs, bs, m, pHOVER, pFOCUS, "New Folder", THEME.dFolder_add, 0, cc, 1, ui(6)) == 2) {
-				fileNameCall(context.path, function(f) /*=>*/ {
+				fileNameCall(context.path, "folder", function(f) /*=>*/ {
 					if(f == "") return;
 					
 					directory_create(f);

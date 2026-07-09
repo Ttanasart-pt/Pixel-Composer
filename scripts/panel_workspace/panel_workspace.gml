@@ -112,7 +112,7 @@ function Panel_Workspace() : PanelContent() constructor {
 				
 				if(mouse_lpress(pFOCUS)) {
 					if(i == amo) {
-						fileNameCall($"{DIRECTORY}layouts/", function(name) /*=>*/ { 
+						fileNameCall($"{DIRECTORY}layouts/", "layout", function(name) /*=>*/ { 
 							var cont = panelSerialize();
 							json_save_struct($"{name}.json", cont);
 							

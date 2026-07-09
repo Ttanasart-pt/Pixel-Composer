@@ -23,7 +23,6 @@ event_inherited();
 		
 		onModify(txt, params); 
 		WIDGET_CURRENT = undefined;
-		
 		instance_destroy(); 
 		
 	}).setEmpty();
@@ -36,6 +35,7 @@ event_inherited();
 		text = _initText;
 		
 		run_in(1, function() /*=>*/ {
+			KEYBOARD_RESET
 			setFocus(self.id);
 			tb_name.activate(text);
 			tb_name.mouse_lhold = true;

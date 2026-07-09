@@ -22,10 +22,11 @@ event_inherited();
 	tb_width = ui(280);
 	tb_name  = textBox_Text(function(t) /*=>*/ { 
 		if(wait) return;
-		name = t; 
+		
 		onModify(filename_combine(path, filename_name_validate(t))); 
+		WIDGET_CURRENT = undefined;
 		instance_destroy(); 
-	});
+	})
 	
 	function setLabel(  _l ) { label    = _l; return self; }
 	function setName(   _n ) { name     = _n; return self; }
@@ -35,6 +36,16 @@ event_inherited();
 	
 	function setPrefix( _l ) { tb_name.setPrefix(_l); return self; }
 	
-	KEYBOARD_RESET
-	tb_name.activate(name);
+	function activate(_initText = "") {
+		name = _initText;
+		
+		run_in(1, function() /*=>*/ {
+			KEYBOARD_RESET
+			setFocus(self.id);
+			tb_name.activate(name);
+			tb_name.mouse_lhold = true;
+		});
+		
+		return self;
+	}
 #endregion

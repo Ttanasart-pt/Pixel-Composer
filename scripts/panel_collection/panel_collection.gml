@@ -1008,7 +1008,7 @@ function Panel_Collection() : PanelContent() constructor {
 			
 			var txt = __txt("panel_collection_add_folder", "Add folder");
 			if(buttonInstant_Pad(bb, bx, by, bs, bs, m, hov, foc, txt, THEME.dFolder_add, 0, COLORS._main_icon) == 2) 
-				fileNameCall(context.path, function(txt) /*=>*/ { directory_create(txt); refreshContext(); })
+				fileNameCall(context.path, "folder", function(txt) /*=>*/ { directory_create(txt); refreshContext(); })
 					.setLabel(__txt("Folder name"))
 					.setPrefix(string_replace(context.path, $"{DIRECTORY}Collections", "") + "/");
 			bx -= bs + ui(2); if(bx < rootx) return;
