@@ -1,0 +1,12 @@
+[
+  {
+    "version": "1.21.6.007",
+    "changes": [
+      {
+        "date": "2026-07-09T02:32:00.395Z",
+        "node": "",
+        "commit": "Remove grid bypass."
+      }
+    ]
+  }
+]

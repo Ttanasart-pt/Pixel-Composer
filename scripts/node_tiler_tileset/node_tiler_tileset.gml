@@ -1,6 +1,6 @@
 function Node_Tile_Tileset(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
     name        = "Tileset";
-    bypass_grid = true;
+    // bypass_grid = true;
     preserve_height_for_preview = true;
     
     node_edit      = noone;

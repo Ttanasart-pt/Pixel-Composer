@@ -14,7 +14,7 @@
 
 function Node_Tile_Drawer(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
     name        = "Tile Drawer";
-    bypass_grid = true;
+    // bypass_grid = true;
     
     newInput( 3, nodeValueSeed());
     newInput( 1, nodeValue_IVec2( "Map size", [ 16, 16 ] ));
