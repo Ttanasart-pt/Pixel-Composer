@@ -35,28 +35,30 @@ function Node_Condition(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	]
 	
 	static update = function(frame = CURRENT_FRAME) {
-		var _true = inputs[3].getValue();
-		var _fals = inputs[4].getValue();
-		
-		var _mode = inputs[5].getValue();
-		
-		var _chck = inputs[0].getValue();
-		var _cond = inputs[1].getValue();
-		var _valu = inputs[2].getValue();
-		var _bool = inputs[6].getValue();
-		var _txt1 = inputs[7].getValue();
-		var _txt2 = inputs[8].getValue();
-		
-		inputs[0].setVisible(_mode == 1, _mode == 1);
-		inputs[1].setVisible(_mode == 1);
-		inputs[2].setVisible(_mode == 1, _mode == 1);
-		inputs[6].setVisible(_mode == 0, _mode == 0);
-		inputs[7].setVisible(_mode == 2, _mode == 2);
-		inputs[8].setVisible(_mode == 2, _mode == 2);
-		
-		inputs[3].setType(inputs[3].value_from == noone? VALUE_TYPE.any : inputs[3].value_from.type);
-		inputs[4].setType(inputs[4].value_from == noone? VALUE_TYPE.any : inputs[4].value_from.type);
-		
+		#region data
+			var _true = inputs[3].getValue();
+			var _fals = inputs[4].getValue();
+			
+			var _mode = inputs[5].getValue();
+			
+			var _chck = inputs[0].getValue();
+			var _cond = inputs[1].getValue();
+			var _valu = inputs[2].getValue();
+			var _bool = inputs[6].getValue();
+			var _txt1 = inputs[7].getValue();
+			var _txt2 = inputs[8].getValue();
+			
+			inputs[0].setVisible(_mode == 1, _mode == 1);
+			inputs[1].setVisible(_mode == 1);
+			inputs[2].setVisible(_mode == 1, _mode == 1);
+			inputs[6].setVisible(_mode == 0, _mode == 0);
+			inputs[7].setVisible(_mode == 2, _mode == 2);
+			inputs[8].setVisible(_mode == 2, _mode == 2);
+			
+			inputs[3].setType(inputs[3].value_from == noone? VALUE_TYPE.any : inputs[3].value_from.type);
+			inputs[4].setType(inputs[4].value_from == noone? VALUE_TYPE.any : inputs[4].value_from.type);
+		#endregion
+			
 		var res = false;
 		
 		switch(_mode) {

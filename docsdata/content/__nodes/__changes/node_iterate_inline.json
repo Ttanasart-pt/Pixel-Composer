@@ -6,6 +6,11 @@
         "date": "2026-07-09T02:05:20.281Z",
         "node": "Repeat",
         "commit": "**Repeat**: Fix animator surface selector not working."
+      },
+      {
+        "date": "2026-07-09T04:46:12.765Z",
+        "node": "",
+        "commit": "**Feedback / Loop**: Now use separate nodes for input and output."
       }
     ]
   },

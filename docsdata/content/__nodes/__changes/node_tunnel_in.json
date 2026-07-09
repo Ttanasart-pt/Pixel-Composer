@@ -1,5 +1,20 @@
 [
   {
+    "version": "1.21.6.007",
+    "changes": [
+      {
+        "date": "2026-07-09T04:46:12.823Z",
+        "node": "",
+        "commit": "**Feedback / Loop**: Now use separate nodes for input and output."
+      },
+      {
+        "date": "2026-07-09T07:30:19.958Z",
+        "node": "",
+        "commit": "**Graph Panel**: Fix extra input padding when collapsing node with dynamic inputs."
+      }
+    ]
+  },
+  {
     "version": "1.21.5.007",
     "changes": [
       {

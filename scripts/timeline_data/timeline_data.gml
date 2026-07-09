@@ -112,7 +112,7 @@ function timelineItemNode(_node) : timelineItem() constructor {
 			} else if(mouse_lpress(focus)) show = !show;
 		}
 		
-		if(node.isActiveDynamic())
+		if(node.isAnimated())
 			draw_sprite_ui_uniform(THEME.arrow, show? 3 : 0, bx + bs / 2, by + h / 2, 1, col == -1? CDEF.main_grey : col, aa);
 		bx += bs + 1;
 		

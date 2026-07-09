@@ -8,9 +8,9 @@ function Node_Tunnel_In(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	hover_use_distance = true;
 	setDimension(32, 32);
 	
-	newInput( 0, nodeValue_Text( "Name", LOADING || APPENDING? "" : $"tunnel{struct_size(project.tunnels_in)}" ))
-		.rejectArray().setAnimable(false);
-	newInput( 1, nodeValue_Any( "Value in" )).setVisible(true, true);
+	var _name = LOADING || APPENDING? "" : $"tunnel{struct_size(project.tunnels_in)}";
+	newInput( 0, nodeValue_Text( "Name", _name )).rejectArray().setAnimable(false);
+	newInput( 1, nodeValue_Any(  "Value in"    )).setVisible(true, true);
 	
 	////- =Display
 	newInput( 2, nodeValue_EButton( "Label Position", 0, [ "T", "B", "L", "R" ] ));
@@ -20,7 +20,7 @@ function Node_Tunnel_In(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	
 	////- =Scope
 	newInput( 6, nodeValue_EButton( "Scope", 1, [ "Global", "Group" ] ));
-	// input 7
+	// 7
 	
 	input_display_list = [ 0, 1, 
 		[ "Display", false ], 2, 3, 4, 5, 

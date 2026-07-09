@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.6.007",
+    "changes": [
+      {
+        "date": "2026-07-09T04:46:12.829Z",
+        "node": "",
+        "commit": "**Feedback / Loop**: Now use separate nodes for input and output."
+      }
+    ]
+  },
+  {
     "version": "1.21.6.006",
     "changes": [
       {

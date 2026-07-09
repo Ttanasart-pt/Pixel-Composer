@@ -1692,7 +1692,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			_p = true;
 		}
 		
-		if(auto_input && dummy_input) _hi += junction_draw_hei_y;
+		if(_p && auto_input && dummy_input) _hi += junction_draw_hei_y;
 		var _p = attributes.show_preview;
 		
 		for( var i = 0, n = array_length(outputs); i < n; i++ ) {

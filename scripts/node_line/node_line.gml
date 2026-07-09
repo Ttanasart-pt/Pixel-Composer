@@ -45,12 +45,12 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	newInput(33, nodeValue_Vec2(     "End Point",     [1,.5] )).setUnitSimple();
 	newInput(35, nodeValue_Bool(     "Force Loop",     false ));
 	newInput(19, nodeValue_Bool(     "Fix Length",     false )).setTooltip("Fix length of each segment instead of segment count.");
-	newInput( 2, nodeValue_ISlider(  "Segment",        8, [1,32,.1] ));
+	newInput( 2, nodeValue_ISlider(  "Segment",        8, [1,32,.1] )).setPieMenu();
 	newInput(20, nodeValue_Float(    "Segment Length", 8            ));
 	
 	////- =Width
-	newInput(17, nodeValue_Bool(  "1px Mode",             false      )).setTooltip("Render pixel perfect 1px line.");
-	newInput( 3, nodeValue_Range( "Width",               [2,2], true )).setCurvable(11, CURVE_DEF_11);
+	newInput(17, nodeValue_Bool(  "1px Mode",             false      )).setPieMenu().setTooltip("Render pixel perfect 1px line.");
+	newInput( 3, nodeValue_Range( "Width",               [2,2], true )).setPieMenu().setCurvable(11, CURVE_DEF_11);
 	newInput(12, nodeValue_Bool(  "Span Width over Path", false      )).setTooltip("Apply the full 'Width Curve' to the trimmed path.");
 	
 		////- =/Weight
@@ -58,9 +58,9 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	newInput(62, nodeValue_Range( "Normalized Range", [0,1] )).setCurvable(63, CURVE_DEF_01);
 	
 	////- =Line Settings
-	newInput( 8, nodeValue_SliRange( "Range",         [0,1] )).setInternalName("path_range").setTooltip("Range of the path to draw.");
+	newInput( 8, nodeValue_SliRange( "Range",         [0,1] )).setPieMenu().setInternalName("path_range").setTooltip("Range of the path to draw.");
 	newInput(25, nodeValue_Bool(     "Invert",        false )).setInternalName("path_invert");
-	newInput( 9, nodeValue_Float(    "Shift",         0     )).setInternalName("path_shift");
+	newInput( 9, nodeValue_Float(    "Shift",         0     )).setPieMenu().setInternalName("path_shift");
 	newInput(26, nodeValue_Bool(     "Clamp Range",   false )).setInternalName("path_range_clamped");
 	
 	////- =Dash Line
@@ -91,7 +91,7 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	newInput(61, nodeValue_Range(    "Offset",     [0,0] ));
 	
 	////- =Color
-	newInput(10, nodeValue_Gradient( "Color over Length",    gra_white ));
+	newInput(10, nodeValue_Gradient( "Color over Length",    gra_white )).setPieMenu();
 	newInput(24, nodeValue_Gradient( "Random Blend",         gra_white ));
 	newInput(15, nodeValue_Bool(     "Span Color over Path", false     )).setTooltip("Apply the full 'color over length' to the trimmed path.");
 	

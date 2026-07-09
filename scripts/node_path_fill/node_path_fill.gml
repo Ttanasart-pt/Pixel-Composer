@@ -8,7 +8,7 @@ function Node_Path_Fill(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	newInput( 1, nodeValue_Path( "Path" ));
 	newInput(12, nodeValue_Range(    "Path Range", [0,1] ));
 	newInput(13, nodeValue_Slider(   "Path Shift",  0    ));
-	newInput( 2, nodeValue_Int(      "Resolution",  64   )).setValidator(VV_min(2));
+	newInput( 2, nodeValue_Int(      "Resolution",  32   )).setValidator(VV_min(2));
 	
 	////- =Transform
 	newInput( 9, nodeValue_Vec2(     "Position",  [0,0]   )).setUnitSimple();
@@ -68,6 +68,8 @@ function Node_Path_Fill(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		    _outSurf = surface_verify(_outSurf, _dim[0], _dim[1]);
 		    if(!is_path(_path)) return _outSurf; 
 	    #endregion
+	    
+	    var plen = _path.getLength(0);
 	    
 	    __tpath  = _path;
 		__step   = 1 / _reso;

@@ -398,7 +398,7 @@ function Panel_Profile_Render() : PanelContent() constructor {
 		        	var _time = _timn.time;
 		        	var _rtm  = _timn.rtime;
 		        	
-		        	var _as = _rtm / node_render_mtime;
+		        	var _as = _rtm / node_render_rtime;
 		        	draw_set_color(_colr);
 		        	if(sum_selecting != noone) draw_set_alpha(.25 + .75 * (_node == sum_selecting));
 		        	
@@ -436,13 +436,12 @@ function Panel_Profile_Render() : PanelContent() constructor {
 		        	draw_text_add(tx_pern + ui(80 - 8), _ty, round(_time / _amo));
 		        	draw_text_add(tx_rtim + ui(80 - 8), _ty, _rtm);
 		        	
-		        	var _as   = _rtm / node_render_mtime;
+		        	var _as   = _rtm / node_render_rtime;
 		        	var bar_x = tx_rtim + ui(80 - 8) + ui(8);
-		        	var bar_w = _ww - bar_x;
+		        	var bar_w = max(0, _ww - bar_x);
 		        	
 		        	var bx = bar_x;
 		        	var by = _ty;
-		        	
 		        	var bw = bar_w * _as;
 		        	
 		        	draw_set_color_alpha(_colr, .75 + .25 * (_node == sum_selecting || sum_selecting == noone));
