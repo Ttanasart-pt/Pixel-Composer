@@ -598,6 +598,7 @@
             "Node_Flip",
             "Node_Mirror",
             "Node_Mirror_Polar",
+            "Node_Mirror_Path",
             
             { "label": "Crop" },
             "Node_Crop",

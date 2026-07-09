@@ -10,22 +10,26 @@ function Node_Mirror(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	name = "Mirror";
 	
 	newActiveInput(3);
+	newInput(10, nodeValue_Toggle("Channel", 0b1111, { data: array_create(4, THEME.inspector_channel) }));
 	
 	////- =Surfaces
 	newInput( 0, nodeValue_Surface( "Surface In" ));
+	newInput( 6, nodeValue_Surface( "Mask"       ));
+	newInput( 7, nodeValue_Slider(  "Mix", 1     ));
+	__init_mask_modifier(6, 8); // inputs 8, 9 
 	
 	////- =Mirror
 	newInput( 1, nodeValue_Vec2(     "Position", [.5,.5] )).setHotkey("G").setUnitSimple().setPieMenu();
 	newInput( 2, nodeValue_Rotation( "Angle",     0      )).setHotkey("R").hideLabel().setPieMenu();
 	newInput( 5, nodeValue_Bool(     "Flip",      false  )).setPieMenu();
 	newInput( 4, nodeValue_Bool(     "Both Side", false  )).setPieMenu();
-	// input 6
+	// 11
 	
 	newOutput( 0, nodeValue_Output( "Surface Out", VALUE_TYPE.surface, noone ));
 	newOutput( 1, nodeValue_Output( "Mirror Mask", VALUE_TYPE.surface, noone )).setCustomData(global.SURFACE_MASK_JUNC);
 	
-	input_display_list = [ 3,
-		[ "Surfaces", false ],  0, 
+	input_display_list = [  3, 10, 
+		[ "Surfaces", false ],  0,  6,  7,  8,  9,  
 		[ "Mirror",   false ],  1,  2,  5,  4, 
 	];
 	
@@ -65,17 +69,17 @@ function Node_Mirror(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	
 	static processData = function(_outData, _data, _array_index) {
 		#region data
-			var _suf = _data[ 0];
+			var _surf = _data[ 0];
 			
-			var _pos = _data[ 1];
-			var _ang = _data[ 2];
-			var _inv = _data[ 5];
-			var _bth = _data[ 4];
+			var _pos  = _data[ 1];
+			var _ang  = _data[ 2];
+			var _inv  = _data[ 5];
+			var _bth  = _data[ 4];
 			
-			if(!is_surface(_suf)) return _outData;
+			if(!is_surface(_surf)) return _outData;
 		#endregion
 		
-		var _dim = surface_get_dimension(_suf);
+		var _dim = surface_get_dimension(_surf);
 		_outData[0] = surface_verify(_outData[0], _dim[0], _dim[1]);
 		_outData[1] = surface_verify(_outData[1], _dim[0], _dim[1]);
 		
@@ -86,8 +90,12 @@ function Node_Mirror(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 			shader_set_i( "bothSide",  _bth );
 			shader_set_i( "invert",    _inv );
 			
-			draw_surface_safe(_suf);
+			draw_surface_safe(_surf);
 		surface_reset_shader();
+		
+		__process_mask_modifier(_data);
+		_outData[0] = mask_apply_input(_surf, _outData[0], _data[6], _data[7], inputs[6]);
+		_outData[0] = channel_apply(_surf, _outData[0], _data[10]);
 		
 		return _outData;
 	}

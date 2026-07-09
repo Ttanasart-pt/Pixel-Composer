@@ -1,1 +1,6 @@
-{"spr":"s_node_iterate_inline_output","pxc_version":121060,"name":"Loop Output","baseNode":"Node_Iterate_Inline_Output"}
+{
+    "name":          "Loop Output",
+    "spr":           "s_node_loop_output",
+    "baseNode":      "Node_Iterate_Inline_Output",
+    "pxc_version":    121060,
+}
