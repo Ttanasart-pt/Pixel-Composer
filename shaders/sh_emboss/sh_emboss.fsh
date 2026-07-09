@@ -186,6 +186,8 @@ uniform int   deboss;
 uniform vec2      intensity;
 uniform int       intensityUseSurf;
 uniform sampler2D intensitySurf;
+uniform float     intbright;
+uniform float     intdark;
 
 uniform int       useheightMap;
 uniform sampler2D heightMap;
@@ -246,15 +248,18 @@ void main() {
 	}
 	
 	float lightEff = doNormal == 1? 1. + light / totalW * its : 1. + light / totalW * its;
-	baseC *= lightEff;
 	
 	if(lightEff > 1.) {
-		baseC.rgb = mix(baseC.rgb, 1. - (1. - baseC.rgb) * color.rgb, lightEff - 1.);
-		
+		float intBright = (lightEff - 1.) * intbright;
+		baseC *= 1. + intBright;
+     	baseC.rgb = mix(baseC.rgb, 1. - (1. - baseC.rgb) * color.rgb, intBright);
+     	
 	} else if(lightEff < 1.) {
-		baseC.rgb = mix(baseC.rgb, baseC.rgb * color.rgb, 1. - lightEff);
+		float intDark = (1. - lightEff) * intdark;
+		baseC *= 1. - intDark;
+		baseC.rgb = mix(baseC.rgb, baseC.rgb  * color.rgb, intDark);
 		
 	}
-	
+		
 	gl_FragColor = baseC;
 }

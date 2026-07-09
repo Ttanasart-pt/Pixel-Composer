@@ -9,21 +9,22 @@ function Node_Emboss(_x, _y, _group = noone) : Node_Shader_Processor(_x, _y, _gr
 	////- =Emboss
 	newInput(i+6, nodeValue_Int(      "Height",         1 )).setShaderProp("height");
 	newInput(i+0, nodeValue_Rotation( "Direction",    135 )).setShaderProp("direction");
-	/**/ newInput(i+2, nodeValue_Bool(     "Deboss",     false )).setShaderProp("deboss");
-	/**/ newInput(i+9, nodeValue_Bool(     "Deboss",     false )).setShaderProp("deboss");
 	
 	////- =Rendering
-	newInput(i+4, nodeValue_Color(    "Color",   ca_white )).setShaderProp("color");
-	newInput(i+1, nodeValue_Float(    "Intensity",      1 )).setMappable(i+3).setShaderProp("intensity");
-	newInput(i+8, nodeValue_Bool(     "Normalize",   true )).setShaderProp("doNormal");
-	newInput(i+7, nodeValue_Bool(     "High-res",   false )).setShaderProp("hires");
+	newInput(i+4, nodeValue_Color(  "Color",   ca_white )).setShaderProp("color");
+	newInput(i+1, nodeValue_Float(  "Intensity",      1 )).setMappable(i+3).setShaderProp("intensity");
+	newInput(i+2, nodeValue_Slider( "Brighten",       1 )).setShaderProp("intbright");
+	newInput(i+9, nodeValue_Slider( "Darken",         1 )).setShaderProp("intdark");
+	
+	newInput(i+8, nodeValue_Bool(  "Normalize",   true )).setShaderProp("doNormal");
+	newInput(i+7, nodeValue_Bool(  "High-res",   false )).setShaderProp("hires");
 	// i+10
 	
 	array_insert_after(input_display_list, 0, [i+5]);
 	
 	array_append(input_display_list, [ 
 		[ "Emboss",    false ], i+6, i+0, 
-		[ "Rendering", false ], i+4, i+1, i+3, i+8, i+7, 
+		[ "Rendering", false ], i+4, i+1, i+2, i+9, i+3, i+8, i+7, 
 	]);
 	
 	////- Node
@@ -33,7 +34,8 @@ function Node_Emboss(_x, _y, _group = noone) : Node_Shader_Processor(_x, _y, _gr
 	    var _cx  = _x + _dim[0] / 2 * _s;
 	    var _cy  = _y + _dim[1] / 2 * _s;
 	    
-	    drawOverlayInput(inputs[ 0].drawOverlay(w_hoverable, active,  _cx,  _cy, _s, _mx, _my));
+	    var i = shader_index;
+	    drawOverlayInput(inputs[i+0].drawOverlay(w_hoverable, active,  _cx,  _cy, _s, _mx, _my));
 	    
 	    return w_hovering;
 	}
