@@ -1,5 +1,4 @@
 #pragma use(uv)
-
 #region -- uv -- [1779523757.7465837]
     uniform sampler2D uvMap;
     uniform int   useUvMap;
@@ -29,8 +28,8 @@
         return vtx;
     }
 #endregion -- uv --
-#pragma use(curve)
 
+#pragma use(curve)
 #region -- curve -- [1780117484.3465736]
 
     #ifdef _YY_HLSL11_ 
@@ -160,8 +159,8 @@
     }
 
 #endregion -- curve --
-#pragma use(gradient)
 
+#pragma use(gradient)
 #region -- gradient -- [1777679826.681391]
 	#define GRADIENT_LIMIT 128
 	
@@ -375,7 +374,8 @@ void main() {
 		}
 	#endregion
 	
-	vec2  vtx  = getUV(v_vTexcoord);
+	float alp  = 0.;
+	vec2  vtx  = getUVA(v_vTexcoord, alp);
 	vec2  asp  = dimension / dimension.y;
 	vec2  cent = center / dimension;
 	float prog = 0.;
@@ -414,5 +414,6 @@ void main() {
 	if(pCurve_curve_use == 1) prog = curveEval(pCurve_curve, pCurve_amount, prog);
 	
 	vec4 col = gradientEval(prog);
-	gl_FragColor = vec4(col.rgb, col.a * texture2D( gm_BaseTexture, vtx ).a);
+	gl_FragColor    = vec4(col.rgb, col.a * texture2D( gm_BaseTexture, v_vTexcoord ).a);
+	gl_FragColor.a *= alp;
 }

@@ -213,6 +213,7 @@ void main() {
 	
 	vec2  tx     = 1. / dimension;
 	vec4  baseC  = texture2D(gm_BaseTexture, v_vTexcoord);
+	vec4  rawC   = baseC;
 	vec4  base   = useheightMap == 1? texture2D(heightMap, v_vTexcoord) : baseC;
 	float baseBr = bright(base);
 	
@@ -261,5 +262,6 @@ void main() {
 		
 	}
 		
+	baseC.a = rawC.a;
 	gl_FragColor = baseC;
 }

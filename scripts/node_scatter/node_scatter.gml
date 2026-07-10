@@ -16,7 +16,8 @@
 #endregion
 
 function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
-	name = "Scatter";
+	name      = "Scatter";
+	use_depth = true;
 	dimension_index = 1;
 	
 	newInput(10, nodeValueSeed());
@@ -1060,7 +1061,7 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 			var tla = tlx && tly;
 			var sortOverlay  = [];
 			var sortUnderlay = [];
-				
+			
 			repeat(_sct_len) {
 				var _atl = _sct[i++];
 				

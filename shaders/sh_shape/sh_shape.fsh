@@ -1,5 +1,4 @@
 #pragma use(uv)
-
 #region -- uv -- [1779523757.7465837]
     uniform sampler2D uvMap;
     uniform int   useUvMap;
@@ -31,7 +30,6 @@
 #endregion -- uv --
 
 #pragma use(curve)
-
 #region -- curve -- [1780117484.3465736]
 
     #ifdef _YY_HLSL11_ 
@@ -658,13 +656,7 @@ void main() {
 		d = sdQuadrilateral(coord, pt0, pt1, pt2, pt3) - corner;
 	}
 	
-	float cc = 0.;
-	
-	if(d < 0.) {
-		float id = -d;
-		// cc = step(.5, fract(id * 8.));
-		cc = 1.;
-	}
+	float cc = d < 0.? 1. : 0.;
 	
 	if(aa == 1) {
 		float _aa = 1. / max(dimension.x, dimension.y);
@@ -701,4 +693,5 @@ void main() {
 	if(multiplyAlpha == 1) gl_FragData[0].rgb *= gl_FragData[0].a;
 	
 	gl_FragData[1] = vec4(cc, cc, cc, 1.);
+	gl_FragData[3] = vec4(coord / scale * .5 + .5, 0., 1.);
 }
