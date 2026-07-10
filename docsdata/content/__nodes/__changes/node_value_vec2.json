@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.6.008",
+    "changes": [
+      {
+        "date": "2026-07-10T01:43:10.286Z",
+        "node": "",
+        "commit": "**Blend Depth**: Add depth blend mode."
+      }
+    ]
+  },
+  {
     "version": "1.21.6.003",
     "changes": [
       {

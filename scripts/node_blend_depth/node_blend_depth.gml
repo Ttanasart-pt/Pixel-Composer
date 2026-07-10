@@ -1,6 +1,8 @@
 function Node_Blend_Depth(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Blend Depth";
 	
+	newInput(14, nodeValue_EScroll( "Depth Mode", 0, [ "Less than", "Less than Equal", "Greater than", "Greater than Equal" ] ));
+	
 	////- =Surface 1
 	newInput( 0, nodeValue_Surface( "Surface 1" )).setDrawGroup(0);
 	newInput( 1, nodeValue_Surface( "Depth 1"   )).setDrawGroup(0);
@@ -22,12 +24,12 @@ function Node_Blend_Depth(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	newInput(11, nodeValue_Anchor(  "Anchor 2",   [.5,.5] ));
 	newInput(12, nodeValue_Rot(     "Rotation 2",   0     ));
 	newInput(13, nodeValue_Vec2(    "Scale 2",    [1,1]   ));
-	// 14
-	 
+	// 15
+	
 	newOutput( 0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone)).setDrawGroup(2);
 	newOutput( 1, nodeValue_Output("Depth Out",   VALUE_TYPE.surface, noone)).setDrawGroup(2);
 	
-	input_display_list = [ 
+	input_display_list = [ 14, 
 		[ "Surface 1",      false ],  0,  1,  4, 
 			[ "/Transform",  true ],  6,  7,  8,  9, 
 		[ "Surface 2",      false ],  2,  3,  5, 
@@ -53,6 +55,8 @@ function Node_Blend_Depth(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	
 	static processData = function(_outData, _data, _array_index = 0) { 
 		#region data
+			var _dmode = _data[14];
+			
 			var _surf1 = _data[ 0];
 			var _dept1 = _data[ 1];
 			var _rang1 = _data[ 4];
@@ -83,6 +87,8 @@ function Node_Blend_Depth(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 		surface_set_shader(_outData, sh_blend_depth);
 			shader_set_interpolation(_surf1);
 			shader_set_2( "dimension",     getDimension() );
+			
+			shader_set_i( "depth_mode",    _dmode );
 			
 			shader_set_s( "surface_1",     _surf1 );
 			shader_set_i( "surface_1_use", _useS1 );

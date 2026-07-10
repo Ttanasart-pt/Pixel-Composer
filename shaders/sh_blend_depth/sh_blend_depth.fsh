@@ -333,6 +333,7 @@ varying vec2 v_vTexcoord;
 varying vec4 v_vColour;
 
 uniform vec2 dimension;
+uniform int  depth_mode;
 
 uniform sampler2D surface_1;
 uniform sampler2D depth_1;
@@ -355,6 +356,10 @@ uniform vec2  position_2;
 uniform vec2  anchor_2;
 uniform float rotation_2;
 uniform vec2  scale_2;
+
+vec4 blend(vec4 bg, vec4 fg) { 
+	return bg * (1. - fg.a) + fg * fg.a; 
+}
 
 void main() {
 	mat2 rot1 = mat2(cos(rotation_1), sin(rotation_1), -sin(rotation_1), cos(rotation_1));
@@ -391,10 +396,17 @@ void main() {
 		d2 = mix(range_2.x, range_2.y, tx2.y);
 	
 	if(s2.a == 0.) return;
+
+	bool depthPass = false;
 	
-	vec4 bg = d1 >= d2? s1 : s2;
-	vec4 fg = d1 <  d2? s1 : s2;
+	     if(depth_mode == 0) depthPass = d1 <  d2;
+	else if(depth_mode == 1) depthPass = d1 <= d2;
+	else if(depth_mode == 2) depthPass = d1 >  d2;
+	else if(depth_mode == 3) depthPass = d1 >= d2;
 	
-	gl_FragData[0] = bg * (1. - fg.a) + fg * fg.a;
+	vec4 bg = !depthPass? s1 : s2;
+	vec4 fg =  depthPass? s1 : s2;
+	
+	gl_FragData[0] = blend(bg, fg);
 	gl_FragData[1] = vec4(vec3(min(d1, d2)), 1.);
 }

@@ -13,12 +13,11 @@ uniform sampler2D depthMap;
 void main() {
     float fDepth = v_vViewPos.z;
     
-    if(useDepth == 1) {
-        vec4 depth = texture2D( depthMap, v_vViewPos.xy * .5 + .5 );
-        
-        float bDepth = (depth.r - viewRange.x) / (viewRange.y - viewRange.x);
+    // if(useDepth == 1) {
+        // vec4 depth = texture2D( depthMap, v_vViewPos.xy * .5 + .5 );
+        // float bDepth = (depth.r - viewRange.x) / (viewRange.y - viewRange.x);
         // if(v_vViewPos.z >= depth.r) discard;
-    }
+    // }
     
     gl_FragData[0] = v_vColour * blend * obj_color;
     gl_FragData[1] = vec4(0.);

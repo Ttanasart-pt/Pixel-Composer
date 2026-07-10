@@ -33,8 +33,6 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		dummy_undo     = -1;
 		dummy_redo     = -1;
 		
-		instanceBase   = undefined;
-		
 		pieWidget = undefined;
 	#endregion
 	
@@ -124,11 +122,13 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		bypass_junc = undefined;
 	#endregion
 	
-	#region ---- attributes ----
+	#region ---- Attributes ----
 		attributes    = {};   // serialized
 		parameters    = {};   // non-serialized
 		
-		setAttribute    = function(k, v, r = false) /*=>*/ { 
+		attributes.override_instance = false;
+		
+		setAttribute  = function(k, v, r = false) /*=>*/ { 
 			attributes[$ k] = v;
 			if(r) node.triggerRender(); 
 			node.project.modified = true; 

@@ -715,7 +715,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			}
 		}
 		
-		array_foreach(_in, function(inp, i) /*=>*/ { inp.index = i });
+		array_foreach(_in, function(inp, i) /*=>*/ { inp.index = i; return true; });
 		
 		if(dummy_input) dummy_input.index = array_length(_in);
 		inputs = _in;

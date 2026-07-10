@@ -88,8 +88,6 @@ function __NodeValue_Vec2(_name, _node, _value, _data = {}) : NodeValue(_name, _
 	}
 
 	static isAnimable = function() {
-		if(instanceBase != undefined) return instanceBase.isAnimable();
-		
 		if(type == VALUE_TYPE.PCXnode)				 return false;
 		if(display_type == VALUE_DISPLAY.text_array) return false;
 		
