@@ -469,8 +469,9 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		return self;
 	}
 	
-	static useInstance = function() { return node.instanceBase && value_from == noone; } 
-	static getInstance = function() { return node.instanceBase.inputs[index];          } 
+	static hasInstance = function() { return connect_type == CONNECT_TYPE.input && node.instanceBase;               } 
+	static useInstance = function() { return hasInstance() && value_from == noone && !attributes.override_instance; } 
+	static getInstance = function() { return node.instanceBase.inputs[index]; } 
 	
 	////- NAME
 	

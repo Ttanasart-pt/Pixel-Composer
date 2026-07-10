@@ -156,6 +156,7 @@
     "info":                               { "path": "./icon/s_info.png",                                    "s": 1, "x":  8, "y":  8 },
     "info_light":                         { "path": "./icon/s_info_light.png",                              "s": 1, "x":  8, "y":  8 },
     "instance_icon":                      { "path": "./icon/s_instance.png",                                "s": 1, "x": 12, "y": 12 },
+    "instance_override":                  { "path": "./icon/s_instance_override.png",                       "s": 2, "x": 12, "y": 12 },
     "inspector_view":                     { "path": "./icon/s_icon_inspector_view.png",                     "s": 2, "x": 12, "y": 12 },
     "junc_visible":                       { "path": "./icon/s_junc_visible.png",                            "s": 3, "x":  8, "y":  8 },
     "junction_bypass":                    { "path": "./icon/s_junction_bypass.png",                         "s": 2, "x": 12, "y": 12 },

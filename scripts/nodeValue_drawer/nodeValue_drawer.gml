@@ -5,6 +5,7 @@ function drawWidgetInit() {
 	anim_hold     = noone;
 	visi_hold     = noone;
 	fav_hold      = noone;
+	ins_hold      = noone;
 	reset_hold    = noone;
 	def_hold      = noone;
 	contentPane   = undefined;
@@ -16,15 +17,16 @@ function drawWidgetInit() {
 	tooltip_loop_type = new tooltipSelector(__txt("panel_animation_looping_mode", "Looping mode"), global.junctionEndName);
 }
 
-function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _focus = false, 
+function drawWidget(xx, yy, ww, _m, _jun, global_var = true, _hover = false, _focus = false, 
 	_scrollPane = noone, rx = 0, ry = 0, _ID = undefined, _blend = c_white) { 
 		
 	#region data
 		var _viewSpac = viewMode == INSP_VIEW_MODE.spacious;
-		var _input    = jun.connect_type == CONNECT_TYPE.input;
+		var _input    = _jun.connect_type == CONNECT_TYPE.input;
+		var _hasInst  = _jun.hasInstance();
+		var _useInst  = _jun.useInstance();
 		
-		if(_input && jun.useInstance())
-		     jun      = jun.getInstance();
+		var jun = _useInst? _jun.getInstance() : _jun;
 		
 		var _font     = _viewSpac? f_p2 : f_p3;
 		var breakLine = _viewSpac || jun.expUse;
@@ -68,6 +70,7 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 			anim_hold  = noone;
 			visi_hold  = noone;	
 			fav_hold   = noone;	
+			ins_hold   = noone;	
 			reset_hold = noone;	
 			def_hold   = noone;	
 		}
@@ -129,7 +132,7 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 		
 		lb_w += bs;
 		
-		if(!global_var) { // Visibility & Expression
+		if(!global_var) { // Visibility / Expression / Fav / Override
 			butx += bs;
 			lb_x += bs;
 			lb_w += bs;
@@ -195,6 +198,39 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 				}
 			}
 			
+			if(_hasInst) {
+				butx += bs;
+				lb_x += bs;
+				lb_w += bs;
+				
+				var cc  = _jun.attributes.override_instance? CDEF.lime : c_white;
+				var aa  = _jun.attributes.override_instance? 1 : .8;
+				var iss = _viewSpac? .75 : .5;
+				
+				draw_sprite_ui_uniform(THEME.instance_override, _jun.attributes.override_instance, butx, lb_y, iss, cc, aa);
+				if(_hover && point_in_circle(_m[0], _m[1], butx, lb_y, bs / 2)) {
+					mbRight = false;
+					cHov    = true;
+					
+					if(ins_hold != noone && _jun.attributes.override_instance != ins_hold) {
+						_jun.attributes.override_instance = ins_hold;
+						_jun.node.triggerRender();
+						jun = _jun.useInstance()? _jun.getInstance() : _jun;
+					}
+					
+					draw_sprite_ui_uniform(THEME.instance_override, _jun.attributes.override_instance, butx, lb_y, iss, cc, 1);
+					TOOLTIP = __txt("Override");
+					
+					if(mouse_lpress(_focus)) {
+						_jun.attributes.override_instance = !_jun.attributes.override_instance;
+						_jun.node.triggerRender();
+						jun = _jun.useInstance()? _jun.getInstance() : _jun;
+						
+						ins_hold = _jun.attributes.override_instance;
+					}
+				}
+			}
+			
 		} // Visibility & Expression
 			
 		var cc = COLORS._main_text;
@@ -203,8 +239,8 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 			cc = expValid? COLORS._main_value_positive : COLORS._main_value_negative;
 		}
 		
-		if(jun.is_anim)                     cc = COLORS._main_value_positive;
-		if(jun.hasJunctionFrom())           cc = COLORS._main_accent;
+		if(jun.is_anim)           cc = COLORS._main_value_positive;
+		if(jun.hasJunctionFrom()) cc = COLORS._main_accent;
 		
 		if(jun.color != -1) {
 			draw_sprite_ui(THEME.timeline_color, 1, lb_x + ui(8), lb_y, 1, 1, 0, jun.color, 1);

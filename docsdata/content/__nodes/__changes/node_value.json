@@ -6,6 +6,11 @@
         "date": "2026-07-10T01:43:10.281Z",
         "node": "",
         "commit": "**Blend Depth**: Add depth blend mode."
+      },
+      {
+        "date": "2026-07-10T02:12:40.283Z",
+        "node": "Inspector Panel",
+        "commit": "**Inspector Panel**: Add per property instance override."
       }
     ]
   },
