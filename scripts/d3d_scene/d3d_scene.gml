@@ -84,6 +84,8 @@ function __3dScene(_camera, _name = "New scene") constructor {
 	enable_ztest        = true;
 	deferData           = noone;
 	
+	depth_texture       = undefined;
+	
 	static reset = function() {
 		lightDir_count        = 0;
 		lightDir_direction    = []; _lightDir_direction    = array_create( D3D_LIGHT_MAX * 4 ); 

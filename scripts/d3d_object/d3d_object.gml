@@ -224,30 +224,16 @@ function __3dObject() : __3dInstance() constructor {
 				
 			case 1 : 
 				submitVertex(_sc, _sh);
-				submitEdge(_sc.wireframe_color, _color_get_alpha(_sc.wireframe_color));
+				submitEdge(_sc);
 				break;
 				
 			case 2 : 
-				gpu_set_blendmode_ext(bm_zero, bm_one);
-				gpu_set_cullmode(cull_clockwise);
-				submitVertex(_sc, _sh);
-				gpu_set_cullmode(cull_counterclockwise);
-				BLEND_NORMAL
-				
-				gpu_set_zfunc(cmpfunc_less);
-				submitEdge(_sc.wireframe_color, _color_get_alpha(_sc.wireframe_color));
-				gpu_set_zfunc(cmpfunc_lessequal);
+				submitEdge(_sc); 
 				break;
-				
-			case 3 : 
-				submitEdge(_sc.wireframe_color, _color_get_alpha(_sc.wireframe_color));
-				break;
-				
 		}
 	}
 	
 	static submitVertex = function(_sc = noone, _sh = noone, _selection = false) {
-		
 		#region shader
 			var _shader;
 			switch(VF) {
@@ -261,6 +247,7 @@ function __3dObject() : __3dInstance() constructor {
 			if(!is_undefined(_sh))     shader_set(_shader);
 		#endregion
 		
+		shader_set_i( "useDepth",  0 );
 		preSubmitVertex(_sc);
 		
 		transform.submitMatrix();
@@ -313,7 +300,8 @@ function __3dObject() : __3dInstance() constructor {
 			if(NVB == noone) generateNormal();
 			if(NVB != noone) {
 				shader_set(sh_d3d_wireframe);
-				shader_set_color("blend", c_white);
+				shader_set_i( "useDepth",      0 );
+				shader_set_c( "blend",   c_white );
 				
 				for( var i = 0, n = array_length(NVB); i < n; i++ ) {
 					if(VBM != undefined) { matrix_stack_push(VBM[i]); matrix_set(matrix_world, matrix_stack_top()); }
@@ -331,14 +319,22 @@ function __3dObject() : __3dInstance() constructor {
 		
 	}
 	
-	static submitEdge = function(cc = c_black, aa = 1) {
+	static submitEdge = function(_sc = noone, useDepth = false, depthType = 0) {
 		if(array_empty(EB)) return;
 		
 		shader_set(sh_d3d_wireframe);
 		transform.submitMatrix();
 		matrix_set(matrix_world, matrix_stack_top());
 		
-		shader_set_c("blend", cc, aa);
+		shader_set_i( "useDepth",  useDepth  );
+		shader_set_i( "depthType", depthType );
+		if(useDepth) {
+			shader_set_2( "viewRange", [_sc.camera.view_near, _sc.camera.view_far] );
+			texture_set_stage( shader_get_sampler_index(sh_d3d_wireframe, "depthMap"), surface_get_texture_depth(_sc.depth_texture) );
+		}
+		
+		shader_set_c( "blend", _sc.wireframe_color );
+		
 		for( var i = 0, n = array_length(EB); i < n; i++ ) {
 			if(VBM != undefined) { matrix_stack_push(VBM[i]); matrix_set(matrix_world, matrix_stack_top()); }
 			vertex_submit(EB[i], pr_linelist, -1);

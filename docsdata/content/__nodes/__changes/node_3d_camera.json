@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.6.008",
+    "changes": [
+      {
+        "date": "2026-07-10T01:29:35.632Z",
+        "node": "3D Camera] Remove 'Front Edge' type. - [3D Camera",
+        "commit": "**3D Camera] Remove 'Front Edge' type. - [3D Camera**: Wireframe mode now output depth."
+      }
+    ]
+  },
+  {
     "version": "1.21.4.006",
     "changes": [
       {

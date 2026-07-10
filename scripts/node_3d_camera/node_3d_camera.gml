@@ -52,7 +52,7 @@ function Node_3D_Camera(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _group)
 	newInput(i+22, nodeValue_EButton( "Blend mode",            0, [ "Normal", "Additive" ] ));
 	
 	////- =Wireframe
-	newInput(i+23, nodeValue_EButton( "Wire Mode",             0, [ "Solid", "Solid + Wireframe", "Edge Front", "Edge All" ] ));
+	newInput(i+23, nodeValue_EButton( "Wire Mode",             0, [ "Solid", "Solid + Wireframe", "Wireframe" ] ));
 	newInput(i+24, nodeValue_Float(   "Wireframe Thickness",   1        ));
 	newInput(i+25, nodeValue_Color(   "Wireframe Color",       ca_black ));
 	newInput(i+26, nodeValue_Bool(    "Wireframe antialias",   false    ));
@@ -164,69 +164,71 @@ function Node_3D_Camera(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _group)
 	
 	static processData = function(_outData, _data, _array_index = 0) {
 		#region data
-			var _sobj   = _data[in_d3d +  4];
+			var i = in_d3d;
+		
+			var _sobj   = _data[i+ 4];
 			
-			var _dim    = _data[in_d3d +  2];
+			var _dim    = _data[i+ 2];
 			
-			var _posm   = _data[in_d3d +  9];
+			var _posm   = _data[i+ 9];
 			var _pos    = _data[0];
 			var _rot    = _data[1];
-			var _look   = _data[in_d3d + 10];
-			var _roll   = _data[in_d3d + 11];
-			var _hAng   = _data[in_d3d + 12];
-			var _vAng   = _data[in_d3d + 13];
-			var _dist   = _data[in_d3d + 14];
+			var _look   = _data[i+10];
+			var _roll   = _data[i+11];
+			var _hAng   = _data[i+12];
+			var _vAng   = _data[i+13];
+			var _dist   = _data[i+14];
 			
-			var _proj   = _data[in_d3d +  3];
-			var _projMt = _data[in_d3d + 33];
-			var _fov    = _data[in_d3d +  0];
-			var _clip   = _data[in_d3d +  1];
-			var _orts   = _data[in_d3d +  8];
+			var _proj   = _data[i+ 3];
+			var _projMt = _data[i+33];
+			var _fov    = _data[i+ 0];
+			var _clip   = _data[i+ 1];
+			var _orts   = _data[i+ 8];
 			
-			var _shader = _data[in_d3d + 32]; if(_shader == 0) _shader = project.attributes.shader; else _shader--;
-			var _ambt   = _data[in_d3d +  5];
-			var _env    = _data[in_d3d + 16];
-			var _dbg    = _data[in_d3d +  6];
-			var _back   = _data[in_d3d +  7];
-			var _gamm   = _data[in_d3d + 15];
-			var _alThr  = _data[in_d3d + 34];
-			var _blend  = _data[in_d3d + 22];
+			var _shader = _data[i+32]; if(_shader == 0) _shader = project.attributes.shader; else _shader--;
+			var _ambt   = _data[i+ 5];
+			var _env    = _data[i+16];
+			var _dbg    = _data[i+ 6];
+			var _back   = _data[i+ 7];
+			var _gamm   = _data[i+15];
+			var _alThr  = _data[i+34];
+			var _blend  = _data[i+22];
 			
-			var _wire   = _data[in_d3d + 23];
-			var _wiret  = _data[in_d3d + 24];
-			var _wirec  = _data[in_d3d + 25];
-			var _wirea  = _data[in_d3d + 26];
-			var _wires  = _data[in_d3d + 27];
-			var _wireo  = _data[in_d3d + 28];
+			var _wire   = _data[i+23];
+			var _wiret  = _data[i+24];
+			var _wirec  = _data[i+25];
+			var _wirea  = _data[i+26];
+			var _wires  = _data[i+27];
+			var _wireo  = _data[i+28];
 			
-			var _aoEn   = _data[in_d3d + 17];
-			var _aoSr   = _data[in_d3d + 20];
-			var _aoRa   = _data[in_d3d + 18];
-			var _aoBi   = _data[in_d3d + 19];
-			var _aoBlur = _data[in_d3d + 31];
+			var _aoEn   = _data[i+17];
+			var _aoSr   = _data[i+20];
+			var _aoRa   = _data[i+18];
+			var _aoBi   = _data[i+19];
+			var _aoBlur = _data[i+31];
 		
-			var _nrmSmt = _data[in_d3d + 21];
-			var _bckBln = _data[in_d3d + 29];
-			var _nswapX = _data[in_d3d + 30];
+			var _nrmSmt = _data[i+21];
+			var _bckBln = _data[i+29];
+			var _nswapX = _data[i+30];
 				
-			inputs[in_d3d + 33].setVisible(_proj == 2);
-			inputs[in_d3d +  0].setVisible(_proj == 0);
-			inputs[in_d3d +  1].setVisible(_proj != 2);
-			inputs[in_d3d +  8].setVisible(_proj == 1);
+			inputs[i+33].setVisible(_proj == 2);
+			inputs[i+ 0].setVisible(_proj == 0);
+			inputs[i+ 1].setVisible(_proj != 2);
+			inputs[i+ 8].setVisible(_proj == 1);
 			
 			inputs[0].setVisible(_posm == 0 || _posm == 1);
 			inputs[1].setVisible(_posm == 0);
-			inputs[in_d3d + 10].setVisible(_posm == 1 || _posm == 2);
-			inputs[in_d3d + 11].setVisible(_posm == 1);
-			inputs[in_d3d + 12].setVisible(_posm == 2);
-			inputs[in_d3d + 13].setVisible(_posm == 2);
-			inputs[in_d3d + 14].setVisible(_posm == 2);
+			inputs[i+10].setVisible(_posm == 1 || _posm == 2);
+			inputs[i+11].setVisible(_posm == 1);
+			inputs[i+12].setVisible(_posm == 2);
+			inputs[i+13].setVisible(_posm == 2);
+			inputs[i+14].setVisible(_posm == 2);
 			
-			inputs[in_d3d + 18].setVisible(_aoEn);
-			inputs[in_d3d + 19].setVisible(_aoEn);
-			inputs[in_d3d + 20].setVisible(_aoEn);
+			inputs[i+18].setVisible(_aoEn);
+			inputs[i+19].setVisible(_aoEn);
+			inputs[i+20].setVisible(_aoEn);
 			
-			inputs[in_d3d + 24].setVisible(_wire != 2);
+			inputs[i+24].setVisible(_wire != 2);
 			
 		#endregion
 		
