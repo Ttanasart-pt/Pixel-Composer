@@ -203,7 +203,7 @@ function drawWidget(xx, yy, ww, _m, _jun, global_var = true, _hover = false, _fo
 				lb_x += bs;
 				lb_w += bs;
 				
-				var cc  = _jun.attributes.override_instance? CDEF.lime : c_white;
+				var cc  = _jun.attributes.override_instance? COLORS._main_accent : c_white;
 				var aa  = _jun.attributes.override_instance? 1 : .8;
 				var iss = _viewSpac? .75 : .5;
 				

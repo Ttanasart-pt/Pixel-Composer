@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.6.008",
+    "changes": [
+      {
+        "date": "2026-07-10T02:39:06.378Z",
+        "node": "Smear",
+        "commit": "**Smear**: Add interpolation setting."
+      }
+    ]
+  },
+  {
     "version": "1.21.6.005",
     "changes": [
       {

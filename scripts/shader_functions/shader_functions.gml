@@ -200,6 +200,7 @@
 	function shader_set_c(uniform, col, alpha = 1) { shader_set_f(uniform, colToVec4(col, alpha)); }
 	function shader_set_color(uniform, col, alpha = 1) { shader_set_f(uniform, colToVec4(col, alpha)); }
 	
+	#macro shader_set_cr shader_set_curve
 	function shader_set_curve(uniform, curve, curveJunc = undefined) { 
 		var _isCurv = is_array(curve);
 		if(curveJunc) _isCurv = _isCurv && curveJunc.attributes.curved;

@@ -49,6 +49,7 @@ function Node_Smear(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	
 	attribute_surface_depth();
 	attribute_oversample();
+	attribute_interpolation();
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _params) { 
 		var _surf = outputs[0].getValue();
@@ -87,7 +88,7 @@ function Node_Smear(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 		#endregion
 		
 		surface_set_shader(_outSurf, sh_smear);
-			shader_set_i( "sampleMode",	  getAttribute("oversample"));
+			shader_set_interpolation(_surf);
 			shader_set_uv(_data[18], _data[19]);
 			
 			shader_set_f( "dimension",   _dim     );
@@ -99,7 +100,7 @@ function Node_Smear(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 			shader_set_m( "direction",   _dirr, _data[10], inputs[ 2] );
 			
 			shader_set_f( "spread",      _sprd    );
-			shader_set_curve( "spread",  _sprdCurv, inputs[13] );
+			shader_set_cr("spread",      _sprdCurv, inputs[13] );
 			
 			shader_set_i( "modulateStr", _mods    );
 			

@@ -431,8 +431,9 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 									.setVAlign(fa_center)
 									.setFont(f_p3)
 									.setSideButton(button(function() /*=>*/ { dialogPanelCall(new Panel_Node_Canvas_Pressure(self), mouse_mx, mouse_my, { anchor: ANCHOR.top | ANCHOR.left }) })
-										.setIcon(THEME.pen_pressure, 0, function() /*=>*/ {return tool_attribute.pressure? COLORS._main_accent : COLORS._main_icon}), true)
-										.setTooltip("Pen Pressure Settings...")
+										.setIcon(THEME.pen_pressure, 0, function() /*=>*/ {return tool_attribute.pressure? COLORS._main_accent : COLORS._main_icon})
+										.setTooltip("Pen Pressure Settings..."), true)
+										
 										
 		tool_smooth_edit    = textBox_Number(function(v) /*=>*/ { brush.smooth = max(0, v); })
 									.setSlideType(true)
