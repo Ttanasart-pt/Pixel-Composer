@@ -5,7 +5,7 @@ function Node_Path_to_Curve(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	
 	////- =Path
 	newInput( 0, nodeValue_Path( "Path"           ));
-	newInput( 1, nodeValue_Int(      "Resolution", 16 ));
+	newInput( 1, nodeValue_Int(  "Resolution", 16 ));
 	
 	////- =Curve 
 	newInput( 5, nodeValue_EScroll( "Type",         0, [ "Curve", "Step" ] ));
@@ -63,7 +63,7 @@ function Node_Path_to_Curve(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		_segs[4] = _orng[1]; // max y
 		_segs[5] = 0; // -
 		
-		// curve format [-cx0, -cy0, x0, y0, +cx0, +cy0, -cx1, -cy1, x1, y1, +cx1, +cy1]
+		// curve format [-cx0, -cy0, x0, y0, +cx0, +cy0, // -cx1, -cy1, x1, y1, +cx1, +cy1]
 		
 		var _p = new __vec2P();
 		for( var i = 0; i <= _reso; i++ ) {

@@ -15,21 +15,21 @@ function Node_Noise_Scratch(_x, _y, _group = noone) : Node_Shader_Generator(_x, 
 	newInput(12, nodeValue_Vec2(     "Scale",     [1,1] )).setShaderProp("scale");
 	
 	////- =Noise
-	newInput( 5, nodeValue_Float(  "Thickness",  0 )).setShaderProp("thickness");
-	newInput( 6, nodeValue_Slider( "Wavyness",  .5 )).setShaderProp("wavyness");
-	newInput( 7, nodeValue_Float(  "Softness",   3 )).setShaderProp("softness");
+	newInput( 5, nodeValue_Float(  "Thickness",  0 )).setMappable(15).setShaderProp("thickness");
+	newInput( 6, nodeValue_Slider( "Wavyness",  .5 )).setMappable(16).setShaderProp("wavyness");
+	newInput( 7, nodeValue_Float(  "Softness",   3 )).setMappable(17).setShaderProp("softness");
 	
 	////- =Detail
 	newInput( 8, nodeValue_Int(      "Octaves",         8       )).setShaderProp("octaves");
 	newInput(13, nodeValue_Vec2(     "Octave Shift",    [10,10] )).setShaderProp("octaveShift");
 	newInput(14, nodeValue_Rotation( "Octave Rotation", 30      )).setShaderProp("octaveRotation");
 	newInput( 9, nodeValue_Float(    "Octave Scale",    1.22    )).setShaderProp("octaveScale");
-	// 15
+	// 18
 	
 	input_display_list = [
 		[ "Output",     true ],  0,  1,  2,  3, 
 		[ "Transform", false ], 10, 11, 12, 
-		[ "Noise",     false ],  5,  6,  7, 
+		[ "Noise",     false ],  5, 15,  6, 16,  7, 17, 
 		[ "Detail",    false ],  8, 13, 14,  9, 
 	];
 	

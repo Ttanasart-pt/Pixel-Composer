@@ -117,17 +117,19 @@ vec4 snoise(vec3 v) {
 }
 
 void main() {
-	float prg = progress.x;
-	if(progressUseSurf == 1) {
-		vec4 _vMap = texture2D( progressSurf, v_vTexcoord );
-		prg = mix(progress.x, progress.y, (_vMap.r + _vMap.g + _vMap.b) / 3.);
-	}
-	
-	float its = intensity.x;
-	if(intensityUseSurf == 1) {
-		vec4 _vMap = texture2D( intensitySurf, v_vTexcoord );
-		its = mix(intensity.x, intensity.y, (_vMap.r + _vMap.g + _vMap.b) / 3.);
-	}
+	#region param
+		float prg = progress.x;
+		if(progressUseSurf == 1) {
+			vec4 _vMap = texture2D( progressSurf, v_vTexcoord );
+			prg = mix(progress.x, progress.y, (_vMap.r + _vMap.g + _vMap.b) / 3.);
+		}
+		
+		float its = intensity.x;
+		if(intensityUseSurf == 1) {
+			vec4 _vMap = texture2D( intensitySurf, v_vTexcoord );
+			its = mix(intensity.x, intensity.y, (_vMap.r + _vMap.g + _vMap.b) / 3.);
+		}
+	#endregion
 	
 	vec2 vtx  = getUV(v_vTexcoord);
 	vec2 p    = vtx;

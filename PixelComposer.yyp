@@ -1661,6 +1661,7 @@
     {"id":{"name":"node_csv_file_read","path":"scripts/node_csv_file_read/node_csv_file_read.yy",},},
     {"id":{"name":"node_csv_file_write","path":"scripts/node_csv_file_write/node_csv_file_write.yy",},},
     {"id":{"name":"node_curvature","path":"scripts/node_curvature/node_curvature.yy",},},
+    {"id":{"name":"node_curve_function","path":"scripts/node_curve_function/node_curve_function.yy",},},
     {"id":{"name":"node_curve_hsv","path":"scripts/node_curve_hsv/node_curve_hsv.yy",},},
     {"id":{"name":"node_curve","path":"scripts/node_curve/node_curve.yy",},},
     {"id":{"name":"node_custom_shader","path":"scripts/node_custom_shader/node_custom_shader.yy",},},

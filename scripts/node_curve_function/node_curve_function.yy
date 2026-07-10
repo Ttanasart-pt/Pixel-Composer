@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"node_curve_function",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"node_curve_function",
+  "parent":{
+    "name":"number",
+    "path":"folders/nodes/data/value/path/number.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

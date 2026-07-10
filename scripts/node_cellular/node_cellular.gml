@@ -45,7 +45,7 @@ function Node_Cellular(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	newInput( 5, nodeValue_Slider(   "Contrast",  1, [0, 4, 0.01] ));
 	newInput( 7, nodeValue_Slider(   "Middle",   .5, [0, 1, 0.01] ));
 	newInput(10, nodeValue_Bool(     "Colored",   false ))
-	// input 24
+	// 24
 	
 	input_display_list = [  3,
 		[ "Output",    false ],  0, 20, 21, 13, 

@@ -47,14 +47,27 @@ uniform float rotation;
 uniform vec2  scale;
 
 uniform float seed; 
-uniform float thickness; //  0
-uniform float wavyness;  // .5
-uniform float softness;  //  3
+
+uniform vec2      thickness;
+uniform int       thicknessUseSurf;
+uniform sampler2D thicknessSurf;
+
+uniform vec2      wavyness;
+uniform int       wavynessUseSurf;
+uniform sampler2D wavynessSurf;
+
+uniform vec2      softness;
+uniform int       softnessUseSurf;
+uniform sampler2D softnessSurf;
 
 uniform int   octaves;   //  8
 uniform vec2  octaveShift;
 uniform float octaveRotation;
 uniform float octaveScale;
+
+float thick;
+float wave;
+float soft;
 
 vec2 hash(vec2 p) { return fract(sin(vec2( dot(p, vec2(127.1324, 311.7874)) * (152.6178612 + seed / 10000.), 
 										   dot(p, vec2(269.8355, 183.3961)) * (437.5453123 + seed / 10000.))) * 43758.5453); }
@@ -67,16 +80,16 @@ float scratch(vec2 p, float f) {
     p = p * cos(h.x + h.y) + vec2(-p.y, p.x) * sin(h.x + h.y);
     p += sin(h.x - h.y);
     
-    float x = abs(p.x - cos(h.x + p.y * 1.57) * wavyness);
-    x = smoothstep(thickness + f, thickness - f, x);
+    float x = abs(p.x - cos(h.x + p.y * 1.57) * wave);
+    x = smoothstep(thick + f, thick - f, x);
     x *= p.y * 0.5 + 0.5;
     
     return x;
 }
 
 float scratches12(vec2 p) {
-    float scratches = 0.0;
-    float w = length(fwidth(p)) * softness;
+    float scratches = 0.;
+    float w = length(fwidth(p)) * soft;
     
     float ang = radians(octaveRotation);
     mat2  rot = mat2(cos(ang), -sin(ang), sin(ang), cos(ang));
@@ -92,15 +105,36 @@ float scratches12(vec2 p) {
 }
 
 void main() {
+	#region param
+		thick = thickness.x;
+		if(thicknessUseSurf == 1) {
+			vec4 _vMap = texture2D( thicknessSurf, v_vTexcoord );
+			thick = mix(thickness.x, thickness.y, (_vMap.r + _vMap.g + _vMap.b) / 3.);
+		}
+		
+		wave = wavyness.x;
+		if(wavynessUseSurf == 1) {
+			vec4 _vMap = texture2D( wavynessSurf, v_vTexcoord );
+			wave = mix(wavyness.x, wavyness.y, (_vMap.r + _vMap.g + _vMap.b) / 3.);
+		}
+		
+		soft = softness.x;
+		if(softnessUseSurf == 1) {
+			vec4 _vMap = texture2D( softnessSurf, v_vTexcoord );
+			soft = mix(softness.x, softness.y, (_vMap.r + _vMap.g + _vMap.b) / 3.);
+		}
+		
+	#endregion
+	
 	float a   = 0.;
 	vec2  vtx = getUVA(v_vTexcoord, a);
 	
 	float ang = radians(rotation);
-	vtx  = vtx * mat2(cos(ang), -sin(ang), sin(ang), cos(ang)) / scale;
 	vtx -= position / dimension;
+	vtx *= mat2(cos(ang), -sin(ang), sin(ang), cos(ang));
+	vtx /= scale;
 	
-	float b   = scratches12(vtx);
-	
+	float b  = scratches12(vtx);
 	vec4 res = vec4(b,b,b,a);
 	gl_FragColor = res;
 }
