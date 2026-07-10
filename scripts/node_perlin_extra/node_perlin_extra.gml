@@ -17,10 +17,10 @@ function Node_Perlin_Extra(_x, _y, _group = noone) : Node_Shader_Generator(_x, _
 	////- =Noise
 	newInput( 5, nodeValueSeed()).setShaderProp("seed").setPieMenu();
 	newInput(10, nodeValue_EScroll( "Noise Type",       0, [ "Absolute worley", "Fluid", "Noisy", "Camo", "Blocky", "Max", "Vine" ])).setShaderProp("type").setPieMenu();
-	newInput( 3, nodeValue_Int(         "Iteration",        2    )).setShaderProp("iteration").setPieMenu();
-	newInput( 4, nodeValue_Bool(        "Tile",             true )).setShaderProp("tile").setPieMenu();
-	newInput(11, nodeValue_Slider(      "Parameter A",      0    )).setShaderProp("paramA").setMappable(14);
-	newInput(12, nodeValue_Float(       "Parameter B",      1    )).setShaderProp("paramB").setMappable(15);
+	newInput( 3, nodeValue_Int(     "Iteration",        2    )).setShaderProp("iteration").setPieMenu();
+	newInput( 4, nodeValue_Bool(    "Tile",             true )).setShaderProp("tile").setPieMenu();
+	newInput(11, nodeValue_Slider(  "Parameter A",      0    )).setShaderProp("paramA").setMappable(14);
+	newInput(12, nodeValue_Float(   "Parameter B",      1    )).setShaderProp("paramB").setMappable(15);
 	
 	////- =Transform
 	newInput( 1, nodeValue_Vec2(     "Position",    [0,0] )).setHotkey("G").setShaderProp("position").setUnitSimple().setPieMenu();
@@ -63,7 +63,6 @@ function Node_Perlin_Extra(_x, _y, _group = noone) : Node_Shader_Generator(_x, _
 			var _col = _data[ 6];
 		#endregion
 		
-		inputs[16].setVisible(!_til);
 		inputs[ 2].type = _til? VALUE_TYPE.integer : VALUE_TYPE.float;
 		
 		inputs[7].setVisible(_col != 0);

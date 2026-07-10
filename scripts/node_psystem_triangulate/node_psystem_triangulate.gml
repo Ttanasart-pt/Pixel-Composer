@@ -110,7 +110,7 @@ function Node_pSystem_Triangulate(_x, _y, _group = noone) : Node(_x, _y, _group)
 				var _dfg     = buffer_read_at( _partBuff, _st1 + PSYSTEM_OFF.dflag,  buffer_u16  );
 				var _draw_x1 = buffer_read_at( _partBuff, _st1 + (bool(_dfg & 0b100)? PSYSTEM_OFF.dposx : PSYSTEM_OFF.posx),   buffer_f64  );
 				var _draw_y1 = buffer_read_at( _partBuff, _st1 + (bool(_dfg & 0b100)? PSYSTEM_OFF.dposy : PSYSTEM_OFF.posy),   buffer_f64  );
-				var _draw_s1 = buffer_read_at( _partBuff, _st1 + (bool(_dfg & 0b010)? PSYSTEM_OFF.dscax : PSYSTEM_OFF.scax),   buffer_f64  );
+				var _draw_s1 = buffer_read_at( _partBuff, _st1 + PSYSTEM_OFF.dscax,  buffer_f64  );
 				
 				var _bldR1   = buffer_read_at( _partBuff, _st1 + PSYSTEM_OFF.blnr, buffer_u8 );
 				var _bldG1   = buffer_read_at( _partBuff, _st1 + PSYSTEM_OFF.blng, buffer_u8 );
@@ -121,7 +121,7 @@ function Node_pSystem_Triangulate(_x, _y, _group = noone) : Node(_x, _y, _group)
 				var _dfg     = buffer_read_at( _partBuff, _st2 + PSYSTEM_OFF.dflag,  buffer_u16  );
 				var _draw_x2 = buffer_read_at( _partBuff, _st2 + (bool(_dfg & 0b100)? PSYSTEM_OFF.dposx : PSYSTEM_OFF.posx),   buffer_f64  );
 				var _draw_y2 = buffer_read_at( _partBuff, _st2 + (bool(_dfg & 0b100)? PSYSTEM_OFF.dposy : PSYSTEM_OFF.posy),   buffer_f64  );
-				var _draw_s2 = buffer_read_at( _partBuff, _st2 + (bool(_dfg & 0b010)? PSYSTEM_OFF.dscax : PSYSTEM_OFF.scax),   buffer_f64  );
+				var _draw_s2 = buffer_read_at( _partBuff, _st2 + PSYSTEM_OFF.dscax,  buffer_f64  );
 				
 				var _bldR2   = buffer_read_at( _partBuff, _st2 + PSYSTEM_OFF.blnr, buffer_u8 );
 				var _bldG2   = buffer_read_at( _partBuff, _st2 + PSYSTEM_OFF.blng, buffer_u8 );
@@ -132,7 +132,7 @@ function Node_pSystem_Triangulate(_x, _y, _group = noone) : Node(_x, _y, _group)
 				var _dfg     = buffer_read_at( _partBuff, _st3 + PSYSTEM_OFF.dflag,  buffer_u16  );
 				var _draw_x3 = buffer_read_at( _partBuff, _st3 + (bool(_dfg & 0b100)? PSYSTEM_OFF.dposx : PSYSTEM_OFF.posx),   buffer_f64  );
 				var _draw_y3 = buffer_read_at( _partBuff, _st3 + (bool(_dfg & 0b100)? PSYSTEM_OFF.dposy : PSYSTEM_OFF.posy),   buffer_f64  );
-				var _draw_s3 = buffer_read_at( _partBuff, _st3 + (bool(_dfg & 0b010)? PSYSTEM_OFF.dscax : PSYSTEM_OFF.scax),   buffer_f64  );
+				var _draw_s3 = buffer_read_at( _partBuff, _st3 + PSYSTEM_OFF.dscax,  buffer_f64  );
 				
 				var _bldR3   = buffer_read_at( _partBuff, _st3 + PSYSTEM_OFF.blnr, buffer_u8 );
 				var _bldG3   = buffer_read_at( _partBuff, _st3 + PSYSTEM_OFF.blng, buffer_u8 );

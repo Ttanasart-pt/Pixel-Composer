@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.6.008",
+    "changes": [
+      {
+        "date": "2026-07-10T06:06:35.382Z",
+        "node": "pSystem Transform",
+        "commit": "**pSystem Transform**: Change scale behavior in non-accumulating mode."
+      }
+    ]
+  },
+  {
     "version": "1.21.5.003",
     "changes": [
       {

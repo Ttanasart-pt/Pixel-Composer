@@ -56,7 +56,6 @@ function Node_pSystem_Render_Point(_x, _y, _group = noone) : Node(_x, _y, _group
 			
 			var _draw_x  = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.posx,  buffer_f64  );
 			var _draw_y  = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.posy,  buffer_f64  );
-			// var _draw_sx = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.scax,  buffer_f64  );
 			
 			array_push(_points, [_draw_x, _draw_y]);
 		}

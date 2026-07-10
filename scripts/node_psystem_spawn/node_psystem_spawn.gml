@@ -392,8 +392,8 @@ function Node_pSystem_Spawn(_x, _y, _group = noone) : Node(_x, _y, _group) const
 			
 			buffer_write_at( _partBuff, _start + PSYSTEM_OFF.dposx, buffer_f64,  0       );
 			buffer_write(    _partBuff,                             buffer_f64,  0       );
-			buffer_write_at( _partBuff, _start + PSYSTEM_OFF.dscax, buffer_f64,  1       );
-			buffer_write(    _partBuff,                             buffer_f64,  1       );
+			buffer_write_at( _partBuff, _start + PSYSTEM_OFF.dscax, buffer_f64,  _sx     );
+			buffer_write(    _partBuff,                             buffer_f64,  _sy     );
 			buffer_write_at( _partBuff, _start + PSYSTEM_OFF.drotx, buffer_f64,  0       );
 			
 			partPool.cursor    = (partPool.cursor + 1) % partPool.poolSize;
@@ -448,6 +448,9 @@ function Node_pSystem_Spawn(_x, _y, _group = noone) : Node(_x, _y, _group) const
 			var _vx  = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.velx,   buffer_f64  );
 			var _vy  = buffer_read(    _partBuff,                              buffer_f64  );
 			
+			var _sx  = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.scax,   buffer_f64  );
+			var _sy  = buffer_read(    _partBuff,                              buffer_f64  );
+			
 			var rat = _lif / (_lifMax - 1);
 			random_set_seed(_seed + _spwnId);
 			
@@ -492,8 +495,8 @@ function Node_pSystem_Spawn(_x, _y, _group = noone) : Node(_x, _y, _group) const
 			buffer_write_at( _partBuff, _start + PSYSTEM_OFF.velpx,  buffer_f64,  _vpx);
 			buffer_write(    _partBuff,                              buffer_f64,  _vpy);
 			
-			buffer_write_at( _partBuff, _start + PSYSTEM_OFF.dscax,  buffer_f64,  1);
-			buffer_write(    _partBuff,                              buffer_f64,  1);
+			buffer_write_at( _partBuff, _start + PSYSTEM_OFF.dscax,  buffer_f64,  _sx);
+			buffer_write(    _partBuff,                              buffer_f64,  _sy);
 			
 			if(!stepTrigUse) continue;
 			

@@ -125,6 +125,10 @@ function Node_pSystem_Transform(_x, _y, _group = noone) : Node(_x, _y, _group) c
 				var _move_mod = _move_curved? curve_move.get(rat) : 1;
 				_px += random_range(_move[0], _move[1]) * _move_mod * _mask;
 				_py += random_range(_move[2], _move[3]) * _move_mod * _mask;
+				
+				buffer_write_at( _partBuff, _start + PSYSTEM_OFF.posx,  buffer_f64, _px  );
+				buffer_write_at( _partBuff, _start + PSYSTEM_OFF.posy,  buffer_f64, _py  );
+				
 			}
 			
 			if(_do_vect) {
@@ -147,10 +151,28 @@ function Node_pSystem_Transform(_x, _y, _group = noone) : Node(_x, _y, _group) c
 			
 			if(_do_scal) {
 				var _scal_mod = _scal_curved? curve_scal.get(rat) : 1;
-				var _sx_t = _sx, _sx_d = random_range(_scal[0], _scal[1]) * _scal_mod;
-				var _sy_t = _sy, _sy_d = random_range(_scal[2], _scal[3]) * _scal_mod;
-				
+				var _sx_d = random_range(_scal[0], _scal[1]) * _scal_mod;
+				var _sy_d = random_range(_scal[2], _scal[3]) * _scal_mod;
+					
 				if(_scal_accu) {
+					var _sx_t = _dsx;
+					var _sy_t = _dsy;
+					
+					switch(_scal_mode) {
+						case 0 : _sx_t = _dsx + _sx_d * _mask;
+						         _sy_t = _dsy + _sy_d * _mask;       break;
+						
+						case 1 : _sx_t = _dsx * (1 + _sx_d * _mask);
+						         _sy_t = _dsy * (1 + _sy_d * _mask); break;
+						
+						case 2 : _sx_t = lerp(_sx_t, _sx_d, _mask);
+						         _sy_t = lerp(_sy_t, _sy_d, _mask);  break;
+					}
+					
+					buffer_write_at( _partBuff, _start + PSYSTEM_OFF.scax,  buffer_f64, _sx_t );
+					buffer_write_at( _partBuff, _start + PSYSTEM_OFF.scay,  buffer_f64, _sy_t );
+			
+				} else {
 					switch(_scal_mode) {
 						case 0 : _sx_t = _sx + _sx_d;
 						         _sy_t = _sy + _sy_d; break;
@@ -161,21 +183,13 @@ function Node_pSystem_Transform(_x, _y, _group = noone) : Node(_x, _y, _group) c
 						case 2 : _sx_t = _sx_d;
 						         _sy_t = _sy_d;       break;
 					}
-					
+							
 					_sx = lerp(_sx, _sx_t, _mask);
 					_sy = lerp(_sy, _sy_t, _mask);
-					
-				} else {
-					switch(_scal_mode) {
-						case 0 : _dsx = _dsx + _sx_d * _mask;
-						         _dsy = _dsy + _sy_d * _mask; break;
-						
-						case 1 : _dsx = _dsx * (1 + _sx_d * _mask);
-						         _dsy = _dsy * (1 + _sy_d * _mask); break;
-						
-						case 2 : _dsx = _sx_d;
-						         _dsy = _sy_d; break;
-					}
+									
+					buffer_write_at( _partBuff, _start + PSYSTEM_OFF.dscax, buffer_f64, _sx );
+					buffer_write_at( _partBuff, _start + PSYSTEM_OFF.dscay, buffer_f64, _sy );
+			
 				}
 			}
 			
@@ -189,18 +203,9 @@ function Node_pSystem_Transform(_x, _y, _group = noone) : Node(_x, _y, _group) c
 				}
 				
 				_rot = lerp(_rot, _rot_t, _mask);
+				
+				buffer_write_at( _partBuff, _start + PSYSTEM_OFF.rotx,  buffer_f64, _rot );
 			}
-			
-			buffer_write_at( _partBuff, _start + PSYSTEM_OFF.posx,  buffer_f64, _px  );
-			buffer_write_at( _partBuff, _start + PSYSTEM_OFF.posy,  buffer_f64, _py  );
-			
-			buffer_write_at( _partBuff, _start + PSYSTEM_OFF.scax,  buffer_f64, _sx  );
-			buffer_write_at( _partBuff, _start + PSYSTEM_OFF.scay,  buffer_f64, _sy  );
-			
-			buffer_write_at( _partBuff, _start + PSYSTEM_OFF.dscax, buffer_f64, _dsx );
-			buffer_write_at( _partBuff, _start + PSYSTEM_OFF.dscay, buffer_f64, _dsy );
-			
-			buffer_write_at( _partBuff, _start + PSYSTEM_OFF.rotx,  buffer_f64, _rot );
 			
 		}
 		

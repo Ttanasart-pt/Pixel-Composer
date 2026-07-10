@@ -176,11 +176,11 @@ function Node_pSystem_Wiggle(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 				var _sca_mod = _sca_curved? curve_sca.get(rat) : 1;
 				var _sca_cur = random_range(_sca_amp[0], _sca_amp[1]) * _sca_mod * _mask;
 				
-				_sx  += wig_scy.getDelta(_seed + _lif) * _sca_cur * _mask;
-				_sy  += wig_scy.getDelta(_seed + _lif) * _sca_cur * _mask;
+				_sx += wig_scy.getDelta(_seed + _lif) * _sca_cur * _mask;
+				_sy += wig_scy.getDelta(_seed + _lif) * _sca_cur * _mask;
 				
-				buffer_write_at( _partBuff, _start + PSYSTEM_OFF.scax, buffer_f64, _sx  );
-				buffer_write_at( _partBuff, _start + PSYSTEM_OFF.scay, buffer_f64, _sy  );
+				buffer_write_at( _partBuff, _start + PSYSTEM_OFF.dscax, buffer_f64, _sx  );
+				buffer_write_at( _partBuff, _start + PSYSTEM_OFF.dscay, buffer_f64, _sy  );
 			}
 			
 			if(_dir_use) {
