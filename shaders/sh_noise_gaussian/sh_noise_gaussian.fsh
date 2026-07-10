@@ -1,8 +1,6 @@
 varying vec2 v_vTexcoord;
 varying vec4 v_vColour;
 
-const float PI = 3.14159265358979323846;
-
 uniform vec2 dimension;
 
 uniform float seed;
@@ -18,6 +16,8 @@ uniform vec2  level;
 uniform int       convertMode;
 uniform sampler2D convertSurface1;
 uniform sampler2D convertSurface2;
+
+#define PI 3.14159265358979323846
 
 float noise(vec2 p) { return fract(sin(dot(p, vec2(78.233,128.852))) * (43758.5453 + seed / 10000.)); }
 

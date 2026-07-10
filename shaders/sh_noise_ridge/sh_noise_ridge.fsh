@@ -1,5 +1,4 @@
 #pragma use(uv)
-
 #region -- uv -- [1779523757.7465837]
     uniform sampler2D uvMap;
     uniform int   useUvMap;

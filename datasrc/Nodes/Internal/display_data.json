@@ -939,6 +939,7 @@
             "Node_Noise_Cristal",
             "Node_Honeycomb_Noise",
             "Node_Ridge_Noise",
+            "Node_Noise_Scratch",
             
             { "label": "Pattern" },
             { "label": "/Basic" },

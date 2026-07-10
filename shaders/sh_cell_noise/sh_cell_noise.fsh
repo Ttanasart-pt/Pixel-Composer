@@ -85,9 +85,7 @@ float cellNoise(vec2 ntx, vec2 pos, float sca, float scaMax, float ang, float _s
 	    }
 		
 	} else if(pattern == 2) {
-		
 		for (int j = 0; j <= int(sca / 2.); j++) {
-			
 			int _amo = int(sca) + int(float(j) * radiusShatter);
 			for (int i = 0; i <= _amo; i++) {
 				
