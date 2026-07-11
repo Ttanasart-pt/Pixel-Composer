@@ -2658,6 +2658,7 @@
     {"name":"sh_mk_grass_grow_v","order":4,"path":"shaders/sh_mk_grass_grow_v/sh_mk_grass_grow_v.yy",},
     {"name":"sh_mk_grass_grow","order":3,"path":"shaders/sh_mk_grass_grow/sh_mk_grass_grow.yy",},
     {"name":"sh_mk_grass_noise","order":2,"path":"shaders/sh_mk_grass_noise/sh_mk_grass_noise.yy",},
+    {"name":"sh_mk_grass_surface","order":9,"path":"shaders/sh_mk_grass_surface/sh_mk_grass_surface.yy",},
     {"name":"sh_mk_isoextrude_apply_height","order":1,"path":"shaders/sh_mk_isoextrude_apply_height/sh_mk_isoextrude_apply_height.yy",},
     {"name":"sh_mk_isoextrude_coordinate","order":3,"path":"shaders/sh_mk_isoextrude_coordinate/sh_mk_isoextrude_coordinate.yy",},
     {"name":"sh_mk_isoextrude_transform","order":2,"path":"shaders/sh_mk_isoextrude_transform/sh_mk_isoextrude_transform.yy",},

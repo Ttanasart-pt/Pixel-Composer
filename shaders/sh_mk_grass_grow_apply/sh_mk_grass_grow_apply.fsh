@@ -147,6 +147,8 @@ varying vec4 v_vColour;
 
 uniform sampler2D grassMask;
 uniform sampler2D grassTexture;
+uniform sampler2D grassSurface;
+
 uniform vec2  dimension;
 uniform float seed;
 
@@ -156,10 +158,22 @@ uniform float density;
 
 uniform int  groundFill;
 uniform vec4 groundColor;
+
+uniform int  shape;
 uniform int  renderType;
 uniform int  drawBG;
 
 float random (in vec2  st) { return fract(sin(dot(st.xy + seed / 1000., vec2(1892.989248, 78.6923453))) * 437.9854123); }
+
+vec4 blend(vec4 bg, vec4 fg) {
+	float al = fg.a + bg.a * (1. - fg.a);
+	if(al == 0.) return vec4(0.);
+	
+	vec4 res = ((fg * fg.a) + (bg * bg.a * (1. - fg.a))) / al;
+	res.a = al;
+	
+	return res;
+}
 
 void main() {
 	vec2  tx        = 1. / dimension;
@@ -170,6 +184,11 @@ void main() {
 	gl_FragColor = drawBG == 1? baseCol : vec4(0.);
 	if(groundFill == 1 && grassBase.a == 0.)
 		gl_FragColor = groundColor;
+	
+	if(shape == 5) {
+		gl_FragColor = blend(gl_FragColor, grasCol);
+		return;
+	}
 	
 	if(grasCol.a == 0.) return;
 	

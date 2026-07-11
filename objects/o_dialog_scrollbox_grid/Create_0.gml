@@ -1,7 +1,7 @@
 /// @description init
 event_inherited();
 
-#region 
+#region data
 	max_h  = 640;
 	anchor = ANCHOR.top | ANCHOR.left;
 	
@@ -170,7 +170,7 @@ event_inherited();
             	var _sx = _xx + gw / 2;
             	var _sy = _yy + ui(4) + (gh - ui(24)) / 2;
             	
-				draw_sprite_ext(_spr, _val.spr_ind, _sx, _sy, _ss, _ss, 0, _val.spr_blend);
+            	draw_sprite_ext(_spr, _val.spr_ind, _sx, _sy, _ss, _ss, 0, _val.spr_blend);
 			}
 			
 			draw_set_text(f_p4, fa_center, fa_bottom, _act? COLORS._main_text : COLORS._main_text_sub);

@@ -7,44 +7,45 @@ function Node_MK_Grass(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	////- =Source
 	onSurfaceSize = function() /*=>*/ {return getDimension()};
 	
-	newInput( 2, nodeValue_EScroll(  "Source", 0, [ "Area", "Mask", "Region", "Color Picker", "Color Sample" ]));
-	newInput( 3, nodeValue_Area(     "Area",  DEF_AREA_REF, { onSurfaceSize })).setUnitSimple();
-	newInput( 4, nodeValue_Surface(  "Mask" ));
-	newInput( 5, nodeValue_Vec2(     "Picker", [0,0] )).setUnitSimple();
-	newInput( 6, nodeValue_Slider(   "Picker Threshold",   .1 ));
-	newInput(24, nodeValue_Color(    "Sample Color", ca_white ));
-	newInput(25, nodeValue_Slider(   "Sample Threshold",   .1 ));
+	newInput( 2, nodeValue_EScroll(  "Source", 0, [ "Area", "Mask", "Region", "Color Picker", "Color Sample" ] ));
+	newInput( 3, nodeValue_Area(     "Area",  DEF_AREA_REF, { onSurfaceSize } )).setUnitSimple();
+	newInput( 4, nodeValue_Surface(  "Mask"                        ));
+	newInput( 5, nodeValue_Vec2(     "Picker",               [0,0] )).setUnitSimple();
+	newInput( 6, nodeValue_Slider(   "Picker Threshold",        .1 ));
+	newInput(24, nodeValue_Color(    "Sample Color",      ca_white ));
+	newInput(25, nodeValue_Slider(   "Sample Threshold",        .1 ));
 	
 	////- =Shape
-	shape_types = __enum_array_gen([ "Dense Bush", "V", "Hash", "Line", "W" ], s_node_mk_grass_type, c_white);
-	newInput( 7, nodeValue_EScroll( "Shape",    0, { data: shape_types, horizontal: 2, text_pad: ui(16) } )).getEditWidget().setFilter(false);
-	newInput(22, nodeValue_Slider(  "Ratio",   .5     ));
-	newInput( 8, nodeValue_Range(   "Size",    [4,4], { linked: true })).setMappableConst(26);
-	newInput(17, nodeValue_Slider(  "Spread",   0     ));
-	newInput(20, nodeValue_Float(   "Extra",    0     ));
-	newInput(21, nodeValue_Range(   "Sway X",  [-4,4] ));
+	shape_types = __enum_array_gen([ "Dense Bush", "V", "Hash", "Line", "W", "Surface" ], s_node_mk_grass_type, c_white);
+	newInput( 7, nodeValue_EScroll(  "Shape",    0, { data: shape_types, horizontal: 2, text_pad: ui(16) } )).getEditWidget().setFilter(false);
+	newInput(22, nodeValue_Slider(   "Ratio",         .5          ));
+	newInput( 8, nodeValue_Range(    "Size",          [4,4], true )).setMappableConst(26);
+	newInput(17, nodeValue_Slider(   "Spread",         0          ));
+	newInput(20, nodeValue_Float(    "Extra",          0          ));
+	newInput(21, nodeValue_Range(    "Sway X",        [-4,4]      ));
+	newInput(27, nodeValue_Surface(  "Grass Surface",             ));
 	
 	////- =Scatter
-	newInput( 9, nodeValue_Slider(  "Distribution", .5 ));
-	newInput(10, nodeValue_Int(     "Level",         1 ));
-	newInput(11, nodeValue_Slider(  "Sharpness",    .5 ));
-	newInput(14, nodeValue_Float(   "Noise Scale",   1 ));
-	newInput(15, nodeValue_Int(     "Noise Detail",  1 ));
+	newInput( 9, nodeValue_Slider(   "Distribution",  .5  ));
+	newInput(10, nodeValue_Int(      "Level",          1  ));
+	newInput(11, nodeValue_Slider(   "Sharpness",     .5  ));
+	newInput(14, nodeValue_Float(    "Noise Scale",    1  ));
+	newInput(15, nodeValue_Int(      "Noise Detail",   1  ));
 	
 	////- =Render
-	newInput(23, nodeValue_Bool(    "Draw Original",  true ));
-	newInput(12, nodeValue_EScroll( "Render Type",    0, [ "Gradient", "Sample Multiply", "Sample Add" ] ));
-	newInput(13, nodeValue_Gradient("Colors",         gra_black_white ));
-	newInput(16, nodeValue_Slider(  "Color Variance", 0 ));
+	newInput(23, nodeValue_Bool(     "Draw Original",  true             ));
+	newInput(12, nodeValue_EScroll(  "Render Type",    0, [ "Gradient", "Sample Multiply", "Sample Add" ] ));
+	newInput(13, nodeValue_Gradient( "Colors",         gra_black_white  ));
+	newInput(16, nodeValue_Slider(   "Color Variance", 0                ));
 	
 	////- =Ground
-	newInput(18, nodeValue_Bool(  "Fill Ground", false));
-	newInput(19, nodeValue_Color( "Ground",      ca_black));
-	// input 27
+	newInput(18, nodeValue_Bool(     "Fill Ground",    false    ));
+	newInput(19, nodeValue_Color(    "Ground",         ca_black ));
+	// 27
 	
 	input_display_list = [ s_MKFX, 1, 0, 
 		[ "Source",  false     ],  2,  3,  4,  5,  6, 24, 25, 
-		[ "Shape",   false     ],  7, 22,  8, 26, 17, 20, 21, 
+		[ "Shape",   false     ],  7, 22,  8, 26, 17, 20, 21, 27, 
 		[ "Scatter", false     ],  9, 11, 14, 15,
 		[ "Render",  false     ], 23, 12, 13, 16, 
 		[ "Ground",  false, 18 ], 19, 
@@ -91,6 +92,7 @@ function Node_MK_Grass(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 			var _spread   = _data[17];
 			var _expand   = _data[20];
 			var _swayx    = _data[21];
+			var _grSurf   = _data[27];
 			
 			var _dens     = _data[9];
 			var _noi_lev  = _data[10];
@@ -105,19 +107,23 @@ function Node_MK_Grass(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 			var _gnd_fil  = _data[18];
 			var _gnd_clr  = _data[19];
 			
-			inputs[ 8].setVisible(_shape == 0 || _shape == 2 || _shape == 3 || _shape == 4);
-			inputs[22].setVisible(_shape != 2);
-			inputs[17].setVisible(_shape == 0);
-			inputs[16].setVisible(_shape == 0);
-			inputs[20].setVisible(_shape == 0);
-			inputs[21].setVisible(_shape == 3 || _shape == 4);
+			inputs[ 8].setVisible( _shape == 0 || _shape == 2 || _shape == 3 || _shape == 4 );
+			inputs[22].setVisible( _shape != 2 );
+			inputs[17].setVisible( _shape == 0 );
+			inputs[16].setVisible( _shape == 0 );
+			inputs[20].setVisible( _shape == 0 );
+			inputs[21].setVisible( _shape == 3 || _shape == 4 );
+			inputs[27].setVisible( _shape == 5,   _shape == 5 );
 			
-			inputs[ 3].setVisible(_src == 0);
-			inputs[ 4].setVisible(_src == 1,   _src == 1);
-			inputs[ 5].setVisible(_src == 2 || _src == 3);
-			inputs[ 6].setVisible(_src == 2 || _src == 3);
-			inputs[24].setVisible(_src == 4);
-			inputs[25].setVisible(_src == 4);
+			inputs[12].setVisible( _shape != 5 );
+			inputs[13].setVisible( _shape != 5 );
+			
+			inputs[ 3].setVisible( _src == 0 );
+			inputs[ 4].setVisible( _src == 1,   _src == 1 );
+			inputs[ 5].setVisible( _src == 2 || _src == 3 );
+			inputs[ 6].setVisible( _src == 2 || _src == 3 );
+			inputs[24].setVisible( _src == 4 );
+			inputs[25].setVisible( _src == 4 );
 			
 			sizeSampler.setSurface(_sizeMap);
 		#endregion
@@ -325,7 +331,24 @@ function Node_MK_Grass(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 						}
 						break;
 						
-					case 5 :
+					case 5 : // _grSurf
+						if(!is_surface(_grSurf)) break;
+						
+						shader_set(sh_mk_grass_surface);
+						repeat(_amo) {
+							var px = buffer_read(_sOut, buffer_f64); 
+							var py = buffer_read(_sOut, buffer_f64);
+							var gx = buffer_read(_sOut, buffer_f64); 
+							var gy = buffer_read(_sOut, buffer_f64);
+							
+							var rr = buffer_read(_sOut, buffer_f64); 
+							var gg = buffer_read(_sOut, buffer_f64); 
+							var bb = buffer_read(_sOut, buffer_f64);
+							
+							var ss = _sizeMapped && sizeSampler.active? sizeSampler.getPixelDirectClamp(px, py) : 1;
+							draw_surface_ext(_grSurf, px, py, ss, ss, 0, c_white, 1);
+						}
+						shader_reset();
 						break;
 				}
 				surface_reset_shader();
@@ -334,6 +357,7 @@ function Node_MK_Grass(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 				surface_set_shader(_outSurf, sh_mk_grass_grow_apply);
 					shader_set_s( "grassMask",     temp_surface[2] );
 					shader_set_s( "grassTexture",  temp_surface[3] );
+					shader_set_s( "grassSurface",  _grSurf         );
 					
 					shader_set_f( "seed",          _seed     );
 					shader_set_2( "dimension",     _dim      );
@@ -342,11 +366,13 @@ function Node_MK_Grass(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 					shader_set_f( "density",       _dens     );
 					shader_set_f( "expand",        _expand   );
 					
-					shader_set_i( "renderType",    _rtype    );
-					shader_set_i( "drawBG",        _drawBg   );
 					shader_set_i( "groundFill",    _gnd_fil  );
 					shader_set_c( "groundColor",   _gnd_clr  );
 				
+					shader_set_i( "shape",         _shape    );
+					shader_set_i( "renderType",    _rtype    );
+					shader_set_i( "drawBG",        _drawBg   );
+					
 					_color.shader_submit();
 					
 					if(useSurf) draw_surface_safe(_surf); 
