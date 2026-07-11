@@ -607,7 +607,7 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 				
 				var tc = ind == dynamic_input_inspecting? COLORS._main_text_accent : COLORS._main_icon;
 				var tf = ind == dynamic_input_inspecting? f_p2b : f_p2;
-				if(hover) tc = COLORS._main_text;
+				if(hover || HIGHLIGHT_PROP == _inp) tc = COLORS._main_text;
 				
 				draw_set_text(tf, fa_left, fa_center, tc);
 				
@@ -696,7 +696,9 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			}
 			
 			if(_hover && point_in_rectangle(_m[0], _m[1], _x, _cy, _x + _w, _cy + lh)) {
+				_HIGHLIGHT_PROP = _inp;
 				hoverIndex = ind;
+				
 				if(layer_dragging != noone) {
 					draw_set_color(COLORS._main_accent);
 					if(layer_dragging > ind) {
@@ -1377,11 +1379,21 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 					raw_anc: _anc,
 				}
 				
+				if(HIGHLIGHT_PROP && HIGHLIGHT_PROP.node == self && HIGHLIGHT_PROP.index >= index && HIGHLIGHT_PROP.index < index + data_length) {
+					draw_set_color(COLORS._main_icon);
+					draw_rectangle_border_points(_d0[0], _d0[1], _d1[0], _d1[1], _d2[0], _d2[1], _d3[0], _d3[1], 3);
+					
+					draw_set_color(COLORS.node_composite_overlay_border);
+					draw_rectangle_border_points(_d0[0], _d0[1], _d1[0], _d1[1], _d2[0], _d2[1], _d3[0], _d3[1]);
+					
+				}
+				
 				if(!_sel[i]) continue;
 				
 				var _hov = point_in_rectangle_points(_mx, _my, _d0[0], _d0[1], _d1[0], _d1[1], _d2[0], _d2[1], _d3[0], _d3[1]);
 				
 				if(_hov) {
+					_HIGHLIGHT_PROP = inputs[index];
 					if(isNotUsingTool() || isUsingTool("Move"))
 						hovering_type = NODE_COMPOSE_DRAG.move;
 					hovering = i;
@@ -1398,6 +1410,7 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 				var _ancid = input_fix_len + dynamic_input_inspecting * data_length;
 				_a = anchors[_ancid];
 			}
+			
 		#endregion
 				
 		if(is_struct(_a)) { // Draw Gizmo

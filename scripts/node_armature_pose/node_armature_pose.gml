@@ -565,7 +565,7 @@ function Node_Armature_Pose(_x, _y, _group = noone) : Node(_x, _y, _group) const
 				var kf = _inp.animationCurrentKey();
 				_hig = kf != undefined;
 				
-				if(_bhov == noone && (PANEL_INSPECTOR.prop_hover == _inp || PANEL_ANIMATION.value_hovering == _inp))
+				if(_bhov == noone && HIGHLIGHT_PROP == _inp)
 					_bhov = [ _bne, 2 ];
 			}
 			

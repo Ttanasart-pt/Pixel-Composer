@@ -83,7 +83,7 @@
         "node_composite_bg": "main_dkgrey",
         "node_composite_bg_blend": "main_white",
         "node_composite_separator": "main_black",
-        "node_composite_overlay_border": "main_grey",
+        "node_composite_overlay_border": "main_white",
         "node_display_text_frame_fill": "main_grey",
         "node_display_text_frame_outline": "main_dkblack",
         "node_level_outline": "main_dkgrey",

@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.6.009",
+    "changes": [
+      {
+        "date": "2026-07-11T07:04:17.643Z",
+        "node": "Composite",
+        "commit": "**Composite**: Add preview highlight when hovering on property, layer."
+      }
+    ]
+  },
+  {
     "version": "1.21.5.003",
     "changes": [
       {

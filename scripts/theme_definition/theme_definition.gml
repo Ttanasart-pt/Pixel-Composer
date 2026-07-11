@@ -83,7 +83,7 @@ function ThemeColor() constructor {
     node_composite_bg                   = CDEF.main_dkgrey;
     node_composite_bg_blend             = CDEF.main_white;
     node_composite_separator            = CDEF.main_black;
-    node_composite_overlay_border       = CDEF.main_grey;
+    node_composite_overlay_border       = CDEF.main_white;
     node_display_text_frame_fill        = CDEF.main_grey;
     node_display_text_frame_outline     = CDEF.main_dkblack;
     node_level_outline                  = CDEF.main_dkgrey;
