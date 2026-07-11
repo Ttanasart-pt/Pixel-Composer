@@ -104,14 +104,14 @@ function Node_MK_Rain(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 			var _ripDel = _data[24];
 			var _ripAlp = _data[25];
 			
-			if(!is_surface(_surf))               return _outSurf;
-			if(_shap == 2 && !is_surface(_text)) return _outSurf;
-			
 			inputs[ 3].setVisible(_shap == 0);
 			inputs[ 4].setVisible(_shap == 0);
 			inputs[10].setVisible(_shap == 1);
 			inputs[11].setVisible(_shap == 2, _shap == 2);
 			inputs[17].setVisible(_shap == 0);
+			
+			if(!is_surface(_surf))               return _outSurf;
+			if(_shap == 2 && !is_surface(_text)) return _outSurf;
 		#endregion
 		
 		var _sw  = surface_get_width_safe(_surf);
