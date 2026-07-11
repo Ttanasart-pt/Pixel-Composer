@@ -12,13 +12,13 @@ function Node_pSystem_Render(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	newInput( 1, nodeValue_Buffer(   "Mask"      ));
 	
 	////- =Surface
-	newInput( 3, nodeValue_Surface( "Surfaces" ));
+	newInput( 3, nodeValue_Surface(  "Surfaces"  ));
 	
 	newInput( 4, nodeValue_EScroll(  "Surface Array", 0, [ "Random", "Order", "Animation", "Scale" ]));
 	newInput( 5, nodeValue_Range(    "Animation Speed",      [1,1], { linked : true } ));
 	newInput( 6, nodeValue_Bool(     "Stretch Animation",    false                    ));
 	newInput( 7, nodeValue_EButton(  "On Animation End",     ANIM_END_ACTION.loop     )).setChoices([ "Loop", "Ping pong", "Destroy" ]);
-	// 4
+	// 8
 	
 	newOutput(0, nodeValue_Output( "Rendered", VALUE_TYPE.surface, noone ));
 	
@@ -76,6 +76,17 @@ function Node_pSystem_Render(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	}
 	
 	static getDimension = function() { return is(inline_context, Node_pSystem_Inline)? inline_context.dimension : PROJ_SURF; }
+	
+	static preUpdate = function() {
+		var _outp = outputs[0].getValue();
+		if(!is_surface(_outp)) return;
+		
+		var _sdim = surface_get_dimension(_outp);
+		var _dim  = getDimension();
+		
+		if(_sdim[0] != _dim[0] || _sdim[1] != _dim[1])
+			clearCache();
+	}
 	
 	static update = function(_frame = CURRENT_FRAME) {
 		#region render check

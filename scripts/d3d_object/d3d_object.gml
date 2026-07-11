@@ -218,18 +218,10 @@ function __3dObject() : __3dInstance() constructor {
 		if(!is(_sc, __3dScene)) return submitVertex(_sc, _sh);
 		
 		switch(_sc.show_wireframe) {
-			case 0 : 
-				submitVertex(_sc, _sh); 
-				break;
-				
-			case 1 : 
-				submitVertex(_sc, _sh);
-				submitEdge(_sc);
-				break;
-				
-			case 2 : 
-				submitEdge(_sc); 
-				break;
+			case 0 : submitVertex(_sc, _sh); break;
+			case 1 : submitVertex(_sc, _sh);
+				     submitEdge(_sc);        break;
+			case 2 : submitEdge(_sc);        break;
 		}
 	}
 	

@@ -20,13 +20,42 @@ function __3dLight() : __3dObject() constructor {
 	static getCenter = function() /*=>*/ {return new __vec3(transform.position.x, transform.position.y, transform.position.z)};
 	static getBBOX   = function() /*=>*/ {return new __bbox3D(new __vec3(-1,-1,-1), new __vec3(1,1,1))};
 	
-	// static submit    = function(scene = {}, shader = noone) {}
+	////- Submit
+	
+	static submitVertex = function(_sc = noone, _sh = noone, _selection = false) {
+		preSubmitVertex(_sc);
+		
+		transform.submitMatrix();
+		matrix_set(matrix_world, matrix_stack_top());
+		draw_set_color_alpha(c_white, 1);
+		
+		for( var i = 0, n = array_length(VB); i < n; i++ ) {
+			if(VB[i] == noone) continue;
+			
+			shader_set_c("obj_color", color );
+			
+			var _mat = array_safe_get_fast(VBM, i, undefined);
+			if(is_array(_mat)) { matrix_stack_push(_mat); matrix_set(matrix_world, matrix_stack_top()); }
+			vertex_submit(VB[i], render_type, -1);
+			if(is_array(_mat)) { matrix_stack_pop();      matrix_set(matrix_world, matrix_stack_top()); }
+		}
+		
+		gpu_set_tex_filter(false);
+		gpu_set_tex_repeat(false);
+		
+		if(!is_undefined(_sh)) shader_reset();
+		
+		transform.clearMatrix();
+		matrix_set(matrix_world, matrix_build_identity());
+		postSubmitVertex(_sc);
+	}
+	
+	////- Shadow
 	
 	static setShadow = function(active, shadowMapSize, shadowMapScale = shadow_map_scale) {
 		shadow_active    = active;
 		shadow_map_size  = shadowMapSize;
 		shadow_map_scale = shadowMapScale;
-		
 		return self;
 	}
 	

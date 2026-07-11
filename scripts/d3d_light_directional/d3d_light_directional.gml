@@ -1,5 +1,5 @@
 function __3dLightDirectional() : __3dLight() constructor {
-	vertex		= [[ new __vertex(1, 0, 0, c_white), new __vertex(3, 0, 0, c_white) ]];
+	// vertex		= [[ new __vertex(1, 0, 0, c_white), new __vertex(3, 0, 0, c_white) ]];
 	VF		    = global.VF_POS_COL;
 	render_type = pr_linelist;
 	VB			= build();
@@ -22,7 +22,6 @@ function __3dLightDirectional() : __3dLight() constructor {
 	static submitShader = function(params = {}) { params.addLightDirectional(self); }
 	
 	static preSubmitVertex = function(params = {}) {
-		
 		var _mat = matrix_stack_top();
 		var _pos = [ transform.position.x, transform.position.y, transform.position.z, 1 ];
 		var _pos = matrix_multiply_vector_column(_mat, _pos);

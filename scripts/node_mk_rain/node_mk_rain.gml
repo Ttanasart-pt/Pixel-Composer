@@ -6,28 +6,28 @@ function Node_MK_Rain(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	newInput(8, nodeValueSeed());
 	
 	////- =Shapes
-	newInput( 9, nodeValue_EScroll( "Shape",           0, __enum_array_gen([ "Rain", "Snow", "Texture" ], s_node_mk_rain_type)));
+	newInput( 9, nodeValue_EScroll(     "Shape",            0, __enum_array_gen([ "Rain", "Snow", "Texture" ], s_node_mk_rain_type)));
 	newInput( 3, nodeValue_Range(       "Raindrop Width",  [1,1]  ));
 	newInput( 4, nodeValue_Range(       "Raindrop Length", [5,10] ));
 	newInput(10, nodeValue_Range(       "Snow Size",       [3,4]  ));
-	newInput(11, nodeValue_Surface(     "Texture" ));
+	newInput(11, nodeValue_Surface(     "Texture"                 ));
 	
 	////- =Lifespan
-	newInput(14, nodeValue_Bool(         "Limited Lifespan",    false));
-	newInput(15, nodeValue_Slider_Range( "Lifespan",            [0,1])).setTooltip("Lifespan of a droplet as a ratio of the entire animation.");
-	newInput(13, nodeValue_Curve(        "Size over Lifetime",  CURVE_DEF_11));
-	newInput(16, nodeValue_Curve(        "Alpha over Lifetime", CURVE_DEF_11));
+	newInput(14, nodeValue_Bool(         "Limited Lifespan",    false ));
+	newInput(15, nodeValue_Slider_Range( "Lifespan",            [0,1] )).setTooltip("Lifespan of a droplet as a ratio of the entire animation.");
+	newInput(13, nodeValue_Curve(        "Size over Lifetime",  CURVE_DEF_11 ));
+	newInput(16, nodeValue_Curve(        "Alpha over Lifetime", CURVE_DEF_11 ));
 	
 	////- =Effect
-	newInput( 2, nodeValue_Float(        "Density",         5));
-	newInput( 1, nodeValue_Rotation(     "Direction",       45));
-	newInput( 7, nodeValue_Range(        "Velocity",        [1,2]));
+	newInput( 2, nodeValue_Float(        "Density",         5     ));
+	newInput( 1, nodeValue_Rotation(     "Direction",       45    ));
+	newInput( 7, nodeValue_Range(        "Velocity",        [1,2] ));
 	newInput(12, nodeValue_Slider_Range( "Track Extension", [0,0], { range: [ 0, 10, 0.01 ] }));
 	
 	////- =Render
-	newInput( 5, nodeValue_Gradient(     "Color",      gra_white));
-	newInput( 6, nodeValue_Slider_Range( "Alpha",      [.5,1]));
-	newInput(17, nodeValue_Bool(         "Fade Alpha", false));
+	newInput( 5, nodeValue_Gradient(     "Color",      gra_white ));
+	newInput( 6, nodeValue_Slider_Range( "Alpha",      [.5,1]    ));
+	newInput(17, nodeValue_Bool(         "Fade Alpha", false     ));
 	
 	////- =Ground
 	newInput(18, nodeValue_Bool(   "Ground",        false   ));
@@ -110,12 +110,12 @@ function Node_MK_Rain(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 			inputs[11].setVisible(_shap == 2, _shap == 2);
 			inputs[17].setVisible(_shap == 0);
 			
-			if(!is_surface(_surf))               return _outSurf;
 			if(_shap == 2 && !is_surface(_text)) return _outSurf;
 		#endregion
 		
-		var _sw  = surface_get_width_safe(_surf);
-		var _sh  = surface_get_height_safe(_surf);
+		var isSurf = is_surface(_surf);
+		var _sw  = isSurf? surface_get_width_safe(_surf)  : DEF_SURF_W;
+		var _sh  = isSurf? surface_get_height_safe(_surf) : DEF_SURF_H;
 		var _tw  = surface_get_width_safe(_text);
 		var _th  = surface_get_height_safe(_text);
 		
@@ -197,14 +197,17 @@ function Node_MK_Rain(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 				
 				draw_set_color_alpha(_lcc, _aa * _aaL);
 				
-				_drpX = _rmx - _prg * _radHx * 2;
-				_drpY = _rmy - _prg * _radHy * 2;
-					
+				_drpX  = _rmx - _prg * _radHx * 2;
+				_drpY  = _rmy - _prg * _radHy * 2;
+				
 				var _x0 = _drpX;
 				var _y0 = _drpY;
+				var _isGround = false;
 				
 				if(_grdUse) {
 					var _grdY  = random_range(_grpRng, _sh);
+					
+					_isGround  = _drpY > _grdY;
 					var _grdO  = max(0, _drpY - _grdY);
 					var _grdOx = _grdO * _tr_span_x / _tr_span_y;
 					
@@ -227,7 +230,7 @@ function Node_MK_Rain(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 						}
 					}
 				}
-					
+				
 				switch(_shap) {
 					case 0 : 						
 						var _tr_span_w = _tr_span_x * _drpH; // rain drop x span
@@ -251,8 +254,13 @@ function Node_MK_Rain(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 							        else           draw_line_width(       _x0, _y0, _x1, _y1, _drpW                ); }
 						break;
 						
-					case 1 : draw_circle(_x0, _y0, _drpW * _scaL, false); break;
-					case 2 : draw_surface_ext(_text, _x0 - _tw*_scaL/2, _y0 - _th*_scaL/2, _scaL, _scaL, 0, draw_get_color(), draw_get_alpha()); break;
+					case 1 : draw_circle(round(_x0), round(_y0), _drpW * _scaL, false); break;
+						
+					case 2 : 
+						var xx = _x0 - _tw * _scaL / 2;
+						var yy = _y0 - _th * _scaL / 2;
+						draw_surface_ext(_text, xx, yy, _scaL, _scaL, 0, draw_get_color(), draw_get_alpha()); 
+						break;
 				}
 			}
 			

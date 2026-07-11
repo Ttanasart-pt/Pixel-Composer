@@ -1,0 +1,12 @@
+[
+  {
+    "version": "1.21.6.009",
+    "changes": [
+      {
+        "date": "2026-07-11T07:58:20.423Z",
+        "node": "pSystem Render",
+        "commit": "**pSystem Render**: Cache now auto-clear when adjust dimension."
+      }
+    ]
+  }
+]

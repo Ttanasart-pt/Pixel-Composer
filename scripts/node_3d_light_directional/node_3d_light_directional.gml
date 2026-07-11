@@ -1,20 +1,19 @@
 function Node_3D_Light_Directional(_x, _y, _group = noone) : Node_3D_Light(_x, _y, _group) constructor {
 	name = "Directional Light";
-	
 	object_class = __3dLightDirectional;
 	
-	newInput(in_light + 0, nodeValue_Bool("Cast Shadow", false));
+	////- =Transform
+	newInput(in_light + 0, nodeValue_Bool(  "Cast Shadow",      false ));
 	
-	newInput(in_light + 1, nodeValue_Int("Shadow Map Size", 1024));
-	
-	newInput(in_light + 2, nodeValue_Int("Shadow Map Scale", 16));
-	
-	newInput(in_light + 3, nodeValue_Float("Shadow Bias", 0.01));
+	////- =Shadow
+	newInput(in_light + 1, nodeValue_Int(   "Shadow Map Size",  1024  ));
+	newInput(in_light + 2, nodeValue_Int(   "Shadow Map Scale", 16    ));
+	newInput(in_light + 3, nodeValue_Float( "Shadow Bias",     .01    ));
 	
 	input_display_list = [ in_d3d + 0, 
-		["Transform", false], 0,
+		[ "Transform", false ], 0,
 		__d3d_input_list_light,
-		["Shadow", false, in_light + 0], in_light + 1, in_light + 2, in_light + 3, 
+		[ "Shadow", false, in_light+0 ], in_light + 1, in_light + 2, in_light + 3, 
 	]
 	
 	tools = [ tool_pos ];

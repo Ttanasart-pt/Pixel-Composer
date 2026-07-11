@@ -6,6 +6,11 @@
         "date": "2026-07-11T07:08:04.732Z",
         "node": "MK Rain",
         "commit": "**MK Rain**: Fix invisible texture input."
+      },
+      {
+        "date": "2026-07-11T07:58:20.424Z",
+        "node": "",
+        "commit": "**pSystem Render**: Cache now auto-clear when adjust dimension."
       }
     ]
   },
