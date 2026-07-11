@@ -1,0 +1,12 @@
+[
+  {
+    "version": "1.21.6.009",
+    "changes": [
+      {
+        "date": "2026-07-11T06:08:45.480Z",
+        "node": "Key Displayer",
+        "commit": "**Key Displayer**: Add position, display settings."
+      }
+    ]
+  }
+]

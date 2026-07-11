@@ -1,5 +1,4 @@
 #pragma use(gradient)
-
 #region -- gradient -- [1777679826.681391]
 	#define GRADIENT_LIMIT 128
 	

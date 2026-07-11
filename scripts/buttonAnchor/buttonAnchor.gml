@@ -10,16 +10,19 @@ function buttonAnchor(_input = noone, _onModify = noone) : widget() constructor 
 	static drawParam = function(params) { return draw(params.x, params.y, params.w, params.h, params.m); }
 	
 	static trigger = function(_index) {
-		if(input == noone) {
+		var val = [0,0];
+		switch(_index) {
+			case 0 : val = [ 0.0, 0.0 ]; break; case 1 : val = [ 0.5, 0.0 ]; break; case 2 : val = [ 1.0, 0.0 ]; break;
+			case 3 : val = [ 0.0, 0.5 ]; break; case 4 : val = [ 0.5, 0.5 ]; break; case 5 : val = [ 1.0, 0.5 ]; break;
+			case 6 : val = [ 0.0, 1.0 ]; break; case 7 : val = [ 0.5, 1.0 ]; break; case 8 : val = [ 1.0, 1.0 ]; break;
+		}
+		
+		if(input == noone) { 
 			onModify(_index);
 			return;
 		}
 		
-		switch(_index) {
-			case 0 : input.setValue([ 0.0, 0.0 ]); break; case 1 : input.setValue([ 0.5, 0.0 ]); break; case 2 : input.setValue([ 1.0, 0.0 ]); break;
-			case 3 : input.setValue([ 0.0, 0.5 ]); break; case 4 : input.setValue([ 0.5, 0.5 ]); break; case 5 : input.setValue([ 1.0, 0.5 ]); break;
-			case 6 : input.setValue([ 0.0, 1.0 ]); break; case 7 : input.setValue([ 0.5, 1.0 ]); break; case 8 : input.setValue([ 1.0, 1.0 ]); break;
-		}
+		input.setValue(val);
 	}
 	
 	static draw = function(_x, _y, _w, _h, _m, spr = THEME.button_def, blend = c_white) {

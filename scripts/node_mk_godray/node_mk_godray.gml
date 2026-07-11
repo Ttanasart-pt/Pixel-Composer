@@ -25,7 +25,7 @@ function Node_MK_GodRay(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	
 	////- =Rendering
 	newInput( 6, nodeValue_Float(   "Subdivision", 2         ));
-	newInput(10, nodeValue_Color(   "Base Color",  ca_white  ));
+	newInput(10, nodeValue_Gradient("Base Color",  gra_white ));
 	newInput( 7, nodeValue_Float(   "Intensity",   16        )).setMappable(22);
 	// 23
 	
@@ -116,7 +116,7 @@ function Node_MK_GodRay(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			shader_set_m( "solidDiffuse", _diffu, _data[21], inputs[ 9] );
 			
 			shader_set_i( "lightAttn",    _lattn );
-			shader_set_c( "lightColor",   _lCol  );
+			shader_set_gradient(          _lCol  );
 			shader_set_f( "brightness",   _brigh );
 			shader_set_f( "subdiv",       _subd  );
 			

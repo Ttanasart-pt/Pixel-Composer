@@ -17,15 +17,19 @@
 	if(key != "") {
 		if(keyboard_check_pressed(vk_anykey) && key != "") array_push(disp_keys, key);
 		disp_key = key;
-		alpha = 2;
+		alpha    = 2;
 		
 	} else
 		alpha = lerp_linear(alpha, 0, 0.01);
 #endregion
 
 #region draw 
-	var win_x = WIN_W;
-	var win_y = WIN_H;
+	gpu_set_tex_filter(true);
+	var mow = dispScale * sprite_get_width(THEME.key_display_mouse);
+	var moh = dispScale * sprite_get_height(THEME.key_display_mouse);
+		
+	var win_x = lerp(ui(16) + mow/2, WIN_W - ui(16) - mow/2, position[0]);
+	var win_y = lerp(ui(16) + moh/2, WIN_H - ui(16) - moh/2, position[1]);
 	
 	#region mouse graph
 		if(show_graph) {
@@ -98,8 +102,8 @@
 	#endregion
 	
 	#region mouse
-		var mxs = win_x - ui(16);
-		var mys = win_y - ui(16);
+		var mxs = win_x;
+		var mys = win_y;
 		
 		if(show_doubleclick) {
 			var dcw  = 72;
@@ -112,42 +116,54 @@
 			draw_sprite_stretched_ext(THEME.box_r2, 0, dcx, dcy, _dcw, dch, COLORS._main_icon_light, 1.0);
 		}
 		
-		var cc = PEN_USE? COLORS._main_accent : c_white;
+		var cc = PEN_USE? COLORS._main_accent : dispColor;
 		
-			 if(DOUBLE_CLICK)       	draw_sprite_ext(s_key_display_mouse, 1, mxs, mys, 1, 1, 0, COLORS._main_value_positive, 1);
-		else if(mouse_lclick())	draw_sprite_ext(s_key_display_mouse, 1, mxs, mys, 1, 1, 0, COLORS._main_icon_light, 1);
+			 if(DOUBLE_CLICK)      draw_sprite_ext(THEME.key_display_mouse, 2, mxs, mys, dispScale, dispScale, 0, COLORS._main_value_positive, 1);
+		else if(mouse_lclick())	   draw_sprite_ext(THEME.key_display_mouse, 2, mxs, mys, dispScale, dispScale, 0, dispColor, 1);
 		
-		if(mouse_rclick())		draw_sprite_ext(s_key_display_mouse, 2, mxs, mys, 1, 1, 0, COLORS._main_icon_light, 1);
-		if(mouse_click(mb_middle))		draw_sprite_ext(s_key_display_mouse, 3, mxs, mys, 1, 1, 0, COLORS._main_icon_light, 1);
+		if(mouse_rclick())         draw_sprite_ext(THEME.key_display_mouse, 3, mxs, mys, dispScale, dispScale, 0, dispColor, 1);
+		if(mouse_click(mb_middle)) draw_sprite_ext(THEME.key_display_mouse, 4, mxs, mys, dispScale, dispScale, 0, dispColor, 1);
 			
-		if(MOUSE_WHEEL > 0)             draw_sprite_ext(s_key_display_mouse, 3, mxs, mys, 1, 1, 0, COLORS._main_accent, 1);
-		if(MOUSE_WHEEL < 0)             draw_sprite_ext(s_key_display_mouse, 3, mxs, mys, 1, 1, 0, COLORS._main_accent, 1);
+		if(MOUSE_WHEEL > 0)        draw_sprite_ext(THEME.key_display_mouse, 4, mxs, mys, dispScale, dispScale, 0, COLORS._main_accent, 1);
+		if(MOUSE_WHEEL < 0)        draw_sprite_ext(THEME.key_display_mouse, 4, mxs, mys, dispScale, dispScale, 0, COLORS._main_accent, 1);
 		
-		draw_sprite_ext_add(s_key_display_mouse, 0, mxs, mys, 1, 1, 0, cc, 0.5);
+		draw_sprite_ext_add(THEME.key_display_mouse, 0, mxs, mys, dispScale, dispScale, 0, cc, dispAlpha);
+		draw_sprite_ext_add(THEME.key_display_mouse, 1, mxs, mys, dispScale, dispScale, 0, cc, dispAlpha);
 	#endregion
 	
 	draw_set_text(_f_sdf, fa_right, fa_bottom, COLORS._main_icon_dark);
-	var ts = .75;
-	var pd = ui(4);
-	var ww = ts * string_width(disp_key)  + pd * 3;
+	var ts = dispScale * .75;
+	var pd = dispScale * ui(4);
+	var ww = ts * string_width(disp_key)  + pd * 2;
 	var hh = ts * string_height(disp_key) + pd * 2;
 	
-	var x1 = win_x - ui(32) - sprite_get_width(s_key_display_mouse);
-	var y1 = win_y - ui(8);
+	var x1 = win_x;
+	var y1 = win_y;
+	
+	switch(align_x) {
+		case 0: x1 = win_x + ui(16) + mow / 2 + ww; break;
+		case 1: x1 = win_x - ui(16) - mow / 2;      break;
+	}
+	
+	switch(align_y) {
+		case 0: y1 = win_y - moh / 2 + hh; break;
+		case 1: y1 = win_y + moh / 2;      break;
+	}
+	
 	var x0 = x1 - ww;
 	var y0 = y1 - hh;
 	
 	if(alpha > 0) {
-		draw_sprite_stretched_ext(THEME.key_display, 0, x0, y0, ww, hh, pressing? COLORS._main_accent : COLORS._main_icon, alpha);
+		draw_sprite_stretched_ext(THEME.key_display, 0, x0, y0, ww, hh, pressing? COLORS._main_accent : keyColor, alpha);
 		draw_set_alpha(alpha);
-		draw_text_transformed(x1 - pd * 1.5, y1 - pd, disp_key, ts, ts, 0);
+		draw_text_transformed(x1 - pd, y1- pd, disp_key, ts, ts, 0);
 		draw_set_alpha(1);
 	}
 		
-	draw_set_text(_f_sdf_medium, fa_right, fa_bottom, COLORS._main_text_sub);
-	var tx = x1;
-	var ty = y1 - pd - hh;
-	var ts = .9;
+	draw_set_text(_f_sdf_medium, align_x? fa_right : fa_left, align_y? fa_bottom : fa_top, COLORS._main_text_sub);
+	var tx = align_x? x1 : x0;
+	var ty = align_y? y0 - pd : y1 + pd;
+	var ts = dispScale * .9;
 	var a  = 0;
 	
 	for( var i = array_length(disp_keys) - 1; i >= 0; i-- ) {
@@ -155,8 +171,11 @@
 		
 		draw_set_alpha(lerp(.3, 1, (5-a)/5));
 		draw_text_transformed(tx, ty, disp_keys[i], ts, ts, 0);
-		ty -= line_get_height() * ts;
+		
+		if(align_y == 0) ty += line_get_height() * ts;
+		else             ty -= line_get_height() * ts;
 	}
 	
 	draw_set_alpha(1);
+	gpu_set_tex_filter(false);
 #endregion

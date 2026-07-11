@@ -474,6 +474,7 @@
     "palette_selecting":                  { "path": "./misc/s_palette_selecting.png",                       "s": 1, "x":  0, "y":  0, "slice": 10 },
     "key_display":                        { "path": "./misc/s_key_display.png",                             "s": 1, "x":  0, "y":  0, "slice": 10 },
     "add_node_bg":                        { "path": "./misc/s_add_node_bg.png",                             "s": 1, "x":  0, "y":  0, "slice": [ 0, 0, 23, 0 ] },
+    "key_display_mouse":                  { "path": "./misc/s_key_display_mouse.png",                       "s": 5, "x": 24, "y": 32 },
     
     "color_3d":                           { "path": "./preview/s_color_3d.png",                             "s": 3, "x": 16, "y": 16 },
     "color_3d_selected":                  { "path": "./preview/s_color_3d_selected.png",                    "s": 3, "x": 16, "y": 16 },

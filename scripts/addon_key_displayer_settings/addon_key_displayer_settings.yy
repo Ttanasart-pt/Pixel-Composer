@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"addon_key_displayer_settings",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"addon_key_displayer_settings",
+  "parent":{
+    "name":"key_displayer",
+    "path":"folders/misc/addons/key_displayer.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

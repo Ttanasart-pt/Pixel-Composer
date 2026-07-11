@@ -1,6 +1,24 @@
 /// @description 
 event_inherited();
 
+#region addon
+	panels    = {}
+	panelMain = Key_Displayer_Settings;
+#endregion
+
+#region main
+	position  = [1,1];
+	
+	align_x   = 1;
+	align_y   = 1;
+	
+	dispScale = 1;
+	dispAlpha = .25;
+	dispColor = c_white;
+	
+	keyColor  = c_white;
+#endregion
+
 #region keys
 	name      = "Key display";
 	alpha     = 0;
@@ -24,3 +42,33 @@ event_inherited();
 	
 	mouse_pos = [];
 #endregion
+
+function serialize()     { 
+	var _m = { 
+		position : array_clone(position), 
+		align_x, 
+		align_y,
+		
+		dispScale, 
+		dispAlpha,
+		dispColor,
+		
+		keyColor,
+	}; 
+	
+	return _m;
+}
+	
+function deserialize(_m) {
+	position  = array_clone(_m[$ "position"] ?? position);
+	align_x   = _m[$ "align_x"]   ?? align_x;
+	align_y   = _m[$ "align_y"]   ?? align_y;
+	
+	dispScale = _m[$ "dispScale"] ?? dispScale;
+	dispAlpha = _m[$ "dispAlpha"] ?? dispAlpha;
+	dispColor = _m[$ "dispColor"] ?? dispColor;
+	
+	keyColor  = _m[$ "keyColor"]  ?? keyColor;
+	
+	return self;
+}
