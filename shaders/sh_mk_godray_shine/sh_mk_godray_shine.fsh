@@ -1,0 +1,125 @@
+varying vec2 v_vTexcoord;
+varying vec4 v_vColour;
+
+uniform float seed;
+uniform vec2  dimension;
+
+uniform sampler2D mask;
+uniform int useMask;
+
+uniform int   type;
+uniform vec2  origin;
+
+uniform vec2      range;
+uniform int       rangeUseSurf;
+uniform sampler2D rangeSurf;
+
+uniform int   emptyMode;
+uniform vec4  emptyColor;
+
+uniform vec2      airDensity;
+uniform int       airDensityUseSurf;
+uniform sampler2D airDensitySurf;
+
+uniform vec2      solidDensity;
+uniform int       solidDensityUseSurf;
+uniform sampler2D solidDensitySurf;
+
+uniform vec2      solidDiffuse;
+uniform int       solidDiffuseUseSurf;
+uniform sampler2D solidDiffuseSurf;
+
+uniform vec4  lightColor;
+uniform int   lightAttn;
+uniform float brightness;
+
+uniform float subdiv;
+
+float random(in vec2 st, float seed) { return fract(sin(dot(st.xy, vec2(1892.9898, 78.23453))) * (seed + 437.54123)); }
+
+void main() {
+	#region params
+		float ran = range.x;
+		if(rangeUseSurf == 1) {
+			vec4 _vMap = texture2D( rangeSurf, v_vTexcoord );
+			ran = mix(range.x, range.y, (_vMap.r + _vMap.g + _vMap.b) / 3.);
+		}
+		
+		float airDen = airDensity.x;
+		if(airDensityUseSurf == 1) {
+			vec4 _vMap = texture2D( airDensitySurf, v_vTexcoord );
+			airDen = mix(airDensity.x, airDensity.y, (_vMap.r + _vMap.g + _vMap.b) / 3.);
+		}
+		
+		float solDen = solidDensity.x;
+		if(solidDensityUseSurf == 1) {
+			vec4 _vMap = texture2D( solidDensitySurf, v_vTexcoord );
+			solDen = mix(solidDensity.x, solidDensity.y, (_vMap.r + _vMap.g + _vMap.b) / 3.);
+		}
+		
+		float solDif = solidDiffuse.x;
+		if(solidDiffuseUseSurf == 1) {
+			vec4 _vMap = texture2D( solidDiffuseSurf, v_vTexcoord );
+			solDif = mix(solidDiffuse.x, solidDiffuse.y, (_vMap.r + _vMap.g + _vMap.b) / 3.);
+		}
+		
+	#endregion
+	
+	vec2  tx       = 1. / dimension;
+	vec2  originTx = origin * tx;
+	float rad      = ran    * tx.x;
+	
+	float pdist = distance(origin, v_vTexcoord * dimension);
+	
+	vec2  dirr;
+	float dist;
+	
+	if(type == 0) {
+		dirr = normalize(originTx - v_vTexcoord);
+		dist = distance(originTx, v_vTexcoord);
+		
+	} else if(type == 1) {
+		dirr = normalize(originTx - .5);
+		dist = distance(originTx, v_vTexcoord);
+	}
+	
+	float lightInt  = max(0., (rad - dist) / rad);
+	
+	     if(lightAttn == 0) lightInt = lightInt;
+	else if(lightAttn == 1) lightInt = lightInt * lightInt;
+	else if(lightAttn == 2) lightInt = 1. - (1. - lightInt) * (1. - lightInt);
+	
+	vec4  lightCol = lightColor;
+	vec4  sampCol  = vec4(0.);
+	
+	float subStep = 1. / subdiv;
+	
+	vec4  emCol = emptyMode == 0? emptyColor : texture2D(gm_BaseTexture, originTx);
+	vec3  empCl = emCol.rgb * emCol.a;
+	
+	for(float i = 0.; i < pdist; i += subStep) {
+		vec2 sampTx = v_vTexcoord + dirr * tx * i;
+		vec4 sampC  = useMask == 0? texture2D(gm_BaseTexture, sampTx) : texture2D(mask, sampTx);
+		
+		if(sampC.rgb * sampC.a == empCl) {
+			lightInt -= airDen * subStep;
+			continue;
+		}
+		
+		if(sampC.a > 0.) {
+			lightInt -= solDen * sampC.a * subStep;
+			sampCol  += solDen * solDif * sampC * subStep * lightInt;
+			
+		} else 
+			lightInt -= airDen * subStep;
+		
+	}
+	
+	vec4 lig    = lightCol * brightness;
+	     lig.a *= lightInt;
+	
+	vec4 res    = sampCol * lightColor + lig;
+	     res.a  = max(res.a, 0.);
+	
+	gl_FragColor = res;
+}

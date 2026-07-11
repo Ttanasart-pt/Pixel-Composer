@@ -6,44 +6,40 @@ function Node_MK_Sparkle(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	dimension_index = -1;
 	update_on_frame = true;
 	
-	newInput(0, nodeValue_Int("Size", 5));
+	newInput( 1, nodeValueSeed());
 	
-	newInput(1, nodeValueSeed());
+	////- =Output
+	newInput( 0, nodeValue_Int(  "Size",           5     ));
+	newInput(12, nodeValue_Bool( "Array",          false ));
+	newInput(13, nodeValue_Int(  "Array Length",   1     ));
 	
-	newInput(2, nodeValue_Slider("Speed", 1));
+	////- =Sparkle
+	newInput( 4, nodeValue_Slider( "Amount",      .5     ));
+	newInput( 5, nodeValue_Slider( "Scatter",     .5     ));
+	newInput( 8, nodeValue_Slider( "Diagonal",    .2     ));
 	
-	newInput(3, nodeValue_Bool("Shade", false));
+	////- =Animation
+	newInput( 2, nodeValue_Slider(  "Speed",       1     ));
+	newInput(11, nodeValue_Int(     "Frame Shift", 0     ));
+	newInput( 9, nodeValue_EScroll( "Loop",        false, [ "None", "Loop", "Ping-pong" ]));
+	newInput(10, nodeValue_Int(     "Loop Length", 4     ));
 	
-	newInput(4, nodeValue_Slider("Amount", 0.5));
-		
-	newInput(5, nodeValue_Slider("Scatter", 0.5));
-		
-	newInput(6, nodeValue_Palette("Colors", [ ca_black, ca_white ]))
-		
-	newInput(7, nodeValue_Bool("Additive", false))
-		
-	newInput(8, nodeValue_Slider("Diagonal", 0.2));
-		
-	newInput(9, nodeValue_EScroll("Loop", false, [ "None", "Loop", "Ping-pong" ]));
-	
-	newInput(10, nodeValue_Int("Loop Length", 4));
-	
-	newInput(11, nodeValue_Int("Frame Shift", 0));
-	
-	newInput(12, nodeValue_Bool("Array", false));
-	
-	newInput(13, nodeValue_Int("Array Length", 1));
-	
-	/////////////////////////////////////////////////////////////////
+	////- =Color
+	newInput( 3, nodeValue_Bool(    "Shade",       false ));
+	newInput( 6, nodeValue_Palette( "Colors",     [ca_black,ca_white] ));
+	newInput( 7, nodeValue_Bool(    "Additive",    false ));
+	// 14
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
 	input_display_list = [ s_MKFX, 1, 
-		["Output",    false], 0, 12, 13, 
-		["Sparkle",	  false], 4, 5, 8, 
-		["Animation", false], 2, 11, 9, 10, 
-		["Color",	  false, 3], 6, 7, 
-	]
+		[ "Output",    false    ],  0, 12, 13, 
+		[ "Sparkle",   false    ],  4,  5,  8, 
+		[ "Animation", false    ],  2, 11,  9, 10, 
+		[ "Color",     false, 3 ],  6,  7, 
+	];
+	
+	////- Node
 	
 	temp_surface = array_create(3);
 	

@@ -1,0 +1,12 @@
+{
+  "$GMShader":"",
+  "%Name":"sh_mk_godray_shine",
+  "name":"sh_mk_godray_shine",
+  "parent":{
+    "name":"mk_godray",
+    "path":"folders/nodes/data/MKFX/generator/mk_godray.yy",
+  },
+  "resourceType":"GMShader",
+  "resourceVersion":"2.0",
+  "type":1,
+}

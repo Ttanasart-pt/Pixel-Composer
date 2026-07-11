@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"node_mk_godray",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"node_mk_godray",
+  "parent":{
+    "name":"generator",
+    "path":"folders/nodes/data/MKFX/generator.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}
