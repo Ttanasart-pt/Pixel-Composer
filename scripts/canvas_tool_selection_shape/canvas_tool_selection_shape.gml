@@ -31,6 +31,11 @@ function canvas_tool_selection_shape(_shape) : canvas_selection_tool() construct
 				sel_h = sel_y1 - sel_y0 + 1;
     			
     		}
+    		
+    		if(key_mod_press(SHIFT)) {
+    			sel_w = max(sel_w, sel_h);
+    			sel_h = sel_w;
+    		}
         	
 			selection_mask = surface_verify(selection_mask, sel_w, sel_h);
 			surface_set_target(selection_mask);

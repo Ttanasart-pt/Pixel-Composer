@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.6.009",
+    "changes": [
+      {
+        "date": "2026-07-11T06:43:23.550Z",
+        "node": "Canvas",
+        "commit": "**Canvas**: Add shift for square selection shape."
+      }
+    ]
+  },
+  {
     "version": "1.21.6.008",
     "changes": [
       {
