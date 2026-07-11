@@ -13,7 +13,7 @@ function Node_MK_GodRay(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	newInput( 4, nodeValue_Vec2(    "Origin", [.5,.5] )).setUnitSimple();
 	newInput( 5, nodeValue_Float(   "Range",    1     )).setUnitSimple().setMappable(18);
 	newInput(13, nodeValue_Float(   "Spread",   4     ));
-	newInput(14, nodeValue_EScroll( "Attenuation", 0, [ "Linear", "Quadratic", "Inv. Quadratic" ] ));
+	newInput(14, nodeValue_EScroll( "Attenuation", 0, [ "Linear", "Quadratic", "Inv. Quadratic", "None" ] ));
 	newInput(17, nodeValue_Slider(  "Brightness", .0  ));
 	
 	////- =Solid
@@ -120,6 +120,8 @@ function Node_MK_GodRay(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			shader_set_f( "brightness",   _brigh );
 			shader_set_f( "subdiv",       _subd  );
 			
+			shader_set_m( "intensity", _inten, _data[22], inputs[ 7] );
+			
 			draw_surface( _surf, 0, 0 );
 			gpu_set_tex_filter(false);
 		surface_reset_shader();
@@ -142,7 +144,6 @@ function Node_MK_GodRay(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			shader_set_2( "dimension",  _dim   );
 			shader_set_s( "raySurface", _outData[1] );
 			
-			shader_set_m( "intensity",  _inten, _data[22], inputs[ 7] );
 			draw_surface( _surf, 0, 0 );
 		surface_reset_shader();
 		

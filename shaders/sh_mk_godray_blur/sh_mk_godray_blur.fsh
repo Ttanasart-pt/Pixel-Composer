@@ -36,14 +36,14 @@ void main() {
 		vec4  samPos = texture2D(gm_BaseTexture, originTx + vec2(cos(samDir), sin(samDir)) * dist);
 		if(samPos.a < baseC.a) continue;
 		
-		float ints   =  1. - (abs(i) / mspread);
-		
-		lightVal += samPos * ints;
-		weightTo += ints;
+		float sampI =  1. - (abs(i) / mspread);
+		lightVal += samPos * sampI;
+		weightTo += sampI;
 	}
 	
 	if(weightTo > .001)
 		lightVal /= weightTo;
 	lightVal.a = max(lightVal.a, 0.);
+		
 	gl_FragColor = lightVal;
 }

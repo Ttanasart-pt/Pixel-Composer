@@ -171,6 +171,10 @@ uniform vec2      solidDiffuse;
 uniform int       solidDiffuseUseSurf;
 uniform sampler2D solidDiffuseSurf;
 
+uniform vec2      intensity;
+uniform int       intensityUseSurf;
+uniform sampler2D intensitySurf;
+
 uniform int       lightAttn;
 uniform float     brightness;
 
@@ -204,6 +208,11 @@ void main() {
 			solDif = mix(solidDiffuse.x, solidDiffuse.y, (_vMap.r + _vMap.g + _vMap.b) / 3.);
 		}
 		
+		float ints = intensity.x;
+		if(intensityUseSurf == 1) {
+			vec4 _vMap = texture2D( intensitySurf, v_vTexcoord );
+			ints = mix(intensity.x, intensity.y, (_vMap.r + _vMap.g + _vMap.b) / 3.);
+		}
 	#endregion
 	
 	vec2  tx       = 1. / dimension;
@@ -229,6 +238,7 @@ void main() {
 	     if(lightAttn == 0) lightInt = lightInt;
 	else if(lightAttn == 1) lightInt = lightInt * lightInt;
 	else if(lightAttn == 2) lightInt = 1. - (1. - lightInt) * (1. - lightInt);
+	else if(lightAttn == 3) lightInt = 1.;
 	
 	vec4  lightCol = gradientEval(lightInt);
 	vec4  sampCol  = vec4(0.);
@@ -240,6 +250,8 @@ void main() {
 	
 	for(float i = 0.; i < pdist; i += subStep) {
 		vec2 sampTx = v_vTexcoord + dirr * tx * i;
+		     sampTx = clamp(sampTx, 0., 1.);
+		     
 		vec4 sampC  = useMask == 0? texture2D(gm_BaseTexture, sampTx) : texture2D(mask, sampTx);
 		
 		if(sampC.rgb * sampC.a == empCl) {
@@ -261,6 +273,7 @@ void main() {
 	
 	vec4 res    = sampCol * lightCol + lig;
 	     res.a  = max(res.a, 0.);
+		 res   *= ints;
 	
 	gl_FragColor = res;
 }
