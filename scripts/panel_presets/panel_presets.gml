@@ -81,6 +81,8 @@ function Panel_Presets(_node) : PanelContent() constructor {
 		}
 	#endregion
 	
+	////- Draw
+	
 	function replacePreset(path)     { if(node != noone) node.savePreset(filename_name_only(path)); }
 	function newPresetFromNode(name) { if(node != noone) node.savePreset(name); adding = false;     }
 	
@@ -103,11 +105,13 @@ function Panel_Presets(_node) : PanelContent() constructor {
 		
 		var _yy = _y;
 		
+		var dh = ui(24);
 		if(defPres != noone) {
 			var preset = defPres;
+			draw_sprite_stretched_ext(THEME.box_r2, 0, 0, _yy, _ww, dh, COLORS._main_icon_dark, 1);
 			
-			if(pHOVER && sc_presets.hover && point_in_rectangle(_m[0], _m[1], 0, _yy, _ww, _yy + _hh)) {
-				draw_sprite_stretched_ext(THEME.node_bg, 1, 0, _yy, _ww, _hh, COLORS._main_icon, 1);
+			if(pHOVER && sc_presets.hover && point_in_rectangle(_m[0], _m[1], 0, _yy, _ww, _yy + dh)) {
+				draw_sprite_stretched_ext(THEME.box_r2, 1, 0, _yy, _ww, dh, COLORS._main_icon, 1);
 				sc_presets.hover_content = true;
 				
 				if(mouse_lpress(pFOCUS)) {
@@ -124,13 +128,15 @@ function Panel_Presets(_node) : PanelContent() constructor {
 				}
 			}
 			
-			draw_set_text(f_p1, fa_left, fa_center, COLORS._main_text);
-			draw_text_add(ui(8), _yy + _hh / 2, "_default");
+			draw_set_text(f_p2, fa_center, fa_center, COLORS._main_text);
+			draw_text_add(_ww / 2, _yy + dh / 2, "default");
 			
 		} else {
 			var aa = .5;
+			draw_sprite_stretched_ext(THEME.box_r2, 0, 0, _yy, _ww, dh, COLORS._main_icon_dark, 1);
 			
-			if(pHOVER && sc_presets.hover && point_in_rectangle(_m[0], _m[1], 0, _yy, _ww, _yy + _hh)) {
+			if(pHOVER && sc_presets.hover && point_in_rectangle(_m[0], _m[1], 0, _yy, _ww, _yy + dh)) {
+				draw_sprite_stretched_ext(THEME.box_r2, 1, 0, _yy, _ww, dh, COLORS._main_icon, .5);
 				aa = .75;
 				sc_presets.hover_content = true;
 				
@@ -143,13 +149,13 @@ function Panel_Presets(_node) : PanelContent() constructor {
 					menuCall("preset_window_menu", context_def);
 			}
 			
-			draw_set_text(f_p1, fa_left, fa_center, COLORS._main_text, aa);
-			draw_text_add(ui(8), _yy + _hh / 2, "_default");
+			draw_set_text(f_p2, fa_center, fa_center, COLORS._main_text, aa);
+			draw_text_add(_ww / 2, _yy + dh / 2, "default");
 			draw_set_alpha(1);
 		}
 		
-		_yy += _hh + ui(4);
-		_h  += _hh + ui(4);
+		_yy += dh + ui(4);
+		_h  += dh + ui(4);
 		
 		var _sz = _hh - ui(8);
 		thumbnail_mask = surface_create(_sz, _sz);

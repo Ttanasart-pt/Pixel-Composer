@@ -108,6 +108,8 @@ function Node_Shadow(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 			
 			var _outSurf = _outData[0];
 			var _outShad = _outData[1];
+			
+			if(!is_surface(_surf)) return _outData;
 		#endregion
 		
 		var _shax = _posi == 0? _shf[0] : _dim[0] / 2 - _lgh[0];

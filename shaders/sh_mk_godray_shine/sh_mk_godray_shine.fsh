@@ -177,6 +177,7 @@ uniform sampler2D intensitySurf;
 
 uniform int       lightAttn;
 uniform float     brightness;
+uniform vec2      level;
 
 uniform float     subdiv;
 
@@ -215,22 +216,30 @@ void main() {
 		}
 	#endregion
 	
+	vec2  oriTx    = v_vTexcoord; 
 	vec2  tx       = 1. / dimension;
 	vec2  originTx = origin * tx;
 	float rad      = ran    * tx.x;
 	
-	float pdist = distance(origin, v_vTexcoord * dimension);
+	float pdist = distance(origin, oriTx * dimension);
 	
 	vec2  dirr;
 	float dist;
 	
 	if(type == 0) {
-		dirr = normalize(originTx - v_vTexcoord);
-		dist = distance(originTx, v_vTexcoord);
+		dirr = normalize(originTx - oriTx);
+		dist = distance(originTx, oriTx);
 		
 	} else if(type == 1) {
 		dirr = normalize(originTx - .5);
-		dist = distance(originTx, v_vTexcoord);
+		dist = distance(originTx, oriTx);
+		
+	} else if(type == 2) {
+		dirr  = normalize(originTx - .5);
+		dist  = distance(originTx, oriTx);
+		pdist = dimension.x + dimension.y;
+		
+		oriTx = v_vTexcoord - dirr * pdist / 2. * tx;
 	}
 	
 	float lightInt  = max(0., (rad - dist) / rad);
@@ -249,18 +258,22 @@ void main() {
 	vec3  empCl = emCol.rgb * emCol.a;
 	
 	for(float i = 0.; i < pdist; i += subStep) {
-		vec2 sampTx = v_vTexcoord + dirr * tx * i;
-		     sampTx = clamp(sampTx, 0., 1.);
-		     
-		vec4 sampC  = useMask == 0? texture2D(gm_BaseTexture, sampTx) : texture2D(mask, sampTx);
+		vec2 sampTx = oriTx + dirr * tx * i;
+		
+		if(sampTx.x < 0. || sampTx.y < 0. || sampTx.x >= 1. || sampTx.y >= 1.)
+			continue;
+			
+		vec4  sampC = useMask == 0? texture2D(gm_BaseTexture, sampTx) : texture2D(mask, sampTx);
+		float sampL = (sampC.r + sampC.g + sampC.b) / 3. * sampC.a;
+		      sampL = (sampL - level.x) / (level.y - level.x);
 		
 		if(sampC.rgb * sampC.a == empCl) {
 			lightInt -= airDen * subStep;
 			continue;
 		}
 		
-		if(sampC.a > 0.) {
-			lightInt -= solDen * sampC.a * subStep;
+		if(sampL > 0.) {
+			lightInt -= solDen * sampL * subStep;
 			sampCol  += solDen * solDif * sampC * subStep * lightInt;
 			
 		} else 
@@ -271,9 +284,9 @@ void main() {
 	vec4 lig    = lightCol * brightness;
 	     lig.a *= lightInt;
 	
-	vec4 res    = sampCol * lightCol + lig;
-	     res.a  = max(res.a, 0.);
-		 res   *= ints;
+	vec4 res  = sampCol * lightCol + lig;
+		 res *= ints;
+         res  = max(res, 0.);
 	
 	gl_FragColor = res;
 }

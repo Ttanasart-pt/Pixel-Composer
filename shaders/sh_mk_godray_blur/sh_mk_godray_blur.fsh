@@ -20,30 +20,46 @@ void main() {
 	
 	vec2  tx       = 1. / dimension;
 	vec2  originTx = origin * tx;
-	vec2  toLight  = v_vTexcoord - originTx;
 	float rad      = range  * tx.x;
 	
-	float dist     = distance(originTx, v_vTexcoord);
-	float dirr     = degrees(atan(toLight.y, toLight.x));
-	float radInt   = (rad - dist) / rad;
-	
-	float mspread  = ceil(spread);
 	vec4  lightVal = vec4(0.);
+	float mspread  = ceil(spread);
 	float weightTo = 0.;
 	
-	for(float i = -mspread; i <= mspread; i += .25) {
-		float samDir = radians(dirr + i * radInt);
-		vec4  samPos = texture2D(gm_BaseTexture, originTx + vec2(cos(samDir), sin(samDir)) * dist);
-		if(samPos.a < baseC.a) continue;
+	if(type == 0) {
+		vec2  toLight = v_vTexcoord - originTx;
+		float dist = distance(originTx, v_vTexcoord);
+		float dirr = degrees(atan(toLight.y, toLight.x));
 		
-		float sampI =  1. - (abs(i) / mspread);
-		lightVal += samPos * sampI;
-		weightTo += sampI;
+		float radInt   = (rad - dist) / rad;
+		
+		for(float i = -mspread; i <= mspread; i += .25) {
+			float samDir = radians(dirr + i * radInt);
+			vec4  samPos = texture2D(gm_BaseTexture, originTx + vec2(cos(samDir), sin(samDir)) * dist);
+			if(samPos.a < baseC.a) continue;
+			
+			float sampI =  1. - (abs(i) / mspread);
+			lightVal += samPos * sampI;
+			weightTo += sampI;
+		}
+		
+	} else if(type == 1 || type == 2) {
+		float dist = distance(originTx, v_vTexcoord);
+		vec2  dirr = normalize(originTx - .5).yx * tx * vec2(1., -1);
+		
+		for(float i = -mspread; i <= mspread; i += .25) {
+			vec4  samPos = texture2D(gm_BaseTexture, v_vTexcoord + dirr * i * dist);
+			// if(samPos.a < baseC.a) continue;
+			
+			float sampI =  1. - (abs(i) / mspread);
+			lightVal += samPos * sampI;
+			weightTo += sampI;
+		}
 	}
 	
 	if(weightTo > .001)
 		lightVal /= weightTo;
 	lightVal.a = max(lightVal.a, 0.);
-		
+	
 	gl_FragColor = lightVal;
 }

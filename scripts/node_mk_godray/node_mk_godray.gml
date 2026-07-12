@@ -9,7 +9,7 @@ function Node_MK_GodRay(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	newInput( 1, nodeValue_Surface( "Ray Mask"   ));
 	
 	////- =Light
-	newInput( 3, nodeValue_EScroll( "Type",     0, [ "Point", "Sun" ] ));
+	newInput( 3, nodeValue_EScroll( "Type",     0, [ "Point", "Sun", "Infinite Sun" ] ));
 	newInput( 4, nodeValue_Vec2(    "Origin", [.5,.5] )).setUnitSimple();
 	newInput( 5, nodeValue_Float(   "Range",    1     )).setUnitSimple().setMappable(18);
 	newInput(13, nodeValue_Float(   "Spread",   4     ));
@@ -22,12 +22,13 @@ function Node_MK_GodRay(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	newInput(15, nodeValue_Slider(  "Air Density",.0 , [ 0, .1, .01 ]  )).setMappable(19);
 	newInput( 8, nodeValue_Slider(  "Density",    .02, [ 0, .1, .01 ]  )).setMappable(20);
 	newInput( 9, nodeValue_Slider(  "Diffuse",    .1                   )).setMappable(21);
+	newInput(23, nodeValue_SliRange("Range",      [0,1]                ));
 	
 	////- =Rendering
 	newInput( 6, nodeValue_Float(   "Subdivision", 2         ));
 	newInput(10, nodeValue_Gradient("Base Color",  gra_white ));
 	newInput( 7, nodeValue_Float(   "Intensity",   16        )).setMappable(22);
-	// 23
+	// 24
 	
 	newOutput( 0, nodeValue_Output( "Surface Out", VALUE_TYPE.surface, noone ));
 	newOutput( 1, nodeValue_Output( "Ray Only",    VALUE_TYPE.surface, noone ));
@@ -35,7 +36,7 @@ function Node_MK_GodRay(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	input_display_list = [ s_MKFX,  2, 16, 
 		[ "Surfaces",  false ],  0,  1, 
 		[ "Light",     false ],  3,  4,  5, 18, 13, 14, 17, 
-		[ "Solid",     false ], 11, 12, 15, 19,  8, 20,  9, 21, 
+		[ "Solid",     false ], 11, 12, 15, 19,  8, 20,  9, 21, 23, 
 		[ "Rendering", false ],  6, 10,  7, 22, 
 	];
 	
@@ -57,7 +58,7 @@ function Node_MK_GodRay(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		draw_circle_dash(_px, _py, _rr);
 		
 		drawOverlayInput(inputs[ 4].drawOverlay(w_hoverable, active, _x,  _y,  _s, _mx, _my));
-		drawOverlayInput(inputs[ 5].drawOverlay(w_hoverable, active, _px, _py, _s, _mx, _my));
+		// drawOverlayInput(inputs[ 5].drawOverlay(w_hoverable, active, _px, _py, _s, _mx, _my));
 	}
 	
 	static processData = function(_outData, _data, _array_index) {
@@ -79,6 +80,7 @@ function Node_MK_GodRay(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			var _emDen = _data[15];
 			var _densi = _data[ 8];
 			var _diffu = _data[ 9];
+			var _level = _data[23];
 			
 			var _subd  = _data[ 6];
 			var _lCol  = _data[10];
@@ -97,7 +99,6 @@ function Node_MK_GodRay(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		_outData[1] = surface_verify(_outData[1], _dim[0], _dim[1], attrDepth());
 		
 		surface_set_shader(temp_surface[0], sh_mk_godray_shine);
-			gpu_set_tex_filter(true);
 			shader_set_f( "seed",         _seed  );
 			
 			shader_set_2( "dimension",    _dim   );
@@ -107,6 +108,7 @@ function Node_MK_GodRay(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			shader_set_i( "type",         _type  );
 			shader_set_2( "origin",       _orig  );
 			shader_set_m( "range",        _range, _data[18], inputs[ 5] );
+			shader_set_2( "level",        _level );
 			
 			shader_set_i( "emptyMode",    _emMod );
 			shader_set_c( "emptyColor",   _emCol );
@@ -122,12 +124,12 @@ function Node_MK_GodRay(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			
 			shader_set_m( "intensity", _inten, _data[22], inputs[ 7] );
 			
+			gpu_set_tex_filter(true);
 			draw_surface( _surf, 0, 0 );
 			gpu_set_tex_filter(false);
 		surface_reset_shader();
 		
 		surface_set_shader(_outData[1], sh_mk_godray_blur);
-			gpu_set_tex_filter(true);
 			shader_set_2( "dimension", _dim   );
 			
 			shader_set_i( "type",      _type  );
@@ -136,6 +138,7 @@ function Node_MK_GodRay(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			
 			shader_set_f( "spread",    _sprd  );
 			
+			gpu_set_tex_filter(true);
 			draw_surface( temp_surface[0], 0, 0 );
 			gpu_set_tex_filter(false);
 		surface_reset_shader();
