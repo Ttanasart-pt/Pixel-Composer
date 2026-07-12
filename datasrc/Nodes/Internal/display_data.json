@@ -1044,6 +1044,7 @@
             "Node_MK_Jigsaw", 
             "Node_MK_Flake", 
             "Node_MK_Rock", 
+            "Node_MK_Cloud", 
         ]
     }, //Generate
     {
@@ -1451,6 +1452,7 @@
             "Node_MK_Dialog", 
             "Node_MK_Facet",
             "Node_MK_Jigsaw",
+            "Node_MK_Cloud",
             "Node_MK_Smoke",
             "Node_MK_Flake",
             "Node_MK_Rock",

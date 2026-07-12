@@ -2,7 +2,11 @@
 function nodeValue_Enum_String(_name, _value, _data = noone) { return new __NodeValue_Enum_String(_name, self, _value, _data); }
 
 function __NodeValue_Enum_String(_name, _node, _value, _data) : NodeValue(_name, _node, CONNECT_TYPE.input, VALUE_TYPE.text, _value, "") constructor {
-	if(_data != noone) setDisplay(VALUE_DISPLAY.enum_string, _data);
+	if(_data != noone) {
+		if(is_array(_data)) _data = { data: _data, display: _data };
+		setDisplay(VALUE_DISPLAY.enum_string, _data);
+	}
+		
 	topbar_editWidget_width = ui(160);
 	
 	////- SET 

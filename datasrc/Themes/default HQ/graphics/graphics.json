@@ -183,6 +183,7 @@
     "minus_32":                           { "path": "./icon/s_minus_32.png",                                "s": 1, "x": 16, "y": 16 },
     "minus_b":                            { "path": "./icon/s_minus_b_24.png",                              "s": 1, "x": 12, "y": 12 },
     "minus_inv_16":                       { "path": "./icon/s_minus_inv_16.png",                            "s": 1, "x":  8, "y":  8 },
+    "mk_cloud_curve_layer":               { "path": "./icon/s_mk_cloud_curve_layer.png",                    "s": 2, "x": 12, "y": 12 },
     "mk_tree_leaf_unit":                  { "path": "./icon/s_mk_tree_leaf_unit.png",                       "s": 2, "x": 12, "y": 12 },
     "mk_tree_curve_length":               { "path": "./icon/s_mk_tree_curve_length.png",                    "s": 2, "x": 12, "y": 12 },
     "mk_tree_curve_branch":               { "path": "./icon/s_mk_tree_curve_branch.png",                    "s": 2, "x": 12, "y": 12 },

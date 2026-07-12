@@ -1,0 +1,12 @@
+{
+  "$GMShader":"",
+  "%Name":"sh_mk_cloud_puff",
+  "name":"sh_mk_cloud_puff",
+  "parent":{
+    "name":"mk_cloud",
+    "path":"folders/nodes/data/MKFX/generator/mk_cloud.yy",
+  },
+  "resourceType":"GMShader",
+  "resourceVersion":"2.0",
+  "type":1,
+}

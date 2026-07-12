@@ -28,11 +28,11 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	////- =Surfaces
 	newInput( 0, nodeValue_Surface( "Surface In" ));
 	newInput(15, nodeValue_EScroll( "Array", 0, [ 
-		new scrollItem("Spread output").setTooltip("Create multiple surfaces for each surface separately."), 
-		new scrollItem("Index").setTooltip("Mix all input surfaces using spawn index as array index."), 
-		new scrollItem("Random").setTooltip("Mix all input surfaces with random array index."), 
-		new scrollItem("Data").setTooltip("Using third value (if exists) to determine array index."), 
-		new scrollItem("Texture").setTooltip("Use external surface to select array index.") 
+		new scrollItem( "Spread Output" ).setTooltip("Create multiple surfaces for each surface separately."), 
+		new scrollItem( "Index"         ).setTooltip("Mix all input surfaces using spawn index as array index."), 
+		new scrollItem( "Random"        ).setTooltip("Mix all input surfaces with random array index."), 
+		new scrollItem( "Data"          ).setTooltip("Using third value (if exists) to determine array index."), 
+		new scrollItem( "Texture"       ).setTooltip("Use external surface to select array index.") 
 	]));
 		
 	newInput(24, nodeValue_IArray(  "Array Indices" )).setArrayDepth(1);

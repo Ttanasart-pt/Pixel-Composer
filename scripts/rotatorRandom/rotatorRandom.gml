@@ -103,6 +103,8 @@ function rotatorRandom(_onModify) : widget() constructor {
 	}
 	
 	static draw = function(_x, _y, _w, _h, _data, _m) {
+		if(!is_array(_data)) return;
+		
 		x = _x;
 		y = _y;
 		w = _w;

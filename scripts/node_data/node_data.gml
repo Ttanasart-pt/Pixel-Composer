@@ -45,8 +45,13 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		manual_ungroupable	 = true;
 		destroy_when_upgroup = false;
 		
-		// run_in(1, () => onValueRefresh());
-		if(NOT_LOAD) array_push(_group == noone? project.nodes : _group.getNodeList(), self);
+		if(NOT_LOAD) {
+			var _parentGroup = project.nodes;
+			if(_group != noone)
+				_parentGroup = has(_group, "getNodeList")? _group.getNodeList() : _group.nodeStack;
+			array_push(_parentGroup, self);
+		}
+		
 		array_push(project.allNodes, self);
 		
 		inline_input   = true;
@@ -59,6 +64,11 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		is_instancer  = false;
 		
 		static setParam = function() /*=>*/ {return false};
+	#endregion
+	
+	#region ---- 3D ----
+		is_3D   = NODE_3D.none;
+		lock_3D = true;
 	#endregion
 	
 	if(NOT_LOAD) {
@@ -418,9 +428,8 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		hotkey_displays = [];
 	#endregion
 	
-	#region ---- 3D ----
-		is_3D   = NODE_3D.none;
-		lock_3D = true;
+	#region ---- Node Stack ----
+		nodeStack = [];
 	#endregion
 	
 	#region ---- Log ----
