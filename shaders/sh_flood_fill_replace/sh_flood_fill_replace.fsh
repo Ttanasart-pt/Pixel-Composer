@@ -147,6 +147,7 @@ varying vec4 v_vColour;
 uniform int  blend;
 uniform vec4 color;
 uniform sampler2D mask;
+uniform int  invert;
 
 uniform int  fillBG;
 uniform vec4 bgColor;
@@ -158,6 +159,8 @@ void main() {
 	gl_FragColor = col;
 	
     vec4 msk = texture2D( mask, v_vTexcoord );
+    if(invert == 1) msk = 1. - msk;
+    
 	if(msk.a == 0. || msk.r != 1.) {
 		if(fillBG == 1) gl_FragColor = bgColor;
 		return;

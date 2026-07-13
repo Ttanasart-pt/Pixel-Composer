@@ -1,0 +1,12 @@
+{
+  "$GMShader":"",
+  "%Name":"sh_flood_fill_mask_thres",
+  "name":"sh_flood_fill_mask_thres",
+  "parent":{
+    "name":"floodfill",
+    "path":"folders/nodes/data/generator/regions/floodfill.yy",
+  },
+  "resourceType":"GMShader",
+  "resourceVersion":"2.0",
+  "type":1,
+}

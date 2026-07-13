@@ -16,6 +16,11 @@
         "date": "2026-07-13T06:07:12.818Z",
         "node": "Flood Fill",
         "commit": "**Flood Fill**: Add Channel control property."
+      },
+      {
+        "date": "2026-07-13T06:46:41.736Z",
+        "node": "Flood Fill",
+        "commit": "**Flood Fill**: Add path and mask fill mode."
       }
     ]
   },

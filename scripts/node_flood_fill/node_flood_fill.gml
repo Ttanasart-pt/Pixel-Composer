@@ -10,9 +10,14 @@ function Node_Flood_Fill(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	__init_mask_modifier(1, 8); // inputs 8, 9
 	
 	////- =Fill
-	newInput(17, nodeValue_Toggle(  "Channel", 0b1111, { data: array_create(4, THEME.inspector_channel) }));
-	newInput( 4, nodeValue_Vec2(    "Position",   [.5,.5]  )).setHotkey("G").setUnitSimple();
-	newInput( 6, nodeValue_Slider(  "Threshold",   .1      ));
+	newInput(17, nodeValue_Toggle(  "Channel",     0b1111, { data: array_create(4, THEME.inspector_channel) }));
+	newInput(18, nodeValue_EScroll( "Fill Mode",   0, [ "Point", "Path", "Mask" ] ));
+	newInput( 4, nodeValue_Vec2(    "Position",   [.5,.5]   )).setHotkey("G").setUnitSimple();
+	newInput(20, nodeValue_Path(    "Path",                 ));
+	newInput(23, nodeValue_Int(     "Resolution",  16       ));
+	newInput(21, nodeValue_Surface( "Fill Mask",            ));
+	newInput(22, nodeValue_Color(   "Ref. Color",  ca_white ))
+	newInput( 6, nodeValue_Slider(  "Threshold",   .1       ));
 	
 	////- =Algorithm
 	newInput(12, nodeValue_EScroll( "Algorithm",   0, [ "Linear Sweep", "Diffusion" ]    ));
@@ -20,9 +25,9 @@ function Node_Flood_Fill(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	newInput(11, nodeValue_Int(     "Iteration",   8       ));
 	
 	////- =Rendering
-	
 	newInput( 5, nodeValue_Color(   "Color",      ca_black )).setHotkeyAuto("C");
 	newInput(10, nodeValue_EScroll( "Blend Mode",   0, [ "Override", "Multiply" ] ));
+	newInput(19, nodeValue_Bool(    "Invert",     false    ));
 	
 		////- =/Background
 	newInput(15, nodeValue_Bool(    "Fill Background",  false            ));
@@ -31,17 +36,17 @@ function Node_Flood_Fill(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 		////- =/Gradient
 	newInput(13, nodeValue_Bool(    "Fill Gradient",    false            ));
 	newInput(14, nodeValue_Gradient("Gradient",         gra_black_white  ));
-	// 18
+	// 24
 	
 	newOutput( 0, nodeValue_Output( "Surface Out", VALUE_TYPE.surface, noone ));
 	newOutput( 1, nodeValue_Output( "Fill Mask",   VALUE_TYPE.surface, noone ));
 	
 	input_display_list = [  3,
 		[ "Surfaces",   true ],  0,  1,  2,  8,  9, 
-		[ "Fill",      false ], 17,  4,  6, 
+		[ "Fill",      false ], 17, 18,  4, 20, 23, 21, 22,  6, 
 		[ "Algorithm", false ], 12,  7, 11, 
 		
-		[ "Rendering", false ],  5, 10, 
+		[ "Rendering", false ],  5, 10, 19, 
 			[ "/Background", false, 15 ], 16, 
 			[ "/Gradient",   false, 13 ], 14, 
 	];
@@ -67,7 +72,12 @@ function Node_Flood_Fill(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 			if(!is_surface(inSurf)) return _outData;
 			
 			var _chan  = _data[17];
+			var _mode  = _data[18];
 			var _pos   = _data[ 4];
+			var _path  = _data[20];
+			var _reso  = _data[23];
+			var _mask  = _data[21];
+			var _cref  = _data[22];
 			var _thr   = _data[ 6];
 			
 			var _algo  = _data[12];
@@ -76,15 +86,23 @@ function Node_Flood_Fill(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 			
 			var _col   = _data[ 5];
 			var _bnd   = _data[10];
+			var _invt  = _data[19];
 			
 			var _bgFil = _data[15];
 			var _bgCol = _data[16];
 			
 			var _ugrad = _data[13];
 			var _grad  = _data[14];
+			
+			inputs[ 4].setVisible(_mode == 0);
+			
+			inputs[20].setVisible(_mode == 1, _mode == 1);
+			inputs[23].setVisible(_mode == 1);
+			
+			inputs[21].setVisible(_mode == 2, _mode == 2);
+			inputs[22].setVisible(_mode != 0);
 		#endregion
 		
-		var _filC = surface_get_pixel_ext(inSurf, _pos[0], _pos[1]);
 		var  sw   = surface_get_width_safe(inSurf);
 		var  sh   = surface_get_height_safe(inSurf);
 		
@@ -95,19 +113,55 @@ function Node_Flood_Fill(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 			DRAW_CLEAR
 			
 			shader_set(sh_flood_fill_thres);
-			shader_set_c( "color",   _filC );
-			shader_set_f( "thres",   _thr  );
-			shader_set_i( "channel", _chan );
+			shader_set_2( "dimension", [sw,sh]  );
+			shader_set_i( "mode",       _mode   );
+			shader_set_2( "position",   _pos    );
+			shader_set_c( "refColor",   _cref   );
+			
+			shader_set_i( "channel",    _chan   );
+			shader_set_f( "thres",      _thr    );
 			
 			BLEND_OVERRIDE
 			draw_surface_safe(inSurf);
 			BLEND_NORMAL
 			shader_reset();
 			
-			BLEND_OVERRIDE
-			draw_set_color(#FF0000);
-			draw_point(_pos[0] - 1, _pos[1] - 1);
-			BLEND_NORMAL
+			switch(_mode) {
+				case 0 : 
+					draw_set_color(#FF0000);
+					draw_point(_pos[0] - 1, _pos[1] - 1); 
+					break;
+				
+				case 1 : 
+					draw_set_color(#FF0000);
+					if(is_path(_path)) {
+						var __p   = new __vec2P();
+						var _reso = 32;
+						
+						var ox, oy, nx, ny;
+						
+						for( var i = 0; i <= _reso; i++ ) {
+							var _t = i / _reso;
+							__p = _path.getPointRatio(_t, 0, __p);
+							
+							nx = __p.x;
+							ny = __p.y;
+							
+							if(i) draw_line(ox, oy, nx, ny);
+							
+							ox = nx;
+							oy = ny;
+						}
+					}
+					break;
+					
+				case 2 : 
+					shader_set(sh_flood_fill_mask_thres);
+						draw_surface_safe(_mask);
+					shader_reset();
+					break;
+			}
+			
 		surface_reset_target();
 		
 		var ind   = 0;
@@ -130,9 +184,10 @@ function Node_Flood_Fill(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 		var _outMask = surface_verify(_outData[1], sw, sh);
 		
 		surface_set_shader(_outSurf, sh_flood_fill_replace);
-			shader_set_c( "color", _col );
-			shader_set_s( "mask",  temp_surface[ind]);
-			shader_set_i( "blend", _bnd );
+			shader_set_c( "color",  _col  );
+			shader_set_s( "mask",   temp_surface[ind]);
+			shader_set_i( "blend",  _bnd  );
+			shader_set_i( "invert", _invt );
 			
 			shader_set_i( "useGrad", _ugrad );
 			shader_set_gradient(     _grad  );

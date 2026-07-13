@@ -1,15 +1,22 @@
 varying vec2 v_vTexcoord;
 varying vec4 v_vColour;
 
-uniform vec4  color;
-uniform float thres;
+uniform vec2  dimension;
+uniform int   mode;
+uniform vec2  position;
+uniform vec4  refColor;
+
 uniform int   channel;
+uniform float thres;
 
 void main() {
     vec4 col = texture2D( gm_BaseTexture, v_vTexcoord );
     
-    float dis  = 0.;
-    int   chan = channel;
+    float dis   = 0.;
+    int   chan  = channel;
+    vec4  color = refColor;
+    
+    if(mode == 0) color = texture2D( gm_BaseTexture, position / dimension );
     
     if(chan >= 8) {
     	dis  += pow( col.a - color.a, 2.);
