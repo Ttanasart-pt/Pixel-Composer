@@ -5,8 +5,8 @@
   "isDnD":false,
   "name":"node_FLIP_domain",
   "parent":{
-    "name":"FLIP",
-    "path":"folders/nodes/data/simulation/FLIP.yy",
+    "name":"domain",
+    "path":"folders/nodes/data/simulation/FLIP/domain.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

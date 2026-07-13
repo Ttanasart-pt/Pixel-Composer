@@ -5,8 +5,8 @@
   "isDnD":false,
   "name":"node_FLIP_apply_force",
   "parent":{
-    "name":"FLIP",
-    "path":"folders/nodes/data/simulation/FLIP.yy",
+    "name":"solid",
+    "path":"folders/nodes/data/simulation/FLIP/solid.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

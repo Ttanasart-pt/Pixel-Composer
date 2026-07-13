@@ -2261,7 +2261,7 @@ function timelineItemNode_Canvas(_node) : timelineItemNode(_node) constructor {
 				draw_sprite_stretched_ext(THEME.box_r2, 1, _rx0, _ry0, _h, _h, COLORS._main_accent);
 				
 			} else {
-				draw_surface_ext(_surf, _rx - _sw * _ss / 2, _ry - _sh * _ss / 2, _ss, _ss, 0, c_white, 0.1);
+				draw_surface_ext(_surf, _rx - _sw * _ss / 2, _ry - _sh * _ss / 2, _ss, _ss, 0, c_white, .75);
 				draw_sprite_stretched_ext(THEME.box_r2, 1, _rx0, _ry0, _h, _h, COLORS._main_icon, 0.3);
 			}
 			

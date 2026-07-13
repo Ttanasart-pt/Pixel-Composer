@@ -5,8 +5,8 @@
   "isDnD":false,
   "name":"FLIP_fluid",
   "parent":{
-    "name":"FLIP",
-    "path":"folders/nodes/data/simulation/FLIP.yy",
+    "name":"__flip",
+    "path":"folders/nodes/data/simulation/FLIP/__flip.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

@@ -323,7 +323,7 @@ function canvas_tool_brush(_eraser = false, _toolAttr = undefined) : canvas_tool
 			
 		} 
 		
-		var _1px = !brush.use_surface && brush.dist_min == brush.dist_max && brush.dist_min == 1;
+		var _1px = brush.draw_type == BRUSH_DRAW_TYPE.line && !brush.use_surface && brush.dist_min == brush.dist_max && brush.dist_min == 1;
 		
 		if(mouse_holding) { // Drawing
 			if(active) {

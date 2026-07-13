@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"node_FLIP_solid",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"node_FLIP_solid",
+  "parent":{
+    "name":"solid",
+    "path":"folders/nodes/data/simulation/FLIP/solid.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

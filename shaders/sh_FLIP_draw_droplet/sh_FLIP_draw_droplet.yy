@@ -3,8 +3,8 @@
   "%Name":"sh_FLIP_draw_droplet",
   "name":"sh_FLIP_draw_droplet",
   "parent":{
-    "name":"FLIP",
-    "path":"folders/nodes/data/simulation/FLIP.yy",
+    "name":"__flip",
+    "path":"folders/nodes/data/simulation/FLIP/__flip.yy",
   },
   "resourceType":"GMShader",
   "resourceVersion":"2.0",

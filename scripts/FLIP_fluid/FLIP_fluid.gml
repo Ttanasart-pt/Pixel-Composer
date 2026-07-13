@@ -1,5 +1,8 @@
-/*[cpp] flip
+/*[cpp]
 #define _USE_MATH_DEFINES
+
+#include <cstddef>
+#include <cstdint>
 #include <cmath>
 #include <cstring>
 #include <algorithm>
@@ -16,6 +19,13 @@ enum CELL {
 enum COLLISION_SHAPE {
 	circle,
 	rectangle
+};
+
+struct pixel {
+	uint8_t r;
+	uint8_t g;
+	uint8_t b;
+	uint8_t a;
 };
 
 struct Obstacle {
@@ -59,6 +69,7 @@ struct Domain {
 	double* prevV;
 	double* p;
 	double* s;
+	double* solidMap; // ?? kinda confuse with the s array.
 
 	double* cellType;
 	double* particlePos;
@@ -102,6 +113,16 @@ double clamp(double x, double min, double max) { return x < min ? min : x > max 
 
 static inline int getIndex (int x, int y, int n) { return x * n + y; }
 
+// Grid cell openness used by solver: 1 = open/fluid cell, 0 = solid cell.
+static inline double getCellOpen(const Domain& domain, int idx) {
+	return (domain.s[idx] != 0 && domain.solidMap[idx] <= 0.5) ? 1.0 : 0.0;
+}
+
+static inline bool isSolidCell(const Domain& domain, int x, int y) {
+	if (x < 0 || y < 0 || x >= domain.fNumX || y >= domain.fNumY) return true;
+	return getCellOpen(domain, getIndex(x, y, (int)domain.fNumY)) == 0.0;
+}
+
 ////////////////////////////////////////////////////////////////////// DOMAINS //////////////////////////////////////////////////////////////////////
 
 cfunction double FLIP_cleanDomain(double dindex) {
@@ -117,6 +138,7 @@ cfunction double FLIP_cleanDomain(double dindex) {
 	delete[] domain.prevV;
 	delete[] domain.p;
 	delete[] domain.s;
+	delete[] domain.solidMap;
 
 	delete[] domain.cellType;
 	delete[] domain.particlePos;
@@ -139,24 +161,25 @@ cfunction double FLIP_resetDomain(double dindex) {
 	domain.obstacles.clear();
 	domain.numParticles = 0;
 
-	memset(domain.u, 0, sizeof(double) * domain.fNumCells);
-	memset(domain.v, 0, sizeof(double) * domain.fNumCells);
-	memset(domain.du, 0, sizeof(double) * domain.fNumCells);
-	memset(domain.dv, 0, sizeof(double) * domain.fNumCells);
-	memset(domain.prevU, 0, sizeof(double) * domain.fNumCells);
-	memset(domain.prevV, 0, sizeof(double) * domain.fNumCells);
-	memset(domain.p, 0, sizeof(double) * domain.fNumCells);
-	memset(domain.s, 0, sizeof(double) * domain.fNumCells);
+	memset( domain.u,                 0, sizeof(double) * domain.fNumCells        );
+	memset( domain.v,                 0, sizeof(double) * domain.fNumCells        );
+	memset( domain.du,                0, sizeof(double) * domain.fNumCells        );
+	memset( domain.dv,                0, sizeof(double) * domain.fNumCells        );
+	memset( domain.prevU,             0, sizeof(double) * domain.fNumCells        );
+	memset( domain.prevV,             0, sizeof(double) * domain.fNumCells        );
+	memset( domain.p,                 0, sizeof(double) * domain.fNumCells        );
+	memset( domain.s,                 0, sizeof(double) * domain.fNumCells        );
+	memset( domain.solidMap,          0, sizeof(double) * domain.fNumCells        );
 
-	memset(domain.cellType, 0, sizeof(double) * domain.fNumCells);
-	memset(domain.particlePos, 0, sizeof(double) * domain.maxParticles * 2);
-	memset(domain.particleVel, 0, sizeof(double) * domain.maxParticles * 2);
-	memset(domain.particleDensity, 0, sizeof(double) * domain.fNumCells);
-	memset(domain.particleLife, 0, sizeof(double) * domain.maxParticles);
+	memset( domain.cellType,          0, sizeof(double) * domain.fNumCells        );
+	memset( domain.particlePos,       0, sizeof(double) * domain.maxParticles * 2 );
+	memset( domain.particleVel,       0, sizeof(double) * domain.maxParticles * 2 );
+	memset( domain.particleDensity,   0, sizeof(double) * domain.fNumCells        );
+	memset( domain.particleLife,      0, sizeof(double) * domain.maxParticles     );
 
-	memset(domain.numCellParticles, 0, sizeof(double) * domain.pNumCells);
-	memset(domain.firstCellParticle, 0, sizeof(double) * (domain.pNumCells + 1));
-	memset(domain.cellParticleIds, 0, sizeof(double) * domain.maxParticles);
+	memset( domain.numCellParticles,  0, sizeof(double) * domain.pNumCells        );
+	memset( domain.firstCellParticle, 0, sizeof(double) * (domain.pNumCells + 1)  );
+	memset( domain.cellParticleIds,   0, sizeof(double) * domain.maxParticles     );
 
 	return 0;
 }
@@ -184,14 +207,15 @@ cfunction double FLIP_updateDomain(double dindex, double _width, double _height,
 	domain.fNumCells   = domain.fNumX * domain.fNumY;
 	int iNumCells = (size_t)domain.fNumCells;
 
-	domain.u     = new double[iNumCells];
-	domain.v     = new double[iNumCells];
-	domain.du    = new double[iNumCells];
-	domain.dv    = new double[iNumCells];
-	domain.prevU = new double[iNumCells];
-	domain.prevV = new double[iNumCells];
-	domain.p     = new double[iNumCells];
-	domain.s     = new double[iNumCells];
+	domain.u        = new double[iNumCells];
+	domain.v        = new double[iNumCells];
+	domain.du       = new double[iNumCells];
+	domain.dv       = new double[iNumCells];
+	domain.prevU    = new double[iNumCells];
+	domain.prevV    = new double[iNumCells];
+	domain.p        = new double[iNumCells];
+	domain.s        = new double[iNumCells];
+	domain.solidMap = new double[iNumCells];
 
 	domain.cellType            = new double[(size_t)domain.fNumCells];
 	domain.particlePos		   = new double[(size_t)domain.maxParticles * 2];
@@ -573,6 +597,83 @@ cfunction double FLIP_simulate_pushParticlesApart(double dindex) {
 	return 0;
 }
 
+static inline void resolveSolidGridCollision(const Domain& domain, double& px, double& py, double& vx, double& vy, double r) {
+	double h = 1.0 / domain.fInvSpacing;
+	double invH = domain.fInvSpacing;
+	double rr = r * r;
+
+	// A few iterations are enough to resolve corner/edge stacking against voxelized solids.
+	for (int iter = 0; iter < 3; ++iter) {
+		int minI = (int)floor((px - r) * invH);
+		int maxI = (int)floor((px + r) * invH);
+		int minJ = (int)floor((py - r) * invH);
+		int maxJ = (int)floor((py + r) * invH);
+
+		minI = (int)clamp(minI, 0, domain.fNumX1);
+		maxI = (int)clamp(maxI, 0, domain.fNumX1);
+		minJ = (int)clamp(minJ, 0, domain.fNumY1);
+		maxJ = (int)clamp(maxJ, 0, domain.fNumY1);
+
+		bool moved = false;
+
+		for (int i = minI; i <= maxI; ++i)
+		for (int j = minJ; j <= maxJ; ++j) {
+			if (!isSolidCell(domain, i, j)) continue;
+
+			double left = i * h;
+			double right = (i + 1) * h;
+			double bottom = j * h;
+			double top = (j + 1) * h;
+
+			double cx = clamp(px, left, right);
+			double cy = clamp(py, bottom, top);
+			double dx = px - cx;
+			double dy = py - cy;
+			double d2 = dx * dx + dy * dy;
+
+			if (d2 >= rr) continue;
+
+			double nx = 0.0;
+			double ny = 0.0;
+			double pen = 0.0;
+
+			if (d2 > 1e-12) {
+				double d = sqrt(d2);
+				nx = dx / d;
+				ny = dy / d;
+				pen = r - d;
+			} else {
+				// Center exactly inside/on boundary: eject along the smallest axis penetration.
+				double dl = abs(px - left);
+				double dr = abs(right - px);
+				double db = abs(py - bottom);
+				double dt = abs(top - py);
+
+				double m = dl;
+				nx = -1.0; ny = 0.0;
+				if (dr < m) { m = dr; nx = 1.0; ny = 0.0; }
+				if (db < m) { m = db; nx = 0.0; ny = -1.0; }
+				if (dt < m) { m = dt; nx = 0.0; ny = 1.0; }
+				pen = r + m;
+			}
+
+			px += nx * pen;
+			py += ny * pen;
+
+			double vn = vx * nx + vy * ny;
+			if (vn < 0) {
+				double bounce = 1.0 + domain.wallElasticity;
+				vx -= bounce * vn * nx;
+				vy -= bounce * vn * ny;
+			}
+
+			moved = true;
+		}
+
+		if (!moved) break;
+	}
+}
+
 void handleParticleCollisions(Domain domain) {
 	double h = 1.0 / domain.fInvSpacing;
 	double r = domain.particleRadius;
@@ -676,6 +777,20 @@ void handleParticleCollisions(Domain domain) {
 				}
 			break;
 		}
+	}
+
+	for (int i = 0; i < numParticles; i++) {
+		int i2 = i * 2;
+
+		double _x = particlePos[i2];
+		double _y = particlePos[i2 + 1];
+
+		if(_x == 0 && _y == 0) continue;
+
+		resolveSolidGridCollision(domain, _x, _y, particleVel[i2], particleVel[i2 + 1], r);
+
+		particlePos[i2] = _x;
+		particlePos[i2 + 1] = _y;
 	}
 
 	// wall collisions
@@ -849,7 +964,7 @@ void transferVelocities(Domain domain, bool toGrid) {
 			u[i]  = 0;
 			v[i]  = 0;
 
-			cellType[i] = s[i] == 0 ? solid : air;
+			cellType[i] = getCellOpen(domain, i) == 0.0 ? solid : air;
 		}	
 
 		for (int i = 0; i < numParticles; i++) {
@@ -991,7 +1106,6 @@ void solveIncompressibility(Domain domain) {
 	double* u = domain.u;
 	double* v = domain.v;
 	double* p = domain.p;
-	double* s = domain.s;
 	double* prevU    = domain.prevU;
 	double* prevV    = domain.prevV;
 	double* cellType = domain.cellType;
@@ -1025,10 +1139,10 @@ void solveIncompressibility(Domain domain) {
 			int bottom = i       * n + j - 1;
 			int top    = i       * n + j + 1;
 
-			double sx0 = s[left]   ;
-			double sx1 = s[right]  ;
-			double sy0 = s[bottom] ;
-			double sy1 = s[top]    ;
+			double sx0 = getCellOpen(domain, left);
+			double sx1 = getCellOpen(domain, right);
+			double sy0 = getCellOpen(domain, bottom);
+			double sy1 = getCellOpen(domain, top);
 			double _s  = sx0 + sx1 + sy0 + sy1;
 			if (_s == 0) continue;
 
@@ -1381,9 +1495,9 @@ cfunction double FLIP_applyVelocity_rectangle(double dindex, double _x, double _
 
 cfunction double FLIP_setSolid_rectangle(double dindex, double _x, double _y, double _width, double _height) {
 	if (dindex < 0 || dindex >= domains.size()) return -1;
-
+	
 	Domain& domain = domains[dindex];
-
+	
 	int n = domain.fNumY;
 	double* s = domain.s;
 
@@ -1403,6 +1517,31 @@ cfunction double FLIP_setSolid_rectangle(double dindex, double _x, double _y, do
 	
 	return 0;
 
+}
+
+cfunction double FLIP_setSolid_surface(double dindex, void* pixelArrayBuffer) {
+	if (dindex < 0 || dindex >= domains.size()) return -1;
+	
+	Domain& domain      = domains[dindex];
+	uint8_t* pixelArray = (uint8_t*)pixelArrayBuffer;
+	
+	double* solidMap = domain.solidMap;
+	int n   = (int)domain.fNumY;
+	int dw  = (int)domain.fNumX;
+	int dh  = (int)domain.fNumY;
+	int num = (int)domain.fNumCells;
+
+	// memset(solidMap, 0, sizeof(double) * num);
+	
+	for(int y = 1; y < dh - 1; y++)
+	for(int x = 1; x < dw - 1; x++) {
+		int srcIndex = y * dw + x;
+		int dstIndex = getIndex(x, y, n);
+		if(pixelArray[srcIndex] > 128)
+			solidMap[dstIndex] = 1;
+	}
+	
+	return 0;
 }
 
 cfunction double FLIP_repel(double dindex, double _x, double _y, double _rad, double _str) {

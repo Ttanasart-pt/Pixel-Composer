@@ -1,8 +1,13 @@
+enum BRUSH_DRAW_TYPE {
+	line,
+	stamp
+}
+
 function canvas_brush() constructor {
 	#region data
 		seed        = irandom_range(100000, 999999);
 		node        = noone;
-		draw_type   = 0;
+		draw_type   = BRUSH_DRAW_TYPE.line;
 		tileMode    = 0;
 		colors      = [ c_white, c_black ];
 	#endregion
@@ -187,7 +192,7 @@ function canvas_brush() constructor {
 	static drawLine = function(_x0, _y0, _x1, _y1, _draw = false, _cap = true) { 
 		var _step = 0;
 		
-		if(use_surface || draw_type == 1) {
+		if(use_surface || draw_type == BRUSH_DRAW_TYPE.stamp) {
 			var diss  = point_distance(_x0, _y0, _x1, _y1);
 			var dirr  = point_direction(_x0, _y0, _x1, _y1);
 			var st_x  = lengthdir_x(1, dirr);
@@ -274,7 +279,7 @@ function canvas_brush() constructor {
 			
 		if(_fill) draw_rectangle(_min_x, _min_y, _max_x, _may_y, 0);
 			
-		if(size == 1 && !use_surface && draw_type == 0)
+		if(size == 1 && !use_surface && draw_type == BRUSH_DRAW_TYPE.line)
 			draw_rectangle(_min_x + 1, _min_y + 1, _max_x - 1, _may_y - 1, 1);
 		else {
 			drawLine(_min_x, _min_y, _max_x, _min_y, _draw);
@@ -309,7 +314,7 @@ function canvas_brush() constructor {
 		var _min_y = min(_y0, _y1) - 0.5;
 		var _max_y = max(_y0, _y1) - 0.5;
 		
-		if(!use_surface && draw_type == 0) {
+		if(!use_surface && draw_type == BRUSH_DRAW_TYPE.line) {
 			if(_fill) draw_ellipse(_min_x, _min_y, _max_x, _max_y, 0);
 			
 			if(size == 1) {

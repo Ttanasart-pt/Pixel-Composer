@@ -306,7 +306,10 @@
             { "label": "/Domain" },
             "Node_FLIP_Domain",
             "Node_FLIP_Update",
-
+            { "label": "/Render" },
+            "Node_FLIP_Render",
+            "Node_FLIP_to_VFX",
+            
             { "label": "Fluid" },
             { "label": "/Spawner" },
             "Node_FLIP_Spawner",
@@ -315,14 +318,13 @@
             "Node_FLIP_Destroy",
             { "label": "/Affector" },
             "Node_FLIP_Apply_Velocity",
-            "Node_FLIP_Apply_Force",
             "Node_FLIP_Repel",
             "Node_FLIP_Vortex",
+
+            { "label": "/Collider" },
+            "Node_FLIP_Apply_Force",
+            "Node_FLIP_Solid",
             
-            { "label": "Render" },
-            { "label": "/Render" },
-            "Node_FLIP_Render",
-            "Node_FLIP_to_VFX",
             
         ],
         "context": ["Node_FLIP_Group_Inline"],

@@ -3,9 +3,9 @@
   "%Name":"note_flip_spawner",
   "name":"note_flip_spawner",
   "parent":{
-    "name":"FLIP",
-    "path":"folders/nodes/data/simulation/FLIP.yy",
+    "name":"fluid",
+    "path":"folders/nodes/data/simulation/FLIP/fluid.yy",
   },
   "resourceType":"GMNotes",
-  "resourceVersion":"1.1",
+  "resourceVersion":"2.0",
 }

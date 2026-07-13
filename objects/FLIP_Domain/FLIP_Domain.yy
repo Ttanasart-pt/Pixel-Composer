@@ -11,8 +11,8 @@
   "name":"FLIP_Domain",
   "overriddenProperties":[],
   "parent":{
-    "name":"FLIP",
-    "path":"folders/nodes/data/simulation/FLIP.yy",
+    "name":"__flip",
+    "path":"folders/nodes/data/simulation/FLIP/__flip.yy",
   },
   "parentObjectId":null,
   "persistent":false,

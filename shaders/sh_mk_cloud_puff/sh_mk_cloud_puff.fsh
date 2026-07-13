@@ -1,7 +1,9 @@
 varying vec2 v_vTexcoord;
 varying vec4 v_vColour;
 
-uniform int   shape;
+uniform int       shape;
+uniform sampler2D surface;
+
 uniform vec2  scale;
 uniform vec4  color;
 
@@ -23,6 +25,13 @@ uniform float spiralThick;
 uniform int   spiralBlend;
 uniform vec4  spiralColor;
 uniform int   spiralShade;
+
+uniform int   rimUse;
+uniform float rimDirect;
+uniform float rimSpan;
+uniform float rimWidth;
+uniform vec4  rimColor;
+uniform float rimInten;
 
 #define TAU 6.28318530718
 
@@ -48,6 +57,13 @@ void main() {
 	} else if(shape == 3) {
 		diss = pow(abs(tn.x * 1.5), 1./2.) + pow(abs(tn.y * 1.5), 1./2.);
 		alp  = step(diss, 1.);
+		
+	} else if(shape == 4) {
+		vec4  samp = texture2D( surface, .5 + tx );
+		float intn = (samp.r + samp.g + samp.b) / 3.;
+		
+		diss = intn;
+		alp  = samp.a;
 	}
 	
 	if(innerUse == 1) {
@@ -93,6 +109,20 @@ void main() {
 			else if(spiralBlend == 3) col = baseC - spiralColor;
 			
 		}
+	}
+	
+	if(rimUse == 1) {
+		float rmFlot  = rimDirect / 360.;
+		float dirr    = atan(-tn.y, tn.x) / TAU;
+		
+		float dirHigh = 1. - min(abs(dirr - rmFlot), abs(1. - (dirr - rmFlot))) * 2.;
+		float intHigh = diss * 2.;
+		float rimSpa  = rimSpan;
+		
+		dirHigh = max(0., dirHigh - (1. - rimSpa))   / rimSpa;
+		intHigh = max(0., intHigh - (1. - rimWidth)) / rimWidth;
+		
+		col += dirHigh * intHigh * rimInten * rimColor;
 	}
 	
 	col.a *= alp;

@@ -2,7 +2,11 @@ varying vec2 v_vTexcoord;
 varying vec4 v_vColour;
 
 uniform vec2  dimension;
+
+uniform int   type;
+uniform float direction;
 uniform float radius;
+
 uniform float strength;
 uniform vec4  color;
 
@@ -13,19 +17,34 @@ void main() {
 	
 	if(base.a > 0.) return;
 	
-	float astep = 64.;
-	
-	for(float i = 0.; i < radius; i++)
-	for(float j = 0.; j < astep; j++) {
-		float ang = radians(j / astep * 360.);
-		vec2 offs = vec2(cos(ang), sin(ang)) * i * tx;
+	if(type == 0) {
+		float astep = 64.;
+		for(float i = 0.; i < radius; i++)
+		for(float j = 0.; j < astep; j++) {
+			float ang = radians(j / astep * 360.);
+			vec2 offs = vec2(cos(ang), sin(ang)) * i * tx;
+			
+			vec4 samp = texture2D(gm_BaseTexture, v_vTexcoord + offs);
+			if(samp.a > 0.) {
+				float ints = 1. - i / radius;
+				gl_FragColor = vec4(color.rgb, ints * strength);
+				return;
+			}
+		}
 		
-		vec4 samp = texture2D(gm_BaseTexture, v_vTexcoord + offs);
-		if(samp.a > 0.) {
-			float ints = 1. - i / radius;
-			gl_FragColor = vec4(color.rgb, ints * strength);
-			return;
+	} else if(type == 1) {
+		float ang = radians(direction);
+		vec2 dirr = vec2(cos(ang), -sin(ang));
+		
+		float itr = dimension.x + dimension.y;
+		for(float i = 0.; i < itr; i++) {
+			vec2 offs = dirr * i * tx;
+			vec4 samp = texture2D(gm_BaseTexture, v_vTexcoord - offs);
+			
+			if(samp.a > 0.) {
+				gl_FragColor = vec4(color.rgb, color.a * strength);
+				return;
+			}
 		}
 	}
-	
 }

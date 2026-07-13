@@ -3,9 +3,9 @@
   "%Name":"note_flip_domain",
   "name":"note_flip_domain",
   "parent":{
-    "name":"FLIP",
-    "path":"folders/nodes/data/simulation/FLIP.yy",
+    "name":"domain",
+    "path":"folders/nodes/data/simulation/FLIP/domain.yy",
   },
   "resourceType":"GMNotes",
-  "resourceVersion":"1.1",
+  "resourceVersion":"2.0",
 }

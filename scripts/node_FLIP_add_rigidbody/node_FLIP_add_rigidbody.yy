@@ -5,8 +5,8 @@
   "isDnD":false,
   "name":"node_FLIP_add_rigidbody",
   "parent":{
-    "name":"FLIP",
-    "path":"folders/nodes/data/simulation/FLIP.yy",
+    "name":"fluid",
+    "path":"folders/nodes/data/simulation/FLIP/fluid.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

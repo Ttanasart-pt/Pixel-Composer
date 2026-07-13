@@ -15,7 +15,7 @@ function FLIP_Obstracle() constructor {
 }
 
 function Node_FLIP_Apply_Force(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
-	name  = "Add Collider";
+	name  = "Shape Collider";
 	color = COLORS.node_blend_fluid;
 	icon  = THEME.fluid_sim;
 	setDrawIcon();
@@ -26,13 +26,17 @@ function Node_FLIP_Apply_Force(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	newInput( 0, nodeValue_Fdomain("Domain")).setVisible(true, true);
 	
 	////- =Collider
-	newInput( 3, nodeValue_EScroll("Shape",   0 , [ new scrollItem("Circle", s_node_shape_circle, 0), new scrollItem("Rectangle", s_node_shape_rectangle, 0), ]));
-	newInput( 2, nodeValue_Slider( "Radius",      4, [1, 16, 0.1] ));
-	newInput( 4, nodeValue_Vec2(   "Size",      [ 4, 4 ] ));
+	newInput( 3, nodeValue_EScroll( "Shape", 0, [ 
+		new scrollItem( "Circle",    s_node_shape_circle    ), 
+		new scrollItem( "Rectangle", s_node_shape_rectangle ), 
+	]));
+	
+	newInput( 2, nodeValue_Slider( "Radius",  4, [1,16,.1] ));
+	newInput( 4, nodeValue_Vec2(   "Size",   [4,4]         ));
 	
 	////- =Obstracle
-	newInput( 1, nodeValue_Vec2(    "Position", [ 0, 0 ] )).setHotkey("G").setUnitSimple();
-	newInput( 5, nodeValue_Surface( "Texture" ));
+	newInput( 1, nodeValue_Vec2(    "Position", [0,0] )).setHotkey("G").setUnitSimple();
+	newInput( 5, nodeValue_Surface( "Texture"         ));
 	// input 6
 	
 	newOutput(0, nodeValue_Output("Domain", VALUE_TYPE.fdomain, noone ));

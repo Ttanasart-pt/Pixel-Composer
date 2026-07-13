@@ -3,8 +3,8 @@
   "%Name":"sh_FLIP_render_threshold",
   "name":"sh_FLIP_render_threshold",
   "parent":{
-    "name":"FLIP",
-    "path":"folders/nodes/data/simulation/FLIP.yy",
+    "name":"__flip",
+    "path":"folders/nodes/data/simulation/FLIP/__flip.yy",
   },
   "resourceType":"GMShader",
   "resourceVersion":"2.0",

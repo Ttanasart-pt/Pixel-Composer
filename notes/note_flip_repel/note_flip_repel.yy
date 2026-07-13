@@ -3,9 +3,9 @@
   "%Name":"note_flip_repel",
   "name":"note_flip_repel",
   "parent":{
-    "name":"FLIP",
-    "path":"folders/nodes/data/simulation/FLIP.yy",
+    "name":"fluid",
+    "path":"folders/nodes/data/simulation/FLIP/fluid.yy",
   },
   "resourceType":"GMNotes",
-  "resourceVersion":"1.1",
+  "resourceVersion":"2.0",
 }
