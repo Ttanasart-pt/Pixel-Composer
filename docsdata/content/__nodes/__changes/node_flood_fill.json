@@ -11,6 +11,11 @@
         "date": "2026-07-13T05:48:46.212Z",
         "node": "Flood Fill",
         "commit": "**Flood Fill**: Add Fill Background properties."
+      },
+      {
+        "date": "2026-07-13T06:07:12.818Z",
+        "node": "Flood Fill",
+        "commit": "**Flood Fill**: Add Channel control property."
       }
     ]
   },
