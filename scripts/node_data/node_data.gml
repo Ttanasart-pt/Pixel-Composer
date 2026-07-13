@@ -1180,8 +1180,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		
 		if(pName == "_default") {
 			var _vals = _pres[$ "_values"];
-			if(_vals[$ "content"] == undefined) 
-				_vals.content = json_load_struct(_vals.path);
+			if(_vals == undefined) return false;
 			
 			var _cont = _vals.content;
 			var _keys = struct_get_names(_cont);
@@ -1209,6 +1208,8 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 				
 				triggerRender();
 			}
+			
+			return true;
 		}
 		
 		if(has(_pres, pName)) {

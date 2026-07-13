@@ -2569,7 +2569,6 @@
     {"name":"sh_flip","order":29,"path":"shaders/sh_flip/sh_flip.yy",},
     {"name":"sh_flood_fill_diff","order":3,"path":"shaders/sh_flood_fill_diff/sh_flood_fill_diff.yy",},
     {"name":"sh_flood_fill_it","order":2,"path":"shaders/sh_flood_fill_it/sh_flood_fill_it.yy",},
-    {"name":"sh_flood_fill_mask_thres","order":0,"path":"shaders/sh_flood_fill_mask_thres/sh_flood_fill_mask_thres.yy",},
     {"name":"sh_flood_fill_render_mask","order":5,"path":"shaders/sh_flood_fill_render_mask/sh_flood_fill_render_mask.yy",},
     {"name":"sh_flood_fill_replace","order":4,"path":"shaders/sh_flood_fill_replace/sh_flood_fill_replace.yy",},
     {"name":"sh_flood_fill_thres","order":1,"path":"shaders/sh_flood_fill_thres/sh_flood_fill_thres.yy",},
