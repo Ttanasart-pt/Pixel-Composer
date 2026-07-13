@@ -2644,7 +2644,6 @@
     {"name":"sh_mk_blast_remove_black","order":2,"path":"shaders/sh_mk_blast_remove_black/sh_mk_blast_remove_black.yy",},
     {"name":"sh_mk_cable_draw","order":1,"path":"shaders/sh_mk_cable_draw/sh_mk_cable_draw.yy",},
     {"name":"sh_mk_cloud_outline","order":2,"path":"shaders/sh_mk_cloud_outline/sh_mk_cloud_outline.yy",},
-    {"name":"sh_mk_cloud_puff","order":0,"path":"shaders/sh_mk_cloud_puff/sh_mk_cloud_puff.yy",},
     {"name":"sh_mk_cloud_shadow","order":1,"path":"shaders/sh_mk_cloud_shadow/sh_mk_cloud_shadow.yy",},
     {"name":"sh_mk_drip_round","order":2,"path":"shaders/sh_mk_drip_round/sh_mk_drip_round.yy",},
     {"name":"sh_mk_drip","order":1,"path":"shaders/sh_mk_drip/sh_mk_drip.yy",},

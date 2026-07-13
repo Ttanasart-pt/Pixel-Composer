@@ -446,17 +446,24 @@ function Panel_Preference() : PanelContent() constructor {
     		PREFERENCES._display_scaling = PREFERENCES.display_scaling;
     		ds_list_add(pref_appr, new __Panel_Linear_Setting_Item(
     			__txt("pref_gui_scaling", "GUI scaling*"),
-    			slider(0.5, 2, 0.01, function(val) /*=>*/ { PREFERENCES._display_scaling = val; should_restart = true; }, 
+    			slider(.5, 4, .01, function(val) /*=>*/ { 
+    				PREFERENCES._display_scaling = val; 
+    				resetScale(PREFERENCES._display_scaling, true);
+    				should_restart = true;
+    				setPanel(); 
+    			}, 
     			function(   ) /*=>*/ { 
     				PREFERENCES._display_scaling = max(PREFERENCES._display_scaling, 0.5);
-    				resetScale(PREFERENCES._display_scaling, true); should_restart = true;
+    				resetScale(PREFERENCES._display_scaling, true); 
+    				should_restart = true;
     				setPanel();
     			}),
     			
     			function(   ) /*=>*/ {return PREFERENCES._display_scaling},
     			function(val) /*=>*/ {
     				PREFERENCES._display_scaling = val;
-    				resetScale(PREFERENCES._display_scaling, true); should_restart = true;
+    				resetScale(PREFERENCES._display_scaling, true); 
+    				should_restart = true;
     				setPanel();
     			},
     			1,

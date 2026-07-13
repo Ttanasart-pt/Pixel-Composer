@@ -1,0 +1,12 @@
+[
+  {
+    "version": "1.21.6.010",
+    "changes": [
+      {
+        "date": "2026-07-13T00:56:03.079Z",
+        "node": "",
+        "commit": "Fix loading gradient with opacity apply as solid color."
+      }
+    ]
+  }
+]

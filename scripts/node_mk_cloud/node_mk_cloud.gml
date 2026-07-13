@@ -1,6 +1,5 @@
 function Node_MK_Cloud(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "MK Cloud";
-	use_depth = true;
 	
 	newInput( 1, nodeValueSeed());
 	
@@ -22,12 +21,19 @@ function Node_MK_Cloud(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	newInput( 3, nodeValue_Vec2(  "Size",           [.3,.3] )).setUnitSimple()
 		.setCurvable(14, CURVE_DEF_01, "Over Layer", "curved", THEME.mk_cloud_curve_layer )
 	
-		////- =/Puff
-	newInput(51, nodeValue_Vec2(     "Aspect",        [1,1]   ));
-	newInput(52, nodeValue_RotRange( "Angle",         [0,0]   ));
-	newInput( 4, nodeValue_Range(    "Puff Radius",   [4,8]   ))
+	////- =Puff
+	newInput(54, nodeValue_EScroll(  "Shape", 0, [ 
+		new scrollItem( "Circle",    s_node_shape_circle    ),
+		new scrollItem( "Rectangle", s_node_shape_rectangle ),
+		new scrollItem( "Diamond",   s_node_shape_diamond   ),
+		new scrollItem( "Star",      s_node_shape_diamond   ),
+	] ));
+	
+	newInput( 4, nodeValue_Range(    "Puff Size",     [4,8]   ))
 		.setCurvable( 6, CURVE_DEF_01, "Over Distance", "curved" )
 		.setCurvable(18, CURVE_DEF_11, "Over Layer",    "curved_layer", THEME.mk_cloud_curve_layer )
+	newInput(51, nodeValue_Vec2(     "Aspect",        [1,1]   ));
+	newInput(52, nodeValue_RotRange( "Angle",         [0,0]   ));
 	
 		////- =/Subtract
 	newInput(45, nodeValue_Bool(   "Use Subtract",     false      ));
@@ -55,8 +61,9 @@ function Node_MK_Cloud(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	newInput(17, nodeValue_Rotation( "Distance",         1                 ));
 	
 		////- =/Rendering
+	newInput(56, nodeValue_EScroll(  "Blend Mode",       1, [ "Override", "Multiply", "Additive", "Subtract" ] ));
 	newInput(33, nodeValue_Bool(     "Soft Shade",       false             ));
-	newInput(25, nodeValue_Color(    "Shadow Color",     cola(c_ltgray, 1) ));
+	newInput(25, nodeValue_Color(    "Color",            cola(c_ltgray, 1) ));
 	
 	////- =Spiral
 	newInput(20, nodeValue_Bool(     "Use Spiral",       false             ));
@@ -67,7 +74,8 @@ function Node_MK_Cloud(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	newInput(22, nodeValue_Slider(   "Spiral Thickness", .4                ));
 	
 		////- =/Rendering
-	newInput(26, nodeValue_Color(    "Spiral Color",     cola(c_ltgray, 1) ));
+	newInput(55, nodeValue_EScroll(  "Blend Mode",       1, [ "Override", "Multiply", "Additive", "Subtract" ] ));
+	newInput(26, nodeValue_Color(    "Color",            cola(c_ltgray, 1) ));
 	newInput(30, nodeValue_Bool(     "Blend With Shade", true              ));
 	
 	////- =Layer Effect
@@ -86,10 +94,10 @@ function Node_MK_Cloud(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	newInput(39, nodeValue_Color(    "Color",        ca_black ));
 	
 	////- =Rendering
-	newInput(32, nodeValue_EScroll(  "Blend Mode", 0, [ "Normal", "Maximum" ] ));
-	newInput(24, nodeValue_Gradient( "Color",  gra_white ));
-	newInput(53, nodeValue_Surface(  "Color Sampler"     ));
-	// 54
+	newInput(32, nodeValue_EScroll(  "Blend Mode",   0, [ "Normal", "Maximum" ] ));
+	newInput(24, nodeValue_Gradient( "Color",        gra_white ));
+	newInput(53, nodeValue_Surface(  "Color Sampler"           ));
+	// 57
 	
 	newOutput( 0, nodeValue_Output( "Surface Out", VALUE_TYPE.surface, noone ));
 	
@@ -97,17 +105,18 @@ function Node_MK_Cloud(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 		[ "Output",         false     ],  0, 
 		[ "Cloud",          false     ], 31, 49, 50, 12,  2, 15, 
 			[ "/Transform", false     ], 11, 28,  3, 14, 
-			[ "/Puff",      false     ], 51, 52,  4,  6, 18, 
+			
+		[ "Puff",           false     ], 54,  4,  6, 18, 51, 52, 
 			[ "/Subtract",  false, 45 ], 46, 47, 48, 
 		
 		[ "Base",            true, 9  ],  8, 10, 13, 
 			[ "/Compress",  false     ], 29, 19, 34, 
 			
 		[ "Shading",         true, 35 ],  5, 16,  7, 17, 
-			[ "/Rendering", false     ], 33, 25, 
+			[ "/Rendering", false     ], 56, 33, 25, 
 			
 		[ "Spiral",          true, 20 ], 41, 21, 23, 27, 22, 
-			[ "/Rendering", false     ], 26, 30,
+			[ "/Rendering", false     ], 55, 26, 30,
 			
 		[ "Layer Effect",    true,    ], 
 			[ "/Outline",   false, 42 ], 43, 44, 
@@ -128,61 +137,67 @@ function Node_MK_Cloud(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	
 	static processData = function(_outData, _data, _array_index = 0) { 
 		#region data
-			var seed   = _data[ 1];
+			var seed    = _data[ 1];
 			
-			var _dim   = _data[ 0];
+			var _dim    = _data[ 0];
 			
-			var _shape = _data[31];
-			var _shMap = _data[49];
-			var _attmp = _data[50];
+			var _shape  = _data[31];
+			var _shMap  = _data[49];
+			var _attmp  = _data[50];
 			
-			var _layer = _data[12];
-			var _amou  = _data[ 2];
-			var _amouC = _data[15], _amouCurve = inputs[ 2].attributes.curved? new curveMap(_amouC) : undefined;
+			var _layer  = _data[12];
+			var _amou   = _data[ 2];
+			var _amouC  = _data[15], _amouCurve = inputs[ 2].attributes.curved? new curveMap(_amouC) : undefined;
 			
-			var _pos   = _data[11];
-			var _posL  = _data[28];
-			var _size  = _data[ 3];
-			var _sizeC = _data[14], _sizeCurve = inputs[ 3].attributes.curved? new curveMap(_sizeC) : undefined;
-			var _aspct = _data[51];
-			var _angle = _data[52];
-			var _radi  = _data[ 4];
-			var _radiC = _data[ 6], _radiCurve  = inputs[ 4].attributes.curved?       new curveMap(_radiC) : undefined;
-			var _radiL = _data[18], _radiCurveL = inputs[ 4].attributes.curved_layer? new curveMap(_radiL) : undefined;
+			var _pos    = _data[11];
+			var _posL   = _data[28];
+			var _size   = _data[ 3];
+			var _sizeC  = _data[14], _sizeCurve = inputs[ 3].attributes.curved? new curveMap(_sizeC) : undefined;
+			
+			var _pshap  = _data[54];
+			var _aspct  = _data[51];
+			var _angle  = _data[52];
+			var _radi   = _data[ 4];
+			var _radiC  = _data[ 6], _radiCurve  = inputs[ 4].attributes.curved?       new curveMap(_radiC) : undefined;
+			var _radiL  = _data[18], _radiCurveL = inputs[ 4].attributes.curved_layer? new curveMap(_radiL) : undefined;
 			
 			var _subUse = _data[45];
 			var _subCha = _data[46];
 			var _subPad = _data[47];
 			var _subShf = _data[48];
 			
-			var _utrim = _data[ 9];
-			var _trimY = _data[ 8];
-			var _trmSp = _data[10];
-			var _trmSh = _data[13];
-			var _trmS  = _data[29];
-			var _trmSc = _data[19];
-			var _trmSt = _data[34];
+			var _utrim  = _data[ 9];
+			var _trimY  = _data[ 8];
+			var _trmSp  = _data[10];
+			var _trmSh  = _data[13];
+			var _trmS   = _data[29];
+			var _trmSc  = _data[19];
+			var _trmSt  = _data[34];
 			
-			var _inuse = _data[35];
-			var _inrad = _data[ 5];
-			var _inrdC = _data[16], _inrdCurve = inputs[ 5].attributes.curved? new curveMap(_inrdC) : undefined;
-			var _indir = _data[ 7];
-			var _indis = _data[17];
-			var _inshd = _data[33];
-			var _incol = _data[25];
+			var _inuse  = _data[35];
+			var _inrad  = _data[ 5];
+			var _inrdC  = _data[16], _inrdCurve = inputs[ 5].attributes.curved? new curveMap(_inrdC) : undefined;
+			var _indir  = _data[ 7];
+			var _indis  = _data[17];
 			
-			var _spUse = _data[20];
-			var _spCha = _data[41];
-			var _spAmo = _data[21];
-			var _spPha = _data[23];
-			var _spFlp = _data[27];
-			var _spThk = _data[22];
-			var _spcol = _data[26];
-			var _spshd = _data[30];
+			var _inbld  = _data[56];
+			var _inshd  = _data[33];
+			var _incol  = _data[25];
 			
-			var _outl      = _data[42];
-			var _outlThk   = _data[43];
-			var _outlCol   = _data[44];
+			var _spUse  = _data[20];
+			var _spCha  = _data[41];
+			var _spAmo  = _data[21];
+			var _spPha  = _data[23];
+			var _spFlp  = _data[27];
+			var _spThk  = _data[22];
+			
+			var _spbld  = _data[55];
+			var _spcol  = _data[26];
+			var _spshd  = _data[30];
+			
+			var _outl       = _data[42];
+			var _outlThk    = _data[43];
+			var _outlCol    = _data[44];
 			
 			var _shadow     = _data[36];
 			var _shadowRad  = _data[37];
@@ -212,6 +227,7 @@ function Node_MK_Cloud(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 			cloud_map = array_filter(cloud_map, function(v,i) /*=>*/ { return v[0] != undefined && v[1] != undefined; })
 			
 			_sAmount = array_length(cloud_map);
+			if(_sAmount <= 0) return;
 		}
 		
 		random_set_seed(seed);
@@ -222,8 +238,10 @@ function Node_MK_Cloud(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 		
 		var s2 = sqrt(2);
 		
-		for( var i = 0, n = array_length(temp_surface); i < n; i++ ) 
+		for( var i = 0, n = array_length(temp_surface); i < n; i++ ) {
 			temp_surface[i] = surface_verify(temp_surface[i], ww, hh);
+			surface_clear(temp_surface[i]);
+		}
 			
 		_outData = surface_verify(_outData, ww, hh);
 		
@@ -231,18 +249,25 @@ function Node_MK_Cloud(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 		var u_spiralUse     = shader_get_uniform( sh_mk_cloud_puff, "spiralUse"   );
 		var u_spiralPhase   = shader_get_uniform( sh_mk_cloud_puff, "spiralPhase" );
 		var u_color         = shader_get_uniform( sh_mk_cloud_puff, "color"       );
+		var u_scale         = shader_get_uniform( sh_mk_cloud_puff, "scale"       );
 		
 		shader_set(sh_mk_cloud_puff);
+			shader_set_i( "shape",         _pshap );
+			
 			shader_set_i( "innerUse",      _inuse );
 			shader_set_f( "innerAngle",    _indir );
 			shader_set_f( "innerDistance", _indis );
+			
+			shader_set_i( "innerBlend",    _inbld );
 			shader_set_c( "innerColor",    _incol );
 			shader_set_i( "innerShade",    _inshd );
-	
+			
 			shader_set_i( "spiralUse",     _spUse );
 			shader_set_f( "spiral",        _spAmo );
 			shader_set_i( "spiralFlip",    _spFlp );
 			shader_set_f( "spiralThick",   _spThk );
+			
+			shader_set_i( "spiralBlend",   _spbld );
 			shader_set_c( "spiralColor",   _spcol );
 			shader_set_i( "spiralShade",   _spshd );
 		shader_reset();
@@ -304,13 +329,14 @@ function Node_MK_Cloud(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 							
 							_x    = (_pp[0] ?? 0) * _sMapW;
 							_y    = (_pp[1] ?? 0) * _sMapH;
-							_irad = (_pp[2] ?? 0);
+							_irad = 1 - (_pp[2] ?? 0);
 							break;
 						
 						default : _valid = false; break;
 					}
 					
 					if(!_valid) continue;
+					random_set_seed(seed + (_y * ww + _x) * 1000);
 					
 					var _ro  = lerp(_radi[0], _radi[1], _radiCurve? _radiCurve.get(1 - _irad) : 1 - _irad);
 					    _ro *= _lrad;
@@ -341,7 +367,6 @@ function Node_MK_Cloud(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 					
 					_x  = round(_x);
 					_y  = round(_y);
-					_ro = ceil(_ro);
 					
 					if(colorSampler.active) {
 						var _pufCol = colorMultiply(_lcolr, colorSampler.getPixel(_x, _y));
@@ -352,8 +377,12 @@ function Node_MK_Cloud(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 					shader_set_uniform_f( u_innerRadius, random_range(_inrad[0], _inrad[1]) * _linrad );
 					shader_set_uniform_f( u_spiralPhase, random_range(_spPha[0], _spPha[1])           );
 					
-					var dsx = round(_ro * _sx);
-					var dsy = round(_ro * _sy);
+					var rsx = _ro * _sx;
+					var rsy = _ro * _sy;
+					
+					var dsx = ceil(rsx);
+					var dsy = ceil(rsy);
+					shader_set_uniform_f( u_scale, rsx / dsx, rsy / dsy);
 					
 					var _subPadd = random_range(_subPad[0], _subPad[1]);
 					if(_subUse && random(1) <= _subCha) {

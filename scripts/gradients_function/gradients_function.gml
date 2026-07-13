@@ -254,7 +254,6 @@ function gradientObject(color = ca_black) constructor {
 				break;
 			
 		}
-		
 	}
 	
 	static shader_submit = function(_key = "gradient") {
@@ -314,6 +313,7 @@ function gradientObject(color = ca_black) constructor {
 			
 			if(LOADING_VERSION < 11660) _value = cola(_value);
 			
+			_value = int64(_value);
 			keys[i] = new gradientKey(_time, _value); 
 		}
 		
