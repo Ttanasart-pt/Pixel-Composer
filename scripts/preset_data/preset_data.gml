@@ -23,6 +23,8 @@
 				var pth = grp.content[j].path;
 				var fil = new FileObject(pth);
 				pre[$ fil.name] = fil;
+				
+				if(fil.name == "_values") fil.content = json_load_struct(pth);
 			}
 		}
 		

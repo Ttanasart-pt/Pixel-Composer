@@ -3,14 +3,20 @@
 	
 	function panel_preset_replace()     { CHECK_PANEL_PRESETS CALL("panel_preset_replace");     FOCUS_CONTENT.replacePreset(FOCUS_CONTENT.selecting_preset.path); }
 	function panel_preset_replace_def() { CHECK_PANEL_PRESETS CALL("panel_preset_replace_def"); FOCUS_CONTENT.newPresetFromNode("_default"); }
+	function panel_preset_replace_thumbnail() { 
+		CHECK_PANEL_PRESETS CALL("panel_preset_replace_thumbnail"); 
+		FOCUS_CONTENT.replacePresetThumbnail(FOCUS_CONTENT.selecting_preset.path); 
+	}
+	
 	function panel_preset_reset()       { CHECK_PANEL_PRESETS CALL("panel_preset_reset");       FOCUS_CONTENT.newPresetFromNode("_default"); }
 	function panel_preset_delete()      { CHECK_PANEL_PRESETS CALL("panel_preset_delete");      file_delete(FOCUS_CONTENT.selecting_preset.path); __initPresets(); }
 	
 	function __fnInit_Presets() {
-		registerFunction("Presets", "Replace",          "", MOD_KEY.none, panel_preset_replace     ).setMenu( "preset_replace"     ).hidePalette();
-		registerFunction("Presets", "Replace Default",  "", MOD_KEY.none, panel_preset_replace_def ).setMenu( "preset_replace_def" ).hidePalette();
-		registerFunction("Presets", "Reset To Default", "", MOD_KEY.none, panel_preset_reset       ).setMenu( "preset_reset"       )
+		registerFunction("Presets", "Replace",          "", MOD_KEY.none, panel_preset_replace           ).setMenu( "preset_replace"           ).hidePalette();
+		registerFunction("Presets", "Replace Default",  "", MOD_KEY.none, panel_preset_replace_def       ).setMenu( "preset_replace_def"       ).hidePalette();
+		registerFunction("Presets", "Replace Thumbnail","", MOD_KEY.none, panel_preset_replace_thumbnail ).setMenu( "preset_replace_thumbnail" ).hidePalette();
 		
+		registerFunction("Presets", "Reset To Default", "", MOD_KEY.none, panel_preset_reset       ).setMenu( "preset_reset" )
 		registerFunction("Presets", "Delete",           "", MOD_KEY.none, panel_preset_delete      ).setMenu( "preset_delete", THEME.cross).hidePalette();
 	}
 #endregion
@@ -47,11 +53,11 @@ function Panel_Presets(_node) : PanelContent() constructor {
 		menu_removeHotkey = menuItem(__txt("Remove Hotkey"), function() /*=>*/ { 
 			var _key    = $"{nodeType}>{selecting_preset.name}";
 			struct_remove(GRAPH_ADD_NODE_MAPS, _key);
-			
 		}, THEME.cross);
 	
 		context_menu = [
 			MENU_ITEMS.preset_replace,
+			MENU_ITEMS.preset_replace_thumbnail,
 			MENU_ITEMS.preset_delete,
 			
 			-1,
@@ -64,7 +70,7 @@ function Panel_Presets(_node) : PanelContent() constructor {
 			menu_removeHotkey,
 		];
 		
-		context_def    = [
+		context_def = [
 			MENU_ITEMS.preset_replace_def,
 			MENU_ITEMS.preset_reset,
 		];
@@ -83,8 +89,9 @@ function Panel_Presets(_node) : PanelContent() constructor {
 	
 	////- Draw
 	
-	function replacePreset(path)     { if(node != noone) node.savePreset(filename_name_only(path)); }
-	function newPresetFromNode(name) { if(node != noone) node.savePreset(name); adding = false;     }
+	function replacePreset(path)          { if(node != noone) node.savePreset(filename_name_only(path));          }
+	function replacePresetThumbnail(path) { if(node != noone) node.savePresetThumbnail(filename_name_only(path)); }
+	function newPresetFromNode(name)      { if(node != noone) node.savePreset(name); adding = false;              }
 	
 	sc_presets = new scrollPane(0, 0, function(_y, _m) {
 		draw_clear_alpha(COLORS.panel_bg_clear_inner, 1);
@@ -102,6 +109,8 @@ function Panel_Presets(_node) : PanelContent() constructor {
 		var amo  = array_length(keys);
 		var _hh  = line_get_height() + ui(10);
 		    _h  += amo * (_hh + ui(4)) + ui(32);
+		if(TESTING)
+			_ww -= _hh + ui(4);
 		
 		var _yy = _y;
 		
@@ -170,7 +179,6 @@ function Panel_Presets(_node) : PanelContent() constructor {
 			if(_name == "_default") { defPres = preset; continue; }
 			
 			draw_sprite_stretched(THEME.ui_panel_bg, 3, 0, _yy, _ww, _hh);
-			
 			if(pHOVER && sc_presets.hover && point_in_rectangle(_m[0], _m[1], 0, _yy, _ww, _yy + _hh)) {
 				draw_sprite_stretched_ext(THEME.node_bg, 1, 0, _yy, _ww, _hh, COLORS._main_accent, 1);
 				sc_presets.hover_content = true;
@@ -188,6 +196,35 @@ function Panel_Presets(_node) : PanelContent() constructor {
 					menu_removeHotkey.setActive(has(GRAPH_ADD_NODE_MAPS, fName));
 					dia = menuCall("preset_window_menu", context_menu);
 				}
+			}
+			
+			if(TESTING) {
+				var tx = _ww + ui(4);
+				var ty = _yy;
+				var tw = _hh;
+				var th = _hh;
+				
+				var dir    = $"D:/Project/MakhamDev/LTS-PixelComposer/PixelComposer/datasrc/Presets/{nodeType}/";
+				var defPth = filename_combine(dir, _name);
+				var isDef  = file_exists_empty(defPth);
+				
+				draw_sprite_stretched(THEME.ui_panel_bg, 3, tx, ty, tw, th);
+				if(pHOVER && sc_presets.hover && point_in_rectangle(_m[0], _m[1], tx, ty, tx + tw, ty + th)) {
+					draw_sprite_stretched_ext(THEME.node_bg, 1, tx, ty, tw, th, COLORS._main_accent, 1);
+					TOOLTIP = __txt("Include in Default");
+					
+					if(mouse_lpress(pFOCUS)) {
+						if(isDef) {
+							file_delete(defPth);
+							
+						} else {
+							directory_verify(dir);
+							file_copy(preset.path, defPth);
+						}
+					}
+				}
+				
+				draw_sprite_ui(THEME.icon_default, 0, tx + tw / 2, ty + th / 2, 1, 1, 0, isDef? COLORS._main_accent : COLORS._main_icon);
 			}
 			
 			if(preset.content == undefined) {
@@ -285,6 +322,20 @@ function Panel_Presets(_node) : PanelContent() constructor {
 			var  bs = ui(32);
 			var _bx = w - sp - bs;
 			
+			var hov = pHOVER && point_in_rectangle(mx, my, bx, by, bx + bs, by + ah);
+			var cc  = hov? CDEF.cyan : COLORS._main_icon;
+			draw_sprite_stretched_ext(THEME.ui_panel, 0, bx, by, bs, ah, cc, .40 + hov * .10);
+			draw_sprite_stretched_ext(THEME.ui_panel, 1, bx, by, bs, ah, cc, .75 + hov * .25);
+			draw_sprite_ui(THEME.path_open, 0, bx + bs/2, by + ah/2, .75, .75, 0, cc);
+			
+			if(hov) {
+				TOOLTIP = __txt("Open in file explorer");
+				if(mouse_lpress(pFOCUS)) shellOpenExplorer(dirPath);
+			}
+			
+			bx += bs + ui(4);
+			ww -= bs + ui(4);
+				
 			if(file_exists_empty(valPath)) {
 				var hov = pHOVER && point_in_rectangle(mx, my, _bx, by, _bx + bs, by + ah);
 				draw_sprite_stretched_ext(THEME.ui_panel, 0, _bx, by, bs, ah, COLORS._main_value_negative, .40 + hov * .10);
@@ -312,7 +363,7 @@ function Panel_Presets(_node) : PanelContent() constructor {
 			draw_sprite_stretched_ext(THEME.ui_panel, 0, bx, by, ww, ah, hov? COLORS._main_value_positive : COLORS._main_icon, .3 + hov * .10);
 			draw_sprite_stretched_ext(THEME.ui_panel, 1, bx, by, ww, ah, hov? COLORS._main_value_positive : COLORS._main_icon, .6 + hov * .25);
 			draw_set_text(f_p2, fa_center, fa_center, hov? COLORS._main_value_positive : COLORS._main_icon_light);
-			draw_text_add(ww / 2, by + ah / 2, __txt("New preset"));
+			draw_text_add(bx + ww / 2, by + ah / 2, __txt("New preset"));
 			
 			if(mouse_lpress(pFOCUS && hov)) { if(!adding) tb_add.activate(); adding = true; }
 			

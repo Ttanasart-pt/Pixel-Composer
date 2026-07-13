@@ -6,6 +6,16 @@
         "date": "2026-07-12T09:51:36.354Z",
         "node": "any",
         "commit": "Introduced"
+      },
+      {
+        "date": "2026-07-13T07:29:10.552Z",
+        "node": "Preset Panel",
+        "commit": "**Preset Panel**: Add \"Replace only thumbnail\" in context menu."
+      },
+      {
+        "date": "2026-07-13T08:45:29.247Z",
+        "node": "",
+        "commit": "**Inspector Panel**: Add the ability to set default value to attribute."
       }
     ]
   },

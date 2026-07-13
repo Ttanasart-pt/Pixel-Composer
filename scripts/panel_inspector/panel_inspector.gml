@@ -871,8 +871,9 @@ function Panel_Inspector() : PanelContent() constructor {
     static drawNodeProperties = function(_x, _y, _w, _m, _inspecting = inspecting, _flag = INSPECTOR_FLAG.show_all, _blend = c_white) { 
     	if(!is(_inspecting, Node)) return 0;
     	
-        var _hover  = pHOVER && contentPane.hover;
-        var _focus  = pFOCUS || PANEL_GRAPH.pFOCUS;
+        var _hover   = pHOVER && contentPane.hover;
+        var _focus   = pFOCUS || PANEL_GRAPH.pFOCUS;
+        var nodeName = instanceof(_inspecting);
         
     	var hh = 0;
     	
@@ -1082,8 +1083,9 @@ function Panel_Inspector() : PanelContent() constructor {
         var con_w   = _w 
         var con_h   = contentPane.surface_h;
         
-        var _font   = viewMode == INSP_VIEW_MODE.spacious? f_p2 : f_p3;
-        var xc      = con_w / 2;
+        var _viewSpac = viewMode == INSP_VIEW_MODE.spacious;
+        var _font     = _viewSpac? f_p2 : f_p3;
+        var xc        = con_w / 2;
         
         var amoIn   = is_array(_inspecting.input_display_list)?  array_length(_inspecting.input_display_list)  : array_length(_inspecting.inputs);
         var amoAttr = array_length(_inspecting.attributes_properties);
@@ -1110,10 +1112,12 @@ function Panel_Inspector() : PanelContent() constructor {
         var showAll = filtering || FILTER_ANIMATION;
         var showHig = false;
         
-        var secFnt = viewMode == INSP_VIEW_MODE.spacious? f_p1 : f_p3;
-        var segHei = viewMode == INSP_VIEW_MODE.spacious? ui(26) : ui(22);
-        var segPad = viewMode == INSP_VIEW_MODE.spacious? ui(8) : ui(4);
-                
+        var secFnt = _viewSpac? f_p1 : f_p3;
+        var segHei = _viewSpac? ui(26) : ui(22);
+        var segPad = _viewSpac? ui(8) : ui(4);
+        
+        var defPreset = PRESETS_MAP[$ nodeName];
+        
         for( var i = 0, n = array_length(_inspecting.inputs); i < n; i++ ) 
         	_inspecting.inputs[i].visible_in_inspector = false;
         
@@ -1446,6 +1450,7 @@ function Panel_Inspector() : PanelContent() constructor {
         		if(filtering && filter_text != "" && !string_match_lower(filter_text, jun.name)) continue;
         		
         		var _name = jun.name;
+        		var _key  = jun.key;
 				var _val  = jun.getter();
 				var _wdgt = jun.editWidget;
 				
@@ -1463,6 +1468,41 @@ function Panel_Inspector() : PanelContent() constructor {
 				var editBoxY   = yy;
 				var editBoxW   = con_ww - labelWidth - ui(4);
 				var editBoxH   = lb_h;
+				
+				#region default
+					var bb = THEME.button_hide_fill;
+					var bx = editBoxX + editBoxW - bs;
+					var by = editBoxY + editBoxH / 2. - bs / 2;
+					
+					var _hasDef = defPreset && has(defPreset, "_values") 
+					                        && has(defPreset._values.content, "attr") 
+					                        && has(defPreset._values.content.attr, _key);
+					
+					var ics = _viewSpac? .9 : .75;
+					var bs  = _viewSpac? ui(20) : ui(15);
+					var ba  = .25 + _hasDef * .5;
+					var cc  = _hasDef? COLORS._main_accent : COLORS._main_icon_light;
+					var bt  = __txt("panel_inspector_default", "Set default");
+					
+					b = buttonInstant(bb, bx, by, bs, bs, _m, _hover, _focus, bt, THEME.icon_default, 0, cc, ba, ics); 
+					
+					if(b == 2) _inspecting.setDefaultAttr(_key);
+					if(b == 3) menuCall("", [ new MenuItem(__txt("Reset Default"), function(k) /*=>*/ {return k[0].removeDefaultAttr(k[1])}).setParam([_inspecting, _key]) ]);
+					
+					bx -= ui(4);
+					editBoxW -= bs + ui(4);
+					
+					bx -= bs;
+					var bt = __txt("panel_inspector_reset", "Reset");
+					var ba = .8;
+					var cc = COLORS._main_icon_light;
+					b = buttonInstant(bb, bx, by, bs, bs, _m, _hover, _focus, bt, THEME.refresh_16, 0, cc, ba, ics); 
+					
+					if(b == 2) _inspecting.resetDefaultAttr(_key);
+					
+					bx -= ui(4);
+					editBoxW -= bs + ui(4);
+				#endregion
 				
                 var param = new widgetParam(editBoxX, editBoxY, editBoxW, editBoxH, _val, undefined, _m, rrx, rry)
                 	.setFont(_font);

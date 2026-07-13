@@ -95,6 +95,7 @@ if __name__ == "__main__":
     packFolder("Layouts", "layouts")
     packFolder("Locale", "locale")
     packFolder("Nodes", "nodes")
+    packFolder("Presets", "presets")
     packFolder("Themes", "themes")
     packFolder("Welcome files", "welcome_files")
     packNodeIcons()

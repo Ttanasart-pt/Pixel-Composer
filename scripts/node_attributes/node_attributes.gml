@@ -100,7 +100,9 @@
 #endregion
 	
 #region attribute
-	function attribute_property(_editor) constructor {
+	function attribute_property(_key, _editor) constructor {
+		key = _key;
+		
 		name       = _editor[0];
 		getter     = _editor[1];
 		editWidget = _editor[2];
@@ -136,7 +138,7 @@
 		if(label) array_push(attributeEditors, "Surface");
 		array_push(attributeEditors, color_depth_editor);
 		
-		array_push(attributes_properties, new attribute_property(color_depth_editor));
+		array_push(attributes_properties, new attribute_property("color_depth", color_depth_editor));
 	}
 	
 	function attribute_interpolation(label = false, _ext = false) {
@@ -155,7 +157,7 @@
 		
 		if(label) array_push(attributeEditors, "Surface");
 		array_push(attributeEditors, interpolate_editor);
-		array_push(attributes_properties, new attribute_property(interpolate_editor));
+		array_push(attributes_properties, new attribute_property("interpolate", interpolate_editor));
 	}
 	
 	function attribute_oversample(label = false) {
@@ -173,7 +175,7 @@
 		
 		if(label) array_push(attributeEditors, "Surface");
 		array_push(attributeEditors, oversample_editor);
-		array_push(attributes_properties, new attribute_property(oversample_editor));
+		array_push(attributes_properties, new attribute_property("oversample", oversample_editor));
 	}
 	
 	function attribute_auto_execute(label = false) {

@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.6.010",
+    "changes": [
+      {
+        "date": "2026-07-13T08:45:29.246Z",
+        "node": "Inspector Panel",
+        "commit": "**Inspector Panel**: Add the ability to set default value to attribute."
+      }
+    ]
+  },
+  {
     "version": "1.21.2.009",
     "changes": [
       {

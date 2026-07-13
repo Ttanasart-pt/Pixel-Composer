@@ -2,6 +2,7 @@ function Node_Flood_Fill(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	name = "Flood Fill";
 	
 	newActiveInput(3);
+	newInput(17, nodeValue_Toggle(  "Channel",     0b1111, { data: array_create(4, THEME.inspector_channel) }));
 	
 	////- =Surfaces
 	newInput(0, nodeValue_Surface( "Surface In" ));
@@ -10,7 +11,6 @@ function Node_Flood_Fill(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	__init_mask_modifier(1, 8); // inputs 8, 9
 	
 	////- =Fill
-	newInput(17, nodeValue_Toggle(  "Channel",     0b1111, { data: array_create(4, THEME.inspector_channel) }));
 	newInput(18, nodeValue_EScroll( "Fill Mode",   0, [ "Point", "Path", "Mask" ] ));
 	newInput( 4, nodeValue_Vec2(    "Position",   [.5,.5]   )).setHotkey("G").setUnitSimple();
 	newInput(20, nodeValue_Path(    "Path",                 ));
@@ -41,10 +41,10 @@ function Node_Flood_Fill(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	newOutput( 0, nodeValue_Output( "Surface Out", VALUE_TYPE.surface, noone ));
 	newOutput( 1, nodeValue_Output( "Fill Mask",   VALUE_TYPE.surface, noone ));
 	
-	input_display_list = [  3,
+	input_display_list = [  3, 17,
 		[ "Surfaces",   true ],  0,  1,  2,  8,  9, 
-		[ "Fill",      false ], 17, 18,  4, 20, 23, 21, 22,  6, 
-		[ "Algorithm", false ], 12,  7, 11, 
+		[ "Fill",      false ], 18,  4, 20, 23, 21, 22,  6, 
+		[ "Algorithm",  true ], 12,  7, 11, 
 		
 		[ "Rendering", false ],  5, 10, 19, 
 			[ "/Background", false, 15 ], 16, 

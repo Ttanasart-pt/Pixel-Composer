@@ -26,6 +26,11 @@
         "date": "2026-07-13T06:49:17.792Z",
         "node": "Flood Fill",
         "commit": "**Flood Fill**: Add invert option."
+      },
+      {
+        "date": "2026-07-13T07:29:10.553Z",
+        "node": "",
+        "commit": "**Preset Panel**: Add \"Replace only thumbnail\" in context menu."
       }
     ]
   },

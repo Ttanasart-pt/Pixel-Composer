@@ -1127,21 +1127,61 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		}
 	}
 	
+	static setDefaultAttr = function(attrKey) {
+		var key = instanceof(self);
+		var dir = $"{DIRECTORY}Presets/{key}/";
+		var pth = $"{dir}_values.json";
+		
+		directory_verify(dir);
+		map = file_exists(pth)? json_load_struct(pth) : {};
+		if(!has(map, "attr")) map.attr = {};
+		map.attr[$ attrKey] = attributes[$ attrKey];
+		
+		json_save_struct(pth, map, true);
+		
+		if(!has(PRESETS_MAP, key)) PRESETS_MAP[$ key] = {};
+		PRESETS_MAP[$ key]._values.content = map;
+	}
+	
+	static removeDefaultAttr = function(attrKey) {
+		var key = instanceof(self);
+		var dir = $"{DIRECTORY}Presets/{key}/";
+		var pth = $"{dir}_values.json";
+		
+		directory_verify(dir);
+		map = file_exists(pth)? json_load_struct(pth) : {};
+		if(!has(map, "attr")) map.attr = {};
+		struct_remove(map.attr, attrKey);
+		
+		json_save_struct(pth, map, true);
+		
+		if(!has(PRESETS_MAP, key)) PRESETS_MAP[$ key] = {};
+		PRESETS_MAP[$ key]._values.content = map;
+	}
+	
+	static resetDefaultAttr = function(attrKey) {
+		var key = instanceof(self);
+		if(!has(PRESETS_MAP, key))              return;
+		if(!has(PRESETS_MAP[$ key], "_values")) return;
+		
+		var map = PRESETS_MAP[$ key]._values.content;
+		if(!has(map, "attr"))                   return;
+		if(!has(map.attr, attrKey))             return;
+		
+		attributes[$ attrKey] = map.attr[$ attrKey];
+		triggerRender();
+	}
+	
 	static setPreset = function(pName) {
 		var _key = instanceof(self);
 		if(!has(PRESETS_MAP, _key)) return false;
 		
 		var _pres = PRESETS_MAP[$ _key];
-		if(has(_pres, pName)) {
-			var _preset = _pres[$ pName];
-			if(_preset.content == undefined) _preset.content = json_load_struct(_preset.path);
-			
-			deserialize(_preset.content, true, 1 + (pName == "_default"));
-		}
 		
-		var _vals = _pres[$ "_values"];
-		if(pName == "_default" && _vals != undefined) {
-			if(_vals.content == undefined) _vals.content = json_load_struct(_vals.path);
+		if(pName == "_default") {
+			var _vals = _pres[$ "_values"];
+			if(_vals[$ "content"] == undefined) 
+				_vals.content = json_load_struct(_vals.path);
 			
 			var _cont = _vals.content;
 			var _keys = struct_get_names(_cont);
@@ -1156,6 +1196,26 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 				inputMap[$ _inptKey].def_preset  = true;
 				inputMap[$ _inptKey].is_modified = false;
 			}
+			
+			if(has(_cont, "attr")) {
+				var _attrs    = _cont.attr;
+				var _attrKeys = struct_get_names(_attrs);
+				
+				for( var i = 0, n = array_length(_attrKeys); i < n; i++ ) {
+					var _key = _attrKeys[i];
+					var _val = _attrs[$ _key];
+					attributes[$ _key] = _val;
+				}
+				
+				triggerRender();
+			}
+		}
+		
+		if(has(_pres, pName)) {
+			var _preset = _pres[$ pName];
+			if(_preset.content == undefined) _preset.content = json_load_struct(_preset.path);
+			
+			deserialize(_preset.content, true, 1 + (pName == "_default"));
 		}
 		
 		return true;
@@ -1167,6 +1227,20 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		directory_verify(dir);
 		
 		var map = serialize(true, true);
+		var thm = getPreviewValues();
+		
+		if(is_surface(thm)) map.thumbnail = surface_encode(thm, false);
+		if(file_exists_empty(pth)) file_delete(pth);
+		json_save_struct(pth, map);
+		__initPresets();
+	}
+	
+	static savePresetThumbnail = function(pName) {
+		var dir = $"{DIRECTORY}Presets/{instanceof(self)}/";
+		var pth = $"{dir}{pName}.json";
+		directory_verify(dir);
+		
+		var map = json_load_struct(pth);
 		var thm = getPreviewValues();
 		
 		if(is_surface(thm)) map.thumbnail = surface_encode(thm, false);
