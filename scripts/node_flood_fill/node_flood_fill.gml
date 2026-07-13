@@ -25,12 +25,13 @@ function Node_Flood_Fill(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	newInput(14, nodeValue_Gradient("Gradient",    gra_black_white ));
 	// input 15
 	
-	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
+	newOutput( 0, nodeValue_Output( "Surface Out", VALUE_TYPE.surface, noone ));
+	newOutput( 1, nodeValue_Output( "Fill Mask",   VALUE_TYPE.surface, noone ));
 	
 	input_display_list = [  3,
-		[ "Surfaces",  false ],  0,  1,  2,  8,  9, 
-		[ "Fill",      false ],  4,  6,  5, 10, 
-		[ "Algorithm", false ], 12,  7, 11, 
+		[ "Surfaces",  false     ],  0,  1,  2,  8,  9, 
+		[ "Fill",      false     ],  4,  6,  5, 10, 
+		[ "Algorithm", false     ], 12,  7, 11, 
 		[ "Gradient",  false, 13 ], 14, 
 	];
 	
@@ -49,10 +50,10 @@ function Node_Flood_Fill(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 		return w_hovering;
 	}
 	
-	static processData = function(_outSurf, _data, _array_index) {
+	static processData = function(_outData, _data, _array_index) {
 		#region data
 			var inSurf = _data[0];
-			if(!is_surface(inSurf)) return _outSurf;
+			if(!is_surface(inSurf)) return _outData;
 			
 			var _pos   = _data[ 4];
 			var _col   = _data[ 5];
@@ -108,6 +109,9 @@ function Node_Flood_Fill(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 			itr++;
 		}
 		
+		var _outSurf = surface_verify(_outData[0], sw, sh);
+		var _outMask = surface_verify(_outData[1], sw, sh);
+		
 		surface_set_shader(_outSurf, sh_flood_fill_replace);
 			shader_set_c( "color", _col );
 			shader_set_s( "mask",  temp_surface[ind]);
@@ -116,11 +120,16 @@ function Node_Flood_Fill(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 			shader_set_i( "useGrad", _ugrad );
 			shader_set_gradient(     _grad  );
 			
-			draw_surface_safe(inSurf);
+			draw_surface(inSurf, 0, 0);
+		surface_reset_shader();
+		
+		surface_set_shader(_outMask, sh_flood_fill_render_mask);
+			draw_surface(temp_surface[ind], 0, 0);
 		surface_reset_shader();
 		
 		__process_mask_modifier(_data);
 		_outSurf = mask_apply_input(_data[0], _outSurf, _data[1], _data[2], inputs[1]);
-		return _outSurf;
+		
+		return _outData;
 	}
 }
