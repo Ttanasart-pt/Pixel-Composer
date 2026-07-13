@@ -1,5 +1,4 @@
 #pragma use(gradient)
-
 #region -- gradient -- [1777679826.681391]
 	#define GRADIENT_LIMIT 128
 	
@@ -149,6 +148,9 @@ uniform int  blend;
 uniform vec4 color;
 uniform sampler2D mask;
 
+uniform int  fillBG;
+uniform vec4 bgColor;
+
 uniform int  useGrad;
 
 void main() {
@@ -156,8 +158,10 @@ void main() {
 	gl_FragColor = col;
 	
     vec4 msk = texture2D( mask, v_vTexcoord );
-	if(msk.a == 0.) return;
-	if(msk.r != 1.) return;
+	if(msk.a == 0. || msk.r != 1.) {
+		if(fillBG == 1) gl_FragColor = bgColor;
+		return;
+	}
 	
 	vec4 fillC = color;
 	float itr  = msk.g;

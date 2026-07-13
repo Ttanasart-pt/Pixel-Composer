@@ -6,6 +6,11 @@
         "date": "2026-07-13T05:40:38.959Z",
         "node": "Flood Fill",
         "commit": "**Flood Fill**: Add Fill Mask output."
+      },
+      {
+        "date": "2026-07-13T05:48:46.212Z",
+        "node": "Flood Fill",
+        "commit": "**Flood Fill**: Add Fill Background properties."
       }
     ]
   },

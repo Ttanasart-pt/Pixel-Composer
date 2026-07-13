@@ -13,26 +13,34 @@ function Node_Flood_Fill(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	newInput( 4, nodeValue_Vec2(    "Position",   [.5,.5]  )).setHotkey("G").setUnitSimple();
 	newInput( 5, nodeValue_Color(   "Color",      ca_black )).setHotkeyAuto("C");
 	newInput( 6, nodeValue_Slider(  "Threshold",   .1      ));
-	newInput(10, nodeValue_EScroll( "Blend",       0, [ "Override", "Multiply" ] ));
+	newInput(10, nodeValue_EScroll( "Blend Mode",   0, [ "Override", "Multiply" ] ));
 	
 	////- =Algorithm
 	newInput(12, nodeValue_EScroll( "Algorithm",   0, [ "Linear Sweep", "Diffusion" ]    ));
 	newInput( 7, nodeValue_Bool(    "Diagonal",    false   ));
 	newInput(11, nodeValue_Int(     "Iteration",   8       ));
 	
-	////- =Gradient
+	////- =Rendering
+	
+		////- =/Background
+	newInput(15, nodeValue_Bool(    "Fill Background",  false            ));
+	newInput(16, nodeValue_Color(   "Background Color", cola(c_black, 0) ));
+	
+		////- =/Gradient
 	newInput(13, nodeValue_Bool(    "Fill Gradient", false ));
 	newInput(14, nodeValue_Gradient("Gradient",    gra_black_white ));
-	// input 15
+	// 17
 	
 	newOutput( 0, nodeValue_Output( "Surface Out", VALUE_TYPE.surface, noone ));
 	newOutput( 1, nodeValue_Output( "Fill Mask",   VALUE_TYPE.surface, noone ));
 	
 	input_display_list = [  3,
-		[ "Surfaces",  false     ],  0,  1,  2,  8,  9, 
-		[ "Fill",      false     ],  4,  6,  5, 10, 
-		[ "Algorithm", false     ], 12,  7, 11, 
-		[ "Gradient",  false, 13 ], 14, 
+		[ "Surfaces",   true ],  0,  1,  2,  8,  9, 
+		[ "Fill",      false ],  4,  6,  5, 10, 
+		[ "Algorithm", false ], 12,  7, 11, 
+		[ "Rendering", false ], 
+			[ "/Background", false, 15 ], 16, 
+			[ "/Gradient",   false, 13 ], 14, 
 	];
 	
 	////- Node
@@ -63,6 +71,9 @@ function Node_Flood_Fill(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 			var _algo  = _data[12];
 			var _dia   = _data[ 7];
 			var _itr   = _data[11];
+			
+			var _bgFil = _data[15];
+			var _bgCol = _data[16];
 			
 			var _ugrad = _data[13];
 			var _grad  = _data[14];
@@ -119,6 +130,9 @@ function Node_Flood_Fill(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 			
 			shader_set_i( "useGrad", _ugrad );
 			shader_set_gradient(     _grad  );
+			
+			shader_set_i( "fillBG",  _bgFil );
+			shader_set_c( "bgColor", _bgCol );
 			
 			draw_surface(inSurf, 0, 0);
 		surface_reset_shader();
