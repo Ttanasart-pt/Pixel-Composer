@@ -21,6 +21,11 @@
         "date": "2026-07-13T06:46:41.736Z",
         "node": "Flood Fill",
         "commit": "**Flood Fill**: Add path and mask fill mode."
+      },
+      {
+        "date": "2026-07-13T06:49:17.792Z",
+        "node": "Flood Fill",
+        "commit": "**Flood Fill**: Add invert option."
       }
     ]
   },

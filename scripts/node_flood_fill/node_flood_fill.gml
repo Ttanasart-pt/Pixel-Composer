@@ -199,6 +199,8 @@ function Node_Flood_Fill(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 		surface_reset_shader();
 		
 		surface_set_shader(_outMask, sh_flood_fill_render_mask);
+			shader_set_i( "invert", _invt );
+			
 			draw_surface(temp_surface[ind], 0, 0);
 		surface_reset_shader();
 		

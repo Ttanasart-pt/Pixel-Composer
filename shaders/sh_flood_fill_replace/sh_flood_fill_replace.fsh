@@ -159,7 +159,7 @@ void main() {
 	gl_FragColor = col;
 	
     vec4 msk = texture2D( mask, v_vTexcoord );
-    if(invert == 1) msk = 1. - msk;
+    if(invert == 1) msk.r = 1. - msk.r;
     
 	if(msk.a == 0. || msk.r != 1.) {
 		if(fillBG == 1) gl_FragColor = bgColor;
