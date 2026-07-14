@@ -463,8 +463,11 @@ function Panel_Inspector() : PanelContent() constructor {
             for( var i = 0, n = array_length(dlist); i < n; i++ ) {
                 if(!is_array(dlist[i])) continue;
                 
-                dlist[i][@ 1] = false;
-                _colMap[$ dlist[i][@ 0]] = false;
+                var _key = array_safe_get_fast(dlist[i], 0, "");
+                var ikey = _key + $"_{i}"
+                
+                dlist[i][@ 1]   = false;
+                _colMap[$ ikey] = false;
             }
         }
         
@@ -477,8 +480,11 @@ function Panel_Inspector() : PanelContent() constructor {
             for( var i = 0, n = array_length(dlist); i < n; i++ ) {
                 if(!is_array(dlist[i])) continue;
                 
-                dlist[i][@ 1] = true;
-                _colMap[$ dlist[i][@ 0]] = true;
+                var _key = array_safe_get_fast(dlist[i], 0, "");
+                var ikey = _key + $"_{i}"
+                
+                dlist[i][@ 1]   = true;
+                _colMap[$ ikey] = true;
             }
         }
         

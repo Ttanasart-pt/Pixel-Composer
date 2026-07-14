@@ -11,6 +11,11 @@
         "date": "2026-07-14T03:18:36.215Z",
         "node": "Inspector Panel",
         "commit": "**Inspector Panel**: Sections of the same name now collapse independently."
+      },
+      {
+        "date": "2026-07-14T03:30:41.214Z",
+        "node": "Flood Fill",
+        "commit": "**Flood Fill**: Add build-in 'alpha isolate' preset."
       }
     ]
   },

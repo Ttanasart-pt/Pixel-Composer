@@ -14,8 +14,6 @@ function Node_MK_Cloud(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	newInput(50, nodeValue_Int(     "Attempt", 8      ));
 	
 	newInput(12, nodeValue_Int(   "Layers",    2      ));
-	newInput( 2, nodeValue_Int(   "Amount",    32     ))
-		.setCurvable(15, CURVE_DEF_01, "Over Layer", "curved", THEME.mk_cloud_curve_layer )
 	
 		////- =/Transform
 	newInput(11, nodeValue_Vec2(  "Position",    [.5,.5] )).setUnitSimple()
@@ -36,6 +34,8 @@ function Node_MK_Cloud(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	] ));
 	newInput(62, nodeValue_Surface( "Puff Surface" ));
 	
+	newInput( 2, nodeValue_Int(   "Amount",    32     ))
+		.setCurvable(15, CURVE_DEF_01, "Over Layer", "curved", THEME.mk_cloud_curve_layer )
 	newInput( 4, nodeValue_Range(    "Puff Size",     [4,8]   ))
 		.setCurvable( 6, CURVE_DEF_01, "Over Distance", "curved" )
 		.setCurvable(18, CURVE_DEF_11, "Over Layer",    "curved_layer", THEME.mk_cloud_curve_layer )
@@ -125,12 +125,12 @@ function Node_MK_Cloud(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	input_display_list = [ s_MKFX, 
 		[ "Seed",           false     ],  1, 57, 
 		[ "Output",         false     ],  0, 
-		[ "Cloud",          false     ], 31, 49, 50, 12,  2, 15, 
+		[ "Cloud",          false     ], 31, 49, 50, 12, 
 			[ "/Transform", false     ], 11, 28,  3, 14, 
 			[ "/Rendering", false,    ], 69, 
 			
-		[ "Puff",           false     ], 54, 62,  4,  6, 18, 51, 52, 
-			[ "/Subtract",  false, 45 ], 46, 47, 48, 
+		[ "Puff",           false     ], 54, 62,  2, 15,  4,  6, 18, 51, 52, 
+			[ "/Subtract",   true, 45 ], 46, 47, 48, 
 			[ "/Rendering", false,    ], 32, 24, 53, 
 			
 		[ "Base",            true, 9  ], 61,  8, 10, 13, 
@@ -146,8 +146,8 @@ function Node_MK_Cloud(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 			[ "/Rendering", false     ], 55, 26, 30,
 			
 		[ "Layer Effect",    true,    ], 
-			[ "/Outline",   false, 42 ], 60, 43, 44, 
-			[ "/Shadow",    false, 36 ], 58, 37, 40, 59, 38, 39, 
+			[ "/Outline",    true, 42 ], 60, 43, 44, 
+			[ "/Shadow",     true, 36 ], 58, 37, 40, 59, 38, 39, 
 		
 	];
 	
@@ -175,8 +175,6 @@ function Node_MK_Cloud(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 			var _attmp  = _data[50];
 			
 			var _layer  = _data[12];
-			var _amou   = _data[ 2];
-			var _amouC  = _data[15], _amouCurve = inputs[ 2].attributes.curved? new curveMap(_amouC) : undefined;
 			
 			var _pos    = _data[11];
 			var _posL   = _data[28];
@@ -186,6 +184,9 @@ function Node_MK_Cloud(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 			
 			var _pshap  = _data[54];
 			var _psurf  = _data[62];
+			
+			var _amou   = _data[ 2];
+			var _amouC  = _data[15], _amouCurve = inputs[ 2].attributes.curved? new curveMap(_amouC) : undefined;
 			var _aspct  = _data[51];
 			var _angle  = _data[52];
 			var _radi   = _data[ 4];
