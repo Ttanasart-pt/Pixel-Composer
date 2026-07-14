@@ -69,7 +69,6 @@ function Node_Flood_Fill(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	static processData = function(_outData, _data, _array_index) {
 		#region data
 			var inSurf = _data[0];
-			if(!is_surface(inSurf)) return _outData;
 			
 			var _chan  = _data[17];
 			var _mode  = _data[18];
@@ -101,6 +100,8 @@ function Node_Flood_Fill(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 			
 			inputs[21].setVisible(_mode == 2, _mode == 2);
 			inputs[22].setVisible(_mode != 0);
+			
+			if(!is_surface(inSurf)) return _outData;
 		#endregion
 		
 		var  sw   = surface_get_width_safe(inSurf);

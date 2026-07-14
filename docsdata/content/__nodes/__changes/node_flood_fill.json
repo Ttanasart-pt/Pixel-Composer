@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.6.011",
+    "changes": [
+      {
+        "date": "2026-07-14T01:26:13.379Z",
+        "node": "Preset Panel] Add option to make preset shows up in add node dialog without searching node name. - [Add Node",
+        "commit": "**Preset Panel] Add option to make preset shows up in add node dialog without searching node name. - [Add Node**: Preset search result now use preset icon."
+      }
+    ]
+  },
+  {
     "version": "1.21.6.010",
     "changes": [
       {

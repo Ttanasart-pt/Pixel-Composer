@@ -214,7 +214,26 @@ if(DIALOG_SHOW_FOCUS) {
 }
 
 #region tooltip
-	if(sprite_exists(node_icon)) {
+	if(surface_exists(node_surface)) {
+		var _sx = node_icon_x - ui(16);
+		var _sy = node_icon_y;
+		
+		var _sw = ui(64);
+		var _sh = ui(64);
+		
+		var _ssw = surface_get_width(node_surface);
+		var _ssh = surface_get_height(node_surface);
+		var _ss  = _sw / max(_ssw, _ssh);
+				
+		var _bgx = _sx - _sw / 2;
+		var _bgy = _sy - _sh / 2;
+		
+		draw_sprite_stretched(THEME.node_junction_name_bg, 0, _bgx - ui(10), _bgy - ui(10), _sw + ui(20), _sh + ui(20));
+		gpu_set_tex_filter(true);
+		draw_surface_ext(node_surface, _bgx, _bgy, _ss, _ss, 0, c_white, 1);
+		gpu_set_tex_filter(false);
+		
+	} else if(sprite_exists(node_icon)) {
 		var _sx = node_icon_x - ui(16);
 		var _sy = node_icon_y;
 		
@@ -229,7 +248,9 @@ if(DIALOG_SHOW_FOCUS) {
 		draw_sprite_stretched(node_icon, 0, _bgx, _bgy, _sw, _sh);
 		gpu_set_tex_filter(false);
 	}
-	node_icon = noone;
+	
+	node_icon    = noone;
+	node_surface = noone;
 	
 	if(node_tooltip != noone) {
 		var ww = ui(300 + 8);

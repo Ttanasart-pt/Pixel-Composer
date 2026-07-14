@@ -41,6 +41,7 @@ event_inherited();
 	node_tooltip   = noone;
 	node_tooltip_x = 0;
 	node_tooltip_y = 0;
+	node_surface   = noone;
 	node_icon      = noone;
 	node_icon_x    = 0;
 	node_icon_y    = 0;
@@ -1146,6 +1147,7 @@ event_inherited();
 					}
 					
 					if(ds_map_exists(search_map, _node)) continue;
+					search_map[? _node] = 1;
 					
 					var _name  = string_lower(_node.getName());
 					var _match = string_partial_match_res(_name, search_lower);
@@ -1181,8 +1183,52 @@ event_inherited();
 						}
 					}
 					
-					if(_match[0] <= -9999) continue;
+					var _matchNode = _match[0] > -9999;
+				
+					if(is(_node, NodeObject) && has(PRESETS_MAP, _node.nodeName)) {
+						var pres = PRESETS_MAP[$ _node.nodeName];
+						var keys = struct_get_names(pres);
+						
+						for( var k = 0, p = array_length(keys); k < p; k++ ) {
+							var key = keys[k];
+							if(key == "_default" || key == "values") continue;
+							
+							var preset = pres[$ key];
+							if(preset.content == undefined) 
+								preset.content = json_load_struct(preset.path);
+				
+							var isNode = preset.content[$ "asNode"] ?? false;
+							if(!isNode && !_matchNode) continue;
+							
+							var _fname = isNode? string_lower(key) : $"{_name} {string_lower(key)}";
+							var mat = string_partial_match_res(_fname, search_lower);
+							if(!isNode) mat[0] -= 10;
+							
+							if(mat[0] > -9999) {
+								if(!isNode) mat[1] = array_copy_trim_start(mat[1], string_length(_name) + 1);
+								
+								var searchData = { 
+									search : true, 
+									name   : _node.name, 
+									node   : _node, 
+									param  : {
+										type  : "preset",
+										value : key,
+										data  : preset, 
+									}, 
+									
+									match  : mat, 
+									weight : mat[0], 
+									path   : _path, 
+								};
+								
+								ds_priority_add(pr_list, searchData, mat[0]);
+							}
+						}
+					}
 					
+					if(!_matchNode) continue;
+				
 					// Fav
 					if(is(_node, NodeObject)) {
 						if(_node.deprecated) continue; // ???
@@ -1197,40 +1243,6 @@ event_inherited();
 						
 					}
 					
-					// Preset 
-					if(is(_node, NodeObject) && has(PRESETS_MAP, _node.nodeName)) {
-						var pres = PRESETS_MAP[$ _node.nodeName];
-						var keys = struct_get_names(pres);
-						
-						for( var k = 0, p = array_length(keys); k < p; k++ ) {
-							if(keys[k] == "_default" || keys[k] == "values") continue;
-							var _fname = $"{_name} {keys[k]}"
-							
-							var mat = string_partial_match_res(_fname, search_lower);
-							mat[0] -= 10;
-							
-							if(mat[0] > -9999) {
-								mat[1] = array_copy_trim_start(mat[1], string_length(_name) + 1);
-								
-								var searchData = { 
-									search : true, 
-									name   : _node.name, 
-									node   : _node, 
-									param  : {
-										type  : "preset",
-										value : keys[k]
-									}, 
-									
-									match  : mat, 
-									weight : mat[0], 
-									path   : _path, 
-								};
-								
-								ds_priority_add(pr_list, searchData, mat[0]);
-							}
-						}
-					}
-					
 					var searchData = { 
 						search : true, 
 						name   : _node.name, 
@@ -1242,7 +1254,6 @@ event_inherited();
 					};
 					
 					ds_priority_add(pr_list, searchData, _match[0]);
-					search_map[? _node] = 1;
 				}
 			}
 			ds_map_destroy(search_map);
@@ -1367,7 +1378,6 @@ event_inherited();
 		}
 		
 		if(PREFERENCES.dialog_add_node_view == 0) { // grid
-			
 			var col = floor(search_pane.surface_w / (grid_width + grid_space));
 			var yy  = _y + grid_space;
 			var ind = 0;
@@ -1523,9 +1533,7 @@ event_inherited();
 				}
 			}
 			
-		
 		} else if(PREFERENCES.dialog_add_node_view == 1) { // list
-			
 			var list_width  = search_pane.surface_w;
 			var list_height = ui(28);
 			var sy  = _y + list_height / 2;
@@ -1567,6 +1575,19 @@ event_inherited();
 				if(_mouseOn) {
 					search_pane.hover_content = true;
 					node_icon   = spr;
+					
+					if(is_struct(_query) && _query.type == "preset") {
+						var _preset = _query.data;
+						if(_preset.content == undefined) _preset.content = json_load_struct(_preset.path);
+						if(_preset.thumbnail_data == -1) _preset.thumbnail_data = struct_try_get(_preset.content, "thumbnail", -1);
+						var _thm = _preset.getThumbnail();
+						
+						if(is_just_surface(_thm)) {
+							node_icon    = noone;
+							node_surface = _thm;
+						}
+					}
+					
 					node_icon_x = search_pane.x + pd + list_height / 2 + ui(32);
 					node_icon_y = search_pane.y + yc;
 				}
@@ -1592,6 +1613,7 @@ event_inherited();
 				
 				if(is(_node, NodeObject)) {
 					var tx = _node.drawList(pd, yy, _m[0], _m[1], list_height, list_width - pd, _param);
+					
 					var _hotkey = GRAPH_ADD_NODE_MAPS[$ _node.nodeName];
 					if(_hotkey != undefined) {
 						draw_set_text(f_p2, fa_right, fa_center, COLORS._main_text_sub);

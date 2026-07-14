@@ -187,14 +187,40 @@ function NodeObject(_name, _node, _tooltip = "") constructor {
 		var spr_x = _x + grid_width / 2;
 		var spr_y = _y + grid_size  / 2;
 		
-		var _spr = getSpr();
-		var _spw = sprite_get_width(_spr);
-		var _sph = sprite_get_height(_spr);
-		var _ss  = grid_size / max(_spw, _sph) * 0.85;
+		var _query = struct_try_get(_param, "query", "");
+		var _draw  = true;
 		
-		gpu_set_tex_filter(true);
-		draw_sprite_uniform(_spr, 0, spr_x, spr_y, _ss);
-		gpu_set_tex_filter(false);
+		if(is_struct(_query) && _query[$ "type"] == "preset") {
+			var _preset = _query.data;
+			if(_preset.content == undefined) _preset.content = json_load_struct(_preset.path);
+			if(_preset.thumbnail_data == -1) _preset.thumbnail_data = struct_try_get(_preset.content, "thumbnail", -1);
+			var _thm = _preset.getThumbnail();
+			
+			if(is_surface(_thm)) {
+				_draw = false;
+				var _sw = surface_get_width(_thm);
+				var _sh = surface_get_height(_thm);
+				
+				var _ss = grid_size / max(_sw, _sh);
+				var _sx = spr_x + grid_size / 2 - _sw * _ss / 2;
+				var _sy = spr_y + grid_size / 2 - _sh * _ss / 2;
+				
+				gpu_set_tex_filter(true);
+				draw_surface_ext(_thm, _sx, _sy, _ss, _ss, 0, c_white, 1);
+				gpu_set_tex_filter(false);
+			}
+		}
+		
+		if(_draw) {
+			var _spr = getSpr();
+			var _spw = sprite_get_width(_spr);
+			var _sph = sprite_get_height(_spr);
+			var _ss  = grid_size / max(_spw, _sph) * 0.85;
+			
+			gpu_set_tex_filter(true);
+			draw_sprite_uniform(_spr, 0, spr_x, spr_y, _ss);
+			gpu_set_tex_filter(false);
+		}
 				
 		if(new_node) {
 			draw_sprite_ui_uniform(THEME.node_new_badge, 0, _x + grid_width - ui(12), _y + ui(6), 1, COLORS._main_accent);
@@ -211,7 +237,6 @@ function NodeObject(_name, _node, _tooltip = "") constructor {
 		
 		var spr_x = _x + grid_width - 4;
 		var spr_y = _y + 4;
-		
 		if(icon) draw_sprite_ext(icon, 0, spr_x, spr_y, 1, 1, 0, c_white, 1);
 	}
 	
@@ -219,18 +244,43 @@ function NodeObject(_name, _node, _tooltip = "") constructor {
 		var fav = struct_exists(NODE_FAV_MAP, nodeName);
 		if(fav) draw_sprite_ui_uniform(THEME.favorite, 1, _x + ui(16), _y + _h / 2, .8, CDEF.yellow, 1.);
 		
-		var _query = struct_try_get(_param, "query", "");
-		var _spr   = getSpr();
 		var spr_x  = _x + ui(32) + _h / 2;
-		var spr_y  = _y + _h / 2;
+		var spr_y  = _y          + _h / 2;
+			
+		var _query = struct_try_get(_param, "query", "");
+		var _draw  = true;
 		
-		var ss = (_h - ui(8)) / max(sprite_get_width(_spr), sprite_get_height(_spr));
-		gpu_set_tex_filter(true);
-		draw_sprite_ext(_spr, 0, spr_x, spr_y, ss, ss, 0, c_white, 1);
-		gpu_set_tex_filter(false);
+		if(is_struct(_query) && _query[$ "type"] == "preset") {
+			var _preset = _query.data;
+			if(_preset.content == undefined) _preset.content = json_load_struct(_preset.path);
+			if(_preset.thumbnail_data == -1) _preset.thumbnail_data = struct_try_get(_preset.content, "thumbnail", -1);
+			var _thm = _preset.getThumbnail();
+			
+			if(is_surface(_thm)) {
+				_draw = false;
+				var _sw = surface_get_width(_thm);
+				var _sh = surface_get_height(_thm);
+				
+				var _ss = (_h - ui(8)) / max(_sw, _sh);
+				var _sx = spr_x - _sw * _ss / 2;
+				var _sy = spr_y - _sh * _ss / 2;
+				
+				gpu_set_tex_filter(true);
+				draw_surface_ext(_thm, _sx, _sy, _ss, _ss, 0, c_white, 1);
+				gpu_set_tex_filter(false);
+			}
+		}
+		
+		if(_draw) {
+			var _spr = getSpr();
+			var ss   = (_h - ui(8)) / max(sprite_get_width(_spr), sprite_get_height(_spr));
+			gpu_set_tex_filter(true);
+			draw_sprite_ext(_spr, 0, spr_x, spr_y, ss, ss, 0, c_white, 1);
+			gpu_set_tex_filter(false);
+		}
 		
 		var tx = spr_x + _h / 2 + ui(4);
-		var ty =    _y + _h / 2;
+		var ty = spr_y;
 				
 		if(new_node) {
 			var _nx = _w - ui(6 + 18);

@@ -109,8 +109,6 @@ function Panel_Presets(_node) : PanelContent() constructor {
 		var amo  = array_length(keys);
 		var _hh  = line_get_height() + ui(10);
 		    _h  += amo * (_hh + ui(4)) + ui(32);
-		if(TESTING)
-			_ww -= _hh + ui(4);
 		
 		var _yy = _y;
 		
@@ -163,6 +161,7 @@ function Panel_Presets(_node) : PanelContent() constructor {
 			draw_set_alpha(1);
 		}
 		
+		_ww -= (_hh + ui(4)) * (1 + TESTING);
 		_yy += dh + ui(4);
 		_h  += dh + ui(4);
 		
@@ -198,40 +197,60 @@ function Panel_Presets(_node) : PanelContent() constructor {
 				}
 			}
 			
-			if(TESTING) {
-				var tx = _ww + ui(4);
-				var ty = _yy;
-				var tw = _hh;
-				var th = _hh;
+			var tx = sc_presets.surface_w - _hh;
+			var ty = _yy;
+			
+			if(preset.content == undefined) preset.content = json_load_struct(preset.path);
 				
-				var dir    = $"D:/Project/MakhamDev/LTS-PixelComposer/PixelComposer/datasrc/Presets/{nodeType}/";
-				var defPth = filename_combine(dir, _name);
-				var isDef  = file_exists_empty(defPth);
+			#region side buttons
+				if(TESTING) {
+					var tw = _hh;
+					var th = _hh;
+					
+					var dir    = $"D:/Project/MakhamDev/LTS-PixelComposer/PixelComposer/datasrc/Presets/{nodeType}/";
+					var defPth = filename_combine(dir, _name);
+					var isDef  = file_exists_empty(defPth);
+					
+					draw_sprite_stretched(THEME.ui_panel_bg, 3, tx, ty, tw, th);
+					if(pHOVER && sc_presets.hover && point_in_rectangle(_m[0], _m[1], tx, ty, tx + tw, ty + th)) {
+						draw_sprite_stretched_ext(THEME.node_bg, 1, tx, ty, tw, th, COLORS._main_accent, 1);
+						TOOLTIP = __txt("Include in Default");
+						
+						if(mouse_lpress(pFOCUS)) {
+							if(isDef) {
+								file_delete(defPth);
+								
+							} else {
+								directory_verify(dir);
+								file_copy(preset.path, defPth);
+							}
+						}
+					}
+					
+					draw_sprite_ui(THEME.icon_default, 0, tx + tw / 2, ty + th / 2, 1, 1, 0, isDef? COLORS._main_accent : COLORS._main_icon);
+					tx -= _hh + ui(4);
+				}
+				
+				var asNode = preset.content[$ "asNode"] ?? false;
 				
 				draw_sprite_stretched(THEME.ui_panel_bg, 3, tx, ty, tw, th);
 				if(pHOVER && sc_presets.hover && point_in_rectangle(_m[0], _m[1], tx, ty, tx + tw, ty + th)) {
 					draw_sprite_stretched_ext(THEME.node_bg, 1, tx, ty, tw, th, COLORS._main_accent, 1);
-					TOOLTIP = __txt("Include in Default");
+					TOOLTIP = __txt("Show as Node");
 					
 					if(mouse_lpress(pFOCUS)) {
-						if(isDef) {
-							file_delete(defPth);
-							
-						} else {
-							directory_verify(dir);
-							file_copy(preset.path, defPth);
-						}
+						preset.content[$ "asNode"] = !asNode;
+						if(file_exists_empty(preset.path)) file_delete(preset.path);
+						json_save_struct(preset.path, preset.content);
 					}
 				}
 				
-				draw_sprite_ui(THEME.icon_default, 0, tx + tw / 2, ty + th / 2, 1, 1, 0, isDef? COLORS._main_accent : COLORS._main_icon);
-			}
+				draw_sprite_ui(THEME.node_outline_icon, 0, tx + tw / 2, ty + th / 2, .75, .75, 0, asNode? COLORS._main_accent : COLORS._main_icon);
+				
+				tx -= _hh + ui(4);
+			#endregion
 			
-			if(preset.content == undefined) {
-				preset.content        = json_load_struct(preset.path);
-				preset.thumbnail_data = struct_try_get(preset.content, "thumbnail", -1);
-			}
-			
+			if(preset.thumbnail_data == -1) preset.thumbnail_data = struct_try_get(preset.content, "thumbnail", -1);
 			var _thm = preset.getThumbnail();
 			var _xx  = ui(8);
 			

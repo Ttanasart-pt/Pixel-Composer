@@ -110,10 +110,11 @@ function Node_MK_Cloud(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	newInput(39, nodeValue_Color(    "Color",        ca_black ));
 	
 	////- =Rendering
-	newInput(32, nodeValue_EScroll(  "Blend Mode",   0, [ "Normal", "Maximum", "Additive" ] ));
+	newInput(32, nodeValue_EScroll(  "Puff Blend Mode",   0, [ "Normal", "Maximum", "Additive" ] ));
+	newInput(69, nodeValue_EScroll(  "Layer Blend Mode",  0, [ "Normal", "Maximum", "Additive" ] ));
 	newInput(24, nodeValue_Gradient( "Color",        gra_white ));
 	newInput(53, nodeValue_Surface(  "Color Sampler"           ));
-	// 69
+	// 70
 	
 	newOutput( 0, nodeValue_Output( "Surface Out", VALUE_TYPE.surface, noone ));
 	
@@ -141,7 +142,7 @@ function Node_MK_Cloud(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 			[ "/Outline",   false, 42 ], 60, 43, 44, 
 			[ "/Shadow",    false, 36 ], 58, 37, 40, 59, 38, 39, 
 		
-		[ "Rendering",      false,    ], 32, 24, 53, 
+		[ "Rendering",      false,    ], 32, 69, 24, 53, 
 	];
 	
 	////- Nodes
@@ -239,7 +240,8 @@ function Node_MK_Cloud(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 			var _shadowStr  = _data[38];
 			var _shadowCol  = _data[39];
 			
-			var _blend = _data[32];
+			var _lblnd = _data[32];
+			var _pblnd = _data[69];
 			var _color = _data[24]; _color.cache();
 			var _csamp = _data[53];
 			
@@ -449,7 +451,7 @@ function Node_MK_Cloud(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 						gpu_set_colorwriteenable(1,1,1,1);
 					}
 					
-					switch(_blend) { 
+					switch(_pblnd) { 
 						case 0: BLEND_NORMAL; break; 
 						case 1: BLEND_MAX;    break;
 						case 2: BLEND_ADD;    break;
@@ -495,10 +497,17 @@ function Node_MK_Cloud(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 					gpu_set_colorwriteenable(1,1,1,0);
 				}
 				
-				// printSurface($"_cloudLayer{i}", _cloudLayer)
+				switch(_lblnd) { 
+					case 0: BLEND_NORMAL; break; 
+					case 1: BLEND_MAX;    break;
+					case 2: BLEND_ADD;    break;
+				}
+				
 				draw_surface(_cloudLayer, 0, 0);
 				
-				if(_blend == 1) {
+				BLEND_NORMAL
+				
+				if(_pblnd == 1) {
 					gpu_set_colorwriteenable(1,1,1,0);
 					draw_surface(temp_surface[1], 0, 0);
 				}
