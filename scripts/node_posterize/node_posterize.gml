@@ -9,7 +9,12 @@ function Node_Posterize(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	name = "Posterize";
 	
 	newActiveInput(5);
-	newInput(0, nodeValue_Surface("Surface In"));
+	
+	////- =Surfaces
+	newInput( 0, nodeValue_Surface( "Surface In" ));
+	newInput(12, nodeValue_Surface( "Mask"       ));
+	newInput(13, nodeValue_Slider(  "Mix",     1 ));
+	__init_mask_modifier(12, 14); // inputs 14, 15
 	
 	////- =Palette
 	newInput( 2, nodeValue_Bool(    "Use Palette",      true )).setPieMenu();
@@ -25,7 +30,7 @@ function Node_Posterize(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	
 	////- =Alpha
 	newInput( 6, nodeValue_Bool( "Posterize alpha", true ));
-	// inputs 12
+	// 16
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
@@ -44,10 +49,11 @@ function Node_Posterize(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		inputs[1].setValue(_pal);
 	}).setIcon(THEME.color_wheel).iconPad(ui(4)).setTooltip(__txt("Trim Palette"));
 	
-	input_display_list = [ 5, 0, 
-		[ "Palette", false, 2, b_palette_trim ],  1,  9,  3,  4,  7,  8, 
-		[ "Bias",    false    ], 11, 10, 
-		[ "Alpha",   false    ],  6, 
+	input_display_list = [ 5, 
+		[ "Surfaces",  true    ],  0, 12, 13, 14, 15, 
+		[ "Palette",  false, 2, b_palette_trim ],  1,  9,  3,  4,  7,  8, 
+		[ "Bias",     false    ], 11, 10, 
+		[ "Alpha",    false    ],  6, 
 	];
 	
 	////- Node
@@ -59,6 +65,7 @@ function Node_Posterize(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	static processData = function(_outSurf, _data, _array_index) {
 		#region data
 			var _surf    = _data[ 0];
+			
 			var _pal     = _data[ 1];
 			var _use_pal = _data[ 2];
 			var _alp     = _data[ 6];
@@ -174,6 +181,9 @@ function Node_Posterize(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 				draw_surface_safe(_surf);
 			surface_reset_shader();
 		}
+		
+		__process_mask_modifier(_data);
+		_outSurf = mask_apply_input(_surf, _outSurf, _data[12], _data[13], inputs[12]);
 		
 		return _outSurf;
 	}

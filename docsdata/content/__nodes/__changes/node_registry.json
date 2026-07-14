@@ -6,6 +6,11 @@
         "date": "2026-07-14T01:26:13.392Z",
         "node": "",
         "commit": "**Preset Panel] Add option to make preset shows up in add node dialog without searching node name. - [Add Node**: Preset search result now use preset icon."
+      },
+      {
+        "date": "2026-07-14T01:37:00.260Z",
+        "node": "",
+        "commit": "**Posterize**: Add mask inputs."
       }
     ]
   },

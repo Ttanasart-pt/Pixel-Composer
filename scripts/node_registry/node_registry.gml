@@ -202,8 +202,8 @@ function NodeObject(_name, _node, _tooltip = "") constructor {
 				var _sh = surface_get_height(_thm);
 				
 				var _ss = grid_size / max(_sw, _sh);
-				var _sx = spr_x + grid_size / 2 - _sw * _ss / 2;
-				var _sy = spr_y + grid_size / 2 - _sh * _ss / 2;
+				var _sx = spr_x - _sw * _ss / 2;
+				var _sy = spr_y - _sh * _ss / 2;
 				
 				gpu_set_tex_filter(true);
 				draw_surface_ext(_thm, _sx, _sy, _ss, _ss, 0, c_white, 1);
