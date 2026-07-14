@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.6.011",
+    "changes": [
+      {
+        "date": "2026-07-14T01:51:53.818Z",
+        "node": "Draw Text",
+        "commit": "**Draw Text**: Add Background input."
+      }
+    ]
+  },
+  {
     "version": "1.21.6.001",
     "changes": [
       {

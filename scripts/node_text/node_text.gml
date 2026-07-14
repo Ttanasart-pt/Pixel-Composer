@@ -26,6 +26,9 @@ function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	newInput(10, nodeValue_IPadding( "Padding",          [0,0,0,0]  ));
 	newInput(33, nodeValue_Bool(     "Atlas",            false      ));
 	
+		////- =/Background
+	newInput(39, nodeValue_Surface( "Background" ));
+	
 	////- =Font
 	newInput( 1, nodeValue_Font(  "Font", array_safe_get(FONT_INTERNAL, 0, "") )).setVisible(true, false);
 	newInput( 2, nodeValue_Int(   "Size",             16       ));
@@ -75,11 +78,12 @@ function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	newInput(25, nodeValue_EButton(  "Trim Type",          0, [ "Character", "Word", "Line" ] ));
 	newInput(24, nodeValue_SliRange( "Range",             [0,1]  ));
 	newInput(26, nodeValue_Bool(     "Use Full Text Size", false ));
-	// inputs 39
+	// 40
 		
 	input_display_list = [ 
 		[ "Text",	    false     ],  0, 32, 
 		[ "Output",		 true     ],  9,  6, 34, 10, 33, 
+			[ "/Background", false], 39, 
 		
 		[ "Font",		false     ],  1,  2, 15, 
 			[ "/Settings",   true ], 35,  3, 37, 
@@ -93,8 +97,8 @@ function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		[ "Trim",		 true, 23 ], 25, 24, 26, 
 	];
 	
-	newOutput(0, nodeValue_Output( "Surface Out", VALUE_TYPE.surface, noone ));
-	newOutput(1, nodeValue_Output( "Draw Data",   VALUE_TYPE.atlas,   []    )).setArrayDepth(1);
+	newOutput( 0, nodeValue_Output( "Surface Out", VALUE_TYPE.surface, noone ));
+	newOutput( 1, nodeValue_Output( "Draw Data",   VALUE_TYPE.atlas,   []    )).setArrayDepth(1);
 	
 	////- Preview
 	
@@ -278,6 +282,8 @@ function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	
 	////- Nodes
 	
+	temp_surface = [ noone ];
+	
 	attribute_surface_depth();
 	attribute_interpolation();
 	
@@ -359,6 +365,7 @@ function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 			var _off   = _data[34];
 			var _padd  = _data[10];
 			var _atls  = _data[33];
+			var _bgSrf = _data[39];
 			
 			var _path  = _data[13];
 			var _pthS  = _data[14];
@@ -828,8 +835,21 @@ function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 				}
 			}
 		#endregion
-		
 		surface_reset_shader();
+		
+		if(is_surface(_bgSrf)) {
+			temp_surface[0] = surface_verify(temp_surface[0], _sw, _sh, attrDepth());
+			surface_set_target(temp_surface[0]);
+				DRAW_CLEAR
+				
+				draw_surface_stretched_safe( _bgSrf, 0, 0, _sw, _sh );
+				draw_surface( _outSurf, 0, 0 );
+			surface_reset_target();
+			
+			surface_set_shader(_outSurf);
+				draw_surface( temp_surface[0], 0, 0 );
+			surface_reset_shader();
+		}
 		
 		array_resize(__dwData, __dwDataI);
 		draw_data[_array_index] = __dwData;
