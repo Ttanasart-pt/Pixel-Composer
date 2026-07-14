@@ -6,6 +6,11 @@
         "date": "2026-07-14T01:26:13.385Z",
         "node": "",
         "commit": "**Preset Panel] Add option to make preset shows up in add node dialog without searching node name. - [Add Node**: Preset search result now use preset icon."
+      },
+      {
+        "date": "2026-07-14T03:18:36.215Z",
+        "node": "Inspector Panel",
+        "commit": "**Inspector Panel**: Sections of the same name now collapse independently."
       }
     ]
   },

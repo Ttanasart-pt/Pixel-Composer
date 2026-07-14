@@ -1251,12 +1251,13 @@ function Panel_Inspector() : PanelContent() constructor {
                 if((filtering && filter_text != "") || FILTER_ANIMATION) continue;
                 
                 var _key = array_safe_get_fast(jun, 0, "");
+                var ikey = _key + $"_{i}"
                 var subk = string_starts_with(_key, "/");
                 var name = __txt(subk? string_trim_start(_key, ["/"]) : _key);
                 
-                if(!subk) currSec = _key;
+                if(!subk) currSec = ikey;
                 
-                var coll = _colMap[$ _key] ?? array_safe_get_fast(jun, 1, false);
+                var coll = _colMap[$ ikey] ?? array_safe_get_fast(jun, 1, false);
                 var togl = array_safe_get_fast(jun, 2, noone);
                 var righ = array_safe_get_fast(jun, 3, noone);
                 
@@ -1310,7 +1311,7 @@ function Panel_Inspector() : PanelContent() constructor {
 							                cmap[$ carr[i]] = true;
 							            cmap[$ m] = false;
 							            
-						            }).setParam(_key)
+						            }).setParam(ikey)
 						        ];
 						        
 								menuCall("inspector_group_menu", _menu, 0, 0, fa_left);
@@ -1326,7 +1327,7 @@ function Panel_Inspector() : PanelContent() constructor {
 	                	draw_sprite_ui(THEME.arrow, !coll * 3, lbx + ui(16 + subk * 2), yy + lbh / 2, ss, ss, 0, cc, 1);
 	                }
 	                
-	                _colMap[$ _key] = coll;
+	                _colMap[$ ikey] = coll;
 	        	#endregion
                 
                 #region Draw Right Buttons
@@ -1391,14 +1392,14 @@ function Panel_Inspector() : PanelContent() constructor {
                 
                 #region Section stat [edit counts, animations]
                 	if(!subk) {
-		                var edt = _edtMap[$ _key] ?? 0;
+		                var edt = _edtMap[$ ikey] ?? 0;
 		                if(edt > 0) {
 		                	draw_set_color(COLORS._main_text_sub);
 		                	draw_text_add(ltx + txw + ui(4), txy, $"[{edt}*]");
 		                }
 		                
-		                _edtMap[$ _key] = 0;
-		                _aniMap[$ _key] = false;
+		                _edtMap[$ ikey] = 0;
+		                _aniMap[$ ikey] = false;
                 	}
 	        	#endregion
                 
@@ -2156,8 +2157,9 @@ function Panel_Inspector() : PanelContent() constructor {
             by += bs + ui(2);
             var _over = inspecting.overwrited_default;
             var _txt  = _over? __txt("Presets (Default Overwited)") : __txt("Presets");
-            if(buttonInstant_Pad(bb, bx, by, bs, bs, m, hov, foc, _txt, THEME.preset, 0,,, ui(8)) == 2)
+            if(buttonInstant_Pad(bb, bx, by, bs, bs, m, hov, foc, _txt, THEME.preset, 0, COLORS._main_icon, 1, ui(8)) == 2)
                 dialogPanelCall(new Panel_Presets(inspecting), x + bx, y + by + ui(36));
+                
             if(_over) {
             	BLEND_SUBTRACT
             	draw_sprite_ui(THEME.circle, 0, bx + bs - ui(6), by + bs - ui(6), 1, 1, 0, COLORS._main_accent);

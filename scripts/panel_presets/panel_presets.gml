@@ -23,7 +23,7 @@
 
 function Panel_Presets(_node) : PanelContent() constructor {
 	title    = __txt("Presets");
-	w        = ui(240);
+	w        = ui(272);
 	h        = ui(400);
 	anchor   = ANCHOR.left | ANCHOR.top;
 	
