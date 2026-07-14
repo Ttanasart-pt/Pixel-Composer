@@ -34,13 +34,15 @@ function Node_MK_Cloud(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	] ));
 	newInput(62, nodeValue_Surface( "Puff Surface" ));
 	
-	newInput( 2, nodeValue_Int(   "Amount",    32     ))
-		.setCurvable(15, CURVE_DEF_01, "Over Layer", "curved", THEME.mk_cloud_curve_layer )
-	newInput( 4, nodeValue_Range(    "Puff Size",     [4,8]   ))
-		.setCurvable( 6, CURVE_DEF_01, "Over Distance", "curved" )
+	newInput( 2, nodeValue_Int(      "Amount",         32         ))
+		.setCurvable(15, CURVE_DEF_01, "Over Layer",    "curved",      THEME.mk_cloud_curve_layer  )
+		
+	newInput( 4, nodeValue_Range(    "Puff Size",     [4,8]       ))
+		.setCurvable( 6, CURVE_DEF_01, "Over Distance", "curved"                                   )
 		.setCurvable(18, CURVE_DEF_11, "Over Layer",    "curved_layer", THEME.mk_cloud_curve_layer )
-	newInput(51, nodeValue_Vec2(     "Aspect",        [1,1]   ));
-	newInput(52, nodeValue_RotRange( "Angle",         [0,0]   ));
+		
+	newInput(51, nodeValue_Vec2(     "Aspect",        [1,1]       ));
+	newInput(52, nodeValue_RotRange( "Angle",         [0,0]       ));
 	
 		////- =/Subtract
 	newInput(45, nodeValue_Bool(   "Use Subtract",     false      ));
