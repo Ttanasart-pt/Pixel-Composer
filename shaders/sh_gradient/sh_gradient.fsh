@@ -414,6 +414,6 @@ void main() {
 	if(pCurve_curve_use == 1) prog = curveEval(pCurve_curve, pCurve_amount, prog);
 	
 	vec4 col = gradientEval(prog);
-	gl_FragColor    = vec4(col.rgb, col.a * texture2D( gm_BaseTexture, v_vTexcoord ).a);
-	gl_FragColor.a *= alp;
+	vec4 res = vec4(col.rgb, col.a * texture2D( gm_BaseTexture, v_vTexcoord ).a * alp);
+	gl_FragColor    = res;
 }

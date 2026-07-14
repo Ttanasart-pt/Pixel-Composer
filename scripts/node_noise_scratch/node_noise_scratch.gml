@@ -10,9 +10,9 @@ function Node_Noise_Scratch(_x, _y, _group = noone) : Node_Shader_Generator(_x, 
 	newInput( 3, nodeValue_Surface( "Mask"       ));
 	
 	////- =Transform
-	newInput(10, nodeValue_Vec2(     "Position",  [0,0] )).setShaderProp("position").setUnitSimple();
-	newInput(11, nodeValue_Rotation( "Rotation",   0    )).setShaderProp("rotation");
-	newInput(12, nodeValue_Vec2(     "Scale",     [1,1] )).setShaderProp("scale");
+	newInput(10, nodeValue_Vec2(     "Position",  [0,0]   )).setShaderProp("position").setUnitSimple();
+	newInput(11, nodeValue_Rotation( "Rotation",   0      )).setShaderProp("rotation");
+	newInput(12, nodeValue_Vec2(     "Scale",     [.5,.5] )).setShaderProp("scale");
 	
 	////- =Noise
 	newInput( 5, nodeValue_Float(  "Thickness",  0 )).setMappable(15).setShaderProp("thickness");
@@ -23,7 +23,7 @@ function Node_Noise_Scratch(_x, _y, _group = noone) : Node_Shader_Generator(_x, 
 	newInput( 8, nodeValue_Int(      "Octaves",         8       )).setShaderProp("octaves");
 	newInput(13, nodeValue_Vec2(     "Octave Shift",    [10,10] )).setShaderProp("octaveShift");
 	newInput(14, nodeValue_Rotation( "Octave Rotation", 30      )).setShaderProp("octaveRotation");
-	newInput( 9, nodeValue_Float(    "Octave Scale",    1.22    )).setShaderProp("octaveScale");
+	newInput( 9, nodeValue_Float(    "Octave Scale",    1       )).setShaderProp("octaveScale");
 	// 18
 	
 	input_display_list = [

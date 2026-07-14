@@ -30,7 +30,7 @@ function Node_MK_Drip(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	
 	////- =Blobify
 	newInput(22, nodeValue_Bool(     "Use Blobify", 0    ));
-	newInput(20, nodeValue_Float(    "Blobify",     0    ));
+	newInput(20, nodeValue_Float(    "Blobify",     4    ));
 	newInput(21, nodeValue_Slider(   "Threshold",  .5    ));
 	
 	////- =Rendering

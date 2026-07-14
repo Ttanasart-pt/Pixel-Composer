@@ -615,9 +615,9 @@ void main() {
 	coord.x += coord.y * shear.x;
 	coord.y += coord.x * shear.y;
 	
-	// gl_FragData[0] = vec4(coord, 0., 1.); return;
+	vec2 outCoord = coord * .5 + .5;
 	
-		 if(shape ==  0) { d = sdBox(           coord, scale * ratio, corner4);                                                          }  
+		 if(shape ==  0) { d = sdBox(           coord, scale * ratio, corner4); outCoord = coord / scale * .5 + .5;                      }  
 	else if(shape ==  1) { d = sdCircle(        coord);                                                                                  } 
 	else if(shape ==  2) { d = sdRegularPolygon(coord, 0.9 - corner, sides, angle ) - corner;                                            } 
 	else if(shape ==  3) { d = sdStar(          coord, 0.9 - corner, sides, 2. + inner * (float(sides) - 2.), angle ) - corner;          } 
@@ -693,5 +693,5 @@ void main() {
 	if(multiplyAlpha == 1) gl_FragData[0].rgb *= gl_FragData[0].a;
 	
 	gl_FragData[1] = vec4(cc, cc, cc, 1.);
-	gl_FragData[3] = vec4(coord / scale * .5 + .5, 0., 1.);
+	gl_FragData[3] = vec4(outCoord, 0., fgPixel.a * cc);
 }

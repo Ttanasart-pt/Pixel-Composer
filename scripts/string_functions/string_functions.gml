@@ -453,7 +453,8 @@ function draw_text_match_range_ext(_x, _y, _text, _w, _range) {
 		case fa_bottom : yy = _y - hh;		break;
 	}
 	
-	var _rind = 1;
+	var _rind   = 1;
+	var _ranLen = array_length(_range);
 	
 	BLEND_ALPHA_MULP
 	for( var i = 0, n = array_length(lines); i < n; i++ ) {
@@ -471,11 +472,12 @@ function draw_text_match_range_ext(_x, _y, _text, _w, _range) {
 		var j = 1;
 		repeat(aa) {
 			var ch = string_char_at(ll, j);
-			draw_set_color(_range[_rind++]? COLORS._main_accent : cc);
+			draw_set_color(_rind < _ranLen && _range[_rind]? COLORS._main_accent : cc);
 			
 			draw_text(ceil(xx), ceil(yy), ch);
 			xx += string_width(ch);
 			j++;
+			_rind++;
 		}
 		
 		yy += lh;

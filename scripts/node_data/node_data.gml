@@ -1214,9 +1214,13 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		
 		if(has(_pres, pName)) {
 			var _preset = _pres[$ pName];
-			if(_preset.content == undefined) _preset.content = json_load_struct(_preset.path);
+			if(_preset.content == undefined) 
+				_preset.content = json_load_struct(_preset.path);
 			
 			deserialize(_preset.content, true, 1 + (pName == "_default"));
+			
+			if(_preset.content[$ "asNode"])
+				name = pName;
 		}
 		
 		return true;

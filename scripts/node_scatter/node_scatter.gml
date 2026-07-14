@@ -235,6 +235,24 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 				_cy /= n;
 			}
 			
+			if(!array_empty(point_selecting)) {
+				_cx = 0;
+				_cy = 0;
+			
+				for( var i = 0, n = array_length(point_selecting); i < n; i++ ) {
+					var _a = point_selecting[i];
+					var p  = _points[_a];
+					var px = _x + p[0] * _s;
+					var py = _y + p[1] * _s;
+					
+					_cx += px;
+					_cy += py;
+				}
+				
+				_cx /= n;
+				_cy /= n;
+			}
+			
 			var _show_selecting = false;
 			
 			switch(PANEL_PREVIEW.tool_current) {
@@ -317,6 +335,9 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 				
 				switch(point_sel_edit) {
 					case 0 : // rotate
+						draw_set_color(COLORS._main_accent);
+						draw_line_dashed(point_editing_cx, point_editing_cy, _mx, _my);
+						
 						var r0 = point_direction(point_editing_cx, point_editing_cy, point_editing_mx, point_editing_my);
 						var r1 = point_direction(point_editing_cx, point_editing_cy, _mx, _my);
 						var rd = angle_difference(r1, r0);
@@ -345,6 +366,9 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 						break;
 						
 					case 1 : // scale
+						draw_set_color(COLORS._main_accent);
+						draw_line_dashed(point_editing_cx, point_editing_cy, _mx, _my);
+						
 						var s0 = point_distance(point_editing_cx, point_editing_cy, point_editing_mx, point_editing_my);
 						var s1 = point_distance(point_editing_cx, point_editing_cy, _mx, _my);
 						var sd = s1 / s0;
@@ -420,7 +444,7 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 					draw_anchor(0, ax, ay, ui(8), 2);
 					
 					var _sl = array_length(p);
-					if(array_length(p) >= 2) {
+					if(array_length(p) > 2) {
 						draw_set_color(COLORS._main_accent);
 						draw_circle(ax, ay, rotRad, true);
 						

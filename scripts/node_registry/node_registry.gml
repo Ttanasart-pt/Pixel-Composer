@@ -187,10 +187,10 @@ function NodeObject(_name, _node, _tooltip = "") constructor {
 		var spr_x = _x + grid_width / 2;
 		var spr_y = _y + grid_size  / 2;
 		
-		var _query = struct_try_get(_param, "query", "");
+		var _query = struct_try_get(_param, "query", {});
 		var _draw  = true;
 		
-		if(is_struct(_query) && _query[$ "type"] == "preset") {
+		if(struct_try_get(_query, "type") == "preset") {
 			var _preset = _query.data;
 			if(_preset.content == undefined) _preset.content = json_load_struct(_preset.path);
 			if(_preset.thumbnail_data == -1) _preset.thumbnail_data = struct_try_get(_preset.content, "thumbnail", -1);
@@ -247,10 +247,10 @@ function NodeObject(_name, _node, _tooltip = "") constructor {
 		var spr_x  = _x + ui(32) + _h / 2;
 		var spr_y  = _y          + _h / 2;
 			
-		var _query = struct_try_get(_param, "query", "");
+		var _query = struct_try_get(_param, "query", {});
 		var _draw  = true;
 		
-		if(is_struct(_query) && _query[$ "type"] == "preset") {
+		if(struct_try_get(_query, "type") == "preset") {
 			var _preset = _query.data;
 			if(_preset.content == undefined) _preset.content = json_load_struct(_preset.path);
 			if(_preset.thumbnail_data == -1) _preset.thumbnail_data = struct_try_get(_preset.content, "thumbnail", -1);
@@ -294,30 +294,38 @@ function NodeObject(_name, _node, _tooltip = "") constructor {
 			draw_sprite_ui_uniform(THEME.node_deprecated_badge, 1, _nx, _y + _h / 2);
 		}	
 		
-		var _txt   = getName();
+		var _name  = getName();
 		var _range = struct_try_get(_param, "range", 0);
-		var _qstr  = is_struct(_query)? _query[$ "value"] : "";
+		var _pKey  = noone;
 		
-		if(_qstr != "") {
+		if(struct_try_get(_query, "type") == "preset") {
+			var _preset = _query.data;
+			if(_preset.content[$ "asNode"]) 
+				 _name = _query[$ "value"];
+			else _pKey = _query[$ "value"];
+		} else 
+			_pKey = struct_try_get(_query, "value", noone);
+		
+		if(_pKey != noone) {
 			draw_set_text(f_p2, fa_left, fa_center, COLORS._main_text_sub);
-			draw_text_add(tx, ty, _txt);
-			tx += string_width(_txt);
+			draw_text_add(tx, ty, _name);
+			tx += string_width(_name);
 			draw_sprite_ui(THEME.arrow, 0, tx + ui(12), ty, 1, 1, 0, COLORS._main_icon, 1);
 			tx += ui(24);
 			
-			_qstr = string_title(_qstr);
+			_pKey = string_title(_pKey);
 			draw_set_text(f_p2, fa_left, fa_center, COLORS._main_text);
 			if(is_array(_range)) 
-				 draw_text_match_range(tx, ty, _qstr, _range);
-			else draw_text_add(tx, ty, _qstr);
-			tx += string_width(_qstr);
+				 draw_text_match_range(tx, ty, _pKey, _range);
+			else draw_text_add(tx, ty, _pKey);
+			tx += string_width(_pKey);
 			
 		} else {
 			draw_set_text(f_p2, fa_left, fa_center, COLORS._main_text);
 			if(is_array(_range)) 
-				 draw_text_match_range(tx, ty, _txt, _range);
-			else draw_text_add(tx, ty, _txt);
-			tx += string_width(_txt);
+				 draw_text_match_range(tx, ty, _name, _range);
+			else draw_text_add(tx, ty, _name);
+			tx += string_width(_name);
 		}
 		
 		return tx;

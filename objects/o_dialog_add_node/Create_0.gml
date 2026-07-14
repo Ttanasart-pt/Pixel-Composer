@@ -318,7 +318,7 @@ event_inherited();
 			for( var i = 0, n = array_length(_new_node.outputs); i < n; i++ ) 
 				array_push(_outputs, _new_node.outputs[i]);
 			
-			var _query = struct_try_get(_param, "query");
+			var _query = struct_try_get(_param, "query", {});
 			if(struct_try_get(_query, "type") == "preset") {
 				_new_node.skipDefault();
 				_new_node.setPreset(_query[$ "value"]);
@@ -1184,14 +1184,15 @@ event_inherited();
 					}
 					
 					var _matchNode = _match[0] > -9999;
-				
+					
+					/// Preset
 					if(is(_node, NodeObject) && has(PRESETS_MAP, _node.nodeName)) {
 						var pres = PRESETS_MAP[$ _node.nodeName];
 						var keys = struct_get_names(pres);
 						
 						for( var k = 0, p = array_length(keys); k < p; k++ ) {
 							var key = keys[k];
-							if(key == "_default" || key == "values") continue;
+							if(key == "_default" || key == "_values") continue;
 							
 							var preset = pres[$ key];
 							if(preset.content == undefined) 
@@ -1228,7 +1229,7 @@ event_inherited();
 					}
 					
 					if(!_matchNode) continue;
-				
+					
 					// Fav
 					if(is(_node, NodeObject)) {
 						if(_node.deprecated) continue; // ???
@@ -1391,7 +1392,7 @@ event_inherited();
 				var s_res  = search_list[i];
 				var _node  = s_res;
 				var _param = {};
-				var _query = "";
+				var _query = {};
 				var _mrng  = noone;
 				var _path  = undefined;
 				
@@ -1489,10 +1490,18 @@ event_inherited();
 				var _nmy  = yy + grid_size + 4, _nmh = 0;
 				var _drw  = _nmy > -grid_size && _nmy < search_pane.h;
 				
-				var _qstr  = struct_try_get(_query, "value", "");
-				if(_qstr != "") {
+				var _pKey  = noone;
+				if(struct_try_get(_query, "type") == "preset") {
+					var _preset = _query.data;
+					if(_preset.content[$ "asNode"]) 
+						 _name = _query[$ "value"];
+					else _pKey = _query[$ "value"];
+				} else 
+					_pKey = struct_try_get(_query, "value", noone);
+				
+				if(_pKey != noone) {
 					draw_set_font(f_p3);
-					_qstr = string_title(_qstr);
+					_pKey = string_title(_pKey);
 					
 					draw_set_text(f_p3, fa_center, fa_top, COLORS._main_text_sub);
 					_nmh = string_height_ext(_name, -1, grid_width);
@@ -1500,10 +1509,10 @@ event_inherited();
 					_nmy += _nmh - ui(2);
 					
 					draw_set_text(f_p3, fa_center, fa_top, COLORS._main_text);
-					var _qhh = string_height_ext(_qstr, -1, grid_width);
+					var _qhh = string_height_ext(_pKey, -1, grid_width);
 					if(_drw) {
-						if(highlight && _mrng != noone) _qhh = draw_text_match_range_ext(_boxx + grid_size / 2, _nmy, _qstr, grid_width, _mrng); 
-						else draw_text_ext(_boxx + grid_size / 2, _nmy, _qstr, -1, grid_width); 
+						if(highlight && _mrng != noone) _qhh = draw_text_match_range_ext(_boxx + grid_size / 2, _nmy, _pKey, grid_width, _mrng); 
+						else draw_text_ext(_boxx + grid_size / 2, _nmy, _pKey, -1, grid_width); 
 					}
 					
 					_nmy += _qhh;
@@ -1515,7 +1524,8 @@ event_inherited();
 				
 					draw_set_text(f_p3, fa_center, fa_top, COLORS._main_text);
 					if(_drw) {
-						if(highlight && _mrng != noone) _nmh = draw_text_match_range_ext(_boxx + grid_size / 2, _nmy, _name, grid_width, _mrng);
+						if(highlight && _mrng != noone) 
+							_nmh = draw_text_match_range_ext(_boxx + grid_size / 2, _nmy, _name, grid_width, _mrng);
 						else draw_text_ext(_boxx + grid_size / 2, _nmy, _name, -1, grid_width);
 					}
 				}
@@ -1546,7 +1556,7 @@ event_inherited();
 				var yc     = yy + list_height / 2;
 				
 				var _node  = s_res;
-				var _query = "";
+				var _query = {};
 				var _mrng  = noone;
 				var _path  = undefined;
 				var _param = {};
@@ -1576,7 +1586,7 @@ event_inherited();
 					search_pane.hover_content = true;
 					node_icon   = spr;
 					
-					if(is_struct(_query) && _query.type == "preset") {
+					if(struct_try_get(_query, "type") == "preset") {
 						var _preset = _query.data;
 						if(_preset.content == undefined) _preset.content = json_load_struct(_preset.path);
 						if(_preset.thumbnail_data == -1) _preset.thumbnail_data = struct_try_get(_preset.content, "thumbnail", -1);
