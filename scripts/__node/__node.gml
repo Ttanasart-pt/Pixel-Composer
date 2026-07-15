@@ -11,6 +11,8 @@ function __Node_Base(_x, _y) constructor {
 	outputs         = [];
 	input_value_map = {};
 	
+	update_on_frame = false;
+	
 	instanceBase    = undefined;
 	instanceChild   = [];
 	
@@ -74,6 +76,41 @@ function __Node_Base(_x, _y) constructor {
 			refreshTimeline();
 		}
 		
+		static refreshAnimationRange = function() {
+			animation_range_start =  infinity;
+			animation_range_end   = -infinity;
+			
+			for( var i = 0, n = array_length(inputs); i < n; i++ ) {
+				var _input = inputs[i];
+				if(!_input.is_anim) continue;
+				
+		        if(_input.on_end != KEYFRAME_END.hold) {
+		        	animation_range_start = min(animation_range_start, 0);
+					animation_range_end   = max(animation_range_end, TOTAL_FRAMES);
+					continue;
+		        }
+		        
+				var _anims = _input.sep_axis? _input.getAnimators() : [_input.animator];
+			    for( var j = 0, m = array_length(_anims); j < m; j++ ) {
+			        var _anim  = _anims[j];
+			        
+			        for(var k = 0, p = array_length(_anim.values); k < p; k++) {
+			            animation_range_start = min(animation_range_start, _anim.values[k].time);
+			    		animation_range_end   = max(animation_range_end,   _anim.values[k].time);
+			    		
+			    		if(k == p - 1 && _anim.values[k].driverObject != undefined)
+			    			animation_range_end = max(animation_range_end, TOTAL_FRAMES);
+			        }
+			    }
+			}
+			
+		}
+		
+		static isAnimated = function(frame = CURRENT_FRAME) {
+			if(update_on_frame) return true;
+			if(instanceBase)    return instanceBase.isAnimated();
+			return array_any(inputs, function(inp,i) /*=>*/ {return inp.getAnim()});
+		}
 	#endregion
 	
 	static step   = function() {}

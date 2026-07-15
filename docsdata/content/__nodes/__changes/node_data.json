@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.7.001",
+    "changes": [
+      {
+        "date": "2026-07-15T10:56:09.583Z",
+        "node": "Globalvar",
+        "commit": "**Globalvar**: Fix error when animating global variable."
+      }
+    ]
+  },
+  {
     "version": "1.21.6.010",
     "changes": [
       {
