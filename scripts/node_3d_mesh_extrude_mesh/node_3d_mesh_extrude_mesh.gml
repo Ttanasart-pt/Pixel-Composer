@@ -6,7 +6,7 @@ function Node_3D_Mesh_Extrude_Mesh(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y
 	newInput(i+3, nodeValue_Bool(  "Always update", false ));
 	
 	////- =Mesh
-	newInput(i+0, nodeValue_Mesh(   "Mesh" )).setVisible(true, true);
+	newInput(i+0, nodeValue_Mesh(   "Mesh"                 )).setVisible(true, true);
 	newInput(i+1, nodeValue_Float(  "Thickness",     1     ));
 	newInput(i+2, nodeValue_Bool(   "Smooth",        false ))
 	newInput(i+7, nodeValue_Slider( "Taper",         0     ))

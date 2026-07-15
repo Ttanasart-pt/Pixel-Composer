@@ -77,15 +77,15 @@ function __3dObject() : __3dInstance() constructor {
 			return;
 		}
 		
-		var check = false;
+		var changed = false;
 		for( var i = 0, n = array_length(_keys); i < n; i++ ) {
 			var key = _keys[i];
 			if(!isEqual(self[$ key], params[$ key]))
-				check = true;
+				changed = true;
 			self[$ key] = params[$ key];
 		}
 		
-		if(check) onParameterUpdate();
+		if(changed) onParameterUpdate();
 	}
 	
 	static onParameterUpdate = function() {}

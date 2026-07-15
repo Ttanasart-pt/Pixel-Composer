@@ -4,26 +4,26 @@ function Node_3D_Mesh_Extrude(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, _gr
 	var i = in_mesh;
 	
 	////- =Transform
-	newInput(i+12, nodeValue_Bool(   "Voxel Scale", false ));
-	newInput(i+13, nodeValue_Float(  "Voxel Size",  .1    ));
+	newInput(i+12, nodeValue_Bool(       "Voxel Scale",        false ));
+	newInput(i+13, nodeValue_Float(      "Voxel Size",         .1    ));
 	
 	////- =Extrude
-	newInput(i+ 0, nodeValue_D3Material(   "Front Surface", new __d3dMaterial() )).setVisible(true, true);
-	newInput(i+ 1, nodeValue_Surface(      "Front Height" ));
-	newInput(i+ 7, nodeValue_Slider_Range( "Front Height Level", [ 0, 1 ] ));
+	newInput(i+ 0, nodeValue_D3Material( "Front Surface"             )).setVisible(true, true);
+	newInput(i+ 1, nodeValue_Surface(    "Front Height"              ));
+	newInput(i+ 7, nodeValue_SliRange(   "Front Height Level", [0,1] ));
 	
 	////- =Backside
-	newInput(i+ 4, nodeValue_Bool(         "Double Side",  false ));
-	newInput(i+ 5, nodeValue_D3Material(   "Back Surface", new __d3dMaterial() )).setVisible(true, true);
-	newInput(i+ 6, nodeValue_Surface(      "Back Height" ));
-	newInput(i+ 8, nodeValue_Slider_Range( "Back Height Level", [ 0, 1 ] ));
+	newInput(i+ 4, nodeValue_Bool(       "Double Side",        false ));
+	newInput(i+ 5, nodeValue_D3Material( "Back Surface"              )).setVisible(true, true);
+	newInput(i+ 6, nodeValue_Surface(    "Back Height"               ));
+	newInput(i+ 8, nodeValue_SliRange(   "Back Height Level",  [0,1] ));
 	
 	////- =Texture
-	newInput(i+ 2, nodeValue_Bool(         "Smooth",        false ))
-	newInput(i+ 3, nodeValue_Bool(         "Always update", false ));
-	newInput(i+ 9, nodeValue_D3Material(   "Front Texture", new __d3dMaterial() ));
-	newInput(i+10, nodeValue_D3Material(   "Back Texture",  new __d3dMaterial() ));
-	newInput(i+11, nodeValue_D3Material(   "Side Texture",  new __d3dMaterial() ));
+	newInput(i+ 2, nodeValue_Bool(       "Smooth",             false ))
+	newInput(i+ 3, nodeValue_Bool(       "Always update",      false ));
+	newInput(i+ 9, nodeValue_D3Material( "Front Texture"             ));
+	newInput(i+10, nodeValue_D3Material( "Back Texture"              ));
+	newInput(i+11, nodeValue_D3Material( "Side Texture"              ));
 	// i+14
 	
 	input_display_list = [ i+ 3,
@@ -77,6 +77,8 @@ function Node_3D_Mesh_Extrude(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, _gr
 			_object.destroy();
 			_object = new __3dSurfaceExtrude();
 			toRefresh = false;
+			
+			cached_object[_array_index] = _object;
 		}
 		
 		_object.checkParameter({ 

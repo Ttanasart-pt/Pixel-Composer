@@ -1,0 +1,12 @@
+{
+  "$GMShader":"",
+  "%Name":"sh_d3d_surface_ex_alpha",
+  "name":"sh_d3d_surface_ex_alpha",
+  "parent":{
+    "name":"mesh_extrudes",
+    "path":"folders/nodes/data/3D/d3d_mesh/mesh_extrudes.yy",
+  },
+  "resourceType":"GMShader",
+  "resourceVersion":"2.0",
+  "type":1,
+}

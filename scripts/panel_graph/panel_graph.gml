@@ -3751,6 +3751,8 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
     	var _y1 = h - toolbar_height - ui(8);
     	
     	if(_selNode) {
+    		var _title   = instanceof(_selNode);
+    		
     		var nodeBase = string_lower(instanceof(_selNode));
     		var dir      = $"D:/Project/MakhamDev/LTS-PixelComposer/PixelComposer/docsdata/src/images/nodegen/{nodeBase}";
     		var dirValid = directory_exists(dir);
@@ -3759,7 +3761,6 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
 			var nodePath  = $"D:/Project/MakhamDev/LTS-PixelComposer/PixelComposer/notes/{noteName}/{noteName}.txt";
 			var noteValid = file_exists(nodePath);
     		
-    		var _title = nodeBase;
     		var _font  = f_p4;
     		
 			draw_set_font(_font);
