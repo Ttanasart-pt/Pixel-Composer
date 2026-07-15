@@ -138,10 +138,11 @@
 
 #region Elements
 	function Inspector_Custom_Renderer(drawFn, registerFn = noone) : widget() constructor {
-	    self.draw = drawFn;
-	    node  = noone;
-	    panel = noone;
-	    name  = "";
+	    draw    = drawFn;
+	    node    = noone;
+	    panel   = noone;
+	    name    = "";
+		padName = false;
 	    
 	    popupPanel  = noone;
 	    popupDialog = noone;
@@ -159,9 +160,10 @@
 	    
 	    b_toggle = button(function() /*=>*/ { togglePopup(name); }).setIcon(THEME.node_goto, 0, COLORS._main_icon, .75);
 	    
-	    static setName  = function(n) /*=>*/ { name = n; return self; }
-	    static setNode  = function(n) /*=>*/ { node = n; return self; }
-	    static toString = function( ) /*=>*/ { return $"Custon renderer: {name}"; }
+	    static setName    = function(n) /*=>*/ { name = n;       return self; }
+	    static setPadName = function( ) /*=>*/ { padName = true; return self; }
+	    static setNode    = function(n) /*=>*/ { node = n;       return self; }
+	    static toString   = function( ) /*=>*/ { return $"Custon renderer: {name}"; }
 	    
 	    static step = function() {
 	        b_toggle.icon_blend = popupPanel == noone? COLORS._main_icon : COLORS._main_accent;
@@ -1225,7 +1227,22 @@ function Panel_Inspector() : PanelContent() constructor {
                 jun.ry        = top_bar_h + y;
                 jun.register(contentPane);
                 
-                var _wdh = jun.draw(ui(6), yy, con_w - ui(12), _m, _hover, pFOCUS, self);
+                var widX = ui(6);
+                var widY = yy;
+                var widW = con_w - ui(12);
+                
+                if(jun.padName && widgPrevX && widgPrevW) {
+                	widX = widgPrevX;
+					widW = widgPrevW;
+					
+					var nx = widgNameX;
+					var ny = yy + ui(4);
+					
+					draw_set_text(_font, fa_left, fa_top, COLORS._main_text);
+					draw_text_add(nx, ny, jun.name);
+                }
+                
+                var _wdh = jun.draw(widX, widY, widW, _m, _hover, pFOCUS, self);
                 if(_wdh > 0) _wdh += ui(8);
                 hh += _wdh;
                 continue;
@@ -1943,6 +1960,9 @@ function Panel_Inspector() : PanelContent() constructor {
         _inspecting.inspector_scroll = contentPane.scroll_y_to;
         
         prop_hover  = noone;
+        widgPrevX   = 0;
+        widgPrevW   = 0;
+        widgNameX   = 0;
         
     	switch(prop_page) {
     		case "Node": 

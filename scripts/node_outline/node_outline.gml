@@ -12,7 +12,7 @@ function Node_Outline(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	name = "Outline";
 	
 	attributes.filter = array_create(9, 1);
-	filtering_vl      = false;
+	filtering_vl      = undefined;
 	filter_button     = new buttonAnchor(noone, function(i) /*=>*/ {
 		if(mouse_lpress()) 
 			filtering_vl = !attributes.filter[i];
@@ -42,16 +42,15 @@ function Node_Outline(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		new scrollItem("Diamond", s_node_shape_misc,      0), 
 	]));
 	
-	newInput( 1, nodeValue_Float(   "Width",       0 )).setDisplay(VALUE_DISPLAY._default, { front_button : filter_button })
-		.setHotkey("S").setMappable(15).setValidator(VV_min(0)).setUnitSimple(false).setPieMenu();
+	newInput( 1, nodeValue_Float(   "Width",       0     )).setHotkey("S").setMappable(15).setValidator(VV_min(0)).setUnitSimple(false).setPieMenu();
 	newInput( 8, nodeValue_Int(     "Start",       0, "Shift outline inside, outside the shape." )).setMappable(17).setPieMenu();
 	newInput(12, nodeValue_Bool(    "Crop border", false ));
 	newInput(19, nodeValue_Slider(  "Threshold",   1     ));
 	
 	////- =Render
-	newInput( 2, nodeValue_Color( "Color",         ca_white )).setHotkeyAuto("C").setPieMenu();
-	newInput( 6, nodeValue_Bool(  "Anti-aliasing", 0        ));
-	newInput(20, nodeValue_Bool(  "High res",      0        ));
+	newInput( 2, nodeValue_Color(   "Color",         ca_white )).setHotkeyAuto("C").setPieMenu();
+	newInput( 6, nodeValue_Bool(    "Anti-aliasing", 0        ));
+	newInput(20, nodeValue_Bool(    "High res",      0        ));
 	
 	////- =Blend
 	newInput( 3, nodeValue_Bool(    "Blend",           false, "Blend outline color with the original color." ));
@@ -63,9 +62,46 @@ function Node_Outline(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	newOutput( 0, nodeValue_Output( "Surface Out", VALUE_TYPE.surface, noone ));
 	newOutput( 1, nodeValue_Output( "Outline",     VALUE_TYPE.surface, noone ));
 	
+	angle_filter = new Inspector_Custom_Renderer(function(_x, _y, _w, _m, _hover, _focus) {
+		var bs = ui(24);
+		var _h = bs * 3 + ui(16);
+		
+		draw_sprite_stretched_ext(THEME.ui_panel_bg, 1, _x, _y, _w, _h, COLORS.node_composite_bg_blend, 1);
+		
+		var _cx = _x + _w / 2;
+		var _cy = _y + _h / 2;
+		
+		for( var i = 0; i < 3; i++ ) 
+		for( var j = 0; j < 3; j++ ) {
+			var ind = i * 3 + j;
+			var bx  = _cx + (j - 1) * bs - bs / 2;
+			var by  = _cy + (i - 1) * bs - bs / 2;
+			
+			if(ind == 4) continue;
+			
+			var _fil = attributes.filter[ind];
+			var bc = _fil? COLORS._main_accent : COLORS._main_icon;
+			
+			var b = buttonInstant_Pad(THEME.button_def, bx + ui(2), by + ui(2), bs - ui(4), bs - ui(4), _m, 
+				_hover, _focus, "", THEME.outline_angle_filter, ind, bc);
+			
+			if(b == 1 && filtering_vl != undefined && attributes.filter[ind] != filtering_vl) {
+				attributes.filter[ind] = filtering_vl;
+				triggerRender();
+			}
+			
+			if(b == 2) filtering_vl = !_fil;
+		}
+		
+		if(mouse_lrelease()) filtering_vl = undefined;
+		
+		return _h;
+		
+	}).setName(__txt("Directions")).setPadName();
+	
 	input_display_list = [ 11, 
 		[ "Surfaces",  true    ],  0, 21,  9, 10, 13, 14, 
-		[ "Outline",  false    ],  5, 18,  1, 15,  8, 17, 12, 19, 
+		[ "Outline",  false    ],  5, angle_filter,   18,  1, 15,  8, 17, 12, 19, 
 		[ "Render",   false    ],  2,  6, 20, 
 		[ "Blend",     true, 3 ], 22,  4, 16,
 	];

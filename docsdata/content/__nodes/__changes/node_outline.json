@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.7.001",
+    "changes": [
+      {
+        "date": "2026-07-15T07:45:39.173Z",
+        "node": "Outline",
+        "commit": "**Outline**: Increase direction filter size."
+      }
+    ]
+  },
+  {
     "version": "1.21.6.005",
     "changes": [
       {
