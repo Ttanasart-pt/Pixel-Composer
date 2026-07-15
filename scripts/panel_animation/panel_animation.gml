@@ -601,7 +601,6 @@ function Panel_Animation() : PanelContent() constructor {
     function getTimelineContent() {
         timeline_contents = [];
         timeline_keys     = [];
-        
         getTimelineContentFolder(PROJECT.timelines);
     }
     

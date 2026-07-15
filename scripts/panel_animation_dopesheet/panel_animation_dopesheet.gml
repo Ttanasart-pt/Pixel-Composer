@@ -311,8 +311,16 @@ function Panel_Animation_Dopesheet() {
     #endregion
     
     #region ---- Item Hover ----
-        _item_dragging    = noone;
+    	 item_selectings  = [];
+    	_item_selectings  = [];
+    	
+    	 item_hovering    = noone;
+    	_item_hovering    = noone;
+    	
          item_dragging    = noone;
+        _item_dragging    = noone;
+        item_draggings    = [];
+         
         item_dragging_mx  = noone;
         item_dragging_my  = noone;
         item_dragging_dx  = noone;
@@ -2270,9 +2278,6 @@ function Panel_Animation_Dopesheet() {
         var cc = prop.sep_axis? COLORS.axis[animator.index] : COLORS._main_text_sub;
         if(dhov) cc = COLORS._main_text_accent;
         
-        // draw_set_color(CDEF.main_mdblack);
-        // draw_rectangle(0, ty - ui(8), tool_width, ty + ui(8), false);
-        
         var tw = ui(15);
         var th = ui(17);
         
@@ -2472,28 +2477,39 @@ function Panel_Animation_Dopesheet() {
     }
     
     function drawDopesheet_Label_Item(_item, _x, _y, msx = -1, msy = -1, alpha = 1) {
-        var _itx = _x;
+        var pd   = ui(4);
+        
+        var _itx = _x + pd;
         var _ity = _y;
-        var _itw = tool_width;
+        var _itw = tool_width - pd * 2;
         var _hov = pHOVER && (msy > 0 && msy < dopesheet_h);
         var _foc = pFOCUS;
         
-        var pd   = ui(4);
-        var _res = _item.item.drawLabel(_item, _itx + pd, _ity, _itw - pd * 2, msx, msy, _hov, _foc, item_dragging, hovering_folder, node_name_type, alpha);
+        var _res = _item.item.drawLabel(_item, _itx, _ity, _itw, msx, msy, _hov, _foc, alpha);
         
         if(_res == 1) {
-            if(mouse_lpress(_foc)) {
-                _item_dragging   = _item;
-                item_dragging_mx = msx;
-                item_dragging_my = msy;
-                
-                item_dragging_dx = msx - _x;
-                item_dragging_dy = msy - _y;
+        	_item_hovering = _item;
+        	if(mouse_lpress(_foc)) {
+            	_item.item.selecting = true;
+            	
+            	if(_item_dragging == noone) {
+	                _item_dragging   = _item;
+	                item_dragging_mx = msx;
+	                item_dragging_my = msy;
+	                
+	                item_dragging_dx = msx - _x;
+	                item_dragging_dy = msy - _y;
+            	}
+            	
             }
             
             if(mouse_rpress(_foc))
                 context_selecting_item = _item;
         }
+        
+        if(_item.item.selecting) 
+        	array_push(_item_selectings, _item);
+        
     }
 	    
     function drawDopesheet_Label() { 
@@ -2524,44 +2540,75 @@ function Panel_Animation_Dopesheet() {
             hovering_folder = PROJECT.timelines;
             hovering_order  = 0;
             
-            var last_y = 0;
-            
-            if(item_dragging != noone)
-            for( var i = 0, n = array_length(timeline_contents); i < n; i++ ) {
-                var _cont = timeline_contents[i];
-                if(!_cont.show && show_nodes) continue;
-                
-                var _y = _cont.y - oy;
-                var _h = _cont.h;
-                
-                if(item_dragging != noone && item_dragging.item == _cont.item) continue;
-                
-                if(_cont.type == "folder") {
-                    if(msy > _y && msy <= _y + _h) {
-                        hovering_folder = _cont.item;
-                        hovering_order  = -1;
-                    } 
-                    
-                } else if(_cont.type == "node") {
-                    if(msy > _y && msy <= _y + _h / 2) {
-                        hovering_folder = _cont.parent;
-                        hovering_order  = _cont.index;
-                        
-                    } else if(msy > _y + _h / 2 && msy <= _y + _h) {
-                        hovering_folder = _cont.parent;
-                        hovering_order  = _cont.index + 1;
-                    }
-                }
-                
-                last_y = _y + _h;
-            }
-            
-            if(msy > last_y) {
-                hovering_folder = PROJECT.timelines;
-                hovering_order  = array_length(hovering_folder.contents);
-            }
-            
             var _itx, _ity = -1, _itw;
+            
+            if(item_dragging != noone) {
+            	var last_y = 0;
+            	
+            	_itx = 0;
+            	_ity = dopesheet_y + ui(2);
+            	_itw = tool_width;
+            	
+	            for( var i = 0, n = array_length(timeline_contents); i < n; i++ ) {
+	                var _cont = timeline_contents[i];
+	                if(!_cont.show && show_nodes) continue;
+	                
+	                var _y = _cont.y - oy;
+	                var _h = _cont.h;
+	                
+	                if(array_exists(item_draggings, _cont)) continue;
+	                
+	                if(_cont.type == "folder") {
+	                    if(msy > _y && msy <= _y + _h) {
+	                        hovering_folder = _cont.item;
+	                        hovering_order  = -1;
+	                        
+	                        _itx = (_cont.depth + 1) * ui(20);
+		                    _ity = _y + _h;
+		                    _itw = tool_width - (_cont.depth + 1) * ui(20);
+	                    } 
+	                    
+	                } else if(_cont.type == "node") {
+	                    if(msy > _y && msy <= _y + _h / 2) {
+	                        hovering_folder = _cont.parent;
+	                        hovering_order  = _cont.index;
+	                        
+	                        _itx = _cont.depth * ui(20);
+		                    _ity = _y;
+		                    _itw = tool_width - _cont.depth * ui(20);
+		                    
+	                    } else if(msy > _y + _h / 2 && msy <= _y + _h) {
+	                        hovering_folder = _cont.parent;
+	                        hovering_order  = _cont.index + 1;
+	                        
+	                        _itx = _cont.depth * ui(20);
+		                    _ity = _y + _h;
+		                    _itw = tool_width - _cont.depth * ui(20);
+	                    }
+	                }
+	                
+	                last_y = _y + _h;
+	            }
+	            
+	            if(msy > last_y) {
+	                hovering_folder = PROJECT.timelines;
+	                hovering_order  = array_length(hovering_folder.contents);
+	                
+	                _itx = 0;
+	                _ity = last_y;
+	                _itw = tool_width;
+	            }
+            }
+            
+             item_selectings = _item_selectings;
+            _item_selectings = [];
+            
+             item_hovering   = _item_hovering;
+            _item_hovering   = noone;
+            
+            if(mouse_lpress(pFOCUS)) 
+            for( var i = 0, n = array_length(timeline_contents); i < n; i++ )
+                timeline_contents[i].item.selecting = false;
             
             for( var i = 0, n = array_length(timeline_contents); i < n; i++ ) {
                 var _cont = timeline_contents[i];
@@ -2570,12 +2617,8 @@ function Panel_Animation_Dopesheet() {
                 var _y = _cont.y;
                 var _h = _cont.h;
                 
-                if(item_dragging != noone && item_dragging.item == _cont.item) {
-                    _itx = _cont.depth * ui(20);
-                    _ity = _cont.y - oy;
-                    _itw = tool_width - _cont.depth * ui(20);
+                if(array_exists(item_draggings, _cont))
                     continue;
-                }
                 
                 if(_y + _h < 0) continue;
                 if(_y > h) break;
@@ -2619,27 +2662,48 @@ function Panel_Animation_Dopesheet() {
             }    
             
             if(_item_dragging != noone) {
-                if(point_distance(msx, msy, item_dragging_mx, item_dragging_my) > 4) {
+                if(point_distance(msx, msy, item_dragging_mx, item_dragging_my) > ui(6)) {
                     item_dragging  = _item_dragging;
                     _item_dragging = noone;
+                    
+                    item_draggings = array_clone(item_selectings, 1);
+	                item_draggings = array_unique(item_draggings);
+	                
+                    for( var i = 0, n = array_length(item_draggings); i < n; i++ ) 
+            			item_draggings[i].item.removeSelf();
                 }
             }
         
-            if(item_dragging != noone) {
-                item_dragging.item.removeSelf();
-                if(hovering_order == -1) 
-                    array_insert(hovering_folder.contents, 0, item_dragging.item);
-                else {
-                    var _ind = min(array_length(hovering_folder.contents), hovering_order);
-                    array_insert(hovering_folder.contents, _ind, item_dragging.item);
-                }
-                
-                item_dragging.item.parent = hovering_folder;
+            if(mouse_lrelease()) {
+	            if(item_dragging != noone) {
+	            	for( var i = 0, n = array_length(item_draggings); i < n; i++ ) {	
+	            		var _it = item_draggings[i].item;
+	            		
+		            	if(hovering_order == -1) 
+		                    array_insert(hovering_folder.contents, 0, _it);
+		                else {
+		                    var _ind = min(array_length(hovering_folder.contents), hovering_order);
+		                    array_insert(hovering_folder.contents, _ind, _it);
+		                }
+		                
+		                _it.parent = hovering_folder;
+	            	}
+	            }
+            	
+            	item_draggings = [];
+                _item_dragging = noone;
+                 item_dragging = noone;
             }
             
-            if(mouse_lrelease()) {
-                _item_dragging = noone;
-                item_dragging  = noone;
+            if(mouse_lpress(pFOCUS)) { // clear selection
+            	if(item_hovering == noone || item_hovering.type != "node") {
+	            	PANEL_GRAPH.nodes_selecting = [];
+	            	PANEL_GRAPH.refreshDraw();
+	            	
+	            	// for( var i = 0, n = array_length(timeline_contents); i < n; i++ )
+	            	// 	timeline_contents[i].item.selecting = false;
+	            	
+            	}
             }
         #endregion
         
@@ -2728,6 +2792,7 @@ function Panel_Animation_Dopesheet() {
     
     function drawDopesheet() { 
     	drawDopesheet_ResetTimelineMask();
+    	if(item_dragging != noone) pHOVER = false;
     	var pad = ui(6);
     	
     	#region Tool width
@@ -3730,7 +3795,6 @@ function Panel_Animation_Dopesheet() {
         
         draw_sprite_stretched(THEME.ui_panel_bg_cover, 1, bar_x, pd, bar_w, dopesheet_h);
         
-        if(item_dragging != noone) drawDopesheet_Label_Item(item_dragging, mx - item_dragging_dx, my - item_dragging_dy,,, 0.5);
     	drawActionTooltip();
 		
 		if(mouse_lrelease()) anim_toggle_key = 0;
@@ -3779,6 +3843,21 @@ function Panel_Animation_Dopesheet() {
     	dopeSheet_TimelineStretch();
     	
         transformKeys();
+        
+        if(item_dragging != noone) {
+        	var n = array_length(item_draggings);
+        	var _dx = mx - item_dragging_dx + n * ui(8);
+        	var _dy = my - item_dragging_dy + n * ui(8);
+        	
+        	for( var i = 0; i < n; i++ ) {
+        		var _it = item_draggings[i];
+        		var _aa = lerp(.1, .5, (i + 1) / n);
+    			drawDopesheet_Label_Item(_it, _dx, _dy, -1, -1, _aa);
+    			
+    			_dx -= ui(8);
+    			_dy -= ui(8);
+        	}
+        }
     }
     
     function setActionTooltip(txt, time = 1) { tooltip_action = txt; tooltip_action_time = time; return self; }

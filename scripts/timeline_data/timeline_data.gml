@@ -1,6 +1,8 @@
 function timelineItem() constructor { 
 	h = ui(20);
 	
+	selecting = false;
+	
 	renaming  = false;
 	tb_rename = undefined;
 	
@@ -62,9 +64,10 @@ function timelineItemNode(_node) : timelineItem() constructor {
 	static rename   = function(   ) /*=>*/ { tb_rename = PANEL_ANIMATION.renameObject(self).activate(node.display_name); }
 	static doRename = function(txt) /*=>*/ { node.setDisplayName(txt); }
 	
-	static drawLabel = function(_item, _x, _y, _w, _msx, _msy, hover, focus, itHover, fdHover, nameType, alpha = 1) {
-		var _sel = node.is_selecting;
-		var _m = [ _msx, _msy ];
+	static drawLabel = function(_item, _x, _y, _w, _msx, _msy, hover, focus, alpha = 1) {
+		selecting = node.is_selecting;
+		var _sel  = selecting;
+		var _m    = [ _msx, _msy ];
 		
 		var lx = _x + _item.depth * ui(12) + ui(2);
 		var lw = _w - _item.depth * ui(12) - ui(4);
@@ -139,15 +142,19 @@ function timelineItemNode(_node) : timelineItem() constructor {
 			
 		////- =Name
 		
-		var txx = bx + ui(2);
-				
+		var txx     = bx + ui(2);
+		var ntype   = PANEL_ANIMATION.node_name_type;
+			
 		if(hover && point_in_rectangle(_msx, _msy, txx, _y, _x + _w, _y + h - 1)) {
 			if(focus && DOUBLE_CLICK)
 				rename();
 				
 			else if(mouse_lpress(focus)) {
-				if(key_mod_press(SHIFT)) array_toggle(PANEL_GRAPH.nodes_selecting, node);
-				else graphFocusNode(node, false);
+				if(key_mod_press(SHIFT))
+					array_toggle(PANEL_GRAPH.nodes_selecting, node);
+					
+				else if(!_sel) 
+					graphFocusNode(node, false);
 			}
 			
 			res = 1;
@@ -168,11 +175,11 @@ function timelineItemNode(_node) : timelineItem() constructor {
 			var nodeName = $"[{node.name}] ";
 			var tw = string_width(nodeName);
 			
-			draw_set_color(itHover == self? COLORS._main_text_accent : COLORS._main_text);
+			draw_set_color(COLORS._main_text);
 			var scis = gpu_get_scissor();
 			gpu_set_scissor(txx, _y, brx - txx, h);
 			
-			if(nameType == 0 || nameType == 1 || !node.renamed) {
+			if(ntype == 0 || ntype == 1 || !node.renamed) {
 				draw_set_alpha(0.6);
 				draw_text_add(txx, _y + h / 2 - ui(2), nodeName);
 				txx += tw;
@@ -180,7 +187,7 @@ function timelineItemNode(_node) : timelineItem() constructor {
 			
 			draw_set_font(f_p3);
 			draw_set_alpha(1);
-			if(nameType == 0 || nameType == 2) 
+			if(ntype == 0 || ntype == 2) 
 				draw_text_add(txx, _y + h / 2 - ui(2), node.display_name);
 			gpu_set_scissor(scis);
 		}
@@ -251,7 +258,7 @@ function timelineItemGroup() : timelineItem() constructor {
 	static rename   = function(   ) /*=>*/ { tb_rename = PANEL_ANIMATION.renameObject(self).activate(name); }
 	static doRename = function(txt) /*=>*/ { name = txt; }
 	
-	static drawLabel = function(_item, _x, _y, _w, _msx, _msy, hover, focus, itHover, fdHover, nameType, alpha = 1) {
+	static drawLabel = function(_item, _x, _y, _w, _msx, _msy, hover, focus, alpha = 1) {
 		var lx = _x + _item.depth * ui(12) + ui(2);
 		var lw = _w - _item.depth * ui(12) - ui(4);
 		var _m = [ _msx, _msy ];
@@ -284,7 +291,8 @@ function timelineItemGroup() : timelineItem() constructor {
 		}
 		
 		draw_sprite_stretched_add(THEME.box_r2, 1, _x, _y, _w, h, c_white, 0.15);
-		if(fdHover == self)
+		if(selecting) draw_sprite_stretched_ext(THEME.box_r2, 1, _x, _y, _w, h, COLORS._main_accent, 1);
+		if(PANEL_ANIMATION.hovering_folder == self)
 			draw_sprite_stretched_ext(THEME.box_r2, 1, _x, _y + 1, _w, h - 2, col == -1? COLORS._main_accent : col, 1);
 		
 		////- =Left Buttons
@@ -334,7 +342,7 @@ function timelineItemGroup() : timelineItem() constructor {
 			tb_rename.drawParam(_param);
 			
 		} else {
-			draw_set_color(itHover == self? COLORS._main_text_accent : COLORS._main_text);
+			draw_set_color(COLORS._main_text);
 			draw_text_add(txx, _y + h / 2, name);
 		}
 		
