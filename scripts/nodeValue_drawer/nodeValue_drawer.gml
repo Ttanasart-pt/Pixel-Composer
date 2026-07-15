@@ -295,26 +295,30 @@ function drawWidget(xx, yy, ww, _m, _jun, global_var = true, _hover = false, _fo
 			var tx  = dtx1 + ui(16) * tcs;
 			var ty  = lb_y;
 			var aa  = .75;
+			var cc  = COLORS._main_icon_light;
 			
-			var tips = _tip;
+			var tipTitle = _tip;
 			if(jun.tooltipData != undefined)
-				tips = jun.tooltipData.title + "...";
+				tipTitle = jun.tooltipData.title + "...";
 			
 			if(_hover && point_in_circle(_m[0], _m[1], tx, ty, ui(10))) {
-				if(is_string(tips)) {
-					TOOLTIP = tips;
-				} else {
-					cHov = true;
-					aa   = 1;
+				cHov = true;
+				aa   = 1;
+				
+				if(is_string(tipTitle))
+					TOOLTIP = tipTitle;
+				
+				if(!is_string(_tip)) {
+					cc = COLORS._main_accent;
 					
-				    if(mouse_lpress(_focus)) {
+					if(mouse_lpress(_focus)) {
 						if(is_callable(_tip)) _tip();
 						else dialogCall(_tip);
 					}
 				}
 			} 
 			
-			draw_sprite_ui(THEME.info_light, 0, tx, ty, tcs, tcs, 0, COLORS._main_icon_light, aa);
+			draw_sprite_ui(THEME.info_light, 0, tx, ty, tcs, tcs, 0, cc, aa);
 			lb_w += ui(24) * tcs;
 		}
 	#endregion
