@@ -13,11 +13,20 @@ DIALOG_DRAW_BG
 	
 	draw_set_text(f_p3, fa_center, fa_top);
 	draw_set_color(COLORS._main_text_sub);
-	draw_text(cx, ly - ui(4), code_is_compiled()? "Native build" : "VM build");
+	
+	var _txt = code_is_compiled()? "Native" : "VM";
+	switch(OS) {
+		case os_windows : _txt += " Windows"; break;
+		case os_linux :   _txt += " Linux";   break;
+		case os_macosx :  _txt += " Mac";     break;
+	}
+	_txt += " build";
+	
+	draw_text(cx, ly - ui(4), _txt);
 	ly += string_height("l");
 	
 	draw_set_text(f_p0, fa_center, fa_top, COLORS._main_text_sub);
-	draw_text(cx, ly, "2025, MakhamDev");
+	draw_text(cx, ly, "2026, MakhamDev");
 	
 	var _padd   = ui(20);
 	var thank_x = dialog_x + _padd;

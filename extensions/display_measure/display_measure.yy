@@ -16,7 +16,7 @@
       "copyToTargets":"64",
     },
     "Steam":{
-      "copyToTargets":"224",
+      "copyToTargets":"64",
     },
   },
   "copyToTargets":194,

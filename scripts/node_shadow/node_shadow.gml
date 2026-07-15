@@ -92,7 +92,7 @@ function Node_Shadow(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 			var _side   = _data[14];
 			var _colr   = _data[ 1];
 			var _stre   = _data[ 2];
-			var _border = _data[ 4];
+			var _grow   = _data[ 4];
 			var _size   = _data[ 5];
 			
 			var _type   = 1;
@@ -115,14 +115,16 @@ function Node_Shadow(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		var _shax = _posi == 0? _shf[0] : _dim[0] / 2 - _lgh[0];
 		var _shay = _posi == 0? _shf[1] : _dim[1] / 2 - _lgh[1];
 		
-		if(_border > 0) {
+		if(_grow > 0) {
 			surface_set_shader(_outShad, sh_outline_only, true, BLEND.over);
 				shader_set_interpolation(_surf);
-				shader_set_f("dimension",   _dim);
-				shader_set_f("borderSize",  _border);
-				shader_set_f("borderColor", [ 1., 1., 1., 1. ]);
 				
-				draw_surface_safe(_surf, _shax, _shay);
+				shader_set_2( "dimension",   _dim          );
+				shader_set_2( "shift",      [_shax, _shay] );
+				shader_set_f( "borderSize",  _grow         );
+				shader_set_c( "borderColor", ca_white      );
+				
+				draw_surface_safe(_surf);
 			surface_reset_shader();
 			
 		} else {
@@ -132,8 +134,8 @@ function Node_Shadow(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		}
 		
 		var _blurSurf = noone;
-		
 		var args = new blur_gauss_args(_outShad, _size + 1, getAttribute("oversample")).setBG(false, _colr).setOver(_colr);
+		
 		if(inputs[2].attributes.curved) args.setSizeCurve(_data[13]);
 		_blurSurf = surface_apply_gaussian(args);
 		

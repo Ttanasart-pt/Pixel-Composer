@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.7.001",
+    "changes": [
+      {
+        "date": "2026-07-15T05:48:04.359Z",
+        "node": "Shadow",
+        "commit": "**Shadow**: Fix Repeat oversampling not render correctly."
+      }
+    ]
+  },
+  {
     "version": "1.21.6.010",
     "changes": [
       {

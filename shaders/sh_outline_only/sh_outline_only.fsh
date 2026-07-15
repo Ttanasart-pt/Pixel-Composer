@@ -48,6 +48,8 @@ varying vec2 v_vTexcoord;
 varying vec4 v_vColour;
 
 uniform vec2  dimension;
+uniform vec2  shift;
+
 uniform float borderSize;
 uniform vec4  borderColor;
 
@@ -56,8 +58,9 @@ uniform vec4  borderColor;
 void main() {
 	gl_FragColor = borderColor;
 	
-	vec2 pixelPosition = v_vTexcoord * dimension;
-	float alpha  = 0.;
+	vec2  tx    = v_vTexcoord - shift / dimension;
+	vec2  px    = tx * dimension;
+	float alpha = 0.;
 	
 	for(float i = 1.; i <= float(borderSize); i++) {
 		float base = 1.;
@@ -70,10 +73,7 @@ void main() {
 				base *= 2.;
 			}
 	
-			vec2 pxs = (pixelPosition + vec2( cos(ang) * i,  sin(ang) * i)) / dimension;
-			if(pxs.x < 0. || pxs.y < 0. || pxs.x > 1. || pxs.y > 1.)
-				continue;
-				
+			vec2 pxs = (px + vec2( cos(ang) * i,  sin(ang) * i)) / dimension;
 			vec4 sam = sampleTexture( gm_BaseTexture, pxs );
 			alpha = max(alpha, sam.a);
 		}
