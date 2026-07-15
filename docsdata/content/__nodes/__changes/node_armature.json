@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.7.001",
+    "changes": [
+      {
+        "date": "2026-07-15T07:49:19.089Z",
+        "node": "Armature Create",
+        "commit": "**Armature Create**: Fix bone list not updated when delete from inspector panel."
+      }
+    ]
+  },
+  {
     "version": "1.21.4.006",
     "changes": [
       {

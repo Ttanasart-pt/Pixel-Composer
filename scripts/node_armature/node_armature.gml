@@ -518,6 +518,8 @@ function Node_Armature(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 				_par.addChild(_ch);
 				_ch.parent_anchor = bone_remove.parent_anchor;
 			}
+			
+			triggerRender();
 		}
 		
 		return bh;
