@@ -39,16 +39,13 @@
 					}
 				}
 				
-				_pos[0] = PANEL_PREVIEW.snapX(dragging_sx + _dx);
-				_pos[1] = PANEL_PREVIEW.snapY(dragging_sy + _dy);
+				var nPos = [
+					PANEL_PREVIEW.snapX(dragging_sx + _dx),
+					PANEL_PREVIEW.snapY(dragging_sy + _dy),
+				];
 				
-				if(inputs[_posInd].setValue(_pos))
+				if(inputs[_posInd].setValue(nPos))
 					UNDO_HOLDING = true;
-				
-				if(inputs[_posInd].unit.mode == VALUE_UNIT.reference) {
-					var p = [ _pos[0], _pos[1] ];
-					_pos = inputs[_posInd].unit.apply(p);
-				}
 				
 			} else if(drag_type == 1) {
 				var aa = point_direction(rot_anc_x, rot_anc_y, _mx, _my);
@@ -67,21 +64,18 @@
 				var mdy = dragging_sy + (_my - dragging_my) - dragging_cy;
 				
 				var _p = point_rotate(mdx, mdy, 0, 0, -_rot);
-				_sca[0] = _p[0] / _s;
-				_sca[1] = _p[1] / _s;
+				var nsca = [ _sca[0], _sca[1] ];
+				
+				nsca[0] = _p[0] / _s;
+				nsca[1] = _p[1] / _s;
 				
 				if(key_mod_press(SHIFT)) {
-					_sca[0] = min(_sca[0], _sca[1]);
-					_sca[1] = min(_sca[0], _sca[1]);
+					nsca[0] = min(nsca[0], nsca[1]);
+					nsca[1] = min(nsca[0], nsca[1]);
 				}
 				
-				if(inputs[_scaInd].setValue(_sca))
-					UNDO_HOLDING = true;	
-					
-				if(_scaUnit && inputs[_scaInd].unit.mode == VALUE_UNIT.reference) {
-					var s = [ _sca[0], _sca[1] ];
-					_sca = inputs[_scaInd].unit.apply(s);
-				}
+				if(inputs[_scaInd].setValue(nsca))
+					UNDO_HOLDING = true;
 			}
 			
 			if(mouse_lrelease()) {

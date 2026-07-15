@@ -24,7 +24,7 @@ void main() {
 	vec2  pos = position / dimension;
 	float ang = radians(rotation);
 	vec2  sca = scale / dimension;
-	vec2  tx  = (v_vTexcoord - pos) / sca * mat2(cos(ang), -sin(ang), sin(ang), cos(ang));
+	vec2  tx  = (v_vTexcoord - pos) * mat2(cos(ang), -sin(ang), sin(ang), cos(ang)) / sca;
 	
 	float dis = sd(tx);
 	

@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.7.001",
+    "changes": [
+      {
+        "date": "2026-07-15T05:52:57.694Z",
+        "node": "Draw Rect, Draw Circle",
+        "commit": "**Draw Rect, Draw Circle**: Fix rotation and scale apply in the wrong order."
+      }
+    ]
+  },
+  {
     "version": "1.21.6.002",
     "changes": [
       {
