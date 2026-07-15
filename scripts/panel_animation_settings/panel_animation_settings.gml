@@ -5,6 +5,16 @@ function Panel_Animation_Setting() : Panel_Linear_Setting() constructor {
 	hotkey_play   = find_hotkey("", "Play/Pause");
 	hotkey_resume = find_hotkey("", "Resume");
 	
+	prop_anim_length = new __Panel_Linear_Setting_Item(
+		__txt("anim_length", "Animation length"),
+		textBox_Number(function(str) /*=>*/ { PROJECT.animator.frames_total = round(real(str)); }),
+		function( ) /*=>*/   {return PROJECT.animator.frames_total},
+		function(v) /*=>*/ { PROJECT.animator.frames_total = v; },
+		PREFERENCES.project_animation_duration,
+		noone,
+		"project_animation_duration",
+	);
+	
 	properties = [
 		new __Panel_Linear_Setting_Item(
 			__txt("Show Frames Preview"),
@@ -28,15 +38,7 @@ function Panel_Animation_Setting() : Panel_Linear_Setting() constructor {
 		
 		-1, 
 		
-		new __Panel_Linear_Setting_Item(
-			__txt("anim_length", "Animation length"),
-			textBox_Number(function(str) /*=>*/ { PROJECT.animator.frames_total = round(real(str)); }),
-			function( ) /*=>*/   {return PROJECT.animator.frames_total},
-			function(v) /*=>*/ { PROJECT.animator.frames_total = v; },
-			PREFERENCES.project_animation_duration,
-			noone,
-			"project_animation_duration",
-		),
+		prop_anim_length,
 		
 		new __Panel_Linear_Setting_Item(
 			__txt("anim_frame_rate", "Preview frame rate"),
@@ -103,7 +105,7 @@ function Panel_Animation_Setting() : Panel_Linear_Setting() constructor {
 	setHeight();
 	
 	static onDraw = function() {
-		
+		prop_anim_length.active = !GLOBAL_IS_PLAYING;
 	}
 	
 }

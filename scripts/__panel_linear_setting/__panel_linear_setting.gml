@@ -1,4 +1,6 @@
 function __Panel_Linear_Setting_Item(_name, _editWidget, _getter = noone, _onEdit = noone, _getDefault = noone, _action = noone, _prefKey = noone) constructor {
+	active     = true;
+	
 	name       = _name;
 	editWidget = _editWidget;
 	data       = _getter;
@@ -153,11 +155,13 @@ function Panel_Linear_Setting() : PanelContent() constructor {
 			}
 			
 			if(is(_prop, __Panel_Linear_Setting_Item)) {
+				var _actv = _prop.active;
 				var _text = _prop.name;
 				var _data = _prop.data;
 				var _widg = _prop.editWidget;
 				if(is_callable(_data)) _data = _data();
 				
+				_widg.setInteract(_actv);
 				_widg.setFocusHover(pFOCUS, pHOVER);
 				_widg.register();
 				
