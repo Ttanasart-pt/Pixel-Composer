@@ -291,6 +291,12 @@ function Panel_Linear_Setting() : PanelContent() constructor {
 		curr_height = yy + ui(4) + hpad;
 	}
 	
-	function drawContent() { drawSettings(); }
+	static onDraw = function() {}
+	
+	function drawContent() { 
+		drawSettings();
+		onDraw();
+	}
+	
 	function preDraw()     { resetHeight(curr_height); }
 }

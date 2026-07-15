@@ -6,7 +6,6 @@ function Panel_Animation_Setting() : Panel_Linear_Setting() constructor {
 	hotkey_resume = find_hotkey("", "Resume");
 	
 	properties = [
-		
 		new __Panel_Linear_Setting_Item(
 			__txt("Show Frames Preview"),
 			new checkBox(function() /*=>*/ { PANEL_ANIMATION.timeline_frame = !PANEL_ANIMATION.timeline_frame; }),
@@ -102,4 +101,9 @@ function Panel_Animation_Setting() : Panel_Linear_Setting() constructor {
 	];
 	
 	setHeight();
+	
+	static onDraw = function() {
+		
+	}
+	
 }

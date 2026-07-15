@@ -116,7 +116,7 @@ function __Node_Base(_x, _y) constructor {
 	static step   = function() {}
 	static update = function(frame = CURRENT_FRAME) {}
 	
-	static valueUpdate   = function(index) {}
+	static valueUpdate   = function(index) {} 
 	static triggerRender = function() {}
 	
 	static onDestroy  = function() {}

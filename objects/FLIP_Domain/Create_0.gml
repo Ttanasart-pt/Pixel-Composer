@@ -3,6 +3,8 @@
 	domain           = -1;
 	particlePosBuff  = noone;
 	particleVelBuff  = noone;
+	
+	project_length   = 0;
 
 	width            = 0;
 	height           = 0;
@@ -37,9 +39,11 @@
 #endregion
 
 function init(_width, _height, _particleSize, _density, _maxParticles) {
+	project_length = GLOBAL_TOTAL_FRAMES;
+	
 	particlePos  = array_create(_maxParticles * 2);
 	particleVel  = array_create(_maxParticles * 2);
-	particleHist = array_create(_maxParticles * 2 * GLOBAL_TOTAL_FRAMES);
+	particleHist = array_create(_maxParticles * 2 * project_length);
 	particleLife = array_create(_maxParticles);
 	obstracles   = [];
 	numParticles = 0;
@@ -88,6 +92,8 @@ function update() {
 }
 
 function step() {
+	if(project_length != GLOBAL_TOTAL_FRAMES) return;
+	
 	FLIP_resetDensity(domain);
 	
 	if(skip_incompressible) { 
@@ -96,25 +102,10 @@ function step() {
 			FLIP_simulate_integrateParticles(domain);
 			FLIP_simulate_pushParticlesApart(domain);
 			FLIP_simulate_handleParticleCollisions(domain);
-			//FLIP_simulate_transferVelocities(domain, 1);
-			//FLIP_simulate_updateParticleDensity(domain);
-			//FLIP_simulate_solveIncompressibility(domain);
-			//FLIP_simulate_transferVelocities(domain, 0);
 		}
-	} else {
-		FLIP_simulate(domain, dt);
 		
-		//FLIP_setTimeStep(domain, dt);
-		//repeat(iteration) {
-		//	FLIP_simulate_integrateParticles(domain);
-		//	FLIP_simulate_pushParticlesApart(domain);
-		//	FLIP_simulate_handleParticleCollisions(domain);
-		//	FLIP_simulate_transferVelocities(domain, 1);
-		//	FLIP_simulate_updateParticleDensity(domain);
-		//	FLIP_simulate_solveIncompressibility(domain);
-		//	FLIP_simulate_transferVelocities(domain, 0);
-		//}
-	}
+	} else
+		FLIP_simulate(domain, dt);
 	
 	FLIP_setParticleBuffer(domain, aPosBuff, aLifeBuff);
 	FLIP_setParticleVelocityBuffer(domain, aVelBuff);
