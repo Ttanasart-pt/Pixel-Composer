@@ -1,0 +1,12 @@
+[
+  {
+    "version": "1.21.7.001",
+    "changes": [
+      {
+        "date": "2026-07-15T06:10:28.444Z",
+        "node": "Flip Surface Collider",
+        "commit": "**Flip Surface Collider**: Add pixel expands, threshold control."
+      }
+    ]
+  }
+]

@@ -1,0 +1,12 @@
+{
+  "$GMShader":"",
+  "%Name":"sh_flip_solid_surface_cvt",
+  "name":"sh_flip_solid_surface_cvt",
+  "parent":{
+    "name":"flip_solid_surface",
+    "path":"folders/nodes/data/simulation/FLIP/solid/flip_solid_surface.yy",
+  },
+  "resourceType":"GMShader",
+  "resourceVersion":"2.0",
+  "type":1,
+}
