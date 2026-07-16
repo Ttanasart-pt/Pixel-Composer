@@ -54,8 +54,11 @@ function Node_3D_Set_Origin(_x, _y, _group = noone) : Node_3D(_x, _y, _group) co
 					
 				for( var i = 0, n = array_length(_vbs); i < n; i++ ) {
 					var _vb = _vbs[i];
+					var _buffer;
 					
-					var _buffer   = buffer_create_from_vertex_buffer(_vb, buffer_fixed, 1);
+					try { _buffer = buffer_create_from_vertex_buffer(_vb, buffer_fixed, 1); }
+					catch(e) continue;
+					
 					var _buffer_s = buffer_get_size(_buffer);
 					var _vertex_s = floor(_buffer_s / _format_s);
 					
