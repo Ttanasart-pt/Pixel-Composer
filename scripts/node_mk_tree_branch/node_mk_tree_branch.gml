@@ -84,10 +84,11 @@ function Node_MK_Tree_Branch(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	
 		////- =/Texture
 	newInput(30, nodeValue_Surface(  "Texture" ));
+	newInput(52, nodeValue_EButton(  "Array Selection", 0           )).setChoices([ "Ordered", "Random" ]);
 	
 	////- =Growth
 	newInput(20, nodeValue_Range( "Grow Delay", [0,0], true ));
-	// input 52
+	// 53
 	
 	newOutput(0, nodeValue_Output("Tree",     VALUE_TYPE.struct, noone)).setCustomData(global.MKTREE_JUNC);
 	newOutput(1, nodeValue_Output("Branches", VALUE_TYPE.struct, noone)).setCustomData(global.MKTREE_JUNC);
@@ -108,7 +109,7 @@ function Node_MK_Tree_Branch(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 		[ "Rendering",   false, 46 ], 39, 
 			[ "/Base Color", false ], 37, 12, 27, 28, 
 			[ "/Edge Color", false ], 17, 18, 29, 
-			[ "/Texture",    false ], 30, 
+			[ "/Texture",    false ], 30, 53, 
 			
 		[ "Growth",           true ], 20, 
 	];
@@ -205,9 +206,14 @@ function Node_MK_Tree_Branch(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 			var _edge     = getInputData(17);
 			var _edgeLGrd = getInputData(18); inputs[18].setVisible(_edge > 0);
 			var _edgeRGrd = getInputData(29); inputs[29].setVisible(_edge > 0);
+			
 			var _tex      = getInputData(30);
+			var _texArSel = getInputData(52);
 				
 			var _grow = getInputData(20);
+			
+			var texArray  = is_array(_tex);
+			var texArrLen = array_safe_length(_tex);
 			
 			inputs[ 4].setVisible(_angT != 2);
 			inputs[40].setVisible(_angT == 2);
@@ -221,7 +227,9 @@ function Node_MK_Tree_Branch(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 			inputs[17].setVisible(!_line);
 			inputs[18].setVisible(!_line);
 			inputs[29].setVisible(!_line);
+			
 			inputs[30].setVisible(!_line);
+			inputs[52].setVisible(texArray);
 			
 			_baseGrad.cache();
 			_lencGrad.cache();
@@ -275,9 +283,15 @@ function Node_MK_Tree_Branch(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 				
 				_tr.getPosition(rat, ori);
 				
+				var tex  = _tex;
+				if(texArray) switch(_texArSel) {
+					case 0 : tex = _tex[j % texArrLen];          break;
+					case 1 : tex = _tex[irandom(texArrLen - 1)]; break;
+				}
+				
 				var _t = new __MK_Tree(_tr.root, ori[0], ori[1], _seed + i)
 					.setDraw(_draw, _line)
-					.setTexture(_tex)
+					.setTexture(tex)
 				
 				_t.rootPosition  =  rat;
 				_t.rootDirection = ori[2];

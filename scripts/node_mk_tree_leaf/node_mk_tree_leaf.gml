@@ -353,6 +353,8 @@ function Node_MK_Tree_Leaf(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		.setCurvable(43, CURVE_DEF_11, "Over Whorled", "curved_whorled", THEME.mk_tree_curve_whorled )
 		
 	newInput( 9, nodeValue_Surface(    "Texture",       noone         ));
+	newInput(59, nodeValue_EButton(    "Array Selection", 0           )).setChoices([ "Ordered", "Random" ]);
+	
 	newInput(21, nodeValue_Slider(     "Leaf Span",     .5            ));
 	newInput(39, nodeValue_EButton(    "Geometry Type",  0, [ "Single", "Range" ] ));
 	newInput(29, nodeValue_Curve(      "Geometry",      CURVE_DEF_01  ));
@@ -394,7 +396,7 @@ function Node_MK_Tree_Leaf(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	
 	////- =Growth
 	newInput(22, nodeValue_Range( "Grow Delay", [0,0], true ));
-	// input 59
+	// 60
 	
 	newOutput(0, nodeValue_Output("Branches", VALUE_TYPE.struct, noone)).setCustomData(global.MKTREE_JUNC);
 	newOutput(1, nodeValue_Output("Leaves",   VALUE_TYPE.struct, noone)).setCustomData(global.MKTREE_LEAVES_JUNC);
@@ -409,7 +411,8 @@ function Node_MK_Tree_Leaf(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 			[ "/Gravity",    false ], 27, 28, 57, 58, 
 			
 		[ "Grouping",        false ], 15, 36, 32, 33, 54, 
-		[ "Shape",           false ],  8,  3, 18, 43,  9, 21, 39, 29, 38, 31, 37, 44, 40, 45, 46, 48, 49, 50, 41, 30, 
+		[ "Shape",           false ],  8,  3, 18, 43,  9, 59, 21, 39, 29, 38, 31, 37, 44, 40, 45, 46, 48, 49, 50, 41, 30, 
+		
 		[ "Color",           false ], 
 			[ "/per Branch", false ],  4, 12, 20, 
 			[ "/per Leaf",   false ],  6, 13, 34, 
@@ -484,7 +487,10 @@ function Node_MK_Tree_Leaf(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 			var _siz  = getInputData( 3);
 			var _sizC = getInputData(18), curve_size   = inputs[ 3].attributes.curved?         new curveMap(_sizC)  : undefined;
 			var _sizW = getInputData(43), curve_sizeW  = inputs[ 3].attributes.curved_whorled? new curveMap(_sizW)  : undefined;
-			var _tex  = getInputData( 9);
+			
+			var _tex      = getInputData( 9);
+			var _texArSel = getInputData(59);
+			
 			var _lspn = getInputData(21);
 			
 			var _geoSc = getInputData(39);
@@ -531,6 +537,9 @@ function Node_MK_Tree_Leaf(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 			
 			var _grow = getInputData(22);
 			
+			var texArray  = is_array(_tex);
+			var texArrLen = array_safe_length(_tex);
+			
 			inputs[58].setVisible(_grvO);
 			
 			inputs[21].setVisible(_shap == MKLEAF_TYPE.Leaf);
@@ -548,6 +557,7 @@ function Node_MK_Tree_Leaf(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 			inputs[48].setVisible(_shap == MKLEAF_TYPE.Complex_Leaf);
 			
 			inputs[ 9].setVisible(_shap == MKLEAF_TYPE.Surface, _shap == MKLEAF_TYPE.Surface);
+			inputs[59].setVisible(texArray);
 			inputs[11].setVisible(_shap != MKLEAF_TYPE.Surface && _edg);
 			
 			inputs[41].setVisible(_shap == MKLEAF_TYPE.Mesh, _shap == MKLEAF_TYPE.Mesh);
@@ -569,8 +579,9 @@ function Node_MK_Tree_Leaf(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		var __p1 = max(_pos[0], _pos[1]);
 		var _leaves = [];
 		
-		var tw = surface_get_width_safe(_tex);
-		var th = surface_get_height_safe(_tex);
+		var tex = texArray? array_safe_get(_tex, 0) : _tex;
+		var tw  = surface_get_width_safe(tex);
+		var th  = surface_get_height_safe(tex);
 		
 		_tree = variable_clone(_tree);
 		outputs[0].setValue(_tree);
@@ -578,6 +589,8 @@ function Node_MK_Tree_Leaf(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		
 		var _prng = __p1 - __p0;
 		if(__p1 < __p0) return;
+		
+		var _spawnIndx = 0;
 		
 		for( var i = 0, n = array_length(_tree); i < n; i++ ) {
 			if(random(1) > _chan) continue;
@@ -690,9 +703,15 @@ function Node_MK_Tree_Leaf(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 					var _llx = _lx + lengthdir_x(_offw, _dr);
 					var _lly = _ly + lengthdir_y(_offw, _dr);
 					
+					var tex  = _tex;
+					if(texArray) switch(_texArSel) {
+						case 0 : tex = _tex[_spawnIndx % texArrLen]; break;
+						case 1 : tex = _tex[irandom(texArrLen - 1)]; break;
+					}
+					
 					var _l = new __MK_Tree_Leaf(_br, _rPos, _shap, _llx, _lly, _dr, lsx, lsy, _lspn);
 					    _l.gravity    = _gDir;
-					    _l.surface    = _tex;
+					    _l.surface    =  tex;
 					    _l.surf_w     =  tw;
 					    _l.surf_h     =  th;
 					    
@@ -711,6 +730,8 @@ function Node_MK_Tree_Leaf(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 					    _l.geometry   = _geo;
 					    _l.geometry1  = _geo2;
 					}
+					
+					_spawnIndx++;
 					
 					var _edgCol = _cEdgM? _cEdgSamp.getPixel(round(_lx), round(_ly)) : _edgC.eval(random(1));
 					

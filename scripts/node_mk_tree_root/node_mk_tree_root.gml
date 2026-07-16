@@ -34,26 +34,31 @@ function Node_MK_Tree_Root(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		////- =/Gravity
 	newInput( 9, nodeValue_Range( "Gravity",   [0,0],   true  ))
 		.setCurvable(15, CURVE_DEF_11, "Over Length", "curved", THEME.mk_tree_curve_length );
+		
 	newInput(38, nodeValue_Bool(  "Override",           false ))
 	newInput(39, nodeValue_Rot(   "Gravity Direction",  0     ))
 	
 		////- =/Wiggle
 	newInput(10, nodeValue_Range(   "Amplitude",   [0,0], true )).setInternalName("wiggle_amplitude")
 		.setCurvable(34, CURVE_DEF_11, "Over Length", "curved", THEME.mk_tree_curve_length )
+		
 	newInput(32, nodeValue_Range(   "Frequency",   [4,4], true )).setInternalName("wiggle_frequency");
 	newInput(33, nodeValue_Range(   "Phase",       [0,0], true )).setInternalName("wiggle_phase");
 	
 		////- =/Spiral
 	newInput(36, nodeValue_Range(   "Amplitude",   [0,0], true )).setInternalName("spiral_amplitude")
 		.setCurvable(37, CURVE_DEF_11, "Over Length", "curved", THEME.mk_tree_curve_length )
+		
 	newInput(22, nodeValue_Range(  "Frequency", [4,4], true )).setInternalName("spiral_frequency")
 		.setCurvable(28, CURVE_DEF_11, "Over Length", "curved", THEME.mk_tree_curve_length );
+		
 	newInput(23, nodeValue_Range(  "Phase",     [0,0], true )).setInternalName("spiral_phase");
 	newInput(18, nodeValue_Range(  "Wave",      [0,0], true ))
 		.setCurvable(19, CURVE_DEF_11, "Over Length", "curved", THEME.mk_tree_curve_length );
+		
 	newInput(20, nodeValue_Range(  "Curl",      [0,0], true ))
 		.setCurvable(21, CURVE_DEF_11, "Over Length", "curved", THEME.mk_tree_curve_length );
-	
+		
 	////- =Thickness
 	newInput( 6, nodeValue_Range(    "Thickness", [4,4], true ))
 		.setCurvable(11, CURVE_DEF_11, "Over Length", "curved", THEME.mk_tree_curve_length );
@@ -74,7 +79,8 @@ function Node_MK_Tree_Root(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	
 		////- =/Texture
 	newInput(27, nodeValue_Surface(  "Texture" ));
-	// input 43
+	newInput(43, nodeValue_EButton(  "Array Selection", 0           )).setChoices([ "Ordered", "Random" ]);
+	// 44
 	
 	newOutput(0, nodeValue_Output("Trunk", VALUE_TYPE.struct, noone)).setCustomData(global.MKTREE_JUNC);
 	
@@ -92,7 +98,7 @@ function Node_MK_Tree_Root(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		[ "Render",      false, 35 ], 29,  
 			[ "/Base Color", false ], 12, 24, 25, 
 			[ "/Edge Color", false ], 16, 17, 26, 
-			[ "/Texture",    false ], 27, 
+			[ "/Texture",    false ], 27, 43, 
 	];
 	
 	////- Nodes
@@ -131,45 +137,45 @@ function Node_MK_Tree_Root(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		#region data
 			var _seed = inline_context.seed + getInputData(14);
 			
-			var _ori    = getInputData( 1);
+			var _ori      = getInputData( 1);
 			
-			var _dist   = getInputData(40);
-			var _ramo   = getInputData( 5);
-			var _scSpan = getInputData(30);
-			var _scShap = getInputData(31);
-			var _scGrid = getInputData(41);
-			var _scData = getInputData(42);
+			var _dist     = getInputData(40);
+			var _ramo     = getInputData( 5);
+			var _scSpan   = getInputData(30);
+			var _scShap   = getInputData(31);
+			var _scGrid   = getInputData(41);
+			var _scData   = getInputData(42);
 			
-			var _segs = getInputData( 7);
-			var _len  = getInputData( 3);
+			var _segs     = getInputData( 7);
+			var _len      = getInputData( 3);
 			
-			var _sprA = getInputData(36);
-			var _spaC = getInputData(37),  curve_spia  = inputs[36].attributes.curved? new curveMap(_spaC)  : undefined;
-			var _sprS = getInputData(22);
-			var _spsC = getInputData(28),  curve_spis  = inputs[22].attributes.curved? new curveMap(_spsC)  : undefined;
-			var _sprP = getInputData(23);
-			var _wav  = getInputData(18);
-			var _wavC = getInputData(19),  curve_wave  = inputs[18].attributes.curved? new curveMap(_wavC)  : undefined;
+			var _sprA     = getInputData(36);
+			var _spaC     = getInputData(37),  curve_spia  = inputs[36].attributes.curved? new curveMap(_spaC)  : undefined;
+			var _sprS     = getInputData(22);
+			var _spsC     = getInputData(28),  curve_spis  = inputs[22].attributes.curved? new curveMap(_spsC)  : undefined;
+			var _sprP     = getInputData(23);
+			var _wav      = getInputData(18);
+			var _wavC     = getInputData(19),  curve_wave  = inputs[18].attributes.curved? new curveMap(_wavC)  : undefined;
 			
-			var _cur  = getInputData(20);
-			var _curC = getInputData(21),  curve_curl  = inputs[20].attributes.curved? new curveMap(_curC)  : undefined;
+			var _cur      = getInputData(20);
+			var _curC     = getInputData(21),  curve_curl  = inputs[20].attributes.curved? new curveMap(_curC)  : undefined;
 			
-			var _ang  = getInputData( 4);
+			var _ang      = getInputData( 4);
 			
-			var _grv  = getInputData( 9);
-			var _grvC = getInputData(15),  curve_grav  = inputs[ 9].attributes.curved? new curveMap(_grvC)  : undefined;
-			var _grvO = getInputData(38);
-			var _grvD = getInputData(39); 
+			var _grv      = getInputData( 9);
+			var _grvC     = getInputData(15),  curve_grav  = inputs[ 9].attributes.curved? new curveMap(_grvC)  : undefined;
+			var _grvO     = getInputData(38);
+			var _grvD     = getInputData(39); 
 			
-			var _wigA = getInputData(10);
-			var _wigAC= getInputData(34),  curve_wiga  = inputs[10].attributes.curved? new curveMap(_wigAC)  : undefined;
-			var _wigF = getInputData(32);
-			var _wigP = getInputData(33);
+			var _wigA     = getInputData(10);
+			var _wigAC    = getInputData(34),  curve_wiga  = inputs[10].attributes.curved? new curveMap(_wigAC)  : undefined;
+			var _wigF     = getInputData(32);
+			var _wigP     = getInputData(33);
 			
-			var _draw  = getInputData(35);
-			var _line  = getInputData(29);
-			var _thk   = getInputData( 6);
-			var _thkC  = getInputData(11), curve_thick = inputs[ 6].attributes.curved? new curveMap(_thkC) : undefined;
+			var _draw     = getInputData(35);
+			var _line     = getInputData(29);
+			var _thk      = getInputData( 6);
+			var _thkC     = getInputData(11), curve_thick = inputs[ 6].attributes.curved? new curveMap(_thkC) : undefined;
 			
 			var _baseGrad = getInputData(12);
 			var _lenc     = getInputData(24);
@@ -177,7 +183,12 @@ function Node_MK_Tree_Root(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 			var _edge     = getInputData(16);
 			var _edgeLGrd = getInputData(17); inputs[17].setVisible(_edge > 0);
 			var _edgeRGrd = getInputData(26); inputs[26].setVisible(_edge > 0);
+			
 			var _tex      = getInputData(27);
+			var _texArSel = getInputData(43);
+			
+			var texArray  = is_array(_tex);
+			var texArrLen = array_safe_length(_tex);
 			
 			inputs[ 5].setVisible(_dist == 0);
 			inputs[30].setVisible(_dist == 0 || _dist == 1);
@@ -192,16 +203,20 @@ function Node_MK_Tree_Root(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 			inputs[16].setVisible(!_line);
 			inputs[17].setVisible(!_line);
 			inputs[26].setVisible(!_line);
-			inputs[27].setVisible(!_line);
 				
+			inputs[27].setVisible(!_line);
+			inputs[43].setVisible(texArray);
+			
 			_baseGrad.cache();
 			_lencGrad.cache();
 			_edgeLGrd.cache();
 			_edgeRGrd.cache();
 			
-			random_set_seed(_seed);
 			var _gDir = _grvO? _grvD : inline_context.gravityDir;
+		
 		#endregion
+		
+		random_set_seed(_seed);
 		
 		#region root positions
 			var _amo = 1;
@@ -270,9 +285,15 @@ function Node_MK_Tree_Root(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 			var  ox  = _pos[0];
 			var  oy  = _pos[1];
 			
+			var tex  = _tex;
+			if(texArray) switch(_texArSel) {
+				case 0 : tex = _tex[i % texArrLen];          break;
+				case 1 : tex = _tex[irandom(texArrLen - 1)]; break;
+			}
+			
 			var _t = new __MK_Tree(undefined, ox, oy, _seed + i)
 				.setDraw(_draw, _line)
-				.setTexture(_tex)
+				.setTexture(tex)
 				
 			var _amou   = random_range(_segs[0], _segs[1]);
 			

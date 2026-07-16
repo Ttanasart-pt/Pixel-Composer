@@ -28,25 +28,26 @@ function Node_MK_Tree_Path_Root(_x, _y, _group = noone) : Node(_x, _y, _group) c
 		.setCurvable(16, CURVE_DEF_11, "Over Length", "curved", THEME.mk_tree_curve_length);
 	
 	////- =Render
-	newInput(21, nodeValue_EScroll(     "Draw Mode",  0, [ "Texture", "Line" ] ));
-	newInput( 3, nodeValue_Range(       "Thickness", [4,4], true ))
+	newInput(21, nodeValue_EScroll(  "Draw Mode",  0, [ "Texture", "Line" ] ));
+	newInput( 3, nodeValue_Range(    "Thickness", [4,4], true ))
 		.setCurvable(4, CURVE_DEF_11, "Over Length", "curved", THEME.mk_tree_curve_length);
 		
 	////- =Render
 	
 		////- =/Base Color
-	newInput( 5, nodeValue_Gradient(    "Base Color",      gra_white ));
-	newInput(17, nodeValue_EButton( "Length Blending",  0, [ "None", "Override", "Multiply", "Screen" ] ));
-	newInput(18, nodeValue_Gradient(    "Length Color",    gra_white ));
+	newInput( 5, nodeValue_Gradient( "Base Color",      gra_white ));
+	newInput(17, nodeValue_EButton(  "Length Blending",  0, [ "None", "Override", "Multiply", "Screen" ] ));
+	newInput(18, nodeValue_Gradient( "Length Color",    gra_white ));
 	
 		////- =/Edge Color
-	newInput( 6, nodeValue_EButton( "Edge Blending",    0, [ "None", "Override", "Multiply", "Screen" ] ));
-	newInput( 7, nodeValue_Gradient(    "L Edge Color",    gra_white ));
-	newInput(19, nodeValue_Gradient(    "R Edge Color",    gra_white ));
+	newInput( 6, nodeValue_EButton(  "Edge Blending",    0, [ "None", "Override", "Multiply", "Screen" ] ));
+	newInput( 7, nodeValue_Gradient( "L Edge Color",    gra_white ));
+	newInput(19, nodeValue_Gradient( "R Edge Color",    gra_white ));
 	
 		////- =/Texture
-	newInput(20, nodeValue_Surface(     "Texture" ));
-	// input 24
+	newInput(20, nodeValue_Surface(  "Texture" ));
+	newInput(24, nodeValue_EButton(  "Array Selection", 0           )).setChoices([ "Ordered", "Random" ]);
+	// 25
 	
 	newOutput(0, nodeValue_Output("Trunk", VALUE_TYPE.struct, noone)).setCustomData(global.MKTREE_JUNC);
 	
@@ -60,7 +61,7 @@ function Node_MK_Tree_Path_Root(_x, _y, _group = noone) : Node(_x, _y, _group) c
 		[ "Color",     false ],
 			[ "/Base Color", false ],  5, 17, 18, 
 			[ "/Edge Color", false ],  6,  7, 19, 
-			[ "/Texture",    false ], 20, 
+			[ "/Texture",    false ], 20, 24, 
 	];
 	
 	////- Nodes
@@ -107,14 +108,21 @@ function Node_MK_Tree_Path_Root(_x, _y, _group = noone) : Node(_x, _y, _group) c
 			var _edge     = getInputData( 6);
 			var _edgeLGrd = getInputData( 7); inputs[ 7].setVisible(_edge > 0);
 			var _edgeRGrd = getInputData(19); inputs[19].setVisible(_edge > 0);
+			
 			var _tex      = getInputData(20);
+			var _texArSel = getInputData(24);
+			
+			var texArray  = is_array(_tex);
+			var texArrLen = array_safe_length(_tex);
 			
 			inputs[17].setVisible(!_line);
 			inputs[18].setVisible(!_line);
 			inputs[ 6].setVisible(!_line);
 			inputs[ 7].setVisible(!_line);
 			inputs[19].setVisible(!_line);
+			
 			inputs[20].setVisible(!_line);
+			inputs[24].setVisible(texArray);
 		#endregion
 		
 		if(!is_path(_path)) return;
@@ -180,7 +188,6 @@ function Node_MK_Tree_Path_Root(_x, _y, _group = noone) : Node(_x, _y, _group) c
 				ox = nx; oy = ny;
 			}
 			
-			
 			for( var i = 0; i <= _samp; i++ ) {
 				var _rat = i / _samp;
 				var _sg  = _t.segments[i];
@@ -212,7 +219,13 @@ function Node_MK_Tree_Path_Root(_x, _y, _group = noone) : Node(_x, _y, _group) c
 				
 			}
 			
-			_t.texture = _tex;
+			var tex  = _tex;
+			if(texArray) switch(_texArSel) {
+				case 0 : tex = _tex[t % texArrLen];          break;
+				case 1 : tex = _tex[irandom(texArrLen - 1)]; break;
+			}
+			
+			_t.texture = tex;
 			_t.amount  = array_length(_samp) + 1;
 			_t.getLength();
 			
