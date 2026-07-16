@@ -11,6 +11,11 @@
         "date": "2026-07-16T09:39:33.660Z",
         "node": "3D Set Origin",
         "commit": "**3D Set Origin**: Fix error when inputting empty mesh."
+      },
+      {
+        "date": "2026-07-16T09:50:36.574Z",
+        "node": "3D Set Origin",
+        "commit": "**3D Set Origin**: Add origin point output."
       }
     ]
   }

@@ -8,13 +8,14 @@ function Node_3D_Set_Origin(_x, _y, _group = noone) : Node_3D(_x, _y, _group) co
 	newInput(1, nodeValue_EScroll( "Type",  1, [ "Fixed World Point", "Mesh Center" ] ));
 	newInput(2, nodeValue_Vec3(    "Point", [0,0,0] ));
 	
-	newOutput(0, nodeValue_Output( "Scene", VALUE_TYPE.d3Mesh, noone ));
+	newOutput( 0, nodeValue_Output( "Scene",  VALUE_TYPE.d3Mesh, noone ));
+	newOutput( 1, nodeValue_Output( "Origin", VALUE_TYPE.float,  [0,0,0] )).setDisplay(VALUE_DISPLAY.vector);
 	
 	input_display_list = [ 0, 
 		[ "Origin", false ], 1, 2,  
 	]
 	
-	static processData = function(_output, _data, _array_index = 0, _frame = CURRENT_FRAME) {
+	static processData = function(_outdata, _data, _array_index = 0, _frame = CURRENT_FRAME) {
 		#region data
 			var _mesh = _data[0];
 			
@@ -24,10 +25,13 @@ function Node_3D_Set_Origin(_x, _y, _group = noone) : Node_3D(_x, _y, _group) co
 			inputs[2].setVisible(_type == 0);
 		#endregion
 		
-		if(!is(_mesh, __3dInstance)) return _output;
-		if(!is(_output, __3dTransformed)) 
-			_output = new __3dTransformed();
-		_output.object = _mesh;
+		if(!is(_mesh, __3dInstance)) return _outdata;
+		
+		var _outMesh = _outdata[0];
+		
+		if(!is(_outMesh, __3dTransformed)) 
+			_outMesh = new __3dTransformed();
+		_outMesh.object = _mesh;
 		
 		var ox = 0;
 		var oy = 0;
@@ -102,16 +106,19 @@ function Node_3D_Set_Origin(_x, _y, _group = noone) : Node_3D(_x, _y, _group) co
 				break;
 		}
 		
-		_output.transform.position.set(	ox-px, oy-py, oz-pz );
-		_output.transform.anchor.set(	ox,    oy,    oz    );
-		_output.transform.applyMatrix();
+		_outMesh.transform.position.set(ox-px, oy-py, oz-pz );
+		_outMesh.transform.anchor.set(	ox,    oy,    oz    );
+		_outMesh.transform.applyMatrix();
 		
 		if(_array_index == preview_index) {
 			gizmo.transform.position.set(	ox-px, oy-py, oz-pz );
 			gizmo.transform.applyMatrix();
 		}
 		
-		return _output;
+		_outdata[0] = _outMesh;
+		_outdata[1] = [ox, oy, oz];
+		
+		return _outdata;
 	}
 	
 	////- Preview

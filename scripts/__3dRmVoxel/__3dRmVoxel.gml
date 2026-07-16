@@ -30,9 +30,9 @@ function __3dRmVoxel() : __3dObject() constructor {
 			var d = buffer_read(voxelData, buffer_u8);
 			if(!d) continue;
 			
-			cx = -(k - voxelRes / 2) * voxelSize;
-			cy =  (i - voxelRes / 2) * voxelSize;
-			cz = -(j - voxelRes / 2) * voxelSize;
+			cx = -(k - voxelRes / 2) * voxelSize - voxelCube;
+			cy =  (i - voxelRes / 2) * voxelSize + voxelCube;
+			cz = -(j - voxelRes / 2) * voxelSize - voxelCube;
 			
 			vertex_position_3d(vb,cx-ss,cy-ss,cz+ss); vertex_normal(vb,0,0,1); vertex_texcoord(vb,0,0); vertex_color(vb,w,1); vertex_float3(vb,255,0,0);
 			vertex_position_3d(vb,cx+ss,cy+ss,cz+ss); vertex_normal(vb,0,0,1); vertex_texcoord(vb,1,1); vertex_color(vb,w,1); vertex_float3(vb,0,255,0);
@@ -289,6 +289,9 @@ function __3dRmCubeMarch() : __3dObject() constructor {
 		var r2 = rs * rs;
 		var cs = rs / 2;
 		
+		voxelSize = 1 / voxelRes;
+		voxelCube = voxelSize / 2;
+		
 		VB[0] = vertex_create_buffer();
 		var vb = VB[0];
 		var cx, cy, cz;
@@ -319,13 +322,13 @@ function __3dRmCubeMarch() : __3dObject() constructor {
 			var marchIndex = d000 << 0 | d001 << 1 | d010 << 2 | d011 << 3 | d100 << 4 | d101 << 5 | d110 << 6 | d111 << 7;
 			if(marchIndex == 0 || marchIndex == 255) continue;
 
-			var p0x = (k   - cs) / rs;
-			var p0y = (j   - cs) / rs;
-			var p0z = (i   - cs) / rs;
+			var p0x = (k   - cs) / rs + voxelCube;
+			var p0y = (j   - cs) / rs + voxelCube;
+			var p0z = (i   - cs) / rs + voxelCube;
 
-			var p1x = (k+1 - cs) / rs;
-			var p1y = (j+1 - cs) / rs;
-			var p1z = (i+1 - cs) / rs;
+			var p1x = (k+1 - cs) / rs + voxelCube;
+			var p1y = (j+1 - cs) / rs + voxelCube;
+			var p1z = (i+1 - cs) / rs + voxelCube;
 			
 			edges[ 0][0] = p0x;             edges[ 0][1] = p0y;             edges[ 0][2] = (p0z + p1z) / 2;
 			edges[ 1][0] = p1x;             edges[ 1][1] = p0y;             edges[ 1][2] = (p0z + p1z) / 2;
