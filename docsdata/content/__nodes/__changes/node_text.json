@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.7.101",
+    "changes": [
+      {
+        "date": "2026-07-16T10:00:53.450Z",
+        "node": "Draw Text",
+        "commit": "**Draw Text**: Add toggle to not split words."
+      }
+    ]
+  },
+  {
     "version": "1.21.6.011",
     "changes": [
       {

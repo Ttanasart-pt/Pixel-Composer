@@ -47,6 +47,7 @@ function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	
 	////- =Alignment
 	newInput(27, nodeValue_Int(      "Max Line Width",    0    ));
+	newInput(40, nodeValue_Bool(     "Split Word",        true ));
 	newInput( 7, nodeValue_EButton(  "H Align",           0, array_create(3, THEME.inspector_text_halign) ));
 	newInput( 8, nodeValue_EButton(  "V Align",           0, array_create(3, THEME.inspector_text_valign) ));
 	
@@ -78,7 +79,7 @@ function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	newInput(25, nodeValue_EButton(  "Trim Type",          0, [ "Character", "Word", "Line" ] ));
 	newInput(24, nodeValue_SliRange( "Range",             [0,1]  ));
 	newInput(26, nodeValue_Bool(     "Use Full Text Size", false ));
-	// 40
+	// 41
 		
 	input_display_list = [ 
 		[ "Text",	    false     ],  0, 32, 
@@ -88,7 +89,7 @@ function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		[ "Font",		false     ],  1,  2, 15, 
 			[ "/Settings",   true ], 35,  3, 37, 
 			[ "/Lettering", false ], 11, 12, 36,
-		[ "Alignment",	false     ], 27,  7,  8, 
+		[ "Alignment",	false     ], 27, 40,  7,  8, 
 		[ "Path",	     true     ], 13, 14, 30, 
 		
 		[ "Rendering",	false     ],  5, 31, 38, 
@@ -369,7 +370,9 @@ function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 			
 			var _path  = _data[13];
 			var _pthS  = _data[14];
+			
 			var _lineW = _data[27];
+			var _cutSp = _data[40];
 			var _hali  = _data[ 7];
 			var _vali  = _data[ 8];
 			__pthR     = _data[30];
@@ -522,11 +525,11 @@ function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 					_line_widths[_ind] += _trck * (string_length(_str_line) - 1);
 					_ind++;
 					
-				} else {
+				} else if(_cutSp) {
 					var _lw  = 0;
 					var _lne = "";
 					
-					for( var j = 1; j <= string_length(_str_line); j++ ) {
+					for( var j = 1, m = string_length(_str_line); j <= m; j++ ) {
 						var _chr = string_char_at(_str_line, j);
 						var _chw = (__mono? __monoW : string_width(_chr)) + _trck;
 						
@@ -548,6 +551,36 @@ function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 						_line_widths[_ind] = _lw - _trck;
 						_ind++;
 					}
+					
+				} else {
+					var _lw  = 0;
+					var _lne = "";
+					var words = string_split(_str_line, " ");
+					
+					for( var j = 0, m = array_length(words); j < m; j++ ) {
+						var _wrd = words[j];
+						var _wrl = string_length(_wrd);
+						var _chw = (__mono? __monoW * _wrl : string_width(_wrd)) + (_trck * _wrl - 1);
+						
+						if(_lw + _chw >= _lineW) {
+							_str_lines[_ind]   = _lne;
+							_line_widths[_ind] = _lw - _trck;
+							_ind++;
+							
+							_lne = "";
+							_lw = 0;
+						}
+						
+						_lne += _wrd + " ";
+						_lw  += _chw + (__mono? __monoW : string_width(" "));
+					}
+					
+					if(_lne != "") {
+						_str_lines[_ind]   = _lne;
+						_line_widths[_ind] = _lw - _trck;
+						_ind++;
+					}
+					
 				}
 			}
 			
