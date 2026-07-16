@@ -122,7 +122,8 @@
 	function attribute_surface_depth(label = true) {
 		var _useInput = !array_empty(inputs) && inputs[0].type == VALUE_TYPE.surface;
 		
-		attributes.color_depth = _useInput? 0 : PREFERENCES.node_def_depth;
+		attributes.color_depth         = _useInput? 0 : PREFERENCES.node_def_depth;
+		attribute_defaults.color_depth = attributes.color_depth;
 		
 		attr_depth_array = variable_clone(global.SURFACE_FORMAT_NAME);
 		attr_depth_array[0].setActive(_useInput);
@@ -145,6 +146,9 @@
 		attributes.interpolate = PREFERENCES.node_def_interpolation;
 		attributes.oversample  = PREFERENCES.node_def_oversample;
 		
+		attribute_defaults.interpolate = attributes.interpolate;
+		attribute_defaults.oversample  = attributes.oversample;
+		
 		attr_interpolate_array = variable_clone(_ext? global.SURFACE_INTERPOLATION_EXT : global.SURFACE_INTERPOLATION);
 		
 		interpolate_selector   = new scrollBox(attr_interpolate_array, function(val) /*=>*/ { attribute_set("interpolate", val); }, false)
@@ -163,6 +167,9 @@
 	function attribute_oversample(label = false) {
 		attributes.interpolate = PREFERENCES.node_def_interpolation;
 		attributes.oversample  = PREFERENCES.node_def_oversample;
+		
+		attribute_defaults.interpolate = attributes.interpolate;
+		attribute_defaults.oversample  = attributes.oversample;
 		
 		attr_oversample_array  = variable_clone(global.SURFACE_OVERSAMPLE);
 		oversample_selector    = new scrollBox(attr_oversample_array, function(val) /*=>*/ { attribute_set("oversample", val); }, false)

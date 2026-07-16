@@ -1510,7 +1510,7 @@ function Panel_Inspector() : PanelContent() constructor {
 				var editBoxW   = con_ww - labelWidth - ui(4);
 				var editBoxH   = lb_h;
 				
-				#region default
+				#region Default
 					var bb = THEME.button_hide_fill;
 					var bx = editBoxX + editBoxW - bs;
 					var by = editBoxY + editBoxH / 2. - bs / 2;
@@ -1532,7 +1532,9 @@ function Panel_Inspector() : PanelContent() constructor {
 					
 					bx -= ui(4);
 					editBoxW -= bs + ui(4);
-					
+				#endregion
+				
+				#region Reset
 					bx -= bs;
 					var bt = __txt("panel_inspector_reset", "Reset");
 					var ba = .8;

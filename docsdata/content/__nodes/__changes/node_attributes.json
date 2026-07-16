@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.7.102",
+    "changes": [
+      {
+        "date": "2026-07-16T23:41:18.607Z",
+        "node": "Inspector Panel",
+        "commit": "**Inspector Panel**: Fix attribute not reset if no default is set."
+      }
+    ]
+  },
+  {
     "version": "1.21.6.010",
     "changes": [
       {

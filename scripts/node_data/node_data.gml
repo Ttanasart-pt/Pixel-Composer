@@ -232,7 +232,8 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		attributes.annotation_size   = .4;
 		attributes.annotation_color  = COLORS._main_text_sub;
 		
-		panel_custom_data = 0;
+		attribute_defaults = {};
+		panel_custom_data  = 0;
 		
 		onSetAttribute  = undefined;
 		setAttribute    = function(k, v, r = false) /*=>*/ { 
@@ -1159,14 +1160,19 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		PRESETS_MAP[$ key]._values.content = map;
 	}
 	
-	static resetDefaultAttr = function(attrKey) {
+	static __resetDefaultAttr = function(attrKey) { 
+		attributes[$ attrKey] = attribute_defaults[$ attrKey] ?? 0; 
+		triggerRender(); 
+	}
+		
+	static resetDefaultAttr   = function(attrKey) {
 		var key = instanceof(self);
-		if(!has(PRESETS_MAP, key))              return;
-		if(!has(PRESETS_MAP[$ key], "_values")) return;
+		if(!has(PRESETS_MAP, key))              return __resetDefaultAttr(attrKey);
+		if(!has(PRESETS_MAP[$ key], "_values")) return __resetDefaultAttr(attrKey);
 		
 		var map = PRESETS_MAP[$ key]._values.content;
-		if(!has(map, "attr"))                   return;
-		if(!has(map.attr, attrKey))             return;
+		if(!has(map, "attr"))                   return __resetDefaultAttr(attrKey);
+		if(!has(map.attr, attrKey))             return __resetDefaultAttr(attrKey);
 		
 		attributes[$ attrKey] = map.attr[$ attrKey];
 		triggerRender();
