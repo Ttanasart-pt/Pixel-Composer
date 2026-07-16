@@ -1265,6 +1265,7 @@
             "Node_Array_Boolean_Opr",
             "Node_Array_Flattern",
             "Node_Array_Transpose",
+            "Node_Array_Randomizer",
             { "label": "/Group Operator" },
             "Node_Array_Sort",
             "Node_Iterate_Each_Inline",

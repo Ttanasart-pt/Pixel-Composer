@@ -27,7 +27,7 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	
 	////- =Surfaces
 	newInput( 0, nodeValue_Surface( "Surface In" ));
-	newInput(15, nodeValue_EScroll( "Array", 0, [ 
+	newInput(15, nodeValue_EScroll( "Array", 1, [ 
 		new scrollItem( "Spread Output" ).setTooltip("Create multiple surfaces for each surface separately."), 
 		new scrollItem( "Index"         ).setTooltip("Mix all input surfaces using spawn index as array index."), 
 		new scrollItem( "Random"        ).setTooltip("Mix all input surfaces with random array index."), 
@@ -614,7 +614,8 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		var iDef = 2 + array_get_index(useV, "Depth");
 		
 		var _dyna     = false;
-		var surfArray = is_array(_inSurf);
+		var surfArray = is_array_safe(_inSurf);
+		var _arrLen   = array_safe_length(_inSurf);
 		if(surfArray && array_empty(_inSurf)) return _outData;
 		
 		#region cache value
@@ -622,10 +623,11 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 			surface_valid_map = {};
 			
 			if(surfArray) {
-				for( var i = 0, n = array_length(_inSurf); i < n; i++ ) {
-					_dyna = _dyna || is(_inSurf[i], dynaSurf);
-					surface_valid_map[$ _inSurf[i]] = is_surface(_inSurf[i]);
-					surface_size_map[$ _inSurf[i]]  = surface_get_dimension(_inSurf[i]);
+				for( var i = 0; i < _arrLen; i++ ) {
+					var _ins = array_safe_get_fast(_inSurf, i);
+					_dyna = _dyna || is(_ins, dynaSurf);
+					surface_valid_map[$ _ins] = is_surface(_ins);
+					surface_size_map[$ _ins]  = surface_get_dimension(_ins);
 				}
 				
 			} else {
@@ -693,8 +695,7 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 			var _sed     = seed;
 			var _sct     = array_verify(_outData[1], _amount);
 			var _sct_len = 0;
-			var _arrLen  = array_safe_length(_inSurf);
-		
+			
 			random_set_seed(_sed);
 			
 			var _wigX = posWig[0] != 0 || posWig[1] != 0;
@@ -971,34 +972,39 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 				if(surfArray) {
 					random_set_seed(_csed++);
 					
-					switch(_arr) { 
-						case 1 : ind  = safe_mod(i, _arrLen);             break;
-						case 2 : ind  = irandom(_arrLen - 1);             break;
-						case 3 : ind  = array_safe_get_fast(arrId, i, 0); break;
-						case 4 : if(useArrTex) ind = colorBrightness(surface_get_pixel(arrTex, _x, _y)) * (_arrLen - 1); break;
-					}
-					
-					if(arrAnim[0] != 0 || arrAnim[1] != 0) {
-						var _arrAnim_spd = random_range_seed(arrAnim[0], arrAnim[1], _csed++);
-						var _animInd     = ind + CURRENT_FRAME * _arrAnim_spd;
+					if(is(_inSurf, ArrayObject) && _arr == 2) {
+						surf = _inSurf.getElementRandom();
 						
-						switch(arrAnimEnd) {
-							case 0 : ind = safe_mod(_animInd, _arrLen); break;
-								
-							case 1 :
-								var pp = safe_mod(_animInd, _arrLen * 2 - 1);
-								ind = pp < _arrLen? pp : _arrLen * 2 - pp;
-								break;
-								
-							case 2 : ind = _animInd; break;
-							case 3 : ind = clamp(_animInd, 0, _arrLen - 1); break;
+					} else {
+						switch(_arr) { 
+							case 1 : ind  = safe_mod(i, _arrLen);             break;
+							case 2 : ind  = irandom(_arrLen - 1);             break;
+							case 3 : ind  = array_safe_get_fast(arrId, i, 0); break;
+							case 4 : if(useArrTex) ind = colorBrightness(surface_get_pixel(arrTex, _x, _y)) * (_arrLen - 1); break;
 						}
-					}
-					
-					if(iArr > 1 && _v != noone) 
-						ind = safe_mod(array_safe_get_fast(_v, iArr, ind), _arrLen);
 						
-					surf = array_safe_get_fast(_inSurf, ind, 0); 
+						if(arrAnim[0] != 0 || arrAnim[1] != 0) {
+							var _arrAnim_spd = random_range_seed(arrAnim[0], arrAnim[1], _csed++);
+							var _animInd     = ind + CURRENT_FRAME * _arrAnim_spd;
+							
+							switch(arrAnimEnd) {
+								case 0 : ind = safe_mod(_animInd, _arrLen); break;
+									
+								case 1 :
+									var pp = safe_mod(_animInd, _arrLen * 2 - 1);
+									ind = pp < _arrLen? pp : _arrLen * 2 - pp;
+									break;
+									
+								case 2 : ind = _animInd; break;
+								case 3 : ind = clamp(_animInd, 0, _arrLen - 1); break;
+							}
+						}
+						
+						if(iArr > 1 && _v != noone) 
+							ind = safe_mod(array_safe_get_fast(_v, iArr, ind), _arrLen);
+							
+						surf = array_safe_get_fast(_inSurf, ind, 0); 
+					}
 				}
 				
 				if(surf == 0 || !surface_valid_map[$ surf]) continue;

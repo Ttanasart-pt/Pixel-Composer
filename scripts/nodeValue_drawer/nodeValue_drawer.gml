@@ -46,6 +46,9 @@ function drawWidget(xx, yy, ww, _m, _jun, global_var = true, _hover = false, _fo
 		var _showVal  = jun.showValue();
 		var _boxColr  = jun.widgetBoxColor;
 		
+		if(is(_showVal, ArrayObject) && _showVal.drawWidget) 
+			wid = _showVal.drawWidget;
+		
 		if(_ID != undefined) {
 			var _map = jun.editWidgetMap;
 			if(!has(_map, _ID)) 
@@ -569,12 +572,15 @@ function drawWidget(xx, yy, ww, _m, _jun, global_var = true, _hover = false, _fo
 			wid.setFocusHover(_focus, _hover);
 			
 			if(_input) {
-				wid.setInteract(jun.editable && !jun.hasJunctionFrom());
+				var _interactable = jun.editable && !jun.hasJunctionFrom();
+				if(is(wid, Inspector_Custom_Renderer))
+					_interactable = true;
+				
+				wid.setInteract(_interactable);
 				if(_focus) wid.register(_scrollPane);
 				
-			} else {
+			} else 
 				wid.setInteract(false);
-			}
 			
 			var param = drawParam;
 			param.set(editBoxX, editBoxY, editBoxW, editBoxH, _m).setR(rx,ry)

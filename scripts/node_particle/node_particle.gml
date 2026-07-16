@@ -237,6 +237,8 @@ function Node_Particle(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 		scatter_index   = 0;
 		def_surface     = -1;
 		
+		// By the time particle is rendering, the surface may already been destroyed or modified in other nodes.
+		// Thus all connected surface is copied and store in the spanwer node.
 		surface_cache   = {};
 		surface_wcache  = {};
 		surface_hcache  = {};
@@ -305,16 +307,17 @@ function Node_Particle(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 		var surfs = inputs_data[0];
 		
 		if(array_empty(surfs)) return;
-		if(!is_array(surfs)) surfs = [ surfs ];
+		if(!is_array_safe(surfs)) surfs = [ surfs ];
 		surfs = array_spread(surfs);
 		
-		for( var i = 0, n = array_length(surfs); i < n; i++ ) {
-			var _s = surfs[i];
+		for( var i = 0, n = array_safe_length(surfs); i < n; i++ ) {
+			var _s   = array_safe_get_fast(surfs, i);
+			var _key = _s;
 			
 			if(is(_s, dynaSurf)) {
-				surface_cache[$  surfs[i]] = _s;
-				surface_wcache[$ surfs[i]] = surface_get_width_safe(_s);
-				surface_hcache[$ surfs[i]] = surface_get_height_safe(_s);
+				surface_cache[$  _key] = _s;
+				surface_wcache[$ _key] = surface_get_width_safe(_s);
+				surface_hcache[$ _key] = surface_get_height_safe(_s);
 				continue;
 			}
 			
@@ -325,11 +328,11 @@ function Node_Particle(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 			
 			var sw = surface_get_width_safe(_s);
 			var sh = surface_get_height_safe(_s);
-			surface_wcache[$ surfs[i]] = sw;
-			surface_hcache[$ surfs[i]] = sh;
-			surface_cache[$  surfs[i]] = surface_verify(surface_cache[$  surfs[i]], sw, sh);
+			surface_wcache[$ _key] = sw;
+			surface_hcache[$ _key] = sh;
+			surface_cache[$  _key] = surface_verify(surface_cache[$ _key], sw, sh);
 			
-			surface_set_target(surface_cache[$  surfs[i]]);
+			surface_set_target(surface_cache[$ _key]);
 				DRAW_CLEAR
 				BLEND_OVERRIDE
 				draw_surface(_s, 0, 0);
@@ -433,21 +436,10 @@ function Node_Particle(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 			
 			#region Sprites
 				var _spr = _inSurf, _index = 0;
-				if(is_array(_inSurf)) switch(_arr_type) {
-					case 0 : 	
-						_index = irandom(array_length(_inSurf) - 1);
-						_spr = _inSurf[_index];						
-						break;
-						
-					case 1 : 
-						_index = safe_mod(spawn_index, array_length(_inSurf));
-						_spr = _inSurf[_index];
-						break;
-						
-					case 2 : 
-					case 3 : 
-						_spr = _inSurf;
-						break;
+				
+				if(is_array_safe(_inSurf)) switch(_arr_type) {
+					case 0 : _spr = array_safe_get_random(_inSurf); break;
+					case 1 : _spr = array_safe_get_fast(_inSurf, safe_mod(spawn_index, array_safe_length(_inSurf))); break;
 				}
 			#endregion
 			
@@ -550,7 +542,7 @@ function Node_Particle(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 					case 2  : clti = irandom(_color_idx_len - 1);                 break;
 				}
 				
-				var _clr_ind  = array_safe_get(_color_idx, clti, ca_white);
+				var _clr_ind  = array_safe_get_fast(_color_idx, clti, ca_white);
 				    _bld      = colorMultiply(_bld, _clr_ind);
 				
 				if(surfSamp.active) {
@@ -700,6 +692,7 @@ function Node_Particle(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 		var keys = variable_struct_get_names(surface_cache);
 		for( var i = 0, n = array_length(keys); i < n; i++ )
 			surface_free_safe(surface_cache[$ keys[i]]);
+			
 		surface_cache  = {};
 		surface_wcache = {};
 		surface_hcache = {};
@@ -826,8 +819,9 @@ function Node_Particle(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 			
 			inputs[76].setVisible(_typ == PARTICLE_RENDER_TYPE.line);
 			
-			if(is_array(_inSurf)) {
+			if(is_array_safe(_inSurf)) {
 				inputs[22].setVisible(true);
+				
 				var _type = getInputData(22);
 				if(_type == 2) {
 					inputs[23].setVisible(true);

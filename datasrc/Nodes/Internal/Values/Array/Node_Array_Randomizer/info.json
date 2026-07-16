@@ -1,0 +1,6 @@
+{
+    "name":          "Array Weighted Selector",
+    "spr":           "s_node_array_randomizer",
+    "baseNode":      "Node_Array_Randomizer",
+    "pxc_version":    121071,
+}

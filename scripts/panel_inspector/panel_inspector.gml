@@ -138,7 +138,6 @@
 
 #region Elements
 	function Inspector_Custom_Renderer(drawFn, registerFn = noone) : widget() constructor {
-	    draw    = drawFn;
 	    node    = noone;
 	    panel   = noone;
 	    name    = "";
@@ -160,14 +159,12 @@
 	    
 	    b_toggle = button(function() /*=>*/ { togglePopup(name); }).setIcon(THEME.node_goto, 0, COLORS._main_icon, .75);
 	    
+	    ////- =Setters
+	    
 	    static setName    = function(n) /*=>*/ { name = n;       return self; }
 	    static setPadName = function( ) /*=>*/ { padName = true; return self; }
 	    static setNode    = function(n) /*=>*/ { node = n;       return self; }
 	    static toString   = function( ) /*=>*/ { return $"Custon renderer: {name}"; }
-	    
-	    static step = function() {
-	        b_toggle.icon_blend = popupPanel == noone? COLORS._main_icon : COLORS._main_accent;
-	    }
 	    
 	    static togglePopup = function(_title) { 
 	        if(popupPanel == noone) {
@@ -184,6 +181,23 @@
 	        
 	        popupPanel = noone;
 	    }
+	    
+	    ////- =Step
+	    
+	    static step = function() {
+	        b_toggle.icon_blend = popupPanel == noone? COLORS._main_icon : COLORS._main_accent;
+	    }
+	    
+	    ////- =Draw
+	    
+	    draw = drawFn;
+	    
+	    static fetchHeight = function(params) { return drawParam(params); }
+		static drawParam   = function(params) { 
+			return draw(params.x, params.y, params.w, params.m, params.hover ?? hover, params.focus ?? active);
+		}
+	    
+	    ////- =Actions
 	    
 	    static clone    = function() { 
 	        var _n = new Inspector_Custom_Renderer(draw, register);
@@ -1241,6 +1255,9 @@ function Panel_Inspector() : PanelContent() constructor {
 					draw_set_text(_font, fa_left, fa_top, COLORS._main_text);
 					draw_text_add(nx, ny, jun.name);
                 }
+                
+                jun.setInteract(true);
+                jun.setFocusHover(_hover, pFOCUS);
                 
                 var _wdh = jun.draw(widX, widY, widW, _m, _hover, pFOCUS, self);
                 if(_wdh > 0) _wdh += ui(8);

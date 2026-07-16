@@ -93,8 +93,8 @@ function widget() constructor {
 	static onSetParam = undefined;
 	static setParam   = function(params) {
 		font = params.font;
-		rx   = params.rx;
-		ry   = params.ry;
+		if(!is_undefined(params.rx)) rx = params.rx;
+		if(!is_undefined(params.ry)) ry = params.ry;
 		
 		sep_axis = params[$ "sep_axis"] ?? sep_axis;
 		hide     = params[$ "hide"]     ?? hide;
@@ -190,10 +190,11 @@ function widgetParam(_x, _y, _w, _h, _data, _display_data = undefined, _m = mous
 	color      = undefined;
 	boxColor   = undefined;
 	hid        = undefined;
+	scrollpane = undefined;
+	
 	focus      = undefined;
 	hover      = undefined;
 	interact   = undefined;
-	scrollpane = undefined;
 	
 	static set = function(_x,_y,_w,_h,_m=m) /*=>*/ { 
 		x = _x; y = _y;

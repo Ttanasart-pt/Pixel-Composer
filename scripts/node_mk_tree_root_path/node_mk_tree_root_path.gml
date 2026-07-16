@@ -112,7 +112,7 @@ function Node_MK_Tree_Path_Root(_x, _y, _group = noone) : Node(_x, _y, _group) c
 			var _tex      = getInputData(20);
 			var _texArSel = getInputData(24);
 			
-			var texArray  = is_array(_tex);
+			var texArray  = is_array_safe(_tex);
 			var texArrLen = array_safe_length(_tex);
 			
 			inputs[17].setVisible(!_line);
@@ -221,8 +221,8 @@ function Node_MK_Tree_Path_Root(_x, _y, _group = noone) : Node(_x, _y, _group) c
 			
 			var tex  = _tex;
 			if(texArray) switch(_texArSel) {
-				case 0 : tex = _tex[t % texArrLen];          break;
-				case 1 : tex = _tex[irandom(texArrLen - 1)]; break;
+				case 0 : tex = array_safe_get(_tex, t % texArrLen); break;
+				case 1 : tex = array_safe_get_random(_tex); break;
 			}
 			
 			_t.texture = tex;

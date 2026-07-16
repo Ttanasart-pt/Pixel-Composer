@@ -1287,6 +1287,7 @@
     {"name":"node_array_length","order":14,"path":"scripts/node_array_length/node_array_length.yy",},
     {"name":"node_array_partition","order":46,"path":"scripts/node_array_partition/node_array_partition.yy",},
     {"name":"node_array_pin","order":40,"path":"scripts/node_array_pin/node_array_pin.yy",},
+    {"name":"node_array_randomizer","order":47,"path":"scripts/node_array_randomizer/node_array_randomizer.yy",},
     {"name":"node_array_range","order":15,"path":"scripts/node_array_range/node_array_range.yy",},
     {"name":"node_array_rearrange","order":35,"path":"scripts/node_array_rearrange/node_array_rearrange.yy",},
     {"name":"node_array_remove","order":7,"path":"scripts/node_array_remove/node_array_remove.yy",},

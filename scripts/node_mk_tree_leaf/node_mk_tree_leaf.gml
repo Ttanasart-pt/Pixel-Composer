@@ -537,7 +537,7 @@ function Node_MK_Tree_Leaf(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 			
 			var _grow = getInputData(22);
 			
-			var texArray  = is_array(_tex);
+			var texArray  = is_array_safe(_tex);
 			var texArrLen = array_safe_length(_tex);
 			
 			inputs[58].setVisible(_grvO);
@@ -705,8 +705,8 @@ function Node_MK_Tree_Leaf(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 					
 					var tex  = _tex;
 					if(texArray) switch(_texArSel) {
-						case 0 : tex = _tex[_spawnIndx % texArrLen]; break;
-						case 1 : tex = _tex[irandom(texArrLen - 1)]; break;
+						case 0 : tex = array_safe_get(_tex, _spawnIndx % texArrLen); break;
+						case 1 : tex = array_safe_get_random(_tex); break;
 					}
 					
 					var _l = new __MK_Tree_Leaf(_br, _rPos, _shap, _llx, _lly, _dr, lsx, lsy, _lspn);

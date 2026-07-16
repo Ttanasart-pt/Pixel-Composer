@@ -212,7 +212,7 @@ function Node_MK_Tree_Branch(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 				
 			var _grow = getInputData(20);
 			
-			var texArray  = is_array(_tex);
+			var texArray  = is_array_safe(_tex);
 			var texArrLen = array_safe_length(_tex);
 			
 			inputs[ 4].setVisible(_angT != 2);
@@ -285,8 +285,8 @@ function Node_MK_Tree_Branch(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 				
 				var tex  = _tex;
 				if(texArray) switch(_texArSel) {
-					case 0 : tex = _tex[j % texArrLen];          break;
-					case 1 : tex = _tex[irandom(texArrLen - 1)]; break;
+					case 0 : tex = array_safe_get(_tex, j % texArrLen); break;
+					case 1 : tex = array_safe_get_random(_tex); break;
 				}
 				
 				var _t = new __MK_Tree(_tr.root, ori[0], ori[1], _seed + i)

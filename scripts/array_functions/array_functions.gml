@@ -1,3 +1,16 @@
+#region object
+	function ArrayObject() constructor {
+		length = 0;
+		
+		static getElementByIndex = function(i) /*=>*/ {return i}
+		static getElementRandom  = function( ) /*=>*/ {return 0}
+		
+		static getIndexRandom    = function( ) /*=>*/ {return 0}
+		
+		static drawWidget = undefined;
+	}
+#endregion
+
 #region creation 
 	function array_create_2d(_x, _y, val = 0) {
 		var _arr = array_create(_x);
@@ -31,9 +44,11 @@
 #endregion
 
 #region check
-	function array_empty(arr)   { INLINE return  is_array(arr) && array_length(arr) == 0; }
-	function array_valid(arr)   { INLINE return  is_array(arr) && array_length(arr) > 0;  }
-	function array_invalid(arr) { INLINE return !is_array(arr) || array_length(arr) == 0; }
+	function is_array_safe(arr) { INLINE return  is_array(arr) || is(arr, ArrayObject); }
+	
+	function array_empty(arr)   { INLINE return  is_array_safe(arr) && array_safe_length(arr) == 0; }
+	function array_valid(arr)   { INLINE return  is_array_safe(arr) && array_safe_length(arr) > 0;  }
+	function array_invalid(arr) { INLINE return !is_array_safe(arr) || array_safe_length(arr) == 0; }
 	
 	function array_verify_min_new(arr, length) { INLINE
 		if(!is_array(arr)) return array_create(length);
@@ -94,7 +109,6 @@
 		
 		return arr;
 	}
-
 #endregion
 
 #region get set
@@ -126,12 +140,13 @@
 	
 	#macro aGetF array_safe_get_fast
 	function array_safe_get_fast(arr, index=0, def=0) {
-		INLINE
+		if(is(arr, ArrayObject)) return arr.getElementByIndex(index);
 		return is_array(arr) && index >= 0 && index < array_length(arr)? arr[index] : def;
 	}
 	
 	function array_safe_get(arr, index, def = 0, overflow = ARRAY_OVERFLOW._default) {
 		INLINE
+		if(is(arr, ArrayObject)) return arr.getElementByIndex(index);
 		if(!is_array(arr) || !is_numeric(index)) return def;
 		
 		var len = array_length(arr);
@@ -159,6 +174,13 @@
 		return arr[index] == undefined? def : arr[index];
 	}
 	
+	function array_safe_get_random(arr, def = 0) {
+		if(is(arr, ArrayObject)) return arr.getElementRandom();
+		if(!is_array(arr) || !is_numeric(index)) return def;
+		if(array_empty(arr)) return def;
+		return arr[irandom(array_length(arr) - 1)];
+	}
+	
 	function array_get_decimal(arr, index, color = false) {
 		INLINE
 		
@@ -172,7 +194,7 @@
 	}
 	
 	function array_safe_length(arr,def=0) {
-		INLINE
+		if(is(arr, ArrayObject)) return arr.length;
 		return is_array(arr)? array_length(arr) : def;
 	}
 
@@ -211,15 +233,15 @@
 	function array_get_depth(arr) { // Read only the first member, faster
 		INLINE
 		
-		if(!is_array(arr))   return 0;
-		if(array_empty(arr)) return 1;
+		if(!is_array_safe(arr)) return 0;
+		if(array_empty(arr))    return 1;
 		
 		var d = 1;
-		var p = arr[0];
+		var p = array_safe_get_fast(arr, 0);
 		
 		while(array_valid(p)) {
 			d++;
-			p = p[0];
+			p = array_safe_get_fast(p, 0);
 		}
 		
 		return d;
@@ -248,7 +270,7 @@
 		return _sub;
 	}
 	
-	function array_sum(arr) { return array_reduce(arr, function(s, v) /*=>*/ {return s + v}, 0); }
+	function array_sum(arr) { return array_reduce(arr, function(s,v,i) /*=>*/ {return s + v}, 0); }
 	
 	function array_search_min_bin(arr, value) {
 	    var _len = array_length(arr);
@@ -256,7 +278,10 @@
 	    
 	    var low  = 0;
 	    var high = _len - 1;
-	
+		
+		if(value <= arr[low])  return low;
+		if(value >= arr[high]) return high;
+		
 	    while (low <= high) {
 	        var mid = floor((low + high) / 2);
 	        var mid_v0 = arr[mid];
@@ -521,8 +546,8 @@
 	function array_spread(arr, _arr = [], _minDepth = 0) {
 		if(array_get_depth(arr) == _minDepth) { array_push(_arr, arr); return _arr; }
 		
-		for( var i = 0, n = array_length(arr); i < n; i++ ) 
-			array_spread(arr[i], _arr, _minDepth);
+		for( var i = 0, n = array_safe_length(arr); i < n; i++ ) 
+			array_spread(array_safe_get_fast(arr, i), _arr, _minDepth);
 		return _arr;
 	}
 	

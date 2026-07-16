@@ -539,27 +539,32 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		var _sdim        = [ 1, 1 ]
 		var _surf        = _iSrf;
 		var _baseSurface = _surf;
-		var _use_array   = is_array(_surf);
-		var _arr_length  = _use_array? array_length(_surf) : 1;
+		var _use_array   = is_array_safe(_surf);
+		var _arr_length  = _use_array? array_safe_length(_surf) : 1;
 		if(_arr_length < 1) return _outData;
 		
 		var minx =  999999, miny =  999999;
 		var maxx = -999999, maxy = -999999;
 		
-		if(is_array(_surf)) {
-			for( var i = 0, n = array_length(_surf); i < n; i++ ) {
-				var _ddim = surface_get_dimension(_surf[i]);
+		surface_size_map  = {};
+		
+		if(_use_array) {
+			for( var i = 0; i < _arr_length; i++ ) {
+				var _srf  = array_safe_get_fast(_surf, i);
+				var _ddim = surface_get_dimension(_srf);
+				surface_size_map[$ _srf] = _ddim;
 				
-				_baseSurface = _surf[i];
+				_baseSurface = _srf;
 				_sdim[0] = max(_sdim[0], _ddim[0]);
 				_sdim[1] = max(_sdim[1], _ddim[1]);
 				_dims[i] = _ddim;
-				_dyna    = is(_surf[i], dynaSurf);
+				_dyna    = is(_srf, dynaSurf);
 			}
 			
 		} else if(is_surface(_surf)) {
 			_dyna = is(_surf, dynaSurf);
 			_sdim = surface_get_dimension(_surf);
+			surface_size_map[$ _surf] = _sdim;
 		}
 		
 		if(!is_surface(_baseSurface)) return _outData;
@@ -672,17 +677,16 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 			var _surface = _iSrf;
 			var _sw  = _sdim[0];
 			var _sh  = _sdim[1];
-			var _sid = 0;
 			
 			if(_use_array) {
 				switch(_arr) {
-					case 0: _sid = safe_mod(i, _arr_length); break;
-					case 1: _sid = irandom(_arr_length - 1); break;
+					case 0: _surface = array_safe_get_fast(_iSrf, safe_mod(i, _arr_length)); break;
+					case 1: _surface = array_safe_get_random(_iSrf);                         break;
 				}
 				
-				_surface = _iSrf[_sid];
-				_sw = _dims[_sid][0];
-				_sh = _dims[_sid][1];
+				var _dim = surface_size_map[$ _surface] ?? _sdim;
+				_sw = _dim[0];
+				_sh = _dim[1];
 			}
 			
 			posx += random_range(_pran[0], _pran[1]);

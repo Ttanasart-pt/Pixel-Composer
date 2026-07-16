@@ -161,9 +161,9 @@ function Node_pSystem_Render(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 			_surf_w   = surface_get_width(_surf);
 			_surf_h   = surface_get_height(_surf);
 			
-		} else if(is_array(_surf) && !array_empty(_surf)) {
+		} else if(is_array_safe(_surf) && !array_empty(_surf)) {
 			_surf_use = 2;
-			_surf_len = array_length(_surf);
+			_surf_len = array_safe_length(_surf);
 		}
 		
 		var __p = [0,0];
@@ -234,12 +234,13 @@ function Node_pSystem_Render(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 						break;
 						
 					case 2 : 
-						var _surfI  = 0;
+						var _surfA  = noone;
 						
 						switch(_arrT) {
-							case 0 : _surfI = irandom(_surf_len - 1); break; // Random
-							case 1 : _surfI = _spwnId % _surf_len;    break; // Order
-							case 2 :                                         // Animation
+							case 0 : _surfA = array_safe_get_random(_surf);                    break; // Random
+							case 1 : _surfA = array_safe_get_fast(_surf, _spwnId % _surf_len); break; // Order
+							case 2 :                                                                  // Animation
+								var _surfI  = 0;
 								if(_anSt) _surfI = rat * (_surf_len - 1);
 								else {
 									var _animSpeed = random_range(_anSp[0], _anSp[1]);
@@ -261,12 +262,13 @@ function Node_pSystem_Render(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 											break; // Hide
 									}
 								}
+								
+								_surfA = array_safe_get_fast(_surf, _surfI); 
 								break;
 								
-							case 3 : _surfI = abs(_draw_sx) % _surf_len; break; // Scale
+							case 3 : _surfA = array_safe_get_fast(_surf, abs(_draw_sx) % _surf_len); break; // Scale
 						}
 						
-						var _surfA  = _surf[_surfI];
 						if(!_act || !is_surface(_surfA)) break;
 						
 					    _surf_w = surface_get_width(_surfA);
