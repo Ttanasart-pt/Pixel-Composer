@@ -267,14 +267,17 @@ function Node_Camera(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	////- Process
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _params) {
+		var amo = getInputAmount();
+		if(amo <= 0) return;
+		
 		PROCESSOR_OVERLAY_CHECK
 		
 		var _out  = outputs[0].getValue();
 		if(is_array(_out)) _out = _out[preview_index];
 		
-		var _siz  = current_data[6];
-		var _pos  = current_data[0];
-		var _zoom = current_data[1];
+		var _siz  = getInputSingle(6);
+		var _pos  = getInputSingle(0);
+		var _zoom = getInputSingle(1);
 		
 		var _cam_w = round(_siz[0]);
 		var _cam_h = round(_siz[1]);
