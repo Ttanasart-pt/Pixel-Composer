@@ -1,5 +1,4 @@
 #pragma use(d3d_sdf)
-
 #region -- d3d_sdf -- [1778544363.3362846]
 
 	#ifdef _YY_HLSL11_

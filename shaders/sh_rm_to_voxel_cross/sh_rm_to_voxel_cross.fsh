@@ -722,13 +722,14 @@ void main() {
 	
 	float r   = resolution;
 	float pix = pixelIndex;
+	
 	float z   = floor(pix / (r*r)); pix -= z * (r*r);
 	float y   = floor(pix /  r);    pix -= y *  r;
 	float x   = pix;
 	
 	vec3 cstart = middle - span * (r - 1.) / r;
 	vec3 cend   = middle + span * (r - 1.) / r;
-	vec3 pos    = mix(cstart, cend, vec3(x, y, z) / (r - 1.));
+	vec3 pos    = mix(cstart, cend, vec3(x, y, z) / r);
 
 	float dist = operateSceneSDF(pos);
 	float rend = 1. - step(0., dist);

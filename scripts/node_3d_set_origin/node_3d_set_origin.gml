@@ -10,7 +10,7 @@ function Node_3D_Set_Origin(_x, _y, _group = noone) : Node_3D(_x, _y, _group) co
 	
 	newOutput(0, nodeValue_Output( "Scene", VALUE_TYPE.d3Mesh, noone ));
 	
-	inputs_display_list = [ 0, 
+	input_display_list = [ 0, 
 		[ "Origin", false ], 1, 2,  
 	]
 	
