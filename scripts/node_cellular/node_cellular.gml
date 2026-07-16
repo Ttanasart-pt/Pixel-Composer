@@ -28,6 +28,7 @@ function Node_Cellular(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	newInput( 1, nodeValue_Vec2(     "Position", [.5,.5] )).setHotkey("G").setUnitSimple().setPieMenu();
 	newInput(12, nodeValue_Rotation( "Rotation",   0     )).setHotkey("R").setPieMenu();
 	newInput( 2, nodeValue_Float(    "Scale",      4     )).setHotkey("S").setMappable(11).setPieMenu();
+	newInput(24, nodeValue_Vec2(     "Size",      [1,1]  ))
 	
 	////- =Radial
 	newInput( 8, nodeValue_Slider( "Radial scale",   2, [  1, 10, 0.01] ));
@@ -45,13 +46,13 @@ function Node_Cellular(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	newInput( 5, nodeValue_Slider(   "Contrast",  1, [0, 4, 0.01] ));
 	newInput( 7, nodeValue_Slider(   "Middle",   .5, [0, 1, 0.01] ));
 	newInput(10, nodeValue_Bool(     "Colored",   false ))
-	// 24
+	// 25
 	
 	input_display_list = [  3,
 		[ "Output",    false ],  0, 20, 21, 13, 
 		[ "Noise",     false ],  4,  6, 14, 23, 
 		[ "Iteration", false ], 16, 18, 19, 17, 
-		[ "Transform", false ],  1, 12,  2, 11, 
+		[ "Transform", false ],  1, 12,  2, 11, 24,  
 		[ "Radial",    false ],  8,  9,
 		[ "Rendering", false ], 22, 15,  5,  7, 10, 
 	];
@@ -87,6 +88,7 @@ function Node_Cellular(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 			
 			var _pos    = _data[ 1];
 			var _rot    = _data[12];
+			var _size   = _data[24];
 			
 			var _rad    = _data[ 8];
 			var _sht    = _data[ 9];
@@ -127,6 +129,8 @@ function Node_Cellular(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 			
 			shader_set_2( "position",      _pos );
 			shader_set_m( "scale",         _data[2], _data[11], inputs[2] );
+			shader_set_2( "size",          _size);
+			
 			shader_set_f( "contrast",      _con );
 			shader_set_f( "middle",        _mid );
 			shader_set_f( "radiusScale",   _rad );

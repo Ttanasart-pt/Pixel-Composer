@@ -51,6 +51,7 @@ uniform int   colored;
 uniform float rotation;
 uniform int   tiled;
 
+uniform vec2      size;
 uniform vec2      scale;
 uniform int       scaleUseSurf;
 uniform sampler2D scaleSurf;
@@ -75,7 +76,7 @@ vec3 colorNoise(in vec2 st) {
 }
 
 vec2 cellNoise(vec2 ntx, vec2 pos, float sca, float scaMax, float ang, float _seed) {
-	vec2 st   = (ntx - pos) * mat2(cos(ang), -sin(ang), sin(ang), cos(ang)) * sca;
+	vec2 st   = (ntx - pos) * mat2(cos(ang), -sin(ang), sin(ang), cos(ang)) * sca / size;
     vec2 i_st = floor(st);
     vec2 f_st = fract(st);
 

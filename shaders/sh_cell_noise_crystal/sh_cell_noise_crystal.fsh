@@ -46,6 +46,7 @@ uniform float iterScale;
 uniform float iterAmpli;
 uniform int   blendMode;
 
+uniform vec2      size;
 uniform vec2      scale;
 uniform int       scaleUseSurf;
 uniform sampler2D scaleSurf;
@@ -105,7 +106,7 @@ void main() {
 	vec2 vtx = getUV(v_vTexcoord);
 	vec2 ntx = vtx * vec2(1., dimension.y / dimension.x);
 	vec2 pos = position / dimension;
-	vec2 st  = (ntx - pos) * mat2(cos(ang), -sin(ang), sin(ang), cos(ang)) * sca * 0.75;
+	vec2 st  = (ntx - pos) * mat2(cos(ang), -sin(ang), sin(ang), cos(ang)) * sca * .75 / size;
 	
     float amp = pow(1. / iterAmpli, float(iteration) - 1.) / (pow(1. / iterAmpli, float(iteration)) - 1.);
     float md  = .0;

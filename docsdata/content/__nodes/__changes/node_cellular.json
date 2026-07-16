@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.7.101",
+    "changes": [
+      {
+        "date": "2026-07-16T09:10:38.766Z",
+        "node": "Cellular Noise",
+        "commit": "**Cellular Noise**: Add 2D 'Size' property separate from uniform scalar 'Scale'."
+      }
+    ]
+  },
+  {
     "version": "1.21.6.008",
     "changes": [
       {

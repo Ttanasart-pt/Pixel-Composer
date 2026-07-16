@@ -46,6 +46,7 @@ uniform float iterScale;
 uniform float iterAmpli;
 uniform int   blendMode;
 
+uniform vec2      size;
 uniform vec2      scale;
 uniform int       scaleUseSurf;
 uniform sampler2D scaleSurf;
@@ -65,7 +66,7 @@ vec2 random2( in vec2 st ) { return fract(sin(vec2(dot(st, vec2(127.1, 311.7)), 
 float random( in vec2 st ) { return fract(sin(dot(st, vec2(12.9898, 78.233))) * 43758.5453123); }
 
 float cellNoise(vec2 ntx, vec2 pos, float sca, float scaMax, float ang, float _seed) {
-	vec2  st     = (ntx - pos) * mat2(cos(ang), -sin(ang), sin(ang), cos(ang)) * sca;
+	vec2  st     = (ntx - pos) * mat2(cos(ang), -sin(ang), sin(ang), cos(ang)) * sca / size;
 	float m_dist = 2.;
 	
 	if(pattern < 2) {
