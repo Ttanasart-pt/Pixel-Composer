@@ -384,6 +384,7 @@ function draw_text_match_range(_x, _y, _text, _range, _scale = 1) {
 	BLEND_ALPHA_MULP
 	var aa = string_length(_text);
 	var lw = string_width(_text) * _scale;
+	var _ranLen = array_length(_range);
 	
 	switch(ha) {
 		case fa_left :   xx = _x;			break;
@@ -394,11 +395,12 @@ function draw_text_match_range(_x, _y, _text, _range, _scale = 1) {
 	var j = 1;
 	repeat(aa) {
 		var ch = string_char_at(_text, j);
-		draw_set_color(_range[j]? COLORS._main_accent : cc);
+		draw_set_color(j < _ranLen && _range[j]? COLORS._main_accent : cc);
 		
 		if(_scale == 1) draw_text(ceil(xx), ceil(yy), ch);
 		else            draw_text_transformed(ceil(xx), ceil(yy), ch, _scale, _scale, 0);
 		xx += string_width(ch) * _scale;
+		
 		j++;
 	}
 	
@@ -476,6 +478,7 @@ function draw_text_match_range_ext(_x, _y, _text, _w, _range) {
 			
 			draw_text(ceil(xx), ceil(yy), ch);
 			xx += string_width(ch);
+			
 			j++;
 			_rind++;
 		}

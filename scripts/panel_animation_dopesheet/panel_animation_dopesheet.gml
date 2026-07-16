@@ -3844,6 +3844,8 @@ function Panel_Animation_Dopesheet() {
     	
         transformKeys();
         
+    	////- =Overlay
+    	
         if(item_dragging != noone) {
         	var n = array_length(item_draggings);
         	var _dx = mx - item_dragging_dx + n * ui(8);
