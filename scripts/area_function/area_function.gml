@@ -259,14 +259,20 @@ function area_get_random_point_poisson_c(_area, _distance, _seed) {
 	var _sbuf = buffer_create(8 * 2 * MAX_POINT, buffer_fixed, 8); 
 	var _args = buffer_create(1, buffer_grow, 1); 
 	
+	var area_x = array_safe_get_fast(_area, 0);
+	var area_y = array_safe_get_fast(_area, 1);
+	var area_w = array_safe_get_fast(_area, 2); area_w = abs(area_w);
+	var area_h = array_safe_get_fast(_area, 3); area_h = abs(area_h);
+	var area_s = array_safe_get_fast(_area, 4);
+	
 	buffer_to_start(_args);
 	buffer_write(_args, buffer_u64, buffer_get_address(_sbuf));
 	
-	buffer_write(_args, buffer_f64, array_safe_get_fast(_area, 0));
-	buffer_write(_args, buffer_f64, array_safe_get_fast(_area, 1));
-	buffer_write(_args, buffer_f64, array_safe_get_fast(_area, 2));
-	buffer_write(_args, buffer_f64, array_safe_get_fast(_area, 3));
-	buffer_write(_args, buffer_f64, array_safe_get_fast(_area, 4));
+	buffer_write(_args, buffer_f64, area_x);
+	buffer_write(_args, buffer_f64, area_y);
+	buffer_write(_args, buffer_f64, area_w);
+	buffer_write(_args, buffer_f64, area_h);
+	buffer_write(_args, buffer_f64, area_s);
 	
 	buffer_write(_args, buffer_f64, max(_distance, 2));
 	buffer_write(_args, buffer_f64, _seed);
