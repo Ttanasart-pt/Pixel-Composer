@@ -144,6 +144,9 @@
 varying vec2 v_vTexcoord;
 varying vec4 v_vColour;
 
+uniform int    useMask;
+uniform sampler2D mask;
+
 uniform sampler2D dripSurface;
 uniform sampler2D dripProgress;
 
@@ -155,11 +158,20 @@ void main() {
 	vec4 progCol = texture2D(dripProgress,   v_vTexcoord);
 	
 	gl_FragColor = origCol;
-	if(origCol.a > 0. || progCol.a == 0.) return;
+	if(origCol.a > 0. || dripCol.a == 0.) return;
+	
+	float maskIntens = 1.;
+	if(useMask == 1) {
+		vec4 maskCol = texture2D(mask, v_vTexcoord);
+		maskIntens   = (maskCol.r + maskCol.g + maskCol.b) / 3. * maskCol.a;
+	}
 	
 	vec4 colr = gradientEval(progCol.r);
+	vec4 targ = vec4(0.);
 	
-	if(blendMode == 0) gl_FragColor = colr;
-	if(blendMode == 1) gl_FragColor = dripCol * colr;
-	if(blendMode == 2) gl_FragColor = dripCol + colr;
+	if(blendMode == 0) targ = colr;
+	if(blendMode == 1) targ = dripCol * colr;
+	if(blendMode == 2) targ = dripCol + colr;
+	
+	gl_FragColor = mix(gl_FragColor, targ, maskIntens);
 }

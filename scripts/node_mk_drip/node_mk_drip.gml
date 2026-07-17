@@ -165,8 +165,11 @@ function Node_MK_Drip(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		}
 		
 		surface_set_shader(_outSurf, sh_mk_drip_render, true, BLEND.normal);
-			shader_set_s( "dripSurface",  temp_surface[2] );
-			shader_set_s( "dripProgress", temp_surface[3] );
+			shader_set_s( "dripSurface",  temp_surface[2]   );
+			shader_set_s( "dripProgress", temp_surface[3]   );
+			
+			shader_set_i( "useMask",      is_surface(_mask) );
+			shader_set_s( "mask",         _mask             );
 			
 			shader_set_i( "blendMode",    _blnd );
 			shader_set_gradient(_colr);

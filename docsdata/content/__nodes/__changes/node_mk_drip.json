@@ -6,6 +6,11 @@
         "date": "2026-07-17T01:54:04.062Z",
         "node": "MK Drip] Blend color is now gradient. - [MK Drip",
         "commit": "**MK Drip] Blend color is now gradient. - [MK Drip**: Add Blend mode property."
+      },
+      {
+        "date": "2026-07-17T02:09:26.037Z",
+        "node": "MK Drip",
+        "commit": "**MK Drip**: Fix mask not working."
       }
     ]
   },
