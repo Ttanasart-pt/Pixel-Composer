@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.7.102",
+    "changes": [
+      {
+        "date": "2026-07-17T08:50:52.340Z",
+        "node": "Armature Create",
+        "commit": "**Armature Create**: Add delete hotkey."
+      }
+    ]
+  },
+  {
     "version": "1.21.7.001",
     "changes": [
       {

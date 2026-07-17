@@ -508,19 +508,8 @@ function Node_Armature(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 		if(bone_dragging && mouse_lrelease())
 			bone_dragging = noone;
 			
-		if(bone_remove != noone) {
-			var _par = bone_remove.parent;
-			recordAction(ACTION_TYPE.struct_modify, bones).setName($"Remove bone [{bone_remove.name}]").setRef(self);
-			array_remove(_par.childs, bone_remove);
-				
-			for( var i = 0, n = array_length(bone_remove.childs); i < n; i++ ) {
-				var _ch = bone_remove.childs[i];
-				_par.addChild(_ch);
-				_ch.parent_anchor = bone_remove.parent_anchor;
-			}
-			
-			triggerRender();
-		}
+		if(bone_remove != noone) 
+			deleteBone(bone_remove);
 		
 		return bh;
 	}); 
@@ -547,6 +536,20 @@ function Node_Armature(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 		
 		return bone;
 	} 
+	
+	static deleteBone = function(bone) {
+		var _par = bone.parent;
+		recordAction(ACTION_TYPE.struct_modify, bones).setName($"Remove bone [{bone.name}]").setRef(self);
+		array_remove(_par.childs, bone);
+			
+		for( var i = 0, n = array_length(bone.childs); i < n; i++ ) {
+			var _ch = bone.childs[i];
+			_par.addChild(_ch);
+			_ch.parent_anchor = bone.parent_anchor;
+		}
+		
+		triggerRender();
+	}
 	
 	////- Tool
 	
@@ -1359,6 +1362,18 @@ function Node_Armature(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 				// bone_select   = [];
 				// bone_selected = false;
 			}
+		#endregion
+		
+		#region hotkey
+			if(active && key_press(vk_delete)) {
+				for( var i = 0, n = array_length(bone_select); i < n; i++ ) {
+					var _bone = bone_points[bone_select[i]];
+					if(is(_bone, __Bone)) deleteBone(_bone);
+				}
+				
+				bone_select = [];
+			}
+		
 		#endregion
 		
 		if(anchor_selecting != noone) hovering = true;
