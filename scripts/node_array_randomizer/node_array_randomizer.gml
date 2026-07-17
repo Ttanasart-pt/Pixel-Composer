@@ -109,7 +109,7 @@ function Node_Array_Randomizer(_x, _y, _group = noone) : Node(_x, _y, _group) co
 			
 			if(_wei < 0) draw_sprite_stretched_ext(THEME.textbox, 2, wdx, wdy, wdw,  wdh, COLORS._main_value_negative, .5);
 			
-			draw_sprite_ui(THEME.icon_random, 0, wdx - ui(4 + 12), ty, .75, .75, 0, COLORS._main_icon);
+			draw_sprite_ui(THEME.weight, 0, wdx - ui(4 + 12), ty, .75, .75, 0, COLORS._main_icon);
 		}
 		
 		return _h;

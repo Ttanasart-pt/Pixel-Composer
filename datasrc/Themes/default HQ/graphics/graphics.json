@@ -324,6 +324,7 @@
     "vote_down":                          { "path": "./icon/s_vote_down.png",                               "s": 1, "x": 16, "y": 16 },
     "vote_up":                            { "path": "./icon/s_vote_up.png",                                 "s": 1, "x": 16, "y": 16 },
     "visible":                            { "path": "./icon/s_visible.png",                                 "s": 2, "x": 12, "y": 12 },
+    "weight":                             { "path": "./icon/s_weight.png",                                  "s": 1, "x": 12, "y": 12 },
     "wiki":                               { "path": "./icon/s_wiki.png",                                    "s": 1, "x": 12, "y": 12 },
     "window_exit_icon":                   { "path": "./icon/s_window_exit.png",                             "s": 1, "x":  8, "y":  8 },
     "window_pan_icon":                    { "path": "./icon/s_window_pan.png",                              "s": 1, "x":  8, "y":  8 },

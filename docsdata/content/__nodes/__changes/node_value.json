@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.7.102",
+    "changes": [
+      {
+        "date": "2026-07-17T01:09:20.216Z",
+        "node": "",
+        "commit": "**Array Get**: Add random pick mode."
+      }
+    ]
+  },
+  {
     "version": "1.21.6.008",
     "changes": [
       {

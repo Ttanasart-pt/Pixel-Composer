@@ -3,11 +3,21 @@ function Node_Array_Get(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	always_pad = true;
 	setDimension(96, 48);
 	
-	newInput(0, nodeValue_Any(     "Array",    0 )).setVisible(true, true);
-	newInput(1, nodeValue_Int(     "Index",    0 ));
-	newInput(2, nodeValue_EScroll( "Overflow", 0, [ "Clamp", "Loop", "Ping Pong" ] )).rejectArray();
+	newInput( 0, nodeValue_Any(     "Array",    0 )).setVisible(true, true);
+	
+	////- =Get
+	newInput( 3, nodeValue_EScroll( "Mode",     0, [ "Index", "Random" ]            ));
+	newInput( 1, nodeValue_Int(     "Index",    0                                   ));
+	newInput( 2, nodeValue_EScroll( "Overflow", 0, [ "Clamp", "Loop", "Ping Pong" ] )).rejectArray();
+	newInput( 4, nodeValueSeed());
 	
 	newOutput(0, nodeValue_Output("Value", VALUE_TYPE.any, 0));
+	
+	input_display_list = [ 0, 
+		[ "Get", false ], 3, 1, 2, 4, 
+	]
+	
+	////- Node
 	
 	static getArray = function(_arr, _ind, _ovf) {
 		if(!is_array(_arr)) return 0;
@@ -44,20 +54,34 @@ function Node_Array_Get(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 			outputs[0].setType(type);
 			
 			var _arr = getInputData(0);
+			
+			var _typ = getInputData(3);
 			var _ind = getInputData(1);
 			var _ovf = getInputData(2);
-			if(!is_array(_arr)) return;
+			var _sed = getInputData(4);
+			
+			inputs[ 1].setVisible(_typ == 0);
+			inputs[ 2].setVisible(_typ == 0);
+			inputs[ 4].setVisible(_typ == 1);
+			
+			if(!is_array_safe(_arr)) return;
 		#endregion
 		
 		var res = 0;
 		
-		if(is_array(_ind)) {
-			res = array_create(array_length(_ind));
-			for( var i = 0, n = array_length(_ind); i < n; i++ )
-				res[i] = getArray(_arr, _ind[i], _ovf);
-			
-		} else 
-			res = getArray(_arr, _ind, _ovf);
+		if(_typ == 0) {
+			if(is_array(_ind)) {
+				res = array_create(array_length(_ind));
+				for( var i = 0, n = array_length(_ind); i < n; i++ )
+					res[i] = getArray(_arr, _ind[i], _ovf);
+				
+			} else 
+				res = getArray(_arr, _ind, _ovf);
+				
+		} else if(_typ == 1) {
+			random_set_seed(_sed);
+			res = array_safe_get_random(_arr);
+		}
 		
 		outputs[0].setValue(res);
 	}

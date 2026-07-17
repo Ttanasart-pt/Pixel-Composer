@@ -1811,10 +1811,8 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		}
 		
 		if(type == VALUE_TYPE.surface || type == VALUE_TYPE.any) {
-			var _sval = array_valid(val)? val[0] : val;
-				
-			if(is(_sval, SurfaceAtlas)) 
-				draw_junction_index = VALUE_TYPE.atlas;
+			var _sval = array_valid(val)? array_safe_get_fast(val, 0) : val;
+			if(is(_sval, SurfaceAtlas)) draw_junction_index = VALUE_TYPE.atlas;
 		}
 		
 		if(useCache) {
@@ -1831,24 +1829,22 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	static _getValue = function(_time = NODE_CURRENT_FRAME, applyUnit = true, arrIndex = 0, log = false) {
 		getValueRecursive(self.__curr_get_val, _time);
 		var val = __curr_get_val[0];
-		var nod = __curr_get_val[1]; if(!is(nod, NodeValue)) return val;
+		var nod = __curr_get_val[1]; 
 		
-		var typ = nod.type;
-		var dis = nod.display_type;
-		
+		if(!is(nod, NodeValue)) return val;
 		if(connect_type == CONNECT_TYPE.output) return val;
 		
-		val = arrayBalance(val);
-		if(isArray(val) && array_length(val) < 1024) { // Process data
-			var _val = array_create(array_length(val));
-			for( var i = 0, n = array_length(val); i < n; i++ )
-				_val[i] = valueProcess(val[i], nod, applyUnit, arrIndex);
-			
-			return _val;
-		}
+		return is_array_safe(val)? val : valueProcess(val, nod, applyUnit, arrIndex);
 		
-		var _val = valueProcess(val, nod, applyUnit, arrIndex);
-		return _val;
+		// val = arrayBalance(val);
+		// if(isArray(val) && array_length(val) < 1024) { // Process data
+		// 	var _val = array_create(array_length(val));
+		// 	for( var i = 0, n = array_length(val); i < n; i++ )
+		// 		_val[i] = valueProcess(val[i], nod, applyUnit, arrIndex);
+		// 	return _val;
+		// }
+		
+		// return valueProcess(val, nod, applyUnit, arrIndex);
 	}
 	
 	static getValueRecursive = function(arr = __curr_get_val, _time = NODE_CURRENT_FRAME) {

@@ -176,8 +176,9 @@
 	
 	function array_safe_get_random(arr, def = 0) {
 		if(is(arr, ArrayObject)) return arr.getElementRandom();
-		if(!is_array(arr) || !is_numeric(index)) return def;
-		if(array_empty(arr)) return def;
+		
+		if(!is_array(arr))       return def;
+		if(array_empty(arr))     return def;
 		return arr[irandom(array_length(arr) - 1)];
 	}
 	
