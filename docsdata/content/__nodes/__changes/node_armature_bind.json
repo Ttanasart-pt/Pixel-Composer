@@ -6,6 +6,11 @@
         "date": "2026-07-17T05:09:40.922Z",
         "node": "Armature Bind",
         "commit": "**Armature Bind**: Fix deleting surface from inspector panel not remove connection."
+      },
+      {
+        "date": "2026-07-17T05:40:53.728Z",
+        "node": "Armature Bind",
+        "commit": "**Armature Bind**: Add surface highlight when hovering on inspector, animation property."
       }
     ]
   },

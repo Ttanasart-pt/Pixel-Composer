@@ -315,6 +315,11 @@ function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	rename_text     = "";
 	tb_rename       = textBox_Text(function(_n) /*=>*/ { 
 		if(renaming == noone) return;
+		if(renaming >= array_length(inputs)) {
+			renaming = noone;
+			return;
+		}
+		
 		inputs[renaming].setName(_n, true);
 		renaming = noone;
 		
@@ -392,6 +397,8 @@ function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 						draw_surface_ext_safe(_surf, _sx, _sy, _ss, _ss, 0, c_white, 1);
 							
 						if(_hover && point_in_rectangle(_m[0], _m[1], _sx, _sy, _sx + _sw * _ss, _sy + _sh * _ss)) {
+							_HIGHLIGHT_PROP = inputs[input_fix_len + _sid * data_length];
+							
 							TOOLTIP = [ _surf, VALUE_TYPE.surface ];
 							if(mouse_lpress(_focus)) {
 								layer_dragging  = _sid;
@@ -547,7 +554,9 @@ function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 				else     draw_sprite_stretched_add(THEME.box_r2, 1, _sx0, _sy0, ssh, ssh, COLORS._main_icon, .3);
 				
 				var tc = _ins? COLORS._main_text_accent : COLORS._main_icon;
-				if(hov) tc = COLORS._main_text;
+				if(hov) _HIGHLIGHT_PROP = inputs[_inp];
+				if(HIGHLIGHT_PROP == inputs[_inp])
+					tc = COLORS._main_text;
 				
 				var _tx = _sx1 + ui(12);
 				var _ty = _cy + lh / 2;
@@ -653,8 +662,6 @@ function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 		for( var i = 0; i < data_length; i++ ) {
 			var _in = array_safe_get(inputs, idx+i, noone);
 			if(_in != noone) _in.removeFrom();
-			// array_delete(inputs, idx, 1);
-			// array_remove(input_display_list, idx + i);
 		}
 		
 		refreshDynamicDisplay();
@@ -1040,7 +1047,16 @@ function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 			var  sx = _ss[0],  sy = _ss[1];
 			
 			var _hov = point_in_rectangle_points(_mx, _my, p0x, p0y, p1x, p1y, p2x, p2y, p3x, p3y);
-			
+		
+			if(HIGHLIGHT_PROP && HIGHLIGHT_PROP.node == self && HIGHLIGHT_PROP.index >= index && HIGHLIGHT_PROP.index < index + data_length) {
+				draw_set_color(COLORS._main_icon);
+				draw_rectangle_border_points(_d0[0], _d0[1], _d1[0], _d1[1], _d2[0], _d2[1], _d3[0], _d3[1], 3);
+				
+				draw_set_color(COLORS.node_composite_overlay_border);
+				draw_rectangle_border_points(_d0[0], _d0[1], _d1[0], _d1[1], _d2[0], _d2[1], _d3[0], _d3[1]);
+				
+			}
+				
 			if(surface_selecting == index) {
 				var _ri = 0;
 				var _si = 0;
@@ -1148,6 +1164,7 @@ function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 		if(hovering != noone) {
 			hoveringWid = true;
 			var a = anchors[hovering];
+			_HIGHLIGHT_PROP = inputs[hovering];
 			
 			if(surface_selecting != hovering) {
 				draw_set_color(COLORS.node_composite_overlay_border);
