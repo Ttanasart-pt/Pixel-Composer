@@ -34,8 +34,9 @@ function Node_MK_Drip(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	newInput(21, nodeValue_Slider(   "Threshold",  .5    ));
 	
 	////- =Rendering
-	newInput(17, nodeValue_Color(    "Blend",   ca_white ));
-	// 25
+	newInput(25, nodeValue_EScroll(  "Blend Mode", 0, [ "Overrride", "Multiply", "Additive" ] ));
+	newInput(17, nodeValue_Gradient( "Drip Color", gra_white ));
+	// 26
 	
 	newOutput( 0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
@@ -45,12 +46,12 @@ function Node_MK_Drip(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		[ "Fluid",     false     ], 23,  4, 24,  5, 19,  6,  7,  8,
 		[ "Dripping",  false, 10 ], 11, 12, 16, 13, 14, 
 		[ "Blobify",   false, 22 ], 20, 21, 
-		[ "Rendering", false     ], 17, 
+		[ "Rendering", false     ], 25, 17, 
 	];
 	
 	////- Nodes
 	
-	temp_surface = [ noone, noone, noone ];
+	temp_surface = [ noone, noone, noone, noone ];
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _params) {
 		var _type = getInputSingle(23);
@@ -91,6 +92,7 @@ function Node_MK_Drip(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 			var _blob  = _data[20];
 			var _bThr  = _data[21];
 			
+			var _blnd  = _data[25];
 			var _colr  = _data[17];
 			
 			inputs[ 4].setVisible(_type == 0);
@@ -119,7 +121,7 @@ function Node_MK_Drip(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 			draw_surface( _surf, 0, 0 );
 		surface_reset_shader();
 		
-		surface_set_shader(temp_surface[1], sh_mk_drip);
+		surface_set_shader([temp_surface[1], temp_surface[3]], sh_mk_drip);
 			shader_set_2( "dimension",     _dim   );
 			shader_set_s( "original",      _surf  );
 			shader_set_f( "seed",          _seed  );
@@ -134,12 +136,12 @@ function Node_MK_Drip(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 			
 			shader_set_2( "dripThreshold", _thrs  );
 			shader_set_2( "thickness",     _thck  );
-			shader_set_curve( "thickness", _thckC );
+			shader_set_cr("thickness",     _thckC );
 			
 			shader_set_i( "dripping",      _drip  );
 			shader_set_f( "dripFreq",      _freq  );
 			shader_set_2( "dripAmpli",     _ampl  );
-			shader_set_curve( "dripAmpli", _amplC );
+			shader_set_cr("dripAmpli",     _amplC );
 			shader_set_f( "dripPhase",     _phas  );
 			shader_set_f( "dripTime",      _sped * CURRENT_FRAME / TOTAL_FRAMES );
 			
@@ -162,8 +164,13 @@ function Node_MK_Drip(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 			
 		}
 		
-		surface_set_shader(_outSurf, sh_sample, true, BLEND.normal);
-			draw_surface_ext( temp_surface[2], 0, 0, 1, 1, 0, _colr, 1);
+		surface_set_shader(_outSurf, sh_mk_drip_render, true, BLEND.normal);
+			shader_set_s( "dripSurface",  temp_surface[2] );
+			shader_set_s( "dripProgress", temp_surface[3] );
+			
+			shader_set_i( "blendMode",    _blnd );
+			shader_set_gradient(_colr);
+			
 			draw_surface( _surf, 0, 0 );
 		surface_reset_shader();
 		

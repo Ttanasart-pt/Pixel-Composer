@@ -2653,6 +2653,7 @@
     {"name":"sh_mk_cable_draw","order":1,"path":"shaders/sh_mk_cable_draw/sh_mk_cable_draw.yy",},
     {"name":"sh_mk_cloud_outline","order":2,"path":"shaders/sh_mk_cloud_outline/sh_mk_cloud_outline.yy",},
     {"name":"sh_mk_cloud_shadow","order":1,"path":"shaders/sh_mk_cloud_shadow/sh_mk_cloud_shadow.yy",},
+    {"name":"sh_mk_drip_render","order":3,"path":"shaders/sh_mk_drip_render/sh_mk_drip_render.yy",},
     {"name":"sh_mk_drip_round","order":2,"path":"shaders/sh_mk_drip_round/sh_mk_drip_round.yy",},
     {"name":"sh_mk_drip","order":1,"path":"shaders/sh_mk_drip/sh_mk_drip.yy",},
     {"name":"sh_mk_facet_render","order":1,"path":"shaders/sh_mk_facet_render/sh_mk_facet_render.yy",},

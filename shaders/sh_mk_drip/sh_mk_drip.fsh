@@ -189,15 +189,17 @@ void main() {
 	
 	float dripStep = maxDrip * dimension.x;
 	
-	gl_FragColor = vec4(0.);
+	gl_FragData[0] = vec4(0.);
+	gl_FragData[1] = vec4(0.);
 	
 	if(base.a > 0.) {
-		gl_FragColor = texture2D(original, v_vTexcoord);
+		gl_FragData[0] = texture2D(original, v_vTexcoord);
 		return;
 	}
 	
 	bool  isDrip  = false;
 	float dripLen = 0.;
+	float dripNor = 0.;
 	vec2  dripPos;
 	vec4  dripCol;
 	
@@ -227,6 +229,7 @@ void main() {
 		if(_samThk < 0.) break;
 		if(_samThk > _thres && _samThk > samThk && _samThk > _currThk) {
 			isDrip  = true;
+			dripNor = 1. - i / dripStep;
 			dripLen = 1. - i / dripStep * (maxDrip / _currDis);
 			
 			dripPos = _dripPos;
@@ -242,7 +245,7 @@ void main() {
 	vec4  origColor = texture2D(original, dripPos);
 	
 	if(!isDrip || dripLen < 0. || dripLen > 1.) {
-		gl_FragColor = vec4(origColor.rgb, 0.);
+		gl_FragData[0] = vec4(origColor.rgb, 0.);
 		return;
 	}
 	
@@ -265,8 +268,9 @@ void main() {
 		dripDens *= dripAnim;
 	}
 	
-	float dripDraw  = step(currThr, dripDens);
+	float dripDraw = step(currThr, dripDens);
+	float dripPrgn = dripNor;
 	
-	gl_FragColor = vec4(origColor.rgb, dripDraw);
-	// gl_FragColor = vec4(dripDens, dripDens, dripDens, dripDraw);
+	gl_FragData[0] = vec4(origColor.rgb, dripDraw);
+	gl_FragData[1] = vec4(dripPrgn, dripPrgn, dripPrgn, dripDraw);
 }

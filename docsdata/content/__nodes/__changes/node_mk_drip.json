@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.7.102",
+    "changes": [
+      {
+        "date": "2026-07-17T01:54:04.062Z",
+        "node": "MK Drip] Blend color is now gradient. - [MK Drip",
+        "commit": "**MK Drip] Blend color is now gradient. - [MK Drip**: Add Blend mode property."
+      }
+    ]
+  },
+  {
     "version": "1.21.6.001",
     "changes": [
       {
