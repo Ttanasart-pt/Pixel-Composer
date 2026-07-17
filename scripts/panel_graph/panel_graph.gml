@@ -1971,6 +1971,9 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
 		node_surface_update    = node_surface_update || _upd;
     }
     
+    __nodeActive = [];
+    __nodeDraw   = [];
+    
     function drawNodes() { 
         if(selection_block-- > 0) return;
         
@@ -2061,10 +2064,19 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
         
         #region node_hovering
         	__hover_dist = infinity;
+        	__pad = 16 * __gr_s;
         	
 	        if(pHOVER && node_hovering == noone) array_foreach(_node_draw, function(_n,i) /*=>*/ { 
 	        	_n.branch_drawing = false;
 	        	
+            	var _xx = __gr_x + _n.x * __gr_s;
+                var _yy = __gr_y + _n.y * __gr_s;
+                
+                var _ww = _n.w * __gr_s;
+                var _hh = _n.h * __gr_s;
+                
+                _n.region_hovering = point_in_rectangle(__mx, __my, _xx - __pad, _yy - __pad, _xx + _ww + __pad, _yy + _hh + __pad);
+                
 	        	if(_n.pointIn(__gr_x, __gr_y, __mx, __my, __gr_s, __self)) {
 	        		if(_n.hover_use_distance) {
 	        			var _dist = point_distance(__mx, __my, __gr_x + _n.x * __gr_s, __gr_y + _n.y * __gr_s);
@@ -2430,21 +2442,22 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
 	        	
 	        node_surface = surface_verify(node_surface, w, h);
 	        
-	        if(pHOVER)
-	        array_foreach(_node_draw, function(_n,i) /*=>*/ {
-	            try { 
+	        if(pHOVER) {
+		        array_foreach(_node_draw, function(_n,i) /*=>*/ {
+	                if(!_n.region_hovering) return true;
+	            	
 	            	var hov = node_hovering == noone || node_hovering == _n || node_hovering.hover_use_distance;
 	            	if(!hov) return true;
 	            	
 	            	var _xx = __gr_x + _n.x * __gr_s;
 	                var _yy = __gr_y + _n.y * __gr_s;
+	                
 	                var val = _n.checkJunctions(_xx, _yy, __mx, __my, __gr_s, __gr_s <= 0.5 || !_n.attributes.show_preview);
 	                if(val) value_focus = val;
 	                
 	                return true;
-	            }
-	            catch(e) { log_warning("NODE DRAW", exception_print(e)); }
-	        });
+		        });
+	        }
 	        
 	        if(node_surface_update) {
 		        surface_set_target(node_surface);
@@ -2454,29 +2467,26 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
 	        	if(array_length(value_draggings) > 1) array_foreach(value_draggings, function(_v,i) /*=>*/ { _v.graph_selecting = true; return true; });
 		        
 		        array_foreach(_node_draw, function(_n,i) /*=>*/ {
-		            try { 
-		            	_n.drawNode(node_surface_update, __gr_x, __gr_y, __mx, __my, __gr_s, __self); 
-		            	
-		            	var _xx = __gr_x + _n.x * __gr_s;
-		                var _yy = __gr_y + _n.y * __gr_s;
-		                var _fs = __gr_s <= 0.5 || !_n.attributes.show_preview;
+	            	_n.drawNode(node_surface_update, __gr_x, __gr_y, __mx, __my, __gr_s, __self); 
+	            	
+	            	var _xx = __gr_x + _n.x * __gr_s;
+	                var _yy = __gr_y + _n.y * __gr_s;
+	                var _fs = __gr_s <= 0.5 || !_n.attributes.show_preview;
+	                
+	                gpu_set_texfilter(true);
+	                if(_fs) {
+	                	_n.drawJunctionsFast(_xx, _yy, __mx, __my, __gr_s);
 		                
-		                gpu_set_texfilter(true);
-		                if(_fs) {
-		                	_n.drawJunctionsFast(_xx, _yy, __mx, __my, __gr_s);
-			                
-		                } else {
-		                	if(!array_empty(_n.inputDisplayGroup)) 
-		                		_n.drawJunctionGroups(_xx, _yy, __mx, __my, __gr_s, false, true, .75);
-			                _n.drawJunctions(_xx, _yy, __mx, __my, __gr_s);
-		                }
-		                
-		                gpu_set_texfilter(false);
-		                
-						if(_n.drawDimension) _n.drawDimension(_xx, _yy, __gr_s);
-						return true;
-		            }
-		            catch(e) { log_warning("NODE DRAW", exception_print(e)); }
+	                } else {
+	                	if(!array_empty(_n.inputDisplayGroup)) 
+	                		_n.drawJunctionGroups(_xx, _yy, __mx, __my, __gr_s, false, true, .75);
+		                _n.drawJunctions(_xx, _yy, __mx, __my, __gr_s);
+	                }
+	                
+	                gpu_set_texfilter(false);
+	                
+					if(_n.drawDimension) _n.drawDimension(_xx, _yy, __gr_s);
+					return true;
 		        });
 		        
 		        array_foreach(_node_draw, function(_n,i) /*=>*/ { _n.drawBadge(__gr_x, __gr_y, __gr_s); return true; });
@@ -2486,7 +2496,11 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
 		        
 	        BLEND_ALPHA_MULP
 	        	draw_surface_safe(node_surface);
-		        array_foreach(_node_draw, function(_n,i) /*=>*/ { _n.drawJunctionNames(__gr_x, __gr_y, __mx, __my, __gr_s, __self); return true; });
+		        array_foreach(_node_draw, function(_n,i) /*=>*/ { 
+	                if(!_n.region_hovering) return true;
+		        	_n.drawJunctionNames(__gr_x, __gr_y, __mx, __my, __gr_s, __self); 
+		        	return true; 
+		        });
 	        BLEND_NORMAL
 	        
 	        #region drawController
@@ -3876,7 +3890,9 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
         
         node_bg_hovering = drawBasePreview();
         
-        drawNodes();
+        try { drawNodes(); }
+        catch(e) { log_warning("drawNodes", exception_print(e)); }
+        
         drawJunctionConnect();
         drawContextFrame();
         mouse_on_graph = true;

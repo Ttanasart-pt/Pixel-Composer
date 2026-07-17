@@ -1,7 +1,7 @@
 function Panel_Graph_Node_Position(_project) : PanelContent() constructor {
 	title    = __txt("Nose Position");
 	w        = ui(272);
-	h        = ui(400);
+	h        = ui(240);
 	anchor   = ANCHOR.left | ANCHOR.top;
 	
 	project  = _project;
@@ -27,6 +27,7 @@ function Panel_Graph_Node_Position(_project) : PanelContent() constructor {
 		
 		var _posi = project.nodeStoredPosition;
 		var _keys = struct_get_names(_posi);
+		array_sort(_keys, true);
 		
 		var hg    = ui(24);
 		var toDel = undefined;
