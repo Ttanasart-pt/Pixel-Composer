@@ -58,7 +58,10 @@ function canvas_tool_selection_magic(_toolAttr) : canvas_selection_tool() constr
 				surface_free_safe(selection_mask);
 				
 				if(tool_after != noone) {
+					tool_after.mouse_tx = _mx;
+					tool_after.mouse_ty = _mx;
 					tool_after.toggle();
+					
 					tool_after   = noone;
 					UNDO_HOLDING = false;
 				}

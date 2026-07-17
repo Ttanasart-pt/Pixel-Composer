@@ -2,9 +2,7 @@ function canvas_tool_with_selector(_tool, _sel) : canvas_tool() constructor {
 	tool     = _tool;
 	selector = _sel;
 	
-	static init = function(_node) {
-		selector.tool_after = tool;
-	}
+	static init = function(_node) { selector.tool_after = tool; }
 	
 	static getToolNode = function() /*=>*/ {return selector};
 	

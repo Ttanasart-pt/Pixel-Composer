@@ -5,6 +5,9 @@ function canvas_tool_fill_gradient(toolAttr) : canvas_tool_shader() constructor 
 	mouse_sx = 0;
 	mouse_sy = 0;
 	
+	mouse_tx = undefined;
+	mouse_ty = undefined;
+	
 	fx = 0;
 	fy = 0;
 	
@@ -33,8 +36,11 @@ function canvas_tool_fill_gradient(toolAttr) : canvas_tool_shader() constructor 
 	}
 	
 	static onInit = function(hover, active, _x, _y, _s, _mx, _my) {
-		mouse_sx = _mx;
-		mouse_sy = _my;
+		mouse_sx = mouse_tx ?? _mx;
+		mouse_sy = mouse_ty ?? _my;
+		
+		mouse_tx = undefined;
+		mouse_ty = undefined;
 	}
 	
 	static stepEffect = function(hover, active, _x, _y, _s, _mx, _my) {
