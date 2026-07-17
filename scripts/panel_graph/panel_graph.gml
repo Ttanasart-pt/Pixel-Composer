@@ -2001,10 +2001,10 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
 		#endregion
 		
         #region node list filter
-	        array_foreach(project.allNodes, function(_n) /*=>*/ { _n.is_selecting = false; });
+	        array_foreach(project.allNodes, function(_n,i) /*=>*/ { _n.is_selecting = false; return true; });
 	        
-	        var _node_active = array_filter(nodes_list, function(_n) /*=>*/ {return _n.active && _n.visible});
-	        var _node_draw   = array_filter( _node_active, function(_n) /*=>*/ {
+	        var _node_active = array_filter(nodes_list, function(_n,i) /*=>*/ {return _n.active && _n.visible});
+	        var _node_draw   = array_filter( _node_active, function(_n,i) /*=>*/ {
 	        	_n.preDraw(__gr_x, __gr_y, __mx, __my, __gr_s);
 	        	var _cull = _n.cullCheck(__gr_x, __gr_y, __gr_s, -32, -32, __gr_w + 32, __gr_h + 64);
 	        	return _n.active && !_n.is_controller && _cull;
@@ -2016,11 +2016,12 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
 	    
         #region drawController
         	if(PREFERENCES.panel_graph_show_control) {
-	        	var _node_controller = array_filter(_node_active, function(_n) /*=>*/ {return _n.is_controller});
-		        array_foreach(_node_controller, function(_n) /*=>*/ { 
+	        	var _node_controller = array_filter(_node_active, function(_n,i) /*=>*/ {return _n.is_controller});
+		        array_foreach(_node_controller, function(_n,i) /*=>*/ { 
 		        	_n.active_draw_index = -1;
 		        	if(_n.drawNodeBG(__gr_x, __gr_y, __mx, __my, __gr_s))
 		        		node_hovering = _n; 
+		        	return true;
 		        });
         	}
         #endregion
@@ -2029,18 +2030,20 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
 	        _frame_hovering  = frame_hovering;
 	         frame_hovering  = noone;
 	         frame_hoverings = [];
-	        _node_frames     = array_filter(_node_draw, function(_n) /*=>*/ {return is(_n, Node_Frame)});
+	        _node_frames     = array_filter(_node_draw, function(_n,i) /*=>*/ {return is(_n, Node_Frame)});
 	        
-	        array_foreach(_node_frames, function(_n) /*=>*/ { 
+	        array_foreach(_node_frames, function(_n,i) /*=>*/ { 
 	        	var _hov = _n.drawNodeBG(__gr_x, __gr_y, __mx, __my, __gr_s, __self);
 	        	if(_hov) {
 	        		frame_hovering = _n; 
 	        		array_push(frame_hoverings, _n);
 	        	}
+	        	
+	        	return true;
 	        });
 	        
-	        array_foreach(_node_draw, function(_n) /*=>*/ { 
-	        	if(is(_n, Node_Frame)) return;
+	        array_foreach(_node_draw, function(_n,i) /*=>*/ { 
+	        	if(is(_n, Node_Frame)) return true;
 	        	
 	        	_n.active_draw_index = -1;
             	var _xx = __gr_x + _n.x * __gr_s;
@@ -2051,6 +2054,8 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
 		                		
 	        	if(_n.drawNodeBG != undefined && _n.drawNodeBG(__gr_x, __gr_y, __mx, __my, __gr_s)) 
 	        		frame_hovering = _n; 
+	        		
+	        	return true;
 	        });
         #endregion
         
@@ -2112,7 +2117,7 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
                     }
                     
                 } else if(mouse_lpress(_focus)) {
-                	if(array_valid(frame_hovering)) array_foreach(frame_hovering, function(f) /*=>*/ {return f.getCoveringNodes(nodes_list)});
+                	if(array_valid(frame_hovering)) array_foreach(frame_hovering, function(f,i) /*=>*/ {return f.getCoveringNodes(nodes_list)});
                 	if(is(node_hovering, Node_Frame)) node_hovering.getCoveringNodes(nodes_list);
                 	
                 	if(dropper_active) {
@@ -2121,10 +2126,10 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
 			    		
 			    	} else if(key_mod_press(SHIFT)) { // Select Multiple
                         if(node_hovering) array_toggle(nodes_selecting, node_hovering);
-                        else nodes_selecting = [];
+                        // else nodes_selecting = [];
                             
                     } else if(value_focus || node_hovering == noone) { // Select Nothing
-                        nodes_selecting = [];
+                    	nodes_selecting = [];
                         
                         if(DOUBLE_CLICK) {
                         	var _ctx = getCurrentContext();
@@ -2171,7 +2176,7 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
                     }
                     
                     if(WIDGET_CURRENT) WIDGET_CURRENT.deactivate();
-                    if(array_valid(nodes_selecting)) array_foreach(nodes_selecting, function(n) /*=>*/ {return bringNodeToFront(n)});
+                    if(array_valid(nodes_selecting)) array_foreach(nodes_selecting, function(n,i) /*=>*/ {return bringNodeToFront(n)});
                 }
                 
                 if(key_mod_press(ALT) && node_hover_type == 0 && !array_empty(nodes_selecting)) { // Alt copy
@@ -2277,6 +2282,7 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
 	                
 	                if(frame_hovering.attributes.show_preview) PANEL_PREVIEW.setNodePreview(frame_hovering);
 	            } 
+	        
 	        }
 	        
 	        dragNodes();
@@ -2298,17 +2304,22 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
         #endregion
         
         #region drawActive
-	        array_foreach(nodes_selecting, function(_n) /*=>*/ { _n.drawActive(instanceof(_n) == FOCUS_STR); _n.is_selecting = true; });
+	        array_foreach(nodes_selecting, function(_n,i) /*=>*/ { 
+	        	_n.drawActive(instanceof(_n) == FOCUS_STR); 
+	        	_n.is_selecting = true; 
+	        	return true; 
+	        });
+        	
 	        if(nodes_select_anchor) nodes_select_anchor.active_draw_anchor = true;
 		#endregion
         
 		#region draw connections
 	        var aa = floor(min(8192 / w, 8192 / h, project.graphConnection.line_aa));
 	        
-	        connection_draw_update |= !surface_valid(connection_surface_cc, w * aa, h * aa);
-	        connection_surface    = surface_verify(connection_surface,    w * aa, h * aa);
-	        connection_surface_cc = surface_verify(connection_surface_cc, w * aa, h * aa);
-	        connection_surface_aa = surface_verify(connection_surface_aa, w,      h     );
+	        connection_draw_update |= !surface_valid(connection_surface_cc,  w * aa, h * aa);
+	        connection_surface      =  surface_verify(connection_surface,    w * aa, h * aa);
+	        connection_surface_cc   =  surface_verify(connection_surface_cc, w * aa, h * aa);
+	        connection_surface_aa   =  surface_verify(connection_surface_aa, w,      h     );
 	        
 	        __hov      = noone;
 	        __hovPoint = undefined;
@@ -2326,14 +2337,15 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
 		        surface_set_target(connection_surface_cc);
 		        	if(connection_draw_update) DRAW_CLEAR
 			    	
-			        array_foreach(_node_active, function(n) /*=>*/ {
-			        	if(n.group != __context) return;
+			        array_foreach(_node_active, function(n,i) /*=>*/ {
+			        	if(n.group != __context) return true;
 			        	
 			        	var _hov = n.drawConnections(connection_param, connection_draw_update);
-			        	if(!is_array(_hov)) return;
+			        	if(!is_array(_hov)) return true;
 			        	
 			            __hov      = _hov[0];
 			            __hovPoint = _hov[1];
+			            return true;
 			        });
 			        
 			        connection_draw_update--;
@@ -2438,10 +2450,10 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
 		        surface_set_target(node_surface);
 	        	draw_clear_alpha(bg_color, 0.);
 	        	
-	        	array_foreach(_node_draw, function(_n) /*=>*/ { if(_n.drawNodeBehind) _n.drawNodeBehind(__gr_x, __gr_y, __mx, __my, __gr_s); });
-	        	if(array_length(value_draggings) > 1) array_foreach(value_draggings, function(_v) /*=>*/ { _v.graph_selecting = true; });
+	        	array_foreach(_node_draw, function(_n,i) /*=>*/ { if(_n.drawNodeBehind) _n.drawNodeBehind(__gr_x, __gr_y, __mx, __my, __gr_s); return true; });
+	        	if(array_length(value_draggings) > 1) array_foreach(value_draggings, function(_v,i) /*=>*/ { _v.graph_selecting = true; return true; });
 		        
-		        array_foreach(_node_draw, function(_n) /*=>*/ {
+		        array_foreach(_node_draw, function(_n,i) /*=>*/ {
 		            try { 
 		            	_n.drawNode(node_surface_update, __gr_x, __gr_y, __mx, __my, __gr_s, __self); 
 		            	
@@ -2462,23 +2474,24 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
 		                gpu_set_texfilter(false);
 		                
 						if(_n.drawDimension) _n.drawDimension(_xx, _yy, __gr_s);
+						return true;
 		            }
 		            catch(e) { log_warning("NODE DRAW", exception_print(e)); }
 		        });
 		        
-		        array_foreach(_node_draw, function(_n) /*=>*/ { _n.drawBadge(__gr_x, __gr_y, __gr_s); });
-		        array_foreach(_node_draw, function(_n) /*=>*/ { if(_n.drawNodeFG) _n.drawNodeFG(__gr_x, __gr_y, __mx, __my, __gr_s, __self); });
+		        array_foreach(_node_draw, function(_n,i) /*=>*/ { _n.drawBadge(__gr_x, __gr_y, __gr_s); return true; });
+		        array_foreach(_node_draw, function(_n,i) /*=>*/ { if(_n.drawNodeFG) _n.drawNodeFG(__gr_x, __gr_y, __mx, __my, __gr_s, __self); return true; });
 				surface_reset_target();
 	        }
 		        
 	        BLEND_ALPHA_MULP
 	        	draw_surface_safe(node_surface);
-		        array_foreach(_node_draw, function(_n) /*=>*/ { _n.drawJunctionNames(__gr_x, __gr_y, __mx, __my, __gr_s, __self); });
+		        array_foreach(_node_draw, function(_n,i) /*=>*/ { _n.drawJunctionNames(__gr_x, __gr_y, __mx, __my, __gr_s, __self); return true; });
 	        BLEND_NORMAL
 	        
 	        #region drawController
 	        	if(PREFERENCES.panel_graph_show_control)
-			        array_foreach(_node_controller, function(_n) /*=>*/ {return _n.drawNodeFG(__gr_x, __gr_y, __mx, __my, __gr_s)});
+			        array_foreach(_node_controller, function(_n,i) /*=>*/ {return _n.drawNodeFG(__gr_x, __gr_y, __mx, __my, __gr_s)});
 	        #endregion
         	
 	        if(value_focus != noone && key_mod_press(SHIFT)) {
@@ -2525,10 +2538,12 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
         #region draw selection frame
 	        if(nodes_select_drag) {
 	            if(point_distance(nodes_select_mx, nodes_select_my, mx, my) > 16)
-	                nodes_select_drag = 2;
+	                nodes_select_drag  = 2;
 	            
 	            if(nodes_select_drag == 2) {
-	                draw_sprite_stretched_points_clamp(THEME.ui_selection, 0, nodes_select_mx, nodes_select_my, mx, my, COLORS._main_accent);
+	            	draw_sprite_stretched_points_clamp(THEME.ui_selection, 0, nodes_select_mx, nodes_select_my, mx, my, COLORS._main_accent);
+	                // nodes_selecting = [];
+	                var box_selecting = [];
 	                
 	                for( var i = 0, n = array_length(nodes_list); i < n; i++ ) {
 	                    var _node = nodes_list[i];
@@ -2551,19 +2566,22 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
 	                    }
 	                    
 	                    var _sel = _w && _h && rectangle_in_rectangle(_x, _y, _x + _w, _y + _h, nodes_select_mx, nodes_select_my, mx, my);
-	                    var _selecting = array_exists(nodes_selecting, _node);
-	                    
-	                    if(!_selecting &&  _sel) array_push(  nodes_selecting, _node);
-	                    if( _selecting && !_sel) array_remove(nodes_selecting, _node);    
+	                    if(_sel) array_push(box_selecting, _node);
 	                }
 	                
 	                for( var i = 0, n = array_length(nodes_list); i < n; i++ ) { //select inline parent
 	                    var _node = nodes_list[i];
 	                	if(!is(_node, Node_Collection_Inline)) continue;
 	                	
-	                	if(array_contains_ext(nodes_selecting, _node.nodes, true))
-	                		array_push_unique(nodes_selecting, _node);
+	                	if(array_contains_ext(box_selecting, _node.nodes, true))
+	                		array_push_unique(box_selecting, _node);
 	                }
+	                
+	                nodes_selecting = [];
+	                nodes_selecting = array_append(nodes_selecting, drag_box_selecting);
+	                nodes_selecting = array_append(nodes_selecting, box_selecting);
+	                
+	                nodes_selecting = array_unique(nodes_selecting);
 	            }
 	        
 	            if(mouse_lrelease())
@@ -2596,9 +2614,11 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
                 recordAction(ACTION_TYPE.var_modify, junction_hovering, [ junction_hovering.draw_line_shift_x, "draw_line_shift_x", "junction anchor x position" ]);
         		recordAction(ACTION_TYPE.var_modify, junction_hovering, [ junction_hovering.draw_line_shift_y, "draw_line_shift_y", "junction anchor y position" ]);
         		
-            } else if(array_empty(nodes_selecting) && !value_focus && !drag_locking) {
+            // } else if(array_empty(nodes_selecting) && !value_focus && !drag_locking) {
+            } else if(node_hovering == noone && !value_focus && !drag_locking) {
                 nodes_select_drag  = 1;
                 nodes_select_frame = frame_hovering == noone;
+                drag_box_selecting = array_clone(nodes_selecting, 1);
                 
                 nodes_select_mx = mx;
                 nodes_select_my = my;

@@ -45,18 +45,41 @@ function Panel_Graph_Node_Position(_project) : PanelContent() constructor {
 			if(_hover && point_in_rectangle(_m[0], _m[1], tx, ty, tx + tw, ty + th)) {
 				draw_sprite_ui(THEME.icon_delete, 0, tx + tw / 2, ty + th / 2, 1, 1, 0, COLORS._main_value_negative);
 				TOOLTIP = __txt("Delete");
-				if(mouse_lpress(pFOCUS)) toDel = _key;
+				
+				if(mouse_lclick(pFOCUS))
+					draw_sprite_stretched_ext(THEME.ui_panel, 1, tx, ty, tw, th, COLORS._main_accent);
+					
+				if(mouse_lpress(pFOCUS)) 
+					toDel = _key;
 				
 			} else 
 				draw_sprite_ui(THEME.icon_delete, 0, tx + tw / 2, ty + th / 2, 1, 1, 0, COLORS._main_icon);
 			
+			 tx -= tw + ui(2);
+			_ww -= tw + ui(2);
+			
+			draw_sprite_stretched(THEME.ui_panel_bg, 3, tx, ty, tw, th);
+			if(_hover && point_in_rectangle(_m[0], _m[1], tx, ty, tx + tw, ty + th)) {
+				draw_sprite_ui(THEME.refresh_icon, 0, tx + tw / 2, ty + th / 2, .75, .75, 0, COLORS._main_icon_light);
+				TOOLTIP = __txt("Update");
+				
+				if(mouse_lclick(pFOCUS))
+					draw_sprite_stretched_ext(THEME.ui_panel, 1, tx, ty, tw, th, COLORS._main_accent);
+					
+				if(mouse_lpress(pFOCUS))
+					project.storeNodePosition(_key); 
+				
+			} else 
+				draw_sprite_ui(THEME.refresh_icon, 0, tx + tw / 2, ty + th / 2, .75, .75, 0, COLORS._main_icon);
+			
+			 tx -= tw + ui(2);
 			_ww -= tw + ui(2);
 			
 			draw_sprite_stretched(THEME.ui_panel_bg, 3, 0, _y, _ww, hg);
-			
 			var _hov = _hover && point_in_rectangle(_m[0], _m[1], 0, _y, _ww, _y + hg);
 			if(_hov) {
 				draw_sprite_stretched_ext(THEME.node_bg, 1, 0, _y, _ww, hg, COLORS._main_accent, 1);
+				
 				if(mouse_lpress(_focus))
 					project.setNodePosition(_key);
 			}

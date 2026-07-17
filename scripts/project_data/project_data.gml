@@ -738,6 +738,8 @@ function Project() constructor {
 			PANEL_GRAPH.fullView();
 			PANEL_GRAPH.refreshDraw();
 		}
+		
+		modified = true;
 	}
 	
 	////- Migration
