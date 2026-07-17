@@ -205,7 +205,8 @@
         } ).setMenu("graph_auto_organize", THEME.obj_auto_organize);
         registerFunction(g, "Auto Organize All",     "",  n, panel_graph_auto_organize_all   ).setMenu("graph_auto_organize_all", THEME.obj_auto_organize)
         registerFunction(g, "Snap Nodes to Grid",    "",  n, panel_graph_snap_nodes          ).setMenu("graph_snap_nodes")
-        registerFunction(g, "Node Selector...",      "",  n, function() /*=>*/ { PANEL_GRAPH.subDialogCall(new Panel_Graph_Selector(PANEL_GRAPH)); } ).setMenu("graph_node_selector", THEME.node_selector);
+        registerFunction(g, "Node Selector...",      "",  n, function() /*=>*/ {return PANEL_GRAPH.subDialogCall(new Panel_Graph_Selector(PANEL_GRAPH))}              ).setMenu("graph_node_selector", THEME.node_selector);
+        registerFunction(g, "Node Position...",      "",  n, function() /*=>*/ {return PANEL_GRAPH.subDialogCall(new Panel_Graph_Node_Position(PANEL_GRAPH.project))} ).setMenu("graph_node_position", THEME.node_position);
         registerFunction(g, "Node Action Pie",       "Q", n, function() /*=>*/ {return PANEL_GRAPH.nodeQuickPie()}     ).setMenu("graph_node_action_pie");
         registerFunction(g, "Node Preset Pie",       "P", a, function() /*=>*/ {return PANEL_GRAPH.nodePresetPie()}    ).setMenu("graph_node_preset_pie");
         registerFunction(g, "Node Attribute Pie",    "A", a, function() /*=>*/ {return PANEL_GRAPH.nodeAttributePie()} ).setMenu("graph_node_attribute_pie");
@@ -962,6 +963,8 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
         	"graph_grid_settings",
         	"graph_view_settings",
         	"graph_node_selector",
+        	"graph_node_position",
+        	
         	{ cond : "graph_select_multiple", items : [ 
         		-1, 
         		"graph_halign_right",

@@ -2184,6 +2184,7 @@
     {"name":"panel_graph_export_image","order":5,"path":"scripts/panel_graph_export_image/panel_graph_export_image.yy",},
     {"name":"panel_graph_grid_settings","order":8,"path":"scripts/panel_graph_grid_settings/panel_graph_grid_settings.yy",},
     {"name":"panel_graph_node_multiplier","order":12,"path":"scripts/panel_graph_node_multiplier/panel_graph_node_multiplier.yy",},
+    {"name":"panel_graph_node_position","order":14,"path":"scripts/panel_graph_node_position/panel_graph_node_position.yy",},
     {"name":"panel_graph_selector","order":13,"path":"scripts/panel_graph_selector/panel_graph_selector.yy",},
     {"name":"panel_graph_view_settings","order":9,"path":"scripts/panel_graph_view_settings/panel_graph_view_settings.yy",},
     {"name":"panel_group_io_edit","order":8,"path":"scripts/panel_group_io_edit/panel_group_io_edit.yy",},

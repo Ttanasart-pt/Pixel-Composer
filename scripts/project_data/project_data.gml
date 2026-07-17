@@ -78,17 +78,17 @@ function Project() constructor {
 	
 	pathInputs  = [];
 	
-	composer        = noone;
-	animator	    = new AnimationManager(self);
-	globalNode	    = new Node_Global().setProject(self);
+	composer         = noone;
+	animator	     = new AnimationManager(self);
+	globalNode	     = new Node_Global().setProject(self);
 	
-	load_layout     = false;
-	previewNode     = "";
-	inspectingNode  = "";
+	load_layout      = false;
+	previewNode      = "";
+	inspectingNode   = "";
 	
-	previewGrid     = variable_clone(PREFERENCES.project_previewGrid);
-	previewSetting  = variable_clone(PREFERENCES.project_previewSetting);
-	previewRuler    = [];
+	previewGrid      = variable_clone(PREFERENCES.project_previewGrid);
+	previewSetting   = variable_clone(PREFERENCES.project_previewSetting);
+	previewRuler     = [];
 	
 	graphGrid        = variable_clone(PREFERENCES.project_graphGrid);
 	graphDisplay     = variable_clone(PREFERENCES.project_graphDisplay);
@@ -118,6 +118,8 @@ function Project() constructor {
 	
 	timelineMarkers        = [];
 	timelineMarkersArray   = [];
+	
+	nodeStoredPosition     = {};
 	
 	#region ===================== TUNNEL ====================
 		tunnels_in  = {};
@@ -698,6 +700,46 @@ function Project() constructor {
 		return _reg;
 	}
 	
+	static storeNodePosition = function(_name) {
+		_pos = [];
+		
+		for( var i = 0, n = array_length(allNodes); i < n; i++ ) {
+			var _node = allNodes[i];
+			var _dat  = {
+				ID: _node.node_id,
+				x:  _node.x,
+				y:  _node.y,
+			}
+			
+			_pos[i] = _dat;
+		}
+		
+		nodeStoredPosition[$ _name] = _pos;
+	}
+	
+	static setNodePosition = function(_name) {
+		var _pos = nodeStoredPosition[$ _name];
+		if(_pos == undefined) return;
+		
+		for( var i = 0, n = array_length(_pos); i < n; i++ ) {
+			var _p  = _pos[i];
+			var _id = _p.ID;
+			var _x  = _p.x;
+			var _y  = _p.y;
+			
+			var _node = nodeMap[? _id];
+			if(!is(_node, Node)) continue;
+			
+			_node.x = _x;
+			_node.y = _y;
+		}
+		
+		if(PANEL_GRAPH) {
+			PANEL_GRAPH.fullView();
+			PANEL_GRAPH.refreshDraw();
+		}
+	}
+	
 	////- Migration
 	
 	migrationError = [];
@@ -796,6 +838,8 @@ function Project() constructor {
 		var prev = PANEL_PREVIEW.getNodePreviewSurface();
 		if(!is_surface(prev)) _map.preview = "";
 		else				  _map.preview = surface_encode(surface_size_lim(prev, 128, 128));
+		
+		_map.nodePosition = variable_clone(nodeStoredPosition);
 		
 		if(_addon) {
 			__addon = {};
@@ -901,6 +945,8 @@ function Project() constructor {
 				animationRegions[i] = new animationRegion().deserialize(_map.aRegion[i]);
 			regionUpdate();
 		}
+		
+		if(has(_map, "nodePosition")) nodeStoredPosition = variable_clone(_map.nodePosition);
 		
 		bind_gamemaker = Binder_Gamemaker(attributes.bind_gamemaker_path);
 		if(bind_gamemaker == noone) attributes.bind_gamemaker_path = "";

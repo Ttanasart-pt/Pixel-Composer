@@ -2578,6 +2578,7 @@
     {"id":{"name":"panel_graph_export_image","path":"scripts/panel_graph_export_image/panel_graph_export_image.yy",},},
     {"id":{"name":"panel_graph_grid_settings","path":"scripts/panel_graph_grid_settings/panel_graph_grid_settings.yy",},},
     {"id":{"name":"panel_graph_node_multiplier","path":"scripts/panel_graph_node_multiplier/panel_graph_node_multiplier.yy",},},
+    {"id":{"name":"panel_graph_node_position","path":"scripts/panel_graph_node_position/panel_graph_node_position.yy",},},
     {"id":{"name":"panel_graph_selector","path":"scripts/panel_graph_selector/panel_graph_selector.yy",},},
     {"id":{"name":"panel_graph_view_settings","path":"scripts/panel_graph_view_settings/panel_graph_view_settings.yy",},},
     {"id":{"name":"panel_graph","path":"scripts/panel_graph/panel_graph.yy",},},

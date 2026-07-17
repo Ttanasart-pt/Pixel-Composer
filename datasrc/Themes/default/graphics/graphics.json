@@ -210,6 +210,7 @@
     "node_path_control_snap":             { "path": "./icon/s_node_path_control_snap.png",                  "s": 2, "x": 12, "y": 12 },
     "node_resize":                        { "path": "./icon/s_node_resize.png",                             "s": 1, "x": 16, "y": 16 },
     "node_selector":                      { "path": "./icon/s_node_selector.png",                           "s": 1, "x": 12, "y": 12 },
+    "node_position":                      { "path": "./icon/s_node_position.png",                           "s": 1, "x": 12, "y": 12 },
     "node_sel_from":                      { "path": "./icon/s_node_sel_from.png",                           "s": 1, "x": 12, "y": 12 },
     "node_sel_to":                        { "path": "./icon/s_node_sel_to.png",                             "s": 1, "x": 12, "y": 12 },
     "node_sel_conn":                      { "path": "./icon/s_node_sel_conn.png",                           "s": 1, "x": 12, "y": 12 },
