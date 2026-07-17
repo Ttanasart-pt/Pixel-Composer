@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.7.102",
+    "changes": [
+      {
+        "date": "2026-07-17T05:09:40.922Z",
+        "node": "Armature Bind",
+        "commit": "**Armature Bind**: Fix deleting surface from inspector panel not remove connection."
+      }
+    ]
+  },
+  {
     "version": "1.21.5.003",
     "changes": [
       {

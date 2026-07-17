@@ -805,7 +805,6 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		
 		if(layer_remove > -1) {
 			deleteLayer(layer_remove);
-			refreshDynamicDisplay();
 			layer_remove = -1;
 		}
 		

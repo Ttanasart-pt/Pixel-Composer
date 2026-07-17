@@ -649,12 +649,16 @@ function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	
 	function deleteLayer(index) {
 		var idx = input_fix_len + index * data_length;
+		
 		for( var i = 0; i < data_length; i++ ) {
-			array_delete(inputs, idx, 1);
-			array_remove(input_display_list, idx + i);
+			var _in = array_safe_get(inputs, idx+i, noone);
+			if(_in != noone) _in.removeFrom();
+			// array_delete(inputs, idx, 1);
+			// array_remove(input_display_list, idx + i);
 		}
 		
-		doUpdate();
+		refreshDynamicDisplay();
+		triggerRender();
 	}
 	
 	function createNewInput(index = array_length(inputs)) {
@@ -1202,7 +1206,10 @@ function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 			}
 		}
 		
-		if(layer_remove > -1) { deleteLayer(layer_remove); layer_remove = -1; }
+		if(layer_remove > -1) { 
+			deleteLayer(layer_remove); 
+			layer_remove = -1; 
+		}
 		
 		return hoveringWid;
 	}
