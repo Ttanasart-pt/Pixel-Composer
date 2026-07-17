@@ -13,7 +13,7 @@ function __NodeValue_FPath(_name, _node, _value, _tooltip = "") : NodeValue(_nam
 		getValueRecursive(self.__curr_get_val, _time);
 		var val = __curr_get_val[0];
 		
-		if(is_array(val)) val = array_map(val, function(v) /*=>*/ {return valueProcess(v)});
+		if(is_array(val)) val = array_map(val, function(v,i) /*=>*/ {return valueProcess(v)});
 		else              val = valueProcess(val);
 		
 		return val;
@@ -72,7 +72,7 @@ function __NodeValue_FPath(_name, _node, _value, _tooltip = "") : NodeValue(_nam
 		
 		if(value_validation == VALIDATION.error && error_notification == noone) {
 			error_notification = noti_error(str);
-			error_notification.onClick = function() /*=>*/{ PANEL_GRAPH.focusNode(node); };
+			error_notification.onClick = function() /*=>*/ {return PANEL_GRAPH.focusNode(node)};
 		}
 			
 		if(value_validation == VALIDATION.pass && error_notification != noone) {

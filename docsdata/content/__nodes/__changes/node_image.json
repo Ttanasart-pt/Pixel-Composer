@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.7.102",
+    "changes": [
+      {
+        "date": "2026-07-17T01:35:24.844Z",
+        "node": "",
+        "commit": "Add link to Discord channel in help menu."
+      }
+    ]
+  },
+  {
     "version": "1.21.5.005",
     "changes": [
       {

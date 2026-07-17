@@ -669,8 +669,12 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 		var _bx = _x + _w - _bs;
 		var _by = _y + _h / 2 - _bs / 2;
 		
+		var fb1 = (_w - _bs > ui(32) || always_side_button) && front_button;
+		var fb2 = (_w - _bs > ui(32) || always_side_button) && front_button2;
+		
 		var sb1 = (_w - _bs > ui(32) || always_side_button) && side_button;
 		var sb2 = (_w - _bs > ui(32) || always_side_button) && side_button2;
+		
 		var unt = unit != noone && unit.reference != noone;
 		var sbw = _bs * (sb1 + sb2 + unt);
 		var _drawInc = false;
@@ -683,10 +687,19 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 			if(sbw) draw_sprite_stretched_ext(THEME.textbox, 3, _x + _w - sbw, _y, sbw, _h, CDEF.main_mdwhite, 1);
 		}
 		
-		if(_w - _bs > ui(32) && front_button) {
+		if(fb1) {
 			if(hide == 0) draw_sprite_stretched_ext(THEME.textbox, 3, _x, _y, _bs, _h, CDEF.main_mdwhite, 1);
 			front_button.setFocusHover(iactive, ihover);
 			front_button.draw(_x, _by, _bs, _bs, _m, THEME.button_hide_fill);
+			
+			_x += _bs;
+			_w -= _bs;
+		}
+		
+		if(fb2) {
+			if(hide == 0) draw_sprite_stretched_ext(THEME.textbox, 3, _x, _y, _bs, _h, CDEF.main_mdwhite, 1);
+			front_button2.setFocusHover(iactive, ihover);
+			front_button2.draw(_x, _by, _bs, _bs, _m, THEME.button_hide_fill);
 			
 			_x += _bs;
 			_w -= _bs;

@@ -31,9 +31,11 @@ function widget() constructor {
 	
 	always_break_line  = false;
 	always_side_button = false;
-	side_button  = noone;
-	side_button2 = noone;
-	front_button = noone;
+	
+	side_button   = noone;
+	side_button2  = noone;
+	front_button  = noone;
+	front_button2 = noone;
 	
 	hide = false;
 	
@@ -68,7 +70,10 @@ function widget() constructor {
 		
 		static setFrontButton = function(b) /*=>*/ { 
 			if(is(b, buttonClass)) b.iconPad(ui(6));
-			front_button = b; 
+			
+			if(front_button) front_button2 = b; 
+			else             front_button  = b; 
+			
 			return self; 
 		} 
 		
