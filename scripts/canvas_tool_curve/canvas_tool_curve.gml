@@ -26,6 +26,8 @@ function canvas_tool_curve_bezier() : canvas_tool() constructor {
 	static cancel    = function() /*=>*/ { disable(); }
 	static onDisable = function() /*=>*/ { clear();   }
 	
+	////- Draw
+	
 	static step = function(hover, active, _x, _y, _s, _mx, _my) {
 		mouse_cur_x = round((_mx - _x) / _s - 0.5);
 		mouse_cur_y = round((_my - _y) / _s - 0.5);
@@ -87,6 +89,10 @@ function canvas_tool_curve_bezier() : canvas_tool() constructor {
 			mouse_edit_sy = mouse_cur_y;
 		} 
 		
+		var _1px = brush.draw_type == BRUSH_DRAW_TYPE.line && !brush.use_surface && brush.dist_min == brush.dist_max && brush.dist_min == 1;
+		var _prc = 32;
+		var _st  = 1 / _prc;
+		
 		surface_set_shader(drawing_surface, noone);
 			var ox, oy, nx, ny;
 			var oax1, oay1, nax0, nay0;
@@ -97,8 +103,54 @@ function canvas_tool_curve_bezier() : canvas_tool() constructor {
 				
 				nax0 = nx + anchors[i][0];
 				nay0 = ny + anchors[i][1];
-			
-				if(i) brush.drawCurve(ox, oy, oax1, oay1, nax0, nay0, nx, ny, false);
+				
+				if(i) {
+					var _ox, _oy, _nx, _ny;
+					
+					var _x0  = ox;
+					var _y0  = oy;
+					var _cx0 = oax1;
+					var _cy0 = oay1;
+					var _cx1 = nax0;
+					var _cy1 = nay0;
+					var _x1  = nx;
+					var _y1  = ny;
+					
+					_ox  = ox;
+					_oy  = oy;
+					
+					for (var j = 1; j <= _prc; j++) {
+						var _t  = _st * j;
+						var _t1 = 1 - _t;
+						
+						_nx =     _t1 * _t1 * _t1 *  _x0 + 
+						      3 * _t1 * _t1 * _t  * _cx0 + 
+						      3 * _t1 * _t  * _t  * _cx1 + 
+						          _t  * _t  * _t  *  _x1;
+						     
+						_ny =     _t1 * _t1 * _t1 *  _y0 + 
+						      3 * _t1 * _t1 * _t  * _cy0 + 
+						      3 * _t1 * _t  * _t  * _cy1 + 
+						          _t  * _t  * _t  *  _y1;
+						
+						var dist = point_distance(_ox, _oy, _nx, _ny);
+						
+						if(dist > 3 || j == _prc) {
+							if(_1px) {
+								if(brush.size == 1)
+									draw_line(_ox - 1, _oy - 1, _nx - 1, _ny - 1);
+								else 
+									draw_line_round(_ox - 1, _oy - 1, _nx - 1, _ny - 1, brush.size);
+							} else 
+								brush.drawLine(_ox, _oy, _nx, _ny, false, true);
+								
+							_ox = _nx;
+							_oy = _ny;
+							
+						}
+					}	
+					// drawCurve(ox, oy, oax1, oay1, nax0, nay0, nx, ny, false);
+				}
 				
 				oax1 = nx + anchors[i][4];
 				oay1 = ny + anchors[i][5];
@@ -166,4 +218,41 @@ function canvas_tool_curve_bezier() : canvas_tool() constructor {
 		if(mouse_hovering[0] == noone && editing[0] == noone) draw_anchor(0, _mx, _my, ui(7));
 	}
 	
+	static drawCurve = function(x0, y0, cx0, cy0, cx1, cy1, x1, y1, _draw = false, prec = 32) { 
+		var ox, oy, nx, ny;
+		var odx, ody;
+		var _st = 1 / prec;
+		
+		for (var i = 0; i <= prec; i++) {
+			var _t  = _st * i;
+			var _t1 = 1 - _t;
+			
+			nx =     _t1 * _t1 * _t1 *  x0 + 
+			     3 * _t1 * _t1 * _t  * cx0 + 
+			     3 * _t1 * _t  * _t  * cx1 + 
+			         _t  * _t  * _t  *  x1;
+			     
+			ny =     _t1 * _t1 * _t1 *  y0 + 
+			     3 * _t1 * _t1 * _t  * cy0 + 
+			     3 * _t1 * _t  * _t  * cy1 + 
+			         _t  * _t  * _t  *  y1;
+			     
+		    if(i) {
+		    	var dist = point_distance(odx, ody, nx, ny);
+		    	if(dist > 3 || i == prec) {
+		    		brush.drawLine(odx, ody, nx, ny, _draw, true);
+		    		odx = nx;
+		    		ody = ny;
+		    	}
+		    	
+		    } else {
+		    	odx = nx;
+		    	ody = ny;
+		    }
+			     
+			ox = nx;
+			oy = ny;
+		}
+	
+	}
 }
