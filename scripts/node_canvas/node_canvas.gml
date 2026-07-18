@@ -1402,15 +1402,15 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			selection.was_selected       = selection.is_selected;
 			selection.selection_hovering = false;
 			
+			array_append(rightTools, selection.is_selected? rightTools_selection : rightTools_not_selection);
+			
 			if(selection.is_selected) {
-				selection.step(hover, active, _x, _y, _s, _mx, _my);
+				// selection.step(hover, active, _x, _y, _s, _mx, _my);
+				
 				if(_tool_sel == noone && is(_tool, canvas_selection_tool))
 					selection.onSelected(hover, active, _x, _y, _s, _mx, _my);
-					
-				array_append(rightTools, rightTools_selection);
 				
-			} else
-				array_append(rightTools, rightTools_not_selection);
+			}
 		#endregion
 		
 		#region tool override

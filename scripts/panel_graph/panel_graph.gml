@@ -2004,7 +2004,7 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
 		#endregion
 		
         #region node list filter
-	        array_foreach(project.allNodes, function(_n,i) /*=>*/ { _n.is_selecting = false; return true; });
+	        array_foreach(project.allNodes, function(_n,i) /*=>*/ { _n.is_selecting = false; _n.region_hovering = false; return true; });
 	        
 	        var _node_active = array_filter(nodes_list, function(_n,i) /*=>*/ {return _n.active && _n.visible});
 	        var _node_draw   = array_filter( _node_active, function(_n,i) /*=>*/ {

@@ -66,9 +66,9 @@ function canvas_tool_selection_magic(_toolAttr) : canvas_selection_tool() constr
 					UNDO_HOLDING = false;
 				}
 				
-			} else // click outside canvas
+			} else { // Click outside canvas
 				node.selection.apply();
-				
+			}
 		}
 	}
 	

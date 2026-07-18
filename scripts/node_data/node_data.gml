@@ -2502,8 +2502,8 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		var y1 = yy + h * _s;
 		
 		var _hov = _panel.pHOVER && (_panel.node_hovering == noone || _panel.node_hovering == self);
-		show_input_name  = _hov;
-		show_output_name = _hov;
+		show_input_name   = _hov;
+		show_output_name  = _hov;
 		
 		show_input_name   = show_input_name  && point_in_rectangle(_mx, _my, xx - (    12) * _s, y0, xx + (    12) * _s, y1);
 		show_output_name  = show_output_name && point_in_rectangle(_mx, _my, xx + (w - 12) * _s, y0, xx + (w + 12) * _s, y1);

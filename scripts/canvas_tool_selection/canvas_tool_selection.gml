@@ -326,8 +326,8 @@ function canvas_selection_data() : canvas_tool() constructor {
 		hover_index = noone;
 		
 		if(is_select_drag) {
-			var dx = mouse_cur_x - selection_mx;
-			var dy = mouse_cur_y - selection_my;
+			var dx = _smx - selection_mx;
+			var dy = _smy - selection_my;
 			var px = selection_sx;
 			var py = selection_sy;
 
@@ -351,8 +351,8 @@ function canvas_selection_data() : canvas_tool() constructor {
 			selection_hovering = true;
 			
 		} else if(is_select_scal) {
-			var _dx = mouse_cur_x - selection_mx;
-			var _dy = mouse_cur_y - selection_my;
+			var _dx = _smx - selection_mx;
+			var _dy = _smy - selection_my;
 			
 			var px = selection_sx;
 			var py = selection_sy;
@@ -480,20 +480,19 @@ function canvas_selection_data() : canvas_tool() constructor {
 			if(key_mod_press(SHIFT)) { CURSOR_SPRITE = THEME.cursor_add;    return; }
 			if(key_mod_press(ALT))   { CURSOR_SPRITE = THEME.cursor_remove; return; }
 		
-			if(point_in_rectangle(mouse_cur_x, mouse_cur_y, pos_x0, pos_y0, pos_x1 - 1, pos_y1 - 1)) {
-				var _msx  = mouse_cur_x - pos_x0;
-				var _msy  = mouse_cur_y - pos_y0;
+			if(point_in_rectangle(_smx, _smy, pos_x0, pos_y0, pos_x1-1, pos_y1-1)) {
+				var _msx  = _smx - pos_x0;
+				var _msy  = _smy - pos_y0;
 				var _mask = selection_sampler.active? selection_sampler.getPixelDirect(_msx, _msy) : 0;
 				selection_hovering = _mask > 0;
-				
 				hover_index = 0;
 			}
 			
-			if(point_in_circle(_smx, _smy, pos_x0, pos_y0, 8 / _s)) hover_index = 1;
-			if(point_in_circle(_smx, _smy, pos_x1, pos_y0, 8 / _s)) hover_index = 2;
-			if(point_in_circle(_smx, _smy, pos_x0, pos_y1, 8 / _s)) hover_index = 3;
-			if(point_in_circle(_smx, _smy, pos_x1, pos_y1, 8 / _s)) hover_index = 4;
-			if(point_in_circle(_smx, _smy, pos_xc, pos_y0 - 24 / _s, 8 / _s)) hover_index = 5;
+			if(point_in_circle(_smx, _smy, pos_x0, pos_y0,         8/_s)) hover_index = 1;
+			if(point_in_circle(_smx, _smy, pos_x1, pos_y0,         8/_s)) hover_index = 2;
+			if(point_in_circle(_smx, _smy, pos_x0, pos_y1,         8/_s)) hover_index = 3;
+			if(point_in_circle(_smx, _smy, pos_x1, pos_y1,         8/_s)) hover_index = 4;
+			if(point_in_circle(_smx, _smy, pos_xc, pos_y0 - 24/_s, 8/_s)) hover_index = 5;
 			
 			if(hover_index) selection_hovering = true;
 		}
@@ -510,8 +509,8 @@ function canvas_selection_data() : canvas_tool() constructor {
 					is_select_drag = 1;
 					selection_sx = pos_x0;
 					selection_sy = pos_y0;
-					selection_mx = mouse_cur_x;
-					selection_my = mouse_cur_y;
+					selection_mx = _smx;
+					selection_my = _smy;
 					break;
 				
 				case 5 : 
@@ -530,8 +529,8 @@ function canvas_selection_data() : canvas_tool() constructor {
 					selection_sy = pos_y0;
 					selection_ex = pos_x1;
 					selection_ey = pos_y1;
-					selection_mx = mouse_cur_x;
-					selection_my = mouse_cur_y;
+					selection_mx = _smx;
+					selection_my = _smy;
 					break;
 					
 			}

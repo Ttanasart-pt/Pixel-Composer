@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.7.103",
+    "changes": [
+      {
+        "date": "2026-07-18T00:03:08.964Z",
+        "node": "",
+        "commit": "**Canvas**: Fix selection can't be move."
+      }
+    ]
+  },
+  {
     "version": "1.21.7.102",
     "changes": [
       {
