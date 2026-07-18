@@ -368,6 +368,8 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		tool_attribute.pattern_pos   = [ 0, 0 ];
 		tool_attribute.pattern_mod   = 4;
 		
+		tool_attribute.freeform_algo = 0;
+		
 		tool_attribute.selInterpolate= 1;
 		
 		tool_mirror_hovering = false;
@@ -467,9 +469,13 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		tool_dither         = new buttonGroup( array_create(4, THEME.canvas_dither), function(v) /*=>*/ { tool_attribute.dither = v; })
 									.setTooltips( [ "No Dithering", "Bayer 2", "Bayer 4", "Bayer 8" ] )
 									.setCollapse(false);
-									
+						
 		tool_sel_interp     = new buttonGroup( array_create(2, THEME.canvas_interpolate), function(v) /*=>*/ { tool_attribute.selInterpolate = v; })
 									.setTooltips( [ "Pixel", "CleanEdge" ] )
+									.setCollapse(false);
+						
+		tool_freeform_algo  = new buttonGroup( array_create(2, THEME.canvas_freeform_algo), function(v) /*=>*/ { tool_attribute.freeform_algo = v; })
+									.setTooltips( [ "Triangulate", "Scanline" ] )
 									.setCollapse(false);
 									
 		/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -487,6 +493,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		tool_iso_settings = toolSetting( "",                   tool_isoangle,       "iso_angle",      tool_attribute                  );
 		tool_dithering    = toolSetting( "",                   tool_dither,         "dither",         tool_attribute                  );
 		tool_selinterp    = toolSetting( "",                   tool_sel_interp,     "selInterpolate", tool_attribute                  );
+		tool_freeform_algo= toolSetting( "",                   tool_freeform_algo,  "freeform_algo",  tool_attribute                  );
 		
 		tool_fill_settings = [
 			tool_thrs,
@@ -522,6 +529,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 				.setSetting(tool_channel)
 				.setSetting(tool_layer)
 				.setSetting(tool_mirror).addWidget(tool_mirror_reset)
+				.setSetting(tool_freeform_algo)
 				.setToolObject([ tool_sel_rectangle, tool_sel_ellipse, tool_sel_freeform, tool_sel_brush ]),
 			
 			new NodeTool( "Magic Selection", THEME.canvas_tools_magic_selection )
@@ -583,6 +591,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 				.setSetting(tool_size)
 				.setSetting(tool_layer)
 				.setSetting(tool_mirror).addWidget(tool_mirror_reset)
+				.setSetting(tool_freeform_algo)
 				.setToolObject(tool_freeform),
 					
 			new NodeTool( "Fill",		  THEME.canvas_tools_bucket)
@@ -1412,7 +1421,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			array_append(rightTools, selection.is_selected? rightTools_selection : rightTools_not_selection);
 			
 			if(selection.is_selected) {
-				// selection.step(hover, active, _x, _y, _s, _mx, _my);
+				selection.step(hover, active, _x, _y, _s, _mx, _my);
 				
 				if(_tool_sel == noone && is(_tool, canvas_selection_tool))
 					selection.onSelected(hover, active, _x, _y, _s, _mx, _my);

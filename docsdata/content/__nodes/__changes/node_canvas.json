@@ -11,6 +11,11 @@
         "date": "2026-07-18T00:24:23.331Z",
         "node": "Canvas",
         "commit": "**Canvas**: Selection interpolation now use CleanEdge algorithm."
+      },
+      {
+        "date": "2026-07-18T01:47:40.928Z",
+        "node": "Canvas",
+        "commit": "**Canvas**: Add Freeform scanline algorithm."
       }
     ]
   },

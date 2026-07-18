@@ -1,0 +1,12 @@
+{
+  "$GMShader":"",
+  "%Name":"sh_canvas_freeform_scanfill",
+  "name":"sh_canvas_freeform_scanfill",
+  "parent":{
+    "name":"util",
+    "path":"folders/nodes/data/canvas/util.yy",
+  },
+  "resourceType":"GMShader",
+  "resourceVersion":"2.0",
+  "type":1,
+}

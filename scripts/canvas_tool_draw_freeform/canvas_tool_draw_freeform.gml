@@ -1,15 +1,16 @@
 function canvas_tool_draw_freeform() : canvas_tool() constructor {
-	brush_resizable = true;
+	brush_resizable = false;
+	drawBrushMask   = false;
 	
 	mouse_cur_x = 0;
 	mouse_cur_y = 0;
 	mouse_pre_x = 0;
 	mouse_pre_y = 0;
 	
-	freeform_shape = [];
+	freeform_shape  = [];
+	freeform_points = [];
 	
 	static step = function(hover, active, _x, _y, _s, _mx, _my) {
-		
 		mouse_cur_x = round((_mx - _x) / _s - 0.5);
 		mouse_cur_y = round((_my - _y) / _s - 0.5);
 		
@@ -26,7 +27,7 @@ function canvas_tool_draw_freeform() : canvas_tool() constructor {
 	}
 	
 	static drawPreview = function(hover, active, _x, _y, _s, _mx, _my) {
-		brush.drawPoint(mouse_cur_x, mouse_cur_y);
+		draw_point(mouse_cur_x, mouse_cur_y);
 	}
 	
 }

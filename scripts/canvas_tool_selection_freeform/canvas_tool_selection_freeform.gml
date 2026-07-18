@@ -1,8 +1,9 @@
 function canvas_tool_selection_freeform() : canvas_selection_tool() constructor {
 	mouse_pre_x = 0;
 	mouse_pre_y = 0;
-	freeform_shape = [];
-	drawBrushMask  = false;
+	freeform_shape  = [];
+	freeform_points = [];
+	drawBrushMask   = false;
 	
 	static onStep = function(hover, active, _x, _y, _s, _mx, _my) {
 		attributes = node.attributes;
