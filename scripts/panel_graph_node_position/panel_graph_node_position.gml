@@ -1,5 +1,5 @@
 function Panel_Graph_Node_Position(_project) : PanelContent() constructor {
-	title    = __txt("Nose Position");
+	title    = __txt("Node Position");
 	w        = ui(272);
 	h        = ui(240);
 	anchor   = ANCHOR.left | ANCHOR.top;

@@ -866,15 +866,13 @@ function Node_Armature_Pose(_x, _y, _group = noone) : Node(_x, _y, _group) const
 				}
 				
 				for( var i = 0, n = array_length(bone_select); i < n; i++ ) {
-					var _bone = bone_points[bone_select[i]];
+					var _sel  = bone_select[i];
+					var _bone = array_safe_get_fast(bone_points, _sel);
 					
 					if(is(_bone, __Bone)) _bone.drawSimple(attributes, _x, _y, _s, _mx, _my, c_white);
 					if(is(_bone, __vec2)) draw_anchor(0, _x + _bone.x * _s, _y + _bone.y * _s, ui(8), 2); 
 				}
 				
-			} else {
-				// bone_select   = [];
-				// bone_selected = false;
 			}
 		#endregion
 		

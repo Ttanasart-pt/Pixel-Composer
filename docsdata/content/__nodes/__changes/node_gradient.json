@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.7.103",
+    "changes": [
+      {
+        "date": "2026-07-18T04:10:02.496Z",
+        "node": "",
+        "commit": "**Draw Gradient**: Add level, curve properties."
+      }
+    ]
+  },
+  {
     "version": "1.21.5.006",
     "changes": [
       {

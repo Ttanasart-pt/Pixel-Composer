@@ -334,11 +334,16 @@ uniform float     iCurve_curve[CURVE_MAX];
 uniform int       iCurve_curve_use;
 uniform int       iCurve_amount;
 
+uniform float     wcurve_curve[CURVE_MAX];
+uniform int       wcurve_curve_use;
+uniform int       wcurve_amount;
+
 uniform int type;
 uniform int gradient_loop;
 uniform int uniAsp;
 
 uniform vec2 cirScale;
+uniform vec2 level;
 
 #define TAU 6.283185307179586
 
@@ -415,5 +420,12 @@ void main() {
 	
 	vec4 col = gradientEval(prog);
 	vec4 res = vec4(col.rgb, col.a * texture2D( gm_BaseTexture, v_vTexcoord ).a * alp);
-	gl_FragColor    = res;
+	
+	res.rgb = (res.rgb - level.x) / (level.y - level.x);
+	float w = (res.r + res.g + res.b) / 3.;
+	float wtarget = curveEval(wcurve_curve, wcurve_amount, w);
+	if(w == 0.) res.rgb = vec3(wtarget);
+	else res.rgb *= wtarget / w;
+	
+	gl_FragColor = res;
 }
