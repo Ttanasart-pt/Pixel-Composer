@@ -278,8 +278,8 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		attributes.frames = 1;
 		attribute_surface_depth();
 	
-		attributes.useBGDim  = false;
-		attributes.dimension = [ 1, 1 ];
+		attributes.useBGDim       = false;
+		attributes.dimension      = [ 1, 1 ];
 	
 		output_surface   = [];
 		canvas_surface   = [];
@@ -309,7 +309,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		brush         = new canvas_brush();
 		current_brush = brush;
 		
-		selection = new canvas_selection_data().setNode(self);
+		selection           = new canvas_selection_data().setNode(self);
 		
 		tool_brush          = new canvas_tool_brush(false, tool_attribute).setNode(self);
 		tool_eraser         = new canvas_tool_brush(true, tool_attribute).setNode(self);
@@ -367,7 +367,9 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		tool_attribute.pattern_scale = [ 1, 1 ];
 		tool_attribute.pattern_pos   = [ 0, 0 ];
 		tool_attribute.pattern_mod   = 4;
-
+		
+		tool_attribute.selInterpolate= 1;
+		
 		tool_mirror_hovering = false;
 		tool_mirror_dragging = undefined;
 		tool_mirror_dragg_sx = undefined;
@@ -466,20 +468,25 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 									.setTooltips( [ "No Dithering", "Bayer 2", "Bayer 4", "Bayer 8" ] )
 									.setCollapse(false);
 									
+		tool_sel_interp     = new buttonGroup( array_create(2, THEME.canvas_interpolate), function(v) /*=>*/ { tool_attribute.selInterpolate = v; })
+									.setTooltips( [ "Pixel", "CleanEdge" ] )
+									.setCollapse(false);
+									
 		/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		
-		tool_channel      = toolSetting( "",                   tool_channel_edit,   "channel",      tool_attribute                  );
-		tool_layer        = toolSetting( "",                   tool_drawLayer_edit, "drawLayer",    tool_attribute                  );
-		tool_mirror       = toolSetting( "",                   tool_mirror_edit,    "mirror",       tool_attribute                  );
-		tool_size         = toolSetting( "",                   tool_size_edit,      "size",         tool_attribute, "Brush Size"    );
-		tool_smooth       = toolSetting( "",                   tool_smooth_edit,    "smooth",       brush,          "Smoothness"    );
-		tool_bg_stamp     = toolSetting( THEME.stamp,          tool_stamp_bg,       "stamp",        tool_attribute, "Stamp BG"      );
-		tool_pixelp       = toolSetting( THEME.pixel_diag,     tool_pixel_perfect,  "pixelPerfect", tool_attribute, "Pixel Perfect" );
-		tool_thrs         = toolSetting( THEME.tool_threshold, tool_thrs_edit,      "thres",        tool_attribute, "Threshold"     );
-		tool_fil8         = toolSetting( THEME.tool_fill_type, tool_fil8_edit,      "fillType",     tool_attribute, "Fill Type"     );
-		tool_fill_bg      = toolSetting( THEME.tool_bg,        tool_fill_use_bg,    "useBG",        tool_attribute, "Use BG"        );
-		tool_iso_settings = toolSetting( "",                   tool_isoangle,       "iso_angle",    tool_attribute                  );
-		tool_dithering    = toolSetting( "",                   tool_dither,         "dither",       tool_attribute                  );
+		tool_channel      = toolSetting( "",                   tool_channel_edit,   "channel",        tool_attribute                  );
+		tool_layer        = toolSetting( "",                   tool_drawLayer_edit, "drawLayer",      tool_attribute                  );
+		tool_mirror       = toolSetting( "",                   tool_mirror_edit,    "mirror",         tool_attribute                  );
+		tool_size         = toolSetting( "",                   tool_size_edit,      "size",           tool_attribute, "Brush Size"    );
+		tool_smooth       = toolSetting( "",                   tool_smooth_edit,    "smooth",         brush,          "Smoothness"    );
+		tool_bg_stamp     = toolSetting( THEME.stamp,          tool_stamp_bg,       "stamp",          tool_attribute, "Stamp BG"      );
+		tool_pixelp       = toolSetting( THEME.pixel_diag,     tool_pixel_perfect,  "pixelPerfect",   tool_attribute, "Pixel Perfect" );
+		tool_thrs         = toolSetting( THEME.tool_threshold, tool_thrs_edit,      "thres",          tool_attribute, "Threshold"     );
+		tool_fil8         = toolSetting( THEME.tool_fill_type, tool_fil8_edit,      "fillType",       tool_attribute, "Fill Type"     );
+		tool_fill_bg      = toolSetting( THEME.tool_bg,        tool_fill_use_bg,    "useBG",          tool_attribute, "Use BG"        );
+		tool_iso_settings = toolSetting( "",                   tool_isoangle,       "iso_angle",      tool_attribute                  );
+		tool_dithering    = toolSetting( "",                   tool_dither,         "dither",         tool_attribute                  );
+		tool_selinterp    = toolSetting( "",                   tool_sel_interp,     "selInterpolate", tool_attribute                  );
 		
 		tool_fill_settings = [
 			tool_thrs,
@@ -823,7 +830,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 				surface_get_pixel_ext(getCanvasSurface(), _x, _y);
 	}
 	
-	static getToolSettings = function() { return []; }
+	static getToolSettings = function() { return selection.is_selected? [ tool_selinterp ] : []; }
 	
 	static pickColor = function(_x, _y, _s, _mx, _my) {
 		var mx = round((_mx - _x) / _s - 0.5);

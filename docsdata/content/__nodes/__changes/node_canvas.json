@@ -6,6 +6,11 @@
         "date": "2026-07-18T00:03:08.957Z",
         "node": "Canvas",
         "commit": "**Canvas**: Fix selection can't be move."
+      },
+      {
+        "date": "2026-07-18T00:24:23.331Z",
+        "node": "Canvas",
+        "commit": "**Canvas**: Selection interpolation now use CleanEdge algorithm."
       }
     ]
   },

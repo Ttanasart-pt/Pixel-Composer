@@ -551,6 +551,7 @@
     "bone_trans_rotate":                  { "path": "./tool/s_bone_trans_rotate.png",                       "s": 2, "x":  9, "y":  9 },
     "bone_trans_scale":                   { "path": "./tool/s_bone_trans_scale.png",                        "s": 2, "x":  9, "y":  9 },
     "canvas_dither":                      { "path": "./tool/s_canvas_dither.png",                           "s": 4, "x":  8, "y":  8 },
+    "canvas_interpolate":                 { "path": "./tool/s_canvas_interpolate.png",                      "s": 2, "x":  8, "y":  8 },
     "canvas_draw_layer":                  { "path": "./tool/s_canvas_draw_layer.png",                       "s": 3, "x":  8, "y":  8 },
     "canvas_iso_angle":                   { "path": "./tool/s_canvas_iso_angle.png",                        "s": 2, "x":  8, "y":  8 },
     "canvas_fill_type":                   { "path": "./tool/s_canvas_fill_type.png",                        "s": 3, "x":  8, "y":  8 },

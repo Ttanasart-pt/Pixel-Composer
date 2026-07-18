@@ -452,11 +452,15 @@ function canvas_selection_data() : canvas_tool() constructor {
 			selection_surface = surface_verify(selection_surface, pw, ph);
 			selection_mask    = surface_verify(selection_mask,    pw, ph);
 			
-			surface_set_shader(selection_surface, noone);
+			surface_set_shader(selection_surface, sh_sample);
+				shader_set_interpolation_surface(selection_surface_base);
+				shader_set_i( "interpolation", node.tool_attribute.selInterpolate? 6 : 0 );
 				draw_surface_ext(selection_surface_base, _p[0], _p[1], 1, 1, aa, c_white, 1);
 			surface_reset_shader();
 			
-			surface_set_shader(selection_mask, noone);
+			surface_set_shader(selection_mask, sh_sample);
+				shader_set_interpolation_surface(selection_surface_base);
+				shader_set_i( "interpolation", node.tool_attribute.selInterpolate? 6 : 0 );
 				draw_surface_ext(selection_mask_base, _p[0], _p[1], 1, 1, aa, c_white, 1);
 			surface_reset_shader();
 			
