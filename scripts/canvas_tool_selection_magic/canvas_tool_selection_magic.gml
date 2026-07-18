@@ -3,7 +3,7 @@ function canvas_tool_selection_magic(_toolAttr) : canvas_selection_tool() constr
 	drawBrushMask  = false;
 	
 	static onStep = function(hover, active, _x, _y, _s, _mx, _my) {
-		if(node.selection.is_select_drag) return;
+		if(node.selection.is_select_drag || node.selection.is_select_rota || node.selection.is_select_scal) return;
 		
 		var _thr		= tool_attribute.thres;
 		var _fill_type	= tool_attribute.fillType;
