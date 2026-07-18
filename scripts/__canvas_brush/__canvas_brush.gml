@@ -66,6 +66,8 @@ function canvas_brush() constructor {
 		range = use_surface? max(surface_w, surface_h) / 2 : ceil(size / 2);
 	}
 	
+	static isPx = function() /*=>*/ { return draw_type == BRUSH_DRAW_TYPE.line && !use_surface && size == 1; }
+	
 	static step = function(hover, active, _x, _y, _s, _mx, _my) {
 		var attr = node.tool_attribute;
 		size = attr.size;

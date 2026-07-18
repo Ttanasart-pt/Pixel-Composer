@@ -323,14 +323,12 @@ function canvas_tool_brush(_eraser = false, _toolAttr = undefined) : canvas_tool
 			
 		} 
 		
-		var _1px = brush.draw_type == BRUSH_DRAW_TYPE.line && !brush.use_surface && brush.dist_min == brush.dist_max && brush.dist_min == 1;
-		
 		if(mouse_holding) { // Drawing
 			if(active) {
 				var _drawnSpeed = 0;
 				var _drawnStep  = 0;
 				
-				if(_1px) {
+				if(brush.isPx()) {
 					if(tool_attribute.pixelPerfect && !isEraser) {
 						var _drawPx = abs(mouse_cur_tx - mouse_las_draw_x) > 1 || abs(mouse_cur_ty - mouse_las_draw_y) > 1;
 						
@@ -419,7 +417,7 @@ function canvas_tool_brush(_eraser = false, _toolAttr = undefined) : canvas_tool
 			}
 			
 			if(mouse_lrelease()) {
-				if(_1px && tool_attribute.pixelPerfect && !isEraser) {
+				if(brush.isPx() && tool_attribute.pixelPerfect && !isEraser) {
 					surface_set_shader(drawing_surface, noone, false);
 						BLEND_MAX_ALPHA
 						draw_point_px_wrap(true, mouse_pre_draw_x, mouse_pre_draw_y);

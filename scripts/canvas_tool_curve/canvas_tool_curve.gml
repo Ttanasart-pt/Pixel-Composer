@@ -89,7 +89,7 @@ function canvas_tool_curve_bezier() : canvas_tool() constructor {
 			mouse_edit_sy = mouse_cur_y;
 		} 
 		
-		var _1px = brush.draw_type == BRUSH_DRAW_TYPE.line && !brush.use_surface && brush.dist_min == brush.dist_max && brush.dist_min == 1;
+		var _1px = brush.isPx();
 		var _prc = 32;
 		var _st  = 1 / _prc;
 		
