@@ -501,6 +501,8 @@ function canvas_selection_data() : canvas_tool() constructor {
 			if(hover_index) selection_hovering = true;
 		}
 		
+		if(active && key_press(vk_delete)) destroy();
+		
 		if(hover_index == noone) {
 			if(PANEL_PREVIEW.tool_current == noone && mouse_lpress(active)) 
 				apply();
