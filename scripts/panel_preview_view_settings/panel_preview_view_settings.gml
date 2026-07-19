@@ -76,6 +76,16 @@ function Panel_Preview_View_Setting(_panel) : Panel_Linear_Setting() constructor
 			"project_previewSetting.quick_nav",
 		),
 		
+		new __Panel_Linear_Setting_Item(
+			__txt("Color Format (RGBA)"),
+			new buttonGroup(__txts([ "HEX (Alpha)", "Percentage" ]), function(val) /*=>*/ { previewPanel.color_format = val; }),
+			function()    /*=>*/   {return previewPanel.color_format},
+			function(val) /*=>*/ { previewPanel.color_format = val; },
+			PREFERENCES.project_previewSetting.color_format,
+			noone,
+			"project_previewSetting.color_format",
+		),
+		
 		-1, 
 		
 		new __Panel_Linear_Setting_Item(

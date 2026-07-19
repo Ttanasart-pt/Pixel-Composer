@@ -272,6 +272,7 @@
 				show_info         : true,
 				show_view_control : 1,
 				status_display    : 2,
+				color_format      : 0,
 				
 				show_ruler    : false, 
 				ruler_color   : -1, 

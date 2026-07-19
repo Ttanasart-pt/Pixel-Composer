@@ -1,0 +1,12 @@
+[
+  {
+    "version": "1.21.7.103",
+    "changes": [
+      {
+        "date": "2026-07-19T06:38:34.727Z",
+        "node": "Preview Panel",
+        "commit": "**Preview Panel**: Add percentage sample color format."
+      }
+    ]
+  }
+]

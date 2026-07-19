@@ -3535,12 +3535,26 @@ function Panel_Preview() : PanelContent() constructor {
 	            	draw_text(tx, cy + ch / 2, _da);
 	            	
 	            } else {
-	                var hx = color_get_hex(_cc);
-	                draw_text(tx, cy + ch / 2, hx);
-	            
-	                tx += string_width(hx) + ui(8);
-	                draw_set_color(COLORS._main_text_sub);
-	                draw_text(tx, cy + ch / 2, $"({color_get_alpha(_cc)})");
+	            	switch(PROJECT.previewSetting.color_format) {
+	            		case 0 : 
+			                var hx = color_get_hex(_cc);
+			                draw_text(tx, cy + ch / 2, hx);
+			            
+			                tx += string_width(hx) + ui(8);
+			                draw_set_color(COLORS._main_text_sub);
+			                draw_text(tx, cy + ch / 2, $"({color_get_alpha(_cc)})");
+			                break;
+			                
+		                case 1 : 
+		                	var _r = _color_get_r(_cc) * 100;
+		                	var _g = _color_get_g(_cc) * 100;
+		                	var _b = _color_get_b(_cc) * 100;
+		                	var _a = _color_get_a(_cc) * 100;
+		                	
+		                	var _txt = $"r: {_r}%, g: {_g}%, b: {_b}%, a: {_a}%";
+		                	draw_text(tx, cy + ch / 2, _txt);
+		                	break;
+	            	}
 	            }
 	            
             } else if(_ty == "tileset") {
