@@ -116,7 +116,7 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		[ "Line Data",     false     ], 27,  6,  7, 28, 32, 33, 35, 19,  2, 20, 
 		
 		[ "Width",         false     ], 17,  3, 11, 12, 
-			[ "/Weight",    true     ], 36, 62, 63, 
+			[ "/Weight",    true, 36 ], 62, 63, 
 			
 		[ "Line Settings", false     ],  8, 25,  9, 26, 
 		[ "Dash",           true, 46 ], 44, 45, 
@@ -204,7 +204,7 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 			var _loop     = _data[35];
 			var _fixL     = _data[19];
 			var _seg      = _data[ 2] + 1;
-			var _segL     = _data[20];
+			var _segL     = _data[20]; _segL = max(1, _segL);
 			
 			var _1px      = _data[17];
 			var _wid      = _data[ 3];

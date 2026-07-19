@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.7.103",
+    "changes": [
+      {
+        "date": "2026-07-19T03:22:49.529Z",
+        "node": "Draw Line",
+        "commit": "**Draw Line**: Fix freeze when setting Segment length to 0."
+      }
+    ]
+  },
+  {
     "version": "1.21.6.007",
     "changes": [
       {
