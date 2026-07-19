@@ -3551,7 +3551,7 @@ function Panel_Preview() : PanelContent() constructor {
 		                	var _b = _color_get_b(_cc) * 100;
 		                	var _a = _color_get_a(_cc) * 100;
 		                	
-		                	var _txt = $"r: {_r}%, g: {_g}%, b: {_b}%, a: {_a}%";
+		                	var _txt = $"r {_r}%, g {_g}%, b {_b}%, a {_a}%";
 		                	draw_text(tx, cy + ch / 2, _txt);
 		                	break;
 	            	}

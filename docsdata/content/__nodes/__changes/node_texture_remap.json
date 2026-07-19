@@ -6,6 +6,11 @@
         "date": "2026-07-19T06:38:34.727Z",
         "node": "Preview Panel",
         "commit": "**Preview Panel**: Add percentage sample color format."
+      },
+      {
+        "date": "2026-07-19T07:34:59.951Z",
+        "node": "Texture Remap",
+        "commit": "**Texture Remap**: Add transform properties."
       }
     ]
   }

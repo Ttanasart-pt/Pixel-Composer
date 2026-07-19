@@ -1,5 +1,4 @@
 #pragma use(sampler)
-
 #region -- sampler -- [1780048120.828549]
 	uniform int  interpolation;
 	uniform vec2 sampleDimension;
@@ -134,18 +133,27 @@ uniform int   useIndex;
 uniform float index;
 uniform float blend;
 
+uniform vec2  position;
+uniform float rotation;
+uniform vec2  scale;
+
 void main() {
 	vec4 map = texture2Dintp( map, v_vTexcoord );
-	vec2 pos = map.rg;
 	
 	gl_FragColor = vec4(0.);
 	if(useIndex == 1 && map.b != index) return;
 	
+	float ang = radians(rotation);
+	mat2  rot = mat2( cos(ang), -sin(ang), sin(ang), cos(ang) );
+	vec2  pos = map.rg;
+	
 	pos.x = 1. - pos.x;
 	pos   = 1. - pos;
 	
-	vec2 px   = mix(v_vTexcoord, pos, blend);
-	vec4 samp = texture2Dintp( gm_BaseTexture, px );
+	vec2 px = mix(v_vTexcoord, pos, blend);
+	     px = .5 + (px + position - .5) * rot / scale;
+	      
+	vec4 samp = sampleTexture( gm_BaseTexture, px );
 	samp.a   *= map.a;
 	
     gl_FragColor = samp;
