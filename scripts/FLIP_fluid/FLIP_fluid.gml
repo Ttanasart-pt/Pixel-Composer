@@ -1297,6 +1297,35 @@ cfunction double FLIP_deleteParticle_rectangle(double dindex, double x, double y
 	return 0;
 }
 
+cfunction double FLIP_deleteParticle_surface(double dindex, void* pixelArrayBuffer, double rat) {
+	if (dindex < 0 || dindex >= domains.size()) return -1;
+	
+	Domain& domain      = domains[dindex];
+	uint8_t* pixelArray = (uint8_t*)pixelArrayBuffer;
+	double* particlePos = domain.particlePos;
+
+	double cel = domain.spacing;
+	int    row = (int)domain.fNumX;
+
+	for (int i = 0; i < domain.numParticles; i++) {
+		if ((double)(rand() % 100) / 100 > rat) continue;
+
+		double _x = particlePos[i * 2 + 0];
+		double _y = particlePos[i * 2 + 1];
+		
+		int cellX = floor(_x / cel);
+		int cellY = floor(_y / cel);
+
+		int index = cellY * row + cellX;
+		if(pixelArray[index] > 128) {
+			particlePos[i * 2 + 0] = 0;
+			particlePos[i * 2 + 1] = 0;
+		}
+	}
+	
+	return 0;
+}
+
 //////////////////////////////////////////////////////////////////// EFFECTORS //////////////////////////////////////////////////////////////////////
 
 cfunction double FLIP_resetObstracles(double dindex) {
