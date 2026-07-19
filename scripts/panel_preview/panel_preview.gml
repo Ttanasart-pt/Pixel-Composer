@@ -3173,7 +3173,7 @@ function Panel_Preview() : PanelContent() constructor {
         var _side   = _left? 1 : -1;
         var _view_x = _left? tool_side_draw_l * toolbar_width + ui(8) : 
                          w - tool_side_draw_r * toolbar_width - ui(8);
-            
+        
         var _view_y = topbar_height + ui(8) + tool_side_draw_t * toolbar_width;
         var _hab    = pHOVER && tool_hovering == noone && !view_pan_tool && !view_zoom_tool;
         view_hovering = false;
@@ -3302,6 +3302,7 @@ function Panel_Preview() : PanelContent() constructor {
             draw_sprite_ui(THEME.view_zoom, 0, _d3x, _d3y, 1, 1, 0, view_zoom_tool? COLORS._main_accent : COLORS._main_icon, 1);
         }
         
+        if(view_hovering) mouse_on_content = false;
         if(view_hovering && mouse_rpress(pFOCUS)) {
         	mouse_on_preview = false;
         	menuCall("preview_view_controller", [ menuItem("Hide view controllers", function() /*=>*/ { PROJECT.previewSetting.show_view_control = 0; }) ]);
