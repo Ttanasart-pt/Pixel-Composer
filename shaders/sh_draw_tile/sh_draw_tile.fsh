@@ -1,5 +1,4 @@
 #pragma use(sampler)
-
 #region -- sampler -- [1780048120.828549]
 	uniform int  interpolation;
 	uniform vec2 sampleDimension;
@@ -137,11 +136,14 @@ uniform vec2  scale;
 uniform float rotation;
 
 void main() {
-	vec2 pos  = position / backDimension;
+	vec2  pos = position / backDimension;
 	float rot = radians(rotation);
-	vec2 sca  = scale * foreDimension / backDimension;
+	vec2  sca = foreDimension / backDimension;
 	
-	vec2 px   = (v_vTexcoord - pos) * mat2(cos(rot), -sin(rot), sin(rot), cos(rot)) / sca;
+	vec2 basp = backDimension / backDimension.y;
+	vec2 fasp = foreDimension / foreDimension.y;
+	
+	vec2  px  = (v_vTexcoord - pos) * fasp / sca * mat2(cos(rot), -sin(rot), sin(rot), cos(rot)) / fasp / scale;
 	
     gl_FragColor = v_vColour * texture2Dintp( gm_BaseTexture, fract(px) );
 }

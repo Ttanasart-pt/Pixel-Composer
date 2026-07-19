@@ -80,13 +80,15 @@
 	
 		var back = surface_get_target();
 		var bdim = surface_get_dimension(back);
+		var sdim = surface_get_dimension(surface);
 	
 		shader_set(sh_draw_tile);
-			shader_set_f("backDimension", bdim);
-			shader_set_f("foreDimension", surface_get_dimension(surface));
-			shader_set_f("position"		, [ _x, _y ]);
-			shader_set_f("scale"		, [ _xs, _ys ]);
-			shader_set_f("rotation"		, _rot);
+			shader_set_2( "backDimension", bdim      );
+			shader_set_2( "foreDimension", sdim      );
+			
+			shader_set_2( "position",      [_x,_y]   );
+			shader_set_2( "scale",         [_xs,_ys] );
+			shader_set_f( "rotation",      _rot      );
 		
 			draw_surface_stretched_ext(surface, 0, 0, bdim[0], bdim[1], _col, _alpha);
 		shader_reset();

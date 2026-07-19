@@ -806,7 +806,6 @@ function Node_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	}
 	
 	static processData = function(_outData, _data, _array_index) {
-		
 		#region data
 			var surf      = _data[ 0];
 			
