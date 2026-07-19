@@ -123,7 +123,9 @@ doRefocus();
 				_tol = _val.tooltip != "";
 				_sca = _val.spr_scale;
 				_txtClr = _val.textColor;
-				_offset = _val.spr || _val.surface;
+				_offset = _val.spr != noone || _val.surface != noone;
+				
+				print(_val.spr, _val.surface)
 				
 			} else {
 				_act = !string_starts_with(_txt, "-");
