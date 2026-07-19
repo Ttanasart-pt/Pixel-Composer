@@ -359,7 +359,7 @@ function Panel_MenuItems_Editor(_menuId, _pie = false) : PanelContent() construc
 		
 		if(_m[0] > 0 && _m[0] < sw && _m[1] > yy - ui(4)) {
 			hoverC = noone;
-			hoverI = n;
+			hoverI = menuAmo;
 			hoverX = 0;
 			hoverY = yy - ui(2);
 		}
