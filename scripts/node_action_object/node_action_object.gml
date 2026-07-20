@@ -27,6 +27,7 @@ function NodeAction() constructor {
 	
 	static build = function(_x = 0, _y = 0, _group = PANEL_GRAPH.getCurrentContext(), _param = {}) {
 		var _n = {};
+		var _node_arr = [];
 		var _node_in  = noone;
 		var _node_out = noone;
 		
@@ -37,6 +38,8 @@ function NodeAction() constructor {
 			
 			var _id   = struct_try_get(__n, "id", i);
 			var _node = nodeBuild(__n.node, _nx, _ny, _group);
+			
+			array_push(_node_arr, _node)
 			_n[$ _id] = _node;
 			
 			if(struct_has(__n, "setValues")) {
@@ -87,7 +90,7 @@ function NodeAction() constructor {
 			_toI.setFrom(_frO);
 		}
 	
-		return { nodes: _n, inputNode: _node_in, outputNode: _node_out };
+		return { nodes: _n, nodeArray: _node_arr, inputNode: _node_in, outputNode: _node_out };
 	}
 
 	static serialize = function() {

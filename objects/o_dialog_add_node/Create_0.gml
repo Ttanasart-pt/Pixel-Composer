@@ -330,6 +330,7 @@ event_inherited();
 			
 			var _node_in  = _dat[$ "inputNode"]  ?? noone;
 			var _node_out = _dat[$ "outputNode"] ?? noone;
+			PANEL_GRAPH.selectDragNode(_dat.nodeArray, false);
 			
 			if(_node_in != noone)
 			for( var i = 0, n = array_length(_node_in.inputs); i < n; i++ ) 

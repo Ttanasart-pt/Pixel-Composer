@@ -2179,6 +2179,7 @@
     {"id":{"name":"node_psystem_vector_gradient","path":"scripts/node_psystem_vector_gradient/node_psystem_vector_gradient.yy",},},
     {"id":{"name":"node_psystem_wiggle","path":"scripts/node_psystem_wiggle/node_psystem_wiggle.yy",},},
     {"id":{"name":"node_psystem_wrap","path":"scripts/node_psystem_wrap/node_psystem_wrap.yy",},},
+    {"id":{"name":"node_puppet_warp","path":"scripts/node_puppet_warp/node_puppet_warp.yy",},},
     {"id":{"name":"node_pxc","path":"scripts/node_pxc/node_pxc.yy",},},
     {"id":{"name":"node_pytagorean_tile","path":"scripts/node_pytagorean_tile/node_pytagorean_tile.yy",},},
     {"id":{"name":"node_quarternion_from_euler","path":"scripts/node_quarternion_from_euler/node_quarternion_from_euler.yy",},},

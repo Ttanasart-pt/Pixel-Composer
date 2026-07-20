@@ -4019,22 +4019,23 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
     }
     
     function selectDragNode(_node, _add = false) {
-    	nodes_selecting = [ _node ];
-    	node_dragging   = _node;
+    	if(is_array(_node) && array_length(_node) == 0) return;
     	
-    	_node.x = mouse_graph_x - _node.w / 2;
-		_node.y = mouse_graph_y - _node.h / 2;
+    	nodes_selecting = is_array(_node)? _node : [ _node ];
+    	node_dragging   = array_safe_get_fast(nodes_selecting, 0, noone);
+    	
+    	node_dragging.x = mouse_graph_x - node_dragging.w / 2;
+		node_dragging.y = mouse_graph_y - node_dragging.h / 2;
     	
         node_drag_mx = mouse_graph_x;
         node_drag_my = mouse_graph_y;
-        node_drag_sx = _node.x;
-        node_drag_sy = _node.y;
+        node_drag_sx = node_dragging.x;
+        node_drag_sy = node_dragging.y;
         node_drag_ox = -1;
         node_drag_oy = -1;
         
-        node_drag_add = _add;
-        
-        node_focus_context = instanceof(_node);
+        node_drag_add      = _add;
+        node_focus_context = instanceof(node_dragging);
     }
     
     function selectPrevious() {
