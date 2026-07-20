@@ -22,6 +22,9 @@ function Panel_MenuItems_Editor(_menuId, _pie = false) : PanelContent() construc
 	dragging  = "";
 	drag_type = 0;
 	
+	to_add = undefined;
+	to_del = undefined;
+	
 	#region categories
 		category_page = 0;
 		categories = [
@@ -118,6 +121,8 @@ function Panel_MenuItems_Editor(_menuId, _pie = false) : PanelContent() construc
 		
 	#endregion
 	
+	////- Draw
+	
 	function drawGroup(hover, focus, _menu, xx, yy, ww, _m, _cont = false) {
 		if(has(_menu, "name")) return drawSubmenu(   hover, focus, _menu, xx, yy, ww, _m, _cont );
 		if(has(_menu, "cond")) return drawCondition( hover, focus, _menu, xx, yy, ww, _m, _cont );
@@ -165,7 +170,7 @@ function Panel_MenuItems_Editor(_menuId, _pie = false) : PanelContent() construc
 		return _hov;
 	}
 	
-	function drawMenu(hover, focus, _menu, xx, yy, ww, _m) {
+	function drawMenu(hover, focus, _menu, xx, yy, ww, _m, _input = 0) {
 		var _txt  = _menu;
 		var _tc   = COLORS._main_text;
 		var _spr  = noone;
@@ -176,7 +181,7 @@ function Panel_MenuItems_Editor(_menuId, _pie = false) : PanelContent() construc
 			_tc  = COLORS._main_text_sub;
 			_spr = THEME.minus_16;
 			
-		} else if(struct_has(MENU_ITEMS, _menu)) {
+		} else if(has(MENU_ITEMS, _menu)) {
 			var _mObj = MENU_ITEMS[$ _menu];
 			
 			_txt = _mObj.name;
@@ -188,6 +193,25 @@ function Panel_MenuItems_Editor(_menuId, _pie = false) : PanelContent() construc
 		if(_hov) {
 			draw_sprite_stretched(THEME.box_r2_clr, 0, xx, yy, ww, hg);
 			draw_sprite_stretched(THEME.box_r2_clr, 1, xx, yy, ww, hg);
+			
+			if(_input != 0) {
+				var aa  = .75;
+				var cc  = COLORS._main_icon;
+				var spr = _input? THEME.add_16 : THEME.icon_delete;
+				
+				if(point_in_rectangle(_m[0], _m[1], xx + ww - hg, yy, xx + ww, yy + hg)) {
+					_hov = false;
+					cc = _input? COLORS._main_value_positive : COLORS._main_value_negative;
+					aa = 1;
+					
+					if(mouse_lpress(focus)) {
+						if(_input) to_add = _menu;
+						else       to_del = _menu;
+					}
+				}
+				
+				draw_sprite_ui(spr, 0, xx + ww - hg / 2, yy + hg / 2, 1, 1, 0, cc, aa);
+			}
 			
 		} else {
 			draw_sprite_stretched_ext(THEME.box_r2_clr, 0, xx, yy, ww, hg, c_white, .3);
@@ -219,6 +243,8 @@ function Panel_MenuItems_Editor(_menuId, _pie = false) : PanelContent() construc
 		return _hov;
 	}
 	
+	////- Content
+	
 	sp_current_list = new scrollPane(list_w, h - padding * 2, function(_y, _m) {
 		draw_clear_alpha(COLORS.panel_bg_clear_inner, 1);
 		var sw  = sp_current_list.surface_w;
@@ -246,7 +272,7 @@ function Panel_MenuItems_Editor(_menuId, _pie = false) : PanelContent() construc
 			var _menu = menu[i];
 			
 			if(!is_struct(_menu)) { // string
-				var _hov = drawMenu(hover, focus, _menu, xx, yy, sw, _m);
+				var _hov = drawMenu(hover, focus, _menu, xx, yy, sw, _m, -1);
 				if(_hov) {
 					hoverC = noone;
 					hoverI = _m[1] > yy + hg / 2? i + 1 : i;
@@ -331,8 +357,7 @@ function Panel_MenuItems_Editor(_menuId, _pie = false) : PanelContent() construc
 			
 			for( var j = 0, m = array_length(_item); j < m; j++ ) {
 				var _subMenu = _item[j];
-				
-				var _hov = drawMenu(hover, focus, _subMenu, _sx, yy, _sw, _m);
+				var _hov = drawMenu(hover, focus, _subMenu, _sx, yy, _sw, _m, -1);
 				
 				if(_hov) {
 					if(drag_type == 0) {
@@ -425,7 +450,7 @@ function Panel_MenuItems_Editor(_menuId, _pie = false) : PanelContent() construc
 			var _hov = false;
 			
 			if(show_type == 0) 
-			     _hov = drawMenu(  hover, focus, _menu, xx, yy, sw, _m );
+			     _hov = drawMenu(  hover, focus, _menu, xx, yy, sw, _m, 1 );
 			else _hov = drawGroup( hover, focus, _menu, xx, yy, sw, _m );
 			
 			if(_hov && mouse_lpress(focus)) {
@@ -504,6 +529,8 @@ function Panel_MenuItems_Editor(_menuId, _pie = false) : PanelContent() construc
 		tb_search.setFocusHover(pFOCUS, pHOVER);
 		tb_search.draw(tx, ty, tw, th, search_string, [mx,my]);
 		
+		if(to_add != undefined) { array_push(menu, to_add);   to_add = undefined; }
+		if(to_del != undefined) { array_remove(menu, to_del); to_del = undefined; }
 	}
 	
 	function drawGUI() {
@@ -512,6 +539,8 @@ function Panel_MenuItems_Editor(_menuId, _pie = false) : PanelContent() construc
 			else if(drag_type == 1) drawGroup( false, false, dragging, mouse_mx, mouse_my, sp_current_list.surface_w, infinity );
 		}
 	}
+	
+	////- Action
 	
 	function resetDefault() {
 		variable_struct_remove(PREFERENCES_MENUITEMS, menuId);
