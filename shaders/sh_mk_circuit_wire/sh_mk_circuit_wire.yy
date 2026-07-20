@@ -1,0 +1,12 @@
+{
+  "$GMShader":"",
+  "%Name":"sh_mk_circuit_wire",
+  "name":"sh_mk_circuit_wire",
+  "parent":{
+    "name":"circuit",
+    "path":"folders/nodes/data/MKFX/generator/circuit.yy",
+  },
+  "resourceType":"GMShader",
+  "resourceVersion":"2.0",
+  "type":1,
+}

@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.7.104",
+    "changes": [
+      {
+        "date": "2026-07-20T07:50:08.620Z",
+        "node": "MK Circuit",
+        "commit": "**MK Circuit**: Add gradient shift, random offset, connection color override properties."
+      }
+    ]
+  },
+  {
     "version": "1.21.5.003",
     "changes": [
       {
