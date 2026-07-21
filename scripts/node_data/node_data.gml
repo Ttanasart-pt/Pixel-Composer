@@ -777,7 +777,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	
 	static getInputAmount = function() /*=>*/ {return (array_length(inputs) - input_fix_len) / data_length};
 	
-	static onInputResize = function() { refreshDynamicInput(); triggerRender(); }
+	static onInputResize  = function() /*=>*/ { refreshDynamicInput(); triggerRender(); }
 	
 	static getOutput = function(_y = 0, junc = noone) {
 		var _targ = noone;
@@ -839,8 +839,8 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	
 	////- JUNCTIONS
 	
-	static newActiveInput = function(i) /*=>*/ { newInput(i, nodeValue_Active()); active_index = i; }
-	static newInput = function(i, j) /*=>*/ { 
+	static newActiveInput = function(i  ) /*=>*/ { newInput(i, nodeValue_Active()); active_index = i; }
+	static newInput       = function(i,j) /*=>*/ { 
 		if(array_length(inputs) < i) array_resize(inputs, i);
 		
 		inputm[$ j.name] = j;
@@ -861,7 +861,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		return j;
 	}
 	
-	static newOutput = function(i, j) /*=>*/ { outputs[i] = j; j.setIndex(i); return j; }
+	static newOutput = function(i,j) /*=>*/ { outputs[i] = j; j.setIndex(i); return j; }
 	
 	static getInputJunctionAmount  = function( ) /*=>*/ {return (input_display_list == -1 || !use_display_list)? array_length(inputs) : array_length(input_display_list)};
 	static getInputJunctionIndex   = function(i) /*=>*/ { 

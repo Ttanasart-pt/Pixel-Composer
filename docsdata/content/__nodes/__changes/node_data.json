@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.7.104",
+    "changes": [
+      {
+        "date": "2026-07-21T00:25:40.469Z",
+        "node": "Add Node Dialog",
+        "commit": "**Add Node Dialog**: Collection preview in list view now animated."
+      }
+    ]
+  },
+  {
     "version": "1.21.7.103",
     "changes": [
       {

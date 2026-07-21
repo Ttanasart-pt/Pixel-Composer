@@ -264,7 +264,7 @@ function DirectoryObject(_path) constructor {
 		var _bw = _w - ui(32);
 		
 		if(_hover && point_in_rectangle(_m[0], _m[1], _bx, _y, _bx + _bw, _y + hg - 1)) {
-			draw_sprite_stretched_ext(THEME.button_hide_fill, 1, _bx - ui(4), _y, _bw + ui(4), hg, CDEF.main_white, 1);
+			draw_sprite_stretched_ext(THEME.button_hide_fill, 1, _bx - ui(4), _y, _bw + ui(4), hg, COLORS._main_icon, 1);
 			
 			if(!triggered) {
 				if(mouse_lpress(_focus)) {
@@ -279,9 +279,10 @@ function DirectoryObject(_path) constructor {
 				
 				if(mouse_rpress(_focus)) {
 					menuCall("directory_context", [
-						new MenuItem("Open in Explorer", function(p) /*=>*/ { shellOpenExplorer(p); },,,, path),
-						new MenuItem("Delete", function(p) /*=>*/ { directory_destroy(p); PANEL_COLLECTION.refreshContext() }, THEME.cross,,, path),
+						new MenuItem("Open in Explorer", function(p) /*=>*/ {return shellOpenExplorer(p)}).setParam(path),
+						new MenuItem("Delete", function(p) /*=>*/ { directory_destroy(p); PANEL_COLLECTION.refreshContext() }, THEME.cross).setParam(path),
 					]);
+					
 					triggered = true;
 				}
 			}

@@ -236,6 +236,7 @@ if(DIALOG_SHOW_FOCUS) {
 	} else if(sprite_exists(node_icon)) {
 		var _sx = node_icon_x - ui(16);
 		var _sy = node_icon_y;
+		var _si = current_time * PREFERENCES.collection_preview_speed / 3000;
 		
 		var _sw = ui(64);
 		var _sh = ui(64);
@@ -244,9 +245,9 @@ if(DIALOG_SHOW_FOCUS) {
 		var _bgy = _sy - _sh / 2;
 		
 		draw_sprite_stretched(THEME.node_junction_name_bg, 0, _bgx - ui(10), _bgy - ui(10), _sw + ui(20), _sh + ui(20));
-		gpu_set_tex_filter(true);
-		draw_sprite_stretched(node_icon, 0, _bgx, _bgy, _sw, _sh);
-		gpu_set_tex_filter(false);
+		// gpu_set_tex_filter(true);
+		draw_sprite_stretched(node_icon, _si, _bgx, _bgy, _sw, _sh);
+		// gpu_set_tex_filter(false);
 	}
 	
 	node_icon    = noone;

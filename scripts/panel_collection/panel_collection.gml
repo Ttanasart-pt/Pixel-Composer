@@ -612,9 +612,7 @@ function Panel_Collection() : PanelContent() constructor {
 		var ww  = folderPane.w - ui(20);
 		var hov = pHOVER && folderPane.hover;
 		var foc = pFOCUS;
-		var _params = {
-			font: f_p3, 
-		};
+		var _params = { font: f_p3 };
 		
 		for( var i = 0, n = array_length(root.subDir); i < n; i++ ) {
 			var hg = root.subDir[i].draw(self, _x, _y, _m, ww, hov, foc, root, _params);
