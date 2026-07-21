@@ -1,5 +1,4 @@
 #pragma use(gradient)
-
 #region -- gradient -- [1777679826.681391]
 	#define GRADIENT_LIMIT 128
 	
@@ -141,8 +140,8 @@
 	}
 	
 #endregion -- gradient --
-#pragma use(sampler_simple)
 
+#pragma use(sampler_simple)
 #region -- sampler_simple -- [1765194569.6586206]
     uniform int  sampleMode;
     
@@ -210,6 +209,8 @@ uniform sampler2D thickSurf;
 
 uniform vec2  level;
 
+uniform float gradient_shift;
+
 uniform int   textureTransform;
 uniform float textureSeed;
 uniform vec4  texturePosition;
@@ -225,6 +226,7 @@ uniform int   gradient_use;
 #define PI  3.14159265359
 #define TAU 6.28318530718
 
+float pfract (in float f) { return fract(fract(f) + 1.); }
 float random (in vec2 st) {	return fract(sin(dot(st.xy + vec2(85.456034, 64.54065), vec2(12.9898, 78.233))) * (43758.5453123 + seed) ); }
 float random (in float sd) { return random(vec2(sd)); }
 
@@ -331,7 +333,8 @@ void main() {
 	}
 	
 	if(mode == 0) {
-		colr = gradientEval(abs(hc.x));
+		colr = gradientEval(pfract(abs(hc.x) + gradient_shift));
+		
 	} else if(mode == 2) {
 		vec2 uv = hc.zw + vec2(0.5, 0.5);
 		vec2 dx = hc.xx;

@@ -40,7 +40,7 @@ function Node_Grid(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	
 	////- =Render
 	newInput(10, nodeValue_EScroll(  "Render Type",  0, ["Colored tile", "Colored tile (Accurate)", "Height map", "Texture grid", "Texture sample"]));
-	newInput( 5, nodeValue_Gradient( "Tile Color",            gra_white )).setMappable(20);
+	newInput( 5, nodeValue_Gradient( "Tile Color",            gra_white )).setMappable(20).addShift(42);
 	newInput( 6, nodeValue_Color(    "Gap Color",             ca_black  ));
 	newInput( 7, nodeValue_Surface(  "Texture"                          ));
 	newInput(25, nodeValue_Bool(     "Use Texture Dimension", false     ));
@@ -55,7 +55,7 @@ function Node_Grid(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	newInput(40, nodeValue_Vec2_Range( "Random Scale",    [1,1,1,1], true ));
 	newInput(19, nodeValue_Slider(     "Flip Horizontal", .5              ));
 	newInput(22, nodeValue_Slider(     "Flip Vertical",   .5              ));
-	// 42
+	// 43
 	
 	input_display_list = [ 11, 
 		[ "Output",  false ],  0, 37, 38, 35, 
@@ -63,7 +63,7 @@ function Node_Grid(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		[ "Shift",   false ],  9,  8, 16, 31, 32, 30, 
 		[ "Scale",   false ], 34, 33, 29, 
 		
-		[ "Render",  false ], 10,  5, 20,  6,  7, 25, 12, 24, 
+		[ "Render",  false ], 10, [5, true], 20, 42, -1,  6,  7, 25, 12, 24, 
 			[ "/Texture Transform", true, 17 ], 18, 39, 23, 40, 19, 22, 
 	];
 	
@@ -153,6 +153,7 @@ function Node_Grid(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 			shader_set_i( "mode",          _mode     );
 			shader_set_f( "seed",          _data[11] );
 			shader_set_gradient(           _data[ 5], _data[20], _data[21], inputs[5]);
+			shader_set_f("gradientShift",  _data[42] );
 			shader_set_c("gapCol",         _data[ 6] );
 			shader_set_i( "aa",            _data[12] );
 			shader_set_2( "level",         _data[24] );

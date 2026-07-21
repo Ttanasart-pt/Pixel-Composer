@@ -1,5 +1,4 @@
 #pragma use(gradient)
-
 #region -- gradient -- [1777679826.681391]
 	#define GRADIENT_LIMIT 128
 	
@@ -150,6 +149,7 @@ uniform vec2  dimension;
 uniform int   mode;
 uniform vec2  size;
 uniform vec2  range;
+uniform float gradient_shift;
 
 uniform float matrix[1024];
 uniform vec2  offset;
@@ -162,6 +162,7 @@ uniform vec2  offset;
 uniform vec4  palette[PALETTE_LIMIT];
 uniform float paletteAmount;
 
+float pfract(in float f) { return fract(fract(f) + 1.); }
 int imod(int a, int b) { return a - (a/b) * b; }
 
 void main() {
@@ -176,6 +177,6 @@ void main() {
 	
 	     if(mode == 0) gl_FragColor = vec4(vec3(grey), 1.);
 	else if(mode == 1) gl_FragColor = palette[imod(int(value), int(paletteAmount))];
-	else if(mode == 2) gl_FragColor = gradientEval(grey);
+	else if(mode == 2) gl_FragColor = gradientEval(pfract(grey + gradient_shift));
 	
 }

@@ -24,19 +24,19 @@ function Node_Weave(_x, _y, _group = noone) : Node_Shader_Generator(_x, _y, _gro
 	newInput(14, nodeValue_EScroll(  "Color Type",   0, [ "Solid", "Axis", "Random" ] )).setShaderProp("colorType");
 	newInput( 8, nodeValue_Color(    "Color",        ca_white )).setShaderProp("color2");
 	newInput(15, nodeValue_Color(    "Color 2",      ca_white )).setShaderProp("color3");
-	newInput(16, nodeValue_Gradient( "Random Color", gra_black_white )).setShaderProp("gradient");
+	newInput(16, nodeValue_Gradient( "Random Color", gra_black_white )).setShaderProp("gradient").addShift(20);
 	
 	////- =Shading
 	newInput(17, nodeValue_Color(  "Shade Color", ca_black )).setShaderProp("shadeColor");
 	newInput(13, nodeValue_Slider( "Shade Span",  .5     )).setShaderProp("shadeSpan");
 	newInput(11, nodeValue_Slider( "Shading",     .5     )).setShaderProp("shading").setCurvable(12, CURVE_DEF_01);
-	// 20
+	// 21
 	
 	input_display_list = [ 9, 
 		[ "Output",     true ],  0,  1,  2,  3, 
 		[ "Transform", false ],  4,  6,  5, 
 		[ "Weave",     false ], 18, 19, 10, 
-		[ "Color",     false ],  7, 14,  8, 15, 16, 
+		[ "Color",     false ],  7, 14,  8, 15, [16, true], 20, -1, 
 		[ "Shading",   false ], 17, 13, 11, 12, 
 	];
 	

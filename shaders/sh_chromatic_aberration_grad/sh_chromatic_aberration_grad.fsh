@@ -1,5 +1,4 @@
 #pragma use(gradient)
-
 #region -- gradient -- [1777679826.681391]
 	#define GRADIENT_LIMIT 128
 	
@@ -143,7 +142,6 @@
 #endregion -- gradient --
 
 #pragma use(curve)
-
 #region -- curve -- [1780117484.3465736]
 
     #ifdef _YY_HLSL11_ 
@@ -277,7 +275,6 @@
 // by 01000001
 
 #pragma use(sampler)
-
 #region -- sampler -- [1780048120.828549]
 	uniform int  interpolation;
 	uniform vec2 sampleDimension;
@@ -431,6 +428,10 @@ uniform vec2      chromaSca;
 uniform int       chromaScaUseSurf;
 uniform sampler2D chromaScaSurf;
 
+uniform float     gradient_shift;
+
+float pfract(in float f) { return fract(fract(f) + 1.); }
+
 vec4 chroma_continuous(vec2 uv, float str, float itns, float offset, float scale) {
 	float stp  = resolution;
 	vec2  tx   = 1.0 / dimension;
@@ -443,7 +444,7 @@ vec4 chroma_continuous(vec2 uv, float str, float itns, float offset, float scale
     	float str = strength_curve_use == 1? curveEval(strength_curve, strength_amount, i) : 1.;
     	vec4  sam = sampleTexture(gm_BaseTexture, uv - cuv * strr * i * str, i); 
     	sam.rgb *= sam.a;
-        o += pow(sam.rgb, vec3(2.2)) * gradientEval(fract(i * scale + offset)).rgb;
+        o += pow(sam.rgb, vec3(2.2)) * gradientEval(pfract(i * scale + offset + gradient_shift)).rgb;
     }
     
     o /= stp * vec3(.386, .372, .23);

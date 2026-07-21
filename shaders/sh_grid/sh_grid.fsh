@@ -1,5 +1,4 @@
 #pragma use(sampler)
-
 #region -- sampler -- [1780048120.828549]
 	uniform int  interpolation;
 	uniform vec2 sampleDimension;
@@ -127,7 +126,6 @@
 #endregion -- sampler --
 
 #pragma use(gradient)
-
 #region -- gradient -- [1777679826.681391]
 	#define GRADIENT_LIMIT 128
 	
@@ -307,6 +305,8 @@ uniform vec2  level;
 uniform int   diagonal;
 uniform int   uniformSize;
 
+uniform float gradientShift;
+
 uniform int   textureTransform;
 uniform float textureSeed;
 uniform vec4  texturePosition;
@@ -322,6 +322,8 @@ uniform float randScaleSeed;
 
 float random (in vec2  st) { return fract(sin(dot(st.xy + vec2(85.456034, 64.54065), vec2(12.9898, 78.233))) * (43758.5453123 + seed) ); }
 float random (in float sd) { return random(vec2(sd)); }
+
+float pfract(in float f) { return fract(fract(f) + 1.); }
 
 void main() {
 	#region params
@@ -435,7 +437,7 @@ void main() {
 	}
 	
 	vec4 colr;
-	vec4 base = gradientEval(random(fract(fract(sqSt) + 1.)));
+	vec4 base = gradientEval(pfract(random(sqSt) + gradientShift));
 	
 	if(mode == 0) {
 		colr = base;

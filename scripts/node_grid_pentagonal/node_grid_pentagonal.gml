@@ -20,20 +20,20 @@ function Node_Grid_Pentagonal(_x, _y, _group = noone) : Node_Processor(_x, _y, _
 	newInput( 3, nodeValue_Slider(   "Gap",       .1, [0, 0.5, 0.001] )).setMappable(12).setPieMenu();
 	
 	////- =Render
-	newInput( 8, nodeValue_EScroll( "Render Type",  0, ["Colored tile", "Height map", "Texture grid"] ));
+	newInput( 8, nodeValue_EScroll(  "Render Type",  0, ["Colored tile", "Height map", "Texture grid"] ));
 	newInput( 9, nodeValueSeed());
-	newInput( 5, nodeValue_Gradient(     "Tile Color", gra_white )).setMappable(14);
-	newInput( 6, nodeValue_Color(        "Gap Color",  ca_black ));
-	newInput( 7, nodeValue_Surface(      "Texture" ));
-	newInput(17, nodeValue_Bool(         "Use Texture Dimension", false ));
-	newInput(10, nodeValue_Bool(         "Anti-aliasing",         false ));
-	newInput(16, nodeValue_Slider_Range( "Level",                 [0,1] ));
-	// inputs 21
+	newInput( 5, nodeValue_Gradient( "Tile Color", gra_white )).setMappable(14).addShift(21);
+	newInput( 6, nodeValue_Color(    "Gap Color",  ca_black  ));
+	newInput( 7, nodeValue_Surface(  "Texture"               ));
+	newInput(17, nodeValue_Bool(     "Use Texture Dimension", false ));
+	newInput(10, nodeValue_Bool(     "Anti-aliasing",         false ));
+	newInput(16, nodeValue_SliRange( "Level",                 [0,1] ));
+	// inputs 22
 	
 	input_display_list = [
-		["Output",  false], 0, 19, 20, 18, 
-		["Pattern",	false], 1, 4, 13, 2, 11, 3, 12, 
-		["Render",	false], 8, 9, 5, 14, 6, 7, 17, 10, 16, 
+		[ "Output",  false ],  0, 19, 20, 18, 
+		[ "Pattern", false ],  1,  4, 13,  2, 11,  3, 12, 
+		[ "Render",  false ],  8,  9, [5, true], 14, 21, -1,  6,  7, 17, 10, 16, 
 	];
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
@@ -100,6 +100,7 @@ function Node_Grid_Pentagonal(_x, _y, _group = noone) : Node_Processor(_x, _y, _
 			
 			shader_set_color("gapCol",  _col_gap);
 			
+			shader_set_f("gradient_shift", _data[21]);
 			shader_set_gradient(_data[5], _data[14], _data[15], inputs[5]);
 			
 			if(is_surface(_sam))	draw_surface_stretched_safe(_sam, 0, 0, _dim[0], _dim[1]);

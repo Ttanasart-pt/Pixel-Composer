@@ -2,26 +2,25 @@ function Node_Pixel_Sampler(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	name = "Pixel Sampler";
 	
 	////- =Texture
-	newInput(0, nodeValue_Surface(     "Base Texture" ));
-	newInput(1, nodeValue_EButton( "Sample Mode",  0, [ "Keep Size", "Expand" ] ));
-	newInput(2, nodeValue_EButton( "Match Mode",   0, [ "Brightness", "RGB", "Hue" ] ));
+	newInput( 0, nodeValue_Surface( "Base Texture" ));
+	newInput( 1, nodeValue_EButton( "Sample Mode",  0, [ "Keep Size", "Expand" ] ));
+	newInput( 2, nodeValue_EButton( "Match Mode",   0, [ "Brightness", "RGB", "Hue" ] ));
 	
 	////- =Surface
-	newInput(3, nodeValue_Surface(  "Surfaces", [])).setArrayDepth(1);
-	newInput(4, nodeValue_Gradient( "Gradient", gra_black_white)).setMappable(5);
+	newInput( 3, nodeValue_Surface(  "Surfaces", [] )).setArrayDepth(1);
+	newInput( 4, nodeValue_Gradient( "Gradient", gra_black_white )).setMappable(5).addShift(9);
 	
 	////- =Render
-	newInput(7, nodeValue_EScroll( "Color Blending",     0, [ "None", "Multiply" ]));
-	newInput(8, nodeValue_Slider(      "Blending Intensity", 1 ));
+	newInput( 7, nodeValue_EScroll( "Color Blending",     0, [ "None", "Multiply" ]));
+	newInput( 8, nodeValue_Slider(  "Blending Intensity", 1 ));
+	// 10
 	
-	// input 9
-	
-	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
+	newOutput( 0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
 	input_display_list = [
-		["Base Texture", false], 0, 1, 2, 
-		["Surface",		 false], 3, //4, 5, 
-		["Render",		 false], 7, 8, 
+		[ "Base Texture", false ],  0,  1,  2, 
+		[ "Surface",      false ],  3,  
+		[ "Render",       false ],  7,  8, 
 	];
 	
 	attribute_surface_depth();

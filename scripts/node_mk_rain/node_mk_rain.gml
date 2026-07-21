@@ -25,7 +25,7 @@ function Node_MK_Rain(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	newInput(12, nodeValue_Slider_Range( "Track Extension", [0,0], { range: [ 0, 10, 0.01 ] }));
 	
 	////- =Render
-	newInput( 5, nodeValue_Gradient(     "Color",      gra_white ));
+	newInput( 5, nodeValue_Gradient(     "Color",      gra_white )).addShift(25);
 	newInput( 6, nodeValue_Slider_Range( "Alpha",      [.5,1]    ));
 	newInput(17, nodeValue_Bool(         "Fade Alpha", false     ));
 	
@@ -38,15 +38,14 @@ function Node_MK_Rain(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	newInput(22, nodeValue_Vec2(   "Rip. Radius",   [16,8]  ));
 	newInput(24, nodeValue_Slider( "Rip. Delay",   .2       ));
 	newInput(25, nodeValue_Slider( "Rip. Alpha",    1       ));
-	
-	// inputs 25
+	// 26
 		
 	input_display_list = [ s_MKFX, 0, 8, 
-		["Shape",    false    ], 9, 3, 4, 10, 11, 
-		["Rain",     false    ], 2, 1, 7, 
-		["Render",   false    ], 5, 6, 17, 
-		["Lifespan",  true, 14], 15, 13, 16, 
-		["Ground & Ripple", true, 18], 19, new Inspector_Spacer(ui(4), true), 20, 23, 21, 22, 24, 25, 
+		[ "Shape",          false     ],  9,  3,  4, 10, 11, 
+		[ "Rain",           false     ],  2,  1,  7, 
+		[ "Render",         false     ], [5, true], 25, -1,  6, 17, 
+		[ "Lifespan",        true, 14 ], 15, 13, 16, 
+		[ "Ground & Ripple", true, 18 ], 19, new Inspector_Spacer(ui(4), true), 20, 23, 21, 22, 24, 25, 
 	];
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
@@ -91,9 +90,10 @@ function Node_MK_Rain(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 			var _velo = _data[ 7];
 			var _trex = _data[12];
 			
-			var _colr = _data[ 5];
-			var _alph = _data[ 6];
-			var _afad = _data[17];
+			var _colr   = _data[ 5];
+			var _colrS  = _data[25];
+			var _alph   = _data[ 6];
+			var _afad   = _data[17];
 			
 			var _grdUse = _data[18];
 			var _grpRng = _data[19];
@@ -183,7 +183,7 @@ function Node_MK_Rain(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 				_prg = _y_shf + _vel * prg;
 				_prg = frac(_prg) - 0.5;    // -0.5 - 0.5
 				
-				if(!_1c) _lcc = _colr.eval(random(1));
+				if(!_1c) _lcc = _colr.eval(pfract(random(1) + _colrS));
 				_aa = random_range(_alph[0], _alph[1]);
 				
 				_clife = clamp((_prg + 0.5) / random_range(_life[0], _life[1]), 0, 1);

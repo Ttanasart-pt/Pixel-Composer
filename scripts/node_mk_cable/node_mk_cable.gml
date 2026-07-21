@@ -40,14 +40,14 @@ function Node_MK_Cable(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	
 	////- =Render
 	newInput( 6, nodeValue_Range(    "Thickness", [1,1], true )).setCurvable(20, CURVE_DEF_11, "Over Cable");
-	newInput( 7, nodeValue_Gradient( "Colors",    gra_white   )).setGradable(21, gra_white,    "Over Cable");
+	newInput( 7, nodeValue_Gradient( "Colors",    gra_white   )).setGradable(21, gra_white,    "Over Cable").addShift(32);
 	newInput(31, nodeValue_Bool(     "Cap",       true        ));
 	
 		////- =/Texture
 	newInput(28, nodeValue_Surface(  "Texture"                ));
 	newInput(29, nodeValue_Vec2(     "UV Position", [0,0]     ));
 	newInput(30, nodeValue_Vec2(     "UV Scale",    [1,1]     ));
-	// 32
+	// 33
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
@@ -57,7 +57,7 @@ function Node_MK_Cable(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 		[ "Cable",          false     ],  5, 14,  4,  8, 
 		[ "Swing",          false, 11 ], 12, 13, 
 			[ "/End Swing", false, 24 ], 27, 25, 26, 
-		[ "Render",         false     ],  6, 20,  7, 21, 31, 
+		[ "Render",         false     ],  6, 20, [7, true], 32, -1, 21, 31, 
 			[ "/Texture",   false     ], 28, 29, 30, 
 	];
 	
@@ -249,6 +249,7 @@ function Node_MK_Cable(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 			
 			var _thks     = _data[ 6];
 			var _colr     = _data[ 7]; _colr.cache();
+			var _colrShf  = _data[32];
 			var _colrMap  = _data[21]; _colrMap.cache();
 			var _caps     = _data[31];
 			
@@ -319,7 +320,7 @@ function Node_MK_Cable(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 						var x1 = _p2[0] + lengthdir_x(_rd1, _ra1);
 						var y1 = _p2[1] + lengthdir_y(_rd1, _ra1);
 						
-						draw_set_color(_colr.evalFast(random(1)));
+						draw_set_color(_colr.evalFast(pfract(random(1) + _colrShf)));
 						drawCable(_data, c, x0, y0, x1, y1, _ten, _segs, _thk);
 					}
 					break;
@@ -338,7 +339,7 @@ function Node_MK_Cable(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 							var _ten = random_range(_tens[0], _tens[1]);
 							var _thk = random_range(_thks[0], _thks[1]);
 							
-							draw_set_color(_colr.evalFast(random(1)));
+							draw_set_color(_colr.evalFast(pfract(random(1) + _colrShf)));
 							drawCable(_data, c, ox, oy, nx, ny, _ten, _segs, _thk);
 						}
 					}
@@ -359,7 +360,7 @@ function Node_MK_Cable(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 							var _ten = random_range(_tens[0], _tens[1]);
 							var _thk = random_range(_thks[0], _thks[1]);
 							
-							draw_set_color(_colr.evalFast(random(1)));
+							draw_set_color(_colr.evalFast(pfract(random(1) + _colrShf)));
 							drawCable(_data, c, ox, oy, nx, ny, _ten, _segs, _thk);
 						}
 						
@@ -396,7 +397,7 @@ function Node_MK_Cable(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 					    var _samp = random_range(_swng_amp[0], _swng_amp[1]) * .1;
 				    	var _sfrq = round(random_range(_swng_frq[0], _swng_frq[1]));
 					    
-					    var cc = _colr.evalFast(random(1));
+					    var cc = _colr.evalFast(pfract(random(1) + _colrShf));
 						draw_set_color(cc);
 						
 						for( var i = 0; i <= _segs; i++ ) {
@@ -436,7 +437,7 @@ function Node_MK_Cable(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 						var x1 = _ar2[0] + random_range(-_ar2[2], _ar2[2]);
 						var y1 = _ar2[1] + random_range(-_ar2[3], _ar2[3]);
 						
-						draw_set_color(_colr.evalFast(random(1)));
+						draw_set_color(_colr.evalFast(pfract(random(1) + _colrShf)));
 						drawCable(_data, c, x0, y0, x1, y1, _ten, _segs, _thk);
 					}
 					break;

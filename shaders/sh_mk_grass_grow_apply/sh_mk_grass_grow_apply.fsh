@@ -1,5 +1,4 @@
 #pragma use(gradient)
-
 #region -- gradient -- [1777679826.681391]
 	#define GRADIENT_LIMIT 128
 	
@@ -154,6 +153,7 @@ uniform float seed;
 
 uniform vec2  grassSize;
 uniform float colorVariance;
+uniform float gradient_shift;
 uniform float density;
 
 uniform int  groundFill;
@@ -163,6 +163,7 @@ uniform int  shape;
 uniform int  renderType;
 uniform int  drawBG;
 
+float pfract(in float f) { return fract(fract(f) + 1.); }
 float random (in vec2  st) { return fract(sin(dot(st.xy + seed / 1000., vec2(1892.989248, 78.6923453))) * 437.9854123); }
 
 vec4 blend(vec4 bg, vec4 fg) {
@@ -193,7 +194,7 @@ void main() {
 	if(grasCol.a == 0.) return;
 	
 	vec2 gPos = grasCol.xy;
-	vec4 gcol = gradientEval(grasCol.b);
+	vec4 gcol = gradientEval(pfract(min(.999, grasCol.b) + gradient_shift));
 	
 	     if(renderType == 0) gl_FragColor = gcol;
 	else if(renderType == 1) gl_FragColor = gcol * texture2D(gm_BaseTexture, gPos);

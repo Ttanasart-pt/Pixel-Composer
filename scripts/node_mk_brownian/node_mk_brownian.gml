@@ -27,11 +27,11 @@ function Node_MK_Brownian(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	newInput(10, nodeValue_Range( "Angular Acceleration", [-2,2] ));
 	
 	////- =Render
-	newInput(13, nodeValue_Range(    "Size",  [1,1], { linked : true } ));
-	newInput( 6, nodeValue_Gradient( "Color", gra_white    ));
-	newInput(16, nodeValue_Range(    "Alpha", [1,1] )).setCurvable(7);
+	newInput(13, nodeValue_Range(    "Size",  [1,1], true  ));
+	newInput( 6, nodeValue_Gradient( "Color", gra_white    )).addShift(17);
+	newInput(16, nodeValue_Range(    "Alpha", [1,1]        )).setCurvable(7);
 	newInput(14, nodeValue_Bool(     "Tile",  false        ));
-	// input 17
+	// 18
 	
 	newOutput( 0, nodeValue_Output( "Output",    VALUE_TYPE.surface, noone ));
 	newOutput( 1, nodeValue_Output( "Positions", VALUE_TYPE.float,   []    ));
@@ -42,7 +42,7 @@ function Node_MK_Brownian(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 		[ "Spawn",      false     ],  3,  2, 
 		[ "Movement",   false     ],  5,  4,  9, 
 		[ "Smooth turn", true, 11 ], 10, 
-		[ "Render",     false     ], 13,  6, 16,  7, 14, 
+		[ "Render",     false     ], 13, [6, true], 17, -1, 16,  7, 14, 
 	];
 	
 	////- Node
@@ -56,7 +56,6 @@ function Node_MK_Brownian(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _params) { 
 		drawOverlayInput(inputs[3].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my));
-		
 		return w_hovering;
 	}
 	
@@ -103,7 +102,7 @@ function Node_MK_Brownian(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 			var _dira = _data[10];
 			
 			var _size = _data[13];
-			var _colr = _data[ 6];
+			var _colr = _data[ 6], _colrS = _data[17];
 			var _alph = _data[16], _alCur = inputs[16].attributes.curved; 
 			var _alpC = _data[ 7];
 			var _tile = _data[14];
@@ -136,7 +135,7 @@ function Node_MK_Brownian(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 		area_x1 = _area[0] + _area[2]; 
 		area_y1 = _area[1] + _area[3];
 		
-		var colStat = _colr.eval(0);
+		var colStat = _colr.eval(pfract(_colrS));
 		var colGrad = array_length(_colr.keys) > 1;
 		
 		surface_set_shader(_outData[0], noone, true, BLEND.normal);
@@ -151,7 +150,7 @@ function Node_MK_Brownian(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 				getPosition(_sed, _lif, _sped, _dire, _dirs, _turn, _dira);
 				random_set_seed(_sed + 50);
 				
-				var _cc   = colGrad? _colr.eval(_ofs / _frame_total) : colStat;
+				var _cc   = colGrad? _colr.eval(pfract(_ofs / _frame_total + _colrS)) : colStat;
 				var _aa   = random_range(_alph[0], _alph[1]) * (_alCur? _alphCurve.get(_lif / _frame_total) : 1);
 				
 				_outData[1][ind] = [ px, py ];

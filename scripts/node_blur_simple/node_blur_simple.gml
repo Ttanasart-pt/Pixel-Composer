@@ -28,13 +28,13 @@ function Node_Blur_Simple(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	
 	////- =Effect
 	newInput(15, nodeValue_Bool(     "Use Gradient", false ));
-	newInput(12, nodeValue_Gradient( "Gradient", gra_black_white )).setMappable(13);
-	// input 17
+	newInput(12, nodeValue_Gradient( "Gradient", gra_black_white )).setMappable(13).addShift(17);
+	// input 18
 	
 	input_display_list = [ 8, 9, 
-		[ "Surfaces", true      ], 0, 17, 18, 6, 7, 10, 11, 
-		[ "Blur",     false     ], 1, 3, 4, 5, 16, 
-		[ "Effects",  false, 15 ], 12, 13, 14, 
+		[ "Surfaces", true      ],  0, 17, 18,  6,  7, 10, 11, 
+		[ "Blur",     false     ],  1,  3,  4,  5, 16, 
+		[ "Effects",  false, 15 ], [12, true], 13, 14, 17, -1,  
 	];
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
@@ -57,23 +57,28 @@ function Node_Blur_Simple(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	}
 	
 	static processData = function(_outSurf, _data, _array_index) {	
-		if(!is_surface(_data[0])) return _outSurf;
-		var _size	= _data[1];
-		var _samp	= getAttribute("oversample");
-		var _mask	= _data[3];
-		var _isovr  = _data[4];
-		var _overc  = _data[5];
-		var _msk    = _data[6];
-		var _mix    = _data[7];
-		var _useGrd = _data[15];
-		var _gam    = _data[16];
-		
-		inputs[5].setVisible(_isovr);
+		#region data
+			if(!is_surface(_data[0])) return _outSurf;
+			
+			var _size	= _data[ 1];
+			var _mask	= _data[ 3];
+			var _isovr  = _data[ 4];
+			var _overc  = _data[ 5];
+			var _msk    = _data[ 6];
+			var _mix    = _data[ 7];
+			var _useGrd = _data[15];
+			var _gam    = _data[16];
+			
+			var _samp	= getAttribute("oversample");
+			
+			inputs[5].setVisible(_isovr);
+		#endregion
 		
 		surface_set_shader(_outSurf, sh_blur_simple);
 			shader_set_uv(_data[17], _data[18]);
 			
-			shader_set_i("useGradient", _useGrd);
+			shader_set_i("useGradient",    _useGrd);
+			shader_set_f("gradient_shift", _data[17]);
 			shader_set_gradient(_data[12], _data[13], _data[14], inputs[12]);
 		
 			shader_set_f("dimension",  surface_get_width_safe(_data[0]), surface_get_height_safe(_data[0]));

@@ -1,5 +1,4 @@
 #pragma use(curve)
-
 #region -- curve -- [1780117484.3465736]
 
     #ifdef _YY_HLSL11_ 
@@ -131,7 +130,6 @@
 #endregion -- curve --
 
 #pragma use(sampler)
-
 #region -- sampler -- [1780048120.828549]
 	uniform int  interpolation;
 	uniform vec2 sampleDimension;
@@ -286,6 +284,7 @@ uniform int       chromaScaUseSurf;
 uniform sampler2D chromaScaSurf;
 
 uniform int       iteration;
+uniform float     gradient_shift;
 
 vec4 chroma_scaling(vec2 uv, float str, float itns) {
 	vec2 tx = 1.0 / dimension;

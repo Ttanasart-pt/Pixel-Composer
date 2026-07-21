@@ -26,15 +26,15 @@ function Node_Wave_Interfere(_x, _y, _group = noone) : Node_Shader_Generator(_x,
 	newInput( 4, nodeValue_Vec2(     "Scale",     [4,4]  )).setShaderProp("scale");
 	
 	////- =Rendering
-	newInput(16, nodeValue_Gradient( "Color", gra_black_white  )).setShaderProp("color");
-	// 17
+	newInput(16, nodeValue_Gradient( "Color", gra_black_white  )).setShaderProp("color").addShift(17);
+	// 18
 	
 	input_display_list = [
 		[ "Output",     true ],  0,  1,  2,  3, 
 		[ "Pattern",   false ], 11, 12, 13, 14, 
 		[ "Wave",      false ],  8, 15,  7,  9, 10, 
 		[ "Transform", false ],  5,  6,  4,  
-		[ "Rendering", false ], 16, 
+		[ "Rendering", false ], [16, true], 17, -1, 
 	];
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _params) { 

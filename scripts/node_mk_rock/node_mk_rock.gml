@@ -36,15 +36,15 @@ function Node_MK_Rock(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	newInput(23, nodeValue_Range(    "Depth",       [1,1]       ));
 	
 		////- =/Rendering
-	newInput(19, nodeValue_Gradient( "Nugget Color",   gra_white ));
-	newInput(25, nodeValue_Gradient( "Nugget Outline", gra_white ));
+	newInput(19, nodeValue_Gradient( "Nugget Color",   gra_white )).addShift(46);
+	newInput(25, nodeValue_Gradient( "Nugget Outline", gra_white )).addShift(47);
 	
 	////- =Rendering
 	newInput(36, nodeValue_EButton(  "Blend Mode", 0, [ "Normal", "Additive", "Maximum" ] ));
-	newInput(18, nodeValue_Gradient( "Base Color", new gradientObject(cola(c_grey)) ));
+	newInput(18, nodeValue_Gradient( "Base Color", new gradientObject(cola(c_grey)) )).addShift(48);
 	
 		////- =/Shading
-	newInput( 9, nodeValue_Gradient( "Shading",    new gradientObject(cola(c_grey)) )).setCurvable(26, CURVE_DEF_11);
+	newInput( 9, nodeValue_Gradient( "Shading",    new gradientObject(cola(c_grey)) )).setCurvable(26, CURVE_DEF_11).addShift(49);
 	newInput(33, nodeValue_Color(    "Shine Color", ca_white      ));
 	newInput(29, nodeValue_Range(    "Shine",      [.5,.5],  true ))
 	newInput(17, nodeValue_RotRand(  "Direction",  [-15,-15]      ));
@@ -55,15 +55,15 @@ function Node_MK_Rock(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	
 		////- =/Outline
 	newInput(12, nodeValue_EButton(  "Inner Outline Blend", 1, [ "Normal", "Multiply", "Screen" ] ));
-	newInput(10, nodeValue_Gradient( "Inner Outline", new gradientObject(cola(c_grey)) ));
+	newInput(10, nodeValue_Gradient( "Inner Outline", new gradientObject(cola(c_grey)) )).addShift(44);
 	
 	newInput(13, nodeValue_EButton(  "Outer Outline Blend", 1, [ "Normal", "Multiply", "Screen" ] ));
-	newInput(11, nodeValue_Gradient( "Outer Outline", gra_white ));
+	newInput(11, nodeValue_Gradient( "Outer Outline", gra_white )).addShift(45);
 	
 		////- =/Posterize
 	newInput(14, nodeValue_Bool(    "Colorize",  true        ));
 	newInput(15, nodeValue_Palette( "Colors",    DEF_PALETTE ));
-	// 44
+	// 50
 	
 	newOutput( 0, nodeValue_Output( "Surface Out", VALUE_TYPE.surface, noone ));
 	newOutput( 1, nodeValue_Output( "Depth",       VALUE_TYPE.surface, noone ));
@@ -75,12 +75,12 @@ function Node_MK_Rock(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 			[ "/Shape Modifier", false], 34, 35, 38, 42, 39, 
 		
 		[ "Nugget",          true, 20 ], 24, 21, 22, 23, 
-			[ "/Rendering", false     ], 19, 25, 
+			[ "/Rendering", false     ], [19, true], 46, [25, true], 47, 
 		
-		[ "Rendering",      false     ], 36, 18, 
-			[ "/Shading",   false     ],  9, 26, 33, 29, 17, 
+		[ "Rendering",      false     ], 36, [18, true], 48, 
+			[ "/Shading",   false     ], [9, true], 49, -1, 26, 33, 29, 17, 
 			[ "/Highlight", false, 31 ], 32, 
-			[ "/Outline",   false     ], 12, 10, 13, 11, 
+			[ "/Outline",   false     ], 12, [10, true], 44, -1, 13, [11, true], 45, -1, 
 			[ "/Posterize", false, 14 ], 15, 
 	];
 	
@@ -102,11 +102,11 @@ function Node_MK_Rock(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	shin_range   = [1,1];
 	shine_col    = ca_white;
 	
-	gra_base     = undefined;
-	gra_nugg     = undefined;
-	gra_shad     = undefined;
-	gra_outi     = undefined;
-	gra_outo     = undefined;
+	gra_base     = undefined; gra_bases = 0;
+	gra_nugg     = undefined; gra_nuggs = 0;
+	gra_shad     = undefined; gra_shads = 0;
+	gra_outi     = undefined; gra_outis = 0;
+	gra_outo     = undefined; gra_outos = 0;
 	
 	scal_curve   = undefined;
 	shade_curve  = undefined;
@@ -233,7 +233,7 @@ function Node_MK_Rock(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		temp_surface[3] = surface_verify(temp_surface[3], pw2, ph2+pebs); surface_clear(temp_surface[3]);
 		temp_surface[5] = surface_verify(temp_surface[5], pw2, ph2+pebs); surface_clear(temp_surface[5]);
 		
-		var shade = gra_shad.eval(random(1));
+		var shade = gra_shad.eval(pfract(random(1) + gra_shads));
 		var scal  = 1;
 		var scalO = nugg? .5 : random_range(scal_range[0], scal_range[1]);
 		
@@ -306,9 +306,11 @@ function Node_MK_Rock(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		surface_reset_shader();
 		
 		temp_surface[4] = surface_verify(temp_surface[4], pw2, ph2+pebs);
+		
 		surface_set_shader(temp_surface[4], sh_mk_rock_pabble_outline);
 			shader_set_2( "dimension", [pw2, ph2+pebs] );
-			shader_set_c( "color",     nugg? gra_nugg_o.eval(random(1)) : gra_outi.eval(random(1)) );
+			shader_set_c( "color",     nugg? gra_nugg_o.eval( pfract(random(1) + gra_nugg_os )) : 
+			                                 gra_outi.eval(   pfract(random(1) + gra_outis   )) );
 			shader_set_i( "blend",     bld_outi );
 			shader_set_i( "nugget",    nugg     );
 			
@@ -368,12 +370,12 @@ function Node_MK_Rock(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 			var _nhei   = _data[22];
 			var _nsiz   = _data[23];
 			
-			gra_nugg    = _data[19];
-			gra_nugg_o  = _data[25];
+			gra_nugg    = _data[19]; gra_nuggs   = _data[46];
+			gra_nugg_o  = _data[25]; gra_nugg_os = _data[47];
 			
 			blend_mode  = _data[36];
-			gra_base    = _data[18];
-			gra_shad    = _data[ 9];
+			gra_base    = _data[18]; gra_bases   = _data[48];
+			gra_shad    = _data[ 9]; gra_shads   = _data[49];
 			shin_range  = _data[29];
 			shine_col   = _data[33];
 			shade_curve = new curveMap(_data[26]);
@@ -383,10 +385,10 @@ function Node_MK_Rock(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 			high_alpha  = _data[32];
 			
 			bld_outi    = _data[12];
-			gra_outi    = _data[10];
+			gra_outi    = _data[10]; gra_outis = _data[44];
 			
 			bld_outo    = _data[13];
-			gra_outo    = _data[11];
+			gra_outo    = _data[11]; gra_outos = _data[45];
 			
 			var _post   = _data[14];
 			var _ppal   = _data[15];
@@ -431,7 +433,7 @@ function Node_MK_Rock(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 			random_set_seed(seed); seed += 100;
 			
 			var rot   = irandom_range(_rota[0], _rota[1]);
-			var baseC = gra_base.eval(random(1));
+			var baseC = gra_base.eval(pfract(random(1) + gra_bases));
 			
 			var pebdy = pebble(prg, pebx, peby, pebw, pebh, pebs, rot, baseC, true, false);
 			
@@ -443,7 +445,7 @@ function Node_MK_Rock(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 				var nugx  = pebx + random_range(-pebw/3, pebw/3);
 				var nugy  = pebdy - irandom(pebh/2);
 				
-				var baseC = gra_nugg.eval(random(1));
+				var baseC = gra_nugg.eval(pfract(random(1) + gra_nuggs));
 				
 				pebble(prg, nugx, nugy, nugw, nugh, nugs, rot, baseC, true, true);
 			}
@@ -470,7 +472,7 @@ function Node_MK_Rock(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		
 		surface_set_shader(_outSurf, sh_mk_rock_pabble_outline_inner);
 			shader_set_2("dimension", [ww, hh]);
-			shader_set_c("color",     gra_outo.eval(random(1)));
+			shader_set_c("color",     gra_outo.eval(pfract(random(1) + gra_outos)));
 			shader_set_i("blend",     bld_outo);
 			
 			draw_surface(temp_surface[output_index], 0, 0);

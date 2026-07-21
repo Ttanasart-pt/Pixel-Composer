@@ -152,7 +152,10 @@ uniform int  invert;
 uniform int  fillBG;
 uniform vec4 bgColor;
 
-uniform int  useGrad;
+uniform int   useGrad;
+uniform float gradient_shift;
+
+float pfract(in float f) { return fract(fract(f) + 1.); }
 
 void main() {
     vec4 col = texture2D( gm_BaseTexture, v_vTexcoord );
@@ -170,7 +173,7 @@ void main() {
 	float itr  = msk.g;
 	
 	if(useGrad == 1) {
-		vec4 grad = gradientEval(itr);
+		vec4 grad = gradientEval(pfract(itr + gradient_shift));
 		fillC *= grad;
 	}
 	

@@ -620,7 +620,12 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	
 	static setWidget = function(_widg) { editWidget = _widg; return self; }
 	
-	static setShaderProp = function(_key) { node.shaderProp[$ _key] = self; return self; }
+	shaderPropKey = undefined;
+	static setShaderProp = function(_key) { 
+		shaderPropKey = _key;
+		node.shaderProp[$ _key] = self; 
+		return self; 
+	}
 	
 	////- Mappable
 	
@@ -877,6 +882,26 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 				node.toRefreshNodeDisplay = true;
 			}
 		}
+	}
+	
+	////- =Adj Inputs
+	
+	static addShift = function(_index) {
+		var iname = string_to_var(internalName) + "_shift";
+		with(node) {
+			var _inp = newInput(_index, nodeValue_Slider( "Shift", 0, [-1,1,.01] )).setInternalName(iname);
+			if(_inp && other.shaderPropKey != undefined) _inp.setShaderProp(other.shaderPropKey + "_shift");
+		}
+		return self;
+	}
+	
+	static addOffset = function(_index) {
+		var iname = string_to_var(internalName) + "_offset";
+		with(node) {
+			var _inp = newInput(_index, nodeValue_Range("Offset", [0,0] )).setInternalName(iname);
+			if(_inp && other.shaderPropKey != undefined) _inp.setShaderProp(other.shaderPropKey + "_offset");
+		}
+		return self;
 	}
 	
 	////- Axis
@@ -2945,6 +2970,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		_map.def_val   = def_val;
 		_map.unit      = unit.mode;
 		_map.r         = animator.serialize(scale);
+		_map.scoll     = sectionCollapse;
 		
 		if(sep_axis && animVector) {
 			var _anims = getAnimators();
@@ -3024,6 +3050,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		draw_line_shift_x = _map[$ "shift_x"] ?? draw_line_shift_x;
 		draw_line_shift_y = _map[$ "shift_y"] ?? draw_line_shift_y;
 		draw_line_shift_e = _map[$ "shift_e"] ?? draw_line_shift_e;
+		sectionCollapse   = _map[$ "scoll"]   ?? sectionCollapse;
 		
 		#region attributes
 			if(has(attributes, "use_project_dimension") && has(node.load_map, "attri") && has(node.load_map.attri, "use_project_dimension"))

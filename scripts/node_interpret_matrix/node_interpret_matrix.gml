@@ -13,15 +13,15 @@ function Node_Interpret_Matrix(_x, _y, _group = noone) : Node_Processor(_x, _y, 
 	newInput( 1, nodeValue_EButton(  "Mode",      0, [ "Greyscale", "Palette", "Gradient" ] ));
 	newInput( 2, nodeValue_Range(    "Range",    [0,1]     ));
 	newInput( 7, nodeValue_Palette(  "Palette"             ));
-	newInput( 3, nodeValue_Gradient( "Gradient", gra_white )).setMappable(4);
-	// input 9
+	newInput( 3, nodeValue_Gradient( "Gradient", gra_white )).setMappable(4).addShift(9);
+	// 10
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
 	input_display_list = [ 
 		[ "Surface",   false ], 6, 
 		[ "Matrix",    false ], 0, 8, 
-		[ "Interpret", false ], 1, 2, 7, 3, 4, 
+		[ "Interpret", false ], 1, 2, 7, [3, true], 4, 9, -1, 
 	];
 	
 	////- Node
@@ -64,6 +64,8 @@ function Node_Interpret_Matrix(_x, _y, _group = noone) : Node_Processor(_x, _y, 
 			shader_set_i( "mode",   _mod );
 			shader_set_f( "range",  _ran );
 			shader_set_palette(_pal);
+			
+			shader_set_f( "gradient_shift", _data[9] );
 			shader_set_gradient(_data[3], _data[4], _data[5], inputs[3]);
 			
 			draw_empty();

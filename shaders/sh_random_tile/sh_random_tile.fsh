@@ -1,5 +1,4 @@
 #pragma use(gradient)
-
 #region -- gradient -- [1777679826.681391]
 	#define GRADIENT_LIMIT 128
 	
@@ -141,8 +140,8 @@
 	}
 	
 #endregion -- gradient --
-#pragma use(sampler_simple)
 
+#pragma use(sampler_simple)
 #region -- sampler_simple -- [1765194569.6586206]
     uniform int  sampleMode;
     
@@ -213,6 +212,7 @@ uniform int   gradient_use;
 
 uniform vec2  level;
 
+uniform float gradient_shift;
 uniform int   textureTransform;
 uniform float textureSeed;
 uniform vec4  texturePosition;
@@ -267,6 +267,8 @@ vec4 RandomCoords(vec2 uv) {
 	return vec4(random(id), d, puv);
 }
 
+float pfract(in float f) { return fract(fract(f) + 1.); }
+
 void main() { 
 	#region params
 		vec2 sca = scale;
@@ -306,7 +308,7 @@ void main() {
 	}
 	
 	if(mode == 0) {
-		colr = gradientEval(hc.x);
+		colr = gradientEval(pfract(hc.x + gradient_shift));
 		
 	} else if(mode == 2) {
 		vec2 uv = hc.zw;

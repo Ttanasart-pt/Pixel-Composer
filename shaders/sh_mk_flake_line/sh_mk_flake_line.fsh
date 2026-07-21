@@ -281,6 +281,10 @@ uniform int   thick_curve_use;
 uniform float thick_curve[CURVE_MAX];
 uniform int   thick_amount;
 
+uniform float gradient_shift;
+
+float pfract(in float f) { return fract(fract(f) + 1.); }
+
 void main() {
 	gl_FragColor = vec4(0.);
 	
@@ -290,7 +294,7 @@ void main() {
 	}
 	
 	vec4 clr  = v_vColour * texture2D(gm_BaseTexture, v_vTexcoord);
-	     clr *= gradientEval(v_vTexcoord.y);
+	     clr *= gradientEval(pfract(min(.999, v_vTexcoord.y) + gradient_shift));
 	
 	gl_FragColor = clr;
 }

@@ -52,7 +52,7 @@ function Node_MK_Cloud(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 			
 		////- =/Rendering
 	newInput(32, nodeValue_EScroll(  "Puff Blend Mode",   0, [ "Normal", "Maximum", "Additive" ] ));
-	newInput(24, nodeValue_Gradient( "Color",        gra_white ));
+	newInput(24, nodeValue_Gradient( "Color",        gra_white )).addShift(70);
 	newInput(53, nodeValue_Surface(  "Color Sampler"           ));
 		
 	////- =Base
@@ -120,7 +120,7 @@ function Node_MK_Cloud(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	newInput(59, nodeValue_Rotation( "Direction",  -45        ));
 	newInput(38, nodeValue_Float(    "Strength",    .1        ));
 	newInput(39, nodeValue_Color(    "Color",        ca_black ));
-	// 70
+	// 71
 	
 	newOutput( 0, nodeValue_Output( "Surface Out", VALUE_TYPE.surface, noone ));
 	
@@ -133,7 +133,7 @@ function Node_MK_Cloud(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 			
 		[ "Puff",           false     ], 54, 62,  2, 15,  4,  6, 18, 51, 52, 
 			[ "/Subtract",   true, 45 ], 46, 47, 48, 
-			[ "/Rendering", false,    ], 32, 24, 53, 
+			[ "/Rendering", false,    ], 32, [24, true], 70, -1, 53, 
 			
 		[ "Base",            true, 9  ], 61,  8, 10, 13, 
 			[ "/Compress",  false     ], 29, 19, 34, 
@@ -202,6 +202,7 @@ function Node_MK_Cloud(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 			
 			var _pblnd  = _data[32];
 			var _color  = _data[24]; _color.cache();
+			var _colorS = _data[70]; 
 			var _csamp  = _data[53]; colorSampler.setSurface(_csamp);
 			
 			var _utrim  = _data[ 9];
@@ -359,7 +360,7 @@ function Node_MK_Cloud(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 				var _linrad = _inrdCurve?  _inrdCurve.get(_layeri)  : 1;
 				var _lrad   = _radiCurveL? _radiCurveL.get(_layeri) : 1;
 				
-				var _lcolr  = _color.evalFast(_layeri);
+				var _lcolr  = _color.evalFast(pfract(_layeri + _colorS));
 				var _valid  = true;
 				
 				shader_set_uniform_f_array( u_color, colToVec4(_lcolr) );

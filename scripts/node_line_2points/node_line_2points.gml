@@ -35,14 +35,14 @@ function Node_Line_2Points(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	newInput(10, nodeValue_EScroll(  "Blend Mode", 0, [ "Normal", "Additive", "Maximum" ] ));
 	
 		////- =/Colors
-	newInput( 7, nodeValue_Gradient( "Base Color",        gra_white ));
-	newInput( 8, nodeValue_Gradient( "Color Over Length", gra_white ));
+	newInput( 7, nodeValue_Gradient( "Base Color",        gra_white )).addShift(16);
+	newInput( 8, nodeValue_Gradient( "Color Over Length", gra_white )).addShift(17);
 	
 		////- =/Texture
 	newInput(13, nodeValue_Surface(  "Texture" ));
 	newInput(14, nodeValue_Vec2(     "UV Position", [0,0] ));
 	newInput(15, nodeValue_Vec2(     "UV Scale",    [1,1] ));
-	// 16
+	// 18
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
@@ -51,7 +51,7 @@ function Node_Line_2Points(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		[ "Points",       false ], 16,  2,  3, 17, 18, 19, 
 		[ "Line",         false ],  4,  5,  6,  9, 11, 
 		[ "Rendering",    false ], 10, 
-			[ "/Colors",  false ],  7,  8, 
+			[ "/Colors",  false ], [7, true], 16, -1, [8, true], 17, -1, 
 			[ "/Texture", false ], 13, 14, 15, 
 	];
 	
@@ -85,8 +85,8 @@ function Node_Line_2Points(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 			var _segs  = getInputData(11);
 			
 			var _blnd  = getInputData(10);
-			var _cBase = getInputData( 7); _cBase.cache();
-			var _cLen  = getInputData( 8); _cLen.cache();
+			var _cBase = getInputData( 7), _cBaseS = getInputData(16);
+			var _cLen  = getInputData( 8), _cLenS  = getInputData(17);
 			
 			var _text  = getInputData(13);
 			var _tpos  = getInputData(14);
@@ -98,6 +98,9 @@ function Node_Line_2Points(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 			inputs[19].setVisible(_pMode == 2);
 			
 			inputs[ 5].setVisible(!_1px);
+			
+			_cBase.cache();
+			_cLen.cache();
 		#endregion
 		
 		random_set_seed(_seed);
@@ -153,7 +156,7 @@ function Node_Line_2Points(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 				
 				var _len = point_distance(p0[0], p0[1], p1[0], p1[1]);
 				
-				var baseColor = _cBase.evalFast(random(1));
+				var baseColor = _cBase.evalFast(pfract(random(1) + _cBaseS));
 				var _thk = random_range(_wid[0], _wid[1]);
 				
 				if(!_1px) {
@@ -166,8 +169,8 @@ function Node_Line_2Points(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 					var j0 = _subSt *  j;
 					var j1 = _subSt * (j + 1);
 					
-					var c0 = colorMultiply(baseColor, _cLen.evalFast(j0));
-					var c1 = colorMultiply(baseColor, _cLen.evalFast(j1));
+					var c0 = colorMultiply(baseColor, _cLen.evalFast(pfract(min(j0, .999) + _cLenS)) );
+					var c1 = colorMultiply(baseColor, _cLen.evalFast(pfract(min(j1, .999) + _cLenS)) );
 					
 					var p0x = lerp(p0[0], p1[0], j0);
 					var p0y = lerp(p0[1], p1[1], j0);

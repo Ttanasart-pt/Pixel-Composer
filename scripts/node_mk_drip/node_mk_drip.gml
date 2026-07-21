@@ -35,8 +35,8 @@ function Node_MK_Drip(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	
 	////- =Rendering
 	newInput(25, nodeValue_EScroll(  "Blend Mode", 0, [ "Overrride", "Multiply", "Additive" ] ));
-	newInput(17, nodeValue_Gradient( "Drip Color", gra_white ));
-	// 26
+	newInput(17, nodeValue_Gradient( "Drip Color", gra_white )).addShift(26);
+	// 27
 	
 	newOutput( 0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
@@ -46,7 +46,7 @@ function Node_MK_Drip(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		[ "Fluid",     false     ], 23,  4, 24,  5, 19,  6,  7,  8,
 		[ "Dripping",  false, 10 ], 11, 12, 16, 13, 14, 
 		[ "Blobify",   false, 22 ], 20, 21, 
-		[ "Rendering", false     ], 25, 17, 
+		[ "Rendering", false     ], 25, [17, true], 26, -1, 
 	];
 	
 	////- Nodes
@@ -94,6 +94,7 @@ function Node_MK_Drip(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 			
 			var _blnd  = _data[25];
 			var _colr  = _data[17];
+			var _colrS = _data[26];
 			
 			inputs[ 4].setVisible(_type == 0);
 			inputs[24].setVisible(_type == 1);
@@ -168,10 +169,11 @@ function Node_MK_Drip(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 			shader_set_s( "dripSurface",  temp_surface[2]   );
 			shader_set_s( "dripProgress", temp_surface[3]   );
 			
-			shader_set_i( "useMask",      is_surface(_mask) );
-			shader_set_s( "mask",         _mask             );
+			shader_set_i( "useMask",        is_surface(_mask) );
+			shader_set_s( "mask",           _mask             );
 			
-			shader_set_i( "blendMode",    _blnd );
+			shader_set_i( "blendMode",      _blnd  );
+			shader_set_f( "gradient_shift", _colrS );
 			shader_set_gradient(_colr);
 			
 			draw_surface( _surf, 0, 0 );

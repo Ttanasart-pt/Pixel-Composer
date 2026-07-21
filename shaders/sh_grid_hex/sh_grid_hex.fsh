@@ -1,5 +1,4 @@
 #pragma use(gradient)
-
 #region -- gradient -- [1777679826.681391]
 	#define GRADIENT_LIMIT 128
 	
@@ -141,8 +140,8 @@
 	}
 	
 #endregion -- gradient --
-#pragma use(sampler_simple)
 
+#pragma use(sampler_simple)
 #region -- sampler_simple -- [1765194569.6586206]
     uniform int  sampleMode;
     
@@ -221,8 +220,11 @@ uniform vec2  textureAngle;
 uniform vec4  textureScale;
 uniform float textureFlip;
 
+uniform float gradient_shift;
+
 #define PI 3.14159265359
 
+float pfract(in float f) { return fract(fract(f) + 1.); }
 float random (in vec2  st) { return fract(sin(dot(st.xy + vec2(85.456034, 64.54065), vec2(12.9898, 78.233))) * (43758.5453123 + seed) ); }
 float random (in float sd) { return random(vec2(sd)); }
 
@@ -293,7 +295,7 @@ void main() {
 	
 	float tileY = floor(sca.y * 4. / 3.);
 	uv.y = mod(floor(uv.y * (tileY + 1.)), tileY) / tileY;
-	vec4 base = gradientEval(random(uv));
+	vec4 base = gradientEval(pfract(random(uv) + gradient_shift));
 	
 	if(mode == 0) {
 		colr = base;

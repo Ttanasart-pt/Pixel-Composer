@@ -1,5 +1,4 @@
 #pragma use(gradient)
-
 #region -- gradient -- [1777679826.681391]
 	#define GRADIENT_LIMIT 128
 	
@@ -159,7 +158,9 @@ uniform float seed;
 
 uniform vec4  colors[PALETTE_LIMIT];
 uniform int   colorAmount;
+uniform float gradient_shift;
 
+float pfract(in float f) { return fract(fract(f) + 1.); }
 float random (in vec2 st) { return fract(sin(dot(st.xy + seed / 100., vec2(12.9898, 78.233))) * 43758.5453123); }
 
 void main() {
@@ -181,7 +182,7 @@ void main() {
 		gl_FragColor = colors[ind];
 		
 	} else if(type == 1) {
-		vec4 colr = gradientEval(random(c.xy));
+		vec4 colr = gradientEval(pfract(random(c.xy) + gradient_shift));
 		gl_FragColor = colr;
 		
 	}

@@ -152,6 +152,7 @@ uniform float angle;
 uniform float extDistance;
 uniform float shift;
 
+uniform float gradient_shift;
 uniform int   cloneColor;
 uniform int   wrap;
 uniform int   drawBase;
@@ -164,6 +165,7 @@ uniform float highlightInten;
 uniform sampler2D mask;
 uniform int    useMask;
 
+float pfract(in float f) { return fract(fract(f) + 1.); }
 vec4 blendColor(vec4 bg, vec4 fg) { 
 	float aa = bg.a + fg.a * (1. - bg.a);
 	vec4  cc = (bg * bg.a) + (fg * fg.a * (1. - bg.a));
@@ -224,12 +226,12 @@ void main() {
 	
 	if(extrude <= 0.) {
 		if(extrude == -1.)
-			gl_FragData[0] = blendColor(gl_FragData[0], gradientEval(0.));
+			gl_FragData[0] = blendColor(gl_FragData[0], gradientEval(pfract(gradient_shift)));
 		return;
 	}
 	
 	float prog = extrude / dist;
-	vec4  colr = gradientEval(prog);
+	vec4  colr = gradientEval(pfract(prog + gradient_shift));
 	
 	gl_FragData[0] = blendColor(gl_FragData[0], colr);
 	gl_FragData[1] = vec4(vec3(mix(depth.x, depth.y, prog)), 1.);

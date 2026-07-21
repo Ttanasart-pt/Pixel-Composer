@@ -59,8 +59,9 @@ function Node_MK_Blast_Inline(_x, _y, _group = noone) : Node_Collection_Inline(_
 function MKBlast_Layer() constructor {
 	x = 0;
 	y = 0;
-	colorize = undefined;
-	flames   = [];
+	colorize   = undefined;
+	color_shft = 0;
+	flames     = [];
 	
 	static draw = function(_surfs, _mask = -1, _param = {}) {
 		var _dim = surface_get_dimension(_surfs[0]);
@@ -82,10 +83,11 @@ function MKBlast_Layer() constructor {
 		
 		surface_set_target(_surfs[1]);
 			shader_set(sh_mk_blast_colorize);
-			shader_set_2("dimension", _dim);
-			shader_set_s("depthBase", _surfs[3]);
-			shader_set_s("depth",     _surfs[2]);
-			shader_set_i("useDepth",  _param.useDepth);
+			shader_set_2( "dimension", _dim            );
+			shader_set_s( "depthBase", _surfs[3]       );
+			shader_set_s( "depth",     _surfs[2]       );
+			shader_set_i( "useDepth",  _param.useDepth );
+			shader_set_f( "gradient_shift", color_shft );
 			shader_set_gradient(colorize);
 			
 			draw_surface(_surfs[0], 0, 0);

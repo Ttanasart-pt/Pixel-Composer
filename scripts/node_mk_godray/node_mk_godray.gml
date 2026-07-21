@@ -26,9 +26,9 @@ function Node_MK_GodRay(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	
 	////- =Rendering
 	newInput( 6, nodeValue_Float(   "Subdivision", 2         ));
-	newInput(10, nodeValue_Gradient("Base Color",  gra_white ));
+	newInput(10, nodeValue_Gradient("Base Color",  gra_white )).addShift(24);
 	newInput( 7, nodeValue_Float(   "Intensity",   16        )).setMappable(22);
-	// 24
+	// 25
 	
 	newOutput( 0, nodeValue_Output( "Surface Out", VALUE_TYPE.surface, noone ));
 	newOutput( 1, nodeValue_Output( "Ray Only",    VALUE_TYPE.surface, noone ));
@@ -37,7 +37,7 @@ function Node_MK_GodRay(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		[ "Surfaces",  false ],  0,  1, 
 		[ "Light",     false ],  3,  4,  5, 18, 13, 14, 17, 
 		[ "Solid",     false ], 11, 12, 15, 19,  8, 20,  9, 21, 23, 
-		[ "Rendering", false ],  6, 10,  7, 22, 
+		[ "Rendering", false ],  6, [10, true], 24, -1,  7, 22, 
 	];
 	
 	////- Node
@@ -84,6 +84,7 @@ function Node_MK_GodRay(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			
 			var _subd  = _data[ 6];
 			var _lCol  = _data[10];
+			var _lColS = _data[24];
 			var _inten = _data[ 7];
 			
 			inputs[12].setVisible(_emMod == 0);
@@ -117,10 +118,11 @@ function Node_MK_GodRay(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			shader_set_m( "solidDensity", _densi, _data[20], inputs[ 8] );
 			shader_set_m( "solidDiffuse", _diffu, _data[21], inputs[ 9] );
 			
-			shader_set_i( "lightAttn",    _lattn );
-			shader_set_gradient(          _lCol  );
-			shader_set_f( "brightness",   _brigh );
-			shader_set_f( "subdiv",       _subd  );
+			shader_set_i( "lightAttn",      _lattn );
+			shader_set_gradient(            _lCol  );
+			shader_set_f( "gradient_shift", _lColS );
+			shader_set_f( "brightness",     _brigh );
+			shader_set_f( "subdiv",         _subd  );
 			
 			shader_set_m( "intensity", _inten, _data[22], inputs[ 7] );
 			

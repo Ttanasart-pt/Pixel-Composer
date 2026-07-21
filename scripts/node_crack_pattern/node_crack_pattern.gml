@@ -34,10 +34,10 @@ function Node_Crack_Pattern(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	
 	////- =Rendering
 	newInput(20, nodeValue_EButton(  "Blend Mode",    0, [ "Nornal", "Addtive", "Maximum" ]));
-	newInput( 9, nodeValue_Gradient( "Color",        gra_white      ));
+	newInput( 9, nodeValue_Gradient( "Color",        gra_white      )).addShift(25);
 	newInput(13, nodeValue_Color(    "Branch Blend", cola(c_ltgray) ));
 	newInput(19, nodeValue_Surface(  "Texture"                      ));
-	// 25
+	// 26
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
@@ -48,7 +48,7 @@ function Node_Crack_Pattern(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 		[ "Crack",     false ],  7, 17,  8, 12, 22, 23, 
 		[ "Trim",       true ], 18, 
 		[ "Thickness", false ], 10, 14,  
-		[ "Rendering", false ], 20,  9, 13, 19, 
+		[ "Rendering", false ], 20, [9, true], 25, -1, 13, 19, 
 	];
 	
 	////- Nodes
@@ -205,6 +205,7 @@ function Node_Crack_Pattern(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 			
 			var _blnd  = _data[20];
 			var _colr  = _data[ 9];
+			var _colrS = _data[25];
 			var _thck  = _data[10];
 			var _thkCr = _data[14], _thkC = inputs[10].attributes.curved? new curveMap(_thkCr) : undefined;
 			crkBlend   = _data[13];
@@ -263,7 +264,7 @@ function Node_Crack_Pattern(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 					
 					var len  = random_range(_lens[0], _lens[1]);
 					var thk  = random_range(_thck[0], _thck[1]);
-					var clr  = _colr.eval(random(1));
+					var clr  = _colr.eval(pfract(random(1) + _colrS));
 					
 					var dir  = choose(-1,1); 
 					
@@ -279,7 +280,7 @@ function Node_Crack_Pattern(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 					
 					var len  = random_range(_lens[0], _lens[1]);
 					var thk  = random_range(_thck[0], _thck[1]);
-					var clr  = _colr.eval(random(1));
+					var clr  = _colr.eval(pfract(random(1) + _colrS));
 					
 					var dir  = choose(-1,1); 
 					

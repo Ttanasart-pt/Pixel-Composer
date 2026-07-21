@@ -1,5 +1,4 @@
 #pragma use(gradient)
-
 #region -- gradient -- [1777679826.681391]
 	#define GRADIENT_LIMIT 128
 	
@@ -141,8 +140,8 @@
 	}
 	
 #endregion -- gradient --
-#pragma use(sampler_simple)
 
+#pragma use(sampler_simple)
 #region -- sampler_simple -- [1765194569.6586206]
     uniform int  sampleMode;
     
@@ -186,8 +185,8 @@
     }
     vec4 sampleTexture( sampler2D texture, vec2 pos) { return sampleTexture(texture, pos, 0.); }
 #endregion -- sampler_simple --
-#pragma use(curve)
 
+#pragma use(curve)
 #region -- curve -- [1780117484.3465736]
 
     #ifdef _YY_HLSL11_ 
@@ -331,7 +330,9 @@ uniform float alpha_curve[CURVE_MAX];
 uniform int   alpha_amount;
 
 uniform float randomAmount;
+uniform float gradient_shift;
 
+float pfract(in float f) { return fract(fract(f) + 1.); }
 float frandom (in vec2 st, in float _seed) {
 	float f = fract(sin(dot(st.xy, vec2(12.9898, 78.233)) * mod(15.15 + seed, 32.156 + _seed) * 12.588) * 43758.5453123);
     return mix(-1., 1., f);
@@ -359,12 +360,10 @@ void main() {
 	vec2 _new_pos = _pos - _vec;
 	vec4 _col = vec4(0.);
 	
-	// if(_new_pos.x >= 0. && _new_pos.x <= 1. && _new_pos.y >= 0. && _new_pos.y <= 1.) {
-		_col = sampleTexture( gm_BaseTexture, _new_pos );
-		vec4 cc = gradientEval(str + frandom(_pos, 1.235) * randomAmount);
-		_col.rgb *= cc.rgb;
-		_col.a   *= cc.a   * curveEval(alpha_curve, alpha_amount, str + frandom(_pos, 2.984) * randomAmount);
-	// }
+	_col = sampleTexture( gm_BaseTexture, _new_pos );
+	vec4 cc = gradientEval(pfract(str + frandom(_pos, 1.235) * randomAmount + gradient_shift));
+	_col.rgb *= cc.rgb;
+	_col.a   *= cc.a   * curveEval(alpha_curve, alpha_amount, str + frandom(_pos, 2.984) * randomAmount);
 	
     gl_FragColor = _col;
 }

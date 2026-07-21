@@ -40,7 +40,7 @@ function Node_MK_Fall(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 	newInput(21, nodeValue_Range(          "Scale",     [1,1], { linked : true } ));
 	
 	////- =Render
-	newInput(13, nodeValue_Gradient( "Color", gra_white ))
+	newInput(13, nodeValue_Gradient( "Color", gra_white )).addShift(26);
 	newInput(14, nodeValue_Curve(    "Alpha", CURVE_DEF_11 ));
 	
 	////- =Ground
@@ -52,21 +52,22 @@ function Node_MK_Fall(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 	newInput(19, nodeValue_Slider( "Twist Rate",   0.1    ));
 	newInput(20, nodeValue_Range(  "Twist Speed",  [5,10] ));
 	newInput(23, nodeValue_Slider( "Twist Radius", 0.7    ));
-	
-	// inputs 26
+	// 27
 		
 	newOutput(0, nodeValue_Output("Output", VALUE_TYPE.surface, noone));
 	
 	input_display_list = [ s_MKFX, 2, 
-		["Dimension", false], 0, 1, 
-		["Spawn",     false], 3, 4, 
-		["Physics",   false], 10, 5, 12,  
-		["Swing",     false], 8, 6, 7, 11, 17, 
-		["Leaf",      false], 22, 9, 24, 25, 21, 
-		["Render",    false], 13, 14, 
-		["Ground",     true, 15], 16, 
-		["Twist",      true, 18], 19, 20, 23, 
+		[ "Dimension", false     ],  0,  1, 
+		[ "Spawn",     false     ],  3,  4, 
+		[ "Physics",   false     ], 10,  5, 12,  
+		[ "Swing",     false     ],  8,  6,  7, 11, 17, 
+		[ "Leaf",      false     ], 22,  9, 24, 25, 21, 
+		[ "Render",    false     ], [13, true], 26, -1, 14, 
+		[ "Ground",     true, 15 ], 16, 
+		[ "Twist",      true, 18 ], 19, 20, 23, 
 	];
+	
+	////- Node
 	
 	#region local data 
 		_gravity = 0;
@@ -280,8 +281,9 @@ function Node_MK_Fall(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 		var _lrot = getInputData(25);
 		_scale    = getInputData(21);
 		
-		var _colr = getInputData(13);
-		var _alph = getInputData(14);
+		var _colr    = getInputData(13);
+		var _colrShf = getInputData(26);
+		var _alph    = getInputData(14);
 		
 		_ground   = getInputData(15)? getInputData(16) : noone;
 		
@@ -336,7 +338,7 @@ function Node_MK_Fall(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 					var _sx = _size[0] * _sc;
 					var _sy = _size[1] * _sc;
 					
-					var _cc = _colr.eval(_ind);
+					var _cc = _colr.eval(pfract(_ind + _colrShf));
 					var _aa = eval_curve_x(_alph, _lif / TOTAL_FRAMES);
 					
 					draw_set_color(_cc);

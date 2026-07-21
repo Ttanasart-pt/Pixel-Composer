@@ -1,5 +1,4 @@
 #pragma use(curve)
-
 #region -- curve -- [1780117484.3465736]
 
     #ifdef _YY_HLSL11_ 
@@ -133,7 +132,6 @@
 // by 01000001
 
 #pragma use(sampler)
-
 #region -- sampler -- [1780048120.828549]
 	uniform int  interpolation;
 	uniform vec2 sampleDimension;
@@ -286,6 +284,8 @@ uniform sampler2D chromaShfSurf;
 uniform vec2      chromaSca;
 uniform int       chromaScaUseSurf;
 uniform sampler2D chromaScaSurf;
+
+uniform float     gradient_shift;
 
 float saturate (float x) { return min(1.0, max(0.0,x)); }
 vec3  saturate (vec3  x) { return min(vec3(1.,1.,1.), max(vec3(0.,0.,0.),x)); }

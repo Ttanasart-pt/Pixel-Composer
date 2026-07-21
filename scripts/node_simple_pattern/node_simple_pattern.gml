@@ -7,12 +7,13 @@ function Node_Simple_Pattern(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 	
 	////- =Pattern
 	newInput( 5, nodeValue_IVec2( "Pattern Size", [3,3], true ));
+	newInput( 6, nodeValue_IVec2( "Shift",        [0,0]       ));
 	newInput( 2, nodeValue_Vec2(  "Scale",        [1,1], true ));
 	
 	////- =Rendering
 	newInput( 3, nodeValue_Color( "Color 1", ca_black ));
 	newInput( 4, nodeValue_Color( "Color 2", ca_white ));
-	// 6
+	// 7
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
@@ -59,7 +60,7 @@ function Node_Simple_Pattern(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 		
 	input_display_list = [ 
 		[ "Output",    false ],  0,  1, 
-		[ "Pattern",   false ],  5, pattern_editor, 2, 
+		[ "Pattern",   false ],  5, pattern_editor,  6,  2, 
 		[ "Rendering", false ],  3,  4, 
 	];
 	
@@ -74,6 +75,7 @@ function Node_Simple_Pattern(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 			var _mask = _data[ 1];
 			
 			var _size = _data[ 5];
+			var _shft = _data[ 6];
 			var _scal = _data[ 2];
 			
 			var _col1 = _data[ 3];
@@ -104,7 +106,8 @@ function Node_Simple_Pattern(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 			shader_set_i( "useMask", is_just_surface(_mask) );
 			shader_set_s( "pattern", temp_surface[0] );
 			
-			shader_set_2( "scale", _scal );
+			shader_set_2( "offset", _shft );
+			shader_set_2( "scale",  _scal );
 			
 			shader_set_c( "color1", _col1 );
 			shader_set_c( "color2", _col2 );

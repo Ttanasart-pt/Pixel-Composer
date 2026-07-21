@@ -31,18 +31,18 @@ function Node_Stripe(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	////- =Render
 	newInput( 3, nodeValue_EButton(  "Type",      0, [ "Solid", "Smooth", "AA" ] ));
 	newInput( 6, nodeValue_EButton(  "Coloring",  0, [ "Alternate", "Palette", "Random" ] ));
-	newInput( 7, nodeValue_Gradient( "Colors",    gra_white )).setMappable(15);
+	newInput( 7, nodeValue_Gradient( "Colors",    gra_white )).setMappable(15).addShift(25);
 	newInput( 8, nodeValue_Color(    "Color 1",   ca_white  ));
 	newInput( 9, nodeValue_Color(    "Color 2",   ca_black  ));
 	newInput(18, nodeValue_Palette(  "Colors",   [ca_black,ca_white] ));
-	// 25
+	// 26
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
 	input_display_list = [ 19, 
 		[ "Output",   true ],  0, 21, 22, 20, 
 		[ "Pattern", false ],  1, 24, 11, 10, 14,  2, 12,  4,  5, 13, 17, 
-		[ "Render",  false ],  3,  6,  7, 15,  8,  9, 18, 
+		[ "Render",  false ],  3,  6, [7, true],  25, -1, 15,  8,  9, 18, 
 	];
 	
 	input_display_deco = function(_x, _y, _w, _m, _hover, _focus, _panel) /*=>*/ {
@@ -102,6 +102,7 @@ function Node_Stripe(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 			
 			var _bnd  = _data[ 3];
 			var _col  = _data[ 6];
+			var _grdS = _data[25];
 			var _clr0 = _data[ 8];
 			var _clr1 = _data[ 9];
 			var _pal  = _data[18];
@@ -137,7 +138,9 @@ function Node_Stripe(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 			shader_set_c( "color0",   _clr0 );
 			shader_set_c( "color1",   _clr1 );
 			shader_set_palette(_pal);
+			
 			shader_set_gradient(_data[7], _data[15], _data[16], inputs[7]);
+			shader_set_f( "gradient_shift",   _grdS );
 			
 			draw_empty();
 		surface_reset_shader();

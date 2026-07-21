@@ -20,14 +20,14 @@ function Node_Ribbon(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	newInput(15, nodeValue_Float(    "Thickness",  0 ));
 	
 	////- =Render
-	newInput( 6, nodeValue_Gradient( "Color over Length", gra_white ));
-	newInput( 7, nodeValue_Gradient( "Color Weight",      gra_white ));
+	newInput( 6, nodeValue_Gradient( "Color over Length", gra_white )).addShift(18);
+	newInput( 7, nodeValue_Gradient( "Color Weight",      gra_white )).addShift(19);
 	newInput(12, nodeValue_Surface(  "Texture",           noone     ));
 	newInput(13, nodeValue_Vec2(     "Texture Position",  [0,0]     ));
 	newInput(16, nodeValue_Rotation( "Texture Rotation",   0        ));
 	newInput(14, nodeValue_Vec2(     "Texture Scale",     [1,1]     ));
 	newInput( 9, nodeValue_Bool(     "Shade Side",        false     ));
-	// 18
+	// 20
 	
 	newOutput( 0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone ));
 	
@@ -35,7 +35,7 @@ function Node_Ribbon(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		[ "Output", false ],  1, 
 		[ "Path",   false ],  2, 17, 11,  3, 10, 
 		[ "Ribbon", false ],  4,  8, 15,  5, 
-		[ "Render", false ],  6,  7, 12, 13, 16, 14,  9, 
+		[ "Render", false ], [6, true], 18, [7, true], 19, -1, 12, 13, 16, 14,  9, 
 	];
 	
 	////- Nodes
@@ -75,7 +75,10 @@ function Node_Ribbon(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 			var _thck    = _data[15];
 			
 			var _colLen  = _data[ 6];
+			var _colLenS = _data[18];
 			var _colWei  = _data[ 7];
+			var _colWeiS = _data[19];
+			
 			var _surface = _data[12]; var _texture = surface_get_texture_safe(_surface);
 			var _textPos = _data[13];
 			var _textRot = _data[16];
@@ -134,8 +137,8 @@ function Node_Ribbon(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 				ny = __p.y;
 				nt = t * i;
 				
-				var _cLen = _colLen.eval(prg);
-				var _cWei = _colWei.eval(__p.weight);
+				var _cLen = _colLen.eval(pfract(prg + _colLenS));
+				var _cWei = _colWei.eval(pfract(__p.weight + _colWeiS));
 				nc = colorMultiply(_cLen, _cWei);
 				
 				nw  = _size;

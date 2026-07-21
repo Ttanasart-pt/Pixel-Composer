@@ -1153,9 +1153,9 @@ function Panel_Inspector() : PanelContent() constructor {
                 var _dsl = _inspecting.input_display_list;
                 var _dsp = array_safe_get_fast(_dsl, i);
                 
-                     if(!is_array(_dsl))  jun = array_safe_get_fast(_inspecting.inputs, i);
-                else if(is_real(_dsp))    jun = array_safe_get_fast(_inspecting.inputs, _dsp);
-                else                      jun = _dsp;
+                     if(!is_array(_dsl))            jun = array_safe_get_fast(_inspecting.inputs, i);
+                else if(is_real(_dsp) && _dsp >= 0) jun = array_safe_get_fast(_inspecting.inputs, _dsp);
+                else                                jun = _dsp;
                 
             } else if(i <  amoIn + amoAttr) { // attributes
             	jun = _inspecting.attributes_properties[i - amoIn];
@@ -1290,7 +1290,8 @@ function Panel_Inspector() : PanelContent() constructor {
             } else if(is_array(jun)) { // Section
                 if((filtering && filter_text != "") || FILTER_ANIMATION) continue;
                 
-                var _key = array_safe_get_fast(jun, 0, "");
+                segOffset = false;
+                var _key  = array_safe_get_fast(jun, 0, "");
                 var _keyJunc = is_real(_key);
                 
                 var coll;
@@ -1301,7 +1302,8 @@ function Panel_Inspector() : PanelContent() constructor {
                 	if(kjun.sectionCollapse == undefined)
                 		kjun.sectionCollapse = array_safe_get_fast(jun, 1, false);
                 		
-                	coll = kjun.sectionCollapse;
+                	segOffset = true;
+                	coll = kjun.sectionCollapse || !kjun.show_in_inspector;
                 	_key = kjun.getName();
                 	
                 } else {
@@ -1461,6 +1463,9 @@ function Panel_Inspector() : PanelContent() constructor {
                 }
                 
                 if(!showAll && coll) { // Skip 
+                	segOffset = false;
+                	var _section_st = 0;
+                	
                     if(i == amoIn) { // Skip attribute
                     	i = amoIn + amoAttr - 1;
                     	
@@ -1474,22 +1479,34 @@ function Panel_Inspector() : PanelContent() constructor {
 	                        if(j_jun == noone) break;
 	                        
 	                        if(is_array(j_jun)) {
-	                        	if(subk) break;
+	                        	if(subk || _keyJunc) break;
 	                        	
 	                        	var _jkey = array_safe_get_fast(j_jun, 0, "");
 	                        	var _jkJn = is_real(_jkey);
 	                        	var _subk = string_starts_with(_jkey, "/");
-	                        	if(!_subk && !_jkJn) break;
 	                        	
-	                        	else { j++; continue; }
+	                        	if(!_subk && !_jkJn) break;
+	                        	else { 
+	                        		j++; 
+	                        		_section_st++;
+	                        		continue; 
+	                        	}
 	                        }
 	                        
 	                        if(is(j_jun, Inspector_Spacer) && !j_jun.coll) break;
 	                        
-	                        jun = array_safe_get_fast(_inspecting.inputs, j_jun)
-	                        if(is(jun, NodeValue) && jun.show_in_inspector) {
-	                        	_edt += jun.is_modified;
-	                        	_ani |= jun.is_anim;
+	                        if(is_real(j_jun)) {
+	                        	if(j_jun < 0) {
+	                        		if(_section_st-- <= 0)
+	                        			break;
+                        			
+		                        } else {
+			                        jun = array_safe_get_fast(_inspecting.inputs, j_jun)
+			                        if(is(jun, NodeValue) && jun.show_in_inspector) {
+			                        	_edt += jun.is_modified;
+			                        	_ani |= jun.is_anim;
+			                        }
+		                        }
 	                        }
 	                        
 	                        j++;
@@ -1574,6 +1591,8 @@ function Panel_Inspector() : PanelContent() constructor {
 				hh += _widH + padd;
         		continue;
         	}
+        	
+        	if(is_real(jun) && jun < 0) segOffset = false;
         	
             if(!is(jun, NodeValue))    continue;
             if(!jun.show_in_inspector) continue;

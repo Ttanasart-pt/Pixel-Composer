@@ -1,5 +1,4 @@
 #pragma use(gradient)
-
 #region -- gradient -- [1777679826.681391]
 	#define GRADIENT_LIMIT 128
 	
@@ -141,8 +140,8 @@
 	}
 	
 #endregion -- gradient --
-#pragma use(curve)
 
+#pragma use(curve)
 #region -- curve -- [1780117484.3465736]
 
     #ifdef _YY_HLSL11_ 
@@ -272,8 +271,8 @@
     }
 
 #endregion -- curve --
-#pragma use(uv)
 
+#pragma use(uv)
 #region -- uv -- [1779523757.7465837]
     uniform sampler2D uvMap;
     uniform int   useUvMap;
@@ -328,7 +327,10 @@ uniform vec2  phase;
 uniform float wave_curve[CURVE_MAX];
 uniform int   wave_amount;
 
+uniform float color_shift;
 uniform float intensity;
+
+float pfract(in float f) { return fract(fract(f) + 1.); }
 
 float valueProcess(float t) {
 	float v = t;
@@ -377,6 +379,6 @@ void main() {
 	else if(blendMode == 1) val *= v0;
 	else if(blendMode == 2) val  = max(val, v0);
 	
-	vec4 clr = gradientEval(val);
+	vec4 clr = gradientEval(pfract(val + color_shift));
 	gl_FragColor = clr;
 }

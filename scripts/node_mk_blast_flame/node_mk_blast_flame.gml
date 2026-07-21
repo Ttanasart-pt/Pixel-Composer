@@ -71,13 +71,13 @@ function Node_MK_Blast_Flame(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	newInput(37, nodeValue_Curve(   "Shape",        CURVE_DEF_11 ));
 	
 		////- =/Color
-	newInput(17, nodeValue_Gradient( "Color", new gradientObject([cola(c_red), cola(c_yellow), cola(c_white)]) ));
+	newInput(17, nodeValue_Gradient( "Color", new gradientObject([cola(c_red), cola(c_yellow), cola(c_white)]) )).addShift(51);
 	newInput(18, nodeValue_Range(    "Level", [0,1]  ));
 	
 		////- =/Perspective
 	newInput(15, nodeValue_Vec2(  "View Origin", [.25,.25] )).setUnitSimple();
 	newInput(16, nodeValue_Range( "Perspective", [2,2]     ));
-	// 51
+	// 52
 	
 	newOutput( 0, nodeValue_Output( "Blast", VALUE_TYPE.struct, [] )).setCustomData(global.MKBLAST_JUNC);
 	
@@ -96,7 +96,7 @@ function Node_MK_Blast_Flame(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 			
 		[ "Render",           false ], 21, 50, 
 			[ "/Shape",       false ], 23, 35, 46, 47, 36, 45, 37, 
-			[ "/Color",       false ], 17, 18, 
+			[ "/Color",       false ], [17, true], 51, -1, 18, 
 			[ "/Perspective", false ], 15, 16, 
 	];
 	
@@ -167,6 +167,7 @@ function Node_MK_Blast_Flame(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 			var _lineS   = getInputData(37), _lineData  = new curveMap(_lineS, 32);
 			
 			var _color   = getInputData(17);
+			var _colorShf= getInputData(51);
 			var _level   = getInputData(18);
 			
 			var _vorig   = getInputData(15);
@@ -231,7 +232,8 @@ function Node_MK_Blast_Flame(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 			var _grAsp  = random_range(_grpAng[0], _grpAng[1]) / _gro;
 			
 			var _layer  = new MKBlast_Layer();
-			_layer.colorize  = _color;
+			_layer.colorize   = _color;
+			_layer.color_shft = _colorShf;
 			
 			var grX = _grpScal[0];
 			var grY = _grpScal[1];

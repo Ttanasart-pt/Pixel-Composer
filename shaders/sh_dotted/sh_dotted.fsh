@@ -1,5 +1,4 @@
 #pragma use(uv)
-
 #region -- uv -- [1779523757.7465837]
     uniform sampler2D uvMap;
     uniform int   useUvMap;
@@ -29,8 +28,8 @@
         return vtx;
     }
 #endregion -- uv --
-#pragma use(gradient)
 
+#pragma use(gradient)
 #region -- gradient -- [1777679826.681391]
 	#define GRADIENT_LIMIT 128
 	
@@ -205,6 +204,7 @@ uniform int   coloring;
 uniform int   colorMode;
 uniform vec4  colorBG;
 uniform vec4  color1;
+uniform float gradient_shift;
 uniform sampler2D texture;
 
 #ifdef _YY_HLSL11_ 
@@ -218,6 +218,7 @@ uniform int   paletteAmount;
 
 vec2 amoVec;
 
+float pfract(in float f) { return fract(fract(f) + 1.); }
 float random (in vec2 st, float seed) { return fract(sin(dot(st.xy, vec2(1892.9898, 78.23453))) * (seed + 437.54123)); }
 
 float getDist(vec2 tx, vec2 _frc) {
@@ -263,7 +264,7 @@ vec4 getD(vec2 _cen, vec2 _frc, vec2 _shf) {
 		
 	} else if(colorMode == 2) {
 		float ind = random(rx, seed);
-		cc = gradientEval(ind);
+		cc = gradientEval(pfract(ind + gradient_shift));
 		
 	} else if(colorMode == 3) {
 		cc = texture2D( texture, tx );

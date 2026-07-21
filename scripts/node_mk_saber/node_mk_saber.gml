@@ -10,7 +10,7 @@ function Node_MK_Saber(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	newInput( 6, nodeValue_Bool(     "Fix length",     false     ));
 	
 	////- =Render
-	newInput( 4, nodeValue_Gradient( "Color",          gra_white ))
+	newInput( 4, nodeValue_Gradient( "Color",          gra_white )).addShift(11);
 	newInput( 7, nodeValue_Int(      "Gradient step",  1         ));
 	newInput( 8, nodeValue_Slider(   "Glow intensity", 0         ));
 	newInput( 9, nodeValue_Int(      "Glow radius",    0         ));
@@ -18,13 +18,13 @@ function Node_MK_Saber(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 		////- =/Trace
 	newInput( 5, nodeValue_Int(      "Trace",          0         ));
 	newInput(10, nodeValue_Surface(  "Trace texture"             )).setVisible(true, true);
-	// 11
+	// 12
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
 	input_display_list = [ s_MKFX, 0, 
 		[ "Saber",      false ],  1,  2,  3,  6, 
-		[ "Render",     false ],  4,  7,  8,  9, 
+		[ "Render",     false ], [4, true], 11, -1,  7,  8,  9, 
 			[ "/Trace", false ],  5, 10,
 	];
 	
@@ -64,6 +64,8 @@ function Node_MK_Saber(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 			var _fixl   = _data[ 6];
 			
 			var _colr   = _data[ 4];
+			var _colrS  = _data[11];
+			
 			var _grds   = _data[ 7]; _grds = max(1, _grds);
 			var _gint   = _data[ 8];
 			var _grad   = _data[ 9];
@@ -135,7 +137,7 @@ function Node_MK_Saber(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 		surface_set_target(temp_surface[0]);
 			DRAW_CLEAR
 			
-			draw_set_color(_colr.eval(1));
+			draw_set_color(_colr.eval(pfract(1 + _colrS)));
 			if(_trac > 0 && CURRENT_FRAME > 0) { // Trace
 				var useTex   = is_surface(_trcTex);
 				
@@ -244,11 +246,11 @@ function Node_MK_Saber(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 			}
 			
 			if(_thck == 1) {
-				draw_set_color(_colr.eval(1));
+				draw_set_color(_colr.eval(pfract(1 + _colrS)));
 				draw_line(_p1x, _p1y, _p2x, _p2y);
 			} else {
 				for( var i = _thck; i > 0; i -= _grds ) {
-					draw_set_color(_colr.eval((i - 1) / (_thck - 1)));
+					draw_set_color(_colr.eval(pfract((i - 1) / (_thck - 1) + _colrS )));
 					draw_line_round(_p1x, _p1y, _p2x, _p2y, i);
 				}
 			}
@@ -270,7 +272,7 @@ function Node_MK_Saber(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 			if(_gint > 0) {
 				BLEND_OVERRIDE
 				shader_set(sh_mk_saber_glow);
-					shader_set_color("color", _colr.eval(1));
+					shader_set_color("color", _colr.eval(pfract(1 + _colrS)));
 					shader_set_f("intensity", _gint);
 					draw_surface_safe(temp_surface[2]);
 				shader_reset();

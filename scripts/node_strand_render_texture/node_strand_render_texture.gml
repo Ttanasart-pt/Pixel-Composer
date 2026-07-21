@@ -19,15 +19,15 @@ function Node_Strand_Render_Texture(_x, _y, _group = noone) : Node(_x, _y, _grou
 	
 	////- =Texture
 	newInput( 4, nodeValue_Surface("Texture"));
-	newInput( 3, nodeValue_Gradient("Random color", gra_white));
-	// inputs 6
+	newInput( 3, nodeValue_Gradient("Random color", gra_white)).addShift(6);
+	// 7
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
 	input_display_list = [ 5, 
 		[ "Output",  false ], 0,
 		[ "Strand",  false ], 1, 2,  
-		[ "Texture", false ], 4, 3, 
+		[ "Texture", false ], 4, [3, true], 6, -1, 
 	];
 	
 	////- Node
@@ -43,13 +43,15 @@ function Node_Strand_Render_Texture(_x, _y, _group = noone) : Node(_x, _y, _grou
 		if(!PROJECT.animator.is_playing && recoverCache()) return;
 			
 		#region data
-			var _dim = getInputData(0);
-			var _str = getInputData(1);
+			var _dim = getInputData( 0);
+			var _str = getInputData( 1);
 			
-			var _thk = getInputData(2);
-			var _bld = getInputData(3);
-			var _tex = getInputData(4);
-			var _sed = getInputData(5);
+			var _thk = getInputData( 2);
+			var _bld = getInputData( 3);
+			var _shf = getInputData( 6);
+			
+			var _tex = getInputData( 4);
+			var _sed = getInputData( 5);
 			
 			var _surf = outputs[0].getValue();
 			_surf = surface_verify(_surf, _dim[0], _dim[1]);
@@ -77,7 +79,7 @@ function Node_Strand_Render_Texture(_x, _y, _group = noone) : Node(_x, _y, _grou
 					var nx0, ny0, nx1, ny1;
 				
 					var len = array_length(hair.points);
-					var bld = _bld.eval(random1D(_sed + _sedIndex)); _sedIndex++;
+					var bld = _bld.eval(pfract(random1D(_sed + _sedIndex) + _shf)); _sedIndex++;
 					var clr = c_black;
 					var tt  = random1D(_sed + _sedIndex, _thk[0], _thk[1]); _sedIndex++;
 					

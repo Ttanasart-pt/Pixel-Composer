@@ -1,29 +1,30 @@
 function Node_PB_FX_Bevel(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Pixel Bevel";
 	
-	newInput(0, nodeValue_Surface( "Surface" ));
+	newInput( 0, nodeValue_Surface( "Surface" ));
 	
 	////- =Bevel
-	newInput(1, nodeValue_Int( "Height", 2 ));
+	newInput( 1, nodeValue_Int( "Height", 2 ));
 	
 	////- =Colors
-	newInput(2, nodeValue_Gradient( "Color Over Height", gra_white))
-	newInput(3, nodeValue_Gradient( "Color Over Angles", gra_black_white))
-	newInput(4, nodeValue_Rotation( "Shift Angle", 0 )).hideLabel();
+	newInput( 2, nodeValue_Gradient( "Color Over Height", gra_white       )).addShift( 9);
+	newInput( 3, nodeValue_Gradient( "Color Over Angles", gra_black_white )).addShift(10);
+	newInput( 4, nodeValue_Rotation( "Shift Angle", 0 )).hideLabel();
 	
 	////- =Highlight
-	newInput(5, nodeValue_Bool(     "Highlight",           false    ));
-	newInput(6, nodeValue_Color(    "Highlight Color",     ca_white ));
-	newInput(7, nodeValue_Rotation( "Highlight Direction", 0        ));
-	newInput(8, nodeValue_Bool(     "Highlight All",       false    ));
+	newInput( 5, nodeValue_Bool(     "Highlight",           false    ));
+	newInput( 6, nodeValue_Color(    "Highlight Color",     ca_white ));
+	newInput( 7, nodeValue_Rotation( "Highlight Direction", 0        ));
+	newInput( 8, nodeValue_Bool(     "Highlight All",       false    ));
+	// 11
 	
 	newOutput(0, nodeValue_Output( "Surface Out", VALUE_TYPE.surface, noone));
 	newOutput(1, nodeValue_Output( "Inner Area",  VALUE_TYPE.surface, noone)).setVisible(false);
 	
-	input_display_list = [ 0,
-	    [ "Bevel",      false    ], 1, 
-	    [ "Colors",     false    ], 2, 3, 4, 
-	    [ "Highlight",  false, 5 ], 8, 7, 6, 
+	input_display_list = [  0,
+	    [ "Bevel",      false    ],  1, 
+	    [ "Colors",     false    ], [2, true],  9, -1, [3, true], 10, -1,  4, 
+	    [ "Highlight",  false, 5 ],  8,  7,  6, 
     ];
 	
 	////- Node
@@ -47,16 +48,18 @@ function Node_PB_FX_Bevel(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	}
 	
 	static processData = function(_outData, _data, _array_index = 0) { 
-	    var _surf  = _data[0];
-	    var _heigh = _data[1];
-	    var _grHig = _data[2];
-	    var _grRad = _data[3];
-	    var _radsh = _data[4];
-	    
-	    var _high = _data[5];
-	    var _hgcl = _data[6];
-	    var _hdir = _data[7];
-	    var _hall = _data[8];
+		#region data
+		    var _surf  = _data[ 0];
+		    var _heigh = _data[ 1];
+		    var _grHig = _data[ 2], _grHigS = _data[ 9];
+		    var _grRad = _data[ 3], _grRadS = _data[10];
+		    var _radsh = _data[ 4];
+		    
+		    var _high  = _data[ 5];
+		    var _hgcl  = _data[ 6];
+		    var _hdir  = _data[ 7];
+		    var _hall  = _data[ 8];
+	    #endregion
 	    
 	    inputs[7].setVisible(!_hall);
 	    
@@ -82,13 +85,16 @@ function Node_PB_FX_Bevel(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
     	    surface_set_target_ext(1, _innerSurf);
 	        DRAW_CLEAR
 	        
-	        shader_set_2("dimension",  _dim);
-	        shader_set_f("height",     _heigh);
-	        shader_set_f("shiftAngle", _radsh / 360);
-	        shader_set_surface("edgeSurf", temp_surface[1]);
+	        shader_set_2( "dimension",  _dim   );
+	        shader_set_f( "height",     _heigh );
+	        shader_set_f( "shiftAngle", _radsh/360      );
+	        shader_set_s( "edgeSurf",   temp_surface[1] );
 			
 			_grHig.shader_submit("height");
 			_grRad.shader_submit("radius");
+			
+	        shader_set_f( "height_shift", _grHigS );
+	        shader_set_f( "radius_shift", _grRadS );
 			
 	        draw_surface_safe(_surf);
 	    surface_reset_shader();

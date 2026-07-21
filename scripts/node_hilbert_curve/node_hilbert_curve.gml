@@ -10,15 +10,14 @@ function Node_Hilbert(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	////- =Rendering
 	newInput( 5, nodeValue_Float(    "Thickness",  2               )).setPieMenu();
 	newInput( 3, nodeValue_Color(    "BG Color",   ca_black        ));
-	newInput( 4, nodeValue_Gradient( "Path Color", gra_white       ));
-	newInput( 6, nodeValue_Slider(   "Path Shift", 0, [-1, 1, .01] ));
-	// 7
+	newInput( 4, nodeValue_Gradient( "Path Color", gra_white       )).addShift(6);
+	// 8
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
 	input_display_list = [  0,
 		[ "Hilbert",   false ],  1,  2, 
-		[ "Rendering", false ],  5,  3,  4,  6, 
+		[ "Rendering", false ],  5,  3, [4, true],  6, -1, 
 	];
 	
 	////- Nodes

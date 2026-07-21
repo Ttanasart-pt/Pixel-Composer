@@ -23,7 +23,7 @@ function Node_Pytagorean_Tile(_x, _y, _group = noone) : Node_Processor(_x, _y, _
 	////- =Render
 	newInput( 7, nodeValue_EScroll( "Render Type",  0, ["Colored tile", "Height map", "Texture grid"]));
 	newInput( 8, nodeValueSeed());
-	newInput( 5, nodeValue_Gradient(     "Tile Color", gra_white)).setMappable(18);
+	newInput( 5, nodeValue_Gradient(     "Tile Color", gra_white)).setMappable(18).addShift(27);
 	newInput( 6, nodeValue_Color(        "Gap Color",  ca_black));
 	newInput( 9, nodeValue_Surface(      "Texture" ));
 	newInput(10, nodeValue_Bool(         "Anti Aliasing", false));
@@ -36,12 +36,12 @@ function Node_Pytagorean_Tile(_x, _y, _group = noone) : Node_Processor(_x, _y, _
 	newInput(20, nodeValue_RotRange(   "Random Angle",    [0,0]           ));
 	newInput(26, nodeValue_Vec2_Range( "Random Scale",    [1,1,1,1], true ));
 	newInput(16, nodeValue_Slider(     "Flip Threshold",  .5              ));
-	// 27
+	// 28
 	
 	input_display_list = [
-		[ "Output",  false ], 0, 23, 24, 22, 
-		[ "Pattern", false ], 1, 3, 12, 2, 11, 17, 4, 13,
-		[ "Render",  false ], 7, 8, 5, 18, 6, 9, 10, 21, 
+		[ "Output",  false ],  0, 23, 24, 22, 
+		[ "Pattern", false ],  1,  3, 12,  2, 11, 17,  4, 13,
+		[ "Render",  false ],  7,  8, [5, true], 18, 27, -1,  6,  9, 10, 21, 
 		[ "Texture Transform", true, 14], 15, 25, 20, 26, 16, 
 	];
 	
@@ -68,18 +68,20 @@ function Node_Pytagorean_Tile(_x, _y, _group = noone) : Node_Processor(_x, _y, _
 	}
 	
 	static processData = function(_outSurf, _data, _array_index) {
-		var _dim  = _data[0];
-		var _pos  = _data[1];
-		var _sam  = _data[9];
-		var _mode = _data[7];
-		
-		var _col_gap = _data[6];
-		var _gra	 = _data[5];
-		
-		inputs[ 5].setVisible(_mode == 0);
-		inputs[ 6].setVisible(_mode != 1);
-		inputs[21].setVisible(_mode == 1);
-		inputs[ 9].setVisible(_mode == 2 || _mode == 3);
+		#region data
+			var _dim  = _data[ 0];
+			var _pos  = _data[ 1];
+			var _sam  = _data[ 9];
+			var _mode = _data[ 7];
+			
+			var _col_gap = _data[ 6];
+			var _gra	 = _data[ 5];
+			
+			inputs[ 5].setVisible(_mode == 0);
+			inputs[ 6].setVisible(_mode != 1);
+			inputs[21].setVisible(_mode == 1);
+			inputs[ 9].setVisible(_mode == 2 || _mode == 3);
+		#endregion
 		
 		_outSurf = surface_verify(_outSurf, _dim[0], _dim[1], attrDepth());
 		
@@ -87,20 +89,20 @@ function Node_Pytagorean_Tile(_x, _y, _group = noone) : Node_Processor(_x, _y, _
 			shader_set_uv(_data[23], _data[24]);
 		    shader_set_interpolation(_sam);
 		    
-			shader_set_f("dimension", _dim[0], _dim[1]);
-			shader_set_f("position",  _pos[0] / _dim[0], _pos[1] / _dim[1]);
+			shader_set_f( "dimension", _dim[0], _dim[1]);
+			shader_set_f( "position",  _pos[0] / _dim[0], _pos[1] / _dim[1]);
 			
-			shader_set_f_map("scale", _data[ 2], _data[11], inputs[2]);
-			shader_set_f_map("angle", _data[ 3], _data[12], inputs[3]);
-			shader_set_f_map("thick", _data[ 4], _data[13], inputs[4]);
+			shader_set_m( "scale", _data[ 2], _data[11], inputs[2]);
+			shader_set_m( "angle", _data[ 3], _data[12], inputs[3]);
+			shader_set_m( "thick", _data[ 4], _data[13], inputs[4]);
 			
-			shader_set_f("seed",  _data[ 8]);
-			shader_set_i("mode",  _mode);
-			shader_set_i("aa",    _data[10]);
-			shader_set_f("phase", _data[17]);
-			shader_set_color("gapCol",_col_gap);
+			shader_set_f( "seed",  _data[ 8]);
+			shader_set_i( "mode",  _mode);
+			shader_set_i( "aa",    _data[10]);
+			shader_set_f( "phase", _data[17]);
+			shader_set_c( "gapCol",_col_gap);
 			
-			shader_set_2("level",          _data[21]);
+			shader_set_2( "level",          _data[21]);
 			
 			shader_set_i( "textureTransform", _data[14] );
 			shader_set_f( "textureSeed",      _data[15] );
@@ -109,6 +111,7 @@ function Node_Pytagorean_Tile(_x, _y, _group = noone) : Node_Processor(_x, _y, _
 			shader_set_4( "textureScale",     _data[26] );
 			shader_set_f( "textureFlip",      _data[16] );
 			
+			shader_set_f( "gradient_shift",   _data[27] );
 			shader_set_gradient(_data[5], _data[18], _data[19], inputs[5]);
 			
 			if(is_surface(_sam)) draw_surface_stretched_safe(_sam, 0, 0, _dim[0], _dim[1]);

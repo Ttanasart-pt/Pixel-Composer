@@ -93,7 +93,7 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	newInput(34, nodeValue_Vec2(    "Scale per Radius",  [0,0]     ));
 	
 	////- =Color
-	newInput(11, nodeValue_Gradient( "Random Blend",    gra_white )).setHotkeyAuto("C").setMappable(28);
+	newInput(11, nodeValue_Gradient( "Random Blend",    gra_white )).setHotkeyAuto("C").setMappable(28).addShift(58);
 	newInput(12, nodeValue_SliRange( "Alpha",           [1,1]     ));
 	newInput(16, nodeValue_Bool(     "Multiply Alpha",   true     ));
 	
@@ -106,7 +106,7 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	newInput(18, nodeValue_EScroll( "Blend Mode", 0, [ "Normal", "Add", "Max" ] ));
 	newInput(23, nodeValue_Bool(    "Sort Y",     false ));
 	newInput(56, nodeValue_Toggle(  "Tile",       0, [ "X", "Y" ] ))
-	// 58
+	// 59
 	
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	 
@@ -129,7 +129,7 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		[ "Position",     false ], 40, 33, 50, 51, 36, 49,  39, 37, 
 		[ "Rotation",     false ], 48,  7,  4, 52, 53, 32, 
 		[ "Scale",        false ],  3, 43, 54, 57, 55,  8, 34, 
-		[ "Color",        false ], 11, 28, 12, 16, 
+		[ "Color",        false ], [11, true], 28, 58, -1, 12, 16, 
 			[ "/Sampler",  true ], 41, 47, 42, 
 		[ "Render",       false ], 18, 23, 56, 
 	];
@@ -538,6 +538,8 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 			var color      = _data[11];
 			var clr_map    = _data[28];
 			var clr_rng    = _data[29];
+			var clr_shf    = _data[58];
+			
 			var alpha      = _data[12];
 			var mulpA      = _data[16];
 			var sampSrf    = _data[41]; surfSamp.setSurface(sampSrf);
@@ -1040,7 +1042,7 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 				
 				var clr = _clrSin;
 				     if( _clrMap) clr = evaluate_gradient_map(grSamp, color, clr_map, clr_rng, inputs[11], true);
-				else if(!_clrUni) clr = color.evalFast(random_seed(1, _csed++));
+				else if(!_clrUni) clr = color.evalFast(pfract(random_seed(1, _csed++) + clr_shf));
 				
 				var alp = _alpUni? alpha[0] : random_range_seed(alpha[0], alpha[1], _csed++);
 				

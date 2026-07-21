@@ -9,6 +9,7 @@ function drawWidgetInit() {
 	reset_hold    = noone;
 	def_hold      = noone;
 	contentPane   = undefined;
+	segOffset     = false;
 	
 	widgPrevX     = 0;
 	widgNameX     = 0;
@@ -277,10 +278,11 @@ function drawWidget(xx, yy, ww, _m, _jun, global_var = true, _hover = false, _fo
 	#endregion
 	
 	#region section
+		var cs = ui(12);
+		
 		if(jun.isSection) {
 			var coll = jun.sectionCollapse;
 			
-			var cs = ui(12);
 			var cx = lb_x + cs / 2 - ui(2);
 			var cy = yy + lb_h / 2;
 			var hv = _hover && point_in_rectangle(_m[0], _m[1], cx - cs/2, yy, cx + cs/2, yy + lb_h);
@@ -290,7 +292,12 @@ function drawWidget(xx, yy, ww, _m, _jun, global_var = true, _hover = false, _fo
 			if(hv && mouse_lpress(_focus)) 
 				jun.sectionCollapse = !jun.sectionCollapse;
 				
-			lb_x += cs + ui(4);
+			lb_x += cs + ui(2);
+			
+		} else if(segOffset) {
+			lb_x += cs + ui(2);
+			if(cc == COLORS._main_text)
+				cc = COLORS._main_text_sub;
 		}
 	#endregion
 	

@@ -1,5 +1,4 @@
 #pragma use(curve)
-
 #region -- curve -- [1780117484.3465736]
 
     #ifdef _YY_HLSL11_ 
@@ -129,8 +128,8 @@
     }
 
 #endregion -- curve --
-#pragma use(gradient)
 
+#pragma use(gradient)
 #region -- gradient -- [1777679826.681391]
 	#define GRADIENT_LIMIT 128
 	
@@ -276,18 +275,21 @@
 varying vec2 v_vTexcoord;
 varying vec4 v_vColour;
 
+uniform float gradient_shift;
 uniform float densityMap_curve[CURVE_MAX];
 uniform int   densityMap_use;
 uniform int   densityMap_amount;
 
 uniform int   transparent;
 
+float pfract(in float f) { return fract(fract(f) + 1.); }
+
 void main() {
 	vec4  rawS = texture2D(gm_BaseTexture, v_vTexcoord);
 	float rawV = rawS.a;
 	
 	float dens = curveEval(densityMap_curve, densityMap_amount, clamp(rawV, 0., 1.));
-	vec4  gradSample = gradientEval(dens);
+	vec4  gradSample = gradientEval(pfract(dens + gradient_shift));
 	
     gl_FragColor = gradSample;
     if(transparent == 1) gl_FragColor.a *= dens;

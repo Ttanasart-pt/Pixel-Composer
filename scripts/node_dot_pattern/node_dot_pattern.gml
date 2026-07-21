@@ -27,11 +27,11 @@ function Node_Dotted(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	newInput(16, nodeValue_EButton(  "Dot Color Mode",  0, [ "Solid", "Palette", "Random", "Texture" ] ));
 	newInput( 8, nodeValue_Color(    "Dot Color",       ca_white        )).setHotkeyAuto("C");
 	newInput(17, nodeValue_Palette(  "Palette"                          ));
-	newInput(18, nodeValue_Gradient( "Gradient",        gra_black_white ));
+	newInput(18, nodeValue_Gradient( "Gradient",        gra_black_white )).addShift(23);
 	newInput(19, nodeValue_Surface(  "Texture"                          ));
 	newInput(12, nodeValue_Slider(   "Smoothness",     .1               ));
 	newInput(11, nodeValue_Slider(   "Intensity",       1               ));
-	// 23
+	// 24
 	
 	newOutput( 0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
@@ -39,7 +39,7 @@ function Node_Dotted(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		[ "Output",     true ],  0, 21, 22,  1, 
 		[ "Transform", false ], 14,  4,  5, 
 		[ "Pattern",   false ], 13,  2,  3, 15,  9, 10, 
-		[ "Render",    false ],  7,  6, 22, 16,  8, 17, 18, 19, 12, 11, 
+		[ "Render",    false ],  7,  6, 22, 16,  8, 17, [18, true], 23, -1, 19, 12, 11, 
 	];
 	
 	////- Nodes
@@ -79,6 +79,7 @@ function Node_Dotted(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 			var _cdot   = _data[ 8];
 			var _palt   = _data[17];
 			var _grad   = _data[18];
+			var _gradS  = _data[23];
 			var _text   = _data[19];
 			var _seed   = _data[20];
 			
@@ -117,6 +118,7 @@ function Node_Dotted(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 			shader_set_s( "texture",   _text   );
 			
 			shader_set_palette(_palt);
+			shader_set_f( "gradient_shift", _gradS );
 			_grad.shader_submit();
 			
 			draw_empty();

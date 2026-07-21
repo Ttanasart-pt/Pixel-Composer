@@ -25,16 +25,16 @@ function Node_Trail(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	newInput( 5, nodeValue_Bool( "Blend Color", true, "Blend color between two pixel smoothly."));
 	
 	////- =Rendering
-	newInput( 7, nodeValue_Gradient( "Color per Frame", gra_white    ));
+	newInput( 7, nodeValue_Gradient( "Color per Frame", gra_white    )).addShift(8);
 	newInput( 6, nodeValue_Curve(    "Alpha per Frame", CURVE_DEF_11 ));
-	// 8
+	// 9
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
 	input_display_list = [
 		[ "Surfaces",   true ],  0, 
 		[ "Trail",     false ],  1,  2,  3, 
-		[ "Rendering", false ],  7,  6, 
+		[ "Rendering", false ], [7, true],  8, -1, 6, 
 	];
 	
 	////- Node
@@ -54,6 +54,7 @@ function Node_Trail(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 			
 			var _alpha = getInputData( 6);
 			var _grad  = getInputData( 7);
+			var _gradS = getInputData( 8);
 		#endregion
 		
 		var cDep   = attrDepth();
@@ -90,7 +91,7 @@ function Node_Trail(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 			var prg = (i + 1) / famo;
 			
 			a1 = eval_curve_x(_alpha, prg);
-			c1 = _grad.eval(1 - prg)
+			c1 = _grad.eval(pfract(1 - prg + _gradS));
 			
 			preF = curR;
 			curF = curR == TOTAL_FRAMES - 1? 0 : curR + 1; 

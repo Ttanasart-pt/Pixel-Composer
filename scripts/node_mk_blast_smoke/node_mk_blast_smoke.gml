@@ -61,9 +61,9 @@ function Node_MK_Blast_Smoke(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	newInput(30, nodeValue_Curve(   "Shape",        CURVE_DEF_11 ));
 	
 		////- =/Color
-	newInput( 3, nodeValue_Gradient( "Color", gra_black_white ));
+	newInput( 3, nodeValue_Gradient( "Color", gra_black_white )).addShift(33);
 	newInput(10, nodeValue_Range(    "Level", [0,1]  ));
-	// 33
+	// 34
 	
 	newOutput( 0, nodeValue_Output( "Blast", VALUE_TYPE.struct, [] )).setCustomData(global.MKBLAST_JUNC);
 	newOutput( 1, nodeValue_Output( "Smoke", VALUE_TYPE.struct, [] )).setCustomData(global.MKBLAST_JUNC);
@@ -83,7 +83,7 @@ function Node_MK_Blast_Smoke(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 		[ "Decay",     false, 13 ], 17, 
 		[ "Render",        false ],  4, 11, 32, 
 			[ "/Shape",    false ], 12, 26, 27, 28, 29, 30, 
-			[ "/Color",    false ],  3, 10, 
+			[ "/Color",    false ], [3, true], 33, -1, 10, 
 	];
 	
 	////- Nodes
@@ -143,6 +143,7 @@ function Node_MK_Blast_Smoke(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 			var _lineS      = getInputData(30), _lineData  = new curveMap(_lineS, 32);
 			
 			var _color      = getInputData( 3);
+			var _colorShf   = getInputData(33);
 			var _level      = getInputData(10);
 			
 			random_set_seed(_seed);
@@ -174,7 +175,8 @@ function Node_MK_Blast_Smoke(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 			var _l = _flameLayer[i];
 			
 			var _layer  = new MKBlast_Layer();
-			_layer.colorize  = _color;
+			_layer.colorize   = _color;
+			_layer.color_shft = _colorShf;
 			
 			for( var j = 0, m = array_length(_l.flames); j < m; j++ ) {
 				var _flm = _l.flames[j];

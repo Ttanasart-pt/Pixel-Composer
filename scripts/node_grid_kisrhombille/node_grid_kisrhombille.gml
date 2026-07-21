@@ -17,15 +17,15 @@ function Node_Kisrhombille(_x, _y, _group = noone) : Node_Shader_Generator(_x, _
 	////- =Render
 	newInput(10, nodeValue_EScroll(  "Grouping",     0, [ "None", "3-6 Deltoidal", "Rhombile", "Triakis Triangular" ])).setShaderProp("group");
 	newInput( 9, nodeValue_EScroll(  "Render Type",  0, [ "Checker", "Random Color" ])).setShaderProp("type");
-	newInput( 7, nodeValue_Color(    "Color 1", ca_black )).setShaderProp("color1");
-	newInput( 8, nodeValue_Color(    "Color 2", ca_white )).setShaderProp("color2");
-	newInput(11, nodeValue_Gradient( "Colors",  gra_black_white )).setShaderProp("gradient");
-	// 13
+	newInput( 7, nodeValue_Color(    "Color 1", ca_black        )).setShaderProp("color1");
+	newInput( 8, nodeValue_Color(    "Color 2", ca_white        )).setShaderProp("color2");
+	newInput(11, nodeValue_Gradient( "Colors",  gra_black_white )).setShaderProp("gradient").addShift(13);
+	// 14
 	
 	input_display_list = [ 12, 
 		[ "Output",     true ],  0,  1,  2,  3, 
 		[ "Transform", false ],  4,  6,  5, 
-		[ "Render",    false ], 10,  9,  7,  8, 11, 
+		[ "Render",    false ], 10,  9,  7,  8, [11, true], 13, -1, 
 	];
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _params) { 

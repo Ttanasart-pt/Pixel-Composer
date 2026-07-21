@@ -23,9 +23,9 @@ function Node_Strand_Render(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	newInput(10, nodeValue_Float( "Scatter Range",  2     ));
 	
 	////- =Color
-	newInput(4, nodeValue_Gradient( "Random color",      gra_white ));
-	newInput(5, nodeValue_Gradient( "Color over length", gra_white )).setHotkeyAuto("C");
-	//// inputs 11
+	newInput(4, nodeValue_Gradient( "Random color",      gra_white )).addShift(11);
+	newInput(5, nodeValue_Gradient( "Color over length", gra_white )).setHotkeyAuto("C").addShift(12);
+	// 13
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
@@ -33,7 +33,7 @@ function Node_Strand_Render(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		[ "Output",   false    ],  0,
 		[ "Strand",   false    ],  1,  2,  3, 
 		[ "Scatter",  false, 9 ],  7, 10, 
-		[ "Color",    false    ],  4,  5, 
+		[ "Color",    false    ], [4, true], 11, [5, true], 11, 
 	];
 	
 	////- Node
@@ -76,8 +76,11 @@ function Node_Strand_Render(_x, _y, _group = noone) : Node(_x, _y, _group) const
 			var _chid  = getInputData( 7);
 			var _chRng = getInputData(10);
 			
-			var _cbas  = getInputData(4); _cbas.cache();
-			var _clen  = getInputData(5); _clen.cache();
+			var _cbas  = getInputData( 4); _cbas.cache();
+			var _cbshf = getInputData(11);
+			
+			var _clen  = getInputData( 5); _clen.cache();
+			var _clshf = getInputData(12);
 			
 			var _surf  = outputs[0].getValue();
 			    _surf  = surface_verify(_surf, _dim[0], _dim[1]);
@@ -114,7 +117,7 @@ function Node_Strand_Render(_x, _y, _group = noone) : Node(_x, _y, _group) const
 				var len = array_length(hair.points);
 				if(len <= 1) continue;
 				
-				var bld = _cbas.evalFast(random1D(_seed + _sedIndex++));
+				var bld = _cbas.evalFast(pfract(random1D(_seed + _sedIndex++) + _cbshf));
 				var st  = 1 / (len - 1);
 				var j   = 0;
 				var prg = 0;
@@ -123,7 +126,7 @@ function Node_Strand_Render(_x, _y, _group = noone) : Node(_x, _y, _group) const
 				oy = hair.points[0].y;
 				ot =  (_rndWidth? random1D(_seed + _sedIndex++, _tbas[0], _tbas[1]) : _tbas[0])
 					* (len_curve? eval_curve_x(_tlen, 0) : 1);
-				oc = colorMultiply(bld, _clen.evalFast(0));
+				oc = colorMultiply(bld, _clen.evalFast(pfract(0 + _clshf)));
 				prg += st;
 				j++;
 				
@@ -134,7 +137,7 @@ function Node_Strand_Render(_x, _y, _group = noone) : Node(_x, _y, _group) const
 					
 					nt =  (_rndWidth? random1D(_seed + _sedIndex++, _tbas[0], _tbas[1]) : _tbas[0])
 						* (len_curve? eval_curve_x(_tlen, prg) : 1);
-					nc = colorMultiply(bld, _clen.evalFast(prg));
+					nc = colorMultiply(bld, _clen.evalFast(pfract(prg + _clshf)));
 					
 					draw_line_width2_prim(ox, oy, nx, ny, ot, nt, 3, oc, nc);
 					

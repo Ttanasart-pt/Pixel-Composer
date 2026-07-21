@@ -49,8 +49,8 @@ function Node_MK_Smoke(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	newInput(27, nodeValue_Bool(    "Draw SDF",    false  ));
 	
 		////- =/Color
-	newInput(16, nodeValue_Gradient( "Base Color",      gra_white ));
-	newInput(17, nodeValue_Gradient( "Color Over Life", gra_white ));
+	newInput(16, nodeValue_Gradient( "Base Color",      gra_white )).addShift(37);
+	newInput(17, nodeValue_Gradient( "Color Over Life", gra_white )).addShift(38);
 	
 	////- =Animation
 	newInput(21, nodeValue_Bool(    "Anim",        false        ));
@@ -58,7 +58,7 @@ function Node_MK_Smoke(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	newInput(19, nodeValue_Range(   "Anim Range",  [1,1], true  ));
  	newInput(20, nodeValue_Range(   "Anim Speed",  [1,1], true  ));
 	newInput(24, nodeValue_Range(   "Anim Shift",  [0,0], true  ));
-	// 37
+	// 39
 	
 	newOutput(0, nodeValue_Output( "Surface Out", VALUE_TYPE.surface, noone ));
 	
@@ -73,7 +73,7 @@ function Node_MK_Smoke(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 		[ "Forces",      false     ], 25, 26, 
 			
 		[ "Render",      false     ], 15, 18, 23, 22, 27, 
-			[ "/Color",  false     ], 16, 17, 
+			[ "/Color",  false     ], [16, false], 37, [17, false], 38, 
 			
 		[ "Animation",   false, 21 ], 36, 19, 20, 24, 
 	];
@@ -139,8 +139,8 @@ function Node_MK_Smoke(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 			var _dRang = _data[22];
 			var _dSDF  = _data[27];
 			
-			var _gBase = _data[16]; _gBase.cache();
-			var _gLife = _data[17]; _gLife.cache();
+			var _gBase = _data[16], _gBaseS = _data[37]; _gBase.cache();
+			var _gLife = _data[17], _gLifeS = _data[38]; _gLife.cache();
 			
 			var _anim  = _data[21];
 			var _animR = _data[36];
@@ -222,7 +222,7 @@ function Node_MK_Smoke(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 				}
 				
 				var _thk   = random_range(_thks[0], _thks[1]);
-				var _cBase = _gBase.evalFast(random(1));
+				var _cBase = _gBase.evalFast(pfract(random(1) + _gBaseS));
 				var oc = _cBase, nc;
 				
 				var _aRang = random_range(_nRang[0], _nRang[1]);
@@ -278,7 +278,7 @@ function Node_MK_Smoke(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 					if(!_anim || (_dProg > 0 && _dProg < 1)) {
 						var _cProg = (_anim && _dRang)? _dProg : _prog;
 						
-						var _cLife = _gLife.evalFast(random(_cProg));
+						var _cLife = _gLife.evalFast(pfract(random(_cProg) + _gLifeS));
 						var cc = colorMultiply(_cBase, _cLife);
 						
 						var tt = _thk * mscale;

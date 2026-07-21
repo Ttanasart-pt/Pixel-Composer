@@ -37,13 +37,13 @@ function Node_MK_Flake(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	////- =Render
 	newInput(15, nodeValue_EScroll(  "Blend Mode",    0, [ "Normal", "Additive", "Maximum" ]   ));
 	newInput( 7, nodeValue_Range(    "Thickness",    [2,2], true )).setCurvable(10, CURVE_DEF_11);
-	newInput( 8, nodeValue_Gradient( "Colors",       gra_white   ));
-	newInput(21, nodeValue_Gradient( "Width Color",  gra_white   ));
+	newInput( 8, nodeValue_Gradient( "Colors",       gra_white   )).addShift(24);
+	newInput(21, nodeValue_Gradient( "Width Color",  gra_white   )).addShift(25);
 	newInput(19, nodeValue_Color(    "Mirror Shade", ca_white    ));
 	
 		////- =/Trim
 	newInput( 9, nodeValue_Slider(   "Trim",     0 ));
-	// 24
+	// 26
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
@@ -53,7 +53,7 @@ function Node_MK_Flake(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 		[ "Flakes",    false ],  3, 22,  4, 11,  5,  6,  
 		[ "Caps",      false ], 16, 18, 17, 20, 
 		[ "Spokes",    false ], 23, 13, 12, 
-		[ "Render",    false ], 15,  7, 10,  8, 21, 19, 
+		[ "Render",    false ], 15,  7, 10, [8, true], 24, -1, [21, true], 25, -1, 19, 
 			[ "/Trim", false ],  9, 
 	];
 	
@@ -90,8 +90,8 @@ function Node_MK_Flake(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 			
 			var _blnd   = _data[15];
 			var _thcks  = _data[ 7];
-			var _colrs  = _data[ 8];
-			var _colrw  = _data[21];
+			var _colrs  = _data[ 8], _colrs_shf = _data[24];
+			var _colrw  = _data[21], _colrw_shf = _data[25];
 			var _mirrC  = _data[19];
 			
 			var _trim   = _data[ 9];
@@ -112,7 +112,8 @@ function Node_MK_Flake(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 		surface_set_shader(temp_surface[0]);
 		
 			shader_set(sh_mk_flake_line);
-			shader_set_curve( "thick", _data[10], inputs[7] );
+			shader_set_cr( "thick", _data[10], inputs[7] );
+			shader_set_f(  "gradient_shift", _colrw_shf  );
 			shader_set_gradient( _colrw );
 			shader_reset();
 			
@@ -127,7 +128,7 @@ function Node_MK_Flake(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 			
 			var _len = _dim[1] * .5 * _size;
 			var  thk = random_range(_thcks[0], _thcks[1]);
-			var  cc  = _colrs.eval(0);
+			var  cc  = _colrs.eval(pfract(0 + _colrs_shf));
 			draw_set_color(cc);
 			
 			var cx0 = cx;
@@ -169,7 +170,7 @@ function Node_MK_Flake(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 				var by1 = by + lengthdir_y(len, dir);
 				
 				var thk = random_range(_thcks[0], _thcks[1]);
-				var clr = _colrs.eval(random(1));
+				var clr = _colrs.eval(pfract(random(1) + _colrs_shf));
 				
 				shader_set(sh_mk_flake_line);
 				draw_set_color(clr);

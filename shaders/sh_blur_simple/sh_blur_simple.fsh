@@ -1,5 +1,4 @@
 #pragma use(gradient)
-
 #region -- gradient -- [1777679826.681391]
 	#define GRADIENT_LIMIT 128
 	
@@ -141,8 +140,8 @@
 	}
 	
 #endregion -- gradient --
-#pragma use(sampler_simple)
 
+#pragma use(sampler_simple)
 #region -- sampler_simple -- [1765194569.6586206]
     uniform int  sampleMode;
     
@@ -200,7 +199,10 @@ uniform int gamma;
 uniform int overrideColor;
 uniform vec4 overColor;
 
-uniform int useGradient;
+uniform int   useGradient;
+uniform float gradient_shift;
+
+float pfract(in float f) { return fract(fract(f) + 1.); }
 
 float sampleMask() {
 	if(useMask == 0) return 1.;
@@ -251,7 +253,7 @@ void main() {
 	}
 	
 	if(useGradient == 1)
-		clr *= gradientEval(1. - weiTotal / totalWeight);
+		clr *= gradientEval(pfract(1. - weiTotal / totalWeight + gradient_shift));
 	
 	gl_FragColor = clr;
 }

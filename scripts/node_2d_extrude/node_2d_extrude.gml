@@ -29,7 +29,7 @@ function Node_2D_Extrude(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	newInput(13, nodeValue_Curve(    "Scale Modulate",    CURVE_DEF_11 ));
 	
 	////- =Render
-	newInput( 3, nodeValue_Gradient( "Color",         gra_white )).setHotkeyAuto("C").setPieMenu();
+	newInput( 3, nodeValue_Gradient( "Color",         gra_white )).addShift(20).setHotkeyAuto("C").setPieMenu();
 	newInput( 4, nodeValue_EScroll(  "Clone Color",    0, [ "None", "Multiply", "Additive" ] ));
 	newInput(10, nodeValue_Range(    "Depth Range",   [0,1]      ));
 	newInput(17, nodeValue_Bool(     "Draw Original", true       ));
@@ -39,7 +39,7 @@ function Node_2D_Extrude(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	newInput(14, nodeValue_Float(    "Width",     1        ));
 	newInput( 6, nodeValue_Color(    "Color",     ca_white ));
 	newInput(19, nodeValue_Slider(   "Intensity", 1        ));
-	// 20
+	// 21
 	
 	newOutput( 0, nodeValue_Output( "Surface Out",  VALUE_TYPE.surface, noone )).setDrawGroup(0);
 	newOutput( 1, nodeValue_Output( "Depth",        VALUE_TYPE.surface, noone )).setDrawGroup(0);
@@ -51,7 +51,7 @@ function Node_2D_Extrude(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	    [ "Extrude",   false    ],  1,  2,  8,  7, 18, 
 	    	[ "/Path", false    ], 15, 16, 
 		[ "Transform", false    ], 11, 12, 13, 
-	    [ "Render",    false    ],  3,  4, 10, 17, 
+	    [ "Render",    false    ], [3, true], 20, -1,  4, 10, 17, 
 	    [ "Highlight", false, 5 ], 14,  6, 19, 
     ];
 	
@@ -139,6 +139,7 @@ function Node_2D_Extrude(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 			var _scal  = _data[13];
 			
 		    var _grad  = _data[ 3];
+		    var _grdS  = _data[20];
 		    var _clne  = _data[ 4];
 		    var _deth  = _data[10];
 		    var _draw  = _data[17];
@@ -210,7 +211,9 @@ function Node_2D_Extrude(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 			shader_set_f( "shift",        _shft / _dim[0] );
 			shader_set_i( "wrap",         _wrap           );
 			
+			shader_set_f( "gradient_shift", _grdS );
 			_grad.shader_submit();
+			
 			shader_set_i( "cloneColor",     _clne );
 	        shader_set_i( "highlight",      _high );
 	        shader_set_f( "highlightWidth", _hgwd );

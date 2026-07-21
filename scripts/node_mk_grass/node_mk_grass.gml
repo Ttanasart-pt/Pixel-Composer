@@ -35,19 +35,19 @@ function Node_MK_Grass(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	////- =Render
 	newInput(23, nodeValue_Bool(     "Draw Original",  true             ));
 	newInput(12, nodeValue_EScroll(  "Render Type",    0, [ "Gradient", "Sample Multiply", "Sample Add" ] ));
-	newInput(13, nodeValue_Gradient( "Colors",         gra_black_white  ));
+	newInput(13, nodeValue_Gradient( "Colors",         gra_black_white  )).addShift(28);
 	newInput(16, nodeValue_Slider(   "Color Variance", 0                ));
 	
 	////- =Ground
 	newInput(18, nodeValue_Bool(     "Fill Ground",    false    ));
 	newInput(19, nodeValue_Color(    "Ground",         ca_black ));
-	// 27
+	// 29
 	
 	input_display_list = [ s_MKFX, 1, 0, 
 		[ "Source",  false     ],  2,  3,  4,  5,  6, 24, 25, 
 		[ "Shape",   false     ],  7, 22,  8, 26, 17, 20, 21, 27, 
 		[ "Scatter", false     ],  9, 11, 14, 15,
-		[ "Render",  false     ], 23, 12, 13, 16, 
+		[ "Render",  false     ], 23, 12, [13, true], 28, -1, 16, 
 		[ "Ground",  false, 18 ], 19, 
 	];
 	
@@ -103,6 +103,7 @@ function Node_MK_Grass(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 			var _drawBg   = _data[23];
 			var _rtype    = _data[12];
 			var _color    = _data[13];
+			var _color_sh = _data[28];
 			var _color_vr = _data[16];
 			var _gnd_fil  = _data[18];
 			var _gnd_clr  = _data[19];
@@ -238,7 +239,6 @@ function Node_MK_Grass(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 				shader_set_f("seed",          _seed);
 				shader_set_2("dimension",     _dim);
 				shader_set_2("grassSize",     _size);
-				shader_set_f("colorVariance", _color_vr);
 				shader_set_f("density",       _dens);
 				shader_set_f("distribution",  _dist);
 				shader_set_f("expand",        _expand);
@@ -248,6 +248,8 @@ function Node_MK_Grass(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 				shader_set_i("groundFill",    _gnd_fil);
 				shader_set_c("groundColor",   _gnd_clr);
 				
+				shader_set_f("colorVariance",  _color_vr);
+				shader_set_f("gradient_shift", _color_sh);
 				_color.shader_submit();
 				
 				if(useSurf) draw_surface_safe(_surf); 
@@ -362,7 +364,6 @@ function Node_MK_Grass(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 					shader_set_f( "seed",          _seed     );
 					shader_set_2( "dimension",     _dim      );
 					shader_set_2( "grassSize",     _size     );
-					shader_set_f( "colorVariance", _color_vr );
 					shader_set_f( "density",       _dens     );
 					shader_set_f( "expand",        _expand   );
 					
@@ -373,6 +374,8 @@ function Node_MK_Grass(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 					shader_set_i( "renderType",    _rtype    );
 					shader_set_i( "drawBG",        _drawBg   );
 					
+					shader_set_f( "colorVariance", _color_vr );
+					shader_set_f("gradient_shift", _color_sh );
 					_color.shader_submit();
 					
 					if(useSurf) draw_surface_safe(_surf); 

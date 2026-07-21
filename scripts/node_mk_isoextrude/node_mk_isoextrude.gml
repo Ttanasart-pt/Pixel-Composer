@@ -33,8 +33,8 @@ function Node_MK_Isoextrude(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	newInput(16, nodeValue_Curve(   "Profile",     CURVE_DEF_11 ));
 	
 	////- =Rendering
-	newInput( 2, nodeValue_Gradient( "Blending", gra_white ));
-	// input 20
+	newInput( 2, nodeValue_Gradient( "Blending", gra_white )).addShift(20);
+	// 21
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	newOutput(1, nodeValue_Output("Depth",       VALUE_TYPE.surface, noone));
@@ -46,7 +46,7 @@ function Node_MK_Isoextrude(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 		[ "Transform",   false     ],  7,  8, 
 		[ "Hole",         true, 13 ], 12, 10, 11, 
 		[ "Profile",      true, 15 ], 16, 
-		[ "Rendering",   false     ],  2, 
+		[ "Rendering",   false     ], [2, true], 20, 
 	];
 	
 	////- Nodes
@@ -89,6 +89,7 @@ function Node_MK_Isoextrude(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 			var _profile = _data[16], _pCurve = undefined; 
 			
 			var _colr    = _data[ 2]; _colr.cache(); 
+			var _colrShf = _data[20]; 
 			
 			inputs[10].setVisible(_hUse, _hUse);
 			inputs[11].setVisible(_hUse, _hUse);
@@ -253,7 +254,7 @@ function Node_MK_Isoextrude(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 				
 				shader_set_f("curDepth", ii);
 				shader_set_f("scale",    _pUse? _pCurve.get(_rat) : 1);
-				draw_surface_ext(temp_surface[0], xx, yy, 1, 1, 0, _colr.evalFast(_rat), 1);
+				draw_surface_ext(temp_surface[0], xx, yy, 1, 1, 0, _colr.evalFast(pfract(_rat + _colrShf)), 1);
 				
 				xx += dx;
 				yy += dy;

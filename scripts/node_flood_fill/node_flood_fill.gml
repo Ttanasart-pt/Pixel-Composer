@@ -35,8 +35,8 @@ function Node_Flood_Fill(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	
 		////- =/Gradient
 	newInput(13, nodeValue_Bool(    "Fill Gradient",    false            ));
-	newInput(14, nodeValue_Gradient("Gradient",         gra_black_white  ));
-	// 24
+	newInput(14, nodeValue_Gradient("Gradient",         gra_black_white  )).addShift(24);
+	// 25
 	
 	newOutput( 0, nodeValue_Output( "Surface Out", VALUE_TYPE.surface, noone ));
 	newOutput( 1, nodeValue_Output( "Fill Mask",   VALUE_TYPE.surface, noone ));
@@ -48,7 +48,7 @@ function Node_Flood_Fill(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 		
 		[ "Rendering", false ],  5, 10, 19, 
 			[ "/Background", false, 15 ], 16, 
-			[ "/Gradient",   false, 13 ], 14, 
+			[ "/Gradient",   false, 13 ], [14, true], 24, 
 	];
 	
 	////- Node
@@ -92,6 +92,7 @@ function Node_Flood_Fill(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 			
 			var _ugrad = _data[13];
 			var _grad  = _data[14];
+			var _gradS = _data[24];
 			
 			inputs[ 4].setVisible(_mode == 0);
 			
@@ -190,8 +191,9 @@ function Node_Flood_Fill(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 			shader_set_i( "blend",  _bnd  );
 			shader_set_i( "invert", _invt );
 			
-			shader_set_i( "useGrad", _ugrad );
-			shader_set_gradient(     _grad  );
+			shader_set_i( "useGrad",        _ugrad );
+			shader_set_f( "gradient_shift", _gradS );
+			shader_set_gradient( _grad  );
 			
 			shader_set_i( "fillBG",  _bgFil );
 			shader_set_c( "bgColor", _bgCol );

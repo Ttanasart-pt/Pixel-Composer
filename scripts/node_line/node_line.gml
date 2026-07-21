@@ -91,12 +91,12 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	newInput(61, nodeValue_Range(    "Offset",     [0,0] ));
 	
 	////- =Color
-	newInput(10, nodeValue_Gradient( "Color over Length",    gra_white )).setPieMenu();
-	newInput(24, nodeValue_Gradient( "Random Blend",         gra_white ));
+	newInput(10, nodeValue_Gradient( "Color over Length",    gra_white )).addShift(64).setPieMenu();
+	newInput(24, nodeValue_Gradient( "Random Blend",         gra_white )).addShift(65);
 	newInput(15, nodeValue_Bool(     "Span Color over Path", false     )).setTooltip("Apply the full 'color over length' to the trimmed path.");
 	
 		////- =/Weight
-	newInput(37, nodeValue_Gradient( "Color Weight",         gra_white ));
+	newInput(37, nodeValue_Gradient( "Color Weight",         gra_white )).addShift(66);
 	newInput(38, nodeValue_Vec2(     "Color Weight Range",   [0,1]     ));
 	
 		////- =/Texture
@@ -108,7 +108,7 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	
 	////- =Render
 	newInput(34, nodeValue_EScroll( "SSAA", 0, [ "None", "2x", "4x", "8x" ] ));
-	// Inputs 64
+	// 67
 	
 	input_display_list = [ 39, 
 		[ "Output",         true     ],  0, 30, 31, 16, 58, 
@@ -125,8 +125,8 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		[ "Line Cap",      false     ], 13, 43, 
 			[ "/Textured", false     ], 40, 41, 42, 60, 61, 
 			
-		[ "Color",         false     ], 10, 24, 15, 
-			[ "/Weight",    true     ], 37, 38, 
+		[ "Color",         false     ], [10, true], 64, -1, [24, true], 65, -1, 15, 
+			[ "/Weight",    true     ], [37, true], 66, -1, 38, 
 			[ "/Texture",   true     ], 18, 21, 22, 23, 29, 
 		
 		[ "Render",         true     ], 34, 
@@ -240,10 +240,10 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 			var _wigTrmR  = _data[56];
 			var _wigTrmC  = _data[57];
 			
-			var _color    = _data[10];
-			var _colb     = _data[24];
+			var _color    = _data[10], _color_shf  = _data[64];
+			var _colb     = _data[24], _colb_shf   = _data[65];
 			var _colP     = _data[15];
-			var _wg2clr   = _data[37];
+			var _wg2clr   = _data[37], _wg2clr_shf = _data[66];
 			var _wg2clrR  = _data[38];
 			
 			var _tex      = _data[18];
@@ -783,7 +783,7 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 				
 				draw_primitive_begin_texture(pr_trianglelist, _texId);
 				
-				var _col_base = dat == noone? gradientEval(_colb, random(1)) : dat.color;
+				var _col_base = dat == noone? gradientEval(_colb, pfract(random(1) + _colb_shf)) : dat.color;
 				_ow = 1;
 				
 				var _stx = 0, _sty = 0, _sta = 0;
@@ -818,8 +818,8 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 					
 					_np = _colP? prog : prgc;
 					_nc = _col_base;
-					_nc = colorMultiply(_nc, gradientEval(_color, _np));
-					_nc = colorMultiply(_nc, gradientEval(_wg2clr, (_ww - _wg2clrR[0]) / _wg2clrRng));
+					_nc = colorMultiply(_nc, gradientEval(_color,  pfract(min(.999, _np) + _color_shf)));
+					_nc = colorMultiply(_nc, gradientEval(_wg2clr, pfract(min(.999, (_ww - _wg2clrR[0]) / _wg2clrRng) + _wg2clr_shf)));
 					_nd = _dir;
 					
 					if(_cappS == 0) {
@@ -1071,7 +1071,7 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 					var pxs = [];
 					var dat = array_safe_get_fast(_pathData, i, noone);
 					
-					var _col_base = dat == noone? gradientEval(_colb, random(1)) : dat.color;
+					var _col_base = dat == noone? gradientEval(_colb, pfract(random(1) + _colb_shf)) : dat.color;
 					
 					for( var j = 0, m = array_length(points); j < m; j++ ) {
 						var p0   = points[j];

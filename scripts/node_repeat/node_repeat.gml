@@ -96,16 +96,16 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	
 		////- =/Color
 	newInput(48, nodeValue_Palette(  "Color per Index",   [ca_white] ));
-	newInput(14, nodeValue_Gradient( "Gradient Over Copy", gra_white )).setMappable(30);
+	newInput(14, nodeValue_Gradient( "Gradient Over Copy", gra_white )).setMappable(30).addShift(54);
 	newInput(47, nodeValue_Float(    "Gradient Scale",     1         ));
-	newInput(23, nodeValue_Gradient( "Random Color",       gra_white ));
+	newInput(23, nodeValue_Gradient( "Random Color",       gra_white )).addShift(53);
 	
 	////- =Deprecated
 	newInput(28, nodeValue_Bool(     "Wrap Index",         true         ));
 	newInput(24, nodeValue_Vec2(     "Animator scale",     [0,0]        ));
 	newInput(25, nodeValue_Curve(    "Animator falloff",   CURVE_DEF_10 ));
 	newInput(27, nodeValue_Color(    "Animator blend",     ca_white     ));
-	// 53
+	// 55
 	
 	newOutput( 0, nodeValue_Output( "Surface Out", VALUE_TYPE.surface, noone ));
 	newOutput( 1, nodeValue_Output( "Atlas Data",  VALUE_TYPE.atlas,   []    )).setVisible(false).rejectArrayProcess();
@@ -221,7 +221,7 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		[ "Rotation",     false ], 33,  5, 20, 
 		[ "Scale",        false ], 29,  6, 10, 41, 42, 21, 
 		[ "Render",       false ], 43, 46, 34, 
-			[ "/Color",   false ], 48, 14, 30,  47, 23, 
+			[ "/Color",   false ], 48, [14, true], 30, 54, 47, [23, true], 53, -1, 
 			
 		new Inspector_Spacer(8, true),
 		new Inspector_Spacer(2, false, false),
@@ -452,9 +452,11 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 			var _palCopy      = _data[48], _palCopyLen = array_length(_palCopy);
 			var _grad         = _data[14];
 			var _grad_map     = _data[30];
+			var _grad_shf     = _data[54];
 			var _grad_range   = _data[31], _grad_use_map = inputs[14].attributes.mapped && is_surface(_grad_map)
 			var _grad_scal    = _data[47];
 			var _cran         = _data[23];
+			var _cshf         = _data[53];
 			
 			var _arr    = _data[16];
 			var _sed    = _data[17];
@@ -711,10 +713,10 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 					
 				cc = grad_sampler.getPixel(_grad_sx, _grad_sy);
 			} else 
-				cc = _grad.evalLoopFast(_prg * _grad_scal);
+				cc = _grad.evalLoopFast(pfract(_prg * _grad_scal + _grad_shf));
 			
 			cc = colorMultiply(cc, _palCopy[i % _palCopyLen]);
-			cc = colorMultiply(cc, _cran.evalFast(random(1)));
+			cc = colorMultiply(cc, _cran.evalFast(pfract(random(1) + _cshf)));
 			
 			minx = min(minx, posx);
 			miny = min(miny, posy);

@@ -12,35 +12,35 @@ function Node_Path_Wave(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	newInput(5, nodeValueSeed());
 	
 	////- =Path
-	newInput( 0, nodeValue_Path( "Path" ));
-	newInput(11, nodeValue_Range(    "Range",       [0,1] ));
-	newInput(12, nodeValue_Bool(     "Clamp Curve", false ));
+	newInput( 0, nodeValue_Path(  "Path"               ));
+	newInput(11, nodeValue_Range( "Range",       [0,1] ));
+	newInput(12, nodeValue_Bool(  "Clamp Curve", false ));
 	
 	////- =Wave
 	newInput( 1, nodeValue_Range( "Frequency", [4,4], { linked : true }));
-	newInput( 2, nodeValue_Range( "Amplitude", [4,4], { linked : true })).setCurvable(9);
-	newInput( 3, nodeValue_Range( "Shift",     [0,0], { linked : true }));
+	newInput( 2, nodeValue_Range( "Amplitude", [4,4], { linked : true })).setCurvable(9).addShift(17);
+	newInput( 3, nodeValue_Range( "Phase",     [0,0], { linked : true }));
 	
 	newInput( 4, nodeValue_EButton( "Mode",    0, [ "Zigzag", "Sine", "Square" ]  ));
 	newInput(10, nodeValue_EButton( "Post Fn", 0, [ "None", "Absolute", "Clamp" ] ));
 	
 	////- =Iterative
 	newInput(13, nodeValue_Int(    "Iteration",   1  ));
-	newInput(14, nodeValue_Float(  "Itr. Freq",   2  ));
-	newInput(15, nodeValue_Slider( "Itr. Ampli", .7  ));
-	newInput(16, nodeValue_Float(  "Itr. Shift",  0  ));
+	newInput(14, nodeValue_Float(  "Freqency",    2  )).setInternalName("itr_frequency");
+	newInput(15, nodeValue_Slider( "Amplitude",  .7  )).setInternalName("itr_ampltude");
+	newInput(16, nodeValue_Float(  "Shift",       0  )).setInternalName("itr_shift");
 	
 	////- =Wiggle
 	newInput( 6, nodeValue_Bool(  "Wiggle",           false  ));
 	newInput( 7, nodeValue_Range( "Wiggle Amplitude", [-2,2] ));
 	newInput( 8, nodeValue_Float( "Wiggle Frequency",  8     ));
-	// input 17
+	// 18
 	
 	newOutput(0, nodeValue_Output("Path", VALUE_TYPE.pathnode, noone));
 	
 	input_display_list = [ 5, 
 		[ "Path",       true    ],  0, 11, 12, 
-		[ "Wave",      false    ],  1,  2,  9,  3,  4, 10, 
+		[ "Wave",      false    ],  1,  [2, true],  9, 17, -1,  3,  4, 10, 
 		[ "Iterative", false    ], 13, 14, 15, 16, 
 		[ "Wiggle",     true, 6 ],  7,  8, 
 	];
@@ -69,6 +69,8 @@ function Node_Path_Wave(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			
 		wig_map   = noone;
 		amp_curve = noone;
+		ampS      = 0;
+		
 		p  = new __vec2P();
 		p0 = new __vec2P();
 		p1 = new __vec2P();
@@ -196,7 +198,7 @@ function Node_Path_Wave(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			
 			if(amp_curve) {
 				var _crat = range_clamp? (_rat - range[0]) / (range[1] - range[0]) : _rat;
-				_prg *= amp_curve.get(_crat);
+				_prg *= amp_curve.get(frac(frac(_crat + ampS) + 1));
 			}
 			
 			out.x = p.x + lengthdir_x(_amp * _prg, dir);
@@ -226,16 +228,17 @@ function Node_Path_Wave(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		_outData.range      = _data[11];
 		_outData.range_clamp= _data[12];
 		
-		_outData.fre  = _data[1];
-		_outData.amp  = _data[2]; _outData.amp_curve = new curveMap(_data[9], 128);
-		_outData.shf  = _data[3];
+		_outData.fre  = _data[ 1];
+		_outData.amp  = _data[ 2]; _outData.amp_curve = new curveMap(_data[9], 128);
+		_outData.ampS = _data[17];
+		_outData.shf  = _data[ 3];
 		
 		_outData.mode = _data[ 4];
 		_outData.post = _data[10];
 		
-		_outData.wig  = _data[6];
-		_outData.wigs = _data[7];
-		_outData.wigf = _data[8];
+		_outData.wig  = _data[ 6];
+		_outData.wigs = _data[ 7];
+		_outData.wigf = _data[ 8];
 		
 		_outData.itr    = _data[13];
 		_outData.itrFre = _data[14];

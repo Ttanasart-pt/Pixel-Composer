@@ -65,13 +65,13 @@ function Node_MK_Blast_Particle(_x, _y, _group = noone) : Node(_x, _y, _group) c
 	newInput(35, nodeValue_Curve(   "Shape",        CURVE_DEF_11 ));
 	
 		////- =/Color
-	newInput(17, nodeValue_Gradient( "Color", new gradientObject([cola(c_red), cola(c_yellow), cola(c_white)]) ));
+	newInput(17, nodeValue_Gradient( "Color", new gradientObject([cola(c_red), cola(c_yellow), cola(c_white)]) )).addShift(38);
 	newInput(18, nodeValue_Range(    "Level", [0,1]  ));
 	
 		////- =/Perspective
 	newInput(19, nodeValue_Vec2(  "View Origin", [.5,.5] )).setUnitSimple();
 	newInput(20, nodeValue_Range( "Perspective", [2,2]   ));
-	// 38
+	// 39
 	
 	newOutput( 0, nodeValue_Output( "Blast", VALUE_TYPE.struct, [] )).setCustomData(global.MKBLAST_JUNC);
 	
@@ -90,7 +90,7 @@ function Node_MK_Blast_Particle(_x, _y, _group = noone) : Node(_x, _y, _group) c
 		
 		[ "Render",           false ], 16, 37, 
 			[ "/Shape",       false ], 15, 31, 32, 33, 34, 35, 
-			[ "/Color",       false ], 17, 18, 
+			[ "/Color",       false ], [17, true], 38, -1, 18, 
 			[ "/Perspective", false ], 20, 21, 
 	];
 	
@@ -157,8 +157,9 @@ function Node_MK_Blast_Particle(_x, _y, _group = noone) : Node(_x, _y, _group) c
 			var _lineW   = getInputData(34);
 			var _lineS   = getInputData(35), _lineData  = new curveMap(_lineS, 32);
 			
-			var _color   = getInputData(17);
-			var _level   = getInputData(18);
+			var _color    = getInputData(17);
+			var _colorShf = getInputData(38);
+			var _level    = getInputData(18);
 			
 			var _vieworg = getInputData(19);
 			var _perspec = getInputData(20);
@@ -186,7 +187,8 @@ function Node_MK_Blast_Particle(_x, _y, _group = noone) : Node(_x, _y, _group) c
 		}
 		
 		if(IS_FIRST_FRAME) mainLayer = new MKBlast_Layer();
-		mainLayer.colorize  = _color;
+		mainLayer.colorize   = _color;
+		mainLayer.color_shft = _colorShf;
 		
 		for( var i = 0, n = array_length(mainLayer.flames); i < n; i++ )
 			mainLayer.flames[i].life++;

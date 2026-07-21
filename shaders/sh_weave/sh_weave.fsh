@@ -337,6 +337,7 @@ uniform vec4 color2;
 uniform vec4 color3;
 
 uniform float shadeSpan;
+uniform float gradient_shift;
 
 uniform float shading;
 uniform vec4  shadeColor;
@@ -367,6 +368,8 @@ bool getWeaveAxis(in vec2 wIndex) {
 	
 	return ax;
 }
+
+float pfract(in float f) { return fract(fract(f) + 1.); }
 
 void main() {
 	float ang = radians(rotation);
@@ -401,7 +404,7 @@ void main() {
 		if(cax) cid.y = 0.;
 		else    cid.x = 0.;
 		
-		res = gradientEval(frandom(cid));
+		res = gradientEval(pfract(frandom(cid) + gradient_shift));
 	}
 	
 	if(ax) {
@@ -440,6 +443,5 @@ void main() {
 		}
 	}
 	
-	// gl_FragColor = vec4(wUV, 0., 1.);
 	gl_FragColor = res;
 }

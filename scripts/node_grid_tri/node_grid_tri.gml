@@ -22,12 +22,12 @@ function Node_Grid_Tri(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	////- =Render
 	newInput( 8, nodeValue_EScroll( "Render Type",  0, ["Colored tile", "Height map", "Texture grid", "Texture sample"]));
 	newInput( 9, nodeValueSeed());
-	newInput( 5, nodeValue_Gradient(     "Tile Color", gra_white )).setMappable(17);
-	newInput( 6, nodeValue_Color(        "Gap Color",  ca_black ));
-	newInput( 7, nodeValue_Surface(      "Texture" ));
-	newInput(21, nodeValue_Bool(         "Use Texture Dimension", false ));
-	newInput(10, nodeValue_Bool(         "Anti-aliasing",         false ));
-	newInput(20, nodeValue_Slider_Range( "Level",                 [0,1] ));
+	newInput( 5, nodeValue_Gradient( "Tile Color", gra_white )).setMappable(17).addShift(27);
+	newInput( 6, nodeValue_Color(    "Gap Color",  ca_black  ));
+	newInput( 7, nodeValue_Surface(  "Texture"               ));
+	newInput(21, nodeValue_Bool(     "Use Texture Dimension", false ));
+	newInput(10, nodeValue_Bool(     "Anti-aliasing",         false ));
+	newInput(20, nodeValue_SliRange( "Level",                 [0,1] ));
 	
 	////- =Texture Transform
 	newInput(14, nodeValue_Bool(       "Truchet",         false           ));
@@ -36,12 +36,12 @@ function Node_Grid_Tri(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	newInput(19, nodeValue_RotRange(   "Random Angle",    [0,0]           ));
 	newInput(26, nodeValue_Vec2_Range( "Random Scale",    [1,1,1,1], true ));
 	newInput(16, nodeValue_Slider(     "Flip Threshold",  .5              ));
-	// input 27
+	// input 28
 	
 	input_display_list = [
-		[ "Output",  false ], 0, 23, 24, 22, 
-		[ "Pattern", false ], 1, 4, 13, 2, 11, 3, 12, 
-		[ "Render",	 false ], 8, 9, 5, 17, 6, 7, 21, 10, 20, 
+		[ "Output",           false    ],  0, 23, 24, 22, 
+		[ "Pattern",          false    ],  1,  4, 13,  2, 11,  3, 12, 
+		[ "Render",	          false    ],  8,  9, [5, true], 17, 27, -1,  6,  7, 21, 10, 20, 
 		[ "Texture Transform", true, 14], 15, 25, 19, 26, 16, 
 	];
 	
@@ -122,6 +122,7 @@ function Node_Grid_Tri(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 			shader_set_4( "textureScale",     _data[26] );
 			shader_set_f( "textureFlip",      _data[16] );
 			
+			shader_set_f( "gradient_shift",   _data[27] );
 			shader_set_gradient(_data[5], _data[17], _data[18], inputs[5]);
 			
 			if(is_surface(_sam))	draw_surface_stretched_safe(_sam, 0, 0, _dim[0], _dim[1]);

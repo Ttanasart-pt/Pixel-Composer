@@ -40,6 +40,7 @@ function smoothstep_bounce(t) {
 	return 1 + c3 * power(t - 1, 3) + c1 * power(t - 1, 2);
 }
 
+function pfract(_t) { return frac(frac(_t) + 1); }
 
 function min_index() {
 	var _min = infinity;

@@ -1,5 +1,4 @@
 #pragma use(uv)
-
 #region -- uv -- [1779523757.7465837]
     uniform sampler2D uvMap;
     uniform int   useUvMap;
@@ -29,8 +28,8 @@
         return vtx;
     }
 #endregion -- uv --
-#pragma use(gradient)
 
+#pragma use(gradient)
 #region -- gradient -- [1777679826.681391]
 	#define GRADIENT_LIMIT 128
 	
@@ -172,9 +171,7 @@
 	}
 	
 #endregion -- gradient --
-//
-// Simple passthrough fragment shader
-//
+
 varying vec2 v_vTexcoord;
 varying vec4 v_vColour;
 
@@ -203,6 +200,9 @@ uniform vec4  gapCol;
 uniform int   gradient_use;
 uniform vec2  level;
 
+uniform float gradient_shift;
+
+float pfract (in float f) { return fract(fract(f) + 1.); }
 float random (in vec2 st) { return fract(sin(dot(st.xy + vec2(85.456034, 64.54065), vec2(12.9898, 78.233))) * (43758.5453123 + seed) ); }
 
 float sdLine(vec2 a, vec2 b, float r, vec2 p){
@@ -318,7 +318,7 @@ void main() {
 	
 	if(mode == 0) {
 		vec2 coordw = fract(fract(coord / sca) + 1.);
-		colr = gradientEval(random(coordw));
+		colr = gradientEval(pfract(random(coordw) + gradient_shift));
 		
 	} else if(mode == 1) {
 		dist = (dist - level.x) / (level.y - level.x);

@@ -214,6 +214,9 @@ uniform vec4  color1;
 
 uniform vec4  palette[PALETTE_LIMIT];
 uniform int   paletteAmount;
+uniform float gradient_shift;
+
+float pfract(in float f) { return fract(fract(f) + 1.); }
 
 float random (in vec2 st) { return fract(sin(dot(st.xy, vec2(12.9898, 78.233))) * (seed + 43758.5453123)); }
 
@@ -286,6 +289,8 @@ void main() {
 		}
 		
 	} else if(coloring == 2) {
-		gl_FragColor = gradientEval(random(vec2(_s > rat? slot : slot + 1.)));
+		gl_FragColor = gradientEval(
+			pfract(random(vec2(_s > rat? slot : slot + 1.)) + gradient_shift)
+		);
 	}
 } 

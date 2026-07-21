@@ -1,5 +1,4 @@
 #pragma use(gradient)
-
 #region -- gradient -- [1777679826.681391]
 	#define GRADIENT_LIMIT 128
 	
@@ -148,8 +147,11 @@ varying vec4 v_vColour;
 uniform sampler2D depthBase;
 uniform sampler2D depth;
 
-uniform vec2 dimension;
-uniform int  useDepth;
+uniform vec2  dimension;
+uniform int   useDepth;
+uniform float gradient_shift;
+
+float pfract(in float f) { return fract(fract(f) + 1.); }
 
 void main() {
 	vec4  v = texture2D(gm_BaseTexture, v_vTexcoord); 
@@ -168,7 +170,7 @@ void main() {
 		return; 
 	}
 	
-	vec4 colr    = gradientEval(v.r);
+	vec4 colr    = gradientEval(pfract(min(.999, v.r) + gradient_shift));
 	     colr.a *= v.a;
 	gl_FragColor = colr;
 }

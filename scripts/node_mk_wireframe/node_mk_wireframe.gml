@@ -21,8 +21,8 @@ function Node_MK_WireFrame(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	newInput( 6, nodeValue_Color( "Front Color",    ca_white  ));
 	newInput(10, nodeValue_Color( "Back Color",     ca_white  ));
 	newInput( 8, nodeValue_Float( "Side Thickness", 1         ));
-	newInput( 9, nodeValue_Gradient( "Side Color",  gra_white ));
-	// 14
+	newInput( 9, nodeValue_Gradient( "Side Color",  gra_white )).addShift(14);
+	// 15
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
@@ -30,7 +30,7 @@ function Node_MK_WireFrame(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 		[ "Output",    false ],  0,
 		[ "Path",      false ],  1,  2,  7,  
 		[ "Thickness", false ],  3,  4, 11, 12, 13, 
-		[ "Render",    false ],  5,  6, 10,  8,  9, 
+		[ "Render",    false ],  5,  6, 10,  8, [9, true], 14, 
 	];
 	
 	////- Nodes
@@ -70,7 +70,9 @@ function Node_MK_WireFrame(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 			var _Fcol = _data[ 6];
 			var _Bcol = _data[10];
 			var _Tthk = _data[ 8];
-			var _Tgrd = _data[ 9]; _Tgrd.cache();
+			
+			var _Tgrd  = _data[ 9]; _Tgrd.cache();
+			var _TgrdS = _data[14];
 			
 			if(!is_path(_path) || _samp < 2) return _outSurf; 
 		#endregion
@@ -139,8 +141,8 @@ function Node_MK_WireFrame(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 				var _ofx1 = lerp(bofx, ofx, _t1);
 				var _ofy1 = lerp(bofy, ofy, _t1);
 				
-				var oc = _Tgrd.evalFast(_t0);
-				var nc = _Tgrd.evalFast(_t1);
+				var oc = _Tgrd.evalFast(pfract(_t0 + _TgrdS));
+				var nc = _Tgrd.evalFast(pfract(_t1 + _TgrdS));
 				
 				for( var i = 0; i <= _samp; i += _wstp ) {
 					var pp = _points[i];

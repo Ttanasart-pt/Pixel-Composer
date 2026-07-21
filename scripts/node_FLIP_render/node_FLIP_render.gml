@@ -22,22 +22,22 @@ function Node_FLIP_Render(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	newInput( 9, nodeValue_SliRange( "Alpha",           [1,1] ));
 	
 	////- =Effect
-	newInput(11, nodeValue_Gradient( "Color Over Velocity", gra_white));
-	newInput(12, nodeValue_Range(    "Velocity Map",        [0,10] ));
-	newInput( 2, nodeValue_Range(    "Lifespan",            [0, 0], { linked : true } ));
+	newInput(11, nodeValue_Gradient( "Color Over Velocity", gra_white    )).addShift(15);
+	newInput(12, nodeValue_Range(    "Velocity Map",        [0,10]       ));
+	newInput( 2, nodeValue_Range(    "Lifespan",            [0, 0], true ));
 	
 	////- =Post Processing
 	newInput( 8, nodeValue_Bool(   "Additive",        true ));
 	newInput( 7, nodeValue_Bool(   "Threshold",       true ));
 	newInput( 1, nodeValue_Slider( "Merge threshold", 0.75 ));
-	// input 15
+	// input 16
 	
 	newOutput(0, nodeValue_Output("Rendered", VALUE_TYPE.surface, noone));
 	
 	input_display_list = [ 5, 
 		[ "Domain",          false ],  0, 13, 
 		[ "Rendering",       false ],  6,  3, 10, 14,  4,  9, 
-		[ "Effect",          false ], 11, 12,  2, 
+		[ "Effect",          false ], 11, [12, true], 15, -1,  2, 
 		[ "Post Processing", false ],  8,  7,  1, 
 	];
 	
@@ -89,7 +89,7 @@ function Node_FLIP_Render(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 			var _obs  = getInputData( 4);
 			var _alp  = getInputData( 9);
 			
-			var _cvl  = getInputData(11); _cvl.cache();
+			var _cvl  = getInputData(11), _cvlShf = getInputData(15);
 			var _vlr  = getInputData(12);
 			var _vap  = getInputData( 2);
 			
@@ -104,6 +104,8 @@ function Node_FLIP_Render(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 			inputs[14].setVisible(_typ == 1);
 			
 			inputs[ 1].setVisible(_typ == 0 && _thr);
+			
+			_cvl.cache();
 		#endregion
 		
 		if(!PROJECT.animator.is_playing && recoverCache()) return;
@@ -178,7 +180,7 @@ function Node_FLIP_Render(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 						var _vel  = sqrt(_sx * _sx + _sy * _sy);
 						var _vmap = (_vel - _vlr[0]) / _vMapRange;
 						    _vmap = power(clamp(_vmap, 0, 1), 5);
-						_cc   = _cvl.evalFast(_vmap);
+						_cc   = _cvl.evalFast(pfract(_vmap + _cvlShf));
 					}
 					
 					if(_useSpr) {
@@ -222,7 +224,7 @@ function Node_FLIP_Render(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 							var _vel  = sqrt(_dx * _dx + _dy * _dy);
 							var _vmap = (_vel - _vlr[0]) / _vMapRange;
 							    _vmap = power(clamp(_vmap, 0, 1), 5);
-							_cc   = _cvl.evalFast(_vmap);
+							_cc   = _cvl.evalFast(pfract(_vmap + _cvlShf));
 						}
 						
 						_nx -= _padd;

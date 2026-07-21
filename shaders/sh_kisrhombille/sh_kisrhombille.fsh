@@ -1,5 +1,4 @@
 #pragma use(sampler_simple)
-
 #region -- sampler_simple -- [1765194569.6586206]
     uniform int  sampleMode;
     
@@ -43,8 +42,8 @@
     }
     vec4 sampleTexture( sampler2D texture, vec2 pos) { return sampleTexture(texture, pos, 0.); }
 #endregion -- sampler_simple --
-#pragma use(gradient)
 
+#pragma use(gradient)
 #region -- gradient -- [1777679826.681391]
 	#define GRADIENT_LIMIT 128
 	
@@ -202,8 +201,11 @@ uniform int  type;
 uniform vec4 color1;
 uniform vec4 color2;
 
+uniform float gradient_shift;
+
 #define s3 1.73205080757
 
+float pfract(in float f) { return fract(fract(f) + 1.); }
 float random (in vec2 st, float seed) { return fract(sin(dot(st.xy + seed / 1000., vec2(1892.9898, 78.23453))) * 437.54123); }
 float frandom (in vec2 st) {
     float n0 = random(st, floor(seed) / 5000.);
@@ -307,7 +309,7 @@ void main() {
 		
 	} else {
 		float p = random(cellIndx, seed + gIndex);
-		res = gradientEval(p);
+		res = gradientEval(pfract(p + gradient_shift));
 		
 	}
     	

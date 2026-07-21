@@ -13,7 +13,7 @@ function Node_Chromatic_Aberration(_x, _y, _group = noone) : Node_Processor(_x, 
 	
 	////- =Effect
 	newInput( 5, nodeValue_EButton( "Type",       0, [ "Scale", "Continuous", "Gradient" ] ));
-	newInput(21, nodeValue_Gradient("Gradient",   gra_black_white ));
+	newInput(21, nodeValue_Gradient("Gradient",   gra_black_white )).addShift(22);
 	newInput( 1, nodeValue_Vec2(    "Center",   [.5,.5] )).hideLabel().setHotkey("G").setUnitSimple().setPieMenu();
 	newInput( 2, nodeValue_Slider(  "Strength",   1, [-16, 16, .01] )).setHotkey("S").setMappable(4).setCurvable(19).setPieMenu();
 	newInput( 6, nodeValue_Slider(  "Intensity",  1, [  0,  4, .01] )).setHotkey("I").setMappable(7).setPieMenu();
@@ -23,13 +23,13 @@ function Node_Chromatic_Aberration(_x, _y, _group = noone) : Node_Processor(_x, 
 	////- =Processing
 	newInput(20, nodeValue_Int( "Iteration",  1  ));
 	newInput(14, nodeValue_Int( "Resolution", 64 ));
-	// input 22
+	// input 23
 	
 	newOutput(0, nodeValue_Output( "Surface Out", VALUE_TYPE.surface, noone ));
 	
 	input_display_list = [ 3, 
 		[ "Surface",    false ],  0,  8,  9, 10, 11, 12, 13, 
-		[ "Effect",     false ],  5, 21,  1,  2,  4, 19,  6,  7, 15, 16, 17, 18,
+		[ "Effect",     false ],  5, [21, true], 22, -1,  1,  2,  4, 19,  6,  7, 15, 16, 17, 18,
 		[ "Processing", false ], 20, 14, 
 	];
 	
@@ -54,7 +54,7 @@ function Node_Chromatic_Aberration(_x, _y, _group = noone) : Node_Processor(_x, 
 			var _surf = _data[ 0];
 			var _cent = _data[ 1];
 			var _type = _data[ 5];
-			var _grad = _data[21];
+			var _grad = _data[21], _gradShf = _data[22];
 			
 			var _iter = _data[20];
 			var _reso = _data[14];
@@ -79,8 +79,9 @@ function Node_Chromatic_Aberration(_x, _y, _group = noone) : Node_Processor(_x, 
 			shader_set_interpolation(_surf);
 			shader_set_uv(_data[8], _data[9]);
 			
-			shader_set_dim("dimension",   _surf );
-			shader_set_2("center",        _cent );
+			shader_set_dim("dimension",     _surf    );
+			shader_set_2( "center",         _cent    );
+			shader_set_f( "gradient_shift", _gradShf );
 			shader_set_gradient(_grad);
 			
 			shader_set_f_map("strength",  _data[ 2], _data[ 4], inputs[ 2], _data[19] );

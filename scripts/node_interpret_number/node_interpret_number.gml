@@ -14,13 +14,13 @@ function Node_Interpret_Number(_x, _y, _group = noone) : Node_Processor(_x, _y, 
 	newInput( 1, nodeValue_EButton(  "Mode",      0, [ "Greyscale", "Palette", "Gradient" ] ));
 	newInput( 2, nodeValue_Range(    "Range",    [0,1]     ));
 	newInput( 6, nodeValue_Palette(  "Palette"             ));
-	newInput( 3, nodeValue_Gradient( "Gradient", gra_white )).setMappable(4);
-	// input 7
+	newInput( 3, nodeValue_Gradient( "Gradient", gra_white )).setMappable(4).addShift(7);
+	// 8
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
 	input_display_list = [ 0,
-		[ "Interpret", false ], 1, 2, 6, 3, 4, 
+		[ "Interpret", false ], 1, 2, 6, [3, true], 4, 7, -1, 
 	];
 	
 	////- Node
@@ -36,10 +36,10 @@ function Node_Interpret_Number(_x, _y, _group = noone) : Node_Processor(_x, _y, 
 		#region data
 			static BATCH_SIZE = 128;
 			
-			var _val = _data[0];
-			var _mod = _data[1];
-			var _ran = _data[2];
-			var _pal = _data[6];
+			var _val = _data[ 0];
+			var _mod = _data[ 1];
+			var _ran = _data[ 2];
+			var _pal = _data[ 6];
 			
 			inputs[2].setVisible(_mod != 2);
 			inputs[6].setVisible(_mod == 1);
@@ -59,6 +59,7 @@ function Node_Interpret_Number(_x, _y, _group = noone) : Node_Processor(_x, _y, 
 			shader_set_f( "range", _ran );
 			shader_set_palette(_pal);
 			
+			shader_set_f( "gradient_shift", _data[7] );
 			shader_set_gradient(_data[3], _data[4], _data[5], inputs[3]);
 			
 			for(var i = 0; i < _amo; i += BATCH_SIZE) {

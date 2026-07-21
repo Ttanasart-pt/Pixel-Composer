@@ -7,6 +7,9 @@ uniform vec2  dimension;
 uniform float height;
 uniform float shiftAngle;
 
+uniform float height_shift;
+uniform float radius_shift;
+
 uniform sampler2D edgeSurf;
 
 #region //////////////////////////////////// GRADIENT ////////////////////////////////////
@@ -141,8 +144,9 @@ uniform sampler2D edgeSurf;
 
 #endregion //////////////////////////////////// GRADIENT ////////////////////////////////////
 
-vec4 gradientHeightEval(in float prog) { return gradientEval(prog, height_blend, height_color, height_time, height_keys); }
-vec4 gradientRadiusEval(in float prog) { return gradientEval(prog, radius_blend, radius_color, radius_time, radius_keys); }
+float pfract(in float f) { return fract(fract(f) + 1.); }
+vec4 gradientHeightEval(in float prog) { return gradientEval(pfract(prog + height_shift), height_blend, height_color, height_time, height_keys); }
+vec4 gradientRadiusEval(in float prog) { return gradientEval(pfract(prog + radius_shift), radius_blend, radius_color, radius_time, radius_keys); }
 
 float val(vec4 v) { return (v.r + v.g + v.b) / 3. * v.a; }
 

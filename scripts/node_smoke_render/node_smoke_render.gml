@@ -18,17 +18,17 @@ function Node_Smoke_Render(_x, _y, _group = noone) : Node_Smoke(_x, _y, _group) 
 	newInput( 3, nodeValue_Bool( "Draw Domain Collision", false ));
 	
 	////- =Render
-	newInput( 6, nodeValue_Gradient( "Volume Color",  gra_black_white ));
+	newInput( 6, nodeValue_Gradient( "Volume Color",  gra_black_white )).addShift(9);
 	newInput( 7, nodeValue_Curve(    "Density Remap", CURVE_DEF_01    ));
 	newInput( 8, nodeValue_Bool(     "Transparent",   false           ));
-	// input 9
+	// 10
 	
 	newOutput(0, nodeValue_Output( "Smoke",  VALUE_TYPE.surface, noone ));
 	newOutput(1, nodeValue_Output( "Domain", VALUE_TYPE.surface, noone ));
 	
 	input_display_list = [
 		[ "Domain", false ],  0,  4,  5,  3, 
-		[ "Render", false ],  6,  7,  8, 
+		[ "Render", false ], [6, true],  9, -1,  7,  8, 
 	];
 		
 	////- Node
@@ -40,14 +40,15 @@ function Node_Smoke_Render(_x, _y, _group = noone) : Node_Smoke(_x, _y, _group) 
 		if(!PROJECT.animator.is_playing && recoverCache()) return;
 		
 		#region data
-			var _dom = getInputData(0);
-			var _upd = getInputData(4);
-			var _ups = getInputData(5);
-			var _drw = getInputData(3);
+			var _dom = getInputData( 0);
+			var _upd = getInputData( 4);
+			var _ups = getInputData( 5);
+			var _drw = getInputData( 3);
 			
-			var _gra = getInputData(6);
-			var _den = getInputData(7);
-			var _trn = getInputData(8);
+			var _gra = getInputData( 6);
+			var _shf = getInputData( 9);
+			var _den = getInputData( 7);
+			var _trn = getInputData( 8);
 			
 			SMOKE_DOMAIN_CHECK
 			
@@ -69,8 +70,9 @@ function Node_Smoke_Render(_x, _y, _group = noone) : Node_Smoke(_x, _y, _group) 
 		
 		surface_set_shader(temp_surface[0], sh_fd_visualize);
 			shader_set_gradient(_gra);
-			shader_set_curve("densityMap", _den );
-			shader_set_i("transparent",    _trn );
+			shader_set_f(  "gradient_shift", _shf );
+			shader_set_cr( "densityMap",     _den );
+			shader_set_i(  "transparent",    _trn );
 			
 			gpu_set_texfilter(true);
 			draw_surface_stretched_safe(fSurf, 0, 0, _dom.width, _dom.height);

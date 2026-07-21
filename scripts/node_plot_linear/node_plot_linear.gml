@@ -62,15 +62,15 @@ function Node_Plot_Linear(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 		.setTooltip(__txt("Use data range"));
 	
 	newInput( 6, nodeValue_Color(    "Base Color",        ca_white  ));
-	newInput(13, nodeValue_Gradient( "Color Over Sample", gra_white )).setMappable(27);
-	newInput(24, nodeValue_Gradient( "Color Over Value",  gra_white )).setMappable(29);
+	newInput(13, nodeValue_Gradient( "Color Over Sample", gra_white )).setMappable(27).addShift(36);
+	newInput(24, nodeValue_Gradient( "Color Over Value",  gra_white )).setMappable(29).addShift(37);
 	newInput(25, nodeValue_Range(    "Value range",      [0,1]      )).setSideButton(b_setRange);
 	newInput(26, nodeValue_Bool(     "Absolute",         false, "Use absolute value to calculate color." ));
 	
 	////- =Background
 	newInput( 8, nodeValue_Bool(     "Background",        false    ));
 	newInput( 9, nodeValue_Color(    "Background Color",  ca_black ));
-	// inputs 36
+	// 38
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
@@ -78,7 +78,7 @@ function Node_Plot_Linear(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 		[ "Data", 	    true    ],  1, 12, 21, 14,  2,  3, 15, 16, 
 		[ "Plot",	   false    ], 11,  4, 10, 20,  5, 31, 22, 23, 32, 
 		[ "Shape",	   false    ],  7, 18, 17, 19, 33, 34, 35, 
-		[ "Color",	   false    ],  6, 13, 27, 24, 29, 25, 26, 
+		[ "Color",	   false    ],  6, [13, true], 27, 36, -1, [24, true], 29, 37, -1, 25, 26, 
 		[ "Background",	true, 8 ],  9, 
 	];
 	
@@ -148,8 +148,8 @@ function Node_Plot_Linear(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 			var _pie_sepa = _data[35];
 			
 			var _lcl     = _data[ 6];
-			var _cls     = _data[13], _cls_map = _data[27], _cls_rng = _data[28];
-			var _clv     = _data[24], _clv_map = _data[29], _clv_rng = _data[30];
+			var _cls     = _data[13], _cls_map = _data[27], _cls_rng = _data[28], _cls_shf = _data[36];
+			var _clv     = _data[24], _clv_map = _data[29], _clv_rng = _data[30], _clv_shf = _data[37];
 			var _clv_r   = _data[25];
 			var _clv_a   = _data[26];
 			
@@ -245,11 +245,11 @@ function Node_Plot_Linear(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 					
 					_ang_nor = _ang + 90;
 					_val	 = _smp_data[i] + _off;
-					_col_sam = evaluate_gradient_map(i / amo, _cls, _cls_map, _cls_rng, inputs[13]);
+					_col_sam = evaluate_gradient_map(pfract(i / amo + _cls_shf), _cls, _cls_map, _cls_rng, inputs[13]);
 					
 					var _val_p    = _clv_a? abs(_val) : _val;
 					var _val_prog = (_val_p - _clv_r[0]) / (_clv_r[1] - _clv_r[0]);
-					_col_val = evaluate_gradient_map(_val_prog, _clv, _clv_map, _clv_rng, inputs[24]);
+					_col_val = evaluate_gradient_map(pfract(_val_prog + _clv_shf), _clv, _clv_map, _clv_rng, inputs[24]);
 					
 					var _c1 = colorMultiply(_lcl, _col_sam);
 					var _c2 = _col_val;
@@ -323,11 +323,11 @@ function Node_Plot_Linear(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 					var _angEd = _radCurr + _sgAng * _radDir;
 					_radCurr   = _angEd;
 					
-					_col_sam = evaluate_gradient_map(i / amo, _cls, _cls_map, _cls_rng, inputs[13]);
+					_col_sam = evaluate_gradient_map(pfract(i / amo + _cls_shf), _cls, _cls_map, _cls_rng, inputs[13]);
 					
 					var _val_p    = _clv_a? abs(_val) : _val;
 					var _val_prog = (_val_p - _clv_r[0]) / (_clv_r[1] - _clv_r[0]);
-					_col_val = evaluate_gradient_map(_val_prog, _clv, _clv_map, _clv_rng, inputs[24]);
+					_col_val = evaluate_gradient_map(pfract(_val_prog + _clv_shf), _clv, _clv_map, _clv_rng, inputs[24]);
 					
 					var _c1 = colorMultiply(_lcl, _col_sam);
 					var _c2 = _col_val;

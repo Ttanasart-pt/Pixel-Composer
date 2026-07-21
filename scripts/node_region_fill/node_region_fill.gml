@@ -28,7 +28,7 @@ function Node_Region_Fill(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	newInput( 8, nodeValue_EScroll(  "Fill Type",       0, [ "Random", "Color map", "Texture map", "Texture Coord", "Texture Index" ] ));
 	newInput(15, nodeValue_EButton(  "Source",          0, [ "Palette", "Gradient" ] ));
 	newInput( 2, nodeValue_Palette(  "Fill Palette"                    ));
-	newInput(16, nodeValue_Gradient( "Fill Gradient",  gra_black_white ));
+	newInput(16, nodeValue_Gradient( "Fill Gradient",  gra_black_white )).addShift(19);
 	
 	newInput( 9, nodeValue_Surface(  "Color Map"                ));
 	newInput(18, nodeValue_Anchor(   "Sample Position", [.5,.5] ));
@@ -41,14 +41,14 @@ function Node_Region_Fill(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	////- =Render
 	newInput( 7, nodeValue_EScroll("Draw Original",  0, [ "None", "Above", "Behind" ]));
 	newInput(17, nodeValue_Bool(     "Output Index",   false           ));
-	// Inputs 19
+	// 20
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
 	input_display_list = [ 4, 
 		[ "Surfaces",       false     ],  0,  1, 
 		[ "Filter",         false, 11 ],  5,  6, 14, 
-		[ "Fill",           false     ], 13,  8, 15,  2, 16,  9, 18, 10, 
+		[ "Fill",           false     ], 13,  8, 15,  2, [16, true], 19, -1,  9, 18, 10, 
 			[ "/Transform", false     ], 12, 
 		[ "Render",         false     ],  7, 17, 
 	];
@@ -71,6 +71,7 @@ function Node_Region_Fill(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 			var _fsrc = _data[15];
 			var _palt = _data[ 2];
 			var _grad = _data[16];
+			var _grdS = _data[19];
 			
 			var _cmap = _data[ 9];
 			var _canc = _data[18];
@@ -205,8 +206,9 @@ function Node_Region_Fill(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 			switch(_filt) {
 				case REGION_FILL_TYPE.Random :  // Random colors
 					shader_set(sh_region_fill_color);
-						shader_set_i( "useMask", is_surface(_mask) );
-						shader_set_s( "mask",    _mask );
+						shader_set_i( "useMask",        is_surface(_mask) );
+						shader_set_s( "mask",           _mask );
+						shader_set_f( "gradient_shift", _grdS );
 						shader_set_palette(_palt, "colors", "colorAmount");
 						_grad.shader_submit();
 						

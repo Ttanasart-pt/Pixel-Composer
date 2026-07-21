@@ -180,7 +180,9 @@ uniform float     brightness;
 uniform vec2      level;
 
 uniform float     subdiv;
+uniform float     gradient_shift;
 
+float pfract(in float f) { return fract(fract(f) + 1.); }
 float random(in vec2 st, float seed) { return fract(sin(dot(st.xy, vec2(1892.9898, 78.23453))) * (seed + 437.54123)); }
 
 void main() {
@@ -249,7 +251,7 @@ void main() {
 	else if(lightAttn == 2) lightInt = 1. - (1. - lightInt) * (1. - lightInt);
 	else if(lightAttn == 3) lightInt = 1.;
 	
-	vec4  lightCol = gradientEval(lightInt);
+	vec4  lightCol = gradientEval(pfract(min(.999, lightInt) + gradient_shift));
 	vec4  sampCol  = vec4(0.);
 	
 	float subStep = 1. / subdiv;

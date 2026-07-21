@@ -1,5 +1,4 @@
 #pragma use(sampler)
-
 #region -- sampler -- [1780048120.828549]
 	uniform int  interpolation;
 	uniform vec2 sampleDimension;
@@ -127,7 +126,6 @@
 #endregion -- sampler --
 
 #pragma use(gradient)
-
 #region -- gradient -- [1777679826.681391]
 	#define GRADIENT_LIMIT 128
 	
@@ -295,6 +293,7 @@ uniform float distant;
 uniform float scale;
 uniform vec2  heightScale;
 uniform int   heightNorm;
+uniform float heightShift;
 
 uniform vec2  depthRange;
 
@@ -345,6 +344,8 @@ uniform vec2  depthRange;
                   b21, (-a21 * a00 + a01 * a20), (a11 * a00 - a01 * a10)) / det;
     }
 #endregion
+
+float pfract(in float f) { return fract(fract(f) + 1.); }
 
 void main() {
 	mat3 rx = rotateX(angle.x);
@@ -436,7 +437,9 @@ void main() {
 	else if (textureFront_use == 1 && mm.x > 0.5 && (samPos.x <= voxSize/2. || samPos.x >= 1. - voxSize/2.)) 
 		gl_FragData[0] = sampleTexture(textureFront, vec2(1.-samPos.z, samPos.y));
     
-    vec4 heightColor = gradientEval(heightNorm == 1? (1. - samPos.y) / (1. - smHei) : 1. - samPos.y);
+    float g = heightNorm == 1? (1. - samPos.y) / (1. - smHei) : 1. - samPos.y;
+          g = pfract(g + heightShift);
+    vec4  heightColor = gradientEval(g);
     gl_FragData[0] *= heightColor;
     
     float depth = distance(eye, hitPos) / scale;

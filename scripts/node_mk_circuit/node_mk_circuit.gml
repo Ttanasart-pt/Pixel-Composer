@@ -18,11 +18,9 @@ function Node_MK_Circuit(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	newInput( 4, nodeValue_Surface(  "Bg Surface"                     ));
 	newInput( 5, nodeValue_Color(    "Bg Color",        ca_black      ));
 	newInput( 6, nodeValue_Float(    "Wire Thickness",  1             ));
-	newInput( 7, nodeValue_Gradient( "Base Color",      gra_white     ));
-	newInput(17, nodeValue_Gradient( "Length Color",    gra_white     ));
-	newInput(20, nodeValue_Slider(   "Gradient Shift",   0, [-1,1,.01]));
-	newInput(24, nodeValue_Range(    "Gradient Offset", [0,0]         ));
-	
+	newInput( 7, nodeValue_Gradient( "Base Color",      gra_white     )).addOffset(25);
+	newInput(17, nodeValue_Gradient( "Length Color",    gra_white     )).addShift(20).addOffset(24);
+		
 	////- =Connection
 	newInput( 9, nodeValue_Bool(    "Connection",  true  ));
 	newInput(11, nodeValue_EScroll( "Shape",       0, [ "Circle", "Square", "Surface" ] )).setInternalName("conn_shape");
@@ -38,14 +36,14 @@ function Node_MK_Circuit(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	
 	////- =Algorithm
 	newInput(13, nodeValue_Int( "Max Attempt",  8 ));
-	// 25
+	// 26
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
 	input_display_list = [ s_MKFX, 2, 
 		[ "Output",     false    ],  0,  8, 
 		[ "Circuit",    false    ],  1,  3, 15, 16, 18, 
-		[ "Rendering",  false    ],  4,  5, __inspc(),  6,  7, [17, false], 20, 24,  
+		[ "Rendering",  false    ],  4,  5, __inspc(),  6, [7, true], 25, [17, true], 20, 24,  
 		[ "Connection", false, 9 ], 11, 10, 14, 
 			[ "/Rendering", false], 19, 12, 23, 21, 22, 
 			
@@ -74,6 +72,7 @@ function Node_MK_Circuit(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 			var _bgColr = _data[ 5];
 			var _lThck  = _data[ 6];
 			var _lColr  = _data[ 7]; 
+			var _lColrS = _data[25]; 
 			
 			var _lColl  = _data[17]; 
 			var _lColRn = _data[24];
@@ -198,7 +197,7 @@ function Node_MK_Circuit(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 		    	var _px, _py;
 		    	var ox, oy, nx, ny, oc, nc;
 		    	
-		    	var cc   = _lColr.evalFast(random(1));
+		    	var cc   = _lColr.evalFast(pfract(random(1) + _lColrS));
 		    	var grSh = _lColSh + random_range(_lColRn[0], _lColRn[1]);
 		    	
 		    	draw_set_color(cc);

@@ -1,0 +1,12 @@
+[
+  {
+    "version": "1.21.7.104",
+    "changes": [
+      {
+        "date": "2026-07-21T07:47:50.783Z",
+        "node": "",
+        "commit": "Most gradient now comes with extra shift input."
+      }
+    ]
+  }
+]

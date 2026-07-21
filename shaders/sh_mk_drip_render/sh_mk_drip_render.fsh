@@ -150,7 +150,10 @@ uniform sampler2D mask;
 uniform sampler2D dripSurface;
 uniform sampler2D dripProgress;
 
-uniform int blendMode;
+uniform int   blendMode;
+uniform float gradient_shift;
+
+float pfract(in float f) { return fract(fract(f) + 1.); }
 
 void main() {
 	vec4 origCol = texture2D(gm_BaseTexture, v_vTexcoord);
@@ -166,7 +169,7 @@ void main() {
 		maskIntens   = (maskCol.r + maskCol.g + maskCol.b) / 3. * maskCol.a;
 	}
 	
-	vec4 colr = gradientEval(progCol.r);
+	vec4 colr = gradientEval(pfract(min(.999, progCol.r) + gradient_shift));
 	vec4 targ = vec4(0.);
 	
 	if(blendMode == 0) targ = colr;

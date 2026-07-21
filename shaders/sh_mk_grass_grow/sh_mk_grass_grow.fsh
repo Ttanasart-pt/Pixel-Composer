@@ -1,5 +1,4 @@
 #pragma use(gradient)
-
 #region -- gradient -- [1777679826.681391]
 	#define GRADIENT_LIMIT 128
 	
@@ -151,6 +150,7 @@ uniform float seed;
 
 uniform vec2  grassSize;
 uniform float colorVariance;
+uniform float gradient_shift;
 uniform float grassSpread;
 uniform float distribution;
 
@@ -163,6 +163,7 @@ uniform float expand;
 
 #define TAU 6.283185307179586
 
+float pfract(in float f) { return fract(fract(f) + 1.); }
 float random (in vec2 st, float seed) { return fract(sin(dot(st.xy + seed / 1000., vec2(1892.9898, 78.23453))) * 437.54123); }
 
 vec2  tx   = 1./dimension;
@@ -187,10 +188,10 @@ bool checkGrass(in vec2 coord, in float lengthAdj) {
 		
 		// if(grassHeight <= 1.) continue;
 		if(grassHeight > i) {
-			float grassRatio = i / (grassHeight - 1.);
+			float grassRatio = min(.999, i / (grassHeight - 1.));
 			float colrModify = grassData.b * colorVariance * 2. - colorVariance;
 			
-			vec4 baseC = gradientEval(grassRatio + colrModify);
+			vec4 baseC = gradientEval(pfract(grassRatio + colrModify + gradient_shift));
 			     if(renderType == 0) gl_FragColor = baseC;
 			else if(renderType == 1) gl_FragColor = baseC * texture2D(gm_BaseTexture, curPos);
 			else if(renderType == 2) gl_FragColor = baseC + texture2D(gm_BaseTexture, curPos);
