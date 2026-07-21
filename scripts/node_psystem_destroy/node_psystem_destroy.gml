@@ -76,7 +76,7 @@ function Node_pSystem_Destroy(_x, _y, _group = noone) : Node(_x, _y, _group) con
 			var _lif    = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.life,   buffer_f64  );
 			var _lifMax = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.mlife,  buffer_f64  );
 			
-			var rat = _lif / (_lifMax - 1);
+			var rat = _lif / max(1, _lifMax - 1);
 			random_set_seed(_seed + _spwnId);
 			
 			var _strn_mod = _strn_curved? curve_strn.get(rat) : 1;

@@ -208,7 +208,7 @@ function Node_pSystem_Render(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 				var _draw_rot = buffer_read_at( _partBuff, _start + (bool(_dfg & 0b001)? PSYSTEM_OFF.drotx : PSYSTEM_OFF.rotx), buffer_f64 );
 				
 				var _draw_a = ((_cc & (0xFF << 24)) >> 24) / 255 * _mask;
-				var rat = _stat? (_frame + _lif + _spwnId * _lifMax) / TOTAL_FRAMES : _lif / (_lifMax - 1);
+				var rat = _stat? (_frame + _lif + _spwnId * _lifMax) / TOTAL_FRAMES : _lif / max(1, _lifMax - 1);
 				    rat = clamp(rat, 0, 1);
 				
 				random_set_seed(_seed + _spwnId);

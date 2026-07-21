@@ -108,7 +108,7 @@ function Node_pSystem_3D_Blend(_x, _y, _group = noone) : Node_3D(_x, _y, _group)
 			var _bldB   = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.blnb,   buffer_u8  );
 			var _bldsA  = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.blnsa,  buffer_u8  );
 			
-			var rat = _lif / (_lifMax - 1);
+			var rat = _lif / max(1, _lifMax - 1);
 			random_set_seed(_seed + _spwnId);
 			
 			if(_alph_use && _alph_curved) {

@@ -451,7 +451,7 @@ function Node_pSystem_Spawn(_x, _y, _group = noone) : Node(_x, _y, _group) const
 			var _sx  = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.scax,   buffer_f64  );
 			var _sy  = buffer_read(    _partBuff,                              buffer_f64  );
 			
-			var rat = _lif / (_lifMax - 1);
+			var rat = _lif / max(1, _lifMax - 1);
 			random_set_seed(_seed + _spwnId);
 			
 			if(_lif >= _lifMax) {

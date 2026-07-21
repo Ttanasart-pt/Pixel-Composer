@@ -117,7 +117,7 @@ function Node_pSystem_Transform(_x, _y, _group = noone) : Node(_x, _y, _group) c
 			var _lif    = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.life,   buffer_f64  );
 			var _lifMax = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.mlife,  buffer_f64  );
 			
-			var rat = _stat? (_frame + _lif + _spwnId * _lifMax) / TOTAL_FRAMES : _lif / (_lifMax - 1);
+			var rat = _stat? (_frame + _lif + _spwnId * _lifMax) / TOTAL_FRAMES : _lif / max(1, _lifMax - 1);
 			    rat = clamp(rat, 0, 1);
 			random_set_seed(_seed + _spwnId);
 			

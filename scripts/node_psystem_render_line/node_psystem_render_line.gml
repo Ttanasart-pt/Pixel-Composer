@@ -124,7 +124,7 @@ function Node_pSystem_Render_Line(_x, _y, _group = noone) : Node(_x, _y, _group)
 				var _cc = make_color_rgba(_cr, _cg, _cb, _ca);
 				
 				random_set_seed(_seed + _spwnId);
-				var rat = _stat? (_frame + _lif + _spwnId * _lifMax) / TOTAL_FRAMES : _lif / (_lifMax - 1);
+				var rat = _stat? (_frame + _lif + _spwnId * _lifMax) / TOTAL_FRAMES : _lif / max(1, _lifMax - 1);
 				    rat = clamp(rat, 0, 1);
 				
 				array_push(_points, [

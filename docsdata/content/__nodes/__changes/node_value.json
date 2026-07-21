@@ -6,6 +6,11 @@
         "date": "2026-07-21T01:58:50.552Z",
         "node": "",
         "commit": "Introduced"
+      },
+      {
+        "date": "2026-07-21T07:47:51.045Z",
+        "node": "",
+        "commit": "Most gradient now comes with extra shift input."
       }
     ]
   },

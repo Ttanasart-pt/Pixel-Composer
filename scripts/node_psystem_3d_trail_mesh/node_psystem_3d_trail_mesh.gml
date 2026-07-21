@@ -166,7 +166,7 @@ function Node_pSystem_3D_Trail_Mesh(_x, _y, _group = noone) : Node_3D(_x, _y, _g
 			var _spwnId = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.sindex, buffer_u32  );
 			var _lifMax = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.mlife,  buffer_f64  );
 			
-			var rat = clamp(_lif / (_lifMax - 1), 0, 1);
+			var rat = clamp(_lif / max(1, _lifMax - 1), 0, 1);
 			var _fram_mod = _fram_curved? curve_fram.get(rat) : 1;
 			var _fram_cur = round(random_range(_fram[0], _fram[1]) * _fram_mod * _mask);
 			    

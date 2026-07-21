@@ -72,7 +72,7 @@ function Node_pSystem_Turbulence(_x, _y, _group = noone) : Node(_x, _y, _group) 
 			var _vx     = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.velx,   buffer_f64  );
 			var _vy     = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.vely,   buffer_f64  );
 			
-			var rat = _stat? (_frame + _lif + _spwnId * _lifMax) / TOTAL_FRAMES : _lif / (_lifMax - 1);
+			var rat = _stat? (_frame + _lif + _spwnId * _lifMax) / TOTAL_FRAMES : _lif / max(1, _lifMax - 1);
 			    rat = clamp(rat, 0, 1);
 			random_set_seed(_seed + _spwnId);
 			

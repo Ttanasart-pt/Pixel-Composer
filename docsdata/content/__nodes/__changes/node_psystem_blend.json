@@ -1,5 +1,20 @@
 [
   {
+    "version": "1.21.7.104",
+    "changes": [
+      {
+        "date": "2026-07-21T07:47:50.978Z",
+        "node": "",
+        "commit": "Most gradient now comes with extra shift input."
+      },
+      {
+        "date": "2026-07-21T07:51:38.443Z",
+        "node": "",
+        "commit": "**pSystem**: Fix divided by zero problem when setting particle lifespan to 1."
+      }
+    ]
+  },
+  {
     "version": "1.21.4.008",
     "changes": [
       {
@@ -13,10 +28,4 @@
     "version": "1.21.0.2.004",
     "changes": [
       {
-        "date": "2026-05-05T04:36:04.409Z",
-        "node": "",
-        "commit": "**Graph Panel**: Fix crash when trying to blend nodes with no surface output."
-      }
-    ]
-  }
-]
+  

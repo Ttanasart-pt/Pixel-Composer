@@ -98,7 +98,7 @@ function Node_pSystem_3D_Snap_Transform(_x, _y, _group = noone) : Node_3D(_x, _y
 			var _lifMax = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.mlife,  buffer_f64  );
 			
 			random_set_seed(_seed + _spwnId);
-			var rat = _lif / (_lifMax - 1);
+			var rat = _lif / max(1, _lifMax - 1);
 			
 			if(_posi) {
 				var _px = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.posx,   buffer_f64  );

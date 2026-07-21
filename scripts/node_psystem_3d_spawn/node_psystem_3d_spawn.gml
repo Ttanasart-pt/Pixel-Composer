@@ -445,7 +445,7 @@ function Node_pSystem_3D_Spawn(_x, _y, _group = noone) : Node_3D(_x, _y, _group)
 			
 			var _bldsA  = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.blnsa,  buffer_u8   );
 			
-			var rat = _lif / (_lifMax - 1);
+			var rat = _lif / max(1, _lifMax - 1);
 			random_set_seed(_seed + _spwnId);
 			
 			if(_lif >= _lifMax) {
