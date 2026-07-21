@@ -223,6 +223,9 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		
 		favorited     = false;
 		latest_height = undefined;
+		
+		isSection       = false;
+		sectionCollapse = undefined;
 	#endregion
 	
 	#region ---- Graph ----

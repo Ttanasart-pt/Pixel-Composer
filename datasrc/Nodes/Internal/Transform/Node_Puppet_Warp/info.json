@@ -1,1 +1,6 @@
-{"spr":"s_node_puppet_warp","pxc_version":121071,"name":"Puppet Warp","baseNode":"Node_Puppet_Warp"}
+{
+    "name":          "Puppet Warp",
+    "spr":           "s_node",
+    "baseNode":      "Node_Puppet_Warp",
+    "pxc_version":    121071,
+}

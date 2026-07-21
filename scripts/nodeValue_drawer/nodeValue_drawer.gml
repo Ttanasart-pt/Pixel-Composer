@@ -276,6 +276,24 @@ function drawWidget(xx, yy, ww, _m, _jun, global_var = true, _hover = false, _fo
 		}
 	#endregion
 	
+	#region section
+		if(jun.isSection) {
+			var coll = jun.sectionCollapse;
+			
+			var cs = ui(12);
+			var cx = lb_x + cs / 2 - ui(2);
+			var cy = yy + lb_h / 2;
+			var hv = _hover && point_in_rectangle(_m[0], _m[1], cx - cs/2, yy, cx + cs/2, yy + lb_h);
+			var sc = hv? COLORS._main_icon_light : COLORS._main_icon;
+			
+			draw_sprite_ui(THEME.arrow, (!coll) * 3, cx, cy + (!coll) * ui(2), 1, 1, 0, sc);
+			if(hv && mouse_lpress(_focus)) 
+				jun.sectionCollapse = !jun.sectionCollapse;
+				
+			lb_x += cs + ui(4);
+		}
+	#endregion
+	
 	#region draw name
 		draw_set_text(_font, fa_left, fa_center, cc);
 		

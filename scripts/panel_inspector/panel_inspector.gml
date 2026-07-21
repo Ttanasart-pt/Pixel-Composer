@@ -1291,159 +1291,174 @@ function Panel_Inspector() : PanelContent() constructor {
                 if((filtering && filter_text != "") || FILTER_ANIMATION) continue;
                 
                 var _key = array_safe_get_fast(jun, 0, "");
-                var ikey = _key + $"_{i}"
-                var subk = string_starts_with(_key, "/");
-                var name = __txt(subk? string_trim_start(_key, ["/"]) : _key);
+                var _keyJunc = is_real(_key);
                 
-                if(!subk) currSec = ikey;
+                var coll;
                 
-                var coll = _colMap[$ ikey] ?? array_safe_get_fast(jun, 1, false);
-                var togl = array_safe_get_fast(jun, 2, noone);
-                var righ = array_safe_get_fast(jun, 3, noone);
-                
-                if(subk) {
-                	var lbw = con_w  - ui(2) - (togl != noone) * (segHei) - (righ != noone) * ui(24);
-	                var lbx = _x     + ui(2) + (togl != noone) * (segHei);
-	                var lbh = segHei - ui(6);
-	                
+                if(_keyJunc) {
+                	var kjun = array_safe_get_fast(_inspecting.inputs, _key);
+                	kjun.isSection = true;
+                	if(kjun.sectionCollapse == undefined)
+                		kjun.sectionCollapse = array_safe_get_fast(jun, 1, false);
+                		
+                	coll = kjun.sectionCollapse;
+                	_key = kjun.getName();
+                	
                 } else {
-                	var lbw = con_w - (togl != noone) * (segHei + segPad) - (righ != noone) * ui(32);
-	                var lbx = _x    + (togl != noone) * (segHei + segPad);
-	                var lbh = segHei;
-                }
+	                var ikey = _key + $"_{i}"
+	                var subk = string_starts_with(_key, "/");
+	                var name = __txt(subk? string_trim_start(_key, ["/"]) : _key);
 	                
-                #region Draw Base 
-	                var hov = _hover && point_in_rectangle(_m[0], _m[1], lbx, yy, lbx + lbw, yy + lbh);
-                	var scw = con_w - lbx;
+	                if(!subk) currSec = ikey;
 	                
-	                if(!subk) {
-	                	var scc = hov? COLORS.section_hover : COLORS.section_bg;
-	                	
-		                          draw_sprite_stretched_ext(THEME.section_separator, 0, lbx, yy, scw, lbh, colorMultiply(_blend, scc));
-		                if(!coll) draw_sprite_stretched_ext(THEME.section_separator, 2, lbx, yy, scw, lbh, colorMultiply(_blend, COLORS.section_selected));
-		                if(hov)   draw_sprite_stretched_ext(THEME.section_separator, 1, lbx, yy, scw, lbh, colorMultiply(_blend, COLORS.section_hover));
-	                }
+	                coll = _colMap[$ ikey] ?? array_safe_get_fast(jun, 1, false);
+	                var togl = array_safe_get_fast(jun, 2, noone);
+	                var righ = array_safe_get_fast(jun, 3, noone);
 	                
-	                if(hov) {
-	                    contentPane.hover_content = true;
-	                	
-	                	if(pFOCUS) {
-							if(DOUBLE_CLICK && !subk) _cAll = jun[@ 1]? -1 : 1;
-							else if(mouse_lpress()) { 
-								if(key_mod_press(CTRL)) {
-									_cAll = jun[@ 1]? 1 : -1;
-									
-								} else {
-			                       	jun[@ 1] = !coll; 
-			                       	coll = !coll; 
-								}
-		                       	
-							} else if(mouse_rpress(pFOCUS)) {
-								var _menu = [
-						            MENU_ITEMS.inspector_expand_all_sections,
-						            MENU_ITEMS.inspector_collapse_all_sections,
-						            menuItem(__txt("Collapse Other"), function(m) /*=>*/ {
-						            	if(inspecting == noone) return;
-						            	var cmap = inspecting.inspector_collapse;
-						            	var carr = struct_get_names(cmap);
-							            
-							            for( var i = 0, n = array_length(carr); i < n; i++ ) 
-							                cmap[$ carr[i]] = true;
-							            cmap[$ m] = false;
-							            
-						            }).setParam(ikey)
-						        ];
-						        
-								menuCall("inspector_group_menu", _menu, 0, 0, fa_left);
-							}
-	                	}
-	                }
-	                
-	                if(!showAll) {
-	                	var _anim = _aniMap[$ currSec] ?? false;
-	                	var cc = !subk && _anim? COLORS._main_value_positive : COLORS._main_icon;
-	                	var ss = subk? .8 : 1;
-	                	
-	                	draw_sprite_ui(THEME.arrow, !coll * 3, lbx + ui(16 + subk * 2), yy + lbh / 2, ss, ss, 0, cc, 1);
-	                }
-	                
-	                _colMap[$ ikey] = coll;
-	        	#endregion
-                
-                #region Draw Right Buttons
-	                if(righ != noone) {
-	                    var _bx = lbx + lbw;
-	                    var _by = yy;
-	                    var _bw = ui(32);
-	                    var _bh = lbh;
-	                    
-	                    righ.setFocusHover(pFOCUS, pHOVER);
-	                    righ.draw(_bx + ui(2), _by + ui(2), _bw - ui(4), _bh - ui(4), _m, THEME.button_hide_fill);
-	                }
-                #endregion
-                
-                #region Draw Toggle button
-	                var cc, aa = 1;
-	                
-	                if(togl != noone) {
-		                var toging = togl != noone? _inspecting.getInputData(togl) : false;
-		                if(is_array(toging)) toging = false;
-	                
-	                	var tgx = _x + subk * ui(6);
-	                	var tgy = yy;
-	                	var tgp = subk? ui(3) : ui(4);
-	                
-	                	var jun   = _inspecting.inputs[togl];
-	                	var tgHov = _hover && point_in_rectangle(_m[0], _m[1], tgx, tgy, tgx + lbh, tgy + lbh);
-	                	
-	                    draw_sprite_stretched_ext(THEME.section_separator, 0, tgx, tgy, lbh, lbh, hov? COLORS.section_hover : COLORS.section_bg);
-	                    if(tgHov) {
-	                        draw_sprite_stretched_ext(THEME.section_separator, 1, tgx, tgy, lbh, lbh, COLORS.section_hover);
-	                        contentPane.hover_content = true;
-	                    	hov = false;
-	                        
-	                        if(mouse_lpress(pFOCUS)) jun.setValue(!toging);
-	                        if(mouse_rpress(pFOCUS)) propRightClick(jun);
-	                    }
-	                    
-	                    cc = toging? COLORS._main_accent : COLORS.section_bg;
-	                    aa = 0.5 + toging * 0.5;
-	                    
-	                               draw_sprite_stretched_ext(THEME.box_r2, 1, tgx + tgp, tgy + tgp, lbh - tgp*2, lbh - tgp*2, cc, 1);
-	                    if(toging) draw_sprite_stretched_ext(THEME.box_r2, 0, tgx + tgp, tgy + tgp, lbh - tgp*2, lbh - tgp*2, cc, 1);
-	                }
-	            #endregion
-	            
-	            #region Draw Name
-	                var ltx = lbx + ui(32);
-	                var txy = yy + lbh / 2;
-	                
-	                draw_set_text(secFnt, fa_left, fa_center, COLORS._main_text, aa * (subk? .8 : 1));
-	                draw_text_add(ltx, txy, name);
-	                draw_set_alpha(1);
-	                
-	                var txw = string_width(name);
 	                if(subk) {
-	                	draw_set_color_alpha(hov? COLORS._main_text : COLORS._main_text_sub, .75 + hov * .1);
-	                	draw_line_width(ltx + txw + ui(8), txy, con_ww, txy, 1);
-	                	draw_set_alpha(1);
+	                	var lbw = con_w  - ui(2) - (togl != noone) * (segHei) - (righ != noone) * ui(24);
+		                var lbx = _x     + ui(2) + (togl != noone) * (segHei);
+		                var lbh = segHei - ui(6);
+		                
+	                } else {
+	                	var lbw = con_w - (togl != noone) * (segHei + segPad) - (righ != noone) * ui(32);
+		                var lbx = _x    + (togl != noone) * (segHei + segPad);
+		                var lbh = segHei;
 	                }
-	        	#endregion
-                
-                #region Section stat [edit counts, animations]
-                	if(!subk) {
-		                var edt = _edtMap[$ ikey] ?? 0;
-		                if(edt > 0) {
-		                	draw_set_color(COLORS._main_text_sub);
-		                	draw_text_add(ltx + txw + ui(4), txy, $"[{edt}*]");
+		                
+	                #region Draw Base 
+		                var hov = _hover && point_in_rectangle(_m[0], _m[1], lbx, yy, lbx + lbw, yy + lbh);
+	                	var scw = con_w - lbx;
+		                
+		                if(!subk) {
+		                	var scc = hov? COLORS.section_hover : COLORS.section_bg;
+		                	
+			                          draw_sprite_stretched_ext(THEME.section_separator, 0, lbx, yy, scw, lbh, colorMultiply(_blend, scc));
+			                if(!coll) draw_sprite_stretched_ext(THEME.section_separator, 2, lbx, yy, scw, lbh, colorMultiply(_blend, COLORS.section_selected));
+			                if(hov)   draw_sprite_stretched_ext(THEME.section_separator, 1, lbx, yy, scw, lbh, colorMultiply(_blend, COLORS.section_hover));
 		                }
 		                
-		                _edtMap[$ ikey] = 0;
-		                _aniMap[$ ikey] = false;
-                	}
-	        	#endregion
-                
-                hh += lbh + padd;
+		                if(hov) {
+		                    contentPane.hover_content = true;
+		                	
+		                	if(pFOCUS) {
+								if(DOUBLE_CLICK && !subk) _cAll = jun[@ 1]? -1 : 1;
+								else if(mouse_lpress()) { 
+									if(key_mod_press(CTRL)) {
+										_cAll = jun[@ 1]? 1 : -1;
+										
+									} else {
+				                       	jun[@ 1] = !coll; 
+				                       	coll = !coll; 
+									}
+			                       	
+								} else if(mouse_rpress(pFOCUS)) {
+									var _menu = [
+							            MENU_ITEMS.inspector_expand_all_sections,
+							            MENU_ITEMS.inspector_collapse_all_sections,
+							            menuItem(__txt("Collapse Other"), function(m) /*=>*/ {
+							            	if(inspecting == noone) return;
+							            	var cmap = inspecting.inspector_collapse;
+							            	var carr = struct_get_names(cmap);
+								            
+								            for( var i = 0, n = array_length(carr); i < n; i++ ) 
+								                cmap[$ carr[i]] = true;
+								            cmap[$ m] = false;
+								            
+							            }).setParam(ikey)
+							        ];
+							        
+									menuCall("inspector_group_menu", _menu, 0, 0, fa_left);
+								}
+		                	}
+		                }
+		                
+		                if(!showAll) {
+		                	var _anim = _aniMap[$ currSec] ?? false;
+		                	var cc = !subk && _anim? COLORS._main_value_positive : COLORS._main_icon;
+		                	var ss = subk? .8 : 1;
+		                	
+		                	draw_sprite_ui(THEME.arrow, !coll * 3, lbx + ui(16 + subk * 2), yy + lbh / 2, ss, ss, 0, cc, 1);
+		                }
+		                
+		                _colMap[$ ikey] = coll;
+		        	#endregion
+	                
+	                #region Draw Right Buttons
+		                if(righ != noone) {
+		                    var _bx = lbx + lbw;
+		                    var _by = yy;
+		                    var _bw = ui(32);
+		                    var _bh = lbh;
+		                    
+		                    righ.setFocusHover(pFOCUS, pHOVER);
+		                    righ.draw(_bx + ui(2), _by + ui(2), _bw - ui(4), _bh - ui(4), _m, THEME.button_hide_fill);
+		                }
+	                #endregion
+	                
+	                #region Draw Toggle button
+		                var cc, aa = 1;
+		                
+		                if(togl != noone) {
+			                var toging = togl != noone? _inspecting.getInputData(togl) : false;
+			                if(is_array(toging)) toging = false;
+		                
+		                	var tgx = _x + subk * ui(6);
+		                	var tgy = yy;
+		                	var tgp = subk? ui(3) : ui(4);
+		                
+		                	var jun   = _inspecting.inputs[togl];
+		                	var tgHov = _hover && point_in_rectangle(_m[0], _m[1], tgx, tgy, tgx + lbh, tgy + lbh);
+		                	
+		                    draw_sprite_stretched_ext(THEME.section_separator, 0, tgx, tgy, lbh, lbh, hov? COLORS.section_hover : COLORS.section_bg);
+		                    if(tgHov) {
+		                        draw_sprite_stretched_ext(THEME.section_separator, 1, tgx, tgy, lbh, lbh, COLORS.section_hover);
+		                        contentPane.hover_content = true;
+		                    	hov = false;
+		                        
+		                        if(mouse_lpress(pFOCUS)) jun.setValue(!toging);
+		                        if(mouse_rpress(pFOCUS)) propRightClick(jun);
+		                    }
+		                    
+		                    cc = toging? COLORS._main_accent : COLORS.section_bg;
+		                    aa = 0.5 + toging * 0.5;
+		                    
+		                               draw_sprite_stretched_ext(THEME.box_r2, 1, tgx + tgp, tgy + tgp, lbh - tgp*2, lbh - tgp*2, cc, 1);
+		                    if(toging) draw_sprite_stretched_ext(THEME.box_r2, 0, tgx + tgp, tgy + tgp, lbh - tgp*2, lbh - tgp*2, cc, 1);
+		                }
+		            #endregion
+		            
+		            #region Draw Name
+		                var ltx = lbx + ui(32);
+		                var txy = yy + lbh / 2;
+		                
+		                draw_set_text(secFnt, fa_left, fa_center, COLORS._main_text, aa * (subk? .8 : 1));
+		                draw_text_add(ltx, txy, name);
+		                draw_set_alpha(1);
+		                
+		                var txw = string_width(name);
+		                if(subk) {
+		                	draw_set_color_alpha(hov? COLORS._main_text : COLORS._main_text_sub, .75 + hov * .1);
+		                	draw_line_width(ltx + txw + ui(8), txy, con_ww, txy, 1);
+		                	draw_set_alpha(1);
+		                }
+		        	#endregion
+	                
+	                #region Section stat [edit counts, animations]
+	                	if(!subk) {
+			                var edt = _edtMap[$ ikey] ?? 0;
+			                if(edt > 0) {
+			                	draw_set_color(COLORS._main_text_sub);
+			                	draw_text_add(ltx + txw + ui(4), txy, $"[{edt}*]");
+			                }
+			                
+			                _edtMap[$ ikey] = 0;
+			                _aniMap[$ ikey] = false;
+	                	}
+		        	#endregion
+	                
+	                hh += lbh + padd;
+                }
                 
                 if(!showAll && coll) { // Skip 
                     if(i == amoIn) { // Skip attribute
@@ -1460,9 +1475,12 @@ function Panel_Inspector() : PanelContent() constructor {
 	                        
 	                        if(is_array(j_jun)) {
 	                        	if(subk) break;
+	                        	
 	                        	var _jkey = array_safe_get_fast(j_jun, 0, "");
+	                        	var _jkJn = is_real(_jkey);
 	                        	var _subk = string_starts_with(_jkey, "/");
-	                        	if(!_subk) break;
+	                        	if(!_subk && !_jkJn) break;
+	                        	
 	                        	else { j++; continue; }
 	                        }
 	                        
@@ -1483,7 +1501,8 @@ function Panel_Inspector() : PanelContent() constructor {
                     }
                 } // Skip 
                 
-                continue;
+                if(_keyJunc) jun = kjun;
+                else continue;
             }
         	
         	if(is(jun, attribute_property)) {

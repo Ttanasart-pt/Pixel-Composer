@@ -18,10 +18,10 @@ function Node_MK_Circuit(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	newInput( 4, nodeValue_Surface(  "Bg Surface"                     ));
 	newInput( 5, nodeValue_Color(    "Bg Color",        ca_black      ));
 	newInput( 6, nodeValue_Float(    "Wire Thickness",  1             ));
-	newInput( 7, nodeValue_Gradient( "Wire Color",      gra_white     ));
-	newInput(17, nodeValue_Gradient( "Color Over Wire", gra_white     ));
-	newInput(24, nodeValue_Range(   "Gradient Offset", [0,0]         ));
+	newInput( 7, nodeValue_Gradient( "Base Color",      gra_white     ));
+	newInput(17, nodeValue_Gradient( "Length Color",    gra_white     ));
 	newInput(20, nodeValue_Slider(   "Gradient Shift",   0, [-1,1,.01]));
+	newInput(24, nodeValue_Range(    "Gradient Offset", [0,0]         ));
 	
 	////- =Connection
 	newInput( 9, nodeValue_Bool(    "Connection",  true  ));
@@ -45,7 +45,7 @@ function Node_MK_Circuit(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	input_display_list = [ s_MKFX, 2, 
 		[ "Output",     false    ],  0,  8, 
 		[ "Circuit",    false    ],  1,  3, 15, 16, 18, 
-		[ "Rendering",  false    ],  4,  5,  6,  7, 17, 24, 20, 
+		[ "Rendering",  false    ],  4,  5, __inspc(),  6,  7, [17, false], 20, 24,  
 		[ "Connection", false, 9 ], 11, 10, 14, 
 			[ "/Rendering", false], 19, 12, 23, 21, 22, 
 			
