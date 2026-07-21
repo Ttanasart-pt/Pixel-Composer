@@ -65,8 +65,7 @@ function Node_Pixel_Cloud(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 			shader_set_i( "useMap", is_surface(_smap));
 			shader_set_s( "strengthMap", _smap);
 			
-			shader_set_f( "gradient_shift", _data[10]);
-			shader_set_gradient(_data[4], _data[9], _data[10], inputs[4]);
+			shader_set_gradient(_data[4], _data[9], _data[10], inputs[4], _data[10]);
 			
 			shader_set_cr( "alpha" ,       _alph );
 			shader_set_f(  "randomAmount", _rand );
