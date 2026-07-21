@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.7.104",
+    "changes": [
+      {
+        "date": "2026-07-21T08:41:07.554Z",
+        "node": "Composite",
+        "commit": "**Composite**: Layer view now support double-click to edit depth."
+      }
+    ]
+  },
+  {
     "version": "1.21.7.102",
     "changes": [
       {

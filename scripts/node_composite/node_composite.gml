@@ -459,6 +459,13 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		renaming_index = noone;
 	}).setHide(1).setFont(f_p1);
 	
+	redepth = noone;
+	tb_depth       = textBox_Number(function(_n) /*=>*/ { 
+		if(redepth == noone) return;
+		if(is_real(redepth))  inputs[redepth].setValue(_n);
+		redepth = noone;
+	}).setHide(1).setFont(f_p1).setAlign(fa_right);
+	
 	hold_visibility = true;
 	hold_select		= true;
 	
@@ -484,6 +491,7 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		var hoverIndex = noone;
 		
 		var _cy = ly;
+		var _tw = _w - ui(200);
 		
 		layer_remove = -1;
 		for(var i = 0; i < amo; i++) {
@@ -604,19 +612,19 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 				var _txy = _cy + lh / 2;
 				
 				if(_junc_canvas) hover = hover && _m[0] > _txx + ui(8 + 16);
+				var _hovName = hover && _m[0] < _txx + _tw;
+				var _hovDept = hover && _m[0] >= _txx + _tw && _m[0] < _x + _w - ui(24 + 2);
 				
 				var tc = ind == dynamic_input_inspecting? COLORS._main_text_accent : COLORS._main_icon;
 				var tf = ind == dynamic_input_inspecting? f_p2b : f_p2;
-				if(hover || HIGHLIGHT_PROP == _inp) tc = COLORS._main_text;
-				
-				draw_set_text(tf, fa_left, fa_center, tc);
+				if(_hovName || HIGHLIGHT_PROP == _inp) tc = COLORS._main_text;
 				
 				if(canvas_draw != noone && _junc_canvas)
 					_txt = _junc_canvas.display_name;
 				
 				if(renaming_index == index) {
 					tb_rename.setFocusHover(_focus, _hover);
-					tb_rename.draw(_txx, _cy, _w - ui(172), lh, rename_text, _m);
+					tb_rename.draw(_txx, _cy, _tw, lh, rename_text, _m);
 				
 				} else {
 					var _txw = string_width(_txt);
@@ -637,20 +645,26 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 				
 						draw_sprite_ui_uniform(THEME.icon_canvas, 0, _icx, _icy, 1, _icc, _ica);
 						
-						draw_set_alpha(aa);
+						draw_set_text(tf, fa_left, fa_center, tc, aa);
 						draw_text_add(_txx + ui(8 + 16), _txy, _txt);
 						draw_set_alpha(1);
 						
 					} else {
-						draw_set_alpha(aa);
+						draw_set_text(tf, fa_left, fa_center, tc, aa);
 						draw_text_add(_txx, _txy, _txt);
 						draw_set_alpha(1);
 					}
 				}
 				
 				var _tx = _x + _w - ui(24 * 2);
-				draw_set_text(tf, fa_right, fa_center, COLORS._main_text_sub);
-				draw_text_add(_tx, _txy, _dep);
+				if(redepth == index + 7) {
+					tb_depth.setFocusHover(_focus, _hover);
+					tb_depth.draw(_tx - ui(64), _cy, ui(64), lh, _dep, _m);
+				
+				} else {
+					draw_set_text(tf, fa_right, fa_center, _hovDept? COLORS._main_text : COLORS._main_text_sub);
+					draw_text_add(_tx, _txy, _dep);
+				}
 			#endregion
 			
 			if(_jun_layer) { // modifiers
@@ -726,18 +740,22 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			
 			if(hover && layer_dragging == noone || layer_dragging == ind) {
 				if(DOUBLE_CLICK) {
-					renaming_index = index;
-					renaming       = index;
-					rename_text    = _txt;
-					
-					if(canvas_draw != noone && _junc_canvas)
-						renaming = _junc_canvas;
+					if(_hovName) {
+						renaming_index = index;
+						renaming       = index;
+						rename_text    = _txt;
 						
-					tb_rename._current_text = _txt;
-					tb_rename.activate();
-				}
-				
-				if(mouse_lpress(_focus)) {
+						if(canvas_draw != noone && _junc_canvas)
+							renaming = _junc_canvas;
+						tb_rename.activate(_txt);
+						
+					} else if(_hovDept) {
+						redepth = index + 7;
+						tb_depth.activate(_dep);
+						
+					}
+					
+				} else if(mouse_lpress(_focus)) {
 					dynamic_input_inspecting = dynamic_input_inspecting == ind? noone : ind;
 					layer_dragging = ind;
 					refreshDynamicDisplay();
