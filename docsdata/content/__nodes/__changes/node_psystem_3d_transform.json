@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.7.104",
+    "changes": [
+      {
+        "date": "2026-07-21T07:51:38.423Z",
+        "node": "",
+        "commit": "**pSystem**: Fix divided by zero problem when setting particle lifespan to 1."
+      }
+    ]
+  },
+  {
     "version": "1.21.5.008",
     "changes": [
       {

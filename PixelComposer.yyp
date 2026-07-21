@@ -2548,6 +2548,7 @@
     {"id":{"name":"panel_addon","path":"scripts/panel_addon/panel_addon.yy",},},
     {"id":{"name":"panel_animation_cleaner","path":"scripts/panel_animation_cleaner/panel_animation_cleaner.yy",},},
     {"id":{"name":"panel_animation_dopesheet","path":"scripts/panel_animation_dopesheet/panel_animation_dopesheet.yy",},},
+    {"id":{"name":"panel_animation_marker_settings","path":"scripts/panel_animation_marker_settings/panel_animation_marker_settings.yy",},},
     {"id":{"name":"panel_animation_region_settings","path":"scripts/panel_animation_region_settings/panel_animation_region_settings.yy",},},
     {"id":{"name":"panel_animation_scaler","path":"scripts/panel_animation_scaler/panel_animation_scaler.yy",},},
     {"id":{"name":"panel_animation_settings","path":"scripts/panel_animation_settings/panel_animation_settings.yy",},},

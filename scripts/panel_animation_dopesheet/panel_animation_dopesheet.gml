@@ -2853,6 +2853,8 @@ function Panel_Animation_Dopesheet() {
         var _regLine = array_length(_regions);
         topbar_height = top_frame_height + _regLine * region_height + ui(1) * _regLine + bool(_regLine) * ui(1);
         
+        var menuCallable = true;
+        
         #region Scroll
             dopesheet_y    = lerp_float(dopesheet_y, dopesheet_y_to, 4);
             dopesheet_y_to = clamp(dopesheet_y_to, -dopesheet_y_max, 0);
@@ -3713,7 +3715,7 @@ function Panel_Animation_Dopesheet() {
 	            
 			#region Markers
 				var _markers = PROJECT.timelineMarkers;
-				var _s = .4;
+				var _s = .5;
 				var _y = sprite_get_height(THEME.timeline_marker) * .5 * _s - ui(2);
 				
 				var _mkHover = undefined;
@@ -3722,27 +3724,44 @@ function Panel_Animation_Dopesheet() {
 					var _m = _markers[i];
 					var _f = _m.frame;
 					var _l = _m.label;
+					var _c = _m.color;
+					var _a  = .85;
+					
+					var mrx = timeline_shift + _f * timeline_scale;
+					var mry = _y;
 					
 					var _curr = _f - 1 == GLOBAL_CURRENT_FRAME;
-					
-					var _x  = timeline_shift + _f * timeline_scale;
-					var _c  = _curr? COLORS._main_icon_dark : COLORS._main_icon;
-					var _a  = _curr? 1 : .7;
-					var _hv = pHOVER && point_in_circle(msx, msy, _x, _y, ui(5));
+					var _hv   = pHOVER && point_in_circle(msx, msy, mrx, mry, ui(5));
+					var _drg  = marker_dragging == _m;
 					
 					if(_hv) {
-						if(!_curr) { _c = COLORS._main_icon; _a = 1; }
+						if(_l != "") TOOLTIP = _l;
 						_mkHover = _m;
 					}
 					
-					draw_sprite_ui(THEME.timeline_marker, 1, _x, _y, _s, _s, 0, _c, _a);
+					if(_hv || _drg) {
+						_a = 1;
+						mry += ui(2);
+					}
+					
+					draw_sprite_ui(THEME.timeline_marker, 1, mrx, mry, _s, _s, 0, _c, _a);
+					if(_drg) draw_sprite_ui(THEME.timeline_marker_select, 1, mrx, mry, _s, _s, 0, COLORS._main_accent, 1);
 				}
 				
 				if(_mkHover != undefined) {
 					timeline_draggable = false;
 					
-					if(mouse_lpress(pFOCUS))
-						marker_dragging = _mkHover;
+					if(mouse_lpress(pFOCUS)) marker_dragging = _mkHover;
+					if(mouse_rpress(pFOCUS)) {
+						menuCall("", [
+							menuItem(__txt("Edit Marker..."), function(m) /*=>*/ 
+								{return dialogPanelCall(new Panel_Animation_Marker_Settings(m), mouse_mx + ui(8), mouse_my + ui(8), 
+									{ anchor: ANCHOR.left | ANCHOR.bottom })}).setParam(_mkHover),
+							menuItem(__txt("Remove Marker"),  function(m) /*=>*/ {return array_remove(PROJECT.timelineMarkers, m)}).setParam(_mkHover),
+						]);
+						
+						menuCallable = false;
+					}
 				}
 				
 				if(marker_dragging != undefined) {
@@ -3801,7 +3820,7 @@ function Panel_Animation_Dopesheet() {
 		
     	////- =Actions
     	
-        if(keyframe_boxable && mouse_rpress(pFOCUS)) { // context menu
+        if(menuCallable && keyframe_boxable && mouse_rpress(pFOCUS)) { // context menu
         	__selecting_frame = clamp(round((mx - bar_x - timeline_shift) / timeline_scale), 0, GLOBAL_TOTAL_FRAMES - 1);
         	
             if(point_in_rectangle(mx, my, bar_x, pd, bar_x + dopesheet_w, pd + dopesheet_h)) {
