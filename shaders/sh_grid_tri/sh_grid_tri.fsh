@@ -275,9 +275,11 @@ void main() {
 	float dist = max(0., tri.z);
 	vec4 colr;
 	
+	float h = (dist - level.x) / (level.y - level.x);
+	gl_FragData[1] = vec4(vec3(h), 1.);
+	
 	if(mode == 1) {
-		dist = (dist - level.x) / (level.y - level.x);
-		gl_FragColor = vec4(vec3(dist), 1.);
+		gl_FragData[0] = vec4(vec3(h), 1.);
 		return;
 	}
 	
@@ -324,5 +326,5 @@ void main() {
 	}
 	
 	float _aa = 3. / max(dimension.x, dimension.y);
-	gl_FragColor = mix(gapCol, colr, aa == 1? smoothstep(wid * 2. - _aa, wid * 2., dist) : step(wid * 2., dist));
+	gl_FragData[0] = mix(gapCol, colr, aa == 1? smoothstep(wid * 2. - _aa, wid * 2., dist) : step(wid * 2., dist));
 }

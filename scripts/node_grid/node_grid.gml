@@ -67,7 +67,8 @@ function Node_Grid(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 			[ "/Texture Transform", true, 17 ], 18, 39, 23, 40, 19, 22, 
 	];
 	
-	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
+	newOutput( 0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone) );
+	newOutput( 1, nodeValue_Output("Heightmap",   VALUE_TYPE.surface, noone) );
 	
 	////- Nodes
 	
@@ -102,9 +103,9 @@ function Node_Grid(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		return _dim;
 	}
 	
-	static processData = function(_outSurf, _data, _array_index) {
+	static processData = function(_outData, _data, _array_index) {
 		#region data
-			var _dim  = surface_get_dimension(_outSurf);
+			var _dim  = getDimension();
 			var _sam  = _data[ 7];
 			var _mode = _data[10];
 			
@@ -124,11 +125,11 @@ function Node_Grid(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 			inputs[25].setVisible(_tex_mode);
 		#endregion
 		
-		surface_set_shader(_outSurf, sh_grid);
+		surface_set_shader(_outData, sh_grid);
 			shader_set_uv(_data[37], _data[38]);
 		    shader_set_interpolation(_sam);
 		    
-			shader_set_f("dimension", _dim[0], _dim[1]);
+			shader_set_f( "dimension", _dim[0], _dim[1]);
 			
 			shader_set_f( "position",      _data[ 1] );
 			shader_set_m( "angle",         _data[ 4], _data[15], inputs[4]);
@@ -170,7 +171,7 @@ function Node_Grid(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 			else					draw_sprite_ext(s_fx_pixel, 0, 0, 0, _dim[0], _dim[1], 0, c_white, 1);
 		surface_reset_shader();
 		
-		_outSurf = mask_apply_empty(_outSurf, _data[input_mask_index]);
-		return _outSurf;
+		_outData[0] = mask_apply_empty(_outData[0], _data[input_mask_index]);
+		return _outData;
 	}
 }

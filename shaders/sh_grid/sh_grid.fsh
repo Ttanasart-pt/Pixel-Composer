@@ -371,10 +371,8 @@ void main() {
 			vec2 fr  = px - fl;
 		
 			if(fr.x > scaG.x || fr.y > scaG.y)
-				gl_FragColor = gapCol;
-				
-			else 
-				gl_FragColor = gradientEval(random(fl));
+				 gl_FragData[0] = gapCol;
+			else gl_FragData[0] = gradientEval(random(fl));
 				
 		} else if(diagonal == 1) {
 			float _x =  px.x + px.y;
@@ -384,10 +382,8 @@ void main() {
 			float my = mod(_y, sca.y);
 			
 			if(mx > scaG.x || my > scaG.y)
-				gl_FragColor = gapCol;
-				
-			else 
-				gl_FragColor = gradientEval(random(vec2(_x, _y) - vec2(mx, my)));
+				 gl_FragData[0] = gapCol;
+			else gl_FragData[0] = gradientEval(random(vec2(_x, _y) - vec2(mx, my)));
 				
 		}
 		return;
@@ -430,9 +426,11 @@ void main() {
 		 if(shiftAxis == 0) { dist = 1. - max((nPos.x - 1.) * rat + 1., nPos.y); }
 	else if(shiftAxis == 1) { dist = 1. - max((nPos.y - 1.) * rat + 1., nPos.x); }
 	
+	float h = (dist - level.x) / (level.y - level.x);
+	gl_FragData[1] = vec4(vec3(h), 1.);
+	
 	if(mode == 2) {
-		dist = (dist - level.x) / (level.y - level.x);
-		gl_FragColor = vec4(vec3(dist), 1.);
+		gl_FragData[0] = vec4(vec3(h), 1.);
 		return;
 	}
 	
@@ -476,5 +474,5 @@ void main() {
 	}
 	
 	float _aa = 4. / max(dimension.x, dimension.y);
-	gl_FragColor = mix(gapCol, colr, aa == 1? smoothstep(gpp - _aa, gpp, dist) : step(gpp, dist));
+	gl_FragData[0] = mix(gapCol, colr, aa == 1? smoothstep(gpp - _aa, gpp, dist) : step(gpp, dist));
 }

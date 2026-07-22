@@ -45,7 +45,8 @@ function Node_Grid_Hex(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 		[ "Texture Transform", true, 14 ],15, 25, 19, 26, 16, 
 	];
 	
-	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
+	newOutput( 0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone) );
+	newOutput( 1, nodeValue_Output("Heightmap",   VALUE_TYPE.surface, noone) );
 	
 	////- Nodes
 	
@@ -79,23 +80,25 @@ function Node_Grid_Hex(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 		return _dim;
 	}
 	
-	static processData = function(_outSurf, _data, _array_index) {
-		var _dim  = surface_get_dimension(_outSurf);
-		var _pos  = _data[1];
-		var _sam  = _data[9];
-		var _mode = _data[7];
-		
-		var _col_gap  = _data[6];
-		var _tex_mode = _mode == 2 || _mode == 3;
-		
-		inputs[ 5].setVisible(_mode != 1);
-		inputs[ 6].setVisible(_mode != 1);
-		inputs[20].setVisible(_mode == 1);
-		
-		inputs[ 9].setVisible(_tex_mode, _tex_mode);
-		inputs[21].setVisible(_tex_mode, _tex_mode);
-		
-		surface_set_shader(_outSurf, sh_grid_hex);
+	static processData = function(_outData, _data, _array_index) {
+		#region data
+			var _dim  = getDimension();
+			var _pos  = _data[1];
+			var _sam  = _data[9];
+			var _mode = _data[7];
+			
+			var _col_gap  = _data[6];
+			var _tex_mode = _mode == 2 || _mode == 3;
+			
+			inputs[ 5].setVisible(_mode != 1);
+			inputs[ 6].setVisible(_mode != 1);
+			inputs[20].setVisible(_mode == 1);
+			
+			inputs[ 9].setVisible(_tex_mode, _tex_mode);
+			inputs[21].setVisible(_tex_mode, _tex_mode);
+		#endregion
+			
+		surface_set_shader(_outData, sh_grid_hex);
 			shader_set_uv(_data[23], _data[24]);
 		    shader_set_interpolation(_sam);
 		    
@@ -127,7 +130,7 @@ function Node_Grid_Hex(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 			else                 draw_sprite_ext(s_fx_pixel, 0, 0, 0, _dim[0], _dim[1], 0, c_white, 1);
 		surface_reset_shader();
 		
-		_outSurf = mask_apply_empty(_outSurf, _data[input_mask_index]);
-		return _outSurf;
+		_outData[0] = mask_apply_empty(_outData[0], _data[input_mask_index]);
+		return _outData;
 	}
 }
