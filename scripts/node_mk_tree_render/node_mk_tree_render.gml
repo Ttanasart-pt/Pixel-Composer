@@ -12,13 +12,24 @@ function Node_MK_Tree_Render(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 	////- =Render
 	newInput( 2, nodeValue_Bool(    "Draw From Root", true )).rejectArray();
 	newInput( 3, nodeValue_EScroll( "Blend Mode",     0, [ "Normal", "Add", "Max", "Min" ]  )).rejectArray();
-	// 3
+	
+	////- =Filter
+	newInput( 4, nodeValue_Bool(    "Filter Root Position", false )).rejectArray();
+	newInput( 5, nodeValue_Range(   "Range",                [0,1] )).rejectArray();
+	
+	newInput( 6, nodeValue_Bool(    "Filter Random",        false )).rejectArray();
+	newInput( 7, nodeValueSeed());
+	newInput( 8, nodeValue_Slider(  "Chance",               .5    )).rejectArray();
+	// 9
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
 	input_display_list = [ s_MKFX, 0, 
-		[ "Outputs", false ], 1, 
-		[ "Render",  false ], 2, 3, 
+		[ "Outputs", false ],  1, 
+		[ "Render",  false ],  2,  3, 
+		[ "Filter",   true ],  
+			[ "/Root Position", false, 4 ],  5, 
+			[ "/Random",        false, 6 ],  7,  8, 
 	];
 	
 	////- Nodes
@@ -32,37 +43,35 @@ function Node_MK_Tree_Render(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 		var _arr  = inputs[1].getValue();
 		inputs[0].setArrayDepth(!_arr);
 		
-		if(array_safe_length(_tree)) array_foreach(_tree, function(t,i) /*=>*/ { t.drawn = false; if(t.root) t.root.drawn = false; })
-	}
-	
-	static drawTree = function(_t) {
-		if(!is(_t, __MK_Tree_Element)) return;
-			
-		if(is(_t, __MK_Tree)) { 
-			var _drawT = drawRoot? _t.root : _t;
-			if(_drawT.drawn) return;
-			
-			_drawT.drawn = true;
-			_drawT.draw();
-			return;
-		}
-		
-		_t.draw();
+		if(!array_empty(_tree)) array_foreach(_tree, function(t,i) /*=>*/ { 
+			t.drawn = false; 
+			if(t.root) t.root.drawn = false; 
+			return true;
+		})
 	}
 	
 	static processData = function(_outSurf, _data, _array_index = 0) { 
 		if(!is(inline_context, Node_MK_Tree_Inline)) return _outSurf;
 		
 		#region data
-			var _tree = _data[0];
-			var _arra = _data[1];
+			var _tree = _data[ 0];
+			var _arra = _data[ 1];
 			
-			drawRoot  = _data[2];
-			var _blnd = _data[3];
+			drawRoot  = _data[ 2];
+			var _blnd = _data[ 3];
+			
+			var _fRootPosUse = _data[ 4];
+			var _fRootPos    = _data[ 5];
+			
+			var _fRandUse  = _data[ 6];
+			var _fRandSeed = _data[ 7];
+			var _fRandChan = _data[ 8];
 			
 			var _dim  = getDimension();
-			if(is_array(_tree) && array_empty(_tree)) return _outSurf;
 		#endregion
+		
+		if(!is_array(_tree)) _tree = [_tree];
+		if(array_empty(_tree)) return _outSurf;
 		
 		_outSurf = surface_verify(_outSurf, _dim[0], _dim[1]);
 		surface_set_target(_outSurf);
@@ -76,9 +85,30 @@ function Node_MK_Tree_Render(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 			}
 			
 			draw_set_color(c_white);
-			if(is_array(_tree)) 
-				 array_foreach(_tree, function(t,i) /*=>*/ {return drawTree(t)});
-			else drawTree(_tree);
+			random_set_seed(_fRandSeed);
+			
+			for( var i = 0, n = array_length(_tree); i < n; i++ ) {
+				var _t = _tree[i];
+				
+				if(!is(_t, __MK_Tree_Element)) continue;
+			
+				if(_fRootPosUse && (_t.rootPosition < _fRootPos[0] || _t.rootPosition > _fRootPos[1]))
+					continue;
+				
+				if(_fRandUse && random(1) > _fRandChan)
+					continue;
+				
+				if(is(_t, __MK_Tree)) { 
+					var _drawT = drawRoot? _t.root : _t;
+					if(_drawT.drawn) continue;
+					
+					_drawT.drawn = true;
+					_drawT.draw();
+					continue;
+				}
+				
+				_t.draw();
+			}
 			
 			BLEND_NORMAL
 		surface_reset_target();

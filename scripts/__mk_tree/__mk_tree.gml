@@ -28,6 +28,7 @@
 
 function __MK_Tree_Element(_root = undefined) constructor {
 	root = _root;
+	rootPosition = 0;
 	
 	static drawOverlay = function(_x,_y,_s) /*=>*/ {}
 	static draw        = function()         /*=>*/ {}

@@ -6,6 +6,11 @@
         "date": "2026-07-22T02:17:00.854Z",
         "node": "MK Tree Render",
         "commit": "**MK Tree Render**: Add minimum blend mode."
+      },
+      {
+        "date": "2026-07-22T03:23:43.813Z",
+        "node": "MK Tree Render",
+        "commit": "**MK Tree Render**: Add root position filter, random filter."
       }
     ]
   },
