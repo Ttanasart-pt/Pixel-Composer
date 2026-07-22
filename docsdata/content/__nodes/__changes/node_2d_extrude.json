@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.7.105",
+    "changes": [
+      {
+        "date": "2026-07-22T07:38:58.541Z",
+        "node": "2D Extrude",
+        "commit": "**2D Extrude**: Add extrude texture input."
+      }
+    ]
+  },
+  {
     "version": "1.21.7.104",
     "changes": [
       {

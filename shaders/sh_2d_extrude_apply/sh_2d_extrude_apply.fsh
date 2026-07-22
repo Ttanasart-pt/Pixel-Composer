@@ -165,6 +165,9 @@ uniform float highlightInten;
 uniform sampler2D mask;
 uniform int    useMask;
 
+uniform sampler2D texture;
+uniform int    useTexture;
+
 float pfract(in float f) { return fract(fract(f) + 1.); }
 vec4 blendColor(vec4 bg, vec4 fg) { 
 	float aa = bg.a + fg.a * (1. - bg.a);
@@ -232,6 +235,11 @@ void main() {
 	
 	float prog = extrude / dist;
 	vec4  colr = gradientEval(pfract(prog + gradient_shift));
+	
+	if(useTexture == 1) {
+		vec4 tex = texture2D(texture, v_vTexcoord);
+		colr *= tex;
+	}
 	
 	gl_FragData[0] = blendColor(gl_FragData[0], colr);
 	gl_FragData[1] = vec4(vec3(mix(depth.x, depth.y, prog)), 1.);

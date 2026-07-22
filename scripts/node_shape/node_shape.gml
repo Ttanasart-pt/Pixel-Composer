@@ -189,12 +189,87 @@ function Node_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	newOutput( 2, nodeValue_Output( "Height",  VALUE_TYPE.surface, noone )).setCustomData(global.SURFACE_MASK_JUNC);
 	newOutput( 3, nodeValue_Output( "UV",      VALUE_TYPE.surface, noone )).setCustomData(global.SURFACE_UV_JUNC);
 	
+	b_dimShape = button(function() /*=>*/ { 
+		var _dim     = current_data[ 0];
+		var _posMode = current_data[15];
+		var _shaSca  = current_data[28];
+		
+		var x0 = 0;
+		var y0 = 0;
+		var x1 = _dim[0];
+		var y1 = _dim[1];
+		
+		switch(_posMode) {
+			case 0 : // area
+				var _ara = current_data[ 3];
+				x0 = _ara[0] - _ara[2] * _shaSca;
+				y0 = _ara[1] - _ara[3] * _shaSca;
+				
+				x1 = _ara[0] + _ara[2] * _shaSca;
+				y1 = _ara[1] + _ara[3] * _shaSca;
+				break;
+				
+			case 1 : // center scale
+				var _cen = current_data[16];
+				var _siz = current_data[17];
+				
+				x0 = _cen[0] - _siz[0] * _shaSca;
+				y0 = _cen[1] - _siz[1] * _shaSca;
+				
+				x1 = _cen[0] + _siz[0] * _shaSca;
+				y1 = _cen[1] + _siz[1] * _shaSca;
+				break;
+				
+			case 2 : // full
+				var ww = _dim[0] * _shaSca;
+				var hh = _dim[1] * _shaSca;
+				
+				x0 = _dim[0] / 2 - ww / 2;
+				y0 = _dim[1] / 2 - hh / 2;
+				
+				x1 = _dim[0] / 2 + ww / 2;
+				y1 = _dim[1] / 2 + hh / 2;
+				break;
+		}
+		
+		x0 = round(x0);
+		y0 = round(y0);
+		
+		x1 = round(x1);
+		y1 = round(y1);
+		
+		var sw = abs(x1 - x0);
+		var sh = abs(y1 - y0);
+		
+		inputs[ 0].attributes.use_project_dimension = false;
+		inputs[ 0].setValue([sw, sh]);
+		inputs[28].setValue(1);
+		
+		switch(_posMode) {
+			case 0 : // area
+				inputs[3].setValue([ sw/2, sh/2, sw/2, sh/2, AREA_SHAPE.rectangle, AREA_MODE.area ]);
+				break;
+				
+			case 1 : // center scale
+				inputs[16].setValue([ sw/2, sh/2 ]);
+				inputs[17].setValue([ sw/2, sh/2 ]);
+				break;
+				
+			case 2 : // full
+				
+				break;
+		}
+		
+	}).setText(__txt("Set Dimension to Shape"));
+	
 	input_display_list = [ 
 		[ "Output",     false     ],  0, 50, 44, 45,  6, 51, 
 		[ "Background", false     ],  1, 11, 46, 47, 
-		[ "Transform",  false     ], 15,  3, 16, 17, 19, 28, 
+		[ "Transform",  false     ], 15,  3, 16, 17, 19, 28, b_dimShape, 
+		
 		[ "Shape",	    false     ],  2, 32, 33, 35, 52, 40, 34, 49, 48,  9,  4, 13,  5,  7,  8, 
 		                             38, 39, 22, 23, 24, 25, 26, 27, 43, 30, 31, 36, 
+		                             
 		[ "Deform",	     true     ], 41, 42, 
 		[ "Render",	    false     ], 10, 18,
 		[ "Height",	     true, 12 ], 29, 20, 37,  
