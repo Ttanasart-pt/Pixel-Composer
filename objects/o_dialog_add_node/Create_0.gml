@@ -14,6 +14,7 @@ event_inherited();
 	node_target_y	  = undefined;
 	
 	junction_called   = noone;
+	build_at_junction = false;
 	node_replace      = noone;
 	
 	node_list         = [];
@@ -396,6 +397,7 @@ event_inherited();
 		if(junction_called != noone) { // Connect to called junction
 			var _call_input = junction_called.connect_type == CONNECT_TYPE.input;
 			var _from       = junction_called.value_from;
+			var _call_node  = junction_called.node;
 			var _junc_list  = _call_input? _outputs : _inputs;
 			
 			for(var i = 0; i < array_length(_junc_list); i++) {
@@ -405,11 +407,21 @@ event_inherited();
 				if(_call_input && junction_called.isConnectableStrict(_junc_list[i]) == 1) {
 					junction_called.setFrom(_junc_list[i]);
 					_new_node.x -= _new_node.w;
+					
+					if(build_at_junction) {
+						_new_node.x = _call_node.x - _new_node.w - 32;
+						_new_node.y = junction_called.ry;
+					}
 					break;
 				} 
 				
 				if(!_call_input && _junc_list[i].isConnectableStrict(junction_called) == 1) {
 					_junc_list[i].setFrom(junction_called);
+					
+					if(build_at_junction) {
+						_new_node.x = _call_node.x + _call_node.w + 32;
+						_new_node.y = junction_called.ry;
+					}
 					break;
 				}
 			}
@@ -418,7 +430,6 @@ event_inherited();
 			
 			for(var i = 0; i < array_length(_inputs); i++) {
 				var _target = _inputs[i]; 
-				
 				if(_target.isConnectableStrict(_from) == 1) {
 					_target.setFrom(_from);
 					break;

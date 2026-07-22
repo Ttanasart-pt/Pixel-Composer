@@ -1,6 +1,8 @@
 #region ___function calls
     function global_filter_anim() { CALL("global_filter_anim"); FILTER_ANIMATION = !FILTER_ANIMATION; GraphRefresh(); }
     
+    function panel_inspector_add_node_to_hover()         { CALL("inspector_add_to_hover");           PANEL_INSPECTOR.addNodeToHovering();              }
+    
     function panel_inspector_copy_prop()                 { CALL("inspector_copy_property");          PANEL_INSPECTOR.propSelectCopy();                 }
     function panel_inspector_paste_prop()                { CALL("inspector_paste_property");         PANEL_INSPECTOR.propSelectPaste();                }
     
@@ -41,6 +43,8 @@
     	
         registerFunction("", "Filter Animation",     "F", a, global_filter_anim                     ).setMenu("global_filter_anim");
         registerFunction("", "Color Picker",         "",  a, panel_inspector_color_pick             ).setMenu("color_picker");
+        
+        registerFunction(i, "Add Node to Hover",     "A", s, panel_inspector_add_node_to_hover      ).setMenu("inspector_add_to_hover")
         
         registerFunction(i, "Copy Value",            "C", c, panel_inspector_copy_prop              ).setMenu("inspector_copy_property",  THEME.copy)
         registerFunction(i, "Paste Value",           "V", c, panel_inspector_paste_prop             ).setMenu("inspector_paste_property", THEME.paste)
@@ -2900,6 +2904,22 @@ function Panel_Inspector() : PanelContent() constructor {
     }
     
     ////- Actions
+    
+    static addNodeToHovering = function() {
+    	if(prop_hover == noone) return;
+    	
+    	var ctx = prop_hover.node.group;
+        var dia = instance_create_depth(mouse_mx + 8, mouse_my + 8, 0, o_dialog_add_node, { context: ctx });
+        if(dia == undefined) return undefined;
+        
+        dia.resetPosition();
+        dia.junction_called   = prop_hover;
+        dia.build_at_junction = true;
+        with(dia) alarm[0]    = 1;
+        setFocus(dia.id);
+        
+        return dia;
+    }
     
 }
 
