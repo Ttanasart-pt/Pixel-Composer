@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.7.105",
+    "changes": [
+      {
+        "date": "2026-07-22T02:17:00.862Z",
+        "node": "",
+        "commit": "**MK Tree Render**: Add minimum blend mode."
+      }
+    ]
+  },
+  {
     "version": "1.21.7.104",
     "changes": [
       {

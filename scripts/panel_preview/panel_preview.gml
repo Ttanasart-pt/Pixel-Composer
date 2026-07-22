@@ -84,12 +84,12 @@
 	    	registerFunction(p, "Add Node",                 "A",       s, panel_preview_add_node           ).setMenu("preview_add_node", THEME.add_20)
 	        registerFunction(p, "Clear Tool",               vk_escape, n, panel_preview_clear_tool         ).setMenu("preview_focus_content" );
 	        
-	        registerFunction(p, "Focus Content",            "F", n, panel_preview_focus_content            ).setMenu("preview_focus_content",      THEME.icon_center_canvas)
-	        registerFunction(p, "Save Current Frame...",    "S", s, panel_preview_save_current_frame       ).setMenu("preview_save_current_frame", THEME.icon_preview_export)
-	        registerFunction(p, "Save All Current Frames...","", n, panel_preview_saveAllCurrentFrames     ).setMenu("preview_save_all_current_frames")
+	        registerFunction(p, "Focus Content",            "F", n, panel_preview_focus_content            ).setMenu("preview_focus_content",      THEME.icon_center_canvas )
+	        registerFunction(p, "Save Current Frame...",    "S", s, panel_preview_save_current_frame       ).setMenu("preview_save_current_frame", THEME.icon_preview_export).setActiveFn(function() /*=>*/ {return is_surface(PANEL_PREVIEW.getNodePreviewSurface())})
+	        registerFunction(p, "Save All Current Frames...","", n, panel_preview_saveAllCurrentFrames     ).setMenu("preview_save_all_current_frames").setActiveFn(function() /*=>*/ {return is_surface(PANEL_PREVIEW.getNodePreviewSurface())})
 	        registerFunction(p, "Save to Focused File",     "",  n, panel_preview_saveCurrentFrameToFocus  ).setMenu("preview_save_to_focused_file")
 	        registerFunction(p, "Save to Project",          "",  n, panel_preview_saveCurrentFrameProject  ).setMenu("preview_save_to_project")
-	        registerFunction(p, "Save all Current Frames...","", n, panel_preview_save_all_current_frame   ).setMenu("preview_save_all_current_frame")
+	        registerFunction(p, "Save all Current Frames...","", n, panel_preview_save_all_current_frame   ).setMenu("preview_save_all_current_frame").setActiveFn(function() /*=>*/ {return is_surface(PANEL_PREVIEW.getNodePreviewSurface())})
 	        registerFunction(p, "Preview Window",           "P", c, panel_preview_preview_window           ).setMenu("preview_preview_window")
 	        registerFunction(p, "Cycle Channel",            vk_tab, n, panel_preview_cycle_channel         ).setMenu("preview_cycle_channel")
 	    

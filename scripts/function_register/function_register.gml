@@ -137,12 +137,13 @@ function functionObject(_context, _name, _key, _mod, _action, _param = noone) co
 		return self;
 	}
 	
-	static setColorFn   = function(colrFn)   { if(menu) menu.getColor  = colrFn;   return self; }
-	static setSpriteInd = function(sprIndFn) { if(menu) menu.getSprInd = sprIndFn; return self; }
-	static setToggle    = function(_togg)    { if(menu) menu.setToggle(_togg);     return self; }
-	static setTooltip   = function(_tool)    { if(menu) menu.setTooltip(_tool);    return self; }
-	static setScroll    = function()         { if(menu) menu.setScroll();          return self; }
-	static setContext   = function(_c)       { if(menu) menu.setContext(_c);       return self; }
+	static setActiveFn   = function(_fn)      { if(menu) menu.setActiveFn(_fn);     return self; }
+	static setColorFn    = function(colrFn)   { if(menu) menu.getColor  = colrFn;   return self; }
+	static setSpriteInd  = function(sprIndFn) { if(menu) menu.getSprInd = sprIndFn; return self; }
+	static setToggle     = function(_togg)    { if(menu) menu.setToggle(_togg);     return self; }
+	static setTooltip    = function(_tool)    { if(menu) menu.setTooltip(_tool);    return self; }
+	static setScroll     = function()         { if(menu) menu.setScroll();          return self; }
+	static setContext    = function(_c)       { if(menu) menu.setContext(_c);       return self; }
 	
 	static hidePalette = function() { hide = true; return self; }
 }

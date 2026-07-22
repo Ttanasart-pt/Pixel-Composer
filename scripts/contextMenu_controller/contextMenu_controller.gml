@@ -29,6 +29,7 @@ function MenuItem(_name, _func, _spr = noone, _hotkey = noone, _toggle = noone, 
 	tooltip      = noone;
 	tooltipName  = new tooltipHotkey(name, undefined);
 	
+	activeFn     = undefined;
 	isShelf      = false;
 	shelfObject  = noone;
 	shiftMenu	 = noone;
@@ -46,6 +47,7 @@ function MenuItem(_name, _func, _spr = noone, _hotkey = noone, _toggle = noone, 
 	
     static setIsShelf   = function()           /*=>*/ { isShelf    = true;       return self; }
     static setActive    = function(_active)    /*=>*/ { active     = _active;    return self; }
+    static setActiveFn  = function(_actFn)     /*=>*/ { activeFn   = _actFn;     return self; }
     static setColor     = function(_color)     /*=>*/ { color      = _color;     return self; }
     static setColorGet  = function(_color)     /*=>*/ { getColor   = _color;     return self; }
     static setShiftMenu = function(_shiftMenu) /*=>*/ { shiftMenu  = _shiftMenu; return self; }
@@ -70,10 +72,17 @@ function MenuItem(_name, _func, _spr = noone, _hotkey = noone, _toggle = noone, 
 	}
 	
 	static draw = function(bx, by, bw, bh, m, hov, foc, con = "", pd = ui(4)) {
+		if(activeFn != undefined) active = activeFn();
+		
 		var _tool = getTooltip();
 		var _spr  = getSpr();
 		var _spri = getSprInd();
 		var _cc   = is_callable(getColor)? getColor() : COLORS._main_icon;
+		
+		if(!active) {
+			buttonInstant_Pad(noone, bx, by, bw, bh, m, false, false, _tool, _spr, _spri, _cc, .5, pd);
+			return;
+		}
 		
 		var b  = buttonInstant_Pad(THEME.button_hide_fill, bx, by, bw, bh, m, hov, foc, _tool, _spr, _spri, _cc, 1, pd);
 		
