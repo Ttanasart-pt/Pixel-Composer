@@ -1,7 +1,7 @@
 {
   "$GMShader":"",
-  "%Name":"sh_gap_contract",
-  "name":"sh_gap_contract",
+  "%Name":"sh_gap_contract_render",
+  "name":"sh_gap_contract_render",
   "parent":{
     "name":"gap_contract",
     "path":"folders/nodes/data/filter/fixes/gap_contract.yy",

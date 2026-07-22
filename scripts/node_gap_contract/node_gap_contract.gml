@@ -4,21 +4,25 @@ function Node_Gap_Contract(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	newActiveInput(1);
 	
 	////- =Surfaces
-	newInput(0, nodeValue_Surface( "Surface In" ));
-	newInput(2, nodeValue_Surface( "Mask"       ));
-	newInput(3, nodeValue_Slider(  "Mix",     1 ));
+	newInput( 0, nodeValue_Surface( "Surface In" ));
+	newInput( 2, nodeValue_Surface( "Mask"       ));
+	newInput( 3, nodeValue_Slider(  "Mix",     1 ));
 	__init_mask_modifier(2, 4); // inputs 4, 5, 
-	newInput(7, nodeValue_Bool( "Invert", false )).setPieMenu();
+	newInput( 7, nodeValue_Bool( "Invert", false )).setPieMenu();
 	
 	////- =Gap
-	newInput(6, nodeValue_Int(  "Max Width", 8 )).setHotkey("S").setPieMenu();
-	/// inputs 9
+	newInput( 6, nodeValue_Int(  "Max Width", 8 )).setHotkey("S").setPieMenu();
+	
+	////- =Render
+	newInput( 8, nodeValue_Bool( "Keep Alpha", false )).setPieMenu();
+	/// 9
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
 	input_display_list = [ 1, 
-		[ "Surfaces", false ], 0, 2, 3, 4, 5, 7, 
-		[ "Gap",      false ], 6, 
+		[ "Surfaces",  false ],  0,  2,  3,  4,  5,  7, 
+		[ "Gap",       false ],  6, 
+		[ "Rendering", false ],  8, 
 	];
 	
 	////- Node
@@ -41,9 +45,14 @@ function Node_Gap_Contract(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	}
 	
 	static processData = function(_outSurf, _data, _array_index) {
-		var surf = _data[0];
-		var _itr = _data[6];
-		var _inv = _data[7];
+		#region data
+			var surf  = _data[ 0];
+			var _inv  = _data[ 7];
+			
+			var _itr  = _data[ 6];
+			
+			var _kalp = _data[ 8];
+		#endregion
 		
 		var _dim = surface_get_dimension(surf);
 		
@@ -63,20 +72,26 @@ function Node_Gap_Contract(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 			surface_reset_shader();
 		}
 		
+		var _samp = getAttribute("oversample");
+		shader_set(sh_gap_contract);
+			shader_set_i( "sampleMode", _samp  );
+			shader_set_2( "dimension",  _dim   );
+			shader_set_i( "inverted",   _itr<0 );
+		shader_reset();
+		
 		repeat(abs(_itr)) {
 			surface_set_shader(temp_surface[_bg], sh_gap_contract);
-				shader_set_i("sampleMode", getAttribute("oversample"));
-				shader_set_2("dimension", _dim);
-				shader_set_i("process",   _bg);
-				shader_set_i("inverted",  _itr < 0);
-				
+				shader_set_i( "process", _bg );
 				draw_surface_safe(temp_surface[!_bg]);
 			surface_reset_shader();
 			
 			_bg = !_bg;
 		}
 		
-		surface_set_shader(_outSurf);
+		surface_set_shader(_outSurf, sh_gap_contract_render);
+			shader_set_i( "keepAlpha",  _kalp );
+			shader_set_s( "original",   surf  );
+			
 			draw_surface_safe(temp_surface[!_bg]);
 		surface_reset_shader();
 		
