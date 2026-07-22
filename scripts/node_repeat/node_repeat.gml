@@ -752,6 +752,9 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 			
 		}
 		
+		var _offset_x = -_fanc[0] * (maxx - minx);
+		var _offset_y = -_fanc[1] * (maxy - miny);
+		
 		if(_ani_amo > 0)
 		for( var i = 0, n = atlas_i; i < n; i++ ) { // animators
 			var _i    = i * ATLAS_ARRAY.length;
@@ -924,9 +927,6 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		output_dimension[_array_index] = [_dim[0], _dim[1]];
 		var _outSurf = surface_verify(_outData[0], _dim[0], _dim[1]);
 		_outData[0]  = _outSurf;
-		
-		var _offset_x = -_fanc[0] * (maxx - minx);
-		var _offset_y = -_fanc[1] * (maxy - miny);
 		
 		////- RENDERING
 		

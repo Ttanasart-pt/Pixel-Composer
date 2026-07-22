@@ -6,6 +6,11 @@
         "date": "2026-07-22T05:10:47.239Z",
         "node": "Grid. Tri Grid, Hex Grid",
         "commit": "**Grid. Tri Grid, Hex Grid**: Add height map output."
+      },
+      {
+        "date": "2026-07-22T06:11:20.061Z",
+        "node": "Repeat",
+        "commit": "**Repeat**: Global anchor now apply before animator."
       }
     ]
   },
