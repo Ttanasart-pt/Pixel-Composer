@@ -129,35 +129,113 @@ varying vec2 v_vTexcoord;
 varying vec4 v_vColour;
 
 uniform vec2  dimension;
-uniform vec2  center;
-uniform vec2  scale;
-
-uniform int   distanceMethod;
-
-uniform vec2      intensity;
-uniform int       intensityUseSurf;
-uniform sampler2D intensitySurf;
+uniform vec2  offset;
 
 void main() {
-	float ins = intensity.x;
-	if(intensityUseSurf == 1) {
-		vec4 _vMap = texture2D( intensitySurf, v_vTexcoord );
-		ins = mix(intensity.x, intensity.y, (_vMap.r + _vMap.g + _vMap.b) / 3.);
+	vec2 tx = 1. / dimension;
+	
+	vec4 base = texture2D(gm_BaseTexture, v_vTexcoord);
+	gl_FragColor = base;
+	if(base.a < 1.) return;
+	
+	float curBright = base.r;
+	
+	float maxBright = 0.;
+	vec2  maxPos    = v_vTexcoord;
+	
+	float minBright = 1.;
+	vec2  minPos    = v_vTexcoord;
+	
+	vec2  offs = offset - dimension / 2.;
+	vec2  offn = normalize(offs) * tx;
+	float len  = ceil(length(offs));
+	
+	for(float j = 0.; j < 360.; j += 15.) {
+		vec2 of = vec2(cos(radians(j)), sin(radians(j))) * tx;
+		
+		for(float i = 0.; i < len; i++) {
+			vec2 sx   = v_vTexcoord + of * i;
+			vec4 samp = sampleTexture(gm_BaseTexture, sx);
+			if(samp.a == 0.) break;
+			
+			if(samp.r > maxBright) {
+				maxBright = samp.r;
+				maxPos    = sx;
+			}
+			
+			if(samp.r < minBright) {
+				minBright = samp.r;
+				minPos    = sx;
+			}	
+		}
 	}
 	
-	vec2 cen = center / dimension;
-	vec2 pos = (v_vTexcoord - cen) / scale;
+	// for(float i = 1.; i <= len; i++) {
+	// 	vec2 sx   = v_vTexcoord + offn * i;
+	// 	vec4 samp = sampleTexture(gm_BaseTexture, sx);
+	// 	if(samp.a == 0.) break;
+		
+	// 	if(samp.r > maxBright) {
+	// 		maxBright = samp.r;
+	// 		maxPos    = sx;
+	// 	}
+		
+	// 	if(samp.r < minBright) {
+	// 		minBright = samp.r;
+	// 		minPos    = sx;
+	// 	}
+	// }
 	
-	float theta  = atan(pos.y, pos.x);
-    float radius = 0.;
-    
-         if(distanceMethod == 0) radius = length(pos);
-	else if(distanceMethod == 1) radius = abs(pos.x) + abs(pos.y);
-	else if(distanceMethod == 2) radius = max(abs(pos.x), abs(pos.y));
-    else if(distanceMethod == 3) radius = min(abs(pos.x), abs(pos.y));
-    	
-    radius = pow(radius, ins);
-    vec2 uv = cen + vec2(radius * cos(theta), radius * sin(theta));
-    
-	gl_FragColor = sampleTexture(gm_BaseTexture, uv);
+	// for(float i = 1.; i <= len; i++) {
+	// 	vec2 sx   = v_vTexcoord - offn * i;
+	// 	vec4 samp = sampleTexture(gm_BaseTexture, sx);
+	// 	if(samp.a == 0.) break;
+		
+	// 	if(samp.r > maxBright) {
+	// 		maxBright = samp.r;
+	// 		maxPos    = sx;
+	// 	}
+		
+	// 	if(samp.r < minBright) {
+	// 		minBright = samp.r;
+	// 		minPos    = sx;
+	// 	}
+	// }
+	
+	// offn = normalize(offs.yx) * vec2(1., -1.) * tx;
+	
+	// for(float i = 1.; i <= len; i++) {
+	// 	vec2 sx   = v_vTexcoord + offn * i;
+	// 	vec4 samp = sampleTexture(gm_BaseTexture, sx);
+	// 	if(samp.a == 0.) break;
+		
+	// 	if(samp.r > maxBright) {
+	// 		maxBright = samp.r;
+	// 		maxPos    = sx;
+	// 	}
+		
+	// 	if(samp.r < minBright) {
+	// 		minBright = samp.r;
+	// 		minPos    = sx;
+	// 	}
+	// }
+	
+	// for(float i = 1.; i <= len; i++) {
+	// 	vec2 sx   = v_vTexcoord - offn * i;
+	// 	vec4 samp = sampleTexture(gm_BaseTexture, sx);
+	// 	if(samp.a == 0.) break;
+		
+	// 	if(samp.r > maxBright) {
+	// 		maxBright = samp.r;
+	// 		maxPos    = sx;
+	// 	}
+		
+	// 	if(samp.r < minBright) {
+	// 		minBright = samp.r;
+	// 		minPos    = sx;
+	// 	}
+	// }
+	
+	float ratio = (curBright - minBright) / (maxBright - minBright);
+	gl_FragColor = vec4(ratio, ratio, ratio, 1.);
 }

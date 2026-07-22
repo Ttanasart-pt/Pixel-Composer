@@ -678,6 +678,7 @@
             "Node_Refract",
             "Node_Fluffify",
             "Node_Extends",
+            // "Node_Heightmap_Offset",
             { "label": "/Mapper" },
             "Node_Texture_Remap",
             "Node_Time_Remap",

@@ -247,6 +247,8 @@ void main() {
 			vec4 _vMap = texture2D( ratioSurf, v_vTexcoord );
 			rat = mix(ratio.x, ratio.y, (_vMap.r + _vMap.g + _vMap.b) / 3.);
 		}
+		
+		rat += .001;
 	#endregion
 	
 	vec2  vtx     = getUV(v_vTexcoord);
@@ -260,8 +262,10 @@ void main() {
 	float ceiling = (slot + (random(vec2(slot + 1.)) * 2. - 1.) * rnd * 0.5 + 1.) * _a;
 	float _s      = fract((prog - ground) / (ceiling - ground) + progress);
 	
+	// gl_FragColor = vec4(_s, 0., 0., 1.); return;
+	
 	if(coloring == 0) {
-		if(blend == 0) gl_FragColor = _s > rat? color0 : color1;
+		if(blend == 0) gl_FragColor = _s >= rat? color0 : color1;
 		
 		else if(blend == 1) { 
 			_s = sin(_s * 2. * PI) * 0.5 + 0.5;
