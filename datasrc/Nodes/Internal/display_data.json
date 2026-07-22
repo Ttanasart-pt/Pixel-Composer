@@ -412,10 +412,13 @@
             "Node_MK_Tree_Branch_Trim",
             "Node_MK_Tree_Grow",
             
-            { "label": "/Animate" },
+            { "label": "/Branch" },
             "Node_MK_Tree_Attract",
             "Node_MK_Tree_Repulse",
             "Node_MK_Tree_Wiggle",
+            
+            { "label": "/Leaves" },
+            "Node_MK_Tree_Wiggle_Leaf",
             "Node_MK_Tree_Leaf_Particle",
             
             { "label": "Render" },

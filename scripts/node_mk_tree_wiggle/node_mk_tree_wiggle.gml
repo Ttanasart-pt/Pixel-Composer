@@ -13,7 +13,7 @@ function Node_MK_Tree_Wiggle(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	newInput( 4, nodeValue_Range(   "Speed",     [1,1], true   ));
 	newInput( 2, nodeValue_Range(   "Strength",  [4,4], true   ));
 	newInput( 3, nodeValue_RotRand( "Direction", [0,0,360,0,0] ));
-	// input 5
+	// 5
 	
 	newOutput(0, nodeValue_Output("Tree", VALUE_TYPE.struct, noone)).setCustomData(global.MKTREE_JUNC);
 	
@@ -38,15 +38,17 @@ function Node_MK_Tree_Wiggle(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	static update = function() {
 		if(!is(inline_context, Node_MK_Tree_Inline)) return;
 		
-		var _seed = inline_context.seed + getInputData(1);
-		
-		var _tree = getInputData(0);
-		
-		var _sped = getInputData(4);
-		var _strn = getInputData(2);
-		var _angr = getInputData(3);
-		
-		random_set_seed(_seed);
+		#region data
+			var _seed = inline_context.seed + getInputData(1);
+			
+			var _tree = getInputData(0);
+			
+			var _sped = getInputData(4);
+			var _strn = getInputData(2);
+			var _angr = getInputData(3);
+			
+			random_set_seed(_seed);
+		#endregion
 		
 		_tree = variable_clone(_tree);
 		
