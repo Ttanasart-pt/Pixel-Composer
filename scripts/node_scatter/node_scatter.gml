@@ -277,8 +277,8 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 					if(hv != undefined && mouse_lpress(active)) {
 						var p  = _points[hv];
 						
-						if(array_empty(point_selecting))
-							point_selecting  = [hv];
+						// if(array_empty(point_selecting))
+						point_selecting  = [hv];
 							
 						point_editing    = hv;
 						point_editing_sx = p[0];

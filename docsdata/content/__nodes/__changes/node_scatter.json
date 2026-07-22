@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.7.105",
+    "changes": [
+      {
+        "date": "2026-07-22T09:26:04.465Z",
+        "node": "Scatter",
+        "commit": "**Scatter**: Fix point selection always always multi-select."
+      }
+    ]
+  },
+  {
     "version": "1.21.7.104",
     "changes": [
       {
