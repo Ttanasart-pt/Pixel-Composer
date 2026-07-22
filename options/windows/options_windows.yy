@@ -15,7 +15,7 @@
     },
     "Steam":{
       "option_windows_copyright_info":"(c) 2026 MakhamDev",
-      "option_windows_display_name":"Pixel Composer 1.21.7.104 steam",
+      "option_windows_display_name":"Pixel Composer 1.21.7.105 steam",
       "option_windows_save_location":"1",
       "option_windows_texture_page":"8192x8192",
       "option_windows_version":"1.21.7.1",

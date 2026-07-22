@@ -1,0 +1,6 @@
+{
+    "name":          "Reduce Array",
+    "spr":           "s_node_iterator_reduce_inline",
+    "baseNode":      "Node_Iterator_Reduce_Inline",
+    "pxc_version":    121071,
+}

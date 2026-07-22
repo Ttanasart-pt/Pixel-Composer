@@ -1274,6 +1274,7 @@
             "Node_Iterate_Each_Inline",
             "Node_Iterate_Filter_Inline",
             "Node_Iterate_Sort_Inline",
+            "Node_Iterator_Reduce_Inline",
             
             { "label": "Path" },
             { "label": "/Creator" },
