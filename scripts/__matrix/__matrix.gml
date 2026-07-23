@@ -8,7 +8,11 @@ function Matrix(_size = 1) constructor {
     	
     	size  = _s;
     	isize = _s[0] * _s[1];
-    	array_resize(raw, isize);
+    	
+    	var r = array_create(isize);
+    	for( var i = 0; i < isize; i++ ) 
+    		r[i] = array_safe_get_fast(raw, i, 0);
+    	raw = r;
     	
     	return self;
     }

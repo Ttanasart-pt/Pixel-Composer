@@ -1,0 +1,12 @@
+[
+  {
+    "version": "1.21.7.106",
+    "changes": [
+      {
+        "date": "2026-07-23T02:04:22.162Z",
+        "node": "Matrix",
+        "commit": "**Matrix**: Fix expanding matrix create undefined values."
+      }
+    ]
+  }
+]

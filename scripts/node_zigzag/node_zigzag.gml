@@ -29,9 +29,9 @@ function Node_Zigzag(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
 	input_display_list = [
-		["Output",  false], 0, 11, 12, 9, 
-		["Pattern",	false], 1, 6, 2, 8, 10,  
-		["Render",	false], 5, 3, 4, 
+		[ "Output",  false ],  0, 11, 12,  9, 
+		[ "Pattern", false ],  1,  6,  2,  8, 10,  
+		[ "Render",  false ],  5,  3,  4, 
 	];
 	
 	////- Nodes
@@ -54,29 +54,33 @@ function Node_Zigzag(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	}
 	
 	static processData = function(_outSurf, _data, _array_index) {
-		var _dim = _data[0];
-		var _pos = _data[2];
-		
-		var _col1 = _data[3];
-		var _col2 = _data[4];
-		var _bnd  = _data[5];
-		var _thr  = _data[10];
-		
-		inputs[10].setVisible(_bnd != 1);
+		#region data
+			var _dim  = _data[ 0];
+			var _pos  = _data[ 2];
+			
+			var _col1 = _data[ 3];
+			var _col2 = _data[ 4];
+			var _bnd  = _data[ 5];
+			var _thr  = _data[10];
+			
+			inputs[10].setVisible(_bnd != 1);
+		#endregion
 		
 		surface_set_shader(_outSurf, sh_zigzag);
 			shader_set_uv(_data[11], _data[12]);
 			
-			shader_set_f("dimension",   _dim);
-			shader_set_f("position",   _pos[0] / _dim[0], _pos[1] / _dim[1]);
-			shader_set_f_map("amount", _data[1], _data[6], inputs[1]);
-			shader_set_f_map("angle",  _data[8], _data[7], inputs[8]);
-			shader_set_i("blend",      _bnd);
-			shader_set_color("col1",   _col1);
-			shader_set_color("col2",   _col2);
-			shader_set_f("threshold",  _thr);
+			shader_set_f( "dimension",  _dim  );
 			
-			draw_sprite_ext(s_fx_pixel, 0, 0, 0, _dim[0], _dim[1], 0, c_white, 1);
+			shader_set_f( "position",   _pos[0] / _dim[0], _pos[1] / _dim[1]);
+			shader_set_m( "amount",     _data[1], _data[6], inputs[1]);
+			shader_set_m( "angle",      _data[8], _data[7], inputs[8]);
+			
+			shader_set_i( "blend",      _bnd  );
+			shader_set_c( "col1",       _col1 );
+			shader_set_c( "col2",       _col2 );
+			shader_set_f( "threshold",  _thr  );
+			
+			draw_empty();
 		surface_reset_shader();
 		
 		_outSurf = mask_apply_empty(_outSurf, _data[input_mask_index]);

@@ -25,6 +25,9 @@ function Node_Matrix(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		
 		var _outp = is(_outData, Matrix)? _outData : new Matrix();
 		
+		_siz[0] = max(1, _siz[0]);
+		_siz[1] = max(1, _siz[1]);
+		
 		if(__prev_size[0] != _siz[0] || __prev_size[1] != _siz[1]) {
 			var _v = inputs[1].animator.values;
 			for( var i = 0, n = array_length(_v); i < n; i++ )
@@ -40,8 +43,11 @@ function Node_Matrix(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	}
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
-		var siz  = getInputSingle(0);
-		var str  = $"[{siz[0]}x{siz[1]}]";
+		var _siz = getInputSingle(0);
+		_siz[0] = max(1, _siz[0]);
+		_siz[1] = max(1, _siz[1]);
+		
+		var str  = $"[{_siz[0]}x{_siz[1]}]";
 		var bbox = draw_bbox;
 		
 		draw_set_text(f_sdf, fa_center, fa_center, COLORS._main_text);
