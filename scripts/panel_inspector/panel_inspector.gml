@@ -2,6 +2,7 @@
     function global_filter_anim() { CALL("global_filter_anim"); FILTER_ANIMATION = !FILTER_ANIMATION; GraphRefresh(); }
     
     function panel_inspector_add_node_to_hover()         { CALL("inspector_add_to_hover");           PANEL_INSPECTOR.addNodeToHovering();              }
+    function panel_inspector_edit_as_string()            { CALL("inspector_edit_as_string");         PANEL_INSPECTOR.editValueAsString();              }
     
     function panel_inspector_copy_prop()                 { CALL("inspector_copy_property");          PANEL_INSPECTOR.propSelectCopy();                 }
     function panel_inspector_paste_prop()                { CALL("inspector_paste_property");         PANEL_INSPECTOR.propSelectPaste();                }
@@ -45,6 +46,7 @@
         registerFunction("", "Color Picker",         "",  a, panel_inspector_color_pick             ).setMenu("color_picker");
         
         registerFunction(i, "Add Node to Hover",     "A", s, panel_inspector_add_node_to_hover      ).setMenu("inspector_add_to_hover")
+        registerFunction(i, "Edit As Text...",       "",  n, panel_inspector_edit_as_string         ).setMenu("inspector_edit_as_string")
         
         registerFunction(i, "Copy Value",            "C", c, panel_inspector_copy_prop              ).setMenu("inspector_copy_property",  THEME.copy)
         registerFunction(i, "Paste Value",           "V", c, panel_inspector_paste_prop             ).setMenu("inspector_paste_property", THEME.paste)
@@ -565,6 +567,7 @@ function Panel_Inspector() : PanelContent() constructor {
         	"inspector_toggle_array", 
         	"inspector_mini_timeline_toggle", 
         	-1,
+        	"inspector_edit_as_string", 
         	"inspector_reset", 
         	"inspector_copy_property", 
         	"inspector_paste_property", 
@@ -1568,7 +1571,9 @@ function Panel_Inspector() : PanelContent() constructor {
 					b = buttonInstant(bb, bx, by, bs, bs, _m, _hover, _focus, bt, THEME.icon_default, 0, cc, ba, ics); 
 					
 					if(b == 2) _inspecting.setDefaultAttr(_key);
-					if(b == 3) menuCall("", [ new MenuItem(__txt("Reset Default"), function(k) /*=>*/ {return k[0].removeDefaultAttr(k[1])}).setParam([_inspecting, _key]) ]);
+					if(b == 3) menuCall("", [ 
+						new MenuItem(__txt("Reset Default"), function(k) /*=>*/ {return k[0].removeDefaultAttr(k[1])}).setParam([_inspecting, _key]), 
+					]);
 					
 					bx -= ui(4);
 					editBoxW -= bs + ui(4);
@@ -2921,6 +2926,12 @@ function Panel_Inspector() : PanelContent() constructor {
         return dia;
     }
     
+    static editValueAsString = function(_junc) {
+    	if(!is(prop_selecting, NodeValue)) return;
+    	
+    	var _val = prop_selecting.showValue();
+    	textboxCall(_val, function(t) /*=>*/ { prop_selecting.setString(t); })
+    }
 }
 
 function New_Inspect_Node_Panel(node, pin = true) {

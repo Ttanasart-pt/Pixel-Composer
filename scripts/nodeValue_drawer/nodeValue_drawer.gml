@@ -442,7 +442,9 @@ function drawWidget(xx, yy, ww, _m, _jun, global_var = true, _hover = false, _fo
 							
 							if(b == 3) {
 								mbRight = false;
-								menuCall("", [ new MenuItem(__txt("Reset Default"), function(j) /*=>*/ {return j.clearDefault()}).setParam(jun) ]);
+								menuCall("", [ 
+									new MenuItem(__txt("Reset Default"), function(j) /*=>*/ {return j.clearDefault()}).setParam(jun), 
+								]);
 							}
 							break;
 						

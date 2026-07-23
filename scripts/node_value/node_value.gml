@@ -2274,17 +2274,23 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	
 	static setString = function(str) {
 		if(!editable || connect_type == CONNECT_TYPE.output) return;
-		if(type == VALUE_TYPE.text) { setValue(str); return; }
 		
 		switch(type) {
+			case VALUE_TYPE.text :
+				setValue(str); 
+				break;
+				
 			case VALUE_TYPE.gradient :
 				var _grad = new gradientObject().deserialize(str);
 				setValueRaw(_grad);
 				break;
 				
 			default : 
-				var _dat = json_try_parse(str, -1);
-				if(_dat != -1) setValueRaw(_dat);
+				try {
+					var _dat = json_parse(str);
+					setValueRaw(_dat);
+				} catch(e) {}
+				break;
 		}
 		
 	}
