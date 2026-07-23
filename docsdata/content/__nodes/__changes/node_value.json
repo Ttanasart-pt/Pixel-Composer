@@ -11,6 +11,11 @@
         "date": "2026-07-23T01:40:04.165Z",
         "node": "",
         "commit": "**Inspector Panel**: Reset button now reset to default value if set."
+      },
+      {
+        "date": "2026-07-23T01:53:40.795Z",
+        "node": "",
+        "commit": "Fix incorrect value when setting default unit to pixel."
       }
     ]
   },

@@ -575,11 +575,10 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		cache_value[0] = false;
 		
 		if(_mode == VALUE_UNIT.reference && PREFERENCES.node_def_dim_unit == 0) {
-			// run_in(1, () => { unit.modeTrigger(); });
-			
 			var pxValue = unit.convertUnit(def_val, VALUE_UNIT.constant);
 			setDefValue(pxValue);
 			unit.mode = VALUE_UNIT.constant;
+			def_unit = VALUE_UNIT.constant;
 		}
 		
 		return self;
