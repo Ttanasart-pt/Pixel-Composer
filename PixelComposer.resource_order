@@ -2180,6 +2180,7 @@
     {"name":"panel_custom_inspector","order":6,"path":"scripts/panel_custom_inspector/panel_custom_inspector.yy",},
     {"name":"panel_custom","order":8,"path":"scripts/panel_custom/panel_custom.yy",},
     {"name":"panel_data","order":5,"path":"scripts/panel_data/panel_data.yy",},
+    {"name":"panel_default_editor","order":9,"path":"scripts/panel_default_editor/panel_default_editor.yy",},
     {"name":"panel_dev_project_manager","order":6,"path":"scripts/panel_dev_project_manager/panel_dev_project_manager.yy",},
     {"name":"panel_display_additional","order":15,"path":"scripts/panel_display_additional/panel_display_additional.yy",},
     {"name":"panel_file_explorer","order":16,"path":"scripts/panel_file_explorer/panel_file_explorer.yy",},

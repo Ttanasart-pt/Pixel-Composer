@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"panel_default_editor",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"panel_default_editor",
+  "parent":{
+    "name":"inspectors",
+    "path":"folders/panels/inspectors.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

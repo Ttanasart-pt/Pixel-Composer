@@ -6,6 +6,11 @@
         "date": "2026-07-23T00:01:35.813Z",
         "node": "Inspector Panel",
         "commit": "**Inspector Panel**: Add option to edit value as raw text."
+      },
+      {
+        "date": "2026-07-23T01:40:04.165Z",
+        "node": "",
+        "commit": "**Inspector Panel**: Reset button now reset to default value if set."
       }
     ]
   },

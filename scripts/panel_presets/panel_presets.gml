@@ -366,7 +366,7 @@ function Panel_Presets(_node) : PanelContent() constructor {
 					TOOLTIP = __txta("Clear {1} Default Value(s)", array_length(defKeys));
 					if(mouse_lpress(pFOCUS)) {
 						file_delete_safe(valPath);
-						PRESETS_MAP[$ instanceof(nodeType)] = {}
+						PRESETS_MAP[$ nodeType] = {}
 					}
 				}
 				

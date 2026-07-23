@@ -425,7 +425,7 @@ function drawWidget(xx, yy, ww, _m, _jun, global_var = true, _hover = false, _fo
 							var bt = __txt("panel_inspector_default", "Set default");
 							var bh = _hover;
 							var ba = .25 + jun.is_modified * .55 + (jun.def_preset * .5);
-							var cc = jun.def_preset? COLORS._main_accent : COLORS._main_icon_light;
+							var cc = COLORS._main_icon_light;
 							
 							bx  -= bs; 
 							b    = buttonInstant(bb, bx, by, bs, bs, _m, bh, _focus, bt, THEME.icon_default, 0, cc, ba, ics); 
@@ -443,6 +443,7 @@ function drawWidget(xx, yy, ww, _m, _jun, global_var = true, _hover = false, _fo
 							if(b == 3) {
 								mbRight = false;
 								menuCall("", [ 
+									new MenuItem(__txt("Edit Default..."), function(j) /*=>*/ {return dialogPanelCall(new Panel_Default_Editor(j.node))}).setParam(jun), 
 									new MenuItem(__txt("Reset Default"), function(j) /*=>*/ {return j.clearDefault()}).setParam(jun), 
 								]);
 							}
@@ -459,12 +460,12 @@ function drawWidget(xx, yy, ww, _m, _jun, global_var = true, _hover = false, _fo
 							bx  -= ui(4);
 							cHov = cHov || b;
 							
-							if(b == 1 && reset_hold && jun.is_modified) 
+							if(b == 1 && reset_hold != noone && reset_hold != jun && jun.is_modified) 
 								jun.resetValue();
 								
 							if(b == 2) {
 								jun.resetValue();
-								reset_hold = true;
+								reset_hold = jun;
 							}
 							break;
 						

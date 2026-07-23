@@ -516,16 +516,6 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		return self;
 	}
 	
-	static resetDefault = function(vals) {
-		if(LOADING || APPENDING) return self;
-		
-		animator.values = [];
-		for( var i = 0, n = array_length(vals); i < n; i++ )
-			array_push(animator.values, new valueKey(vals[i][0], vals[i][1], animator));
-			
-		return self;
-	}
-	
 	static clearDefault = function() {
 		def_preset = false;
 		
@@ -548,6 +538,14 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	static skipDefault = function() /*=>*/ { set_default = false; return self; }
 	static resetValue  = function() /*=>*/ {
 		if(!set_default) return;
+		
+		var _hasDefault = struct_has_ext(PRESETS_MAP, instanceof(node), "_values", "content", internalName);
+		if(_hasDefault) {
+			var _map = PRESETS_MAP[$ instanceof(node)][$ "_values"][$ "content"][$ internalName];
+			applyDeserialize(_map, true);
+			is_modified = always_modified;
+			return;
+		}
 		
 		unit.mode = def_unit;
 		setValueDirect(variable_clone(def_val)); 
@@ -2286,7 +2284,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 				break;
 				
 			default : 
-				try {
+				try { 
 					var _dat = json_parse(str);
 					setValueRaw(_dat);
 				} catch(e) {}

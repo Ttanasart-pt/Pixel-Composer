@@ -667,13 +667,8 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 			var _time  = [];
 			
 			switch(values[i].type) {
-				case 0 : 
-					_time = [ 0, _frame ];
-					break;
-					
-				case 1 : 
-					_time = [ values[i].type, _frame, 0 ];
-					break;
+				case 0 : _time = [ 0, _frame ];                 break;
+				case 1 : _time = [ values[i].type, _frame, 0 ]; break;
 			}
 			
 			_value_list[0] = _time;
@@ -713,8 +708,7 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 			array_push(_data, _value_list);
 		}
 		
-		if(_comp) return { d: _data[0][1] };
-		return _data;
+		return _comp? { d: _data[0][1] } : _data;
 	}
 	
 	static deserialize = function(_data, scale = false) {
