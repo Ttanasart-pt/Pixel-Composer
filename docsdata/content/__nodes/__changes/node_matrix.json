@@ -6,6 +6,11 @@
         "date": "2026-07-23T02:04:22.162Z",
         "node": "Matrix",
         "commit": "**Matrix**: Fix expanding matrix create undefined values."
+      },
+      {
+        "date": "2026-07-23T02:04:35.924Z",
+        "node": "Matrix",
+        "commit": "**Matrix**: Size now cannot be lower than 1."
       }
     ]
   }
