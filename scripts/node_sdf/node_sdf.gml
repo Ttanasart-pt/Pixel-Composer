@@ -20,8 +20,9 @@ function Node_SDF(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) const
 	
 	////- =SDF
 	newInput( 2, nodeValue_EButton( "Side",         2, [ "Inside", "Outside", "Both" ])).setPieMenu();
-	newInput( 3, nodeValue_Slider(  "Max Distance", 1, [ 0, 2, .01 ] )).setMappable(7).setPieMenu();
-	newInput( 6, nodeValue_Bool(    "Angle",        false));
+	newInput( 3, nodeValue_Slider(  "Max Distance", 1, [0,2,.01] )).setMappable(7).setPieMenu();
+	newInput( 6, nodeValue_Bool(    "Angle",        false        ));
+	newInput(15, nodeValue_Slider(  "Threshold",   .5            ));
 	
 	////- =Render
 	newInput( 4, nodeValue_Bool( "Keep Alpha", false));
@@ -30,13 +31,13 @@ function Node_SDF(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) const
 		////- =/Fill Others
 	newInput(13, nodeValue_Bool(  "Fill Others", false    ));
 	newInput(14, nodeValue_Color( "Fill Color",  ca_white ));
-	// input 15
+	// input 16
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
 	input_display_list = [  1,  8, 
 		[ "Surfaces",  false     ],  0,  9, 10, 11, 12, 
-		[ "SDF",       false     ],  2,  3,  7,  6,
+		[ "SDF",       false     ],  2,  3,  7,  6, 15, 
 		[ "Render",	   false     ],  4,  5, 
 			[ "/Fill", false, 13 ], 14,
 	]
@@ -65,6 +66,7 @@ function Node_SDF(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) const
 			var _side  = _data[ 2];
 			var _dist  = _data[ 3];
 			var _angl  = _data[ 6];
+			var _tolr  = _data[15];
 			
 			var _alph  = _data[ 4];
 			var _invt  = _data[ 5];
@@ -83,6 +85,8 @@ function Node_SDF(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) const
 		_outSurf = surface_verify(_outSurf, sw, sh, cDep);
 		
 		surface_set_shader(temp_surface[0], sh_sdf_tex);
+			shader_set_f( "threshold", _tolr );
+			
 			draw_surface_safe(inSurf);
 		surface_reset_shader();
 		

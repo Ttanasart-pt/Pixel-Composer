@@ -47,8 +47,8 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		
 		if(NOT_LOAD) {
 			var _parentGroup = project.nodes;
-			if(_group != noone)
-				_parentGroup = has(_group, "getNodeList")? _group.getNodeList() : _group.nodeStack;
+			if(has(_group, "getNodeList"))
+				_parentGroup = _group.getNodeList();
 			array_push(_parentGroup, self);
 		}
 		
@@ -427,10 +427,6 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		topbar_settings = [];
 		
 		hotkey_displays = [];
-	#endregion
-	
-	#region ---- Node Stack ----
-		nodeStack = [];
 	#endregion
 	
 	#region ---- Log ----

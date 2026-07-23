@@ -19,20 +19,21 @@ function Node_Zigzag(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	newInput( 2, nodeValue_Vec2(     "Position",  [.5,.5] )).setHotkey("G").setUnitSimple().setPieMenu();
 	newInput( 8, nodeValue_Rotation( "Angle",       0     )).setHotkey("R").setMappable(7).setPieMenu();
 	newInput(13, nodeValue_Vec2(     "Scale",      [1,1]  )).setHotkey("S").setPieMenu();
-	newInput(10, nodeValue_Slider(   "Threshold",  .5     )).setPieMenu();
+	newInput(14, nodeValue_Slider(   "Offset",      0, [-1,1,.01] ));
 	
 	////- =Render
-	newInput( 5, nodeValue_EButton(  "Type",    0, [ "Solid", "Smooth", "Sawtooth", "AA" ]));
-	newInput( 3, nodeValue_Color(    "Color 1", ca_white));
-	newInput( 4, nodeValue_Color(    "Color 2", ca_black));
-	// input 13
+	newInput( 5, nodeValue_EButton(  "Type",        0, [ "Solid", "Smooth", "Sawtooth", "AA" ]));
+	newInput(10, nodeValue_Slider(   "Threshold",  .5       )).setPieMenu();
+	newInput( 3, nodeValue_Color(    "Color 1",    ca_white ));
+	newInput( 4, nodeValue_Color(    "Color 2",    ca_black ));
+	// 15
 	
-	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
+	newOutput(0, nodeValue_Output( "Surface Out", VALUE_TYPE.surface, noone ));
 	
 	input_display_list = [
 		[ "Output",  false ],  0, 11, 12,  9, 
-		[ "Pattern", false ],  1,  6,  2,  8, 13, 10,  
-		[ "Render",  false ],  5,  3,  4, 
+		[ "Pattern", false ],  1,  6,  2,  8, 13, 14, 
+		[ "Render",  false ],  5, 10,  3,  4, 
 	];
 	
 	////- Nodes
@@ -63,6 +64,8 @@ function Node_Zigzag(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 			var _col2 = _data[ 4];
 			var _bnd  = _data[ 5];
 			var _scal = _data[13];
+			var _offs = _data[14];
+			
 			var _thr  = _data[10];
 			
 			inputs[10].setVisible(_bnd == 0 || _bnd == 3);
@@ -77,6 +80,7 @@ function Node_Zigzag(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 			shader_set_m( "amount",     _data[1], _data[6], inputs[1]);
 			shader_set_m( "angle",      _data[8], _data[7], inputs[8]);
 			shader_set_2( "scale",      _scal );
+			shader_set_f( "offset",     _offs );
 			
 			shader_set_i( "blend",      _bnd  );
 			shader_set_c( "col1",       _col1 );

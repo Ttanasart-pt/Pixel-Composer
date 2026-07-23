@@ -16,6 +16,11 @@
         "date": "2026-07-23T03:46:17.635Z",
         "node": "Zigzag",
         "commit": "**Zigzag**: Add scale, sawtooth render type."
+      },
+      {
+        "date": "2026-07-23T05:19:31.762Z",
+        "node": "",
+        "commit": "**SDF**: Add threshold setting."
       }
     ]
   },

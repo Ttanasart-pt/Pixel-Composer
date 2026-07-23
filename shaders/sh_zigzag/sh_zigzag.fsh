@@ -37,6 +37,8 @@ uniform vec2  position;
 uniform int   blend;
 uniform float rotation;
 uniform vec2  scale;
+uniform float offset;
+
 uniform float threshold;
 
 uniform vec2      amount;
@@ -49,6 +51,8 @@ uniform sampler2D angleSurf;
 
 uniform vec4 col1;
 uniform vec4 col2;
+
+float pfract (in float f) { return fract(fract(f) + 1.); }
 
 void main() {
 	#region params
@@ -72,10 +76,11 @@ void main() {
 	vec2 ptx = floor(vtx * dimension) / dimension;
 	vec2 pos = (ptx - position / dimension) * asp;
 	
-	float _cell  = 1. / (amo * 2.); 
+	pos.y += offset / amo;
 	pos   *= mat2(cos(ang), -sin(ang), sin(ang), cos(ang));
 	pos   /= scale;
 	
+	float _cell  = 1. / (amo * 2.); 
     float _xind  = floor(pos.x / _cell);
     float _yind  = floor(pos.y / _cell);
 	
@@ -95,18 +100,26 @@ void main() {
 	
 	if(blend == 0) {
 		if(flip) _h = 1. - _h;
+		// _h = pfract(_h + offset);
+		
 		gl_FragColor = _h < threshold? col1 : col2;
 		
 	} else if(blend == 1) {
 		if(flip) _h = 1. - _h;
+		// _h = pfract(_h + offset);
+		
 		gl_FragColor = mix(col1, col2, _h);
 		
 	} else if(blend == 2) {
 		_h = _h * .5 + (flip? .5 : 0.);
+		// _h = pfract(_h + offset);
+		
 		gl_FragColor = mix(col1, col2, _h);
 		
 	} else if(blend == 3) { 
 		if(flip) _h = 1. - _h;
+		// _h = pfract(_h + offset);
+		
 		float px = 1. / max(dimension.x, dimension.y);
 		_h = smoothstep(threshold - px, threshold + px, _h);
 			

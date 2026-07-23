@@ -44,6 +44,7 @@ event_inherited();
 	node_tooltip_y = 0;
 	node_surface   = noone;
 	node_icon      = noone;
+	node_icon_fil  = true;
 	node_icon_x    = 0;
 	node_icon_y    = 0;
 	
@@ -903,6 +904,7 @@ event_inherited();
 					node_icon      = spr;
 					node_icon_x    = content_pane.x + pd + list_height / 2 + ui(32);
 					node_icon_y    = content_pane.y + yy + list_height / 2;
+					node_icon_fil  = true;
 					
 					draw_sprite_stretched_ext(THEME.node_bg, 1, pd, yy, list_width - pd * 2, list_height, COLORS._main_accent, 1);
 					
@@ -1596,7 +1598,8 @@ event_inherited();
 				
 				if(_mouseOn) {
 					search_pane.hover_content = true;
-					node_icon   = spr;
+					node_icon     = spr;
+					node_icon_fil = is(_node, NodeObject);
 					
 					if(struct_try_get(_query, "type") == "preset") {
 						var _preset = _query.data;
