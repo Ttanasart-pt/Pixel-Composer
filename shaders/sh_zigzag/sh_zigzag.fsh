@@ -1,5 +1,4 @@
 #pragma use(uv)
-
 #region -- uv -- [1779523757.7465837]
     uniform sampler2D uvMap;
     uniform int   useUvMap;
@@ -70,10 +69,10 @@ void main() {
 	vec2 asp = vec2(dimension.x / dimension.y, 1.);
 	vec2 vtx = getUV(v_vTexcoord);
 	vec2 ptx = floor(vtx * dimension) / dimension;
-	vec2 pos = (ptx - position) * asp;
+	vec2 pos = (ptx - position / dimension) * asp;
 	
 	float _cell  = 1. / (amo * 2.); 
-	pos.y -= _cell / 2.;
+	// pos.y -= _cell / 2.;
 	pos   *= mat2(cos(ang), -sin(ang), sin(ang), cos(ang));
 	
     float _xind  = floor(pos.x / _cell);
@@ -91,15 +90,21 @@ void main() {
 	float _h = _x > _y? _y + (1. - _x) : _y - _x;
 	      
 	float _ychi = _x > _y ? _yind + 1. : _yind;
-	if(mod(_ychi, 2.) == 1.) _h = 1. - _h;
+	bool  flip  = mod(_ychi, 2.) == 1.;
 	
 	if(blend == 0) {
+		if(flip) _h = 1. - _h;
 		gl_FragColor = _h < threshold? col1 : col2;
 		
 	} else if(blend == 1) {
+		if(flip) _h = 1. - _h;
 		gl_FragColor = mix(col1, col2, _h);
 		
-	} else if(blend == 2) { 
+	} else if(blend == 2) {
+		gl_FragColor = mix(col1, col2, _h);
+		
+	} else if(blend == 3) { 
+		if(flip) _h = 1. - _h;
 		float px = 1. / max(dimension.x, dimension.y);
 		_h = smoothstep(threshold - px, threshold + px, _h);
 			

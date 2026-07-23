@@ -21,7 +21,7 @@ function Node_Zigzag(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	newInput(10, nodeValue_Slider(   "Threshold",  .5     )).setPieMenu();
 	
 	////- =Render
-	newInput( 5, nodeValue_EButton(  "Type",    0, [ "Solid", "Smooth", "AA" ]));
+	newInput( 5, nodeValue_EButton(  "Type",    0, [ "Solid", "Smooth", "Sawtooth", "AA" ]));
 	newInput( 3, nodeValue_Color(    "Color 1", ca_white));
 	newInput( 4, nodeValue_Color(    "Color 2", ca_black));
 	// input 13
@@ -71,7 +71,7 @@ function Node_Zigzag(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 			
 			shader_set_f( "dimension",  _dim  );
 			
-			shader_set_f( "position",   _pos[0] / _dim[0], _pos[1] / _dim[1]);
+			shader_set_f( "position",   _pos  );
 			shader_set_m( "amount",     _data[1], _data[6], inputs[1]);
 			shader_set_m( "angle",      _data[8], _data[7], inputs[8]);
 			

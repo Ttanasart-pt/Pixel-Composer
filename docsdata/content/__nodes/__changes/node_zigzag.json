@@ -6,6 +6,11 @@
         "date": "2026-07-23T02:04:22.169Z",
         "node": "",
         "commit": "**Matrix**: Fix expanding matrix create undefined values."
+      },
+      {
+        "date": "2026-07-23T03:41:57.367Z",
+        "node": "Zigzag",
+        "commit": "**Zigzag**: Add sawtooth render type."
       }
     ]
   },
