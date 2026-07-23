@@ -32,7 +32,8 @@ function __NodeValue_Rotation_Random(_name, _node, _value, _tooltip = "") : __No
 		__f = from.value;
 		__t = to.value;
 		__i = KeyframeInterpolate(from, to, rat);
-		return [
+		
+		return sep_axis? lerp(__f, __t, __i) : [
 			lerp(__f[0], __t[0], __i),
 			
 			lerp(__f[1], __t[1], __i),

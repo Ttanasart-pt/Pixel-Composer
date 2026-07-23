@@ -40,8 +40,6 @@ function Node_Tunnel_In(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 			_rec[i].inputs[0].setValueDirect(newKey);
 	};
 	
-	static getDisplayName = function() /*=>*/ {return string(inputs[0].getValue())};
-	
 	isHovering     = false;
 	
 	preview_connecting = false;
@@ -83,11 +81,13 @@ function Node_Tunnel_In(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	static update = function(frame = CURRENT_FRAME) {
 		var _frm = inputs[1].value_from;
 		
-		label_ori   = getInputData(2);
-		label_scale = getInputData(3);
-		label_color = getInputData(4);
-		label_alpha = getInputData(5);
-		scope       = getInputData(6);
+		name        = getInputData( 0);
+		
+		label_ori   = getInputData( 2);
+		label_scale = getInputData( 3);
+		label_color = getInputData( 4);
+		label_alpha = getInputData( 5);
+		scope       = getInputData( 6);
 		
 		if(_frm != __jfrom) {
 			inputs[1].setType(   _frm? _frm.type         : VALUE_TYPE.any);

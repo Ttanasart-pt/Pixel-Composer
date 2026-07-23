@@ -46,7 +46,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		destroy_when_upgroup = false;
 		
 		if(NOT_LOAD) {
-			var _parentGroup = project.nodes;
+			var _parentGroup = project.nodes; 
 			if(has(_group, "getNodeList"))
 				_parentGroup = _group.getNodeList();
 			array_push(_parentGroup, self);

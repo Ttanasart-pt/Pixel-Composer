@@ -21,6 +21,7 @@ switch(load_process) {
     		
     		while(load_step < load_total) {
     			var _node = nodeLoad(_node_list[load_step]);
+    			
     			load_step++;
     			if(_node) create_list[node_length++] = _node;
     			

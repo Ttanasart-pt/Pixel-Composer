@@ -31,6 +31,8 @@ function __NodeValue_Vec2Arr(_name, _node, _value, _data = {}) : NodeValue(_name
 		var _at = array_safe_length(__t, -1);
 		if(_af ==  0 || _at ==  0) return 0;
 		
+		if(sep_axis) return lerp(__f, __t, __i);
+		
 		var _as  = min(_af, _at);
 		var _res = array_create(_as);
 		

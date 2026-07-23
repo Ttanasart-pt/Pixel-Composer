@@ -11,10 +11,12 @@ function __NodeValue_Vec3_Range(_name, _node, _value, _data = {}) : __NodeValue_
 		__f = from.value;
 		__t = to.value;
 		__i = KeyframeInterpolate(from, to, rat);
-		return [
+		
+		return sep_axis? lerp(__f, __t, __i) : [
 			lerp(__f[0], __t[0], __i),
 			lerp(__f[1], __t[1], __i),
 			lerp(__f[2], __t[2], __i),
+			
 			lerp(__f[3], __t[3], __i),
 			lerp(__f[4], __t[4], __i),
 			lerp(__f[5], __t[5], __i),

@@ -11,6 +11,11 @@
         "date": "2026-07-23T05:19:31.746Z",
         "node": "SDF",
         "commit": "**SDF**: Add threshold setting."
+      },
+      {
+        "date": "2026-07-23T08:37:26.928Z",
+        "node": "",
+        "commit": "Fix error when animating with separate axis."
       }
     ]
   },
