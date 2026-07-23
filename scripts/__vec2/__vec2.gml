@@ -199,10 +199,7 @@ function __vec2(_x = 0, _y = _x) constructor {
         y = lerp_float(y, to.y, speed, pre);
     }
 
-	static equal = function(to) {
-		INLINE
-		return x == to.x && y == to.y;
-	}
+	static equal = function(to) { INLINE return x == to.x && y == to.y; }
 	
 	static clone = function() {
 		INLINE
@@ -215,7 +212,7 @@ function __vec2(_x = 0, _y = _x) constructor {
 	
 	static toArray = function() { return [ x, y ]; }
 	
-	static lessThan = function(p) { return y < p.y? true : (x < p.x); }
+	static lessThan = function(p) { return y < p.y? true : (y > p.y? false : x < p.x); }
 }
 
 function __vec2P(_x = 0, _y = _x, _w = 1) : __vec2(_x, _y) constructor {

@@ -250,11 +250,12 @@
 
 	function array_safe_set(arr, index, value, fill = 0) {
 		if(!is_array(arr))  return arr;
-		if(is_array(index)) return arr;
+		if(!is_real(index)) return arr;
 		
 		if(index < 0) return arr;
-		if(index >= array_length(arr)) {
-			var i = array_length(arr);
+		
+		var i = array_length(arr);
+		if(index >= i) {
 			for(; i <= index; i++ )
 				arr[i] = fill;
 			arr[index] = value;

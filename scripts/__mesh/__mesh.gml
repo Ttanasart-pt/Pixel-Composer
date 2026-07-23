@@ -43,6 +43,89 @@ function Mesh() constructor {
 		return false;
 	}
 	
+	static getSides = function() {
+		if(array_length(triangles) == 0) return [];
+		
+		var _segs     = [];
+		var _segmap   = {};
+		var _countmap = {};
+		
+		for( var i = 0, n = array_length(triangles); i < n; i++ ) {
+			var t  = triangles[i];
+			var p0 = points[t[0]];
+			var p1 = points[t[1]];
+			var p2 = points[t[2]];
+			
+			var sg = { p0: p0, p1: p1 };
+			var hs = p0.lessThan(p1)? $"{p0}|{p1}" : $"{p1}|{p0}";
+			_segmap[$ hs]   = sg;
+			_countmap[$ hs] = (_countmap[$ hs] ?? 0) + 1;
+			
+			var sg = { p0: p1, p1: p2 };
+			var hs = p1.lessThan(p2)? $"{p1}|{p2}" : $"{p2}|{p1}"
+			_segmap[$ hs]   = sg;
+			_countmap[$ hs] = (_countmap[$ hs] ?? 0) + 1;
+			
+			var sg = { p0: p2, p1: p0 };
+			var hs = p2.lessThan(p0)? $"{p2}|{p0}" : $"{p0}|{p2}"
+			_segmap[$ hs]   = sg;
+			_countmap[$ hs] = (_countmap[$ hs] ?? 0) + 1;
+			
+		}
+		
+		var _hashs = struct_get_names(_segmap);
+		for( var i = 0, n = array_length(_hashs); i < n; i++ ) {
+			var _hash = _hashs[i];
+			var _seg  = _segmap[$ _hash];
+			var _cnt  = _countmap[$ _hash];
+			
+			if(_cnt == 1) array_push(_segs, _seg);
+		}
+		
+		if(array_empty(_segs)) return _segs;
+		
+		var _paths = [];
+		while(array_length(_segs) > 0) {
+			var _pst = _segs[0];
+			var _pth = [_pst.p0, _pst.p1];
+			var _ter = _pst.p1;
+			array_delete(_segs, 0, 1);
+			
+			// print(array_length(_paths));
+			for( var i = 0, n = array_length(_segs); i < n; i++ ) {
+				var _seg = _segs[i];
+				
+				if(_seg.p0.equal(_ter)) {
+					array_delete(_segs, i, 1);
+					array_push(_pth, _seg.p1);
+					_ter = _seg.p1;
+					
+					i = -1;
+					n--;
+					
+					// print("|    >>>> found p0", n, _ter);
+					
+				} else if(_seg.p1.equal(_ter)) {
+					array_delete(_segs, i, 1);
+					array_push(_pth, _seg.p0);
+					_ter = _seg.p0;
+					
+					i = -1;
+					n--;
+					
+					// print("|    >>>> found p1", n, _ter);
+					
+				} 
+			}
+			
+			array_push(_paths, _pth);
+		}
+		
+		// print(_paths)
+		
+		return _paths;
+	}
+	
 	static mergePath = function(_conn = true) {
 		if(array_length(triangles) == 0) return [];
 		
@@ -51,7 +134,6 @@ function Mesh() constructor {
 		
 		for( var i = 0, n = array_length(triangles); i < n; i++ ) {
 			var t = triangles[i];
-			
 			for( var j = 0; j < 3; j++ ) {
 				var p0 = points[t[(j + 0) % 3]];
 				var p1 = points[t[(j + 1) % 3]];

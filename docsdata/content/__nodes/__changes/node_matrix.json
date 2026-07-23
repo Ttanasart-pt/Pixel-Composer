@@ -11,6 +11,11 @@
         "date": "2026-07-23T02:04:35.924Z",
         "node": "Matrix",
         "commit": "**Matrix**: Size now cannot be lower than 1."
+      },
+      {
+        "date": "2026-07-23T03:21:51.402Z",
+        "node": "Mesh Extrude 3D",
+        "commit": "**Mesh Extrude 3D**: Fix side face does not appear on inside face."
       }
     ]
   }
