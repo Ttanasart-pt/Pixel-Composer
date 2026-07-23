@@ -6,6 +6,11 @@
         "date": "2026-07-23T05:29:30.534Z",
         "node": "Shadow",
         "commit": "**Shadow**: Fix incorrect 'Shadow Only' output in inside shadow mode."
+      },
+      {
+        "date": "2026-07-23T08:06:27.678Z",
+        "node": "",
+        "commit": "**RigidSim Wall**: Add offset property."
       }
     ]
   },

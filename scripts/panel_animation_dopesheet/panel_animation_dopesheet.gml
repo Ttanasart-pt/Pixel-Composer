@@ -3936,6 +3936,16 @@ function Panel_Animation_Dopesheet() {
         
     	////- =Overlay
     	
+    	if(animation_analyze) {
+    		var bs = ui(28);
+    		var bx = bar_x + bar_w - ui(4) - bs;
+    		var by = pd + ui(4);
+    		
+    		if(buttonInstant(THEME.button_def, bx, by, bs, bs, [mx,my], pHOVER, pFOCUS, __txt("Analyze on"), 
+    			THEME.keyframe_analyze, 0, COLORS._main_value_positive, 1, .75) == 2)
+    			animation_analyze = false;
+    	}
+    	
         if(item_dragging != noone) {
         	var n = array_length(item_draggings);
         	var _dx = mx - item_dragging_dx + n * ui(8);

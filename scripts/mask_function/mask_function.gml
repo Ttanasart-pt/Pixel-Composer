@@ -41,11 +41,11 @@ function mask_modify(mask, invert = false, feather = 0, alpha = 0) {
 	return __temp_mask;
 }
 
-function mask_apply_input(original, edited, mask, mix = 1, _input = noone) {
-	return mask_apply(original, edited, mask, mix, _input);
-}
+// function mask_apply_input(original, edited, mask, mix = 1, _input = noone) {
+// 	return mask_apply(original, edited, mask, mix, _input);
+// }
 
-function mask_apply(original, edited, mask, mix = 1, _input = noone) {
+function mask_apply_input(original, edited, mask, mix = 1, _input = noone) {
 	if(!is_surface(mask) && mix == 1) return edited;
 	
 	var _w = surface_get_width(edited);
@@ -58,6 +58,7 @@ function mask_apply(original, edited, mask, mix = 1, _input = noone) {
 		mask = surface_apply_gaussian(new blur_gauss_args(mask, __mask_feather).setBG(false, c_white));
 	
 	surface_set_shader(__mask_surface, sh_mask);
+		shader_set_i( "empty",    !is_surface(original));
 		shader_set_s( "original", original);
 		shader_set_s( "edited",   edited);
 		

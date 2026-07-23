@@ -6,13 +6,14 @@ uniform int useMask;
 uniform int invMask;
 uniform int maskAlpha;
 
+uniform int empty;
 uniform sampler2D original;
 uniform sampler2D edited;
 uniform float mixRatio;
 
 void main() {
 	vec4 msk = texture2D( mask, v_vTexcoord );
-	vec4 ori = texture2D( original, v_vTexcoord );
+	vec4 ori = empty == 1? vec4(0.) : texture2D( original, v_vTexcoord );
 	vec4 edt = texture2D( edited, v_vTexcoord );
 	
 	float mskAmo = maskAlpha == 1? msk.a : (msk.r + msk.g + msk.b) / 3. * msk.a;

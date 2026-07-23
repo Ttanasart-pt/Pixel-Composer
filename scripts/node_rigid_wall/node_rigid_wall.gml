@@ -10,19 +10,23 @@ function Node_Rigid_Wall(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	worldScale = 100;
 	objects    = [];
 	
-	newInput(2, nodeValue_Dimension());
-	newInput(3, nodeValue_Int(    "Collision Group", 1 ));
-	newInput(0, nodeValue_Toggle( "Sides", 0b0010, { data : [ "T", "B", "L", "R" ] }));
+	newInput( 2, nodeValue_Dimension());
+	newInput( 3, nodeValue_Int(     "Collision Group", 1 ));
+	
+	////- =Wall
+	newInput( 0, nodeValue_Toggle(  "Sides", 0b0010, { data : [ "T", "B", "L", "R" ] }));
+	newInput( 5, nodeValue_Vec4(    "Offsets", [0,0,0,0] ));
 		
 	////- =Physics
-	newInput(1, nodeValue_Float(  "Contact Friction", .2 ));
-	newInput(4, nodeValue_Slider( "Bounciness",       .2 ));
-	// input 5
+	newInput( 1, nodeValue_Float(  "Contact Friction", .2 ));
+	newInput( 4, nodeValue_Slider( "Bounciness",       .2 ));
+	// input 6
 	
 	newOutput(0, nodeValue_Output("Object", VALUE_TYPE.rigid, objects));
 	
-	input_display_list = [ 0, 
-		["Physics",	false],	1, 4, 
+	input_display_list = [ 
+		[ "Wall",    false ],  0,  5, 
+		[ "Physics", false ],  1,  4, 
 	];
 	
 	////- Node
@@ -32,17 +36,23 @@ function Node_Rigid_Wall(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _params) { 
 		if(!is(inline_context, Node_Rigid_Group_Inline)) return;
 		var _dim  = inline_context.dimension;
-		var _sids = getInputData(0);
+		var _sids = getInputData( 0);
+		var _offs = getInputData( 5);
 		
 		draw_set_color(COLORS._main_accent);
 		
 		var x0 = _x, x1 = _x + _dim[0] * _s;
 		var y0 = _y, y1 = _y + _dim[1] * _s;
 		
-		if(_sids & 0b0001) draw_line_round(x0, y0, x1, y0, 4);
-		if(_sids & 0b0010) draw_line_round(x0, y1, x1, y1, 4);
-		if(_sids & 0b0100) draw_line_round(x0, y0, x0, y1, 4);
-		if(_sids & 0b1000) draw_line_round(x1, y0, x1, y1, 4);
+		var ft = _offs[0] * _s;
+		var fb = _offs[1] * _s;
+		var fl = _offs[2] * _s;
+		var fr = _offs[3] * _s;
+		
+		if(_sids & 0b0001) draw_line_round(x0, y0+ft, x1, y0+ft, 4);
+		if(_sids & 0b0010) draw_line_round(x0, y1-fb, x1, y1-fb, 4);
+		if(_sids & 0b0100) draw_line_round(x0+fl, y0, x0+fl, y1, 4);
+		if(_sids & 0b1000) draw_line_round(x1-fr, y0, x1-fr, y1, 4);
 		
 	}
 	
@@ -50,8 +60,12 @@ function Node_Rigid_Wall(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		if(worldIndex == undefined) return undefined;
 		
 		var _dim = inline_context.dimension;
-		var _frc = getInputData(1);
-		var _res = getInputData(4);
+		var _off = getInputData( 5);
+		
+		var _frc = getInputData( 1);
+		var _res = getInputData( 4);
+		
+		var of = _off[side] / worldScale;
 		
 		var ww = _dim[0] / worldScale;
 		var hh = _dim[1] / worldScale;
@@ -59,10 +73,10 @@ function Node_Rigid_Wall(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		gmlBox2D_Object_Create_Begin(worldIndex, 0, 0, false);
 		
 		switch(side) {
-			case 0 : gmlBox2D_Object_Create_Shape_Segment( 0,  0, ww,  0); break;
-			case 1 : gmlBox2D_Object_Create_Shape_Segment( 0, hh, ww, hh); break;
-			case 2 : gmlBox2D_Object_Create_Shape_Segment( 0,  0,  0, hh); break;
-			case 3 : gmlBox2D_Object_Create_Shape_Segment(ww,  0, ww, hh); break;
+			case 0 : gmlBox2D_Object_Create_Shape_Segment( 0,    of, ww,    of); break;
+			case 1 : gmlBox2D_Object_Create_Shape_Segment( 0, hh-of, ww, hh-of); break;
+			case 2 : gmlBox2D_Object_Create_Shape_Segment(   of,  0,    of, hh); break;
+			case 3 : gmlBox2D_Object_Create_Shape_Segment(ww-of,  0, ww-of, hh); break;
 				
 		}
 		
@@ -92,6 +106,8 @@ function Node_Rigid_Wall(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		for( var i = 0; i < 4; i++ )
 			if(_sids & (1 << i)) array_push(objects, spawn(i));
 	}
+	
+	////- Draw
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
 		var bbox  = draw_bbox;

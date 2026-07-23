@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.7.106",
+    "changes": [
+      {
+        "date": "2026-07-23T08:06:27.678Z",
+        "node": "RigidSim Wall",
+        "commit": "**RigidSim Wall**: Add offset property."
+      }
+    ]
+  },
+  {
     "version": "1.21.rc10",
     "changes": [
       {

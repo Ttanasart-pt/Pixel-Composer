@@ -172,6 +172,7 @@ function Node_Shadow(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		
 		__process_mask_modifier(_data);
 		_outSurf = mask_apply_input(_surf, _outSurf, _data[6], _data[7], inputs[6]);
+		_outShad = mask_apply_input(noone, _outShad, _data[6], _data[7], inputs[6]);
 		
 		return _outData;
 	}

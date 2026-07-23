@@ -160,6 +160,7 @@
     "inspector_view":                     { "path": "./icon/s_icon_inspector_view.png",                     "s": 2, "x": 12, "y": 12 },
     "junc_visible":                       { "path": "./icon/s_junc_visible.png",                            "s": 3, "x":  8, "y":  8 },
     "junction_bypass":                    { "path": "./icon/s_junction_bypass.png",                         "s": 2, "x": 12, "y": 12 },
+    "keyframe_analyze":                   { "path": "./icon/s_keyframe_analyze.png",                        "s": 1, "x": 12, "y": 12 },
     "keyframe_override":                  { "path": "./icon/s_icon_keyframe_override.png",                  "s": 2, "x": 12, "y": 12 },
     "libraries":                          { "path": "./icon/s_libraries.png",                               "s": 1, "x": 12, "y": 12 },
     "loading_s":                          { "path": "./icon/s_loading_s.png",                               "s": 1, "x": 12, "y": 12 },
