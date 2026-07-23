@@ -2847,6 +2847,7 @@
     {"name":"sh_shadow_cast_light_sep","order":3,"path":"shaders/sh_shadow_cast_light_sep/sh_shadow_cast_light_sep.yy",},
     {"name":"sh_shadow_cast_remove_solid","order":5,"path":"shaders/sh_shadow_cast_remove_solid/sh_shadow_cast_remove_solid.yy",},
     {"name":"sh_shadow_cast","order":2,"path":"shaders/sh_shadow_cast/sh_shadow_cast.yy",},
+    {"name":"sh_shadow_inner_crop","order":1,"path":"shaders/sh_shadow_inner_crop/sh_shadow_inner_crop.yy",},
     {"name":"sh_shape_ellipse","order":3,"path":"shaders/sh_shape_ellipse/sh_shape_ellipse.yy",},
     {"name":"sh_shape_half","order":5,"path":"shaders/sh_shape_half/sh_shape_half.yy",},
     {"name":"sh_shape_map_polygon","order":1,"path":"shaders/sh_shape_map_polygon/sh_shape_map_polygon.yy",},

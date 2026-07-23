@@ -145,14 +145,25 @@ function Node_Shadow(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		surface_reset_shader();
 		
 		surface_set_shader(_outSurf, sh_shadow_apply, true, BLEND.over);
-			shader_set_s("shadowTex", _outShad );
-			shader_set_i("side",      _side    );
-			shader_set_f("strength",  _stre * _color_get_alpha(_colr) );
+			shader_set_s( "shadowTex", _outShad ) ;
+			shader_set_i( "side",      _side    ) ;
+			shader_set_f( "strength",  _stre * _color_get_alpha(_colr) );
 			
 			draw_surface_safe(_surf);
 		surface_reset_shader();
 		
-		if(_remOri) {
+		if(_side == 1) {
+			temp_surface[0] = surface_verify(temp_surface[0], _dim[0], _dim[1]);
+			surface_set_shader(temp_surface[0]);
+				draw_surface(_outShad, 0, 0);
+			surface_reset_shader();
+			
+			surface_set_shader(_outShad, sh_shadow_inner_crop);
+				shader_set_s( "original", _surf );
+				draw_surface(temp_surface[0], 0, 0);
+			surface_reset_shader();
+			
+		} else if(_remOri) {
 			surface_set_shader(_outShad, noone, false);
 				BLEND_SUBTRACT
 				draw_surface(_surf, 0, 0);

@@ -1,0 +1,12 @@
+{
+  "$GMShader":"",
+  "%Name":"sh_shadow_inner_crop",
+  "name":"sh_shadow_inner_crop",
+  "parent":{
+    "name":"shadow",
+    "path":"folders/nodes/data/filter/effects/shadow.yy",
+  },
+  "resourceType":"GMShader",
+  "resourceVersion":"2.0",
+  "type":1,
+}

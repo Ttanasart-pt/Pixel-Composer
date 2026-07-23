@@ -3361,6 +3361,7 @@
     {"id":{"name":"sh_shadow_cast_light_sep","path":"shaders/sh_shadow_cast_light_sep/sh_shadow_cast_light_sep.yy",},},
     {"id":{"name":"sh_shadow_cast_remove_solid","path":"shaders/sh_shadow_cast_remove_solid/sh_shadow_cast_remove_solid.yy",},},
     {"id":{"name":"sh_shadow_cast","path":"shaders/sh_shadow_cast/sh_shadow_cast.yy",},},
+    {"id":{"name":"sh_shadow_inner_crop","path":"shaders/sh_shadow_inner_crop/sh_shadow_inner_crop.yy",},},
     {"id":{"name":"sh_shape_ellipse","path":"shaders/sh_shape_ellipse/sh_shape_ellipse.yy",},},
     {"id":{"name":"sh_shape_half","path":"shaders/sh_shape_half/sh_shape_half.yy",},},
     {"id":{"name":"sh_shape_map_circle","path":"shaders/sh_shape_map_circle/sh_shape_map_circle.yy",},},
