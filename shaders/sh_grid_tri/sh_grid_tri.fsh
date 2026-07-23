@@ -221,6 +221,7 @@ uniform vec2  textureAngle;
 uniform vec4  textureScale;
 uniform float textureFlip;
 
+uniform float gradient_seed;
 uniform float gradient_shift;
 
 float pfract(in float f) { return fract(fract(f) + 1.); }
@@ -285,7 +286,7 @@ void main() {
 	
 	vec2 uv = tri.xy / sca / vec2(dimension.x / dimension.y, c30);
 	     uv = fract(fract(uv) + 1.);
-	vec4 base = gradientEval(pfract(random(uv) + gradient_shift));
+	vec4 base = gradientEval(pfract(random(uv + gradient_seed / 1000.) + gradient_shift));
 	
 	if(mode == 0) {
 		colr = base;

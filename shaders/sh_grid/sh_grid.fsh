@@ -305,7 +305,8 @@ uniform vec2  level;
 uniform int   diagonal;
 uniform int   uniformSize;
 
-uniform float gradientShift;
+uniform float gradient_seed;
+uniform float gradient_shift;
 
 uniform int   textureTransform;
 uniform float textureSeed;
@@ -435,7 +436,7 @@ void main() {
 	}
 	
 	vec4 colr;
-	vec4 base = gradientEval(pfract(random(sqSt) + gradientShift));
+	vec4 base = gradientEval(pfract(random(sqSt + gradient_seed / 1000.) + gradient_shift));
 	
 	if(mode == 0) {
 		colr = base;

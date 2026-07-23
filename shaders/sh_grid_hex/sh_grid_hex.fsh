@@ -220,6 +220,7 @@ uniform vec2  textureAngle;
 uniform vec4  textureScale;
 uniform float textureFlip;
 
+uniform float gradient_seed;
 uniform float gradient_shift;
 
 #define PI 3.14159265359
@@ -296,7 +297,7 @@ void main() {
 	
 	float tileY = floor(sca.y * 4. / 3.);
 	uv.y = mod(floor(uv.y * (tileY + 1.)), tileY) / tileY;
-	vec4 base = gradientEval(pfract(random(uv) + gradient_shift));
+	vec4 base = gradientEval(pfract(random(uv + gradient_seed / 1000.) + gradient_shift));
 	
 	if(mode == 0) {
 		colr = base;

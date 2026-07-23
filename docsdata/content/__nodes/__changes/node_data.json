@@ -16,6 +16,11 @@
         "date": "2026-07-23T08:37:26.928Z",
         "node": "",
         "commit": "Fix error when animating with separate axis."
+      },
+      {
+        "date": "2026-07-23T09:47:32.238Z",
+        "node": "Grid",
+        "commit": "**Grid**: Add separate seed control for Random Shift. Random Scale and Tile color properties."
       }
     ]
   },

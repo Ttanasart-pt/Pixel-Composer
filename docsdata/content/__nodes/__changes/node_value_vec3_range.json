@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.7.106",
+    "changes": [
+      {
+        "date": "2026-07-23T08:37:27.003Z",
+        "node": "",
+        "commit": "Fix error when animating with separate axis."
+      }
+    ]
+  },
+  {
     "version": "1.21.6.003",
     "changes": [
       {

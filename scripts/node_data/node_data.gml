@@ -863,6 +863,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	static getInputJunctionIndex   = function(i) /*=>*/ { 
 		if(input_display_list == -1 || !use_display_list) return i;
 		var _junci = input_display_list[i];
+		if(is_array(_junci)) _junci = _junci[0];
 		return is_numeric(_junci)? _junci : noone;
 	}
 	
@@ -933,14 +934,25 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 				
 				if(is_real(ind)) {
 					var jun = array_safe_get(inputs, ind, noone);
-					if(!is(jun, NodeValue) || !jun.isVisible()) continue;
-					array_push(inputDisplayList, jun);
+					if(is(jun, NodeValue) && jun.isVisible()) 
+						array_push(inputDisplayList, jun);
 					
-				} else if(is_array(ind) && array_length(ind) >= 3) {
-					var _trInd = ind[2];
-					var jun = array_safe_get(inputs, _trInd, noone);
-					if(!is(jun, NodeValue) || !jun.isVisible()) continue;
-					array_push(inputDisplayList, jun);
+				} 
+				
+				if(is_array(ind)) {
+					var _sgInd = ind[0];
+					if(is_real(_sgInd)) {
+						var jun = array_safe_get(inputs, _sgInd, noone);
+						if(is(jun, NodeValue) && jun.isVisible()) 
+							array_push(inputDisplayList, jun);
+					}
+					
+					if(array_length(ind) >= 3) {
+						var _trInd = ind[2];
+						var jun = array_safe_get(inputs, _trInd, noone);
+						if(is(jun, NodeValue) && jun.isVisible()) 
+							array_push(inputDisplayList, jun);
+					}
 				}
 			}
 			
@@ -2488,9 +2500,6 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	}
 	
 	static drawJunctionNames = function(_x, _y, _mx, _my, _s, _panel = noone) {
-		var amo = input_display_list == -1? array_length(inputs) : array_length(input_display_list);
-		var jun;
-		
 		var xx = x * _s + _x;
 		var yy = y * _s + _y;
 		
