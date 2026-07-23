@@ -19,12 +19,15 @@ function Node_Grid_Tri(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	newInput( 1, nodeValue_Vec2(     "Position", [.5,.5]   )).setHotkey("G").setUnitSimple();
 	newInput( 4, nodeValue_Rotation( "Angle",     0        )).setHotkey("R").setMappable(13).setPieMenu();
 	newInput( 2, nodeValue_Vec2(     "Scale",    [.25,.25] )).setHotkey("S").setUnitSimple().setMappable(11).setPieMenu();
-	newInput( 3, nodeValue_Slider(   "Gap",      .1, [0, 0.5, 0.001] )).setMappable(12).setPieMenu();
+	newInput( 3, nodeValue_Slider(   "Gap",      .1, [0,.5,.001] )).setMappable(12).setPieMenu();
+	
+	////- =Shift
+	newInput(29, nodeValue_Slider(   "Shift",     0, [-1,1,.01]  ));
 	
 	////- =Render
-	newInput( 8, nodeValue_EScroll( "Render Type",  0, ["Colored tile", "Height map", "Texture grid", "Texture sample"]));
+	newInput( 8, nodeValue_EScroll(  "Render Type",  0, ["Colored tile", "Height map", "Texture grid", "Texture sample"]));
 	newInput( 5, nodeValue_Gradient( "Tile Color", gra_white        )).setMappable(17).addShift(27);
-	newInput(28, nodeValueSeed(      "Color Seed"                   ));
+	newInput(28, nodeValueSeedFloat( "Color Seed"                   ));
 	newInput( 6, nodeValue_Color(    "Gap Color",  ca_black         ));
 	
 	newInput( 7, nodeValue_Surface(  "Texture"                      ));
@@ -39,11 +42,12 @@ function Node_Grid_Tri(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	newInput(19, nodeValue_RotRange(   "Random Angle",    [0,0]           ));
 	newInput(26, nodeValue_Vec2_Range( "Random Scale",    [1,1,1,1], true ));
 	newInput(16, nodeValue_Slider(     "Flip Threshold",  .5              ));
-	// input 29
+	// input 30
 	
 	input_display_list = [ 9, 
 		[ "Output",  false ],  0, 23, 24, 22, 
 		[ "Pattern", false ],  1,  4, 13,  2, 11,  3, 12, 
+		[ "Shift",   false ], 29, 
 		[ "Render",	 false ],  8,  [5, true], 17, 27, 28, -1,  6,  7, 21, 10, 20, 
 			[ "/Texture Transform", true, 14], 15, 25, 19, 26, 16, 
 	];
@@ -120,6 +124,8 @@ function Node_Grid_Tri(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 			shader_set_i( "aa",        _aa       );
 			shader_set_c( "gapCol",    _col_gap  );
 			shader_set_2( "level",     _data[20] );
+			
+			shader_set_f( "shift",     _data[29] );
 			
 			shader_set_i( "textureTransform", _data[14] );
 			shader_set_f( "textureSeed",      _data[15] );

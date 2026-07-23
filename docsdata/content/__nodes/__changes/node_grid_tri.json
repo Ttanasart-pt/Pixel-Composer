@@ -6,6 +6,11 @@
         "date": "2026-07-23T09:47:32.258Z",
         "node": "",
         "commit": "**Grid**: Add separate seed control for Random Shift. Random Scale and Tile color properties."
+      },
+      {
+        "date": "2026-07-23T10:07:54.157Z",
+        "node": "",
+        "commit": "**Tri Grid**: Add shift property."
       }
     ]
   },

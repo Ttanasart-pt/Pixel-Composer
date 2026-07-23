@@ -214,6 +214,8 @@ uniform vec4  gapCol;
 uniform int   gradient_use;
 uniform vec2  level;
 
+uniform float shift;
+
 uniform int   textureTransform;
 uniform float textureSeed;
 uniform vec4  texturePosition;
@@ -228,19 +230,19 @@ float pfract(in float f) { return fract(fract(f) + 1.); }
 float random (in vec2 st) { return fract(sin(dot(st.xy + vec2(85.456034, 64.54065), vec2(12.9898, 78.233))) * (43758.5453123 + seed) ); }
 float random (in float sd) { return random(vec2(sd)); }
 
-vec3 triGrid(vec2 p) {
-    float _stx = (p.x + c30 / 2.0 * p.y);
+vec3 triGrid(vec2 _pos) {
+    float _stx = (_pos.x + c30 / 2.0 * _pos.y);
     float stx  = abs(fract(_stx) - 0.5);
    	
-    float _sty = (p.x - c30 / 2.0 * p.y);
+    float _sty = (_pos.x - c30 / 2.0 * _pos.y);
     float sty  = abs(fract(_sty) - 0.5);
-    float sth  = abs(fract(p.y * c30) - 0.5);
+    float sth  = abs(fract(_pos.y * c30) - 0.5);
     float sm   = 1.;
     
 	float n = min(smoothstep(sm, -sm, stx), min(smoothstep(sm, -sm, sty), smoothstep(sm, -sm, sth)));
 	n = (n - .16) / (.35 - .16);
 	
-    return vec3((floor(_stx) + floor(_sty) + 1.) / 2., floor(p.y * c30), n);
+    return vec3((floor(_stx) + floor(_sty) + 1.) / 2., floor(_pos.y * c30), n);
 }
 
 void main() {
@@ -273,13 +275,17 @@ void main() {
     vec2 _pos = pos * rot * sca;
 	
 	vec3  tri  = triGrid(_pos);
+	
+	_pos.x += tri.y * shift;
+	 tri    = triGrid(_pos);
+	
 	float dist = max(0., tri.z);
 	vec4 colr;
 	
 	float h = (dist - level.x) / (level.y - level.x);
 	gl_FragData[1] = vec4(vec3(h), 1.);
 	
-	if(mode == 1) {
+	if(mode == 1) { 
 		gl_FragData[0] = vec4(vec3(h), 1.);
 		return;
 	}

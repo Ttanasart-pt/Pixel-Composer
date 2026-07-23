@@ -24,7 +24,7 @@ function Node_Grid_Hex(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	////- =Render
 	newInput( 7, nodeValue_EScroll(  "Render Type",  0, ["Colored tile", "Height map", "Texture grid", "Texture sample"]));
 	newInput( 5, nodeValue_Gradient( "Tile Color",   gra_white      )).setMappable(17).addShift(27);
-	newInput(28, nodeValueSeed(      "Color Seed"                   ));
+	newInput(28, nodeValueSeedFloat( "Color Seed"                   ));
 	newInput( 6, nodeValue_Color(    "Gap Color",    ca_black       ));
 	
 	newInput( 9, nodeValue_Surface(  "Texture"                      ));
