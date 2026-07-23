@@ -11,6 +11,11 @@
         "date": "2026-07-23T03:41:57.367Z",
         "node": "Zigzag",
         "commit": "**Zigzag**: Add sawtooth render type."
+      },
+      {
+        "date": "2026-07-23T03:46:17.635Z",
+        "node": "Zigzag",
+        "commit": "**Zigzag**: Add scale, sawtooth render type."
       }
     ]
   },

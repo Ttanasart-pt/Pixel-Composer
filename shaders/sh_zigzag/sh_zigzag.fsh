@@ -36,6 +36,7 @@ uniform vec2  dimension;
 uniform vec2  position;
 uniform int   blend;
 uniform float rotation;
+uniform vec2  scale;
 uniform float threshold;
 
 uniform vec2      amount;
@@ -72,8 +73,8 @@ void main() {
 	vec2 pos = (ptx - position / dimension) * asp;
 	
 	float _cell  = 1. / (amo * 2.); 
-	// pos.y -= _cell / 2.;
 	pos   *= mat2(cos(ang), -sin(ang), sin(ang), cos(ang));
+	pos   /= scale;
 	
     float _xind  = floor(pos.x / _cell);
     float _yind  = floor(pos.y / _cell);
@@ -101,6 +102,7 @@ void main() {
 		gl_FragColor = mix(col1, col2, _h);
 		
 	} else if(blend == 2) {
+		_h = _h * .5 + (flip? .5 : 0.);
 		gl_FragColor = mix(col1, col2, _h);
 		
 	} else if(blend == 3) { 
