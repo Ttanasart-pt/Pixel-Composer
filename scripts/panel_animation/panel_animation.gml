@@ -936,12 +936,22 @@ function Panel_Animation() : PanelContent() constructor {
         	var _dx = x + bx + ui(32);
         	var _dy = y + by - ui(8);
         	
+        	var param = { x : _dx, y : _dy };
+        	
         	menuCall("animation_tools", [
-        		menuItem(__txt("panel_animation_scale_animation", "Scaler"),  function(d) /*=>*/ { dialogPanelCall(new Panel_Animation_Scaler(),  d.x, d.y, 
-        			{ anchor: ANCHOR.right | ANCHOR.bottom }); }, noone, noone, noone, { x : _dx, y : _dy }),
+        		menuItem(__txt("panel_animation_scale_animation", "Scaler"),  function(d) /*=>*/ { 
+        			dialogPanelCall(new Panel_Animation_Scaler(),  d.x, d.y, { anchor: ANCHOR.right | ANCHOR.bottom }); 
+        		}).setParam(param),
         			
-        		menuItem(__txt("panel_animation_clean_animation", "Cleaner"), function(d) /*=>*/ { dialogPanelCall(new Panel_Animation_Cleaner(), d.x, d.y, 
-        			{ anchor: ANCHOR.right | ANCHOR.bottom }); }, noone, noone, noone, { x : _dx, y : _dy }),
+        		menuItem(__txt("panel_animation_clean_animation", "Cleaner"), function(d) /*=>*/ { 
+        			dialogPanelCall(new Panel_Animation_Cleaner(), d.x, d.y, { anchor: ANCHOR.right | ANCHOR.bottom }); 
+        		}).setParam(param),
+        		
+        		-1,	
+        		
+        		menuItem(__txt("panel_animation_analyze", "Analyze..."), function(d) /*=>*/ { 
+        			dialogPanelCall(new Panel_Animation_Analyze_Settings(), d.x, d.y, { anchor: ANCHOR.right | ANCHOR.bottom }); 
+        		}).setParam(param),
         			
     		], _dx, _dy);
         

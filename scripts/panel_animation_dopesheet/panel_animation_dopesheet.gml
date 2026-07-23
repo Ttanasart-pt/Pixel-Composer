@@ -285,8 +285,13 @@ function Panel_Animation_Dopesheet() {
         
         tooltip_action      = "";
         tooltip_action_time = 0;
-        
+    #endregion
+    
+    #region ---- Analyze ----     
         animation_analyze   = false;
+        
+        analyze_velocity    =  true;
+        analyze_delta_pixel = false;
     #endregion
     
     #region ---- Graph ----
@@ -1820,7 +1825,7 @@ function Panel_Animation_Dopesheet() {
         return key_hover;
     }
 	
-    function drawDopesheet_Graph_Analyze(animator, msx, msy) {
+    function drawDopesheet_Graph_Analyze_Velocity(animator, msx, msy) {
         var _py   = animator.y;
         var _famo = TOTAL_FRAMES;
         
@@ -1866,6 +1871,9 @@ function Panel_Animation_Dopesheet() {
 	        	oc = nc;
         	}
         	
+        	if(pHOVER && point_in_rectangle(msx, msy, x0, y0, x1-1, y1))
+        		TOOLTIP = $"velocity: {delt}";
+        	
         	x0 = x1;
         	ov = nv;
         }
@@ -1873,6 +1881,67 @@ function Panel_Animation_Dopesheet() {
         draw_set_alpha(1);
         
         animator.value_delta = _delMax;
+    }
+    
+    function drawDopesheet_Graph_Analyze_Pixel(animator, msx, msy) {
+    	var _py   = animator.y;
+        var _famo = TOTAL_FRAMES;
+        
+        var ov = animator.getValue(0);
+        var nv;
+        
+        var y0 = _py - ui(9);
+        var y1 = _py + ui(9);
+        var x0 = timeline_shift + .5 * timeline_scale;
+        var x1;
+        
+    	draw_set_alpha(1);
+        
+        var valArr = is_array(ov);
+        var valLen = array_safe_length(ov);
+        
+        var oc = undefined;
+        var nc = undefined;
+        var del;
+        var applyUnit = animator.prop.unit.mode == VALUE_UNIT.reference;
+        if(applyUnit) ov = animator.prop.unit.apply(ov);
+        
+        for( var i = 1; i <= _famo; i++ ) {
+        	nv = animator.getValue(i);
+        	if(applyUnit) nv = animator.prop.unit.apply(nv);
+        	
+        	x1 = x0 + timeline_scale;
+        	
+        	var px = 0;
+        	
+        	if(valArr) {
+        		del = [];
+        		for( var j = 0; j < valLen; j++ ) {
+        			del[j] = frac(ov[j]-nv[j]);
+        			px += frac(ov[j]-nv[j]) == 0? 0 : .5 - abs(frac(ov[j]-nv[j]) - .5);
+        		}
+        		px /= valLen;
+        		
+        	} else {
+        		del = frac(nv-ov);
+        		px  = frac(nv-ov) == 0? 0 : .5 - abs(frac(nv-ov) - .5);
+        	}
+        	px = abs(px);
+        	
+        	if(px != 0.) {
+	    		draw_set_color_alpha(COLORS._main_value_negative, .5 + px);
+	        	draw_rectangle(x0, y0, x1-1, y1, false);
+        	}
+        	
+        	if(pHOVER && point_in_rectangle(msx, msy, x0, y0, x1-1, y1))
+        		TOOLTIP = $"delta: {del}, off-pixel: {px}";
+        	
+        	x0 = x1;
+        	ov = nv;
+        }
+        
+        draw_set_alpha(1);
+        
     }
     
     function drawDopesheet_Graph() {
@@ -1920,8 +1989,10 @@ function Panel_Animation_Dopesheet() {
                 for( var k = 0, o = array_length(_anims); k < o; k++ ) {
                 	var _anim = _anims[k];
                 	
-                    if(animation_analyze) 
-                    	drawDopesheet_Graph_Analyze(_anim, msx, msy);
+                    if(animation_analyze) {
+                    	if(analyze_velocity)    drawDopesheet_Graph_Analyze_Velocity(_anim, msx, msy);
+                    	if(analyze_delta_pixel) drawDopesheet_Graph_Analyze_Pixel(_anim, msx, msy);
+                    }
                     
                     var key = drawDopesheet_Graph_BG(_anim, msx, msy);
                     if(key != noone) key_hover = key;

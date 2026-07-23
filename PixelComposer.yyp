@@ -2553,6 +2553,7 @@
     {"id":{"name":"panel_action_manager","path":"scripts/panel_action_manager/panel_action_manager.yy",},},
     {"id":{"name":"panel_addnode_pie_editor","path":"scripts/panel_addnode_pie_editor/panel_addnode_pie_editor.yy",},},
     {"id":{"name":"panel_addon","path":"scripts/panel_addon/panel_addon.yy",},},
+    {"id":{"name":"panel_animation_analyze_settings","path":"scripts/panel_animation_analyze_settings/panel_animation_analyze_settings.yy",},},
     {"id":{"name":"panel_animation_cleaner","path":"scripts/panel_animation_cleaner/panel_animation_cleaner.yy",},},
     {"id":{"name":"panel_animation_dopesheet","path":"scripts/panel_animation_dopesheet/panel_animation_dopesheet.yy",},},
     {"id":{"name":"panel_animation_marker_settings","path":"scripts/panel_animation_marker_settings/panel_animation_marker_settings.yy",},},
