@@ -11,6 +11,11 @@
         "date": "2026-07-24T06:35:33.416Z",
         "node": "Canvas",
         "commit": "**Canvas**: Add freeform polygonal draw/selection tool."
+      },
+      {
+        "date": "2026-07-24T09:20:23.134Z",
+        "node": "Canvas",
+        "commit": "**Canvas**: Improve frame manipulation. Add multiple selection, hotkey for deletion, duplication."
       }
     ]
   },

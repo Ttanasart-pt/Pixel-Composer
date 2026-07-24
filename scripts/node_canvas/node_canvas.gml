@@ -91,24 +91,18 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	frame_renderer_x     = 0;
 	frame_renderer_x_to  = 0;
 	frame_renderer_x_max = 0;
-	frame_dragging       = noone;
-	frame_selecting      = noone;
+	frame_selecting      = [];
+	
+	frame_drag      = 0;
+	frame_dragging  = undefined;
+	frame_drag_data = [];
+	frame_drag_mx   = 0;
+	
 	use_external_dimension = false;
 	
 	menu_frame = [
-		menuItem(__txt("Duplicate"), function() /*=>*/ { 
-			var _dup_surf = surface_clone(canvas_surface[frame_selecting]);
-			var _dup_buff = buffer_from_surface(_dup_surf, false);
-			
-			array_insert(canvas_surface, frame_selecting, _dup_surf);
-			array_insert(canvas_buffer,  frame_selecting, _dup_buff);
-			
-			attributes.frames++;
-			refreshFrames();
-			update();
-			
-		}, THEME.duplicate),
-		menuItem(__txt("Delete"),    function() /*=>*/ { removeFrame(frame_selecting); }, THEME.cross),
+		menuItem( __txt("Duplicate"), function() /*=>*/ {return duplicateSelectedFrame()}, THEME.duplicate ).setHotkey(new Hotkey("", "", "D", MOD_KEY.ctrl)),
+		menuItem( __txt("Delete"),    function() /*=>*/ {return removeSelectedFrame()},    THEME.cross     ).setHotkey(new Hotkey("", "", vk_delete)),
 	];
 	
 	frame_renderer_content = noone;
@@ -143,17 +137,23 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			var _msx = _m[0] - _x0;
 			var _msy = _m[1] - _y0;
 			
-			var _fr_h = _hh - 8;
+			var _fr_h = _hh - ui(8);
 			var _fr_w = _fr_h;
 			
-			var _fr_x = 4 - _fx;
-			var _fr_y = 4;
+			var _fr_x = ui(4) - _fx;
+			var _fr_y = ui(4);
+			
+			var _dragI = 0;
+			var _dragX = _fr_x - ui(2);
 			
 			var surfs = output_surface;
 			var _del  = noone;
 			
-			for( var i = 0, n = attributes.frames; i < n; i++ ) {
-				var _surf = array_safe_get(surfs, i);
+			var _amo    = array_length(canvas_surface);
+			var _hovFrm = _hover && point_in_rectangle(_m[0], _m[1], _x0, _y0, _x1, _y1);
+			
+			for( var i = 0; i < _amo; i++ ) {
+				var _surf = canvas_surface[i];
 				if(!is_surface(_surf)) continue;
 				
 				var _sw = surface_get_width(_surf);
@@ -165,55 +165,82 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 				
 				var _ssw = _sw * _ss;
 				var _ssh = _sh * _ss;
+				var _xw  = _ssw + ui(4);
 				
+				var isCur = i == preview_index;
+				
+				if(array_exists(frame_selecting, i))
+					draw_sprite_stretched_ext(THEME.box_r2, 2, _sx-2, _sy-2, _ssw+4, _ssh+4, COLORS._main_icon, 1);
+				
+				var bc = isCur? COLORS._main_accent : COLORS.panel_toolbar_outline;
 				draw_surface_ext(_surf, _sx, _sy, _ss, _ss, 0, c_white, 1);
-				draw_sprite_stretched_add(THEME.box_r2, 1, _sx, _sy, _ssw, _ssh, i == preview_index? COLORS._main_accent : COLORS.panel_toolbar_outline, 1);
+				draw_sprite_stretched_ext(THEME.box_r2, 1, _sx, _sy, _ssw, _ssh, bc, 1);
 				
-				if(_hover && point_in_rectangle(_m[0], _m[1], _x0, _y0, _x1, _y1)) {
+				if(_hovFrm) {
 					var _del_x = _sx + _fr_w  - 10;
 					var _del_y = _sy          + 10;
 					var _del_a = noone;
 					
-					if(key_mod_press(SHIFT) && point_in_circle(_msx, _msy, _del_x, _del_y, 8)) {
-						_del_a = 1;
-						
-						if(mouse_lpress(_focus)) 
-							_del = i;
+					if(point_in_rectangle(_msx, _msy, _sx, _sy, _sx + _ssw, _sy + _ssh)) {
+						if(key_mod_press(SHIFT) && point_in_circle(_msx, _msy, _del_x, _del_y, 8)) {
+							_del_a = 1;
 							
-					} else if(point_in_rectangle(_msx, _msy, _sx, _sy, _sx + _ssw, _sy + _ssh)) {
-						_frame_hovering = i;
-						draw_sprite_stretched_add(THEME.box_r2, 1, _sx, _sy, _ssw, _ssh, c_white, .2);
-						
-						if(mouse_lpress(_focus)) {
-							setFrame(i);
-							frame_dragging  = i;
-							frame_selecting = i;
-						}
+							if(mouse_lpress(_focus)) 
+								_del = i;
+								
+						} else {
+							_frame_hovering = i;
+							draw_sprite_stretched_add(THEME.box_r2, 1, _sx, _sy, _ssw, _ssh, c_white, .2);
 							
-						if(mouse_rpress(_focus))  {
-							frame_selecting = i;
-							menuCall("node_canvas_frame", menu_frame);
+							if(mouse_lpress(_focus))
+								setFrame(i);
 						}
 					}
 					
-					if(_del_a != noone) {
-						draw_sprite_ui(THEME.cross_12, 0, _del_x, _del_y, 1, 1, 0, c_white, .5 + _del_a * .5);
-					}
+					if(_del_a != noone) draw_sprite_ui(THEME.cross_12, 0, _del_x, _del_y, 1, 1, 0, c_white, .5 + _del_a * .5);
 				}
 				
-				if(_focus && i == preview_index) {
-					if(key_press(vk_delete)) _del = i;
+				if(_msx >= _fr_x && _msx < _fr_x + _xw / 2) {
+					_dragI = i;
+					_dragX = _fr_x - ui(2);
+						
+				} else if(_msx >= _fr_x + _xw / 2 && _msx < _fr_x + _xw) {
+					_dragI = i + 1;
+					_dragX = _fr_x + _ssw + ui(2);
+					
 				}
 				
-				var _xw = _ssw + 4;
 				_fr_x += _xw;
 				frame_renderer_x_max += _xw;
 			} 
-			
+	
+			if(_msx > _fr_x) {
+				_dragI = i;
+				_dragX = _fr_x - ui(2);
+			}
+					
 			if(_del > noone) removeFrame(_del);
 		surface_reset_shader();
 		draw_surface(frame_renderer_content, _x0, _y0);
 		
+		if(mouse_lpress()) {
+			if(_frame_hovering == noone) frame_selecting = [];
+			else if(_focus) {
+				if(key_mod_press(SHIFT)) array_toggle(frame_selecting, _frame_hovering);
+				else if(!array_exists(frame_selecting, _frame_hovering))
+					frame_selecting = [_frame_hovering];
+				
+				frame_dragging  = array_clone(frame_selecting);
+				frame_drag      = 1;
+				frame_drag_mx   = _m[0];
+			}
+		}
+
+		if(mouse_rpress(_focus))  {
+			if(array_empty(frame_selecting) && _frame_hovering != noone) frame_selecting = [_frame_hovering];
+			menuCall("node_canvas_frame", menu_frame);
+		}
+						
 		frame_renderer_x_max = max(0, frame_renderer_x_max - 200);
 		frame_renderer_x     = lerp_float(frame_renderer_x, frame_renderer_x_to, 3);
 		
@@ -227,27 +254,77 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		if(buttonInstant(noone, _bx, _by, _bs, _bs, _m, _hover, _focus, "", THEME.add_16, 0, CARRAY.button_positive) == 2)
 			addFrame(true);
 		
-		if(frame_dragging != noone) {
-			
-			if(_frame_hovering != noone && _frame_hovering != frame_dragging) {
-				var _dup_surf = canvas_surface[frame_dragging];
-				var _dup_buff = canvas_buffer[frame_dragging];
+		if(frame_drag == 1) {
+			if(abs(frame_drag_mx - _m[0]) > ui(16)) {
+				frame_drag_data = [];
+				frame_drag      = 2;
 				
-				array_delete(canvas_surface, frame_dragging, 1);
-				array_delete(canvas_buffer,  frame_dragging, 1);
+				array_sort(frame_dragging, false);
+				for( var i = 0, n = array_length(frame_dragging); i < n; i++ ) {
+					var _did = frame_dragging[i];
+					
+					frame_drag_data[i] = [ canvas_surface[_did], canvas_buffer[_did] ];
+					array_delete(canvas_surface, _did, 1);
+					array_delete(canvas_buffer,  _did, 1);
+				}
 				
-				array_insert(canvas_surface, _frame_hovering, _dup_surf);
-				array_insert(canvas_buffer,  _frame_hovering, _dup_buff);
-				
-				frame_dragging = _frame_hovering;
-				
-				setFrame(frame_dragging);
-				refreshFrames();
-				update();
+				frame_selecting = [];
 			}
 			
-			if(mouse_lrelease())
-				frame_dragging = noone;
+			if(mouse_lrelease()) {
+				frame_dragging = undefined;
+				frame_drag     = 0;
+			}
+			
+		} else if(frame_drag == 2) {
+			draw_set_color(COLORS._main_accent);
+			draw_line_round(_x0 + _dragX, _y0 + _fr_y, _x0 + _dragX, _y0 + _fr_y + _fr_h, ui(2));
+			
+			var am = array_length(frame_drag_data);
+			var ps = _fr_h;
+			for( var i = 0; i < am; i++ ) {
+				var dx = _m[0] + ui(8) + (am - i - 1) * ui(4);
+				var dy = _m[1] + ui(8) + (am - i - 1) * ui(4);	
+				
+				var _data = frame_drag_data[i];
+				var _surf = _data[0];
+				if(!is_just_surface(_surf)) continue;
+				
+				var ss = ps / (max(surface_get_width(_surf), surface_get_height(_surf)));
+				draw_sprite_stretched_ext(THEME.box_r2, 1, dx, dy, ps, ps, COLORS._main_icon, 1);
+				draw_surface_ext(_surf, dx, dy, ss, ss, 0, c_white, 1);
+			}
+			
+			if(mouse_lrelease()) {
+				for( var i = 0, n = array_length(frame_drag_data); i < n; i++ ) {
+					var _data = frame_drag_data[i];
+					var _surf = _data[0];
+					var _butt = _data[1];
+					
+					array_insert(canvas_surface, _dragI, _surf);
+					array_insert(canvas_buffer,  _dragI, _butt);
+				}
+				
+				frame_selecting = [];
+				for( var i = 0, n = array_length(frame_drag_data); i < n; i++ )
+					array_push(frame_selecting, _dragI + i);
+				
+				refreshFrames();
+				update();
+				
+				frame_dragging = undefined;
+				frame_drag     = 0;
+			}
+			
+		}
+		
+		if(_focus) {
+			if(key_press(ord("D"), MOD_KEY.ctrl))
+				duplicateSelectedFrame();
+			
+			if(key_press(vk_delete))
+				removeSelectedFrame();
+			
 		}
 		
 		return _h + 8 * _full;
@@ -971,6 +1048,38 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	}
 	static resizeFrames  = function() /*=>*/ { for( var i = 0; i < attributes.frames; i++ ) resizeFrame(i); }
 	
+	static duplicateSelectedFrame = function() /*=>*/ {
+		if(array_empty(frame_selecting)) return;
+		
+		array_sort(frame_selecting, false);
+		for( var i = 0, n = array_length(frame_selecting); i < n; i++ ) {
+			var _ind = frame_selecting[i];
+			var _dup_surf = surface_clone(canvas_surface[_ind]);
+			var _dup_buff = buffer_from_surface(_dup_surf, false);
+			
+			array_insert(canvas_surface, _ind, _dup_surf);
+			array_insert(canvas_buffer,  _ind, _dup_buff);
+			
+			attributes.frames++;
+		}
+		
+		frame_selecting = [];
+		
+		refreshFrames();
+		update();
+	}
+	
+	static removeSelectedFrame = function() /*=>*/ {
+		if(array_empty(frame_selecting)) return;
+		
+		array_sort(frame_selecting, false);
+		for( var i = 0, n = array_length(frame_selecting); i < n; i++ ) 
+			removeFrame(frame_selecting[i]);
+			
+		frame_selecting = [];
+		
+	}
+	
 	////- Surfaces
 	
 	static getCanvasSurface = function(i = preview_index) /*=>*/ {return array_safe_get_fast(canvas_surface, i)};
@@ -1298,6 +1407,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	}
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _params) { 
+		if(frame_drag) return;
 		preview_surface_sample = isNotUsingTool();
 		
 		#region parameters

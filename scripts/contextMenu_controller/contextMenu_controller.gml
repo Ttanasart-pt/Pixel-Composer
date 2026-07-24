@@ -54,8 +54,9 @@ function MenuItem(_name, _func, _spr = noone, _hotkey = noone, _toggle = noone, 
     static setParam     = function(_param)     /*=>*/ { params     = _param;     return self; }
     static setToggle    = function(_toggle)    /*=>*/ { toggle     = _toggle;    return self; }
     static setTooltip   = function(_t)         /*=>*/ { tooltip    = _t; scrollable = true; return self; }
-    static setContext   = function(_c)         /*=>*/ { contextMenu = _c;        return self; }
-    static setScroll    = function()           /*=>*/ { scrollable = true;       return self; }
+    static setContext   = function(_c)         /*=>*/ { contextMenu  = _c;        return self; }
+    static setScroll    = function()           /*=>*/ { scrollable   = true;      return self; }
+    static setHotkey    = function(_h)         /*=>*/ { hoykeyObject = _h;        return self; }
 	
 	static setSurface   = function(_c)         /*=>*/ { surface = _c;            return self; }
 	
