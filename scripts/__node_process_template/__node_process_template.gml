@@ -21,3 +21,14 @@ function Node_Process_Template(_x, _y, _group = noone) : Node_Processor(_x, _y, 
 		return _outSurf; 
 	}
 }
+
+/* dynamic inputs
+	function createNewInput(index = array_length(inputs)) {
+		var inAmo = array_length(inputs);
+		newInput(index, nodeValue_Surface("Input")).setVisible(true, true);
+		refreshDynamicDisplay();
+		return inputs[index];
+	} 
+	
+	setDynamicInput(1);
+*/

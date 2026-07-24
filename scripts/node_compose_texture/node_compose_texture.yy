@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"node_compose_texture",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"node_compose_texture",
+  "parent":{
+    "name":"compose",
+    "path":"folders/nodes/data/compose.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

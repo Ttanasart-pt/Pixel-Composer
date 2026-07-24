@@ -589,11 +589,11 @@ function Panel_Inspector() : PanelContent() constructor {
     }
     
     function setInspecting(_inspecting, _lock = false, _focus = true, _record = true) {
-        if(locked) return;
-        if(inspecting == _inspecting) return;
+        if(locked) return self;
+        if(inspecting == _inspecting) return self;
         if(_inspecting == noone) {
         	clearInspecting();
-        	return;
+        	return self;
         }
         
         if(_record) {
@@ -618,6 +618,7 @@ function Panel_Inspector() : PanelContent() constructor {
         contentPane.scroll_wait  = 2;
             
         picker_index = 0;
+        return self;
     }
     
     function getInspecting() { return inspecting != noone && inspecting.active? inspecting : noone; }

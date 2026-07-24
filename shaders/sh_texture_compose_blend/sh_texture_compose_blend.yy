@@ -1,0 +1,12 @@
+{
+  "$GMShader":"",
+  "%Name":"sh_texture_compose_blend",
+  "name":"sh_texture_compose_blend",
+  "parent":{
+    "name":"compose_texture",
+    "path":"folders/nodes/data/compose/compose_texture.yy",
+  },
+  "resourceType":"GMShader",
+  "resourceVersion":"2.0",
+  "type":1,
+}

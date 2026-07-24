@@ -388,6 +388,8 @@ function Node_Processor(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	static attributeDeserialize = function(attr) {
 		struct_override(attributes, attr, true); 
 		setProcess();
+		
+		if(doAttributeDeserialize) doAttributeDeserialize(attr);
 	}
 	
 	setProcess();

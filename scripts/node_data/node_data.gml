@@ -648,7 +648,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	dyna_input_check_shift     =  0;
 	input_display_dynamic      = -1;
 	input_display_dynamic_full = undefined;
-	dynamic_input_inspecting   =  0;
+	dynamic_input_inspecting   = noone;
 	
     static setDynamicInput = function(_data_length = 1, _auto_input = true, _dummy_type = VALUE_TYPE.any, _dynamic_input_cond = DYNA_INPUT_COND.connection) {
 		is_dynamic_input	= true;						
@@ -735,7 +735,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		array_resize(input_display_list, array_length(input_display_list_raw));
 		
 		var _amo = getInputAmount();
-		if(_amo == 0) { dynamic_input_inspecting = 0; return; }
+		if(_amo == 0) { dynamic_input_inspecting = noone; return; }
 		
 		dynamic_input_inspecting = min(dynamic_input_inspecting, _amo - 1);
 		
@@ -750,6 +750,9 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 				for( var j = 0, n = array_length(_list); j < n; j++ ) {
 					var v = _list[j]; 
 					if(is_real(v)) v += _ind;
+							
+					if(is_array(v) && array_length(v) > 2 && v[2] >= 0)
+						v = [v[0], v[1], v[2] + _ind];
 					
 					array_push(input_display_list, v);
 				}
@@ -1466,7 +1469,8 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
         return false;
 	}
 	
-	static triggerRender = function(resetSelf = true) {
+	static onTriggerRender = undefined
+	static triggerRender   = function(resetSelf = true) {
 		LOG_BLOCK_START
 		if(global.FLAG.render == 1) LOG($"Trigger render for {getFullName()}");
 		
@@ -1488,6 +1492,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		for( var i = 0, n = array_length(instanceChild); i < n; i++ ) 
 			instanceChild[i].triggerRender(resetSelf);
 		
+		if(onTriggerRender) onTriggerRender();
 		LOG_BLOCK_END
 	}
 	
@@ -3439,7 +3444,8 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		repeat(_dynamic_inputs) createNewInput();
 	}
 	 
-	static attributeDeserialize = function(attr) {
+	static doAttributeDeserialize = undefined
+	static attributeDeserialize   = function(attr) {
 		struct_override(attributes, attr, true); 
 		
 		if(!CLONING && LOADING_VERSION < 1_18_02_0) {
@@ -3454,6 +3460,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			if(!_supp) attributes.color_depth = PREFERENCES.node_default_depth;
 		}
 		
+		if(doAttributeDeserialize) doAttributeDeserialize(attr);
 	}
 	
 	static doDeserialize   = function(m) /*=>*/ {}

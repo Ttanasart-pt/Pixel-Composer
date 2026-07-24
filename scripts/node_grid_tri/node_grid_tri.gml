@@ -22,7 +22,10 @@ function Node_Grid_Tri(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	newInput( 3, nodeValue_Slider(   "Gap",      .1, [0,.5,.001] )).setMappable(12).setPieMenu();
 	
 	////- =Shift
-	newInput(29, nodeValue_Slider(   "Shift",     0, [-1,1,.01]  ));
+	newInput(29, nodeValue_Slider(   "Shift",            0, [-1,1,.01] ));
+	newInput(31, nodeValue_Slider(   "Random Shift",     0             ));
+	newInput(32, nodeValueSeedFloat( "Shift Seed"                      ));
+	newInput(30, nodeValue_Slider(   "Secondary Shift",  0             ));
 	
 	////- =Render
 	newInput( 8, nodeValue_EScroll(  "Render Type",  0, ["Colored tile", "Height map", "Texture grid", "Texture sample"]));
@@ -42,12 +45,12 @@ function Node_Grid_Tri(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	newInput(19, nodeValue_RotRange(   "Random Angle",    [0,0]           ));
 	newInput(26, nodeValue_Vec2_Range( "Random Scale",    [1,1,1,1], true ));
 	newInput(16, nodeValue_Slider(     "Flip Threshold",  .5              ));
-	// input 30
+	// input 33
 	
 	input_display_list = [ 9, 
 		[ "Output",  false ],  0, 23, 24, 22, 
 		[ "Pattern", false ],  1,  4, 13,  2, 11,  3, 12, 
-		[ "Shift",   false ], 29, 
+		[ "Shift",   false ], 29, [31, true], 32, -1, 30, 
 		[ "Render",	 false ],  8,  [5, true], 17, 27, 28, -1,  6,  7, 21, 10, 20, 
 			[ "/Texture Transform", true, 14], 15, 25, 19, 26, 16, 
 	];
@@ -125,7 +128,10 @@ function Node_Grid_Tri(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 			shader_set_c( "gapCol",    _col_gap  );
 			shader_set_2( "level",     _data[20] );
 			
-			shader_set_f( "shift",     _data[29] );
+			shader_set_f( "shift",         _data[29] );
+			shader_set_f( "secShift",      _data[30] );
+			shader_set_f( "randShift",     _data[31] );
+			shader_set_f( "randShiftSeed", _data[32] );
 			
 			shader_set_i( "textureTransform", _data[14] );
 			shader_set_f( "textureSeed",      _data[15] );

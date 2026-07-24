@@ -215,6 +215,9 @@ uniform int   gradient_use;
 uniform vec2  level;
 
 uniform float shift;
+uniform float secShift;
+uniform float randShift;
+uniform float randShiftSeed;
 
 uniform int   textureTransform;
 uniform float textureSeed;
@@ -276,7 +279,9 @@ void main() {
 	
 	vec3  tri  = triGrid(_pos);
 	
-	_pos.x += tri.y * shift;
+	_pos.x += tri.y * shift + mod(tri.y, 2.) * secShift;
+	_pos.x += randShift * (random(randShiftSeed / 1000. + tri.y) * 2. - 1.);
+	
 	 tri    = triGrid(_pos);
 	
 	float dist = max(0., tri.z);

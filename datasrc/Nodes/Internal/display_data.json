@@ -1064,6 +1064,7 @@
             "Node_Composite",
             "Node_Camera",
             "Node_UV_Blend", 
+            "Node_Compose_Texture", 
             "Node_Weld", 
             { "label": "/Align" },
             "Node_Stack",
