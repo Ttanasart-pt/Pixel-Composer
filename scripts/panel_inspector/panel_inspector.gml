@@ -1487,13 +1487,14 @@ function Panel_Inspector() : PanelContent() constructor {
 	                        if(j_jun == noone) break;
 	                        
 	                        if(is_array(j_jun)) {
-	                        	if(subk || _keyJunc) break;
+	                        	if(_keyJunc) break;
 	                        	
 	                        	var _jkey = array_safe_get_fast(j_jun, 0, "");
 	                        	var _jkJn = is_real(_jkey);
 	                        	var _subk = string_starts_with(_jkey, "/");
 	                        	
-	                        	if(!_subk && !_jkJn) break;
+	                        	if(!_subk && !_jkJn)    break;
+	                        	else if(subk && !_jkJn) break;
 	                        	else { 
 	                        		j++; 
 	                        		_section_st++;

@@ -18,7 +18,7 @@ function Node_MK_Rock(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	newInput(40, nodeValue_Range(    "Sides",       [4,6]         ));
 	newInput(43, nodeValue_Surface(  "Surface"                    ));
 	newInput( 3, nodeValue_Range(    "Size",        [4,8]         ));
-	newInput( 4, nodeValue_SliRange( "Ratio",       [.5,.5], true ));
+	newInput( 4, nodeValue_Range(    "Ratio",       [.5,.5], true )).setCurvable(50, CURVE_DEF_11);
 	newInput( 7, nodeValue_Range(    "Depth",       [4,6]         ));
 	newInput( 6, nodeValue_RotRange( "Rock Angle",  [0,0]         ));
 	newInput(16, nodeValue_Range(    "Shape Scale", [1,1], true   )).setCurvable(28, CURVE_DEF_11);
@@ -63,7 +63,7 @@ function Node_MK_Rock(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		////- =/Posterize
 	newInput(14, nodeValue_Bool(    "Colorize",  true        ));
 	newInput(15, nodeValue_Palette( "Colors",    DEF_PALETTE ));
-	// 50
+	// 51
 	
 	newOutput( 0, nodeValue_Output( "Surface Out", VALUE_TYPE.surface, noone ));
 	newOutput( 1, nodeValue_Output( "Depth",       VALUE_TYPE.surface, noone ));
@@ -71,7 +71,7 @@ function Node_MK_Rock(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	input_display_list = [ s_MKFX, 1, 
 		[ "Output",         false     ],  0, 
 		[ "Pile",           false     ],  2,  5,  8, 27, 30, 
-		[ "Rock",           false     ], 37, 40, 43,  3,  4,  7,  6, 16, 28, 
+		[ "Rock",           false     ], 37, 40, 43,  3,  4, 50,  7,  6, 16, 28, 
 			[ "/Shape Modifier", true ], 34, 35, 38, 42, 39, 
 		
 		[ "Nugget",          true, 20 ], 24, 21, 22, 23, 
@@ -353,6 +353,7 @@ function Node_MK_Rock(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 			shape_surf  = _data[43];
 			var _size   = _data[ 3];
 			var _ratio  = _data[ 4];
+			ratio_curve = new curveMap(_data[50]);
 			var _dept   = _data[ 7];
 			var _rota   = _data[ 6];
 			scal_range  = _data[16];
@@ -416,23 +417,19 @@ function Node_MK_Rock(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		surface_clear(temp_surface[output_index]);
 		surface_clear(temp_surface[depth_index], c_black, 1);
 		
-		var rockS = random(1);
-		var deptS = random(1);
-		
-		var pebs = lerp(_dept[0], _dept[1], deptS);
-		
 		var scx  = _scatt[0];
 		var scy  = _scatt[1];
+		
+		var pebw  = lerp(_size[0], _size[1], random(1));
+		var pebs  = lerp(_dept[0], _dept[1], random(1));
 		
 		for( var i = 0; i < _amou; i++ ) {
 			var prg = _amou > 1? i / (_amou - 1) : 1;
 			
 			random_set_seed(seed); seed += 100;
 			
-			var pebr = random_range(_ratio[0], _ratio[1]);
-			
-			var pebw = lerp(_size[0], _size[1], rockS);
-			var pebh = ceil(pebw * pebr);
+			var pebr  = random_range(_ratio[0], _ratio[1]) * ratio_curve.get(prg);
+			var pebh  = ceil(pebw * pebr);
 			
 			var rot   = irandom_range(_rota[0], _rota[1]);
 			var baseC = gra_base.eval(pfract(random(1) + gra_bases));

@@ -6,6 +6,11 @@
         "date": "2026-07-24T06:52:52.946Z",
         "node": "Inspector Panel",
         "commit": "**Inspector Panel**: Fix error when collapsing all section contain junction-based subsection."
+      },
+      {
+        "date": "2026-07-24T07:05:28.002Z",
+        "node": "Inspector Panel",
+        "commit": "**Inspector Panel**: Sub-section now able to collapse junction-section."
       }
     ]
   },
