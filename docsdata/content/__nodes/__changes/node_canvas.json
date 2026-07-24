@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.7.107",
+    "changes": [
+      {
+        "date": "2026-07-24T05:57:41.770Z",
+        "node": "Canvas",
+        "commit": "**Canvas**: Pasting now activate selection tool automatically."
+      }
+    ]
+  },
+  {
     "version": "1.21.7.103",
     "changes": [
       {

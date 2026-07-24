@@ -524,13 +524,20 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		
 		/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		
+		selection_tool = new NodeTool( "Selection",	[ 
+			THEME.canvas_tools_selection_rectangle, 
+			THEME.canvas_tools_selection_circle, 
+			THEME.canvas_tools_freeform_selection, 
+			THEME.canvas_tools_selection_brush 
+		])
+			.setSetting(tool_channel)
+			.setSetting(tool_layer)
+			.setSetting(tool_mirror).addWidget(tool_mirror_reset)
+			.setSetting(tool_freeform_algo)
+			.setToolObject([ tool_sel_rectangle, tool_sel_ellipse, tool_sel_freeform, tool_sel_brush ]);
+		
 		tools = [
-			new NodeTool( "Selection",	[ THEME.canvas_tools_selection_rectangle, THEME.canvas_tools_selection_circle, THEME.canvas_tools_freeform_selection, THEME.canvas_tools_selection_brush ])
-				.setSetting(tool_channel)
-				.setSetting(tool_layer)
-				.setSetting(tool_mirror).addWidget(tool_mirror_reset)
-				.setSetting(tool_freeform_algo)
-				.setToolObject([ tool_sel_rectangle, tool_sel_ellipse, tool_sel_freeform, tool_sel_brush ]),
+			selection_tool,
 			
 			new NodeTool( "Magic Selection", THEME.canvas_tools_magic_selection )
 				.setSetting(tool_channel)
@@ -2215,7 +2222,8 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		}
 		
 		selection.selection_position = [ _sel_x, _sel_y ];
-		tools[0].toggle(0);
+		if(!isUsingTool(selection_tool))
+			selection_tool.toggle(0);
 	}
 
 	static setSurface = function(_surf, _sw, _sh) {
