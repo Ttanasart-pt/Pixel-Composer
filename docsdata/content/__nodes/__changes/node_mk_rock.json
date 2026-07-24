@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.7.107",
+    "changes": [
+      {
+        "date": "2026-07-24T06:52:52.946Z",
+        "node": "Inspector Panel",
+        "commit": "**Inspector Panel**: Fix error when collapsing all section contain junction-based subsection."
+      }
+    ]
+  },
+  {
     "version": "1.21.7.104",
     "changes": [
       {

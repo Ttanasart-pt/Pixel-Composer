@@ -15,13 +15,13 @@ function Node_MK_Rock(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	
 	////- =Rock
 	newInput(37, nodeValue_EScroll(  "Shape",        0, [ "Ellipse", "Rectangle", "Quadrilateral", "Polygon", "Surface" ] ));
-	newInput(40, nodeValue_Range(    "Sides",       [4,6]       ));
-	newInput(43, nodeValue_Surface(  "Surface"                  ));
-	newInput( 3, nodeValue_Range(    "Size",        [4,8]       ));
-	newInput( 4, nodeValue_Slider(   "Ratio",       .5          ));
-	newInput( 7, nodeValue_Range(    "Depth",       [4,6]       ));
-	newInput( 6, nodeValue_RotRange( "Rock Angle",  [0,0]       ));
-	newInput(16, nodeValue_Range(    "Shape Scale", [1,1], true )).setCurvable(28, CURVE_DEF_11);
+	newInput(40, nodeValue_Range(    "Sides",       [4,6]         ));
+	newInput(43, nodeValue_Surface(  "Surface"                    ));
+	newInput( 3, nodeValue_Range(    "Size",        [4,8]         ));
+	newInput( 4, nodeValue_SliRange( "Ratio",       [.5,.5], true ));
+	newInput( 7, nodeValue_Range(    "Depth",       [4,6]         ));
+	newInput( 6, nodeValue_RotRange( "Rock Angle",  [0,0]         ));
+	newInput(16, nodeValue_Range(    "Shape Scale", [1,1], true   )).setCurvable(28, CURVE_DEF_11);
 	
 		////- =Shape Modifier
 	newInput(34, nodeValue_Range(    "Shear",       [0,0]       )).setCurvable(35, CURVE_DEF_11);
@@ -72,7 +72,7 @@ function Node_MK_Rock(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		[ "Output",         false     ],  0, 
 		[ "Pile",           false     ],  2,  5,  8, 27, 30, 
 		[ "Rock",           false     ], 37, 40, 43,  3,  4,  7,  6, 16, 28, 
-			[ "/Shape Modifier", false], 34, 35, 38, 42, 39, 
+			[ "/Shape Modifier", true ], 34, 35, 38, 42, 39, 
 		
 		[ "Nugget",          true, 20 ], 24, 21, 22, 23, 
 			[ "/Rendering", false     ], [19, true], 46, [25, true], 47, 
@@ -419,9 +419,6 @@ function Node_MK_Rock(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		var rockS = random(1);
 		var deptS = random(1);
 		
-		var pebw = lerp(_size[0], _size[1], rockS);
-		var pebh = ceil(pebw * _ratio);
-		
 		var pebs = lerp(_dept[0], _dept[1], deptS);
 		
 		var scx  = _scatt[0];
@@ -431,6 +428,11 @@ function Node_MK_Rock(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 			var prg = _amou > 1? i / (_amou - 1) : 1;
 			
 			random_set_seed(seed); seed += 100;
+			
+			var pebr = random_range(_ratio[0], _ratio[1]);
+			
+			var pebw = lerp(_size[0], _size[1], rockS);
+			var pebh = ceil(pebw * pebr);
 			
 			var rot   = irandom_range(_rota[0], _rota[1]);
 			var baseC = gra_base.eval(pfract(random(1) + gra_bases));
@@ -495,4 +497,16 @@ function Node_MK_Rock(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		
 		return _outData;
 	}
+
+	////- Serialize
+	
+	static postDeserialize = function() {
+		if(LOADING_VERSION < 1_21_07_0) {
+			var _ins  = load_map.inputs;
+			
+			var _rat = _ins[4].r.d;
+			_ins[4] = { r: { d: [_rat,_rat] }};
+		}
+	}
+	
 }

@@ -36,7 +36,7 @@ gml_pragma("UnityBuild", "true");
 	
 	globalvar LATEST_VERSION; LATEST_VERSION = 1_21_00_0;
 	globalvar VERSION; VERSION        = 1_21_07_1;
-	globalvar SAVE_VERSION; SAVE_VERSION   = 1_21_06_1;
+	globalvar SAVE_VERSION; SAVE_VERSION   = 1_21_07_0;
 	globalvar VERSION_STRING; VERSION_STRING = "1.21.7.107";                  // Display on menu panel, workshop thumbnail
 	globalvar RELEASE_STRING; RELEASE_STRING = "1.21.7";                      // Use for searching release note from github
 	globalvar BUILD_NUMBER; BUILD_NUMBER   = 1_21_07_1.07;
