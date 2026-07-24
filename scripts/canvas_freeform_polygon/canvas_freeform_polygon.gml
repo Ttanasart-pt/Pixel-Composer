@@ -1,36 +1,23 @@
-function canvas_freeform_step(active, _x, _y, _s, _mx, _my, _draw) {
+function canvas_freeform_polygon_step(active, _x, _y, _s, _mx, _my, _draw) {
 	var _dim = attributes.dimension;
 	
 	var _mmx = (_mx - _x) / _s;
 	var _mmy = (_my - _y) / _s;
-		
-	if(mouse_holding) {
-		if(abs(_mmx - mouse_pre_x) + abs(_mmy - mouse_pre_y) >= 1) {
-				
-			if(_draw) {
-				surface_set_target(drawing_surface);
-					draw_line(round(mouse_pre_x - .5), round(mouse_pre_y - .5), round(_mmx - .5), round(_mmy - .5));
-				surface_reset_target();
-			}
-					
-			mouse_pre_x = _mmx;
-			mouse_pre_y = _mmy;
-					
-			array_push(freeform_shape, new __vec2(_mmx, _mmy) );
+	
+	if(freeform_drawing) {
+		if(mouse_rpress(active)) {
+			freeform_drawing = false;
+			return false;
 		}
-			
-		if(mouse_lrelease()) {
-			surface_set_target(drawing_surface);
-				draw_line(round(_mmx - .5), round(_mmy - .5), round(freeform_shape[0].x - .5), round(freeform_shape[0].y - .5));
-			surface_reset_target();
-			
+		
+		if(DOUBLE_CLICK) {
 			var temp_surface = surface_create(_dim[0], _dim[1]);
 			
 			switch(node.tool_attribute.freeform_algo) {
-				case 0 : 
-					if(array_length(freeform_shape) > 3) {
+				case 0 :
+					if(array_length(freeform_shape) >= 3) {
 						var _triangles   = polygon_triangulate(freeform_shape, 1)[0];
-							
+						
 						surface_set_target(temp_surface);
 							DRAW_CLEAR 
 							
@@ -45,7 +32,6 @@ function canvas_freeform_step(active, _x, _y, _s, _mx, _my, _draw) {
 									draw_vertex(round(p2.x), round(p2.y));
 								}							 
 							draw_primitive_end();
-							draw_surface_safe(drawing_surface);
 						surface_reset_target();
 					}
 					break;
@@ -69,8 +55,6 @@ function canvas_freeform_step(active, _x, _y, _s, _mx, _my, _draw) {
 						shader_set_i( "pointAmo",  len + 1         );
 						
 						shader_set_c( "color",     draw_get_color() );
-						
-						draw_surface(drawing_surface, 0, 0);
 					surface_reset_shader();
 					break;
 			}
@@ -81,18 +65,83 @@ function canvas_freeform_step(active, _x, _y, _s, _mx, _my, _draw) {
 			surface_reset_shader();
 			
 			surface_free(temp_surface);
-			mouse_holding = false;
+			
+			freeform_drawing = false;
+			return true;
+			
+		} else if(mouse_lpress(active)) {
+			mouse_pre_x = _mmx;
+			mouse_pre_y = _mmy;
+					
+			array_push(freeform_shape, new __vec2(_mmx, _mmy) );
 		}
 			
 	} else if(mouse_lpress(active)) {
 		mouse_pre_x = _mmx;
 		mouse_pre_y = _mmy;
 				
-		mouse_holding  = true;
-		freeform_shape = [ new __vec2(_mmx, _mmy) ];
+		freeform_drawing = true;
+		freeform_shape   = [ new __vec2(_mmx, _mmy) ];
 		
 		node.tool_pick_color(_mmx, _mmy);
 				
 		surface_clear(drawing_surface);
 	}
+	
+	return false;
+}
+
+function canvas_freeform_polygon_draw_px(active, _x, _y, _s, _mx, _my, _draw) {
+	if(!freeform_drawing) return;
+	
+	if(array_empty(freeform_shape)) return;
+	
+	var ox = 0;
+	var oy = 0;
+	
+	var nx = 0;
+	var ny = 0;
+	
+	var _mmx = round((_mx - _x) / _s - .5);
+	var _mmy = round((_my - _y) / _s - .5);
+	
+	draw_set_color(COLORS._main_icon);
+	for( var i = 0, n = array_length(freeform_shape); i < n; i++ ) {
+		var _f = freeform_shape[i];
+		nx = round(_f.x - .5);
+		ny = round(_f.y - .5);
+		
+		if(i) draw_line(ox, oy, nx, ny);
+		
+		ox = nx;
+		oy = ny;
+	}
+	
+	draw_line(ox, oy, _mmx, _mmy);
+}
+
+function canvas_freeform_polygon_draw(active, _x, _y, _s, _mx, _my, _draw) {
+	if(!freeform_drawing) return;
+	
+	if(array_empty(freeform_shape)) return;
+	
+	var ox = 0;
+	var oy = 0;
+	
+	var nx = 0;
+	var ny = 0;
+	
+	draw_set_color(COLORS._main_icon);
+	for( var i = 0, n = array_length(freeform_shape); i < n; i++ ) {
+		var _f = freeform_shape[i];
+		nx = _x + _f.x * _s;
+		ny = _y + _f.y * _s;
+		
+		if(i) draw_line(ox, oy, nx, ny);
+		
+		ox = nx;
+		oy = ny;
+	}
+	
+	draw_line(ox, oy, _mx, _my);
 }

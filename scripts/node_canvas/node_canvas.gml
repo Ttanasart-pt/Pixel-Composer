@@ -322,13 +322,15 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		tool_fill_pattern   = new canvas_tool_pattern(tool_attribute).setNode(self);
 		
 		tool_freeform       = new canvas_tool_draw_freeform().setNode(self);
+		tool_freeform_poly  = new canvas_tool_draw_freeform_polygon().setNode(self);
 		tool_curve_bez      = new canvas_tool_curve_bezier().setNode(self);
 		
-		tool_sel_rectangle  = new canvas_tool_selection_shape(CANVAS_TOOL_SHAPE.rectangle).setNode(self);
-		tool_sel_ellipse    = new canvas_tool_selection_shape(CANVAS_TOOL_SHAPE.ellipse).setNode(self);
-		tool_sel_freeform   = new canvas_tool_selection_freeform().setNode(self);
-		tool_sel_magic      = new canvas_tool_selection_magic(tool_attribute).setNode(self);
-		tool_sel_brush      = new canvas_tool_selection_brush().setNode(self);
+		tool_sel_rectangle     = new canvas_tool_selection_shape(CANVAS_TOOL_SHAPE.rectangle).setNode(self);
+		tool_sel_ellipse       = new canvas_tool_selection_shape(CANVAS_TOOL_SHAPE.ellipse).setNode(self);
+		tool_sel_freeform      = new canvas_tool_selection_freeform().setNode(self);
+		tool_sel_freeform_poly = new canvas_tool_selection_freeform_polygonal().setNode(self);
+		tool_sel_magic         = new canvas_tool_selection_magic(tool_attribute).setNode(self);
+		tool_sel_brush         = new canvas_tool_selection_brush().setNode(self);
 		
 		use_color_3d        = false;
 		color_3d_selected   = 0;
@@ -528,13 +530,14 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			THEME.canvas_tools_selection_rectangle, 
 			THEME.canvas_tools_selection_circle, 
 			THEME.canvas_tools_freeform_selection, 
+			THEME.canvas_tools_freeform_polygon_selection, 
 			THEME.canvas_tools_selection_brush 
 		])
 			.setSetting(tool_channel)
 			.setSetting(tool_layer)
 			.setSetting(tool_mirror).addWidget(tool_mirror_reset)
 			.setSetting(tool_freeform_algo)
-			.setToolObject([ tool_sel_rectangle, tool_sel_ellipse, tool_sel_freeform, tool_sel_brush ]);
+			.setToolObject([ tool_sel_rectangle, tool_sel_ellipse, tool_sel_freeform, tool_sel_freeform_poly, tool_sel_brush ]);
 		
 		tools = [
 			selection_tool,
@@ -593,13 +596,13 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 				.setSetting([ "", tool_curve_buttons, 0, tool_attribute ])
 				.setToolObject(tool_curve_bez),
 			
-			new NodeTool( "Freeform",	  THEME.canvas_tools_freeform)
+			new NodeTool( "Freeform",	  [THEME.canvas_tools_freeform, THEME.canvas_tools_freeform_polygon])
 				.setSetting(tool_channel)
 				.setSetting(tool_size)
 				.setSetting(tool_layer)
 				.setSetting(tool_mirror).addWidget(tool_mirror_reset)
 				.setSetting(tool_freeform_algo)
-				.setToolObject(tool_freeform),
+				.setToolObject([tool_freeform, tool_freeform_poly]),
 					
 			new NodeTool( "Fill",		  THEME.canvas_tools_bucket)
 				.setSettings(tool_fill_settings)

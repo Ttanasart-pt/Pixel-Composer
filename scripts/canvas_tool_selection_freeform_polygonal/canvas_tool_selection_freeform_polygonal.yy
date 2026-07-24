@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"canvas_tool_selection_freeform_polygonal",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"canvas_tool_selection_freeform_polygonal",
+  "parent":{
+    "name":"selection",
+    "path":"folders/nodes/data/canvas/tools/selection.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

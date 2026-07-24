@@ -6,6 +6,11 @@
         "date": "2026-07-24T05:57:41.770Z",
         "node": "Canvas",
         "commit": "**Canvas**: Pasting now activate selection tool automatically."
+      },
+      {
+        "date": "2026-07-24T06:35:33.416Z",
+        "node": "Canvas",
+        "commit": "**Canvas**: Add freeform polygonal draw/selection tool."
       }
     ]
   },

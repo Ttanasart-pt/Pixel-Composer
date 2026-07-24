@@ -1,0 +1,75 @@
+function canvas_tool_selection_freeform_polygonal() : canvas_selection_tool() constructor {
+	mouse_pre_x = 0;
+	mouse_pre_y = 0;
+	drawBrushMask   = false;
+	
+	freeform_shape   = [];
+	freeform_points  = [];
+	freeform_drawing = false;
+	
+	static onStep = function(hover, active, _x, _y, _s, _mx, _my) {
+		attributes = node.attributes;
+		var _dim   = attributes.dimension;
+		
+		if(!node.selection.selection_hovering && mouse_lpress(active)) {
+			is_selecting = true;
+			selection_sx = mouse_cur_x;
+			selection_sy = mouse_cur_y;
+			node.selection.initSelection();
+			
+			surface_free_safe(selection_mask);
+		}
+		
+		if(is_selecting) {
+			draw_set_color(c_white);
+			var _act = canvas_freeform_polygon_step(active, _x, _y, _s, _mx, _my, false);
+			
+			if(_act) {
+				is_selecting = false;
+				
+				var _bbox = surface_get_bbox(drawing_surface);
+				var sel_x = _bbox[0];
+				var sel_y = _bbox[1];
+				var sel_w = _bbox[2];
+				var sel_h = _bbox[3];
+				
+				if(sel_w > 1 && sel_h > 1) {
+					selection_mask = surface_verify(selection_mask, sel_w, sel_h);
+					surface_set_target(selection_mask);
+						DRAW_CLEAR
+						draw_surface(drawing_surface, -sel_x, -sel_y);
+					surface_reset_target();
+					node.selection.createSelection(selection_mask, sel_x, sel_y, sel_w, sel_h);
+					
+				} else node.selection.apply();
+				
+				surface_clear(drawing_surface);
+				surface_free_safe(selection_mask);
+			}
+					
+		}
+	}
+	
+	static drawPostOverlay = function(hover, active, _x, _y, _s, _mx, _my) {
+		if(!is_selecting && !freeform_drawing) return;
+		if(array_empty(freeform_shape)) return;
+		
+		var ox, oy, nx, ny;
+					
+		draw_set_color(c_white);
+						
+		for( var i = 0, n = array_length(freeform_shape); i < n; i++ ) {
+			nx = _x + freeform_shape[i].x * _s;
+			ny = _y + freeform_shape[i].y * _s;
+						
+			if(i) draw_line(ox, oy, nx, ny);
+							
+			ox = nx;
+			oy = ny;
+		}
+		
+		if(freeform_drawing)
+			draw_line(ox, oy, _mx, _my);
+	}
+	
+}

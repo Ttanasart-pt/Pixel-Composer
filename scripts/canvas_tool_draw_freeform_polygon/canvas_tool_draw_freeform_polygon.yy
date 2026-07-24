@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"canvas_tool_draw_freeform_polygon",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"canvas_tool_draw_freeform_polygon",
+  "parent":{
+    "name":"brush",
+    "path":"folders/nodes/data/canvas/tools/brush.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}
