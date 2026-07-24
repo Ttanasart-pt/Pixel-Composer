@@ -13,6 +13,7 @@ function canvas_tool_selection_brush() : canvas_selection_tool() constructor {
 		var _dim   = attributes.dimension;
 		
 		if(!node.selection.selection_hovering && mouse_lpress(active)) {
+			node.selection.initSelection();
 			selection_mask = surface_verify(selection_mask, _dim[0], _dim[1]);
 			
 			surface_set_shader(selection_mask, sh_canvas_tool_selection_brush_mask);

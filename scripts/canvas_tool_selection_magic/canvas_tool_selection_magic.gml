@@ -10,6 +10,8 @@ function canvas_tool_selection_magic(_toolAttr) : canvas_selection_tool() constr
 		var _use_output	= tool_attribute.useBG;
 		
 		if(mouse_lpress(active)) {
+			node.selection.initSelection();
+			
 			canvas_buffer = node.canvas_buffer;
 			preview_index = node.preview_index;
 		

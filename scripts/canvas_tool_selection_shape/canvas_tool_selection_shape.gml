@@ -67,6 +67,8 @@ function canvas_tool_selection_shape(_shape) : canvas_selection_tool() construct
 				select_snap  = DOUBLE_CLICK && PROJECT.previewGrid.show;
 				selection_sx = mouse_cur_x;
 				selection_sy = mouse_cur_y;
+				node.selection.initSelection();
+				
 				surface_free_safe(selection_mask);
 			}
 					

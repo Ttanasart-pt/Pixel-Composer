@@ -284,8 +284,8 @@ function Node_Compose_Texture(_x, _y, _group = noone) : Node_Processor(_x, _y, _
 	});
 	
 	input_display_list = [ 
-		[ "Surface",   false ],  0,  
-		[ "Composing", false ],  1,  
+		[ "Surface",  false ],  0,  
+		[ "Matching", false ],  1,  
 		new Inspector_Spacer(ui(4), true, false), texture_renderer, 
 	];
 	

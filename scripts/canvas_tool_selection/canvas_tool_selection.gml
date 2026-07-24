@@ -23,11 +23,21 @@ function canvas_selection_data() : canvas_tool() constructor {
 	
 	mouse_cur_x  = 0; mouse_cur_y  = 0;
 	
+	create_mode  = 0;
+	
 	static init = function() {
 		is_select_drag = false;
 	}
 	
 	////- Create Selection
+	
+	static initSelection = function() {
+		create_mode = 0;
+		if(key_mod_press(SHIFT)) { 
+			create_mode = 1;
+			if(key_mod_press(ALT)) create_mode = -1;
+		}
+	}
 	
 	static createSelection = function(_mask, sel_x0, sel_y0, sel_w, sel_h) {
 		if(!is_selected) { 
@@ -37,9 +47,14 @@ function canvas_selection_data() : canvas_tool() constructor {
 		}
 		
 		apply();
-		     if(key_mod_press(SHIFT)) modifySelection(_mask, sel_x0, sel_y0, sel_w, sel_h, true);
-		else if(key_mod_press(ALT))   modifySelection(_mask, sel_x0, sel_y0, sel_w, sel_h, false);
-		else                          createNewSelection(_mask, sel_x0, sel_y0, sel_w, sel_h);
+		
+		switch(create_mode) {
+			case  0 : createNewSelection(_mask, sel_x0, sel_y0, sel_w, sel_h);     break;
+			case -1 : modifySelection(_mask, sel_x0, sel_y0, sel_w, sel_h, false); break;
+			case  1 : modifySelection(_mask, sel_x0, sel_y0, sel_w, sel_h,  true); break;
+		}
+		
+		create_mode = 0;
 		updateSelection();
 	}
 	
@@ -259,7 +274,7 @@ function canvas_selection_data() : canvas_tool() constructor {
 	
 	////- Step
 	
-	static apply = function(targetSurface = canvas_surface) {
+	static apply = function(targetSurface = canvas_surface, resetSelection = true) {
 		if(!is_selected) return;
 		
 		recordAction(ACTION_TYPE.custom, function(data, _undo) /*=>*/ { 
@@ -299,7 +314,8 @@ function canvas_selection_data() : canvas_tool() constructor {
 			node.setCanvasSurface(_drawnSurface);
 			canvas_surface = _drawnSurface;
 			node.surface_store_buffer();
-			is_selected = false;
+			
+			if(resetSelection) is_selected = false;
 		}
 		
 		surface_free(targetSurface);
@@ -330,7 +346,7 @@ function canvas_selection_data() : canvas_tool() constructor {
 			var dy = _smy - selection_my;
 			var px = selection_sx;
 			var py = selection_sy;
-
+			
 			if(key_mod_press(SHIFT)) {
 				if(abs(dx) > abs(dy)) 
 					 px = selection_sx + dx;
@@ -481,9 +497,12 @@ function canvas_selection_data() : canvas_tool() constructor {
 			selection_hovering = true;
 			
 		} else {
-			if(key_mod_press(SHIFT)) { CURSOR_SPRITE = THEME.cursor_add;    return; }
-			if(key_mod_press(ALT))   { CURSOR_SPRITE = THEME.cursor_remove; return; }
-		
+			if(create_mode ==  1) CURSOR_SPRITE = THEME.cursor_add; 
+			if(create_mode == -1) CURSOR_SPRITE = THEME.cursor_remove; 
+			
+			if(key_mod_press(SHIFT))
+				CURSOR_SPRITE = key_mod_press(ALT)? THEME.cursor_remove : THEME.cursor_add; 
+			
 			if(point_in_rectangle(_smx, _smy, pos_x0, pos_y0, pos_x1-1, pos_y1-1)) {
 				var _msx  = _smx - pos_x0;
 				var _msy  = _smy - pos_y0;
@@ -517,6 +536,8 @@ function canvas_selection_data() : canvas_tool() constructor {
 					selection_sy = pos_y0;
 					selection_mx = _smx;
 					selection_my = _smy;
+					
+					if(key_mod_press(ALT)) apply(canvas_surface, false);
 					break;
 				
 				case 5 : 

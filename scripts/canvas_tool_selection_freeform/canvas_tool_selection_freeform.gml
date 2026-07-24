@@ -13,7 +13,8 @@ function canvas_tool_selection_freeform() : canvas_selection_tool() constructor 
 			is_selecting = true;
 			selection_sx = mouse_cur_x;
 			selection_sy = mouse_cur_y;
-					
+			node.selection.initSelection();
+			
 			surface_free_safe(selection_mask);
 		}
 		

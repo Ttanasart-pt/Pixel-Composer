@@ -1,0 +1,12 @@
+[
+  {
+    "version": "1.21.7.107",
+    "changes": [
+      {
+        "date": "2026-07-24T04:55:43.496Z",
+        "node": "Canvas",
+        "commit": "**Canvas**: Add Alt+Drag selection to clone content."
+      }
+    ]
+  }
+]
