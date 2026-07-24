@@ -1,0 +1,12 @@
+[
+  {
+    "version": "1.21.7.107",
+    "changes": [
+      {
+        "date": "2026-07-24T05:49:01.697Z",
+        "node": "",
+        "commit": "Add PCX reference for Equation node, expression."
+      }
+    ]
+  }
+]

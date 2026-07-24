@@ -11,7 +11,8 @@ function Node_Lua_Compute(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	newInput(1, nodeValue_EScroll( "Return type",  0, { data: [ "Number", "String", "Struct" ], update_hover: false } ));
 	
 	////- =Script
-	newInput(2, nodeValue_Text( "Lua code" )).setDisplay(VALUE_DISPLAY.codeLUA).setTooltip(function() /*=>*/ {return dialogPanelCall(new Panel_Lua_Reference())})
+	newInput(2, nodeValue_Text( "Lua code" )).setDisplay(VALUE_DISPLAY.codeLUA)
+		.setTooltip(function() /*=>*/ {return dialogPanelCall(new Panel_Lua_Reference())}, __txt("Lua Reference"))
 	// 5
 	
 	newOutput(0, nodeValue_Output( "Execution thread", VALUE_TYPE.node, lua_state ));

@@ -45,7 +45,7 @@ function Node_Equation(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	ast = [];
 	attributes.size = 0;
 	
-	newInput(0, nodeValue_Text( "Equation" ));
+	newInput(0, nodeValue_Text( "Equation" )).setTooltip(function() /*=>*/ {return dialogPanelCall(new Panel_PCX_Reference())}, __txt("PCX Reference"));
 	
 	newOutput(0, nodeValue_Output("Result", VALUE_TYPE.float, 0));
 	

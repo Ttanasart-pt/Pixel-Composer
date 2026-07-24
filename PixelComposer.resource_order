@@ -2221,6 +2221,7 @@
     {"name":"panel_notification","order":7,"path":"scripts/panel_notification/panel_notification.yy",},
     {"name":"panel_palette_mixer","order":3,"path":"scripts/panel_palette_mixer/panel_palette_mixer.yy",},
     {"name":"panel_patreon","order":1,"path":"scripts/panel_patreon/panel_patreon.yy",},
+    {"name":"panel_pcx_reference","order":2,"path":"scripts/panel_pcx_reference/panel_pcx_reference.yy",},
     {"name":"panel_preference","order":19,"path":"scripts/panel_preference/panel_preference.yy",},
     {"name":"panel_presets","order":5,"path":"scripts/panel_presets/panel_presets.yy",},
     {"name":"panel_preview_3d_grid_setting","order":11,"path":"scripts/panel_preview_3d_grid_setting/panel_preview_3d_grid_setting.yy",},

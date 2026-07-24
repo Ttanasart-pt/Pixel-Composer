@@ -1,73 +1,106 @@
 #region data
     global.EVALUATE_HEAD = noone;
     global.PCX_FUNCTIONS = ds_map_create();
+    global.pcx_function_list = [];
 	
-	function PXC_FN(key, fn) { global.PCX_FUNCTIONS[? key] = fn; }
-	
-    PXC_FN("sin",      [ ["radian"], function(r)   /*=>*/ {return sin(r)}   ]);
-    PXC_FN("cos",      [ ["radian"], function(r)   /*=>*/ {return cos(r)}   ]);
-    PXC_FN("tan",      [ ["radian"], function(r)   /*=>*/ {return tan(r)}   ]);
+	function PXC_FN(key, fn, desp = "", despArg = [], otype = "null") { 
+		global.PCX_FUNCTIONS[? key] = fn; 
+		
+		var _syn = key + "(";
+		for( var i = 0, n = array_length(fn[0]); i < n; i++ ) {
+			var arg = fn[0][i];
+			if(i) _syn += ", ";
+			_syn += arg;
+		}
+		_syn += ")";
+		
+		var _fn = new function_syntax( key, fn[1], _syn, desp, despArg, otype);
+		array_push(global.pcx_function_list, _fn);
+	}
+    	
+	array_push(global.pcx_function_list, "Number Operation");
+    PXC_FN("abs",      [ ["x"], function(v) /*=>*/ {return abs(v)}   ], "Calculate absolute value.",            [["x", "number", "Number"]], "number");
+    PXC_FN("round",    [ ["x"], function(v) /*=>*/ {return round(v)} ], "Round to the nearest integer.",        [["x", "number", "Number"]], "number");
+    PXC_FN("ceil",     [ ["x"], function(v) /*=>*/ {return ceil(v)}  ], "Round up to the nearest integer.",     [["x", "number", "Number"]], "number");
+    PXC_FN("floor",    [ ["x"], function(v) /*=>*/ {return floor(v)} ], "Round down to the nearest integer.",   [["x", "number", "Number"]], "number");
+    PXC_FN("fract",    [ ["x"], function(v) /*=>*/ {return frac(v)}  ], "Get the fractional part of a number.", [["x", "number", "Number"]], "number");
+    PXC_FN("sign",     [ ["x"], function(v) /*=>*/ {return sign(v)}  ], "Get the sign of a number.",            [["x", "number", "Number"]], "number");
     
-    PXC_FN("dsin",     [ ["degree"], function(d)   /*=>*/ {return dsin(d)}  ]);
-    PXC_FN("dcos",     [ ["degree"], function(d)   /*=>*/ {return dcos(d)}  ]);
-    PXC_FN("dtan",     [ ["degree"], function(d)   /*=>*/ {return dtan(d)}  ]);
+    PXC_FN("min",      [ ["x","y"],                 function(v,w)       /*=>*/ {return min(v,w)}     ], "Get the minimum of two numbers.",                     
+    	[["x", "number", "The first number"], ["y", "number", "The second number"]], "number");
+    	
+    PXC_FN("max",      [ ["x","y"],                 function(v,w)       /*=>*/ {return max(v,w)}     ], "Get the maximum of two numbers.",                     
+    	[["x", "number", "The first number"], ["y", "number", "The second number"]], "number");
+    	
+    PXC_FN("clamp",    [ ["x","min = 0","max = 1"], function(v,n=0,m=1) /*=>*/ {return clamp(v,n,m)} ], "Clamp a number between a minimum and maximum value.", 
+    	[["x", "number", "Number"], ["min", "number", "Minimum"], ["max", "number", "Maximum"]], "number");
+    	
+    PXC_FN("lerp",     [ ["x","y","amount"],        function(v,w,a)     /*=>*/ {return lerp(v,w,a)}  ], "Linearly interpolate between two numbers.",           
+    	[["x", "number", "The first number"], ["y", "number", "The second number"], ["amount", "number", "Ratio"]], "number");
+    	
+	array_push(global.pcx_function_list, "Trigonometry");
+    PXC_FN("sin",      [ ["radian"], function(r)   /*=>*/ {return sin(r)}        ], "Calculate sin of a radian.", [["radian", "number", "angle"]], "number");
+    PXC_FN("cos",      [ ["radian"], function(r)   /*=>*/ {return cos(r)}        ], "Calculate cos of a radian.", [["radian", "number", "angle"]], "number");
+    PXC_FN("tan",      [ ["radian"], function(r)   /*=>*/ {return tan(r)}        ], "Calculate tan of a radian.", [["radian", "number", "angle"]], "number");
     
-    PXC_FN("arcsin",   [ ["x"],      function(v)   /*=>*/ {return arcsin(v)}     ]);
-    PXC_FN("arccos",   [ ["x"],      function(v)   /*=>*/ {return arccos(v)}     ]);
-    PXC_FN("arctan",   [ ["x"],      function(v)   /*=>*/ {return arctan(v)}     ]);
-    PXC_FN("arctan2",  [ ["y","x"],  function(v,w) /*=>*/ {return arctan2(v,w)}  ]);
+    PXC_FN("dsin",     [ ["degree"], function(d)   /*=>*/ {return dsin(d)}       ], "Calculate sin of a degree.", [["degree", "number", "angle"]], "number");
+    PXC_FN("dcos",     [ ["degree"], function(d)   /*=>*/ {return dcos(d)}       ], "Calculate cos of a degree.", [["degree", "number", "angle"]], "number");
+    PXC_FN("dtan",     [ ["degree"], function(d)   /*=>*/ {return dtan(d)}       ], "Calculate tan of a degree.", [["degree", "number", "angle"]], "number");
     
-    PXC_FN("darcsin",  [ ["x"],      function(v)   /*=>*/ {return darcsin(v)}    ]);
-    PXC_FN("darccos",  [ ["x"],      function(v)   /*=>*/ {return darccos(v)}    ]);
-    PXC_FN("darctan",  [ ["x"],      function(v)   /*=>*/ {return darctan(v)}    ]);
-    PXC_FN("darctan2", [ ["y","x"],  function(v,w) /*=>*/ {return darctan2(v,w)} ]);
+    PXC_FN("arcsin",   [ ["x"],      function(v)   /*=>*/ {return arcsin(v)}     ], "Calculate arcsin of a number.",     [["x", "number", "Number"]], "number");
+    PXC_FN("arccos",   [ ["x"],      function(v)   /*=>*/ {return arccos(v)}     ], "Calculate arccos of a number.",     [["x", "number", "Number"]], "number");
+    PXC_FN("arctan",   [ ["x"],      function(v)   /*=>*/ {return arctan(v)}     ], "Calculate arctan of a number.",     [["x", "number", "Number"]], "number");
+    PXC_FN("arctan2",  [ ["y","x"],  function(v,w) /*=>*/ {return arctan2(v,w)}  ], "Calculate arctan2 of two numbers.", [["y", "number", "The first number"], ["x", "number", "The second number"]], "number");
     
-    PXC_FN("abs",      [ ["x"],      function(v)   /*=>*/ {return abs(v)}   ]);
-    PXC_FN("round",    [ ["x"],      function(v)   /*=>*/ {return round(v)} ]);
-    PXC_FN("ceil",     [ ["x"],      function(v)   /*=>*/ {return ceil(v)}  ]);
-    PXC_FN("floor",    [ ["x"],      function(v)   /*=>*/ {return floor(v)} ]);
-    PXC_FN("fract",    [ ["x"],      function(v)   /*=>*/ {return frac(v)}  ]);
-    PXC_FN("sign",     [ ["x"],      function(v)   /*=>*/ {return sign(v)}  ]);
+    PXC_FN("darcsin",  [ ["x"],      function(v)   /*=>*/ {return darcsin(v)}    ], "Calculate arcsin of a number in degrees.",     [["x", "number", "Number"]], "number");
+    PXC_FN("darccos",  [ ["x"],      function(v)   /*=>*/ {return darccos(v)}    ], "Calculate arccos of a number in degrees.",     [["x", "number", "Number"]], "number");
+    PXC_FN("darctan",  [ ["x"],      function(v)   /*=>*/ {return darctan(v)}    ], "Calculate arctan of a number in degrees.",     [["x", "number", "Number"]], "number");
+    PXC_FN("darctan2", [ ["y","x"],  function(v,w) /*=>*/ {return darctan2(v,w)} ], "Calculate arctan2 of two numbers in degrees.", [["y", "number", "The first number"], ["x", "number", "The second number"]], "number");
     
-    PXC_FN("min",      [ ["x","y"],  function(v,w) /*=>*/ {return min(v,w)} ]);
-    PXC_FN("max",      [ ["x","y"],  function(v,w) /*=>*/ {return max(v,w)} ]);
-    PXC_FN("clamp",    [ ["x","min = 0","max = 1"], function(v,n=0,m=1) /*=>*/ {return clamp(v, n, m)} ]);
-    PXC_FN("lerp",     [ ["x","y","amount"], function(v,w,a) /*=>*/ {return lerp(v, w, a)} ]);
+	array_push(global.pcx_function_list, "Random");
+    PXC_FN("random",   [ ["min = 0","max = 1"],    function(n=0,m=1) /*=>*/  {return random_range(n, m)} ], "Get random decimal between min and max (inclusive).", [["min", "number", "Minimum"], ["max", "number", "Maximum"]], "number");
+    PXC_FN("irandom",  [ ["min = 0","max = 1"],    function(n=0,m=1) /*=>*/ {return irandom_range(n, m)} ], "Get random integer between min and max (inclusive).", [["min", "number", "Minimum"], ["max", "number", "Maximum"]], "number");
+    PXC_FN("wiggle",   [ ["time","frequency","octave = 1","seed = 0"], function(t,f,o,s) /*=>*/ {return wiggle(0, 1, GLOBAL_TOTAL_FRAMES / f, t, s, o)} ], 
+    	"Get a number that wiggle over time.", [["time", "number", "Time"], ["frequency", "number", "Frequency"], ["octave", "number", "Octave"], ["seed", "number", "Seed"]], "number");
     
-    PXC_FN("wiggle",   [ ["time","frequency","octave = 1","seed = 0"], function(t,f,o,s) /*=>*/ {return wiggle(0, 1, GLOBAL_TOTAL_FRAMES / f, t, s, o)} ]);
-    PXC_FN("random",   [ ["min = 0","max = 1"],    function(n=0,m=1) /*=>*/  {return random_range(n, m)} ]);
-    PXC_FN("irandom",  [ ["min = 0","max = 1"],    function(n=0,m=1) /*=>*/ {return irandom_range(n, m)} ]);
-    PXC_FN("range",    [ ["length","start = 0","step = 1"],   
+	array_push(global.pcx_function_list, "Data Types");
+    PXC_FN("string",   [ ["value"], function(v) /*=>*/ {return string(v)}   ], "Convert value to string", [["value", "any", "Value to convert"]], "string");
+    PXC_FN("number",   [ ["value"], function(v) /*=>*/ {return toNumber(v)} ], "Convert value to number", [["value", "any", "Value to convert"]], "number");
+    PXC_FN("chr",      [ ["x"],     function(v) /*=>*/ {return chr(v)}      ], "Convert unicode code point to character", [["x", "number", "Unicode code point"]], "string");
+    PXC_FN("ord",      [ ["char"],  function(v) /*=>*/ {return ord(v)}      ], "Convert character to unicode code point", [["char", "string", "Character to convert"]], "number");
+         
+	array_push(global.pcx_function_list, "Array");
+	PXC_FN("range",    [ ["length","start = 0","step = 1"],   
     	function(l=0,s=0,e=1) /*=>*/ { 
 			var arr = array_create(l);
 			for( var i = 0; i < l; i++ ) arr[i] = s + i * e;
 			return arr;
-		} ]);
-    
+		} ], "Create array of number with starting point and step up over the specified range", [["length", "number", "Length of the array"], ["start", "number", "Starting point"], ["step", "number", "Step value"]], "number[]");
     PXC_FN("length",   [ ["value"], 
     	function(a) /*=>*/ { 
 			if(is_array(a))  return array_length(a);
 			if(is_string(a)) return string_length(a);
 			return 0;
-		} ]);
+		} ], "Get the length of an array or string", [["value", "array, string", "Array or string to get length of"]], "number");
     
-    PXC_FN("string",   [ ["value"], function(v) /*=>*/ {return string(v)}   ]);
-    PXC_FN("number",   [ ["value"], function(v) /*=>*/ {return toNumber(v)} ]);
-    PXC_FN("chr",      [ ["x"],     function(v) /*=>*/ {return chr(v)}      ]);
-    PXC_FN("ord",      [ ["char"],  function(v) /*=>*/ {return ord(v)}      ]);
-         
+	array_push(global.pcx_function_list, "Surfaces");
     PXC_FN("draw", [ ["surface", "x = 0", "y = 0", "xs = 1", "ys = 1", "rot = 0", "color = white", "alpha = 1"], 
-        function(s,sx=0,sy=0,xs=1,ys=1,r=0,c=c_white,a=1) /*=>*/ { draw_surface_ext_safe(s, sx, sy, xs, ys, r, c, a); return true; } ]);
+        function(s,sx=0,sy=0,xs=1,ys=1,r=0,c=c_white,a=1) /*=>*/ { draw_surface_ext_safe(s, sx, sy, xs, ys, r, c, a); return true; } ], 
+        "Draw a surface at the specified position with optional scaling, rotation, color, and alpha", 
+            [["surface", "surface", "Surface to draw"], ["x", "number", "X position"], ["y", "number", "Y position"], 
+             ["xs", "number", "X scale"], ["ys", "number", "Y scale"], ["rot", "number", "Rotation"], ["color", "color", "Color"], ["alpha", "number", "Alpha"]], "null");
     
-    PXC_FN("surface_get_dimension", [ ["surface"], function(s) /*=>*/ {return surface_get_dimension(s)}    ]);
-    PXC_FN("surface_get_width",     [ ["surface"], function(s) /*=>*/ {return surface_get_width_safe(s)}   ]);
-    PXC_FN("surface_get_height",    [ ["surface"], function(s) /*=>*/ {return surface_get_height_safe(s)}  ]);
+    PXC_FN("surface_get_dimension", [ ["surface"], function(s) /*=>*/ {return surface_get_dimension(s)}    ], "Get the dimension (width, height) of a surface as a vector 2.", [["surface", "surface", "Surface to get"]], "vec2");
+    PXC_FN("surface_get_width",     [ ["surface"], function(s) /*=>*/ {return surface_get_width_safe(s)}   ], "Get the width of a surface", [["surface", "surface", "Surface to get"]], "number");
+    PXC_FN("surface_get_height",    [ ["surface"], function(s) /*=>*/ {return surface_get_height_safe(s)}  ], "Get the height of a surface", [["surface", "surface", "Surface to get"]], "number");
     
-    PXC_FN("color_hex", [ ["char"],                  function(c)     /*=>*/ {return colorFromHex(c)}       ]);
-    PXC_FN("color_rgb", [ ["red", "green", "blue"],  function(r,g,b) /*=>*/ {return make_color_rgb(r,g,b)} ]);
-    PXC_FN("color_hsv", [ ["hue", "sat", "value"],   function(h,s,v) /*=>*/ {return make_color_hsv(h,s,v)} ]);
+	array_push(global.pcx_function_list, "Colors");
+    PXC_FN("color_hex", [ ["char"],                  function(c)     /*=>*/ {return colorFromHex(c)}       ], "Convert hex string to color", [["char", "string", "Hex string"]], "color");
+    PXC_FN("color_rgb", [ ["red", "green", "blue"],  function(r,g,b) /*=>*/ {return make_color_rgb(r,g,b)} ], "Convert RGB values to color", [["red", "number", "Red (0-255)"], ["green", "number", "Green (0-255)"], ["blue", "number", "Blue (0-255)"]], "color");
+    PXC_FN("color_hsv", [ ["hue", "sat", "value"],   function(h,s,v) /*=>*/ {return make_color_hsv(h,s,v)} ], "Convert HSV values to color", [["hue", "number", "Hue (0-255)"], ["sat", "number", "Saturation (0-255)"], ["value", "number", "Value (0-255)"]], "color");
     
-    PXC_FN("print", [ ["string", "warning = 0"],     function(s,w=0) /*=>*/ { if(w) noti_warning(s); else print(s); return 0; } ]);
+	array_push(global.pcx_function_list, "Debug");
+    PXC_FN("print", [ ["string", "warning = 0"],     function(s,w=0) /*=>*/ { if(w) noti_warning(s); else print(s); return 0; } ], "Show message in notification", [["string", "string", "Message to show"], ["warning", "bool", "Show as warning"]], "null");
     
     globalvar PROJECT_VARIABLES;
     PROJECT_VARIABLES = {};

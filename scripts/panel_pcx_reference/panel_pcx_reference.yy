@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"panel_pcx_reference",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"panel_pcx_reference",
+  "parent":{
+    "name":"guide",
+    "path":"folders/panels/guide.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

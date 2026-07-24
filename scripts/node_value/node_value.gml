@@ -432,7 +432,13 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		return self;
 	}
 	
-	static setTooltip = function(_tip) { tooltip = _tip; return self; }
+	static setTooltip = function(_tip, _title = undefined) { 
+		tooltip = _tip; 
+		
+		if(_title != undefined)
+			tooltipData = { title: _title }
+		return self; 
+	}
 	
 	static setIcon = function(_ico, _colr = undefined) { custom_icon = _ico; custom_color = _colr; return self; }
 	

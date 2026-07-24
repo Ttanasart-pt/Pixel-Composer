@@ -317,7 +317,7 @@ function drawWidget(xx, yy, ww, _m, _jun, global_var = true, _hover = false, _fo
 			dtx1 += ui(8);
 		}
 		var _tip = jun.tooltip;
-			
+		
 		if(_tip != "") { // Tooltip
 			var tcs = _viewSpac? .75 : .6;
 			var tx  = dtx1 + ui(16) * tcs;
@@ -524,6 +524,13 @@ function drawWidget(xx, yy, ww, _m, _jun, global_var = true, _hover = false, _fo
 							else			jun.popup_dialog = dialogPanelCall(new Panel_Text_Editor(wid, function() /*=>*/ {return context.showValue()}, jun));
 							if(jun.popup_dialog) jun.popup_dialog.content.title = $"{jun.node.name} - {_name}";
 						}
+						
+						var cc = c_white;
+						var t  = __txt("PCX Reference");
+						bx  -= bs; b = buttonInstant(bb, bx, by, bs, bs, _m, hv, fc, t, THEME.info_light, 0, cc, .8, ics); bx -= ui(4);
+						cHov = cHov || b;
+						if(b == 2) dialogPanelCall(new Panel_PCX_Reference());
+						
 					}
 					
 				}

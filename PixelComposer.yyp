@@ -2621,6 +2621,7 @@
     {"id":{"name":"panel_palette_mixer","path":"scripts/panel_palette_mixer/panel_palette_mixer.yy",},},
     {"id":{"name":"panel_palette","path":"scripts/panel_palette/panel_palette.yy",},},
     {"id":{"name":"panel_patreon","path":"scripts/panel_patreon/panel_patreon.yy",},},
+    {"id":{"name":"panel_pcx_reference","path":"scripts/panel_pcx_reference/panel_pcx_reference.yy",},},
     {"id":{"name":"panel_preference","path":"scripts/panel_preference/panel_preference.yy",},},
     {"id":{"name":"panel_presets","path":"scripts/panel_presets/panel_presets.yy",},},
     {"id":{"name":"panel_preview_3d_grid_setting","path":"scripts/panel_preview_3d_grid_setting/panel_preview_3d_grid_setting.yy",},},
