@@ -11,6 +11,11 @@
         "date": "2026-07-24T07:05:28.002Z",
         "node": "Inspector Panel",
         "commit": "**Inspector Panel**: Sub-section now able to collapse junction-section."
+      },
+      {
+        "date": "2026-07-24T07:22:51.103Z",
+        "node": "MK Rock",
+        "commit": "**MK Rock**: Add more curve and range controls."
       }
     ]
   },
