@@ -6,6 +6,11 @@
         "date": "2026-07-25T01:54:11.516Z",
         "node": "Composite",
         "commit": "**Composite**: Rearranging layer now won't reorder inputs, only depth."
+      },
+      {
+        "date": "2026-07-25T03:03:11.234Z",
+        "node": "",
+        "commit": "**Composite**: Add effect stack."
       }
     ]
   },

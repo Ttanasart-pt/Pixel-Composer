@@ -316,12 +316,12 @@ function Node_Compose_Texture(_x, _y, _group = noone) : Node_Processor(_x, _y, _
 	attributes.output_amount = 0;
 	attributes.layer_order   = [];
 	attributes.layer_effect  = [];
+	
 	layer_effect_map = {};
+	effect_nodes     = [];
 	
 	temp_surface = array_create(2, noone);
 	io_pool = [];
-	
-	effect_nodes = [];
 	
 	static add = function(_node) /*=>*/ {
 		layer_effect_map[$ _node.node_id] = _node;

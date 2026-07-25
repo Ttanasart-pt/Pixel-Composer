@@ -469,6 +469,12 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	hold_visibility = true;
 	hold_select		= true;
 	
+	add_effect_index = 0;
+	effect_dragging  = undefined;
+	effect_drag_par  = undefined;
+	effect_drag      = 0;
+	effect_drag_my   = 0;
+	
 	layer_dragging	= noone;
 	layer_drag      = 0;
 	layer_drag_my   = 0;
@@ -496,10 +502,14 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		var hoverIndex = noone;
 		
 		var _cy = ly;
-		var _tw = _w - ui(200);
 		
 		var dragI = 0;
 		var dragY = ly;
+		
+		var _inei = 0;
+		var _iney = ly;
+		
+		var ehg  = ui(24);
 		
 		layer_remove = -1;
 		for(var i = 0; i < amo; i++) {
@@ -512,7 +522,6 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			var _inp  = inputs[index];
 			var _junc = _inp.value_from? _inp.value_from.node : noone;
 			
-			var _bx = _x + _w - ui(24);
 			var aa  = 1;
 			var vis = array_safe_get_fast(_vis, ind) ?? true; _vis[ind] = vis;
 			var sel = array_safe_get_fast(_sel, ind) ?? true; _sel[ind] = sel;
@@ -552,15 +561,6 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			} 
 			
 			#region draw buttons
-				if(point_in_circle(_m[0], _m[1], _bx, _cy + lh / 2, ui(16))) {
-					draw_sprite_ui_uniform(THEME.icon_delete, 3, _bx, _cy + lh / 2, 1, COLORS._main_value_negative);
-					
-					if(mouse_lpress(_focus))
-						layer_remove = ind;
-						
-				} else 
-					draw_sprite_ui_uniform(THEME.icon_delete, 3, _bx, _cy + lh / 2, 1, COLORS._main_icon);
-				
 				var _bx = _x + ui(16 + 24);
 				if(point_in_circle(_m[0], _m[1], _bx, _cy + lh / 2, ui(12))) {
 					draw_sprite_ui_uniform(THEME.junc_visible, vis, _bx, _cy + lh / 2, 1, c_white);
@@ -616,14 +616,58 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 				}
 			#endregion
 			
+			#region right button
+				var bs = ui(24);
+				
+				var bx = _x + _w - ui(8);
+				var by = _cy + lh / 2 - bs / 2;
+				
+				bx -= bs; 
+				if(buttonInstant(THEME.button_hide, bx, by, bs, bs, _m, _hover, _focus, __txt("Delete"), THEME.icon_delete, 0, CARRAY.button_negative) == 2) 
+					layer_remove = ind;
+				
+				bx -= bs + ui(2);
+				if(buttonInstant(THEME.button_hide, bx, by, bs, bs, _m, _hover, _focus, __txt("Add Effect"), THEME.add_16, 0, CARRAY.button_positive) == 2) {
+					var dx  = mouse_mx + 8;
+					var dy  = mouse_my + 8;
+					var ctx = self;
+					var dia = instance_create_depth(dx, dy, 0, o_dialog_add_node, { context: ctx });
+					add_effect_index = ind;
+					
+					if(dia) dia.buildCallback = function(newNode) /*=>*/ {
+						array_push(attributes.layer_effect[add_effect_index], newNode.node_id);
+						add(newNode)
+						
+						dialogPanelCall(new Panel_Inspector().setInspecting(newNode, true))
+					}
+				}
+				
+				bx -= ui(8);
+				var depWid = ui(64);
+				var _hovDept = hover && _m[0] >= bx - depWid && _m[0] < bx;
+				
+				if(redepth == index + 7) {
+					tb_depth.setFocusHover(_focus, _hover);
+					tb_depth.draw(bx - ui(64), _cy, ui(64), lh, _dep, _m);
+				
+				} else {
+					draw_set_text(f_p2, fa_right, fa_center, _hovDept? COLORS._main_text : COLORS._main_text_sub);
+					draw_text_add(bx, _cy + lh / 2, _dep);
+				}
+				
+				bx -= depWid + ui(4);
+				
+			#endregion
+			
 			#region draw title
 				var _txt = _inp.name;
 				var _txx = _sx1 + ui(12);
 				var _txy = _cy + lh / 2;
 				
+				var _tw  = bx - _txx;
+				
 				if(_junc_canvas) hover = hover && _m[0] > _txx + ui(8 + 16);
 				var _hovName = hover && _m[0] < _txx + _tw;
-				var _hovDept = hover && _m[0] >= _txx + _tw && _m[0] < _x + _w - ui(24 + 2);
 				
 				var tc = ind == dynamic_input_inspecting? COLORS._main_text_accent : COLORS._main_icon;
 				var tf = ind == dynamic_input_inspecting? f_p2b : f_p2;
@@ -665,59 +709,151 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 						draw_set_alpha(1);
 					}
 				}
-				
-				var _tx = _x + _w - ui(24 * 2);
-				if(redepth == index + 7) {
-					tb_depth.setFocusHover(_focus, _hover);
-					tb_depth.draw(_tx - ui(64), _cy, ui(64), lh, _dep, _m);
-				
-				} else {
-					draw_set_text(tf, fa_right, fa_center, _hovDept? COLORS._main_text : COLORS._main_text_sub);
-					draw_text_add(_tx, _txy, _dep);
-				}
 			#endregion
 			
-			if(_jun_layer) { // modifiers
-				var _modis = _jun_layer.modifier;
-				var _mdx   = _x + ui(16 + 24 + 12);
-				var _mdy   = _cy + _lh;
-				var mh     = ui(24);
-				
-				for (var j = array_length(_modis) - 1; j >= 0; j--) {
-					var _modi = _modis[j];
-					var _mtx  = _mdx;
+			#region modifiers
+				if(_jun_layer) { 
+					var _modis = _jun_layer.modifier;
+					var _mdx   = _x + ui(16 + 24 + 12);
+					var _mdy   = _cy + _lh;
 					
-					if(_modi.active_index != -1) {
-						var _bx = _mtx + ui(12);
-						var _by = _mdy + mh / 2;
+					for (var j = array_length(_modis) - 1; j >= 0; j--) {
+						var _modi = _modis[j];
+						var _mtx  = _mdx;
 						
-						var _acti = _modi.getInputData(_modi.active_index);
+						if(_modi.active_index != -1) {
+							var _bx = _mtx + ui(12);
+							var _by = _mdy + ehg / 2;
+							
+							var _acti = _modi.getInputData(_modi.active_index);
+							
+							if(_hover && point_in_circle(_m[0], _m[1], _bx, _by, ui(12))) {
+								draw_sprite_ui_uniform(THEME.visible_12, _acti, _bx, _by - ui(2), 1, c_white);
+								
+								if(mouse_lpress(_focus))
+									_modi.inputs[_modi.active_index].setValue(!_acti);
+							} else 
+								draw_sprite_ui_uniform(THEME.visible_12, _acti, _bx, _by - ui(2), 1, COLORS._main_icon);
+								
+						}
 						
-						if(_hover && point_in_circle(_m[0], _m[1], _bx, _by, ui(12))) {
-							draw_sprite_ui_uniform(THEME.visible_12, _acti, _bx, _by - ui(2), 1, c_white);
-							
-							if(mouse_lpress(_focus))
-								_modi.inputs[_modi.active_index].setValue(!_acti);
-						} else 
-							draw_sprite_ui_uniform(THEME.visible_12, _acti, _bx, _by - ui(2), 1, COLORS._main_icon);
-							
+						_mtx += ui(24);
+						var _mhov = _hover && point_in_rectangle(_m[0], _m[1], _mtx, _mdy, _x + _w, _mdy + mh - 1);
+						draw_set_text(f_p2, fa_left, fa_center, _mhov? COLORS._main_text : COLORS._main_text_sub);
+						draw_text_add(_mtx, _mdy + ehg / 2 - ui(2), _modi.display_name);
+						
+						if(_mhov && DOUBLE_CLICK) {
+							var pan = panelAdd("Panel_Inspector", true);
+							pan.content.setInspecting(_modi, true);
+						}
+						
+						_h   += ehg;
+						_lh  += ehg;
+						_mdy += ehg;
 					}
-					
-					_mtx += ui(24);
-					var _mhov = _hover && point_in_rectangle(_m[0], _m[1], _mtx, _mdy, _x + _w, _mdy + mh - 1);
-					draw_set_text(f_p2, fa_left, fa_center, _mhov? COLORS._main_text : COLORS._main_text_sub);
-					draw_text_add(_mtx, _mdy + mh / 2 - ui(2), _modi.display_name);
-					
-					if(_mhov && DOUBLE_CLICK) {
-						var pan = panelAdd("Panel_Inspector", true);
-						pan.content.setInspecting(_modi, true);
-					}
-					
-					_h   += mh;
-					_lh  += mh;
-					_mdy += mh;
 				}
-			}
+				
+				var _effs = attributes.layer_effect[ind];
+				if(effect_drag_par == i) {
+					_inei = 0;
+					_iney = _cy + _lh;
+				}
+				
+				if(!array_empty(_effs)) {
+					var ey = _cy + _lh;
+					
+					var ex = _x + ui(16);
+					var ew = _w - ui(16 + 8);
+					
+					var toDel = undefined;
+					
+					for( var j = 0, m = array_length(_effs); j < m; j++ ) {
+						var _eff = _effs[j];
+						var _eno = layer_effect_map[$ _eff];
+						if(!is(_eno, Node)) continue;
+						
+						ew = _w - ui(16 + 8);
+						
+						#region side buttons
+							var bx = _x + _w - ui(8);
+							var by = ey;
+							
+							bx -= ehg; ew -= ehg;
+							if(buttonInstant(THEME.button_hide, bx, by, ehg, ehg, _m, _hover, _focus, __txt("Remove Effect"), 
+								THEME.icon_delete, 0, CARRAY.button_negative, 1, 1) == 2) {
+									
+								_eno.destroy();
+								toDel = j;
+							}
+							
+							bx -= ehg + ui(2); ew -= ehg + ui(2);
+							if(_eno.input_mask_index >= 0) {
+								var _umsk = bool(_eno.attributes[$ "effect_use_mask"]);
+								if(buttonInstant(THEME.button_hide, bx, by, ehg, ehg, _m, _hover, _focus, __txt("Mask Under"), 
+									THEME.shader_alpha, _umsk, COLORS._main_icon, 1, .75) == 2) {
+									
+									_eno.attributes[$ "effect_use_mask"] = !_umsk;
+									triggerRender();
+								}
+							}
+							
+							ew -= ui(2);
+						#endregion
+						
+						var _name = _eno.getDisplayName();
+			    		draw_set_text(f_p4, fa_left, fa_center, COLORS._main_text);
+			    		draw_text_add(ex + ui(24), ey + ehg/2, _name);
+					    		
+			    		var _ic = _eno.getMetaSpr();
+			    		var _ss = (ehg - ui(4)) / sprite_get_width(_ic);
+			    		draw_sprite_ext(_ic, 0, ex + ui(12), ey + ehg / 2, _ss, _ss);
+	    				
+			    		var _hov = _hover && point_in_rectangle(_m[0], _m[1], ex, ey, ex + ew, ey + ehg);
+			    		if(_hov) {
+			    			draw_sprite_stretched_add(THEME.box_r5, 1, ex, ey, ew, ehg, c_white, .2);
+			    			if(mouse_lpress(_focus)) {
+			    				dialogPanelCall(new Panel_Inspector().setInspecting(_eno, true));
+			    				
+								effect_dragging = _eff;
+								effect_drag_par = i;
+								effect_drag     = 1;
+								effect_drag_my  = _m[1];
+			    			}
+			    			
+			    			if(effect_drag_par == i) {
+								if(_m[1] > ey + ehg / 2) {
+									_inei = j+1;
+									_iney = ey + ehg;
+									
+								} else {
+									_inei = j;
+									_iney = ey;
+								}
+								
+							}
+							
+			    		}
+			    		
+			    		 ey  += ehg;
+						_h   += ehg;
+						_lh  += ehg;
+					}
+					
+					if(toDel) {
+						array_delete(_effs, toDel, 1);
+						triggerRender();
+					}
+					
+					if(effect_drag_par == i && _m[1] > ey) {
+						_inei = m-1;
+						_iney = ey;
+					}
+					
+					_h  += ui(2);
+					_lh += ui(2);
+				}
+				
+			#endregion
 			
 			if(_hover && point_in_rectangle(_m[0], _m[1], _x, _cy, _x + _w, _cy + _lh)) {
 				_HIGHLIGHT_PROP = _inp;
@@ -779,59 +915,85 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			dragI = i;
 			dragY = _cy;
 		}
-			
-		if(layer_drag == 1) {
-			if(abs(_m[1] - layer_drag_my) > ui(16)) {
-				layer_drag = 2;
-				array_remove(attributes.layer_order, layer_dragging);
-			}
-			
-			if(mouse_lrelease())
-				layer_drag = 0;
-				
-		} else if(layer_drag == 2) {
-			draw_set_color(COLORS._main_accent);
-			draw_line_width(_x + ui(16), dragY, _x + _w - ui(16), dragY, ui(2));
-			
-			if(mouse_lrelease()) {
-				var ind   = layer_dragging;
-				var index = input_fix_len + ind * data_length;
-				var depInput = inputs[index + 7];
-				
-				if(dragI == 0) {
-					var ind   = attributes.layer_order[dragI];
-					var index = input_fix_len + ind * data_length;
-					var _dep  = current_data[index + 7];
-						
-					depInput.setValue(_dep + 100);
-					
-				} else if(dragI >= array_length(attributes.layer_order)) {
-					var ind   = attributes.layer_order[dragI - 1];
-					var index = input_fix_len + ind * data_length;
-					var _dep  = current_data[index + 7];
-					
-					depInput.setValue(_dep - 100);
-					
-				} else {
-					var ind   = attributes.layer_order[dragI - 1];
-					var index = input_fix_len + ind * data_length;
-					var _dep1 = current_data[index + 7];
-					
-					var ind   = attributes.layer_order[dragI];
-					var index = input_fix_len + ind * data_length;
-					var _dep2 = current_data[index + 7];
-					
-					depInput.setValue((_dep1 + _dep2) / 2);
+		
+		#region Drag Layer	
+			if(layer_drag == 1) {
+				if(abs(_m[1] - layer_drag_my) > ui(16)) {
+					layer_drag = 2;
+					array_remove(attributes.layer_order, layer_dragging);
 				}
 				
-				array_insert(attributes.layer_order, dragI, layer_dragging);
-				layer_drag = 0;
+				if(mouse_lrelease())
+					layer_drag = 0;
+					
+			} else if(layer_drag == 2) {
+				draw_set_color(COLORS._main_accent);
+				draw_line_width(_x + ui(16), dragY, _x + _w - ui(16), dragY, ui(2));
 				
-				triggerRender();
-				if(canvas_group) canvas_group.onLayerChanged();
+				if(mouse_lrelease()) {
+					var ind   = layer_dragging;
+					var index = input_fix_len + ind * data_length;
+					var depInput = inputs[index + 7];
+					
+					if(dragI == 0) {
+						var ind   = attributes.layer_order[dragI];
+						var index = input_fix_len + ind * data_length;
+						var _dep  = current_data[index + 7];
+							
+						depInput.setValue(_dep + 100);
+						
+					} else if(dragI >= array_length(attributes.layer_order)) {
+						var ind   = attributes.layer_order[dragI - 1];
+						var index = input_fix_len + ind * data_length;
+						var _dep  = current_data[index + 7];
+						
+						depInput.setValue(_dep - 100);
+						
+					} else {
+						var ind   = attributes.layer_order[dragI - 1];
+						var index = input_fix_len + ind * data_length;
+						var _dep1 = current_data[index + 7];
+						
+						var ind   = attributes.layer_order[dragI];
+						var index = input_fix_len + ind * data_length;
+						var _dep2 = current_data[index + 7];
+						
+						depInput.setValue((_dep1 + _dep2) / 2);
+					}
+					
+					array_insert(attributes.layer_order, dragI, layer_dragging);
+					layer_drag = 0;
+					
+					triggerRender();
+					if(canvas_group) canvas_group.onLayerChanged();
+				}
 			}
-		}
+		#endregion
 		
+		#region Drag Effect
+			if(effect_drag == 2) {
+				draw_set_color(COLORS._main_accent);
+				draw_line_round(_x + ui(24), _iney, _w - ui(16), _iney, ui(2));
+			}
+			
+			if(effect_drag == 1) {
+				if(mouse_lrelease()) effect_drag = 0;
+				if(abs(_m[1] - effect_drag_my) > ehg/2) {
+					effect_drag = 2;
+					var ind = attributes.layer_order[effect_drag_par];
+					array_remove(attributes.layer_effect[ind], effect_dragging);
+				}
+				
+			} else if(effect_drag == 2) {
+				if(mouse_lrelease()) {
+					var ind = attributes.layer_order[effect_drag_par];
+					array_insert(attributes.layer_effect[ind], _inei, effect_dragging);
+					effect_drag = 0;
+				}
+				
+			}
+		#endregion
+			
 		layer_height     = max(ui(16), _h);
 		layer_renderer.h = layer_height;
 		
@@ -964,7 +1126,9 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	////- Nodes
 	
 	attributes.layer_effect  = [];
+	
 	layer_effect_map = {};
+	effect_nodes     = [];
 	
 	temp_surface       = array_create(3, noone);
 	blend_temp_surface = temp_surface[2];
@@ -1787,6 +1951,15 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	
 	////- Update
 	
+	static add = function(_node) /*=>*/ {
+		layer_effect_map[$ _node.node_id] = _node;
+		_node.onTriggerRender = function() /*=>*/ {return triggerRender()};
+		array_remove(project.allNodes, _node);
+		array_push(effect_nodes, _node);
+	}
+	
+	static getNodeList = function() /*=>*/ {return effect_nodes};
+	
 	static getToolNode = function() /*=>*/ {
 		if(dynamic_input_inspecting >= 0) {
 			var ind = input_fix_len + dynamic_input_inspecting * data_length + 1;
@@ -1853,6 +2026,14 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		return [ ww, hh ];
 	} 
 	
+	static preGetInputs = function() {
+		var _amo = getInputAmount();
+		
+		var _lamo = array_length(attributes.layer_effect);
+		for( var i = _lamo; i < _amo; i++ )
+			attributes.layer_effect[i] = [];
+	}
+	
 	static processData = function(_outData, _data, _array_index) {
 		draw_transforms[_array_index] = noone;
 		
@@ -1892,9 +2073,6 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		var _atlas    = [];
 		var _trans    = array_create(imageAmo, noone);
 		
-		var _selDraw  = _array_index == preview_index && attributes.select_object;
-		if(_selDraw) selection_surf = surface_clear(surface_verify(selection_surf, ww, hh, surface_r16float));
-		
 		#region depth sorting
 			var _renderPR    = ds_priority_create();
 			for(var i = 0; i < imageAmo; i++) {
@@ -1910,9 +2088,13 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			ds_priority_destroy(_renderPR);
 		#endregion
 		
+		var _selDraw = _array_index == preview_index && attributes.select_object;
+		if(_selDraw) selection_surf = surface_clear(surface_verify(selection_surf, ww, hh, surface_r16float));
+		
 		blend_temp_surface = temp_surface[2];
 		for(var i = 0; i < imageAmo; i++) {
 			var _index = attributes.layer_order[imageAmo - i - 1];
+			var _effs  = attributes.layer_effect[_index]
 			
 			var vis  = _vis[_index];
 			if(!vis) continue;
@@ -1947,14 +2129,50 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			array_push(_atlas, new SurfaceAtlas(_surf, px, py, _rot, _sca[0], _sca[1]));
 			_trans[i] = [ px, py, _sca[0], _sca[1], _rot ];
 			
+			surface_set_shader(blend_temp_surface, sh_sample, true, BLEND.over);
+				shader_set_interpolation(_surf);
+				draw_surface_ext_safe(_surf, px, py, _sca[0], _sca[1], _rot, c_white, 1);
+			surface_reset_shader();
+			
+			var _layerSurf = blend_temp_surface;
+			
+			#region effect
+				for( var j = 0, m = array_length(_effs); j < m; j++ ) {
+					var _eff = _effs[j];
+					var _eno = layer_effect_map[$ _eff];
+					if(!is(_eno, Node)) continue;
+					
+					var _inp = _eno.getInput(  0, inputs[_ind] );
+					var _otp = _eno.getOutput( 0, inputs[_ind] );
+					
+					if(!is(_inp, NodeValue) || !is(_otp, NodeValue)) continue;
+					
+					if(_eno.input_mask_index >= 0) {
+						var _minp = _eno.inputs[_eno.input_mask_index];
+						var _umsk = bool(_eno.attributes[$ "effect_use_mask"]);
+						
+						if(_umsk) _minp.setValue(temp_surface[!_bg], false, CURRENT_FRAME, false);
+						else      _minp.setValue(noone,              false, CURRENT_FRAME, false);
+					}
+					
+					_inp.setValue(_layerSurf, false, CURRENT_FRAME, false);
+					_eno.doUpdate();
+					
+					var _outS = _otp.getValue();
+					if(!is_just_surface(_outS)) continue;
+					
+					_layerSurf = _outS;
+				}
+			#endregion
+			
 			surface_set_shader(temp_surface[_bg], noone, true, BLEND.over);
-				try { draw_surface_blend_ext(temp_surface[!_bg], _surf, px, py, _sca[0], _sca[1], _rot, c_white, _alp, _bld, false); }
+				try { draw_surface_blend(temp_surface[!_bg], _layerSurf, _bld, _alp, false, 0, 0); }
 				catch(e) { noti_warning(e, noone, self); }
 			surface_reset_shader();
 			
 			surface_set_shader(selection_surf, sh_selection_mask, false, BLEND.maximum);
 				shader_set_f("index", i + 1);
-				draw_surface_ext_safe(_surf, px, py, _sca[0], _sca[1], _rot, c_white, 1);
+				draw_surface(_layerSurf, 0, 0);
 			surface_reset_shader();
 			
 			_bg = !_bg;
@@ -2000,6 +2218,11 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		att.layer_visible    = attributes.layer_visible;
 		att.layer_selectable = attributes.layer_selectable;
 		
+		var effNodes = [];
+		for( var i = 0, n = array_length(effect_nodes); i < n; i++ ) 
+			effNodes[i] = effect_nodes[i].serialize();
+		att.effectNodes = effNodes;
+		
 		return att;
 	}
 	
@@ -2008,5 +2231,19 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		
 		if(struct_has(attr, "layer_visible"))    attributes.layer_visible    = attr.layer_visible;
 		if(struct_has(attr, "layer_selectable")) attributes.layer_selectable = attr.layer_selectable;
+		
+		if(has(attr, "effectNodes")) {
+			effect_nodes = [];
+			var effNodes = attr.effectNodes;
+			
+			for( var i = 0, n = array_length(effNodes); i < n; i++ ) {
+				var _node = nodeLoad(effNodes[i], false, self);
+				if(!is(_node, Node)) continue;
+				
+				_node.postDeserialize();
+				_node.applyDeserialize();
+				add(_node);
+			}
+		}
 	}
 }

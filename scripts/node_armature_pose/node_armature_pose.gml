@@ -586,9 +586,10 @@ function Node_Armature_Pose(_x, _y, _group = noone) : Node(_x, _y, _group) const
 			hovering = true;
 			var _bne = anchor_selecting[0];
 			
-			if(struct_has(boneMap, _bne.ID)) {
+			if(has(boneMap, _bne.ID)) {
 				var _inp = boneMap[$ _bne.ID];
-				_inp.getEditWidget().temp_hovering = true;
+				_HIGHLIGHT_PROP = _inp;
+				// _inp.getEditWidget().temp_hovering = true;
 			}
 		}
 		
@@ -599,9 +600,10 @@ function Node_Armature_Pose(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		var smy = PANEL_PREVIEW.snapY(my);
 		
 		if(posing_bone) {
-			gpu_set_texfilter(true);
+			_HIGHLIGHT_PROP = posing_input;
 			var val = array_clone(posing_input.getValue());
 			
+			gpu_set_texfilter(true);
 			if(posing_type == 0) { //move
 				var ang = posing_bone.pose_local_rotate; 
 				var pp  = point_rotate(smx - posing_mx, smy - posing_my, 0, 0, -ang);
