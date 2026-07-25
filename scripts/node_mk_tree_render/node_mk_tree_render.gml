@@ -44,6 +44,8 @@ function Node_MK_Tree_Render(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 		inputs[0].setArrayDepth(!_arr);
 		
 		if(!array_empty(_tree)) array_foreach(_tree, function(t,i) /*=>*/ { 
+			if(!is(t, __MK_Tree)) return true;
+			
 			t.drawn = false; 
 			if(t.root) t.root.drawn = false; 
 			return true;

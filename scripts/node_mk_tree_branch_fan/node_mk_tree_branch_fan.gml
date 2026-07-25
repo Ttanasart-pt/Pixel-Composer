@@ -249,6 +249,7 @@ function Node_MK_Tree_Branch_Fan(_x, _y, _group = noone) : Node(_x, _y, _group) 
 					}
 					
 					var _t = new __MK_Tree(_tr.root, ori[0], ori[1], _seed + bIndex++)
+						.setParent(_tr)
 						.setDraw(_draw, _line)
 						.setTexture(tex)
 						

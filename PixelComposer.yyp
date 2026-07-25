@@ -1966,6 +1966,7 @@
     {"id":{"name":"node_mk_tree_add_leaf","path":"scripts/node_mk_tree_add_leaf/node_mk_tree_add_leaf.yy",},},
     {"id":{"name":"node_mk_tree_attract","path":"scripts/node_mk_tree_attract/node_mk_tree_attract.yy",},},
     {"id":{"name":"node_mk_tree_branch_fan","path":"scripts/node_mk_tree_branch_fan/node_mk_tree_branch_fan.yy",},},
+    {"id":{"name":"node_mk_tree_branch_reroot","path":"scripts/node_mk_tree_branch_reroot/node_mk_tree_branch_reroot.yy",},},
     {"id":{"name":"node_mk_tree_branch_split","path":"scripts/node_mk_tree_branch_split/node_mk_tree_branch_split.yy",},},
     {"id":{"name":"node_mk_tree_branch_to_path","path":"scripts/node_mk_tree_branch_to_path/node_mk_tree_branch_to_path.yy",},},
     {"id":{"name":"node_mk_tree_branch_trim","path":"scripts/node_mk_tree_branch_trim/node_mk_tree_branch_trim.yy",},},

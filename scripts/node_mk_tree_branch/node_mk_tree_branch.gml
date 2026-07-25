@@ -292,6 +292,7 @@ function Node_MK_Tree_Branch(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 				var _t = new __MK_Tree(_tr.root, ori[0], ori[1], _seed + i)
 					.setDraw(_draw, _line)
 					.setTexture(tex)
+					.setParent(_tr)
 				
 				_t.rootPosition  =  rat;
 				_t.rootDirection = ori[2];

@@ -27,8 +27,11 @@
 #endregion
 
 function __MK_Tree_Element(_root = undefined) constructor {
-	root = _root;
+	root   = _root;
+	parent = root;
 	rootPosition = 0;
+	
+	static setParent = function(_p) /*=>*/ { parent = _p; return self; }
 	
 	static drawOverlay = function(_x,_y,_s) /*=>*/ {}
 	static draw        = function()         /*=>*/ {}
@@ -70,6 +73,7 @@ function __MK_Tree(_root = undefined, _x = 0, _y = 0, _seed = 0) : __MK_Tree_Ele
 	
 	points    = [];
 	pointAmo  = 0;
+	points_cache = undefined;
 	
 	children  = [];
 	leaves    = [];
@@ -164,6 +168,29 @@ function __MK_Tree(_root = undefined, _x = 0, _y = 0, _seed = 0) : __MK_Tree_Ele
 		var rr = (rat - segmentRatio[low - 1]) / (segmentRatio[low] - segmentRatio[low - 1]);
 		
 		return merge_color(ox.color, nx.color, rr);
+	}
+	
+	static clearCachePoints = function() { points_cache = undefined; }
+	
+	static getPoints = function() {
+		if(points_cache != undefined) return points_cache;
+		var p = [];
+		
+		for( var i = 0, n = array_length(segments); i < n; i++ ) {
+			var seg = segments[i];
+			array_push(p, [
+				seg.x, 
+				seg.y, 
+				seg.thickness,
+				
+				seg.color,
+				seg.colorEdgeL,
+				seg.colorEdgeR,
+			]);
+		}
+		
+		points_cache = p;
+		return p;
 	}
 	
 	////- Build
@@ -545,6 +572,8 @@ function __MK_Tree(_root = undefined, _x = 0, _y = 0, _seed = 0) : __MK_Tree_Ele
 	}
 	
 	////- Action
+	
+	static clone = function() /*=>*/ {return variable_clone(self, 1)};
 	
 	static toString = function() /*=>*/ {return $"[MK Tree]: {array_length(children)} branch, {array_length(leaves)} leaves."};
 	

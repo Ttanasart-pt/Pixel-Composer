@@ -100,7 +100,7 @@ function Node_Compose_Texture(_x, _y, _group = noone) : Node_Processor(_x, _y, _
 				add_effect_index = ind;
 				
 				if(dia) dia.buildCallback = function(newNode) /*=>*/ {
-					array_push(attributes.layer_effect[add_effect_index], newNode.node_id);
+					array_insert(attributes.layer_effect[add_effect_index], 0, newNode.node_id);
 					add(newNode)
 					
 					dialogPanelCall(new Panel_Inspector().setInspecting(newNode, true))
@@ -192,7 +192,7 @@ function Node_Compose_Texture(_x, _y, _group = noone) : Node_Processor(_x, _y, _
 		    		_hh += fhg;
 				}
 				
-				if(toDel) {
+				if(toDel >= 0) {
 					array_delete(_effs, toDel, 1);
 					triggerRender();
 				}
@@ -330,7 +330,8 @@ function Node_Compose_Texture(_x, _y, _group = noone) : Node_Processor(_x, _y, _
 		array_push(effect_nodes, _node);
 	}
 	
-	static getNodeList = function() /*=>*/ {return effect_nodes};
+	static refreshNodes = function() /*=>*/ {};
+	static getNodeList  = function() /*=>*/ {return effect_nodes};
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _params) { 
 		if(dynamic_input_inspecting != noone) {
@@ -353,7 +354,7 @@ function Node_Compose_Texture(_x, _y, _group = noone) : Node_Processor(_x, _y, _
 		var _amo = getInputAmount();
 		if(array_length(io_pool) < _amo) {
 			for( var i = array_length(io_pool); i < _amo; i++ )
-				io_pool[i] = nodeValue_Output($"Texture {i}", VALUE_TYPE.surface, noone);
+				io_pool[i] = nodeValue_Output($"Texture {i}", VALUE_TYPE.surface, noone).setVisible(false);
 		}
 		
 		var _olen = array_length(outputs);

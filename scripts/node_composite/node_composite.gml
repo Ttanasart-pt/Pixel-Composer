@@ -635,7 +635,7 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 					add_effect_index = ind;
 					
 					if(dia) dia.buildCallback = function(newNode) /*=>*/ {
-						array_push(attributes.layer_effect[add_effect_index], newNode.node_id);
+						array_insert(attributes.layer_effect[add_effect_index], 0, newNode.node_id);
 						add(newNode)
 						
 						dialogPanelCall(new Panel_Inspector().setInspecting(newNode, true))
@@ -839,7 +839,7 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 						_lh  += ehg;
 					}
 					
-					if(toDel) {
+					if(toDel >= 0) {
 						array_delete(_effs, toDel, 1);
 						triggerRender();
 					}
@@ -1958,7 +1958,8 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		array_push(effect_nodes, _node);
 	}
 	
-	static getNodeList = function() /*=>*/ {return effect_nodes};
+	static refreshNodes = function() /*=>*/ {};
+	static getNodeList  = function() /*=>*/ {return effect_nodes};
 	
 	static getToolNode = function() /*=>*/ {
 		if(dynamic_input_inspecting >= 0) {

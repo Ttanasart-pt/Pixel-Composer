@@ -80,6 +80,8 @@ function Node_MK_Tree_Branch_Split(_x, _y, _group = noone) : Node(_x, _y, _group
 			
 			repeat(_amo) {
 				var _t = new __MK_Tree();
+				
+				_t.setParent(_tr);
 				_t.seed = _seed + i;
 				_t.root = _tr.root;
 				_t.x = ori[0];
