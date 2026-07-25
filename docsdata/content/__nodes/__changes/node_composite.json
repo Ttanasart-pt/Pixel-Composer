@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.7.108",
+    "changes": [
+      {
+        "date": "2026-07-25T01:54:11.516Z",
+        "node": "Composite",
+        "commit": "**Composite**: Rearranging layer now won't reorder inputs, only depth."
+      }
+    ]
+  },
+  {
     "version": "1.21.7.104",
     "changes": [
       {

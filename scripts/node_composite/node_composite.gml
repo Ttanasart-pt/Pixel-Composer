@@ -470,16 +470,21 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	hold_select		= true;
 	
 	layer_dragging	= noone;
+	layer_drag      = 0;
+	layer_drag_my   = 0;
+	
 	layer_remove	= -1;
 	layer_height    = 0;
 	layer_renderer	= new Inspector_Custom_Renderer(function(_x, _y, _w, _m, _hover, _focus) {
 		PROCESSOR_OVERLAY_CHECK
 		
-		var amo = getInputAmount();
 		var lh  = ui(28);
 		var eh  = ui(36);
 		
-		properties_expand = array_verify(properties_expand, amo);
+		var iamo = getInputAmount();
+		var amo  = array_length(attributes.layer_order);
+		
+		properties_expand = array_verify_min(properties_expand, amo);
 		var _h = ui(4);
 		
 		draw_sprite_stretched_ext(THEME.ui_panel_bg, 1, _x, _y, _w, layer_height, COLORS.node_composite_bg_blend, 1);
@@ -493,10 +498,14 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		var _cy = ly;
 		var _tw = _w - ui(200);
 		
+		var dragI = 0;
+		var dragY = ly;
+		
 		layer_remove = -1;
 		for(var i = 0; i < amo; i++) {
-			var ind   = amo - i - 1;
+			var ind   = attributes.layer_order[i];
 			var index = input_fix_len + ind * data_length;
+			
 			var _surf = current_data[index + 0];
 			var _pos  = current_data[index + 1];
 			var _dep  = current_data[index + 7];
@@ -504,11 +513,11 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			var _junc = _inp.value_from? _inp.value_from.node : noone;
 			
 			var _bx = _x + _w - ui(24);
-			var aa  = (ind != layer_dragging || layer_dragging == noone)? 1 : 0.5;
+			var aa  = 1;
 			var vis = array_safe_get_fast(_vis, ind) ?? true; _vis[ind] = vis;
 			var sel = array_safe_get_fast(_sel, ind) ?? true; _sel[ind] = sel;
 			
-			var _exp = properties_expand[i] ?? 0;
+			var _exp = properties_expand[ind] ?? 0;
 			var _lh  = lh + ui(4) + _exp * eh;
 			_h += _lh;
 			
@@ -548,6 +557,7 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 					
 					if(mouse_lpress(_focus))
 						layer_remove = ind;
+						
 				} else 
 					draw_sprite_ui_uniform(THEME.icon_delete, 3, _bx, _cy + lh / 2, 1, COLORS._main_icon);
 				
@@ -709,21 +719,18 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 				}
 			}
 			
-			if(_hover && point_in_rectangle(_m[0], _m[1], _x, _cy, _x + _w, _cy + lh)) {
+			if(_hover && point_in_rectangle(_m[0], _m[1], _x, _cy, _x + _w, _cy + _lh)) {
 				_HIGHLIGHT_PROP = _inp;
 				hoverIndex = ind;
 				
-				if(layer_dragging != noone) {
-					draw_set_color(COLORS._main_accent);
-					if(layer_dragging > ind) {
-						var ly = _cy + lh + ui(2);
-						draw_line_width(_x + ui(16), ly, _x + _w - ui(16), ly, 2);
-						
-					} else if(layer_dragging < ind) {
-						var ly = _cy - ui(2);
-						draw_line_width(_x + ui(16), ly, _x + _w - ui(16), ly, 2);
-						
-					}
+				if(_m[1] < _cy + _lh / 2) {
+					dragI = i;
+					dragY = _cy;
+					
+				} else {
+					dragI = i + 1;
+					dragY = _cy + _lh;
+					
 				}
 			}
 			
@@ -733,12 +740,12 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 				cc = c_white;
 				
 				if(mouse_lpress(_focus))
-					properties_expand[i] = !properties_expand[i];
+					properties_expand[ind] = !properties_expand[ind];
 			}
 			
 			draw_sprite_ui_uniform(THEME.arrow, _exp? 3 : 0, _bx, _cy + lh / 2 + _exp * 2, 1, cc);
 			
-			if(hover && layer_dragging == noone || layer_dragging == ind) {
+			if(hover) {
 				if(DOUBLE_CLICK) {
 					if(_hovName) {
 						renaming_index = index;
@@ -757,65 +764,72 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 					
 				} else if(mouse_lpress(_focus)) {
 					dynamic_input_inspecting = dynamic_input_inspecting == ind? noone : ind;
-					layer_dragging = ind;
 					refreshDynamicDisplay();
+					
+					layer_dragging	= ind;
+					layer_drag      = 1;
+					layer_drag_my   = _m[1];
 				}
 			}
 			
 			_cy += _lh;
 		}
 		
-		if(layer_dragging != noone && mouse_lrelease()) {
-			if(layer_dragging != hoverIndex && hoverIndex != noone) {
-				var index = input_fix_len + layer_dragging * data_length;
-				var targt = input_fix_len + hoverIndex * data_length;
-				var _vis = attributes.layer_visible;
-				var _sel = attributes.layer_selectable;
-				
-				var ext = [];
-				var vis = _vis[layer_dragging];
-				array_delete(_vis, layer_dragging, 1);
-				array_insert(_vis, hoverIndex, vis);
-				
-				var sel = _sel[layer_dragging];
-				array_delete(_sel, layer_dragging, 1);
-				array_insert(_sel, hoverIndex, sel);
-				
-				for( var i = 0; i < data_length; i++ ) {
-					ext[i] = inputs[index];
-					array_delete(inputs, index, 1);
-				}
-				
-				for( var i = 0; i < data_length; i++ )
-					array_insert(inputs, targt + i, ext[i]);
-				
-				if(amo > 1) {
-					var _ndepth = 0;
-					if(hoverIndex == 0) { // drag to lowest
-						_ndepth = current_data[targt + 7] - 100; // set to lowest - 100
-						
-					} else if(hoverIndex == amo - 1) { // drag to highest
-						_ndepth = current_data[targt + 7] + 100; // set to highest + 100
-						
-					} else { // middle
-						var _fl = current_data[targt               + 7];
-						var _ce = current_data[targt + data_length + 7];
-						_ndepth = round((_fl + _ce) / 2);
-					}
-					
-					inputs[targt + 7].setValue(_ndepth);
-				}
-				
-				for( var i = 0, n = array_length(inputs); i < n; i++ )
-					inputs[i].index = i;
-				
-				triggerRender();
+		if(_m[1] > _cy) {
+			dragI = i;
+			dragY = _cy;
+		}
+			
+		if(layer_drag == 1) {
+			if(abs(_m[1] - layer_drag_my) > ui(16)) {
+				layer_drag = 2;
+				array_remove(attributes.layer_order, layer_dragging);
 			}
 			
-			layer_dragging = noone;
-			if(canvas_group) canvas_group.onLayerChanged();
-			// refreshDepth();
-			refreshDynamicDisplay();
+			if(mouse_lrelease())
+				layer_drag = 0;
+				
+		} else if(layer_drag == 2) {
+			draw_set_color(COLORS._main_accent);
+			draw_line_width(_x + ui(16), dragY, _x + _w - ui(16), dragY, ui(2));
+			
+			if(mouse_lrelease()) {
+				var ind   = layer_dragging;
+				var index = input_fix_len + ind * data_length;
+				var depInput = inputs[index + 7];
+				
+				if(dragI == 0) {
+					var ind   = attributes.layer_order[dragI];
+					var index = input_fix_len + ind * data_length;
+					var _dep  = current_data[index + 7];
+						
+					depInput.setValue(_dep + 100);
+					
+				} else if(dragI >= array_length(attributes.layer_order)) {
+					var ind   = attributes.layer_order[dragI - 1];
+					var index = input_fix_len + ind * data_length;
+					var _dep  = current_data[index + 7];
+					
+					depInput.setValue(_dep - 100);
+					
+				} else {
+					var ind   = attributes.layer_order[dragI - 1];
+					var index = input_fix_len + ind * data_length;
+					var _dep1 = current_data[index + 7];
+					
+					var ind   = attributes.layer_order[dragI];
+					var index = input_fix_len + ind * data_length;
+					var _dep2 = current_data[index + 7];
+					
+					depInput.setValue((_dep1 + _dep2) / 2);
+				}
+				
+				array_insert(attributes.layer_order, dragI, layer_dragging);
+				layer_drag = 0;
+				
+				triggerRender();
+				if(canvas_group) canvas_group.onLayerChanged();
+			}
 		}
 		
 		layer_height     = max(ui(16), _h);
@@ -949,6 +963,9 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		
 	////- Nodes
 	
+	attributes.layer_effect  = [];
+	layer_effect_map = {};
+	
 	temp_surface       = array_create(3, noone);
 	blend_temp_surface = temp_surface[2];
 	
@@ -974,7 +991,7 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	canvas_draw        = noone;
 	
 	__p = [ 0, 0 ];
-
+	
 	////- Overlay
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _params) {
@@ -1866,9 +1883,6 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			
 			attributes.layer_visible    = array_verify(attributes.layer_visible,    imageAmo);
 			attributes.layer_selectable = array_verify(attributes.layer_selectable, imageAmo);
-			
-			for( var i = array_length(attributes.layer_order); i < imageAmo; i++ )
-				attributes.layer_order[i] = i;
 		#endregion
 		
 		var res_index = 0;
@@ -1881,17 +1895,24 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		var _selDraw  = _array_index == preview_index && attributes.select_object;
 		if(_selDraw) selection_surf = surface_clear(surface_verify(selection_surf, ww, hh, surface_r16float));
 		
-		var _renderPR    = ds_priority_create();
-		for(var i = 0; i < imageAmo; i++) {
-			var _ind = input_fix_len + i * data_length;
-			var _dep = _data[_ind + 7];
+		#region depth sorting
+			var _renderPR    = ds_priority_create();
+			for(var i = 0; i < imageAmo; i++) {
+				var _ind = input_fix_len + i * data_length;
+				var _dep = _data[_ind + 7];
+				
+				ds_priority_add(_renderPR, i, _dep);
+			}
 			
-			ds_priority_add(_renderPR, i, _dep);
-		}
+			attributes.layer_order = [];
+			while(!ds_priority_empty(_renderPR)) 
+				array_push(attributes.layer_order, ds_priority_delete_max(_renderPR))
+			ds_priority_destroy(_renderPR);
+		#endregion
 		
 		blend_temp_surface = temp_surface[2];
 		for(var i = 0; i < imageAmo; i++) {
-			var _index = ds_priority_delete_min(_renderPR);
+			var _index = attributes.layer_order[imageAmo - i - 1];
 			
 			var vis  = _vis[_index];
 			if(!vis) continue;
@@ -1939,7 +1960,6 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			_bg = !_bg;
 		}
 		
-		ds_priority_destroy(_renderPR);
 		if(_selDraw) selection_sampler.setSurface(selection_surf);
 		
 		_outSurf = surface_verify(_outSurf, ww, hh, cDep);
