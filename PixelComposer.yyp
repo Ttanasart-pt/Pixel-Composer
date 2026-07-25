@@ -1984,6 +1984,8 @@
     {"id":{"name":"node_mk_tree_root_path","path":"scripts/node_mk_tree_root_path/node_mk_tree_root_path.yy",},},
     {"id":{"name":"node_mk_tree_root","path":"scripts/node_mk_tree_root/node_mk_tree_root.yy",},},
     {"id":{"name":"node_mk_tree_smoothen_branch","path":"scripts/node_mk_tree_smoothen_branch/node_mk_tree_smoothen_branch.yy",},},
+    {"id":{"name":"node_mk_tree_spiral_branch","path":"scripts/node_mk_tree_spiral_branch/node_mk_tree_spiral_branch.yy",},},
+    {"id":{"name":"node_mk_tree_subdivide_branch","path":"scripts/node_mk_tree_subdivide_branch/node_mk_tree_subdivide_branch.yy",},},
     {"id":{"name":"node_mk_tree_wave_branch","path":"scripts/node_mk_tree_wave_branch/node_mk_tree_wave_branch.yy",},},
     {"id":{"name":"node_mk_tree_wiggle_leaf","path":"scripts/node_mk_tree_wiggle_leaf/node_mk_tree_wiggle_leaf.yy",},},
     {"id":{"name":"node_mk_tree_wiggle","path":"scripts/node_mk_tree_wiggle/node_mk_tree_wiggle.yy",},},
