@@ -229,8 +229,9 @@ function __MK_Tree(_root = undefined, _x = 0, _y = 0, _seed = 0) : __MK_Tree_Ele
 	static grow = function(_amount, _param) {
 		amount = _amount;
 		
-		var _length = _param.length;
-		var _angle  = _param.angle;
+		var _length     = _param.length;
+		var _angle      = _param.angle;
+		var _angleClamp = _param[$ "angleClamp"];
 		
 		var _wigg   = _param.wigg;
 		var _wiggC  = _param.wiggC;
@@ -273,7 +274,7 @@ function __MK_Tree(_root = undefined, _x = 0, _y = 0, _seed = 0) : __MK_Tree_Ele
 		
 		segments[0] = new __MK_Tree_Segment(ox, oy, t);
 		var _sg = segments[0];
-		var _a  = _angle;
+		var _a  = _angle, _d;
 		var ll  = _length / amount;
 		
 		var _gx = lengthdir_x(1, _gravD);
@@ -328,10 +329,22 @@ function __MK_Tree(_root = undefined, _x = 0, _y = 0, _seed = 0) : __MK_Tree_Ele
 				totalLength += ll;
 				
 				_gg = _grav * (_gravC? _gravC.get(p) : 1);
-				dx += _gg * ll * _gx;
-				dy += _gg * ll * _gy;
 				
-				_a = point_direction(0, 0, dx, dy);
+				if(_angleClamp == undefined) {
+					dx += _gg * ll * _gx;
+					dy += _gg * ll * _gy;
+					
+					_a = point_direction(0, 0, dx, dy);
+					
+				} else {
+					var dgx = dx + _gg * ll * _gx;
+					var dgy = dy + _gg * ll * _gy;
+					
+					_a = point_direction(0, 0, dgx, dgy);
+					_d = point_distance(0, 0, dgx, dgy);
+					
+					_a = clamp_angle(_a, _angleClamp[0], _angleClamp[1]);
+				}
 			}
 			
 			switch(_cLen) {

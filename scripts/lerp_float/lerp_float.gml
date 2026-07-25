@@ -44,3 +44,14 @@ function lerp_d3(_a, _b, _l, _p) {
 	_p[2] = lerp(_a[2], _b[2], _l);
 	return _p;
 }
+
+function clamp_angle(a, amin, amax) {
+	var ang = (a % 360 + 360) % 360;
+
+	if(a >= amin && a <= amax) return a;
+
+	var dmin = angle_difference(amin, ang);
+	var dmax = angle_difference(amax, ang);
+	
+	return abs(dmin) < abs(dmax)? a + dmin : a + dmax;
+}

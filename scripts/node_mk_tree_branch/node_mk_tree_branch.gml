@@ -37,6 +37,10 @@ function Node_MK_Tree_Branch(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	newInput(15, nodeValue_EScroll( "Reflect",         0, [ "None", "Randomize", "Ordered" ] ));
 	newInput(49, nodeValue_EScroll( "Reflect Order",   0, [ "Even", "Odd", "Random" ] ));
 	
+		////- =/Clamp Direction
+	newInput(53, nodeValue_Bool(  "Do Clamp Direction", false   ));
+	newInput(54, nodeValue_Range( "Clamp Direction",    [0,360] ));
+		
 		////- =/Gravity
 	newInput( 9, nodeValue_Range(   "Gravity",        [0,0], true    ))
 		.setCurvable( 16, CURVE_DEF_11, "Over Length", "curved",        THEME.mk_tree_curve_length )
@@ -88,7 +92,7 @@ function Node_MK_Tree_Branch(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	
 	////- =Growth
 	newInput(20, nodeValue_Range( "Grow Delay", [0,0], true ));
-	// 53
+	// 55
 	
 	newOutput(0, nodeValue_Output("Tree",     VALUE_TYPE.struct, noone)).setCustomData(global.MKTREE_JUNC);
 	newOutput(1, nodeValue_Output("Branches", VALUE_TYPE.struct, noone)).setCustomData(global.MKTREE_JUNC);
@@ -101,6 +105,7 @@ function Node_MK_Tree_Branch(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 			
 		[ "Geometry",        false ],  3, 13,  7, 
 		[ "Direction",       false ], 31,  4, 40, 41, 15, 49,
+			[ "/Clamp Direction", false, 53], 54, 
 			[ "/Gravity",    false ],  9, 16, 33, 50, 51, 
 			[ "/Wiggle",      true ], 10, 34, 35, 42, 43, 
 			[ "/Spiral",      true ], 47, 48, 25, 38, 26, 21, 22, 23, 24, 
@@ -178,6 +183,9 @@ function Node_MK_Tree_Branch(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 			
 			var _refl  = getInputData(15);
 			var _refo  = getInputData(49);
+			
+			var _clmDirUse = getInputData(53);
+			var _clmDir    = getInputData(54);
 			
 			var _grv   = getInputData( 9);
 			var _grvC  = getInputData(16), curve_grav    = inputs[ 9].attributes.curved?        new curveMap(_grvC)  : undefined;
@@ -339,9 +347,13 @@ function Node_MK_Tree_Branch(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 					_colBase = merge_color(_colBase, colorMultiply(_colBase, _rootColor), _inhColor);
 				}
 				
+				var _cAngle = _clmDirUse? _clmDir : undefined;
+				
 				var _growParam = {
-					length : _length,
-					angle  : _angle,   
+					length     : _length,
+					angle      : _angle,   
+					angleClamp : _cAngle, 
+					
 					wigg   : _wiggA,   wiggC  : curve_angw,    wiggF   : _wiggF,    wiggP : _wiggP, 
 					grav   : _grav,    gravC  : curve_grav,    gravD   : _gDir, 
 					thick  : _thick,   thickC : curve_thick,
