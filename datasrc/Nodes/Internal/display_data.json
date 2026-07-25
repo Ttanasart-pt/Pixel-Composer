@@ -400,6 +400,9 @@
             "Node_MK_Tree_Branch",
             "Node_MK_Tree_Branch_Fan",
             "Node_MK_Tree_Add_Branch",
+            "Node_MK_Tree_Smoothen_Branch",
+            "Node_MK_Tree_Wave_Branch",
+            "Node_MK_Tree_Ground_Branch",
             
             { "label": "/Leaves" },
             "Node_MK_Tree_Leaf",
@@ -418,6 +421,8 @@
             "Node_MK_Tree_Wiggle",
             "Node_MK_Tree_Branch_Reroot",
             "Node_MK_Tree_Smoothen_Branch",
+            "Node_MK_Tree_Wave_Branch",
+            "Node_MK_Tree_Ground_Branch",
             
             { "label": "/Leaves" },
             "Node_MK_Tree_Wiggle_Leaf",
