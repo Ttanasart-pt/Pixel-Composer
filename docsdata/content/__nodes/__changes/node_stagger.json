@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.7.108",
+    "changes": [
+      {
+        "date": "2026-07-25T05:04:48.157Z",
+        "node": "Stagger",
+        "commit": "**Stagger**: Add loop overflow mode."
+      }
+    ]
+  },
+  {
     "version": "1.21.5.009",
     "changes": [
       {
