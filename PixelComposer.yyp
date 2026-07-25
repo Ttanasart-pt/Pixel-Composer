@@ -1982,6 +1982,7 @@
     {"id":{"name":"node_mk_tree_repulse","path":"scripts/node_mk_tree_repulse/node_mk_tree_repulse.yy",},},
     {"id":{"name":"node_mk_tree_root_path","path":"scripts/node_mk_tree_root_path/node_mk_tree_root_path.yy",},},
     {"id":{"name":"node_mk_tree_root","path":"scripts/node_mk_tree_root/node_mk_tree_root.yy",},},
+    {"id":{"name":"node_mk_tree_smoothen_branch","path":"scripts/node_mk_tree_smoothen_branch/node_mk_tree_smoothen_branch.yy",},},
     {"id":{"name":"node_mk_tree_wiggle_leaf","path":"scripts/node_mk_tree_wiggle_leaf/node_mk_tree_wiggle_leaf.yy",},},
     {"id":{"name":"node_mk_tree_wiggle","path":"scripts/node_mk_tree_wiggle/node_mk_tree_wiggle.yy",},},
     {"id":{"name":"node_mk_wireframe","path":"scripts/node_mk_wireframe/node_mk_wireframe.yy",},},

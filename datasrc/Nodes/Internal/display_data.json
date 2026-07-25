@@ -417,6 +417,7 @@
             "Node_MK_Tree_Repulse",
             "Node_MK_Tree_Wiggle",
             "Node_MK_Tree_Branch_Reroot",
+            "Node_MK_Tree_Smoothen_Branch",
             
             { "label": "/Leaves" },
             "Node_MK_Tree_Wiggle_Leaf",

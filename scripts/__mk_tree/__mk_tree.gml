@@ -419,6 +419,8 @@ function __MK_Tree(_root = undefined, _x = 0, _y = 0, _seed = 0) : __MK_Tree_Ele
 			l += segmentLengths[i];
 			segmentRatio[i] = l / totalLength;
 		}
+		
+		return self;
 	}
 	
 	////- Draw

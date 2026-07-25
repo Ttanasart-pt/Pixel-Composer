@@ -1655,6 +1655,7 @@
     {"name":"node_mk_tree_render","order":5,"path":"scripts/node_mk_tree_render/node_mk_tree_render.yy",},
     {"name":"node_mk_tree_repulse","order":3,"path":"scripts/node_mk_tree_repulse/node_mk_tree_repulse.yy",},
     {"name":"node_mk_tree_root_path","order":1,"path":"scripts/node_mk_tree_root_path/node_mk_tree_root_path.yy",},
+    {"name":"node_mk_tree_smoothen_branch","order":7,"path":"scripts/node_mk_tree_smoothen_branch/node_mk_tree_smoothen_branch.yy",},
     {"name":"node_mk_tree_wiggle_leaf","order":5,"path":"scripts/node_mk_tree_wiggle_leaf/node_mk_tree_wiggle_leaf.yy",},
     {"name":"node_mk_tree_wiggle","order":4,"path":"scripts/node_mk_tree_wiggle/node_mk_tree_wiggle.yy",},
     {"name":"node_mk_wireframe","order":8,"path":"scripts/node_mk_wireframe/node_mk_wireframe.yy",},

@@ -155,8 +155,7 @@ function Node_MK_Tree_Branch_Reroot(_x, _y, _group = noone) : Node(_x, _y, _grou
 				
 			}
 			
-			var newBr = _br.clone();
-			newBr.setPoints(_points);
+			var newBr = _br.clone().setPoints(_points);
 			
 			array_push(_branch, newBr)
 		}
