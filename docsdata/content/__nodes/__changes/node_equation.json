@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.7.108",
+    "changes": [
+      {
+        "date": "2026-07-25T00:46:38.764Z",
+        "node": "",
+        "commit": "**Shape Path 3D**: Fix error with preview bounding box."
+      }
+    ]
+  },
+  {
     "version": "1.21.7.107",
     "changes": [
       {

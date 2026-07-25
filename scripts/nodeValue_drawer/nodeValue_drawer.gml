@@ -529,7 +529,7 @@ function drawWidget(xx, yy, ww, _m, _jun, global_var = true, _hover = false, _fo
 						var t  = __txt("PCX Reference");
 						bx  -= bs; b = buttonInstant(bb, bx, by, bs, bs, _m, hv, fc, t, THEME.info_light, 0, cc, .8, ics); bx -= ui(4);
 						cHov = cHov || b;
-						if(b == 2) dialogPanelCall(new Panel_PCX_Reference());
+						if(b == 2) dialogPanelCall(new Panel_Code_Reference(global.pcx_function_list));
 						
 					}
 					

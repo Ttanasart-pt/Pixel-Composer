@@ -12,7 +12,7 @@ function Node_Lua_Compute(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	
 	////- =Script
 	newInput(2, nodeValue_Text( "Lua code" )).setDisplay(VALUE_DISPLAY.codeLUA)
-		.setTooltip(function() /*=>*/ {return dialogPanelCall(new Panel_Lua_Reference())}, __txt("Lua Reference"))
+		.setTooltip(function() /*=>*/ {return dialogPanelCall(new Panel_Code_Reference(global.lua_functions))}, __txt("Lua Reference"))
 	// 5
 	
 	newOutput(0, nodeValue_Output( "Execution thread", VALUE_TYPE.node, lua_state ));

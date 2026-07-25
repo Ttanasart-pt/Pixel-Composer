@@ -3,21 +3,39 @@
     global.PCX_FUNCTIONS = ds_map_create();
     global.pcx_function_list = [];
 	
-	function PXC_FN(key, fn, desp = "", despArg = [], otype = "null") { 
-		global.PCX_FUNCTIONS[? key] = fn; 
+	function PXC_FN(key, fn, desp = "", despArg = [], otype = "null") {
+		var _syn = key;
 		
-		var _syn = key + "(";
-		for( var i = 0, n = array_length(fn[0]); i < n; i++ ) {
-			var arg = fn[0][i];
-			if(i) _syn += ", ";
-			_syn += arg;
+		if(fn[1] != undefined) {
+			global.PCX_FUNCTIONS[? key] = fn; 
+		
+			_syn = key + "(";
+			for( var i = 0, n = array_length(fn[0]); i < n; i++ ) {
+				var arg = fn[0][i];
+				if(i) _syn += ", ";
+				_syn += arg;
+			}
+			_syn += ")";
 		}
-		_syn += ")";
 		
 		var _fn = new function_syntax( key, fn[1], _syn, desp, despArg, otype);
 		array_push(global.pcx_function_list, _fn);
 	}
     	
+	array_push(global.pcx_function_list, "Arithmatic Symbols");
+    PXC_FN("add (a + b)",      [ ["a","b"], undefined ], "Add two numbers.",      [["a", "number", "Number"], ["b", "number", "Number"]], "number");
+    PXC_FN("subtract (a - b)", [ ["a","b"], undefined ], "Subtract two numbers.", [["a", "number", "Number"], ["b", "number", "Number"]], "number");
+    PXC_FN("multiply (a * b)", [ ["a","b"], undefined ], "Multiply two numbers.", [["a", "number", "Number"], ["b", "number", "Number"]], "number");
+    PXC_FN("divide (a / b)",   [ ["a","b"], undefined ], "Divide two numbers.",   [["a", "number", "Number"], ["b", "number", "Number"]], "number");
+    PXC_FN("exponent (a ** b)",[ ["a","b"], undefined ], "Calculate a^b.",        [["a", "number", "Number"], ["b", "number", "Number"]], "number");
+    
+    PXC_FN("increment (a++)",       [ ["a"],     undefined ], "Increase number by 1.", [["a", "number", "Number"]], "number");
+    PXC_FN("decrenent (a--)",       [ ["a"],     undefined ], "Decrease number by 1.", [["a", "number", "Number"]], "number");
+    PXC_FN("increment by (a += b)", [ ["a","b"], undefined ], "Equivalence to a = a + b", [["a", "number", "Number"], ["b", "number", "Number"]], "number");
+    PXC_FN("decrement by (a -= b)", [ ["a","b"], undefined ], "Equivalence to a = a - b", [["a", "number", "Number"], ["b", "number", "Number"]], "number");
+    PXC_FN("multiply by (a *= b)",  [ ["a","b"], undefined ], "Equivalence to a = a * b", [["a", "number", "Number"], ["b", "number", "Number"]], "number");
+    PXC_FN("divide by (a /= b)",    [ ["a","b"], undefined ], "Equivalence to a = a / b", [["a", "number", "Number"], ["b", "number", "Number"]], "number");
+	
 	array_push(global.pcx_function_list, "Number Operation");
     PXC_FN("abs",      [ ["x"], function(v) /*=>*/ {return abs(v)}   ], "Calculate absolute value.",            [["x", "number", "Number"]], "number");
     PXC_FN("round",    [ ["x"], function(v) /*=>*/ {return round(v)} ], "Round to the nearest integer.",        [["x", "number", "Number"]], "number");
@@ -70,6 +88,7 @@
     PXC_FN("ord",      [ ["char"],  function(v) /*=>*/ {return ord(v)}      ], "Convert character to unicode code point", [["char", "string", "Character to convert"]], "number");
          
 	array_push(global.pcx_function_list, "Array");
+	PXC_FN("array creator (a..b)",  [ ["a","b"], undefined ], "Create array of numbers from a to b (inclusive).",  [["a", "number", "Number"], ["b", "number", "Number"]], "number[]");
 	PXC_FN("range",    [ ["length","start = 0","step = 1"],   
     	function(l=0,s=0,e=1) /*=>*/ { 
 			var arr = array_create(l);
@@ -99,6 +118,10 @@
     PXC_FN("color_rgb", [ ["red", "green", "blue"],  function(r,g,b) /*=>*/ {return make_color_rgb(r,g,b)} ], "Convert RGB values to color", [["red", "number", "Red (0-255)"], ["green", "number", "Green (0-255)"], ["blue", "number", "Blue (0-255)"]], "color");
     PXC_FN("color_hsv", [ ["hue", "sat", "value"],   function(h,s,v) /*=>*/ {return make_color_hsv(h,s,v)} ], "Convert HSV values to color", [["hue", "number", "Hue (0-255)"], ["sat", "number", "Saturation (0-255)"], ["value", "number", "Value (0-255)"]], "color");
     
+	array_push(global.pcx_function_list, "Bitwise Operation");
+	PXC_FN("bitshift left (a << b)",  [ ["a","b"], undefined ], "Shift binary to the left by b digits.",  [["a", "number", "Number"], ["b", "number", "Number"]], "number");
+	PXC_FN("bitshift right (a >> b)", [ ["a","b"], undefined ], "Shift binary to the right by b digits.", [["a", "number", "Number"], ["b", "number", "Number"]], "number");
+	
 	array_push(global.pcx_function_list, "Debug");
     PXC_FN("print", [ ["string", "warning = 0"],     function(s,w=0) /*=>*/ { if(w) noti_warning(s); else print(s); return 0; } ], "Show message in notification", [["string", "string", "Message to show"], ["warning", "bool", "Show as warning"]], "null");
     

@@ -104,6 +104,8 @@ function BBOX() constructor {
 	}
 	
 	static fromBoundingBox = function(box) {
+		if(!is(box, BoundingBox)) return self;
+		
 		self.x0 = box.minx; 
 		self.x1 = box.maxx; 
 		self.y0 = box.miny; 
