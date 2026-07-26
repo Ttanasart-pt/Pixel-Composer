@@ -24,7 +24,6 @@ function Node_Path_From_Mask(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	loop		= true;
 	cached_pos  = ds_map_create();
 	
-	attributes.maximum_dim    = 64;
 	attributes.maximum_points = 4096;
 	array_push(attributeEditors, Node_Attribute("Max Points", function() /*=>*/ {return attributes.maximum_points}, 
 		function() /*=>*/ {return textBox_Number(function(v) /*=>*/ {return setAttribute("maximum_points", clamp(v, 8, 10000))})}));
@@ -81,7 +80,6 @@ function Node_Path_From_Mask(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	static getPointRatio = function(_rat, _ind = 0, out = undefined) { return getPointDistance(frac(_rat) * lengthTotal, _ind, out); }
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _params) { 
-		
 		draw_set_color(COLORS._main_accent);
 		var ox, oy, nx, ny, sx, sy;
 		
@@ -95,7 +93,7 @@ function Node_Path_From_Mask(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 				sy = ny;
 			}
 			
-			draw_circle(nx, ny, 3, false);
+			draw_circle(nx, ny, ui(3), false);
 			
 			ox = nx;
 			oy = ny;
@@ -103,14 +101,16 @@ function Node_Path_From_Mask(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	}
 	
 	static update = function(frame = CURRENT_FRAME) {
-		ds_map_clear(cached_pos);
-		var _surf = getInputData(0);
-		
-		var _smt   = getInputData(2);
-		var _smtEp = getInputData(1);
-		
-		anchors = [];
-		if(!is_surface(_surf)) return;
+		#region data
+			ds_map_clear(cached_pos);
+			var _surf = getInputData(0);
+			
+			var _smt   = getInputData(2);
+			var _smtEp = getInputData(1);
+			
+			anchors = [];
+			if(!is_surface(_surf)) return;
+		#endregion
 		
 		var _dim = surface_get_dimension(_surf);
 		temp_surface[0] = surface_verify(temp_surface[0], _dim[0], _dim[1]);

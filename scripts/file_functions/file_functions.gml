@@ -311,7 +311,7 @@ function directory_create_os(_p) {
 	_p = filename_os(_p);
 	print($"Creating dir: {_p}")
 	
-	// if(OS == os_linux) return ProcessExecute($"sudo mkdir \"{_p}\"");
+	if(OS == os_linux) return shell_execute("", $"mkdir \"{_p}\"");
 	return __directory_create(_p); 
 }
 

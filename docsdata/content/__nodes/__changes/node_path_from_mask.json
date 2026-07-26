@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.7.109",
+    "changes": [
+      {
+        "date": "2026-07-26T05:15:48.685Z",
+        "node": "",
+        "commit": "- Linux build now comes Linux libraries and downloader. - Due to license, FFmpeg will now not be included in the software. A popup will appear with download link to download the required binary."
+      }
+    ]
+  },
+  {
     "version": "1.21.2.006",
     "changes": [
       {

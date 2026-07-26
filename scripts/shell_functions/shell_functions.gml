@@ -1,13 +1,21 @@
 function shellOpenExplorer(path) {
-	if(OS == os_windows) {
-		var _windir = environment_get_variable("WINDIR") + "/explorer.exe";
-		path = string_replace_all(path, "/", "\\");
-		shell_execute_async(_windir, path);	
-		
-	} else if(OS == os_macosx) {
-		path = string_replace_all(path, "\\", "/");
-		var res = shell_execute_async("open", path);
-	} 
+	switch(OS) {
+		case os_windows : 
+			var _windir = environment_get_variable("WINDIR") + "/explorer.exe";
+			path = string_replace_all(path, "/", "\\");
+			shell_execute_async(_windir, path);	
+			break;
+			
+		case os_linux : 
+			path = string_replace_all(path, "\\", "/");
+            var res = shell_execute_async($"xdg-open {path}");
+            break;
+			
+		case os_macosx : 
+			path = string_replace_all(path, "\\", "/");
+			var res = shell_execute_async("open", path);
+			break;
+	}
 	
 	return 0;
 }
@@ -33,7 +41,7 @@ function shell_execute_async(path, command, ref = noone, _log = true) {
 	INLINE
 	if(IS_CMD) return shell_execute(path, command, ref);
 	
-	if(OS == os_macosx) {
+	if(OS == os_macosx || OS == os_linux) {
 		path    = string_replace_all(path,    "\\", "/");
 		command = string_replace_all(command, "\\", "/");
 	}

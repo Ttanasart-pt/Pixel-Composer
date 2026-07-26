@@ -255,22 +255,41 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	gif_frames        = 0;
 	
 	directory = "";
-	converter = filepath_resolve(PREFERENCES.ImageMagick_path) + "convert.exe";
-	magick    = filepath_resolve(PREFERENCES.ImageMagick_path) + "magick.exe";
-	webp      = filepath_resolve(PREFERENCES.webp_path)		   + "webpmux.exe";
-	gifski    = filepath_resolve(PREFERENCES.gifski_path) 	   + "win/gifski.exe";
-	ffmpeg    = filepath_resolve(PREFERENCES.ffmpeg_path) 	   + "bin/ffmpeg.exe";
-	
 	temp_surface = [ noone ]; 
 	
 	if(OS == os_windows) {
+		converter = filepath_resolve(PREFERENCES.ImageMagick_path) + "win/convert.exe";
+		magick    = filepath_resolve(PREFERENCES.ImageMagick_path) + "win/magick.exe";
+		webp      = filepath_resolve(PREFERENCES.webp_path)		   + "win/webpmux.exe";
+		gifski    = filepath_resolve(PREFERENCES.gifski_path) 	   + "win/gifski.exe";
+		ffmpeg    = filepath_resolve(PREFERENCES.ffmpeg_path) 	   + "win/ffmpeg.exe";
+		
 		var _w = function(s,p) /*=>*/ {return $"No {s} detected at {p}, please make sure the installation is complete and {s} path is set correctly in the preference."};
 		
 		if(!file_exists_empty(converter)) noti_warning(_w("ImageMagick", magick), noone, self);
 		if(!file_exists_empty(magick))    noti_warning(_w("ImageMagick", magick), noone, self);
 		if(!file_exists_empty(webp))      noti_warning(_w("webp",        webp),   noone, self);
 		if(!file_exists_empty(gifski))    noti_warning(_w("gifski",      gifski), noone, self);
-		if(!file_exists_empty(ffmpeg))    noti_warning(_w("FFmpeg",      ffmpeg), noone, self);
+		
+	} else if(OS == os_linux) {
+		converter = string_lower(filepath_resolve(PREFERENCES.ImageMagick_path)) + "linux/imagemagick.appimage";
+		magick    = string_lower(filepath_resolve(PREFERENCES.ImageMagick_path)) + "linux/imagemagick.appimage";
+		webp      = string_lower(filepath_resolve(PREFERENCES.webp_path))        + "linux/webpmux";
+		gifski    = string_lower(filepath_resolve(PREFERENCES.gifski_path))      + "linux/gifski";
+		ffmpeg    = string_lower(filepath_resolve(PREFERENCES.ffmpeg_path))      + "linux/ffmpeg";
+		
+		var _w = function(s,p) /*=>*/ {return $"No {s} detected at {p}, please make sure the installation is complete and {s} path is set correctly in the preference."};
+		
+		if(!file_exists_empty(converter)) noti_warning(_w("ImageMagick", magick), noone, self);
+		if(!file_exists_empty(magick))    noti_warning(_w("ImageMagick", magick), noone, self);
+		if(!file_exists_empty(webp))      noti_warning(_w("webp",        webp),   noone, self);
+		if(!file_exists_empty(gifski))    noti_warning(_w("gifski",      gifski), noone, self);
+		
+		shell_execute("", $"chmod +x {converter}");
+		shell_execute("", $"chmod +x {magick}");
+		shell_execute("", $"chmod +x {webp}");
+		shell_execute("", $"chmod +x {gifski}");
+		shell_execute("", $"chmod +x {ffmpeg}");
 		
 	} else if(OS == os_macosx) {
 		var _w = function(str) /*=>*/ {return $"No {str} installed, please install {str} with homebrew or use the provided 'mac-libraries-installer.command'."};
@@ -282,6 +301,7 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		converter = "/opt/homebrew/bin/convert";
 		magick    = "/opt/homebrew/bin/magick";
 		webp      = "/opt/homebrew/bin/webp";
+		gifski    = "/opt/homebrew/bin/gifski";
 		ffmpeg    = "/opt/homebrew/bin/ffmpeg";
 	}
 	
@@ -552,9 +572,9 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 				var temp_batch_path = string_replace(temp_path, "*.png", $"{i/bsiz}-*.png");
 				var targ_batch_path = string_replace(temp_path, "*.png", $"{i/bsiz}.gif");
 				
-				var		 shell_cmd  = $"-delay {framerate} -alpha set -dispose 2 -loop {loop_str}";
+				var		 shell_cmd  = $"-delay {framerate} -dispose 2 -loop {loop_str}";
 				if(opti) shell_cmd += $" -fuzz {fuzz * 100}% -layers OptimizeFrame -layers OptimizeTransparency";
-						 shell_cmd += $" {string_quote(temp_batch_path)} {string_quote(targ_batch_path)}";
+						 shell_cmd += $" {string_quote(temp_batch_path)} -alpha set {string_quote(targ_batch_path)}";
 				var _id = shell_execute_async(converter, shell_cmd, self);
 				array_push(render_process_batch, _id);
 			}
@@ -563,9 +583,9 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			render_process_batch_merge = $"{string_quote(batch_gif_path)} {string_quote(target_path)}";
 			
 		} else {
-			var		 shell_cmd  = $"-delay {framerate} -alpha set -dispose 2 -loop {loop_str}";
+			var		 shell_cmd  = $"-delay {framerate} -dispose 2 -loop {loop_str}";
 			if(opti) shell_cmd += $" -fuzz {fuzz * 100}% -layers OptimizeFrame -layers OptimizeTransparency";
-					 shell_cmd += $" {string_quote(temp_path)} {string_quote(target_path)}";
+					 shell_cmd += $" {string_quote(temp_path)} -alpha set {string_quote(target_path)}";
 			
 			array_push(render_process_id, shell_execute_async(converter, shell_cmd, self));
 		}
@@ -897,10 +917,12 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 				}
 					
 				p = save_surface(_surf, p);
-				var _delt = get_seconds() - file_get_modify_s(p);
-				if(file_attributes(p, fa_readonly) || _delt > 2) // check if saved file is actually modified (+- 2 seconds)
-					succ = false;
 				
+				if(OS == os_windows) {
+					var _delt = get_seconds() - file_get_modify_s(p);
+					if(file_attributes(p, fa_readonly) || _delt > 2) // check if saved file is actually modified (+- 2 seconds)
+						succ = false;
+				}
 			}
 			
 			if(!succ) {
@@ -937,7 +959,7 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			
 			p = save_surface(surf, p);
 			var _delt = get_seconds() - file_get_modify_s(p);
-			if(file_attributes(p, fa_readonly) || _delt > 2) { // check if saved file is actually modified (+- 2 seconds)
+			if(OS == os_windows && (file_attributes(p, fa_readonly) || _delt > 2)) { // check if saved file is actually modified (+- 2 seconds)
 				if(exportLog)
 					log_warning("EXPORT", $"Export failed, file is read-only.")
 						.setOnClick(function(p) /*=>*/ {return shellOpenExplorer(p)}, "Open in explorer", THEME.explorer, filename_dir(p));
@@ -964,12 +986,12 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		if(path == "") { noti_warning("Export: Path is empty"); return; }
 		
 		var form = getInputData( 3);
-		var extd = getInputData( 9);
+		var extn = getInputData( 9);
 		
 		switch(form) {
-			case NODE_EXPORT_FORMAT.single    : current_format = format_image[extd];     break;
-			case NODE_EXPORT_FORMAT.sequence  : current_format = format_image[extd];     break;
-			case NODE_EXPORT_FORMAT.animation : current_format = format_animation[extd]; break;
+			case NODE_EXPORT_FORMAT.single    : current_format = format_image[extn];     break;
+			case NODE_EXPORT_FORMAT.sequence  : current_format = format_image[extn];     break;
+			case NODE_EXPORT_FORMAT.animation : current_format = format_animation[extn]; break;
 		}
 		
 		if(form == NODE_EXPORT_FORMAT.single) {
@@ -978,6 +1000,34 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			
 			updatedOutTrigger.setValue(true);
 			return;
+			
+		} 
+		
+		switch(current_format) {
+			case ".mp4" : 
+				if(!file_exists_empty(ffmpeg)) {
+					var dia    = dialogCall(o_dialog_export_library_missing);
+					var _link  = "https://ffmpeg.org/download.html"
+					var _tfile = "";
+					
+					switch(OS) {
+						case os_windows : 
+							_link  = "https://www.gyan.dev/ffmpeg/builds/ffmpeg-release-full.7z"; 
+							_tfile = "./bin/ffmpeg.exe";
+							break;
+							
+						case os_linux   : 
+							_link  = "https://github.com/BtbN/FFmpeg-Builds/releases/download/latest/ffmpeg-master-latest-linux64-gpl.tar.xz"; 
+							_tfile = "./bin/ffmpeg";
+							break;
+							
+					}
+					
+					dia.setData(self, "FFmpeg", _link, ffmpeg, ".mp4", _tfile);
+					return;
+				}
+				
+				break;
 		}
 		
 		if(_resetRegion) {
