@@ -7,22 +7,6 @@ function Panel_Curve_Presets(_curve, _onModify = undefined) : PanelContent() con
 	onModify = _onModify;
 	context  = array_empty(CURVES_FOLDER.subDir)? CURVES_FOLDER : CURVES_FOLDER.subDir[0];
 	
-	function gotoDir(dirName) {
-		for(var i = 0; i < array_length(CURVES_FOLDER.subDir); i++) {
-			var d = CURVES_FOLDER.subDir[i];
-			if(d.name != dirName) continue;
-			
-			d.open = true;
-			setContext(d);
-		}
-	}
-	
-	function setContext(cont) {
-		context = cont;
-		contentPane.scroll_y_raw = 0;
-		contentPane.scroll_y_to	 = 0;
-	}
-
 	folderW = ui(160);
 	folderW_dragging = false;
 	folderW_drag_mx  = 0;
@@ -31,7 +15,9 @@ function Panel_Curve_Presets(_curve, _onModify = undefined) : PanelContent() con
 	content_w = w - ui(26) - folderW;
 	content_h = h - ui(24);
 	
-	folderPane = new scrollPane(1, 1, function(_y, _m) {
+	////- Draw
+	
+	folderPane = new scrollPane(0,0, function(_y, _m) /*=>*/ {
 		draw_clear_alpha(COLORS.panel_bg_clear, 1);
 		
 		var hh = ui(8);
@@ -63,7 +49,7 @@ function Panel_Curve_Presets(_curve, _onModify = undefined) : PanelContent() con
 	});
 	folderPane.scroll_color_bg = CDEF.main_mdblack;
 	
-	contentPane = new scrollPane(1, 1, function(_y, _m) {
+	contentPane = new scrollPane(0,0, function(_y, _m) /*=>*/ {
 		DRAW_CLEAR
 		
 		var hov = contentPane.hover;
@@ -163,7 +149,19 @@ function Panel_Curve_Presets(_curve, _onModify = undefined) : PanelContent() con
 			draw_set_color(COLORS._main_icon);
 			draw_curve(cx, cy, cw, ch, _curv);
 			
-			if(hv && mouse_lpress(foc)) { onModify(_curv); close(); }
+			if(hv) { 
+				if(mouse_lpress(foc)) {
+					onModify(_curv); 
+					close(); 
+				}
+				
+				if(mouse_rpress(foc)) {
+					menuCall("", [
+						menuItem(__txt("Favorite"), function(c) /*=>*/ {return __toggleCurveFav(c)}).setParam(c),
+						menuItem(__txt("Delete"),   function(c) /*=>*/ { c.deleteFile(); context.scanned = false; context.scan(); }).setParam(c),
+					]);
+				}
+			}
 			
 			yy += hg + ui(4);
 		}
@@ -199,7 +197,7 @@ function Panel_Curve_Presets(_curve, _onModify = undefined) : PanelContent() con
 			var by = pad + ui(18) - bs / 2;
 			
 			var cc = COLORS._main_value_positive;
-			if(buttonInstant_Pad(bb, bx, by, bs, bs, m, pHOVER, pFOCUS, "Add to Preset", THEME.add, 0, cc, 1, ui(6)) == 2) {
+			if(buttonInstant_Pad(bb, bx, by, bs, bs, m, pHOVER, pFOCUS, "Add to Preset", THEME.add, 0, cc, 1, ui(8)) == 2) {
 				fileNameCall(context.path, "curve", function(f) /*=>*/ {
 					if(f == "") return;
 					
@@ -211,7 +209,7 @@ function Panel_Curve_Presets(_curve, _onModify = undefined) : PanelContent() con
 			} bx -= bs + ui(1);
 			
 			var cc = COLORS._main_icon;
-			if(buttonInstant_Pad(bb, bx, by, bs, bs, m, pHOVER, pFOCUS, "New Folder", THEME.dFolder_add, 0, cc, 1, ui(2)) == 2) {
+			if(buttonInstant_Pad(bb, bx, by, bs, bs, m, pHOVER, pFOCUS, "New Folder", THEME.dFolder_add, 0, cc, 1, ui(6)) == 2) {
 				fileNameCall(context.path, "folder", function(f) /*=>*/ {
 					if(f == "") return;
 					
@@ -222,7 +220,7 @@ function Panel_Curve_Presets(_curve, _onModify = undefined) : PanelContent() con
 			} bx -= bs + ui(1);
 			
 			var cc = COLORS._main_icon;
-			if(buttonInstant_Pad(bb, bx, by, bs, bs, m, pHOVER, pFOCUS, "Open Explorer", THEME.dPath_open, 0, cc, 1, ui(2)) == 2) {
+			if(buttonInstant_Pad(bb, bx, by, bs, bs, m, pHOVER, pFOCUS, "Open Explorer", THEME.dPath_open, 0, cc, 1, ui(6)) == 2) {
 				shellOpenExplorer(context.path);
 			} bx -= bs + ui(1);
 			
@@ -256,4 +254,23 @@ function Panel_Curve_Presets(_curve, _onModify = undefined) : PanelContent() con
 		contentPane.verify(content_w, content_h - 2);
 		contentPane.drawOffset(_cnt_x, pad + 1, mx, my);
 	}
+	
+	////- Actions
+	
+	function gotoDir(dirName) {
+		for(var i = 0; i < array_length(CURVES_FOLDER.subDir); i++) {
+			var d = CURVES_FOLDER.subDir[i];
+			if(d.name != dirName) continue;
+			
+			d.open = true;
+			setContext(d);
+		}
+	}
+	
+	function setContext(cont = context) {
+		context = cont;
+		contentPane.scroll_y_raw = 0;
+		contentPane.scroll_y_to	 = 0;
+	}
+
 }

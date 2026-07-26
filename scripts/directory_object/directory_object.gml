@@ -166,6 +166,11 @@ function FileObject(_path) constructor {
 		sprite_delete_safe(spr);
 		surface_free_safe(thumbnail);
 	}
+	
+	static deleteFile = function() {
+		file_delete_os(path);
+		return self;
+	}
 }
 
 function DirectoryObject(_path) constructor {
