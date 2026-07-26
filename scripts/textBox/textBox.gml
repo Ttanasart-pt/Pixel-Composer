@@ -987,111 +987,137 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 				else                   draw_sprite_stretched(THEME.textbox, sprite_index, x, y, w, h);
 			}
 			
-			if(sliding != 2)
+			var _mx = _m[0];
+			var _my = _m[1];
+					
+			if(sliding != 2) {
 				editText();
 			
-			if(!typing && undoable && (ds_stack_empty(undo_stack) || ds_stack_top(undo_stack)[0] != _input_text)) {
-				ds_stack_push(undo_stack, [_input_text, cursor, cursor_select]);
-				ds_stack_clear(redo_stack);
-			}
-			
-			if(input == TEXTBOX_INPUT.number && _w > ui(64)) { // multiplier
-				var  aa  = .5;
-				var _inv = key_mod_press(ALT);
-				var _lab, _mul = 1, _add = 0;
-				
-				switch(quickedit) {
-					case 0 : 
-						_lab = _inv? "/2" : "x2";
-						_mul = _inv? .5 : 2;
-						break;
-					
-					case 1 : 
-						_lab = _inv? "CW" : "CCW";
-						_add = _inv? -90 : 90;
-						break;
-						
+				if(!typing && undoable && (ds_stack_empty(undo_stack) || ds_stack_top(undo_stack)[0] != _input_text)) {
+					ds_stack_push(undo_stack, [_input_text, cursor, cursor_select]);
+					ds_stack_clear(redo_stack);
 				}
 				
-				if(hover && point_in_rectangle(_m[0], _m[1], _x + _w - ui(32), _y, _x + _w, _y + _h)) {
-					aa = 1;
+				if(input == TEXTBOX_INPUT.number && _w > ui(64)) { // multiplier
+					var  aa  = .5;
+					var _inv = key_mod_press(ALT);
+					var _lab, _mul = 1, _add = 0;
 					
-					if(mouse_lpress(active)) {
-						_input_text = string_real(toNumber(_input_text) * _mul + _add);
-						apply();
+					switch(quickedit) {
+						case 0 : 
+							_lab = _inv? "/2" : "x2";
+							_mul = _inv? .5 : 2;
+							break;
 						
-						if(IS_PATREON) shake_amount = PREFERENCES.textbox_shake;
+						case 1 : 
+							_lab = _inv? "CW" : "CCW";
+							_add = _inv? -90 : 90;
+							break;
+							
 					}
+					
+					if(hover && point_in_rectangle(_m[0], _m[1], _x + _w - ui(32), _y, _x + _w, _y + _h)) {
+						aa = 1;
+						
+						if(mouse_lpress(active)) {
+							_input_text = string_real(toNumber(_input_text) * _mul + _add);
+							apply();
+							
+							if(IS_PATREON) shake_amount = PREFERENCES.textbox_shake;
+						}
+					}
+					
+					draw_set_text(font, fa_right, fa_center, COLORS._main_text_sub, aa);
+					draw_text_add(_x + _w - ui(6), _y + _h / 2 - ui(1), _lab);
+					draw_set_alpha(1);
 				}
 				
-				draw_set_text(font, fa_right, fa_center, COLORS._main_text_sub, aa);
-				draw_text_add(_x + _w - ui(6), _y + _h / 2 - ui(1), _lab);
-				draw_set_alpha(1);
-			}
-			
-			#region draw
-				draw_set_text(font, fa_left, fa_top);
+				#region draw
+					draw_set_text(font, fa_left, fa_top);
+					var txt  = _input_text;
+					var tw   = string_width(txt);
+					var th   = string_height(txt == ""? "l" : txt);
+					
+					var p_w  = string_width(prefix);
+					var cs   = string_copy(txt, 1, cursor);
+					var c_w  = string_width(cs);
+					var c_y0 = _y + _h / 2 - th / 2;
+					var c_y1 = _y + _h / 2 + th / 2;
+					
+					switch(align) {
+						case fa_left   :
+							disp_x_min = -max(0, tw - _w + ui(16 + 8));
+							disp_x_max = 0;
+							break;
+							
+						case fa_center : 
+							disp_x_min = -max(0, tw - _w + ui(16 + 8)) / 2;
+							disp_x_max =  max(0, tw - _w + ui(16 + 8)) / 2;
+							tx -= tw / 2;	
+							break;
+							
+						case fa_right  :
+							disp_x_min = 0;
+							disp_x_max = max(0, tw - _w + ui(16 + 8));
+							tx -= tw;		
+							break;
+							
+					}
+					
+					cursor_pos_to = disp_x + tx + c_w + p_w;
+					if(cursor_pos_to < _x) 
+						disp_x_to += _w - lpad - rpad;
+						
+					if(cursor_pos_to > _x + _w - lpad - rpad)  
+						disp_x_to -= _w - lpad - rpad;
+					
+					cursor_pos_y = c_y0;
+					cursor_pos   = cursor_pos == 0? cursor_pos_to : lerp_float(cursor_pos, cursor_pos_to, 3);
+					
+					var scis = gpu_get_scissor();
+					
+					if(cursor_select > -1) { //draw highlight
+						if(highlight_color == -1) highlight_color = COLORS.widget_text_highlight;
+						gpu_set_scissor(_x + 1, _y + 1, _w - 2, _h - 2);
+						draw_set_color(highlight_color);
+						draw_set_alpha(highlight_alpha);
+						
+						var c_x1 = tx + disp_x + string_width(string_copy(txt, 1, cursor_select)) + p_w;
+						var _rx0 = min(cursor_pos, c_x1);
+						var _rx1 = max(cursor_pos, c_x1);
+						
+						draw_roundrect_ext(_rx0, c_y0, _rx1, c_y1, THEME_VALUE.highlight_corner_radius, THEME_VALUE.highlight_corner_radius, 0);
+						draw_set_alpha(1);
+						gpu_set_scissor(scis);
+					}
+					
+					var _display_text = string_real(txt);
+					surface_set_shader(text_surface, noone, true, BLEND.add);
+						display_text(tx - tb_surf_x, _h / 2 - th / 2, _display_text, _w - ui(4), _mx - tb_surf_x);
+					surface_reset_shader();
+					gpu_set_scissor(_scis);
+					
+					BLEND_ALPHA
+					draw_surface_ext(text_surface, tb_surf_x, tb_surf_y, 1, 1, 0, postBlend, postAlpha);
+					BLEND_NORMAL
+					
+					gpu_set_scissor(_x + 1, _y + 1, _w - 2, _h - 2);
+					draw_set_color(COLORS._main_text_accent);
+					draw_set_alpha((typing || current_time % (PREFERENCES.caret_blink * 2000) > PREFERENCES.caret_blink * 1000) * 0.8 + 0.2);
+					draw_line_width(cursor_pos, c_y0, cursor_pos, c_y1, 2);
+					draw_set_alpha(1);
+					gpu_set_scissor(scis);
+					
+					if(typing) typing--;
+				#endregion
+				
+			} else {
 				var txt  = _input_text;
 				var tw   = string_width(txt);
 				var th   = string_height(txt == ""? "l" : txt);
-				
-				var p_w  = string_width(prefix);
-				var cs   = string_copy(txt, 1, cursor);
-				var c_w  = string_width(cs);
-				var c_y0 = _y + _h / 2 - th / 2;
-				var c_y1 = _y + _h / 2 + th / 2;
-				
-				switch(align) {
-					case fa_left   :
-						disp_x_min = -max(0, tw - _w + ui(16 + 8));
-						disp_x_max = 0;
-						break;
-						
-					case fa_center : 
-						disp_x_min = -max(0, tw - _w + ui(16 + 8)) / 2;
-						disp_x_max =  max(0, tw - _w + ui(16 + 8)) / 2;
-						tx -= tw / 2;	
-						break;
-						
-					case fa_right  :
-						disp_x_min = 0;
-						disp_x_max = max(0, tw - _w + ui(16 + 8));
-						tx -= tw;		
-						break;
-						
-				}
-				
-				cursor_pos_to = disp_x + tx + c_w + p_w;
-				if(cursor_pos_to < _x) 
-					disp_x_to += _w - lpad - rpad;
 					
-				if(cursor_pos_to > _x + _w - lpad - rpad)  
-					disp_x_to -= _w - lpad - rpad;
-				
-				cursor_pos_y = c_y0;
-				cursor_pos   = cursor_pos == 0? cursor_pos_to : lerp_float(cursor_pos, cursor_pos_to, 3);
-				
-				var scis = gpu_get_scissor();
-				
-				if(cursor_select > -1) { //draw highlight
-					if(highlight_color == -1) highlight_color = COLORS.widget_text_highlight;
-					gpu_set_scissor(_x + 1, _y + 1, _w - 2, _h - 2);
-					draw_set_color(highlight_color);
-					draw_set_alpha(highlight_alpha);
-					
-					var c_x1 = tx + disp_x + string_width(string_copy(txt, 1, cursor_select)) + p_w;
-					var _rx0 = min(cursor_pos, c_x1);
-					var _rx1 = max(cursor_pos, c_x1);
-					
-					draw_roundrect_ext(_rx0, c_y0, _rx1, c_y1, THEME_VALUE.highlight_corner_radius, THEME_VALUE.highlight_corner_radius, 0);
-					draw_set_alpha(1);
-					gpu_set_scissor(scis);
-				}
-				
-				var _mx = _m[0];
-				var _my = _m[1];
-				
 				var _display_text = string_real(txt);
+				
 				surface_set_shader(text_surface, noone, true, BLEND.add);
 					display_text(tx - tb_surf_x, _h / 2 - th / 2, _display_text, _w - ui(4), _mx - tb_surf_x);
 				surface_reset_shader();
@@ -1101,15 +1127,7 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 				draw_surface_ext(text_surface, tb_surf_x, tb_surf_y, 1, 1, 0, postBlend, postAlpha);
 				BLEND_NORMAL
 				
-				gpu_set_scissor(_x + 1, _y + 1, _w - 2, _h - 2);
-				draw_set_color(COLORS._main_text_accent);
-				draw_set_alpha((typing || current_time % (PREFERENCES.caret_blink * 2000) > PREFERENCES.caret_blink * 1000) * 0.8 + 0.2);
-				draw_line_width(cursor_pos, c_y0, cursor_pos, c_y1, 2);
-				draw_set_alpha(1);
-				gpu_set_scissor(scis);
-				
-				if(typing) typing--;
-			#endregion
+			}
 			
 			if(!hoverRect && mouse_lpress() && !mouse_lhold) 
 				deactivate();
