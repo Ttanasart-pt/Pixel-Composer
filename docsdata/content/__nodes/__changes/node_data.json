@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.7.109",
+    "changes": [
+      {
+        "date": "2026-07-26T06:50:20.486Z",
+        "node": "Inspector Panel",
+        "commit": "**Inspector Panel**: Editing setting now apply to all selecting nodes."
+      }
+    ]
+  },
+  {
     "version": "1.21.7.108",
     "changes": [
       {

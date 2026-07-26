@@ -896,7 +896,8 @@ function Panel_Inspector() : PanelContent() constructor {
     
     ////- DRAW NODE
     
-    __chainItemConnect = undefined;
+    __chainItemConnect  = undefined;
+    __attribute_set_msg = undefined;
     
     static drawNodeProperties = function(_x, _y, _w, _m, _inspecting = inspecting, _flag = INSPECTOR_FLAG.show_all, _blend = c_white) { 
     	if(!is(_inspecting, Node)) return 0;
@@ -1880,7 +1881,8 @@ function Panel_Inspector() : PanelContent() constructor {
         var _pd    = viewMode == INSP_VIEW_MODE.spacious? ui(8) : ui(6);
         
         var _att_name, _att_val, _att_wid, _att_key;
-
+		__attribute_set_msg = undefined;
+		
         for( var i = 0, n = array_length(_inspecting.attributeEditors); i < n; i++ ) {
             var edt = _inspecting.attributeEditors[i];
             
@@ -1944,12 +1946,22 @@ function Panel_Inspector() : PanelContent() constructor {
             if(is(_att_wid, checkBox)) _param.halign = fa_center;
             
             var _wh = _att_wid.drawParam(_param);
-            
             if(_att_wid.inBBOX(_m)) contentPane.hover_content = true;
             
             var _hg = max(_att_h, _wh);
             yy += _hg + _pd;
             hh += _hg + _pd;
+        }
+        
+        if(__attribute_set_msg != undefined) {
+        	var _msg = __attribute_set_msg;
+        	
+        	for( var i = 0, n = array_length(inspectings); i < n; i++ ) {
+        		var _inps = inspectings[i];
+        		if(_inps == _inspecting) continue;
+        		
+        		_inps.setAttribute(_msg.key, _msg.value, _msg.render);
+        	}
         }
         
         return hh; 
