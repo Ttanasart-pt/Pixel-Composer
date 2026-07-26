@@ -9,16 +9,25 @@ function Node_MK_Tree_Wiggle(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	newInput( 1, nodeValueSeed());
 	newInput( 0, nodeValue_Struct("Tree", noone)).setVisible(true, true).setCustomData(global.MKTREE_JUNC);
 	
+	////- =Area
+	newInput( 5, nodeValue_EScroll( "Area Type", 0, [ "All", "Area", "Band" ] ));
+	newInput( 6, nodeValue_Area(    "Area",      DEF_AREA_REF )).setUnitSimple();
+	newInput( 9, nodeValue_Vec2(    "Center",    [.5,.5]      )).setUnitSimple();
+	newInput(10, nodeValue_Vec2(    "Width",       8          ));
+	newInput( 7, nodeValue_Float(   "Falloff Distance", 4     )).setCurvable( 8);
+	
+	
 	////- =Wiggle
 	newInput( 4, nodeValue_Range(   "Speed",     [1,1], true   ));
 	newInput( 2, nodeValue_Range(   "Strength",  [4,4], true   ));
 	newInput( 3, nodeValue_RotRand( "Direction", [0,0,360,0,0] ));
-	// 5
+	// 11
 	
 	newOutput(0, nodeValue_Output("Tree", VALUE_TYPE.struct, noone)).setCustomData(global.MKTREE_JUNC);
 	
-	input_display_list = [ s_MKFX, 1, 0, 
-		[ "Wiggle", false ], 4, 2, 3, 
+	input_display_list = [ s_MKFX,  1,  0, 
+		[ "Area",   false ],  5,  6,  9, 10,  7,  8,  
+		[ "Wiggle", false ],  4,  2,  3, 
 	];
 	
 	////- Nodes
@@ -39,13 +48,26 @@ function Node_MK_Tree_Wiggle(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 		if(!is(inline_context, Node_MK_Tree_Inline)) return;
 		
 		#region data
-			var _seed = inline_context.seed + getInputData(1);
+			var _seed  = inline_context.seed + getInputData(1);
 			
-			var _tree = getInputData(0);
+			var _tree  = getInputData( 0);
 			
-			var _sped = getInputData(4);
-			var _strn = getInputData(2);
-			var _angr = getInputData(3);
+			var _aType = getInputData( 5);
+			var _area  = getInputData( 6);
+			var _cent  = getInputData( 9);
+			var _widt  = getInputData(10);
+			var _falW  = getInputData( 7);
+			var _falC  = getInputData( 8);
+			
+			var _sped  = getInputData( 4);
+			var _strn  = getInputData( 2);
+			var _angr  = getInputData( 3);
+			
+			inputs[ 6].setVisible(_aType == 1);
+			inputs[ 9].setVisible(_aType == 2);
+			inputs[10].setVisible(_aType == 3);
+			
+			inputs[ 7].setVisible(_aType >  0);
 			
 			random_set_seed(_seed);
 		#endregion
