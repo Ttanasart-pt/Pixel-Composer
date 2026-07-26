@@ -218,3 +218,12 @@ function buffer_clone(_buff) {
 	buffer_copy(_buff, 0, _size, _clone, 0);
 	return _clone;
 }
+
+function buffer_sum(_buff) {
+	var _size = buffer_get_size(_buff);
+	var _sum  = 0;
+	
+	buffer_to_start(_buff);
+	repeat(_size) _sum += buffer_read(_buff, buffer_u8);
+	return _sum;
+}

@@ -1,15 +1,16 @@
 function Node_Path_From_Mask(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name = "Path from Mask";
 	
-	newInput(0, nodeValue_Surface("Mask"));
+	newInput( 0, nodeValue_Surface( "Mask" ));
 	
-	newInput(2, nodeValue_Bool("Smooth",   false));
-	newInput(1, nodeValue_Float("Smoothness", 2));
+	////- Smooth
+	newInput( 2, nodeValue_Bool(  "Smooth",     false ));
+	newInput( 1, nodeValue_Float( "Smoothness", 2     ));
 		
 	newOutput(0, nodeValue_Output("Path", VALUE_TYPE.pathnode, self));
 	
 	input_display_list = [ 0, 
-		["Smooth", false, 2], 1, 
+		[ "Smooth", false, 2 ], 1, 
 	];
 	
 	////- Nodes
@@ -113,7 +114,7 @@ function Node_Path_From_Mask(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 		#endregion
 		
 		var _dim = surface_get_dimension(_surf);
-		temp_surface[0] = surface_verify(temp_surface[0], _dim[0], _dim[1]);
+		temp_surface[0] = surface_verify(temp_surface[0], _dim[0], _dim[1], surface_r8unorm);
 		
 		surface_set_shader(temp_surface[0], sh_image_trace);
 			shader_set_f("dimension", _dim);
@@ -121,7 +122,9 @@ function Node_Path_From_Mask(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 		surface_reset_shader();
 		
 		var _amo  = attributes.maximum_points;
-		var _sbuf = buffer_from_surface(temp_surface[0], false);
+		var _sbuf = buffer_create(_dim[0] * _dim[1], buffer_grow, 1);
+		buffer_get_surface(_sbuf, temp_surface[0], 0);
+		
 		var _obuf = buffer_create(_amo * 2 * 4, buffer_fixed, 4);
 		var _args = buffer_create(1, buffer_grow, 1);
 		buffer_to_start(_args);
@@ -138,6 +141,12 @@ function Node_Path_From_Mask(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 		buffer_write(_args, buffer_f64,  _smtEp);
 		
 		var _ancAmo = path_from_mask(buffer_get_address(_args));
+		
+		if(_ancAmo < 0) {
+			if(_ancAmo == -1) print(_ancAmo, "Empty input");
+			print(_ancAmo);
+			return;
+		}
 		
 		var ox, oy, nx, ny;
 		var _lind = 0;
@@ -266,10 +275,12 @@ std::vector<vec2> douglasPeucker(const std::vector<vec2>& points, double epsilon
 	return { pointFront, pointBack };
 }
 
+uint16_t lx, ly;
+
 cfunction double path_from_mask(void* args) {
 	pathFromMaskArgs* pArgs = (pathFromMaskArgs*)args;
 
-	pixel*   pixels = (pixel*)pArgs->pixelArrayBuffer;
+	uint8_t* mask   = (uint8_t*)pArgs->pixelArrayBuffer;
 	uint16_t width  = pArgs->surfaceWidth;
 	uint16_t height = pArgs->surfaceHeight;
 
@@ -277,19 +288,22 @@ cfunction double path_from_mask(void* args) {
 	vec2*    outputStart = output;
 	uint16_t maxOutput   = pArgs->maxOutput;
 
-	uint16_t x = -1;
-	uint16_t y = -1;
+	if (width == 0 || height == 0) return -1;
 
-	for (uint16_t i = 0, n = width * height; i < n; i++) {
-		if (pixels[i].a > 0) {
-			x = i % width;
-			y = i / width;
+	uint16_t x = UINT16_MAX;
+	uint16_t y = UINT16_MAX;
+	
+	size_t n = (size_t)width * (size_t)height;
+	for (size_t i = 0; i < n; ++i) {
+		if (mask[i] > 0) {
+			x = (uint16_t)(i % width);
+			y = (uint16_t)(i / width);
 			break;
 		}
 	}
-
-	if (x == -1 || y == -1 || x >= width || y >= height) return 0.0; // Empty mask
-
+	
+	if (x == UINT16_MAX || y == UINT16_MAX) return -1;
+	
 	vec2 directions[8] = {{1, 0}, {1, -1}, {0, -1}, {-1, -1}, {-1, 0}, {-1, 1}, {0, 1}, {1, 1}};
 	uint16_t dir = 3;
 	uint16_t pointCount = 0;
@@ -299,7 +313,7 @@ cfunction double path_from_mask(void* args) {
 	uint16_t sy = y;
 	maxOutput--;
 
-	pixels[y * width + x].a = 0;
+	mask[y * width + x] = 0;
 	while (pointCount++ < maxOutput) {
 		output->x = x;
 		output->y = y;
@@ -311,7 +325,7 @@ cfunction double path_from_mask(void* args) {
 			uint16_t checkDir = (startDir + i) % 8;
 			uint16_t newX = x + directions[checkDir].x;
 			uint16_t newY = y + directions[checkDir].y;
-			if (newX >= 0 && newY >= 0 && newX < width && newY < height && pixels[newY * width + newX].a > 0) {
+			if (newX >= 0 && newY >= 0 && newX < width && newY < height && mask[newY * width + newX] > 0) {
 				if (!firstPoint && dir == checkDir) { // Remove the last point if we are still in the same direction
 					output--;
 					pointCount--;
@@ -322,7 +336,7 @@ cfunction double path_from_mask(void* args) {
 				dir   = checkDir;
 				found = true;
 
-				pixels[newY * width + newX].a = 0; // Mark as visited
+				mask[newY * width + newX] = 0; // Mark as visited
 				break;
 			}
 		}
@@ -355,5 +369,8 @@ cfunction double path_from_mask(void* args) {
 
 	return static_cast<double>(simplifiedSize);
 }
+
+cfunction double path_from_mask_get_lx() { return static_cast<double>(lx); }
+cfunction double path_from_mask_get_ly() { return static_cast<double>(ly); }
 
 */

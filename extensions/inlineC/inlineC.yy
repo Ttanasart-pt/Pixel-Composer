@@ -174,6 +174,8 @@
   "filename":"path_from_mask.dll",
   "final":"",
   "functions":[{"$GMExtensionFunction":"","%Name":"path_from_mask","argCount":1,"args":[1],"documentation":"","externalName":"path_from_mask","help":"","hidden":false,"kind":1,"name":"path_from_mask","resourceType":"GMExtensionFunction","resourceVersion":"2.0","returnType":2},
+{"$GMExtensionFunction":"","%Name":"path_from_mask_get_lx","argCount":1,"args":[1],"documentation":"","externalName":"path_from_mask_get_lx","help":"","hidden":false,"kind":1,"name":"path_from_mask_get_lx","resourceType":"GMExtensionFunction","resourceVersion":"2.0","returnType":2},
+{"$GMExtensionFunction":"","%Name":"path_from_mask_get_ly","argCount":1,"args":[1],"documentation":"","externalName":"path_from_mask_get_ly","help":"","hidden":false,"kind":1,"name":"path_from_mask_get_ly","resourceType":"GMExtensionFunction","resourceVersion":"2.0","returnType":2},
  ],
   "init":"",
   "kind":1,

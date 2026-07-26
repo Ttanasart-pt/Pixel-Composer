@@ -6,6 +6,11 @@
         "date": "2026-07-26T05:15:48.685Z",
         "node": "",
         "commit": "- Linux build now comes Linux libraries and downloader. - Due to license, FFmpeg will now not be included in the software. A popup will appear with download link to download the required binary."
+      },
+      {
+        "date": "2026-07-26T06:05:27.389Z",
+        "node": "Path from Mask",
+        "commit": "**Path from Mask**: Fix error with surface larger than 256x256px."
       }
     ]
   },
