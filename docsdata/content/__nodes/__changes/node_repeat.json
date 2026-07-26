@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.7.110",
+    "changes": [
+      {
+        "date": "2026-07-26T23:50:33.615Z",
+        "node": "",
+        "commit": "**Repeat**: Fix error when using Offset path positon."
+      }
+    ]
+  },
+  {
     "version": "1.21.7.105",
     "changes": [
       {

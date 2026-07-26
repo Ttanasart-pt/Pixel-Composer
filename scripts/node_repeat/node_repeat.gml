@@ -594,18 +594,21 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		var _pth_oy = 0;
 		var _pth_an = 0;
 		
+		var __p0 = new __vec2P();
+		var __p1 = new __vec2P();
+		
 		var _pathValid = is_path(_path);
 		if(_pathValid) {
-			var _p0 = _path.getPointRatio(0);
+			__p0 = _path.getPointRatio(0, 0, __p0);
 			
 			if(_poff) {
-				_pth_ox = _p.x;
-				_pth_oy = _p.y;
+				_pth_ox = __p0.x;
+				_pth_oy = __p0.y;
 			}
 			
 			if(_prot) {
-				var _p1 = _path.getPointRatio(.01);
-				_pth_an = point_direction(_p0.x, _p0.y, _p1.x, _p1.y);
+				__p1 = _path.getPointRatio(.01, 0, __p1);
+				_pth_an = point_direction(__p0.x, __p0.y, __p1.x, __p1.y);
 			}
 		}
 		

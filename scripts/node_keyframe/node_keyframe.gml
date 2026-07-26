@@ -712,8 +712,6 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 	}
 	
 	static deserialize = function(_data, scale = false) {
-		values = [];
-		
 		if(is_struct(_data)) {
 			var _defval = prop.def_val;
 			var _datval = _data.d;
@@ -723,6 +721,8 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 		}
 		
 		if(prop.type == VALUE_TYPE.gradient && LOADING_VERSION < 1340 && !CLONING) { //backward compat: Gradient
+			values = [];
+			
 			var _val = [];
 			var value = _data[0][1];
 			
@@ -743,10 +743,14 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 			return;
 		}
 		
+		if(array_empty(_data))
+			return;
+		
 		var base = prop.def_val;
 		var _typ = prop.type;
 		var _time;
 		
+		values = [];
 		for(var i = 0, n = array_length(_data); i < n; i++) {
 			var _keyframe = _data[i];
 			var _klen     = array_length(_keyframe);
