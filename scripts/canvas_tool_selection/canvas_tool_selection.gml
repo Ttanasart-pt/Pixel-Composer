@@ -438,7 +438,7 @@ function canvas_selection_data() : canvas_tool() constructor {
 			selection_size[1] = ph;
 			
 			if((is_select_scal == 1 && mouse_lrelease()) || (is_select_scal == 2 && mouse_lpress())) {
-				selection_sampler.setSurface(selection_mask);
+				updateSelection();
 				is_select_scal = 0;
 			}
 			
