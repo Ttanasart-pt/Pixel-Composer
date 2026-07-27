@@ -55,12 +55,14 @@ function Node_Perlin(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _params) {
 		var _dim = getDimension();
-		var _pos = getInputSingle(1);
+		var _pos = getInputSingle( 1);
+		var _til = getInputSingle( 4);
 		var  px  = _x + _pos[0] * _s;
 		var  py  = _y + _pos[1] * _s;
 		
 		drawOverlayInput(inputs[ 1].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my ));
-		drawOverlayInput(inputs[11].drawOverlay(w_hoverable, active, px, py, _s, _mx, _my ));
+		if(!_til)
+			drawOverlayInput(inputs[11].drawOverlay(w_hoverable, active, px, py, _s, _mx, _my ));
 		drawOverlayInput(inputs[ 2].drawOverlay(w_hoverable, active, px, py, _s, _mx, _my ));
 		
 		return w_hovering;

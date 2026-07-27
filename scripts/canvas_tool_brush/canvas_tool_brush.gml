@@ -276,9 +276,6 @@ function canvas_tool_brush(_eraser = false, _toolAttr = undefined) : canvas_tool
 		}
 		
 		if(mouse_lpress(active)) {
-			surface_set_shader(drawing_surface, noone, true, BLEND.over);
-				draw_point_wrap(true);
-			surface_reset_shader();
 			
 			if(mouse_pre_draw_x != undefined && mouse_pre_draw_y != undefined && shiftLine) { // Shift Line
 				surface_set_shader(drawing_surface, noone, false, BLEND.maximum);
@@ -289,6 +286,10 @@ function canvas_tool_brush(_eraser = false, _toolAttr = undefined) : canvas_tool
 				apply_draw_surface();
 				
 			} else {
+				surface_set_shader(drawing_surface, noone, true, BLEND.over);
+					draw_point_wrap(true);
+				surface_reset_shader();
+			
 				mouse_holding = true;
 				
 				if(brush.animated) {
