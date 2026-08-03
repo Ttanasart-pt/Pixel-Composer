@@ -96,7 +96,7 @@ function Node_MK_Rock(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 			[ "/Cut",        true     ], 60, 38, 59, 42, 39, 
 		
 		[ "Nugget",          true, 20 ], 61, 24, 63, 64, 21, 23, 
-			[ "/Rendering", false     ], [19, true], 46, -1, 62, [25, true], 47, 
+			[ "/Rendering", false     ], [19, true], 46, -1, 62, //[25, true], 47, 
 		
 		[ "Rendering",      false     ], 36, [18, true], 48, 
 			[ "/Shading",    true, 51 ], [9, true], 49, -1, 26, 33, 17, 
@@ -165,7 +165,7 @@ function Node_MK_Rock(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		drawOverlayInput(inputs[ 8].drawOverlay(hover, active, _x, _y, _s, _mx, _my));
 	}
 	
-	static pebble = function(seed, index, pebx, peby, pebw, pebh, pebs, rot, baseC, outline) {
+	static pebble = function(seed, index, pebx, peby, pebw, pebh, pebs, gSca, rot, baseC, outline) {
 		pebx = round(pebx);
 		peby = round(peby);
 		pebw = round(pebw);
@@ -381,12 +381,13 @@ function Node_MK_Rock(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 			random_set_seed(seed + 50 + i * 10 + nugg_seed);
 			if(nugg_use && random(1) <= nugg_chan) {
 				nugg_d = min(i, random_range(nugg_depth[0],  nugg_depth[1]));
+				nugg_d = ceil(nugg_d);
 				
 				nugg_w = random_range(nugg_width[0],  nugg_width[1])  * 2;
 				nugg_h = random_range(shape_ratio[0], shape_ratio[1]) * nugg_w;
 				
-				nugg_w = ceil(nugg_w);
-				nugg_h = ceil(nugg_h);
+				nugg_w = ceil(nugg_w * gSca);
+				nugg_h = ceil(nugg_h * gSca);
 				
 				var ngr = rot + random(360);
 				var ngs = max(nugg_w, nugg_h);
@@ -598,8 +599,10 @@ function Node_MK_Rock(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		var scx  = _scatt[0];
 		var scy  = _scatt[1];
 		
-		var pebw  = lerp(_size[0], _size[1], random(1));
-		var pebs  = lerp(_dept[0], _dept[1], random(1));
+		var pebw = lerp(_size[0], _size[1], random(1));
+		var pebs = lerp(_dept[0], _dept[1], random(1));
+		
+		var gSca = 1;
 		
 		for( var i = 0; i < _amou; i++ ) {
 			var prg = _amou > 1? i / (_amou - 1) : 1;
@@ -619,7 +622,7 @@ function Node_MK_Rock(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 			var rot   = irandom_range(_rota[0], _rota[1]);
 			var baseC = gra_base.eval(pfract(random(1) + gra_bases));
 			
-			var pebdy = pebble(seed, prg, pebx, peby, pebdw, pebdh, pebds, rot, baseC, true);
+			var pebdy = pebble(seed, prg, pebx, peby, pebdw, pebdh, pebds, gSca, rot, baseC, true);
 			
 			pebx  = cx + scx * _dir;
 			peby += scy;
@@ -632,6 +635,9 @@ function Node_MK_Rock(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 			
 			scx  *= cScale;
 			scy  *= cScale;
+			
+			gSca *= cScale;
+			
 			_dir  = -_dir;
 		}
 	

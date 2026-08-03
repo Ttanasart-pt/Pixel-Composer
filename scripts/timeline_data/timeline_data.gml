@@ -122,9 +122,15 @@ function timelineItemNode(_node) : timelineItem() constructor {
 		var ii = node.attributes.timeline_hide;
 		var tt = __txt("Hide");
 		var cc = ii? COLORS._main_icon : COLORS._main_icon_light;
+		var b  = buttonInstant(noone, bx, by, bs, h, _m, hover, focus, tt, THEME.timeline_hide, ii, cc, .5, .75);
 		
-		if(buttonInstant(noone, bx, by, bs, h, _m, hover, focus, tt, THEME.timeline_hide, ii, cc, .5, .75) == 2)
+		if(b == 1 && __anim_hide_holding != undefined && __anim_hide_holding != node.attributes.timeline_hide)
+			node.setAttribute("timeline_hide", __anim_hide_holding);
+			
+		if(b == 2) {
 			node.toggleAttribute("timeline_hide");
+        	__anim_hide_holding = node.attributes.timeline_hide;
+		}
 		bx += bs + 1;
 		
 		////- =Right Buttons

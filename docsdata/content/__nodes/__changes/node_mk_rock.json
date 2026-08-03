@@ -6,6 +6,11 @@
         "date": "2026-08-03T05:05:34.887Z",
         "node": "MK Rock",
         "commit": "**MK Rock**: Add more nugget controls."
+      },
+      {
+        "date": "2026-08-03T05:29:08.853Z",
+        "node": "Dopesheet",
+        "commit": "**Dopesheet**: Hide icon now support hold edit."
       }
     ]
   },

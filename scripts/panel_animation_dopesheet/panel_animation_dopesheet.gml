@@ -347,6 +347,8 @@ function Panel_Animation_Dopesheet() {
 	#endregion
 
     #region ---- Mouse Actions ----
+    	globalvar __anim_hide_holding; __anim_hide_holding = undefined;
+    	
         stagger_mode  = 0;
         stagger_index = 0;
     
@@ -2363,8 +2365,14 @@ function Panel_Animation_Dopesheet() {
 	        _gx += tw + 1;
 	        
 	        var ii = prop.attributes.timeline_hide;
-	        if(buttonInstant(noone, _gx, _gy, tw, th, m, hov, foc, __txt("Hide"), THEME.timeline_hide, ii, bc, .75, .75) == 2)
-	            prop.toggleAttribute("timeline_hide");
+	        var b  = buttonInstant(noone, _gx, _gy, tw, th, m, hov, foc, __txt("Hide"), THEME.timeline_hide, ii, bc, .75, .75);
+	        if(b == 1 && __anim_hide_holding != undefined && __anim_hide_holding != prop.attributes.timeline_hide)
+	        	prop.attributes.timeline_hide = __anim_hide_holding;
+	        
+	        if(b == 2) {
+	        	prop.attributes.timeline_hide = !prop.attributes.timeline_hide;
+	        	__anim_hide_holding = prop.attributes.timeline_hide;
+	        }
 	        _gx += tw + 1;
 	        
 	        var _title_x = _gx + ui(4);
@@ -3889,6 +3897,8 @@ function Panel_Animation_Dopesheet() {
 		if(mouse_lrelease()) anim_toggle_key = 0;
 		
     	////- =Actions
+    	
+    	if(__anim_hide_holding != undefined && mouse_lrelease()) __anim_hide_holding = undefined;
     	
         if(menuCallable && keyframe_boxable && mouse_rpress(pFOCUS)) { // context menu
         	__selecting_frame = clamp(round((mx - bar_x - timeline_shift) / timeline_scale), 0, GLOBAL_TOTAL_FRAMES - 1);
