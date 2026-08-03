@@ -93,8 +93,8 @@ vec3 Oilnoise(in vec2 pos, in vec3 RGB) {
 
 void main() {
     vec2 vtx = getUV(v_vTexcoord);
-    vec2 ntx = vtx * vec2(1., dimension.y / dimension.x);
-    vec2 pos = ntx * scale + position;
+    vec2 ntx = vtx * vec2(1., dimension.y / dimension.x) - position / dimension;
+    vec2 pos = ntx * scale;
     vec3 col = Oilnoise(pos, color.rgb * gamma);
     
     col.r = applyLevel(col.r);

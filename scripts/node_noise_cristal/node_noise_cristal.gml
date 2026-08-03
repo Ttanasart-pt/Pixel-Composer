@@ -13,8 +13,8 @@ function Node_Noise_Cristal(_x, _y, _group = noone) : Node_Shader_Generator(_x, 
 	newInput( 4, nodeValue_Int(      "Iteration", 15 )).setShaderProp("iteration").setPieMenu();
 	
 	////- =Transform
-	newInput( 1, nodeValue_Vec2( "Position", [0,0] )).setHotkey("G").setShaderProp("position").setPieMenu();
-	newInput( 2, nodeValue_Vec2( "Scale",    [1,1] )).setHotkey("S").setShaderProp("scale").setPieMenu();
+	newInput( 1, nodeValue_Vec2( "Position", [0,0] )).setUnitSimple().setHotkey("G").setShaderProp("position").setPieMenu();
+	newInput( 2, nodeValue_Vec2( "Scale",    [1,1] )).setHotkey("S").setShaderProp("scale").setPieMenu().hideLabel();
 	
 	////- =Render
 	newInput(11, nodeValue_SliRange( "Level", [0,1]             )).setShaderProp("level");
@@ -34,8 +34,8 @@ function Node_Noise_Cristal(_x, _y, _group = noone) : Node_Shader_Generator(_x, 
 		var  px  = _x + _pos[0] * _s;
 		var  py  = _y + _pos[1] * _s;
 		
-		drawOverlayInput(inputs[1].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my));
-		drawOverlayInput(inputs[2].drawOverlay(w_hoverable, active, px, py, _s, _mx, _my));
+		drawOverlayInput(inputs[1].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my   ));
+		drawOverlayInput(inputs[2].drawOverlay(w_hoverable, active, px, py, _s, _mx, _my, 1));
 		
 		return w_hovering;
 	}
