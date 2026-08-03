@@ -26,7 +26,7 @@ event_inherited();
 		onModify(filename_combine(path, filename_name_validate(t))); 
 		WIDGET_CURRENT = undefined;
 		instance_destroy(); 
-	})
+	});
 	
 	function setLabel(  _l ) { label    = _l; return self; }
 	function setName(   _n ) { name     = _n; return self; }

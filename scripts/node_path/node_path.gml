@@ -1,6 +1,4 @@
 #region Global
-	function is_path(p) { return has(p, "getPointRatio"); }
-	
 	enum _ANCHOR {
 		  x,   y,
 		c1x, c1y,
@@ -23,6 +21,8 @@
 		hotkeyCustom("Node_Path", "Rotate Selection",    "R");
 		hotkeyCustom("Node_Path", "Scale Selection",     "S");
 	});
+	
+	function is_path(p) { return has(p, "getPointRatio"); }
 	
 	function path_tool_move(_node) : ToolObject() constructor {
 		setNode(_node);
@@ -520,6 +520,11 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		anchor_focus      = undefined;
 		anchor_select     = [];
 		anchor_select_map = {};
+		
+		line_editing     = undefined;
+		line_edit_mx     = 0;
+		line_edit_my     = 0;
+		line_edit_data   = [];
 	#endregion
 	
 	#region ---- actions ----
@@ -1023,6 +1028,45 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 				triggerRender();
 				UNDO_HOLDING = false;
 			}
+		
+		} else if(line_editing != undefined) {
+			var dx = (_mx - line_edit_mx) / _s;
+			var dy = (_my - line_edit_my) / _s;
+			
+			var i0 = inputs[input_fix_len + line_editing    ];
+			var i1 = inputs[input_fix_len + line_editing + 1];
+			
+			var a0/*:_ANCHOR*/ = line_edit_data[line_editing    ];
+			var a1/*:_ANCHOR*/ = line_edit_data[line_editing + 1];
+			
+			var n0 = [ a0[_ANCHOR.x], a0[_ANCHOR.y], a0[_ANCHOR.c1x], a0[_ANCHOR.c1y], a0[_ANCHOR.c2x], a0[_ANCHOR.c2y], a0[_ANCHOR.ind] ];
+			var n1 = [ a1[_ANCHOR.x], a1[_ANCHOR.y], a1[_ANCHOR.c1x], a1[_ANCHOR.c1y], a1[_ANCHOR.c2x], a1[_ANCHOR.c2y], a1[_ANCHOR.ind] ];
+			
+			if(a0[_ANCHOR.c1x] == 0 && a0[_ANCHOR.c1y] == 0 && a0[_ANCHOR.c2x] == 0 && a0[_ANCHOR.c2y] == 0 && a1[_ANCHOR.c1x] == 0 && a1[_ANCHOR.c1y] == 0 && a1[_ANCHOR.c2x] == 0 && a1[_ANCHOR.c2y] == 0) {
+				n0[0] = a0[0] + dx;
+				n0[1] = a0[1] + dy;
+				
+				n1[0] = a1[0] + dx;
+				n1[1] = a1[1] + dy;
+				
+			} else {
+				n0[4] = a0[4] + dx;
+				n0[5] = a0[5] + dy;
+				
+				n1[2] = a1[2] + dx;
+				n1[3] = a1[3] + dy;
+				
+			}
+			
+			var e0 = i0.setValue(n0);
+			var e1 = i1.setValue(n1);
+			
+			if(e0 || e1) UNDO_HOLDING = true;
+			
+			if(mouse_lrelease()) {
+				line_editing = undefined;
+				UNDO_HOLDING = false;
+			}
 		}
 		
 		/////////////////////////////////////////////////////// DRAW PATH ///////////////////////////////////////////////////////
@@ -1232,9 +1276,10 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 								_closet_dist = _d;
 								_point_hover = _p;
 								_point_ratio = _rat;
-							}
+								
+							} 
 							
-							if(_d < ui(4)) _line_hover = i;
+							if(_d < ui(8)) _line_hover = i;
 						}
 						
 						if(draw_w) {
@@ -1956,102 +2001,113 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 				break;
 				
 			default :
-				if(anchor_hover == -1) break;
-				
-				var _a/*:_ANCHOR*/ = array_clone(getInputData(input_fix_len + anchor_hover));
-				
-				if(hover_type == 0 && _tooln == "Edit Control point") { // add / remove anchor point
-					CURSOR_SPRITE = THEME.cursor_path_anchor;
+				if(anchor_hover != -1) {
+					var _a/*:_ANCHOR*/ = array_clone(getInputData(input_fix_len + anchor_hover));
 					
-					if(mouse_lpress(active)) {
-						if(_a[_ANCHOR.c1x] != 0 || _a[_ANCHOR.c1y] != 0 || _a[_ANCHOR.c2x] != 0 || _a[_ANCHOR.c2y] != 0) {
-							_a[@_ANCHOR.c1x] = 0;
-							_a[@_ANCHOR.c1y] = 0;
-							_a[@_ANCHOR.c2x] = 0;
-							_a[@_ANCHOR.c2y] = 0;
-							_a[@_ANCHOR.ind] = 0;
-							inputs[input_fix_len + anchor_hover].setValue(_a);
+					if(hover_type == 0 && _tooln == "Edit Control point") { // add / remove anchor point
+						CURSOR_SPRITE = THEME.cursor_path_anchor;
+						
+						if(mouse_lpress(active)) {
+							if(_a[_ANCHOR.c1x] != 0 || _a[_ANCHOR.c1y] != 0 || _a[_ANCHOR.c2x] != 0 || _a[_ANCHOR.c2y] != 0) {
+								_a[@_ANCHOR.c1x] = 0;
+								_a[@_ANCHOR.c1y] = 0;
+								_a[@_ANCHOR.c2x] = 0;
+								_a[@_ANCHOR.c2y] = 0;
+								_a[@_ANCHOR.ind] = 0;
+								inputs[input_fix_len + anchor_hover].setValue(_a);
+								
+							} else {
+								_a[@_ANCHOR.c1x] = -8;
+								_a[@_ANCHOR.c1y] = 0;
+								_a[@_ANCHOR.c2x] = 8;
+								_a[@_ANCHOR.c2y] = 0;	
+								_a[@_ANCHOR.ind] = 0;
+								
+								drag_point    = anchor_hover;
+								drag_type     = 1;
+								drag_point_mx = _mx;
+								drag_point_my = _my;
+								drag_point_sx = _a[_ANCHOR.x];
+								drag_point_sy = _a[_ANCHOR.y];
+							}
 							
-						} else {
-							_a[@_ANCHOR.c1x] = -8;
-							_a[@_ANCHOR.c1y] = 0;
-							_a[@_ANCHOR.c2x] = 8;
-							_a[@_ANCHOR.c2y] = 0;	
-							_a[@_ANCHOR.ind] = 0;
-							
-							drag_point    = anchor_hover;
-							drag_type     = 1;
-							drag_point_mx = _mx;
-							drag_point_my = _my;
-							drag_point_sx = _a[_ANCHOR.x];
-							drag_point_sy = _a[_ANCHOR.y];
+							drag_point_data = array_verify(drag_point_data, array_length(inputs));
+							for( var i = input_fix_len, n = array_length(inputs); i < n; i++ )
+								drag_point_data[i] = array_clone(inputs[i].getValue());
 						}
 						
-						drag_point_data = array_verify(drag_point_data, array_length(inputs));
-						for( var i = input_fix_len, n = array_length(inputs); i < n; i++ )
-							drag_point_data[i] = array_clone(inputs[i].getValue());
-					}
-					
-				} else if(hover_type == 0 && key_mod_press(SHIFT)) { // remove
-					CURSOR_SPRITE = THEME.cursor_remove;
-					
-					if(mouse_lpress(active)) {
-						var _indx = input_fix_len + anchor_hover;
-						recordAction(ACTION_TYPE.array_delete, inputs, [ inputs[_indx], _indx, "remove path anchor point" ])
-							.setRef(self);
+					} else if(hover_type == 0 && key_mod_press(SHIFT)) { // remove
+						CURSOR_SPRITE = THEME.cursor_remove;
 						
-						array_delete(inputs, _indx, 1);
-						resetDisplayList();
-						triggerRender();
-					}
-					
-				} else {
-					var _mode = 0;
-					
-					if(_tooln == "Edit Control point") {
-						_mode = key_mod_press(SHIFT)? 2 : 1;
+						if(mouse_lpress(active)) {
+							var _indx = input_fix_len + anchor_hover;
+							recordAction(ACTION_TYPE.array_delete, inputs, [ inputs[_indx], _indx, "remove path anchor point" ])
+								.setRef(self);
+							
+							array_delete(inputs, _indx, 1);
+							resetDisplayList();
+							triggerRender();
+						}
 						
 					} else {
-						if(key_mod_press(SHIFT))
-							_mode = key_mod_press(ALT)? 2 : 1;
+						var _mode = 0;
+						
+						if(_tooln == "Edit Control point") {
+							_mode = key_mod_press(SHIFT)? 2 : 1;
+							
+						} else {
+							if(key_mod_press(SHIFT))
+								_mode = key_mod_press(ALT)? 2 : 1;
+						}
+						
+						var _spr = THEME.cursor_move;
+						switch(_mode) {
+							case 1 : _spr = THEME.cursor_path_anchor_unmirror; break;
+							case 2 : _spr = THEME.cursor_path_anchor_detach;   break;
+						}
+						
+						CURSOR_SPRITE = _spr;
+						
+						if(mouse_lpress(active)) {
+							if(_mode != 0) {
+								_a[@_ANCHOR.ind] = _mode;
+								inputs[input_fix_len + anchor_hover].setValue(_a);
+							}
+								
+							drag_point    = anchor_hover;
+							drag_type     = hover_type;
+							drag_point_sx = _a[_ANCHOR.x];
+							drag_point_sy = _a[_ANCHOR.y];
+							drag_point_mx = _mx;
+							drag_point_my = _my;
+							drag_point_px = PANEL_PREVIEW.snapX(drag_point_sx);
+							drag_point_py = PANEL_PREVIEW.snapY(drag_point_sy);
+							
+							if(hover_type == 1) {
+								drag_point_sx = _a[_ANCHOR.x] + _a[_ANCHOR.c1x];
+								drag_point_sy = _a[_ANCHOR.y] + _a[_ANCHOR.c1y];	
+								
+							} else if(hover_type == -1) {
+								drag_point_sx = _a[_ANCHOR.x] + _a[_ANCHOR.c2x];
+								drag_point_sy = _a[_ANCHOR.y] + _a[_ANCHOR.c2y];
+							} 
+							
+							drag_point_data = array_verify(drag_point_data, array_length(inputs));
+							for( var i = input_fix_len, n = array_length(inputs); i < n; i++ )
+								drag_point_data[i] = array_clone(inputs[i].getValue());
+						}
 					}
 					
-					var _spr = THEME.cursor_move;
-					switch(_mode) {
-						case 1 : _spr = THEME.cursor_path_anchor_unmirror; break;
-						case 2 : _spr = THEME.cursor_path_anchor_detach;   break;
-					}
-					
-					CURSOR_SPRITE = _spr;
+				} else if(line_hover != -1) {
+					hovering = true;
 					
 					if(mouse_lpress(active)) {
-						if(_mode != 0) {
-							_a[@_ANCHOR.ind] = _mode;
-							inputs[input_fix_len + anchor_hover].setValue(_a);
-						}
-							
-						drag_point    = anchor_hover;
-						drag_type     = hover_type;
-						drag_point_sx = _a[_ANCHOR.x];
-						drag_point_sy = _a[_ANCHOR.y];
-						drag_point_mx = _mx;
-						drag_point_my = _my;
-						drag_point_px = PANEL_PREVIEW.snapX(drag_point_sx);
-						drag_point_py = PANEL_PREVIEW.snapY(drag_point_sy);
-						
-						if(hover_type == 1) {
-							drag_point_sx = _a[_ANCHOR.x] + _a[_ANCHOR.c1x];
-							drag_point_sy = _a[_ANCHOR.y] + _a[_ANCHOR.c1y];	
-							
-						} else if(hover_type == -1) {
-							drag_point_sx = _a[_ANCHOR.x] + _a[_ANCHOR.c2x];
-							drag_point_sy = _a[_ANCHOR.y] + _a[_ANCHOR.c2y];
-						} 
-						
-						drag_point_data = array_verify(drag_point_data, array_length(inputs));
-						for( var i = input_fix_len, n = array_length(inputs); i < n; i++ )
-							drag_point_data[i] = array_clone(inputs[i].getValue());
+						line_editing     = line_hover;
+						line_edit_mx     = _mx;
+						line_edit_my     = _my;
+						line_edit_data   = array_clone(_pth.anchors);
 					}
+					
 				}
 				break;
 		}

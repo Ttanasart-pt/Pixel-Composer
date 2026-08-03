@@ -41,6 +41,7 @@ function winwin_start(window, clear = undefined) {
 
 function winwin_end() {
 	checkTOOLTIP();
-	winwin_draw_end();
+	if(is_winwin(WINWIN_CURRENT))
+		winwin_draw_end();
 	WINWIN_CURRENT = undefined;
 }

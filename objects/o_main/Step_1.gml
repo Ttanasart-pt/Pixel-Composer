@@ -13,7 +13,7 @@ _FILE_DROPPED       = false;
 
 if(os_is_paused()) OS_PAUSED = true;
 
-#region keybord captures
+#region Keybord captures
 	if(PREFERENCES.keyboard_capture_raw) {
 		if(keyboard_string != "") {
 			KEYBOARD_PRESSED_STRING = keyboard_string;
@@ -34,7 +34,7 @@ if(os_is_paused()) OS_PAUSED = true;
 	if(_altTab) { KEYBOARD_MOD_RESET } // Dirty hack for Alt+Tab bug in linux
 #endregion
 
-#region minimize
+#region Minimize
 	if(winMan_isMinimized()) {
 		exit;
 		
@@ -47,7 +47,7 @@ if(os_is_paused()) OS_PAUSED = true;
 	}
 #endregion
 	
-#region windows focus
+#region Windows focus
 	HOVER_WINDOW = undefined;
 	FOCUS_WINDOW = undefined;
 	var foc = false;
@@ -57,6 +57,11 @@ if(os_is_paused()) OS_PAUSED = true;
 			HOVER_WINDOW = 1;
 			FOCUS_WINDOW = 1;
 			foc = true;
+		}
+		
+		if(FILE_IS_DROPPING || FILE_DROPPED) {
+			HOVER_WINDOW = 1;
+			FOCUS_WINDOW = 1;
 		}
 		
 		if(MULTI_WINDOWS) {
@@ -86,7 +91,7 @@ if(os_is_paused()) OS_PAUSED = true;
 	
 #endregion
 
-#region fps
+#region FPS
 	var _fps_cur = game_get_speed(gamespeed_fps);
 	var _fps_tar = foc || GLOBAL_IS_PLAYING? PREFERENCES.ui_framerate : PREFERENCES.ui_framerate_non_focus;
 	if(_fps_tar == 0) _fps_tar = 999;
@@ -115,7 +120,7 @@ if(os_is_paused()) OS_PAUSED = true;
 	}
 #endregion
 
-#region window & mouse
+#region Window & Mouse
 	mouse_step();
 	
 	if(OS_PAUSED && mouse_press(mb_any)) OS_PAUSED = false;
@@ -188,7 +193,7 @@ if(os_is_paused()) OS_PAUSED = true;
 	_HIGHLIGHT_PROP = undefined;
 #endregion
 
-#region auto save
+#region Auto Save
 	AUTO_SAVE_TIMER += delta_time / 1_000_000;
 	
 	if(PROJECT.modified && PREFERENCES.auto_save_time > 0 && AUTO_SAVE_TIMER > PREFERENCES.auto_save_time) {
@@ -210,7 +215,7 @@ if(os_is_paused()) OS_PAUSED = true;
 	}
 #endregion
 
-#region animation & RENDER
+#region Animation & Render
 	if(RENDERING != undefined) {
 		if(RENDERING.render())
 			RENDERING = undefined;
@@ -284,7 +289,7 @@ if(os_is_paused()) OS_PAUSED = true;
 	UPDATE = RENDER_TYPE.none;
 #endregion
 
-#region clicks
+#region Clicks
 	DOUBLE_CLICK = false;
 	if(mouse_lpress()) {
 		if(dc_check > 0) {
@@ -301,7 +306,7 @@ if(os_is_paused()) OS_PAUSED = true;
 	dc_check -= DELTA_TIME;
 #endregion
 
-#region actions
+#region Actions
 	if(array_length(action_last_frame) > 0) {
 		ds_stack_push(UNDO_STACK, action_last_frame);
 		ds_stack_clear(REDO_STACK);
@@ -309,7 +314,7 @@ if(os_is_paused()) OS_PAUSED = true;
 	action_last_frame = [];
 #endregion
 
-#region mouse wrap
+#region Mouse wrap
 	MOUSE_WRAPPING = max(0, MOUSE_WRAPPING - 1);
 	
 	if(MOUSE_WRAP) {
@@ -337,14 +342,14 @@ if(os_is_paused()) OS_PAUSED = true;
 	MOUSE_WRAP = false;
 #endregion
 
-#region depth
+#region Depth
 	if(_use_depth != USE_DEPTH) {
 		_use_depth = USE_DEPTH;
 		surface_depth_disable(!USE_DEPTH);
 	}
 #endregion
 
-#region cmd
+#region CMD
 	var _resPath = program_directory + "in";
 	if(IS_CMD && file_exists(_resPath)) {
 		var cmd = file_read_all(_resPath);

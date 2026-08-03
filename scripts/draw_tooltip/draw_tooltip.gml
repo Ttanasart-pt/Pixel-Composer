@@ -94,13 +94,13 @@
 		var mx = 0;
 		var my = 0;
 			
-		if(TOOLTIP_WINDOW == undefined) {
-			mx = min(mouse_mx + ui(16), WIN_W - tw);
-			my = min(mouse_my + ui(16), WIN_H - th);
-			
-		} else {
+		if(is_winwin(TOOLTIP_WINDOW)) {
 			mx = min(mouse_rx + ui(16) - winwin_get_x(TOOLTIP_WINDOW), winwin_get_width(TOOLTIP_WINDOW)  - tw);
 			my = min(mouse_ry + ui(16) - winwin_get_y(TOOLTIP_WINDOW), winwin_get_height(TOOLTIP_WINDOW) - th);
+			
+		} else {
+			mx = min(mouse_mx + ui(16), WIN_W - tw);
+			my = min(mouse_my + ui(16), WIN_H - th);
 			
 		}
 		

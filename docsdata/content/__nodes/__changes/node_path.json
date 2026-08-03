@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.8.004",
+    "changes": [
+      {
+        "date": "2026-08-03T09:29:39.206Z",
+        "node": "Path",
+        "commit": "**Path**: Add dragging line segment."
+      }
+    ]
+  },
+  {
     "version": "1.21.6.005",
     "changes": [
       {
