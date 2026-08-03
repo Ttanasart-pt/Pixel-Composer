@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.8.004",
+    "changes": [
+      {
+        "date": "2026-08-03T07:14:22.248Z",
+        "node": "Armature Stagger] Add loop option. - [Armature Stagger",
+        "commit": "**Armature Stagger] Add loop option. - [Armature Stagger**: Fix jumping when rotation start at non-zero."
+      }
+    ]
+  },
+  {
     "version": "1.21.4.006",
     "changes": [
       {

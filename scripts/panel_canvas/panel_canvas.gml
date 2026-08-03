@@ -136,12 +136,16 @@ function Panel_Canvas() : PanelContent() constructor {
 			select_bool_fixed = select_bool_fixed == b? 0 : b;
 		}).iconPad(ui(6)), function() /*=>*/ {return select_bool_fixed? select_bool_fixed : select_bool}, function(b) /*=>*/ { select_bool_fixed = b; } );
 		
+		select_invt_editor = new __Simple_Editor( "", button(function() /*=>*/ {return invertSelection()}).setTooltip("Invert Selection")
+			.setBaseSprite(THEME.button_hide_fill).setIcon(THEME.canvas_selection_invert, 0, COLORS._main_icon_light, .75), function() /*=>*/ {return 0}, function() /*=>*/ {} );
+	
 		select_inter_editor = new __Simple_Editor( "", new buttonGroup(array_create(2, THEME.canvas_interpolate), function(b) /*=>*/ {
 			select_cleanEdge = b;
 		}).iconPad(ui(6)), function() /*=>*/ {return select_cleanEdge}, function(b) /*=>*/ { select_cleanEdge = b; } );
 		
 		selector_settings = [
 			select_bool_editor,
+			select_invt_editor,
 			-1, 
 			rotate_editor,
 			flip_editor,
@@ -343,6 +347,20 @@ function Panel_Canvas() : PanelContent() constructor {
 		selection_w   = _bbox[2];
 		selection_h   = _bbox[3];
 		selection_rot = 0;
+	}
+	
+	static invertSelection = function() {
+		if(!selecting) return;
+		
+		var dim = surface_get_dimension(selection_mask);
+		var _invMask = surface_create(dim[0], dim[1]);
+		
+		surface_set_shader(_invMask, sh_canvas_selection_invert);
+			draw_surface(selection_mask, 0, 0)
+		surface_reset_shader();
+		
+		createSelection(_invMask);
+		surface_free(_invMask);
 	}
 	
 	////- Draw
@@ -618,6 +636,7 @@ function Panel_Canvas() : PanelContent() constructor {
 				var hovType = undefined;
 				
 				var hovMaskPix = surface_getpixel(selection_mask, mpx, mpy);
+				
 				if(hovMaskPix > 0) {
 					hovType = 9;
 					CURSOR_SPRITE = THEME.cursor_move; 

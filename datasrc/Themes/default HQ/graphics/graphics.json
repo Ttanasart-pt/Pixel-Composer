@@ -571,6 +571,7 @@
     "canvas_rotate":                      { "path": "./tool/s_canvas_rotate.png",                           "s": 2, "x":  9, "y":  9 },
     "canvas_rotate_ccw":                  { "path": "./tool/s_canvas_rotate_ccw.png",                       "s": 2, "x":  9, "y":  9 },
     "canvas_rotate_cw":                   { "path": "./tool/s_canvas_rotate_cw.png",                        "s": 2, "x":  9, "y":  9 },
+    "canvas_selection_invert":            { "path": "./tool/s_canvas_selection_invert.png",                 "s": 1, "x": 12, "y": 12 },
     "canvas_tool_curve_icon":             { "path": "./tool/s_canvas_tool_curve.png",                       "s": 2, "x":  9, "y":  9 },
     "canvas_tools_curve":                 { "path": "./tool/s_canvas_tool_curve.png",                       "s": 2, "x":  9, "y":  9 },
     "canvas_tools_line":                  { "path": "./tool/s_canvas_tool_line.png",                        "s": 2, "x":  9, "y":  9 },

@@ -4,28 +4,29 @@ function Node_Armature_Pose_Stagger(_x, _y, _group = noone) : Node(_x, _y, _grou
 	setDimension(96, 96);
 	draw_padding = 8;
 	
-	newInput(0, nodeValue_Armature());
+	newInput( 0, nodeValue_Armature());
 	
 	////- =Stagger
-	newInput(1, nodeValue_Bone( "Bone", function() /*=>*/ {return toggleBoneTarget()} ));
-	newInput(2, nodeValue_Int(  "Amount",   3  ));
-	newInput(6, nodeValue_Int(  "Frame",    1  ));
+	newInput( 1, nodeValue_Bone( "Bone", function() /*=>*/ {return toggleBoneTarget()} ));
+	newInput( 2, nodeValue_Int(  "Amount",   3  ));
+	newInput( 6, nodeValue_Int(  "Frame",    1  ));
+	newInput( 8, nodeValue_Bool( "Loop", false  ));
 	
 	////- =Rotation
-	newInput(3, nodeValue_Rotation( "Rotation",  0 ));
-	newInput(5, nodeValue_Slider(   "Stiffness", 0 ));
-	newInput(7, nodeValue_Slider(   "Intertia",  1 ));
+	newInput( 3, nodeValue_Rotation( "Rotation",  0 ));
+	newInput( 5, nodeValue_Slider(   "Stiffness", 0 ));
+	newInput( 7, nodeValue_Slider(   "Intertia",  1 ));
 	
 	////- =Scale
-	newInput(4, nodeValue_Float( "Scale", 1 ));
-	// inputs 8
+	newInput( 4, nodeValue_Float( "Scale", 1 ));
+	// 9
 	
 	newOutput(0, nodeValue_Output("Armature", VALUE_TYPE.armature, noone));
 	
 	input_display_list = [ 0,
-		[ "Stagger",  false ], 1, 2, 6, 
-		[ "Rotation", false ], 3, 5, 7, 
-		[ "Scale",    false ], 4, 
+		[ "Stagger",  false ],  1,  2,  6,  8, 
+		[ "Rotation", false ],  3,  5,  7, 
+		[ "Scale",    false ],  4, 
 	]
 	
 	__node_bone_attributes();
@@ -48,8 +49,8 @@ function Node_Armature_Pose_Stagger(_x, _y, _group = noone) : Node(_x, _y, _grou
 		var _h = _b.getHash();
 		if(boneHash == _h) return;
 		
-		boneHash  = _h;
-		bonePose  = _b.clone().connect();
+		boneHash   = _h;
+		bonePose   = _b.clone().connect();
 		bone_array = bonePose.toArray();
 		bonePose.constrains = _b.constrains;
 	}
@@ -90,18 +91,21 @@ function Node_Armature_Pose_Stagger(_x, _y, _group = noone) : Node(_x, _y, _grou
 	////- Update
 	
 	static update = function(frame = CURRENT_FRAME) {
-		setBone();
-		
-		var _b   = getInputData(0);
-		var _tar = getInputData(1);
-		var _amo = getInputData(2);
-		var _frm = getInputData(6);
-		
-		var _rot  = getInputData(3);
-		var _stif = getInputData(5); _stif = 1 - _stif;
-		var _iner = getInputData(7);
-		
-		var _sca  = getInputData(4);
+		#region data
+			setBone();
+			
+			var _b    = getInputData( 0);
+			var _tar  = getInputData( 1);
+			var _amo  = getInputData( 2);
+			var _frm  = getInputData( 6);
+			var _lop  = getInputData( 8);
+			
+			var _rot  = getInputData( 3);
+			var _stif = getInputData( 5); _stif = 1 - _stif;
+			var _iner = getInputData( 7);
+			
+			var _sca  = getInputData( 4);
+		#endregion
 		
 		bone_bbox = [ 0, 0, PROJ_SURF_W, PROJ_SURF_H, PROJ_SURF_W, PROJ_SURF_H ];
 		if(!is(_b, __Bone)) return;
@@ -129,67 +133,49 @@ function Node_Armature_Pose_Stagger(_x, _y, _group = noone) : Node(_x, _y, _grou
 			bPose.direction     = bRaw.direction;
 			bPose.distance      = bRaw.distance;
 			
-			// if(IS_FIRST_FRAME) {
-				bPose.pose_posit[0] = bRaw.pose_posit[0];
-				bPose.pose_posit[1] = bRaw.pose_posit[1];
-				bPose.pose_rotate   = bRaw.pose_rotate;
-			// }
-			
+			bPose.pose_posit[0] = bRaw.pose_posit[0];
+			bPose.pose_posit[1] = bRaw.pose_posit[1];
+			bPose.pose_rotate   = bRaw.pose_rotate;
+		
 			bPose.pose_scale    = bRaw.pose_scale;
 		}
 		
 		var _bArr = [ bTarg ];
-		if(IS_FIRST_FRAME) {
-			var _rr = _rot;
-			var _sx = _sca;
+		array_safe_set(rotation_dh, CURRENT_FRAME, _rot);
+		
+		var _sx  = _sca;
+		var _dr  = _rot;
+		var _inf = 1;
+		var _itr = 0;
+		
+		repeat(_amo) {
+			var _cArr = [];
 			
-			repeat(_amo) {
-				var _cArr = [];
-				
-				for( var i = 0, n = array_length(_bArr); i < n; i++ ) {
-					var b = _bArr[i];
-					b.pose_rotate += _rr;
-					b.pose_scale  *= _sx;
-					
-					array_append(_cArr, b.childs);
-				}
-				
-				if(array_empty(_cArr)) break;
-				_bArr = _cArr;
-				
-				_rr *= _stif;
-				_sx *= _sca;
-			} 
+			var fr = CURRENT_FRAME - _itr * _frm;
 			
-		} else {
-			var _sx  = _sca;
-			var _dr  = _rot;
-			var _inf = 1;
-			var _itr = 0;
-			array_safe_set(rotation_dh, CURRENT_FRAME, _dr);
+			if(_lop) fr = pmod(fr, TOTAL_FRAMES);
+			else     fr = max(0, fr);
 			
-			repeat(_amo) {
-				var _cArr = [];
+			var rr = array_safe_get(rotation_dh, fr, 0);
+			
+			for( var i = 0, n = array_length(_bArr); i < n; i++ ) {
+				var b  = _bArr[i];
 				
-				for( var i = 0, n = array_length(_bArr); i < n; i++ ) {
-					var b  = _bArr[i];
-					var rr = array_safe_get(rotation_dh, CURRENT_FRAME - _itr * _frm, 0);
-					var targRot = b.pose_rotate + rr * _inf;
-					
-					b.pose_rotate = lerp(b.pose_rotate, targRot, _iner);
-					b.pose_scale  *= _sx;
-					
-					array_append(_cArr, b.childs);
-				}
+				var r0 = b.pose_rotate;
+				var r1 = b.pose_rotate + rr * _inf;
 				
-				if(array_empty(_cArr)) break;
-				_bArr = _cArr;
-				_inf *= _stif;
-				_sx  *= _sca;
+				b.pose_rotate = lerp(r0, r1, _iner);
+				b.pose_scale *= _sx;
 				
-				_itr++;
+				array_append(_cArr, b.childs);
 			}
 			
+			if(array_empty(_cArr)) break;
+			_bArr = _cArr;
+			_inf *= _stif;
+			_sx  *= _sca;
+			
+			_itr++;
 		}
 		
 		rotation_prev = _rot;
