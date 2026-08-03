@@ -49,6 +49,7 @@ function Node_Path_L_System(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 		newInput(index + 0, nodeValue_Text($"Name {_idx}"));
 		newInput(index + 1, nodeValue_Text($"Rule {_idx}"));
 		
+		postCreateNewInput(index);
 		return inputs[index + 0];
 	}
 	

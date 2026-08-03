@@ -46,7 +46,7 @@ function tilesetBox(_junction) : widget() constructor {
         	var bi = 0;
         	
         	if(ihover && point_in_rectangle(_m[0], _m[1], x, y, x + iw, y + h)) {
-        		TOOLTIP = __txt("View node");
+        		setTOOLTIP(__txt("View node"));
         		bi = 1;
         		
         		if(mouse_lclick(iactive))

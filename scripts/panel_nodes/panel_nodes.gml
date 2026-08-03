@@ -188,7 +188,7 @@ function Panel_Nodes() : PanelContent() constructor {
 			
 			if(key_mod_press(SHIFT)) {
 				var _outp = node.getOutput();
-				if(is(_outp, NodeValue)) TOOLTIP = [ _outp.getValue(), _outp.type ];
+				if(is(_outp, NodeValue)) setTOOLTIP([ _outp.getValue(), _outp.type ]);
 			}
 			
 		} else {

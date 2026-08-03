@@ -31,7 +31,7 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	newInput(17, nodeValueSeed());
 	
 	////- =Surfaces
-	newInput( 0, nodeValue_Surface(     "Surface In" ));
+	newInput( 0, nodeValue_Surface(     "Surface In" )).setRequired();
 	newInput(35, nodeValue_EScroll(     "Output Dimension Type", OUTPUT_SCALING.constant, [
         new scrollItem( "Same as input"),
         new scrollItem( "Constant"),
@@ -113,36 +113,37 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	typeList = [ "Linear Transform", "Blending" ];
 	enum_select_mode = __enum_array_gen( [ "Index", "Area", "Linear", "Surface" ], s_node_repeat_selection_types);
 	
-	function createNewInput(i = array_length(inputs)) {
+	function createNewInput(index = array_length(inputs)) {
 		var inAmo = array_length(inputs);
 		
 		dynamic_input_inspecting = getInputAmount();
 		
 		////- =Selection
-		newInput(i+ 1, nodeValue_EScroll(  "Select Mode",    0, enum_select_mode ));
-		newInput(i+ 9, nodeValue_Area(     "Select Area",    DEF_AREA_REF        )).setUnitSimple();
-		newInput(i+10, nodeValue_Float(    "Select Index",   0      ));
-		newInput(i+11, nodeValue_Float(    "Select Range",   2      ));
-		newInput(i+14, nodeValue_Surface(  "Select Surface"         ));
-		newInput(i+16, nodeValue_Vec2(     "Select Position", [0,0] )).setUnitSimple();
-		newInput(i+17, nodeValue_Rotation( "Select Rotation",  0    ));
+		newInput(index+ 1, nodeValue_EScroll(  "Select Mode",    0, enum_select_mode ));
+		newInput(index+ 9, nodeValue_Area(     "Select Area",    DEF_AREA_REF        )).setUnitSimple();
+		newInput(index+10, nodeValue_Float(    "Select Index",   0      ));
+		newInput(index+11, nodeValue_Float(    "Select Range",   2      ));
+		newInput(index+14, nodeValue_Surface(  "Select Surface"         ));
+		newInput(index+16, nodeValue_Vec2(     "Select Position", [0,0] )).setUnitSimple();
+		newInput(index+17, nodeValue_Rotation( "Select Rotation",  0    ));
 		
-		newInput(i+12, nodeValue_Float(    "Select Falloff", 0                   ));
-		newInput(i+13, nodeValue_Curve(    "Select Falloff Curve", CURVE_DEF_10  ));
+		newInput(index+12, nodeValue_Float(    "Select Falloff", 0                   ));
+		newInput(index+13, nodeValue_Curve(    "Select Falloff Curve", CURVE_DEF_10  ));
 		
 		////- =Effects
-		newInput(i+ 0, nodeValue_EScroll(  "Animator type",     0, typeList               ));
-		newInput(i+ 2, nodeValue_Vec2(     "Position",         [0,0]                      ));
-		newInput(i+ 3, nodeValue_Rotation( "Rotation",          0                         ));
-		newInput(i+ 4, nodeValue_Vec2(     "Scale",            [0,0]                      ));
-		newInput(i+ 5, nodeValue_EButton(  "Anchor type",       1, [ "Global", "Local" ]  ));
-		newInput(i+ 6, nodeValue_Vec2(     "Anchor Position", [.5,.5])).setTooltip("Anchor point for transformation, absolute value for global type, relative for local.");
-		newInput(i+ 7, nodeValue_Color(    "Color",             ca_white                  ));
-		newInput(i+ 8, nodeValue_Slider(   "Alpha",             0, [ -1, 1, 0.01 ]        ));
-		newInput(i+15, nodeValue_Slider(   "Strength",          0, [ -1, 1, 0.01 ]        ));
+		newInput(index+ 0, nodeValue_EScroll(  "Animator type",     0, typeList               ));
+		newInput(index+ 2, nodeValue_Vec2(     "Position",         [0,0]                      ));
+		newInput(index+ 3, nodeValue_Rotation( "Rotation",          0                         ));
+		newInput(index+ 4, nodeValue_Vec2(     "Scale",            [0,0]                      ));
+		newInput(index+ 5, nodeValue_EButton(  "Anchor type",       1, [ "Global", "Local" ]  ));
+		newInput(index+ 6, nodeValue_Vec2(     "Anchor Position", [.5,.5])).setTooltip("Anchor point for transformation, absolute value for global type, relative for local.");
+		newInput(index+ 7, nodeValue_Color(    "Color",             ca_white                  ));
+		newInput(index+ 8, nodeValue_Slider(   "Alpha",             0, [ -1, 1, 0.01 ]        ));
+		newInput(index+15, nodeValue_Slider(   "Strength",          0, [ -1, 1, 0.01 ]        ));
 		
 		refreshDynamicDisplay();
-		return inputs[i];
+		postCreateNewInput(index);
+		return inputs[index];
 	} 
 	
 	input_display_dynamic = [ 

@@ -13,6 +13,8 @@
 function Panel(_parent, _x, _y, _w, _h) constructor {
 	parent = _parent;
 	if(parent) array_push(parent.childs, self);
+	 
+	dialog  = undefined;
 	
 	padding = ui(THEME_VALUE.panel_margin);
 	content = [];
@@ -28,11 +30,11 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 	
 	hovering    = false;
 	focusing    = false;
-	prefocusing = false;
+	focusDialog = false;
 	
 	tab_align   = 0;
 	tab_width   = 0;
-	tab_size  = ui(24);
+	tab_size    = ui(24);
 	tab_x       = 0;
 	tab_x_to    = 0;
 	tab_surface = noone;
@@ -74,20 +76,46 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
         [ [THEME.panel_tab_align, 3], function() /*=>*/ { tab_align = 3; refreshSize(); } ],
     ]);
 	
-	static getContent = function() /*=>*/ {return array_safe_get_fast(content, content_index, noone)};
+	////- Get Set
+	
+	static setDialog = function(_d) /*=>*/ { dialog = _d; return self; }
+	
+	static isGlobal   = function() /*=>*/ {return parent == noone && dialog == undefined};
 	
 	////- Content
 	
+	static getContent = function() /*=>*/ {return array_safe_get_fast(content, content_index, noone)};
+	
 	function setContent(_content = noone, _switch = false) {
-		array_append(content, _content);
+		if(is(_content, Panel)) {
+			content = _content.content;
+			childs  = _content.childs;
+			refreshSize();
+			return;
+		}
 		
+		array_append(content, _content);
 		for( var i = 0, n = array_length(content); i < n; i++ ) 
 			content[i].onSetPanel(self);
 			
 		if(_switch) switchContent(_content);
 		refresh();
 		
-		PANEL_MODIFIED = true;
+		if(dialog == undefined) PANEL_MODIFIED = true;
+	}
+	
+	function findContent(_type) {
+		var _cont = undefined;
+		for( var i = 0, n = array_length(content); i < n; i++ )
+			if(is(content[i], _type)) _cont = content[i];
+		
+		for( var i = 0, n = array_length(childs); i < n; i++ ) {
+			var ch = childs[i];
+			var _c = ch.findContent(_type);
+			_cont = _cont ?? _c;
+		}
+		
+		return _cont;
 	}
 	
 	function switchContent(_content) {
@@ -125,8 +153,8 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 	function refresh() {
 		resetMask();
 		
-		array_foreach(content, function(c) /*=>*/ { c.refresh(); });
-		array_foreach(childs,  function(c) /*=>*/ { c.refresh(); });
+		array_foreach(content, function(c,i) /*=>*/ {return c.refresh()});
+		array_foreach(childs,  function(c,i) /*=>*/ {return c.refresh()});
 	}
 	
 	////- Sizing
@@ -137,17 +165,15 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 		x += dx;
 		y += dy;
 		
-		for(var i = 0; i < array_length(childs); i++) {
-			var _panel = childs[i];
-			_panel.move(dx, dy);
-		}
+		for( var i = 0, n = array_length(childs); i < n; i++ )
+			childs[i].move(dx, dy);
 		
 		for( var i = 0, n = array_length(content); i < n; i++ ) {
 			content[i].x = x;
 			content[i].y = y;
 		}
 	
-		PANEL_MODIFIED = true;
+		if(dialog == undefined) PANEL_MODIFIED = true;
 	}
 	
 	function setTabSize() {
@@ -226,26 +252,51 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 			childs[fixChild].y = y;
 			
 			if(split == "h") {
-				childs[ fixChild].w = round(childs[fixChild].w / _tw * w);
+				var w0 = round(childs[fixChild].w / _tw * w);
+				var w1 = round(w - childs[fixChild].w);
+				
+				var mw0 = childs[0].getmin_w();
+				var mw1 = childs[1].getmin_w();
+				
+				var dw0 = max(0, mw0 - w0);
+				var dw1 = max(0, mw1 - w1);
+				
+				     if(dw0 && dw1 == 0) { w0 += dw0; w1 -= dw0; } 
+				else if(dw0 == 0 && dw1) { w0 -= dw1; w1 += dw1; }
+				
+				childs[ fixChild].w = w0;
 				childs[ fixChild].h = round(h);
 			
-				childs[!fixChild].x = x + childs[fixChild].w;
+				childs[!fixChild].x = x + w0;
 				childs[!fixChild].y = y;
 					
-				childs[!fixChild].w = round(w - childs[fixChild].w);
+				childs[!fixChild].w = w1;
 				childs[!fixChild].h = round(h);
 				
 				childs[ fixChild].anchor = ANCHOR.left;
 				childs[!fixChild].anchor = ANCHOR.right;
+				
 			} else if(split == "v") {	
+				var h0 = round(childs[fixChild].h / _th * h);
+				var h1 = round(h - childs[fixChild].h);
+				
+				var mh0 = childs[0].getmin_h();
+				var mh1 = childs[1].getmin_h();
+				
+				var dh0 = max(0, mh0 - h0);
+				var dh1 = max(0, mh1 - h1);
+				
+				     if(dh0 && dh1 == 0) { h0 += dh0; h1 -= dh0; } 
+				else if(dh0 == 0 && dh1) { h0 -= dh1; h1 += dh1; }
+				
 				childs[ fixChild].w = round(w);
-				childs[ fixChild].h = round(childs[fixChild].h / _th * h);
+				childs[ fixChild].h = h0;
 			
 				childs[!fixChild].x = x;
-				childs[!fixChild].y = y + childs[fixChild].h;
+				childs[!fixChild].y = y + h0;
 					
 				childs[!fixChild].w = round(w);
-				childs[!fixChild].h = round(h - childs[fixChild].h);
+				childs[!fixChild].h = h1;
 				
 				childs[ fixChild].anchor = ANCHOR.top;
 				childs[!fixChild].anchor = ANCHOR.bottom;
@@ -275,7 +326,15 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 		h = max(h, min_h);
 		
 		refreshSize(false);
-		PANEL_MODIFIED = true;
+		if(dialog == undefined) PANEL_MODIFIED = true;
+	}
+	
+	function verify(_w, _h) {
+		if(w == _w && h == _h) return;
+		
+		var dw = _w - w;
+		var dh = _h - h;
+		resize(dw, dh);
 	}
 	
 	function split_h(_w) {
@@ -304,15 +363,19 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 			content[i].onResize();
 		}
 		
-		if(parent == noone) 
+		if(isGlobal()) 
 			PANEL_MAIN = _panelParent;
-		else
+		else if(dialog != undefined)
+			dialog.panel = _panelParent;
+		else if(parent != noone)
 			array_remove(parent.childs, self);
 			
 		parent	= _panelParent;
 		anchor	= ANCHOR.left;
 		content = [];
-		PANEL_MODIFIED = true;
+		
+		if(dialog == undefined)  
+			PANEL_MODIFIED = true;
 		
 		return [ _panelL, _panelR ];
 	}
@@ -342,15 +405,19 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 			content[i].onResize();
 		}
 		
-		if(parent == noone) 
+		if(isGlobal()) 
 			PANEL_MAIN = _panelParent;
-		else
+		else if(dialog != undefined)
+			dialog.panel = _panelParent;
+		else if(parent != noone)
 			array_remove(parent.childs, self);
 		
 		parent	= _panelParent;
 		anchor	= ANCHOR.top;
 		content = [];
-		PANEL_MODIFIED = true;
+		
+		if(dialog == undefined) 
+			PANEL_MODIFIED = true;
 		
 		return [_panelT, _panelB];
 	}
@@ -387,6 +454,52 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 		_panelB.move(0, dh);
 	}
 	
+	function getmin_w() {
+		if(!array_empty(content)) {
+			var _minw = 0;
+			for( var i = 0, n = array_length(content); i < n; i++ )
+				_minw = max(_minw, content[i].min_w);
+			return _minw;
+		}
+		
+		if(split == "h") {
+			var _minL = childs[0].getmin_w();
+			var _minR = childs[1].getmin_w();
+			return _minL + _minR;
+		}
+		
+		if(split == "v") {
+			var _minU = childs[0].getmin_w();
+			var _minD = childs[1].getmin_w();
+			return max(_minU, _minD);
+		}
+		
+		return 0;
+	}
+	
+	function getmin_h() {
+		if(!array_empty(content)) {
+			var _minh = 0;
+			for( var i = 0, n = array_length(content); i < n; i++ )
+				_minh = max(_minh, content[i].min_w);
+			return _minh;
+		}
+		
+		if(split == "h") {
+			var _minL = childs[0].getmin_w();
+			var _minR = childs[1].getmin_w();
+			return max(_minL, _minR);
+		}
+		
+		if(split == "v") {
+			var _minU = childs[0].getmin_w();
+			var _minD = childs[1].getmin_w();
+			return _minU + _minD;
+		}
+		
+		return 0;
+	}
+	
 	function centralize_split() {
 		if(array_length(childs) != 2) return;
 		
@@ -394,7 +507,62 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 		else if(split == "v") resplit_v(h / 2);
 	}
 	
+	static forceResize = function(_cont) { if(dialog) dialog.forceResize(_cont); }
+	
+	function contentResizable() {
+		var _resize = true;
+		
+		for( var i = 0, n = array_length(content); i < n; i++ ) 
+			_resize = _resize && content[i].resizable;
+		
+		for( var i = 0, n = array_length(childs); i < n; i++ ) 
+			_resize = _resize && childs[i].contentResizable();
+		
+		return _resize;
+	}
+	
 	////- Step
+	
+	function checkMouse() {
+		var con = getContent();
+		
+		if(FULL_SCREEN_CONTENT != noone && con == FULL_SCREEN_CONTENT && self != FULL_SCREEN_PARENT) return;
+		if(dialog && HOVER != dialog.id) return;
+		
+		var _mx = mouse_mx;
+		var _my = mouse_my;
+		var  x0 = x;
+		var  y0 = y;
+		var  x1 = x + w;
+		var  y1 = y + h;
+		
+		if(con && point_in_rectangle(_mx, _my, x0, y0, x1, y1))
+			HOVER = con;
+			
+		for( var i = 0, n = array_length(childs); i < n; i++ )
+			childs[i].checkMouse();
+	}
+	
+	function postCheckMouse() {
+		for( var i = 0, n = array_length(content); i < n; i++ ) 
+			content[i].postCheckMouse();
+		
+		for( var i = 0, n = array_length(childs); i < n; i++ )
+			childs[i].postCheckMouse();
+	}
+	
+	function checkFocus() {
+		var con = getContent();
+		if(FULL_SCREEN_CONTENT != noone && con == FULL_SCREEN_CONTENT && self != FULL_SCREEN_PARENT) return;
+		
+		hovering    = HOVER == con;
+		if(hovering && mouse_press(mb_any)) setFocus(con);
+		
+		focusing    = FOCUS       == con;
+		focusDialog = FOCUS_PANEL == dialog;
+		
+		array_foreach(childs, function(ch,i) /*=>*/ {return ch.checkFocus()});
+	}
 	
 	function stepBegin() {
 		var con = getContent();
@@ -404,7 +572,6 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 			content[i].panelStepBegin(self);
 		
 		if(o_main.panel_dragging != noone) dragging = -1;
-		hovering = false;
 		
 		if(dragging == 1) {
 			var _mx = clamp(mouse_mx, ui(16), WIN_W - ui(16));
@@ -414,12 +581,8 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 			for(var i = 0; i < array_length(childs); i++) {
 				var _panel = childs[i];
 				switch(_panel.anchor) {
-					case ANCHOR.left:
-						res = res && _panel.resizable(dw, 0, ANCHOR.left);
-						break;
-					case ANCHOR.right:
-						res = res && _panel.resizable(-dw, 0, ANCHOR.right);
-						break;
+					case ANCHOR.left  : res = res && _panel.resizable( dw, 0, ANCHOR.left);  break;
+					case ANCHOR.right : res = res && _panel.resizable(-dw, 0, ANCHOR.right); break;
 				}
 			}
 			
@@ -457,12 +620,8 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 			for(var i = 0; i < array_length(childs); i++) {
 				var _panel = childs[i];
 				switch(_panel.anchor) {
-					case ANCHOR.top:
-						res = res && _panel.resizable(0, dh, ANCHOR.top);
-						break;
-					case ANCHOR.bottom:
-						res = res && _panel.resizable(0, -dh, ANCHOR.bottom);
-						break;
+					case ANCHOR.top    : res = res && _panel.resizable(0,  dh, ANCHOR.top);    break;
+					case ANCHOR.bottom : res = res && _panel.resizable(0, -dh, ANCHOR.bottom); break;
 				}
 			}
 				
@@ -487,38 +646,13 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 				refreshSize();
 				dragging = -1;
 			}
-			
 			return;
 		}
 		
-		var _mx = mouse_mxs;
-		var _my = mouse_mys;
-		var  x0 = x + ui(2);
-		var  y0 = y + ui(2);
-		var  x1 = x + w - ui(4);
-		var  y1 = y + h - ui(4);
-		
-		if(con && point_in_rectangle(_mx, _my, x0, y0, x1, y1))
-			HOVER = con;
-			
-		for(var i = 0; i < array_length(childs); i++)
+		for( var i = 0, n = array_length(childs); i < n; i++ ) {
+			childs[i].dialog = dialog;
 			childs[i].stepBegin();
-	}
-	
-	function checkFocus() {
-		var con = getContent();
-		if(FULL_SCREEN_CONTENT != noone && con == FULL_SCREEN_CONTENT && self != FULL_SCREEN_PARENT) return;
-		
-		if(HOVER == con) {
-			hovering = true;
-			if(mouse_press(mb_any)) setFocus(con);
 		}
-		
-		focusing    = FOCUS       == con;
-		prefocusing = FOCUS_PANEL == con;
-		
-		for(var i = 0; i < array_length(childs); i++)
-			childs[i].checkFocus();
 	}
 	
 	static step = function() {
@@ -541,6 +675,16 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 		surface_reset_target();
 	} resetMask();
 	
+	static preDraw = function() {
+		for( var i = 0, n = array_length(content); i < n; i++ )
+			content[i].preDraw();
+		
+		for(var i = 0, n = array_length(childs); i < n; i++) {
+			var _panel = array_safe_get(childs, i, 0);
+			if(is(_panel, Panel)) _panel.preDraw();
+		}
+	}
+	
 	static draw = function() {
 		if(!array_empty(content)) { drawContent(); return; }
 		if(array_empty(childs)) return;
@@ -557,35 +701,48 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 			_min_h = childs[0].min_h + childs[1].min_h;
 		}
 		
+		var _resizable = (is(HOVER, PanelContent) && HOVER.panel.dialog == dialog) || (dialog && instance_exists(HOVER) && HOVER == dialog.id);
+		    _resizable = _resizable && contentResizable();
+		
 		for(var i = 0, n = array_length(childs); i < n; i++) {
 			var _panel = array_safe_get(childs, i, 0);
-			if(_panel == 0) continue;
+			if(is(_panel, Panel)) _panel.draw();
+		}
+		
+		var p = ui(6 - 1);
+		for(var i = 0, n = array_length(childs); i < n; i++) {
+			var _panel = array_safe_get(childs, i, 0);
+			if(!is(_panel, Panel)) continue;
 			
-			_panel.draw();
-			if!(HOVER == noone || is_struct(HOVER)) continue;
-			
-			var p = ui(6 - 1);
+			var px = _panel.x;
+			var py = _panel.y;
+			var pw = _panel.w;
+			var ph = _panel.h;
 			
 			switch(_panel.anchor) {
 				case ANCHOR.left :
-					if(!point_in_rectangle(mouse_mx, mouse_my, _panel.x + _panel.w - p, _panel.y, _panel.x + _panel.w + p, _panel.y + _panel.h))
+					// draw_set_color(_resizable? c_lime : c_red); draw_rectangle(px + pw - p, py, px + pw + p, py + ph, true);
+				
+					if(!_resizable || !point_in_rectangle(mouse_mx, mouse_my, px + pw - p, py, px + pw + p, py + ph))
 						break;
 							
 					CURSOR = cr_size_we;
 					if(mouse_lpress()) {
 						dragging  = 1;
-						drag_sval = _panel.w;
+						drag_sval = pw;
 						drag_sm   = mouse_mx;
 					}
 					break;
 				case ANCHOR.top :
-					if(!point_in_rectangle(mouse_mx, mouse_my, _panel.x, _panel.y + _panel.h - p, _panel.x + _panel.w, _panel.y + _panel.h + p))
+					// draw_set_color(_resizable? c_lime : c_red); draw_rectangle(px, py + ph - p, px + pw, py + ph + p, true);
+				
+					if(!_resizable || !point_in_rectangle(mouse_mx, mouse_my, px, py + ph - p, px + pw, py + ph + p))
 						break;
 							
 					CURSOR = cr_size_ns;
 					if(mouse_lpress()) {
 						dragging  = 2;
-						drag_sval = _panel.h;
+						drag_sval = ph;
 						drag_sm   = mouse_my;
 					}
 					break;
@@ -709,7 +866,7 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 						tab_holding_sx = tab_holding.tab_x;
 					}
 					
-					if(DRAGGING) TOOLTIP = __txt("Right Click to switch tab");
+					if(DRAGGING) setTOOLTIP(__txt("Right Click to switch tab"));
 					if(mouse_rpress(focus)) {
 						if(DRAGGING) setTab(i);
 						else {
@@ -901,7 +1058,7 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 						tab_holding_sx = tab_holding.tab_x;
 					}
 					
-					if(DRAGGING) TOOLTIP = __txt("Right Click to switch tab");
+					if(DRAGGING) setTOOLTIP(__txt("Right Click to switch tab"));
 					if(mouse_rpress(focus)) {
 						if(DRAGGING) setTab(i);
 						else {
@@ -1008,7 +1165,9 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 		
 		var _mx = mouse_mxs;
 		var _my = mouse_mys;
-			
+		
+		if(dialog) con.window = dialog.window;
+		
 		var p = ui(6);
 		var m_in = point_in_rectangle(_mx, _my, tx + p, ty + p, tx + tw - p, ty + th - p);
 		var m_ot = point_in_rectangle(_mx, _my, tx, ty, tx + tw, ty + th);
@@ -1056,6 +1215,8 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 		} else 
 			draw_surface_ext_safe(content_surface, tx, ty, 1, 1, 0, c_white, .5);
 		
+		// draw_set_color(c_red); draw_rectangle(tx, ty, tx+tw, ty+th, true);
+		
 	}
 	
 	function drawFrame() {
@@ -1082,12 +1243,12 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 		if(THEME_VALUE.panel_separation_type == "frame")
 			draw_sprite_stretched_ext(THEME.ui_panel, 1, _tx, _ty, _tw, _th, COLORS.panel_frame);
 		
-		if(focusing || prefocusing || (instance_exists(o_dialog_menubox) && o_dialog_menubox.getContextPanel() == self)) {
+		if(focusing || focusDialog || (instance_exists(o_dialog_menubox) && o_dialog_menubox.getContextPanel() == self)) {
 			var _color = PREFERENCES.panel_outline_accent? COLORS._main_accent : COLORS.panel_select_border;
 			draw_sprite_stretched_ext(THEME.ui_panel, 1, _tx, _ty, _tw, _th, _color, 1);
 		}
 		
-		if(focusing && parent != noone && !m_in && m_ot) {
+		if(focusing && parent != noone && !m_in && m_ot && contentResizable()) {
 			draw_sprite_stretched_ext(THEME.ui_panel, 1, _tx, _ty, _tw, _th, c_white, .4);
 			
 			if(DOUBLE_CLICK) {
@@ -1107,9 +1268,6 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 			draw_sprite_stretched_ext(THEME.ui_panel, 1, _tx, _ty, _tw, _th, COLORS._main_value_positive, 1);	
 			draw_droppable = false;
 		}
-		
-		if(o_main.panel_dragging != noone && m_ot && !key_mod_press(CTRL))
-			checkHover();
 	}
 	
 	function drawGUI() {
@@ -1122,6 +1280,16 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 	}
 	
 	////- Actions
+	
+	function onClose() {
+		for( var i = 0, n = array_length(content); i < n; i++ )
+			content[i].onClose();
+		
+		for(var i = 0, n = array_length(childs); i < n; i++) {
+			var _panel = array_safe_get(childs, i, 0);
+			if(is(_panel, Panel)) _panel.onClose();
+		}
+	}
 	
 	function extract() {
 		var con = getContent();
@@ -1139,18 +1307,24 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 		var ind = !array_find(parent.childs, self); // index of the sibling
 		var sib = parent.childs[ind];
 		
-		if(array_length(sib.childs) == 2) { // sibling is compound panel
-			var gparent = parent.parent;
-			if(gparent == noone) {
-				sib.x = PANEL_MAIN.x; sib.y = PANEL_MAIN.y;
-				sib.w = PANEL_MAIN.w; sib.h = PANEL_MAIN.h;
+		if(array_length(sib.childs) == 2) { // Sibling is compound panel
+			if(parent.parent == noone) { // Promote sibling to main panel
+				var _main = parent.dialog? parent.dialog.panel : PANEL_MAIN;
 				
-				PANEL_MAIN = sib;
+				sib.x = _main.x; sib.y = _main.y;
+				sib.w = _main.w; sib.h = _main.h;
+				
+				if(parent.dialog == undefined)
+					PANEL_MAIN = sib;
+				else
+					parent.dialog.panel = sib;
+				
 				sib.parent = noone;
-				PANEL_MAIN.refreshSize();
+				_main.refreshSize();
 				
 			} else {
-				var pind    = array_find(gparent.childs, parent); //index of parent in grandparent object
+				var gparent = parent.parent;
+				var pind    = array_find(gparent.childs, parent); // index of parent in grandparent object
 				gparent.childs[pind] = sib; //replace parent with sibling
 				sib.parent = gparent;
 				gparent.refreshSize();
@@ -1172,6 +1346,9 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 	}
 	
 	function checkHover() {
+		if(o_main.panel_dragging == noone || key_mod_press(CTRL))
+			return;
+			
 		var dx = (mouse_mx - x) / w;
 		var dy = (mouse_my - y) / h;
 		var p  = ui(8);
@@ -1185,7 +1362,7 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 		var y1 = y + h - p;
 		var xc = x + w / 2;
 		var yc = y + h / 2;
-		
+			
 		if(point_in_rectangle(mouse_mx, mouse_my, x + w * 1 / 3, y + h * 1 / 3, x + w * 2 / 3, y + h * 2 / 3)) {
 			o_main.panel_split = 4;
 			
@@ -1193,6 +1370,7 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 			o_main.panel_draw_y0_to = y + h * 1 / 3;
 			o_main.panel_draw_x1_to = x + w * 2 / 3;
 			o_main.panel_draw_y1_to = y + h * 2 / 3;
+			
 		} else {
 			if(dx + dy > 1) {
 				if((1 - dx) + dy > 1) {
@@ -1230,8 +1408,35 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 		}
 	}
 	
-	function onFocusBegin() { INLINE if(FOCUS.getContent()) FOCUS.getContent().onFocusBegin(); }
-	function onFocusEnd()   { INLINE if(FOCUS.getContent()) FOCUS.getContent().onFocusEnd();   }
+	function onFocusBegin() { 
+		var _cont = getContent();
+		if(is(_cont, PanelContent))
+			_cont.onFocusBegin(); 
+	}
+		
+	function onFocusEnd()   { 
+		var _cont = getContent();
+		if(is(_cont, PanelContent))
+			_cont.onFocusEnd(); 
+	}
+	
+	function asyncCallback(_data) {
+		var _cont = getContent();
+		if(is(_cont, PanelContent))
+			_cont.asyncCallback(_data);
+		
+		for(var i = 0, n = array_length(childs); i < n; i++) {
+			var _panel = array_safe_get(childs, i, 0);
+			if(is(_panel, Panel)) _panel.asyncCallback(_data);
+		}
+	}
+	
+	function getAllContent(_arr = []) {
+		array_append(_arr, content);
+		for( var i = 0, n = array_length(childs); i < n; i++ ) 
+			childs[i].getAllContent(_arr);
+		return _arr;
+	}
 	
 	function remove(con = getContent()) {
 		var curr = getContent();
@@ -1244,7 +1449,11 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 		refresh();
 		
 		if(!array_empty(content)) return;
-		if(parent == noone) { show_message("Can't close the main panel."); return; }
+		if(parent == noone) { 
+			if(dialog == undefined) show_message("Can't close the main panel."); 
+			else instance_destroy(dialog);
+			return;
+		}
 		
 		if(array_length(parent.childs) == 2) {
 			array_remove(parent.childs, self);
@@ -1264,27 +1473,25 @@ function PanelContent() constructor {
 	anchor      = ANCHOR.none;
 	auto_pin	= false;
 	panel		= noone;
+	window      = undefined;
 	
 	mx = 0;
 	my = 0;
 	x  = 0;
 	y  = 0;
-	w  = 640;
-	h  = 480;
+	w  = ui(640); min_w = ui(40); pref_w = ui(40);
+	h  = ui(480); min_h = ui(40); pref_h = ui(40);
 	padding		 = ui(12);
 	title_height = ui(28);
 	
+	mouse_overflow = false;
+	
 	tab_x  = 0;
-	min_w  = ui(40);
-	min_h  = ui(40);
 	
 	pFOCUS = false;
 	pHOVER = false;
 	
-	in_dialog   = false;
-	
 	dragSurface = noone;
-	showHeader  = true;
 	
 	title_actions = [];
 	title_actions_override = true;
@@ -1292,14 +1499,14 @@ function PanelContent() constructor {
 	
 	////- Size
 	
-	static refresh = function() {
+	static refresh = function() /*=>*/ {
 		setPanelSize(panel);
 		onResize();
 	}
 	
-	static setSize      = function(_w, _h) { w = _w; h = _h; return self; } 
-	static onResize     = function() {}
-	static setPanelSize = function(_panel) {
+	static setSize      = function(_w, _h) /*=>*/ { w = _w; h = _h; return self; } 
+	static onResize     = function() /*=>*/ {}
+	static setPanelSize = function(_panel) /*=>*/ {
 		x = _panel.tx;
 		y = _panel.ty;
 		w = _panel.tw;
@@ -1308,26 +1515,28 @@ function PanelContent() constructor {
 	
 	////- Focus
 	
-	static onFocusBegin = function() {}
-	static onFocusEnd   = function() {}
-	static initSize     = function() {}
+	static onFocusBegin = function() /*=>*/ {}
+	static onFocusEnd   = function() /*=>*/ {}
+	static initSize     = function() /*=>*/ {}
+	
+	function postCheckMouse() {}
 	
 	////- Panel
 	
-	static onSetPanel     = function(_panel) {
+	static onSetPanel     = function(_panel) /*=>*/ {
 		panel = _panel;
 		setPanelSize(_panel);
 		initSize();
 		onResize();
 	}
-	static panelStepBegin = function(_panel) {
+	static panelStepBegin = function(_panel) /*=>*/ {
 		setPanelSize(_panel);
 		onStepBegin();
 	}
 	
 	////- Step
 	
-	static onStepBegin = function() {
+	static onStepBegin = function() /*=>*/ {
 		mx = mouse_mx - x;
 		my = mouse_my - y;
 		stepBegin();
@@ -1337,39 +1546,43 @@ function PanelContent() constructor {
 				FOCUSING_PANEL = self;
 		}
 	}
-	static stepBegin   = function() {}
+	static stepBegin   = function() /*=>*/ {}
 	
 	////- Draw
 	
-	static draw = function(_panel) {
+	static draw = function(_panel) /*=>*/ {
 		panel = _panel;
 		
 		if(o_main.panel_dragging == noone) {
 			pFOCUS = FOCUS == self;
-			pHOVER = !CURSOR_IS_LOCK && HOVER == self && panel.mouse_active;
+			
+			pHOVER = !CURSOR_IS_LOCK && HOVER == self && (panel.mouse_active || mouse_overflow);
 			if(pFOCUS) FOCUS_CONTENT = self;
 		}
 		
 		drawContent(panel);
 	}
 	
-	static drawContent   = function(_panel) {}
-	static preDraw       = function() {}
-	static drawGUI       = function() {}
-	static onFullScreen  = function() {}
+	static drawContent   = function(_panel) /*=>*/ {}
+	static preDraw       = function() /*=>*/ {}
+	static drawGUI       = function() /*=>*/ {}
+	static onFullScreen  = function() /*=>*/ {}
 	
 	////- Actions
 	
-	static checkClosable = function() { return true; }
-	static close         = function() { panel.remove(self); }
-	static onClose       = function() {}
+	static checkClosable = function() /*=>*/ { return true; }
+	static close         = function() /*=>*/ { panel.remove(self); }
+	static closeDialog   = function() /*=>*/ { if(panel.dialog) instance_destroy(panel.dialog); }
+	static onClose       = function() /*=>*/ {}
 	
-	static asyncCallback = function(async_load) {}
+	static asyncCallback = function(async_load) /*=>*/ {}
+	
+	static toString      = function() /*=>*/ {return $"[PanelContent] {title}"};
 	
 	////- Serialize
 	
-	static serialize     = function()     { return { name: instanceof(self) }; }
-	static deserialize   = function(data) { return self; }
+	static serialize     = function()     /*=>*/ { return { name: instanceof(self) }; }
+	static deserialize   = function(data) /*=>*/ { return self; }
 }
 
 function setFocusString(_str) { FOCUS_STR = _str; }

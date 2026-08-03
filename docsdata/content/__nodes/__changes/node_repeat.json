@@ -1,11 +1,26 @@
 [
   {
+    "version": "1.21.8.003",
+    "changes": [
+      {
+        "date": "2026-08-02T08:04:59.442Z",
+        "node": "",
+        "commit": "-- add reset to default code for dynamic inputs"
+      }
+    ]
+  },
+  {
     "version": "1.21.7.110",
     "changes": [
       {
         "date": "2026-07-26T23:50:33.615Z",
         "node": "",
         "commit": "**Repeat**: Fix error when using Offset path positon."
+      },
+      {
+        "date": "2026-07-27T02:38:53.503Z",
+        "node": "",
+        "commit": "Add junction requirement."
       }
     ]
   },

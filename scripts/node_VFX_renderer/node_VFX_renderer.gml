@@ -31,6 +31,7 @@ function Node_VFX_Renderer(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		newInput(index + 1, nodeValue_Particle()).setVisible(true, true);
 		
 		array_push(input_display_list, inAmo + 0, inAmo + 1);
+		postCreateNewInput(index);
 		return inputs[index + 1];
 	}
 	

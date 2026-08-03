@@ -7,6 +7,7 @@ function buttonGradient(_onModify, dialog = noone) : widget() constructor {
 		edit_gradient    = undefined;
 		
 		expanded         = false;
+		expandable       = true;
 		drag_color_index = -1;
 		edit_color_index = -1;
 		edit_color_mx    =  0;
@@ -38,6 +39,8 @@ function buttonGradient(_onModify, dialog = noone) : widget() constructor {
 				}
 			})
 		]
+		
+		static setExpandable = function(e) /*=>*/ { expandable = e; return self; }
 	#endregion
 	
 	static trigger = function() {
@@ -120,8 +123,13 @@ function buttonGradient(_onModify, dialog = noone) : widget() constructor {
 		
 		var _drawSingle = !is_array(_gradient) && is(_gradient, gradientObject);
 		var _bbw = _h;
-		var _ggw = _drawSingle? _gw - _bbw : _w;
-		var _ggx = _drawSingle? _x + ui(2) + _bbw : _x;
+		var _ggw = _drawSingle? _gw : _w;
+		var _ggx = _drawSingle? _x + ui(2) : _x;
+		
+		if(expandable) {
+			_ggx += _bbw;
+			_ggw -= _bbw;
+		}
 		
 		var hoverRect = ihover && point_in_rectangle(_m[0], _m[1], _ggx, _y, _ggx + _ggw, _y + h);
 		
@@ -143,22 +151,24 @@ function buttonGradient(_onModify, dialog = noone) : widget() constructor {
 			var _ggh = _gh;
 			var _ggy = _y + ui(2);
 			
-			var _bbx = _x + _bbw / 2;
-			var _bby = _y + _ggh / 2 + ui(2);
-			
-			var _bba = .4 + .4 * interactable;
-			var _bbc = COLORS._main_icon;
-			
-			if(hover && point_in_rectangle(_m[0], _m[1], _x, _y, _x + _bbw, _y + _ggh)) {
-				_bbc = COLORS._main_icon_light;
+			if(expandable) {
+				var _bbx = _x + _bbw / 2;
+				var _bby = _y + _ggh / 2 + ui(2);
 				
-				if(mouse_lpress())
-					expanded = !expanded;
+				var _bba = .4 + .4 * interactable;
+				var _bbc = COLORS._main_icon;
+				
+				if(hover && point_in_rectangle(_m[0], _m[1], _x, _y, _x + _bbw, _y + _ggh)) {
+					_bbc = COLORS._main_icon_light;
+					
+					if(mouse_lpress())
+						expanded = !expanded;
+				}
+				
+				draw_sprite_stretched_ext(THEME.textbox, 3, _x, _y, _bbw, h, CDEF.main_mdwhite, 1);
+				draw_sprite_ui(THEME.arrow, expanded? 3 : 0, _bbx, _bby + ui(expanded), 1, 1, 0, _bbc, _bba);
 			}
-			
-			draw_sprite_stretched_ext(THEME.textbox, 3, _x, _y, _bbw, h, CDEF.main_mdwhite, 1);
-			draw_sprite_ui(THEME.arrow, expanded? 3 : 0, _bbx, _bby + ui(expanded), 1, 1, 0, _bbc, _bba);
-			
+				
 			var _display_gradient = current_gradient;
 			_display_gradient.draw(_ggx, _ggy, _ggw, _ggh);
 			

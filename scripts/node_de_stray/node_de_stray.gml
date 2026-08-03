@@ -4,7 +4,7 @@ function Node_De_Stray(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	newActiveInput(2);
 	
 	////- =Surfaces
-	newInput(0, nodeValue_Surface( "Surface In" ));
+	newInput(0, nodeValue_Surface( "Surface In" )).setRequired();
 	newInput(5, nodeValue_Surface( "Mask"       ));
 	newInput(6, nodeValue_Slider(  "Mix",     1 ));
 	__init_mask_modifier(5, 7); // inputs 7, 8,

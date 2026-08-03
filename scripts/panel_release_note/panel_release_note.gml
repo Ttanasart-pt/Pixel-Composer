@@ -134,19 +134,19 @@ function Panel_Release_Note() : PanelContent() constructor {
 				ty += string_height(vers) / 2;
 				
 				if(hov && point_in_circle(_m[0], _m[1], tx, ty, ui(12))) { 
-					TOOLTIP = "Download for Windows"; 
+					setTOOLTIP("Download for Windows");
 					hv_link = dl.link;
 					hv_os   = 0; 
 				}
 				
 				if(osL && hov && point_in_circle(_m[0], _m[1], tx + ui(24 * 1), ty, ui(12))) { 
-					TOOLTIP = "Download for Linux";   
+					setTOOLTIP("Download for Linux");
 					hv_link = dl.links.linux;
 					hv_os   = 1; 
 				}
 				
 				if(osM && hov && point_in_circle(_m[0], _m[1], tx + ui(24 * 2), ty, ui(12))) { 
-					TOOLTIP = "Download for Mac OS";  
+					setTOOLTIP("Download for Mac OS");
 					hv_link = dl.links.mac;
 					hv_os   = 2; 
 				}

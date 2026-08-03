@@ -31,7 +31,7 @@ function checkBoxGroup(_sprs, _onClick) : widget() constructor {
 				
 			if(hover && point_in_rectangle(_m[0], _m[1], _x, _y, _x + _h, _y + _h)) {			
 				ind = 1
-				TOOLTIP = array_safe_get(tooltips, i, "");
+				setTOOLTIP(array_safe_get(tooltips, i, ""));
 				
 				if(holding != noone)
 					trigger(holding, i);

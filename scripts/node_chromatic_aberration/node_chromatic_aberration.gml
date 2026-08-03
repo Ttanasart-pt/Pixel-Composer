@@ -4,7 +4,7 @@ function Node_Chromatic_Aberration(_x, _y, _group = noone) : Node_Processor(_x, 
 	newActiveInput(3);
 	
 	////- =Surface
-	newInput( 0, nodeValue_Surface( "Surface In" ));
+	newInput( 0, nodeValue_Surface( "Surface In" )).setRequired();
 	newInput( 8, nodeValue_Surface( "UV Map"     ));
 	newInput( 9, nodeValue_Slider(  "UV Mix", 1  ));
 	newInput(10, nodeValue_Surface( "Mask"       ));

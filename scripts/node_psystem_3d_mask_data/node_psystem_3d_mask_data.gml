@@ -66,9 +66,7 @@ function Node_pSystem_3D_Mask_Data(_x, _y, _group = noone) : Node_3D(_x, _y, _gr
 		curve_modi = new curveMap(getInputData(6));
 	}
 	
-	static update = function(_frame = CURRENT_FRAME) { 
-		var _data = inputs_data;
-		
+	static processData = function(_outData, _data, _array_index = 0, _frame = CURRENT_FRAME) {
 		var _parts = _data[ 0];
 		var _masks = _data[ 1];
 		
@@ -180,8 +178,10 @@ function Node_pSystem_3D_Mask_Data(_x, _y, _group = noone) : Node_3D(_x, _y, _gr
 			buffer_write(mask_buffer, buffer_f32, _inf);
 		}
 		
-		outputs[0].setValue(_parts);
-		outputs[1].setValue(mask_buffer);
+		_outData[0] = _parts;
+		_outData[1] = mask_buffer;
+		
+		return _outData;
 	}
 	
 }

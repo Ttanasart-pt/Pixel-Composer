@@ -2,7 +2,7 @@ function Node_Image_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	name  = "Splice Spritesheet";
 	
 	////- =Sprite
-	newInput( 0, nodeValue_Surface( "Surface In" ));
+	newInput( 0, nodeValue_Surface( "Surface In" )).setRequired();
 	newInput( 1, nodeValue_Vec2(    "Sprite size", [32,32]   ));
 	newInput( 6, nodeValue_IPadding("Padding",     [0,0,0,0] ));
 	newInput( 2, nodeValue_Int(     "Row",          1        )); //unused

@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.8.001",
+    "changes": [
+      {
+        "date": "2026-07-28T07:50:39.324Z",
+        "node": "MK Circuit",
+        "commit": "**MK Circuit**: Fix rendering error."
+      }
+    ]
+  },
+  {
     "version": "1.21.7.104",
     "changes": [
       {

@@ -25,7 +25,7 @@ function Panel_Text_Editor(_textArea, _inputFunc, _context) : PanelContent() con
 		draw_clear_alpha(COLORS.panel_bg_clear, 0);
 		
 		var bx = ui(8);
-		var by = in_dialog? ui(4) : ui(8);
+		var by = ui(8);
 		var bs = ui(28);
 		var bp = THEME.button_hide_fill;
 		var cc = COLORS._main_icon_light;
@@ -57,7 +57,7 @@ function Panel_Text_Editor(_textArea, _inputFunc, _context) : PanelContent() con
 			editor.apply();
 		bx -= bs + ui(4);
 		
-		var pd = in_dialog? ui(8) : ui(4);
+		var pd = ui(4);
 		var tx = pd;
 		var ty = by + bs + ui(4);
 		var tw = w - pd * 2;

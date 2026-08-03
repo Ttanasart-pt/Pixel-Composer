@@ -69,7 +69,6 @@ function Node_Image_mp4(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	
 	attribute_surface_depth();
 	
-	ffmpeg       = filepath_resolve(PREFERENCES.ffmpeg_path) + "bin/ffmpeg.exe";
 	path_current = "";
 	sprs         = [];
 	surfaces	 = [];
@@ -93,6 +92,35 @@ function Node_Image_mp4(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	
 	insp1button = button(function() /*=>*/ { updatePaths(path_get(getInputData(0))); }).setTooltip(__txt("Refresh"))
 		.setIcon(THEME.refresh_icon, 1, COLORS._main_value_positive).iconPad(ui(6)).setBaseSprite(THEME.button_hide_fill);
+	
+	function ffmpegCheck() {
+		     if(OS == os_windows) ffmpeg = filepath_resolve(PREFERENCES.ffmpeg_path)               + "win/ffmpeg.exe";
+		else if(OS == os_linux)   ffmpeg = string_lower(filepath_resolve(PREFERENCES.ffmpeg_path)) + "ffmpeg";
+		else if(OS == os_macosx)  ffmpeg = "/opt/homebrew/bin/ffmpeg";
+		
+		ffmpegPass = file_exists_empty(ffmpeg);
+		
+		if(!ffmpegPass) {
+			var dia    = dialogCall(o_dialog_export_library_missing);
+			var _link  = "https://ffmpeg.org/download.html"
+			var _tfile = "";
+			
+			switch(OS) {
+				case os_windows : 
+					_link  = "https://www.gyan.dev/ffmpeg/builds/ffmpeg-release-full.7z"; 
+					_tfile = "./bin/ffmpeg.exe";
+					break;
+					
+				case os_linux   : 
+					_link  = "https://github.com/BtbN/FFmpeg-Builds/releases/download/latest/ffmpeg-master-latest-linux64-gpl.tar.xz"; 
+					_tfile = "./bin/ffmpeg";
+					break;
+					
+			}
+			dia.setData(self, "FFmpeg", _link, ffmpeg, ".mp4", _tfile);
+		}
+			
+	} ffmpegCheck();
 		
 	function updatePaths(path = path_current) {
 		if(path == -1) return false;
@@ -114,19 +142,42 @@ function Node_Image_mp4(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	}
 	
 	static mp4init = function() {
+		ffmpegCheck();
+		if(!ffmpegPass)  return;
 		if(file_reading) return;
 		
 		var _filemod = file_get_modify_s(path_current);
+		
+		shell_cmd = $"-v error -stats -i \"{path_current}\" -map 0:v:0 -f null NUL";
+		frame_res = shell_execute(ffmpeg, shell_cmd)
+		
+		if(!string_pos("frame=", frame_res)) { noti_warning("Can't read file metadata."); return; }
+		
+		var res = string_split(frame_res, " ", true);
+		var ind = array_find(res, "frame=");
+		
+		if(ind < 0) { noti_warning("Can't read frame data."); return; }
+		
+		frame_counts_raw = array_safe_get_fast(res, ind + 1);
+		frame_counts     = toNumber(frame_counts_raw);
 		
 		file_reading     = true;
 		file_hash        = md5_string_unicode($"{path_current}{_filemod}");
 		file_read_cursor =  1;
 		file_reader_pid  = -1;
 		var targ_dir = $"{DIRECTORY}Cache/{file_hash}";
+		var cached   = directory_exists(targ_dir);
 		
-		if(!directory_exists(targ_dir)) { // no cached frames
+		if(cached) {
+			var cacheAmo = directory_file_count(targ_dir);
+			if(cacheAmo != frame_counts) {
+				directory_destroy(targ_dir);
+				cached = false;
+			}
+		}
+		
+		if(!cached) { // no cached frames
 			directory_verify(targ_dir);
-			
 			shell_cmd       = $"-hide_banner -loglevel quiet -i \"{path_current}\" -pix_fmt rgba \"{targ_dir}/frame%04d.png\"";
 			file_reader_pid = shell_execute_async(ffmpeg, shell_cmd);
 		}
@@ -143,6 +194,8 @@ function Node_Image_mp4(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		
 		while(true) {
 			var fpath = $"{targ_dir}/frame{string_lead_zero(file_read_cursor,4)}.png";
+			print(fpath)
+			
 			if(!file_exists(fpath)) return loadAll;
 			
 			if(file_read_cursor == 1) {

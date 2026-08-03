@@ -59,17 +59,18 @@ function Panel_Linear_Setting() : PanelContent() constructor {
 			if(_prop == -1) h += ui(8)
 			else            h += prop_height;
 		}
+		
 	}
 	
 	static resetHeight = function(_h) { 
 		if(h == _h) return;
 		
-		if(shift_height && in_dialog) {
+		if(shift_height) {
 			if(anchor & ANCHOR.top)
 				panel.dialog_y -= _h - h; 
 			panel.dialog_h  = _h 
 			h = _h;
-			panel.contentResize();
+			panel.forceResize(self);
 		}
 		
 		h = _h; 

@@ -9,7 +9,7 @@ function Node_Array_Sample(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	////- =Sampling
 	newInput( 2, nodeValue_EScroll( "Mode",      0, [ "Uniform", "Random" ] ));
 	newInput( 6, nodeValue_Int(     "Dimension", 0 ));
-	newInput( 1, nodeValue_Float(   "Step",      1 ));
+	newInput( 1, nodeValue_Float(   "Step",      2 ));
 	newInput( 3, nodeValue_Int(     "Shift",     0 ));
 	
 	////- =Amount

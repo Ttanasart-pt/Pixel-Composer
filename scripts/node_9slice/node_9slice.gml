@@ -8,7 +8,7 @@ function Node_9Slice(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	name = "Nine Slice";
 	
 	////- =Surface
-	newInput( 0, nodeValue_Surface("Surface In"));
+	newInput( 0, nodeValue_Surface("Surface In")).setRequired();
 	
 	////- =Slices
 	newInput( 1, nodeValue_Dimension());

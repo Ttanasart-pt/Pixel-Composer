@@ -1,10 +1,12 @@
 /// @description init
+DIALOG_WINDOW_START
+
 #region base UI
-	draw_sprite_stretched(THEME.textbox, 3, dialog_x, dialog_y, dialog_w, dialog_h);
-	if(sFOCUS) draw_sprite_stretched_ext(THEME.textbox, 2, dialog_x, dialog_y, dialog_w, dialog_h, COLORS._main_accent);
-	else       draw_sprite_stretched(THEME.textbox, 1, dialog_x, dialog_y, dialog_w, dialog_h);
+	draw_sprite_stretched(THEME.textbox, 3, _dialog_x, _dialog_y, dialog_w, dialog_h);
+	if(sFOCUS) draw_sprite_stretched_ext(THEME.textbox, 2, _dialog_x, _dialog_y, dialog_w, dialog_h, COLORS._main_accent);
+	else       draw_sprite_stretched(THEME.textbox, 1, _dialog_x, _dialog_y, dialog_w, dialog_h);
 	
-	draw_sprite_stretched(THEME.ui_panel_bg, 1, dialog_x + ui(4), dialog_y + ui(4), dialog_w - ui(8), dialog_h - ui(8));
+	draw_sprite_stretched(THEME.ui_panel_bg, 1, _dialog_x + ui(4), _dialog_y + ui(4), dialog_w - ui(8), dialog_h - ui(8));
 	
 	tb_name.interactable  = !STEAM_UGC_UPLOADING; tb_name.setFont(font);
 	t_update.interactable = !STEAM_UGC_UPLOADING; t_update.setFont(font);
@@ -22,17 +24,17 @@
 	var tw = dialog_w - tx - padding - (th + ui(4)) * (3 - meta_expand);
 	
 	draw_set_text(font, fa_left, fa_center, COLORS._main_icon);
-	draw_text_add(dialog_x + ui(12), dialog_y + padding + th / 2, __txt("Name"));
+	draw_text_add(_dialog_x + ui(12), _dialog_y + padding + th / 2, __txt("Name"));
 	
 	tb_name.setFocusHover(sFOCUS, sHOVER);
 	tb_name.register();
-	tb_name.draw(dialog_x + tx, dialog_y + padding, tw, th, meta.name, mouse_ui);
+	tb_name.draw(_dialog_x + tx, _dialog_y + padding, tw, th, meta.name, mouse_ui);
 #endregion
 
 #region buttons
 	var bs = th;
-	var bx = dialog_x + dialog_w - padding - bs;
-	var by = dialog_y + padding;
+	var bx = _dialog_x + dialog_w - padding - bs;
+	var by = _dialog_y + padding;
 	var bb = THEME.button_hide_fill;
 	var bc = COLORS._main_value_negative;
 	
@@ -126,9 +128,9 @@
 	var lh = line_get_height(font, 4);
 	
 	if(meta_expand) {
-		var dx = dialog_x + padding;
+		var dx = _dialog_x + padding;
 		var dw = dialog_w - padding * 2;
-		var yy = dialog_y + th + padding * 2;
+		var yy = _dialog_y + th + padding * 2;
 		
 		if(ugc == 2) {
 			draw_set_text(font, fa_left, fa_top, COLORS._main_icon);
@@ -186,3 +188,5 @@
 		move     = false;
 	}
 #endregion
+
+DIALOG_WINDOW_END

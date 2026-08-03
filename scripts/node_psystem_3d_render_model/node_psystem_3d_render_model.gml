@@ -12,14 +12,14 @@ function Node_pSystem_3D_Render_Model(_x, _y, _group = noone) : Node_3D(_x, _y, 
 	newInput( 1, nodeValue_Buffer(   "Mask"      ));
 	
 	////- =Mesh
-	newInput( 3, nodeValue_D3Mesh("Mesh" ));
+	newInput( 3, nodeValue_D3Mesh( "Mesh" ));
 	
 	////- =Render
-	newInput( 4, nodeValue_EScroll( "Blend Mode",     0, [ "Normal", "Alpha", "Additive", "Maximum" ]));
-	newInput( 5, nodeValue_Bool(        "Billboard",      false ));
+	newInput( 4, nodeValue_EScroll( "Blend Mode", 0, [ "Normal", "Alpha", "Additive", "Maximum" ]));
+	newInput( 5, nodeValue_Bool(    "Billboard",  false ));
 	// 
 	
-	newOutput(0, nodeValue_Output( "Mesh", VALUE_TYPE.d3Mesh, noone ));
+	newOutput( 0, nodeValue_Output( "Mesh", VALUE_TYPE.d3Mesh, noone ));
 	
 	input_display_list = [ 2, 
 		[ "Particles", false ], 0, 1, 
@@ -34,9 +34,7 @@ function Node_pSystem_3D_Render_Model(_x, _y, _group = noone) : Node_3D(_x, _y, 
 	buffer_particle  = undefined;
 	buffer_particle2 = undefined;
 	
-	static update = function(_frame = CURRENT_FRAME) { 
-		var _data = inputs_data;
-		
+	static processData = function(_outData, _data, _array_index = 0, _frame = CURRENT_FRAME) {
 		if(!is(inline_context, Node_pSystem_3D_Inline) || inline_context.prerendering) return;
 		
 		var _parts = _data[0];
@@ -45,7 +43,7 @@ function Node_pSystem_3D_Render_Model(_x, _y, _group = noone) : Node_3D(_x, _y, 
 		
 		var _blnd_mode = _data[4];
 		var _billboard = _data[5];
-			
+		
 		if(!is(_parts, pSystem_Particles)) return;
 		if(!is(_obj, __3dInstance))        return;
 		if(use_mask) buffer_to_start(_masks);
@@ -195,7 +193,7 @@ function Node_pSystem_3D_Render_Model(_x, _y, _group = noone) : Node_3D(_x, _y, 
 			}
 		#endregion
 		
-		outputs[0].setValue(system);
+		return system;
 	}
 	
 	static reset = function() {

@@ -34,20 +34,17 @@ function Node_pSystem_3D_Oscillate(_x, _y, _group = noone) : Node_3D(_x, _y, _gr
 	
 	static getDimension = function() { return is(inline_context, Node_pSystem_Inline)? inline_context.dimension : PROJ_SURF; }
 	
-	static update = function(_frame = CURRENT_FRAME) { 
-		var _data = inputs_data;
-		
-		var _parts = getInputData(0);
-		var _masks = getInputData(1), use_mask = _masks != noone;
+	static processData = function(_outData, _data, _array_index = 0, _frame = CURRENT_FRAME) {
+		var _parts = _data[0];
+		var _masks = _data[1], use_mask = _masks != noone;
 		
 		if(!is(_parts, pSystem_Particles)) return;
 		if(use_mask) buffer_to_start(_masks);
-		outputs[0].setValue(_parts);
 		
-		var _seed = getInputData( 2);
-		var _strn = getInputData( 3), _strn_curved = inputs[3].attributes.curved && curve_strn != undefined;
-		var _ampl = getInputData( 5), _ampl_curved = inputs[5].attributes.curved && curve_ampl != undefined;
-		var _freq = getInputData( 7), _freq_curved = inputs[7].attributes.curved && curve_freq != undefined;
+		var _seed = _data[2];
+		var _strn = _data[3], _strn_curved = inputs[3].attributes.curved && curve_strn != undefined;
+		var _ampl = _data[5], _ampl_curved = inputs[5].attributes.curved && curve_ampl != undefined;
+		var _freq = _data[7], _freq_curved = inputs[7].attributes.curved && curve_freq != undefined;
 		
 		var _partAmo  = _parts.maxCursor;
 		var _partBuff = _parts.buffer;
@@ -107,6 +104,7 @@ function Node_pSystem_3D_Oscillate(_x, _y, _group = noone) : Node_3D(_x, _y, _gr
 			buffer_write_at( _partBuff, _start + PSYSTEM_OFF.dposy, buffer_f64, _dpy );
 		}
 		
+		return _parts;
 	}
 	
 	static reset = function() {

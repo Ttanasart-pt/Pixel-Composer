@@ -165,7 +165,7 @@ doRefocus();
 				var ty = _yy;
 				
 				if(point_in_circle(_m[0], _m[1], tx, ty, ui(10))) {
-					TOOLTIP = _val.tooltip;
+					setTOOLTIP(_val.tooltip);
 					draw_sprite_ui(THEME.info, 0, tx, ty, .75, .75, 0, COLORS._main_icon, 1);
 					
 				} else 
@@ -227,12 +227,12 @@ doRefocus();
 		}
 		
 		if(sc_content.active) {
-			if(key_input_press(vk_up)) {
+			if(keyboard_check_pressed(vk_up)) {
 				selecting--;
 				if(selecting < 0) selecting = array_length(data) - 1;
 			}
 			
-			if(key_input_press(vk_down))
+			if(keyboard_check_pressed(vk_down))
 				selecting = safe_mod(selecting + 1, array_length(data));
 				
 			if(keyboard_check_pressed(vk_escape))

@@ -5,12 +5,13 @@ DIALOG_DRAW_BG
 
 #region content
 	tb_search.activate();
+	if(is_winwin(window)) winwin_set_focus(window);
 	ds_stack_push(FOCUS_STACK, context_str);
 	
 	var pd = ui(10);
 	
-	var tx = dialog_x + ui(14);
-	var ty = dialog_y + ui(14);
+	var tx = _dialog_x + ui(14);
+	var ty = _dialog_y + ui(14);
 	var tw = dialog_w - ui(28);
 	var th = ui(28);
 	
@@ -22,9 +23,9 @@ DIALOG_DRAW_BG
 	if(search_string == "") {
 		catagory_pane.setFocusHover(sFOCUS, sHOVER);
 		catagory_pane.verify(category_width, _content_h);
-		catagory_pane.draw(dialog_x + ui(12), _content_y);
+		catagory_pane.draw(_dialog_x + ui(12), _content_y);
 		
-		var _content_x = dialog_x + category_width + ui(20);
+		var _content_x = _dialog_x + category_width + ui(20);
 		draw_sprite_stretched(THEME.ui_panel_bg, 1, _content_x, _content_y, _content_w, _content_h);
 		
 		if(array_length(recent_nodes)) {
@@ -47,7 +48,7 @@ DIALOG_DRAW_BG
 				draw_sprite_ext(_spr, 0, _rcx + _rcs / 2, _rcy + _rcs / 2, _ss, _ss, 0, _cc);
 				
 				if(_hov) {
-					TOOLTIP = _nam;
+					setTOOLTIP(_nam);
 					if(mouse_lpress(sFOCUS) || (init_rclick && mouse_rrelease()))
 						buildNode(_rec);
 				}
@@ -91,7 +92,7 @@ DIALOG_DRAW_BG
 		
 		search_pane.setFocusHover(sFOCUS, sHOVER);
 		search_pane.verify(dialog_w - ui(36), _content_h - ui(2));
-		search_pane.draw(dialog_x + ui(16), _content_y);
+		search_pane.draw(_dialog_x + ui(16), _content_y);
 	}
 	
 	#region buttons
@@ -100,7 +101,7 @@ DIALOG_DRAW_BG
 		var bs = ui(28);
 		var sp = ui(2);
 		
-		var bx = dialog_x + dialog_w - ui(44);
+		var bx = _dialog_x + dialog_w - ui(44);
 		var by = ty;
 		var mm = mouse_ui;
 		
@@ -210,7 +211,7 @@ DIALOG_DRAW_BG
 
 if(DIALOG_SHOW_FOCUS) {
 	var cc = node_replace == noone? COLORS._main_accent : COLORS.dialog_add_node_replace_mode;
-	draw_sprite_stretched_ext(THEME.dialog, 1, dialog_x - 8, dialog_y - 8, dialog_w + 16, dialog_h + 16, cc, 1);
+	draw_sprite_stretched_ext(THEME.dialog, 1, _dialog_x - 8, _dialog_y - 8, dialog_w + 16, dialog_h + 16, cc, 1);
 }
 
 #region tooltip
@@ -340,3 +341,5 @@ if(DIALOG_SHOW_FOCUS) {
 	
 	if(mouse_rrelease()) init_rclick = false;
 #endregion
+
+DIALOG_WINDOW_END

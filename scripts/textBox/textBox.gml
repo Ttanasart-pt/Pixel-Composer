@@ -56,6 +56,9 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 		slider_cur_del = 0;
 		slider_object  = noone;
 		
+		slide_mx = undefined;
+		slide_my = undefined;
+		
 		use_range      = false;
 		range_min      = 0;
 		range_max      = 0;
@@ -245,7 +248,7 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 	////- Edit
 	
 	static onKey = function(key) {
-		if(key_input_press(vk_left)) {
+		if(keyboard_check_pressed(vk_left)) {
 			if(key_mod_press(SHIFT)) {
 				if(cursor_select == -1)
 					cursor_select = cursor;
@@ -267,7 +270,7 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 			}
 		}
 				
-		if(key_input_press(vk_right)) {
+		if(keyboard_check_pressed(vk_right)) {
 			if(key_mod_press(SHIFT)) {
 				if(cursor_select == -1)
 					cursor_select = cursor;
@@ -337,6 +340,12 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 		var modified = false;
 		var undoing  = false;
 		
+		var str = KEYBOARD_PRESSED_STRING;
+		if(is_winwin(WINWIN_CURRENT)) {
+			str = winwin_keyboard_get_string(WINWIN_CURRENT);
+			winwin_keyboard_set_string(WINWIN_CURRENT, "");
+		}
+		
 		#region text editor
 			if(key_mod_press(CTRL) && keyboard_check_pressed(ord("A"))) {
 				cursor        = string_length(_input_text);
@@ -378,12 +387,12 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 					var _ctxt = clipboard_get_text();
 					    _ctxt = string_replace_all(_ctxt, "\t", "    ");
 					    
-					KEYBOARD_PRESSED_STRING = _ctxt;
+					str = _ctxt;
 					modified = true;
 				}
 				
 				if(keyboard_check_pressed(vk_escape) || KEYBOARD_ENTER) {
-				} else if(key_input_press(vk_backspace)) {
+				} else if(keyboard_check_pressed(vk_backspace)) {
 					if(cursor_select == -1) {
 						var str_before, str_after;
 						
@@ -417,7 +426,7 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 					cursor_select = -1;
 					moveCursor(-1);
 					
-				} else if(key_input_press(vk_delete) || (keyboard_check_pressed(ord("X")) && key_mod_press(CTRL) && cursor_select != -1)) {
+				} else if(keyboard_check_pressed(vk_delete) || (keyboard_check_pressed(ord("X")) && key_mod_press(CTRL) && cursor_select != -1)) {
 					if(cursor_select == -1) {
 						var str_before	= string_copy(_input_text, 1, cursor);
 						var str_after	= string_copy(_input_text, cursor + 2, string_length(_input_text) - cursor - 1);
@@ -434,8 +443,8 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 					modified      = true;
 					cursor_select = -1;
 					
-				} else if(KEYBOARD_PRESSED_STRING != "") {
-					var ch = KEYBOARD_PRESSED_STRING;
+				} else if(str != "") {
+					var ch = str;
 					
 					if(cursor_select == -1) {
 						var str_before	= string_copy(_input_text, 1, cursor);
@@ -462,16 +471,16 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 			keyboard_lastkey = -1;
 		#endregion
 		
-		if(key_input_press(vk_left))  onKey(vk_left);
-		if(key_input_press(vk_right)) onKey(vk_right);
+		if(keyboard_check_pressed(vk_left))  onKey(vk_left);
+		if(keyboard_check_pressed(vk_right)) onKey(vk_right);
 		
 		if(input == TEXTBOX_INPUT.number) {
 			var _inc = 1;
 			if(key_mod_press(CTRL)) _inc *= 10;
 			if(key_mod_press(ALT))  _inc /= 10;
 			
-			if(key_input_press(vk_up))   { _input_text = string(toNumber(_input_text) + _inc); apply(); }
-			if(key_input_press(vk_down)) { _input_text = string(toNumber(_input_text) - _inc); apply(); }
+			if(keyboard_check_pressed(vk_up))   { _input_text = string(toNumber(_input_text) + _inc); apply(); }
+			if(keyboard_check_pressed(vk_down)) { _input_text = string(toNumber(_input_text) - _inc); apply(); }
 		}
 		
 		if(modified) {
@@ -868,7 +877,29 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 		var hoverRect = point_in_rectangle(_m[0], _m[1], _x, _y, _x + _w, _y + _h);
 		
 		if(sliding > 0) { 
-			slide_delta   += PEN_USE? PEN_X_DELTA + PEN_Y_DELTA : window_mouse_get_delta_x() + window_mouse_get_delta_y();
+			var dx = window_mouse_get_delta_x();
+			var dy = window_mouse_get_delta_y();
+			
+			var mlock = !slidePen && PREFERENCES.slider_lock_mouse && !is_winwin(WINWIN_CURRENT);
+					
+			if(is_winwin(WINWIN_CURRENT)) {
+				var wmx = winwin_mouse_get_x(WINWIN_CURRENT);
+				var wmy = winwin_mouse_get_y(WINWIN_CURRENT);
+				
+				if(slide_mx != undefined) dx = wmx - slide_mx;
+				if(slide_my != undefined) dy = wmy - slide_my;
+				
+				slide_mx = wmx;
+				slide_my = wmy;
+			}
+			
+			if(PEN_USE) {
+				dx = PEN_X_DELTA;
+				dy = PEN_Y_DELTA;
+				
+			}
+			
+			slide_delta += dx + dy;
 			
 			if(sliding == 1 && abs(slide_delta) > 8) {
 				deactivate();
@@ -884,7 +915,7 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 				slider_dy   = 0;
 				slider_mulp = 0;
 				
-				if(!slidePen && PREFERENCES.slider_lock_mouse) {
+				if(mlock) {
 					CURSOR_LOCK_X = mouse_mx;
 					CURSOR_LOCK_Y = mouse_my;
 				}
@@ -898,9 +929,6 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 				}
 			}
 			
-			var _mdx = slidePen? PEN_X_DELTA : window_mouse_get_delta_x();
-			var _mdy = slidePen? PEN_Y_DELTA : window_mouse_get_delta_y();
-			
 			if(sliding == 2) {
 				if(slider_object) {
 					slider_object.x = rx + _x;
@@ -909,9 +937,9 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 					slider_object.h = slider_object.h;
 				}
 				
-				if(!slidePen && PREFERENCES.slider_lock_mouse) CURSOR_LOCK = true;
+				if(mlock) CURSOR_LOCK = true;
 				
-				if(abs(_mdy) > abs(_mdx))
+				if(abs(dy) > abs(dx))
 					slider_dy += slidePen? PEN_Y_DELTA : window_mouse_get_delta_y();
 				
 				var _mulp = slider_mulp;
@@ -935,14 +963,14 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 					
 				} else {
 					MOUSE_BLOCK = true;
-					var _sc = power(10, slider_mulp + (PREFERENCES.slider_lock_mouse && slide_int));
+					var _sc = power(10, slider_mulp + !mlock);
 					var _s  = slide_speed * _sc;
 					
-					if(!PREFERENCES.slider_lock_mouse && slide_range != noone) _s = (slide_range[1] - slide_range[0]) / _w * _sc;
+					if(!mlock && is_array(slide_range)) _s = (slide_range[1] - slide_range[0]) / _w * _sc;
 					
-					if(abs(_mdx) > abs(_mdy)) {
-						slider_dx      += _mdx / w;
-						slider_cur_del += _mdx;
+					if(abs(dx) > abs(dy)) {
+						slider_dx      += dx / w;
+						slider_cur_del += dx;
 						slider_cur_val  = slider_def_val + slider_cur_del * _s;
 						
 						if(slide_range != noone) slider_cur_val = clamp(slider_cur_val, curr_range[0], curr_range[1]);
@@ -979,7 +1007,7 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 		////- Main Draw
 		
 		if(hover && hoverRect && tooltip != "")
-			TOOLTIP = tooltip;
+			setTOOLTIP(tooltip);
 				
 		if(selecting) { 
 			if(hide < 2) {
@@ -1092,10 +1120,12 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 					}
 					
 					var _display_text = string_real(txt);
+					SURFACE_PREDRAW
 					surface_set_shader(text_surface, noone, true, BLEND.add);
 						display_text(tx - tb_surf_x, _h / 2 - th / 2, _display_text, _w - ui(4), _mx - tb_surf_x);
 					surface_reset_shader();
 					gpu_set_scissor(_scis);
+					SURFACE_POSTDRAW
 					
 					BLEND_ALPHA
 					draw_surface_ext(text_surface, tb_surf_x, tb_surf_y, 1, 1, 0, postBlend, postAlpha);
@@ -1118,10 +1148,12 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 					
 				var _display_text = string_real(txt);
 				
+				SURFACE_PREDRAW
 				surface_set_shader(text_surface, noone, true, BLEND.add);
 					display_text(tx - tb_surf_x, _h / 2 - th / 2, _display_text, _w - ui(4), _mx - tb_surf_x);
 				surface_reset_shader();
 				gpu_set_scissor(_scis);
+				SURFACE_POSTDRAW
 				
 				BLEND_ALPHA
 				draw_surface_ext(text_surface, tb_surf_x, tb_surf_y, 1, 1, 0, postBlend, postAlpha);
@@ -1154,6 +1186,9 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 					if(slidable) {
 						sliding     = 1;
 						slide_delta = 0;
+						
+						slide_mx = undefined;
+						slide_my = undefined;
 					} 
 				}
 				
@@ -1181,10 +1216,12 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 						case fa_right  : tx -= tw;		break;
 					}
 					
+					SURFACE_PREDRAW
 					surface_set_shader(text_surface, noone, true, BLEND.add);
 						display_text(tx - tb_surf_x, _h / 2 - th / 2, _display_text, _w - ui(4));
 					surface_reset_shader();
 					gpu_set_scissor(_scis);
+					SURFACE_POSTDRAW
 				}
 				
 				if(interactable) {

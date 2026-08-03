@@ -212,7 +212,7 @@ function Panel_File_Explorer() : PanelContent() constructor {
 			}),
 			
 			menuItem("Add as canvas", function() /*=>*/ {
-				var node = nodeBuild("Node_Canvas", PANEL_GRAPH.graph_cx, PANEL_GRAPH.graph_cy).loadImagePath(__menu_file_selecting.path);
+				var node = nodeBuild("Node_Canvas_S", PANEL_GRAPH.graph_cx, PANEL_GRAPH.graph_cy).loadImagePath(__menu_file_selecting.path);
 				PANEL_PREVIEW.setNodePreview(node);
 				PANEL_INSPECTOR.inspecting = node;
 			}),
@@ -234,7 +234,7 @@ function Panel_File_Explorer() : PanelContent() constructor {
 					surface_save(_s, txt);
 					surface_free(_s);
 					
-					var node = nodeBuild("Node_Canvas", PANEL_GRAPH.graph_cx, PANEL_GRAPH.graph_cy).loadImagePath(txt);
+					var node = nodeBuild("Node_Canvas_S", PANEL_GRAPH.graph_cx, PANEL_GRAPH.graph_cy).loadImagePath(txt);
 					PANEL_PREVIEW.setNodePreview(node);
 					PANEL_INSPECTOR.inspecting = node;
 					
@@ -364,7 +364,7 @@ function Panel_File_Explorer() : PanelContent() constructor {
 						} _bx += _ph + ui(2);
 						
 						if(buttonInstant(noone, _bx, _py, _ph, _ph, _m, hov, foc, "Import as Canvas", THEME.canvas_20, 0, _butc) == 2) {
-							var node = nodeBuild("Node_Canvas", _graph_x, _graph_y).loadImagePath(_fil.path);
+							var node = nodeBuild("Node_Canvas_S", _graph_x, _graph_y).loadImagePath(_fil.path);
 							PANEL_PREVIEW.setNodePreview(node);
 							PANEL_INSPECTOR.inspecting = node;
 							
@@ -386,8 +386,8 @@ function Panel_File_Explorer() : PanelContent() constructor {
 					if(!mouse_lclick()) {
 						draw_sprite_stretched_ext(THEME.ui_panel, 1, _px, _py, _tw, _ph, COLORS._main_icon, .75);
 						if(!instance_exists(o_dialog_menubox)) {
-							if(_fil.type == FILE_TYPE.assets)       TOOLTIP = [ _thm, "sprite"  ];
-							else if(_fil.type == FILE_TYPE.project) TOOLTIP = [ _fil, "project" ];
+							if(_fil.type == FILE_TYPE.assets)       setTOOLTIP([ _thm, "sprite"  ]);
+							else if(_fil.type == FILE_TYPE.project) setTOOLTIP([ _fil, "project" ]);
 						}
 					}
 					
@@ -476,7 +476,7 @@ function Panel_File_Explorer() : PanelContent() constructor {
 					if(!mouse_lclick()) {
 						draw_sprite_stretched_ext(THEME.ui_panel, 1, _px, _py, _pw, _ph, COLORS._main_icon, .75);
 						if(!instance_exists(o_dialog_menubox))
-							TOOLTIP = [ _th, "sprite" ];
+							setTOOLTIP([ _th, "sprite" ]);
 					}
 					
 					file_hovering = _fil;

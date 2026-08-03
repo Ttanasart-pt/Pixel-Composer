@@ -5,7 +5,7 @@ function Node_Tile_Random(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	newInput( 1, nodeValue_Dimension());
 	
 	////- =Surfaces
-	newInput( 0, nodeValue_Surface("Surface In"));
+	newInput( 0, nodeValue_Surface("Surface In")).setRequired();
 	
 	////- =Tiling
 	newInput( 2, nodeValue_Slider("Randomness", 0.5)).setPieMenu();

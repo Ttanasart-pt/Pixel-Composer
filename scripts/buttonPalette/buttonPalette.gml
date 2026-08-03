@@ -1,18 +1,28 @@
 function buttonPalette(_onModify, dialog = noone) : widget() constructor {
 	onModify     = _onModify;
 	parentDialog = dialog;
+	outputName   = false;
 	
 	current_palette = [];
 	side_button     = noone;
 	
-	expanded         = false;
+	expandable = true;
+	expanded   = false;
+	
+	presetName = "";
 	edit_color_index = -1;
 	
+	static setOutputName = function(n) /*=>*/ { outputName = n; return self; }
+	static setExpandable = function(e) /*=>*/ { expandable = e; return self; }
+	
+	////- Actions
+	
 	static trigger = function() {
-		var dialog = dialogCall(o_dialog_palette, WIN_W / 2, WIN_H / 2);
+		var dialog = dialogCall(o_dialog_palette);
 		
 		dialog.setDefault(current_palette);
 		dialog.onModify     = onModify;
+		dialog.outputPreset = outputName;
 		dialog.interactable = interactable;
 		dialog.drop_target  = self;
 		
@@ -33,6 +43,8 @@ function buttonPalette(_onModify, dialog = noone) : widget() constructor {
 		
 		dialog.interactable = interactable;
 	}
+	
+	////- Draw
 	
 	static fetchHeight = function(params) /*=>*/ {return params.h + expanded * (array_length(params.data) * ui(16) + ui(2))};
 	static drawParam   = function(params) /*=>*/ {return draw(params.x, params.y, params.w, params.h, params.data, params.m)};
@@ -77,8 +89,14 @@ function buttonPalette(_onModify, dialog = noone) : widget() constructor {
 		var _colr_h = ui(16);
 		var _drawSingle = !is_array(_color[0]);
 		var _bbw = _h;
-		var _ppw = _drawSingle? _pw - _bbw : _w;
-		var _ppx = _drawSingle? _x + ui(2) + _bbw : _x;
+		
+		var _ppx = _drawSingle? _x + ui(2) : _x;
+		var _ppw = _drawSingle? _pw : _w;
+		
+		if(expandable) {
+			_ppx += _bbw;
+			_ppw -= _bbw;
+		}
 		
 		var hoverRect = ihover && point_in_rectangle(_m[0], _m[1], _ppx, _y, _ppx + _ppw, _y + h);
 		
@@ -93,27 +111,30 @@ function buttonPalette(_onModify, dialog = noone) : widget() constructor {
 				draw_sprite_stretched_ext(THEME.button_def, 2, _x, _y, _w, h, boxColor);	
 				draw_sprite_stretched_ext(THEME.button_def, 3, _x, _y, _w, h, COLORS._main_accent, 1);	
 			}
+			
 		} else if(mouse_lpress()) deactivate();
 		
 		if(_drawSingle) {
 			var _pph = _ph;
 			var _ppy = _y + ui(2);
-		
-			var _bbx = _x + _bbw / 2;
-			var _bby = _y + _pph / 2 + ui(2);
 			
-			var _bba = .4 + .4 * interactable;
-			var _bbc = COLORS._main_icon;
-			
-			if(hover && point_in_rectangle(_m[0], _m[1], _x, _y, _x + _bbw, _y + _pph)) {
-				_bbc = COLORS._main_icon_light;
+			if(expandable) {
+				var _bbx = _x + _bbw / 2;
+				var _bby = _y + _pph / 2 + ui(2);
 				
-				if(mouse_lpress())
-					expanded = !expanded;
+				var _bba = .4 + .4 * interactable;
+				var _bbc = COLORS._main_icon;
+				
+				if(hover && point_in_rectangle(_m[0], _m[1], _x, _y, _x + _bbw, _y + _pph)) {
+					_bbc = COLORS._main_icon_light;
+					
+					if(mouse_lpress())
+						expanded = !expanded;
+				}
+				
+				draw_sprite_stretched_ext(THEME.textbox, 3, _x, _y, _bbw, h, CDEF.main_mdwhite, 1);
+				draw_sprite_ui(THEME.arrow, expanded? 3 : 0, _bbx, _bby + ui(expanded), 1, 1, 0, _bbc, _bba);
 			}
-			
-			draw_sprite_stretched_ext(THEME.textbox, 3, _x, _y, _bbw, h, CDEF.main_mdwhite, 1);
-			draw_sprite_ui(THEME.arrow, expanded? 3 : 0, _bbx, _bby + ui(expanded), 1, 1, 0, _bbc, _bba);
 			
 			if(expanded) {
 				var _cx = _x + ui(2);
@@ -152,6 +173,15 @@ function buttonPalette(_onModify, dialog = noone) : widget() constructor {
 				}
 			}
 			
+			if(presetName != "") {
+				draw_set_text(f_p4, fa_left, fa_bottom, COLORS._main_text);
+				var lh = line_get_height(f_p3);
+				
+				draw_text_add(_ppx + ui(2), _ppy + lh - ui(2), presetName);
+				_ppy += lh;
+				_pph -= lh;
+			}
+			
 			drawPalette(_color, _ppx, _ppy, _ppw, _pph);
 			
 		} else {
@@ -169,6 +199,7 @@ function buttonPalette(_onModify, dialog = noone) : widget() constructor {
 		if(hide == 0) {
 			if(hoverRect) draw_sprite_stretched_ext(THEME.button_def, 3, x, y, w, h, CDEF.main_grey);	
 			else draw_sprite_stretched_ext(THEME.textbox, 0, x, y, w, h, boxColor, .5 + .5 * interactable);
+			
 		}
 		
 		if(WIDGET_CURRENT == self || (instance_exists(o_dialog_palette) && o_dialog_palette.drop_target == self))

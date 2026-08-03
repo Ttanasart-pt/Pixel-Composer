@@ -67,6 +67,7 @@ output.color = surfaceColor;"
 		inputs[index + 2].getEditWidget().interactable = false;
 							
 		array_push(input_display_list, inAmo, inAmo + 1, inAmo + 2);
+		postCreateNewInput(index);
 	}
 	
 	argumentRenderer();

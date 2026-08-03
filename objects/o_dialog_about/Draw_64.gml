@@ -4,10 +4,10 @@ if !ready exit;
 DIALOG_DRAW_BG
 
 #region about
-	var cx = dialog_x + dialog_w / 2;
-	var ly = dialog_y + ui(96);
+	var cx = _dialog_x + dialog_w / 2;
+	var ly = _dialog_y + ui(96);
 	
-	draw_sprite_ui_uniform(THEME.icon_64, 0, cx, dialog_y + ui(56));
+	draw_sprite_ui_uniform(THEME.icon_64, 0, cx, _dialog_y + ui(56));
 	draw_sprite_ui_uniform(s_title, 0, cx - ui(256 * .4), ly, .4 * THEME_SCALE);
 	ly += ui(32);
 	
@@ -29,8 +29,8 @@ DIALOG_DRAW_BG
 	draw_text(cx, ly, "2026, MakhamDev");
 	
 	var _padd   = ui(20);
-	var thank_x = dialog_x + _padd;
-	var thank_y = dialog_y + ui(188);
+	var thank_x = _dialog_x + _padd;
+	var thank_y = _dialog_y + ui(188);
 	var thank_w = dialog_w - _padd * 2;
 	var thank_h = dialog_h - ui(188) - _padd;
 	

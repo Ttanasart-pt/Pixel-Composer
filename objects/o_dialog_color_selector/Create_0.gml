@@ -2,9 +2,14 @@
 event_inherited();
 PALETTES_FOLDER.forEach(function(f) /*=>*/ { if(f.content == undefined) f.content = loadPalette(f.path); }); // Load all presets
 
+if(!variable_global_exists("COLOR_SELECTOR_PALETTE_COLLAPSED")) globalvar COLOR_SELECTOR_PALETTE_COLLAPSED; COLOR_SELECTOR_PALETTE_COLLAPSED = false;
+
 #region data
-	dialog_w = ui(812);
-	dialog_h = ui(396);
+	presets_w    = ui(240);
+	content_w    = ui(556);
+	
+	dialog_w     = presets_w + content_w;
+	dialog_h     = ui(396);
 	title_height = 52;
 	interactable = true;
 	destroy_on_click_out = true;
@@ -275,8 +280,6 @@ PALETTES_FOLDER.forEach(function(f) /*=>*/ { if(f.content == undefined) f.conten
 #endregion
 
 #region action
-	function checkMouse() {}
-	
 	function dropperActive() {
 		selector.dropper_active = true;
 		selector.dropper_close  = true;

@@ -198,7 +198,7 @@ function Node_Mesh_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	newInput(9, nodeValueSeed());
 	
 	////- =Mesh
-	newInput( 0, nodeValue_Surface( "Surface In" ));
+	newInput( 0, nodeValue_Surface( "Surface In" )).setRequired();
 	newInput( 8, nodeValue_EButton( "Mesh Type",   0, [ "Grid", "Custom" ] ));
 	newInput( 1, nodeValue_ISlider( "Sample",      8, [ 2, 32, 0.1 ])).setTooltip("Amount of grid subdivision. Higher number means more grid, detail.");
 	newInput( 7, nodeValue_Bool(    "Full Mesh",   false ));

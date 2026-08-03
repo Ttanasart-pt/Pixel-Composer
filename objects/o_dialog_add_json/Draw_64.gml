@@ -5,19 +5,19 @@ DIALOG_DRAW_BG
 
 #region base UI
 	draw_set_text(f_p2, fa_left, fa_top, COLORS._main_text_sub);
-	draw_text(dialog_x + ui(20), dialog_y + ui(8), __txt("Import JSON as"));
+	draw_text(_dialog_x + ui(20), _dialog_y + ui(8), __txt("Import JSON as"));
 #endregion
 
 #region nodes
-	draw_sprite_stretched(THEME.ui_panel_bg, 1, dialog_x + ui(12), dialog_y + title_h, dialog_w - ui(24), ui(120));
+	draw_sprite_stretched(THEME.ui_panel_bg, 1, _dialog_x + ui(12), _dialog_y + title_h, dialog_w - ui(24), ui(120));
 	var grid_size  = ui(64);
 	var grid_space = ui(16);
 	var grid_width = grid_size + grid_space;
 	
 	for(var i = 0; i < array_length(nodes); i++) {
 		var _node = nodes[i];
-		var xx    = dialog_x + ui(32) + i * grid_width;
-		var yy    = dialog_y + title_h + ui(16);
+		var xx    = _dialog_x + ui(32) + i * grid_width;
+		var yy    = _dialog_y + title_h + ui(16);
 		
 		PANEL_GRAPH.stepBegin();
 		

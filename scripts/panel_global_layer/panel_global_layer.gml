@@ -73,7 +73,7 @@ function Panel_Global_Layer_Drawer() constructor {
 			
 			if(!array_empty(_nodes)) _lnode.inputs[1].setValue(_nodes[0].inputs[1].getValue() - 100);
 			
-			var _canvas = nodeBuild("Node_Canvas", 0, 0);
+			var _canvas = nodeBuild("Node_Canvas_S", 0, 0);
 			_lnode.inputs[0].setFrom(_canvas.outputs[0]);
 			
 			panelFocusNode(_canvas);

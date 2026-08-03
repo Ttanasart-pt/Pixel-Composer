@@ -117,6 +117,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		ign_array      = false; function toggleArray() { ign_array = !ign_array; node.triggerRender(); return self; }
 		
 		updateOnSet    = false;
+		required       = false;
 		
 		bypass_use  = false;
 		bypass_junc = undefined;
@@ -478,6 +479,8 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		return self;
 	}
 	
+	static setRequired = function() /*=>*/ { required = true; return self; }
+	
 	static hasInstance = function() { return connect_type == CONNECT_TYPE.input && node.instanceBase;               } 
 	static useInstance = function() { return hasInstance() && value_from == noone && !attributes.override_instance; } 
 	static getInstance = function() { return node.instanceBase.inputs[index]; } 
@@ -550,6 +553,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 			var _map = PRESETS_MAP[$ instanceof(node)][$ "_values"][$ "content"][$ internalName];
 			applyDeserialize(_map, true);
 			is_modified = always_modified;
+			node.triggerRender();
 			return;
 		}
 		
@@ -1606,7 +1610,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 				} );
 				
 				if(!has(display_data, "atlas")) display_data.atlas = true;
-				_ext = "Node_Canvas";
+				_ext = "Node_Canvas_S";
 				break;
 				
 			case VALUE_TYPE.surface :	
@@ -1614,7 +1618,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 				editWidget = new surfaceBox(function(ind) /*=>*/ {return setValueInspector(ind)});
 				
 				if(!has(display_data, "atlas")) display_data.atlas = true;
-				_ext = "Node_Canvas";
+				_ext = "Node_Canvas_S";
 				break;
 				
 			case VALUE_TYPE.pathnode :    
@@ -2038,6 +2042,8 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	}
 	
 	arrayLength = __arrayLength;
+	
+	static requirementPass = function() /*=>*/ {return true};
 	
 	////- ANIMATOR
 	
@@ -2701,6 +2707,9 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	static drawJunction = function(_s, _mx, _my, _aa = 1) { 
 		var _hov = hover_in_graph || (draw_group_object != undefined && draw_group_object[3]);
 		_s /= 2 * THEME_SCALE;
+		
+		var reqfail = required && !requirementPass();
+		if(reqfail) __draw_sprite_ext(THEME.node_junction_selecting, 0, x, y, _s * 2, _s * 2, 0, COLORS._main_value_negative, .85);
 		
 		if(custom_icon != undefined) {
 			var mirx = connect_type == CONNECT_TYPE.output? -1 : 1;

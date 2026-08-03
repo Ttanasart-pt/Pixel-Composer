@@ -1,5 +1,30 @@
 [
   {
+    "version": "1.21.8.003",
+    "changes": [
+      {
+        "date": "2026-08-02T07:49:40.568Z",
+        "node": "",
+        "commit": "Dynamic inputs node now shares default values."
+      },
+      {
+        "date": "2026-08-02T08:04:59.310Z",
+        "node": "",
+        "commit": "-- add reset to default code for dynamic inputs"
+      }
+    ]
+  },
+  {
+    "version": "1.21.8.001",
+    "changes": [
+      {
+        "date": "2026-07-28T07:54:25.398Z",
+        "node": "Composite",
+        "commit": "**Composite**: Fix error when no surface connected."
+      }
+    ]
+  },
+  {
     "version": "1.21.7.108",
     "changes": [
       {

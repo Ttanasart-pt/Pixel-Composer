@@ -245,13 +245,13 @@ sc_content = new scrollPane(dialog_w - ui(4), dialog_h - ui(32), function(_y, _m
 		KEYBOARD_RESET
 			
 	} else if(sc_content.active) {
-		if(key_input_press(vk_up)) {
+		if(keyboard_check_pressed(vk_up)) {
 			keyboard_trigger = true;
 			selecting--;
 			if(selecting < 0) selecting = array_length(data) - 1;
 		}
 		
-		if(key_input_press(vk_down)) {
+		if(keyboard_check_pressed(vk_down)) {
 			keyboard_trigger = true;
 			selecting = safe_mod(selecting + 1, array_length(data));
 		}

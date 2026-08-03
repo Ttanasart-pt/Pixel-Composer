@@ -49,9 +49,7 @@ function Node_pSystem_3D_Collision(_x, _y, _group = noone) : Node_3D_Object(_x, 
 		
 	}
 	
-	static update = function(_frame = CURRENT_FRAME) { 
-		var _data = inputs_data;
-		
+	static processData = function(_outData, _data, _array_index = 0, _frame = CURRENT_FRAME) {
 		var i = in_d3d;
 		var _parts = _data[i+0];
 		var _masks = _data[i+1], use_mask = _masks != noone;
@@ -217,9 +215,11 @@ function Node_pSystem_3D_Collision(_x, _y, _group = noone) : Node_3D_Object(_x, 
 		
 		buffer_write_at(collideTrig, 0, buffer_u32, collideCount);
 		
-		outputs[0].setValue(_parts);
-		outputs[1].setValue(collideTrig);
-		outputs[2].setValue(mask_buffer);
+		_outData[0] = _parts;
+		_outData[1] = collideTrig;
+		_outData[2] = mask_buffer;
+		
+		return _outData;
 	}
 	
 	static getPreviewObjects		= function() /*=>*/ {return [getPreviewObject(), gizmo_object]};

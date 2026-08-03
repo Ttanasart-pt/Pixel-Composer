@@ -26,6 +26,7 @@ function Node_Armature_Skin(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		var _inpC = newInput(index+1, nodeValue_Gradient( "Color",  gra_white ));
 		var _inpT = newInput(index+2, nodeValue_Surface(  "Texture"           ));
 		
+		postCreateNewInput(index);
 		return [_inpR, _inpC, _inpT];
 	} 
 	setDynamicInput(3, false);

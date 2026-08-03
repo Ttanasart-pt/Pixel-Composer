@@ -43,6 +43,7 @@ function Node_Image_Grid(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 			.setVisible(true, true);
 			
 		array_push(input_display_list, inAmo);
+		postCreateNewInput(index);
 		return inputs[index];
 	} 
 	setDynamicInput(1, true, VALUE_TYPE.surface);

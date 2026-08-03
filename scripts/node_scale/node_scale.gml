@@ -13,7 +13,7 @@ function Node_Scale(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	newActiveInput(4);
 	
 	////- =Surfaces
-	newInput( 0, nodeValue_Surface("Surface In"));
+	newInput( 0, nodeValue_Surface("Surface In")).setRequired();
 	
 	////- =Scale
 	newInput( 2, nodeValue_EButton( "Mode",             0, [ "Upscale", "Scale to Size" ] )).setPieMenu();

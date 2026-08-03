@@ -91,11 +91,12 @@ function draw_sprite_ui_uniform(spr, ind, _x, _y, scale = 1, color = c_white, al
 	draw_sprite_ui(spr, ind, _x, _y, scale, scale, rot, color, alpha);
 }
 
-function draw_sprite_colored(spr, ind, _x, _y, scale = 1, rot = 0, color = COLORS._main_accent) {
+function draw_sprite_colored(spr, ind, _x, _y, scale = 1, rot = 0, color = COLORS._main_accent, inv = false) {
 	var num = sprite_get_number(spr);
+	var e = num % 2 == 0;
 	
-	draw_sprite_ui(spr, ind, _x, _y, scale, scale, rot, c_white);
-	if(num % 2 == 0) draw_sprite_ui(spr, num / 2 + ind, _x, _y, scale, scale, rot, color);
+	      draw_sprite_ui(spr, ind,         _x, _y, scale, scale, rot, inv? color : c_white);
+	if(e) draw_sprite_ui(spr, num/2 + ind, _x, _y, scale, scale, rot, inv? c_white : color);
 }
 
 	////- UI Elements

@@ -8,25 +8,25 @@ DIALOG_DRAW_BG
 	var foc = sFOCUS;
 	var hov = sHOVER;
 	
-	var icx = dialog_x + ui(56);
-	var icy = dialog_y + ui(56);
+	var icx = _dialog_x + ui(56);
+	var icy = _dialog_y + ui(56);
 	draw_sprite_ui_uniform(THEME.icon_64, 0, icx, icy);
-	draw_sprite_ui_uniform(s_title, 0, dialog_x + ui(56 + 48 - 4), dialog_y + ui(56 + 4 - 32), .4 * THEME_SCALE);
+	draw_sprite_ui_uniform(s_title, 0, _dialog_x + ui(56 + 48 - 4), _dialog_y + ui(56 + 4 - 32), .4 * THEME_SCALE);
 	
-	var bx  = dialog_x + ui(56 + 48);
-	var by  = dialog_y + ui(56 +  4);
+	var bx  = _dialog_x + ui(56 + 48);
+	var by  = _dialog_y + ui(56 +  4);
 	draw_set_text(f_p0, fa_left, fa_top, COLORS._main_text);
 	draw_text(bx, by, PREFERENCES.video_title);
 	
-	var bx  = dialog_x + dialog_w - ui(16);
-	var by  = dialog_y + ui(16);
+	var bx  = _dialog_x + dialog_w - ui(16);
+	var by  = _dialog_y + ui(16);
 	draw_set_text(f_p0, fa_right, fa_top, COLORS._main_text_sub);
 	draw_text(bx, by, $"recorded on v.{VERSION_STRING}");
 #endregion
 
 #region node covered
-	var nx = dialog_x + ui( 16);
-	var ny = dialog_y + ui(104);
+	var nx = _dialog_x + ui( 16);
+	var ny = _dialog_y + ui(104);
 	var nw = dialog_w - ui( 32);
 	var nh = dialog_h - ui(104 + 16);
 	
@@ -99,8 +99,8 @@ DIALOG_DRAW_BG
 	if(buttonInstant_Pad(noone, bx, by, bs, bs, m, hov, foc, "", THEME.add,  0, bc, .5) == 2) addCoveredNodes(); bx -= bs + ui(2);
 		
 	dialog_h = ui(104 + 16 + 32) + row * (th + ui(8));
-	dialog_x = WIN_W / 2 - dialog_w / 2;
-	dialog_y = WIN_H / 2 - dialog_h / 2;
+	_dialog_x = WIN_W / 2 - dialog_w / 2;
+	_dialog_y = WIN_H / 2 - dialog_h / 2;
 #endregion
 
 DIALOG_DRAW_FOCUS

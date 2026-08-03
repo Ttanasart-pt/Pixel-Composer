@@ -46,9 +46,9 @@ function Node_Logic(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		var inAmo = array_length(inputs);
 		
 		var jname = chr(ord("a") + index - 1);
-		newInput(index, nodeValue_Bool(jname, false ))
-			.setVisible(true, true);
+		newInput(index, nodeValue_Bool(jname, false )).setVisible(true, true);
 		
+		postCreateNewInput(index);
 		return inputs[index];
 	} 
 	

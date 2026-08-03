@@ -5,19 +5,19 @@ DIALOG_DRAW_BG
 	
 #region base UI
 	draw_set_text(f_p2, fa_left, fa_top, COLORS._main_text_sub);
-	draw_text(dialog_x + ui(20), dialog_y + ui(8), __txt("add_images_title_images", "Import Directory as"));
+	draw_text(_dialog_x + ui(20), _dialog_y + ui(8), __txt("add_images_title_images", "Import Directory as"));
 #endregion
 
 #region nodes
-	draw_sprite_stretched(THEME.ui_panel_bg, 1, dialog_x + ui(12), dialog_y + title_h, dialog_w - ui(24), content_h);
+	draw_sprite_stretched(THEME.ui_panel_bg, 1, _dialog_x + ui(12), _dialog_y + title_h, dialog_w - ui(24), content_h);
 	var grid_size  = ui(64);
 	var grid_space = ui(16);
 	var grid_width = grid_size + grid_space;
 	
 	for(var i = 0, n = array_length(nodes); i < n; i++) {
 		var _node = nodes[i];
-		var xx    = dialog_x + ui(32) + i * grid_width;
-		var yy    = dialog_y + title_h + ui(16);
+		var xx    = _dialog_x + ui(32) + i * grid_width;
+		var yy    = _dialog_y + title_h + ui(16);
 		
 		PANEL_GRAPH.stepBegin();
 		
@@ -45,10 +45,10 @@ DIALOG_DRAW_BG
 						}
 						break;
 						
-					case Node_Canvas :
+					case Node_Canvas_S :
 						for( var j = 0, m = array_length(path_arr); j < m; j++ )  {
 							var path = path_arr[j];
-							var _canvas = nodeBuild("Node_Canvas", nx, ny);
+							var _canvas = nodeBuild("Node_Canvas_S", nx, ny);
 							_canvas.skipDefault();
 							_canvas.loadImagePath(path);
 							ny += 160;
@@ -87,21 +87,21 @@ DIALOG_DRAW_BG
 		var dw = dialog_w - ui(160);
 		var dh = ui(32);
 		
-		var dx = dialog_x + dialog_w - dw - ui(16);
-		var dy = dialog_y + title_h + content_h + ui(8);
+		var dx = _dialog_x + dialog_w - dw - ui(16);
+		var dy = _dialog_y + title_h + content_h + ui(8);
 		
 		cb_recursive.setFocusHover(sFOCUS, sHOVER);
 		cb_recursive.draw(dx, dy, dw, dh, dir_recursive, mouse_ui);
 		
 		draw_set_text(f_p2, fa_left, fa_center, COLORS._main_text);
-		draw_text(dialog_x + ui(24), dy + dh/2, __txt("add_images_recursive", "Recursive"));
+		draw_text(_dialog_x + ui(24), dy + dh/2, __txt("add_images_recursive", "Recursive"));
 		
 		dy += dh + ui(8);
 		tb_filter.setFocusHover(sFOCUS, sHOVER);
 		tb_filter.draw(dx, dy, dw, dh, dir_filter, mouse_ui);
 		
 		draw_set_text(f_p2, fa_left, fa_center, COLORS._main_text);
-		draw_text(dialog_x + ui(24), dy + dh/2, __txt("add_images_filter", "Filter"));
+		draw_text(_dialog_x + ui(24), dy + dh/2, __txt("add_images_filter", "Filter"));
 	}
 #endregion
 

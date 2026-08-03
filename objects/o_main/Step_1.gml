@@ -1,4 +1,5 @@
 /// @description init
+if(MULTI_WINDOWS) winwin_update();
 global.__debug_runner++;
 global.cache_call = 0;
 global.cache_hit  = 0;
@@ -46,10 +47,45 @@ if(os_is_paused()) OS_PAUSED = true;
 	}
 #endregion
 	
-#region fps
-	var  foc = window_has_focus();
-	if(OS == os_linux) foc = !OS_PAUSED;
+#region windows focus
+	HOVER_WINDOW = undefined;
+	FOCUS_WINDOW = undefined;
+	var foc = false;
 	
+	if(OS == os_windows) {
+		if(window_has_focus()) {
+			HOVER_WINDOW = 1;
+			FOCUS_WINDOW = 1;
+			foc = true;
+		}
+		
+		if(MULTI_WINDOWS) {
+			if(winwin_mouse_is_over(winwin_main))
+				HOVER_WINDOW = 1;
+				
+			for( var i = 0, n = array_length(WINWIN_ALL); i < n; i++ ) {
+				if(winwin_mouse_is_over(WINWIN_ALL[i]))
+					HOVER_WINDOW = WINWIN_ALL[i];
+					
+				if(winwin_has_focus(WINWIN_ALL[i])) {
+					FOCUS_WINDOW = WINWIN_ALL[i];
+					foc = true;
+				}
+				
+			}
+			
+		}
+		
+	} else {
+		if(!OS_PAUSED) {
+			HOVER_WINDOW = 1;
+			FOCUS_WINDOW = 1;
+			foc = true;
+		}
+	}
+#endregion
+
+#region fps
 	var _fps_cur = game_get_speed(gamespeed_fps);
 	var _fps_tar = foc || GLOBAL_IS_PLAYING? PREFERENCES.ui_framerate : PREFERENCES.ui_framerate_non_focus;
 	if(_fps_tar == 0) _fps_tar = 999;
@@ -85,6 +121,9 @@ if(os_is_paused()) OS_PAUSED = true;
 	
 	if(_cursor != CURSOR) {
 		window_set_cursor(CURSOR);
+		for( var i = 0, n = array_length(WINWIN_ALL); i < n; i++ ) 
+			winwin_set_cursor(WINWIN_ALL[i], CURSOR);
+		
 		_cursor = CURSOR;
 	} 
 	CURSOR = cr_default;
@@ -119,24 +158,30 @@ if(os_is_paused()) OS_PAUSED = true;
 	// print($"{mouse_mxs}, {mouse_mys}");
 #endregion
 
-#region focus
+#region Hover & Focus
 	if(mouse_release(mb_any)) DIALOG_CLICK = true;
 	
 	HOVER = noone;
-	with(_p_dialog) checkMouse();
-	if(PANEL_MAIN) PANEL_MAIN.stepBegin();
-	
 	DIALOG_DEPTH_HOVER = 0;
 	
-	with(o_pie_menu) checkFocus();
+	if(PANEL_MAIN)   PANEL_MAIN.checkMouse();
+	with(_p_dialog)  checkMouse();
+	with(o_pie_menu) checkMouse();
+		
+	if(PANEL_MAIN)   PANEL_MAIN.checkFocus();
 	with(_p_dialog)  checkFocus();
-	if(PANEL_MAIN) PANEL_MAIN.checkFocus();
+	with(o_pie_menu) checkFocus();
 	
-	with(o_pie_menu) checkDepth();
+	// print("hover|", typeof(HOVER), instanceof(HOVER), HOVER);
+	if(is(HOVER, PanelContent)) HOVER.panel.checkHover();
+	
 	with(_p_dialog)  checkDepth();
+	with(o_pie_menu) checkDepth();
 	
-	with(_p_dialog) doResize();
-	with(_p_dialog) doDrag();
+	with(_p_dialog)  doResize();
+	with(_p_dialog)  doDrag();
+	
+	if(PANEL_MAIN)   PANEL_MAIN.stepBegin();
 	
 	 HIGHLIGHT_PROP = _HIGHLIGHT_PROP;
 	_HIGHLIGHT_PROP = undefined;

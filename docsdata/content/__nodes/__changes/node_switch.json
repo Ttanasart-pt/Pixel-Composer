@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.8.003",
+    "changes": [
+      {
+        "date": "2026-08-02T08:04:59.485Z",
+        "node": "",
+        "commit": "-- add reset to default code for dynamic inputs"
+      }
+    ]
+  },
+  {
     "version": "1.21.3.008",
     "changes": [
       {

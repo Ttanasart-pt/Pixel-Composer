@@ -121,18 +121,22 @@ function tooltipSurfaceAssetion(expect, got) constructor {
 		var tw =  ss * 2 + ui(8);
 		var th = (ss + ui(4)) * array_length(expect) + ui(20) - ui(4);
 		
-		var mx = min(mouse_mxs + ui(16), WIN_W - (tw + ui(16)));
-		var my = min(mouse_mys + ui(16), WIN_H - (th + ui(16)));
+		var pd = ui(8);
+	
+		var tww = tw + pd * 2;
+		var thh = th + pd * 2;
 		
-		draw_sprite_stretched(THEME.textbox, 3, mx, my, tw + ui(16), th + ui(16));
-		draw_sprite_stretched(THEME.textbox, 0, mx, my, tw + ui(16), th + ui(16));
+		TOOLTIP_SURFACE = surface_verify(TOOLTIP_SURFACE, tww, thh);
+		surface_set_shader(TOOLTIP_SURFACE);
+		draw_sprite_stretched(THEME.textbox, 3, 0, 0, tww, thh);
+		draw_sprite_stretched(THEME.textbox, 0, 0, 0, tww, thh);
 		
-		var xe = mx + ui(8);
-		var xg = mx + ui(8) + ss + ui(8);
+		var xe = ui(8);
+		var xg = ui(8) + ss + ui(8);
 		
 		draw_set_text(f_p2, fa_center, fa_top, COLORS._main_text_sub);
-		draw_text(xe + ss / 2, my + ui(4), "Expected");
-		draw_text(xg + ss / 2, my + ui(4), "Got");
+		draw_text(xe + ss / 2, ui(4), "Expected");
+		draw_text(xg + ss / 2, ui(4), "Got");
 		
 		for( var i = 0, n = array_length(expect); i < n; i++ ) {
 			var _e = array_safe_get(expect, i);
@@ -144,7 +148,7 @@ function tooltipSurfaceAssetion(expect, got) constructor {
 			var _gw = surface_get_width_safe(_g);
 			var _gh = surface_get_height_safe(_g);
 			
-			var yy = my + ui(8 + 20) + i * (ss + ui(4));
+			var yy = ui(8 + 20) + i * (ss + ui(4));
 			
 			var sc  = min(ss / _ew, ss / _eh);
 			draw_surface_ext_safe(_e, xe + ss / 2 - _ew * sc / 2, yy + ss / 2 - _eh * sc / 2, sc, sc);
@@ -154,5 +158,6 @@ function tooltipSurfaceAssetion(expect, got) constructor {
 			draw_surface_ext_safe(_g, xg + ss / 2 - _gw * sc / 2, yy + ss / 2 - _gh * sc / 2, sc, sc);
 			draw_sprite_stretched_add(THEME.box_r2, 1, xg, yy, ss, ss, c_white, .15);
 		}
+		surface_reset_shader();
 	}
 }

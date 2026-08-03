@@ -7,6 +7,8 @@ function buttonAnchor(_input = noone, _onModify = noone) : widget() constructor 
 	center   = true;
 	context  = noone;
 	
+	alpha    = 1;
+	
 	static drawParam = function(params) { return draw(params.x, params.y, params.w, params.h, params.m); }
 	
 	static trigger = function(_index) {
@@ -38,6 +40,23 @@ function buttonAnchor(_input = noone, _onModify = noone) : widget() constructor 
 		var spac = floor((min(_w, _h) - ui(4)) / 3);
 		var size = spac / 2;
 		
+		var hovInd = -1;
+		
+		for( var i = -1; i <= 1; i++ ) 
+		for( var j = -1; j <= 1; j++ ) {
+			if(!center && i == 0 && j == 0) continue;
+			
+			var _bx  = cx + j * spac;
+			var _by  = cy + i * spac;
+			var _in  = (i + 1) * 3 + (j + 1);
+			var hov = hover && point_in_rectangle(_m[0], _m[1], _bx - size, _by - size, _bx + size, _by + size);
+			
+			if(hov) {
+				hovering = true;
+				hovInd   = _in;
+			}
+		}
+		
 		for( var i = -1; i <= 1; i++ ) 
 		for( var j = -1; j <= 1; j++ ) {
 			if(!center && i == 0 && j == 0) continue;
@@ -47,16 +66,12 @@ function buttonAnchor(_input = noone, _onModify = noone) : widget() constructor 
 			var _in  = (i + 1) * 3 + (j + 1);
 			var _fil = is_array(index)? index[_in] : _in == index;
 			
-			var hov = hover && point_in_rectangle(_m[0], _m[1], _bx - size, _by - size, _bx + size, _by + size);
+			var hov = hovInd == _in;
 			var cc  = hov? COLORS._main_accent : COLORS._main_icon_light;
-			var aa  = .5 + (_fil || hov) * .5;
+			var aa  = (_fil || hov)? 1 : .5 * alpha;
 			
 			draw_sprite_ext(THEME.prop_anchor, _fil, _bx - size, _by - size, spac / 10, spac / 10, 0, cc, aa);
-			
-			if(hov) {
-				hovering = true;
-				if(mouse_lclick(active)) trigger(_in)
-			}
+			if(hov && mouse_lclick(active)) trigger(_in);
 		}
 		
 		resetFocus();

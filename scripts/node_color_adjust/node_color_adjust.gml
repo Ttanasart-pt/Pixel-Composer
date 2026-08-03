@@ -7,7 +7,7 @@ function Node_Color_adjust(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	
 	////- =Input
 	newInput(12, nodeValue_EButton( "Input Type",   0, [ "Surface", "Color" ] ));
-	newInput( 0, nodeValue_Surface( "Surface In"                   ));
+	newInput( 0, nodeValue_Surface( "Surface In"                   )).setRequired();
 	newInput( 8, nodeValue_Surface( "Mask"                         ));
 	newInput(16, nodeValue_Bool(    "Invert mask",  false          ));
 	newInput(13, nodeValue_Palette( "Color"                        )).setVisible(true, true);

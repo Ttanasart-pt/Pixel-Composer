@@ -538,9 +538,10 @@ function Panel_Menu() : PanelContent() constructor {
                 draw_text_add(xc, yc, _name);
             
                 if(hori) {
-                    xx  += ww + 8;
+                    xx  += ww + ui(4);
                     _mx  = max(_mx, xx);
-                    _ww += ww + 8;
+                    _ww += ww + ui(4);
+                    
                     if(_ww > w * 0.6 - sx) {
                         _curRow++;
                         _ww = 0;
@@ -548,7 +549,7 @@ function Panel_Menu() : PanelContent() constructor {
                     }
                     
                 } else
-                    yy += hh + 8;
+                    yy += hh + ui(4);
             }
         #endregion
         
@@ -604,7 +605,7 @@ function Panel_Menu() : PanelContent() constructor {
                     if(mouse_lpress(pFOCUS))
                         dialogPanelCall(new Panel_Notification(), nx0, ny0 + nh / 2 + ui(4), { anchor: ANCHOR.left | ANCHOR.top });
                     
-                    TOOLTIP = $"{warning_amo} {__txt("Warnings")} {error_amo} {__txt("Errors")}";
+                    setTOOLTIP($"{warning_amo} {__txt("Warnings")} {error_amo} {__txt("Errors")}");
                 } else
                     draw_sprite_stretched_ext(THEME.ui_panel_bg, 1, nx0, ny0 - nh / 2, nw, nh, cc, 1);
                 
@@ -651,7 +652,7 @@ function Panel_Menu() : PanelContent() constructor {
                 
                 if(pHOVER && point_in_rectangle(mx, my, nx0, ny0 - wh / 2, nx0 + ww, ny0 + wh / 2)) {
                     _draggable = false;
-                    TOOLTIP = __txt("Addons");
+                    setTOOLTIP(__txt("Addons"));
                     draw_sprite_stretched(THEME.box_r2_clr, 0, nx0, ny0 - wh / 2, ww, wh);
                     if(mouse_lpress(pFOCUS)) dialogPanelCall(new Panel_Addon());
                     
@@ -816,7 +817,7 @@ function Panel_Menu() : PanelContent() constructor {
                 	_draggable = false;
                 	
                     if(ACCOUNT_ID == undefined) {
-                        TOOLTIP = __txt("Online Accounts");
+                        setTOOLTIP(__txt("Online Accounts"));
                         
                         if(mouse_lpress(true)) {
                             var _menu = array_clone(profile_menu, 1);
@@ -829,7 +830,7 @@ function Panel_Menu() : PanelContent() constructor {
                         }
                         
                     } else {
-                        TOOLTIP = __txt($"PXC Account: {ACCOUNT_DATA.displayName}");
+                        setTOOLTIP(__txt($"PXC Account: {ACCOUNT_DATA.displayName}"));
                         
                         if(mouse_lpress(true)) {
                             var _menu = array_clone(profile_menu, 1);
@@ -878,7 +879,7 @@ function Panel_Menu() : PanelContent() constructor {
                     if(pHOVER && point_in_rectangle(mx, my, _x0, _y0, _x1, _y1)) {
                         _draggable = false;
                         draw_sprite_stretched_ext(THEME.button_hide_fill, 1, _x0, _y0, _x1 - _x0, _y1 - _y0, sc, 1);
-                        if(NEW_VERSION) TOOLTIP = __txt("New Version Available");
+                        if(NEW_VERSION) setTOOLTIP(__txt("New Version Available"));
                         
                         if(mouse_lpress(pFOCUS)) dialogPanelCall(new Panel_Release_Note(), noone, noone, { toggle: true });
                         if(mouse_rpress(pFOCUS)) {
@@ -908,7 +909,7 @@ function Panel_Menu() : PanelContent() constructor {
                 if(pHOVER && point_in_rectangle(mx, my, _xx1, y1 - ui(16), _xx1 + ww, y1 + ui(16))) {
                     _draggable = false;
                     draw_sprite_stretched_ext(THEME.button_hide_fill, 1, _xx1, y1 - ui(12), ww, ui(24), sc, 1);
-                    if(NEW_VERSION) TOOLTIP = __txt("New Version Available");
+                    if(NEW_VERSION) setTOOLTIP(__txt("New Version Available"));
                     
                     if(mouse_lpress(pFOCUS))
                         dialogCall(o_dialog_release_note); 
@@ -1089,7 +1090,7 @@ function Panel_Menu() : PanelContent() constructor {
                 var _ib = COLORS._main_text_sub;
                 
                 if(pHOVER && point_in_rectangle(mx, my, _cx - 12, _cy - 12, _cx + 12, _cy + 12)) {
-                    TOOLTIP = __txt("Supporter");
+                    setTOOLTIP(__txt("Supporter"));
                     _ib = COLORS._main_accent;
                 }
                 
@@ -1127,10 +1128,8 @@ function Panel_Menu() : PanelContent() constructor {
         #region drag
             if(_draggable) {
                 if(DOUBLE_CLICK) {
-                    if(window_is_maximized) 
-                        winMan_Unmaximize();
-                    else 
-                        winMan_Maximize();
+                    if(window_is_maximized) winMan_Unmaximize();
+                    else                    winMan_Maximize();
                     DISPLAY_REFRESH
                 }
                 

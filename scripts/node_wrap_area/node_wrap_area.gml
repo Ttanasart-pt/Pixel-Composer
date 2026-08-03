@@ -1,7 +1,7 @@
 function Node_Wrap_Area(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Area Warp";
 	
-	newInput(0, nodeValue_Surface("Surface In"));
+	newInput(0, nodeValue_Surface("Surface In")).setRequired();
 
 	onSurfaceSize = function() /*=>*/ {return surface_get_dimension(getInputData(0))};
 	newInput(1, nodeValue_Area("Area", DEF_AREA_REF, { onSurfaceSize, useShape : false })).setHotkey("A").setUnitSimple();
@@ -27,8 +27,6 @@ function Node_Wrap_Area(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	
 	static processData = function(_outSurf, _data, _array_index) {
 		var _inSurf	= _data[0];
-		if(!is_surface(_inSurf)) return _outSurf;
-		
 		var _area	= _data[1];
 		if(!is_array(_area) && array_length(_area) < 4)
 			return _outSurf;

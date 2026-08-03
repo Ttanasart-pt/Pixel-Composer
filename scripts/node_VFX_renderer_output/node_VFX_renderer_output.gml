@@ -28,6 +28,7 @@ function Node_VFX_Renderer_Output(_x, _y, _group = noone) : Node_Group_Output(_x
 			.setVisible(true, true);
 			
 		array_push(input_display_list, ["Particle", false], inAmo + 0, inAmo + 1);
+		postCreateNewInput(index);
 		return inputs[index + 1];
 	} 
 	

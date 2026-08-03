@@ -12,7 +12,7 @@ function Node_Spherize(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	
 	////- =Surfaces
 	/* UNUSED */ newInput( 4, nodeValue_EScroll("Oversample Mode",  0, [ "Empty", "Clamp", "Repeat" ]));
-	newInput( 0, nodeValue_Surface( "Surface In" ));
+	newInput( 0, nodeValue_Surface( "Surface In" )).setRequired();
 	newInput( 5, nodeValue_Surface( "Mask"       ));
 	newInput( 6, nodeValue_Slider(  "Mix", 1     ));
 	__init_mask_modifier(5, 9); // inputs 9, 10

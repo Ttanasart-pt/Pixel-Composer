@@ -1,10 +1,10 @@
 function RandomizedArray() : ArrayObject() constructor {
-	content = [];
+	content     = [];
 	
 	weights     = [];
 	weightTotal = 0;
 	
-	static getElementByIndex = function(i) /*=>*/ {return content[i]};
+	static getElementByIndex = function(i) /*=>*/ {return array_safe_get_fast(content, i)};
 	static getElementRandom  = function( ) /*=>*/ {
 		if(length == 0) return noone;
 		var _w = random(weightTotal);
@@ -122,6 +122,8 @@ function Node_Array_Randomizer(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	
 	function createNewInput(index = array_length(inputs)) {
 		newInput(index, nodeValue_Float( "Weight", 1 ));
+		
+		postCreateNewInput(index);
 		return inputs[index];
 	} setDynamicInput(1, false);
 	

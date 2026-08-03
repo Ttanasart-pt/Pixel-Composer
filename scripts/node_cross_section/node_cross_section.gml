@@ -9,7 +9,7 @@ function Node_Cross_Section(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	name = "Draw Cross Section";
 	
 	////- =Surfaces
-	newInput( 0, nodeValue_Surface( "Surface In" ));
+	newInput( 0, nodeValue_Surface( "Surface In" )).setRequired();
 	newInput( 5, nodeValue_Surface( "Mask"       ));
 	
 	////- =Axis

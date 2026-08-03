@@ -1,6 +1,5 @@
 function Panel_Action_Manager() : PanelContent() constructor {
 	title = __txt("Action Manager");
-	showHeader = true;
 	
 	w     = min(WIN_W, ui(1000));
 	h     = ui(600);
@@ -176,7 +175,7 @@ function Panel_Action_Manager() : PanelContent() constructor {
 			
 			var _bc = action_selecting.outputNode == i? COLORS._main_value_negative : COLORS._main_icon_dark;
 			draw_sprite_ui(THEME.arrow, 1, _bw - ui(12), yy + _bh / 2, 1, 1, 0, _bc);
-			if(_hv) TOOLTIP = __txt("Action Output");
+			if(_hv) setTOOLTIP(__txt("Action Output"));
 			if(mouse_lpress(_hv)) action_selecting.outputNode = action_selecting.outputNode == i? noone : i;
 			_bw -= ui(28);
 			
@@ -187,7 +186,7 @@ function Panel_Action_Manager() : PanelContent() constructor {
 			
 			var _bc = action_selecting.inputNode == i? COLORS._main_value_positive : COLORS._main_icon_dark;
 			draw_sprite_ui(THEME.arrow, 3, _bw - ui(12), yy + _bh / 2, 1, 1, 0, _bc);
-			if(_hv) TOOLTIP = __txt("Action Input");
+			if(_hv) setTOOLTIP(__txt("Action Input"));
 			if(mouse_lpress(_hv)) action_selecting.inputNode = action_selecting.inputNode == i? noone : i;
 			_bw -= ui(28);
 			
@@ -219,7 +218,7 @@ function Panel_Action_Manager() : PanelContent() constructor {
 					var _tg = struct_has(_vali, "value"); _ttg = _ttg || _tg;
 					var _hv = pHOVER && point_in_circle(_m[0], _m[1], _bx, _by, ui(8));
 					if(_hv) {
-						TOOLTIP = "Save value";
+						setTOOLTIP("Save value");
 						sc_action_creating.hover_content = true;
 					}
 					
@@ -234,7 +233,7 @@ function Panel_Action_Manager() : PanelContent() constructor {
 						var _tg = struct_has(_vali, "expression"); _ttg = _ttg || _tg;
 						var _hv = pHOVER && point_in_circle(_m[0], _m[1], _bx, _by, ui(8));
 						if(_hv) {
-							TOOLTIP = "Save expression";
+							setTOOLTIP("Save expression");
 							sc_action_creating.hover_content = true;
 						}
 						
@@ -250,7 +249,7 @@ function Panel_Action_Manager() : PanelContent() constructor {
 						var _tg = struct_has(_vali, "unit"); _ttg = _ttg || _tg;
 						var _hv = pHOVER && point_in_circle(_m[0], _m[1], _bx, _by, ui(8));
 						if(_hv) {
-							TOOLTIP = "Save unit";
+							setTOOLTIP("Save unit");
 							sc_action_creating.hover_content = true;
 						}
 						

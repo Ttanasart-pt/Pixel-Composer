@@ -1,6 +1,5 @@
 function Panel_Action_Create() : PanelContent() constructor {
 	title = __txt("Create Action");
-	showHeader = true;
 	
 	w     = min(WIN_W, ui(720));
 	h     = ui(400);
@@ -124,7 +123,7 @@ function Panel_Action_Create() : PanelContent() constructor {
 					var _tg = struct_has(_vali, "value"); _ttg = _ttg || _tg;
 					var _hv = pHOVER && point_in_circle(_m[0], _m[1], _bx, _by, ui(8));
 					if(_hv) {
-						TOOLTIP = "Save value";
+						setTOOLTIP("Save value");
 						sc_node_content.hover_content = true;
 					}
 					
@@ -139,7 +138,7 @@ function Panel_Action_Create() : PanelContent() constructor {
 						var _tg = struct_has(_vali, "expression"); _ttg = _ttg || _tg;
 						var _hv = pHOVER && point_in_circle(_m[0], _m[1], _bx, _by, ui(8));
 						if(_hv) {
-							TOOLTIP = "Save expression";
+							setTOOLTIP("Save expression");
 							sc_node_content.hover_content = true;
 						}
 						
@@ -155,7 +154,7 @@ function Panel_Action_Create() : PanelContent() constructor {
 						var _tg = struct_has(_vali, "unit"); _ttg = _ttg || _tg;
 						var _hv = pHOVER && point_in_circle(_m[0], _m[1], _bx, _by, ui(8));
 						if(_hv) {
-							TOOLTIP = "Save unit";
+							setTOOLTIP("Save unit");
 							sc_node_content.hover_content = true;
 						}
 						

@@ -272,7 +272,7 @@ function Tileset_Rule(_tileset) : Inspector_Custom_Renderer(noone, noone) constr
     		var _ahv = _hover && point_in_rectangle(_m[0], _m[1], _acx, _acy, _acx + _acw, _acy + _ach);
     		
     		if(_ahv) {
-    			TOOLTIP = "Active";
+    			setTOOLTIP("Active");
     			if(mouse_lpress(_focus)) {
     				_rl.active = !_rl.active;
     				tileset.triggerRender();

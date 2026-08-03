@@ -33,6 +33,7 @@ function Node_VerletSim_Mesh_Bridge(_x, _y, _group = noone) : Node(_x, _y, _grou
 	function createNewInput(index = array_length(inputs)) {
 		newInput(index, nodeValue_Path( "Path" )).setVisible(true, true);
 		array_push(input_display_list, index);
+		postCreateNewInput(index);
 		
 		return inputs[index];
 	} setDynamicInput(1);

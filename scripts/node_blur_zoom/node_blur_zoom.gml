@@ -11,7 +11,7 @@ function Node_Blur_Zoom(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	newInput(9, nodeValue_Toggle("Channel", 0b1111, { data: array_create(4, THEME.inspector_channel) }));
 	
 	////- =Surface
-	newInput( 0, nodeValue_Surface( "Surface In" ));
+	newInput( 0, nodeValue_Surface( "Surface In" )).setRequired();
 	newInput(17, nodeValue_Surface( "UV Map"     ));
 	newInput(18, nodeValue_Slider(  "UV Mix", 1  ));
 	newInput( 6, nodeValue_Surface( "Mask"       ));

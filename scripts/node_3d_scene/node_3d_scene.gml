@@ -10,9 +10,9 @@ function Node_3D_Scene(_x, _y, _group = noone) : Node_3D(_x, _y, _group) constru
 	function createNewInput(index = array_length(inputs)) {
 		var inAmo = array_length(inputs);
 		
-		newInput(index, nodeValue_D3Mesh("Object" ))
-			.setVisible(true, true);
+		newInput(index, nodeValue_D3Mesh("Object" )).setVisible(true, true);
 		
+		postCreateNewInput(index);
 		return inputs[index];
 	} setDynamicInput(1, true, VALUE_TYPE.d3Mesh);
 	

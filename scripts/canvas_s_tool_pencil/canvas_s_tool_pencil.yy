@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"canvas_s_tool_pencil",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"canvas_s_tool_pencil",
+  "parent":{
+    "name":"tools",
+    "path":"folders/panels/nodes/canvas/tools.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

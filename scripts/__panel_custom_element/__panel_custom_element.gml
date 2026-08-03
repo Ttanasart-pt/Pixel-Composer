@@ -218,7 +218,7 @@ function Panel_Custom_Element(_data) constructor {
 			draw_sprite_ui_uniform(THEME.lock_12, selectable, bx0 + lw/2, by0 + lh/2, 1, COLORS._main_icon_light, aa);
 			if(hovIn) {
 				hov = false;
-				TOOLTIP = __txt("Lock");
+				setTOOLTIP(__txt("Lock"));
 				_panel.outline_hover = undefined;
 				
 				if(_panel.outline_hold_lock != undefined && mouse_lclick(_panel.pFOCUS)) 
@@ -238,7 +238,7 @@ function Panel_Custom_Element(_data) constructor {
 		draw_sprite_ui_uniform(THEME.magnet, snapable, bx0 + lw/2, by0 + lh/2, .5, COLORS._main_icon_light, aa);
 		if(hovIn) {
 			hov = false;
-			TOOLTIP = __txt("Snap");
+			setTOOLTIP(__txt("Snap"));
 			_panel.outline_hover = undefined;
 			
 			if(_panel.outline_hold_snap != undefined && mouse_lclick(_panel.pFOCUS)) 
@@ -359,7 +359,8 @@ function __Simple_Editor(_name, _widget, _getter, _setter) constructor {
 	getter     = _getter;
 	setter     = _setter;
 	
-	visible    = true;
+	visible    = true;    static setVisible = function(n) /*=>*/ { visible = n; return self; }
+	tooltip    = "";      static setTooltip = function(n) /*=>*/ { tooltip = n; return self; }
 }
 
 #region elements

@@ -1,6 +1,12 @@
 #macro NODE_NEW_MANUAL  !LOADING && !APPENDING && !CLONING
 
-#region 
+#region Draw Transform
+	enum TRANSFORM_HANDLE {
+		move,
+		rotate,
+		scale
+	}
+	
 	function node_draw_transform_init() {
 		drag_type   = -1;
 		dragging_sx = 0;
@@ -24,7 +30,7 @@
 		if(drag_type > -1) {
 			w_hovering = true;
 			
-			if(drag_type == 0) {
+			if(drag_type == TRANSFORM_HANDLE.move) {
 				var _dx = (_mx - dragging_mx) / _s;
 				var _dy = (_my - dragging_my) / _s;
 				
@@ -47,19 +53,18 @@
 				if(inputs[_posInd].setValue(nPos))
 					UNDO_HOLDING = true;
 				
-			} else if(drag_type == 1) {
+			} else if(drag_type == TRANSFORM_HANDLE.rotate) {
 				var aa = point_direction(rot_anc_x, rot_anc_y, _mx, _my);
 				var da = angle_difference(dragging_mx, aa);
 				
-				if(key_mod_press(CTRL)) 
-					_rot = round((dragging_sx - da) / 15) * 15;
-				else 
-					_rot = dragging_sx - da;
-			
+				_rot = dragging_sx - da;
+				if(key_mod_press(CTRL))  _rot = round(_rot);
+				if(key_mod_press(SHIFT)) _rot = value_snap(_rot, 15);
+				
 				if(inputs[_rotInd].setValue(_rot))
 					UNDO_HOLDING = true;
 					
-			} else if(drag_type == 2) {
+			} else if(drag_type == TRANSFORM_HANDLE.scale) {
 				var mdx = dragging_sx + (_mx - dragging_mx) - dragging_cx;
 				var mdy = dragging_sy + (_my - dragging_my) - dragging_cy;
 				
@@ -114,20 +119,20 @@
 		
 		if(drag_type == -1) {
 			if(point_in_rectangle_points(_mx, _my, pd0x, pd0y, pd1x, pd1y, pd2x, pd2y, pd3x, pd3y)) 
-				hovering = 0;
+				hovering = TRANSFORM_HANDLE.move;
 				
 			if(point_in_circle(_mx, _my, prx, pry, 12)) 
-				hovering = 1;
+				hovering = TRANSFORM_HANDLE.rotate;
 				
 			if(point_in_circle(_mx, _my, psx, psy, 12)) 
-				hovering = 2;
+				hovering = TRANSFORM_HANDLE.scale;
 		}
 		
 		draw_set_color(COLORS._main_accent);
-		draw_line_width(pd0x, pd0y, pd1x, pd1y, hovering == 0? 2 : 1);
-		draw_line_width(pd0x, pd0y, pd2x, pd2y, hovering == 0? 2 : 1);
-		draw_line_width(pd3x, pd3y, pd1x, pd1y, hovering == 0? 2 : 1);
-		draw_line_width(pd3x, pd3y, pd2x, pd2y, hovering == 0? 2 : 1);
+		draw_line_width(pd0x, pd0y, pd1x, pd1y, hovering == TRANSFORM_HANDLE.move? TRANSFORM_HANDLE.scale : TRANSFORM_HANDLE.rotate);
+		draw_line_width(pd0x, pd0y, pd2x, pd2y, hovering == TRANSFORM_HANDLE.move? TRANSFORM_HANDLE.scale : TRANSFORM_HANDLE.rotate);
+		draw_line_width(pd3x, pd3y, pd1x, pd1y, hovering == TRANSFORM_HANDLE.move? TRANSFORM_HANDLE.scale : TRANSFORM_HANDLE.rotate);
+		draw_line_width(pd3x, pd3y, pd2x, pd2y, hovering == TRANSFORM_HANDLE.move? TRANSFORM_HANDLE.scale : TRANSFORM_HANDLE.rotate);
 		
 		draw_line(prcx, prcy, prx, pry);
 		draw_anchor(hovering == 1, prx, pry, ui(8), 1);
@@ -142,19 +147,19 @@
 		if(mouse_lpress(active)) {
 			drag_type = hovering;
 			
-			if(hovering == 0) {
+			if(hovering == TRANSFORM_HANDLE.move) {
 				dragging_sx = _pos[0];
 				dragging_sy = _pos[1];
 				dragging_mx = _mx;
 				dragging_my = _my;
 				
-			} else if(hovering == 1) { //rot
+			} else if(hovering == TRANSFORM_HANDLE.rotate) { //rot
 				dragging_sx = _rot;
 				rot_anc_x	= _x + _pos[0] * _s;
 				rot_anc_y	= _y + _pos[1] * _s;
 				dragging_mx = point_direction(rot_anc_x, rot_anc_y, _mx, _my);
 				
-			} else if(hovering == 2) { //sca
+			} else if(hovering == TRANSFORM_HANDLE.scale) { //sca
 				dragging_sx = pd3x;
 				dragging_sy = pd3y;
 				dragging_cx	= _x + _pos[0] * _s;

@@ -35,7 +35,7 @@
 #endregion 
 
 function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
-	name  = "Canvas";
+	name  = "Canvas Ext";
 	color = COLORS.node_blend_canvas;
 	preview_select_surface = false;
 	setAlwaysTimeline(new timelineItemNode_Canvas(self));

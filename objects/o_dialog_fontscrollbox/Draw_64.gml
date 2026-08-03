@@ -1,18 +1,19 @@
 /// @description init
+DIALOG_WINDOW_START
 #region pos
 	var hght = line_get_height(f_p0, 8);
 	var hh   = array_length(curr_data) * hght + ui(40);
 	if(search_string != "") hh += ui(24);
 	
-	dialog_h = min(max_h, hh);
-	dialog_y = min(dialog_y, WIN_H - dialog_h - ui(8));
+	 dialog_h = min(max_h, hh);
+	_dialog_y = min(_dialog_y, WIN_H - dialog_h - ui(8));
 #endregion
 
 #region draw
-	draw_sprite_stretched(THEME.textbox, 3, dialog_x, dialog_y, dialog_w, dialog_h);
+	draw_sprite_stretched(THEME.textbox, 3, _dialog_x, _dialog_y, dialog_w, dialog_h);
 	
-	var _tx = dialog_x + ui(8);
-	var _ty = dialog_y + ui(8);
+	var _tx = _dialog_x + ui(8);
+	var _ty = _dialog_y + ui(8);
 	var _tw = dialog_w - ui(16);
 	var _th = ui(24);
 	
@@ -30,7 +31,8 @@
 	
 	sc_content.verify(dialog_w - ui(6), dialog_h - ui(40));
 	sc_content.setFocusHover(sFOCUS, sHOVER);
-	sc_content.draw(dialog_x, dialog_y + ui(40));
+	sc_content.draw(_dialog_x, _dialog_y + ui(40));
 	
-	draw_sprite_stretched(THEME.textbox, 1, dialog_x, dialog_y, dialog_w, dialog_h);
+	draw_sprite_stretched(THEME.textbox, 1, _dialog_x, _dialog_y, dialog_w, dialog_h);
 #endregion
+DIALOG_WINDOW_END

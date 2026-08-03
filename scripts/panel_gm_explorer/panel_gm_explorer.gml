@@ -187,13 +187,13 @@ function GM_Explore_draw(gmBinder, _x, _y, _w, _h, _m, _hover, _focus) {
             
             if(_hov) {
                 draw_sprite_stretched_ext(THEME.ui_panel, 1, _x0, _y0, grid_w, grid_h, COLORS._main_icon);
-                if(_thm && _ass.type != "GMRoom") TOOLTIP = [ _thm, "sprite" ];
+                if(_thm && _ass.type != "GMRoom") setTOOLTIP([ _thm, "sprite" ]);
                 
                 if(_nod == noone) {
                 	if(mouse_lpress(_focus)) 
                 		DRAGGING = { type : _ass.type, data : _ass };
                 } else 
-                	TOOLTIP = "Assets is already binded to a node.";
+                	setTOOLTIP("Assets is already binded to a node.");
             }
         }
         

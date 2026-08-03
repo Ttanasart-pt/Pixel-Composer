@@ -9,7 +9,7 @@ function Node_UV_Height(_x, _y, _group = noone) : Node_Shader_Generator(_x, _y, 
 	newInput( 3, nodeValue_Surface( "Mask"       ));
 	
 	////- =Height Map
-	newInput( 4, nodeValue_Surface( "Height Map"      )).setShaderProp("heightMap");
+	newInput( 4, nodeValue_Surface( "Height Map"      )).setShaderProp("heightMap").setRequired();
 	newInput( 5, nodeValue_Vec2(    "Position", [0,0] )).setUnitSimple().setShaderProp("position");
 	newInput( 7, nodeValue_Slider(  "Strength",  1, [-4,4,.01] )).setShaderProp("intensity");
 	

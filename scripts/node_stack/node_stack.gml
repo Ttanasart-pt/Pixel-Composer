@@ -38,6 +38,7 @@ function Node_Stack(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		newInput(index, nodeValue_Surface("Input")).setVisible(true, true);
 		
 		array_push(input_display_list, inAmo);
+		postCreateNewInput(index);
 		return inputs[index];
 	} 
 	

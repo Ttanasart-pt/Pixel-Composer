@@ -130,8 +130,11 @@ function buttonGroup(_data, _onModify) : widget() constructor {
 				var tc  = fColor;
 				
 				if(_selecting == i) {
-					if(hover && point_in_rectangle(_m[0], _m[1], floor(bx), _y, floor(bx) + bww, _y + _h)) 
-						TOOLTIP = _t;
+					if(hover && point_in_rectangle(_m[0], _m[1], floor(bx), _y, floor(bx) + bww, _y + _h)) {
+						setTOOLTIP(_t);
+						if(mouse_lpress(active))
+							onModify(i);
+					}
 						
 					draw_sprite_stretched_ext(spr, 2, floor(bx), _y, ceil(bww), _h, boxColor);
 					draw_sel = [spr, bx];

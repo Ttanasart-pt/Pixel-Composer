@@ -442,7 +442,7 @@ function Panel_Collection() : PanelContent() constructor {
 							
 							if(!instance_exists(o_dialog_menubox) && meta != noone && meta != undefined) {
 								meta.thumbnail = spr;
-								TOOLTIP = meta;
+								setTOOLTIP(meta);
 							}
 						}
 						
@@ -608,7 +608,7 @@ function Panel_Collection() : PanelContent() constructor {
 		draw_set_alpha(1);
 		_y += ui(24);
 		
-		var _x  = ui(8 + in_dialog * 8);
+		var _x  = ui(8);
 		var ww  = folderPane.w - ui(20);
 		var hov = pHOVER && folderPane.hover;
 		var foc = pFOCUS;
@@ -763,7 +763,7 @@ function Panel_Collection() : PanelContent() constructor {
 				draw_sprite_stretched_ext(THEME.node_bg, 1, _nx, yy, grid_width, grid_size, CDEF.main_dkgrey);
 				
 				if(_hover && point_in_rectangle(_m[0], _m[1], _nx, yy, _nx + grid_width, yy + grid_size)) {
-					TOOLTIP = _node.name;
+					setTOOLTIP(_node.name);
 					nodecontentPane.hover_content = true;
 					draw_sprite_stretched_ext(THEME.node_bg, 1, _nx, yy, grid_width, grid_size, COLORS._main_accent);
 					

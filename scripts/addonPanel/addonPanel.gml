@@ -9,7 +9,6 @@ function addonPanel(_addon, _pane) : PanelContent() constructor {
 	
 	w = ui(pane.w);
 	h = ui(pane.h);
-	showHeader = true;
 	
 	drawFn   = struct_has(pane, "drawFn")?	 pane.drawFn   : "";
 	drawUIFn = struct_has(pane, "drawUIFn")? pane.drawUIFn : "";

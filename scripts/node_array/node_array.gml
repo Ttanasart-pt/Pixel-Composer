@@ -39,6 +39,7 @@ function Node_Array(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		newInput(index, nodeValue("Input", self, CONNECT_TYPE.input, _typ, -1 )).setVisible(true, true);
 		
 		array_push(input_display_list, inAmo);
+		postCreateNewInput(index);
 		return inputs[index];
 		
 	} setDynamicInput(1);

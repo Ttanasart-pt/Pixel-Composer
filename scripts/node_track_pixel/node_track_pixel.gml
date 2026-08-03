@@ -4,7 +4,7 @@ function Node_Track_Pixel(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	setDimension(96, 48);
 	setDrawIcon();
 	
-	newInput( 0, nodeValue_Surface( "Surface In" ));
+	newInput( 0, nodeValue_Surface( "Surface In" )).setRequired();
 	
 	////- =Tracking
 	newInput( 1, nodeValue_Vec2(    "Origin",       [.5,.5]  )).setUnitSimple().setAnimable(false).hideLabel();
@@ -194,8 +194,6 @@ function Node_Track_Pixel(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 			
 			var _ctlr = getInputData( 4);
 			var _ptlr = getInputData( 5);
-			
-			if(!is_just_surface(_surf)) return;
 		#endregion
 		
 		var _winSiz = _wind * 2 + 1;

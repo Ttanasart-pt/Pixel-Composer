@@ -1,7 +1,7 @@
 function Node_MK_Fracture(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "MK Fracture";
 	
-	newInput( 0, nodeValue_Surface("Surface In"));
+	newInput( 0, nodeValue_Surface("Surface In")).setRequired();
 	
 	////- =Fracture
 	newInput( 1, nodeValue_Vec2(        "Subdivision", [4,4] ));

@@ -8,16 +8,25 @@ function Node_MK_Tree_Wave_Branch(_x, _y, _group = noone) : Node(_x, _y, _group)
 	newInput( 1, nodeValueSeed());
 	newInput( 0, nodeValue_Struct( "Branch", noone)).setVisible(true, true).setCustomData(global.MKTREE_JUNC);
 	
-	////- =Smoothen
-	newInput( 2, nodeValue_Range(    "Frequency", [2,2], true ));
-	newInput( 3, nodeValue_Range(    "Amplitude", [4,4], true )).setCurvable(4);
-	newInput( 5, nodeValue_RotRange( "Phase",      ROTRAN_DEF_0 ));
-	// 6
+	////- =Area
+	newInput( 6, nodeValue_EScroll( "Area Type", 0, [ "All", "Area", "Band" ] ));
+	newInput( 7, nodeValue_Area(    "Area",      DEF_AREA_REF )).setUnitSimple();
+	newInput(10, nodeValue_Vec2(    "Center",    [.5,.5]      )).setUnitSimple();
+	newInput(11, nodeValue_Float(   "Width",       8          ));
+	newInput(12, nodeValue_Rotation("Angle",       0          ));
+	newInput( 8, nodeValue_Float(   "Falloff Distance", 0     )).setCurvable( 9, CURVE_DEF_01);
+	
+	////- =Wave
+	newInput( 2, nodeValue_Range(    "Frequency", [2,2], true  ));
+	newInput( 3, nodeValue_Range(    "Amplitude", [4,4], true  )).setCurvable(4);
+	newInput( 5, nodeValue_RotRange( "Phase",     ROTRAN_DEF_0 ));
+	// 13
 	
 	newOutput( 0, nodeValue_Output("Branches", VALUE_TYPE.struct, noone)).setCustomData(global.MKTREE_JUNC);
 	
 	input_display_list = [ s_MKFX, 1, 0, 
-		[ "Scatter", false ],  2,  3,  4,  5, 
+		[ "Area", false ],  6,  7, 10, 11, 12, [8, false],  9,  
+		[ "Wave", false ],  2,  3,  4,  5, 
 	];
 	
 	////- Nodes
@@ -32,6 +41,39 @@ function Node_MK_Tree_Wave_Branch(_x, _y, _group = noone) : Node(_x, _y, _group)
 			var _t = _resT[i];
 			if(is(_t, __MK_Tree)) _t.drawOverlay(_x, _y, _s);
 		}
+		
+		var _aType = getInputData( 6);
+		var _falW  = getInputData( 8);
+		
+		switch(_aType) {
+			case 1 : // area
+				drawOverlayInput(inputs[ 7].drawOverlay(hover, active, _x, _y, _s, _mx, _my));
+				break;
+				
+			case 2 : // band
+				var _cent  = getInputData( 8);
+				var _widt  = getInputData(11);
+				var _bang  = getInputData(12);
+				
+				var cx = _x + _cent[0] * _s;
+				var cy = _y + _cent[1] * _s;
+				
+				var cdx = lengthdir_x(9999, _bang);
+				var cdy = lengthdir_y(9999, _bang);
+				
+				var dx = lengthdir_x(_widt * _s, _bang + 90);
+				var dy = lengthdir_y(_widt * _s, _bang + 90);
+				
+				draw_set_color(COLORS._main_accent);
+				draw_line(cx+dx - cdx, cy+dy - cdy, cx+dx + cdx, cy+dy + cdy);
+				draw_line(cx-dx - cdx, cy-dy - cdy, cx-dx + cdx, cy-dy + cdy);
+				
+				drawOverlayInput(inputs[10].drawOverlay(hover, active, _x, _y, _s, _mx, _my, 1));
+				drawOverlayInput(inputs[11].drawOverlay(hover, active, cx, cy, _s, _mx, _my, _bang + 90));
+				drawOverlayInput(inputs[12].drawOverlay(hover, active, cx, cy, _s, _mx, _my));
+				break;
+		}
+		
 	}
 	
 	static update = function() {
@@ -43,10 +85,26 @@ function Node_MK_Tree_Wave_Branch(_x, _y, _group = noone) : Node(_x, _y, _group)
 			
 			var _bran = getInputData( 0);
 			
+			var _aType = getInputData( 6);
+			var _area  = getInputData( 7);
+			var _cent  = getInputData(10);
+			var _widt  = getInputData(11);
+			var _bang  = getInputData(12);
+			var _falW  = getInputData( 8);
+			var _falC  = getInputData( 9), fal_curve = new curveMap(_falC);
+			
 			var _freq = getInputData( 2);
 			var _ampl = getInputData( 3);
 			var _ampC = getInputData( 4), amp_curve = inputs[3].attributes.curved? new curveMap(_ampC) : undefined;
 			var _phas = getInputData( 5);
+			
+			inputs[ 7].setVisible(_aType == 1);
+			inputs[10].setVisible(_aType == 2);
+			inputs[11].setVisible(_aType == 2);
+			inputs[12].setVisible(_aType == 2);
+			
+			inputs[ 8].setVisible(_aType >  0);
+			
 		#endregion
 		
 		var _len = array_safe_length(_bran);
@@ -64,8 +122,17 @@ function Node_MK_Tree_Wave_Branch(_x, _y, _group = noone) : Node(_x, _y, _group)
 			var _bpnt = _br.getPoints();
 			if(array_empty(_bpnt)) continue;
 			
+			var sx  = _bpnt[0][0];
+			var sy  = _bpnt[0][1];
+			var wei = 1;
+			
+			switch(_aType) {
+				case 1 : wei = area_get_point_influence(_area, _falW, fal_curve, sx, sy);                                    break;
+				case 2 : wei = distance_to_line_angle_influence(sx, sy, _cent[0], _cent[1], _bang, _widt, _falW, fal_curve); break;
+			}
+			
 			var freq = random_range(_freq[0], _freq[1]);
-			var ampl = random_range(_ampl[0], _ampl[1]);
+			var ampl = random_range(_ampl[0], _ampl[1]) * wei;
 			
 			var phas = rotation_random_eval(_phas);
 			

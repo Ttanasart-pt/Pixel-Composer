@@ -73,6 +73,19 @@ function distance_to_line_angle_signed(px, py, lx, ly, aa) {
 	return (x1 - x0) * (y0 - py) - (x0 - px) * (y1 - y0);
 }
 	
+function distance_to_line_angle_influence(px, py, lx, ly, aa, width, fallW, fallC) { 
+	var _dist = distance_to_line_angle_signed(px, py, lx, ly, aa); 
+	    _dist = abs(_dist);
+	
+	if(_dist > width + fallW)
+		return fallC.get(0);
+		
+	if (fallW > 0 && _dist > width)
+		return fallC.get(1 - clamp((_dist - width) / fallW, 0, 1));
+		
+	return fallC.get(1);
+}
+	
 function distance_to_line_infinite_signed(px, py, x0, y0, x1, y1) { return ((x1 - x0) * (y0 - py) - (x0 - px) * (y1 - y0)) / sqrt(sqr(x1 - x0) + sqr(y1 - y0)); }
 function distance_to_line_infinite(px, py, x0, y0, x1, y1)        { return abs((x1 - x0) * (y0 - py) - (x0 - px) * (y1 - y0)) / sqrt(sqr(x1 - x0) + sqr(y1 - y0)); }
 
@@ -87,7 +100,7 @@ function point_project_line(px, py, l0x, l0y, l1x, l1y) {
 function point_project_distance_line_angle(px, py, lx, ly, ang) {
 	var dx = lengthdir_x(1, ang);
 	var dy = lengthdir_y(1, ang);
-	var dt  = dot_product(px - lx, py - ly, dx, dy);
+	var dt = dot_product(px - lx, py - ly, dx, dy);
 	return dt;
 }
 

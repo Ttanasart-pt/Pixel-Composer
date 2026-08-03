@@ -1103,7 +1103,7 @@ function Panel_Animation() : PanelContent() constructor {
         drawAnimationControl();
         
         if(timeline_show_time > -1) {
-            TOOLTIP = $"{__txt("Frame")} {timeline_show_time + 1}/{GLOBAL_TOTAL_FRAMES}";
+            setTOOLTIP($"{__txt("Frame")} {timeline_show_time + 1}/{GLOBAL_TOTAL_FRAMES}");
             timeline_show_time = -1;
         }
         
@@ -1121,10 +1121,7 @@ function Panel_Animation() : PanelContent() constructor {
     }
         
     function toggleDopesheet() {
-    	if(in_dialog) {
-    		
-    		
-    	} else if(panel.parent) {
+    	 if(panel.parent) {
     		var pd = panel.padding * 2;
     		var hh = h > min_h + pd? min_h + pd : expands_h + pd;
     		panel.parent.resplit_v(undefined, hh);

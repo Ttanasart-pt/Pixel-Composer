@@ -34,7 +34,7 @@ event_inherited();
 	var y0 = dialog_y + ui(128);
 	var y1 = dialog_y + dialog_h - ui(16);
 	
-	sp_recent = new scrollPane(x1 - x0 - ui(12), y1 - y0, function(_y, _m) {
+	sp_recent = new scrollPane(x1 - x0 - ui(12), y1 - y0, function(_y, _m) /*=>*/ {
 		draw_clear_alpha(COLORS.panel_bg_clear, 0);
 		
 		var spw = sp_recent.surface_w;
@@ -99,8 +99,8 @@ event_inherited();
 			if(_hov) {
 				sp_recent.hover_content = true;
 				if(!instance_exists(o_dialog_menubox)) {
-					if(!_thumb) TOOLTIP = new tooltipRecentFile(_rec, rx + xx, ry + yy + hg - hgt, ww, hg);
-					else        TOOLTIP = _dat.path;
+					if(!_thumb) setTOOLTIP(new tooltipRecentFile(_rec, rx + xx, ry + yy + hg - hgt, ww, hg));
+					else        setTOOLTIP(_dat.path);
 				}
 				
 				if(mouse_lpress(focus)) {
@@ -316,7 +316,7 @@ event_inherited();
 					
 					if(page == "Workshop") {
 						_meta = _project.getMetadata();
-						TOOLTIP = _meta;
+						setTOOLTIP(_meta);
 					}
 					
 					if(mouse_lpress(sFOCUS)) {
@@ -515,7 +515,7 @@ event_inherited();
 		
 			if(sHOVER && sp_contest.hover && point_in_rectangle(_m[0], _m[1], bx - spr_w / 2, _y + sy, bx + spr_w / 2, _y + sy + spr_h)) {
 				sp_contest.hover_content = true;
-				TOOLTIP = "Go to Pixel Composer Discord server";
+				setTOOLTIP("Go to Pixel Composer Discord server");
 			
 				if(mouse_lpress(sFOCUS))
 					url_open("https://discord.gg/aHGbYjQh63");
@@ -762,7 +762,7 @@ event_inherited();
 			
 			if(sHOVER && sp_contest.hover && point_in_rectangle(_m[0], _m[1], bx - ui(16), by - ui(16), bx + ui(16), by + ui(16))) {
 				sp_contest.hover_content = true;
-				TOOLTIP = __txt("contest_open_discord", "Open in Discord");
+				setTOOLTIP(__txt("contest_open_discord", "Open in Discord"));
 				
 				draw_sprite_ui(THEME.discord, 0, bx, by,,,, c_white);
 				if(mouse_lpress(sFOCUS))
@@ -983,7 +983,7 @@ event_inherited();
 			
 			if(_hov) {
 				draw_sprite_stretched_ext(THEME.node_bg, 1, _px0, _py0, _pw, _ph, COLORS._main_accent, 1);
-				TOOLTIP = "Open in browser"
+				setTOOLTIP("Open in browser");
 				
 				if(mouse_lpress(focus))
 					URL_open(_art.link);
@@ -1019,7 +1019,7 @@ event_inherited();
 			
 			if(_inf.link != "" && sp_news.hover && point_in_rectangle(_m[0], _m[1], _sx, _sy, _sx + _sw, _sy + _sh)) {
 				draw_sprite_stretched_add(THEME.node_bg, 1, _sx, _sy, _sw, _sh, COLORS._main_icon, .4);
-				TOOLTIP = _inf.tooltip;
+				setTOOLTIP(_inf.tooltip);
 				
 				if(mouse_lpress(sp_news.active))
 					url_open(_inf.link);

@@ -10,7 +10,7 @@ function Node_Seperate_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 	name = "Separate Shape";
 	
 	////- =Shape
-	newInput( 0, nodeValue_Surface( "Surface In" ));
+	newInput( 0, nodeValue_Surface( "Surface In" )).setRequired();
 	newInput( 5, nodeValue_EButton( "Mode",        0, [ "Greyscale", "Alpha" ] ))
 	newInput( 1, nodeValue_Slider(  "Tolerance",  .2, { range: [ 0, 1, 0.01 ], update_stat: SLIDER_UPDATE.release }));
 	newInput( 4, nodeValue_EButton( "Blank",       0, [ "Include", "Ignore" ] ));

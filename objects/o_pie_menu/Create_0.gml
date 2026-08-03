@@ -210,12 +210,16 @@ function onActivate() {
 	// instance_destroy(o_dialog_menubox);
 }
 
-function checkFocus() {
+function checkMouse() {
 	if(itemSelecting != -1 && depth <= DIALOG_DEPTH_HOVER) {
 		DIALOG_DEPTH_HOVER = depth;
 		HOVER = self.id;
 	}
 } 
+
+function checkFocus() {
+	
+}
 
 function checkDepth() {
 	if(active && depth == DIALOG_DEPTH_HOVER) 

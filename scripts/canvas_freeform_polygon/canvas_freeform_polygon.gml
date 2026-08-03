@@ -12,6 +12,7 @@ function canvas_freeform_polygon_step(active, _x, _y, _s, _mx, _my, _draw) {
 		
 		if(DOUBLE_CLICK) {
 			var temp_surface = surface_create(_dim[0], _dim[1]);
+			surface_clear(drawing_surface);
 			
 			switch(node.tool_attribute.freeform_algo) {
 				case 0 :
@@ -21,6 +22,7 @@ function canvas_freeform_polygon_step(active, _x, _y, _s, _mx, _my, _draw) {
 						surface_set_target(temp_surface);
 							DRAW_CLEAR 
 							
+							draw_set_color(c_white);
 							draw_primitive_begin(pr_trianglelist);
 								for( var i = 0, n = array_length(_triangles); i < n; i++ ) {
 									var p0 = _triangles[i][0];
@@ -54,7 +56,9 @@ function canvas_freeform_polygon_step(active, _x, _y, _s, _mx, _my, _draw) {
 						shader_set_f( "points",    freeform_points );
 						shader_set_i( "pointAmo",  len + 1         );
 						
-						shader_set_c( "color",     draw_get_color() );
+						shader_set_c( "color",     ca_white        );
+						
+						draw_empty();
 					surface_reset_shader();
 					break;
 			}

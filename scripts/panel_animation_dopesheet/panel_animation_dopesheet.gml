@@ -619,7 +619,7 @@ function Panel_Animation_Dopesheet() {
             len = max(1, len);
         
         if(timeline_stretch == 1) {
-            TOOLTIP = __txt("panel_animation_length", "Animation length") + $" {len}";
+            setTOOLTIP(__txt("panel_animation_length", "Animation length") + $" {len}");
             GLOBAL_TOTAL_FRAMES = len;
             
             timeline_draggable = false;
@@ -632,7 +632,7 @@ function Panel_Animation_Dopesheet() {
         } 
         
         if(timeline_stretch == 2) {
-            TOOLTIP  = __txt("panel_animation_length", "Animation length") + $" {len}";
+            setTOOLTIP(__txt("panel_animation_length", "Animation length") + $" {len}");
             var _len = GLOBAL_TOTAL_FRAMES;
             GLOBAL_TOTAL_FRAMES = len;
             
@@ -710,10 +710,10 @@ function Panel_Animation_Dopesheet() {
         } 
         
         if(!GLOBAL_IS_PLAYING && pHOVER && point_in_circle(msx, msy, stx, sty, sty)) {
-        	TOOLTIP = tooltip_anim_end;
+        	setTOOLTIP(tooltip_anim_end);
         	
         	if(key_mod_press(ALT)) {
-                TOOLTIP = __txt("panel_animation_stretch", "Stretch animation");
+                setTOOLTIP(__txt("panel_animation_stretch", "Stretch animation"));
         		
                 if(DOUBLE_CLICK) {
                 	timeline_stretch      = 2;
@@ -760,7 +760,7 @@ function Panel_Animation_Dopesheet() {
                 }
                 
             } else if(key_mod_press(CTRL)) {
-                TOOLTIP = __txt("panel_animation_adjust_length", "Adjust animation length");
+                setTOOLTIP(__txt("panel_animation_adjust_length", "Adjust animation length"));
         		
                 if(DOUBLE_CLICK) {
                 	timeline_stretch      = 1;
@@ -1472,7 +1472,7 @@ function Panel_Animation_Dopesheet() {
                 draw_sprite_ui_uniform(THEME.timeline_keyframe, 0, px, py, 1, _hv? COLORS._main_accent : cc, aa);
                 
                 if(point_in_circle(mmx, mmy, px, py, ui(10))) {
-                	TOOLTIP = v[j];
+                	setTOOLTIP(v[j]);
                 	
                     _graph_key_hover       = key;
                     _graph_key_hover_index = KEYFRAME_DRAG_TYPE.move;
@@ -1872,7 +1872,7 @@ function Panel_Animation_Dopesheet() {
         	}
         	
         	if(pHOVER && point_in_rectangle(msx, msy, x0, y0, x1-1, y1))
-        		TOOLTIP = $"velocity: {delt}";
+        		setTOOLTIP($"velocity: {delt}");
         	
         	x0 = x1;
         	ov = nv;
@@ -1934,7 +1934,7 @@ function Panel_Animation_Dopesheet() {
         	}
         	
         	if(pHOVER && point_in_rectangle(msx, msy, x0, y0, x1-1, y1))
-        		TOOLTIP = $"delta: {del}, off-pixel: {px}";
+        		setTOOLTIP($"delta: {del}, off-pixel: {px}");
         	
         	x0 = x1;
         	ov = nv;
@@ -2018,7 +2018,7 @@ function Panel_Animation_Dopesheet() {
                 	var _mrat = (msy - pr[0]) / (pr[1] - pr[0]);
                 	
 	                var vv  = lerp(graph_key_drag_range[1], graph_key_drag_range[0], _mrat);
-	                TOOLTIP = vv;
+	                setTOOLTIP(vv);
 	                k.value = vv;
 	                
                 } else if(is_array(graph_key_drag_value) && graph_key_drag_array >= 0 && graph_key_drag_array < array_length(graph_key_drag_value)) {
@@ -2026,7 +2026,7 @@ function Panel_Animation_Dopesheet() {
                 	var _mrat = (msy - pr[0]) / (pr[1] - pr[0]);
                 	
 	                var vv  = lerp(graph_key_drag_range[1], graph_key_drag_range[0], _mrat);
-	                TOOLTIP = vv;
+	                setTOOLTIP(vv);
 	                k.value[graph_key_drag_array] = vv;
                 }
                 
@@ -2214,7 +2214,7 @@ function Panel_Animation_Dopesheet() {
 	            
                 key_hover = keyframe;
                 if(!instance_exists(o_dialog_menubox))
-                    TOOLTIP = [ keyframe, animator.prop.type ];
+                    setTOOLTIP([ keyframe, animator.prop.type ]);
                 
                 if(pFOCUS && !key_mod_press(SHIFT)) {
                     if(DOUBLE_CLICK) {
@@ -2417,8 +2417,7 @@ function Panel_Animation_Dopesheet() {
             tx = tool_width - ui(16);
             if(pHOVER && point_in_rectangle(msx, msy, tx - ui(9), ty - ui(10), tx + ui(10), ty + ui(8))) {
                 draw_sprite_ui_uniform(THEME.timeline_graph, 1, tx, ty, 1, COLORS._main_icon_on_inner, _tool_a);
-                TOOLTIP = _graph_show? __txt("panel_animation_hide_graph", "Hide graph") : 
-                                       __txt("panel_animation_show_graph", "Show graph");
+                setTOOLTIP(_graph_show? __txt("panel_animation_hide_graph", "Hide graph") : __txt("panel_animation_show_graph", "Show graph"));
                 
                 if(mouse_lpress(pFOCUS)) {
                     if(prop.sep_axis) prop.attributes.show_graphs[animator.index] = !_graph_show;
@@ -2474,7 +2473,7 @@ function Panel_Animation_Dopesheet() {
 	            if(tooltip_loop_prop != prop) tooltip_loop_type.arrow_pos = noone;
 	            tooltip_loop_prop       = prop;
 	            tooltip_loop_type.index = prop.on_end;
-	            TOOLTIP = tooltip_loop_type;
+	            setTOOLTIP(tooltip_loop_type);
 	                            
 	            if(mouse_lrelease(pFOCUS)) prop.on_end = safe_mod(prop.on_end + 1, sprite_get_number(THEME.prop_on_end));
 	            if(mouse_lpress(pFOCUS)) on_end_dragging_anim = prop;
@@ -3435,7 +3434,7 @@ function Panel_Animation_Dopesheet() {
 		                if(edited) UNDO_HOLDING = true;
 		                
 		                var _tsca = (tt - _sf) / (keyframe_drag_st - _sf);
-	                	TOOLTIP = $"{__txt("Key stretch")} {keyframe_drag_st - _sf} > {tt - _sf} [{string_format(_tsca * 100, -1, 2)}%]";
+	                	setTOOLTIP($"{__txt("Key stretch")} {keyframe_drag_st - _sf} > {tt - _sf} [{string_format(_tsca * 100, -1, 2)}%]");
 	                }
 	                            
 	                if(mouse_lrelease()) {
@@ -3806,7 +3805,7 @@ function Panel_Animation_Dopesheet() {
 					var _drg  = marker_dragging == _m;
 					
 					if(_hv) {
-						if(_l != "") TOOLTIP = _l;
+						if(_l != "") setTOOLTIP(_l);
 						_mkHover = _m;
 					}
 					
@@ -4309,20 +4308,24 @@ function tooltipAnimEnd() constructor {
 		var lh = line_get_height(f_p1);
 		var _h = lh * 2 + ui(4);
 		var _w = ui(136);
+		var pd = ui(8);
 		
-		var mx = min(mouse_mxs + ui(16), WIN_W - (_w + ui(16) + ui(4)));
-		var my = min(mouse_mys + ui(16), WIN_H - (_h + ui(16) + ui(4)));
+		var tww = _w + pd * 2;
+		var thh = _h + pd * 2;
 		
-		draw_sprite_stretched(THEME.textbox, 3, mx, my, _w + ui(16), _h + ui(16));
-		draw_sprite_stretched(THEME.textbox, 0, mx, my, _w + ui(16), _h + ui(16));
+		TOOLTIP_SURFACE = surface_verify(TOOLTIP_SURFACE, tww, thh);
+		surface_set_shader(TOOLTIP_SURFACE);
+		draw_sprite_stretched(THEME.textbox, 3, 0, 0, tww, thh);
+		draw_sprite_stretched(THEME.textbox, 0, 0, 0, tww, thh);
 		
-		var yy = my + ui(8);
+		var yy = ui(8);
 		draw_set_text(f_p1b, fa_left, fa_top, COLORS._main_text_sub);
-		draw_text(mx + ui(116), yy,              "Ctrl");
-		draw_text(mx + ui(116), yy + lh + ui(4), "Alt");
+		draw_text(ui(116), yy,              "Ctrl");
+		draw_text(ui(116), yy + lh + ui(4), "Alt");
 		
 		draw_set_text(f_p1, fa_left, fa_top, COLORS._main_text);
-		draw_text(mx + ui(8), yy,              "Adjust Length");
-		draw_text(mx + ui(8), yy + lh + ui(4), "Stretch");
+		draw_text(ui(8), yy,              "Adjust Length");
+		draw_text(ui(8), yy + lh + ui(4), "Stretch");
+		surface_reset_shader();
 	}
 }

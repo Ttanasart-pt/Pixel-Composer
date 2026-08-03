@@ -54,14 +54,15 @@ function mouse_step() {
 	
 	var _focus  = window_has_focus();
 	var _mouse  = _focus && point_in_rectangle(
-		display_mouse_get_x(),               display_mouse_get_y(), 
+		mouse_rx,                            mouse_ry, 
 		window_get_x(),                      window_get_y(), 
 		window_get_x() + window_get_width(), window_get_y() + window_get_height()
 	);
 	
-	var _fclick = !MOUSE_EVENT.wfocus && _mouse;
+	if(MULTI_WINDOWS) _mouse = true;
 	
-	MOUSE_EVENT.wfocus   = _focus;
+	var _fclick = !MOUSE_EVENT.wfocus && _mouse;
+	MOUSE_EVENT.wfocus = _focus;
 	
 	if(OS == os_windows && MOUSE_GLOBAL) {
 		MOUSE_EVENT.lclick   = _mouse && global_mouse_left_is_pressing();
@@ -75,6 +76,25 @@ function mouse_step() {
 		MOUSE_EVENT.mclick   = _mouse && global_mouse_middle_is_pressing();
 		MOUSE_EVENT.mpress   = _mouse && global_mouse_middle_is_pressed();
 		MOUSE_EVENT.mrelease = global_mouse_middle_is_released();
+		
+		for( var i = 0, n = array_length(WINWIN_ALL); i < n; i++ ) {
+			var win = WINWIN_ALL[i];
+			
+			MOUSE_EVENT.lclick   |= winwin_mouse_check_button(          win, mb_left   );
+			MOUSE_EVENT.lpress   |= winwin_mouse_check_button_pressed(  win, mb_left   );
+			MOUSE_EVENT.lrelease |= winwin_mouse_check_button_released( win, mb_left   );
+			
+			MOUSE_EVENT.rclick   |= winwin_mouse_check_button(          win, mb_right  );
+			MOUSE_EVENT.rpress   |= winwin_mouse_check_button_pressed(  win, mb_right  );
+			MOUSE_EVENT.rrelease |= winwin_mouse_check_button_released( win, mb_right  );
+			
+			MOUSE_EVENT.mclick   |= winwin_mouse_check_button(          win, mb_middle );
+			MOUSE_EVENT.mpress   |= winwin_mouse_check_button_pressed(  win, mb_middle );
+			MOUSE_EVENT.mrelease |= winwin_mouse_check_button_released( win, mb_middle );
+			
+			if(winwin_mouse_wheel_up(win))   MOUSE_WHEEL =  1;
+			if(winwin_mouse_wheel_down(win)) MOUSE_WHEEL = -1;
+		}
 		
 	} else {
 		MOUSE_EVENT.lclick   = mouse_check_button(mb_left);

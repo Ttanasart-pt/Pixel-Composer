@@ -5,12 +5,12 @@ DIALOG_DRAW_BG
 
 #region base UI
 	draw_set_text(f_p0, fa_left, fa_top, COLORS._main_text);
-	draw_text(dialog_x + ui(24), dialog_y + ui(20), __txt("dialog_group_output_order_title", "Output order"));
+	draw_text(_dialog_x + ui(24), _dialog_y + ui(20), __txt("dialog_group_output_order_title", "Output order"));
 #endregion
 
 #region preset
-	var px = dialog_x + ui(padding);
-	var py = dialog_y + ui(title_height);
+	var px = _dialog_x + ui(padding);
+	var py = _dialog_y + ui(title_height);
 	var pw = dialog_w - ui(padding + padding);
 	var ph = dialog_h - ui(title_height + padding)
 	

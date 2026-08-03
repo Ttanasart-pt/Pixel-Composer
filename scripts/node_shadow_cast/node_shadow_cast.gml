@@ -51,6 +51,7 @@ function Node_Shadow_Cast(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 		// inputs 14
 		
 		refreshDynamicDisplay();
+		postCreateNewInput(index);
 		return inputs[index];
 	} 
 	

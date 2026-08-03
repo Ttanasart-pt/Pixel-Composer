@@ -5,19 +5,19 @@ DIALOG_DRAW_BG
 
 #region base UI
 	draw_set_text(f_p2, fa_left, fa_top, COLORS._main_text_sub);
-	draw_text(dialog_x + ui(20), dialog_y + ui(8), __txt("add_images_title_single", "Import image as"));
+	draw_text(_dialog_x + ui(20), _dialog_y + ui(8), __txt("add_images_title_single", "Import image as"));
 #endregion
 
 #region nodes
-	draw_sprite_stretched(THEME.ui_panel_bg, 1, dialog_x + ui(12), dialog_y + title_h, dialog_w - ui(24), ui(120));
+	draw_sprite_stretched(THEME.ui_panel_bg, 1, _dialog_x + ui(12), _dialog_y + title_h, dialog_w - ui(24), ui(120));
 	var grid_size  = ui(64);
 	var grid_space = ui(16);
 	var grid_width = grid_size + grid_space;
 	
 	for(var i = 0; i < array_length(nodes); i++) {
 		var _node = nodes[i];
-		var xx    = dialog_x + ui(32) + i * grid_width;
-		var yy    = dialog_y + title_h + ui(16);
+		var xx    = _dialog_x + ui(32) + i * grid_width;
+		var yy    = _dialog_y + title_h + ui(16);
 		
 		PANEL_GRAPH.stepBegin();
 		
@@ -32,7 +32,7 @@ DIALOG_DRAW_BG
 			if(mouse_lpress(sFOCUS)) {
 				
 				switch(_node.node) {
-					case Node_Image          : 
+					case Node_Image : 
 						var _n = Node_create_Image_path(nx, ny, path);
 						    _n.skipDefault();
 						break;
@@ -42,8 +42,8 @@ DIALOG_DRAW_BG
 						    _n.skipDefault();
 						break;
 						
-					case Node_Canvas         : 
-						var _n = nodeBuild("Node_Canvas", nx, ny);
+					case Node_Canvas_S : 
+						var _n = nodeBuild("Node_Canvas_S", nx, ny);
 						    _n.skipDefault().loadImagePath(path); 
 						break;
 				}

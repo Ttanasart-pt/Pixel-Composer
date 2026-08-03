@@ -6,7 +6,7 @@ function Node_MK_GridBalls(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	newInput( 1, nodeValue_Dimension());
 	
 	////- =Surface
-	newInput( 0, nodeValue_Surface(  "Surface In" ));
+	newInput( 0, nodeValue_Surface(  "Surface In" )).setRequired();
 	
 	////- =Grid
 	newInput( 2, nodeValue_Vec2(     "Amount",     [4,4]  ));

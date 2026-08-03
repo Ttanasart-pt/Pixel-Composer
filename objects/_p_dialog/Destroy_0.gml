@@ -7,3 +7,7 @@ ds_list_remove(DIALOGS, self);
 DIALOG_JUST_CLOSED = string(object_get_name(object_index));
 
 if(parent) array_remove(parent.children, id);
+if(is_winwin(window)) {
+	run_in(1, function() /*=>*/ {return winwin_destroy(window)});
+	array_remove(WINWIN_ALL, window);
+}

@@ -29,7 +29,7 @@ function Node_Liquefy(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	newInput(4, nodeValue_Toggle("Channel", 0b1111, { data: array_create(4, THEME.inspector_channel) }));
 	
 	////- =Surfaces
-	newInput(0, nodeValue_Surface( "Surface In" ));
+	newInput(0, nodeValue_Surface( "Surface In" )).setRequired();
 	newInput(2, nodeValue_Surface( "Mask"       ));
 	newInput(3, nodeValue_Slider(  "Mix", 1     ));
 	__init_mask_modifier(2, 5); // inputs 5, 6, 
@@ -41,30 +41,32 @@ function Node_Liquefy(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	typeListStr = [ "Push", "Twirl", "Pinch", "Bloat" ];
 	typeList    = __enum_array_gen(typeListStr, s_node_liquefy_type);
 	
-	function createNewInput(i = array_length(inputs)) {
+	function createNewInput(index = array_length(inputs)) {
 		var inAmo = array_length(inputs);
 		dynamic_input_inspecting = getInputAmount();
 		
-		newInput(i+ 0, nodeValue_EScroll( "Type", 0, typeList ));
+		newInput(index+ 0, nodeValue_EScroll( "Type", 0, typeList ));
 		
 		////- =Region
-		newInput(i+ 1, nodeValue_Vec2(     "Position",    [.5,.5] )).setUnitSimple();
-		newInput(i+ 2, nodeValue_Vec2(     "Position 2",  [ 1, 0] )).setUnitSimple();
-		newInput(i+ 8, nodeValue_Path( "Push path"            ))
-		newInput(i+ 9, nodeValue_Int(      "Push resolution",  16 ));
-		newInput(i+ 3, nodeValue_Float(    "Radius",            8 )).hideLabel();
-		newInput(i+10, nodeValue_Float(    "Radius 2",          8 ));
-		newInput(i+ 5, nodeValue_Float(    "Falloff",           0 )).setCurvable(i + 6, CURVE_DEF_01).hideLabel();
+		newInput(index+ 1, nodeValue_Vec2(  "Position",    [.5,.5] )).setUnitSimple();
+		newInput(index+ 2, nodeValue_Vec2(  "Position 2",  [ 1, 0] )).setUnitSimple();
+		newInput(index+ 8, nodeValue_Path(  "Push path"            ))
+		newInput(index+ 9, nodeValue_Int(   "Push resolution",  16 ));
+		newInput(index+ 3, nodeValue_Float( "Radius",            8 )).hideLabel();
+		newInput(index+10, nodeValue_Float( "Radius 2",          8 ));
+		newInput(index+ 5, nodeValue_Float( "Falloff",           0 )).setCurvable(i + 6, CURVE_DEF_01).hideLabel();
 		
 		////- =Effect
-		newInput(i+ 4, nodeValue_Slider( "Intensity", .1, [ -1, 1, 0.01] ));
-		newInput(i+ 7, nodeValue_Slider( "Push",      .1, [ -1, 1, 0.01] ));
+		newInput(index+ 4, nodeValue_Slider( "Intensity", .1, [ -1, 1, 0.01] ));
+		newInput(index+ 7, nodeValue_Slider( "Push",      .1, [ -1, 1, 0.01] ));
+		// index+11
 		
-		inputs[i+ 3].overlay_text_valign = fa_bottom;
-		inputs[i+10].overlay_text_valign = fa_bottom;
+		inputs[index+ 3].overlay_text_valign = fa_bottom;
+		inputs[index+10].overlay_text_valign = fa_bottom;
 		
 		refreshDynamicDisplay();
-		return inputs[i];
+		postCreateNewInput(index);
+		return inputs[index];
 	} 
 	
 	effect_renderer = new Inspector_Custom_Renderer(function(_x, _y, _w, _m, _hover, _focus) {

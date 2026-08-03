@@ -47,6 +47,8 @@ function drawWidget(xx, yy, ww, _m, _jun, global_var = true, _hover = false, _fo
 		var _showVal  = jun.showValue();
 		var _boxColr  = jun.widgetBoxColor;
 		
+		var _reqfail  = jun.required && !jun.requirementPass();
+		
 		if(is(_showVal, ArrayObject) && _showVal.drawWidget) 
 			wid = _showVal.drawWidget;
 		
@@ -102,7 +104,7 @@ function drawWidget(xx, yy, ww, _m, _jun, global_var = true, _hover = false, _fo
 				draw_sprite_ui_uniform(THEME.animate_clock, index, butx, lb_y, ics, index == 2? COLORS._main_accent : c_white, 1);
 				
 				if(_input) {
-					TOOLTIP = __txt("panel_inspector_link", "Connected");
+					setTOOLTIP(__txt("panel_inspector_link", "Connected"));
 					if(mouse_rpress(_focus))
 						jun.removeFrom();
 				}
@@ -123,7 +125,7 @@ function drawWidget(xx, yy, ww, _m, _jun, global_var = true, _hover = false, _fo
 					jun.setAnim(anim_hold, true);
 					
 				draw_sprite_ui_uniform(THEME.animate_clock, index, butx, lb_y, ics, index == 2? COLORS._main_accent : c_white, 1);
-				TOOLTIP = __txt("panel_inspector_toggle_anim", "Toggle Animation");
+				setTOOLTIP(__txt("panel_inspector_toggle_anim", "Toggle Animation"));
 						
 				if(mouse_lpress(_focus)) {
 					jun.setAnim(!jun.is_anim, true);
@@ -161,7 +163,7 @@ function drawWidget(xx, yy, ww, _m, _jun, global_var = true, _hover = false, _fo
 				}
 				
 				draw_sprite_ui_uniform(THEME.junc_visible, _visi, butx, lb_y, ics, cc, 1);
-				TOOLTIP = __txt("Visibility");
+				setTOOLTIP(__txt("Visibility"));
 				
 				if(mouse_lpress(_focus)) {
 					jun.setVisibleManual(_visi? -1 : 1);
@@ -192,7 +194,7 @@ function drawWidget(xx, yy, ww, _m, _jun, global_var = true, _hover = false, _fo
 					}
 					
 					draw_sprite_ui_uniform(THEME.favorite, jun.favorited, butx, lb_y, ics, cc, 1);
-					TOOLTIP = __txt("Favorite");
+					setTOOLTIP(__txt("Favorite"));
 					
 					if(mouse_lpress(_focus)) {
 						jun.favorited = !jun.favorited;
@@ -227,7 +229,7 @@ function drawWidget(xx, yy, ww, _m, _jun, global_var = true, _hover = false, _fo
 					}
 					
 					draw_sprite_ui_uniform(THEME.instance_override, _jun.attributes.override_instance, butx, lb_y, iss, cc, 1);
-					TOOLTIP = __txt("Override");
+					setTOOLTIP(__txt("Override"));
 					
 					if(mouse_lpress(_focus)) {
 						_jun.attributes.override_instance = !_jun.attributes.override_instance;
@@ -267,7 +269,7 @@ function drawWidget(xx, yy, ww, _m, _jun, global_var = true, _hover = false, _fo
 				if(_hover && point_in_circle(_m[0], _m[1], tx, ty, ui(10))) {
 					cHov  = true;
 					
-					TOOLTIP = jun.inactive_tooltip;
+					setTOOLTIP(jun.inactive_tooltip);
 					draw_sprite_ui(THEME.info, 0, tx, ty,,,, COLORS._main_icon_light, 1);
 				} else 
 					draw_sprite_ui(THEME.info, 0, tx, ty,,,, COLORS._main_icon_light, 0.75);
@@ -302,10 +304,14 @@ function drawWidget(xx, yy, ww, _m, _jun, global_var = true, _hover = false, _fo
 	#endregion
 	
 	#region draw name
+		if(_reqfail) cc = COLORS._main_value_negative;
 		draw_set_text(_font, fa_left, fa_center, cc);
 		
 		var lbHov = _hover && point_in_rectangle(_m[0], _m[1], lb_x - padx / 2, yy, lb_x + ds_w + padx, yy + lb_h);
-		if(lbHov) draw_sprite_stretched_ext(THEME.box_r2_clr, 0, lb_x - padx / 2, yy, ds_w + padx, lb_h, c_white, 1);
+		if(lbHov) {
+			if(_reqfail) setTOOLTIP(__txt("Required"));
+			draw_sprite_stretched_ext(THEME.box_r2_clr, 0, lb_x - padx / 2, yy, ds_w + padx, lb_h, c_white, 1);
+		}
         
         widgNameX = lb_x;
 		draw_text_add(lb_x, lb_y, dispName);
@@ -334,7 +340,7 @@ function drawWidget(xx, yy, ww, _m, _jun, global_var = true, _hover = false, _fo
 				aa   = 1;
 				
 				if(is_string(tipTitle))
-					TOOLTIP = tipTitle;
+					setTOOLTIP(tipTitle);
 				
 				if(!is_string(_tip)) {
 					cc = COLORS._main_accent;

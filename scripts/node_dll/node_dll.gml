@@ -47,11 +47,10 @@ function Node_DLL(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		var inAmo = array_length(inputs);
 		
 		newInput(index + 0, nodeValue_EButton("Parameter type",  0, [ "Number", "Buffer" ]));
-		
-		newInput(index + 1, nodeValue_Float("Parameter value", 0 ))
-			.setVisible(true, true);
+		newInput(index + 1, nodeValue_Float("Parameter value", 0 )).setVisible(true, true);
 		
 		array_push(input_display_list, inAmo + 0, inAmo + 1);
+		postCreateNewInput(index);
 		
 		return [ inputs[index + 0], inputs[index + 1] ];
 	} 

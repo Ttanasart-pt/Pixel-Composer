@@ -39,9 +39,9 @@ function Node_Struct(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			.setAnimable(false);
 		bDel.setContext(inputs[index + 0]);
 		
-		inputs[index + 1] = nodeValue("value", self, CONNECT_TYPE.input, VALUE_TYPE.any, 0 )
-			.setVisible(false, false);
+		inputs[index + 1] = nodeValue("value", self, CONNECT_TYPE.input, VALUE_TYPE.any, 0 ).setVisible(false, false);
 			
+		postCreateNewInput(index);
 		return inputs[index + 0];
 	} 
 	setDynamicInput(2, false);

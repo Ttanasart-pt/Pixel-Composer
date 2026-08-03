@@ -17,7 +17,7 @@ function Node_Bit_Reduce(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	name = "Quantize Colors";
 	
 	////- =Surfaces
-	newInput(0, nodeValue_Surface( "Surface In" ));
+	newInput(0, nodeValue_Surface( "Surface In" )).setRequired();
 	
 	////- =Quantize
 	newInput(1, nodeValue_EScroll( "Color Space",  0, [ "RGB", "HSV", "OKLAB", "YIQ" ] ));

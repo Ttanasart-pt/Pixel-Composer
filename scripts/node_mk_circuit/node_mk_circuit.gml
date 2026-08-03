@@ -18,7 +18,7 @@ function Node_MK_Circuit(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	newInput( 4, nodeValue_Surface(  "Bg Surface"                     ));
 	newInput( 5, nodeValue_Color(    "Bg Color",        ca_black      ));
 	newInput( 6, nodeValue_Float(    "Wire Thickness",  1             ));
-	newInput( 7, nodeValue_Gradient( "Base Color",      gra_white     )).addOffset(25);
+	newInput( 7, nodeValue_Gradient( "Base Color",      gra_white     )).addShift(25);
 	newInput(17, nodeValue_Gradient( "Length Color",    gra_white     )).addShift(20).addOffset(24);
 		
 	////- =Connection

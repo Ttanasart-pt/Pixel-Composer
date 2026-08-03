@@ -456,8 +456,8 @@ function SHAPE_capsule(data) {
 	var segment = [];
 	array_push(segment, new __vec2(-w + h, h), new __vec2( w - hh, hh));
 	
-	var triangles = [[ new __vec2(-w + h, -h), new __vec2(-w + h, h), new __vec2(w - hh, -hh), c_white ],
-		             [ new __vec2( w - hh, -hh),           new __vec2(-w + h, h), new __vec2(w - hh,  hh), c_white ]];
+	var triangles = [[ new __vec2(-w + h, -h),   new __vec2(-w + h, h), new __vec2(w - hh, -hh), c_white ],
+		             [ new __vec2( w - hh, -hh), new __vec2(-w + h, h), new __vec2(w - hh,  hh), c_white ]];
 	shapes[0] = { type: SHAPE_TYPE.rectangle, triangles: triangles };
 	
 	var triangles = [];

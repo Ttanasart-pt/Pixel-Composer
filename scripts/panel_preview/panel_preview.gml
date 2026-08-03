@@ -1377,7 +1377,7 @@ function Panel_Preview() : PanelContent() constructor {
                     var _sy1  = _syy + ts2;
                     
                     if(point_in_rectangle(mx, my, _sx0, _sy0, _sx1, _sy1)) {
-                        TOOLTIP = tool.getDisplayName(j);
+                        setTOOLTIP(tool.getDisplayName(j));
                         draw_sprite_stretched(THEME.button_hide_fill, 1, _sx0 + pd, _sy0 + pd, ts - pd * 2, ts - pd * 2);
                             
                         if(mouse_lpress(pFOCUS)) tool.toggle(j);
@@ -1400,7 +1400,7 @@ function Panel_Preview() : PanelContent() constructor {
             } else { // single tools
                 if(tool_hovering == tool) {
                     draw_sprite_stretched(THEME.button_hide_fill, 1, _bx, _by, _bs, _bs);
-                    TOOLTIP = tool.getDisplayName();
+                    setTOOLTIP(tool.getDisplayName());
                     
                     if(mouse_lpress(pFOCUS)) tool.toggle();
                     if(mouse_rpress(pFOCUS)) tool.rightClick();
@@ -1504,7 +1504,7 @@ function Panel_Preview() : PanelContent() constructor {
         	var _hov = _act && thov && point_in_rectangle(mx, my, _x0, _y0, _x1, _y1);
         	
         	if(_hov) {
-        		TOOLTIP = new tooltipKey($"Set {_in.name}", _key.toString());
+        		setTOOLTIP(new tooltipKey($"Set {_in.name}", _key.toString()));
         		if(_in.drawOverlayToggle != noone) {
 	        		draw_sprite_stretched(THEME.button_hide_fill, 1, _bx, _by, _bs, _bs);
 	        		if(mouse_lpress(pFOCUS)) _in.drawOverlayToggle();
@@ -1749,7 +1749,7 @@ function Panel_Preview() : PanelContent() constructor {
                     var _sy1  = _syy + ts2;
                     
                     if(point_in_rectangle(mx, my, _sx0, _sy0, _sx1, _sy1)) {
-                        TOOLTIP = tool.getDisplayName(_sind);
+                        setTOOLTIP(tool.getDisplayName(_sind));
                         draw_sprite_stretched(THEME.button_hide_fill, 1, _sx0 + pd, _sy0 + pd, ts - pd * 2, ts - pd * 2);
                         
                         if(mouse_lpress(pFOCUS)) tool.toggle(_sind);
@@ -1773,7 +1773,7 @@ function Panel_Preview() : PanelContent() constructor {
             } else { // single tools
                 if(tool_hovering == tool) {
                     draw_sprite_stretched(THEME.button_hide_fill, 1, _bx, _by, _bs, _bs);
-                    TOOLTIP = tool.getDisplayName();
+                    setTOOLTIP(tool.getDisplayName());
                 	
                     if(mouse_lpress(pFOCUS)) tool.toggle();
                     if(mouse_rpress(pFOCUS)) tool.rightClick();
@@ -1910,7 +1910,7 @@ function Panel_Preview() : PanelContent() constructor {
             	var cc = _val? COLORS._main_accent : COLORS._main_icon_light;
             	var ss = (cbw - ui(8)) / max(sprite_get_width(nme), sprite_get_height(nme));
             	draw_sprite_ext(nme, _val, tolx + cbw / 2, topbar_height / 2, ss, ss, 0, cc);
-        		if(hov && ttip != "") TOOLTIP = ttip;
+        		if(hov && ttip != "") setTOOLTIP(ttip);
         		
 	            tolx      += cbw + pd;
 	            tol_max_w += cbw + pd;
@@ -1932,7 +1932,7 @@ function Panel_Preview() : PanelContent() constructor {
 	        		draw_sprite_ext(nme, 0, tolx + ui(8), topbar_height / 2, ss, ss, 0, COLORS._main_icon);
 	        		
 	        		if(ttip != "" && _hover && point_in_rectangle(mx, my, tolx, 0, tolx + ui(20), topbar_height))
-	        			TOOLTIP = ttip;
+	        			setTOOLTIP(ttip);
 	        		
 	                tolx      += ui(20);
 	                tol_max_w += ui(20);
@@ -1965,7 +1965,7 @@ function Panel_Preview() : PanelContent() constructor {
             }
             
             if(ttip != "" && _hover && point_in_rectangle(mx, my, tolx, toly, tolx + tolw, toly + tolh))
-    			TOOLTIP = ttip;
+    			setTOOLTIP(ttip);
             			
             var params = new widgetParam(tolx, toly, tolw, tolh, _val, undefined, [ mx, my ], x, y)
             				.setFont(_font)

@@ -40,19 +40,16 @@ function Node_pSystem_3D_Trigger_Event(_x, _y, _group = noone) : Node_3D(_x, _y,
 	
 	static getDimension = function() { return is(inline_context, Node_pSystem_Inline)? inline_context.dimension : PROJ_SURF; }
 	
-	static update = function(_frame = CURRENT_FRAME) { 
-		var _data = inputs_data;
-		
-		var _parts = getInputData(0);
-		var _masks = getInputData(1), use_mask = _masks != noone;
+	static processData = function(_outData, _data, _array_index = 0, _frame = CURRENT_FRAME) {
+		var _parts = _data[0];
+		var _masks = _data[1], use_mask = _masks != noone;
 		
 		if(!is(_parts, pSystem_Particles)) return;
-		outputs[0].setValue(stepTrig);
 		if(use_mask) buffer_to_start(_masks);
 		
-		var _seed = getInputData( 2);
-		var _step = getInputData( 3), _step_curved = inputs[3].attributes.curved && curve_step != undefined;
-		var _chan = getInputData( 5), _chan_curved = inputs[5].attributes.curved && curve_chan != undefined;
+		var _seed = _data[2];
+		var _step = _data[3], _step_curved = inputs[3].attributes.curved && curve_step != undefined;
+		var _chan = _data[5], _chan_curved = inputs[5].attributes.curved && curve_chan != undefined;
 		
 		var _poolSize = _parts.poolSize;
 		var _partAmo  = _parts.maxCursor;
@@ -108,6 +105,7 @@ function Node_pSystem_3D_Trigger_Event(_x, _y, _group = noone) : Node_3D(_x, _y,
 		
 		buffer_write_at(stepTrig, 0, buffer_u32, stepCount);
 		
+		return stepTrig;
 	}
 	
 	static reset = function() {

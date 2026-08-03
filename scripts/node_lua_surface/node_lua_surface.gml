@@ -48,6 +48,7 @@ function Node_Lua_Surface(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		inputs[index + 2].getEditWidget().interactable = false;
 		
 		array_push(input_display_list, inAmo, inAmo + 1, inAmo + 2);
+		postCreateNewInput(index);
 		return inputs[index + 0];
 	} 
 	

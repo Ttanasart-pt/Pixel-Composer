@@ -44,11 +44,7 @@ function Panel_Notification() : PanelContent() constructor {
 	
 	array_append(rightClickMenu_item, rightClickMenu);
 	
-	function onResize() {
-		sp_noti.resize(w - padding * 2, h - padding * 2);
-	}
-	
-	sp_noti = new scrollPane(w - padding * 2, h - padding * 2, function(_y, _m) {
+	sp_noti = new scrollPane(0, 0, function(_y, _m) {
 		draw_clear_alpha(COLORS.panel_bg_clear_inner, 1);
 		
 		var hh  = ui(8);
@@ -96,7 +92,7 @@ function Panel_Notification() : PanelContent() constructor {
 				draw_sprite_stretched_ext(THEME.box_r2, 0, 0, yy, _w, _h, CDEF.main_dkblack, 1);
 				
 				if(noti.tooltip != "")
-					TOOLTIP = noti.tooltip;
+					setTOOLTIP(noti.tooltip);
 			
 				if(noti.onClick != noone && mouse_lpress(pFOCUS))
 					noti.onClick(noti.param);
@@ -165,6 +161,8 @@ function Panel_Notification() : PanelContent() constructor {
 		return hh;
 	});
 	
+	surf = surface_create(64, 64);
+	
 	function drawContent(panel) { 
 		draw_clear_alpha(COLORS.panel_bg_clear, 0);
 		
@@ -172,10 +170,12 @@ function Panel_Notification() : PanelContent() constructor {
 		var py = padding;
 		var pw = w - padding * 2;
 		var ph = h - padding * 2;
-	
+		
 		draw_sprite_stretched(THEME.ui_panel_bg, 1, px - ui(8), py - ui(8), pw + ui(16), ph + ui(16));
+		
+		sp_noti.verify(pw, ph);
 		sp_noti.setFocusHover(pFOCUS, pHOVER);
-		sp_noti.draw(px, py, mx - px, my - py);
+		sp_noti.drawOffset(px, py, mx, my);
 		
 		if(mouse_rpress(pFOCUS))
 			menuCall("notification_log_menu", noti_selecting == noone? rightClickMenu : rightClickMenu_item);

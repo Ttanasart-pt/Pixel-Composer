@@ -8,9 +8,9 @@ function Node_String_Merge(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	function createNewInput(index = array_length(inputs)) {
 		var inAmo = array_length(inputs);
 		
-		newInput(index, nodeValue_Text("Text"))
-			.setVisible(true, true);
+		newInput(index, nodeValue_Text("Text")).setVisible(true, true);
 		
+		postCreateNewInput(index);
 		return inputs[index];
 	} 
 	

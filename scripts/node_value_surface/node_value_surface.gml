@@ -52,6 +52,8 @@ function __NodeValue_Surface(_name, _node, _value = noone, _tooltip = "") : Node
 		return self; 
 	}
 	
+	static requirementPass = function() /*=>*/ {return value_from != noone || is_surface(getValue())};
+	
 	/////============== GET =============
 	
 	static getValue = function(_time = NODE_CURRENT_FRAME, applyUnit = true, arrIndex = 0, useCache = false, log = false) { 

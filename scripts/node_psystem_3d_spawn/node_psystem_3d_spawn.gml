@@ -25,26 +25,26 @@ function Node_pSystem_3D_Spawn(_x, _y, _group = noone) : Node_3D(_x, _y, _group)
 	
 	////- =Spawn
 	newInput( 0, nodeValue_EScroll( "Spawn Type", 0, [ "Stream", "Burst", "Trigger" ] ));
-	newInput( 1, nodeValue_Trigger(     "Spawn Trigger",                ));
-	newInput( 2, nodeValue_Int(         "Spawn Delay",       4          )).setTooltip("Frames delay between each particle spawn.");
-	newInput( 3, nodeValue_Int(         "Burst Duration",    1          ));
-	newInput( 4, nodeValue_Range(       "Spawn Amount",     [2,2], true )).setTooltip("Amount of particle spawn in that frame.");
-	newInput( 5, nodeValue_Range(       "Lifespan",         [20,30]     ));
+	newInput( 1, nodeValue_Trigger( "Spawn Trigger",                ));
+	newInput( 2, nodeValue_Int(     "Spawn Delay",       4          )).setTooltip("Frames delay between each particle spawn.");
+	newInput( 3, nodeValue_Int(     "Burst Duration",    1          ));
+	newInput( 4, nodeValue_Range(   "Spawn Amount",     [2,2], true )).setTooltip("Amount of particle spawn in that frame.");
+	newInput( 5, nodeValue_Range(   "Lifespan",         [20,30]     ));
 	
 		////- =/Source
-	newInput( 7, nodeValue_EScroll( "Type",      0,         )).setChoices([ "Shape", "Path", "Mesh Vertices", "Direct Data" ]);
-	newInput( 8, nodeValue_EScroll( "Shape",     0,         )).setChoices(__enum_array_gen([ "Box", "Sphere", "Circle" ], s_node_particle_3d_spawn_shape));
-	newInput( 9, nodeValue_Vec3(        "Origin",   [0,0,0]     ));
-	newInput(10, nodeValue_Vec3(        "Span",     [1,1,1]     ));
-	newInput(11, nodeValue_Quaternion(  "Rotation"   ));
-	newInput(12, nodeValue_Path(    "Path"                  ));
-	newInput(13, nodeValue_D3Mesh(      "Mesh" ));
-	newInput(14, nodeValue_Vector(      "Data"                  )).setArrayDepth(1);
+	newInput( 7, nodeValue_EScroll(    "Type",      0,         )).setChoices([ "Shape", "Path", "Mesh Vertices", "Direct Data" ]);
+	newInput( 8, nodeValue_EScroll(    "Shape",     0,         )).setChoices(__enum_array_gen([ "Box", "Sphere", "Circle" ], s_node_particle_3d_spawn_shape));
+	newInput( 9, nodeValue_Vec3(       "Origin",   [0,0,0]     ));
+	newInput(10, nodeValue_Vec3(       "Span",     [1,1,1]     ));
+	newInput(11, nodeValue_Quaternion( "Rotation" ));
+	newInput(12, nodeValue_Path(       "Path"     ));
+	newInput(13, nodeValue_D3Mesh(     "Mesh"     ));
+	newInput(14, nodeValue_Vector(     "Data"     )).setArrayDepth(1);
 	
 	////- =Transform
-	newInput(15, nodeValue_Range(      "Inherit Velocity",    [0,0], true   ));
-	newInput(16, nodeValue_Vec3_Range( "Velocity",            [0,0,0,0,0,0] ));
-	newInput(24, nodeValue_Range(       "Follow Spawn Shape", [0,0], true   ));
+	newInput(15, nodeValue_Range(      "Inherit Velocity",   [0,0], true   ));
+	newInput(16, nodeValue_Vec3_Range( "Velocity",           [0,0,0,0,0,0] ));
+	newInput(24, nodeValue_Range(      "Follow Spawn Shape", [0,0], true   ));
 	
 	////- =Rotation
 	newInput(17, nodeValue_Vec3_Range( "Rotation", [0,0,0,0,0,0] ));
@@ -503,9 +503,7 @@ function Node_pSystem_3D_Spawn(_x, _y, _group = noone) : Node_3D(_x, _y, _group)
 		
 	}
 	
-	static update = function(_frame = CURRENT_FRAME) { 
-		var _data = inputs_data;
-		
+	static processData = function(_outData, _data, _array_index = 0, _frame = CURRENT_FRAME) {
 		if(!is(partPool, pSystem_Particles)) reset();
 		
 		#region data
@@ -615,11 +613,12 @@ function Node_pSystem_3D_Spawn(_x, _y, _group = noone) : Node_3D(_x, _y, _group)
 		buffer_write_at(stepTrig,    0, buffer_u32, stepCount);
 		buffer_write_at(destroyTrig, 0, buffer_u32, destroyCount);
 		
-		outputs[0].setValue(partPool);
+		_outData[0] = partPool;
+		_outData[1] = spawnTrig;
+		_outData[2] = stepTrig;
+		_outData[3] = destroyTrig;
 		
-		outputs[1].setValue(spawnTrig);
-		outputs[2].setValue(stepTrig);
-		outputs[3].setValue(destroyTrig);
+		return _outData;
 	}
 	
 	static resetSeed = function() {

@@ -1,5 +1,35 @@
-#region ==================================== DRAW ====================================
+#region ==================================== STACK ====================================
+	#macro SURFACE_PREDRAW  var __preSurf = surface_get_target(); if(__preSurf) surface_reset_target();
+	#macro SURFACE_POSTDRAW if(__preSurf) surface_set_target(__preSurf);
+	
+	#macro surface_set_target surface_set_target_winwin
+	#macro __surface_set_target surface_set_target
+	
+	#macro surface_reset_target surface_reset_target_winwin
+	#macro __surface_reset_target surface_reset_target
+	
+	function surface_set_target_winwin(_surf) {
+		if(ds_stack_size(SURFACE_STACK)) 
+			__surface_reset_target();
+		
+		__surface_set_target(_surf);
+		ds_stack_push(SURFACE_STACK, _surf);
+	}
+	
+	function surface_reset_target_winwin() {
+		__surface_reset_target();
+		ds_stack_pop(SURFACE_STACK);
+		
+		if(WINWIN_CURRENT != undefined) 
+			winwin_draw_sync();
+			
+		if(ds_stack_size(SURFACE_STACK)) 
+			__surface_set_target(ds_stack_top(SURFACE_STACK));
+	}
+#endregion
 
+#region ==================================== DRAW ====================================
+	
 	function draw_surface_safe(surface, _x = 0, _y = 0) {
 		INLINE
 	
@@ -86,6 +116,65 @@
 			shader_set_2( "backDimension", bdim      );
 			shader_set_2( "foreDimension", sdim      );
 			
+			shader_set_2( "axis",          [1,1]     );
+			shader_set_2( "position",      [_x,_y]   );
+			shader_set_2( "scale",         [_xs,_ys] );
+			shader_set_f( "rotation",      _rot      );
+		
+			draw_surface_stretched_ext(surface, 0, 0, bdim[0], bdim[1], _col, _alpha);
+		shader_reset();
+	}
+
+	function draw_surface_tiled_hori(surface, _x = 0, _y = 0, _xs = 1, _ys = 1, _rot = 0, _col = c_white, _alpha = 1) {
+		INLINE
+	
+		if(is_struct(surface)) {
+			if(is(surface, dynaSurf)) {
+				surface.drawTile(_x, _y, _xs, _ys, _col, _alpha);
+				return;
+			} else if(is(surface, SurfaceAtlas))
+				surface = surface.getSurface();
+		}
+		if(is_array(surface) || !surface_exists(surface)) return;
+	
+		var back = surface_get_target();
+		var bdim = surface_get_dimension(back);
+		var sdim = surface_get_dimension(surface);
+	
+		shader_set(sh_draw_tile);
+			shader_set_2( "backDimension", bdim      );
+			shader_set_2( "foreDimension", sdim      );
+			
+			shader_set_2( "axis",          [1,0]     );
+			shader_set_2( "position",      [_x,_y]   );
+			shader_set_2( "scale",         [_xs,_ys] );
+			shader_set_f( "rotation",      _rot      );
+		
+			draw_surface_stretched_ext(surface, 0, 0, bdim[0], bdim[1], _col, _alpha);
+		shader_reset();
+	}
+
+	function draw_surface_tiled_vert(surface, _x = 0, _y = 0, _xs = 1, _ys = 1, _rot = 0, _col = c_white, _alpha = 1) {
+		INLINE
+	
+		if(is_struct(surface)) {
+			if(is(surface, dynaSurf)) {
+				surface.drawTile(_x, _y, _xs, _ys, _col, _alpha);
+				return;
+			} else if(is(surface, SurfaceAtlas))
+				surface = surface.getSurface();
+		}
+		if(is_array(surface) || !surface_exists(surface)) return;
+	
+		var back = surface_get_target();
+		var bdim = surface_get_dimension(back);
+		var sdim = surface_get_dimension(surface);
+	
+		shader_set(sh_draw_tile);
+			shader_set_2( "backDimension", bdim      );
+			shader_set_2( "foreDimension", sdim      );
+			
+			shader_set_2( "axis",          [0,1]     );
 			shader_set_2( "position",      [_x,_y]   );
 			shader_set_2( "scale",         [_xs,_ys] );
 			shader_set_f( "rotation",      _rot      );

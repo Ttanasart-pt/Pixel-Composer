@@ -43,9 +43,7 @@ function Node_pSystem_3D_Destroy(_x, _y, _group = noone) : Node_3D(_x, _y, _grou
 		curve_strn = new curveMap(getInputData(4));
 	}
 	
-	static update = function(_frame = CURRENT_FRAME) { 
-		var _data = inputs_data;
-		
+	static processData = function(_outData, _data, _array_index = 0, _frame = CURRENT_FRAME) {
 		var _parts = _data[0];
 		var _masks = _data[1], use_mask = _masks != noone;
 		
@@ -109,8 +107,10 @@ function Node_pSystem_3D_Destroy(_x, _y, _group = noone) : Node_3D(_x, _y, _grou
 		
 		buffer_write_at(destroyTrig, 0, buffer_u32, destroyCount);
 		
-		outputs[0].setValue(_parts);
-		outputs[1].setValue(destroyTrig);
+		_outData[0] = _parts;
+		_outData[1] = destroyTrig;
+		
+		return _outData;
 	}
 	
 }

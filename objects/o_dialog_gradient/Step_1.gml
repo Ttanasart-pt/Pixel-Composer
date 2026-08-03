@@ -1,4 +1,5 @@
 /// @description init
+event_inherited();
 if !ready exit;
 
 #region destroy

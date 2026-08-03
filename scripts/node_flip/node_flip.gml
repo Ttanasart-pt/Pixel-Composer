@@ -8,7 +8,7 @@ function Node_Flip(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	name = "Flip";
 	
 	newActiveInput(2);
-	newInput( 0, nodeValue_Surface( "Surface In" ));
+	newInput( 0, nodeValue_Surface( "Surface In" )).setRequired();
 	newInput( 1, nodeValue_Toggle(  "Axis",  1, [ "X", "Y" ] )).setPieMenu();
 	// 3
 	

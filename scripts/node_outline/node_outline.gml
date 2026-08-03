@@ -23,7 +23,7 @@ function Node_Outline(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	newActiveInput(11);
 	
 	////- =Surfaces
-	newInput( 0, nodeValue_Surface( "Surface In" ));
+	newInput( 0, nodeValue_Surface( "Surface In" )).setRequired();
 	newInput(21, nodeValue_Surface( "Texture"    ));
 	newInput( 9, nodeValue_Surface( "Mask"       ));
 	newInput(10, nodeValue_Slider(  "Mix",     1 ));

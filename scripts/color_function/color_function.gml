@@ -123,8 +123,10 @@
 	
 	function color_hsv(col)  { return [ color_get_hue(col) / 255,             color_get_saturation(col) / 255,        color_get_value(col) / 255 ];            }
 	
-	function make_color_hsva(h, s, v, a) { INLINE return _cola(make_color_hsv(h, s, v), a); }
+	function _make_color_hsv(h, s, v) { INLINE return make_color_hsv(h * 255, s * 255, v * 255); }
 	
+	function  make_color_hsva(h, s, v, a) { INLINE return _cola(make_color_hsv(h, s, v), a); }
+	function _make_color_hsva(h, s, v, a) { INLINE return  cola(make_color_hsv(h * 255, s * 255, v * 255), a); }
 	
 	function hueLerp(a0, a1, t) {
 		a0 /= 255;

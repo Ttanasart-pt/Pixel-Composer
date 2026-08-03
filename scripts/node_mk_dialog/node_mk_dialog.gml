@@ -149,35 +149,36 @@ function Node_MK_Dialog(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	positionTypeList = __enum_array_gen([ "Start", "End", "Start/End", "Always" ], s_node_mk_dialog_position, COLORS._main_icon_light);
 	applyGroupList   = __enum_array_gen([ "Letter", "Words", "All" ], s_node_mk_dialog_apply_group, COLORS._main_icon_light);
 	
-	function createNewInput(i = array_length(inputs)) {
+	function createNewInput(index = array_length(inputs)) {
 		var inAmo = array_length(inputs);
 		
 		dynamic_input_inspecting = getInputAmount();
 		
 		////- =Selection
-		newInput(i+ 0, nodeValue_EScroll( "Track Position",    0, positionTypeList ));
-		newInput(i+ 1, nodeValue_EScroll( "Apply Group",       0, applyGroupList   ));
-		newInput(i+ 2, nodeValue_Slider(      "Origin",            0 ));
-		newInput(i+14, nodeValue_EScroll( "Duration Type",     1, [ "Frame", "Ratio" ] ));
-		newInput(i+ 3, nodeValue_Float(       "Duration",         .2 ));
-		newInput(i+13, nodeValue_Slider(      "Range",            .1 ));
+		newInput(index+ 0, nodeValue_EScroll( "Track Position",    0, positionTypeList ));
+		newInput(index+ 1, nodeValue_EScroll( "Apply Group",       0, applyGroupList   ));
+		newInput(index+ 2, nodeValue_Slider(  "Origin",            0 ));
+		newInput(index+14, nodeValue_EScroll( "Duration Type",     1, [ "Frame", "Ratio" ] ));
+		newInput(index+ 3, nodeValue_Float(   "Duration",         .2 ));
+		newInput(index+13, nodeValue_Slider(  "Range",            .1 ));
 		
 		////- =Effects
-		newInput(i+ 4, nodeValue_EScroll( "Animation",         0, animTypeList ));
-		newInput(i+ 5, nodeValue_Vec2(        "Position",         [0,0]     ));
-		newInput(i+ 6, nodeValue_Rotation(    "Rotation",          0        ));
-		newInput(i+ 7, nodeValue_Vec2(        "Scale",            [0,0]     ));
-		newInput(i+ 8, nodeValue_EButton( "Anchor type",       1, [ "Global", "Local" ]  ));
-		newInput(i+ 9, nodeValue_Anchor(      "Anchor Position", [.5,.5])).setTooltip("Anchor point for transformation, absolute value for global type, relative for local.");
-		newInput(i+10, nodeValue_Color(       "Color",             ca_white ));
-		newInput(i+11, nodeValue_Slider(      "Alpha",             1        ));
-		newInput(i+12, nodeValue_Vec2(        "Amplitude",        [4,4], { linked: true } ));
-		newInput(i+15, nodeValue_Vec2(        "Frequency",        [4,4], { linked: true } ));
-		newInput(i+16, nodeValue_Vec2(        "Speed",            [4,4], { linked: true } ));
-		// 17
+		newInput(index+ 4, nodeValue_EScroll( "Animation",         0, animTypeList ));
+		newInput(index+ 5, nodeValue_Vec2(    "Position",         [0,0]     ));
+		newInput(index+ 6, nodeValue_Rotation("Rotation",          0        ));
+		newInput(index+ 7, nodeValue_Vec2(    "Scale",            [0,0]     ));
+		newInput(index+ 8, nodeValue_EButton( "Anchor type",       1, [ "Global", "Local" ]  ));
+		newInput(index+ 9, nodeValue_Anchor(  "Anchor Position", [.5,.5])).setTooltip("Anchor point for transformation, absolute value for global type, relative for local.");
+		newInput(index+10, nodeValue_Color(   "Color",             ca_white ));
+		newInput(index+11, nodeValue_Slider(  "Alpha",             1        ));
+		newInput(index+12, nodeValue_Vec2(    "Amplitude",        [4,4], { linked: true } ));
+		newInput(index+15, nodeValue_Vec2(    "Frequency",        [4,4], { linked: true } ));
+		newInput(index+16, nodeValue_Vec2(    "Speed",            [4,4], { linked: true } ));
+		// index+17
 		
 		refreshDynamicDisplay();
-		return inputs[i];
+		postCreateNewInput(index);
+		return inputs[index];
 	} 
 	
 	input_display_dynamic = [ 

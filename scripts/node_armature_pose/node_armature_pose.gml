@@ -459,6 +459,7 @@ function Node_Armature_Pose(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		if(bone != noone) boneMap[$ bone.ID] = inputs[index];
 		
 		array_push(input_display_list, inAmo);
+		postCreateNewInput(index);
 		return inputs[index];
 	} 
 	setDynamicInput(1, false);

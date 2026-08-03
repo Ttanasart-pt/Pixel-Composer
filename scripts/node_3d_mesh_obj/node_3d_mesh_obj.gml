@@ -54,6 +54,7 @@ function Node_3D_Mesh_Obj(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, _group)
 		newInput(index, nodeValue_D3Material("Material", new __d3dMaterial())).setVisible(true, true);
 		
 		array_push(input_display_list, inAmo);
+		postCreateNewInput(index);
 		return inputs[index];
 	} setDynamicInput(1, false);
 	

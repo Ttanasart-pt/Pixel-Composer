@@ -114,7 +114,7 @@
 	CURSOR_IS_LOCK	   = false;
 	CURSOR_LOCK_X	   = 0;
 	CURSOR_LOCK_Y	   = 0;
-	TOOLTIP            = "";
+	TOOLTIP            = undefined;
 	DRAGGING           = noone;
 	KEYBOARD_RESET
 	
@@ -135,7 +135,6 @@
 	windows_focused = true;
 	
 	panelInit();
-	
 #endregion
 
 #region Loader

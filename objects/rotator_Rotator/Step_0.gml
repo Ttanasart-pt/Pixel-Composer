@@ -1,9 +1,9 @@
 /// @description Insert description here
-var dx  = mouse_mx - drag_mx;
-var dy  = mouse_my - drag_my;
+var dx  = mouse_rx - drag_mx;
+var dy  = mouse_ry - drag_my;
 
-drag_mx = mouse_mx;
-drag_my = mouse_my;
+drag_mx = mouse_rx;
+drag_my = mouse_ry;
 
 drag_sx += dx;
 drag_sy += dy;

@@ -12,7 +12,7 @@ function Node_Twirl(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	
 	////- =Surfaces
 	newInput( 4, nodeValue_EScroll("Oversample Mode",  0, [ "Empty", "Clamp", "Repeat" ]));
-	newInput( 0, nodeValue_Surface( "Surface In" ));
+	newInput( 0, nodeValue_Surface( "Surface In" )).setRequired();
 	newInput( 5, nodeValue_Surface( "Mask"       ));
 	newInput( 6, nodeValue_Slider(  "Mix",     1 ));
 	__init_mask_modifier(5, 9); // inputs 9, 10
@@ -26,10 +26,12 @@ function Node_Twirl(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
-	input_display_list = [ 7, 8,
-		["Surfaces", true],	0, 5, 6, 9, 10, 
-		["Twirl",	false],	1, 2, 11, 3, 12,
+	input_display_list = [  7,  8,
+		[ "Surfaces", true ],  0,  5,  6,  9, 10, 
+		[ "Twirl",   false ],  1,  2, 11,  3, 12,
 	];
+	
+	////- Node
 	
 	attribute_surface_depth();
 	attribute_oversample();
@@ -53,7 +55,7 @@ function Node_Twirl(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 		return w_hovering;
 	}
 	
-	static processData = function(_outSurf, _data, _array_index) { #region	
+	static processData = function(_outSurf, _data, _array_index) {	
 		var sam    = getAttribute("oversample");
 		
 		surface_set_shader(_outSurf, sh_twirl);
@@ -72,5 +74,5 @@ function Node_Twirl(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 		_outSurf = channel_apply(_data[0], _outSurf, _data[8]);
 		
 		return _outSurf;
-	} #endregion
+	}
 }

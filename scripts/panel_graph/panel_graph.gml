@@ -841,20 +841,11 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
             break;
         }
     
-        if(_outp == -1) return;
-        if(!is_array(surf)) surf = [ surf ];
+        if(_outp == -1 || !is_just_surface(surf)) return;
         
-        var _canvas = nodeBuild("Node_Canvas", _node.x + _node.w + 64, _node.y);
-        var _dim    = surface_get_dimension(surf[0]);
-        
-        _canvas.skipDefault();
-        _canvas.inputs[0].attributes.use_project_dimension = false;
-        _canvas.inputs[0].setValue(_dim);
-        _canvas.attributes.dimension = _dim;
-        _canvas.attributes.frames    = array_length(surf);
-        _canvas.canvas_surface       = surface_array_clone(surf);
-        
-        _canvas.apply_surfaces();
+        var _canvas = nodeBuild("Node_Canvas_S", _node.x + _node.w + 64, _node.y);
+    		_canvas.skipDefault();
+            _canvas.setSurface(surf);
     }
 
     function setCurrentCanvasSend(_node = getFocusingNode()) {
@@ -871,17 +862,13 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
             break;
         }
     	
-        if(_outp == -1) return;
-        if(!is_array(surf)) surf = [ surf ];
+        if(_outp == -1 || !is_just_surface(surf)) return;
         
-        var _canvas = nodeBuild("Node_Canvas", _node.x + _node.w + 64, _node.y);
-        var _dim    = surface_get_dimension(surf[0]);
+        var _canvas = nodeBuild("Node_Canvas_S", _node.x + _node.w + 64, _node.y);
+            _canvas.skipDefault();
         
-        _canvas.skipDefault();
         _canvas.inputs[0].attributes.use_project_dimension = false;
-        _canvas.inputs[0].setValue(_dim);
-        _canvas.inputs[8].setFrom(_outp);
-        _canvas.attributes.dimension = _dim;
+        _canvas.inputs[0].setValue(surface_get_dimension(surf));
     }
 
     function setCurrentCanvasBlend(_node = getFocusingNode()) {
@@ -904,14 +891,15 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
     
         if(_outp == -1) return;
     
-        var _canvas = nodeBuild("Node_Canvas", _node.x, _node.y + _node.h + 64);
-        _canvas.skipDefault();
+        var _canvas = nodeBuild("Node_Canvas_S", _node.x, _node.y + _node.h + 64);
+        	_canvas.skipDefault();
+        	
         _canvas.inputs[0].attributes.use_project_dimension = false;
         _canvas.inputs[0].setValue(surface_get_dimension(surf));
-        _canvas.inputs[5].setValue(true);
     
         var _blend = nodeBuild("Node_Blend", _node.x + _node.w + 64, _node.y);
-        _blend.skipDefault();
+        	_blend.skipDefault();
+        	
         _blend.inputs[0].setFrom(_outp);
         _blend.inputs[1].setFrom(_canvas.outputs[0]);
     }
@@ -2312,7 +2300,7 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
 	        } 
 	        
 	        if(dropper_active && node_hovering)
-	        	TOOLTIP = $"Select {node_hovering}";
+	        	setTOOLTIP($"Select {node_hovering}");
         #endregion
         
         #region drawActive
@@ -2509,7 +2497,7 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
 	        #endregion
         	
 	        if(value_focus != noone && key_mod_press(SHIFT)) {
-            	TOOLTIP = [ value_focus.getValue(), value_focus.type ];
+            	setTOOLTIP([ value_focus.getValue(), value_focus.type ]);
             	if(pFOCUS && DOUBLE_CLICK) value_focus.drawValue = !value_focus.drawValue;
             }
             
@@ -3477,7 +3465,7 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
             var slid = struct_try_get(project.slideShow, project.slideShow_keys[i], noone);
             
             if(pHOVER && point_in_rectangle(mx, my, _sx - _sn, _sy - _sn, _sx + _sn, _sy + _sn)) {
-                if(slid) TOOLTIP = slid.slide_title;
+                if(slid) setTOOLTIP(slid.slide_title);
                 _hv = true;
                 aa  = 1;
                 
@@ -3494,7 +3482,7 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
             mouse_on_graph = false;
             
             if(pHOVER && !_hv) {
-        		TOOLTIP = new tooltipHotkey("Next Section", "Graph", "Slideshow Next");
+        		setTOOLTIP(new tooltipHotkey("Next Section", "Graph", "Slideshow Next"));
                 draw_sprite_stretched_add(THEME.ui_panel_bg, 4, _sl_x, _sl_y, slider_width, _sl_h, COLORS._main_icon, 0.05);
                 draw_sprite_stretched_add(THEME.ui_panel, 1, _sl_x, _sl_y, slider_width, _sl_h, c_white, 0.1);
                 
@@ -3531,7 +3519,7 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
 	            mouse_on_graph = false;
 	            
 	            if(pHOVER && !_hv) {
-	            	TOOLTIP = __txt("Splash screen");
+	            	setTOOLTIP(__txt("Splash screen"));
 	                draw_sprite_stretched_add(THEME.ui_panel_bg, 4, _spx0, _spy0, _spw, _sph, COLORS._main_icon, 0.05);
 	                draw_sprite_stretched_add(THEME.ui_panel, 1, _spx0, _spy0, _spw, _sph, c_white, 0.1);
 	                
@@ -3975,7 +3963,7 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
                     run_in(1, load_file_path, [ FILE_DROPPING, _gx, _gy ]);
             }
             
-            if(_tip != "") TOOLTIP = _tip;
+            if(_tip != "") setTOOLTIP(_tip);
             
         } // File Drop
         
@@ -5454,23 +5442,27 @@ function Panel_Graph_Drop_tooltip(panel) constructor {
 		
 		var tw = max(w1, w2);
 		var th = h1 + ui(8) + h2;
+		var pd = ui(8);
+	
+		var tww = tw + pd * 2;
+		var thh = th + pd * 2;
 		
-		var mx = min(mouse_mxs + ui(16), WIN_W - (tw + ui(16)));
-		var my = min(mouse_mys + ui(16), WIN_H - (th + ui(16)));
-		
-		draw_sprite_stretched(THEME.textbox, 3, mx, my, tw + ui(16), th + ui(16));
-		draw_sprite_stretched(THEME.textbox, 0, mx, my, tw + ui(16), th + ui(16));
+		TOOLTIP_SURFACE = surface_verify(TOOLTIP_SURFACE, tww, thh);
+		surface_set_shader(TOOLTIP_SURFACE);
+		draw_sprite_stretched(THEME.textbox, 3, 0, 0, tww, thh);
+		draw_sprite_stretched(THEME.textbox, 0, 0, 0, tww, thh);
 		
 		draw_set_text(f_p1, fa_left, fa_top, COLORS._main_text);
-		draw_text(mx + ui(8), my + ui(8), _drop);
+		draw_text(pd, pd, _drop);
 		
 		draw_set_font(f_p2);
-		var _hx = mx + ui(12) + string_width("Shift");
-		var _hy = my + ui(8) + h1 + ui(4) + h2 / 2 + ui(4);
+		var _hx = ui(12) + string_width("Shift");
+		var _hy = ui(8) + h1 + ui(4) + h2 / 2 + ui(4);
 		hotkey_draw("Shift", _hx, _hy);
 		
 		draw_set_text(f_p2, fa_left, fa_top, COLORS._main_text);
-		draw_text(_hx + ui(8), my + ui(8) + h1 + ui(6), _shft);
+		draw_text(_hx + pd, pd + h1 + ui(6), _shft);
+		surface_reset_shader();
 	}
 }
 

@@ -19,7 +19,9 @@ function Node_MK_Blast_Combine(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	function createNewInput(index = array_length(inputs)) {
 		var inAmo = array_length(inputs);
 		newInput(index, nodeValue_Struct( "Blast" )).setCustomData(global.MKBLAST_JUNC).setVisible(true, true);
+		
 		array_push(input_display_list, inAmo);
+		postCreateNewInput(index);
 		return inputs[index];
 	} setDynamicInput(1);
 	

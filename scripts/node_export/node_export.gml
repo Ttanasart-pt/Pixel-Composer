@@ -63,7 +63,7 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	png_format       = [ "INDEX4", "INDEX8", "Default (PNG32)" ];
 	
 	////- =Export
-	newInput( 0, nodeValue_Surface( "Surface"   ));
+	newInput( 0, nodeValue_Surface( "Surface"   )).setRequired();
 	newInput( 1, nodeValue_FPath(    "Directory" )).setDisplay(VALUE_DISPLAY.path_save, { 
 		type        : "area", 
 		filter      : "dir", 
@@ -216,9 +216,6 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		[ "Regions",       true, 24 ], 25, 
 	];
 	
-	attributes.clear_directory = true;
-	array_push(attributeEditors, Node_Attribute("Delete temp Folder", function() /*=>*/ {return attributes.clear_directory}, function() /*=>*/ {return new checkBox(function() /*=>*/ {return toggleAttribute("clear_directory")})}));
-	
 	framerateUnitToggle  = button(function() /*=>*/ { 
 		var _gfr = project.animator.framerate;
 		var _cfr = inputs[8].getValue();
@@ -234,6 +231,17 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	
 	inputs[8].attributes.unit = VALUE_UNIT.reference;
 	inputs[8].getEditWidget().setSideButton(framerateUnitToggle);
+	
+	////- Attributes
+	
+	attributes.clear_directory = true;
+	array_push(attributeEditors, Node_Attribute("Delete temp Folder", function() /*=>*/ {return attributes.clear_directory}, function() /*=>*/ {return new checkBox(function() /*=>*/ {return toggleAttribute("clear_directory")})}));
+	
+	array_push(attributeEditors, "Libraries");
+	array_push(attributeEditors, Node_Attribute("ImageMagick", function() /*=>*/ {return PREFERENCES.ImageMagick_path}, function() /*=>*/ {return textBox_Text(function(txt) /*=>*/ {return setPreference("ImageMagick_path", txt)})} ));
+	array_push(attributeEditors, Node_Attribute("Webp",        function() /*=>*/ {return PREFERENCES.webp_path},        function() /*=>*/ {return textBox_Text(function(txt) /*=>*/ {return setPreference("webp_path",        txt)})} ));
+	array_push(attributeEditors, Node_Attribute("GifSki",      function() /*=>*/ {return PREFERENCES.gifski_path},      function() /*=>*/ {return textBox_Text(function(txt) /*=>*/ {return setPreference("gifski_path",      txt)})} ));
+	array_push(attributeEditors, Node_Attribute("FFmpeg",      function() /*=>*/ {return PREFERENCES.ffmpeg_path},      function() /*=>*/ {return textBox_Text(function(txt) /*=>*/ {return setPreference("ffmpeg_path",      txt)})} ));
 	
 	////- Paths
 	
@@ -262,7 +270,7 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		magick    = filepath_resolve(PREFERENCES.ImageMagick_path) + "win/magick.exe";
 		webp      = filepath_resolve(PREFERENCES.webp_path)		   + "win/webpmux.exe";
 		gifski    = filepath_resolve(PREFERENCES.gifski_path) 	   + "win/gifski.exe";
-		ffmpeg    = filepath_resolve(PREFERENCES.ffmpeg_path) 	   + "win/ffmpeg.exe";
+		ffmpeg    = filepath_resolve(PREFERENCES.ffmpeg_path) 	   + "ffmpeg.exe";
 		
 		var _w = function(s,p) /*=>*/ {return $"No {s} detected at {p}, please make sure the installation is complete and {s} path is set correctly in the preference."};
 		
@@ -276,7 +284,7 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		magick    = string_lower(filepath_resolve(PREFERENCES.ImageMagick_path)) + "linux/imagemagick.appimage";
 		webp      = string_lower(filepath_resolve(PREFERENCES.webp_path))        + "linux/webpmux";
 		gifski    = string_lower(filepath_resolve(PREFERENCES.gifski_path))      + "linux/gifski";
-		ffmpeg    = string_lower(filepath_resolve(PREFERENCES.ffmpeg_path))      + "linux/ffmpeg";
+		ffmpeg    = string_lower(filepath_resolve(PREFERENCES.ffmpeg_path))      + "ffmpeg";
 		
 		var _w = function(s,p) /*=>*/ {return $"No {s} detected at {p}, please make sure the installation is complete and {s} path is set correctly in the preference."};
 		

@@ -2,7 +2,7 @@ function Node_Puppet_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	name = "Puppet Warp";
 	
 	////- =Surface
-	newInput( 0, nodeValue_Surface( "Surface In" ));
+	newInput( 0, nodeValue_Surface( "Surface In" )).setRequired();
 	
 	////- =Mesh
 	newInput( 1, nodeValue_Mesh( "Mesh" )).setVisible(true, true);
@@ -21,12 +21,13 @@ function Node_Puppet_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 		[ "Pin",     false ],  
 	];
 	
-	function createNewInput(i = array_length(inputs)) {
-		newInput( i+0, nodeValue_Vec2("Pin Position", [0,0] )).setUnitSimple();
-		newInput( i+1, nodeValue_Vec2("Pin Offset",   [0,0] )).setUnitSimple();
+	function createNewInput(index = array_length(inputs)) {
+		newInput(index+0, nodeValue_Vec2("Pin Position", [0,0] )).setUnitSimple();
+		newInput(index+1, nodeValue_Vec2("Pin Offset",   [0,0] )).setUnitSimple();
 		
 		refreshDynamicDisplay();
-		return inputs[i];
+		postCreateNewInput(index);
+		return inputs[index];
 	} setDynamicInput(2, false);
 	
 	////- Tools

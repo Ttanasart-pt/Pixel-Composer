@@ -470,7 +470,7 @@ function Node_Armature(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 			var _y0 = by;
 			var cc  = bone.apply_scale? COLORS._main_icon : COLORS._main_value_negative;
 			if(_hover && point_in_circle(_m[0], _m[1], _x0, _y0, ui(10))) {
-				TOOLTIP = "Apply Scale";
+				setTOOLTIP("Apply Scale");
 				draw_sprite_ui(THEME.bone, 3, _x0, _y0,,,, cc, 0.75);
 				
 				if(mouse_lpress(_focus))
@@ -481,7 +481,7 @@ function Node_Armature(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 			_x0 -= ui(20);
 			var cc  = bone.apply_rotation? COLORS._main_icon : COLORS._main_value_negative;
 			if(_hover && point_in_circle(_m[0], _m[1], _x0, _y0, ui(10))) {
-				TOOLTIP = "Apply Rotation";
+				setTOOLTIP("Apply Rotation");
 				draw_sprite_ui(THEME.bone, 4, _x0, _y0,,,, cc, 0.75);
 				
 				if(mouse_lpress(_focus))
@@ -492,7 +492,7 @@ function Node_Armature(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 			_x0 -= ui(20);
 			var cc = has(bone_constrained, bone.ID)? COLORS._main_accent : COLORS._main_icon;
 			if(_hover && point_in_circle(_m[0], _m[1], _x0, _y0, ui(10))) {
-				TOOLTIP = "Add Constrains";
+				setTOOLTIP("Add Constrains");
 				draw_sprite_ui(THEME.bone, 5, _x0, _y0,,,, cc, .75);
 				
 				if(mouse_lpress(_focus)) {

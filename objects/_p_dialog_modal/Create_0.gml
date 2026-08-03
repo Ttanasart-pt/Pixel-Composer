@@ -2,6 +2,8 @@
 event_inherited();
 
 #region data
+	dialog_x = 0;
+	dialog_y = 0;
 	dialog_w = ui(440);
 	dialog_h = ui(128);
 	padding  = ui(16);
@@ -16,6 +18,7 @@ event_inherited();
 	
 	function resetPosition() {
 		if(!active) return;
+		
 		dialog_x = xstart - dialog_w / 2;
 		dialog_y = ystart - dialog_h / 2;
 		

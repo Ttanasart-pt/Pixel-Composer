@@ -135,6 +135,8 @@ uniform vec2  position;
 uniform vec2  scale;
 uniform float rotation;
 
+uniform vec2  axis;
+
 void main() {
 	vec2  pos = position / backDimension;
 	float rot = radians(rotation);
@@ -145,5 +147,12 @@ void main() {
 	
 	vec2  px  = (v_vTexcoord - pos) * fasp / sca * mat2(cos(rot), -sin(rot), sin(rot), cos(rot)) / fasp / scale;
 	
-    gl_FragColor = v_vColour * texture2Dintp( gm_BaseTexture, fract(px) );
+	if(axis.x > 0.) px.x = fract(px.x);
+	if(axis.y > 0.) px.y = fract(px.y);
+	
+	gl_FragColor = vec4(0.);
+	if(px.x < 0. || px.x >= 1.) return;
+	if(px.y < 0. || px.y >= 1.) return;
+	
+    gl_FragColor = v_vColour * texture2Dintp( gm_BaseTexture, px );
 }

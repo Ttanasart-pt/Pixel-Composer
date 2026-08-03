@@ -66,3 +66,17 @@ function directory_listdir_all(path) {
 	
 	return files;
 }
+
+
+function directory_file_count(path) {
+	var amo  = 0;
+	var file = file_find_first($"{path}/*", -1);
+	
+	while(file != "") {	
+		amo++;
+		file = file_find_next();
+	}
+	file_find_close();
+	
+	return amo;
+}

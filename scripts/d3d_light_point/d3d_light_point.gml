@@ -130,6 +130,6 @@ function __3dLightPoint() : __3dLight() constructor {
 			shader_reset();
 			
 			BLEND_NORMAL
-		__surface_reset_target();
+		surface_reset_target();
 	}
 }

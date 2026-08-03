@@ -1,8 +1,21 @@
 function dialogCall(_dia, _x = noone, _y = noone, param = {}, create = false) {
 	if(DIALOG_JUST_CLOSED == object_get_name(_dia)) return undefined;
 	
-	if(_x == noone) _x = WIN_SW / 2;
-	if(_y == noone) _y = WIN_SH / 2;
+	if(is_winwin(WINWIN_CURRENT)) {
+		if(_x == noone) _x = winwin_get_width(WINWIN_CURRENT)  / 2;
+		if(_y == noone) _y = winwin_get_height(WINWIN_CURRENT) / 2;
+		
+		var wx = winwin_get_x(WINWIN_CURRENT) - window_get_x();
+		var wy = winwin_get_y(WINWIN_CURRENT) - window_get_y();
+		
+		_x += wx;
+		_y += wy;
+		
+	} else {
+		if(_x == noone) _x = WIN_SW / 2;
+		if(_y == noone) _y = WIN_SH / 2;
+			
+	}
 	
 	var dia = (!create && instance_exists(_dia))? instance_find(_dia, 0) : instance_create_depth(_x, _y, 0, _dia, param);
 	
@@ -40,12 +53,27 @@ function dialogPanelCall(_panel, _x = noone, _y = noone, params = undefined) {
 		if(_open) return undefined;
 	} 
 	
-	if(_x == noone) _x = WIN_SW / 2;
-	if(_y == noone) _y = WIN_SH / 2;
+	if(is_winwin(WINWIN_CURRENT)) {
+		if(_x == noone) _x = winwin_get_width(WINWIN_CURRENT)  / 2;
+		if(_y == noone) _y = winwin_get_height(WINWIN_CURRENT) / 2;
+		
+		var wx = winwin_get_x(WINWIN_CURRENT) - window_get_x();
+		var wy = winwin_get_y(WINWIN_CURRENT) - window_get_y();
+		
+		_x += wx;
+		_y += wy;
+		
+	} else {
+		if(_x == noone) _x = WIN_SW / 2;
+		if(_y == noone) _y = WIN_SH / 2;
+			
+	}
 	
 	var dia = instance_create_depth(_x, _y, 0, o_dialog_panel);
 	if(params != undefined) variable_instance_set_struct(dia, params);
 	dia.setContent(_panel);
+	
+	if(!instance_exists(dia)) return undefined;
 	
 	dia.x      = _x;
 	dia.y      = _y;

@@ -221,7 +221,7 @@ function menuCallGen(menu_id, _x = 0, _y = 0, align = fa_left, _pie = true) {
 function menuCall(menu_id = "", menu = [], _x = 0, _y = 0, align = fa_left, _pie = true) {
 	_x = _x == 0? mouse_mx + ui(4) : _x;
 	_y = _y == 0? mouse_my + ui(4) : _y;
-	
+			
 	if(_pie && menu_id != "") {
 		var pie_id = "pie_" + menu_id;
 		var _piemenus = menuItems_gen(pie_id);
@@ -240,12 +240,10 @@ function menuCall(menu_id = "", menu = [], _x = 0, _y = 0, align = fa_left, _pie
 	if(array_empty(menu)) return noone;
 	FOCUS_BEFORE = FOCUS;
 	
-	var dia = dialogCall(o_dialog_menubox, _x, _y);
-	menu    = array_clone(menu, 1);
+    menu = array_clone(menu, 1);
 	
 	if(menu_id != "" && ds_map_exists(CONTEXT_MENU_CALLBACK, menu_id)) {
 		var callbacks = CONTEXT_MENU_CALLBACK[? menu_id];
-		
 		for( var i = 0, n = array_length(callbacks); i < n; i++ ) 
 			array_append(menu, callbacks[i].populate());
 	}
@@ -253,9 +251,11 @@ function menuCall(menu_id = "", menu = [], _x = 0, _y = 0, align = fa_left, _pie
 	if(_pie && menu_id != "") 
 		array_push(menu, -1, menuItem(__txt("Create pie menu..."), function(m) /*=>*/ {return menuItemEdit(m,true)}).setParam(pie_id));
 	
+	var dia  = dialogCall(o_dialog_menubox, _x, _y);
 	dia.context  = self;
 	dia.menu_id  = menu_id;
 	dia.setMenu(menu, align);
+	
 	return dia;
 }
 
@@ -263,8 +263,8 @@ function pieMenuCallGen(menu_id, _x = 0, _y = 0, align = fa_left) { return pieMe
 function pieMenuCall(menu_id = "", menu = [], _x = 0, _y = 0) {
 	if(!PREFERENCES.menu_use_pie) return noone;
 	
-	_x = _x == 0? mouse_mx : _x;
-	_y = _y == 0? mouse_my : _y;
+	_x = _x == 0? mouse_mx + ui(4) : _x;
+	_y = _y == 0? mouse_my + ui(4) : _y;
 	
 	var dia = instance_create(_x, _y, o_pie_menu);
 	menu    = array_clone(menu, 1);

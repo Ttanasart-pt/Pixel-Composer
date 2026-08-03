@@ -49,15 +49,12 @@ function Node_pSystem_3D_Transform(_x, _y, _group = noone) : Node_3D(_x, _y, _gr
 	curve_rota = undefined;
 	curve_scal = undefined;
 	
-	static update = function(_frame = CURRENT_FRAME) { 
-		var _data = inputs_data;
-		
+	static processData = function(_outData, _data, _array_index = 0, _frame = CURRENT_FRAME) {
 		var _parts = _data[0];
 		var _masks = _data[1], use_mask = _masks != noone;
 		
 		if(!is(_parts, pSystem_Particles)) return;
 		if(use_mask) buffer_to_start(_masks);
-		outputs[0].setValue(_parts);
 		
 		var _seed      = _data[ 2];
 		
@@ -180,6 +177,7 @@ function Node_pSystem_3D_Transform(_x, _y, _group = noone) : Node_3D(_x, _y, _gr
 			
 		}
 		
+		return _parts;
 	}
 	
 	static reset = function() {

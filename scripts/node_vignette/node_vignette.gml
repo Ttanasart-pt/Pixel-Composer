@@ -4,7 +4,7 @@ function Node_Vignette(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	newActiveInput(1);
 	
 	////- =Surfaces
-	newInput( 0, nodeValue_Surface( "Surface In" ));
+	newInput( 0, nodeValue_Surface( "Surface In" )).setRequired();
 	newInput(11, nodeValue_Surface( "Mask"       ));
 	newInput(12, nodeValue_Slider(  "Mix", 1     ));
 	__init_mask_modifier(11, 13); // inputs 13, 14

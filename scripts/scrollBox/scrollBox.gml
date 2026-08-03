@@ -107,7 +107,10 @@ function scrollBox(_data, _onModify, _update_hover = true) : widget() constructo
 			case 2 : _object = o_dialog_scrollbox_grid;       break;
 		}
 		
-		scrollDialog = dialogCall(_object, x + open_rx, y + open_ry);
+		var rx = x + open_rx;
+		var ry = y + open_ry;
+		
+		scrollDialog = dialogCall(_object, rx, ry);
 		if(scrollDialog) {
 			scrollDialog.initScroll(self, ind);
 			open = true;

@@ -107,6 +107,7 @@ function Node_MIDI_In(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 		var _out = nodeValue_Output("Value", VALUE_TYPE.float, -1 );
 		array_push(outputs, _out);
 		
+		postCreateNewInput(index);
 		return inputs[index];
 	} setDynamicInput(2, false);
 	

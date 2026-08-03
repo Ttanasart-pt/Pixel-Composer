@@ -269,7 +269,7 @@ event_inherited();
 					selecting = i;
 					hovering  = searchIndex == undefined? i : array_safe_get_fast(searchIndex, i, 0);
 					
-					if(_tol) TOOLTIP = _val.tooltip;
+					if(_tol) setTOOLTIP(_val.tooltip);
 				}
 			
 				if(selecting == i) {
@@ -320,12 +320,12 @@ event_inherited();
 		}
 		
 		if(sc_content.active) {
-			if(key_input_press(vk_up)) {
+			if(keyboard_check_pressed(vk_up)) {
 				selecting--;
 				if(selecting < 0) selecting = array_length(data) - 1;
 			}
 			
-			if(key_input_press(vk_down))
+			if(keyboard_check_pressed(vk_down))
 				selecting = safe_mod(selecting + 1, array_length(data));
 				
 			if(keyboard_check_pressed(vk_escape))

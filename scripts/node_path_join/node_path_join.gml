@@ -9,14 +9,16 @@ function Node_Path_Join(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		[ "Paths", false ], 
 	];
 	
-	function createNewInput(i = array_length(inputs)) {
-		newInput(i+0, nodeValue_Path( "Path"           ));
-		newInput(i+1, nodeValue_Bool( "Reverse", false ));
+	function createNewInput(index = array_length(inputs)) {
+		newInput(index+0, nodeValue_Path( "Path"           ));
+		newInput(index+1, nodeValue_Bool( "Reverse", false ));
 		
-		if(i > input_fix_len)
+		if(index > input_fix_len)
 			array_push(input_display_list, new Inspector_Spacer(ui(6), true));
-		array_push(input_display_list, i+0, i+1);
-		return inputs[i];
+			
+		array_push(input_display_list, index+0, index+1);
+		postCreateNewInput(index);
+		return inputs[index];
 	} 
 	
 	setDynamicInput( 2, true, VALUE_TYPE.pathnode);

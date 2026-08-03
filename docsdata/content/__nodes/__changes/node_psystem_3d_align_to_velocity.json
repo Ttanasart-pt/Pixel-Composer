@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.8.002",
+    "changes": [
+      {
+        "date": "2026-07-31T09:40:59.514Z",
+        "node": "",
+        "commit": "**pSystem 3D**: Fix system not updating."
+      }
+    ]
+  },
+  {
     "version": "1.21.4.008",
     "changes": [
       {

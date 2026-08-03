@@ -115,14 +115,17 @@ function MetaDataManager() constructor {
 			_h = string_height(name);
 			_w = string_width(name);
 			
-			var mx = min(mouse_mxs + _pdx * 2, WIN_W - (_w + _pdx * 2));
-			var my = min(mouse_mys + _pdy * 2, WIN_H - (_h + _pdy * 2));
+			var tww = _w + _pdx * 2;
+			var thh = _h + _pdy * 2;
 			
-			draw_sprite_stretched(THEME.textbox, 3, mx, my, _w + _pdx * 2, _h + _pdx * 2);
-			draw_sprite_stretched(THEME.textbox, 0, mx, my, _w + _pdy * 2, _h + _pdy * 2);
+			TOOLTIP_SURFACE = surface_verify(TOOLTIP_SURFACE, tww, thh);
+			surface_set_shader(TOOLTIP_SURFACE);
+			draw_sprite_stretched(THEME.textbox, 3, 0, 0, tww, thh);
+			draw_sprite_stretched(THEME.textbox, 0, 0, 0, tww, thh);
 			
 			draw_set_text(f_p1, fa_left, fa_top, COLORS._main_text);
-			draw_text(mx + _pdx, my + _pdy, name);
+			draw_text(_pdx, _pdy, name);
+			surface_reset_shader();
 			return;
 		}
 		
@@ -186,16 +189,17 @@ function MetaDataManager() constructor {
 		
 		var ww = _w + _pdx * 2
 		var hh = _h + _pdy * 2
-		var mx = min(mouse_mxs + _pdx * 2, WIN_W - ww);
-		var my = min(mouse_mys + _pdy * 2, WIN_H - hh);
+		
+		TOOLTIP_SURFACE = surface_verify(TOOLTIP_SURFACE, ww, hh);
+		surface_set_shader(TOOLTIP_SURFACE);
 		
 		////////////////////////////////////////////////////////////////////////////////////////////////////
 		
-		draw_sprite_stretched(THEME.textbox, 3, mx, my, ww, hh);
-		draw_sprite_stretched(THEME.textbox, 0, mx, my, ww, hh);
+		draw_sprite_stretched(THEME.textbox, 3, 0, 0, ww, hh);
+		draw_sprite_stretched(THEME.textbox, 0, 0, 0, ww, hh);
 		
-		var tx = mx + _pdx;
-		var ty = my + ui(8);
+		var tx = _pdx;
+		var ty = ui(8);
 		
 		draw_set_text(f_h5, fa_left, fa_top, COLORS._main_text);
 		draw_text_line(tx, ty, name, -1, _w);
@@ -268,13 +272,14 @@ function MetaDataManager() constructor {
 					ty += hh + ui(2);
 				}
 				
-				draw_sprite_stretched_ext(THEME.box_r5_clr, 0, mx + ui(8) + tx, ty, ww, hh, COLORS._main_icon, 1);
-				draw_text(mx + ui(8) + tx + ui(8), ty + hh / 2, tags[i]);
+				draw_sprite_stretched_ext(THEME.box_r5_clr, 0, ui(8) + tx, ty, ww, hh, COLORS._main_icon, 1);
+				draw_text(ui(8) + tx + ui(8), ty + hh / 2, tags[i]);
 			
 				tx += ww + ui(2);
 			}
 		}
 		
+		surface_reset_shader();
 	}
 }
 

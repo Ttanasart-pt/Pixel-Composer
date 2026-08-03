@@ -8,7 +8,7 @@
 function Node_Normalize(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Normalize";
 	
-	newInput(0, nodeValue_Surface( "Surface In"  ));
+	newInput(0, nodeValue_Surface( "Surface In"  )).setRequired();
 	newInput(1, nodeValue_EButton( "Channels", 0, [ "BW", "RGB" ]       ));
 	
 	////- =Normalize

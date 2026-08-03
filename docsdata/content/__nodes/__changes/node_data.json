@@ -1,5 +1,40 @@
 [
   {
+    "version": "1.21.8.003",
+    "changes": [
+      {
+        "date": "2026-08-02T07:49:40.575Z",
+        "node": "",
+        "commit": "Dynamic inputs node now shares default values."
+      }
+    ]
+  },
+  {
+    "version": "1.21.8.002",
+    "changes": [
+      {
+        "date": "2026-07-31T07:06:57.013Z",
+        "node": "",
+        "commit": "Reworked canvas node.  - Remove most features. - Editor now it's own interface.  - More stable. - Loading project with the old canvas will still use the old node."
+      },
+      {
+        "date": "2026-07-31T08:09:52.371Z",
+        "node": "Graph Panel",
+        "commit": "**Graph Panel**: Node now hide output if requirement failed."
+      }
+    ]
+  },
+  {
+    "version": "1.21.7.110",
+    "changes": [
+      {
+        "date": "2026-07-27T02:38:53.093Z",
+        "node": "",
+        "commit": "Add junction requirement."
+      }
+    ]
+  },
+  {
     "version": "1.21.7.109",
     "changes": [
       {

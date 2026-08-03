@@ -1917,6 +1917,8 @@ function Panel_Inspector() : PanelContent() constructor {
                 _att_key  = array_safe_get(edt, 3, 0);
             }
             
+            if(!is(_att_wid, widget)) { yy += _hg + _pd; continue; }
+            
             _att_wid.font = _font;
             _att_wid.register(contentPane);
             _att_wid.setFocusHover(pFOCUS, pHOVER);
@@ -1931,6 +1933,8 @@ function Panel_Inspector() : PanelContent() constructor {
                 continue;
             } 
             
+            var wdgw = max(ww, _att_wid.minWidth);
+            
             draw_set_text(_font, fa_left, fa_center, COLORS._main_text);
             draw_text_add(ui(8), yy + _att_h / 2, _att_name);
             
@@ -1939,7 +1943,7 @@ function Panel_Inspector() : PanelContent() constructor {
                 draw_text_add(wx0 - ui(8), yy + _att_h / 2, _att_key.toString());
             }
             
-            var _param = new widgetParam(wx0, yy, ww, _att_h, _att_val, undefined, _m, x + contentPane.x, y + contentPane.y);
+            var _param = new widgetParam(wx0, yy, wdgw, _att_h, _att_val, undefined, _m, x + contentPane.x, y + contentPane.y);
                 _param.s    = _att_h;
                 _param.font = _font;
                 
@@ -2289,8 +2293,8 @@ function Panel_Inspector() : PanelContent() constructor {
         	b.draw(bx, by, bs, bs, m);
         	
         	if(b.hovering) {
-        		TOOLTIP      = tooltip_primary;
-        		TOOLTIP.text = b.tooltip;
+        		tooltip_primary.text = b.tooltip;
+        		setTOOLTIP(tooltip_primary);
         	}
         }
         
@@ -2302,8 +2306,8 @@ function Panel_Inspector() : PanelContent() constructor {
         	b.draw(bx, by, bs, bs, m);
         	
         	if(b.hovering) {
-        		TOOLTIP      = tooltip_secondary;
-        		TOOLTIP.text = b.tooltip;
+        		tooltip_secondary.text = b.tooltip;
+        		setTOOLTIP(tooltip_secondary);
         	}
         }
         
@@ -2315,8 +2319,8 @@ function Panel_Inspector() : PanelContent() constructor {
         	b.draw(bx, by, bs, bs, m);
         	
         	if(b.hovering) {
-        		TOOLTIP      = tooltip_cache;
-        		TOOLTIP.text = b.tooltip;
+        		tooltip_cache.text = b.tooltip;
+        		setTOOLTIP(tooltip_cache);
         	}
         }
     }
@@ -2690,7 +2694,7 @@ function Panel_Inspector() : PanelContent() constructor {
                         }
                         
                         if(hv) {
-                        	TOOLTIP = __txt("Change Thumbnail") + "...";
+                        	setTOOLTIP(__txt("Change Thumbnail") + "...");
                         	draw_sprite_stretched(THEME.textbox, 1, _wdx, yy, _wdw, wh);
                         	
                         	if(mouse_lpress(pFOCUS)) {
@@ -2723,7 +2727,7 @@ function Panel_Inspector() : PanelContent() constructor {
                 		var fc  = _p.open_start? COLORS._main_value_positive : COLORS._main_icon;
                 		draw_sprite_ui(THEME.favorite, _p.open_start, ui(16), yy + _ph / 2, .75, .75, 0, fc, .75 + fhv*.25);
                 		if(fhv) {
-                			TOOLTIP = __txt("Open on Project load");
+                			setTOOLTIP(__txt("Open on Project load"));
                 			if(mouse_lpress(_focus)) _p.open_start = !_p.open_start;
                 		}
                 		

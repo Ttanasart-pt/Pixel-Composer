@@ -138,14 +138,15 @@ function Node_Equation(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 		[ "Inputs",     true ], 
 	]
 	
-	function createNewInput(i = array_length(inputs)) {
+	function createNewInput(index = array_length(inputs)) {
 		var inAmo = array_length(inputs);
 		
-		newInput(i+0, nodeValue_Text(  "Argument name"     )).setDisplay(VALUE_DISPLAY.text_box);
-		newInput(i+1, nodeValue_Float( "Argument value", 0 )).setVisible(true, true);
+		newInput(index+0, nodeValue_Text(  "Argument name"     )).setDisplay(VALUE_DISPLAY.text_box);
+		newInput(index+1, nodeValue_Float( "Argument value", 0 )).setVisible(true, true);
 							
 		array_push(input_display_list, inAmo, inAmo + 1);
-		return inputs[i];
+		postCreateNewInput(index);
+		return inputs[index];
 	} 
 	
 	setDynamicInput(2, false);

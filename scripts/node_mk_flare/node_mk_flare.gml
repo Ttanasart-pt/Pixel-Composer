@@ -279,7 +279,7 @@ function Node_MK_Flare(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 				draw_sprite_ext(s_flare_type, _flare.type, _ffx + _ffh / 2, _ffy + _ffh / 2, 1, 1, 0, c_white, 1);
 				if(_hov) {
 					_hv     = false;
-					TOOLTIP = __txt("Shape");
+					setTOOLTIP(__txt("Shape"));
 				}
 				
 				if(_hov && mouse_lpress(_focus)) {
@@ -300,7 +300,7 @@ function Node_MK_Flare(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 				draw_sprite_stretched_ext(THEME.palette_mask, 1, _ffx + ui(4), _ffy + ui(4), _ffw - ui(8), _ffh - ui(8), _flare.blend, 1);
 				if(_hov) {
 					_hv     = false;
-					TOOLTIP = __txt("Color");
+					setTOOLTIP(__txt("Color"));
 				}
 				
 				if(_hov && mouse_lpress(_focus)) {
@@ -342,7 +342,7 @@ function Node_MK_Flare(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 						_hv = false;
 						
 						if(flare_editing == noone) {
-							TOOLTIP = __txt(_txt);
+							setTOOLTIP(__txt(_txt));
 							ic      = c_white;
 						}
 					}

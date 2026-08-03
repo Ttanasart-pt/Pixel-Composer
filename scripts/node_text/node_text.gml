@@ -232,34 +232,34 @@ function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 			} else if(edit_cursor != noone) {
 				var _edit = false;
 				
-				if(key_input_press(vk_left)) {
+				if(keyboard_check_pressed(vk_left)) {
 					edit_cursor = max(0, edit_cursor - 1);
 					edit_cursor_sel = noone;
 					
-				} else if(key_input_press(vk_right)) {
+				} else if(keyboard_check_pressed(vk_right)) {
 					edit_cursor = min(edit_cursor + 1, string_length(_currStr));
 					edit_cursor_sel = noone;
 					
-				} else if(key_input_press(vk_escape)) {
+				} else if(keyboard_check_pressed(vk_escape)) {
 					PANEL_PREVIEW.tool_current = noone;
 					edit_cursor_sel = noone;
 					
-				} else if(edit_cursor_sel != noone && (KEYBOARD_PRESSED_STRING != "" || key_input_press(vk_backspace) || key_input_press(vk_delete))) {
+				} else if(edit_cursor_sel != noone && (KEYBOARD_PRESSED_STRING != "" || keyboard_check_pressed(vk_backspace) || keyboard_check_pressed(vk_delete))) {
 					_currStr        = string_delete(_currStr, _crmin + 1, _crmax - _crmin);
 					_edit           = true;
 					edit_cursor     = _crmin;
 					edit_cursor_sel = noone;
 					
-				} else if(key_input_press(vk_backspace)) {
+				} else if(keyboard_check_pressed(vk_backspace)) {
 					_currStr    = string_delete(_currStr, edit_cursor, 1);
 					_edit       = true;
 					edit_cursor = max(0, edit_cursor - 1);
 					
-				} else if(key_input_press(vk_delete)) {
+				} else if(keyboard_check_pressed(vk_delete)) {
 					_currStr    = string_delete(_currStr, edit_cursor + 1, 1);
 					_edit       = true;
 				
-				} else if(key_input_press(vk_enter)) {
+				} else if(keyboard_check_pressed(vk_enter)) {
 					_currStr    = string_insert("\n", _currStr, edit_cursor + 1);
 					_edit       = true;
 					

@@ -14,6 +14,7 @@ function Node_Path_Array(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		
 		newInput(index, nodeValue_Path("Path" ));
 		
+		postCreateNewInput(index);
 		return inputs[index];
 	} setDynamicInput(1, true, VALUE_TYPE.pathnode);
 	

@@ -56,7 +56,7 @@
 		
 		switch(CTRL) {
 			case KEY_STAT.idle: 
-				if(keyboard_check_pressed(vk_control)) { 
+				if(keyboard_check_direct(vk_control)) { 
 					CTRL = kd_ctrl < _d? KEY_STAT.double : KEY_STAT.down;  
 					kd_ctrl = 0; 
 				}
@@ -64,7 +64,7 @@
 			
 			case KEY_STAT.down: case KEY_STAT.double: case KEY_STAT.pressing:
 				CTRL = KEY_STAT.pressing;
-				if(!keyboard_check(vk_control)) CTRL = KEY_STAT.up;
+				if(!keyboard_check_direct(vk_control)) CTRL = KEY_STAT.up;
 				break;
 				
 			case KEY_STAT.up: CTRL = KEY_STAT.idle; break;
@@ -72,7 +72,7 @@
 		
 		switch(SHIFT) {
 			case KEY_STAT.idle: 
-				if(keyboard_check_pressed(vk_shift)) { 
+				if(keyboard_check_direct(vk_shift)) { 
 					SHIFT = kd_shift < _d? KEY_STAT.double : KEY_STAT.down;  
 					kd_shift = 0; 
 				}
@@ -80,7 +80,7 @@
 			
 			case KEY_STAT.down: case KEY_STAT.double: case KEY_STAT.pressing:
 				SHIFT = KEY_STAT.pressing;
-				if(!keyboard_check(vk_shift)) SHIFT = KEY_STAT.up;
+				if(!keyboard_check_direct(vk_shift)) SHIFT = KEY_STAT.up;
 				break;
 				
 			case KEY_STAT.up: SHIFT = KEY_STAT.idle; break;
@@ -88,7 +88,7 @@
 		
 		switch(ALT) {
 			case KEY_STAT.idle: 
-				if(keyboard_check_pressed(vk_alt)) { 
+				if(keyboard_check_direct(vk_alt)) { 
 					ALT = kd_alt < _d? KEY_STAT.double : KEY_STAT.down;  
 					kd_alt = 0; 
 				}
@@ -96,7 +96,7 @@
 			
 			case KEY_STAT.down: case KEY_STAT.double: case KEY_STAT.pressing:
 				ALT = KEY_STAT.pressing;
-				if(!keyboard_check(vk_alt)) ALT = KEY_STAT.up;
+				if(!keyboard_check_direct(vk_alt)) ALT = KEY_STAT.up;
 				break;
 				
 			case KEY_STAT.up: ALT = KEY_STAT.idle; break;
@@ -107,8 +107,8 @@
 		if(SHIFT == KEY_STAT.pressing) HOTKEY_MOD |= MOD_KEY.shift;
 		if(ALT   == KEY_STAT.pressing) HOTKEY_MOD |= MOD_KEY.alt;
 		
-		if(ENTER && !keyboard_check(vk_enter)) keyboard_lastchar = "";
-		ENTER = keyboard_check_pressed(vk_enter) || ord(keyboard_lastchar) == 13;
+		if(ENTER && !keyboard_check_direct(vk_enter)) keyboard_lastchar = "";
+		ENTER = keyboard_check_direct(vk_enter) || ord(keyboard_lastchar) == 13;
 		
 		if(os_is_paused()) { KEYBOARD_MOD_RESET }
 	}

@@ -13,6 +13,8 @@ event_inherited();
 	menu      = 1;
 	editable  = true;
 	
+	waitmenu  = 0;
+	
 	align     = fa_left;
 	tooltips  = [];
 	show_icon = false;
@@ -45,6 +47,8 @@ event_inherited();
 	
 	function setMenu(_menu, _align = fa_left) {
 		with(_p_dialog) { if(on_top) continue; other.depth = min(depth - 1, other.depth); }
+		
+		var _premenu = menu;
 		
 		title    = menu_id;
 		menu     = _menu;
@@ -126,8 +130,17 @@ event_inherited();
 		
 		mouse_init_inside = point_in_rectangle(mouse_mx, mouse_my, dialog_x, dialog_y, dialog_x + dialog_w, dialog_y + dialog_h);
 		init_rclick = !mouse_init_inside && mouse_rclick();
-		ready = true;
+		ready       = true;
 		
+		dialog_w = ceil(dialog_w);
+		dialog_h = ceil(dialog_h);
+		
+		if(is_array(_premenu) && is_winwin(window)) {
+			winwin_set_visible(window, false);
+			winwin_set_rectangle(window, window_get_x() + dialog_x, window_get_y() + dialog_y, dialog_w, dialog_h);
+			winwin_order_front(window);
+			waitmenu = 2;
+		}
 	}
 	
 	function getContextPanel() { return is(context, PanelContent)? context.panel : context; }

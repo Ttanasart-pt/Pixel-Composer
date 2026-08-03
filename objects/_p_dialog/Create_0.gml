@@ -1,18 +1,35 @@
 /// @description init
-#macro DIALOG_PAD 8
+#macro DIALOG_PAD ui(8)
 #macro DIALOG_SHOW_FOCUS (FOCUS == self.id || (FOCUS && FOCUS[$ "preFocus"] == self.id) || (instance_exists(o_dialog_menubox) && o_dialog_menubox.getContextPanel() == self))
-#macro DIALOG_DRAW_BG    draw_sprite_stretched( THEME.dialog, 0, dialog_x - 8, dialog_y - 8, dialog_w + 16, dialog_h + 16 );
-#macro DIALOG_DRAW_FOCUS \
-	var foc = FOCUS == self.id || (FOCUS && FOCUS[$ "preFocus"] == self.id); \
-	if(foc || (instance_exists(o_dialog_menubox) && o_dialog_menubox.getContextPanel() == self)) \
-		draw_sprite_stretched_ext( THEME.dialog, 1, dialog_x - 8, dialog_y - 8, dialog_w + 16, dialog_h + 16, PREFERENCES.panel_outline_accent? COLORS._main_accent : COLORS.panel_select_border, 1 ); \
-	else \
-		draw_sprite_stretched_ext( THEME.dialog, 1, dialog_x - 8, dialog_y - 8, dialog_w + 16, dialog_h + 16, COLORS.panel_frame, 1 );
 
-#macro DIALOG_WINCLEAR  //
-#macro DIALOG_WINCLEAR1 //
-#macro DIALOG_PREDRAW   //
-#macro DIALOG_POSTDRAW  //
+#macro DIALOG_DRAW_BG                           \
+	if(is_winwin(window)) winwin_start(window); \
+	var _dialog_x = window? 0 : dialog_x;       \ 
+	var _dialog_y = window? 0 : dialog_y;       \
+	draw_sprite_stretched( THEME.dialog, 0, _dialog_x - 8, _dialog_y - 8, _dialog_w + 16, _dialog_h + 16 );
+
+#macro DIALOG_DRAW_FOCUS                                                                                                \
+	var foc = FOCUS == self.id || (FOCUS && FOCUS[$ "preFocus"] == self.id);                                            \
+	var cc  = PREFERENCES.panel_outline_accent? COLORS._main_accent : COLORS.panel_select_border                        \
+	if(foc || (instance_exists(o_dialog_menubox) && o_dialog_menubox.getContextPanel() == self))                        \
+		 draw_sprite_stretched_ext( THEME.dialog, 1, _dialog_x-8, _dialog_y-8, _dialog_w+16, _dialog_h+16, cc, 1 );     \
+	else draw_sprite_stretched_ext( THEME.dialog, 1, _dialog_x-8, _dialog_y-8, _dialog_w+16, _dialog_h+16, COLORS.panel_frame, 1 ); \
+	if(is_winwin(window)) winwin_end();
+
+#macro DIALOG_DRAW_FOCUS_UNEND                                                                                          \
+	var foc = FOCUS == self.id || (FOCUS && FOCUS[$ "preFocus"] == self.id);                                            \
+	var cc  = PREFERENCES.panel_outline_accent? COLORS._main_accent : COLORS.panel_select_border                        \
+	if(foc || (instance_exists(o_dialog_menubox) && o_dialog_menubox.getContextPanel() == self))                        \
+		 draw_sprite_stretched_ext( THEME.dialog, 1, _dialog_x-8, _dialog_y-8, _dialog_w+16, _dialog_h+16, cc, 1 );     \
+	else draw_sprite_stretched_ext( THEME.dialog, 1, _dialog_x-8, _dialog_y-8, _dialog_w+16, _dialog_h+16, COLORS.panel_frame, 1 );
+
+#macro DIALOG_WINDOW_START                      \
+	if(is_winwin(window)) winwin_start(window); \
+	var _dialog_x = window? 0 : dialog_x;       \ 
+	var _dialog_y = window? 0 : dialog_y;
+
+#macro DIALOG_WINDOW_END                  \
+	if(is_winwin(window)) winwin_end();
 
 #region data
 	on_top    = false;
@@ -55,7 +72,11 @@
 	init_rclick   = mouse_rclick();
 #endregion
 
-#region windows
+ ////- Window manipulations
+	
+	windowConfig = new winwin_config();
+	window       = undefined;
+	
 	mouse_active	= false;
 	draggable		= true;
 	dialog_dragging = false;
@@ -65,6 +86,8 @@
 	dialog_drag_my  = 0;
 	mouse_draggable = true;
 	
+	onDrag = undefined;
+	
 	function doDrag() {
 		if(!active) return;
 		
@@ -72,27 +95,36 @@
 		if(!draggable) return;
 		
 		if(dialog_dragging) {
-			var _dx = dialog_drag_sx + mouse_mx - dialog_drag_mx;
-			var _dy = dialog_drag_sy + mouse_my - dialog_drag_my;
+			var diax = dialog_x;
+			var diay = dialog_y;
 			
-			var _wx = window_get_x();
-			var _wy = window_get_y();
+			dialog_x = dialog_drag_sx + mouse_rx - dialog_drag_mx;
+			dialog_y = dialog_drag_sy + mouse_ry - dialog_drag_my;
 			
-			dialog_x = clamp(_dx, ui(16) - dialog_w, WIN_W - ui(16));
-			dialog_y = clamp(_dy, ui(16) - dialog_h, WIN_H - ui(16));
+			var dx = dialog_x - diax;
+			var dy = dialog_y - diay;
 			
-			if(mouse_lrelease())
-				dialog_dragging = false;
+			if(onDrag) onDrag(dx, dy);
+			
+			if(mouse_lrelease()) dialog_dragging = false;
 		}
 		
-		if(mouse_draggable && !dialog_resizing && point_in_rectangle(mouse_mx, mouse_my, dialog_x, dialog_y, dialog_x + dialog_w, dialog_y + title_height)) {
+		var diax = window_get_x() + dialog_x;
+		var diay = window_get_y() + dialog_y;
+		
+		var _x0 = diax;
+		var _y0 = diay;
+		var _x1 = diax + dialog_w;
+		var _y1 = diay + title_height;
+		
+		if(mouse_draggable && !dialog_resizing && point_in_rectangle(mouse_rx, mouse_ry, _x0, _y0, _x1, _y1)) {
 			mouse_active = false;
 			if(mouse_lpress(sFOCUS)) {
 				dialog_dragging = true;
 				dialog_drag_sx  = dialog_x;
 				dialog_drag_sy  = dialog_y;
-				dialog_drag_mx  = mouse_mx;
-				dialog_drag_my  = mouse_my;
+				dialog_drag_mx  = mouse_rx;
+				dialog_drag_my  = mouse_ry;
 			}
 		}
 	
@@ -114,32 +146,33 @@
 	onResize        = undefined;
 	
 	function doResize() {
-		if(!active) return;
-		if(!dialog_resizable) return;
+		if(!active || !dialog_resizable) return;
 		
 		if(dialog_resizing != 0) {
+			var dx = mouse_rx - dialog_resiz_mx;
+			var dy = mouse_ry - dialog_resiz_my;
 			
 			if(dialog_resizing & 0b0001) {
-				var ww = dialog_resiz_sw + (mouse_mx - dialog_resiz_mx);
+				var ww = dialog_resiz_sw + dx;
 				    ww = clamp(ww, dialog_w_min, dialog_w_max);
 				dialog_w = ww;
 			} 
 			
 			if(dialog_resizing & 0b0010) {
-				var hh = dialog_resiz_sh + (mouse_my - dialog_resiz_my);
+				var hh = dialog_resiz_sh + dy;
 				    hh = clamp(hh, dialog_h_min, dialog_h_max);
 				dialog_h = hh;
 			}
 			
 			if(dialog_resizing & 0b0100) {
-				var ww = dialog_resiz_sw - (mouse_mx - dialog_resiz_mx);
+				var ww = dialog_resiz_sw - dx;
 				    ww = clamp(ww, dialog_w_min, dialog_w_max);
 				dialog_x = dialog_resiz_sx - (ww - dialog_resiz_sw);
 				dialog_w = ww;
 			} 
 			
 			if(dialog_resizing & 0b1000) {
-				var hh = dialog_resiz_sh - (mouse_my - dialog_resiz_my);
+				var hh = dialog_resiz_sh - dy;
 				    hh = clamp(hh, dialog_h_min, dialog_h_max);
 				
 				dialog_y = dialog_resiz_sy - (hh - dialog_resiz_sh);
@@ -157,17 +190,20 @@
 		}
 		
 		if(sHOVER) {
-			var _x0 = dialog_x;
-			var _y0 = dialog_y;
-			var _x1 = dialog_x + dialog_w;
-			var _y1 = dialog_y + dialog_h;
+			var diax = window_get_x() + dialog_x;
+			var diay = window_get_y() + dialog_y;
+			
+			var _x0 = diax;
+			var _y0 = diay;
+			var _x1 = diax + dialog_w;
+			var _y1 = diay + dialog_h;
 			var _sel_mask = 0;
 			
-			if(point_in_rectangle(mouse_mx, mouse_my, _x0, _y0, _x1, _y1)) {
-				if(distance_to_line(mouse_mx, mouse_my, _x1, _y0, _x1, _y1) < DIALOG_PAD) _sel_mask |= 1 << 0;
-				if(distance_to_line(mouse_mx, mouse_my, _x0, _y1, _x1, _y1) < DIALOG_PAD) _sel_mask |= 1 << 1;
-				if(distance_to_line(mouse_mx, mouse_my, _x0, _y0, _x0, _y1) < DIALOG_PAD) _sel_mask |= 1 << 2;
-				if(distance_to_line(mouse_mx, mouse_my, _x0, _y0, _x1, _y0) < DIALOG_PAD) _sel_mask |= 1 << 3;
+			if(point_in_rectangle(mouse_rx, mouse_ry, _x0, _y0, _x1, _y1)) {
+				if(distance_to_line(mouse_rx, mouse_ry, _x1, _y0, _x1, _y1) < DIALOG_PAD) _sel_mask |= 1 << 0;
+				if(distance_to_line(mouse_rx, mouse_ry, _x0, _y1, _x1, _y1) < DIALOG_PAD) _sel_mask |= 1 << 1;
+				if(distance_to_line(mouse_rx, mouse_ry, _x0, _y0, _x0, _y1) < DIALOG_PAD) _sel_mask |= 1 << 2;
+				if(distance_to_line(mouse_rx, mouse_ry, _x0, _y0, _x1, _y0) < DIALOG_PAD) _sel_mask |= 1 << 3;
 			}
 			
 			if(_sel_mask != 0) {
@@ -186,44 +222,81 @@
 					dialog_resiz_sy = dialog_y;
 					dialog_resiz_sw = dialog_w;
 					dialog_resiz_sh = dialog_h;
-					dialog_resiz_mx = mouse_mx;
-					dialog_resiz_my = mouse_my;
+					dialog_resiz_mx = mouse_rx;
+					dialog_resiz_my = mouse_ry;
 				}
 			}
 		}
 		
 	}
-#endregion
 
-#region focus
+ ////- Focus
+		
 	function point_in(mx, my) {
-		INLINE
+		var diax = dialog_x; 
+		var diay = dialog_y;
+	
 		var _r = dialog_resizable * 6;
-		var x0 = dialog_x            - _r;
-		var x1 = dialog_x + dialog_w + _r;
-		var y0 = dialog_y            - _r;
-		var y1 = dialog_y + dialog_h + _r;
+		var x0 = diax            - _r;
+		var x1 = diax + dialog_w + _r;
+		var y0 = diay            - _r;
+		var y1 = diay + dialog_h + _r;
 		
 		return point_in_rectangle(mx, my, x0, y0, x1, y1);
 	}
 	
-	function checkFocus() {
+	onCheckMouse = undefined;
+	function checkMouse() {
 		if(!active) return;
 		
-		var _mx = FILE_IS_DROPPING? FILE_DROPPING_X : mouse_mx;
-		var _my = FILE_IS_DROPPING? FILE_DROPPING_Y : mouse_my;
+		var _mx = mouse_mx;
+		var _my = mouse_my;
 		
-		if(point_in(_mx, _my) && depth <= DIALOG_DEPTH_HOVER) {
+		var useWindow = is_winwin(window);
+		
+		if(useWindow) {
+			_mx = winwin_mouse_get_x(window);
+			_my = winwin_mouse_get_y(window);
+		}
+		
+		if(FILE_IS_DROPPING) {
+			_mx = FILE_DROPPING_X;
+			_my = FILE_DROPPING_Y;
+				
+		}
+		
+		var _hoverRect  = useWindow? winwin_mouse_is_over(window) : point_in(_mx, _my);
+		var _depthHover = useWindow? winwin_mouse_is_over(window) : depth <= DIALOG_DEPTH_HOVER;
+		
+		if(_hoverRect && _depthHover) {
 			DIALOG_DEPTH_HOVER = depth;
 			HOVER = self.id;
 		}
 		
+		if(onCheckMouse) onCheckMouse();
+		
+		if(!DIALOG_CLICK || init_pressing) return;
+		
+		if(mouse_lpress() || mouse_rpress()) { 
+			if(!volatile && !isTop()) return;
+			
+			for( var i = 0, n = array_length(children); i < n; i++ )
+				if(instance_exists(children[i])) return;
+			
+			if(checkClosable() && destroy_on_click_out && !_hoverRect) {
+				instance_destroy(self);
+				onDestroy();
+				DIALOG_CLICK = false;
+			}
+		}
 	}
+	
+	onCheckFocus = undefined;
+	function checkFocus() { if(onCheckFocus) onCheckFocus(); }
 	
 	function checkDepth() {
 		if(!active) return;
 		if(HOVER != self.id) return;
-		
 		
 		if(mouse_press(mb_any, true, true)) {
 			setFocus(self.id);
@@ -254,6 +327,21 @@
 		dialog_x = round(clamp(dialog_x, 2, WIN_SW - dialog_w - 2));
 		dialog_y = round(clamp(dialog_y, 2, WIN_SH - dialog_h - 2));
 		onResetPosition();
+		
+		if(MULTI_WINDOWS) {
+			if(is_winwin(window)) {
+				winwin_set_rectangle(window, window_get_x() + dialog_x, window_get_y() + dialog_y, dialog_w, dialog_h);
+				
+			} else {
+				var wx = window_get_x() + dialog_x;
+				var wy = window_get_y() + dialog_y;
+				window = winwin_create(wx, wy, dialog_w, dialog_h, windowConfig);
+				winwin_enable_per_pixel_alpha(window);
+				winwin_order_front(window);
+				
+				array_push(WINWIN_ALL, window);
+			}
+		}
 	}
 	
 	function isTop() {
@@ -261,31 +349,13 @@
 		return true;
 	}
 	
-	function checkMouse() {
-		if(!active || !DIALOG_CLICK || init_pressing) return;
-		
-		if(mouse_lpress() || mouse_rpress()) { 
-			if(!volatile && !isTop()) return;
-			
-			for( var i = 0, n = array_length(children); i < n; i++ )
-				if(instance_exists(children[i])) return;
-			
-			if(checkClosable() && destroy_on_click_out && !point_in(mouse_mx, mouse_my)) {
-				instance_destroy(self);
-				onDestroy();
-				DIALOG_CLICK = false;
-			}
-		}
-	}
-	
 	function checkClosable() { return true; }
 		
 	function onDestroy() {}
-#endregion
 
-#region children
+ ////- Children
+		
 	function addChildren(object) {
-		object.parent = self;
-		array_push_unique(children, object.id);
-	}
-#endregion
+			object.parent = self;
+			array_push_unique(children, object.id);
+		}

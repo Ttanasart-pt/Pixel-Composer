@@ -5,7 +5,7 @@ function Node_XDoG_Threshold(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 	newInput(6, nodeValue_Toggle("Channel", 0b1111, { data: array_create(4, THEME.inspector_channel) }));
 	
 	////- =Surface
-	newInput( 0, nodeValue_Surface( "Surface In" ));
+	newInput( 0, nodeValue_Surface( "Surface In" )).setRequired();
 	newInput( 1, nodeValue_Surface( "Mask"       ));
 	newInput( 2, nodeValue_Slider(  "Mix", 1     ));
 	__init_mask_modifier(1, 3); // inputs 3, 4
@@ -49,8 +49,6 @@ function Node_XDoG_Threshold(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 			
 			var _edge = _data[15];
 			var _smth = _data[11];
-			
-			if(!is_surface(_surf)) return _outData; 
 		#endregion
 		
 		var _dim = surface_get_dimension(_surf);

@@ -2,7 +2,7 @@ function Node_Scale_Content_Aware(_x, _y, _group = noone) : Node_Processor(_x, _
 	name = "Content-Aware Scale";
 	
 	////- =Surface
-	newInput( 0, nodeValue_Surface( "Surface In" ));
+	newInput( 0, nodeValue_Surface( "Surface In" )).setRequired();
 	
 	////- =Scale
 	newInput( 2, nodeValue_EButton(   "Type",         0, [ "Multiply", "Scale to Size" ] ));

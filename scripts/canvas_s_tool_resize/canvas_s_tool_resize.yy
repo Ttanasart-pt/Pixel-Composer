@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"canvas_s_tool_resize",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"canvas_s_tool_resize",
+  "parent":{
+    "name":"global",
+    "path":"folders/panels/nodes/canvas/tools/global.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

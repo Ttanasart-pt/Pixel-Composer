@@ -22,6 +22,7 @@ function Node_MK_Parallax(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 		inputs[index].stat = stat_label;
 		
 		array_push(input_display_list, index + 0, index + 1, index + 2, index + 3, stat_label);
+		postCreateNewInput(index);
 		return inputs[index + 0];
 	} 
 	

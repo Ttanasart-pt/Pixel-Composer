@@ -14,23 +14,23 @@ function Node_pSystem_3D_Blend(_x, _y, _group = noone) : Node_3D(_x, _y, _group)
 	newInput( 1, nodeValue_Buffer(   "Mask"      ));
 	
 	////- =Alpha
-	newInput(10, nodeValue_Bool(   "Alpha", false ));
-	newInput(11, nodeValue_Curve(  "Alpha by Lifespan", CURVE_DEF_11      ));
+	newInput(10, nodeValue_Bool(     "Alpha", false ));
+	newInput(11, nodeValue_Curve(    "Alpha by Lifespan", CURVE_DEF_11      ));
 	
 	////- =Solid
-	newInput(12, nodeValue_Bool(        "Blend Color", false ));
-	newInput(14, nodeValue_EScroll( "Blend Mode",  0, [ "Mix", "Multiply", "Add", "Screen" ] )).setInternalName("blend_mode_solid");
-	newInput(13, nodeValue_Color(       "Color",       ca_white )).setInternalName("blend_solid_color");
+	newInput(12, nodeValue_Bool(     "Blend Color", false ));
+	newInput(14, nodeValue_EScroll(  "Blend Mode",  0, [ "Mix", "Multiply", "Add", "Screen" ] )).setInternalName("blend_mode_solid");
+	newInput(13, nodeValue_Color(    "Color",       ca_white )).setInternalName("blend_solid_color");
 	
 	////- =Lifespan
-	newInput( 8, nodeValue_Bool(        "Blend by Lifespan", false ));
-	newInput( 3, nodeValue_EScroll( "Blend Mode", 0, [ "Mix", "Multiply", "Add", "Screen" ] )).setInternalName("blend_mode_lifespan");
-	newInput( 4, nodeValue_Gradient(    "Color by Lifespan", gra_white  ));
+	newInput( 8, nodeValue_Bool(     "Blend by Lifespan", false ));
+	newInput( 3, nodeValue_EScroll(  "Blend Mode", 0, [ "Mix", "Multiply", "Add", "Screen" ] )).setInternalName("blend_mode_lifespan");
+	newInput( 4, nodeValue_Gradient( "Color by Lifespan", gra_white  ));
 	
 	////- =Index
-	newInput( 9, nodeValue_Bool(        "Blend by Index", false ));
-	newInput( 7, nodeValue_EScroll( "Blend Mode", 0, [ "Mix", "Multiply", "Add", "Screen" ] )).setInternalName("blend_mode_index");
-	newInput( 5, nodeValue_Palette(     "Color by Index",    [ca_white] )).setCurvable(6, CURVE_DEF_11, "Over Lifespan");
+	newInput( 9, nodeValue_Bool(     "Blend by Index", false ));
+	newInput( 7, nodeValue_EScroll(  "Blend Mode", 0, [ "Mix", "Multiply", "Add", "Screen" ] )).setInternalName("blend_mode_index");
+	newInput( 5, nodeValue_Palette(  "Color by Index",    [ca_white] )).setCurvable(6, CURVE_DEF_11, "Over Lifespan");
 	// 15
 	
 	newOutput(0, nodeValue_Output("Particles", VALUE_TYPE.particle, noone ));
@@ -53,15 +53,12 @@ function Node_pSystem_3D_Blend(_x, _y, _group = noone) : Node_3D(_x, _y, _group)
 		curve_alph = new curveMap(getInputData(11));
 	}
 	
-	static update = function(_frame = CURRENT_FRAME) { 
-		var _data = inputs_data;
-		
+	static processData = function(_outData, _data, _array_index = 0, _frame = CURRENT_FRAME) {
 		var _parts = _data[ 0];
 		var _masks = _data[ 1], use_mask = _masks != noone;
 		
 		if(!is(_parts, pSystem_Particles)) return;
 		if(use_mask) buffer_to_start(_masks);
-		outputs[0].setValue(_parts);
 		
 		var _seed = _data[ 2];
 		
@@ -213,5 +210,6 @@ function Node_pSystem_3D_Blend(_x, _y, _group = noone) : Node_3D(_x, _y, _group)
 			buffer_write_at( _partBuff, _start + PSYSTEM_OFF.blnb, buffer_u8, round(_bldB) );
 		}
 		
+		return _parts;
 	}
 }

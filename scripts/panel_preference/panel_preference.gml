@@ -308,7 +308,7 @@ function Panel_Preference() : PanelContent() constructor {
     		ds_list_add(pref_global, new __Panel_Linear_Setting_Item_Preference(
     			__txt("pref_directory_ImageMagick", "ImageMagick path*"),
     			"ImageMagick_path",
-    			new textBox(TEXTBOX_INPUT.text, function(txt) /*=>*/ {return prefSet("ImageMagick_path", txt)})
+    			textBox_Text(function(txt) /*=>*/ {return prefSet("ImageMagick_path", txt)})
     				.setSideButton(button(function() /*=>*/ { PREFERENCES.ImageMagick_path = get_open_directory_compat(PREFERENCES.ImageMagick_path); PREF_SAVE(); }, THEME.button_path_icon))
     				.setFont(f_p2).setEmpty(),
     		));
@@ -316,7 +316,7 @@ function Panel_Preference() : PanelContent() constructor {
     		ds_list_add(pref_global, new __Panel_Linear_Setting_Item_Preference(
     			__txt("pref_directory_webp", "Webp path*"),
     			"webp_path",
-    			new textBox(TEXTBOX_INPUT.text, function(txt) /*=>*/ {return prefSet("webp_path")})
+    			textBox_Text(function(txt) /*=>*/ {return prefSet("webp_path")})
     				.setSideButton(button(function() /*=>*/ { PREFERENCES.webp_path = get_open_directory_compat(PREFERENCES.webp_path); PREF_SAVE(); }, THEME.button_path_icon))
     				.setFont(f_p2).setEmpty(),
     		));
@@ -324,7 +324,7 @@ function Panel_Preference() : PanelContent() constructor {
     		ds_list_add(pref_global, new __Panel_Linear_Setting_Item_Preference(
     			__txt("pref_directory_gifski", "Gifski path*"),
     			"gifski_path",
-    			new textBox(TEXTBOX_INPUT.text, function(txt) /*=>*/ {return prefSet("gifski_path")})
+    			textBox_Text(function(txt) /*=>*/ {return prefSet("gifski_path")})
     				.setSideButton(button(function() /*=>*/ { PREFERENCES.gifski_path = get_open_directory_compat(PREFERENCES.gifski_path); PREF_SAVE(); }, THEME.button_path_icon))
     				.setFont(f_p2).setEmpty(),
     		));
@@ -332,7 +332,7 @@ function Panel_Preference() : PanelContent() constructor {
     		ds_list_add(pref_global, new __Panel_Linear_Setting_Item_Preference(
     			__txt("pref_directory_FFmpeg", "FFmpeg path*"),
     			"ffmpeg_path",
-    			new textBox(TEXTBOX_INPUT.text, function(txt) /*=>*/ {return prefSet("gifski_path")})
+    			textBox_Text(function(txt) /*=>*/ {return prefSet("ffmpeg_path")})
     				.setSideButton(button(function() /*=>*/ { PREFERENCES.ffmpeg_path = get_open_directory_compat(PREFERENCES.ffmpeg_path); PREF_SAVE(); }, THEME.button_path_icon))
     				.setFont(f_p2).setEmpty(),
     		));
@@ -453,7 +453,7 @@ function Panel_Preference() : PanelContent() constructor {
     				setPanel(); 
     			}, 
     			function(   ) /*=>*/ { 
-    				PREFERENCES._display_scaling = max(PREFERENCES._display_scaling, 0.5);
+    				PREFERENCES._display_scaling = max(PREFERENCES._display_scaling, .5);
     				resetScale(PREFERENCES._display_scaling, true); 
     				should_restart = true;
     				setPanel();
@@ -469,15 +469,14 @@ function Panel_Preference() : PanelContent() constructor {
     			1,
     		).setKey("ui_scale"));
     		
-    		ds_list_add(pref_appr, new __Panel_Linear_Setting_Item_Preference(
-    			__txt("pref_ui_text_scaling", "Text scale"),
-    			"text_scaling",
-    			textBox_Number(function(str) /*=>*/ {
-    				prefSet("text_scaling", clamp(real(str), .5, 4), true);
-    				loadFonts();
-    				setPanel();
-    			})
-    		));
+    		ds_list_add(pref_appr, new __Panel_Linear_Setting_Item(
+    			__txt("pref_ui_text_scaling", "Text scale*"),
+    			slider(.5,4,.01, function(v) /*=>*/ { PREFERENCES.text_scaling = v;                   should_restart = true; loadFonts(); setPanel(); }, 
+    			function( ) /*=>*/ { PREFERENCES.text_scaling = clamp(PREFERENCES.text_scaling,.5,4); should_restart = true; loadFonts(); setPanel(); }),
+    			function( ) /*=>*/   {return PREFERENCES.text_scaling},
+    			function(v) /*=>*/ { PREFERENCES.text_scaling = clamp(v,.5,4); should_restart = true; loadFonts(); setPanel(); },
+    			1,
+    		).setKey("text_scaling"));
     		
     		ds_list_add(pref_appr, new __Panel_Linear_Setting_Item_Preference(
     			__txt("pref_ui_frame_rate", "UI frame rate"),
@@ -499,6 +498,13 @@ function Panel_Preference() : PanelContent() constructor {
     			new textBox(TEXTBOX_INPUT.text, function(txt) /*=>*/ {return prefSet("font_overwrite", txt, true)})
     				.setSideButton(button(function() /*=>*/ { PREFERENCES.font_overwrite = get_open_filename_compat("Font Files (.ttf, .otf)|*.ttf;*.otf", ""); PREF_SAVE(); }, THEME.button_path_icon))
     				.setFont(f_p2).setEmpty()
+    		));
+    		
+    		if(OS == os_windows) 
+    		ds_list_add(pref_appr, new __Panel_Linear_Setting_Item_Preference(
+    			__txt("pref_ui_multi_window", "Multi windows") + "*",
+    			"window_multi",
+    			new checkBox(function() /*=>*/ {return prefToggle("window_multi", false, true)})
     		));
     		
     		if(OS == os_windows) 
@@ -1966,11 +1972,12 @@ function Panel_Preference() : PanelContent() constructor {
     		var sect  = [];
     		var psect = "";
     		var lbh   = sectH + ui(8 + 4);
+    		var wdh   = 0;
     		
     		var _focus = sp_pref.active;
     		var _hover = sp_pref.hover && _m[1] > lbh;
     		
-    		for(var i = 0; i < ds_list_size(current_list); i++) {
+    		for(var i = 0, n = ds_list_size(current_list); i < n; i++) {
     			var _pref = current_list[| i];
     			
     			if(is_string(_pref)) {
@@ -2501,7 +2508,7 @@ function Panel_Preference() : PanelContent() constructor {
         				if(mouse_lpress(pFOCUS && _hov)) hk_modifiers ^= MOD_KEY.alt;
         					
         			} else if(has(_keyUsing, _vk)) {
-        				if(_hov) TOOLTIP = new tooltipHotkey_multiple(_keyUsing[$ _vk], _cmod);
+        				if(_hov) setTOOLTIP(new tooltipHotkey_multiple(_keyUsing[$ _vk], _cmod));
         				
         				if(has(_keyUsing[$ _vk], _cmod)) {
         					draw_sprite_stretched_ext(THEME.ui_panel, 0, _kx, _ky, _kw, _kh, CDEF.main_ltgrey);
@@ -2531,7 +2538,7 @@ function Panel_Preference() : PanelContent() constructor {
         				draw_sprite_stretched_ext(THEME.ui_panel, 0, _kx, _ky, _kw, _kh, CDEF.main_black);
         				_tc  = COLORS._main_text_sub;
         				
-        				if(_hov) TOOLTIP = new tooltipHotkey_assign(noone, key_get_name(_vk, _cmod));
+        				if(_hov) setTOOLTIP(new tooltipHotkey_assign(noone, key_get_name(_vk, _cmod)));
         			}
         			
         			if(has(_keyUsing, _vk)) {

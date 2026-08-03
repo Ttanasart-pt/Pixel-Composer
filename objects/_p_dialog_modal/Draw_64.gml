@@ -15,9 +15,6 @@ WIDGET_TAB_BLOCK = true;
 		draw_rectangle(0, 0, WIN_W, WIN_H, false);
 		draw_set_alpha(1);
 	}
-
-	DIALOG_PREDRAW
-	DIALOG_WINCLEAR
 	
 	DIALOG_DRAW_BG
 #endregion
@@ -67,6 +64,5 @@ WIDGET_TAB_BLOCK = true;
 #endregion
 
 DIALOG_DRAW_FOCUS
-DIALOG_POSTDRAW
 
 if(_des) instance_destroy();

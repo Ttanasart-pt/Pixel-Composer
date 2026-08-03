@@ -123,9 +123,7 @@ function Panel_Presets(_node) : PanelContent() constructor {
 				
 				if(mouse_lpress(pFOCUS)) {
 					LOADING_VERSION = SAVE_VERSION;
-					
 					node.setPreset(preset.name);
-					if(in_dialog && panel.destroy_on_click_out) close();
 				}
 				
 				if(mouse_rpress(pFOCUS)) {
@@ -149,7 +147,6 @@ function Panel_Presets(_node) : PanelContent() constructor {
 				
 				if(mouse_lpress(pFOCUS)) {
 					node.resetDefault();
-					if(in_dialog && panel.destroy_on_click_out) close();
 				}
 				
 				if(mouse_rpress(pFOCUS))
@@ -184,9 +181,7 @@ function Panel_Presets(_node) : PanelContent() constructor {
 				
 				if(mouse_lpress(pFOCUS)) {
 					LOADING_VERSION = SAVE_VERSION;
-					
 					node.setPreset(_name);
-					if(in_dialog && panel.destroy_on_click_out) close();
 				}
 				
 				if(mouse_rpress(pFOCUS)) {
@@ -214,7 +209,7 @@ function Panel_Presets(_node) : PanelContent() constructor {
 					draw_sprite_stretched(THEME.ui_panel_bg, 3, tx, ty, tw, th);
 					if(pHOVER && sc_presets.hover && point_in_rectangle(_m[0], _m[1], tx, ty, tx + tw, ty + th)) {
 						draw_sprite_stretched_ext(THEME.node_bg, 1, tx, ty, tw, th, COLORS._main_accent, 1);
-						TOOLTIP = __txt("Include in Default");
+						setTOOLTIP(__txt("Include in Default"));
 						
 						if(mouse_lpress(pFOCUS)) {
 							if(isDef) {
@@ -236,7 +231,7 @@ function Panel_Presets(_node) : PanelContent() constructor {
 				draw_sprite_stretched(THEME.ui_panel_bg, 3, tx, ty, tw, th);
 				if(pHOVER && sc_presets.hover && point_in_rectangle(_m[0], _m[1], tx, ty, tx + tw, ty + th)) {
 					draw_sprite_stretched_ext(THEME.node_bg, 1, tx, ty, tw, th, COLORS._main_accent, 1);
-					TOOLTIP = __txt("Show as Node");
+					setTOOLTIP(__txt("Show as Node"));
 					
 					if(mouse_lpress(pFOCUS)) {
 						preset.content[$ "asNode"] = !asNode;
@@ -348,7 +343,7 @@ function Panel_Presets(_node) : PanelContent() constructor {
 			draw_sprite_ui(THEME.path_open, 0, bx + bs/2, by + ah/2, .75, .75, 0, cc);
 			
 			if(hov) {
-				TOOLTIP = __txt("Open in file explorer");
+				setTOOLTIP(__txt("Open in file explorer"));
 				if(mouse_lpress(pFOCUS)) shellOpenExplorer(dirPath);
 			}
 			
@@ -363,7 +358,7 @@ function Panel_Presets(_node) : PanelContent() constructor {
 				draw_sprite_ui(THEME.icon_delete, 0, _bx + bs/2, by + ah/2, 1, 1, 0, COLORS._main_value_negative);
 				
 				if(hov) {
-					TOOLTIP = __txta("Clear {1} Default Value(s)", array_length(defKeys));
+					setTOOLTIP(__txta("Clear {1} Default Value(s)", array_length(defKeys)));
 					if(mouse_lpress(pFOCUS)) {
 						file_delete_safe(valPath);
 						PRESETS_MAP[$ nodeType] = {}

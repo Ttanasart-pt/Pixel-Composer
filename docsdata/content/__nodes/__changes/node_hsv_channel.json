@@ -1,0 +1,12 @@
+[
+  {
+    "version": "1.21.7.110",
+    "changes": [
+      {
+        "date": "2026-07-27T02:38:53.235Z",
+        "node": "",
+        "commit": "Add junction requirement."
+      }
+    ]
+  }
+]

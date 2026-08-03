@@ -1,15 +1,15 @@
 /// @description init
 #region base UI
-	draw_sprite_stretched(THEME.textbox, 3, dialog_x, dialog_y, dialog_w, dialog_h);
-	draw_sprite_stretched(THEME.textbox, 1, dialog_x, dialog_y, dialog_w, dialog_h);
+	draw_sprite_stretched(THEME.textbox, 3, _dialog_x, _dialog_y, dialog_w, dialog_h);
+	draw_sprite_stretched(THEME.textbox, 1, _dialog_x, _dialog_y, dialog_w, dialog_h);
 #endregion
 
 #region draw
 	tb_name.setFont(font);
 	tb_name.setFocusHover(sFOCUS, sHOVER);
 	
-	var _tbx = dialog_x + ui(4);
-	var _tby = dialog_y + ui(4);
+	var _tbx = _dialog_x + ui(4);
+	var _tby = _dialog_y + ui(4);
 	var _tbh = tbh;
 	var _tbw = dialog_w - ui(8) - (_tbh + ui(4)) * 2;
 	

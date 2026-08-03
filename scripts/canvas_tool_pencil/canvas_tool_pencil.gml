@@ -1,0 +1,1 @@
+function canvas_tool_pencil() {}

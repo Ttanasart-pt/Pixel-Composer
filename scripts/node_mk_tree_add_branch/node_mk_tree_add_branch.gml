@@ -22,6 +22,7 @@ function Node_MK_Tree_Add_Branch(_x, _y, _group = noone) : Node(_x, _y, _group) 
 		newInput(index, nodeValue_Struct("Branch", noone)).setVisible(true, true).setCustomData(global.MKTREE_JUNC);
 		array_push(input_display_list, inAmo);
 		
+		postCreateNewInput(index);
 		return inputs[index];
 	}
 	

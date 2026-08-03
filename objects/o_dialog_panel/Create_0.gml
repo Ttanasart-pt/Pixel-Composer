@@ -2,85 +2,99 @@
 event_inherited();
 
 #region panel
-	dialog_w             = 640;
-	dialog_h             = 480;
-	padding              = ui(2);
+	dialog_w             = ui(640);
+	dialog_h             = ui(480);
+	padding              = ui(4);
 	title_height         = ui(24);
 	dialog_resizable     = true;
 	destroy_on_click_out = true;
 	destroy_on_escape    = true;
 	
-	panel        = surface_create(dialog_w, dialog_h);
-	mask_surface = noone;
-	content		 = noone;
+	panel_toRefresh = false;
+	panel   = new Panel(noone, x, y, dialog_w, dialog_h).setDialog(self);
+	content = undefined;
 #endregion
 	
 function setContent(_content) {
-	content      = _content;
-	context_str  = content.context_str;
+	var _cnt   = undefined;
+	var _dia_w = 0;
+	var _dia_h = 0;
 	
-	if(struct_has(content, "title_height"))
-		title_height = content.title_height;
+	if(is(_content, PanelContent)) {
+		_dia_w = _content.w;
+		_dia_h = _content.h;
+		
+		panel.setContent(_content);
+		_cnt = panel.getContent();
+		
+	} else if(typeof(_content) == "struct") {
+		_dia_w = min(ui(_content.pref_w), WIN_W);
+		_dia_h = min(ui(_content.pref_h), WIN_H);
+		panel.verify(_dia_w, _dia_h);
+		
+		_cnt = __loadPanelStruct(panel, _content);
+		if(!is(_cnt, PanelContent)) 
+			_cnt = panel.getContent();
+	}
 	
-	dialog_w         = content.w + content.showHeader * padding * 2;
-	dialog_h         = content.h + content.showHeader * (padding * 2 + title_height);
-	dialog_w_min     = content.min_w;
-	dialog_h_min     = content.min_h;
-	dialog_resizable = content.resizable;
+	if(!is(_cnt, PanelContent)) {
+		instance_destroy();
+		return;
+	}
 	
-	content.panel     = self;
-	content.in_dialog = true;
+	title       = _cnt.title;
+	content     = _cnt;
+	context_str = _cnt.context_str;
 	
-	if(content.auto_pin) {
+	if(has(_cnt, "title_height"))
+		title_height = _cnt.title_height;
+	
+	dialog_w         = _dia_w +  padding * 2;
+	dialog_h         = _dia_h + (padding * 2 + title_height);
+	dialog_w_min     = _cnt.min_w;
+	dialog_h_min     = _cnt.min_h;
+	dialog_resizable = _cnt.resizable;
+	
+	_dialog_w = dialog_w;
+	_dialog_h = dialog_h;
+	
+	if(_cnt.auto_pin) {
 		destroy_on_click_out = false;
 		destroy_on_escape    = false;
 	}
+	
+	panel_toRefresh = true;
 }
 
-function contentResize() {
-	dialog_w = content.w + content.showHeader * padding * 2;
-	dialog_h = content.h + content.showHeader * (padding * 2 + title_height);
-}
-
-function resetMask() {
-	if(!content) return;
-	mask_surface = surface_verify(mask_surface, dialog_w - content.showHeader * padding * 2, 
-										        dialog_h - content.showHeader * (padding * 2 + title_height));
+#region draw
+	function onDrag(dx, dy) {  if(!is_winwin(window)) panel.move(dx, dy); }
 	
-	surface_set_target(mask_surface);
-	draw_clear(c_black);
-	gpu_set_blendmode(bm_subtract);
-	draw_sprite_stretched(THEME.ui_panel_bg, 0, 0, 0, dialog_w - content.showHeader * padding * 2, 
-													  dialog_h - content.showHeader * (padding * 2 + title_height));
-	gpu_set_blendmode(bm_normal);
-	surface_reset_target();
-} resetMask();
-
-onResize = function() {
-	panel = surface_verify(panel, dialog_w, dialog_h);
-	resetMask();
-	
-	if(content) {
-		content.w = dialog_w - content.showHeader * padding * 2;
-		content.h = dialog_h - content.showHeader * (padding * 2 + title_height);
-	
-		content.onResize();
+	function dragStart() {
+		dialog_dragging = true;
+		dialog_drag_sx  = dialog_x;
+		dialog_drag_sy  = dialog_y;
+		dialog_drag_mx  = mouse_rx;
+		dialog_drag_my  = mouse_ry;
 	}
+#endregion
+
+function forceResize(_cont) {
+	// dialog_h = _cont.h + (padding * 2 + title_height);
 }
+
+onCheckMouse = function() /*=>*/ {
+	if(is_winwin(window)) WINWIN_CURRENT = window;
+	panel.checkMouse();
+	panel.postCheckMouse();
+	if(is_winwin(window)) WINWIN_CURRENT = undefined;
+}
+
+onCheckFocus = function() /*=>*/ {return panel.checkFocus()};
 
 function checkClosable() {
-	if(!content) return true;
-	return content.checkClosable();
+	var _cnt = panel.getContent();
+	return is(_cnt, PanelContent)? _cnt.checkClosable() : true;
 }
 
-function onDestroy() {
-	if(content == noone) return;
-	content.onClose();
-}
-
-function remove() {
-	instance_destroy();
-}
-	
-function onFocusBegin() { if(content) content.onFocusBegin(); }
-function onFocusEnd()   { if(content) content.onFocusEnd();   }
+function onDestroy() { panel.onClose();    }
+function remove()    { instance_destroy(); }

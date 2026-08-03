@@ -1,4 +1,5 @@
 /// @description init
+event_inherited();
 if !ready exit;
 
 #region destroy
@@ -13,12 +14,12 @@ if !ready exit;
 	
 	if(sFOCUS && WIDGET_CURRENT_PREV == undefined) {
 		if(KEYBOARD_ENTER) {
-			onModify(palette);
+			applyPalette(palette);
 			instance_destroy();
 		}
 		
 		if(keyboard_check_pressed(vk_escape)) {
-			onModify(previous_palette);
+			applyPalette(previous_palette);
 			instance_destroy();
 		}
 	}

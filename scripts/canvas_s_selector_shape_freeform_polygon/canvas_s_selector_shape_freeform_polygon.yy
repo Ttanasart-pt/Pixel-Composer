@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"canvas_s_selector_shape_freeform_polygon",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"canvas_s_selector_shape_freeform_polygon",
+  "parent":{
+    "name":"selector",
+    "path":"folders/panels/nodes/canvas/selector.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

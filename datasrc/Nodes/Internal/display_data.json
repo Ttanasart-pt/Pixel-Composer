@@ -537,8 +537,7 @@
             "Node_Export",
             
             { "label": "Canvas" },
-            "Node_Canvas",
-            "Node_Canvas_Group",
+            "Node_Canvas_S",
             "Node_Active_Canvas",
             
             { "label": "Tileset" },

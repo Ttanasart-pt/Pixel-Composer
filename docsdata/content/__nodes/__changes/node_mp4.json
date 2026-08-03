@@ -1,5 +1,20 @@
 [
   {
+    "version": "1.21.8.002",
+    "changes": [
+      {
+        "date": "2026-07-31T08:20:03.610Z",
+        "node": "MP4",
+        "commit": "**MP4**: Add popup to download FFmpeg as it's required for the node to function."
+      },
+      {
+        "date": "2026-07-31T08:47:34.262Z",
+        "node": "MP4",
+        "commit": "**MP4**: Fix load error with incomplete cache data."
+      }
+    ]
+  },
+  {
     "version": "1.21.4",
     "changes": [
       {

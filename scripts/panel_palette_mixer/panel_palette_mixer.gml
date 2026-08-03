@@ -123,7 +123,7 @@ function Panel_Palette_Mixer(_selector = noone) : PanelContent() constructor {
 		if(key_mod_press(SHIFT)) shade_mode = lerp_float(shade_mode, 1, 20);
 		else					 shade_mode = lerp_float(shade_mode, 0, 10);
 		
-		if(!in_dialog) draw_sprite_stretched(THEME.ui_panel_bg, 1, 0, 0, w, h);
+		draw_sprite_stretched(THEME.ui_panel_bg, 1, 0, 0, w, h);
 		
 		#region blend points
 			for (var i = 0, n = array_length(_blends); i < n; i++) {
@@ -160,14 +160,14 @@ function Panel_Palette_Mixer(_selector = noone) : PanelContent() constructor {
 			
 			if(selector == noone) { // draw palette
 				var pal_s = ui(16);
-				var pal_w = in_dialog? w - padding * 2 : w - ui(16 * 2);
+				var pal_w = w - ui(16 * 2);
 				
 				var col = floor(pal_w / pal_s);
 				var row = ceil(array_length(_palettes) / col);
 				
 				var pal_h = pal_s * max(1, row);
-				var pal_x = in_dialog? padding : ui(16);
-				var pal_y = in_dialog? h - pal_h - padding : h - pal_h - ui(16);
+				var pal_x = ui(16);
+				var pal_y = h - pal_h - ui(16);
 				
 				var pbg_x = pal_x - ui(8);
 				var pbg_y = pal_y - ui(8);
@@ -273,7 +273,7 @@ function Panel_Palette_Mixer(_selector = noone) : PanelContent() constructor {
 		var pw = w - padding - padding;
 		var ph = h - padding - padding - pal_h;
 		
-		if(in_dialog || selector != noone)
+		if(selector != noone)
 			draw_sprite_stretched(THEME.ui_panel_bg, 1, px - ui(8), py - ui(8), pw + ui(16), ph + ui(16 - 4 * (selector == noone)));
 		else 
 			ph -= ui(8);

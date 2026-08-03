@@ -399,7 +399,7 @@ function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 						if(_hover && point_in_rectangle(_m[0], _m[1], _sx, _sy, _sx + _sw * _ss, _sy + _sh * _ss)) {
 							_HIGHLIGHT_PROP = inputs[input_fix_len + _sid * data_length];
 							
-							TOOLTIP = [ _surf, VALUE_TYPE.surface ];
+							setTOOLTIP([ _surf, VALUE_TYPE.surface ]);
 							if(mouse_lpress(_focus)) {
 								layer_dragging  = _sid;
 								boneIDMap[_sid] = "";
@@ -687,6 +687,7 @@ function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 		while(_s >= array_length(attributes.layer_selectable)) array_push(attributes.layer_selectable, true);
 		
 		refreshDynamicDisplay();
+		postCreateNewInput(index);
 		return inputs[index + 0];
 	} 
 	

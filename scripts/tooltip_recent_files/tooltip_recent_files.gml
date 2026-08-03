@@ -20,20 +20,23 @@ function tooltipRecentFile(path, _x, _y, _w, _h) constructor {
 		var tw  = max(w, _w1, _w2);
 		var th  = _h1 + ui(2) + _h2;
 		
-		var mx = x;
-		var my = y;
+		var tww = tw + ui(24);
+		var thh = th + ui(14);
 		
-		draw_sprite_stretched(THEME.ui_panel_bg,  1, mx, my, tw + ui(24), th + ui(14));
-		draw_sprite_stretched_ext(THEME.ui_panel, 1, mx, my, tw + ui(24), th + ui(14), COLORS._main_accent, 1);
+		TOOLTIP_SURFACE = surface_verify(TOOLTIP_SURFACE, tww, thh);
+		surface_set_shader(TOOLTIP_SURFACE);
+			draw_sprite_stretched(THEME.ui_panel_bg,  1, 0, 0, tww, thh);
+			draw_sprite_stretched_ext(THEME.ui_panel, 1, 0, 0, tww, thh, COLORS._main_accent, 1);
+			
+			var tx = ui(12);
+			var ty = ui(6);
+			
+			draw_set_text(f_p0b, fa_left, fa_top, COLORS._main_text_inner);
+			draw_text(tx, ty, fname);
 		
-		var tx = mx + ui(12);
-		var ty = my + ui(6);
-		
-		draw_set_text(f_p0b, fa_left, fa_top, COLORS._main_text_inner);
-		draw_text(tx, ty, fname);
-	
-		ty += _h1 + ui(2);
-		draw_set_text(f_p2, fa_left, fa_top, COLORS._main_text_sub);
-		draw_text(tx, ty, fdir);
+			ty += _h1 + ui(2);
+			draw_set_text(f_p2, fa_left, fa_top, COLORS._main_text_sub);
+			draw_text(tx, ty, fdir);
+		surface_reset_shader();
 	}
 }

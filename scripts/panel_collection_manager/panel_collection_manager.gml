@@ -36,7 +36,7 @@ function Panel_Collection_Manager() : PanelContent() constructor {
     		var by = yy + bs / 2;
     		
     		if(_a && point_in_circle(_m[0], _m[1], bx, by, bs / 2)) {
-    			TOOLTIP = "Load Folder";
+    			setTOOLTIP("Load Folder");
     			draw_sprite_ui(THEME.folder, 0, bx, by, .5, .5, 0, c_white);
     			if(mouse_lclick()) __test_load_collections(st);
     			
@@ -44,7 +44,7 @@ function Panel_Collection_Manager() : PanelContent() constructor {
 		    bx -= bs;
 		    
     		if(_a && point_in_circle(_m[0], _m[1], bx, by, bs / 2)) {
-    			TOOLTIP = "Update Folder";
+    			setTOOLTIP("Update Folder");
     			draw_sprite_ui(THEME.refresh_icon, 0, bx, by, .5, .5, 0, c_white);
     			if(mouse_lclick()) __test_update_collections(st);
     			

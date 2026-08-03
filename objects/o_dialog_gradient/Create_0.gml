@@ -8,7 +8,7 @@ GRADIENTS_FOLDER.forEach(function(f) /*=>*/ { if(f.content == undefined) f.conte
 	content_w    = ui(556);
 	palette_w    = ui(240);
 	
-	dialog_w     = presets_w + ui(16) + content_w + ui(16) + palette_w;
+	dialog_w     = presets_w + content_w + palette_w;
 	dialog_h     = ui(468);
 	title_height = 52;
 	
@@ -641,8 +641,4 @@ GRADIENTS_FOLDER.forEach(function(f) /*=>*/ { if(f.content == undefined) f.conte
 		new MenuItem_Sort(__txt("Sat Average"), [ sortPreset_sat_a,  sortPreset_sat_d ]),
 		new MenuItem_Sort(__txt("Val Average"), [ sortPreset_val_a,  sortPreset_val_d ]),
 	];
-#endregion
-
-#region action
-	function checkMouse() {}
 #endregion

@@ -4,8 +4,8 @@ if !ready exit;
 DIALOG_DRAW_BG
 
 #region text
-	var _x = dialog_x + ui(16);
-	var _y = dialog_y + ui(16);
+	var _x = _dialog_x + ui(16);
+	var _y = _dialog_y + ui(16);
 	var hg = line_get_height(f_p1, 8);
 	
 	draw_set_text(f_p0b, fa_left, fa_top, COLORS._main_text);
@@ -34,8 +34,8 @@ DIALOG_DRAW_BG
 		_y += hg;
 	}
 	
-	var _px = dialog_x + page_width;
-	var _py = dialog_y + padding;
+	var _px = _dialog_x + page_width;
+	var _py = _dialog_y + padding;
 	var _pw = dialog_w - padding - page_width;
 	var _ph = dialog_h - padding - padding;
 	

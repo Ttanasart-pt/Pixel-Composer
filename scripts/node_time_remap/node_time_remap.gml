@@ -11,20 +11,20 @@ function Node_Time_Remap(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	setCacheManual();
 	
 	////- =Surfaces
-	newInput(0, nodeValue_Surface( "Surface In" )).rejectArray();
-	newInput(1, nodeValue_Surface( "Map" )).rejectArray();
+	newInput( 0, nodeValue_Surface( "Surface In" )).setRequired().rejectArray();
+	newInput( 1, nodeValue_Surface( "Map" )).rejectArray();
 	
 	////- =Remap
-	newInput(2, nodeValue_Int(  "Max Life", 3     )).rejectArray().setPieMenu();
-	newInput(3, nodeValue_Bool( "Loop",     false )).setPieMenu();
+	newInput( 2, nodeValue_Int(  "Max Life", 3     )).rejectArray().setPieMenu();
+	newInput( 3, nodeValue_Bool( "Loop",     false )).setPieMenu();
 	// input 4
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
 	input_display_list = [ 
-		["Surfaces", false], 0, 1, 
-		["Remap",	 false], 2, 3,
-	]
+		[ "Surfaces", false ],  0,  1, 
+		[ "Remap",    false ],  2,  3,
+	];
 	
 	attribute_surface_depth();
 	

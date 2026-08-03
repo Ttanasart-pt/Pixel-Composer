@@ -1,0 +1,12 @@
+{
+  "$GMShader":"",
+  "%Name":"sh_canvas_selection_multiply",
+  "name":"sh_canvas_selection_multiply",
+  "parent":{
+    "name":"shaders",
+    "path":"folders/panels/nodes/canvas/shaders.yy",
+  },
+  "resourceType":"GMShader",
+  "resourceVersion":"2.0",
+  "type":1,
+}

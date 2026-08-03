@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.8.002",
+    "changes": [
+      {
+        "date": "2026-07-31T07:35:22.922Z",
+        "node": "Preference",
+        "commit": "**Preference**: Fix resetting text scale not updating."
+      }
+    ]
+  },
+  {
     "version": "1.21.0.2.004",
     "changes": [
       {

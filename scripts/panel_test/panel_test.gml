@@ -142,7 +142,7 @@ function Panel_Test() : PanelContent() constructor {
 					cc = merge_color(COLORS._main_value_negative, c_white, 0.5); 
 					tx = ui(16);
 					
-					if(hv) TOOLTIP = _f[$ "tooltip"] ?? "";
+					if(hv) setTOOLTIP(_f[$ "tooltip"] ?? "");
 					break;
 					
 				case  0 : 

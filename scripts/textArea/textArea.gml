@@ -369,6 +369,12 @@ function textArea(_input, _onModify) : textInput(_input, _onModify) constructor 
 		var undoing  = false;
 		
 		#region text editor
+			var str = KEYBOARD_PRESSED_STRING;
+			if(is_winwin(WINWIN_CURRENT)) {
+				str = winwin_keyboard_get_string(WINWIN_CURRENT);
+				winwin_keyboard_set_string(WINWIN_CURRENT, "");
+			}
+			
 			if(key_mod_press(CTRL) && keyboard_check_pressed(ord("A"))) {
 				cursor        = string_length(_input_text);
 				cursor_select = 0;
@@ -410,7 +416,7 @@ function textArea(_input, _onModify) : textInput(_input, _onModify) constructor 
 				if(key_mod_press(CTRL) && keyboard_check_pressed(ord("V"))) {
 					var _ctxt = clipboard_get_text();
 					    _ctxt = string_replace_all(_ctxt, "\t", "    ");
-					KEYBOARD_PRESSED_STRING = _ctxt;
+					str = _ctxt;
 				}
 				
 				if(keyboard_check_pressed(vk_escape)) {
@@ -440,7 +446,7 @@ function textArea(_input, _onModify) : textInput(_input, _onModify) constructor 
 					modified   = true;
 					ds_stack_push(undo_stack, [_input_text, cursor, cursor_select]);
 					
-				} else if(key_input_press(vk_backspace)) {
+				} else if(keyboard_check_pressed(vk_backspace)) {
 					if(cursor_select == -1) {
 						var str_before, str_after;
 						
@@ -478,7 +484,7 @@ function textArea(_input, _onModify) : textInput(_input, _onModify) constructor 
 					move_cursor(-1);
 					modified = true;
 					
-				} else if(key_input_press(vk_delete) || (keyboard_check_pressed(ord("X")) && key_mod_press(CTRL) && cursor_select != -1)) {
+				} else if(keyboard_check_pressed(vk_delete) || (keyboard_check_pressed(ord("X")) && key_mod_press(CTRL) && cursor_select != -1)) {
 					if(cursor_select == -1) {
 						var str_before	= string_copy(_input_text, 1, cursor);
 						var str_after	= string_copy(_input_text, cursor + 2, string_length(_input_text) - cursor - 1);
@@ -500,8 +506,8 @@ function textArea(_input, _onModify) : textInput(_input, _onModify) constructor 
 					cursor_select = -1;
 					modified = true;
 					
-				} else if(KEYBOARD_PRESSED_STRING != "" && KEYBOARD_PRESSED_STRING != "\b" && KEYBOARD_PRESSED_STRING != "\r") {
-					var ch = KEYBOARD_PRESSED_STRING;
+				} else if(str != "" && str != "\b" && str != "\r") {
+					var ch = str;
 					
 					if(cursor_select == -1) {
 						var str_before	= string_copy(_input_text, 1, cursor);
@@ -549,10 +555,10 @@ function textArea(_input, _onModify) : textInput(_input, _onModify) constructor 
 		if(auto_update && (keyboard_check_pressed(vk_anykey) || modified))
 			apply();
 			
-		if(key_input_press(vk_left))  onKey(vk_left);
-		if(key_input_press(vk_right)) onKey(vk_right);
-		if(key_input_press(vk_up))    onKey(vk_up);
-		if(key_input_press(vk_down))  onKey(vk_down);
+		if(keyboard_check_pressed(vk_left))  onKey(vk_left);
+		if(keyboard_check_pressed(vk_right)) onKey(vk_right);
+		if(keyboard_check_pressed(vk_up))    onKey(vk_up);
+		if(keyboard_check_pressed(vk_down))  onKey(vk_down);
 		
 		if(keyboard_check_pressed(vk_home)) {
 			if(key_mod_press(SHIFT)) {
@@ -839,6 +845,7 @@ function textArea(_input, _onModify) : textInput(_input, _onModify) constructor 
 		
 		var _scis = gpu_get_scissor();
 		
+		SURFACE_PREDRAW
 		surface_set_shader(text_surface, noone, true, BLEND.add);
 			if(isCodeFormat() && show_line_number) {
 				draw_sprite_stretched_ext(THEME.textbox_code, 0, 0, 0, ui(code_line_width), hh, boxColor, 1);
@@ -852,6 +859,7 @@ function textArea(_input, _onModify) : textInput(_input, _onModify) constructor 
 				}
 			}
 		surface_reset_shader();
+		SURFACE_POSTDRAW
 		gpu_set_scissor(_scis);
 		
 		////- Selecting
@@ -871,6 +879,7 @@ function textArea(_input, _onModify) : textInput(_input, _onModify) constructor 
 			var msx = _m[0] - _x;
 			var msy = _m[1] - _y;
 			
+			SURFACE_PREDRAW
 			surface_set_shader(text_surface, noone, false, BLEND.add);
 				draw_set_text(font, fa_left, fa_top, COLORS._main_text);
 			
@@ -966,6 +975,7 @@ function textArea(_input, _onModify) : textInput(_input, _onModify) constructor 
 				}
 				
 			surface_reset_shader();
+			SURFACE_POSTDRAW
 			gpu_set_scissor(_scis);
 		
 			BLEND_ALPHA
@@ -997,10 +1007,12 @@ function textArea(_input, _onModify) : textInput(_input, _onModify) constructor 
 			if(mouse_lrelease()) mouse_lhold = false;
 				
 		} else {
+			SURFACE_PREDRAW
 			surface_set_shader(text_surface, noone, false, BLEND.add);
 				display_text(tx, text_y + padding_v, _text);
 			surface_reset_shader();
 			gpu_set_scissor(_scis);
+			SURFACE_POSTDRAW
 			
 			BLEND_ALPHA
 				draw_surface(text_surface, _x, _y);

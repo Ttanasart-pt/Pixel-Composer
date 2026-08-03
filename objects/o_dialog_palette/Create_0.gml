@@ -13,7 +13,7 @@ function __PaletteColor(_color = c_black) constructor {
 	content_w    = ui(556);
 	subpreset_w  = ui(240);
 	
-	dialog_w     = presets_w + ui(16) + content_w + ui(16) + subpreset_w;
+	dialog_w     = presets_w + content_w + subpreset_w;
 	dialog_h     = ui(440);
 	title_height = 52;
 	destroy_on_click_out = true;
@@ -39,6 +39,23 @@ function __PaletteColor(_color = c_black) constructor {
 	index_drag_w = 0; index_drag_w_to = 0;
 	index_drag_h = 0; index_drag_h_to = 0;
 	
+	applyPalette = function(p) /*=>*/ {
+		if(!onModify) return;
+		
+		var outp = p;
+		
+		if(outputPreset) {
+			outp = {
+				palette: p,
+				preset: preset_name, 
+			}
+		}
+		
+		onModify(outp);
+	}
+	
+	onModify = noone;
+	
 	setApply = function(a) /*=>*/ { onModify = a; selector.onModify = a; return self; }
 	setDrop  = function(d) /*=>*/ { drop_target = d;                     return self; }
 	setColor = function(c) /*=>*/ {
@@ -48,11 +65,10 @@ function __PaletteColor(_color = c_black) constructor {
 		palette[_ind] = c;
 		paletteObject[_ind].color = c;
 		
-		if(onModify != noone) onModify(palette);
+		applyPalette(palette);
 		return self;
 	};
 	
-	onModify = noone;
 	selector = new colorSelector(setColor);
 	selector.dropper_close  = false;
 	selector.discretize_pal = false;
@@ -60,9 +76,9 @@ function __PaletteColor(_color = c_black) constructor {
 	previous_palette  = c_black;
 	selection_surface = noone;
 	
-	b_cancel = button(function() /*=>*/ { onModify(previous_palette); instance_destroy(); }).setIcon(THEME.undo, 0, COLORS._main_icon)
+	b_cancel = button(function() /*=>*/ { applyPalette(previous_palette); instance_destroy(); }).setIcon(THEME.undo, 0, COLORS._main_icon)
 	                                                                           .setTooltip(__txt("dialog_revert_and_exit", "Revert and exit"));
-	b_apply  = button(function() /*=>*/ { onModify(palette);          instance_destroy(); }).setIcon(THEME.accept, 0, COLORS._main_icon_dark);
+	b_apply  = button(function() /*=>*/ { applyPalette(palette);          instance_destroy(); }).setIcon(THEME.accept, 0, COLORS._main_icon_dark);
 	
 	menu_add_target = "";
 	menu_add = [
@@ -84,7 +100,9 @@ function __PaletteColor(_color = c_black) constructor {
 #endregion
 
 #region presets
+	preset_name      = "Project";
 	hovering_name    = "";
+	outputPreset     = false;
 	preset_show_name = true;
 	preset_expands   = {};
 	
@@ -166,9 +184,10 @@ function __PaletteColor(_color = c_black) constructor {
 			if(b == 2) {
 				array_insert(PALETTES_REC_DIR.content, 0, p);
 				PALETTES_REC_DIR.content = array_unique(PALETTES_REC_DIR.content);
+				preset_name = p.name;
 				
 				setPalette(array_clone(_palt)); 
-				onModify(palette);
+				applyPalette(palette);
 			}
 		}
 		
@@ -191,7 +210,7 @@ function __PaletteColor(_color = c_black) constructor {
 		if(select && mouse_lpress(_foc)) {
 			preset_expands[$ _path] = !_exp;
 			click_block = true;
-			onModify(palette);
+			applyPalette(palette);
 		}
 		
 		if(isHover && mouse_rpress(_foc)) {
@@ -200,8 +219,10 @@ function __PaletteColor(_color = c_black) constructor {
 					array_insert(PALETTES_REC_DIR.content, 0, p.file);
 					PALETTES_REC_DIR.content = array_unique(PALETTES_REC_DIR.content);
 					
+					preset_name = p.name;
 					setPalette(array_clone(p.palette)); 
-					onModify(palette);
+					applyPalette(palette);
+					
 				}).setParam({ file: p, palette: _palt }),
 				menuItem(__txt("palette_editor_set_default", "Set as default"), function(p) /*=>*/ { PROJECT.setPalette(array_clone(p)); }).setParam(_palt),
 				menuItem(__txt("palette_editor_delete", "Delete palette"),      function(p) /*=>*/ { file_delete(p); __refreshPalette(); }).setParam(_path),
@@ -439,7 +460,7 @@ function __PaletteColor(_color = c_black) constructor {
 		for( var i = 0, n = array_length(paletteObject); i < n; i++ )
 			palette[i] = paletteObject[i].color;
 		
-		onModify(palette);
+		applyPalette(palette);
 	}
 	
 	function sortPalette(sortFunc) {
@@ -488,10 +509,8 @@ function __PaletteColor(_color = c_black) constructor {
 		index_selecting[1] = array_length(pal);
 		refreshPaletteObject();
 		
-		if(onModify != noone) onModify(palette);
+		applyPalette(palette);
 	} 
-	
-	function checkMouse() {}
 	
 	menu_palette_sort = [
 		new MenuItem_Sort(__txt("palette_editor_sort_brightness", "Brightness"), 

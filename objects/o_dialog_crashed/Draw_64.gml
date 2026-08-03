@@ -8,17 +8,17 @@ draw_set_alpha(1);
 DIALOG_DRAW_BG
 
 #region text
-	var py = dialog_y + ui(16);
+	var py = _dialog_y + ui(16);
 	draw_set_text(f_h5, fa_left, fa_top, COLORS._main_text);
-	draw_text(dialog_x + ui(24), py, __txt("crashed_title", "Restore project"));
+	draw_text(_dialog_x + ui(24), py, __txt("crashed_title", "Restore project"));
 	py += line_get_height(, 4);
 	
 	draw_set_text(f_p0, fa_left, fa_top, COLORS._main_text);
-	draw_text(dialog_x + ui(24), py, __txt("crashed_content", "Restore previous project before crash?"));
+	draw_text(_dialog_x + ui(24), py, __txt("crashed_content", "Restore previous project before crash?"));
 	
 	var bw = ui(96), bh = BUTTON_HEIGHT;
-	var bx1 = dialog_x + dialog_w - ui(16);
-	var by1 = dialog_y + dialog_h - ui(16);
+	var bx1 = _dialog_x + dialog_w - ui(16);
+	var by1 = _dialog_y + dialog_h - ui(16);
 	var bx0 = bx1 - bw;
 	var by0 = by1 - bh;
 	
@@ -37,7 +37,7 @@ DIALOG_DRAW_BG
 		instance_destroy();
 	}
 	
-	bx0 = dialog_x + ui(16);
+	bx0 = _dialog_x + ui(16);
 	var b = buttonInstant(THEME.button_def, bx0, by0, bw, bh, mouse_ui, sHOVER, sFOCUS);
 	draw_text(bx0 + bw / 2, by0 + bh / 2, __txt("crashed_log", "Log file") + "...");
 	if(b == 2) {

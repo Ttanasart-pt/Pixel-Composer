@@ -1,0 +1,12 @@
+{
+  "$GMShader":"",
+  "%Name":"sh_canvas_selection_transform",
+  "name":"sh_canvas_selection_transform",
+  "parent":{
+    "name":"shaders",
+    "path":"folders/panels/nodes/canvas/shaders.yy",
+  },
+  "resourceType":"GMShader",
+  "resourceVersion":"2.0",
+  "type":1,
+}

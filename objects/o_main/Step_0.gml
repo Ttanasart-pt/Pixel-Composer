@@ -30,6 +30,7 @@ if(!LOADING && PROJECT.active && !PROJECT.safeMode) { //node step
 				
 				if(has(HOTKEYS, _focus_ctx)) {
 					var list = HOTKEYS[$ _focus_ctx];
+					
 					for( var i = 0, n = array_length(list); i < n; i++ ) {
 						var h = list[i];
 						var p = h.isPressing();

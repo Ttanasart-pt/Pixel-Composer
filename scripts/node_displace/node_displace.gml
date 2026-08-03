@@ -16,7 +16,7 @@ function Node_Displace(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	newInput(12, nodeValue_Toggle("Channel", 0b1111, { data: array_create(4, THEME.inspector_channel) }));
 	
 	////- =Surfaces
-	newInput( 0, nodeValue_Surface( "Surface In" ));
+	newInput( 0, nodeValue_Surface( "Surface In" )).setRequired();
 	newInput(22, nodeValue_Surface( "UV Map"     ));
 	newInput(23, nodeValue_Slider(  "UV Mix", 1  ));
 	newInput( 8, nodeValue_Surface( "Mask"       ));

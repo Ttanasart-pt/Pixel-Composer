@@ -19,7 +19,7 @@ function Node_2D_light(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	name = "2D Light";
 	
 	////- =Surfaces
-	newInput( 0, nodeValue_Surface( "Surface In"  ));
+	newInput( 0, nodeValue_Surface( "Surface In"  )).setRequired();
 	newInput( 1, nodeValue_Bool(    "Tile", false ));
 	
 	////- =Rendering
@@ -30,52 +30,53 @@ function Node_2D_light(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	typeList    = __enum_array_gen(typeListStr, s_node_2d_light_shape);
 	attnList    = __enum_array_gen([ "Quadratic", "Invert quadratic", "Linear", "Custom" ], s_node_curve_type);
 	
-	function createNewInput(_ind = array_length(inputs)) {
+	function createNewInput(index = array_length(inputs)) {
 		var inAmo = array_length(inputs);
 		
 		dynamic_input_inspecting = getInputAmount();
 			
-		newInput(_ind + 14, nodeValue_Active());
+		newInput(index + 14, nodeValue_Active());
 		
 		////- =Shape
-		newInput(_ind +  0, nodeValue_EScroll("Light shape", 0, typeList));
-		inputs[_ind].options_histories = [ typeListStr, { cond: function() /*=>*/ {return LOADING_VERSION < 1_18_00_0 && !CLONING}, list: [ "Point", "Line", "Line asymmetric", "Spot" ] } ];
+		newInput(index +  0, nodeValue_EScroll("Light shape", 0, typeList));
+		inputs[index].options_histories = [ typeListStr, { cond: function() /*=>*/ {return LOADING_VERSION < 1_18_00_0 && !CLONING}, list: [ "Point", "Line", "Line asymmetric", "Spot" ] } ];
 		
-		newInput(_ind +  1, nodeValue_Vec2(     "Position",    [.5,.5] )).setUnitSimple().hideLabel();
-		newInput(_ind +  2, nodeValue_Float(    "Radius",       .5     )).setUnitSimple().hideLabel();
-		newInput(_ind +  5, nodeValue_Vec2(     "Start",       [.25,.5])).setUnitSimple().hideLabel();
-		newInput(_ind +  6, nodeValue_Vec2(     "Finish",      [.75,.5])).setUnitSimple().hideLabel();
-		newInput(_ind +  7, nodeValue_ISlider(  "Sweep",        15, [-80, 80, 0.1] )).hideLabel();
-		newInput(_ind +  8, nodeValue_ISlider(  "Sweep End",    0,  [-80, 80, 0.1] )).hideLabel();
-		newInput(_ind + 22, nodeValue_Int(      "Sweep Soft",   1      )).hideLabel();
-		newInput(_ind + 23, nodeValue_Float(    "Sweep Spread", 1      )).hideLabel();
-		newInput(_ind + 15, nodeValue_Float(    "Radius x",    .5      )).setUnitSimple().hideLabel();
-		newInput(_ind + 16, nodeValue_Float(    "Radius y",    .5      )).setUnitSimple().hideLabel();
-		newInput(_ind + 17, nodeValue_Rotation( "Rotation",     0      )).hideLabel();
-		newInput(_ind + 20, nodeValue_Bool(     "Two Sides",    false  )).hideLabel();
-		newInput(_ind + 21, nodeValue_Float(    "Thickness",    2      )).hideLabel();
+		newInput(index +  1, nodeValue_Vec2(     "Position",    [.5,.5] )).setUnitSimple().hideLabel();
+		newInput(index +  2, nodeValue_Float(    "Radius",       .5     )).setUnitSimple().hideLabel();
+		newInput(index +  5, nodeValue_Vec2(     "Start",       [.25,.5])).setUnitSimple().hideLabel();
+		newInput(index +  6, nodeValue_Vec2(     "Finish",      [.75,.5])).setUnitSimple().hideLabel();
+		newInput(index +  7, nodeValue_ISlider(  "Sweep",        15, [-80, 80, 0.1] )).hideLabel();
+		newInput(index +  8, nodeValue_ISlider(  "Sweep End",    0,  [-80, 80, 0.1] )).hideLabel();
+		newInput(index + 22, nodeValue_Int(      "Sweep Soft",   1      )).hideLabel();
+		newInput(index + 23, nodeValue_Float(    "Sweep Spread", 1      )).hideLabel();
+		newInput(index + 15, nodeValue_Float(    "Radius x",    .5      )).setUnitSimple().hideLabel();
+		newInput(index + 16, nodeValue_Float(    "Radius y",    .5      )).setUnitSimple().hideLabel();
+		newInput(index + 17, nodeValue_Rotation( "Rotation",     0      )).hideLabel();
+		newInput(index + 20, nodeValue_Bool(     "Two Sides",    false  )).hideLabel();
+		newInput(index + 21, nodeValue_Float(    "Thickness",    2      )).hideLabel();
 		
 		////- =Light
-		newInput(_ind +  3, nodeValue_Slider(   "Intensity",    1, [0,4,.01] ));
-		newInput(_ind +  4, nodeValue_Color(    "Color",        ca_white     ));
+		newInput(index +  3, nodeValue_Slider(   "Intensity",    1, [0,4,.01] ));
+		newInput(index +  4, nodeValue_Color(    "Color",        ca_white     ));
 		
 			////- =/Attenuation
-		newInput(_ind + 10, nodeValue_EScroll( "Attenuation",   0, attnList  )).setTooltip("Control how light fade out over distance.");
-		newInput(_ind + 24, nodeValue_Curve(   "AttenCurve",    CURVE_DEF_01 ));
+		newInput(index + 10, nodeValue_EScroll( "Attenuation",   0, attnList  )).setTooltip("Control how light fade out over distance.");
+		newInput(index + 24, nodeValue_Curve(   "AttenCurve",    CURVE_DEF_01 ));
 			
 			////- =/Banding
-		newInput(_ind + 11, nodeValue_ISlider(  "Radial Banding",     0, [0,16,.1] ));
-		newInput(_ind + 12, nodeValue_Rotation( "Radial Start",       0            ));
-		newInput(_ind + 13, nodeValue_Slider(   "Radial Band Ratio", .5            ));
-		newInput(_ind +  9, nodeValue_ISlider(  "Banding",            0, [0,16,.1] ));
+		newInput(index + 11, nodeValue_ISlider(  "Radial Banding",     0, [0,16,.1] ));
+		newInput(index + 12, nodeValue_Rotation( "Radial Start",       0            ));
+		newInput(index + 13, nodeValue_Slider(   "Radial Band Ratio", .5            ));
+		newInput(index +  9, nodeValue_ISlider(  "Banding",            0, [0,16,.1] ));
 			
 		////- =Render
-		newInput(_ind + 18, nodeValue_Float(    "Exponent",      2     ));
-		newInput(_ind + 19, nodeValue_Bool(     "Anti Aliasing", false ));
+		newInput(index + 18, nodeValue_Float(    "Exponent",      2     ));
+		newInput(index + 19, nodeValue_Bool(     "Anti Aliasing", false ));
 		// input 25
 		
 		refreshDynamicDisplay();
-		return inputs[_ind];
+		postCreateNewInput(index);
+		return inputs[index];
 	} 
 	
 	newOutput(0, nodeValue_Output( "Surface Out", VALUE_TYPE.surface, noone ));

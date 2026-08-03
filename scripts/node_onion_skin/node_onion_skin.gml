@@ -3,7 +3,7 @@ function Node_Onion_Skin(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	clearCacheOnChange = false;
 	setCacheManual();
 	
-	newInput(0, nodeValue_Surface("Surface In"));
+	newInput(0, nodeValue_Surface("Surface In")).setRequired();
 	
 	newInput(1, nodeValue_Slider_Range("Range", [-1, 1], { range: [ -16, 16, 0.1 ] }));
 	

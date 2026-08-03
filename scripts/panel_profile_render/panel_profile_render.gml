@@ -20,7 +20,6 @@ function profile_message(_level, _text, _desc = "") constructor {
 function Panel_Profile_Render() : PanelContent() constructor {
 	#region ---- data ----
 	    title      = __txt("Render Profiler");
-		showHeader = true;
 		auto_pin   = true;
 		project    = undefined;
 		
@@ -331,26 +330,26 @@ function Panel_Profile_Render() : PanelContent() constructor {
         		var _ty1 = _ty + ui(19);
         		
 	        	if(point_in_rectangle(_m[0], _m[1], tx_name, _ty, tx_time, _ty1)) {
-	        		TOOLTIP = "Node type";
+	        		setTOOLTIP("Node type");
 	        	}
 	        	
 	        	if(point_in_rectangle(_m[0], _m[1], tx_time, _ty, tx_per,  _ty1)) {
-	        		TOOLTIP = "Total processing time (including graph propagation, debug data collection)";
+	        		setTOOLTIP("Total processing time (including graph propagation, debug data collection)");
 	        		if(mouse_lpress(_foc)) array_sort(node_render_time_type_sorted, function(a,b) /*=>*/ {return b.time - a.time});
 	        	}
 	        	
 	        	if(point_in_rectangle(_m[0], _m[1], tx_per,  _ty, tx_pern, _ty1)) {
-	        		TOOLTIP = "Total time as percentage";
+	        		setTOOLTIP("Total time as percentage");
 	        		if(mouse_lpress(_foc)) array_sort(node_render_time_type_sorted, function(a,b) /*=>*/ {return b.time - a.time});
 	        	}
 	        	
 	        	if(point_in_rectangle(_m[0], _m[1], tx_pern, _ty, tx_rtim, _ty1)) {
-	        		TOOLTIP = "Average time per node";
+	        		setTOOLTIP("Average time per node");
 	        		if(mouse_lpress(_foc)) array_sort(node_render_time_type_sorted, function(a,b) /*=>*/ {return b.time/b.amount - a.time/a.amount});
 	        	}
 	        	
 	        	if(point_in_rectangle(_m[0], _m[1], tx_rtim, _ty, tx_last, _ty1)) {
-	        		TOOLTIP = "Processing time";
+	        		setTOOLTIP("Processing time");
 	        		if(mouse_lpress(_foc)) array_sort(node_render_time_type_sorted, function(a,b) /*=>*/ {return b.rtime - a.rtime});
 	        	}
 	        	
@@ -890,7 +889,7 @@ function Panel_Profile_Render() : PanelContent() constructor {
 					
 					var _rx1  = _px0 + (_running_time / node_render_time) * _pw;
 					if((pHOVER && point_in_rectangle(mx, my, _rx, _py0, _rx1, _py1) || (render_drag && mx >= _rx && mx < _rx1))) {
-						TOOLTIP = $"Render {_report.node.getFullName()}";
+						setTOOLTIP($"Render {_report.node.getFullName()}");
 						
 						if(mouse_lclick(pFOCUS) || render_drag) {
 							render_drag = true;
@@ -907,7 +906,7 @@ function Panel_Profile_Render() : PanelContent() constructor {
 					draw_set_color(COLORS._main_accent);
 			    	
 			    	if(pHOVER && point_in_rectangle(mx, my, _rx - 4, _py0, _rx + 4, _py1)) {
-			    		TOOLTIP = _report.text;
+			    		setTOOLTIP(_report.text);
 			    		draw_line_width(_rx, _py0, _rx, _py0 + _ph - ui(2), 2);
 			    		
 			    	} else

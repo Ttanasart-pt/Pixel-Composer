@@ -1,7 +1,7 @@
 function Node_Tile(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Tile";
 	
-	newInput( 0, nodeValue_Surface( "Surface In" ));
+	newInput( 0, nodeValue_Surface( "Surface In" )).setRequired();
 	newInput( 9, nodeValue_Surface( "UV Map"     ));
 	newInput(10, nodeValue_Slider(  "UV Mix", 1  ));
 	
@@ -86,8 +86,6 @@ function Node_Tile(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 			inputs[2].setVisible(_type == 0);
 			inputs[3].setVisible(_type == 1);
 		#endregion
-		
-		if(!is_surface(_surf)) return _outSurf;
 		
 		var _idim = surface_get_dimension(_surf);
 		var _sw = _dim[0];

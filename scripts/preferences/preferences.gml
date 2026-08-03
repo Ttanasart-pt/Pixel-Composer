@@ -7,6 +7,7 @@
 	globalvar PREFERENCES_MENUITEMS; PREFERENCES_MENUITEMS = {};
 	
 	globalvar FILTER_ANIMATION; FILTER_ANIMATION = false;
+	globalvar MULTI_WINDOWS; MULTI_WINDOWS    = false; 
 	
 	function PREF_INIT() {
 		#region GENERAL UI
@@ -20,6 +21,7 @@
 			PREFERENCES.window_fix_width				= 1600;
 			PREFERENCES.window_fix_height				= 800;
 			PREFERENCES.window_shadow                   = true;
+			PREFERENCES.window_multi                    = true;
 			
 			PREFERENCES.theme							= "default";
 			PREFERENCES.theme_override					= "override";
@@ -93,7 +95,7 @@
 			PREFERENCES.dialog_add_node_search_high = true;
 			PREFERENCES.dialog_add_node_search_fav  = false;
 			PREFERENCES.dialog_add_node_search_typ  = true;
-			PREFERENCES.dialog_add_node_pie         = [ "Node_Shape", "Node_Canvas" ];
+			PREFERENCES.dialog_add_node_pie         = [ "Node_Shape", "Node_Canvas_S" ];
 			PREFERENCES.dialog_add_node_collection  = true;
 			
 			PREFERENCES.add_node_page               = 0;
@@ -343,7 +345,7 @@
 		
 		global.menuItems_pie_add_node = [
 			"graph_add_Node_Shape", 
-			"graph_add_Node_Canvas"
+			"graph_add_Node_Canvas_S"
 		];
 	}
 	
@@ -505,6 +507,9 @@
 				if(!directory_exists($"{DIRECTORY}Themes/{PREFERENCES.theme}"))
 					PREFERENCES.theme = "default";
 				
+				PREFERENCES.display_scaling = max(PREFERENCES.display_scaling, .5);
+				PREFERENCES.text_scaling    = max(PREFERENCES.text_scaling,    .5);
+
 			} else
 				PREF_LOAD_INIT();
 			
@@ -585,11 +590,11 @@
 		var cy = dh / 2;
 		
 		if(OS == os_windows) {
-			var _monitors = display_measure_all();
+			DISPLAY_DATA = display_measure_all();
 			
-			if(is_array(_monitors))
-			for( var i = 0, n = array_length(_monitors); i < n; i++ ) {
-				var _m = _monitors[i];
+			if(is_array(DISPLAY_DATA))
+			for( var i = 0, n = array_length(DISPLAY_DATA); i < n; i++ ) {
+				var _m = DISPLAY_DATA[i];
 				if(!is_array(_m) || array_length(_m) < 10) continue;
 				
 				if(PREFERENCES.window_monitor == _m[9]) {
@@ -598,6 +603,8 @@
 				}
 			}
 		}
+		
+		MULTI_WINDOWS = OS == os_windows? PREFERENCES.window_multi : false;
 		
 		window_set_rectangle(cx - ww / 2, cy - hh / 2, ww, hh);
 		if(PREFERENCES.window_maximize) winMan_Maximize();

@@ -245,6 +245,7 @@ function Node_Camera(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		while(_s >= array_length(attributes.layer_selectable)) array_push(attributes.layer_selectable, true);
 		
 		refreshDynamicDisplay();
+		postCreateNewInput(index);
 		return inputs[index + 0];
 	} 
 	

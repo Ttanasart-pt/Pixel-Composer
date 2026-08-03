@@ -8,79 +8,12 @@ if(USE_TEXTUREGROUP && texturegroup_get_status("UI") == texturegroup_status_load
 }
 
 #region tooltip
-	if(!_MOUSE_BLOCK) {
-		if(is_struct(TOOLTIP)) {
-			if(has(TOOLTIP, "drawTooltip"))
-				TOOLTIP.drawTooltip();
-				
-		} else if(is_array(TOOLTIP)) {
-			var raw  = TOOLTIP[0];
-			var type = TOOLTIP[1];
-			var content = raw;
-			
-			if(is(raw, valueKey)) {
-				content = raw.value;
-				
-			} else if(is_method(raw)) content = raw();
-			
-			switch(type) {
-				case VALUE_TYPE.float    :
-				case VALUE_TYPE.integer  : 
-				case VALUE_TYPE.text     :
-				case VALUE_TYPE.particle : 
-				case VALUE_TYPE.path     : draw_tooltip_text(content);                                                          break;
-				
-				case VALUE_TYPE.boolean  : draw_tooltip_text(printBool(content));                                               break;
-				case VALUE_TYPE.curve    : draw_tooltip_curve(content);                                                         break;
-				case VALUE_TYPE.color    : draw_tooltip_color(content);                                                         break;
-				case VALUE_TYPE.gradient : draw_tooltip_gradient(content);                                                      break;
-				case VALUE_TYPE.atlas    : 
-				case VALUE_TYPE.surface  : draw_tooltip_surface(content);                                                       break;
-				case VALUE_TYPE.buffer   : draw_tooltip_buffer(content);                                                        break;
-				case VALUE_TYPE.pathnode : draw_tooltip_path(content);                                                          break;
-				
-				case VALUE_TYPE.d3object : draw_tooltip_text($"[{__txt("3D Object")}]");                                        break;
-				case VALUE_TYPE.object   : draw_tooltip_text($"[{__txt("Object")}]");                                           break;
-				case VALUE_TYPE.rigid    : draw_tooltip_text($"[{__txt("Rigidbody Object")} (id: {content})]");                 break;
-				case VALUE_TYPE.sdomain  : draw_tooltip_text($"[{__txt("Domain")} (id: {content})]");                           break;
-				case VALUE_TYPE.d3vertex : draw_tooltip_text($"[{__txt("3D Vertex")} (groups: {array_length(content)})]");      break;
-				
-				case VALUE_TYPE.strands :
-					var txt = __txt("Strands Object");
-					if(is_struct(content))
-						txt += $" (strands: {array_length(content.hairs)})";
-					draw_tooltip_text($"[{txt}]");
-					break;
-				
-				case VALUE_TYPE.mesh :
-					var txt = __txt("Mesh Object");
-					if(is(content, MeshedSurface)) txt += $" (triangles: {array_length(content.tris)})";
-					draw_tooltip_text($"[{txt}]");
-					break;
-					
-				case VALUE_TYPE.struct   : 
-					if(has(content, "drawTooltip")) content.drawTooltip();
-					else draw_tooltip_text(content);
-					break;
-				
-				case "sprite"  : draw_tooltip_sprite(content);  break;
-				case "project" : draw_tooltip_project(content); break;
-				
-				default :
-					var tt = "";
-					if(is_struct(content)) tt = $"[{instanceof(content)}] {content}";
-					else                   tt = string(content);
-					
-					draw_tooltip_text(tt);
-			} 
-			
-		} else if(TOOLTIP != "")
-			draw_tooltip_text(TOOLTIP);
-	}
-	TOOLTIP = "";
+	checkTOOLTIP();
 #endregion
 
 #region dragging
+	panelDraw();
+	
 	if(DRAGGING != noone) {
 		var mx = mouse_mx + ui(8);
 		var my = mouse_my + ui(8);
@@ -175,8 +108,6 @@ if(USE_TEXTUREGROUP && texturegroup_get_status("UI") == texturegroup_status_load
 		
 	panelDisplayDraw();
 	dialogGUIDraw();
-	
-	if(PREFERENCES.video_mode && !ZOOM_AREA && !_cursor_lock) draw_sprite(THEME.cursor_video, 0, mouse_mx, mouse_my);
 #endregion
 
 #region debug

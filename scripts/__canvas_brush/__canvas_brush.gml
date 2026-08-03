@@ -255,7 +255,7 @@ function canvas_brush() constructor {
 	
 		return _step;
 	}
-			
+	
 	static drawRect = function(_x0, _y0, _x1, _y1, _fill, _draw = false) {
 		if(_x0 == _x1 && _y0 == _y1) {
 			drawPoint(_x0, _y0, _draw);
@@ -291,7 +291,7 @@ function canvas_brush() constructor {
 		}
 	
 	}
-		
+	
 	static drawEllipse = function(_x0, _y0, _x1, _y1, _fill, _draw = false) {
 		if(_x0 == _x1 && _y0 == _y1) {
 			drawPoint(_x0, _y0, _draw);

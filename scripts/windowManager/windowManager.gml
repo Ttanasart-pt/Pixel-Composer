@@ -100,8 +100,8 @@ function winMan_Minimize() { window_minimize(); }
 function winMan_initDrag(_index) {
 	window_drag_status = _index;
 	window_drag_hold   = 0;
-	window_drag_mx     = mouse_raw_x;
-	window_drag_my	   = mouse_raw_y;
+	window_drag_mx     = mouse_rx;
+	window_drag_my	   = mouse_ry;
 	window_drag_sx	   = window_get_x();
 	window_drag_sy	   = window_get_y();
 	window_drag_sw	   = window_get_width();
@@ -167,8 +167,8 @@ function winManStep() {
 	var _sw = window_drag_sw;
 	var _sh = window_drag_sh;
 	
-	var mx = mouse_raw_x;
-	var my = mouse_raw_y;
+	var mx = mouse_rx;
+	var my = mouse_ry;
 	var sx = _sx;
 	var sy = _sy;
 	var sw = _sw;

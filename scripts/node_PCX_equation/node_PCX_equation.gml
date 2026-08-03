@@ -72,6 +72,7 @@ function Node_PCX_Equation(_x, _y, _group = noone) : Node_PCX(_x, _y, _group) co
 			.setVisible(true, true);
 		inputs[index + 1].getEditWidget().interactable = false;
 		
+		postCreateNewInput(index);
 		return inputs[index + 0];
 	} setDynamicInput(2, false);
 	

@@ -76,13 +76,13 @@ event_inherited();
 		}
 		gpu_set_tex_filter(false);
 		
-		if(key_input_press(vk_up))   { 
+		if(keyboard_check_pressed(vk_up))   { 
 			selecting = (selecting - 1 + n) % n; 
 			sc_content.scroll_y_to = max(sc_content.scroll_y_to, -selecting * hght);
 			if(selecting == n - 1) sc_content.scroll_y_to = -(selecting - show_items + 1) * hght;
 		}
 		
-		if(key_input_press(vk_down)) { 
+		if(keyboard_check_pressed(vk_down)) { 
 			selecting = (selecting + 1) % n; 
 			sc_content.scroll_y_to = min(sc_content.scroll_y_to, -(selecting - show_items + 1) * hght);
 			if(selecting == 0) sc_content.scroll_y_to = -selecting * hght;

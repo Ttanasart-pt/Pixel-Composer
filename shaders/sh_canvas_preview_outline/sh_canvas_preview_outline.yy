@@ -1,0 +1,12 @@
+{
+  "$GMShader":"",
+  "%Name":"sh_canvas_preview_outline",
+  "name":"sh_canvas_preview_outline",
+  "parent":{
+    "name":"shaders",
+    "path":"folders/panels/nodes/canvas/shaders.yy",
+  },
+  "resourceType":"GMShader",
+  "resourceVersion":"2.0",
+  "type":1,
+}

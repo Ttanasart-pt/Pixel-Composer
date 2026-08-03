@@ -12,7 +12,7 @@ function Node_Region_Fill(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	newInput( 4, nodeValueSeed());
 	
 	////- =Surfaces
-	newInput( 0, nodeValue_Surface(   "Surface In" ));
+	newInput( 0, nodeValue_Surface(   "Surface In" )).setRequired();
 	newInput( 1, nodeValue_Surface(   "Mask"       ));
 	
 	////- =Filter

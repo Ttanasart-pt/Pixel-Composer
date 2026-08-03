@@ -55,8 +55,6 @@ draw_clear(COLORS.bg);
 		
 		noti_warning(exception_print(e));
 	}
-	
-	panelDraw();
 #endregion
 
 #region notes

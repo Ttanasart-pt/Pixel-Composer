@@ -14,17 +14,17 @@ DIALOG_DRAW_BG
 	}
 	
 	draw_set_text(f_p0b, fa_left, fa_top, COLORS._main_text);
-	draw_text(dialog_x + ui(24), dialog_y + ui(16), __txt("Assets"));
+	draw_text(_dialog_x + ui(24), _dialog_y + ui(16), __txt("Assets"));
 	
-	var _fld_x = dialog_x + ui(12);
+	var _fld_x = _dialog_x + ui(12);
 	folderPane.setFocusHover(sFOCUS, sHOVER);
-	folderPane.draw(_fld_x, dialog_y + ui(48));
+	folderPane.draw(_fld_x, _dialog_y + ui(48));
 	
 	var _cnt_x = _fld_x + folderW - ui(4);
 	var dx0 = _cnt_x - ui(8);
 	var dx1 = _cnt_x;
-	var dy0 = dialog_y + ui(48);
-	var dy1 = dialog_y + dialog_h - ui(16);
+	var dy0 = _dialog_y + ui(48);
+	var dy1 = _dialog_y + dialog_h - ui(16);
 	
 	if(point_in_rectangle(mouse_mx, mouse_my, dx0, dy0, dx1, dy1)) {
 		CURSOR = cr_size_we;
@@ -35,10 +35,10 @@ DIALOG_DRAW_BG
 		}
 	}
 	
-	draw_sprite_stretched(THEME.ui_panel_bg, 1, _cnt_x, dialog_y + ui(12), content_w + ui(6), dialog_h - ui(24));
+	draw_sprite_stretched(THEME.ui_panel_bg, 1, _cnt_x, _dialog_y + ui(12), content_w + ui(6), dialog_h - ui(24));
 	
 	contentPane.setFocusHover(sFOCUS, sHOVER);
-	contentPane.draw(_cnt_x, dialog_y + ui(12));
+	contentPane.draw(_cnt_x, _dialog_y + ui(12));
 #endregion
 
 DIALOG_DRAW_FOCUS

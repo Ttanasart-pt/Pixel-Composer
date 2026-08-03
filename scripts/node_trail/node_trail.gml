@@ -13,7 +13,7 @@ function Node_Trail(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	setCacheManual();
 	
 	////- =Surfaces
-	newInput( 0, nodeValue_Surface("Surface In")).rejectArray();
+	newInput( 0, nodeValue_Surface("Surface In")).setRequired().rejectArray();
 	
 	////- =Trail
 	newInput( 1, nodeValue_Int(  "Max Life", 5 ));

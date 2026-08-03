@@ -1,15 +1,16 @@
 /// @description init
 if(editWidget == noone) exit;
 
+DIALOG_WINDOW_START
 #region Draw
-	draw_sprite_stretched(THEME.textbox, 3, dialog_x, dialog_y, dialog_w, dialog_h);
-	draw_sprite_stretched(THEME.textbox, 1, dialog_x, dialog_y, dialog_w, dialog_h);
+	draw_sprite_stretched(THEME.textbox, 3, _dialog_x, _dialog_y, dialog_w, dialog_h);
+	draw_sprite_stretched(THEME.textbox, 1, _dialog_x, _dialog_y, dialog_w, dialog_h);
 	
 	editWidget.setFocusHover(sFOCUS, sHOVER);
 	
-	var eX = dialog_x + ui(4);
-	var eY = dialog_y + ui(4);
-	var eW = dialog_w - ui(8);
+	var eX = _dialog_x + ui(4);
+	var eY = _dialog_y + ui(4);
+	var eW =  dialog_w - ui(8);
 	
 	var param = new widgetParam(eX, eY, eW, TEXTBOX_HEIGHT, keyframe.value, junction.display_data);
 	
@@ -17,8 +18,9 @@ if(editWidget == noone) exit;
 	dialog_h = _h + ui(8);
 	
 	if(wid_h != dialog_h) {
-		dialog_y = min(dialog_y, WIN_H - dialog_h - ui(8));
+		_dialog_y = min(_dialog_y, WIN_H - dialog_h - ui(8));
 		wid_h = dialog_h;
 	}
 	
 #endregion
+DIALOG_WINDOW_END

@@ -1050,7 +1050,7 @@ function Panel_Steam_Workshop(_contentPage = 0, _page = 0) : PanelContent() cons
 				
 				draw_sprite_ui(THEME.animate_node_go, 0, _gx, _gy, 1, 1, 0, _hv? COLORS._main_icon_light : COLORS._main_icon);
 				if(_hv) {
-					TOOLTIP = __txt("View Graph") + "...";
+					setTOOLTIP(__txt("View Graph") + "...");
 					
 					if(mouse_lpress(_focus)) {
 						var _graph = new Panel_Graph(_author.profile_graph_runner.project);
@@ -1159,7 +1159,7 @@ function Panel_Steam_Workshop(_contentPage = 0, _page = 0) : PanelContent() cons
 					draw_sprite_ui(_bspr, 0, _icx, _icy, 1, 1, 0, _cc);
 					
 					if(_ihv) {
-						TOOLTIP = _btxt;
+						setTOOLTIP(_btxt);
 						if(_myPage) draw_sprite_stretched(THEME.button_hide, 1, _xx, _cy, _ls, _ls, 1, 1, 0, COLORS._main_icon);
 					}
 					
@@ -1397,7 +1397,7 @@ function Panel_Steam_Workshop(_contentPage = 0, _page = 0) : PanelContent() cons
 					}
 					
 					var _hov = _hhov && point_in_rectangle(_m[0], _m[1], _bdx, _bdy, _bdx + _bds, _bdy + _bds);
-					if(_hov) TOOLTIP = new tooltip_two_lines(b.name, b.subtitle);
+					if(_hov) setTOOLTIP(new tooltip_two_lines(b.name, b.subtitle));
 					
 					_bdx += _bds + ui(4);
 				}
@@ -2176,7 +2176,7 @@ function Panel_Steam_Workshop(_contentPage = 0, _page = 0) : PanelContent() cons
 				draw_text_add(_vx + _vw/2, _vy + _bh/2, __txt("Link to PXC hub"));
 				
 				if(_hov) {
-					TOOLTIP = __txt("pxc_hub_upload_des", "Linking submission to PXC hub will allows for in-software rating and comment (Data separated from Steam Workshop).")
+					setTOOLTIP(__txt("pxc_hub_upload_des", "Linking submission to PXC hub will allows for in-software rating and comment (Data separated from Steam Workshop)."));
 					if(mouse_lpress(_focus)) item_viewing.linkHUB();
 				}
 				
@@ -2615,7 +2615,7 @@ function Panel_Steam_Workshop(_contentPage = 0, _page = 0) : PanelContent() cons
 			
 			for( var i = 0, n = array_length(sort_types); i < n; i++ ) {
 				var hv = _hover && point_in_rectangle(_m[0], _m[1], bx, by, bx + bw, by + bh);
-				if(hv) TOOLTIP = sort_types[i];
+				if(hv) setTOOLTIP(sort_types[i]);
 				
 				if(sort_type != i) {
 					var cc = hv? COLORS._main_icon_light : COLORS._main_icon;
@@ -2647,7 +2647,7 @@ function Panel_Steam_Workshop(_contentPage = 0, _page = 0) : PanelContent() cons
 			
 				for( var i = 0, n = array_length(sort_days); i < n; i++ ) {
 					var hv = _hover && point_in_rectangle(_m[0], _m[1], bx, by, bx + bw, by + bh);
-					if(hv) TOOLTIP = sort_days_tool[i];
+					if(hv) setTOOLTIP(sort_days_tool[i]);
 					
 					var cc = COLORS._main_accent;
 					

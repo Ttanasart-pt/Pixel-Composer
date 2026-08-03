@@ -35,11 +35,11 @@ gml_pragma("UnityBuild", "true");
 	globalvar DEBUG; DEBUG    = false;
 	
 	globalvar LATEST_VERSION; LATEST_VERSION = 1_21_00_0;
-	globalvar VERSION; VERSION        = 1_21_07_1;
+	globalvar VERSION; VERSION        = 1_21_08_0;
 	globalvar SAVE_VERSION; SAVE_VERSION   = 1_21_07_0;
-	globalvar VERSION_STRING; VERSION_STRING = "1.21.7.110";                  // Display on menu panel, workshop thumbnail
-	globalvar RELEASE_STRING; RELEASE_STRING = "1.21.7";                      // Use for searching release note from github
-	globalvar BUILD_NUMBER; BUILD_NUMBER   = 1_21_07_1.10;
+	globalvar VERSION_STRING; VERSION_STRING = "1.21.8.004";          // Display on menu panel, workshop thumbnail
+	globalvar RELEASE_STRING; RELEASE_STRING = "1.21.8";              // Use for searching release note from github
+	globalvar BUILD_NUMBER; BUILD_NUMBER   = 1_21_08_0.04;
 	globalvar PREF_VERSION; PREF_VERSION   = 1_17_1;
 	
 	globalvar NEW_VERSION; NEW_VERSION    = false;
@@ -57,6 +57,8 @@ gml_pragma("UnityBuild", "true");
 	globalvar HOTKEY_CONTEXT; HOTKEY_CONTEXT      = [0];
 	
 	globalvar TOOLTIP; TOOLTIP             = "";
+	globalvar TOOLTIP_WINDOW; TOOLTIP_WINDOW      = undefined;
+	
 	globalvar DRAGGING; DRAGGING            = noone;
 	globalvar DIALOG_DEPTH_HOVER; DIALOG_DEPTH_HOVER  = 0;
 	globalvar DIALOG_JUST_CLOSED; DIALOG_JUST_CLOSED  = false;
@@ -68,10 +70,13 @@ gml_pragma("UnityBuild", "true");
 	
 	globalvar  HIGHLIGHT_PROP;  HIGHLIGHT_PROP     = undefined;
 	globalvar _HIGHLIGHT_PROP; _HIGHLIGHT_PROP     = undefined;
+	
+	globalvar SURFACE_STACK; SURFACE_STACK = ds_stack_create();
 #endregion
 
 #region input
 	globalvar FOCUS; FOCUS	            = noone;
+	globalvar FOCUS_WINDOW; FOCUS_WINDOW      = undefined;
 	globalvar FOCUS_PANEL; FOCUS_PANEL       = noone;
 	globalvar FOCUS_CONTENT; FOCUS_CONTENT     = noone;
 	globalvar FOCUS_STR; FOCUS_STR	        = "";
@@ -80,6 +85,7 @@ gml_pragma("UnityBuild", "true");
 	globalvar DOUBLE_CLICK; DOUBLE_CLICK      = false;
 	
 	globalvar HOVER; HOVER             = noone;
+	globalvar HOVER_WINDOW; HOVER_WINDOW      = undefined;
 	globalvar HOVERING_ELEMENT; HOVERING_ELEMENT  = noone;
 	globalvar _HOVERING_ELEMENT; _HOVERING_ELEMENT = noone;
 	
@@ -89,6 +95,11 @@ gml_pragma("UnityBuild", "true");
 	globalvar ADD_NODE_SUBPAGE; ADD_NODE_SUBPAGE  = 0;
 	globalvar ADD_NODE_SCROLL; ADD_NODE_SCROLL   = 0;
 	globalvar TOOLTIP_WINDOW; TOOLTIP_WINDOW    = noone;
+	
+	globalvar WINWIN_CURRENT; WINWIN_CURRENT    = undefined;
+	globalvar WINWIN_ALL; WINWIN_ALL        = [];
+	
+	globalvar DISPLAY_DATA; DISPLAY_DATA      = undefined;
 #endregion
 
 #region macro
@@ -113,15 +124,15 @@ gml_pragma("UnityBuild", "true");
 	
 	#macro UI_SCALE PREFERENCES.display_scaling
 	
+	#macro mouse_mx (PEN_USE? PEN_X : ( winwin_exists(WINWIN_CURRENT)? (display_mouse_get_x() - winwin_get_x(WINWIN_CURRENT)) : (display_mouse_get_x() - window_get_x()) ))
+	#macro mouse_my (PEN_USE? PEN_Y : ( winwin_exists(WINWIN_CURRENT)? (display_mouse_get_y() - winwin_get_y(WINWIN_CURRENT)) : (display_mouse_get_y() - window_get_y()) ))
 	#macro mouse_ui [mouse_mx, mouse_my]
-	#macro mouse_mx (PEN_USE? PEN_X : device_mouse_raw_x(0))
-	#macro mouse_my (PEN_USE? PEN_Y : device_mouse_raw_y(0))
 	
 	#macro mouse_mxs (FILE_IS_DROPPING? FILE_DROPPING_X : mouse_mx)
 	#macro mouse_mys (FILE_IS_DROPPING? FILE_DROPPING_Y : mouse_my)
 	
-	#macro mouse_raw_x display_mouse_get_x()
-	#macro mouse_raw_y display_mouse_get_y()
+	#macro mouse_rx display_mouse_get_x()
+	#macro mouse_ry display_mouse_get_y()
 	
 	#macro sFOCUS (FOCUS == self.id)
 	#macro sHOVER (!CURSOR_IS_LOCK && (HOVER == self.id))

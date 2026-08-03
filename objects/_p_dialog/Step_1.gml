@@ -10,6 +10,11 @@ if !active exit;
 		if(PREFERENCES.panel_force_on_escape || (destroy_on_escape && checkClosable()))
 			instance_destroy();
 	}
+	
+	if(is_winwin(window)) {
+		winwin_set_caption(window, title);
+		winwin_set_rectangle(window, window_get_x() + dialog_x, window_get_y() + dialog_y, dialog_w, dialog_h);
+	}
 #endregion
 
 #region resize
@@ -19,5 +24,5 @@ if !active exit;
 		
 		if(onResize != undefined) onResize();
 	}
+	
 #endregion
-

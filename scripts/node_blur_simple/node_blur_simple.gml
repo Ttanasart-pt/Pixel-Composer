@@ -12,7 +12,7 @@ function Node_Blur_Simple(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	
 	////- =Surfaces
 	newInput( 2, nodeValue_EScroll( "Oversample mode",  0, [ "Empty", "Clamp", "Repeat" ]));
-	newInput( 0, nodeValue_Surface( "Surface In" ));
+	newInput( 0, nodeValue_Surface( "Surface In" )).setRequired();
 	newInput(17, nodeValue_Surface( "UV Map"     ));
 	newInput(18, nodeValue_Slider(  "UV Mix", 1  ));
 	newInput( 6, nodeValue_Surface( "Mask"       ));

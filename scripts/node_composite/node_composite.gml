@@ -489,6 +489,7 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		
 		var iamo = getInputAmount();
 		var amo  = array_length(attributes.layer_order);
+		if(iamo == 0) return 0;
 		
 		properties_expand = array_verify_min(properties_expand, amo);
 		var _h = ui(4);
@@ -1062,29 +1063,31 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	
 	////- Dynamic IO
 	
-	function createNewInput(i = array_length(inputs)) {
+	function createNewInput(index = array_length(inputs)) {
 		var inAmo = array_length(inputs);
-		var _s    = floor((i - input_fix_len) / data_length);
+		var _s    = floor((index - input_fix_len) / data_length);
 		
-		newInput(i+0, nodeValue_Surface(  $"Surface {_s}" ));
-		newInput(i+4, nodeValue_EScroll(  $"Blend {_s}",     0, BLEND_TYPES ))
+		newInput(index+0, nodeValue_Surface(  $"Surface"                   ));
+		newInput(index+4, nodeValue_EScroll(  $"Blend",     0, BLEND_TYPES ))
 			.setHistory([ BLEND_TYPES, { cond: function() /*=>*/ {return LOADING_VERSION < 1_18_00_0}, list: global.BLEND_TYPES_18 } ]);
-		newInput(i+5, nodeValue_Slider(   $"Opacity {_s}",   1      ));
+			
+		newInput(index+5, nodeValue_Slider(   $"Opacity",   1              ));
 		
-		newInput(i+7, nodeValue_Float(    $"Order {_s}",    _s*100  ));
-		newInput(i+1, nodeValue_Vec2(     $"Position {_s}", [.5,.5] )).setUnitSimple();
-		newInput(i+6, nodeValue_Anchor(                             ));
-		newInput(i+2, nodeValue_Rotation( $"Rotation {_s}",  0      ));
-		newInput(i+3, nodeValue_Vec2(     $"Scale {_s}",    [1,1]   ));
-		// i+8
+		newInput(index+7, nodeValue_Float(    $"Order",    _s*100          ));
+		newInput(index+1, nodeValue_Vec2(     $"Position", [.5,.5]         )).setUnitSimple();
+		newInput(index+6, nodeValue_Anchor(                                ));
+		newInput(index+2, nodeValue_Rotation( $"Rotation",  0              ));
+		newInput(index+3, nodeValue_Vec2(     $"Scale",    [1,1]           ));
+		// index+8
 		
-		inputs[i+0].hover_effect = 0;
+		inputs[index+0].hover_effect = 0;
 		
 		while(_s >= array_length(attributes.layer_visible))    array_push(attributes.layer_visible,    true);
 		while(_s >= array_length(attributes.layer_selectable)) array_push(attributes.layer_selectable, true);
 		
+		postCreateNewInput(index);
 		refreshDynamicDisplay();
-		return inputs[i];
+		return inputs[index];
 	} 
 	
 	input_display_dynamic = [ 
@@ -2040,7 +2043,12 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		
 		#region data
 			var imageAmo  = getInputAmount();
-			if( imageAmo == 0) return _outData;
+			if( imageAmo == 0) {
+				var _outSurf = _outData[0];
+				if(is_surface(_outSurf))
+					surface_clear(_outSurf);
+				return _outData;
+			}
 			
 			var _pad  = _data[ 0];
 			var _dimt = _data[ 1];

@@ -22,6 +22,7 @@ function KeyCombination(_key = "", _modi = MOD_KEY.none) constructor {
 	
 	static isPressing = function(hold = false) /*=>*/ {return hasKey()? key_press(_K, _M, hold) : false};
 	static toString   = function() /*=>*/ {return key_get_name(_K, _M)};
+	static getKeyName = function() /*=>*/ {return key_get_name(_K, _M)};
 	
 	static set     = function(k,m) /*=>*/ { _K = k;    _M = m;    return self; }
 	static setKey  = function(k)   /*=>*/ { _K = k._K; _M = k._M; return self; }
@@ -157,7 +158,7 @@ function addHotkey(_context, _name, _key, _mod, _action, _param = noone) {
 	var hotkey = new Hotkey(_context, _name, _key, _mod, _action, _param);
 	HOTKEYS_ALL[$ string_to_var2(_context, _name)] = hotkey;
 	
-	if(!struct_has(HOTKEYS, _context)) {
+	if(!has(HOTKEYS, _context)) {
 		HOTKEYS[$ _context] = [];
 		array_push_unique(HOTKEY_CONTEXT, _context);
 	}

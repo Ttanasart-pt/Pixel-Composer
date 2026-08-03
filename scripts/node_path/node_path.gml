@@ -1015,7 +1015,7 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 			attributes.weight[weight_drag][1] = _wei;
 			if(_pth.loop && weight_drag == 0) array_last(attributes.weight)[1] = _wei;
 			
-			TOOLTIP = __txt("Weight") + $": {_wei}";
+			setTOOLTIP(__txt("Weight") + $": {_wei}");
 			_pth.updateLength();
 			
 			if(mouse_lrelease()) {
@@ -1352,7 +1352,7 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 					var _pd = point_distance(_mx, _my, _wx, _wy);
 					
 					if(_pd < _wd) {
-						TOOLTIP = __txt("Weight") + $": {_wg[1]}";
+						setTOOLTIP(__txt("Weight") + $": {_wg[1]}");
 						
 						_weight_hover = i;
 						_wd = _pd;

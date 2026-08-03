@@ -56,6 +56,8 @@ function scrollPane(_w, _h, ondraw) : widget() constructor {
 	use_depth   = false;
 	draw_camera = undefined;
 	
+	log = false;
+	
 	static verify = function(_w,_h) /*=>*/ { if(w == _w && h == _h) return; resize(_w, _h); }
 	
 	static resize = function(_w, _h) {
@@ -98,20 +100,23 @@ function scrollPane(_w, _h, ondraw) : widget() constructor {
 		
 		hover_content = false;
 		
-		/// Draw
+		////- =Draw
+		
+		var hh = 0;
 		
 		surface_set_target(surface);
 			draw_clear(COLORS.panel_bg_clear);
-			var hh = drawFunc(scroll_y, [ mx, my ], [ x, y ]);
-			    hh = real(hh);
-			content_h = max(0, hh - surface_h);
+			hh = drawFunc(scroll_y, [mx,my], [x,y]);
 		surface_reset_target();
+		
+	    hh = real(hh);
+		content_h = max(0, hh - surface_h);
 		
 		var sc = is_scroll;
 		is_scroll = hh > surface_h;
 		if(sc != is_scroll) resize(w, h);
 		
-		/// Scrolling
+		////- =Scrolling
 		
 		if(scroll_wait) scroll_wait--;
 		else {
@@ -122,6 +127,8 @@ function scrollPane(_w, _h, ondraw) : widget() constructor {
 		}
 		
 		draw_surface_safe(surface, x, y);
+		// draw_set_color(c_blue); draw_rectangle(x, y, x+surface_w, y+surface_h, true);
+		
 		if(tool_w) draw_sprite_stretched(THEME.ui_panel_tool, 0, x + w + ui(8) - tool_w, y - ui(8), tool_w, tool_h);
 		
 		if(hover && !scroll_lock) {
@@ -164,7 +171,7 @@ function scrollPane(_w, _h, ondraw) : widget() constructor {
 		
 		scroll_lock = false;
 		
-		/// Pen scroll
+		////- =Pen scroll
 		
 		if(pen_scrolling == 0 && mouse_lpress(!hover_content && hover && PEN_USE)) {
 			pen_scrolling = 1;

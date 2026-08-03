@@ -1,5 +1,25 @@
 [
   {
+    "version": "1.21.8.003",
+    "changes": [
+      {
+        "date": "2026-08-02T08:04:59.340Z",
+        "node": "",
+        "commit": "-- add reset to default code for dynamic inputs"
+      }
+    ]
+  },
+  {
+    "version": "1.21.7.110",
+    "changes": [
+      {
+        "date": "2026-07-27T02:38:53.282Z",
+        "node": "",
+        "commit": "Add junction requirement."
+      }
+    ]
+  },
+  {
     "version": "1.21.5.005",
     "changes": [
       {

@@ -159,7 +159,7 @@ function Panel_Asset_Selector(_onSet, _currData = undefined, _defPath = "") : Pa
 				
 				if(interactable && hov && point_in_rectangle(_m[0], _m[1], xx, yy, xx + grid_size, yy + grid_size)) {
 					contentPane.hover_content = true;
-					TOOLTIP = [ spr, "sprite" ];
+					setTOOLTIP([ spr, "sprite" ]);
 					
 					draw_sprite_stretched_ext(THEME.node_bg, 1, xx, yy, grid_size, grid_size, COLORS._main_accent, 1);
 					

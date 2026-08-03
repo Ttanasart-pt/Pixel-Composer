@@ -2,7 +2,7 @@ function Node_Project_Layer(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	name = "Layer";
 	if(NODE_NEW_MANUAL) name = $"Layer {array_length(project.globalLayer_nodes)}";
 	
-	newInput( 0, nodeValue_Surface( "Surface In"    ));
+	newInput( 0, nodeValue_Surface( "Surface In"    )).setRequired();
 	newInput( 1, nodeValue_Int(     "Depth",      0 ));
 	
 	////- =Transform

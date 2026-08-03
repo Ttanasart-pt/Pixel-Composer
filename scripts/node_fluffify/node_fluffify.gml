@@ -5,7 +5,7 @@ function Node_Fluffify(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	newInput( 7, nodeValueSeed());
 	
 	////- =Surfaces
-	newInput( 0, nodeValue_Surface("Surface In"));
+	newInput( 0, nodeValue_Surface("Surface In")).setRequired();
 	newInput( 1, nodeValue_Surface( "Mask" ));
 	newInput( 2, nodeValue_Slider(  "Mix", 1));
 	__init_mask_modifier(1, 3); // inputs 3, 4

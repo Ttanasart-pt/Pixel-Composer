@@ -80,12 +80,12 @@ function Node_MK_Facet(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 			
 			var _fww = _ffw / 4;
 			var _hov = _hover && point_in_rectangle(_m[0], _m[1], _ffx, _ffy, _ffx + _fww, _ffy + _ffh);
-			if(_hov) TOOLTIP = __txt("Pattern");
+			if(_hov) setTOOLTIP(__txt("Pattern"));
 			draw_sprite_ui(THEME.prop_segment, 0, _ffx + _ffh / 2, _ffy + _ffh / 2, .75, .75, 0, COLORS._main_icon);
 			_ffx += _fww;
 			
 			var _hov = _hover && point_in_rectangle(_m[0], _m[1], _ffx, _ffy, _ffx + _fww, _ffy + _ffh);
-			if(_hov) TOOLTIP = __txt("Angle");
+			if(_hov) setTOOLTIP(__txt("Angle"));
 			
 			shader_set(sh_widget_rotator);
 				shader_set_c("color", COLORS._main_icon );
@@ -97,11 +97,11 @@ function Node_MK_Facet(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 			_ffx += _fww;
 			
 			var _hov = _hover && point_in_rectangle(_m[0], _m[1], _ffx, _ffy, _ffx + _fww, _ffy + _ffh);
-			if(_hov) TOOLTIP = __txt("Width");
+			if(_hov) setTOOLTIP(__txt("Width"));
 			_ffx += _fww;
 			
 			var _hov = _hover && point_in_rectangle(_m[0], _m[1], _ffx, _ffy, _ffx + _fww, _ffy + _ffh);
-			if(_hov) TOOLTIP = __txt("Depth");
+			if(_hov) setTOOLTIP(__txt("Depth"));
 			_ffx += _fww;
 			
 			_fy += _hg;
@@ -134,6 +134,7 @@ function Node_MK_Facet(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	
 	function createNewInput(index = array_length(inputs)) {
 		newInput(index, nodeValue_Vec4( "Facet", [ 4,  0,  8, .5 ], { linkable: false, label: array_create(4,"") } ));
+		postCreateNewInput(index);
 		return inputs[index];
 	} 
 	

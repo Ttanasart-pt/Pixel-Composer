@@ -4,10 +4,10 @@ if !ready exit;
 DIALOG_DRAW_BG
 
 #region header
-	var icx = dialog_x + ui(56);
-	var icy = dialog_y + ui(56);
+	var icx = _dialog_x + ui(56);
+	var icy = _dialog_y + ui(56);
 	draw_sprite_ui_uniform(THEME.icon_64, 0, icx, icy);
-	draw_sprite_ui_uniform(s_title, 0, dialog_x + ui(56 + 48 - 4), dialog_y + ui(56 + 4 - 32), .4 * THEME_SCALE);
+	draw_sprite_ui_uniform(s_title, 0, _dialog_x + ui(56 + 48 - 4), _dialog_y + ui(56 + 4 - 32), .4 * THEME_SCALE);
 	
 	draw_set_text(f_p0, fa_left, fa_top, COLORS._main_text_sub);
 	var bhf = THEME.button_hide_fill;
@@ -15,8 +15,8 @@ DIALOG_DRAW_BG
 	var foc = sFOCUS;
 	var hov = sHOVER;
 	
-	var bx  = dialog_x + ui(56 + 48);
-	var by  = dialog_y + ui(56 + 4);
+	var bx  = _dialog_x + ui(56 + 48);
+	var by  = _dialog_y + ui(56 + 4);
 	var txt = VERSION_STRING;
 	var ww  = string_width(txt) + ui(8);
 	var hh  = line_get_height(, 4);
@@ -26,8 +26,8 @@ DIALOG_DRAW_BG
 	draw_text(bx, by, txt);
 	
 	var bs = ui(32);
-	var bx = dialog_x + dialog_w - ui(16) - bs;
-	var by = dialog_y + ui(16);
+	var bx = _dialog_x + dialog_w - ui(16) - bs;
+	var by = _dialog_y + ui(16);
 	if(buttonInstant(bhf, bx, by, bs, bs, m, hov, foc, __txt("Preferences"), THEME.gear) == 2)
 		dialogPanelCall(new Panel_Preference());
 	
@@ -41,10 +41,10 @@ DIALOG_DRAW_BG
 #endregion
 
 #region recent
-	var x0 = dialog_x + ui(16);
+	var x0 = _dialog_x + ui(16);
 	var x1 = x0 + recent_width;
-	var y0 = dialog_y + ui(128);
-	var y1 = dialog_y + dialog_h - ui(16);
+	var y0 = _dialog_y + ui(128);
+	var y1 = _dialog_y + dialog_h - ui(16);
 	
 	sp_recent.setFocusHover(sFOCUS, sHOVER);
 	sp_recent.rx = x0 + ui(6);
@@ -123,7 +123,7 @@ DIALOG_DRAW_BG
 
 #region content
 	x0 = x1 + ui(16);
-	x1 = dialog_x + dialog_w - ui(16);
+	x1 = _dialog_x + dialog_w - ui(16);
 	bx = x0;
 	
 	var tabH = ui(32);

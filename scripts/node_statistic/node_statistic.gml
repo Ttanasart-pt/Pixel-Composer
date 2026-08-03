@@ -48,6 +48,7 @@ function Node_Statistic(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		
 		newInput(index, nodeValue_Float("Input", -1 )).setVisible(false, true);
 			
+		postCreateNewInput(index);
 		return inputs[index];
 	} 
 	

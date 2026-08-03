@@ -4,7 +4,7 @@ function Node_Crop_Content(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	newActiveInput(1);
 	
 	////- =Surfaces
-	newInput(0, nodeValue_Surface( "Surface In" )).setArrayDepth(1);
+	newInput(0, nodeValue_Surface( "Surface In" )).setArrayDepth(1).setRequired();
 	newInput(2, nodeValue_EScroll( "Array Sizing",  1, [ "Largest, same size", "Independent" ]))
 		.setTooltip("Cropping mode for dealing with image array.");
 		

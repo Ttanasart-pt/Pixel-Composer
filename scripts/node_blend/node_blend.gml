@@ -50,7 +50,7 @@ function Node_Blend(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	newActiveInput(8);
 	
 	////- =Surfaces
-	newInput( 0, nodeValue_Surface( "Background"                       ));
+	newInput( 0, nodeValue_Surface( "Background"                       )).setRequired();
 	newInput( 1, nodeValue_Surface( "Foreground"                       ));
 	newInput( 4, nodeValue_Surface( "Mask"                             ));
 	newInput(15, nodeValue_Bool(    "Swap",               false        ));

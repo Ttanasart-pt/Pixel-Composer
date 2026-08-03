@@ -54,7 +54,7 @@ var mdis = point_distance( x, y, mouse_mx, mouse_my);
 	    mouse_rel |= activate_key_release && keyboard_check_released(vk_anykey);
 	    // mouse_rel &= WIDGET_CURRENT == undefined;
 	
-	var mouse_sel = sHOVER && mouse_rel;
+	var mouse_sel = mouse_rel// && sHOVER;
 	
 	var _bx0, _bx1, _by0, _by1;
 	
@@ -277,7 +277,7 @@ var mdis = point_distance( x, y, mouse_mx, mouse_my);
 				
 				var hovRec = point_in_rectangle(mouse_mx, mouse_my, ixc - _sw/2, iyc - _sh/2, ixc + _sw/2, iyc + _sh/2);
 				if(sHOVER && _hov && !sHov && hovRec) {
-					if(_tlp != "") TOOLTIP = _tlp;
+					if(_tlp != "") setTOOLTIP(_tlp);
 					draw_sprite_stretched_ext(THEME.textbox, 3, ixc - _sw/2, iyc - _sh/2, _sw, _sh, COLORS.dialog_menubox_highlight, 1);
 					draw_sprite_stretched_ext(THEME.textbox, 2, ixc - _sw/2, iyc - _sh/2, _sw, _sh, COLORS.dialog_menubox_highlight, 1);
 					if(mouse_sel) {

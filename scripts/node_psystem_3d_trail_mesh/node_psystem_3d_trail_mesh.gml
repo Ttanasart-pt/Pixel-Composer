@@ -93,15 +93,15 @@ function Node_pSystem_3D_Trail_Mesh(_x, _y, _group = noone) : Node_3D(_x, _y, _g
 		buffer_clear(trail_buffer);
 	}
 	
-	static update = function(_frame = CURRENT_FRAME) {
-		var _parts = getInputData(0);
-		var _masks = getInputData(1), use_mask = _masks != noone;
+	static processData = function(_outData, _data, _array_index = 0, _frame = CURRENT_FRAME) {
+		var _parts = _data[0];
+		var _masks = _data[1], use_mask = _masks != noone;
 		
 		if(!is(_parts, pSystem_Particles)) return;
 		if(use_mask) buffer_to_start(_masks);
 		
-		var _seed = getInputData(2);
-		var _fram = getInputData(3), _fram_curved = inputs[3].attributes.curved && curve_fram != undefined;
+		var _seed = _data[2];
+		var _fram = _data[3], _fram_curved = inputs[3].attributes.curved && curve_fram != undefined;
 		
 		var _poolSize  = _parts.poolSize;
 		var _lenMax    = max(_fram[0], _fram[1]);
@@ -258,7 +258,7 @@ function Node_pSystem_3D_Trail_Mesh(_x, _y, _group = noone) : Node_3D(_x, _y, _g
 		object.VF     = global.VF_POS_NORM_TEX_COL;
 		object.VB     = object.build();
 		
-		outputs[0].setValue(object);
+		return object;
 	}
 	
 	static getObject = function(index, class = object_class) {

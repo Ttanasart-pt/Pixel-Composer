@@ -289,19 +289,20 @@ function Node_Compose_Texture(_x, _y, _group = noone) : Node_Processor(_x, _y, _
 		new Inspector_Spacer(ui(4), true, false), texture_renderer, 
 	];
 	
-	function createNewInput(i = array_length(inputs)) {
+	function createNewInput(index = array_length(inputs)) {
 		
 		////- Texture
-		newInput(i+1, nodeValue_Color(    "Target", ca_black ));
-		newInput(i+0, nodeValue_Surface(  "Texture"          )).setVisible(true, true);
+		newInput(index+1, nodeValue_Color(    "Target", ca_black ));
+		newInput(index+0, nodeValue_Surface(  "Texture"          )).setVisible(true, true);
 		
 			////- /Transform
-		newInput(i+2, nodeValue_Vec2(     "Offset",   [0,0] )).setUnitSimple();
-		newInput(i+3, nodeValue_Rotation( "Rotation",  0    ));
-		newInput(i+4, nodeValue_Vec2(     "Scale",    [1,1] ));
+		newInput(index+2, nodeValue_Vec2(     "Offset",   [0,0] )).setUnitSimple();
+		newInput(index+3, nodeValue_Rotation( "Rotation",  0    ));
+		newInput(index+4, nodeValue_Vec2(     "Scale",    [1,1] ));
 		
 		refreshDynamicDisplay();
-		return inputs[i];
+		postCreateNewInput(index);
+		return inputs[index];
 	} 
 	
 	input_display_dynamic = [ // 5

@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.8.003",
+    "changes": [
+      {
+        "date": "2026-08-02T07:49:40.589Z",
+        "node": "",
+        "commit": "Dynamic inputs node now shares default values."
+      }
+    ]
+  },
+  {
     "version": "1.21.7.101",
     "changes": [
       {

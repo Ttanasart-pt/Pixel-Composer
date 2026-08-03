@@ -2,7 +2,7 @@ function Node_Normal_Light(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	name = "Normal Light";
 	
 	////- =Input
-	newInput( 0, nodeValue_Surface( "Surface In"           ));
+	newInput( 0, nodeValue_Surface( "Surface In"           )).setRequired();
 	newInput( 1, nodeValue_Surface( "Normal map"           ));
 	newInput( 3, nodeValue_Color(   "Ambient",    ca_black ));
 	newInput( 5, nodeValue_Bool(    "Keep Alpha", true     ));
@@ -16,38 +16,39 @@ function Node_Normal_Light(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	typeList    = __enum_array_gen(typeListStr, s_node_normal_light_type);
 	attnList    = __enum_array_gen([ "Quadratic", "Invert quadratic", "Linear", "Custom" ], s_node_curve_type);
 	
-	function createNewInput(i = array_length(inputs)) {
+	function createNewInput(index = array_length(inputs)) {
 		var inAmo = array_length(inputs);
 		dynamic_input_inspecting = getInputAmount();
 		
 		////- =Shape
-		newInput(i+ 0, nodeValue_EScroll( "Type",          0, typeList ));
-		newInput(i+ 1, nodeValue_Vec2(    "Position",     [0,0]    )).setUnitSimple();
-		newInput(i+ 7, nodeValue_Float(   "Distance",      0       ));
-		newInput(i+ 5, nodeValue_Vec2(    "End Position", [0,0]    )).setUnitSimple();
-		newInput(i+ 8, nodeValue_Float(   "End Distance",  0       ));
-		newInput(i+ 2, nodeValue_Float(   "Range",         16      ));
+		newInput(index+ 0, nodeValue_EScroll( "Type",          0, typeList ));
+		newInput(index+ 1, nodeValue_Vec2(    "Position",     [0,0]    )).setUnitSimple();
+		newInput(index+ 7, nodeValue_Float(   "Distance",      0       ));
+		newInput(index+ 5, nodeValue_Vec2(    "End Position", [0,0]    )).setUnitSimple();
+		newInput(index+ 8, nodeValue_Float(   "End Distance",  0       ));
+		newInput(index+ 2, nodeValue_Float(   "Range",         16      ));
 		
 		////- =Light
-		newInput(i+ 3, nodeValue_Float(   "Intensity", 4        ));
-		newInput(i+ 4, nodeValue_Color(   "Color",     ca_white ));
-		newInput(i+ 6, nodeValue_Color(   "End Color", ca_white ));
+		newInput(index+ 3, nodeValue_Float(   "Intensity", 4        ));
+		newInput(index+ 4, nodeValue_Color(   "Color",     ca_white ));
+		newInput(index+ 6, nodeValue_Color(   "End Color", ca_white ));
 		
 			////- =/Attenuation
-		newInput(i+ 9, nodeValue_EScroll( "Attenuation",   0, attnList       )).setTooltip("Control how light fade out over distance.");
-		newInput(i+10, nodeValue_Curve(   "AttenCurve",    CURVE_DEF_01      ));
+		newInput(index+ 9, nodeValue_EScroll( "Attenuation",   0, attnList       )).setTooltip("Control how light fade out over distance.");
+		newInput(index+10, nodeValue_Curve(   "AttenCurve",    CURVE_DEF_01      ));
 			
 			////- =/Banding
-		newInput(i+11, nodeValue_ISlider(  "Radial Banding",     0, [0, 16, 0.1]   ));
-		newInput(i+12, nodeValue_Rotation( "Radial Start",       0                 ));
-		newInput(i+13, nodeValue_Slider(   "Radial Band Ratio", .5                 ));
-		newInput(i+14, nodeValue_ISlider(  "Banding",            0, [0, 16, 0.1]   ));
-		// input 15
+		newInput(index+11, nodeValue_ISlider(  "Radial Banding",     0, [0, 16, 0.1]   ));
+		newInput(index+12, nodeValue_Rotation( "Radial Start",       0                 ));
+		newInput(index+13, nodeValue_Slider(   "Radial Band Ratio", .5                 ));
+		newInput(index+14, nodeValue_ISlider(  "Banding",            0, [0, 16, 0.1]   ));
+		// index+15
 		
-		inputs[i + 2].overlay_text_valign = fa_bottom;
+		inputs[index+ 2].overlay_text_valign = fa_bottom;
 		
 		refreshDynamicDisplay();
-		return inputs[i];
+		postCreateNewInput(index);
+		return inputs[index];
 	}
 	
 	lights_renderer = new Inspector_Custom_Renderer(function(_x, _y, _w, _m, _hover, _focus) {

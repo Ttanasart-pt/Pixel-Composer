@@ -173,9 +173,11 @@ function colorSelector(_onModify = noone) constructor {
 		var bgx = dtx + ui(20);
 			
 		textbox_surface = surface_verify(textbox_surface, bgw, bgh);
+		SURFACE_PREDRAW
 		surface_set_shader(textbox_surface);
 			draw_sprite_stretched_ext(THEME.box_r2, 0, 0, 0, bgw, bgh, c_white, 1);
 		surface_reset_shader();
+		SURFACE_POSTDRAW
 		
 		draw_set_text(f_p2b, fa_left, fa_center, COLORS._main_text_sub);
 		draw_text(dtx, dty + wdh / 2, _label);
@@ -477,6 +479,7 @@ function colorSelector(_onModify = noone) constructor {
 		
 		#region content
 			content_surface = surface_verify(content_surface, cont_w, cont_h);
+			SURFACE_PREDRAW
 			surface_set_target(content_surface);			
 				DRAW_CLEAR
 				
@@ -495,8 +498,10 @@ function colorSelector(_onModify = noone) constructor {
 				shader_reset();
 				gpu_set_colorwriteenable(1, 1, 1, 1);
 			surface_reset_target();
+			SURFACE_POSTDRAW
 			
 			side_surface = surface_verify(side_surface,    sel_w,  sel_h);
+			SURFACE_PREDRAW
 			surface_set_target(side_surface);
 				DRAW_CLEAR
 				
@@ -515,6 +520,7 @@ function colorSelector(_onModify = noone) constructor {
 				shader_reset();
 				gpu_set_colorwriteenable(1, 1, 1, 1);
 			surface_reset_target();
+			SURFACE_POSTDRAW
 			
 			// draw_sprite_stretched(THEME.ui_panel_bg, 1, cont_x - pd, cont_y - pd, cont_w + pd*2, cont_h + pd*2);
 			// draw_sprite_stretched(THEME.ui_panel_bg, 1, sel_x  - pd, sel_y  - pd, sel_w  + pd*2, sel_h  + pd*2);
@@ -689,6 +695,7 @@ function colorSelector(_onModify = noone) constructor {
 			var gra_h = mix_h - ui(8);
 			
 			mix_surface = surface_verify(mix_surface, gra_w,  gra_h);
+			SURFACE_PREDRAW
 			surface_set_target(mix_surface);
 				DRAW_CLEAR
 				
@@ -704,6 +711,7 @@ function colorSelector(_onModify = noone) constructor {
 				gpu_set_colorwriteenable(1, 1, 1, 1);
 				
 			surface_reset_target();
+			SURFACE_POSTDRAW
 			
 			draw_surface(mix_surface, gra_x, gra_y);
 			draw_sprite_stretched_add(THEME.box_r2, 1, gra_x, gra_y, gra_w, gra_h, c_white, 0.2);
@@ -746,6 +754,7 @@ function colorSelector(_onModify = noone) constructor {
 		
 		#region content
 			content_surface = surface_verify(content_surface, cont_w, cont_h);
+			SURFACE_PREDRAW
 			surface_set_target(content_surface);			
 				DRAW_CLEAR
 				
@@ -764,8 +773,10 @@ function colorSelector(_onModify = noone) constructor {
 				shader_reset();
 				gpu_set_colorwriteenable(1, 1, 1, 1);
 			surface_reset_target();
+			SURFACE_POSTDRAW
 			
 			side_surface = surface_verify(side_surface,    sel_w,  sel_h);
+			SURFACE_PREDRAW
 			surface_set_target(side_surface);
 				DRAW_CLEAR
 				
@@ -783,8 +794,8 @@ function colorSelector(_onModify = noone) constructor {
 					draw_empty();
 				shader_reset();
 				gpu_set_colorwriteenable(1, 1, 1, 1);
-				
 			surface_reset_target();
+			SURFACE_POSTDRAW
 			
 			draw_sprite_stretched(THEME.ui_panel_bg, 1, cont_x - ui(8), cont_y - ui(8), cont_w + ui(16), cont_h + ui(16));
 			draw_sprite_stretched(THEME.ui_panel_bg, 1, sel_x  - ui(8), sel_y  - ui(8), sel_w  + ui(16), sel_h  + ui(16));

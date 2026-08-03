@@ -29,7 +29,7 @@ function Node_Dither(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	newInput(13, nodeValueSeed());
 	
 	////- =Surfaces
-	newInput( 0, nodeValue_Surface( "Surface In" ));
+	newInput( 0, nodeValue_Surface( "Surface In" )).setRequired();
 	newInput( 7, nodeValue_Surface( "Mask"       ));
 	newInput( 8, nodeValue_Slider(  "Mix",     1 ));
 	__init_mask_modifier(7, 11); // inputs 11, 12, 

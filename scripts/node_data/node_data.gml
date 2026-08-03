@@ -34,6 +34,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		itype        = noone;
 		active       = true;
 		renderActive = true;
+		reqpass      = true;
 		
 		x = _x;
 		y = _y;
@@ -670,6 +671,11 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		
 		attributes.size = 0;
 		resetDynamicInput();
+	}
+	
+	static postCreateNewInput = function(ind = array_length(inputs)) {
+		for( var i = 0; i < data_length; i++ )
+			inputs[ind + i].resetValue();
 	}
 	
 	static resetDynamicInput = function() {
@@ -1323,6 +1329,8 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	static preUpdate = undefined
 	static update    = function() /*=>*/ {}
 	
+	static checkRequirement = function() /*=>*/ {return array_all(inputs, function(inp,i) /*=>*/ {return !inp.required || inp.requirementPass()})};
+	
 	static forceUpdate = function() {
 		input_hash = "";
 		doUpdate();
@@ -1332,8 +1340,11 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		if(project.safeMode) return;
 		if(is_3D == NODE_3D.polygon) USE_DEPTH = true;
 		
-		render_timer = get_timer();
 		setRenderStatus(true);
+		reqpass = checkRequirement();
+		if(!reqpass) return;
+		
+		render_timer = get_timer();
 		if(preUpdate) preUpdate(frame); 
 		
 		if(use_cache == CACHE_USE.auto && recoverCache()) {
@@ -1363,9 +1374,13 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		if(project.safeMode) return;
 		if(is_3D == NODE_3D.polygon) USE_DEPTH = true;
 		
-		render_timer = get_timer();
 		var _updateRender = !is(self, Node_Collection) || !managedRenderOrder;
 		if(_updateRender) setRenderStatus(true);
+		
+		reqpass = checkRequirement();
+		if(!reqpass) return;
+		
+		render_timer = get_timer();
 		if(preUpdate) preUpdate(frame); 
 		
 		if(use_cache == CACHE_USE.auto && recoverCache()) {
@@ -2142,6 +2157,8 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		var cc = renderActive? COLORS._main_text : COLORS._main_text_sub;
 		if(PREFERENCES.node_show_render_status && !rendered)
 			cc = isRenderable()? COLORS._main_value_positive : COLORS._main_value_negative;
+		if(!reqpass)
+			cc = COLORS._main_value_negative;
 		
 		aa += 0.25;
 		
@@ -2619,6 +2636,8 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	}
 	
 	static drawPreview = function(xx, yy, _s) {
+		if(!reqpass) return;
+		
 		var surf = getGraphPreviewSurface();
 		if(surf == noone) return;
 		
@@ -2645,9 +2664,9 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		var _sw = __preview_sw;
 		var _sh = __preview_sh;
 		var _ss = min(bbox.w / _sw, bbox.h / _sh);
+		
 		var  aa = 1;
 		if(FILTER_ANIMATION && !isAnimated()) aa = .5;
-		
 		draw_surface_ext(preview_surface, bbox.xc - _sw * _ss / 2, bbox.yc - _sh * _ss / 2, _ss, _ss, 0, c_white, aa);
 	}
 	
@@ -3628,7 +3647,8 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		disable();
 		
 		GraphRefresh();
-		array_remove(group == noone? project.nodes : group.getNodeList(), self);
+		var l = group == noone? project.nodes : group.getNodeList();
+		array_remove(l, self);
 		
 		if(PANEL_GRAPH.node_hover == self) PANEL_GRAPH.node_hover = noone;
 		array_remove(PANEL_GRAPH.nodes_selecting, self);

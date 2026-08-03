@@ -3,7 +3,7 @@
 	global.FIX_POINTS = [];
 		
 	global.FIX_POINTS[0] = [];
-	global.FIX_POINTS[1] = [];
+	global.FIX_POINTS[1] = [[ 0, 0 ]];
 	global.FIX_POINTS[2] = [[ 0, 0 ], [ 1, 0 ], [ 0, 1 ], [ 1, 1 ]];
 	global.FIX_POINTS[3] = [[ 0, 0 ], [ -1, 0 ], [ 0, -1 ], [ 1, 0 ], [ 0, 1 ]];
 	global.FIX_POINTS[4] = [[ 0, 0 ], [ -1, 0 ], [ 0, -1 ], [ -1, -1 ], [ -2, -1 ], [ -2, 0 ], [ -1, -2 ], [ 0, -2 ], [ 1, -1 ], [ 1, 0 ], [ -1, 1 ], [ 0, 1 ]];

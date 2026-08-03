@@ -54,6 +54,7 @@ function Node_Threshold_Switch(_x, _y, _group = noone) : Node(_x, _y, _group) co
 		
 		inputs[index + 1] = nodeValue("Value", self, CONNECT_TYPE.input, VALUE_TYPE.any, 0 ).setVisible(false, false);
 		
+		postCreateNewInput(index);
 		return inputs[index + 0];
 	} 
 	

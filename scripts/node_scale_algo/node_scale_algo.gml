@@ -26,7 +26,7 @@ function Node_Scale_Algo(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	newActiveInput(3);
 	
 	////- =Surfaces
-	newInput( 0, nodeValue_Surface( "Surface In" ));
+	newInput( 0, nodeValue_Surface( "Surface In" )).setRequired();
 	
 	////- =Scale
 	newInput( 1, nodeValue_EScroll(  "Algorithm",  0, [ "Scale2x", "Scale3x", "CleanEdge" ])).setPieMenu();

@@ -326,11 +326,11 @@ function Node_Tile_Tileset(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 			
 			#region interaction
 				if(_hov && _mid > noone) {
-		    		     if(is(object_selecting, tiler_brush_autoterrain) && object_select_id != noone) TOOLTIP = "Set Autoterrain";
-					else if(is(object_selecting, tiler_brush_animated)    && object_select_id != noone) TOOLTIP = "Set Animated tile";
-					else if(is(object_selecting, tiler_rule)              && object_select_id != noone) TOOLTIP = "Set Rule selector";
-					else if(is(object_selecting, tiler_rule_replacement))  TOOLTIP = "Set Rule replacement";
-					else if(is(object_selecting, tilemap_convert_object))  TOOLTIP = "Set Replacement target";
+		    		     if(is(object_selecting, tiler_brush_autoterrain) && object_select_id != noone) setTOOLTIP("Set Autoterrain");
+					else if(is(object_selecting, tiler_brush_animated)    && object_select_id != noone) setTOOLTIP("Set Animated tile");
+					else if(is(object_selecting, tiler_rule)              && object_select_id != noone) setTOOLTIP("Set Rule selector");
+					else if(is(object_selecting, tiler_rule_replacement))  setTOOLTIP("Set Rule replacement");
+					else if(is(object_selecting, tilemap_convert_object))  setTOOLTIP("Set Replacement target");
 					
 					if(mouse_lpress(_focus)) {
 						if(is(object_selecting, tiler_brush_autoterrain) && object_select_id != noone) {
@@ -597,7 +597,7 @@ function Node_Tile_Tileset(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 				
 				if(_shov) {
 					if(object_selecting == noone) {
-						TOOLTIP = "Set empty";
+						setTOOLTIP("Set empty");
 						
 						if(mouse_lpress(_focus)) {
 							brush.brush_indices = [[[ -1, 0 ]]];
@@ -607,7 +607,7 @@ function Node_Tile_Tileset(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 						}
 						
 					} else if(is(object_selecting, tiler_rule)) {
-						TOOLTIP = "Set Rule selector";
+						setTOOLTIP("Set Rule selector");
 						
 						if(mouse_lpress(_focus)) {
 							if(object_select_id != noone)
@@ -630,7 +630,7 @@ function Node_Tile_Tileset(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 				_sx += _sw + ui(8);
 				
 				if(_shov) {
-					TOOLTIP = "Flip X";
+					setTOOLTIP("Flip X");
 					
 					if(mouse_lpress(_focus)) {
 						tile_selector_fx = !tile_selector_fx;
@@ -883,7 +883,7 @@ function Node_Tile_Tileset(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 				
 	    		if(_hov) {
 	    			if(is(object_selecting, tiler_rule)) {
-	    				TOOLTIP = "Set Rule selector";
+	    				setTOOLTIP("Set Rule selector");
 	    				
 	    				if(mouse_lpress(_focus)) {
 		    				if(object_select_id != noone)
@@ -893,7 +893,7 @@ function Node_Tile_Tileset(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	    				}
 	    				
 	    			} else if(is(object_selecting, tilemap_convert_object)) {
-	    				TOOLTIP = "Set Replacement target";
+	    				setTOOLTIP("Set Replacement target");
 	    				
 	    				if(mouse_lpress(_focus)) {
 		    				object_selecting.target = [ "terrain", i ];
@@ -1724,7 +1724,7 @@ function Node_Tile_Tileset(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 				
 	    		if(_hov) {
 	    			if(is(object_selecting, tiler_rule)) {
-	    				TOOLTIP = "Set Rule selector";
+	    				setTOOLTIP("Set Rule selector");
 	    				
 	    				if(mouse_lpress(_focus)) {
 		    				if(object_select_id != noone)
@@ -1733,7 +1733,7 @@ function Node_Tile_Tileset(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	    					triggerRender();
 	    				}
 	    			} else if(is(object_selecting, tiler_rule_replacement)) {
-	    				TOOLTIP = "Set Rule replacement";
+	    				setTOOLTIP("Set Rule replacement");
 	    				
 	    				if(mouse_lpress(_focus)) {
 	    					object_selecting.index = -(i + 2);
@@ -1741,7 +1741,7 @@ function Node_Tile_Tileset(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	    					triggerRender();
 	    				}
     				} else if(is(object_selecting, tilemap_convert_object)) {
-	    				TOOLTIP = "Set Replacement target";
+	    				setTOOLTIP("Set Replacement target");
 	    			
 	    				if(mouse_lpress(_focus)) {
 		    				object_selecting.target = -(i + 2);

@@ -13,7 +13,7 @@ function Node_Kuwahara(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	newInput( 6, nodeValue_Toggle( "Channel", 0b1111, { data: array_create(4, THEME.inspector_channel) }));
 	
 	////- =Surfaces
-	newInput( 0, nodeValue_Surface( "Surface In" ));
+	newInput( 0, nodeValue_Surface( "Surface In" )).setRequired();
 	newInput(14, nodeValue_Surface( "UV Map"     ));
 	newInput(15, nodeValue_Slider(  "UV Mix",  1 ));
 	newInput( 3, nodeValue_Surface( "Mask"       ));

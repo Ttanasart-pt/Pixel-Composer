@@ -1741,7 +1741,7 @@ event_inherited();
 		
 		node_focusing = -1;
 		
-		if(key_input_press(vk_up)) {
+		if(keyboard_check_pressed(vk_up)) {
 			if(PREFERENCES.dialog_add_node_view == 0) {
 				node_selecting = safe_mod(node_selecting - 1 + amo, amo);
 				node_focusing  = node_selecting;
@@ -1755,7 +1755,7 @@ event_inherited();
 			}
 		}
 		
-		if(key_input_press(vk_down)) {
+		if(keyboard_check_pressed(vk_down)) {
 			if(PREFERENCES.dialog_add_node_view == 0) {
 				node_selecting = safe_mod(node_selecting + 1, amo);
 				node_focusing  = node_selecting;

@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"panel_canvas_layer",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"panel_canvas_layer",
+  "parent":{
+    "name":"canvas",
+    "path":"folders/panels/nodes/canvas.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

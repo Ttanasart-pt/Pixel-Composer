@@ -12,7 +12,7 @@ function Node_Blur_Radial(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	
 	////- =Surfaces
 	newInput( 3, nodeValue_EScroll("Oversample mode", 0, [ "Empty", "Clamp", "Repeat" ]));
-	newInput( 0, nodeValue_Surface( "Surface In" ));
+	newInput( 0, nodeValue_Surface( "Surface In" )).setRequired();
 	newInput(12, nodeValue_Surface( "UV Map"     ));
 	newInput(13, nodeValue_Slider(  "UV Mix", 1  ));
 	newInput( 4, nodeValue_Surface( "Mask"       ));

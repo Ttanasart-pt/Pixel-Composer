@@ -45,9 +45,7 @@ function Node_pSystem_3D_Mask(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _
 	mask_sampler = undefined;
 	plane_normal = [ 0, 0, 1 ];
 	
-	static update = function(_frame = CURRENT_FRAME) { 
-		var _data = inputs_data;
-		
+	static processData = function(_outData, _data, _array_index = 0, _frame = CURRENT_FRAME) {
 		#region data
 			var i = in_d3d;
 			var _seed  = _data[i+2];
@@ -162,8 +160,10 @@ function Node_pSystem_3D_Mask(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _
 			buffer_write(mask_buffer, buffer_f32, _inf);
 		}
 		
-		outputs[0].setValue(_parts);
-		outputs[1].setValue(mask_buffer);
+		_outData[0] = _parts;
+		_outData[1] = mask_buffer;
+		
+		return _outData;
 	}
 	
 	static getPreviewObjects		= function() /*=>*/ {return shape_type == 0? array_append([getPreviewObject()], gizmo_object) : []};

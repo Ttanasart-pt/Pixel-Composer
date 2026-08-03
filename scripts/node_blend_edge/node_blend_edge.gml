@@ -12,7 +12,7 @@ function Node_Blend_Edge(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	newInput(4, nodeValue_Toggle( "Channel", 0b1111, { data: array_create(4, THEME.inspector_channel) }));
 	
 	////- =Surfaces
-	newInput(0, nodeValue_Surface( "Surface In" ));
+	newInput(0, nodeValue_Surface( "Surface In" )).setRequired();
 	
 	////- =Blend
 	newInput(2, nodeValue_EButton( "Types",       0, [ "Both", "Horizontal", "Vertical" ])).setPieMenu();

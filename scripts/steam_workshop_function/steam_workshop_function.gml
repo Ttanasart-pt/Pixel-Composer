@@ -233,7 +233,7 @@ function Patreon_project_item(_file) constructor {
 			if(_own) {
 				var cc = COLORS._main_icon;
 				if(_subHov) {
-					TOOLTIP = __txt("Open");
+					setTOOLTIP(__txt("Open"));
 					cc = COLORS._main_value_positive;
 					if(mouse_lpress(_focus)) LOAD_PATH(content_fpath, true);
 				}
@@ -246,7 +246,7 @@ function Patreon_project_item(_file) constructor {
 			} else {
 				draw_sprite_ui(THEME.download_inv_16, 0, _ox, _oy, 1, 1, 0, COLORS._main_value_positive, .8 + _subHov * .2);
 				if(_subHov) {
-					TOOLTIP = __txt("Download");
+					setTOOLTIP(__txt("Download"));
 					if(mouse_lpress(_focus)) downloadContent();
 				}
 			}
@@ -622,7 +622,7 @@ function Steam_workshop_item() constructor {
 			if(_own) {
 				if(_subHov) {
 					draw_sprite_ui(THEME.cross_inv_16, 0, _ox, _oy, 1, 1, 0, COLORS._main_value_negative, 1);
-					TOOLTIP = __txt("Unsubscribe");
+					setTOOLTIP(__txt("Unsubscribe"));
 					
 					if(mouse_lpress(_focus))
 						UGC_unsubscribe_item(_fid);
@@ -636,7 +636,7 @@ function Steam_workshop_item() constructor {
 			} else {
 				draw_sprite_ui(THEME.add_inv_16, 0, _ox, _oy, 1, 1, 0, COLORS._main_value_positive, .8 + _subHov * .2);
 				if(_subHov) {
-					TOOLTIP = __txt("Subscribe");
+					setTOOLTIP(__txt("Subscribe"));
 					
 					if(mouse_lpress(_focus))
 						UGC_subscribe_item(_fid);
@@ -650,7 +650,7 @@ function Steam_workshop_item() constructor {
 				var _subHov = _hover && point_in_rectangle(_m[0], _m[1], _ox - ui(8), _oy - ui(8), _ox + ui(8), _oy + ui(8));
 				if(_subHov) {
 					_hov = false;
-					TOOLTIP = "PXC hub";
+					setTOOLTIP("PXC hub");
 				}
 				draw_sprite_ui(THEME.pxc_hub, 0, _ox, _oy, 1, 1, 0, COLORS._main_accent, .8 + _subHov * .2);
 				
@@ -660,7 +660,7 @@ function Steam_workshop_item() constructor {
 		#endregion
 			
 		if(_hov) {
-			if(!_panel.hold_tooltip) TOOLTIP = self;
+			if(!_panel.hold_tooltip) setTOOLTIP(self);
 			
 			if(mouse_rpress(_focus)) {
 				menuCall("steam_workshop_item", [
@@ -795,24 +795,27 @@ function Steam_workshop_item() constructor {
 		
 		////////////////////////////////////////////////////////////
 		
-		var mx = min(mouse_mxs + _pd, WIN_W - (dw + _pd * 2));
-		var my = min(mouse_mys + _pd, WIN_H - (hh + _pd * 2));
+		var tww = dw + _pd * 2;
+		var thh = hh + _pd * 2;
 		
-		draw_sprite_stretched(THEME.textbox, 3, mx, my, dw + _pd * 2, hh + _pd * 2);
-		draw_sprite_stretched(THEME.textbox, 0, mx, my, dw + _pd * 2, hh + _pd * 2);
+		TOOLTIP_SURFACE = surface_verify(TOOLTIP_SURFACE, tww, thh);
+		surface_set_shader(TOOLTIP_SURFACE);
+		
+		draw_sprite_stretched(THEME.textbox, 3, 0, 0, tww, thh);
+		draw_sprite_stretched(THEME.textbox, 0, 0, 0, tww, thh);
 		
 		////////////////////////////////////////////////////////////
 		
-		var tx = mx + _pd;
-		var ty = my + ui(8);
+		var tx = _pd;
+		var ty = ui(8);
 		
 		draw_set_text(f_h5, fa_left, fa_top, COLORS._main_text);
 		draw_text_ext(tx, ty, title, -1, ww);
 		ty += string_height_ext(title, -1, ww) - ui(4);
 		
 		#region votes
-			var cx = mx + _pd + dw - ui(8);
-			var cy = my + ui(24);
+			var cx = _pd + dw - ui(8);
+			var cy = ui(24);
 			
 			var _vote_down = getVotesDown();
 			draw_sprite_ui(THEME.vote_down, 0, cx, cy, .5, .5, 0, COLORS._main_value_negative);
@@ -865,12 +868,13 @@ function Steam_workshop_item() constructor {
 					ty += hh + ui(2);
 				}
 				
-				draw_sprite_stretched_ext(THEME.box_r5_clr, 0, mx + ui(8) + tx, ty, _ww, hh, COLORS._main_icon, 1);
-				draw_text(mx + ui(8) + tx + ui(8), ty + hh / 2, tags_content[i]);
+				draw_sprite_stretched_ext(THEME.box_r5_clr, 0, ui(8) + tx, ty, _ww, hh, COLORS._main_icon, 1);
+				draw_text(ui(8) + tx + ui(8), ty + hh / 2, tags_content[i]);
 				
 				tx += _ww + ui(2);
 			}
 		}
+		surface_reset_shader();
 		
 	}
 	

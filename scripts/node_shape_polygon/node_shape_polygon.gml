@@ -203,8 +203,7 @@ function Node_Shape_Polygon(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 			draw_primitive_begin(pr_trianglelist);
 			
 			if(is(_mesh, Mesh)) {
-				
-				for( var j = 0; j < array_length(_mesh.triangles); j++ ) {
+				for( var j = 0, n = array_length(_mesh.triangles); j < n; j++ ) {
 					var tri = _mesh.triangles[j];
 					var p0  = _mesh.points[tri[0]];
 					var p1  = _mesh.points[tri[1]];

@@ -140,6 +140,9 @@ function draw_ellipse_prec(x0, y0, x1, y1, border, precision = 32) {
 // }
 
 function draw_ellipse_border(x0, y0, x1, y1, w = 1) {
+	draw_ellipse(x0, y0, x1, y1, true);
+	if(w == 1) return;
+	
     var cx = (x0 + x1) / 2;
     var cy = (y0 + y1) / 2;
     var ww = abs(x1 - x0) / 2;

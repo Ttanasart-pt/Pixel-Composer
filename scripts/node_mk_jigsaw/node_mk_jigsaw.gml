@@ -2,7 +2,7 @@ function Node_MK_Jigsaw(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	name = "MK Jigsaw";
 	
 	newInput( 3, nodeValueSeed());
-	newInput( 0, nodeValue_Surface( "Surface In" ));
+	newInput( 0, nodeValue_Surface( "Surface In" )).setRequired();
 	
 	////- =Pattern
 	newInput( 1, nodeValue_EScroll( "Pattern",    0, [ "Grid", "Polar" ] ));

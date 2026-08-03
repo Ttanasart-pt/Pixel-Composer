@@ -40,7 +40,7 @@ function clipboard_get_surface() {
 	return { buffer:b, surface:s1, w, h };
 }
 
-function clipboard_get_file() {
+function clipboard_get_filename() {
 	var f = clipboard_get_file(window_handle());
 	return f;
 }

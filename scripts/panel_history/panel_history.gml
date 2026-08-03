@@ -120,9 +120,10 @@ function Panel_History() : PanelContent() constructor {
 				_hover = i;
 				
 				if(array_length(item) > itamo) {
-					TOOLTIP = "";
+					var tt = "";
 					for( var j = 0; j < array_length(item); j++ ) 
-						TOOLTIP += (j? "\n" : "") + item[j].toString();
+						tt += (j? "\n" : "") + item[j].toString();
+					setTOOLTIP(tt);
 				}
 				
 				if(mouse_lclick() && click_hold != item) {

@@ -125,7 +125,7 @@ function Panel_Default_Editor(_node) : PanelContent() constructor {
 			draw_sprite_ui(THEME.path_open, 0, bx + bs/2, by + ah/2, .75, .75, 0, cc);
 			
 			if(hov) {
-				TOOLTIP = __txt("Open Default File...");
+				setTOOLTIP(__txt("Open Default File..."));
 				if(mouse_lpress(pFOCUS)) shellOpenExplorer(defPath);
 			}
 		} else {
@@ -146,7 +146,7 @@ function Panel_Default_Editor(_node) : PanelContent() constructor {
 			draw_sprite_ui(THEME.icon_delete, 0, _bx + bs/2, by + ah/2, 1, 1, 0, COLORS._main_value_negative);
 			
 			if(hov) {
-				TOOLTIP = __txt("Clear all Default Value(s)");
+				setTOOLTIP(__txt("Clear all Default Value(s)"));
 				if(mouse_lpress(pFOCUS)) {
 					file_delete_safe(defPath);
 					PRESETS_MAP[$ nodeType] = {}

@@ -3,6 +3,19 @@ if !ready exit;
 if palette == 0 exit;
 draggable = true;
 
+#region dropper
+	if(is_winwin(window)) winwin_set_visible(window, !selector.dropper_active);
+	
+	selector.interactable = interactable;
+	if(selector.dropper_active) { 
+		DIALOG_WINDOW_END
+		selector.drawDropper(self); 
+		exit;
+	}
+#endregion
+
+DIALOG_WINDOW_START
+
 #region hotkeys
 	if(sFOCUS) {
 		HOTKEY_BLOCK = true;
@@ -24,42 +37,34 @@ draggable = true;
 	}
 #endregion
 	
-#region dropper
-	selector.interactable = interactable;
-	if(selector.dropper_active) { selector.drawDropper(self); exit; }
-#endregion
-
 #region base UI
-	var presets_x = dialog_x;
-	var content_x = dialog_x + presets_w + ui(16);
-	var palette_x = content_x + content_w + ui(16);
+	var presets_x = _dialog_x;
+	var content_x = _dialog_x + presets_w;
+	var palette_x = content_x + content_w;
 	
 	var p   = DIALOG_PAD;
 	var p2  = DIALOG_PAD * 2;
 	var foc = sFOCUS || (FOCUS && FOCUS[$ "preFocus"] == id);
 	
-	draw_sprite_stretched(THEME.dialog, 0, presets_x - p, dialog_y - p, presets_w + p2, dialog_h + p2);
-	if(foc) draw_sprite_stretched_ext(THEME.dialog, 1, presets_x - p, dialog_y - p, presets_w + p2, dialog_h + p2, COLORS._main_accent, 1);
-	
-	draw_sprite_stretched(THEME.dialog, 0, content_x - p, dialog_y - p, content_w + p2, dialog_h + p2);
-	if(foc) draw_sprite_stretched_ext(THEME.dialog, 1, content_x - p, dialog_y - p, content_w + p2, dialog_h + p2, COLORS._main_accent, 1);
-	
-	draw_sprite_stretched(THEME.dialog, 0, palette_x - p, dialog_y - p, presets_w + p2, dialog_h + p2);
-	if(foc) draw_sprite_stretched_ext(THEME.dialog, 1, palette_x - p, dialog_y - p, presets_w + p2, dialog_h + p2, COLORS._main_accent, 1);
+	draw_sprite_stretched(THEME.dialog, 0, _dialog_x - p, _dialog_y - p, dialog_w + p2, dialog_h + p2);
+	draw_set_color(COLORS.panel_separator);
+	draw_line(content_x, _dialog_y, content_x, _dialog_y + dialog_h);
+	draw_line(palette_x, _dialog_y, palette_x, _dialog_y + dialog_h);
+	if(foc) draw_sprite_stretched_ext(THEME.dialog, 1, _dialog_x - p, _dialog_y - p, dialog_w + p2, dialog_h + p2, COLORS._main_accent, 1);
 	
 	draw_set_text(f_p1, fa_left, fa_top, COLORS._main_text);
-	draw_text(presets_x + ui(24), dialog_y + ui(16), __txt("Presets"));
-	draw_text(content_x + (!interactable * ui(32)) + ui(24), dialog_y + ui(16), name);
+	draw_text(presets_x + ui(24), _dialog_y + ui(16), __txt("Presets"));
+	draw_text(content_x + (!interactable * ui(32)) + ui(24), _dialog_y + ui(16), name);
 	if(!interactable)
-		draw_sprite_ui(THEME.lock, 0, content_x + ui(24 + 12), dialog_y + ui(16 + 12),,,, COLORS._main_icon);
-	draw_text(palette_x + ui(24), dialog_y + ui(16), __txt("Sub-Palettes"));
+		draw_sprite_ui(THEME.lock, 0, content_x + ui(24 + 12), _dialog_y + ui(16 + 12),,,, COLORS._main_icon);
+	draw_text(palette_x + ui(24), _dialog_y + ui(16), __txt("Sub-Palettes"));
 #endregion
 
 #region presets
 	var dgx = presets_x + pal_padding;
-	var dgy = dialog_y  + ui(48);
+	var dgy = _dialog_y + ui(48);
 	var dgw = presets_w - pal_padding * 2;
-	var dgh = dialog_h  - ui(48) - pal_padding;
+	var dgh =  dialog_h - ui(48) - pal_padding;
 	
 	draw_sprite_stretched(THEME.ui_panel_bg, 1, dgx, dgy, dgw, dgh);
 	
@@ -80,7 +85,7 @@ draggable = true;
 	
 	var bs = ui(24);
 	var bx = presets_x + presets_w - bs - ui(12);
-	var by = dialog_y + ui(14);
+	var by = _dialog_y + ui(14);
 	var bb  = THEME.button_hide_fill;
 	var hov = sHOVER, foc = sFOCUS;
 	var m   = mouse_ui;
@@ -113,7 +118,7 @@ draggable = true;
 
 #region sub-palette
 	var dgx = palette_x   + pal_padding;
-	var dgy = dialog_y    + ui(48);
+	var dgy = _dialog_y   + ui(48);
 	var dgw = subpreset_w - pal_padding * 2;
 	var dgh = dialog_h    - ui(48) - pal_padding;
 	
@@ -133,7 +138,7 @@ draggable = true;
 #region palette
 	#region tools
 		var bx = content_x + content_w - ui(10);
-		var by = dialog_y + ui(14);
+		var by = _dialog_y + ui(14);
 		
 		bx -= bs + ui(2);
 		var _txt = index_selecting[1] < 2? __txt("palette_editor_sort", "Sort palette") + "..." : __txt("palette_editor_sort_selected", "Sort selected") + "...";
@@ -199,7 +204,7 @@ draggable = true;
 				palette = loadPalette(path);
 				refreshPaletteObject();
 				
-				onModify(palette);
+				applyPalette(palette);
 			}
 		}
 		
@@ -236,13 +241,13 @@ draggable = true;
 			
 			palette = pal;
 			refreshPaletteObject();
-			onModify(palette);
+			applyPalette(palette);
 		}
 		
 	#endregion
 	
 	var pl_x = content_x + ui(26);
-	var pl_y = dialog_y  + ui(54);
+	var pl_y = _dialog_y + ui(54);
 	var pl_w = content_w - ui(26 + 94);
 	var hh   = ui(24);
 	
@@ -294,15 +299,15 @@ draggable = true;
 		var _kx = pl_x + j * ww;
 		var _ky = pl_y + i * hh;
 		
-		var _px = floor(_kx + pd) - dialog_x;
-		var _py = floor(_ky + pd) - dialog_y;
+		var _px = floor(_kx + pd) - _dialog_x;
+		var _py = floor(_ky + pd) - _dialog_y;
 		
 		_p.x = _p.x == 0? _px : lerp_float(_p.x, _px, 4);
 		_p.y = _p.y == 0? _py : lerp_float(_p.y, _py, 4);
 		
 		var _selecting = index >= index_selecting[0] && index < index_selecting[0] + index_selecting[1];
-		var _pdx = dialog_x + _p.x;
-		var _pdy = dialog_y + _p.y;
+		var _pdx = _dialog_x + _p.x;
+		var _pdy = _dialog_y + _p.y;
 		
 		var _ind = 0;
 		
@@ -345,8 +350,8 @@ draggable = true;
 			
 			if(index >= index_selecting[0] && index < index_selecting[0] + index_selecting[1]) {
 				var _p  = paletteObject[index];
-				var _px = dialog_x + _p.x - pl_sx;
-				var _py = dialog_y + _p.y - pl_sy;
+				var _px = _dialog_x + _p.x - pl_sx;
+				var _py = _dialog_y + _p.y - pl_sy;
 				
 				drawColor(_p.color, _px, _py, _pw, _ph, true, _palInd[index]);
 			}
@@ -475,7 +480,7 @@ draggable = true;
 			index_selecting = [ 0, 0 ];
 			
 			refreshPaletteObject();
-			onModify(palette);
+			applyPalette(palette);
 		}
 	} else
 		draw_sprite_ui_uniform(THEME.minus, 0, bx + ui(14), by + ui(14), 1, COLORS._main_icon, 0.5);
@@ -486,14 +491,14 @@ draggable = true;
 		palette[array_length(palette)] = selector.current_color;
 		
 		refreshPaletteObject();
-		onModify(palette);
+		applyPalette(palette);
 	}
 	
 #endregion
 
 #region selector
 	var con_x = content_x + ui(20);
-	var con_y = dialog_y  + ui(70) + pl_h;
+	var con_y = _dialog_y + ui(70) + pl_h;
 		
 	var con_w = content_w - ui(40);
 	var con_h = dialog_h  - (ui(70) + pl_h + ui(64));
@@ -523,7 +528,7 @@ draggable = true;
 
 #region controls
 	var bx = content_x + content_w - ui(36);
-	var by = dialog_y + dialog_h - ui(36);
+	var by = _dialog_y + dialog_h - ui(36);
 	
 	b_apply.register();
 	b_apply.setFocusHover(sFOCUS, sHOVER);
@@ -534,3 +539,5 @@ draggable = true;
 	b_cancel.setFocusHover(sFOCUS, sHOVER);
 	b_cancel.draw(bx - ui(18), by - ui(18), ui(36), ui(36), mouse_ui, THEME.button_hide_fill);
 #endregion
+
+DIALOG_WINDOW_END

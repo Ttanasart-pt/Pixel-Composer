@@ -74,6 +74,7 @@
 	}
 	
 	function __loadPanelStruct(panel, str) {
+		var focPanel = undefined;
 		var cont = str.content;
 		
 		panel.tab_align     = str[$ "tab_align"]     ?? 0;
@@ -85,12 +86,13 @@
 			else if(str.split == "h") pan = panel.split_h(ui(str.width));
 			
 			if(pan != noone) {
-				__loadPanelStruct(pan[0], cont[0]);
-				__loadPanelStruct(pan[1], cont[1]);
+				var _f = __loadPanelStruct(pan[0], cont[0]); focPanel = focPanel ?? _f;
+				var _f = __loadPanelStruct(pan[1], cont[1]); focPanel = focPanel ?? _f;
 			}
 			
 		} else {
 			if(!is_array(cont)) cont = [ cont ];
+			var is_main = str[$ "main"] ?? false;
 			
 			for( var i = 0, n = array_length(cont); i < n; i++ ) {
 				var _content = cont[i];
@@ -100,13 +102,16 @@
 				var _pnCont = getPanelFromName(_key, true);
 				if(_pnCont == noone) continue; 
 				
+				if(is_main) focPanel = _pnCont;
 				panel.setContent(_pnCont);
 				if(is_struct(_content))
 					_pnCont.deserialize(_content);
 			}
 		}
 		
-		PANEL_MODIFIED = false;
+		if(panel.isGlobal()) PANEL_MODIFIED = false;
+		
+		return focPanel;
 	}
 	
 	function loadPanel(path) {
@@ -301,13 +306,14 @@
 				var p = [];
 				
 				if(panel_split == 4) { 
-					if(panel_hovering == PANEL_MAIN) { //pop out
+					if(panel_hovering == PANEL_MAIN) { // Pop out
 						var panel = instanceof(panel_dragging) == "Panel"? panel_dragging.content : panel_dragging;
 						dialogPanelCall(panel);
+						
 					} else 
 						panel_hovering.setContent(panel_dragging, true);
 						
-				} else if(panel_hovering == PANEL_MAIN) { //split main panel
+				} else if(panel_hovering == PANEL_MAIN) { // Split main panel
 					var panel = new Panel(noone, ui(2), ui(2), WIN_SW - ui(4), WIN_SH - ui(4));
 					var main  = PANEL_MAIN;
 					

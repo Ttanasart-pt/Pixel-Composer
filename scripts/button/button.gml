@@ -131,7 +131,7 @@ function buttonClass(_onClick, _icon = noone) : widget() constructor {
 						tooltip.index = tooltipIndexFn(params);
 				}
 				
-				TOOLTIP = ttip;
+				setTOOLTIP(ttip);
 			}
 			
 			if(onWUp   != undefined && key_mod_press(SHIFT) && MOUSE_WHEEL > 0) onWUp();
@@ -222,7 +222,7 @@ function buttonInstant(spr, _x, _y, _w, _h, _m, _hvr, _act, _tip = "",
 			
 		res = 1;
 		if(spr) draw_sprite_stretched_ext(spr, 1, _x, _y, _w, _h, _button_blend);
-		if(_tip != "") TOOLTIP = _tip;
+		if(_tip != "") setTOOLTIP(_tip);
 			
 		if(mouse_lpress(_act))   res = 2;
 		if(mouse_rpress(_act))   res = 3;
@@ -260,7 +260,7 @@ function buttonInstant_Pad(spr, _x, _y, _w, _h, _m, _hvr, _act, _tip = "",
 			
 		res = 1;
 		if(spr) draw_sprite_stretched_ext(spr, 1, _x, _y, _w, _h, _button_blend);
-		if(_tip != "") TOOLTIP = _tip;
+		if(_tip != "") setTOOLTIP(_tip);
 			
 		if(mouse_lpress(_act))		res = 2;
 		if(mouse_rpress(_act))		res = 3;
@@ -305,7 +305,7 @@ function buttonInstant_Icon(_cx, _cy, _s, _m, _hvr, _act, _tip = "",
 		cc = _icon_blend_hover;
 			
 		res = 1;
-		if(_tip != "") TOOLTIP = _tip;
+		if(_tip != "") setTOOLTIP(_tip);
 		
 		if(mouse_lpress(_act))		res = 2;
 		if(mouse_rpress(_act))		res = 3;

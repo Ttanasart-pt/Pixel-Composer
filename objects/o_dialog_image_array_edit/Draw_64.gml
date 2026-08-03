@@ -5,12 +5,12 @@ if !target exit;
 DIALOG_DRAW_BG
 #region base UI
 	draw_set_text(f_p0, fa_left, fa_top, COLORS._main_text);
-	draw_text(dialog_x + ui(padding), dialog_y + ui(20), __txt("array_edit_title", "Image array edit"));
+	draw_text(_dialog_x + ui(padding), _dialog_y + ui(20), __txt("array_edit_title", "Image array edit"));
 #endregion
 
 #region content
-	var px = dialog_x + ui(padding);
-	var py = dialog_y + ui(title_height);
+	var px = _dialog_x + ui(padding);
+	var py = _dialog_y + ui(title_height);
 	var pw = dialog_w - ui(padding + padding);
 	var ph = dialog_h - ui(title_height + padding);
 	
@@ -22,8 +22,8 @@ DIALOG_DRAW_BG
 #region button
 	var bw = ui(28);
 	var bh = ui(28);
-	var bx = dialog_x + dialog_w - ui(padding - 8) - bw;
-	var by = dialog_y + ui(18);
+	var bx = _dialog_x + dialog_w - ui(padding - 8) - bw;
+	var by = _dialog_y + ui(18);
 	
 	if(buttonInstant(THEME.button_hide_fill, bx, by, bw, bh, mouse_ui, sHOVER, sFOCUS, __txt("Add") + "...", THEME.add,, COLORS._main_value_positive) == 2) {
 		

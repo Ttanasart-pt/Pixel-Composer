@@ -2,7 +2,7 @@ function Node_Optical_Flow(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	name = "Optical Flow";
 	setCacheManual();
 	
-	newInput( 0, nodeValue_Surface("Surface In"));
+	newInput( 0, nodeValue_Surface("Surface In")).setRequired();
 	
 	////- =Optical Flow
 	newInput( 1, nodeValue_Float(  "Radius",    4 )).setPieMenu();

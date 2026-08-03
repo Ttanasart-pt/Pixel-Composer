@@ -47,7 +47,6 @@ function canvas_tool_node(_canvas, _node) : canvas_tool() constructor {
 	}
 	
 	static init = function() {
-		
 		applySelection = canvas.selection.is_selected;
 		sourceSurface  = applySelection? canvas.selection.selection_surface : canvas.getCanvasSurface();
 		if(!is_surface(sourceSurface)) return noone;

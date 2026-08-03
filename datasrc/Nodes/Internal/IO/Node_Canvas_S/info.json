@@ -1,0 +1,7 @@
+{
+    "name":          "Canvas",
+    "tooltip":       "Draw on surface",
+    "spr":           "s_node_canvas",
+    "baseNode":      "Node_Canvas_S",
+    "pxc_version":    0,
+}

@@ -124,7 +124,7 @@ function Node_Armature_Mesh_Rig(_x, _y, _group = noone) : Node(_x, _y, _group) c
 				
 				if(_m[0] < _x + ui(36)) {
 					draw_sprite_stretched_ext(THEME.checkbox_def, 1, _x + ui(16), ty + ui(4), ui(20), ui(20), c_white);
-					TOOLTIP = "Include in autoweight";
+					setTOOLTIP("Include in autoweight");
 					
 					if(mouse_lpress(_focus)) {
 						if(attributes.rigBones == noone)
@@ -149,7 +149,7 @@ function Node_Armature_Mesh_Rig(_x, _y, _group = noone) : Node(_x, _y, _group) c
 				
 				if(_m[0] > _ix - ui(12)) {
 					_cc = COLORS._main_value_negative;
-					TOOLTIP = "Clear weight";
+					setTOOLTIP("Clear weight");
 					
 					if(mouse_lpress(_focus) && struct_has(attributes.bakeData, _bone.ID)) {
 						var _wdata = attributes.bakeData[$ _bone.ID];

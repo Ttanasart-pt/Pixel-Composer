@@ -10,7 +10,7 @@ function Node_Palette_Extract(_x, _y, _group = noone) : Node_Processor(_x, _y, _
 	setDimension(96, 48);
 	
 	////- =Surfaces
-	newInput(0, nodeValue_Surface( "Surface In" ));
+	newInput(0, nodeValue_Surface( "Surface In" )).setRequired();
 	newInput(5, nodeValue_Surface( "Mask" ));
 	
 	////- =Palette

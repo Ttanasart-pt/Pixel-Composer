@@ -42,16 +42,14 @@ function Node_pSystem_3D_Clone(_x, _y, _group = noone) : Node_3D(_x, _y, _group)
 		}
 	}
 	
-	static update = function(_frame = CURRENT_FRAME) { 
-		var _data = inputs_data;
-		
-		var _parts = getInputData(0);
-		var _masks = getInputData(1), use_mask = _masks != noone;
+	static processData = function(_outData, _data, _array_index = 0, _frame = CURRENT_FRAME) {
+		var _parts = _data[0];
+		var _masks = _data[1], use_mask = _masks != noone;
 		
 		if(!is(_parts, pSystem_Particles)) return;
 		if(use_mask) buffer_to_start(_masks);
 		
-		var _seed = getInputData( 2);
+		var _seed = _data[2];
 		
 		var _poolSize = _parts.poolSize;
 		var _partAmo  = _parts.maxCursor;
@@ -68,8 +66,10 @@ function Node_pSystem_3D_Clone(_x, _y, _group = noone) : Node_3D(_x, _y, _group)
 			buffer_copy(_parts.buffer, 0, _bufSize, partPool.buffer, 0);
 		}
 		
-		outputs[0].setValue(_parts);
-		outputs[1].setValue(partPool);
+		_outData[0] = _parts;
+		_outData[1] = partPool;
+		
+		return _outData;
 	}
 	
 }

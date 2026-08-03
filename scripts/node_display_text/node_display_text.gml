@@ -229,7 +229,7 @@ function Node_Display_Text(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 									case "animation" :  FOCUSING_PANEL = PANEL_ANIMATION;  break;
 									case "collection" : FOCUSING_PANEL = PANEL_COLLECTION; break;
 									
-									case "add node" :   TOOLTIP = "Right click on an empty area in the Graph Panel."; break;
+									case "add node" :   setTOOLTIP("Right click on an empty area in the Graph Panel."); break;
 								}
 							}
 							
@@ -262,7 +262,7 @@ function Node_Display_Text(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 							
 							if(PANEL_GRAPH.node_hovering == self && point_in_rectangle(_mx, _my, _tx0, _ty0, _tx1, _ty1)) {
 								draw_sprite_stretched_points(THEME.box_r2, 1, _tx0, _ty0, _tx1, _ty1, COLORS._main_icon);
-								TOOLTIP = new tooltipHotkey(_txt, _key);
+								setTOOLTIP(new tooltipHotkey(_txt, _key));
 							}
 							
 							draw_set_color(_cc);

@@ -783,7 +783,7 @@
 		[ "animation_render",    function( ) /*=>*/ { PROJECT.animator.render();    }],
 		
 		//panel
-		[ "set_tooltip", function(txt) /*=>*/ { TOOLTIP = txt; }],
+		[ "set_tooltip", function(txt) /*=>*/ { setTOOLTIP(txt); }],
 		
 		[ "panel_get", function(type) {
 			switch(type) {
