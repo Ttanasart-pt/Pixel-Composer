@@ -6,6 +6,11 @@
         "date": "2026-08-03T02:54:06.261Z",
         "node": "Inspector Panel",
         "commit": "**Inspector Panel**: Fix setting attribute for multiple nodes not refresh the nodes."
+      },
+      {
+        "date": "2026-08-03T03:07:16.883Z",
+        "node": "Graph Panel",
+        "commit": "**Graph Panel**: Fix bypass output drawn too low."
       }
     ]
   },

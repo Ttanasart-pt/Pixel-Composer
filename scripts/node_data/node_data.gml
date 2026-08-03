@@ -998,10 +998,23 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		
 		outputDisplayList = [];
 		
-		array_foreach(outputs, function(jun,i) /*=>*/ { if(jun.isVisible()) array_push(outputDisplayList, jun);                 return true; });
-		array_foreach(inputs,  function(jun,i) /*=>*/ { if(jun.bypass_use)  array_push(outputDisplayList, jun.getBypassJunc()); return true; });
+		array_foreach(outputs, function(jun,i) /*=>*/ { 
+			if(jun.isVisible()) array_push(outputDisplayList, jun);
+			return true; 
+		});
 		
-		if(attributes.outp_meta) array_foreach(junc_meta, function(jun,i) /*=>*/ { if(jun.isVisible()) array_push(outputDisplayList, jun); return true; });
+		array_foreach(inputs,  function(jun,i) /*=>*/ { 
+			if(!jun.bypass_use) return true;
+			
+			var j = jun.getBypassJunc();
+			if(j.visible) array_push(outputDisplayList, jun.getBypassJunc()); 
+			return true; 
+		});
+		
+		if(attributes.outp_meta) array_foreach(junc_meta, function(jun,i) /*=>*/ { 
+			if(jun.isVisible()) array_push(outputDisplayList, jun); 
+			return true; 
+		});
 	}
 	
 	static onIOValidate = function() {
@@ -2005,7 +2018,8 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		__mx = _mx;
 		__my = _my;
 		
-		array_foreach(inputs, function(jun) /*=>*/ { jun.x = _ix; jun.y = _iy; });
+		array_foreach(inputs,  function(jun,i) /*=>*/ { jun.x = _ix; jun.y = _iy; return true; });
+		array_foreach(outputs, function(jun,i) /*=>*/ { jun.x = _ox; jun.y = _oy; return true; });
 		
 		inputDisplayGroup = [];
 		_curr_group  = noone;
@@ -2013,7 +2027,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		
 		_dummy_curr  = 0; 
 		_dummy_start = 0;
-		_dummy = _dummy && key_mod_press(CTRL);
+		_dummy       = _dummy && key_mod_press(CTRL);
 		if(_dummy) dummy_insert = 0;
 		
 		array_foreach(inputDisplayList, function(jun, i) /*=>*/ { 
@@ -2071,8 +2085,6 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			return true;
 		});
 		
-		// array_foreach(outputs_draw_index, (jun, i) => { 
-		// 	jun = outputs[jun]; 
 		array_foreach(outputDisplayList, function(jun, i) /*=>*/ { 
 			jun.x = _ox; jun.rx = _rox; 
 			jun.y = _oy; jun.ry = _roy; 
@@ -2092,17 +2104,11 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 				jun.draw_group_object = _curr_group;
 			}
 			
-			var __vis = jun.isVisible();
-			_roy += junction_outp_hei_y * __vis 
-			_oy  += junction_outp_hei_y * __vis * __s; 
+			_roy += junction_outp_hei_y; 
+			_oy  += junction_outp_hei_y * __s; 
 			
 			return true;
 		});
-		
-		array_foreach(inputs,    function(jun,i) /*=>*/ { if(!jun.bypass_use) return; jun = jun.getBypassJunc(); if(!jun.visible) return; 
-		                                    jun.x = _ox; jun.y = _oy; _oy += junction_draw_hei_y * jun.visible * __s; });
-		
-		array_foreach(junc_meta, function(jun,i) /*=>*/ { jun.x = _ox; jun.y = _oy; _oy += junction_draw_hei_y * jun.isVisible() * __s; });
 		
 		if(SHOW_PARAM) h = h_param;
 		if(onPreDraw) onPreDraw(_x, _y, _s, _iy, _oy);
