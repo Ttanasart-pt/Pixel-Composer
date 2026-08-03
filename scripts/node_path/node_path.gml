@@ -1042,7 +1042,7 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 			var n0 = [ a0[_ANCHOR.x], a0[_ANCHOR.y], a0[_ANCHOR.c1x], a0[_ANCHOR.c1y], a0[_ANCHOR.c2x], a0[_ANCHOR.c2y], a0[_ANCHOR.ind] ];
 			var n1 = [ a1[_ANCHOR.x], a1[_ANCHOR.y], a1[_ANCHOR.c1x], a1[_ANCHOR.c1y], a1[_ANCHOR.c2x], a1[_ANCHOR.c2y], a1[_ANCHOR.ind] ];
 			
-			if(a0[_ANCHOR.c1x] == 0 && a0[_ANCHOR.c1y] == 0 && a0[_ANCHOR.c2x] == 0 && a0[_ANCHOR.c2y] == 0 && a1[_ANCHOR.c1x] == 0 && a1[_ANCHOR.c1y] == 0 && a1[_ANCHOR.c2x] == 0 && a1[_ANCHOR.c2y] == 0) {
+			if(a0[_ANCHOR.c2x] == 0 && a0[_ANCHOR.c2y] == 0 && a1[_ANCHOR.c1x] == 0 && a1[_ANCHOR.c1y] == 0) {
 				n0[0] = a0[0] + dx;
 				n0[1] = a0[1] + dy;
 				
