@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.8.004",
+    "changes": [
+      {
+        "date": "2026-08-03T03:25:27.040Z",
+        "node": "Composite Tag",
+        "commit": "**Composite Tag**: Fix surface not clear before updating."
+      }
+    ]
+  },
+  {
     "version": "1.21.8.003",
     "changes": [
       {

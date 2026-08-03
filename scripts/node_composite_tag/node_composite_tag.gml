@@ -101,8 +101,11 @@ function Node_Composite_Tag(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
         var _cy = round(_dim[1] / 2 - (miny + maxy) / 2);
         
         _outSurf   = surface_verify(_outSurf, _dim[0], _dim[1]);
-        for( var i = 0, n = array_length(temp_surface); i < n; i++ ) 
+        for( var i = 0, n = array_length(temp_surface); i < n; i++ ) {
         	temp_surface[i] = surface_verify(temp_surface[i], _dim[0], _dim[1]);
+        	surface_clear(temp_surface[i]);
+        }
+        
 		blend_temp_surface = temp_surface[2];
 		
         var _trans = array_create(_amo, noone);
