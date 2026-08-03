@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.8.004",
+    "changes": [
+      {
+        "date": "2026-08-03T02:54:06.261Z",
+        "node": "Inspector Panel",
+        "commit": "**Inspector Panel**: Fix setting attribute for multiple nodes not refresh the nodes."
+      }
+    ]
+  },
+  {
     "version": "1.21.8.003",
     "changes": [
       {

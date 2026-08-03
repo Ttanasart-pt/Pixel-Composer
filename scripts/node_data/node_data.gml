@@ -249,37 +249,55 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			project.modified = true; 
 			
 			if(PANEL_INSPECTOR) PANEL_INSPECTOR.__attribute_set_msg = { key:k, value:v, render:r };
+			
+			switch(k) {
+				case "cache":
+					checkCache();
+					break;
+					
+				case "node_width" :
+				case "node_height" :
+				case "preview_size" :
+				case "node_param_width" :
+					attributes.resizeManual = true;
+					break;
+				
+				case "show_timeline":
+					anim_timeline = attributes.show_timeline;
+					refreshTimeline();
+					break;
+					
+				case "show_parameter":	
+					GraphRefresh(2);
+					break;
+			}
+			
 			return self;
 		}
 		
 		toggleAttribute = function(k,r=0) /*=>*/ {return setAttribute(k, !attributes[$ k], r)};
 		
-		attrCacheEdit = Node_Attribute("Cache Output", function() /*=>*/ {return attributes.cache},  function() /*=>*/ {return new checkBox(function() /*=>*/ { toggleAttribute("cache", true); checkCache(); })});
+		attrCacheEdit = Node_Attribute("Cache Output", function() /*=>*/ {return attributes.cache},  function() /*=>*/ {return new checkBox(function() /*=>*/ {return toggleAttribute("cache", true)} )});
 		
 		array_append(attributeEditors, [
 			"Display",  
-			Node_Attribute("Annotation",     function() /*=>*/ {return attributes.annotation},       function() /*=>*/ {return textArea_Text( function(v) /*=>*/ { setAttribute("annotation", v,  2); })} ),
-			Node_Attribute("Show Preview",   function() /*=>*/ {return attributes.show_preview},     function() /*=>*/ {return new checkBox(function() /*=>*/ { toggleAttribute("show_preview",   2); })} ),
-			Node_Attribute("Parameter View", function() /*=>*/ {return attributes.show_parameter},   function() /*=>*/ {return new checkBox(function() /*=>*/ { toggleAttribute("show_parameter", 2); GraphRefresh(2); })} ),
+			Node_Attribute("Annotation",     function() /*=>*/ {return attributes.annotation},       function() /*=>*/ {return textArea_Text( function(v) /*=>*/ {return setAttribute("annotation", v,  2)})} ),
+			Node_Attribute("Show Preview",   function() /*=>*/ {return attributes.show_preview},     function() /*=>*/ {return new checkBox(function() /*=>*/ {return toggleAttribute("show_preview",   2)})} ),
+			Node_Attribute("Parameter View", function() /*=>*/ {return attributes.show_parameter},   function() /*=>*/ {return new checkBox(function() /*=>*/ {return toggleAttribute("show_parameter", 2)})} ),
 			
 			"Size",  
-			Node_Attribute("Node Width",     function() /*=>*/ {return attributes.node_width},       function() /*=>*/ {return textBox_Number(function(v) /*=>*/ { attributes.resizeManual = true; setAttribute("node_width", v, 2);            })} ),
-			Node_Attribute("Node Height",    function() /*=>*/ {return attributes.node_height},      function() /*=>*/ {return textBox_Number(function(v) /*=>*/ { attributes.resizeManual = true; setAttribute("node_height", v, 2);           })} ),
-			Node_Attribute("Preview Height", function() /*=>*/ {return attributes.preview_size},     function() /*=>*/ {return textBox_Number(function(v) /*=>*/ { attributes.resizeManual = true; setAttribute("preview_size", max(32, v, 2)); })} ),
-			Node_Attribute("Params Width",   function() /*=>*/ {return attributes.node_param_width}, function() /*=>*/ {return textBox_Number(function(v) /*=>*/ { attributes.resizeManual = true; setAttribute("node_param_width", v, 2);      })} ),
+			Node_Attribute("Node Width",     function() /*=>*/ {return attributes.node_width},       function() /*=>*/ {return textBox_Number(function(v) /*=>*/ {return setAttribute("node_width", v, 2)})}            ),
+			Node_Attribute("Node Height",    function() /*=>*/ {return attributes.node_height},      function() /*=>*/ {return textBox_Number(function(v) /*=>*/ {return setAttribute("node_height", v, 2)})}           ),
+			Node_Attribute("Preview Height", function() /*=>*/ {return attributes.preview_size},     function() /*=>*/ {return textBox_Number(function(v) /*=>*/ {return setAttribute("preview_size", max(32, v, 2))})} ),
+			Node_Attribute("Params Width",   function() /*=>*/ {return attributes.node_param_width}, function() /*=>*/ {return textBox_Number(function(v) /*=>*/ {return setAttribute("node_param_width", v, 2)})}      ),
 			
 			"Node",
 			attrCacheEdit,
-			Node_Attribute("Auto Update",       function() /*=>*/ {return attributes.update_graph},        function() /*=>*/ {return new checkBox(function() /*=>*/ { toggleAttribute("update_graph", 2);        })} ),
-			Node_Attribute("Render Frame Input",function() /*=>*/ {return attributes.show_render_frame},   function() /*=>*/ {return new checkBox(function() /*=>*/ { toggleAttribute("show_render_frame", 2);   })} ),
-			Node_Attribute("Update Trigger",    function() /*=>*/ {return attributes.show_update_trigger}, function() /*=>*/ {return new checkBox(function() /*=>*/ { toggleAttribute("show_update_trigger", 2); })} ),
-			Node_Attribute("Output Metadata",   function() /*=>*/ {return attributes.outp_meta},           function() /*=>*/ {return new checkBox(function() /*=>*/ { toggleAttribute("outp_meta", 2);           })} ),
-			Node_Attribute("Show In Timeline",  function() /*=>*/ {return attributes.show_timeline},       
-				function() /*=>*/ {return new checkBox(function() /*=>*/ { toggleAttribute("show_timeline"); 
-					anim_timeline = attributes.show_timeline;
-					refreshTimeline();
-				})}
-			),
+			Node_Attribute("Auto Update",       function() /*=>*/ {return attributes.update_graph},        function() /*=>*/ {return new checkBox(function() /*=>*/ {return toggleAttribute("update_graph", 2)})}        ),
+			Node_Attribute("Render Frame Input",function() /*=>*/ {return attributes.show_render_frame},   function() /*=>*/ {return new checkBox(function() /*=>*/ {return toggleAttribute("show_render_frame", 2)})}   ),
+			Node_Attribute("Update Trigger",    function() /*=>*/ {return attributes.show_update_trigger}, function() /*=>*/ {return new checkBox(function() /*=>*/ {return toggleAttribute("show_update_trigger", 2)})} ),
+			Node_Attribute("Output Metadata",   function() /*=>*/ {return attributes.outp_meta},           function() /*=>*/ {return new checkBox(function() /*=>*/ {return toggleAttribute("outp_meta", 2)})}           ),
+			Node_Attribute("Show In Timeline",  function() /*=>*/ {return attributes.show_timeline},       function() /*=>*/ {return new checkBox(function() /*=>*/ {return toggleAttribute("show_timeline")})}          ),
 		]);
 			
 		static attrDepth = function() {
