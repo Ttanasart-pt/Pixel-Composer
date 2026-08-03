@@ -1,6 +1,7 @@
 function Node_Anim_Loop(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Frame Loop";
-	is_simulation = true;
+	update_on_frame = true;
+	is_simulation   = true;
 	
 	newInput( 0, nodeValue_Surface("Surface"));
 	
