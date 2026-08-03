@@ -881,6 +881,21 @@ function Node_Armature(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 			anchor_selecting = _b.draw(attributes, false, _x, _y, _s, _mx, _my, anchor_selecting, builder_bone);
 			_b.drawControl(attributes);
 			
+			var dx = mx - builder_mx;
+			var dy = my - builder_my;
+			
+			if(builder_type == ARMATURE_DRAG_TYPE.move && key_mod_press(SHIFT)) {
+				draw_set_color(COLORS._main_accent);
+				var dmsx = _x + builder_mx * _s;
+				var dmsy = _y + builder_my * _s;
+				
+				if(abs(dx) > abs(dy)) { dy = 0; draw_line_dashed(0, dmsy, panel.w, dmsy); }
+				if(abs(dx) < abs(dy)) { dx = 0; draw_line_dashed(dmsx, 0, dmsx, panel.h); }
+			}
+			
+			var smx = PANEL_PREVIEW.snapX(builder_mx + dx);
+			var smy = PANEL_PREVIEW.snapY(builder_my + dy);
+			
 			var dir = point_direction( builder_sx, builder_sy, smx, smy );
 			var dis = point_distance(  builder_sx, builder_sy, smx, smy );
 			
@@ -990,6 +1005,9 @@ function Node_Armature(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 						
 						builder_sx   = smx;
 						builder_sy   = smy;
+						builder_mx   = mx;
+						builder_my   = my;
+						
 						UNDO_HOLDING = true;
 						bones.setPosition();
 						
@@ -999,6 +1017,9 @@ function Node_Armature(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 						
 						builder_sx   = smx;
 						builder_sy   = smy;
+						builder_mx   = mx;
+						builder_my   = my;
+						
 						UNDO_HOLDING = true;
 						bones.setPosition();
 						
@@ -1039,6 +1060,9 @@ function Node_Armature(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 				if(mouse_lpress(active)) {
 					builder_bone = createBone(bones, point_distance(0, 0, smx, smy), point_direction(0, 0, smx, smy));
 					builder_bone.control = true;
+					
+					builder_mx   = mx;
+					builder_my   = my;
 				}
 				
 				draw_sprite_ui(THEME.bone_tool_add_control, 0, _mx + 24, _my + 24, 1, 1, 0, c_white, 1);
@@ -1270,6 +1294,9 @@ function Node_Armature(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 					bone_select   = [];
 					bone_selected = false;
 					
+					builder_mx   = mx;
+					builder_my   = my;
+					
 					var _bind = array_find(bone_points, _bne);
 					if(_bind > -1) {
 						bone_select   = [ _bind, _bind + 1, _bind + 2 ];
@@ -1293,8 +1320,6 @@ function Node_Armature(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 						builder_sv = point_direction(orig.x, orig.y, mx, my);
 						builder_sx = orig.x;
 						builder_sy = orig.y;
-						builder_mx = mx;
-						builder_my = my;
 						
 					} 
 					

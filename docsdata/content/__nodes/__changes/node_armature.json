@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.8.004",
+    "changes": [
+      {
+        "date": "2026-08-03T06:18:42.891Z",
+        "node": "Armature Create/ Pose",
+        "commit": "**Armature Create/ Pose**: Add shift for axis align."
+      }
+    ]
+  },
+  {
     "version": "1.21.7.102",
     "changes": [
       {

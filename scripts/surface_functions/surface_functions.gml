@@ -4,10 +4,6 @@
 	
 	#macro surface_set_target surface_set_target_winwin
 	#macro __surface_set_target surface_set_target
-	
-	#macro surface_reset_target surface_reset_target_winwin
-	#macro __surface_reset_target surface_reset_target
-	
 	function surface_set_target_winwin(_surf) {
 		if(ds_stack_size(SURFACE_STACK)) 
 			__surface_reset_target();
@@ -16,6 +12,18 @@
 		ds_stack_push(SURFACE_STACK, _surf);
 	}
 	
+	#macro surface_set_target_ext surface_set_target_ext_winwin
+	#macro __surface_set_target_ext surface_set_target_ext
+	function surface_set_target_ext_winwin(_ind, _surf) {
+		if(_ind == 0 && ds_stack_size(SURFACE_STACK)) 
+			__surface_reset_target();
+		
+		__surface_set_target_ext(_ind, _surf);
+		if(_ind == 0) ds_stack_push(SURFACE_STACK, _surf);
+	}
+	
+	#macro surface_reset_target surface_reset_target_winwin
+	#macro __surface_reset_target surface_reset_target
 	function surface_reset_target_winwin() {
 		__surface_reset_target();
 		ds_stack_pop(SURFACE_STACK);

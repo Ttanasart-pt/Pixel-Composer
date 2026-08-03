@@ -604,10 +604,23 @@ function Node_Armature_Pose(_x, _y, _group = noone) : Node(_x, _y, _group) const
 			_HIGHLIGHT_PROP = posing_input;
 			var val = array_clone(posing_input.getValue());
 			
+			var dx = smx - posing_mx;
+			var dy = smy - posing_my;
+				
+			if(key_mod_press(SHIFT)) {
+				draw_set_color(COLORS._main_accent);
+				var dmsx = _x + posing_mx * _s;
+				var dmsy = _y + posing_my * _s;
+				
+				if(abs(dx) > abs(dy)) { dy = 0; draw_line_dashed(0, dmsy, panel.w, dmsy); }
+				if(abs(dx) < abs(dy)) { dx = 0; draw_line_dashed(dmsx, 0, dmsx, panel.h); }
+			}
+			
 			gpu_set_texfilter(true);
 			if(posing_type == 0) { //move
 				var ang = posing_bone.pose_local_rotate; 
-				var pp  = point_rotate(smx - posing_mx, smy - posing_my, 0, 0, -ang);
+				
+				var pp  = point_rotate(dx, dy, 0, 0, -ang);
 				var bx  = posing_sx + pp[0];
 				var by  = posing_sy + pp[1];
 				
@@ -620,6 +633,9 @@ function Node_Armature_Pose(_x, _y, _group = noone) : Node(_x, _y, _group) const
 				draw_sprite_ui(THEME.bone_move, 0, _rx, _ry, 1, 1, 0, COLORS._main_value_positive, 1);
 				
 			} else if(posing_type == 1) { //free move
+				var smx = PANEL_PREVIEW.snapX(posing_mx + dx);
+				var smy = PANEL_PREVIEW.snapY(posing_my + dy);
+				
 				var _direction = point_direction(posing_sx, posing_sy, smx, smy);
 				var _distance  = point_distance(posing_sx, posing_sy, smx, smy);
 				

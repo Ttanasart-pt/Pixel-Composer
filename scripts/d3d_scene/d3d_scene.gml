@@ -167,7 +167,6 @@ function __3dScene(_camera, _name = "New scene") constructor {
 		}
 			
 		gpu_set_zwriteenable(true);
-		
 		gpu_set_ztestenable(true);
 		gpu_set_alphatestenable(true);
 		

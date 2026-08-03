@@ -2432,7 +2432,7 @@ function Panel_Preview() : PanelContent() constructor {
             }
         
             if(_prev_obj) 
-            	d3_deferData  = d3_scene_preview.deferPass(_prev_obj, w, h, d3_deferData);
+            	d3_deferData = d3_scene_preview.deferPass(_prev_obj, w, h, d3_deferData);
         #endregion
         
         #region render
