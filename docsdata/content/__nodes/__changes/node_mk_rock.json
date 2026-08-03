@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.8.004",
+    "changes": [
+      {
+        "date": "2026-08-03T05:05:34.887Z",
+        "node": "MK Rock",
+        "commit": "**MK Rock**: Add more nugget controls."
+      }
+    ]
+  },
+  {
     "version": "1.21.8.003",
     "changes": [
       {

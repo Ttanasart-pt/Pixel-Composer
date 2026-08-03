@@ -1554,9 +1554,9 @@ function PanelContent() constructor {
 		panel = _panel;
 		
 		if(o_main.panel_dragging == noone) {
-			pFOCUS = FOCUS == self;
+			pHOVER = HOVER_WINDOW != undefined && !CURSOR_IS_LOCK && HOVER == self && (panel.mouse_active || mouse_overflow);
+			pFOCUS = FOCUS_WINDOW != undefined && FOCUS == self;
 			
-			pHOVER = !CURSOR_IS_LOCK && HOVER == self && (panel.mouse_active || mouse_overflow);
 			if(pFOCUS) FOCUS_CONTENT = self;
 		}
 		

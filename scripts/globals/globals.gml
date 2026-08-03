@@ -134,8 +134,8 @@ gml_pragma("UnityBuild", "true");
 	#macro mouse_rx display_mouse_get_x()
 	#macro mouse_ry display_mouse_get_y()
 	
-	#macro sFOCUS (FOCUS == self.id)
-	#macro sHOVER (!CURSOR_IS_LOCK && (HOVER == self.id))
+	#macro sHOVER (HOVER_WINDOW != undefined && !CURSOR_IS_LOCK && HOVER == self.id)
+	#macro sFOCUS (FOCUS_WINDOW != undefined && FOCUS == self.id)
 	
 	#macro CONF_TESTING false
 	globalvar TESTING; TESTING    = CONF_TESTING;

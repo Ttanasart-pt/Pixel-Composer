@@ -83,6 +83,7 @@ if(os_is_paused()) OS_PAUSED = true;
 			foc = true;
 		}
 	}
+	
 #endregion
 
 #region fps
