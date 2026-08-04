@@ -89,14 +89,10 @@ function Node_pSystem_Render(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	}
 	
 	static update = function(_frame = CURRENT_FRAME) {
+		
 		#region render check
-			var _update = true;
-			
-			if(!is(inline_context, Node_pSystem_Inline)) _update = false;
-			if(inline_context.prerendering)              _update = false;
-			if(!IS_PLAYING)                              _update = false;
-			
-			if(!_update) return;
+			if(!is(inline_context, Node_pSystem_Inline)) return;
+			if(inline_context.prerendering)              return;
 		#endregion
 		
 		#region data

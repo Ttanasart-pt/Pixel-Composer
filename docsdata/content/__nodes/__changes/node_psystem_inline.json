@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.8.005",
+    "changes": [
+      {
+        "date": "2026-08-04T06:53:37.838Z",
+        "node": "Preview Panel",
+        "commit": "**Preview Panel**: Disable gizmo transformation."
+      }
+    ]
+  },
+  {
     "version": "1.21.6.007",
     "changes": [
       {

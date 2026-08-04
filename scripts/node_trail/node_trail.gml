@@ -104,7 +104,6 @@ function Node_Trail(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 			
 			if(!is_surface(preS)) continue;
 			
-			// if(preF >= curF || !is_surface(curS)) {
 			if(!is_surface(curS)) {
 				surface_set_shader(temp_surface[bg], sh_trail_blend, true, BLEND.over);
 					shader_set_s( "bg",    temp_surface[!bg] );

@@ -595,7 +595,8 @@ function Panel_Preview() : PanelContent() constructor {
     #endregion
     
     #region ---- gizmo ----
-    	gizmo_show       = true;
+    	gizmo_show      = true;
+    	gizmo_transform = false;
     #endregion
     
     #region ---- minimap ----
@@ -3421,14 +3422,16 @@ function Panel_Preview() : PanelContent() constructor {
 		var _node_prev = _node.getPreviewValues();
         
         if(d3_active == NODE_3D.none) {
-            var _prevNode = getNodePreview();
-            if(_prevNode != _node && is(_prevNode, Node)) {
-            	var _trans = _prevNode.drawOverlayChainTransform(_node);
-            	_ovx += _trans[0] * _ovs;
-				_ovy += _trans[1] * _ovs;
-				_ovs *= _trans[2];
-            }
-        
+        	if(gizmo_transform) {
+	            var _prevNode = getNodePreview();
+	            if(_prevNode != _node && is(_prevNode, Node)) {
+	            	var _trans = _prevNode.drawOverlayChainTransform(_node);
+	            	_ovx += _trans[0] * _ovs;
+					_ovy += _trans[1] * _ovs;
+					_ovs *= _trans[2];
+	            }
+        	}
+        	
         } else if(render_2d_overlay && is_surface(_node_prev)) {
 			var _node_pw = surface_get_width_safe(_node_prev);
 			var _node_ph = surface_get_height_safe(_node_prev);

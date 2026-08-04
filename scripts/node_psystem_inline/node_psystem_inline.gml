@@ -35,14 +35,14 @@ function Node_pSystem_Inline(_x, _y, _group = noone) : Node_Collection_Inline(_x
 	// static getNextNodes = function() { return __nodeLeafList(nodes); }
 	
 	static reset = function() {
-		array_foreach(nodes, function(n) /*=>*/ { if(has(n, "reset")) n.reset(); });
+		array_foreach(nodes, function(n,i) /*=>*/ { if(has(n, "reset")) n.reset(); return true; });
 		
 		var _loop = getInputData(0);
 		var _prer = getInputData(2); if(_prer == -1) _prer = TOTAL_FRAMES;
 		if(!_loop) return;
 		
 		if(!IS_PLAYING && !IS_FRAME_PROGRESS) { 
-			array_foreach(nodes, function(n) /*=>*/ { if(has(n, "resetSeed")) n.resetSeed(); }); 
+			array_foreach(nodes, function(n,i) /*=>*/ { if(has(n, "resetSeed")) n.resetSeed(); return true; });
 			return; 
 		}
 		
@@ -59,7 +59,7 @@ function Node_pSystem_Inline(_x, _y, _group = noone) : Node_Collection_Inline(_x
 		}
 		
 		prerendering = false;
-		array_foreach(nodes, function(n) /*=>*/ { if(has(n, "resetSeed")) n.resetSeed(); });
+		array_foreach(nodes, function(n,i) /*=>*/ { if(has(n, "resetSeed")) n.resetSeed(); return true; });
 	}
 	
 	static update = function() {
