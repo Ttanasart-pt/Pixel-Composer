@@ -12,7 +12,7 @@ function Node_Time_Remap(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	
 	////- =Surfaces
 	newInput( 0, nodeValue_Surface( "Surface In" )).setRequired().rejectArray();
-	newInput( 1, nodeValue_Surface( "Map" )).rejectArray();
+	newInput( 1, nodeValue_Surface( "Map"        )).setRequired().rejectArray();
 	
 	////- =Remap
 	newInput( 2, nodeValue_Int(  "Max Life", 3     )).rejectArray().setPieMenu();
