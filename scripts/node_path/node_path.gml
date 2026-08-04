@@ -2385,7 +2385,7 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		}
 		static getPointRatio    = function(_rat, _ind = 0, out = undefined) {
 			if(_rat < 0) _rat = 1 + frac(_rat);
-			var pix = (loop? frac(_rat) : clamp(_rat, 0, 0.99)) * lengthTotal;
+			var pix = (loop? frac(_rat) : clamp(_rat, 0, 0.9999)) * lengthTotal;
 			return getPointDistance(pix, _ind, out);
 		}
 		

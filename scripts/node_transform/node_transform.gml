@@ -308,16 +308,17 @@ function Node_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	newInput(10, nodeValue_Bool( "Round Position",  false, "Round position to the nearest integer value to avoid jittering."));
 	
 	////- =Rotation
-	newInput(4, nodeValue_Bool(     "Relative Anchor",    true ));
-	newInput(5, nodeValue_Rotation( "Rotation",           0    )).setPieMenu();
-	newInput(8, nodeValue_Slider(   "Rotate by Velocity", 0    )).setTooltip("Make the surface rotates to follow its movement.");
+	newInput( 4, nodeValue_Bool(     "Relative Anchor",    true ));
+	newInput( 5, nodeValue_Rotation( "Rotation",           0    )).setPieMenu();
+	newInput( 8, nodeValue_Slider(   "Rotate by Velocity", 0    )).setTooltip("Make the surface rotates to follow its movement.");
 	
 	////- =Scale
-	newInput(6, nodeValue_Vec2( "Scale", [1,1], { linked: true} )).setPieMenu();
+	newInput( 6, nodeValue_Vec2( "Scale", [1,1], { linked: true} )).setPieMenu();
 	
 	////- =Path
 	newInput(21, nodeValue_Path(   "Path" ));
 	newInput(22, nodeValue_Slider( "Position",     0     )).setInternalName("path_position");
+	newInput(24, nodeValue_Bool(   "Loop",         false ));
 	newInput(23, nodeValue_Bool(   "Rotate Along", false ));
 	
 	////- =Render
@@ -333,7 +334,7 @@ function Node_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	newInput(16, nodeValue_EButton( "Echo Type",       0, [ "Static", "Animated" ] ));
 	newInput(13, nodeValue_Int(     "Echo Amount",     8     ));
 	newInput(20, nodeValue_EButton( "Echo Blend Mode", 0, [ "Normal", "Alpha", "Additive", "Maximum" ] ));
-	// input 24
+	// 25
 	
 	newOutput(0, nodeValue_Output( "Surface Out", VALUE_TYPE.surface, noone ));
 	newOutput(2, nodeValue_Output( "Atlas data",  VALUE_TYPE.atlas,   []    ));
@@ -347,7 +348,7 @@ function Node_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		[ "Position", false    ],  2,  3, 10, 
 		[ "Rotation", false    ],  5,  8, 
 		[ "Scale",    false    ],  6, 
-		[ "Path",      true    ], 21, 22, 23,  
+		[ "Path",      true    ], 21, 22, 24, 23,  
 		[ "Render",   false    ], 14, 
 		[ "Stretch",  true, 17 ], 18, 19, 
 		[ "Echo",     true, 12 ], 16, 13, 20, 
@@ -825,6 +826,7 @@ function Node_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			
 			var path      = _data[21];
 			var pathPos   = _data[22];
+			var pathLop   = _data[24];
 			var pathRot   = _data[23];
 			
 			var alp       = _data[14];
@@ -928,8 +930,11 @@ function Node_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			pos[1] += py0;
 			
 			if(pathRot) {
-				var _p0 = path.getPointRatio(clamp(pathPos - .01, 0, .99));
-				var _p1 = path.getPointRatio(clamp(pathPos + .01, 0, .99));
+				var r0 = pathLop? pfract(pathPos - .01) : clamp(pathPos - .01, 0, .999);
+				var r1 = pathLop? pfract(pathPos + .01) : clamp(pathPos + .01, 0, .999);
+				
+				var _p0 = path.getPointRatio(r0);
+				var _p1 = path.getPointRatio(r1);
 				var dir = point_direction(_p0.x, _p0.y, _p1.x, _p1.y);
 				rot += dir;
 			}

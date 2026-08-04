@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.8.005",
+    "changes": [
+      {
+        "date": "2026-08-04T05:39:51.065Z",
+        "node": "",
+        "commit": "**Transform**: Fix Rotate Along path problem at path terminal."
+      }
+    ]
+  },
+  {
     "version": "1.21.7.110",
     "changes": [
       {
