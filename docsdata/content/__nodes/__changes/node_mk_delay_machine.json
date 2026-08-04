@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.8.005",
+    "changes": [
+      {
+        "date": "2026-08-04T08:16:10.151Z",
+        "node": "MK Delay Machine",
+        "commit": "**MK Delay Machine**: Add hold palette select type."
+      }
+    ]
+  },
+  {
     "version": "1.21.6.006",
     "changes": [
       {

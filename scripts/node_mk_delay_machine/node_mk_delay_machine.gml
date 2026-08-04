@@ -19,7 +19,7 @@ function Node_MK_Delay_Machine(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	
 	////- =Delay
 	newInput( 3, nodeValue_Palette( "Blend over Delay", [ca_white] ));
-	newInput( 5, nodeValue_EScroll( "Palette Select",    0, [ "Loop", "Pingpong", "Random" ] ));
+	newInput( 5, nodeValue_EScroll( "Palette Select",    0, [ "Loop", "Pingpong", "Random", "Hold" ] ));
 	newInput( 6, nodeValueSeed());
 	newInput( 4, nodeValue_Curve(   "Alpha over Delay", CURVE_DEF_11 ));
 	newInput( 8, nodeValue_EScroll( "Blend Mode",       0, [ "Normal", "Alpha", "Additive", "Maximum" ] ));
@@ -96,6 +96,7 @@ function Node_MK_Delay_Machine(_x, _y, _group = noone) : Node(_x, _y, _group) co
 					case 0 : cc = array_safe_get(_pal, _i, c_white, ARRAY_OVERFLOW.loop);          break;
 					case 1 : cc = array_safe_get(_pal, _i, c_white, ARRAY_OVERFLOW.pingpong);      break;
 					case 2 : cc = array_safe_get_fast(_pal, irandom(_psiz), c_white);              break;
+					case 3 : cc = array_safe_get_fast(_pal, clamp(_i, 0, _psiz - 1), c_white);     break;
 				}
 				
 				aa = eval_curve_x(_alpC, 1 - _i / _amo);
