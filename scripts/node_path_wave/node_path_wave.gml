@@ -15,6 +15,7 @@ function Node_Path_Wave(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	newInput( 0, nodeValue_Path(  "Path"               ));
 	newInput(11, nodeValue_Range( "Range",       [0,1] ));
 	newInput(12, nodeValue_Bool(  "Clamp Curve", false ));
+	newInput(18, nodeValue_Bool(  "Loop",        false ));
 	
 	////- =Wave
 	newInput( 1, nodeValue_Range( "Frequency", [4,4], { linked : true }));
@@ -34,12 +35,12 @@ function Node_Path_Wave(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	newInput( 6, nodeValue_Bool(  "Wiggle",           false  ));
 	newInput( 7, nodeValue_Range( "Wiggle Amplitude", [-2,2] ));
 	newInput( 8, nodeValue_Float( "Wiggle Frequency",  8     ));
-	// 18
+	// 19
 	
 	newOutput(0, nodeValue_Output("Path", VALUE_TYPE.pathnode, noone));
 	
 	input_display_list = [ 5, 
-		[ "Path",       true    ],  0, 11, 12, 
+		[ "Path",       true    ],  0, 11, 12, 18,  
 		[ "Wave",      false    ],  1,  [2, true],  9, 17, -1,  3,  4, 10, 
 		[ "Iterative", false    ], 13, 14, 15, 16, 
 		[ "Wiggle",     true, 6 ],  7,  8, 
@@ -48,6 +49,7 @@ function Node_Path_Wave(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	////- Node
 	
 	function _wavePath(_node) : Path(_node) constructor {
+		loop  = false;
 		range = [0,1];
 		range_clamp = false;
 		
@@ -157,9 +159,19 @@ function Node_Path_Wave(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			var _wigs = wigs;
 			var _wigf = wigf;
 			
-			p0  = _path.getPointRatio(clamp(_rat - 0.001, 0, 0.999999), ind, p0);
-			p   = _path.getPointRatio(_rat, ind, p);
-			p1  = _path.getPointRatio(clamp(_rat + 0.001, 0, 0.999999), ind, p1);
+			if(loop) {
+				p0 = _path.getPointRatio( pfract(_rat - .01), ind, p0 );
+				p  = _path.getPointRatio( pfract(_rat      ), ind, p  );
+				p1 = _path.getPointRatio( pfract(_rat + .01), ind, p1 );
+				
+			} else {
+				_rat = clamp(_rat, 0., 0.99);
+				p0 = _path.getPointRatio( clamp(_rat - .01, 0, .99), ind, p0 );
+				p  = _path.getPointRatio( clamp(_rat      , 0, .99), ind, p  );
+				p1 = _path.getPointRatio( clamp(_rat + .01, 0, .99), ind, p1 );
+				
+			}
+			
 			dir = point_direction(p0.x, p0.y, p1.x, p1.y) + 90;
 			
 			_amp = random_range_seed(_amp[0], _amp[1], _seed + ind);
@@ -223,6 +235,7 @@ function Node_Path_Wave(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			_outData = new _wavePath(self);
 		
 		_outData.cached_pos = {};
+		_outData.loop       = _data[18];
 		_outData.seed       = _data[ 5] + _array_index;
 		_outData.curr_path  = _data[ 0];
 		_outData.range      = _data[11];

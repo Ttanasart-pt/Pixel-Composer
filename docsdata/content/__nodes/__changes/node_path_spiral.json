@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.8.005",
+    "changes": [
+      {
+        "date": "2026-08-04T04:00:54.522Z",
+        "node": "Spiral/ Wave path",
+        "commit": "**Spiral/ Wave path**: Add loop toggle for dealing with path terminal."
+      }
+    ]
+  },
+  {
     "version": "1.21.5.008",
     "changes": [
       {

@@ -4,9 +4,10 @@ function Node_Path_Spiral(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	setDrawIcon();
 	
 	////- =Path
-	newInput( 0, nodeValue_Path( "Path" ));
-	newInput( 6, nodeValue_Range(    "Range",       [0,1] ));
-	newInput( 7, nodeValue_Bool(     "Clamp Curve", false ));
+	newInput( 0, nodeValue_Path(  "Path" ));
+	newInput( 6, nodeValue_Range( "Range",       [0,1] ));
+	newInput( 7, nodeValue_Bool(  "Clamp Curve", false ));
+	newInput( 8, nodeValue_Bool(  "Loop",        false ));
 	
 	////- =Spiral
 	newInput( 1, nodeValue_Float( "Frequency",  4));
@@ -14,19 +15,20 @@ function Node_Path_Spiral(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	
 	newInput( 3, nodeValue_Slider(   "Spiral",    .75, [-2,2,.01]));
 	newInput( 4, nodeValue_Rotation( "Phase",      0));
-	// input 8
+	// 9
 	
 	newOutput(0, nodeValue_Output("Path", VALUE_TYPE.pathnode, noone));
 	
 	input_display_list = [ 
-		[ "Path",    true ],  0,  6,  7, 
+		[ "Path",    true ],  0,  6,  7,  8, 
 		[ "Spiral", false ],  1,  2,  5,  3,  4, 
 	];
 	
 	////- Nodes
 	
 	function _spiralPath(_node) : Path(_node) constructor {
-		range     = [ 0,1 ];
+		loop  = false;
+		range = [ 0,1 ];
 		range_clamp = false;
 		
 		freq      = 0; 
@@ -122,9 +124,18 @@ function Node_Path_Spiral(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 			var _pha  = phase / 360;
 			var _spi  = spiral;
 			
-			p0 = _path.getPointRatio( clamp(_rat - 0.001, 0, 0.999999), ind, p0 );
-			p  = _path.getPointRatio(       _rat,                       ind, p  );
-			p1 = _path.getPointRatio( clamp(_rat + 0.001, 0, 0.999999), ind, p1 );
+			if(loop) {
+				p0 = _path.getPointRatio( pfract(_rat - .01), ind, p0 );
+				p  = _path.getPointRatio( pfract(_rat      ), ind, p  );
+				p1 = _path.getPointRatio( pfract(_rat + .01), ind, p1 );
+				
+			} else {
+				_rat = clamp(_rat, 0., 0.99);
+				p0 = _path.getPointRatio( clamp(_rat - .01, 0, .99), ind, p0 );
+				p  = _path.getPointRatio( clamp(_rat      , 0, .99), ind, p  );
+				p1 = _path.getPointRatio( clamp(_rat + .01, 0, .99), ind, p1 );
+				
+			}
 			
 			var dir = point_direction(p0.x, p0.y, p1.x, p1.y);
 			var prg = (_pha + _rat * _fre) * pi * 2;
@@ -166,6 +177,7 @@ function Node_Path_Spiral(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 		
 		_outData.cached_pos = {};
 		_outData.curr_path  = _data[0];
+		_outData.loop       = _data[8];
 		_outData.range      = _data[6];
 		_outData.range_clamp= _data[7];
 		

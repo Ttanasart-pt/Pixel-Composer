@@ -562,7 +562,6 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		
 		is_modified       = always_modified;
 		attributes.mapped = false;
-		
 		node.triggerRender();
 	}
 	
