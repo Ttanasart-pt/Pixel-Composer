@@ -16,9 +16,11 @@ function Path(_node) constructor {
 		return (hv ?? false) || node.w_hovering;
 	}
 	
-	static getBoundary		= function() /*=>*/ {return boundary};
-	static getAccuLength	= function() /*=>*/ {return lengthAccs};
-	static getLength		= function() /*=>*/ {return lengthTotal};
+	static getLoop          = function() /*=>*/ {return loop};
+	
+	static getBoundary      = function() /*=>*/ {return boundary};
+	static getAccuLength    = function() /*=>*/ {return lengthAccs};
+	static getLength        = function() /*=>*/ {return lengthTotal};
 	static getSegmentCount  = function() /*=>*/ {return 1};
 	static getLineCount     = function() /*=>*/ {return 1};
 	static getTangentRatio  = function(_rat) /*=>*/ {return 0};
@@ -27,8 +29,8 @@ function Path(_node) constructor {
 	static getPointRatio    = function(_rat, _ind = 0, out = undefined) { return getPointDistance(frac(_rat) * lengthTotal, _ind, out); }
 	
 	static getPointTangent  = function(_rat, _ind = 0) {
-		var _r0 = clamp(clamp(_rat, .001, 0.999) - .001, 0, .999);
-		var _r2 = clamp(clamp(_rat, .001, 0.999) + .001, 0, .999);
+		var _r0 = loop? pfract(_rat - .001) : clamp(_rat - .001, .001, 0.999); 
+		var _r2 = loop? pfract(_rat + .001) : clamp(_rat + .001, .001, 0.999); 
 		
 		getPointRatio(_r0, _ind, __temp_p);
 		var _p0x = __temp_p.x;

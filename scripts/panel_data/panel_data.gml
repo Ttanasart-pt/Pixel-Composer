@@ -555,11 +555,11 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 		var con = getContent();
 		if(FULL_SCREEN_CONTENT != noone && con == FULL_SCREEN_CONTENT && self != FULL_SCREEN_PARENT) return;
 		
-		hovering    = HOVER == con;
+		hovering    = HOVER_WINDOW != undefined && HOVER == con;
 		if(hovering && mouse_press(mb_any)) setFocus(con);
 		
-		focusing    = FOCUS       == con;
-		focusDialog = FOCUS_PANEL == dialog;
+		focusing    = FOCUS_WINDOW != undefined && FOCUS       == con;
+		focusDialog = FOCUS_WINDOW != undefined && FOCUS_PANEL == dialog;
 		
 		array_foreach(childs, function(ch,i) /*=>*/ {return ch.checkFocus()});
 	}

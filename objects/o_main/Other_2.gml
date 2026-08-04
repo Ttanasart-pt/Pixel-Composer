@@ -30,7 +30,7 @@
 		FS_PATH    = $"{DIRECTORY}fs.appimage";
 		
 		file_copy_override(fsPath, FS_PATH);
-		shell_execute("", $"chmod +x {FS_PATH}");
+		shell_execute("", $"chmod +x \"{FS_PATH}\"");
 		
 	} else if(OS == os_macosx) {
 		APP_DIRECTORY = working_directory;

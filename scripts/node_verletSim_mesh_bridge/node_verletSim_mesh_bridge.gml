@@ -63,16 +63,16 @@ function Node_VerletSim_Mesh_Bridge(_x, _y, _group = noone) : Node(_x, _y, _grou
 		if(!IS_FIRST_FRAME) return;
 		
 		#region data
-			var _subd = getInputData(0);
-			var _quad = getInputData(1);
+			var _subd = getInputData( 0);
+			var _quad = getInputData( 1);
 			
-			var _ten  = getInputData(2), _tens = 1 - _ten;
-			var _drag = getInputData(3);
-			var _adrg = getInputData(7);
+			var _ten  = getInputData( 2), _tens = 1 - _ten;
+			var _drag = getInputData( 3);
+			var _adrg = getInputData( 7);
 			
-			var _loop = getInputData(4);
-			var _pshf = getInputData(5);
-			var _pinf = getInputData(6);
+			var _loop = getInputData( 4);
+			var _pshf = getInputData( 5);
+			var _pinf = getInputData( 6);
 		#endregion
 		
 		var _pathData = [];
@@ -93,6 +93,7 @@ function Node_VerletSim_Mesh_Bridge(_x, _y, _group = noone) : Node(_x, _y, _grou
 		var _pSamp  = _subd[0];
 		var _pStep  = 1 / _pSamp;
 		var _p = new __vec2P();
+		var _rat;
 		
 		for( var i = 0; i < _lamo; i++ ) {
 			var _pathD = _pathData[i];
@@ -100,10 +101,10 @@ function Node_VerletSim_Mesh_Bridge(_x, _y, _group = noone) : Node(_x, _y, _grou
 			_pPoint[i] = _ps;
 			
 			for( var j = 0; j <= _pSamp; j++ ) {
-				var _rat = j * _pStep + _pshf;
-				if(_loop) _rat = frac(_rat);
+				_rat = j * _pStep + _pshf;
+				_rat = _loop? pfract(_rat) : clamp(_rat, 0, .999);
 				
-				_p = _pathD[0].getPointRatio(clamp(_rat, 0, 0.999), _pathD[1], _p);
+				_p = _pathD[0].getPointRatio(_rat, _pathD[1], _p);
 				_ps[j] = [_p.x, _p.y];
 			}
 		}

@@ -12,6 +12,7 @@
 		progCrop = _progCrop;
 		weight   = _weight;
 		
+		function clone() { return new __LinePoint(x, y, prog, progCrop, weight); }
 		function toString() { return $"[{prog}]({x},{y})"; }
 	}
 	
@@ -312,6 +313,11 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 			
 			var _rtStr = min(_ratio[0], _ratio[1]) + _shift;
 			var _rtEnd = max(_ratio[0], _ratio[1]) + _shift;
+			if(_clamp) {
+				_rtStr = clamp(_rtStr, 0, 1);
+				_rtEnd = clamp(_rtEnd, 0, 1);
+			}
+			
 			var _rtRng = _rtEnd - _rtStr;
 			if(_rtRng <= 0) {
 				for( var i = 0, n = array_length(_outData); i < n; i++ ) 
@@ -469,39 +475,50 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 							var pointCrop = [];
 							p0 = points[0];
 							
-							if(_rtStr <= 0) array_push(pointCrop, p0);
+							var _decSt = floor(_rtStr);
+							var _decEd = ceil(_rtEnd);
+							var g0, g1;
+							
+							for( var k = _decSt; k < _decEd; k++ ) {		
+								for( var j = 0, m = array_length(points); j < m; j++ ) {
+									g0 = k + p0.prog;
 									
-							for( var j = 1, m = array_length(points); j < m; j++ ) {
-								p1 = points[j];
-								var _p0 = p0.prog;
-								var _p1 = p1.prog;
-								
-								if(_rtStr > _p0 && _rtStr < _p1) {
-									var _midProg = (_rtStr - _p0) / (_p1 - _p0);
-									array_push(pointCrop, new __LinePoint( 
-										lerp(p0.x,      p1.x,      _midProg), 
-										lerp(p0.y,      p1.y,      _midProg), 
-										lerp(p0.prog,   p1.prog,   _midProg), 
-										lerp(p0.prog,   p1.prog,   _midProg), 
-										lerp(p0.weight, p1.weight, _midProg), 
-									));
+									if(j == 0 && k == _decSt) {
+										if(array_empty(pointCrop) && g0 >= _rtStr && g0 <= _rtEnd)
+											array_push(pointCrop, p0.clone());
+										continue;
+									}
+									
+									p1 = points[j];
+									g1 = k + p1.prog;
+									
+									if(_rtStr > g0 && _rtStr < g1) {
+										var _midProg = (_rtStr - g0) / (g1 - g0);
+										array_push(pointCrop, new __LinePoint( 
+											lerp(p0.x,      p1.x,      _midProg), 
+											lerp(p0.y,      p1.y,      _midProg), 
+											lerp(g0,        g1,        _midProg), 
+											lerp(g0,        g1,        _midProg), 
+											lerp(p0.weight, p1.weight, _midProg), 
+										));
+									}
+									
+									if(_rtEnd > g0 && _rtEnd < g1) {
+										var _midProg = (_rtEnd - g0) / (g1 - g0);
+										array_push(pointCrop, new __LinePoint( 
+											lerp(p0.x,      p1.x,      _midProg), 
+											lerp(p0.y,      p1.y,      _midProg), 
+											lerp(g0,        g1,        _midProg), 
+											lerp(g0,        g1,        _midProg), 
+											lerp(p0.weight, p1.weight, _midProg), 
+										));
+									}
+									
+									if(g1 >= _rtStr && g1 <= _rtEnd)
+										array_push(pointCrop, p1.clone());
+									
+									p0 = p1;
 								}
-								
-								if(_rtEnd > _p0 && _rtEnd < _p1) {
-									var _midProg = (_rtEnd - _p0) / (_p1 - _p0);
-									array_push(pointCrop, new __LinePoint( 
-										lerp(p0.x,      p1.x,      _midProg), 
-										lerp(p0.y,      p1.y,      _midProg), 
-										lerp(p0.prog,   p1.prog,   _midProg), 
-										lerp(p0.prog,   p1.prog,   _midProg), 
-										lerp(p0.weight, p1.weight, _midProg), 
-									));
-								}
-								
-								if(_rtStr <= _p1 && _rtEnd >= _p1)
-									array_push(pointCrop, p1);
-								
-								p0 = p1;
 							}
 							
 							for( var j = 0, m = array_length(pointCrop); j < m; j++ )
