@@ -27,6 +27,10 @@ void main() {
 	
 	vec4 cc = sampC(v_vTexcoord);
 	
+	// gl_FragColor = cc;
+	// if(cc.a == 0.) gl_FragColor = sampP(v_vTexcoord);
+	// return;
+	
 	for(float a = 0.; a <= 64.; a++) {
 		ang  = top / base * TAU;
 		top += 2.;

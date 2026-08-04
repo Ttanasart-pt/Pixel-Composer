@@ -3487,6 +3487,7 @@
     {"id":{"name":"sh_track_pixel_diff","path":"shaders/sh_track_pixel_diff/sh_track_pixel_diff.yy",},},
     {"id":{"name":"sh_track_pixel_draw","path":"shaders/sh_track_pixel_draw/sh_track_pixel_draw.yy",},},
     {"id":{"name":"sh_trail_blend","path":"shaders/sh_trail_blend/sh_trail_blend.yy",},},
+    {"id":{"name":"sh_trail_blend_normal","path":"shaders/sh_trail_blend_normal/sh_trail_blend_normal.yy",},},
     {"id":{"name":"sh_trail_filler_pass1","path":"shaders/sh_trail_filler_pass1/sh_trail_filler_pass1.yy",},},
     {"id":{"name":"sh_trail_filler_pass2","path":"shaders/sh_trail_filler_pass2/sh_trail_filler_pass2.yy",},},
     {"id":{"name":"sh_trail_filler","path":"shaders/sh_trail_filler/sh_trail_filler.yy",},},

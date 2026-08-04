@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.8.005",
+    "changes": [
+      {
+        "date": "2026-08-04T06:29:06.782Z",
+        "node": "Trail] Fix last frame got skipped in loop mode. - [Trail",
+        "commit": "**Trail] Fix last frame got skipped in loop mode. - [Trail**: Fix color blending error."
+      }
+    ]
+  },
+  {
     "version": "1.21.7.110",
     "changes": [
       {

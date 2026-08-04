@@ -77,7 +77,9 @@ function Node_Trail(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		var famo = _loop? _life : min(_life, CURRENT_FRAME);
 		
 		var startF = CURRENT_FRAME - _life;
-		if(startF < 0) startF = _loop? TOTAL_FRAMES + startF : 0;
+		
+		if(_loop) startF = pmod(startF, TOTAL_FRAMES);
+		else      startF = clamp(startF, 0, TOTAL_FRAMES - 1);
 		
 		var preF, curF, curR = startF;
 		var preS, curS;
@@ -93,16 +95,17 @@ function Node_Trail(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 			a1 = eval_curve_x(_alpha, prg);
 			c1 = _grad.eval(pfract(1 - prg + _gradS));
 			
-			preF = curR;
-			curF = curR == TOTAL_FRAMES - 1? 0 : curR + 1; 
+			preF =  curR;
+			curF = (curR + 1) % TOTAL_FRAMES;
+			curR =  curF;
+			
 			preS = getCacheFrame(preF);
 			curS = getCacheFrame(curF);
 			
-			curR = curR == TOTAL_FRAMES - 1? 0 : curR + 1; 
-			
 			if(!is_surface(preS)) continue;
 			
-			if(preF >= curF || !is_surface(curS)) {
+			// if(preF >= curF || !is_surface(curS)) {
+			if(!is_surface(curS)) {
 				surface_set_shader(temp_surface[bg], sh_trail_blend, true, BLEND.over);
 					shader_set_s( "bg",    temp_surface[!bg] );
 					shader_set_s( "fg",    preS );
@@ -144,9 +147,11 @@ function Node_Trail(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		    _outSurf = surface_verify(_outSurf, _sw, _sh, cDep);
 		outputs[0].setValue(_outSurf);
 		
-		surface_set_shader(_outSurf);
-			draw_surface_safe(temp_surface[!bg]);
-			draw_surface_safe(_surf);
+		surface_set_shader(_outSurf, sh_trail_blend_normal);
+			shader_set_s("bg", temp_surface[!bg]);
+			shader_set_s("fg", _surf);
+			
+			draw_empty();
 		surface_reset_shader();
 	}
 	
