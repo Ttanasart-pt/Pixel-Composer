@@ -6,6 +6,11 @@
         "date": "2026-08-04T23:46:19.671Z",
         "node": "Grid Warp",
         "commit": "**Grid Warp**: Fix hotkey not working."
+      },
+      {
+        "date": "2026-08-04T23:54:34.506Z",
+        "node": "Crop Content",
+        "commit": "**Crop Content**: Fix node cannot be deactivated."
       }
     ]
   },

@@ -39,12 +39,50 @@ function Node_Crop_Content(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	
 	static update = function() { 
 		#region data
-			var _inSurf	= getInputData(0);
-			var _array	= getInputData(2);
-			var _bg 	= getInputData(4);
+			var _active = getInputData( 1);
 			
-			var _padd	= getInputData(3);
+			var _inSurf = getInputData( 0);
+			var _array  = getInputData( 2);
+			var _bg     = getInputData( 4);
+			
+			var _padd   = getInputData( 3);
 		#endregion
+		
+		var _outSurfs = outputs[0].getValue();
+		
+		if(!_active) {
+			if(is_surface(_inSurf)) {
+				if(is_array(_outSurfs)) surface_array_free(_outSurfs);
+				
+				var _dim  = surface_get_dimension(_inSurf);
+				_outSurfs = surface_verify(_outSurfs, _dim[0], _dim[1]);
+				surface_set_shader(_outSurfs);
+					draw_surface(_inSurf, 0, 0);
+				surface_reset_shader();
+				
+			} else if(is_array(_inSurf)) {
+				var ilen = array_length(_inSurf);
+				if(array_safe_length(_outSurfs) != ilen)  {
+					surface_array_free(_outSurfs);
+					_outSurfs = array_verify(_outSurfs, ilen);
+				}
+				
+				for( var i = 0; i < ilen; i++ ) {
+					var _ins = _inSurf[i];
+					
+					var _dim = surface_get_dimension(_ins);
+					var _ots = surface_verify(_outSurfs[i], _dim[0], _dim[1]);
+					surface_set_shader(_ots);
+						draw_surface(_ins, 0, 0);
+					surface_reset_shader();
+					
+					_outSurfs[i] = _ots;
+				}
+			}
+			
+			outputs[0].setValue(_outSurfs);
+			return;
+		}
 		
 		var _arr = is_array(_inSurf);
 		_array   = _array && _arr;
@@ -132,8 +170,6 @@ function Node_Crop_Content(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 				maxy[0] = max(maxy[0], _maxy);
 			}
 		}
-		
-		var _outSurfs = outputs[0].getValue();
 		
 		var resl = [];
 		var crop = [];
