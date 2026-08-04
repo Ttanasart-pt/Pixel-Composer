@@ -614,8 +614,8 @@ function Node_Strand_Create(_x, _y, _group = noone) : Node(_x, _y, _group) const
 					sx  = _pos[0] + _p.x;
 					sy  = _pos[1] + _p.y;
 					
-					var _p0 = _pth.getPointRatio(clamp(rat - 0.001, 0, 1));
-					var _p1 = _pth.getPointRatio(clamp(rat + 0.001, 0, 1));
+					var _p0 = _pth.getPointRatio(clamp(rat - .01, 0, .999));
+					var _p1 = _pth.getPointRatio(clamp(rat + .01, 0, .999));
 					dir = point_direction(_p0.x, _p0.y, _p1.x, _p1.y) + 90;
 					
 					     if(_sid == 1) dir += 180;

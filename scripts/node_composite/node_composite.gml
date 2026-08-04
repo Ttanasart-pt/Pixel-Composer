@@ -1150,12 +1150,13 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	rot_anc_x     = 0; rot_anc_y   = 0;
 	dragging_bbox = [0, 0, 1, 1, 0, 0];
 	
-	draw_transforms    = [];
-	selection_surf     = noone;
-	selection_sampler  = new Surface_sampler();
+	draw_transforms     = [];
+	selection_surf      = noone;
+	selection_surf_prev = noone;
+	selection_sampler   = new Surface_sampler();
 	
-	canvas_group       = noone;
-	canvas_draw        = noone;
+	canvas_group        = noone;
+	canvas_draw         = noone;
 	
 	__p = [ 0, 0 ];
 	
@@ -1504,7 +1505,10 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			if(attributes.select_object && selection_sampler.active) {
 				var _msx = floor((_mx - _x) / _s);
 				var _msy = floor((_my - _y) / _s);
-				var _ind = selection_sampler.getPixel(_msx, _msy);
+				var _ind = 0;
+				
+				if(_msx >= 0 && _msx < ww && _msy >= 0 && _msy < hh)
+					_ind = selection_sampler.getPixel(_msx, _msy);
 				
 				if(_ind) {
 					hovering_type = NODE_COMPOSE_DRAG.move;
@@ -1581,11 +1585,13 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 				}
 				
 				if(HIGHLIGHT_PROP && HIGHLIGHT_PROP.node == self && HIGHLIGHT_PROP.index >= index && HIGHLIGHT_PROP.index < index + data_length) {
-					draw_set_color(COLORS._main_icon);
-					draw_rectangle_border_points(_d0[0], _d0[1], _d1[0], _d1[1], _d2[0], _d2[1], _d3[0], _d3[1], 3);
-					
-					draw_set_color(COLORS.node_composite_overlay_border);
-					draw_rectangle_border_points(_d0[0], _d0[1], _d1[0], _d1[1], _d2[0], _d2[1], _d3[0], _d3[1]);
+					if(!attributes.select_object) {
+						draw_set_color(COLORS._main_icon);
+						draw_rectangle_border_points(_d0[0], _d0[1], _d1[0], _d1[1], _d2[0], _d2[1], _d3[0], _d3[1], 3);
+						
+						draw_set_color(COLORS.node_composite_overlay_border);
+						draw_rectangle_border_points(_d0[0], _d0[1], _d1[0], _d1[1], _d2[0], _d2[1], _d3[0], _d3[1]);
+					}
 					
 				}
 				
@@ -1872,8 +1878,27 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		if(hovering != noone && is_struct(hovering_ianc)) { // Start Transform Action
 			var a = hovering_ianc;
 			if(hovering > -1 && hovering != dynamic_input_inspecting) {
+				if(attributes.select_object) {
+					selection_surf_prev = surface_verify(selection_surf_prev, panel.w, panel.h, surface_r16float);
+					surface_set_shader(selection_surf_prev);
+						draw_surface_ext(selection_surf, _x, _y, _s, _s, 0, c_white, 1);
+					surface_reset_shader();
+					
+					shader_set(sh_composite_draw_selection);
+						shader_set_2( "dimension", [panel.w, panel.h] );
+						shader_set_f( "selecting", hovering + 1       );
+						
+						shader_set_f( "time",      current_time / 100 );
+						shader_set_f( "scale",     _s                 );
+						shader_set_f( "size",      ui(6)              );
+						
+						draw_surface(selection_surf_prev, 0, 0);
+					shader_reset();
+				}
+				
 				draw_set_color(COLORS.node_composite_overlay_border);
 				draw_rectangle_border_points(a.d0[0], a.d0[1], a.d1[0], a.d1[1], a.d2[0], a.d2[1], a.d3[0], a.d3[1]);
+				
 			}
 			
 			var _selectable = true;

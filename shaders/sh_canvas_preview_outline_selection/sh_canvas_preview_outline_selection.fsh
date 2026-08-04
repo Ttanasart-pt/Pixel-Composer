@@ -2,6 +2,7 @@ varying vec2 v_vTexcoord;
 varying vec4 v_vColour;
 
 uniform vec2  dimension;
+
 uniform float time;
 uniform float scale;
 uniform float size;

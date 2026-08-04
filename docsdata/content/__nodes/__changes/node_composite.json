@@ -6,6 +6,11 @@
         "date": "2026-08-04T03:39:16.608Z",
         "node": "Composite",
         "commit": "**Composite**: Fix locked layer still draggable."
+      },
+      {
+        "date": "2026-08-04T06:07:33.476Z",
+        "node": "Composite",
+        "commit": "**Composite**: Add content highlight when using content-base selection mode."
       }
     ]
   },
