@@ -585,6 +585,7 @@
             { "label": "External" },
             { "label": "/Device" },
             "Node_Spout_Send",
+            // "Node_Spout_Receive",
             "Node_MIDI_In",
             { "label": "/Network" },
             "Node_Websocket_Receiver",

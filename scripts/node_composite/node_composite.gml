@@ -1590,7 +1590,6 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 				}
 				
 				if(!_sel[i]) continue;
-				
 				var _hov = point_in_rectangle_points(_mx, _my, _d0[0], _d0[1], _d1[0], _d1[1], _d2[0], _d2[1], _d3[0], _d3[1]);
 				
 				if(_hov) {
@@ -1877,7 +1876,10 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 				draw_rectangle_border_points(a.d0[0], a.d0[1], a.d1[0], a.d1[1], a.d2[0], a.d2[1], a.d3[0], a.d3[1]);
 			}
 			
-			if(mouse_lpress(active)) {
+			var _selectable = true;
+			if(hovering > -1) _selectable = _sel[hovering];
+			
+			if(mouse_lpress(active) && _selectable) {
 				surf_dragging	= hovering > -1? input_fix_len + hovering * data_length : -1;
 				drag_type		= hovering_type;
 				

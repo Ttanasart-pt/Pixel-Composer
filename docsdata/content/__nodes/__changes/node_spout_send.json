@@ -1,0 +1,12 @@
+[
+  {
+    "version": "1.21.8.005",
+    "changes": [
+      {
+        "date": "2026-08-04T03:39:16.609Z",
+        "node": "",
+        "commit": "**Composite**: Fix locked layer still draggable."
+      }
+    ]
+  }
+]

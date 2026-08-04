@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"node_spout_receive",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"node_spout_receive",
+  "parent":{
+    "name":"io",
+    "path":"folders/nodes/data/io.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

@@ -1,0 +1,7 @@
+{
+    "name":          "Spout Receive",
+    "tooltip":       "Receive surface through Spout.",
+    "spr":           "s_node_spout_send",
+    "baseNode":      "Node_Spout_Receive",
+    "pxc_version":    121080,
+}

@@ -519,6 +519,7 @@
     {"link":"io.gamemaker.sdfshaders-1.0.0","name":"io.gamemaker.sdfshaders-1.0.0","path":"io.gamemaker.sdfshaders-1.0.0.yyp",},
   ],
   "IncludedFiles":[
+    {"$GMIncludedFile":"","%Name":".gitignore","CopyToMask":-1,"filePath":"datafiles","name":".gitignore","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"dllcredits.txt","ConfigValues":{
         "Itch":{
           "CopyToMask":"0",
@@ -2470,6 +2471,7 @@
     {"id":{"name":"node_smoke_vortex","path":"scripts/node_smoke_vortex/node_smoke_vortex.yy",},},
     {"id":{"name":"node_solid","path":"scripts/node_solid/node_solid.yy",},},
     {"id":{"name":"node_spherize","path":"scripts/node_spherize/node_spherize.yy",},},
+    {"id":{"name":"node_spout_receive","path":"scripts/node_spout_receive/node_spout_receive.yy",},},
     {"id":{"name":"node_spout_send","path":"scripts/node_spout_send/node_spout_send.yy",},},
     {"id":{"name":"node_sprite_stack","path":"scripts/node_sprite_stack/node_sprite_stack.yy",},},
     {"id":{"name":"node_stack","path":"scripts/node_stack/node_stack.yy",},},

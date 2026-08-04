@@ -361,6 +361,7 @@ enum RENDER_TYPE {
 			
 			LOG_END
 			GraphRefresh();
+			
 		}
 		
 		static renderTo = function(_node) {
