@@ -4,17 +4,18 @@ function Node_Path_Shift(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	setDrawIcon();
 	
 	////- =Path
-	newInput( 0, nodeValue_Path( "Path" ));
-	newInput( 2, nodeValue_Range(    "Range", [0,1] ));
+	newInput( 0, nodeValue_Path(  "Path"         ));
+	newInput( 3, nodeValue_Bool(  "Loop",  false ));
+	newInput( 2, nodeValue_Range( "Range", [0,1] ));
 	
 	////- =Shift
 	newInput( 1, nodeValue_Float("Distance", 0)).setHotkey("D");
-	// 3
+	// 4
 	
 	newOutput(0, nodeValue_Output("Path", VALUE_TYPE.pathnode, self));
 	
 	input_display_list = [ 
-		[ "Path",  false ],  0,  2, 
+		[ "Path",  false ],  0,  3,  2, 
 		[ "Shift", false ],  1, 
 	];
 	
@@ -23,8 +24,10 @@ function Node_Path_Shift(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	cached_pos = ds_map_create();
 	
 	curr_path  = noone;
+	curr_loop  = false;
 	curr_range = [0, 1];
 	curr_shift = noone;
+	
 	p  = new __vec2P();
 	p0 = new __vec2P();
 	p1 = new __vec2P();
@@ -79,8 +82,11 @@ function Node_Path_Shift(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 			dir = curr_path.getPointTangent(_rat, ind) + 90;
 			
 		} else {
-			p0 = curr_path.getPointRatio(clamp(_rat - .001, 0, .999), ind, p0);
-			p1 = curr_path.getPointRatio(clamp(_rat + .001, 0, .999), ind, p1);
+			var r0 = curr_loop? pfract(_rat - .01) : clamp(_rat - .01, 0, .999);
+			var r1 = curr_loop? pfract(_rat + .01) : clamp(_rat + .01, 0, .999);
+			
+			p0 = curr_path.getPointRatio(r0, ind, p0);
+			p1 = curr_path.getPointRatio(r1, ind, p1);
 			
 			dir = point_direction(p0.x, p0.y, p1.x, p1.y) + 90;
 		}
@@ -99,10 +105,11 @@ function Node_Path_Shift(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	////- Update
 	
 	static update = function() {
-		curr_path  = getInputData(0);
-		curr_range = getInputData(2);
+		curr_path  = getInputData( 0);
+		curr_loop  = getInputData( 3);
+		curr_range = getInputData( 2);
 		
-		curr_shift = getInputData(1);
+		curr_shift = getInputData( 1);
 		
 		ds_map_clear(cached_pos);
 		outputs[0].setValue(self);

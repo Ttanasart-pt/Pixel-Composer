@@ -4,15 +4,15 @@ function Node_Path_Smoothen(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	setDrawIcon();
 	
 	////- =Path
-	newInput( 0, nodeValue_Path( "Path" ));
-	newInput( 1, nodeValue_Range(    "Range",       [0,1] ));
-	newInput( 2, nodeValue_Bool(     "Clamp Curve", false ));
+	newInput( 0, nodeValue_Path(  "Path" ));
+	newInput( 1, nodeValue_Range( "Range",       [0,1] ));
+	newInput( 2, nodeValue_Bool(  "Clamp Curve", false ));
 	
 	////- =Smoothen
 	newInput( 3, nodeValue_Slider( "Span",  .02, [0,.1,.001] ));
 	newInput( 4, nodeValue_Slider( "Blend",   1 ));
 	newInput( 5, nodeValue_Int(    "Step",    1 ));
-	// input 6
+	// 6
 	
 	newOutput(0, nodeValue_Output("Path", VALUE_TYPE.pathnode, noone));
 	
@@ -88,18 +88,19 @@ function Node_Path_Smoothen(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 			p  = _path.getPointRatio(_rat, ind, p);
 			
 			var t0;
-			var sx = 0, sy = 0;
+			var sx  = 0;
+			var sy  = 0;
 			var amp = 1;
 			var wei = 0;
 			var spn = span;
 			
 			repeat(sstep) {
-				t0  = loop? frac(frac(_rat - spn) + 1) : clamp(_rat - spn, 0, 0.99999);
+				t0  = loop? pfract(_rat - spn) : clamp(_rat - spn, 0, .999);
 				p0  = _path.getPointRatio(t0, ind, p0);
 				sx += p0.x * amp;
 				sy += p0.y * amp;
 				
-				t0  = loop? frac(frac(_rat + spn) + 1) : clamp(_rat + spn, 0, 0.99999);
+				t0  = loop? pfract(_rat + spn) : clamp(_rat + spn, 0, .999);
 				p0  = _path.getPointRatio(t0, ind, p0);
 				sx += p0.x * amp;
 				sy += p0.y * amp;

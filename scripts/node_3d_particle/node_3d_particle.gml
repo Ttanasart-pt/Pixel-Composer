@@ -126,7 +126,7 @@ function Node_3D_Particle(_x, _y, _group = noone) : Node_3D(_x, _y, _group) cons
 	static drawOverlay3D = function(active, _mx, _my, _params) { 
 		var _ori = new __vec3(inputs[9].getValue(,,, true));
 		
-		if(isUsingTool("Move Origin")) tool_ori_obj.drawOverlay3D(9, noone, _ori, active, _mx, _my, _params);
+		if(isUsingTool("Move Origin")) tool_ori_obj.drawOverlay3D(9, _ori, noone, active, _mx, _my, _params);
 	} 
 	
 	////- Node

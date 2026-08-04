@@ -3,23 +3,23 @@ function Node_Path_Weight_Adjust(_x, _y, _group = noone) : Node(_x, _y, _group) 
 	setDimension(96, 48);
 	setDrawIcon();
 	
-	newInput(0, nodeValue_Path("Path"));
+	newInput( 0, nodeValue_Path("Path"));
 	
-	newInput(1, nodeValue_EScroll("Mode", 0, [ "Additive", "Multiplicative" ]));
-	
-	newInput(2, nodeValue_Float("Value", 0));
-	
-	newInput(3, nodeValue_Curve("Curve", CURVE_DEF_11));
-	
-	newInput(4, nodeValue_EScroll("Type", 0, [ "Constant", "Curve" ]));
-	
-	newInput(5, nodeValue_Vec2("Curve Range", [ 0, 1 ]));
+	////- =Adjustment
+	newInput( 1, nodeValue_EScroll( "Mode",  0, [ "Additive", "Multiplicative" ] ));
+	newInput( 4, nodeValue_EScroll( "Type",  0, [ "Constant", "Curve" ]          ));
+	newInput( 2, nodeValue_Float(   "Value", 0            ));
+	newInput( 3, nodeValue_Curve(   "Curve", CURVE_DEF_11 ));
+	newInput( 5, nodeValue_Vec2(    "Curve Range", [0,1]  ));
+	// 6
 	
 	newOutput(0, nodeValue_Output("Path", VALUE_TYPE.pathnode, self));
 	
 	input_display_list = [ 0, 
-	    ["Adjustment", false], 1, 4, 2, 3, 5, 
+	    [ "Adjustment", false ],  1,  4,  2,  3,  5, 
     ];
+    
+    ////- Node
 	
 	curr_path  = noone;
 	curr_mode  = 0;

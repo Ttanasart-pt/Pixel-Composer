@@ -1318,6 +1318,7 @@
             "Node_Path_Smoothen",
             "Node_Path_Extends",
             "Node_Path_Remap",
+            "Node_Path_3D_Transform",
             { "label": "/Combine" },
             "Node_Path_Array",
             "Node_Path_Repeat",

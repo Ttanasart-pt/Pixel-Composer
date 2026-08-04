@@ -60,10 +60,11 @@ function Node_3D_Object(_x, _y, _group = noone) : Node_3D(_x, _y, _group) constr
 		
 		var _rpos = inputs[0].getValue();
 		var _vpos = new __vec3( _rpos[0], _rpos[1], _rpos[2] );
+		var _qrot = object.transform.rotation;
 		
-		if(isUsingTool("Transform"))   tool_object_pos.drawOverlay3D(0, object, _vpos, active, _mx, _my, _params);
-		if(isUsingTool("Rotate"))      tool_object_rot.drawOverlay3D(1, object, _vpos, active, _mx, _my, _params);
-		if(isUsingTool("Scale"))       tool_object_sca.drawOverlay3D(2, object, _vpos, active, _mx, _my, _params);
+		if(isUsingTool("Transform"))   tool_object_pos.drawOverlay3D(0, _vpos, _qrot, active, _mx, _my, _params);
+		if(isUsingTool("Rotate"))      tool_object_rot.drawOverlay3D(1, _vpos, _qrot, active, _mx, _my, _params);
+		if(isUsingTool("Scale"))       tool_object_sca.drawOverlay3D(2, _vpos, _qrot, active, _mx, _my, _params);
 		if(isUsingTool("Side Adjust")) tool_object_sid.drawOverlay3D(object, active, _mx, _my, _params);
 		
 		onDrawOverlay3D(active, _mx, _my, _params);

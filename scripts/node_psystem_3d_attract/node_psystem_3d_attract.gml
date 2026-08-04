@@ -49,7 +49,7 @@ function Node_pSystem_3D_Attract(_x, _y, _group = noone) : Node_3D(_x, _y, _grou
 	static drawOverlay3D = function(active, _mx, _my, _params) { 
 		var _ori = new __vec3(inputs[5].getValue(,,, true));
 		
-		if(isUsingTool("Move Target")) tool_ori_obj.drawOverlay3D(5, noone, _ori, active, _mx, _my, _params);
+		if(isUsingTool("Move Target")) tool_ori_obj.drawOverlay3D(5, _ori, noone, active, _mx, _my, _params);
 	} 
 	
 	////- Nodes

@@ -8,7 +8,7 @@
 		drag_delta = 0;
 		drag_prev  = 0;
 		drag_dist  = 0;
-		drag_val   = 0;
+		drag_val   = [0,0,0];
 		
 		drag_mx = 0; drag_my = 0;
 		drag_px = 0; drag_py = 0;
@@ -28,12 +28,12 @@
 			activeKeyboard = true;
 		}
 		
-		function drawOverlay3D(index, object, _vpos, active, _mx, _my, _params) {
+		function drawOverlay3D(index, _vpos, _orot, active, _mx, _my, _params) {
 			#region ---- main ----
 				var _pos  = node.inputs[index].getValue(,,, true);
-				var _qrot = object == noone? new BBMOD_Quaternion() : object.transform.rotation;
+				var _qrot = _orot == noone? new BBMOD_Quaternion() : _orot;
 				var _qinv = new BBMOD_Quaternion().FromAxisAngle(new BBMOD_Vec3(1, 0, 0), 90);
-			
+				
 				var _camera = _params.scene.camera;
 				var _qview  = new BBMOD_Quaternion().FromEuler(_camera.focus_angle_y, -_camera.focus_angle_x, 0);
 				
@@ -308,10 +308,10 @@
 			activeKeyboard = true;
 		}
 		
-		function drawOverlay3D(index, object, _vpos, active, _mx, _my, _params) {
+		function drawOverlay3D(index, _vpos, _orot, active, _mx, _my, _params) {
 			#region ---- main ----
 				var _rot  = node.inputs[index].getValue();
-				var _qrot = object == noone? new BBMOD_Quaternion() : object.transform.rotation;
+				var _qrot = _orot == noone? new BBMOD_Quaternion() : _orot;
 				var _qinv = new BBMOD_Quaternion().FromAxisAngle(new BBMOD_Vec3(1, 0, 0), 90);
 				
 				var _camera = _params.scene.camera;
@@ -516,7 +516,7 @@
 		drag_delta = 0;
 		drag_prev  = 0;
 		drag_dist  = 0;
-		drag_val   = 0;
+		drag_val   = [0,0,0];
 		
 		drag_mx = 0; drag_my = 0;
 		drag_sx = 0; drag_sy = 0;
@@ -537,11 +537,11 @@
 			activeKeyboard = true;
 		}
 		
-		function drawOverlay3D(index, object, _vpos, active, _mx, _my, _params) {
+		function drawOverlay3D(index, _vpos, _orot, active, _mx, _my, _params) {
 			
 			#region ---- main ----
 				var _sca  = node.inputs[index].getValue(,,, true);
-				var _qrot = object == noone? new BBMOD_Quaternion() : object.transform.rotation;
+				var _qrot = _orot == noone? new BBMOD_Quaternion() : _orot;
 				var _qinv = new BBMOD_Quaternion().FromAxisAngle(new BBMOD_Vec3(1, 0, 0), 90);
 			
 				var _camera = _params.scene.camera;

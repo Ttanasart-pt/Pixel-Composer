@@ -3,9 +3,11 @@ function Node_Path_Reverse(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	setDimension(96, 48);
 	setDrawIcon();
 	
-	newInput(0, nodeValue_Path("Path"));
+	newInput( 0, nodeValue_Path("Path"));
 	
 	newOutput(0, nodeValue_Output("Path", VALUE_TYPE.pathnode, noone));
+	
+	////- Node
 	
 	function _reversePath(_node) : Path(_node) constructor {
 		curr_path  = noone;

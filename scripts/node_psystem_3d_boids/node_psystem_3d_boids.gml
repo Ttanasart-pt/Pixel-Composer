@@ -64,7 +64,7 @@ function Node_pSystem_3D_Boids(_x, _y, _group = noone) : Node_3D(_x, _y, _group)
 	static drawOverlay3D = function(active, _mx, _my, _params) { 
 		var _ori = new __vec3(inputs[13].getValue(,,, true));
 		
-		if(isUsingTool("Move Target")) tool_ori_obj.drawOverlay3D(13, noone, _ori, active, _mx, _my, _params);
+		if(isUsingTool("Move Target")) tool_ori_obj.drawOverlay3D(13, _ori, noone, active, _mx, _my, _params);
 	} 
 	
 	////- Nodes
