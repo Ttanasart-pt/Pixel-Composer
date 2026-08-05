@@ -13,8 +13,8 @@ def title(s): # Replace _ with space and capitalize the first letter in each wor
     return s.replace('_', ' ').title()
     
 # %% Copy image files
-nodeIconDir = "datasrc/NodeIcons"
-shutil.copytree(nodeIconDir, "docsdata/src/nodeIcons", dirs_exist_ok = True)
+shutil.copytree("datasrc/NodeIcons", "docsdata/src/nodeIcons", dirs_exist_ok = True)
+shutil.copytree("datasrc/Themes/default/graphics/node/assets", "docsdata/src/nodeIcons/assets", dirs_exist_ok = True)
 shutil.copytree("docsdata/src", "docs/src", dirs_exist_ok = True)
 
 svg_home = fileUtil.readFile("docs/src/svg/home.svg")
