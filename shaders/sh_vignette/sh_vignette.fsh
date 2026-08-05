@@ -1,7 +1,6 @@
 #pragma use(curve)
 
 #region -- curve -- [1780117484.3465736]
-
     #ifdef _YY_HLSL11_ 
         #define CURVE_MAX  512
     #else 
@@ -133,7 +132,7 @@
 varying vec2 v_vTexcoord;
 varying vec4 v_vColour;
 
-uniform int   light;
+uniform float light;
 uniform vec4  color;
 
 uniform vec2      dimension;
@@ -195,10 +194,14 @@ void main() {
 	float strn = (1. - ((1. - vig) * str));
 	if(strength_curve_use == 1) strn = curveEval(strength_curve, strength_amount, strn);
 	
-	if(light == 1) strn = strn < 0.001? 10000. : 1. / strn;
+	vec4 dcol = samp * strn;
+	     dcol = mix(dcol * color, dcol, strn);
 	
-	vec4 col = samp * strn;
-	     col = mix(col * (light == 1? 1. - color : color), col, strn);
+	strn = strn < 0.001? 10000. : 1. / strn;
+	vec4 lcol = samp * strn;
+	     lcol = mix(lcol * (1. - color), lcol, strn);
+	
+	vec4 col = mix(dcol, lcol, light);
 	
     gl_FragColor = vec4(col.rgb, samp.a);
 }

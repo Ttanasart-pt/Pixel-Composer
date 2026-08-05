@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.8.006",
+    "changes": [
+      {
+        "date": "2026-08-05T03:30:03.465Z",
+        "node": "Vignette",
+        "commit": "**Vignette**: Lighten is now floating value instead of boolean."
+      }
+    ]
+  },
+  {
     "version": "1.21.7.110",
     "changes": [
       {

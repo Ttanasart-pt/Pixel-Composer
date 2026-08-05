@@ -17,8 +17,8 @@ function Node_Vignette(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	newInput( 4, nodeValue_Slider( "Exponent",  .25 )).setPieMenu();
 	
 	////- =Render
-	newInput( 6, nodeValue_Bool(  "Lighten", false    )).setPieMenu();
-	newInput(16, nodeValue_Color( "Color",   ca_white ));
+	newInput( 6, nodeValue_Slider( "Lighten", 0        )).setPieMenu();
+	newInput(16, nodeValue_Color(  "Color",   ca_white ));
 	// 17
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
@@ -68,7 +68,7 @@ function Node_Vignette(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 			shader_set_2( "dimension", surface_get_dimension(_outSurf) );
 			shader_set_2( "center",    _cent );
 			
-			shader_set_i( "light",     _ligh );
+			shader_set_f( "light",     _ligh );
 			shader_set_c( "color",     _colr );
 			
 			draw_surface_safe(_surf);
