@@ -336,6 +336,7 @@
 				var wx = window_get_x() + dialog_x;
 				var wy = window_get_y() + dialog_y;
 				window = winwin_create(wx, wy, dialog_w, dialog_h, windowConfig);
+				winwin_set_shadow(window, false);
 				winwin_enable_per_pixel_alpha(window);
 				winwin_order_front(window);
 				

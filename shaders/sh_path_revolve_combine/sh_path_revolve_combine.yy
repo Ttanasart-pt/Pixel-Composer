@@ -1,0 +1,12 @@
+{
+  "$GMShader":"",
+  "%Name":"sh_path_revolve_combine",
+  "name":"sh_path_revolve_combine",
+  "parent":{
+    "name":"path_revolve",
+    "path":"folders/nodes/data/value/path/surface/path_revolve.yy",
+  },
+  "resourceType":"GMShader",
+  "resourceVersion":"2.0",
+  "type":1,
+}

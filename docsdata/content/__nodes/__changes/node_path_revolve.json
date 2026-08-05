@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.8.006",
+    "changes": [
+      {
+        "date": "2026-08-05T04:39:30.036Z",
+        "node": "Revolve Path",
+        "commit": "**Revolve Path**: Add path-progress based depth sorting."
+      }
+    ]
+  },
+  {
     "version": "1.21.6.005",
     "changes": [
       {

@@ -28,6 +28,7 @@ function Node_Path_Revolve(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	newInput(21, nodeValue_Vec2(     "Scale",     [1,1]   ));
 	
 	////- =Rendering
+	newInput(33, nodeValue_EButton( "Depth Sort", 0, [ "Normal", "Path", "Path Invert" ] ));
 	newInput(17, nodeValue_EButton( "Blend Mode", 0, [ "Normal", "Additive", "Maximum" ] ));
 	newInput( 2, nodeValue_Surface( "Texture"             ));
 	newInput(12, nodeValue_Vec2(    "UV Position", [0,0]  ));
@@ -49,7 +50,7 @@ function Node_Path_Revolve(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	newInput(24, nodeValue_Surface( "End Cap Texture"                                    ));
 	newInput(29, nodeValue_EButton( "Blend Mode", 0, [ "Normal", "Additive", "Maximum" ] ));
 	newInput(32, nodeValue_EButton( "Mapping",    1, [ "None", "Cartesian", "Polar" ]    ));
-	// input 33
+	// 34
 		
 	newOutput( 0, nodeValue_Output("Rendered",  VALUE_TYPE.surface, noone));
 	newOutput( 1, nodeValue_Output("Start Cap", VALUE_TYPE.surface, noone));
@@ -60,7 +61,7 @@ function Node_Path_Revolve(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 		[ "Paths",           false ],  0, 14,  4,  5,  7, 
 		[ "Revolve",         false ],  8,  9, 11, 13, 10, 15, 16,  3, 
 		[ "Transform",       false ], 18, 19, 20, 21, 
-		[ "Rendering",       false ], 17,  2, 12,  6, 30, 
+		[ "Rendering",       false ], 33, 17,  2, 12,  6, 30, 
 		[ "Caps",             true ], 
 			[ "/Start Caps", false, 22 ], 26, 23, 28, 31, 
 			[ "/End Caps",   false, 25 ], 27, 24, 29, 32, 
@@ -71,7 +72,7 @@ function Node_Path_Revolve(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	attribute_surface_depth();
 	attribute_interpolation();
 	
-	temp_surface = [ noone ];
+	temp_surface = [ noone, noone, noone, noone ];
 	
 	curve_scale = new curveMap();
 	
@@ -121,6 +122,7 @@ function Node_Path_Revolve(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 		    var _rot  = _data[20];
 		    var _sca  = _data[21];
 		    
+			var _sort = _data[33];
 			var _blnd = _data[17];
 			var _surf = _data[ 2];
 			var _uvP  = _data[12];
@@ -148,9 +150,10 @@ function Node_Path_Revolve(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 			if(!is_path(_path)) return _outData;
 		#endregion
 		
-		if(!is_surface(_surf)) {
-			temp_surface[0] = surface_verify(temp_surface[0], _dim[0], _dim[1]);
+		for( var i = 0, n = array_length(temp_surface); i < n; i++ ) 
+			temp_surface[i] = surface_verify(temp_surface[i], _dim[0], _dim[1]);
 			
+		if(!is_surface(_surf)) {
 			surface_set_shader(temp_surface[0], sh_coord);
 				draw_empty();
 			surface_reset_shader()
@@ -364,34 +367,23 @@ function Node_Path_Revolve(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 			surface_reset_shader();
 		}
 		
-		var _outSurf = surface_verify(_outData[0], _dim[0], _dim[1], attrDepth());
-		surface_set_shader(_outSurf, sh_path_map_render, true, BLEND.normal);
+		surface_set_shader([temp_surface[1], temp_surface[2]], sh_path_revolve_render, true, BLEND.normal);
 			shader_set_interpolation(_surf);
 			draw_set_color(c_white);
 			
-			shader_set_2( "uvP",        [1,1]    );
-			shader_set_2( "uvS",        [1,1]    );
-			shader_set_2( "trimRange",  [0,1]    );
-			shader_set_c( "blendColor", ca_white );
-			
-			if(_caps && _scOr == 1) { // start cap
-				switch(_scBl) { case 0 : BLEND_NORMAL; break; case 1 : BLEND_ADD; break; case 2 : BLEND_MAX; break; }
-				draw_surface(_outCapS, 0, 0);
-				BLEND_NORMAL
-			}
-			
-			if(_cape && _ecOr == 1) { // end cap
-				switch(_ecBl) { case 0 : BLEND_NORMAL; break; case 1 : BLEND_ADD; break; case 2 : BLEND_MAX; break; }
-				draw_surface(_outCapE, 0, 0);
-				BLEND_NORMAL
-			}
-			
-			shader_set_2("uvP",       _uvP);
-			shader_set_2("uvS",       _uvS);
-			shader_set_2("trimRange", _uvSP? _prng : [0,1]);
+			shader_set_2( "uvP",       _uvP                 );
+			shader_set_2( "uvS",       _uvS                 );
+			shader_set_2( "trimRange", _uvSP? _prng : [0,1] );
+			shader_set_c( "blendColor", ca_white            );
+			shader_set_i( "invert",     _sort               );
 			
 			matrix_set(matrix_world, trans);
-			switch(_blnd) { case 0 : BLEND_NORMAL; break; case 1 : BLEND_ADD; break; case 2 : BLEND_MAX; break; }
+			switch(_sort) { 
+				case 0 : BLEND_NORMAL; break; 
+				case 1 : BLEND_MAX;    break; 
+				case 2 : BLEND_MAX;    break; 
+			}
+			
 			draw_primitive_begin_texture(pr_trianglelist, surface_get_texture(_surf));
 				var _ind = 0;
 				for( var j = 0; j < _sub; j++ ) {
@@ -453,9 +445,42 @@ function Node_Path_Revolve(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 			BLEND_NORMAL
 			matrix_set(matrix_world, MATRIX_IDENTITY);
 			
-			shader_set_2("uvP",       [1,1]);
-			shader_set_2("uvS",       [1,1]);
-			shader_set_2("trimRange", [0,1]);
+		surface_reset_shader();
+		
+		surface_set_shader(temp_surface[3], sh_path_revolve_combine);
+			shader_set_s( "surf_x", temp_surface[1] );
+			shader_set_s( "surf_y", temp_surface[2] );
+			draw_empty();
+		surface_reset_shader();
+		
+		var _outSurf = surface_verify(_outData[0], _dim[0], _dim[1], attrDepth());
+		surface_set_target(_outSurf);
+			DRAW_CLEAR
+			
+			if(_caps && _scOr == 1) { // start cap
+				switch(_scBl) { case 0 : BLEND_NORMAL; break; case 1 : BLEND_ADD; break; case 2 : BLEND_MAX; break; }
+				draw_surface(_outCapS, 0, 0);
+				BLEND_NORMAL
+			}
+			
+			if(_cape && _ecOr == 1) { // end cap
+				switch(_ecBl) { case 0 : BLEND_NORMAL; break; case 1 : BLEND_ADD; break; case 2 : BLEND_MAX; break; }
+				draw_surface(_outCapE, 0, 0);
+				BLEND_NORMAL
+			}
+			
+			switch(_blnd) { case 0 : BLEND_NORMAL; break; case 1 : BLEND_ADD; break; case 2 : BLEND_MAX; break; }
+			
+			shader_set(sh_path_revolve_map);
+				shader_set_interpolation(_surf);
+				shader_set_s( "uvmap",     temp_surface[3]      );
+				shader_set_2( "uvP",       _uvP                 );
+				shader_set_2( "uvS",       _uvS                 );
+				shader_set_2( "trimRange", _uvSP? _prng : [0,1] );
+				shader_set_c( "blendColor", ca_white            );
+				
+				draw_surface(_surf, 0, 0);
+			shader_reset();
 			
 			if(_caps && _scOr == 0) { // start cap
 				switch(_scBl) { case 0 : BLEND_NORMAL; break; case 1 : BLEND_ADD; break; case 2 : BLEND_MAX; break; }
@@ -469,7 +494,7 @@ function Node_Path_Revolve(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 				BLEND_NORMAL
 			}
 			
-		surface_reset_shader();
+		surface_reset_target();
 		
 		return _outData;
 	}
