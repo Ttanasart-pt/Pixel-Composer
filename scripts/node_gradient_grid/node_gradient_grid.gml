@@ -537,7 +537,7 @@ function Node_Gradient_Grid(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 			var _mmx = _mx;
 			var _mmy = _my;
 			
-			if(key_mod_check(CTRL)) {
+			if(key_mod_check(MOD_KEY.ctrl)) {
 				_mmx = round(_mx);
 				_mmy = round(_my);
 			}

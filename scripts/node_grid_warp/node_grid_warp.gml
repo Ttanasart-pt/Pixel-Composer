@@ -513,32 +513,29 @@ function Node_Grid_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 				dragging_sy = anc[1];
 				dragging_mx = mx;
 				dragging_my = my;
-				dragging_px = mx;
-				dragging_py = my;
+				dragging_px = anc[0];
+				dragging_py = anc[1];
 			}
 		}
 		
 		if(dragging_anchor != undefined) {
-			var mmx = mx;
-			var mmy = my;
+			var vx = dragging_sx + (mx - dragging_mx);
+			var vy = dragging_sy + (my - dragging_my);
 			
-			if(key_mod_check(CTRL)) {
-				mmx = round(mmx);
-				mmy = round(mmy);
+			if(key_mod_check(MOD_KEY.ctrl)) {
+				vx = round(vx);
+				vy = round(vy);
 			}
 			
-			mmx = PANEL_PREVIEW.snapX(mmx);
-			mmy = PANEL_PREVIEW.snapY(mmy);
-			
-			var vx = dragging_sx + (mmx - dragging_mx);
-			var vy = dragging_sy + (mmy - dragging_my);
+			vx = PANEL_PREVIEW.snapX(vx);
+			vy = PANEL_PREVIEW.snapY(vy);
 			
 			var _edited = false;
 			if(inputs[dragging_anchor].setValue([vx, vy]))
 				_edited = true;
 			
-			var dx = mmx - dragging_px;
-			var dy = mmy - dragging_py;
+			var dx = vx - dragging_px;
+			var dy = vy - dragging_py;
 			
 			for( var i = 0, n = array_length(anchor_select); i < n; i++ ) {
 				var _a = anchor_select[i];
@@ -552,8 +549,8 @@ function Node_Grid_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 					_edited = true;
 			}
 			
-			dragging_px = mmx;
-			dragging_py = mmy;
+			dragging_px = vx;
+			dragging_py = vy;
 				
 			if(_edited) UNDO_HOLDING = true;
 			
