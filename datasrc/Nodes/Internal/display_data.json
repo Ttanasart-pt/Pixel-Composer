@@ -1256,6 +1256,7 @@
             { "label": "Array" },
             { "label": "/Creator" },
             "Node_Array",
+            "Node_Array_Uniform",
             "Node_Array_Range",
             "Node_Array_CSV_Parse",
             { "label": "/Info" },

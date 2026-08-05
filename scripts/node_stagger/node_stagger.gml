@@ -3,7 +3,7 @@ function Node_Stagger(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	is_simulation   = true;
 	update_on_frame = true;
 	
-	newInput( 0, nodeValue_Surface("Surface"));
+	newInput( 0, nodeValue_Surface( "Surface" ));
 	
 	////- =Stagger
 	newInput( 3, nodeValue_Curve(   "Stagger Curve", CURVE_DEF_01 ));

@@ -1619,6 +1619,7 @@
     {"id":{"name":"node_array_split","path":"scripts/node_array_split/node_array_split.yy",},},
     {"id":{"name":"node_array_transpose","path":"scripts/node_array_transpose/node_array_transpose.yy",},},
     {"id":{"name":"node_array_trim","path":"scripts/node_array_trim/node_array_trim.yy",},},
+    {"id":{"name":"node_array_uniform","path":"scripts/node_array_uniform/node_array_uniform.yy",},},
     {"id":{"name":"node_array_unique","path":"scripts/node_array_unique/node_array_unique.yy",},},
     {"id":{"name":"node_array_zip","path":"scripts/node_array_zip/node_array_zip.yy",},},
     {"id":{"name":"node_array","path":"scripts/node_array/node_array.yy",},},
