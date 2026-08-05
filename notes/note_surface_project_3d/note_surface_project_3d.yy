@@ -1,0 +1,11 @@
+{
+  "$GMNotes":"v1",
+  "%Name":"note_surface_project_3d",
+  "name":"note_surface_project_3d",
+  "parent":{
+    "name":"projectors",
+    "path":"folders/nodes/data/3D/projectors.yy",
+  },
+  "resourceType":"GMNotes",
+  "resourceVersion":"1.1",
+}

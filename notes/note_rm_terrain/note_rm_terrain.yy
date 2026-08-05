@@ -1,0 +1,11 @@
+{
+  "$GMNotes":"v1",
+  "%Name":"note_rm_terrain",
+  "name":"note_rm_terrain",
+  "parent":{
+    "name":"object",
+    "path":"folders/nodes/data/3D/raymarching/object.yy",
+  },
+  "resourceType":"GMNotes",
+  "resourceVersion":"1.1",
+}

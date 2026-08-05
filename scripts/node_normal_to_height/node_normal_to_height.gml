@@ -2,7 +2,7 @@ function Node_Normal_to_Height(_x, _y, _group = noone) : Node_Processor(_x, _y, 
 	name = "Normal to Height";
 	
 	////- =Surface
-	newInput( 0, nodeValue_Surface("Normal In"));
+	newInput( 0, nodeValue_Surface("Normal In")).setRequired();
 	
 	////- =Normal
 	newInput( 1, nodeValue_Float(  "Normal Height",  1 ));

@@ -1,0 +1,1 @@
+Separate image into image array based on colors.

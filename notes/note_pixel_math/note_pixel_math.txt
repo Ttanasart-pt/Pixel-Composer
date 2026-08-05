@@ -1,0 +1,1 @@
+Apply math equation to each pixel.

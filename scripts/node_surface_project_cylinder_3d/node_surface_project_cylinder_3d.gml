@@ -6,7 +6,7 @@ function Node_Surface_Project_Cylinder_3D(_x, _y, _group = noone) : Node_Process
 	newInput( 0, nodeValue_Dimension());
 	
 	////- =Surfaces
-	newInput( 1, nodeValue_Surface( "Cylinder" )).setDrawGroup(0);
+	newInput( 1, nodeValue_Surface( "Cylinder" )).setRequired().setDrawGroup(0);
 	newInput( 2, nodeValue_Surface( "Top"      )).setDrawGroup(0);
 	
 		////- =/Unused (copied from surface project)

@@ -1,0 +1,1 @@
+Create new armature from path.

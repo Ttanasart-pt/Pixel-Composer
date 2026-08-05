@@ -84,6 +84,9 @@
             </tr><tr>
                 <td class="summary-topic junction-type"><p style="color: #ffe478">vec2</p></td>
                 <td><p>Scale</p></td>
+            </tr><tr>
+                <td class="summary-topic junction-type"><p style="color: #8c3f5d">bool</p></td>
+                <td><p>Shift Multiply</p></td>
             </tr>
 <tr height="8px"></tr>
 <tr><th class="head" colspan="2"><p>Outputs</p></th></tr>
@@ -106,7 +109,13 @@
 </button><br><p>Darken pixels from the nearest edge. Work best with black and white image. The height of the bevel is based on the brightness of that pixel.</p><br>
 <p><img class="node-content" src="/src/images/etc/node_bevel.png"></p><br>
 <br><h2><a id="Properties" class="anchor"></a>Properties</h2><br>
-<p><table class="cc3070"><tr><td>Bevel</td></tr><tr><td>Slope</td><td>Shape of the bevel profile.</td></tr><tr><td>Height</td><td>Maximum bevel level.</td></tr><tr><td>Highres</td><td>Use shader with higher iteration for cleaner output.</p><br></td></tr><tr><td><p>Transform</td></tr><tr><td>Shift</td><td>Move bevel to create shading effect.</td></tr><tr><td>Scale</td><td>Scale distance per each bevel level.</td></tr></table></p><br><br><h2 class="nosidebar">Related Links</h2><br><ul class="link-table"><li><span>Base Code: </span><a href="https://github.com/Ttanasart-pt/Pixel-Composer/blob/main/scripts/node_bevel/node_bevel.gml">/scripts/node_bevel/node_bevel.gml</a></li><li><span>Shader [sh_bevel_highp]: </span><a href="https://github.com/Ttanasart-pt/Pixel-Composer/blob/main/shaders/sh_bevel_highp/sh_bevel_highp.fsh">/shaders/sh_bevel_highp/sh_bevel_highp.fsh</a></li><li><span>Shader [sh_bevel]: </span><a href="https://github.com/Ttanasart-pt/Pixel-Composer/blob/main/shaders/sh_bevel/sh_bevel.fsh">/shaders/sh_bevel/sh_bevel.fsh</a></li></ul>
+<p><table class="cc3070"><tr><td>Bevel</td></tr><tr><td><span class="junction" style="border-color: #ff9166AA">Slope</span></td><td>Shape of the bevel profile.</td></tr><tr><td><span class="junction" style="border-color: #ff9166AA">Height</span></td><td>Maximum bevel level.</td></tr><tr><td><span class="junction" style="border-color: #8c3f5dAA">Highres</span></td><td>Use shader with higher iteration for cleaner output.</p><br></td></tr><tr><td><p>Transform</td></tr><tr><td><span class="junction" style="border-color: #ffe478AA">Shift</span></td><td>Move bevel per level.</td></tr><tr><td><span class="junction" style="border-color: #ffe478AA">Scale</span></td><td>Scale distance per each bevel level.</td></tr></table></p><br>
+<h2><a id="Transformation" class="anchor"></a>Transformation</h2><br>
+<p><span class="junction" style="border-color: #ffe478AA">Shift</span> and <span class="junction" style="border-color: #ffe478AA">Scale</span> are used to create directional shading effect. Reducing the scale to be lower than 1 increase the width of 
+each band. Then apply shift to set light position.</p><br>
+<p><img class="node-content" src="/src/images/etc/node_bevel_transform.png"></p><br>
+<br><h2 class="nosidebar">Commit History</h2><br>
+<table class="change-table"><tr><th>1.21.8.006</th><td><ul><li> Add option to use additive for shifting instead of multiplicative.</li></ul></td></tr></table><br><h2 class="nosidebar">Related Links</h2><br><ul class="link-table"><li><span>Base Code: </span><a href="https://github.com/Ttanasart-pt/Pixel-Composer/blob/main/scripts/node_bevel/node_bevel.gml">/scripts/node_bevel/node_bevel.gml</a></li><li><span>Shader [sh_bevel]: </span><a href="https://github.com/Ttanasart-pt/Pixel-Composer/blob/main/shaders/sh_bevel/sh_bevel.fsh">/shaders/sh_bevel/sh_bevel.fsh</a></li><li><span>Shader [sh_bevel_highp]: </span><a href="https://github.com/Ttanasart-pt/Pixel-Composer/blob/main/shaders/sh_bevel_highp/sh_bevel_highp.fsh">/shaders/sh_bevel_highp/sh_bevel_highp.fsh</a></li></ul>
         </div>
     </div>
 

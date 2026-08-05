@@ -8,7 +8,7 @@ The direct value apply directly to each object based on its index, there are set
 <junc Positions>, <junc Rotations>, and <junc Scales> 
 properties. 
 
-The compound value multiply per each index, e.g. the second object will tranform twice as much as the first object, 
+The compound value multiply per each index, e.g. the second object will transform twice as much as the first object, 
 the compound values are controlled by the <junc Shift Position>, <junc Shift Rotation>, and <junc Shift Scale> properties.
 
 Both direct and compound transformations are added to create the final transformations.

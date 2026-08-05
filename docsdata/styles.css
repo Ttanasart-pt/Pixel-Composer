@@ -925,6 +925,16 @@ table.cc4060 td:nth-child(2) {
     width: 60%;
 }
 
+table.cc5050 td:first-child {
+    text-align: center;
+    width: 50%;
+}
+
+table.cc5050 td:nth-child(2) {
+    text-align: center;
+    width: 50%;
+}
+
 table.ccc203050 td:first-child {
     text-align: center;
     width: 20%;

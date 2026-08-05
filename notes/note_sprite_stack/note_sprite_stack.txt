@@ -2,6 +2,25 @@ Sprite stack is a way to create a 3D like image using 2D images by stacking them
 
 <img node_sprite_stack>
 
+## Properties
+
+[proptable]
+Surface
+Output dimension type|Method for getting output dimension.
+Array Process|When inputing array of surfaces. Whether to create multiple outputs for each surface or combine all surface into one stack.
+Stack
+Stack Amount|Amount of layers.
+Stack Shift|Shifting per layer.
+Move Base|Shift the origin to the last stack layer and invert per-layer shifting.
+Position|Origin position.
+Rotation|Rotate surface before stacking.
+Render
+Stack Blend|Multiply stack by color.
+Highlight|Apply different color to the layer before the last to create highlight effect.
+Highlight Color|Color of the highlight layer.
+Highlight Alpha|Opacity of the highlight layer.
+[/proptable]
+
 ## Stacking Positions
 
 When stacking, each copy will be shifted by the amount set by the <junc Stack shift> properties. 

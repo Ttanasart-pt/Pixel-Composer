@@ -1,0 +1,11 @@
+{
+  "$GMNotes":"v1",
+  "%Name":"note_barrel_distort",
+  "name":"note_barrel_distort",
+  "parent":{
+    "name":"warps",
+    "path":"folders/nodes/data/filter/warps.yy",
+  },
+  "resourceType":"GMNotes",
+  "resourceVersion":"1.1",
+}

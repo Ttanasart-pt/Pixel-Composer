@@ -5,8 +5,8 @@ function Node_Weld(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	newInput( 4, nodeValue_Toggle( "Channel", 0b1111, { data: array_create(4, THEME.inspector_channel) }));
 	
 	////- =Surfaces
-	newInput( 0, nodeValue_Surface( "Surface 1"  ));
-	newInput( 1, nodeValue_Surface( "Surface 2"  ));
+	newInput( 0, nodeValue_Surface( "Surface 1"  )).setRequired();
+	newInput( 1, nodeValue_Surface( "Surface 2"  )).setRequired();
 	newInput( 7, nodeValue_Surface( "Mask"       ));
 	newInput( 2, nodeValue_Slider(  "Mix",     1 ));
 	__init_mask_modifier(7, 5); // inputs 5, 6, 

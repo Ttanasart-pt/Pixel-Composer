@@ -1,0 +1,1 @@
+Extract all pixel from the surface into vec4 array.

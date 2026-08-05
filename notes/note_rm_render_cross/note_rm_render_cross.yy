@@ -1,0 +1,11 @@
+{
+  "$GMNotes":"v1",
+  "%Name":"note_rm_render_cross",
+  "name":"note_rm_render_cross",
+  "parent":{
+    "name":"render",
+    "path":"folders/nodes/data/3D/raymarching/render.yy",
+  },
+  "resourceType":"GMNotes",
+  "resourceVersion":"1.1",
+}

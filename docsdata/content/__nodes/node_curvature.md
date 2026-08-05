@@ -1,0 +1,1 @@
+Calculate the curvature around each pixel.

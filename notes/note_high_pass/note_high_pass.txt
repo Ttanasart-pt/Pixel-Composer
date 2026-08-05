@@ -1,0 +1,1 @@
+High pass effect is used for image sharpening.

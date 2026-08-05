@@ -1,0 +1,1 @@
+Blend two height maps using heightmap specific blend modes.

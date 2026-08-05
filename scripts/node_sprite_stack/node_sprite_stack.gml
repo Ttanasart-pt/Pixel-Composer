@@ -10,25 +10,25 @@ function Node_Sprite_Stack(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	];
 	
 	////- =Surface
-	newInput( 0, nodeValue_Surface( "Base shape" ));
-	newInput(13, nodeValue_EScroll( "Output dimension type", OUTPUT_SCALING.constant, __output_dim_enum ));
+	newInput( 0, nodeValue_Surface( "Base Shape" )).setRequired();
+	newInput(13, nodeValue_EScroll( "Output Dimension Type", OUTPUT_SCALING.constant, __output_dim_enum ));
 	newInput( 1, nodeValue_Dimension());
-	newInput(14, nodeValue_Vec2(    "Relative dimension", [1,1] ));
-	newInput(12, nodeValue_EScroll( "Array process",       1, [ "Individual", "Combined" ] ));
+	newInput(14, nodeValue_Vec2(    "Relative Dimension", [1,1] ));
+	newInput(12, nodeValue_EScroll( "Array Process",       1, [ "Individual", "Combined" ] ));
 	
 	////- =Stack
-	newInput( 2, nodeValue_Int(      "Stack amount",  4    )).setPieMenu();
-	newInput( 3, nodeValue_Vec2(     "Stack shift",  [0,1] )).setPieMenu();
-	newInput( 8, nodeValue_Bool(     "Move base",    false, "Make each copy move the original image." )).setPieMenu();
+	newInput( 2, nodeValue_Int(      "Stack Amount",  4    )).setPieMenu();
+	newInput( 3, nodeValue_Vec2(     "Stack Shift",  [0,1] )).setPieMenu();
+	newInput( 8, nodeValue_Bool(     "Move Base",    false, "Make each copy move the original image." )).setPieMenu();
 	newInput( 4, nodeValue_Vec2(     "Position",     [0,0] )).setUnitSimple();
 	newInput( 5, nodeValue_Rotation( "Rotation",      0    )).hideLabel().setPieMenu();
 	
 	////- =Render
-	newInput( 6, nodeValue_Color(    "Stack blend",     ca_white ));
-	newInput( 7, nodeValue_Slider(   "Alpha end",       1        )).setTooltip("Alpha value for the last copy." );
+	newInput( 6, nodeValue_Color(    "Stack Blend",     ca_white ));
+	newInput( 7, nodeValue_Slider(   "Alpha End",       1        )).setTooltip("Alpha value for the last copy." );
 	newInput( 9, nodeValue_EScroll(  "Highlight",       0, [ "None", "Color", "Inner pixel" ] ));
-	newInput(10, nodeValue_Color(    "Highlight color", ca_white ));
-	newInput(11, nodeValue_Slider(   "Highlight alpha", 1        ));
+	newInput(10, nodeValue_Color(    "Highlight Color", ca_white ));
+	newInput(11, nodeValue_Slider(   "Highlight Alpha", 1        ));
 	// 15
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));

@@ -6,7 +6,7 @@ function Node_Heightmap_Project_3D(_x, _y, _group = noone) : Node_Processor(_x, 
 	newInput( 0, nodeValue_Dimension());
 	
 	////- =Surfaces
-	newInput( 1, nodeValue_Surface( "Heightmap"     ));
+	newInput( 1, nodeValue_Surface( "Heightmap"     )).setRequired();
 	newInput( 2, nodeValue_Surface( "Texture"       ));
 	newInput(10, nodeValue_Surface( "Texture Side"  ));
 	newInput(11, nodeValue_Surface( "Texture Front" ));

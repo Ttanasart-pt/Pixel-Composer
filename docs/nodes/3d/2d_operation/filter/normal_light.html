@@ -69,12 +69,12 @@
             </tr><tr>
                 <td class="summary-topic junction-type"><p style="color: #8c3f5d">bool</p></td>
                 <td><p>Keep Alpha</p></td>
-            </tr><tr><th colspan="2" class="summary-topic junction-separator"><p>Input</p></th></tr><tr>
-                <td class="summary-topic junction-type"><p style="color: #ffe478">float</p></td>
-                <td><p>Height</p></td>
-            </tr><tr>
+            </tr><tr><th colspan="2" class="summary-topic junction-separator"><p>Heightmap</p></th></tr><tr>
                 <td class="summary-topic junction-type"><p style="color: #ff6b97">surface</p></td>
                 <td><p>Height Map</p></td>
+            </tr><tr>
+                <td class="summary-topic junction-type"><p style="color: #ffe478">float</p></td>
+                <td><p>Height</p></td>
             </tr><tr><td colspan="2"><table class="summary-table dynamic" style="margin-top: 8px;"><tr>
                 <th colspan="2" class="summary-topic">
                     <p style="margin: -0.85rem auto -4px auto;width: fit-content;padding: 0px 8px;">Dynamic Inputs</p>
@@ -122,6 +122,9 @@
                     <td class="summary-topic junction-type"><p style="color: #ffe478" >slider</p></td>
                     <td><p>Radial Band Ratio</p></td>
                 </tr><tr>
+                    <td class="summary-topic junction-type"><p style="color: #ffe478" >slider</p></td>
+                    <td><p>Radial Shadow</p></td>
+                </tr><tr>
                     <td class="summary-topic junction-type"><p style="color: #ff9166" >islider</p></td>
                     <td><p>Banding</p></td>
                 </tr></table></td></tr>
@@ -146,12 +149,10 @@
     }
 </script><img class="node-graph-preview" src="/src/images/nodegen/node_normal_light/node_normal_light-graph.png"><script>const sampleContent = "{\"version\":120076,\"nodes\":[{\"x\":-576,\"y\":-160,\"inputs\":[{\"from_node\":\"gA8CS93627605lsKOl8Km3RJAsfOVnZN\",\"from_index\":0},{\"r\":{\"d\":16},\"m\":1},{\"unit\":1},{},{\"attri\":{\"curved\":false}},{},{},{},{},{},{},{\"v\":0},{\"r\":{\"d\":true},\"m\":1},{}],\"outputs\":[{}],\"renamed\":true,\"id\":\"gA8CSG3634678Szc7OG0IoJfB8rwlKRx\",\"version\":120076,\"attriTool\":{},\"name\":\"Bevel\",\"inspectInputs\":[{\"v\":1},{\"v\":1},{\"v\":1},{},{\"v\":1}],\"iname\":\"Bevel58372\",\"type\":\"Node_Bevel\"},{\"x\":-736,\"y\":-224,\"inputs\":[{\"linked\":true},{},{\"r\":{\"d\":\"Ellipse\"},\"m\":1},{\"unit\":1},{},{},{},{},{},{},{},{},{},{},{\"v\":1},{},{\"unit\":1},{\"unit\":1},{},{},{},{},{},{},{},{},{},{},{\"r\":{\"d\":0.93999999999999995},\"m\":1},{},{},{},{\"unit\":1},{\"unit\":1},{},{\"unit\":1},{},{},{},{},{\"unit\":1},{},{},{},{},{},{},{},{},{}],\"outputs\":[{},{},{}],\"renamed\":true,\"id\":\"gA8CS93627605lsKOl8Km3RJAsfOVnZN\",\"version\":120076,\"attriTool\":{},\"name\":\"Draw Shape\",\"inspectInputs\":[{\"v\":1},{\"v\":1},{\"v\":1},{},{\"v\":1}],\"iname\":\"Draw_Shape51077\",\"type\":\"Node_Shape\"},{\"x\":-416,\"y\":-160,\"inputs\":[{\"from_node\":\"gA8CSG3634678Szc7OG0IoJfB8rwlKRx\",\"from_index\":0},{\"r\":{\"d\":8},\"m\":1},{\"r\":{\"d\":1},\"m\":1},{},{},{\"r\":{\"d\":true},\"m\":1},{\"v\":0},{\"v\":0},{\"r\":{\"d\":false},\"m\":1},{}],\"outputs\":[{}],\"renamed\":true,\"id\":\"gA8CS73625576roU7huZqAZSwWAMYvxI\",\"version\":120076,\"attriTool\":{},\"name\":\"Normal\",\"inspectInputs\":[{\"v\":1},{\"v\":1},{\"v\":1},{},{\"v\":1}],\"iname\":\"Normal71922\",\"type\":\"Node_Normal\"},{\"x\":-256,\"y\":-224,\"inputs\":[{\"from_node\":\"gA8CS93627605lsKOl8Km3RJAsfOVnZN\",\"from_index\":0},{\"from_node\":\"gA8CS73625576roU7huZqAZSwWAMYvxI\",\"from_index\":0},{},{},{},{},{\"r\":{\"d\":1},\"m\":1},{\"unit\":1,\"r\":{\"d\":[0.25,0.25]},\"m\":1},{\"r\":{\"d\":16},\"m\":1},{\"r\":{\"d\":2},\"m\":1},{},{\"unit\":1},{},{\"r\":{\"d\":8},\"m\":1},{}],\"outputs\":[{},{}],\"renamed\":true,\"data_length\":9,\"id\":\"gA8CSV3649322cnBsmNpM9GyXemeqF56\",\"version\":120076,\"input_fix_len\":6,\"attri\":{\"size\":0},\"attriTool\":{},\"name\":\"Normal Light\",\"inspectInputs\":[{\"v\":1},{\"v\":1},{\"v\":1},{},{\"v\":1}],\"iname\":\"Normal_Light36859\",\"type\":\"Node_Normal_Light\"}]}";</script><button class="copy-sample" onclick="copyToClipboard(sampleContent)">
         Copy to Clipboard
-</button><br><p>This node allows you to light up the surface using normal map.</p><br>
+</button><br><p>Add lighting to the surface using normal map to control ray reflection.</p><br>
 <p><img class="node-content" src="/src/images/etc/node_normal_light.png"></p><br>
-<br><h2><a id="Light Properties" class="anchor"></a>Light Properties</h2><br>
-<p>There're 2 types of lights: point and sun. Point light illuminate the surrouding area, sun light will light up 
-the entire image equally.</p><br>
-<p><img class="node-content" src="/src/images/etc/node_normal_light_light_properties.png"></p><br>
+<br><h2><a id="Properties" class="anchor"></a>Properties</h2><br>
+<p><table class="cc3070"><tr><td>Input</td></tr><tr><td><span class="junction" style="border-color: #8fde5dAA">Ambient</span></td><td>Base color without any light.</td></tr><tr><td><span class="junction" style="border-color: #8c3f5dAA">Keep Alpha</span></td><td>Use input opacity.</td></tr><tr><td>Shape</td></tr><tr><td><span class="junction">Type</span></td><td>Light type</td></tr><tr><td><span class="junction">Position</span></td><td>Light position</td></tr><tr><td><span class="junction">Distance</span></td><td>Light distance away from the surface.</td></tr><tr><td><span class="junction">Range</span></td><td>Light radius</td></tr><tr><td>Light</td></tr><tr><td><span class="junction">Intensity</span></td><td>Light brightness</td></tr><tr><td><span class="junction">Color</span></td><td>Light color</td></tr><tr><td>- Attenuation</td></tr><tr><td><span class="junction">Attenuation</span></td><td>How the light will fade away over distance</td></tr><tr><td>- Banding</td></tr><tr><td><span class="junction">Radial Banding</span></td><td>Creating light band around point source.</td></tr><tr><td><span class="junction">Radial Start</span></td><td>Shift light band angle.</td></tr><tr><td><span class="junction">Radial Band Ratio</span></td><td>Ratio of light band.</td></tr><tr><td><span class="junction">Radial Shadow</span></td><td>Darkness level of the light outside the band.</td></tr><tr><td><span class="junction">Banding</span></td><td>Discretize intensity to fixed level.</td></tr></table></p><br>
 <br><h2 class="nosidebar">Commit History</h2><br>
 <table class="change-table"><tr><th>1.21.6.007</th><td><ul><li> Now work without normal map connected, why don't you just use 2d light node for that I don't know.</li></ul></td></tr><tr><th>1.21.6.005</th><td><ul><li> Remove range control from sun type.</li></ul></td></tr></table><br><h2 class="nosidebar">Related Links</h2><br><ul class="link-table"><li><span>Base Code: </span><a href="https://github.com/Ttanasart-pt/Pixel-Composer/blob/main/scripts/node_normal_light/node_normal_light.gml">/scripts/node_normal_light/node_normal_light.gml</a></li><li><span>Shader [sh_normal_light_apply]: </span><a href="https://github.com/Ttanasart-pt/Pixel-Composer/blob/main/shaders/sh_normal_light_apply/sh_normal_light_apply.fsh">/shaders/sh_normal_light_apply/sh_normal_light_apply.fsh</a></li><li><span>Shader [sh_normal_light]: </span><a href="https://github.com/Ttanasart-pt/Pixel-Composer/blob/main/shaders/sh_normal_light/sh_normal_light.fsh">/shaders/sh_normal_light/sh_normal_light.fsh</a></li></ul>
         </div>

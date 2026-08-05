@@ -22,5 +22,6 @@ Attenuation|How the light will fade away over distance
 Radial Banding|Creating light band around point source.
 Radial Start|Shift light band angle.
 Radial Band Ratio|Ratio of light band.
+Radial Shadow|Darkness level of the light outside the band.
 Banding|Discretize intensity to fixed level.
 [/proptable]

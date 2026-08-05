@@ -21,7 +21,7 @@ function Node_Fluffify(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	////- =Iteration
 	newInput(10, nodeValue_Float(    "Iteration",     10             )).setPieMenu();
 	newInput(11, nodeValue_Slider(   "Size Modify",   1, [0, 2, .01] ));
-	newInput(12, nodeValue_Slider(   "Span Modify",   1, [0, 2, .01] ));
+	newInput(12, nodeValue_Slider(   "Radius Modify", 1, [0, 2, .01] ));
 	newInput(20, nodeValue_Vec2(     "Offset",       [0,0]           ));
 	
 	////- =Rendering

@@ -3,7 +3,7 @@ function Node_Anim_Loop(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	update_on_frame = true;
 	is_simulation   = true;
 	
-	newInput( 0, nodeValue_Surface("Surface"));
+	newInput( 0, nodeValue_Surface( "Surface" ));
 	
 	////- =Loop
 	newInput( 1, nodeValue_Int(  "Loop Start",  1    )).setPieMenu();

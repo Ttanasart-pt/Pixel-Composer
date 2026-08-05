@@ -1,0 +1,11 @@
+{
+  "$GMNotes":"v1",
+  "%Name":"note_3d_get_data",
+  "name":"note_3d_get_data",
+  "parent":{
+    "name":"d3d_modifier",
+    "path":"folders/nodes/data/3D/d3d_modifier.yy",
+  },
+  "resourceType":"GMNotes",
+  "resourceVersion":"1.1",
+}

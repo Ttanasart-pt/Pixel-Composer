@@ -1,0 +1,1 @@
+Add solid background color to a surface.

@@ -2,7 +2,7 @@ function Node_Normal_Adjust(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	name = "Adjust Normal";
 	
 	////- =Normal
-	newInput( 0, nodeValue_Surface( "Normal" ));
+	newInput( 0, nodeValue_Surface( "Normal" )).setRequired();
 	newInput( 6, nodeValue_Surface( "Mask"   ));
 	
 	////- =Transform

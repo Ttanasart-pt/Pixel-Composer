@@ -1,0 +1,1 @@
+Combines multiple tagged surfaces create by <node Node_Surface_Tag> node by aligning tags of the same name.

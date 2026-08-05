@@ -1,0 +1,11 @@
+{
+  "$GMNotes":"v1",
+  "%Name":"note_fast3D",
+  "name":"note_fast3D",
+  "parent":{
+    "name":"fast3d",
+    "path":"folders/nodes/data/3D/fast3d.yy",
+  },
+  "resourceType":"GMNotes",
+  "resourceVersion":"1.1",
+}

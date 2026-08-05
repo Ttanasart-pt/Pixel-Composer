@@ -2,17 +2,17 @@ function Node_Ambient_Occlusion(_x, _y, _group = noone) : Node_Processor(_x, _y,
 	name = "Ambient Occlusion";
 	
 	newActiveInput(2);
-	newInput(0, nodeValue_Surface("Height Map"));
+	newInput( 0, nodeValue_Surface("Height Map")).setRequired();
 	
 	////- =Effect
-	newInput(3, nodeValue_Float(  "Height",     .25   )).setMappable(9).setUnitSimple().setPieMenu();
-	newInput(1, nodeValue_Slider( "Intensity",   4, [ 0, 8, 0.1 ] )).setMappable(8).setCurvable(10).setPieMenu();
-	newInput(4, nodeValue_Bool(   "Pixel Sweep", true ));
+	newInput( 3, nodeValue_Float(  "Height",     .25   )).setMappable(9).setUnitSimple().setPieMenu();
+	newInput( 1, nodeValue_Slider( "Intensity",   4, [ 0, 8, 0.1 ] )).setMappable(8).setCurvable(10).setPieMenu();
+	newInput( 4, nodeValue_Bool(   "Pixel Sweep", true ));
 	
-	////- =Blend
-	newInput(5, nodeValue_Bool(    "Blend Original", false ));
-	newInput(6, nodeValue_EScroll( "Blendmode",      0, [ "Multiply", "Subtract" ] ));
-	newInput(7, nodeValue_Slider(  "Blend Strength", 1     ));
+	////- =Blend Original
+	newInput( 5, nodeValue_Bool(    "Blend Original", false ));
+	newInput( 6, nodeValue_EScroll( "Blendmode",      0, [ "Multiply", "Subtract" ] ));
+	newInput( 7, nodeValue_Slider(  "Blend Strength", 1     ));
 	// 11
 	
 	input_display_list = [ 2, 0, 

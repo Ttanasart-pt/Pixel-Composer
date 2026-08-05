@@ -1,0 +1,1 @@
+Render armature to surface by drawing thick line around each bone.

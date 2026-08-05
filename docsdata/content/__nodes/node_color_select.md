@@ -1,0 +1,1 @@
+Select part of the image based on color in HSV space.

@@ -1,11 +1,16 @@
 <v 1.18.0/>
 Generate ambient occlusion using brightness as height.
+
 ## Properties
-### <junc height map>
-Image to generate ambient occlusion from.
-### <junc height>
-Maximum height, this effect the radius of the ambient occlusion.
-### <junc intensity>
-Intensity of the ambient occlusion.
-### <junc pixel sweep>
-Use binary sweep instead of uniform sampling.
+
+[proptable]
+Height Map|Image to generate ambient occlusion from.
+Effect
+Height|Maximum height, this effect the radius of the ambient occlusion.
+Intensity|Intensity of the ambient occlusion.
+Pixel Sweep|Use binary sweep instead of uniform sampling.
+Blend Original
+Blend Original|Blend ao with the original surface.
+Blendmode|Blend mode use for blending.
+Blend Strength|Strength of blending.
+[/proptable]

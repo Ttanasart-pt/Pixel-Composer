@@ -1,0 +1,1 @@
+Subdivide each triangle in a model to increase vertex density.

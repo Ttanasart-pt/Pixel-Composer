@@ -1,0 +1,11 @@
+{
+  "$GMNotes":"v1",
+  "%Name":"note_gap_contract",
+  "name":"note_gap_contract",
+  "parent":{
+    "name":"fixes",
+    "path":"folders/nodes/data/filter/fixes.yy",
+  },
+  "resourceType":"GMNotes",
+  "resourceVersion":"1.1",
+}

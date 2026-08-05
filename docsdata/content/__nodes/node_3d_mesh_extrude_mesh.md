@@ -1,0 +1,1 @@
+Create 3D object by extruding mesh data (e.g. mesh output from <node Node_Shape_Polygon>).

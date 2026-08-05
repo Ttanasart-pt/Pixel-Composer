@@ -1,10 +1,27 @@
-This node allows you to light up the surface using normal map.
+Add lighting to the surface using normal map to control ray reflection.
 
 <img node_normal_light>
 
-## Light Properties
+## Properties
 
-There're 2 types of lights: point and sun. Point light illuminate the surrouding area, sun light will light up 
-the entire image equally.
-
-<img node_normal_light_light_properties>
+[proptable]
+Input
+Ambient|Base color without any light.
+Keep Alpha|Use input opacity.
+Shape
+Type|Light type
+Position|Light position
+Distance|Light distance away from the surface.
+Range|Light radius
+Light
+Intensity|Light brightness
+Color|Light color
+- Attenuation
+Attenuation|How the light will fade away over distance
+- Banding
+Radial Banding|Creating light band around point source.
+Radial Start|Shift light band angle.
+Radial Band Ratio|Ratio of light band.
+Radial Shadow|Darkness level of the light outside the band.
+Banding|Discretize intensity to fixed level.
+[/proptable]

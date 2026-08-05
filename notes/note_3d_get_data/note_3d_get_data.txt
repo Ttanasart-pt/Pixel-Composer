@@ -1,0 +1,1 @@
+Returns different data from a 3D model.

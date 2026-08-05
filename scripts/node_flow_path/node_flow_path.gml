@@ -12,20 +12,20 @@ function Node_Flow_Path(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	__init_mask_modifier(1, 3); // inputs 3, 4
 	
 	////- =Path
-	newInput( 7, nodeValue_Path( "Path" ));
-	newInput(10, nodeValue_Int(      "Sample",          16    )).setPieMenu();
-	newInput(13, nodeValue_Bool(     "Invert",          false )).setPieMenu();
-	newInput( 8, nodeValue_Float(    "Radius",          .25   )).setUnitSimple().setPieMenu();
-	newInput(11, nodeValue_Bool(     "Apply Weight",    false )).setPieMenu();
-	newInput(16, nodeValue_Curve(    "Weight Blending", CURVE_DEF_01 ));
+	newInput( 7, nodeValue_Path(  "Path" ));
+	newInput(10, nodeValue_Int(   "Sample",          16    )).setPieMenu();
+	newInput(13, nodeValue_Bool(  "Invert",          false )).setPieMenu();
+	newInput( 8, nodeValue_Float( "Radius",          .25   )).setUnitSimple().setPieMenu();
+	newInput(11, nodeValue_Bool(  "Apply Weight",    false )).setPieMenu();
+	newInput(16, nodeValue_Curve( "Weight Blending", CURVE_DEF_01 ));
 	
 	////- =Flow
-	newInput( 9, nodeValue_Slider(   "Flow Rate",    1     )).setPieMenu();
-	newInput(12, nodeValue_Int(      "Flow Speed",   1     )).setPieMenu();
+	newInput( 9, nodeValue_Slider("Flow Rate",    1     )).setPieMenu();
+	newInput(12, nodeValue_Int(   "Flow Speed",   1     )).setPieMenu();
 	
 	////- =Flowmap
-	newInput(14, nodeValue_Bool(     "Tile",         false ));
-	newInput(15, nodeValue_Int(      "Blur",         1     ));
+	newInput(14, nodeValue_Bool(  "Tile",         false ));
+	newInput(15, nodeValue_Int(   "Blur",         1     ));
 	// input 16
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));

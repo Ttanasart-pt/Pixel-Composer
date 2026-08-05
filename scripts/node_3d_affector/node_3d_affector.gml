@@ -9,7 +9,7 @@ function Node_3D_Affector(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _grou
 	newInput(i+0, nodeValue_D3Scene("Scene")).setVisible(true, true);
 	
 	////- =Affectors
-	newInput(i+1, nodeValue_EScroll( "Shape",             0, __enum_array_gen( [ "Sphere", "Plane", ], s_node_3d_affector_shape )));
+	newInput(i+1, nodeValue_EScroll( "Shape", 0, __enum_array_gen( [ "Sphere", "Plane", ], s_node_3d_affector_shape )));
 	
 	////- =Falloff
 	newInput(i+2, nodeValue_Float(   "Falloff Distance", .5            ));

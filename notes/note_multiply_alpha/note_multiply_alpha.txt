@@ -1,0 +1,1 @@
+Multiply opacity level into pixel RGB values. This can be useful for composition as it will clear all colored transparent to pure transparent (#00000000).

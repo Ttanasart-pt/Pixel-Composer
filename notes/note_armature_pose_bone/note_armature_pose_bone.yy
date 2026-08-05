@@ -1,0 +1,11 @@
+{
+  "$GMNotes":"v1",
+  "%Name":"note_armature_pose_bone",
+  "name":"note_armature_pose_bone",
+  "parent":{
+    "name":"armature",
+    "path":"folders/nodes/data/armature.yy",
+  },
+  "resourceType":"GMNotes",
+  "resourceVersion":"1.1",
+}

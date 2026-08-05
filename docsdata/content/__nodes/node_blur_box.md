@@ -1,0 +1,1 @@
+Apply box blur effect to a surface.

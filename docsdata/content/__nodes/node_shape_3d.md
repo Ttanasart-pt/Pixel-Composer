@@ -1,0 +1,1 @@
+Simple node that combine 3D mesh, light and camera into one node.

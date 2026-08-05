@@ -1,0 +1,11 @@
+{
+  "$GMNotes":"v1",
+  "%Name":"note_3d_instancer",
+  "name":"note_3d_instancer",
+  "parent":{
+    "name":"d3d_particle",
+    "path":"folders/nodes/data/3D/d3d_particle.yy",
+  },
+  "resourceType":"GMNotes",
+  "resourceVersion":"1.1",
+}

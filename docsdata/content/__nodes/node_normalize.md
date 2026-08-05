@@ -1,0 +1,1 @@
+Normalize image brightness level to pure black (#000000) to pure white (#FFFFFF).

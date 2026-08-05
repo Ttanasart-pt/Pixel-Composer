@@ -1,17 +1,18 @@
 function Node_3D_Displace(_x, _y, _group = noone) : Node_3D_Modifier(_x, _y, _group) constructor {
 	name = "Displace Vertex";
 	
-	newInput(in_mesh + 0, nodeValue_D3Material("Displace Texture", new __d3dMaterial())).setVisible(true, true);
+	////- =Mesh
+	newInput( in_mesh+2, nodeValue_Float( "Subobjects",  -1 ));
 	
-	newInput(in_mesh + 1, nodeValue_Float("Height", .1));
-	
-	newInput(in_mesh + 2, nodeValue_Float("Subobjects", -1));
-	
-	newInput(in_mesh + 3, nodeValue_Bool("Recalculate normal", true));
+	////- =Displace
+	newInput( in_mesh+0, nodeValue_D3Material( "Displace Texture", new __d3dMaterial())).setVisible(true, true);
+	newInput( in_mesh+1, nodeValue_Float( "Height",      .1 ));
+	newInput( in_mesh+3, nodeValue_Bool(  "Recalculate Normal", true ));
+	// in_mesh+4
 	
 	input_display_list = [ 
-		["Mesh",     false], 0, in_mesh + 2, 
-		["Displace", false], in_mesh + 0, in_mesh + 1, in_mesh + 3
+		[ "Mesh",     false ], 0, in_mesh + 2, 
+		[ "Displace", false ], in_mesh + 0, in_mesh + 1, in_mesh + 3
 	];
 	
 	static processData = function(_output, _data, _array_index = 0, _frame = CURRENT_FRAME) { 
