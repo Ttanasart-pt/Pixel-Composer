@@ -3763,7 +3763,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		}
 	}
 	
-	static dropPath = noone;  
+	static dropPath = noone;
 	
 	static onClone  = undefined
 	static clone    = function(_group = PANEL_GRAPH.getCurrentContext()) {

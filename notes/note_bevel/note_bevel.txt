@@ -1,24 +1,16 @@
-Extude out the white colors. Works best with black and white image.
+Darken pixels from the nearest edge. Work best with black and white image. The height of the bevel is based on the brightness of that pixel.
 
 <img node_bevel>
 
-## Bevel Properties
+## Properties
 
-### Height
+[proptable]
+Bevel
+Slope|Shape of the bevel profile.
+Height|Maximum bevel level.
+Highres|Use shader with higher iteration for cleaner output.
 
-Agjust the bevel amount.
-
-<img node_bevel_heights>
-
-### Slope
-
-Shape of the bevel profile.
-
-<img node_bevel_slopes>
-
-## Transformations
-
-Adding transformation to control the bevel direction. Scale can be use to increase the step size for each 
-bevel level.
-
-<img node_bevel_transform>
+Transform
+Shift|Move bevel to create shading effect.
+Scale|Scale distance per each bevel level.
+[/proptable]

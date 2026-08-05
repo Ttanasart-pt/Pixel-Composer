@@ -6,6 +6,11 @@
         "date": "2026-08-05T04:39:30.036Z",
         "node": "Revolve Path",
         "commit": "**Revolve Path**: Add path-progress based depth sorting."
+      },
+      {
+        "date": "2026-08-05T06:23:12.989Z",
+        "node": "",
+        "commit": "--fix click detection outside the window"
       }
     ]
   },

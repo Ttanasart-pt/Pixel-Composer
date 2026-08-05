@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.8.006",
+    "changes": [
+      {
+        "date": "2026-08-05T06:23:12.989Z",
+        "node": "",
+        "commit": "--fix click detection outside the window"
+      }
+    ]
+  },
+  {
     "version": "1.21.8.004",
     "changes": [
       {

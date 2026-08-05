@@ -14,6 +14,26 @@ def parse_md(path):
     data_html = data_html.replace("</h3>", "</h3><br>")
     data_html = data_html.replace("</p>",  "</p><br>" )
     data_html = data_html.replace("</ul>", "</ul><br>")
+
+    reProp = re.compile(r"\[proptable\]([\s\S]*?)\[\/proptable\]")
+    proptable = reProp.findall(data_html)
+    for table in proptable:
+        table_html = '<table class="cc3070">'
+        rows = table.split("\n")
+        for row in rows:
+            if row.strip() == "":
+                continue
+
+            table_html += "<tr>"
+            cells = row.split("|")
+            for cell in cells:
+                if cell.strip() == "":
+                    continue
+                table_html += f"<td>{cell.strip()}</td>"
+            table_html += "</tr>"
+
+        table_html += "</table>"
+        data_html = data_html.replace(f"[proptable]{table}[/proptable]", table_html)
     
     with open(target, "a") as f:
         f.write(data_html)

@@ -59,7 +59,7 @@ function mouse_step() {
 		window_get_x() + window_get_width(), window_get_y() + window_get_height()
 	);
 	
-	if(MULTI_WINDOWS) _mouse = true;
+	if(MULTI_WINDOWS) _mouse = FOCUS_WINDOW != undefined;
 	
 	var _fclick = !MOUSE_EVENT.wfocus && _mouse;
 	MOUSE_EVENT.wfocus = _focus;

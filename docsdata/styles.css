@@ -905,6 +905,16 @@ table.icon-detail td:nth-child(3) {
     width: 60%;
 }
 
+table.cc3070 td:first-child {
+    text-align: center;
+    width: 30%;
+}
+
+table.cc3070 td:nth-child(2) {
+    text-align: center;
+    width: 70%;
+}
+
 table.cc4060 td:first-child {
     text-align: center;
     width: 40%;

@@ -28,7 +28,7 @@ function Node_Path_Revolve(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	newInput(21, nodeValue_Vec2(     "Scale",     [1,1]   ));
 	
 	////- =Rendering
-	newInput(33, nodeValue_EButton( "Depth Sort", 0, [ "Normal", "Path", "Path Invert" ] ));
+	newInput(33, nodeValue_EButton( "Depth Sort", 1, [ "Normal", "Path", "Path Invert" ] ));
 	newInput(17, nodeValue_EButton( "Blend Mode", 0, [ "Normal", "Additive", "Maximum" ] ));
 	newInput( 2, nodeValue_Surface( "Texture"             ));
 	newInput(12, nodeValue_Vec2(    "UV Position", [0,0]  ));

@@ -58,9 +58,9 @@ void main() {
 	vec4 samp = sampleTexture(gm_BaseTexture, tex);
 	
 	float tx = v_vTexcoord.x;
-	float ty = 1. - v_vTexcoord.y;
+	float ty = v_vTexcoord.y;
 	
-	if(invert == 2) ty = 1. - ty;
+	if(invert != 2) ty = 1. - ty;
 	
 	gl_FragData[0] = vec4(tx, tx, tx, samp.a);
 	gl_FragData[1] = vec4(ty, ty, ty, samp.a);
