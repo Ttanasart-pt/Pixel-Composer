@@ -192,6 +192,8 @@ uniform vec2      height;
 uniform int       heightUseSurf;
 uniform sampler2D heightSurf;
 
+uniform int       shiftScale;
+
 float bright(in vec4 col) { return (col.r + col.g + col.b) / 3. * col.a; }
 
 void main() {
@@ -233,9 +235,14 @@ void main() {
 				base *= 2.;
 			}
 			
-			float added_distance = 1. + cos(abs(shift_angle - ang)) * shift_distance;
-				
-			vec2 shf = vec2( cos(ang),  sin(ang)) * (i * added_distance) / scale;
+			vec2 shf  = vec2(cos(ang), sin(ang));
+			if(shiftScale == 0) 
+			     shf += shiftPx;
+			     shf *= i;
+	    	if(shiftScale == 1) 
+	    		 shf *= 1. + cos(abs(shift_angle - ang)) * shift_distance;
+			     shf /= scale;
+			     
 			vec2 pxs = v_vTexcoord + shf * tx;
 				
 			col1 = sampleTexture( gm_BaseTexture, pxs );

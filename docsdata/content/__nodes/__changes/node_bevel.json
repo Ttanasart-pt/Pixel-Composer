@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.8.006",
+    "changes": [
+      {
+        "date": "2026-08-05T06:57:41.428Z",
+        "node": "Bevel",
+        "commit": "**Bevel**: Add option to use additive for shifting instead of multiplicative."
+      }
+    ]
+  },
+  {
     "version": "1.21.7.110",
     "changes": [
       {
