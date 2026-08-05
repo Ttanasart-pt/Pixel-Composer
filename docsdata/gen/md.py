@@ -26,10 +26,16 @@ def parse_md(path):
 
             table_html += "<tr>"
             cells = row.split("|")
-            for cell in cells:
-                if cell.strip() == "":
+            amo   = len(cells)
+            for i, cell in enumerate(cells):
+                cel = cell.strip()
+                if cel == "":
                     continue
-                table_html += f"<td>{cell.strip()}</td>"
+
+                if amo == 2 and i == 0:
+                    table_html += f"<td><junc {cel}></td>"
+                else:
+                    table_html += f"<td>{cel}</td>"
             table_html += "</tr>"
 
         table_html += "</table>"

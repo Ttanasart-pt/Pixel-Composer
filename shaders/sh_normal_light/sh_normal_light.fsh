@@ -1,5 +1,4 @@
 #pragma use(curve)
-
 #region -- curve -- [1780117484.3465736]
     #ifdef _YY_HLSL11_ 
         #define CURVE_MAX  512
@@ -164,6 +163,7 @@ uniform float band;
 uniform float radialBandAmo;
 uniform float radialBandStart;
 uniform float radialBandRatio;
+uniform float radialBandShadow;
 
 vec3 closestPointOnLine(vec3 P, vec3 A, vec3 B, out float t) {
     vec3 AP = P - A;
@@ -200,7 +200,9 @@ void main() {
 	    if(radialBandAmo > 1.) {
 	        float dirr = atan(curr.y - lightPos.y, curr.x - lightPos.x) + TAU / 2. + radians(radialBandStart);
 	        float rbnd = fract(dirr / TAU * radialBandAmo);
-	        brightness *= step(radialBandRatio, rbnd);
+	        
+	        if(step(radialBandRatio, rbnd) == 0.)
+        		brightness *= radialBandShadow;
 	    }
 	    
 	} else if(lightType == 1) {

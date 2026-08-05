@@ -17,7 +17,7 @@ function Node_Normal(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	////- =Normal
 	newInput( 1, nodeValue_Float(  "Height",    1           )).setMappable(6).setPieMenu();
 	newInput( 2, nodeValue_Slider( "Smooth",    0, [0,4,.1] )).setMappable(7).setPieMenu().setTooltip("Include diagonal pixel in normal calculation, which leads to smoother output.");
-	newInput( 9, nodeValue_Bool( "Trim Flat",  false        )).setPieMenu();
+	newInput( 9, nodeValue_Bool(   "Trim Flat", false       )).setPieMenu();
 	
 	////- =Rendering
 	newInput( 5, nodeValue_Bool( "Flip X",      true )).setPieMenu();

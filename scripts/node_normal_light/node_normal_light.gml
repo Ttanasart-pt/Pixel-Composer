@@ -3,13 +3,13 @@ function Node_Normal_Light(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	
 	////- =Input
 	newInput( 0, nodeValue_Surface( "Surface In"           )).setRequired();
-	newInput( 1, nodeValue_Surface( "Normal map"           ));
+	newInput( 1, nodeValue_Surface( "Normal Map"           ));
 	newInput( 3, nodeValue_Color(   "Ambient",    ca_black ));
 	newInput( 5, nodeValue_Bool(    "Keep Alpha", true     ));
 	
-	////- =Input
-	newInput( 2, nodeValue_Float(   "Height", 1  ));
+	////- =Heightmap
 	newInput( 4, nodeValue_Surface( "Height map" ));
+	newInput( 2, nodeValue_Float(   "Height", 1  ));
 	// input 6
 	
 	typeListStr = [ "Point", "Sun", "Line", "Spot" ];
@@ -41,8 +41,9 @@ function Node_Normal_Light(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 		newInput(index+11, nodeValue_ISlider(  "Radial Banding",     0, [0, 16, 0.1]   ));
 		newInput(index+12, nodeValue_Rotation( "Radial Start",       0                 ));
 		newInput(index+13, nodeValue_Slider(   "Radial Band Ratio", .5                 ));
+		newInput(index+15, nodeValue_Slider(   "Radial Shadow",      0                 ));
 		newInput(index+14, nodeValue_ISlider(  "Banding",            0, [0, 16, 0.1]   ));
-		// index+15
+		// index+16
 		
 		inputs[index+ 2].overlay_text_valign = fa_bottom;
 		
@@ -115,7 +116,7 @@ function Node_Normal_Light(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 		[ "Shape",            false ],  0,  1,  7,  5,  8,  2, 
 		[ "Light",            false ],  3,  4,  6, 
 			[ "/Attenuation", false ],  9, 10, 
-			[ "/Banding",     false ], 11, 12, 13, 14, 
+			[ "/Banding",     false ], 11, 12, 13, 15, 14, 
 	];
 	
 	input_display_list = [ 
@@ -125,7 +126,7 @@ function Node_Normal_Light(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 		lights_renderer, 
 	];
 	
-	setDynamicInput(15, false);
+	setDynamicInput(16, false);
 	if(!LOADING && !APPENDING) createNewInput();
 	
 	newOutput(0, nodeValue_Output( "Surface Out", VALUE_TYPE.surface, noone ));
@@ -205,6 +206,7 @@ function Node_Normal_Light(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 		var _light_rbnd = _data[_ind +11];
 		var _light_rbns = _data[_ind +12];
 		var _light_rbnr = _data[_ind +13];
+		var _light_rshd = _data[_ind +15];
 		var _light_band = _data[_ind +14];
 		
 		surface_set_shader(_ligSurf, sh_normal_light, false, BLEND.add);
@@ -232,6 +234,7 @@ function Node_Normal_Light(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 			shader_set_f( "radialBandAmo",    _light_rbnd       );
 			shader_set_f( "radialBandStart",  _light_rbns       );
 			shader_set_f( "radialBandRatio",  _light_rbnr       );
+			shader_set_f( "radialBandShadow", _light_rshd       );
 			
 			draw_empty();
 		surface_reset_shader();

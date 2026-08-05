@@ -1,0 +1,11 @@
+{
+  "$GMNotes":"v1",
+  "%Name":"note_normal_to_height",
+  "name":"note_normal_to_height",
+  "parent":{
+    "name":"2d_effects",
+    "path":"folders/nodes/data/3D/2d_effects.yy",
+  },
+  "resourceType":"GMNotes",
+  "resourceVersion":"1.1",
+}
