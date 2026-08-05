@@ -65,9 +65,9 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	newInput(26, nodeValue_Bool(     "Clamp Range",   false )).setInternalName("path_range_clamped");
 	
 	////- =Dash Line
-	newInput(46, nodeValue_Bool(  "Dash",       false ));
-	newInput(44, nodeValue_Float( "Dash Line",    [0] )).setDisplay(VALUE_DISPLAY.number_array);
-	newInput(45, nodeValue_Float( "Dash Shift",    0  ));
+	newInput(46, nodeValue_Bool(  "Dash",          false    ));
+	newInput(44, nodeValue_Vec4(  "Dash Line",    [0,0,0,0], { linkable: false, drawType: "dash", draw_label: false } ));
+	newInput(45, nodeValue_Float( "Dash Shift",    0        ));
 	
 	////- =Wiggle
 	newInput(47, nodeValue_Bool(    "Use Wiggle",  false         ));

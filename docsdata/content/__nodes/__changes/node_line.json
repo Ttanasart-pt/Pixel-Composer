@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.8.006",
+    "changes": [
+      {
+        "date": "2026-08-05T00:19:39.567Z",
+        "node": "",
+        "commit": "**Draw Line**: Dash line is now vec4 with dash guide."
+      }
+    ]
+  },
+  {
     "version": "1.21.8.005",
     "changes": [
       {

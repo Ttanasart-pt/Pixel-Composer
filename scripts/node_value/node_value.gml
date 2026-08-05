@@ -1210,10 +1210,15 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 						var len = display_data[$ "length"] ?? array_length(def_val);
 						
 						editWidget = new vectorBox(len, function(val, i) /*=>*/ {return setValueInspector(val, i)}, unit );
-						editWidget.axis     = display_data[$ "label"]    ?? editWidget.axis;
-						editWidget.linkable = display_data[$ "linkable"] ?? editWidget.linkable;
-						editWidget.per_line = display_data[$ "per_line"] ?? editWidget.per_line;
-						editWidget.linked   = display_data[$ "linked"]   ?? editWidget.linked;
+						editWidget.axis       = display_data[$ "label"]    ?? editWidget.axis;
+						editWidget.linkable   = display_data[$ "linkable"] ?? editWidget.linkable;
+						editWidget.linked     = display_data[$ "linked"]   ?? editWidget.linked;
+						
+						editWidget.per_line   = display_data[$ "per_line"]   ?? editWidget.per_line;
+						editWidget.draw_label = display_data[$ "draw_label"] ?? editWidget.draw_label;
+						
+						if(has(display_data, "drawType"))
+							editWidget.drawType = display_data.drawType;
 						
 						switch(len) {
 							case 2 : _ext = [ "Node_Vector2", "Node_Path" ]; break;

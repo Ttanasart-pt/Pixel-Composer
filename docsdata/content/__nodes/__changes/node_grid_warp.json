@@ -11,6 +11,11 @@
         "date": "2026-08-04T23:54:34.506Z",
         "node": "Crop Content",
         "commit": "**Crop Content**: Fix node cannot be deactivated."
+      },
+      {
+        "date": "2026-08-05T00:19:39.554Z",
+        "node": "Draw Line",
+        "commit": "**Draw Line**: Dash line is now vec4 with dash guide."
       }
     ]
   },

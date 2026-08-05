@@ -15,6 +15,9 @@ function vectorBox(_size, _onModify, _unit = noone) : widget() constructor {
 		linked        = false;
 		side_button   = noone;
 		display_data  = noone;
+		draw_label    = true;
+		
+		drawType      = "";
 		
 		link_inactive_color = noone;
 		tooltip	= new tooltipSelector("Axis", [ __txt("Independent"), __txt("Linked") ]);
@@ -79,8 +82,8 @@ function vectorBox(_size, _onModify, _unit = noone) : widget() constructor {
 	////- Setters
 	
 	static setLink     = function(  ) /*=>*/ { linked = true;                                    return self; }
-	static setSuffix   = function(_v) /*=>*/ { for(var i = 0; i < 4; i++) tb[i].setSuffix(_v);   return self; }
 	static setLinkable = function(_l) /*=>*/ { linkable = _l;                                    return self; }
+	static setSuffix   = function(_v) /*=>*/ { for(var i = 0; i < 4; i++) tb[i].setSuffix(_v);   return self; }
 	static setBoxColor = function(_v) /*=>*/ { for(var i = 0; i < 4; i++) tb[i].setBoxColor(_v); return self; }
 	static setFont     = function(_f) /*=>*/ { for(var i = 0; i < 4; i++) tb[i].setFont(_f);     return self; }
 	static setLinkInactiveColor = function(_c) /*=>*/ { link_inactive_color = _c;                return self; }
@@ -342,6 +345,7 @@ function vectorBox(_size, _onModify, _unit = noone) : widget() constructor {
 		var bxHover = hover && point_in_rectangle(_m[0], _m[1], x, y, x + w, y + h);
 		var tbHover = bxHover;
 		
+		// scale drag hover culling
 		if(!per_line && _sz == 2) {
 			var ps = _h / 2;
 			var px = _x + ww;
@@ -358,13 +362,21 @@ function vectorBox(_size, _onModify, _unit = noone) : widget() constructor {
 			var by = per_line? _y + (_h + ui(4)) * i : _y;
 			
 			tb[i].setFocusHover(active, tbHover);
-			tb[i].labelColor = sep_axis? COLORS.axis[i] : COLORS._main_text_sub;
 			tb[i].hide       = !per_line;
-			tb[i].setLabel(axis[i]);
+			
+			tb[i].labelColor = sep_axis? COLORS.axis[i] : COLORS._main_text_sub;
+			tb[i].setLabel(draw_label? axis[i] : "");
+			
+			if(drawType == "dash" && i % 2 == 0) {
+				draw_set_color_alpha(COLORS._main_icon, .5);
+				draw_line_width(bx, by + _h/2, bx + ww, by + _h/2, ui(4));
+				draw_set_alpha(1);
+			}
 			
 			tb[i].draw(bx, by, ww - 1, _h, _data[i], _m);
 		}
 		
+		// scale drag
 		if(!per_line && _sz == 2) {
 			if(scaleDrag) {
 				hover = false;
