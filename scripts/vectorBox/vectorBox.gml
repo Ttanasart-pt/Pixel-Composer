@@ -26,7 +26,7 @@ function vectorBox(_size, _onModify, _unit = noone) : widget() constructor {
 	#region menu
 		context_menu = [];
 		
-		if(linkable)
+		if(linkable) 
 			array_push(context_menu, menuItem(__txt("Link Axis"), function() /*=>*/ {return toggleLink()}).setToggle(function() /*=>*/ {return linked}));
 		if(unit != noone && unit.reference) 
 			array_push(context_menu, unit.contextMenu);

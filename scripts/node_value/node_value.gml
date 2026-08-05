@@ -1329,7 +1329,11 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 						
 					case VALUE_DISPLAY.puppet_control :
 						editWidget = new controlPointBox(function(val, i) /*=>*/ {return setValueInspector(val, i)});
+						_ext = "";
+						break;
 						
+					case VALUE_DISPLAY.grid_anchor :
+						editWidget = new gridAnchorBox(function(val, i) /*=>*/ {return setValueInspector(val, i)}, unit);
 						_ext = "";
 						break;
 						

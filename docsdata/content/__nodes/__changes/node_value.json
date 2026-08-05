@@ -6,6 +6,11 @@
         "date": "2026-08-05T00:19:39.574Z",
         "node": "",
         "commit": "**Draw Line**: Dash line is now vec4 with dash guide."
+      },
+      {
+        "date": "2026-08-05T02:45:30.024Z",
+        "node": "",
+        "commit": "**Grid Warp**: Grid anchor now comes with Bezier control points."
       }
     ]
   },

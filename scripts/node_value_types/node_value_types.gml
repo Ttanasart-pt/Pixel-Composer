@@ -103,6 +103,7 @@
 		
 		//Misc
 		puppet_control,
+		grid_anchor,
 		button,
 		label,
 		
@@ -291,6 +292,7 @@
 			case VALUE_DISPLAY.padding :
 			case VALUE_DISPLAY.area :
 			case VALUE_DISPLAY.puppet_control :
+			case VALUE_DISPLAY.grid_anchor :
 			case VALUE_DISPLAY.matrix :
 			case VALUE_DISPLAY.transform :
 			case VALUE_DISPLAY.boolean_grid :
@@ -314,8 +316,11 @@
 		INLINE
 		
 		if(prop.type == VALUE_TYPE.integer || prop.type == VALUE_TYPE.float) {
-			if(prop.display_type == VALUE_DISPLAY.puppet_control)
-				return false;
+			switch(prop.display_type) {
+				case VALUE_DISPLAY.puppet_control : 
+					return false;
+			}
+			
 			return true;
 		}
 		
@@ -683,6 +688,7 @@ function nodeValueUnit(__nodeValue) constructor {
 				case VALUE_DISPLAY.padding      :
 				case VALUE_DISPLAY.vector       :
 				case VALUE_DISPLAY.vector_range :
+				case VALUE_DISPLAY.grid_anchor  :
 					var _val = array_clone(value, 1);
 					
 					if(_len % 2 == 0) {

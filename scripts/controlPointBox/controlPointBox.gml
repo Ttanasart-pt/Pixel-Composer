@@ -39,7 +39,7 @@ function controlPointBox(_onModify) : widget() constructor {
 	
 	static setInteract = function(n = noone) /*=>*/ { interactable = n; for( var i = 0; i < widgetLen; i++ ) widgets[i].setInteract(n); }
 	static register    = function(p = noone) /*=>*/ {                   for( var i = 0; i < widgetLen; i++ ) widgets[i].register(p);    }
-	static isHovering  = function() /*=>*/ {return array_any(widgets, function(w) /*=>*/ {return w.isHovering()})};
+	static isHovering  = function() /*=>*/ {return array_any(widgets, function(w,i) /*=>*/ {return w.isHovering()})};
 	
 	static fetchHeight = function(params) { return params.h + ui(4) + params.h * 2; }
 	static drawParam   = function(params) {

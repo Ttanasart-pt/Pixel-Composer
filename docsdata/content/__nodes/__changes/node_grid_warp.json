@@ -21,6 +21,11 @@
         "date": "2026-08-05T00:34:20.979Z",
         "node": "",
         "commit": "**Grid Warp**: Fix anchor always snap to pixel without pressing ctrl."
+      },
+      {
+        "date": "2026-08-05T02:45:30.023Z",
+        "node": "Grid Warp",
+        "commit": "**Grid Warp**: Grid anchor now comes with Bezier control points."
       }
     ]
   },

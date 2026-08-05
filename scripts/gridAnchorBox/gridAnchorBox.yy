@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"gridAnchorBox",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"gridAnchorBox",
+  "parent":{
+    "name":"text",
+    "path":"folders/widgets/text.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}
