@@ -1,0 +1,11 @@
+{
+  "$GMNotes":"v1",
+  "%Name":"note_perlin_cube",
+  "name":"note_perlin_cube",
+  "parent":{
+    "name":"noise",
+    "path":"folders/nodes/data/generator/noise.yy",
+  },
+  "resourceType":"GMNotes",
+  "resourceVersion":"1.1",
+}

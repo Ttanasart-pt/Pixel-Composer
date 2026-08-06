@@ -18,7 +18,7 @@ function Node_Seperate_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 	newInput( 7, nodeValue_Bool(    "Diagonal",   true ));
 	
 	////- =Output
-	newInput( 2, nodeValue_Bool(  "Override color", false    ));
+	newInput( 2, nodeValue_Bool(  "Override Color", false    ));
 	newInput( 3, nodeValue_Color( "Color",          ca_white ));
 	newInput( 6, nodeValue_Bool(  "Crop",           true     ))
 	// inputs 9

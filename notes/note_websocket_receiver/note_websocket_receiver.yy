@@ -1,0 +1,11 @@
+{
+  "$GMNotes":"v1",
+  "%Name":"note_websocket_receiver",
+  "name":"note_websocket_receiver",
+  "parent":{
+    "name":"network",
+    "path":"folders/nodes/data/io/network.yy",
+  },
+  "resourceType":"GMNotes",
+  "resourceVersion":"1.1",
+}

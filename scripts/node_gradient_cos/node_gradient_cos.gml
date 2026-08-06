@@ -8,22 +8,22 @@ function Node_Gradient_Cos(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	newInput( 1, nodeValue_Surface( "Mask"       ));
 	
 	////- Coefficients
-	newInput( 2, nodeValue_Vec3( "a",     [ .5,  .5,  .5  ] )).setMappableConst(4);
-	newInput( 3, nodeValue_Vec3( "a Max", [ .5,  .5,  .5  ] ));
+	newInput( 2, nodeValue_Vec3( "a",     [.50,.50,.50] )).setMappableConst(4);
+	newInput( 3, nodeValue_Vec3( "a Max", [.50,.50,.50] ));
 	
-	newInput( 5, nodeValue_Vec3( "b",     [ .5,  .5,  .5  ] )).setMappableConst(7);
-	newInput( 6, nodeValue_Vec3( "b Max", [ .5,  .5,  .5  ] ));
+	newInput( 5, nodeValue_Vec3( "b",     [.50,.50,.50] )).setMappableConst(7);
+	newInput( 6, nodeValue_Vec3( "b Max", [.50,.50,.50] ));
 	
-	newInput( 8, nodeValue_Vec3( "c",     [ .8,  .8,  .8  ] )).setMappableConst(10);
-	newInput( 9, nodeValue_Vec3( "c Max", [ .8,  .8,  .8  ] ));
+	newInput( 8, nodeValue_Vec3( "c",     [.80,.80,.80] )).setMappableConst(10);
+	newInput( 9, nodeValue_Vec3( "c Max", [.80,.80,.80] ));
 	
-	newInput(11, nodeValue_Vec3( "d",     [ .21, .54, .88 ] )).setMappableConst(13);
-	newInput(12, nodeValue_Vec3( "d Max", [ .21, .54, .88 ] ));
+	newInput(11, nodeValue_Vec3( "d",     [.21,.54,.88] )).setMappableConst(13);
+	newInput(12, nodeValue_Vec3( "d Max", [.21,.54,.88] ));
 	
 	////- Gradient
 	newInput(20, nodeValue_Float(  "Shift",  0 ));
 	newInput(21, nodeValue_Float(  "Scale",  1 ));
-	newInput(24, nodeValue_Curve(    "Progress Remap", CURVE_DEF_01 ));
+	newInput(24, nodeValue_Curve(  "Progress Remap", CURVE_DEF_01 ));
 	
 	////- Shape
 	__gradTypes = __enum_array_gen(["Linear", "Circular", "Radial", "Diamond"], s_node_gradient_type);

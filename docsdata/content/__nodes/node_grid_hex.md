@@ -4,9 +4,10 @@ Generate hexagonal grid, honeycomb pattern.
 
 ## Properties
 
-### <junc gap/>
-
-Thickness of the gap between each cell.
+[proptable]
+Pattern
+Gap|Thickness of the gap between grid.
+[/proptable]
 
 ## Rendering Modes
 

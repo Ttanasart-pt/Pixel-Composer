@@ -10,7 +10,7 @@ function Node_Pixel_Sampler(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	newInput( 3, nodeValue_Surface(  "Surfaces", [] )).setArrayDepth(1);
 	newInput( 4, nodeValue_Gradient( "Gradient", gra_black_white )).setMappable(5).addShift(9);
 	
-	////- =Render
+	////- =Rendering
 	newInput( 7, nodeValue_EScroll( "Color Blending",     0, [ "None", "Multiply" ]));
 	newInput( 8, nodeValue_Slider(  "Blending Intensity", 1 ));
 	// 10
@@ -20,7 +20,7 @@ function Node_Pixel_Sampler(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	input_display_list = [
 		[ "Base Texture", false ],  0,  1,  2, 
 		[ "Surface",      false ],  3,  
-		[ "Render",       false ],  7,  8, 
+		[ "Rendering",    false ],  7,  8, 
 	];
 	
 	attribute_surface_depth();
@@ -28,15 +28,17 @@ function Node_Pixel_Sampler(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	temp_surface = [ noone ];
 	
 	static processData = function(_outSurf, _data, _array_index) {
-		var _base = _data[0];
-		var _samp = _data[1];
-		var _mach = _data[2];
-		
-		var _surf = _data[3];
-		var _colr = _data[4];
-		
-		var _blnd = _data[7];
-		var _bint = _data[8];
+		#region data
+			var _base = _data[ 0];
+			var _samp = _data[ 1];
+			var _mach = _data[ 2];
+			
+			var _surf = _data[ 3];
+			var _colr = _data[ 4];
+			
+			var _blnd = _data[ 7];
+			var _bint = _data[ 8];
+		#endregion
 		
 		if(!is_array(_surf)) _surf = [_surf];
 		var _inps = array_length(_surf);

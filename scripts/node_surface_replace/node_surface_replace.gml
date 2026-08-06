@@ -13,7 +13,7 @@ function Node_Surface_Replace(_x, _y, _group = noone) : Node_Processor(_x, _y, _
 	newInput( 3, nodeValue_Slider( "Color Threshold", .1   )).setTooltip("How similiar the color need to be in order to be count as matched." );
 	newInput( 6, nodeValue_Slider( "Pixel Threshold", .1   )).setTooltip("How many pixel need to me matched to replace with replacement image." );
 	
-	////- =Render
+	////- =Rendering
 	newInput( 4, nodeValue_Bool( "Draw Base Image", true  ));
 	newInput( 9, nodeValue_Bool( "Replace Empty",   false ))
 	// input 10
@@ -23,7 +23,7 @@ function Node_Surface_Replace(_x, _y, _group = noone) : Node_Processor(_x, _y, _
 	input_display_list = [
 		[ "Surfaces",   true ],  0,  1,  2,  7,  8, 
 		[ "Searching", false ],  5,  3,  6, 
-		[ "Render",    false ],  4,  9, 
+		[ "Rendering", false ],  4,  9, 
 	];
 	
 	////- Node

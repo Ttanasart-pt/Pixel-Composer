@@ -5,39 +5,22 @@ to work with the feedback system.
 
 ## Properties
 
-### <junc dissipation/>
+[proptable]
+Diffuse
+Dissipation|The amount of pixel faded away per frame.
+Iteration|Amount of iteration.
 
-The amount of pixel faded away per frame.
+Flow
+Scale|Scale of the turbulence effect.
+Detail|Amount of iteration to apply turbulence.
+Randomness|Frequency of seed change
+Flow Rate|Flow intensity
 
-## Flow Properties
+Forces
+External Strength|Apply external force in/out of the middle point.
 
-Flow effect add random turbulence to the image.
+Rendering
+Threshold|Apply threshold after each step.
+[/proptable]
 
-### <junc scale/>
-
-Scale of the turbulence effect.
-
-### <junc detail/>
-
-Amount of iteration to apply turbulence.
-
-### <junc randomness/>
-
-Frequency of seed change
-
-### <junc flow rate/>
-
-Flow intensity
-
-## External Forces
-
-### <junc external strength/>
-
-Apply external force in/out of the middle point.
-
-## Rendering Properties
-
-### <junc threshold/>
-
-Apply threshold after each step.
 

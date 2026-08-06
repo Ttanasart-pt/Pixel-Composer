@@ -1,0 +1,11 @@
+{
+  "$GMNotes":"v1",
+  "%Name":"note_shape_fast",
+  "name":"note_shape_fast",
+  "parent":{
+    "name":"shape",
+    "path":"folders/nodes/data/generator/drawer/shape.yy",
+  },
+  "resourceType":"GMNotes",
+  "resourceVersion":"1.1",
+}

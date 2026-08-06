@@ -50,6 +50,10 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	newInput( 9, nodeValue_Vec2(     "Start Position",  [.5,.5] )).setHotkey("G").setUnitSimple();
 	newInput(32, nodeValue_Rotation( "Start Rotation",   0      )).setHotkey("R");
 	
+		////- =/Amount
+	newInput( 2, nodeValue_Int(      "Amount",           4      ));
+	newInput(18, nodeValue_Int(      "Column",           4      ));
+	
 		////- =/Pattern
 	newInput(22, nodeValue_Anchor(   "Global Anchor",   [ 0, 0] ));
 	newInput(45, nodeValue_Rotation( "Global Rotation",  0      ));
@@ -57,10 +61,6 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	newInput( 8, nodeValue_Float(    "Radius",          .25     )).setUnitSimple();
 	newInput(49, nodeValue_Slider(   "Circular Ratio",   1      ))
 	newInput(50, nodeValue_Rotation( "Circular Angle",   0      ))
-	
-		////- =/Repeat
-	newInput( 2, nodeValue_Int(      "Amount",           4      ));
-	newInput(18, nodeValue_Int(      "Column",           4      ));
 	
 	////- =Path
 	newInput(11, nodeValue_Path(     "Path",                 noone )).setTooltip("Make each copy follow along path.");
@@ -89,10 +89,10 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	newInput(41, nodeValue_Float(  "Scale Y",        1,       )).setCurvable(42, CURVE_DEF_11, "Over Copy");
 	newInput(21, nodeValue_Range2( "Random Scale",  [1,1,1,1] ));
 	
-	////- =Render
+	////- =Rendering
+	newInput(34, nodeValue_EScroll(  "Blend Mode",         0, [ "Normal", "Additive", "Maximum" ] ));
 	newInput(43, nodeValue_Bool(     "Inverse Draw Order", false  ));
 	newInput(46, nodeValue_Bool(     "Sort Y",             false  ));
-	newInput(34, nodeValue_EScroll(  "Blend Mode",         0, [ "Normal", "Additive", "Maximum" ] ));
 	
 		////- =/Color
 	newInput(48, nodeValue_Palette(  "Color per Index",   [ca_white] ));
@@ -214,14 +214,14 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	input_display_list = [ 17, 
 		[ "Surfaces",      true ],  0, 35, 36, 37,  1, 16, 
 		[ "Pattern",      false ],  3,  9, 32,
+			[ "/Amount",  false ],  2, 18,
 			[ "/Pattern", false ], 22, 45,  7,  8, 49, 50, 
-			[ "/Repeat",  false ],  2, 18,
 			
 		[ "Path",          true ], 11, 12, 13, 40, 51, 52, 
 		[ "Position",     false ],  4, 38, 26, 19, 39, 15, 44, 
 		[ "Rotation",     false ], 33,  5, 20, 
 		[ "Scale",        false ], 29,  6, 10, 41, 42, 21, 
-		[ "Render",       false ], 43, 46, 34, 
+		[ "Rendering",    false ], 34, 43, 46,  
 			[ "/Color",   false ], 48, [14, true], 30, 54, 47, [23, true], 53, -1, 
 			
 		new Inspector_Spacer(8, true),

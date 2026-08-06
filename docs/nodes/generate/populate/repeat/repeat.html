@@ -84,6 +84,12 @@
             </tr><tr>
                 <td class="summary-topic junction-type"><p style="color: #ffe478">rotation</p></td>
                 <td><p>Start Rotation</p></td>
+            </tr><tr><th colspan="2" class="summary-topic junction-separator"><p>Amount</p></th></tr><tr>
+                <td class="summary-topic junction-type"><p style="color: #ff9166">int</p></td>
+                <td><p>Amount</p></td>
+            </tr><tr>
+                <td class="summary-topic junction-type"><p style="color: #ff9166">int</p></td>
+                <td><p>Column</p></td>
             </tr><tr><th colspan="2" class="summary-topic junction-separator"><p>Pattern</p></th></tr><tr>
                 <td class="summary-topic junction-type"><p style="color: #8fde5d">anchor</p></td>
                 <td><p>Global Anchor</p></td>
@@ -102,12 +108,6 @@
             </tr><tr>
                 <td class="summary-topic junction-type"><p style="color: #ffe478">rotation</p></td>
                 <td><p>Circular Angle</p></td>
-            </tr><tr><th colspan="2" class="summary-topic junction-separator"><p>Repeat</p></th></tr><tr>
-                <td class="summary-topic junction-type"><p style="color: #ff9166">int</p></td>
-                <td><p>Amount</p></td>
-            </tr><tr>
-                <td class="summary-topic junction-type"><p style="color: #ff9166">int</p></td>
-                <td><p>Column</p></td>
             </tr><tr><th colspan="2" class="summary-topic junction-separator"><p>Path</p></th></tr><tr>
                 <td class="summary-topic junction-type"><p style="color: #eb004b">path</p></td>
                 <td><p>Path</p></td>
@@ -165,15 +165,15 @@
             </tr><tr>
                 <td class="summary-topic junction-type"><p style="color: #8fde5d">range2</p></td>
                 <td><p>Random Scale</p></td>
-            </tr><tr><th colspan="2" class="summary-topic junction-separator"><p>Render</p></th></tr><tr>
+            </tr><tr><th colspan="2" class="summary-topic junction-separator"><p>Rendering</p></th></tr><tr>
+                <td class="summary-topic junction-type"><p style="color: #ff9166">enum</p></td>
+                <td><p>Blend Mode</p></td>
+            </tr><tr>
                 <td class="summary-topic junction-type"><p style="color: #8c3f5d">bool</p></td>
                 <td><p>Inverse Draw Order</p></td>
             </tr><tr>
                 <td class="summary-topic junction-type"><p style="color: #8c3f5d">bool</p></td>
                 <td><p>Sort Y</p></td>
-            </tr><tr>
-                <td class="summary-topic junction-type"><p style="color: #ff9166">enum</p></td>
-                <td><p>Blend Mode</p></td>
             </tr><tr><th colspan="2" class="summary-topic junction-separator"><p>Color</p></th></tr><tr>
                 <td class="summary-topic junction-type"><p style="color: #8fde5d">palette</p></td>
                 <td><p>Color Per Index</p></td>
@@ -278,7 +278,9 @@
     }
 </script><img class="node-graph-preview" src="/src/images/nodegen/node_repeat/node_repeat-graph.png"><script>const sampleContent = "{\"version\":120076,\"nodes\":[{\"x\":-272,\"y\":64,\"inputs\":[{\"r\":{\"d\":[0.25,0.25]},\"m\":1,\"linked\":true},{},{\"r\":{\"d\":\"Ellipse\"},\"m\":1},{\"unit\":1},{},{},{},{},{},{},{},{},{},{},{\"v\":1},{},{\"unit\":1},{\"unit\":1},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{\"unit\":1},{\"unit\":1},{},{\"unit\":1},{},{},{},{},{\"unit\":1},{},{},{},{},{},{},{},{},{}],\"outputs\":[{},{},{}],\"renamed\":true,\"id\":\"gA8CjW4670407fjwc7iAhqANDRl54kcF\",\"version\":120076,\"attriTool\":{},\"name\":\"Draw Shape\",\"inspectInputs\":[{\"v\":1},{\"v\":1},{\"v\":1},{},{\"v\":1}],\"iname\":\"Draw_Shape93098\",\"type\":\"Node_Shape\"},{\"x\":-96,\"y\":64,\"inputs\":[{\"from_node\":\"gA8CjW4670407fjwc7iAhqANDRl54kcF\",\"from_index\":0},{\"linked\":true},{\"r\":{\"d\":16},\"m\":1},{\"r\":{\"d\":1},\"m\":1},{\"unit\":1,\"r\":{\"d\":[0.25,0]},\"attri\":{\"curved\":false},\"m\":1},{},{\"attri\":{\"curved\":false}},{},{\"unit\":1},{\"unit\":1,\"r\":{\"d\":[0,0]},\"m\":1},{},{\"v\":1},{},{},{},{\"ranged\":false,\"linked\":false},{},{\"r\":{\"d\":639458},\"m\":1},{},{\"unit\":1,\"r\":{\"d\":[0,0.25]},\"m\":1},{},{\"ranged\":false,\"linked\":false},{},{},{},{},{},{},{},{},{\"v\":0},{},{},{},{},{},{},{},{},{\"r\":{\"d\":[0,0]},\"m\":1},{},{\"attri\":{\"curved\":false}},{},{},{},{}],\"outputs\":[{},{\"v\":0}],\"renamed\":true,\"data_length\":18,\"id\":\"gA8CjU4667894qOD2h5e34xIeuirZ5te\",\"version\":120076,\"input_fix_len\":46,\"attri\":{\"size\":0},\"attriTool\":{},\"name\":\"Repeat\",\"inspectInputs\":[{\"v\":1},{\"v\":1},{\"v\":1},{},{\"v\":1}],\"iname\":\"Repeat25501\",\"type\":\"Node_Repeat\"}]}";</script><button class="copy-sample" onclick="copyToClipboard(sampleContent)">
         Copy to Clipboard
-</button><br>
+</button><br><p>Repeat surface over a fix pattern. To scatter surface randomly, use <a class="node" href="/nodes/_index/Node_Scatter.html">Scatter</a> node.</p><br>
+<br><h2><a id="Properties" class="anchor"></a>Properties</h2><br>
+<p><table class="prop-table cc3070"><tr><td colspan='2' class='prop-section'>Surfaces</td></tr><tr><td><span class="junction" style="border-color: #ff9166AA">Output Dimension Type</span></td><td>Method for determining output dimension.</td></tr><tr><td><span class="junction" style="border-color: #ff9166AA">Array Select</span></td><td>Whether to select image from an array in order, at random, or spread each image to its own output.</p><br></td></tr><tr><td colspan='2' class='prop-section'><p>Pattern</td></tr><tr><td><span class="junction" style="border-color: #8fde5dAA">Pattern</span></td><td>Repeation pattern.</td></tr><tr><td><span class="junction" style="border-color: #8fde5dAA">Global Anchor</span></td><td>Repositon all repeated image After it's repeation.</td></tr><tr><td><span class="junction" style="border-color: #ffe478AA">Global Rotation</span></td><td>Rotate all repeated surface around one global anchor.</p><br></td></tr><tr><td colspan='2' class='prop-section'><p>Path</td></tr><tr><td><span class="junction" style="border-color: #eb004bAA">Path</span></td><td>Make repeated surface follows path. Set <span class="junction" style="border-color: #ffe478AA">Shift Position</span> to [0,0] to remove offset.</td></tr><tr><td><span class="junction" style="border-color: #ffe478AA">Path Range</span></td><td>Range of the path to distribute.</td></tr><tr><td><span class="junction" style="border-color: #ffe478AA">Path Shift</span></td><td>Shift position along path.</td></tr><tr><td><span class="junction" style="border-color: #8c3f5dAA">Rotate Along Path</span></td><td>Whether to rotate object along path normal.</p><br></td></tr><tr><td colspan='2' class='prop-section'><p>Position</td></tr><tr><td><span class="junction" style="border-color: #ffe478AA">Shift Position</span></td><td>Move surface by a fix amount per copies.</td></tr><tr><td><span class="junction" style="border-color: #ff9166AA">Stack</span></td><td>Automatically shift the next copy by the width of the current one. Set <span class="junction" style="border-color: #ffe478AA">Shift Position</span> to [0,0] to remove offset.</td></tr><tr><td><span class="junction" style="border-color: #ffe478AA">Shift Column</span></td><td>Move surface by a fix amount per row (in grid mode).</td></tr><tr><td><span class="junction" style="border-color: #8fde5dAA">Anchor</span></td><td>Draw anchor.</td></tr><tr><td><span class="junction" style="border-color: #8fde5dAA">Random Position</span></td><td>Add random shifting.</td></tr><tr><td><span class="junction" style="border-color: #8c3f5dAA">Use Shift As Endpoint</span></td><td>Instead of shifting each copy by a fix amount. The <span class="junction" style="border-color: #ffe478AA">Shift Position</span> determine where the last copy would be and subdivided other copies in-between.</p><br></td></tr><tr><td colspan='2' class='prop-section'><p>Rotation</td></tr><tr><td><span class="junction" style="border-color: #ffe478AA">Base Rotation</span></td><td>Rotation of the first copy.</td></tr><tr><td><span class="junction" style="border-color: #ffe478AA">Repeat Rotation</span></td><td>Adjust rotation of subsequence copy by a fix amount.</td></tr><tr><td><span class="junction" style="border-color: #ffe478AA">Random Rotation</span></td><td>Add random rotation to each copy.</p><br></td></tr><tr><td colspan='2' class='prop-section'><p>Scale</td></tr><tr><td><span class="junction" style="border-color: #8c3f5dAA">Uniform Scale</span></td><td>Force the final scale to have the same X and Y scale factor.</td></tr><tr><td><span class="junction" style="border-color: #8fde5dAA">Random Scale</span></td><td>Add random scale to each copy.</p><br></td></tr><tr><td colspan='2' class='prop-section'><p>Render</td></tr><tr><td><span class="junction" style="border-color: #ff9166AA">Blend Mode</span></td><td>Drawing blend mode.</td></tr><tr><td><span class="junction" style="border-color: #8c3f5dAA">Sort Y</span></td><td>Sort drawing order by it's Y position to create top-down depth effect.</td></tr></table></p><br>
 <br><h2 class="nosidebar">Commit History</h2><br>
 <table class="change-table"><tr><th>1.10.0</th><td><ul><li>Introduced</li></ul></td></tr><tr><th>1.21.6.004</th><td><ul><li> Add circular patten aspect ratio, angle.</li></ul></td></tr><tr><th>1.21.5.002</th><td><ul><li> Fix dynasurf not rendering.</li></ul></td></tr><tr><th>1.21.2.005</th><td><ul><li> Fix sort Y override global rotation property.</li></ul></td></tr><tr><th>1.21.2.003</th><td><ul><li> Add Y sort option.</li></ul></td></tr></table><br><h2 class="nosidebar">Related Links</h2><br><ul class="link-table"><li><span>Base Code: </span><a href="https://github.com/Ttanasart-pt/Pixel-Composer/blob/main/scripts/node_repeat/node_repeat.gml">/scripts/node_repeat/node_repeat.gml</a></li><li><span>Shader [sh_sample]: </span><a href="https://github.com/Ttanasart-pt/Pixel-Composer/blob/main/shaders/sh_sample/sh_sample.fsh">/shaders/sh_sample/sh_sample.fsh</a></li><li><span>Shader [sh_sample_shape]: </span><a href="https://github.com/Ttanasart-pt/Pixel-Composer/blob/main/shaders/sh_sample_shape/sh_sample_shape.fsh">/shaders/sh_sample_shape/sh_sample_shape.fsh</a></li></ul>
         </div>

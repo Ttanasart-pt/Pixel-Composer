@@ -121,7 +121,6 @@ function Node_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	newInput(28, nodeValue_Slider(   "Shape Scale",         1     )).setHotkey("S").hideLabel().setPieMenu();
 	
 	////- =Shape
-	
 	newInput( 2, nodeValue_EString(  "Shape",  "Rectangle", { 
 			data       : global.node_shape_types, 
 			display    : global.node_shape_types_map, 

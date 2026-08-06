@@ -1,0 +1,11 @@
+{
+  "$GMNotes":"v1",
+  "%Name":"note_uv_polar",
+  "name":"note_uv_polar",
+  "parent":{
+    "name":"uv",
+    "path":"folders/nodes/data/generator/uv.yy",
+  },
+  "resourceType":"GMNotes",
+  "resourceVersion":"1.1",
+}

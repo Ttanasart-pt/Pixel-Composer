@@ -4,9 +4,10 @@ Generate triangular grid pattern.
 
 ## Properties
 
-### <junc gap/>
-
-The thickness of the gap between cell.
+[proptable]
+Pattern
+Gap|Thickness of the gap between grid.
+[/proptable]
 
 ## Rendering Modes
 

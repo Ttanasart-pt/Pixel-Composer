@@ -31,8 +31,8 @@ function Node_Cellular(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	newInput(24, nodeValue_Vec2(     "Size",      [1,1]  ))
 	
 	////- =Radial
-	newInput( 8, nodeValue_Slider( "Radial scale",   2, [  1, 10, 0.01] ));
-	newInput( 9, nodeValue_Slider( "Radial shatter", 0, [-10, 10, 0.01] )).setVisible(false);
+	newInput( 8, nodeValue_Slider( "Radial Scale",   2, [  1, 10, 0.01] ));
+	newInput( 9, nodeValue_Slider( "Radial Shatter", 0, [-10, 10, 0.01] )).setVisible(false);
 	
 	////- =Iteration
 	newInput(16, nodeValue_Int(     "Iteration",       1 ));

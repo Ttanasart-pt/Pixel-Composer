@@ -1,0 +1,11 @@
+{
+  "$GMNotes":"v1",
+  "%Name":"note_fur",
+  "name":"note_fur",
+  "parent":{
+    "name":"pattern",
+    "path":"folders/nodes/data/generator/pattern.yy",
+  },
+  "resourceType":"GMNotes",
+  "resourceVersion":"1.1",
+}

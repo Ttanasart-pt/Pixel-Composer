@@ -26,9 +26,6 @@ function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	newInput(10, nodeValue_IPadding( "Padding",          [0,0,0,0]  ));
 	newInput(33, nodeValue_Bool(     "Atlas",            false      ));
 	
-		////- =/Background
-	newInput(39, nodeValue_Surface( "Background" ));
-	
 	////- =Font
 	newInput( 1, nodeValue_Font(  "Font", array_safe_get(FONT_INTERNAL, 0, "") )).setVisible(true, false);
 	newInput( 2, nodeValue_Int(   "Size",             16       ));
@@ -66,6 +63,7 @@ function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	////- =Background
 	newInput(16, nodeValue_Bool(     "Render Background", false     ));
 	newInput(17, nodeValue_Color(    "BG Color",          ca_black  ));
+	newInput(39, nodeValue_Surface(  "Background"                   ));
 	
 	////- =Wave
 	newInput(18, nodeValue_Bool(     "Wave",           false        ));
@@ -84,8 +82,6 @@ function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	input_display_list = [ 
 		[ "Text",	    false     ],  0, 32, 
 		[ "Output",		 true     ],  9,  6, 34, 10, 33, 
-			[ "/Background", false], 39, 
-		
 		[ "Font",		false     ],  1,  2, 15, 
 			[ "/Settings",   true ], 35,  3, 37, 
 			[ "/Lettering", false ], 11, 12, 36,
@@ -93,7 +89,7 @@ function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		[ "Path",	     true     ], 13, 14, 30, 
 		
 		[ "Rendering",	false     ],  5, 31, 38, 
-		[ "Background",  true, 16 ], 17, 
+		[ "Background",  true, 16 ], 17, 39, 
 		[ "Wave",	     true, 18 ], 22, 19, 20, 21, 
 		[ "Trim",		 true, 23 ], 25, 24, 26, 
 	];

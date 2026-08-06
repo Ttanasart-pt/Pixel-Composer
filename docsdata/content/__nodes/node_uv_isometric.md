@@ -1,0 +1,1 @@
+Generate isometric uv map.

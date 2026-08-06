@@ -195,7 +195,7 @@
             </tr><tr>
                 <td class="summary-topic junction-type"><p style="color: #8fde5d">range2</p></td>
                 <td><p>Sample Wiggle</p></td>
-            </tr><tr><th colspan="2" class="summary-topic junction-separator"><p>Render</p></th></tr><tr>
+            </tr><tr><th colspan="2" class="summary-topic junction-separator"><p>Rendering</p></th></tr><tr>
                 <td class="summary-topic junction-type"><p style="color: #ff9166">enum</p></td>
                 <td><p>Blend Mode</p></td>
             </tr><tr>
@@ -226,7 +226,58 @@
     }
 </script><img class="node-graph-preview" src="/src/images/nodegen/node_scatter/node_scatter-graph.png"><script>const sampleContent = "{\"version\":120076,\"nodes\":[{\"x\":-288,\"y\":112,\"inputs\":[{\"r\":{\"d\":[0.25,0.25]},\"m\":1,\"linked\":true},{},{\"r\":{\"d\":\"Ellipse\"},\"m\":1},{\"unit\":1},{},{},{},{},{},{},{},{},{},{},{\"v\":1},{},{\"unit\":1},{\"unit\":1},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{\"unit\":1},{\"unit\":1},{},{\"unit\":1},{},{},{},{},{\"unit\":1},{},{},{},{},{},{},{},{},{}],\"outputs\":[{},{},{}],\"renamed\":true,\"id\":\"gA8CjW4670407fjwc7iAhqANDRl54kcF\",\"version\":120076,\"attriTool\":{},\"name\":\"Draw Shape\",\"inspectInputs\":[{\"v\":1},{\"v\":1},{\"v\":1},{},{\"v\":1}],\"iname\":\"Draw_Shape93098\",\"type\":\"Node_Shape\"},{\"x\":-112,\"y\":112,\"inputs\":[{\"from_node\":\"gA8CjW4670407fjwc7iAhqANDRl54kcF\",\"from_index\":0},{\"linked\":true},{},{\"ranged\":false,\"linked\":true},{},{\"unit\":1},{},{},{},{},{\"r\":{\"d\":891607},\"m\":1},{},{},{\"v\":0},{},{},{},{},{},{},{},{},{},{},{},{\"v\":0},{\"linked\":true},{},{\"v\":0},{},{},{},{},{\"ranged\":false,\"linked\":false},{},{},{},{},{},{\"linked\":false},{},{},{\"ranged\":false,\"linked\":false},{},{},{},{},{}],\"outputs\":[{},{\"v\":0}],\"renamed\":true,\"id\":\"gA8CkU4728488gSaiAf3HQHq9crrMTkQ\",\"version\":120076,\"attriTool\":{},\"name\":\"Scatter\",\"inspectInputs\":[{\"v\":1},{\"v\":1},{\"v\":1},{},{\"v\":1}],\"iname\":\"Scatter80512\",\"type\":\"Node_Scatter\"}]}";</script><button class="copy-sample" onclick="copyToClipboard(sampleContent)">
         Copy to Clipboard
-</button><br>
+</button><br><p>Scatter surface randomly. To repeat surface in fixed pattern use <a class="node" href="/nodes/_index/Node_Repeat.html">Repeat</a> node.</p><br>
+<br><h2><a id="Properties" class="anchor"></a>Properties</h2><br>
+<p>[proptable]
+Surfaces
+Array|Choose surface array processing method:\n
+ - Spread Output: Create multiple surfaces for each surface separately.\n
+ - Index: Mix all input surfaces using spawn index as array index.\n
+ - Random: Mix all input surfaces with random array index.\n
+ - Data: Using third value (if exists) to determine array index.\n
+ - Texture: Use external surface to select array index.
+Animated|With surface array connected, increase array index per frame.
+Animated End|Select what to do when index outside array range.</p><br>
+<p>Scatter &gt; Source
+Source|Scatter area type.
+Extra Value|In point array source, apply the third and later values in each data point (if exist) to the given properties.
+Distribution|Scatter distribution.</p><br>
+<p>Amount
+Amount|Scatter amount.
+Distance|In poisson distribution, set minimum distance between each copies.
+Attempt|In map distribution, set sampling attempt before gives up.</p><br>
+<p>Path
+Path|Scatter along path.
+Rotate Along Path|Make the copy rotate along path normal.
+Path Range|Range of the path to follow.
+Path Shift|Shift position along path.
+Scatter Distance|Set random shift distance away from the path.</p><br>
+<p>Position
+Random Position|Randomly move surface from it's original place.
+Shift Position|Move surface with fixed amount increase per copy.
+Shift Radial|Move surface based on its rotation.
+Exact|Round drawing position to integer.</p><br>
+<p>Rotation
+Rotation|Base angle.
+Point at Center|Rotate each copy to face the spawn center.
+Random Angle|Rotate surface randomly.</p><br>
+<p>Scale
+Scale|Base scale.
+Offset Scale|Scale surface randomly in both axis independenly.
+Scale Random|Scale surface randomly in both axis uniformly.
+Uniform Scaling|Force the final scaling to have the same value in X and Y axis.</p><br>
+<p>Color
+Random Blend|Apply random color blending per copy.
+Alpha|Apply random opacity per copy.
+Multiply Alpha|Multiply opacity to RGB channel before drawing.</p><br>
+<p>Sample Color
+Sample Surface|Blend surface based on color sampled from additional surface.
+Sample Wiggle|Randomly modify sample point.</p><br>
+<p>Rendering
+Blend Mode|Drawing blend mode.
+Sort Y|Sort drawing order by it's Y position to create top-down depth effect.
+Tile|Draw overflow surface to the other side of the surface to create tiling effect.
+[/proptable]</p><br>
 <br><h2 class="nosidebar">Commit History</h2><br>
 <table class="change-table"><tr><th>1.21.7.105</th><td><ul><li> Fix point selection always always multi-select.</li></ul></td></tr><tr><th>1.21.5.002</th><td><ul><li> Fix alpha not apply when using sampler surface.</li></ul></td></tr><tr><th>1.21.5</th><td><ul><li> Fix sampler position using incorrect position.</li></ul></td></tr><tr><th>1.21.4.002</th><td><ul><li> Tiling option now separate X and Y axis.</li></ul></td></tr><tr><th>1.21.2.003</th><td><ul><li> Fix amount input disappear when setting source to map while setting distribution to poisson.</li><li> Add "Stop" option for ended animation.</li></ul></td></tr><tr><th>1.21.1.0</th><td><ul><li> Fix value map doesn't work.</li><li> Add tiling option for all scatter source type.</li></ul></td></tr><tr><th>1.21.0.2.007</th><td><ul><li> Add offset transformation properties.</li></ul></td></tr></table><br><h2 class="nosidebar">Related Links</h2><br><ul class="link-table"><li><span>Base Code: </span><a href="https://github.com/Ttanasart-pt/Pixel-Composer/blob/main/scripts/node_scatter/node_scatter.gml">/scripts/node_scatter/node_scatter.gml</a></li><li><span>Shader [sh_sample]: </span><a href="https://github.com/Ttanasart-pt/Pixel-Composer/blob/main/shaders/sh_sample/sh_sample.fsh">/shaders/sh_sample/sh_sample.fsh</a></li><li><span>Shader [sh_sample_shape]: </span><a href="https://github.com/Ttanasart-pt/Pixel-Composer/blob/main/shaders/sh_sample_shape/sh_sample_shape.fsh">/shaders/sh_sample_shape/sh_sample_shape.fsh</a></li></ul>
         </div>

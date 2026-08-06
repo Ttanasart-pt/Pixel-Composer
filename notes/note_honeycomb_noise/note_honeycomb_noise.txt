@@ -1,5 +1,10 @@
-<v 1.18.0/>
 Generate various type of hexagonal patterns.
-## Properties
-### <junc mode>
-The type of hexagonal pattern to generate.
+
+[proptable]
+Noise
+Mode|Noise mode.
+Iteration|Level of detail.
+
+Rendering
+Level|Brightness level.
+[/proptable]

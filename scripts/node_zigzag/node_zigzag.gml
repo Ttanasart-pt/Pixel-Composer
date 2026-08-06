@@ -21,7 +21,7 @@ function Node_Zigzag(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	newInput(13, nodeValue_Vec2(     "Scale",      [1,1]  )).setHotkey("S").setPieMenu();
 	newInput(14, nodeValue_Slider(   "Offset",      0, [-1,1,.01] ));
 	
-	////- =Render
+	////- =Rendering
 	newInput( 5, nodeValue_EButton(  "Type",        0, [ "Solid", "Smooth", "Sawtooth", "AA" ]));
 	newInput(10, nodeValue_Slider(   "Threshold",  .5       )).setPieMenu();
 	newInput( 3, nodeValue_Color(    "Color 1",    ca_white ));
@@ -31,9 +31,9 @@ function Node_Zigzag(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	newOutput(0, nodeValue_Output( "Surface Out", VALUE_TYPE.surface, noone ));
 	
 	input_display_list = [
-		[ "Output",  false ],  0, 11, 12,  9, 
-		[ "Pattern", false ],  1,  6,  2,  8, 13, 14, 
-		[ "Render",  false ],  5, 10,  3,  4, 
+		[ "Output",    false ],  0, 11, 12,  9, 
+		[ "Pattern",   false ],  1,  6,  2,  8, 13, 14, 
+		[ "Rendering", false ],  5, 10,  3,  4, 
 	];
 	
 	////- Nodes

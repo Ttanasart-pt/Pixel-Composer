@@ -16,7 +16,7 @@ function Node_Noise(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	////- =Moise
 	newInput( 1, nodeValueSeed());
 	
-	////- =Color
+	////- =Rendering
 	newInput( 9, nodeValue_SliRange( "Level",         [0,1] ));
 	newInput( 2, nodeValue_EButton(  "Color Mode",      0, [ "Greyscale", "RGB", "HSV" ] ));
 	newInput( 3, nodeValue_SliRange( "Color R Range", [0,1] ));
@@ -27,9 +27,9 @@ function Node_Noise(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
 	input_display_list = [
-		[ "Output", false ],  0,  7,  8,  6, 
-		[ "Noise",  false ],  1,  
-		[ "Color",  false ],  9,  2,  3,  4,  5, 
+		[ "Output",     false ],  0,  7,  8,  6, 
+		[ "Noise",      false ],  1,  
+		[ "Rendering",  false ],  9,  2,  3,  4,  5, 
 	];
 	
 	////- Nodes

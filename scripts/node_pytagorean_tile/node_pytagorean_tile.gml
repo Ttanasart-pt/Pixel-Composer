@@ -20,14 +20,14 @@ function Node_Pytagorean_Tile(_x, _y, _group = noone) : Node_Processor(_x, _y, _
 	newInput(17, nodeValue_Rotation( "Phase",      90       ));
 	newInput( 4, nodeValue_Slider(   "Gap",       .25, [0, 0.5, 0.001] )).setMappable(13).setPieMenu();
 	
-	////- =Render
-	newInput( 7, nodeValue_EScroll( "Render Type",  0, ["Colored tile", "Height map", "Texture grid"]));
+	////- =Rendering
+	newInput( 7, nodeValue_EScroll(  "Render Type",  0, ["Colored tile", "Height map", "Texture grid"]));
 	newInput( 8, nodeValueSeed());
-	newInput( 5, nodeValue_Gradient(     "Tile Color", gra_white)).setMappable(18).addShift(27);
-	newInput( 6, nodeValue_Color(        "Gap Color",  ca_black));
-	newInput( 9, nodeValue_Surface(      "Texture" ));
-	newInput(10, nodeValue_Bool(         "Anti Aliasing", false));
-	newInput(21, nodeValue_Slider_Range( "Level",         [0,1] ));
+	newInput( 5, nodeValue_Gradient( "Tile Color", gra_white)).setMappable(18).addShift(27);
+	newInput( 6, nodeValue_Color(    "Gap Color",  ca_black));
+	newInput( 9, nodeValue_Surface(  "Texture" ));
+	newInput(10, nodeValue_Bool(     "Anti Aliasing", false));
+	newInput(21, nodeValue_SliRange( "Level",         [0,1] ));
 	
 	////- =Texture Transform
 	newInput(14, nodeValue_Bool(       "Truchet",         false           ));
@@ -39,9 +39,9 @@ function Node_Pytagorean_Tile(_x, _y, _group = noone) : Node_Processor(_x, _y, _
 	// 28
 	
 	input_display_list = [
-		[ "Output",  false ],  0, 23, 24, 22, 
-		[ "Pattern", false ],  1,  3, 12,  2, 11, 17,  4, 13,
-		[ "Render",  false ],  7,  8, [5, true], 18, 27, -1,  6,  9, 10, 21, 
+		[ "Output",      false ],  0, 23, 24, 22, 
+		[ "Pattern",     false ],  1,  3, 12,  2, 11, 17,  4, 13,
+		[ "Rendering",   false ],  7,  8, [5, true], 18, 27, -1,  6,  9, 10, 21, 
 		[ "Texture Transform", true, 14], 15, 25, 20, 26, 16, 
 	];
 	

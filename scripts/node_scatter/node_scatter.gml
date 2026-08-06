@@ -49,7 +49,7 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	newInput(13, nodeValue_Surface(  "Distribution Map"    ));
 	newInput(14, nodeValue_Vec2(     "Points Array",    [] )).setAnimable(false).setArrayDepth(1);
 	newInput(17, nodeValue_Text(     "Extra Value",     [] ))
-		.setTooltip("Apply the third and later values in each data point (if exist) on given properties.")
+		.setTooltip("Apply the third and later values in each data point (if exist) to the given properties.")
 		.setDisplay(VALUE_DISPLAY.text_array, { data: [ "Scale", "Rotation", "Color", "Alpha", "Array Index", "Depth" ] });
 		
 	newInput( 9, nodeValue_EButton(  "Distribution",    1, [ "Uniform", "Random", "Poisson" ] ));
@@ -102,7 +102,7 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	newInput(47, nodeValue_Anchor(   "Sample Anchor"              ));
 	newInput(42, nodeValue_Range2(   "Sample Wiggle",   [0,0,0,0] ));
 	
-	////- =Render
+	////- =Rendering
 	newInput(18, nodeValue_EScroll( "Blend Mode", 0, [ "Normal", "Add", "Max" ] ));
 	newInput(23, nodeValue_Bool(    "Sort Y",     false ));
 	newInput(56, nodeValue_Toggle(  "Tile",       0, [ "X", "Y" ] ))
@@ -131,7 +131,7 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		[ "Scale",        false ],  3, 43, 54, 57, 55,  8, 34, 
 		[ "Color",        false ], [11, true], 28, 58, -1, 12, 16, 
 			[ "/Sampler",  true ], 41, 47, 42, 
-		[ "Render",       false ], 18, 23, 56, 
+		[ "Rendering",    false ], 18, 23, 56, 
 	];
 	
 	////- Nodes

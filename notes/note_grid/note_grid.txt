@@ -2,18 +2,12 @@
 
 ## Properties
 
-### <junc gap/>
-
-Thickness of the gap between grid.
-
-
-### <junc shift/>
-
-Shift every even row by a fix amount to create brick pattern.
-
-### <junc shift axis/>
-
-The axis to apply shift to.
+[proptable]
+Pattern
+Gap|Thickness of the gap between grid.
+Shift|Shift every even row by a fix amount to create brick pattern.
+Shift Axis|The axis to apply shift to.
+[/proptable]
 
 ## Rendering Modes
 

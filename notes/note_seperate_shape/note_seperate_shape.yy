@@ -1,0 +1,11 @@
+{
+  "$GMNotes":"v1",
+  "%Name":"note_seperate_shape",
+  "name":"note_seperate_shape",
+  "parent":{
+    "name":"regions",
+    "path":"folders/nodes/data/generator/regions.yy",
+  },
+  "resourceType":"GMNotes",
+  "resourceVersion":"1.1",
+}

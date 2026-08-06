@@ -19,7 +19,9 @@ def parse_md(path):
     proptable = reProp.findall(data_html)
     for table in proptable:
         table_html = '<table class="prop-table cc3070">'
+        table = table.replace("\\n\n", "<br>")
         rows = table.split("\n")
+
         for row in rows:
             if row.strip() == "":
                 continue

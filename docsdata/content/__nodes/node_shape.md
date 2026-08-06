@@ -12,6 +12,8 @@ BG Blend Mode|Blend mode between background and content
 Transform
 Positioning Mode|Method for setting position, scale of the shape
 
+Shape
+Shape|Shape to draw
 [/proptable]
 
 

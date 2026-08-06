@@ -1,0 +1,11 @@
+{
+  "$GMNotes":"v1",
+  "%Name":"note_recursive_subdiv",
+  "name":"note_recursive_subdiv",
+  "parent":{
+    "name":"pattern",
+    "path":"folders/nodes/data/generator/pattern.yy",
+  },
+  "resourceType":"GMNotes",
+  "resourceVersion":"1.1",
+}

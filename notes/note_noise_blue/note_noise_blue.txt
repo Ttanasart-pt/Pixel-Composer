@@ -1,0 +1,1 @@
+Generate blue noise using Mitchell’s Best Candidate Algorithm. This node is extremely slow on larger surface.

@@ -33,11 +33,11 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	
 	////- =Background
 	newInput( 1, nodeValue_EButton( "Background",    2, [ "None", "Solid", "Surface" ] ));
-	newInput(48, nodeValue_Color(   "BG color",      ca_black ));
+	newInput(48, nodeValue_Color(   "BG Color",      ca_black ));
 	newInput(49, nodeValue_Surface( "BG Surface"              ));
 	newInput(50, nodeValue_EScroll( "BG Blend Mode", 0, [ "Override", "Max" ] ));
 	
-	////- =Line data
+	////- =Line Data
 	newInput(27, nodeValue_EScroll(  "Data Type",      1, [ "Line", "Path", "Segments", "Two points" ]));
 	newInput( 6, nodeValue_Rotation( "Rotation",       0     ));
 	newInput( 7, nodeValue_Path(     "Path"                  ));

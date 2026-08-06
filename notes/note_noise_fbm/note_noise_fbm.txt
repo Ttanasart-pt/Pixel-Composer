@@ -1,0 +1,1 @@
+Generate fractal brownian motion noise.

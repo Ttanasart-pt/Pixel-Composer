@@ -25,8 +25,8 @@ function Node_Noise_Strand(_x, _y, _group = noone) : Node_Shader_Generator(_x, _
 	
 	////- =Curve
 	newInput( 5, nodeValue_SliRange( "Curve",       [0,0], [ 0, 4, 0.01 ] )).setShaderProp("curve");
-	newInput( 6, nodeValue_Float(    "Curve scale",  1 )).setShaderProp("curveDetail");
-	newInput( 8, nodeValue_Float(    "Curve shift",  0 )).setShaderProp("curveShift");
+	newInput( 6, nodeValue_Float(    "Curve Scale",  1 )).setShaderProp("curveDetail");
+	newInput( 8, nodeValue_Float(    "Curve Shift",  0 )).setShaderProp("curveShift");
 	
 	////- =Rendering
 	newInput(15, nodeValue_SliRange( "Level",       [0,1] )).setShaderProp("level");

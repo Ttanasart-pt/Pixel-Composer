@@ -1,0 +1,1 @@
+Generate simple repeated pattern using custom editor.

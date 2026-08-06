@@ -11,17 +11,16 @@ function Node_RD(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	newInput( 6, nodeValue_Slider(  "Diffusion B", .2 )).setMappable(12);
 	
 	////- =Parameter
-	newInput( 1, nodeValue_Slider(  "Kill rate", 0.058, [ 0, 0.1, 0.0001] )).setMappable(8);
-	newInput( 2, nodeValue_Slider(  "Feed rate", 0.043, [ 0, 0.1, 0.0001] )).setMappable(9);
+	newInput( 1, nodeValue_Slider(  "Kill Rate", 0.058, [ 0, 0.1, 0.0001] )).setMappable(8);
+	newInput( 2, nodeValue_Slider(  "Feed Rate", 0.043, [ 0, 0.1, 0.0001] )).setMappable(9);
 	
 	////- =Simulation
 	newInput( 3, nodeValue_Float(   "Timestep",  1  )).setMappable(10);
 	newInput( 4, nodeValue_Int(     "Iteration", 16 ));
-	
 	// input 14
 		
-	newOutput(0, nodeValue_Output("Reacted", VALUE_TYPE.surface, noone));
-	newOutput(1, nodeValue_Output("Rendered", VALUE_TYPE.surface, noone));
+	newOutput(0, nodeValue_Output( "Reacted",  VALUE_TYPE.surface, noone ));
+	newOutput(1, nodeValue_Output( "Rendered", VALUE_TYPE.surface, noone ));
 	
 	preview_channel = 1;
 	

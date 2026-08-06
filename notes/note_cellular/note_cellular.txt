@@ -1,50 +1,22 @@
 ## Properties
 
-### <junc type/>
+[proptable]
+Noise
+Type|Type of the pattern. <img cellular_type/>
+Pattern|Cell distribution.\n - Uniform: Distribute the cell randomly across the surface.\n - Radial: Distribute the cell around the <junc position/> value.\n<img cellular_pattern/>
+Phase|Noise phase.
+Randomness|Cell varience. Set to zero for uniform rectangle grid.
 
-Type of the pattern.
+Transform
+Position|The position of the pattern, or center point if set to <li><span class="inline-code">Radial</span> pattern.
+Scale|Scale of the pattern.
 
-<img cellular_type/>
+Radial
+Radial Scale|Control scaling of the radial effect.
+Radial Shatter|Control how many angular fragmentation per radius.
 
-### <junc pattern/>
-
-Cell distribution.
-
-<ul>
-    <li><span class="inline-code">Uniform</span>: Distribute the cell randomly across the surface.</li>
-    <li><span class="inline-code">Radial</span>: Distribute the cell around the <junc position/> value.</li>
-</ul>
-
-<img cellular_pattern/>
-
-### <junc position/>
-
-The position of the pattern, or center point if set to <li><span class="inline-code">Radial</span> pattern.
-
-### <junc scale/>
-
-Scale of the pattern.
-
-## Radial Properties
-
-### <junc radial scale/>
-
-Control scaling of the radial effect.
-
-### <junc radial shatter/>
-
-Control how many angular fragmentation per radius.
-
-## Rendering Properties
-
-### <junc contrast/>
-
-Control the contrast of the final image.
-
-### <junc middle/>
-
-The middle point for contrast calculation.
-
-### <junc colored/>
-
-<span class="inline-code">Cell</span> type only: fill each cell with random color.
+Rendering
+Contrast|Control the contrast of the final image.
+Middle|The middle point for contrast calculation.
+Colored|<span class="inline-code">Cell</span> type only: fill each cell with random color.
+[/proptable]
