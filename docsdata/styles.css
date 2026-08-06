@@ -907,84 +907,41 @@ table.icon-detail {
     }
 }
 
-table.cc3070 {
-    td:first-child {
-        text-align: center;
-        width: 30%;
-    }
-
-    td:nth-child(2) {
-        text-align: center;
-        width: 70%;
-    }
-}
-
-table td.prop-section {
-    color: var(--main_ltgrey);
-}
-
 table.prop-table {
+    th.prop-section {
+        color: var(--main_ltgrey);
+    }
+
     td:nth-child(2) {
         text-align: left;
     }
 }
 
-
-table.cc4060 {
-    td:first-child {
-        text-align: center;
-        width: 40%;
-    }
-
-    td:nth-child(2) {
-        text-align: center;
-        width: 60%;
-    }
+table.cc3070 {
+    td:first-child  { text-align: center; width: 30%; }
+    td:nth-child(2) { text-align: center; width: 70%; }
 }
 
-table.cc5050 {
-    td:first-child {
-        text-align: center;
-        width: 50%;
-    }
+table.cc4060 {
+    td:first-child  { text-align: center; width: 40%; }
+    td:nth-child(2) { text-align: center; width: 60%; }
+}
 
-    td:nth-child(2) {
-        text-align: center;
-        width: 50%;
-    }
+table.cc5050 { 
+    td:first-child  { text-align: center; width: 50%; }
+    td:nth-child(2) { text-align: center; width: 50%; }
 }
 
 table.ccc203050 {
-    td:first-child {
-        text-align: center;
-        width: 20%;
-    }
-
-    td:nth-child(2) {
-        text-align: center;
-        width: 30%;
-    }
-
-    td:nth-child(3) {
-        text-align: center;
-        width: 50%;
-    }
+    td:first-child  { text-align: center; width: 20%; }
+    td:nth-child(2) { text-align: center; width: 30%; }
+    td:nth-child(3) { text-align: center; width: 50%; }
 }
 
 table.ccc205030 {
-    td:first-child {
-        text-align: center;
-        width: 20%;
-    }
-    td:nth-child(2) {
-        text-align: center;
-        width: 50%;
-    }
-
-    td:nth-child(3) {
-        text-align: center;
-        width: 30%;
-    }
+    td:first-child  { text-align: center; width: 20%; }
+    td:nth-child(2) { text-align: center; width: 50%; }
+    td:nth-child(3) { text-align: center; width: 30%; }
 }
 
 table img.node-content {
