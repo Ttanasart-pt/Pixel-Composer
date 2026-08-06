@@ -908,7 +908,7 @@ table.icon-detail {
 }
 
 table.prop-table {
-    td.prop-section {
+    td.prop-section, td.prop-section > p {
         font-weight: 600;
         font-size: 0.9rem;
         color: var(--main_ltgrey);
