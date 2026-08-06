@@ -917,18 +917,18 @@ table.cc3070 {
         text-align: center;
         width: 70%;
     }
-
-    td.prop-section {
-        color: var(--main_ltgrey);
-    }
-    
-    &.prop-table {
-        td:nth-child(2) {
-            text-align: left;
-        }
-    }
-
 }
+
+table td.prop-section {
+    color: var(--main_ltgrey);
+}
+
+table.prop-table {
+    td:nth-child(2) {
+        text-align: left;
+    }
+}
+
 
 table.cc4060 {
     td:first-child {

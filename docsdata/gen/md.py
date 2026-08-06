@@ -29,7 +29,7 @@ def parse_md(path):
             amo   = len(cells)
 
             if amo == 1:
-                table_html += f"<th colspan='2' class='prop-section'><junc {cells[0].strip()}></th>"
+                table_html += f"<th colspan='2' class='prop-section'>{cells[0].strip()}</th>"
             else:
                 for i, cell in enumerate(cells):
                     cel = cell.strip()
