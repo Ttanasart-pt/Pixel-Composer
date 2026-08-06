@@ -18,7 +18,7 @@ def parse_md(path):
     reProp = re.compile(r"\[proptable\]([\s\S]*?)\[\/proptable\]")
     proptable = reProp.findall(data_html)
     for table in proptable:
-        table_html = '<table class="cc3070">'
+        table_html = '<table class="prop-table cc3070">'
         rows = table.split("\n")
         for row in rows:
             if row.strip() == "":

@@ -921,6 +921,13 @@ table.cc3070 {
     td.header {
         color: var(--main_ltgrey);
     }
+    
+    &.prop-table {
+        td:nth-child(2) {
+            text-align: left;
+        }
+    }
+
 }
 
 table.cc4060 {
