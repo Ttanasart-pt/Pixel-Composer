@@ -1133,6 +1133,7 @@
     {"id":{"name":"note_shadow","path":"notes/note_shadow/note_shadow.yy",},},
     {"id":{"name":"note_shape_3d","path":"notes/note_shape_3d/note_shape_3d.yy",},},
     {"id":{"name":"note_shape_map","path":"notes/note_shape_map/note_shape_map.yy",},},
+    {"id":{"name":"note_shape","path":"notes/note_shape/note_shape.yy",},},
     {"id":{"name":"note_shuffle","path":"notes/note_shuffle/note_shuffle.yy",},},
     {"id":{"name":"note_smear","path":"notes/note_smear/note_smear.yy",},},
     {"id":{"name":"note_smoke_add_collider","path":"notes/note_smoke_add_collider/note_smoke_add_collider.yy",},},

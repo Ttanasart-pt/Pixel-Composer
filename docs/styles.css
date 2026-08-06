@@ -890,79 +890,94 @@ table.center td {
     text-align: center;
 }
 
-table.icon-detail td:first-child {
-    text-align: center;
-    width: 10%;
+table.icon-detail {
+    td:first-child {
+        text-align: center;
+        width: 10%;
+    }
+
+    td:nth-child(2) {
+        text-align: center;
+        width: 30%;
+    }
+
+    td:nth-child(3) {
+        text-align: left;
+        width: 60%;
+    }
 }
 
-table.icon-detail td:nth-child(2) {
-    text-align: center;
-    width: 30%;
+table.cc3070 {
+    td:first-child {
+        text-align: center;
+        width: 30%;
+    }
+
+    td:nth-child(2) {
+        text-align: center;
+        width: 70%;
+    }
+
+    td.header {
+        color: var(--main_ltgrey);
+    }
 }
 
-table.icon-detail td:nth-child(3) {
-    text-align: left;
-    width: 60%;
+table.cc4060 {
+    td:first-child {
+        text-align: center;
+        width: 40%;
+    }
+
+    td:nth-child(2) {
+        text-align: center;
+        width: 60%;
+    }
 }
 
-table.cc3070 td:first-child {
-    text-align: center;
-    width: 30%;
+table.cc5050 {
+    td:first-child {
+        text-align: center;
+        width: 50%;
+    }
+
+    td:nth-child(2) {
+        text-align: center;
+        width: 50%;
+    }
 }
 
-table.cc3070 td:nth-child(2) {
-    text-align: center;
-    width: 70%;
+table.ccc203050 {
+    td:first-child {
+        text-align: center;
+        width: 20%;
+    }
+
+    td:nth-child(2) {
+        text-align: center;
+        width: 30%;
+    }
+
+    td:nth-child(3) {
+        text-align: center;
+        width: 50%;
+    }
 }
 
-table.cc4060 td:first-child {
-    text-align: center;
-    width: 40%;
-}
+table.ccc205030 {
+    td:first-child {
+        text-align: center;
+        width: 20%;
+    }
+    td:nth-child(2) {
+        text-align: center;
+        width: 50%;
+    }
 
-table.cc4060 td:nth-child(2) {
-    text-align: center;
-    width: 60%;
-}
-
-table.cc5050 td:first-child {
-    text-align: center;
-    width: 50%;
-}
-
-table.cc5050 td:nth-child(2) {
-    text-align: center;
-    width: 50%;
-}
-
-table.ccc203050 td:first-child {
-    text-align: center;
-    width: 20%;
-}
-
-table.ccc203050 td:nth-child(2) {
-    text-align: center;
-    width: 30%;
-}
-
-table.ccc203050 td:nth-child(3) {
-    text-align: center;
-    width: 50%;
-}
-
-table.ccc205030 td:first-child {
-    text-align: center;
-    width: 20%;
-}
-
-table.ccc205030 td:nth-child(2) {
-    text-align: center;
-    width: 50%;
-}
-
-table.ccc205030 td:nth-child(3) {
-    text-align: center;
-    width: 30%;
+    td:nth-child(3) {
+        text-align: center;
+        width: 30%;
+    }
 }
 
 table img.node-content {

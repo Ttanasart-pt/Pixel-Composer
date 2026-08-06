@@ -27,15 +27,20 @@ def parse_md(path):
             table_html += "<tr>"
             cells = row.split("|")
             amo   = len(cells)
-            for i, cell in enumerate(cells):
-                cel = cell.strip()
-                if cel == "":
-                    continue
 
-                if amo == 2 and i == 0:
-                    table_html += f"<td><junc {cel}></td>"
-                else:
-                    table_html += f"<td>{cel}</td>"
+            if amo == 1:
+                table_html += f"<th colspan='2' class='header'><junc {cells[0].strip()}></th>"
+            else:
+                for i, cell in enumerate(cells):
+                    cel = cell.strip()
+                    if cel == "":
+                        continue
+
+                    if amo == 2 and i == 0:
+                        table_html += f"<td><junc {cel}></td>"
+                    else:
+                        table_html += f"<td>{cel}</td>"
+
             table_html += "</tr>"
 
         table_html += "</table>"
