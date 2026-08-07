@@ -3,20 +3,20 @@ function Node_Lua_Compute(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	update_on_frame = true;
 	lua_state = lua_create();
 	
-	newInput(3, nodeValue(      "Execution thread", self, CONNECT_TYPE.input, VALUE_TYPE.node, lua_state )).setVisible(false, true);
-	newInput(4, nodeValue_Bool( "Execute on frame", true ));
+	newInput(3, nodeValue(      "Execution Thread", self, CONNECT_TYPE.input, VALUE_TYPE.node, lua_state )).setVisible(false, true);
+	newInput(4, nodeValue_Bool( "Execute on Frame", true ));
 	
 	////- =Function
-	newInput(0, nodeValue_Text(    "Function name", $"render{irandom_range(100000, 999999)}" ));
-	newInput(1, nodeValue_EScroll( "Return type",  0, { data: [ "Number", "String", "Struct" ], update_hover: false } ));
+	newInput(0, nodeValue_Text(    "Function Name", $"render{irandom_range(100000, 999999)}" ));
+	newInput(1, nodeValue_EScroll( "Return Type",  0, { data: [ "Number", "String", "Struct" ], update_hover: false } ));
 	
 	////- =Script
-	newInput(2, nodeValue_Text( "Lua code" )).setDisplay(VALUE_DISPLAY.codeLUA)
+	newInput(2, nodeValue_Text( "Lua Code" )).setDisplay(VALUE_DISPLAY.codeLUA)
 		.setTooltip(function() /*=>*/ {return dialogPanelCall(new Panel_Code_Reference(global.lua_functions))}, __txt("Lua Reference"))
 	// 5
 	
-	newOutput(0, nodeValue_Output( "Execution thread", VALUE_TYPE.node, lua_state ));
-	newOutput(1, nodeValue_Output( "Return value",     VALUE_TYPE.any,  noone     ));
+	newOutput(0, nodeValue_Output( "Execution Thread", VALUE_TYPE.node, lua_state ));
+	newOutput(1, nodeValue_Output( "Return Value",     VALUE_TYPE.any,  noone     ));
 	
 	argumentRenderer(global.lua_arguments);
 	

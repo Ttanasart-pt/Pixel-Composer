@@ -1,0 +1,7 @@
+Create an animation of multiple set of texts with transition.
+
+## Properties
+
+[proptable]
+Path|File path.
+[/proptable]

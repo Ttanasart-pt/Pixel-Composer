@@ -4,20 +4,20 @@ function Node_MK_Saber(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	newInput( 0, nodeValue_Dimension());
 	
 	////- =Saber
-	newInput( 1, nodeValue_Vec2(     "Point 1",       [0,0]      ));
-	newInput( 2, nodeValue_Vec2(     "Point 2",       [16,16]    ));
+	newInput( 1, nodeValue_Vec2(     "Point 1",       [0,0]      )).setUnitSimple();
+	newInput( 2, nodeValue_Vec2(     "Point 2",       [16,16]    )).setUnitSimple();
 	newInput( 3, nodeValue_Int(      "Thickness",      2         ))
-	newInput( 6, nodeValue_Bool(     "Fix length",     false     ));
+	newInput( 6, nodeValue_Bool(     "Fix Length",     false     ));
 	
 	////- =Render
 	newInput( 4, nodeValue_Gradient( "Color",          gra_white )).addShift(11);
-	newInput( 7, nodeValue_Int(      "Gradient step",  1         ));
-	newInput( 8, nodeValue_Slider(   "Glow intensity", 0         ));
-	newInput( 9, nodeValue_Int(      "Glow radius",    0         ));
+	newInput( 7, nodeValue_Int(      "Gradient Step",  1         ));
+	newInput( 8, nodeValue_Slider(   "Glow Intensity", 0         ));
+	newInput( 9, nodeValue_Int(      "Glow Radius",    0         ));
 	
 		////- =/Trace
 	newInput( 5, nodeValue_Int(      "Trace",          0         ));
-	newInput(10, nodeValue_Surface(  "Trace texture"             )).setVisible(true, true);
+	newInput(10, nodeValue_Surface(  "Trace Texture"             )).setVisible(true, true);
 	// 12
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
@@ -248,6 +248,7 @@ function Node_MK_Saber(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 			if(_thck == 1) {
 				draw_set_color(_colr.eval(pfract(1 + _colrS)));
 				draw_line(_p1x, _p1y, _p2x, _p2y);
+				
 			} else {
 				for( var i = _thck; i > 0; i -= _grds ) {
 					draw_set_color(_colr.eval(pfract((i - 1) / (_thck - 1) + _colrS )));

@@ -1,0 +1,11 @@
+{
+  "$GMNotes":"v1",
+  "%Name":"note_sequence_anim",
+  "name":"note_sequence_anim",
+  "parent":{
+    "name":"image",
+    "path":"folders/nodes/data/io/image.yy",
+  },
+  "resourceType":"GMNotes",
+  "resourceVersion":"1.1",
+}

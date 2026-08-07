@@ -1,0 +1,11 @@
+{
+  "$GMNotes":"v1",
+  "%Name":"note_mk_pile",
+  "name":"note_mk_pile",
+  "parent":{
+    "name":"composite",
+    "path":"folders/nodes/data/MKFX/composite.yy",
+  },
+  "resourceType":"GMNotes",
+  "resourceVersion":"1.1",
+}

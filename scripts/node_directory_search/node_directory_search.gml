@@ -28,10 +28,10 @@ function Node_Directory_Search(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	name  = "Directory Search";
 	color = COLORS.node_blend_input;
 	
-	newInput(0, nodeValue_FPath("Path")).setDisplay(VALUE_DISPLAY.path_load, { filter: "dir" });
-	newInput(1, nodeValue_Text("Extensions", ".png"));
-	newInput(2, nodeValue_EScroll("Type",  0, [ "Surface", "Text" ]));
-	newInput(3, nodeValue_Bool("Recursive", false));
+	newInput( 0, nodeValue_FPath(   "Path" )).setDisplay(VALUE_DISPLAY.path_load, { filter: "dir" });
+	newInput( 1, nodeValue_Text(    "Extensions",  ".png"                   ));
+	newInput( 2, nodeValue_EScroll( "Type",        0, [ "Surface", "Text" ] ));
+	newInput( 3, nodeValue_Bool(    "Recursive",   false                    ));
 	// input 4
 		
 	newOutput(0, nodeValue_Output("Outputs", VALUE_TYPE.surface, [])).setVisible(true, true);
@@ -117,6 +117,8 @@ function Node_Directory_Search(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	
 	insp1button = button(function() /*=>*/ { updatePaths(); triggerRender(); }).setTooltip(__txt("Refresh"))
 		.setIcon(THEME.refresh_icon, 1, COLORS._main_value_positive).iconPad(ui(6)).setBaseSprite(THEME.button_hide_fill);
+	
+	////- Node
 	
 	static step = function() {
 		if(attributes.file_checker) {

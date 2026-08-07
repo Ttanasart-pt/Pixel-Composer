@@ -31,10 +31,10 @@ function Node_Image_mp4(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	update_on_frame = true;
 	setAlwaysTimeline(new timelineItemNode_Image_mp4(self));
 	
-	newInput( 8, nodeValue_Bool( "Edit in Timeline",   true  ));
+	newInput( 8, nodeValue_Bool(  "Edit in Timeline",   true  ));
 	
-	////- =Image
-	newInput( 0, nodeValue_FPath("Path")).setDisplay(VALUE_DISPLAY.path_load, { filter: "MP4 (.mp4)|*.mp4" });
+	////- =File
+	newInput( 0, nodeValue_FPath( "Path" )).setDisplay(VALUE_DISPLAY.path_load, { filter: "MP4 (.mp4)|*.mp4" });
 	detail = new Inspector_Label("Mp4 file");
 	
 	////- =Output
@@ -44,22 +44,22 @@ function Node_Image_mp4(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	newInput( 1, nodeValue_Trigger("Match Animation Length" ));
 	b_match_len = button(function() /*=>*/ { TOTAL_FRAMES = max(1, array_length(sprs)); }).setText("Match Length");
 	
-	newInput( 3, nodeValue_EScroll( "Loop Mode",         0, ["Loop", "Ping pong", "Hold last frame", "Hide"])).rejectArray();
+	newInput( 3, nodeValue_EScroll( "Loop Mode",         0, [ "Loop", "Ping pong", "Hold last frame", "Hide" ])).rejectArray();
 	newInput( 4, nodeValue_Int(     "Start Frame",       1    ));
 	newInput( 7, nodeValue_Float(   "Animation Speed",   1    ));
 	newInput( 9, nodeValue_Bool(    "Draw Before Start", true ));
 	
 	////- =Custom Order
-	newInput( 5, nodeValue_Bool( "Custom frame order",  false ));
+	newInput( 5, nodeValue_Bool( "Custom Frame Order",  false ));
 	newInput( 6, nodeValue_Int(  "Frame",               0     ));
-	// input 10
+	// 10
 	
 	newOutput(0, nodeValue_Output( "Surface Out", VALUE_TYPE.surface, noone ));
 	newOutput(1, nodeValue_Output( "Path",        VALUE_TYPE.path,    ""    )).setVisible(true, true);
 	newOutput(2, nodeValue_Output( "Dimension",   VALUE_TYPE.integer, [1,1] )).setDisplay(VALUE_DISPLAY.vector);
 	
 	input_display_list = [ 8, 
-		[ "Image",     false ],  0, detail, 
+		[ "File",      false ],  0, detail, 
 		[ "Output",    false ],  2, 
 		[ "Animation", false ], b_match_len,  3,  4,  7,  9, 
 		[ "Custom Frame Order", false, 5 ],  6,
@@ -92,6 +92,8 @@ function Node_Image_mp4(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	
 	insp1button = button(function() /*=>*/ { updatePaths(path_get(getInputData(0))); }).setTooltip(__txt("Refresh"))
 		.setIcon(THEME.refresh_icon, 1, COLORS._main_value_positive).iconPad(ui(6)).setBaseSprite(THEME.button_hide_fill);
+	
+	////- MP4
 	
 	function ffmpegCheck() {
 		     if(OS == os_windows) ffmpeg = filepath_resolve(PREFERENCES.ffmpeg_path)               + "win/ffmpeg.exe";
@@ -219,6 +221,8 @@ function Node_Image_mp4(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		
 		return loadAll;
 	}
+	
+	////- Update
 	
 	static step = function() {
 		if(file_reading) {

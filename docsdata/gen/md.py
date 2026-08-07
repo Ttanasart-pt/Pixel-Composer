@@ -47,7 +47,7 @@ def parse_md(path):
 
         table_html += "</table>"
         data_html = data_html.replace(f"[proptable]{table}[/proptable]", table_html)
-    
+
     with open(target, "a") as f:
         f.write(data_html)
 

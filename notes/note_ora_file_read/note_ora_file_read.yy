@@ -1,0 +1,11 @@
+{
+  "$GMNotes":"v1",
+  "%Name":"note_ora_file_read",
+  "name":"note_ora_file_read",
+  "parent":{
+    "name":"ora",
+    "path":"folders/nodes/data/io/ora.yy",
+  },
+  "resourceType":"GMNotes",
+  "resourceVersion":"1.1",
+}

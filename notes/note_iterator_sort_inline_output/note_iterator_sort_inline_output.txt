@@ -1,0 +1,1 @@
+A node for receiving the result whether to swap or not.

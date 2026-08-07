@@ -12,17 +12,20 @@ function Node_SVG(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name  = "SVG";
 	color = COLORS.node_blend_input;
 	
-	newInput(0, nodeValue_FPath(    "Path")).setDisplay(VALUE_DISPLAY.path_load, { filter: "Scalable Vector Graphics (.svg)|*.svg" });
-	newInput(2, nodeValue_EButton( "Type",      0, [ "Scale", "Constant" ] ));
-	newInput(1, nodeValue_Float(   "Scale",     1        ));
-	newInput(3, nodeValue_Dimension());
-		
-	newOutput(0, nodeValue_Output( "Surface Out", VALUE_TYPE.surface,  noone ));
-	newOutput(1, nodeValue_Output( "SVG Object",  VALUE_TYPE.dynaSurface, {} ));
-	newOutput(2, nodeValue_Output( "Dimension",   VALUE_TYPE.integer, [1,1] )).setDisplay(VALUE_DISPLAY.vector);
+	newInput( 0, nodeValue_FPath( "Path" )).setDisplay(VALUE_DISPLAY.path_load, { filter: "Scalable Vector Graphics (.svg)|*.svg" });
+	
+	////- =Dimension
+	newInput( 2, nodeValue_EButton( "Type",  0, [ "Scale", "Constant" ] ));
+	newInput( 1, nodeValue_Float(   "Scale", 1 ));
+	newInput( 3, nodeValue_Dimension());
+	// 4
+	
+	newOutput( 0, nodeValue_Output( "Surface Out", VALUE_TYPE.surface,     noone ));
+	newOutput( 1, nodeValue_Output( "SVG Object",  VALUE_TYPE.dynaSurface, {}    ));
+	newOutput( 2, nodeValue_Output( "Dimension",   VALUE_TYPE.integer,     [1,1] )).setDisplay(VALUE_DISPLAY.vector);
 	
 	input_display_list = [ 0, 
-		[ "Dimension", false ], 2, 1, 3, 
+		[ "Dimension", false ],  2,  1,  3, 
 	];
 	
 	attribute_surface_depth();

@@ -30,20 +30,16 @@ function Node_CSV_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	color = COLORS.node_blend_input;
 	w     = 128;
 	
-	newInput(0, nodeValue_FPath("Path"))
-		.setDisplay(VALUE_DISPLAY.path_load, { filter: "CSV File (.csv)|*.csv" })
-		.rejectArray();
-		
-	newInput(1, nodeValue_Bool("Convert to Number", false))
-		.rejectArray();
+	newInput( 0, nodeValue_FPath( "Path" )).setDisplay(VALUE_DISPLAY.path_load, { filter: "CSV File (.csv)|*.csv" }).rejectArray();
 	
-	newOutput(0, nodeValue_Output("Content", VALUE_TYPE.text, ""));
+	////- =Data
+	newInput( 1, nodeValue_Bool(  "Convert to Number", false )).rejectArray();
 	
-	newOutput(1, nodeValue_Output("Path", VALUE_TYPE.path, ""))
-		.setVisible(true, true);
+	newOutput( 0, nodeValue_Output( "Content", VALUE_TYPE.text, "" ));
+	newOutput( 1, nodeValue_Output( "Path",    VALUE_TYPE.path, "" )).setVisible(true, true);
 	
 	input_display_list = [ 0,
-		["Data", false], 1,
+		[ "Data", false ], 1,
 	];
 	
 	content      = "";

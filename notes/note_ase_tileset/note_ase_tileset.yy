@@ -1,0 +1,11 @@
+{
+  "$GMNotes":"v1",
+  "%Name":"note_ase_tileset",
+  "name":"note_ase_tileset",
+  "parent":{
+    "name":"aseprite",
+    "path":"folders/nodes/data/io/aseprite.yy",
+  },
+  "resourceType":"GMNotes",
+  "resourceVersion":"1.1",
+}

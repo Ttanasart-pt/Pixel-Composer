@@ -4,14 +4,13 @@ function Node_Lua_Global(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	lua_state = lua_create();
 	
 	////- =Main
-	newInput(0, nodeValue_Text( "Lua code" )).setDisplay(VALUE_DISPLAY.codeLUA)
+	newInput(2, nodeValue(         "Execution Thread", self, CONNECT_TYPE.input, VALUE_TYPE.node, lua_state)).setVisible(false, true);
+	newInput(1, nodeValue_EScroll( "Run Order",  0, [ "On start", "Every frame" ]));
+	newInput(0, nodeValue_Text(    "Lua Code" )).setDisplay(VALUE_DISPLAY.codeLUA)
 		.setTooltip(function() /*=>*/ {return dialogPanelCall(new Panel_Code_Reference(global.lua_functions))}, __txt("Lua Reference"))
-	
-	newInput(2, nodeValue( "Execution thread", self, CONNECT_TYPE.input, VALUE_TYPE.node, lua_state)).setVisible(false, true);
-	newInput(1, nodeValue_EScroll( "Run order",  0, [ "On start", "Every frame" ]));
 	// 3
 	
-	newOutput(0, nodeValue_Output("Execution thread", VALUE_TYPE.node, lua_state ));
+	newOutput(0, nodeValue_Output("Execution Thread", VALUE_TYPE.node, lua_state ));
 	
 	input_display_list = [ 
 		["Main", false], 2, 1, 0,

@@ -4,12 +4,8 @@ function Node_Text_File_Write(_x, _y, _group = noone) : Node(_x, _y, _group) con
 	
 	w = 128;
 	
-	newInput(0, nodeValue_FPath("Path"))
-		.setDisplay(VALUE_DISPLAY.path_save, { filter: "text file|*.txt" })
-		.rejectArray();
-		
-	newInput(1, nodeValue_Text("Content"))
-		.setVisible(true, true);
+	newInput(0, nodeValue_FPath( "Path"    )).setDisplay(VALUE_DISPLAY.path_save, { filter: "text file|*.txt" }).rejectArray();
+	newInput(1, nodeValue_Text(  "Content" )).setVisible(true, true);
 	
 	static writeFile = function() {
 		var path = getInputData(0);

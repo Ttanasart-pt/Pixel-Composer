@@ -1,0 +1,11 @@
+{
+  "$GMNotes":"v1",
+  "%Name":"note_lua_surface",
+  "name":"note_lua_surface",
+  "parent":{
+    "name":"lua",
+    "path":"folders/nodes/data/lua.yy",
+  },
+  "resourceType":"GMNotes",
+  "resourceVersion":"1.1",
+}

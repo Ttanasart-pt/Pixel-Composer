@@ -1,7 +1,7 @@
 function Node_create_ORA_File_Read(_x, _y, _group = noone) { 
 	var path = "";
 	if(NODE_NEW_MANUAL) {
-		path = get_open_filename_compat("ORA File (*.kra)|*.kra", "");
+		path = get_open_filename_compat("ORA File (*.ora)|*.ora", "");
 		key_release();
 		if(path == "") return noone;
 	}

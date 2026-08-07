@@ -1,12 +1,11 @@
 function Node_Tile_Tileset(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
-    name        = "Tileset";
-    // bypass_grid = true;
+    name = "Tileset";
     preserve_height_for_preview = true;
     
     node_edit      = noone;
     renaming       = noone;
 	rename_text    = "";
-	tb_rename      = new textBox(TEXTBOX_INPUT.text, function(_name) { 
+	tb_rename      = textBox_Text(function(_name) /*=>*/ { 
 		if(renaming == noone) return;
 		renaming.name  = _name;
 		renaming       = noone;

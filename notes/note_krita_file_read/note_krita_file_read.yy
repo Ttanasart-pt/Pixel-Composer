@@ -1,0 +1,11 @@
+{
+  "$GMNotes":"v1",
+  "%Name":"note_krita_file_read",
+  "name":"note_krita_file_read",
+  "parent":{
+    "name":"krita",
+    "path":"folders/nodes/data/io/krita.yy",
+  },
+  "resourceType":"GMNotes",
+  "resourceVersion":"1.1",
+}

@@ -1,0 +1,11 @@
+{
+  "$GMNotes":"v1",
+  "%Name":"note_pxc",
+  "name":"note_pxc",
+  "parent":{
+    "name":"pxc",
+    "path":"folders/nodes/data/io/pxc.yy",
+  },
+  "resourceType":"GMNotes",
+  "resourceVersion":"1.1",
+}

@@ -53,7 +53,7 @@ function Node_Image_gif(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	newInput( 9, nodeValue_Bool(    "Draw Before Start", true ));
 	
 	////- =Custom Order
-	newInput( 5, nodeValue_Bool( "Custom frame order", false ));
+	newInput( 5, nodeValue_Bool( "Custom Frame Order", false ));
 	newInput( 6, nodeValue_Int(  "Frame",              0     ));
 	// input 10
 	

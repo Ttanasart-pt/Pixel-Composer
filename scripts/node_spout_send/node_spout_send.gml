@@ -1,7 +1,7 @@
 function Node_Spout_Send(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name	= "Spout Send";
 	
-	newInput( 0, nodeValue_Text(    "Sender name", "PixelComposer" ));
+	newInput( 0, nodeValue_Text(    "Sender Name", "PixelComposer" ));
 	newInput( 1, nodeValue_Surface( "Surface" ));
 	// 2
 	

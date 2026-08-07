@@ -1,0 +1,11 @@
+{
+  "$GMNotes":"v1",
+  "%Name":"note_mk_isocube",
+  "name":"note_mk_isocube",
+  "parent":{
+    "name":"3d",
+    "path":"folders/nodes/data/MKFX/3d.yy",
+  },
+  "resourceType":"GMNotes",
+  "resourceVersion":"1.1",
+}

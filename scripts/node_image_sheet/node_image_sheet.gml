@@ -3,13 +3,13 @@ function Node_Image_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	
 	////- =Sprite
 	newInput( 0, nodeValue_Surface( "Surface In" )).setRequired();
-	newInput( 1, nodeValue_Vec2(    "Sprite size", [32,32]   ));
+	newInput( 1, nodeValue_Vec2(    "Sprite Size", [32,32]   ));
 	newInput( 6, nodeValue_IPadding("Padding",     [0,0,0,0] ));
 	newInput( 2, nodeValue_Int(     "Row",          1        )); //unused
 	
-	////- =Shet
+	////- =Sheet
 	newInput( 3, nodeValue_Vec2(    "Amount",    [1,1] ));
-	newInput(10, nodeValue_Trigger( "Auto fill", "Automatically set amount based on sprite size." ));
+	newInput(10, nodeValue_Trigger( "Auto Fill", "Automatically set amount based on sprite size." ));
 	
 	b_auto_fill = button(function() /*=>*/ {
 		var _sur = getInputData(0);
@@ -40,8 +40,8 @@ function Node_Image_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	
 	////- =Output
 	newInput( 7, nodeValue_EScroll( "Output",          1, [ "Animation", "Array" ]));
-	newInput( 8, nodeValue_Float(   "Animation speed", 1 ));
-	newInput(11, nodeValue_Trigger( "Sync animation"     ));
+	newInput( 8, nodeValue_Float(   "Animation Speed", 1 ));
+	newInput(11, nodeValue_Trigger( "Sync Animation"     ));
 	
 	b_sync_frame = button(function() /*=>*/ { 
 		var _atl = outputs[1].getValue();
@@ -53,10 +53,10 @@ function Node_Image_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	newInput(15, nodeValue_Bool(    "Flatten Array",       true  ));
 		
 	////- =Filter
-	newInput(12, nodeValue_Bool(    "Filter empty output", false ));
+	newInput(12, nodeValue_Bool(    "Filter Empty Output", false ));
 	newInput(13, nodeValue_EScroll( "Filtered Pixel",      0, [ "Transparent", "Color" ]));
 	newInput(14, nodeValue_Color(   "Filtered Color",      ca_black ));
-	//16
+	// 16
 	
 	newOutput(0, nodeValue_Output( "Surface Out", VALUE_TYPE.surface, noone ));
 	newOutput(1, nodeValue_Output( "Atlas Data",  VALUE_TYPE.atlas,   []    )).setArrayDepth(1);
@@ -303,15 +303,16 @@ function Node_Image_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		spliceSurf   = _surf;
 		
 		var _outSurf = outputs[0].getValue();
-		var _out	 = getInputData(7);
-		var _dim	 = getInputData(1);
-		var _amo	 = getInputData(3);
-		var _off	 = getInputData(4);
-		var _total   = _amo[0] * _amo[1];
-		var _pad	 = getInputData(6);
+		var _out	 = getInputData( 7);
+		var _dim	 = getInputData( 1);
+		var _amo	 = getInputData( 3);
+		var _off	 = getInputData( 4);
+		var _pad	 = getInputData( 6);
 		 
-		surf_space   = getInputData(5);
-		surf_axis    = getInputData(9);
+		surf_space   = getInputData( 5);
+		surf_axis    = getInputData( 9);
+		
+		var _total   = _amo[0] * _amo[1];
 		
 		var ww = _dim[0] + _pad[0] + _pad[2];
 		var hh = _dim[1] + _pad[1] + _pad[3];

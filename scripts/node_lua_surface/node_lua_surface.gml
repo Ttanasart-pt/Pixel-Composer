@@ -4,19 +4,19 @@ function Node_Lua_Surface(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	update_on_frame = true;
 	lua_state = lua_create();
 	
-	newInput(3, nodeValue(      "Execution thread", self, CONNECT_TYPE.input, VALUE_TYPE.node, lua_state )).setVisible(false, true);
-	newInput(4, nodeValue_Bool( "Execute on frame", true ));
+	newInput(3, nodeValue(      "Execution Thread", self, CONNECT_TYPE.input, VALUE_TYPE.node, lua_state )).setVisible(false, true);
+	newInput(4, nodeValue_Bool( "Execute on Frame", true ));
 	
 	////- =Function
-	newInput(0, nodeValue_Text( "Function name", $"render{irandom_range(100000, 999999)}" ));
-	newInput(1, nodeValue_Vec2( "Output dimension", PROJ_SURF ));
+	newInput(0, nodeValue_Text( "Function Name", $"render{irandom_range(100000, 999999)}" ));
+	newInput(1, nodeValue_Vec2( "Output Dimension", PROJ_SURF ));
 	
 	////- =Script
-	newInput(2, nodeValue_Text( "Lua code" )).setDisplay(VALUE_DISPLAY.codeLUA)
+	newInput(2, nodeValue_Text( "Lua Code" )).setDisplay(VALUE_DISPLAY.codeLUA)
 		.setTooltip(function() /*=>*/ {return dialogPanelCall(new Panel_Code_Reference(global.lua_functions))}, __txt("Lua Reference"));
 	// 5
 	
-	newOutput(0, nodeValue_Output( "Execution thread", VALUE_TYPE.node,    lua_state ));
+	newOutput(0, nodeValue_Output( "Execution Thread", VALUE_TYPE.node,    lua_state ));
 	newOutput(1, nodeValue_Output( "Surface Out",      VALUE_TYPE.surface, noone     ));
 	
 	attribute_surface_depth();

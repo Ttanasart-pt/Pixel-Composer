@@ -1,2 +1,6 @@
-<v 1.18.1/>
-Loop through the graph, recycle the output of one iteration as the input of the next iteration. The output of the last iteration will be the final output of the loop.
+Loop system sends an output value back as an input repeatedly.
+
+The system comes with 2 nodes:
+
+ - <node Node_Iterate_Inline_Input> A node for defining loop starting points.
+ - <node Node_Iterate_Inline_Output> A node for defining the end result of the loop.

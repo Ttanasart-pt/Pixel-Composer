@@ -1,0 +1,1 @@
+A node for receiving the operation result.

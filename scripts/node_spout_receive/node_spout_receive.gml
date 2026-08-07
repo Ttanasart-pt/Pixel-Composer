@@ -29,10 +29,6 @@ function Node_Spout_Receive(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	connected = false;
 	surf_buff = buffer_create(1, buffer_grow, 1);
 	
-	static step = function() {
-		
-	}
-	
 	static update = function() {
 		if(spoutIndex < 0) return;
 		

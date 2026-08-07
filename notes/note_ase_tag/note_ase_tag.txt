@@ -1,0 +1,1 @@
+Output an animation of a selected tags inside the aseprite file.

@@ -30,13 +30,15 @@ function Node_ASE_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	w    = 128;
 	update_on_frame = false;
 	
-	newInput(0, nodeValue_FPath(    "Path" )).setDisplay(VALUE_DISPLAY.path_load, { filter: "Aseprite File (.ase, .aseprite)|*.ase;*.aseprite" });
-	/*UNUSED*/ newInput(1, nodeValue_Trigger( "Generate layers" ));
+	newInput( 0, nodeValue_FPath(    "Path" )).setDisplay(VALUE_DISPLAY.path_load, { filter: "Aseprite File (.ase, .aseprite)|*.ase;*.aseprite" });
+	/*UNUSED*/ newInput( 1, nodeValue_Trigger( "Generate layers" ));
 	
-	newInput(2, nodeValue_Text(    "Current tag"     ));
-	newInput(3, nodeValue_Bool(    "Use cel dimension", false ));
+	////- =Layers
+	newInput( 3, nodeValue_Bool(    "Use cel Dimension", false ));
 	
-	/////////////////////////////////
+	////- =Tag
+	newInput( 2, nodeValue_Text(    "Current Tag"     ));
+	// 4
 	
 	newOutput( 0, nodeValue_Output( "Output",       VALUE_TYPE.surface, noone ));
 	newOutput( 1, nodeValue_Output( "Content",      VALUE_TYPE.object,  self  )).setIcon(THEME.junc_aseprite, c_white);
@@ -151,7 +153,7 @@ function Node_ASE_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	}
 	
 	layer_renderer_height = undefined;
-	layer_renderer        = new Inspector_Custom_Renderer(function(_x, _y, _w, _m, _hover, _focus) { 
+	layer_renderer  = new Inspector_Custom_Renderer(function(_x, _y, _w, _m, _hover, _focus) { 
 		var _h  = layer_renderer_height ?? 0;
 		var _yy = _y + ui(8);
 		var _hh = ui(16);

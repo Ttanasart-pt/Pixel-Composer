@@ -45,17 +45,19 @@ function Node_Image_Sequence(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	spr   = [];
 	color = COLORS.node_blend_input;
 	
-	newInput( 0, nodeValue_FPath(    "Paths",        []        )).setDisplay(VALUE_DISPLAY.path_array, { filter: [FILE_SEL_IMAGE, ""] });
+	////- =Image
+	newInput( 0, nodeValue_FPath(   "Paths",        []        )).setDisplay(VALUE_DISPLAY.path_array, { filter: [FILE_SEL_IMAGE, ""] });
 	newInput( 1, nodeValue_IPadding("Padding",      [0,0,0,0] )).rejectArray();
-	newInput( 2, nodeValue_EScroll( "Canvas size",   0, [ "Individual", "Minimum", "Maximum" ] )).rejectArray();
-	newInput( 3, nodeValue_EScroll( "Sizing method", 0, [ "Padding / Crop", "Scale" ]          )).rejectArray();
+	newInput( 2, nodeValue_EScroll( "Canvas Size",   0, [ "Individual", "Minimum", "Maximum" ] )).rejectArray();
+	newInput( 3, nodeValue_EScroll( "Sizing Method", 0, [ "Padding/Crop", "Scale" ]            )).rejectArray();
+	// 4
 	
 	newOutput( 0, nodeValue_Output( "Surfaces Out", VALUE_TYPE.surface, []      ));
 	newOutput( 1, nodeValue_Output( "Paths",        VALUE_TYPE.path,    []      )).setVisible(true, true);
 	newOutput( 2, nodeValue_Output( "Dimensions",   VALUE_TYPE.integer, [[1,1]] )).setDisplay(VALUE_DISPLAY.vector);
 	
 	input_display_list = [
-		["Array settings", false], 0, 1, 2, 3
+		[ "Image", false ],  0,  1,  2,  3
 	];
 	
 	////- Nodes

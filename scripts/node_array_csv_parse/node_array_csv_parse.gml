@@ -3,35 +3,32 @@ function Node_Array_CSV_Parse(_x, _y, _group = noone) : Node(_x, _y, _group) con
 	always_pad = true;
 	setDimension(96, 48);
 	
-	newInput(0, nodeValue_Text("CSV string"))
-		.setVisible(true, true);
+	////- =Input
+	newInput( 0, nodeValue_Text( "CSV string" )).setVisible(true, true);
+	newInput( 1, nodeValue_Int(  "Skip line",        0     ));
 	
-	newInput(1, nodeValue_Int("Skip line", 0));
+	////- =Table
+	newInput( 2, nodeValue_Bool( "First Row Header", false ));
+	newInput( 6, nodeValue_Text( "Number Columns",   []    )).setDisplay(VALUE_DISPLAY.text_array, { data: [] });
+	newInput( 3, nodeValue_Text( "Sort",             []    )).setDisplay(VALUE_DISPLAY.text_array, { data: [] });
 	
-	newInput(2, nodeValue_Bool("First Row Header", false));
+	////- =Output
+	newInput( 5, nodeValue_Text( "Columns",          []    )).setDisplay(VALUE_DISPLAY.text_array, { data: [] });
+	newInput( 4, nodeValue_Bool( "Output Struct",    false ));
+	// 7
 	
-	newInput(3, nodeValue_Text("Sort", []))
-		.setDisplay(VALUE_DISPLAY.text_array, { data: [] });
-	
-	newInput(4, nodeValue_Bool("Output Struct", false));
-	
-	newInput(5, nodeValue_Text("Columns", []))
-		.setDisplay(VALUE_DISPLAY.text_array, { data: [] });
-	
-	newInput(6, nodeValue_Text("Number Columns", []))
-		.setDisplay(VALUE_DISPLAY.text_array, { data: [] });
-	
-	newOutput(0, nodeValue_Output("Array", VALUE_TYPE.any, 0))
-		.setArrayDepth(1);
+	newOutput(0, nodeValue_Output("Array", VALUE_TYPE.any, 0)).setArrayDepth(1);
 	
 	input_display_list = [
-		["Input",  false], 0, 1, 
-		["Table",  false], 2, 6, 3, 
-		["Output", false], 5, 4,
+		[ "Input",  false ],  0,  1, 
+		[ "Table",  false ],  2,  6,  3, 
+		[ "Output", false ],  5,  4,
 	];
 	
 	inputs[0].getEditWidget().max_height = ui(240);
 	inputs[3].getEditWidget().mode       = 1;
+	
+	////- Node
 	
 	__sortKey = "";
 	

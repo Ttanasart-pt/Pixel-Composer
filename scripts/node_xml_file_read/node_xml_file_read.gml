@@ -31,14 +31,10 @@ function Node_XML_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	
 	w = 128;
 	
-	newInput(0, nodeValue_FPath("Path"))
-		.setDisplay(VALUE_DISPLAY.path_load, { filter: "XML File (.xml)|*.xml" })
-		.rejectArray();
+	newInput( 0, nodeValue_FPath( "Path" )).setDisplay(VALUE_DISPLAY.path_load, { filter: "XML File (.xml)|*.xml" }).rejectArray();
 		
-	newOutput(0, nodeValue_Output("Content", VALUE_TYPE.struct, {}));
-	
-	newOutput(1, nodeValue_Output("Path", VALUE_TYPE.path, ""))
-		.setVisible(true, true);
+	newOutput(0, nodeValue_Output( "Content", VALUE_TYPE.struct, {} ));
+	newOutput(1, nodeValue_Output( "Path",    VALUE_TYPE.path,   "" )).setVisible(true, true);
 	
 	content      = {};
 	path_current = "";

@@ -11,7 +11,7 @@ function Node_Iterator_Reduce_Input(_x, _y, _group = noone) : Node(_x, _y, _grou
 	inline_input         = false;
 	manual_ungroupable	 = false;
 	
-	newInput( 0, nodeValue_Any("Array in",   [] )).setVisible(true, true);
+	newInput( 0, nodeValue_Any("Array In",   [] )).setVisible(true, true);
 	newInput( 1, nodeValue_Any("Init Value", 0  )).setVisible(true, true);
 	// 2
 	

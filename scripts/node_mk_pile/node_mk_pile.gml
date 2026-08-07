@@ -20,14 +20,19 @@ function Node_MK_Pile(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	newInput(10, nodeValue_Float(  "Center Bias",         0            ));
 	newInput(13, nodeValue_Slider( "Shuffle",             0            ));
 	
+	////- =Offset
+	newInput(15, nodeValue_Range(  "X Offset",           [0,0]         ));
+	newInput(16, nodeValue_Range(  "Y Offset",           [0,0]         ));
+	
 	////- =Scatter
 	newInput(11, nodeValue_Int(   "Amount", 0 )).setValidator(VV_min(0));
 	newInput(12, nodeValue_Range( "Range",  [.75, 1.5] ));
-	// inputs 15
+	// 17
 		
 	input_display_list = [ s_MKFX, 1, 2, 
 		[ "Object",  false ],  0, 14,  3,  4,  9, 
 		[ "Pile",    false ],  5,  6,  7,  8, 10, 13, 
+		[ "Offset",  false ], 15, 16,  
 		[ "Scatter", false ], 11, 12, 
 	];
 	
@@ -60,6 +65,9 @@ function Node_MK_Pile(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 			var _shft = _data[ 8];
 			var _cent = _data[10];
 			var _shuf = _data[13];
+			
+			var _offx = _data[15];
+			var _offy = _data[16];
 			
 			var _scat    = _data[11];
 			var _scatRng = _data[12];
@@ -170,8 +178,14 @@ function Node_MK_Pile(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 							case 1 : _sind = irandom(_samo - 1); break;
 						}
 						
-						draw_surface(_surf[_sind], _colX, _colY);
-						_outPoin[_pointL++] = [_colX, _colY];
+						var _drwX = _colX;
+						var _drwY = _colY;
+						
+						_drwX += random_range(_offx[0], _offx[1]);
+						_drwY += random_range(_offy[0], _offy[1]);
+						
+						draw_surface(_surf[_sind], _drwX, _drwY);
+						_outPoin[_pointL++] = [_drwX, _drwY];
 						_colY -= _dept;
 						_ind++;
 					}

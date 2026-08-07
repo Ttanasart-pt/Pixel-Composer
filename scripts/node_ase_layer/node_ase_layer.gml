@@ -1,13 +1,13 @@
 function Node_ASE_layer(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name = "ASE Layer";
 	
-	newInput(0, nodeValue("ASE data", self, CONNECT_TYPE.input, VALUE_TYPE.object, undefined ))
+	newInput( 0, nodeValue("ASE data", self, CONNECT_TYPE.input, VALUE_TYPE.object, undefined ))
 		.setIcon(THEME.junc_aseprite, c_white).setVisible(false, true).rejectArray();
 		
-	newInput(2, nodeValue_Text( "Layer Name"          )).rejectArray();
-	newInput(1, nodeValue_Bool( "Crop Output",  false )).rejectArray();
-	newInput(3, nodeValue_Bool( "Loop",         false )).rejectArray();
-	newInput(4, nodeValue_Bool( "Apply Opacity", true )).rejectArray();
+	newInput( 2, nodeValue_Text( "Layer Name"          )).rejectArray();
+	newInput( 1, nodeValue_Bool( "Crop Output",  false )).rejectArray();
+	newInput( 3, nodeValue_Bool( "Loop",         false )).rejectArray();
+	newInput( 4, nodeValue_Bool( "Apply Opacity", true )).rejectArray();
 	// 4
 		
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone ));

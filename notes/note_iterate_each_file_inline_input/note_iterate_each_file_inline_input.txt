@@ -1,0 +1,1 @@
+A node defining starting points. Will output the file content.

@@ -14,11 +14,11 @@ function Node_MIDI_In(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 	for( var i = 0; i < inps; i++ ) 
 		_miniNames[i] = rtmidi_name_in(i);
 	
-	newInput( 0, nodeValue_EScroll("Input",  0, { data: _miniNames, update_hover: false })).rejectArray();
+	newInput( 0, nodeValue_EScroll( "Input",  0, { data: _miniNames, update_hover: false } )).rejectArray();
 	
-	newOutput( 0, nodeValue_Output("Raw Message", VALUE_TYPE.float, []));
-	newOutput( 1, nodeValue_Output("Pressing notes", VALUE_TYPE.float, []));
-	newOutput( 2, nodeValue_Output("Direct values", VALUE_TYPE.struct, {}));
+	newOutput( 0, nodeValue_Output( "Raw Message",    VALUE_TYPE.float,  [] ));
+	newOutput( 1, nodeValue_Output( "Pressing Notes", VALUE_TYPE.float,  [] ));
+	newOutput( 2, nodeValue_Output( "Direct Values",  VALUE_TYPE.struct, {} ));
 	
 	watcher_controllers = new Inspector_Custom_Renderer(function(_x, _y, _w, _m, _hover, _focus) {
 		var _h = ui(48);
