@@ -1,0 +1,11 @@
+{
+  "$GMNotes":"v1",
+  "%Name":"note_mk_fracture",
+  "name":"note_mk_fracture",
+  "parent":{
+    "name":"animation",
+    "path":"folders/nodes/data/MKFX/animation.yy",
+  },
+  "resourceType":"GMNotes",
+  "resourceVersion":"1.1",
+}

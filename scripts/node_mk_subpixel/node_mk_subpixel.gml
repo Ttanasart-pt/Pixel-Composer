@@ -18,7 +18,7 @@ function Node_MK_Subpixel(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	
 	////- =Ridge
 	newInput(11, nodeValue_Bool(   "Ridge",           false ));
-	newInput( 9, nodeValue_Float(  "Ridge amount",    8     ));
+	newInput( 9, nodeValue_Float(  "Ridge Amount",    8     ));
 	newInput(10, nodeValue_Slider( "Ridge Intensity", 1     ));
 	
 	////- =Render

@@ -104,13 +104,12 @@ void main() {
     
     for(float i = -MAX_RANGE; i <= MAX_RANGE;      i++)
     for(float j = -MAX_RANGE; j <= MAX_RANGE * 2.; j++) {
-        
         vec2 tx = v_vTexcoord + fragSize * vec2(j, i);
         vec2 cl = cellID(tx);
         
         vec4 uv = uvInFrag(v_vTexcoord, cl);
         if(uv.w == 0.) continue;
-        if(uv.x < 0. || uv.x > 1. || uv.y < 0. || uv.y > 1.) continue;
+        if(uv.x < 0. || uv.x >= 1. || uv.y < 0. || uv.y >= 1.) continue;
         
         float pro = uv.z;
         float alp = mix(1., alpha, pro);

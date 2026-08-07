@@ -4,11 +4,11 @@ function Node_MK_Fracture(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	newInput( 0, nodeValue_Surface("Surface In")).setRequired();
 	
 	////- =Fracture
-	newInput( 1, nodeValue_Vec2(        "Subdivision", [4,4] ));
-	newInput( 2, nodeValue_Slider(      "Progress",    .5 )).setMappable(3);
+	newInput( 1, nodeValue_Vec2(    "Subdivision", [4,4] ));
+	newInput( 2, nodeValue_Slider(  "Progress",    .5 )).setMappable(3);
 	newInput(13, nodeValue_EButton( "Brick Axis",   0, [ "X", "Y" ] ));
-	newInput(11, nodeValue_Slider(      "Brick Shift",  0 ));
-	newInput(12, nodeValue_Slider(      "Skew",         0, [ -1, 1, 0.01 ] ));
+	newInput(11, nodeValue_Slider(  "Brick Shift",  0 ));
+	newInput(12, nodeValue_Slider(  "Skew",         0, [ -1, 1, 0.01 ] ));
 	
 	////- =Physics
 	newInput( 4, nodeValue_Vec2(     "Movement",  [0,0] )).setMappable(9, true);
@@ -51,16 +51,16 @@ function Node_MK_Fracture(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 		var _dim  = surface_get_dimension(_surf);
 		
 		surface_set_shader(_outSurf, sh_mk_fracture);
-			shader_set_f("dimension",    _dim  );
+			shader_set_f("dimension",     _dim  );
 			
 			shader_set_f( "subdivision",  _subd );
-			shader_set_f_map( "progress", _prog, _data[ 3], inputs[ 2]);
+			shader_set_m( "progress",     _prog, _data[ 3], inputs[ 2]);
 			shader_set_i( "axis",		  _axis );
 			shader_set_f( "brickShift",   _shft );
 			shader_set_f( "skew",         _skew );
 			
-			shader_set_f_map( "movement", _move, _data[ 9], inputs[ 4]);
-			shader_set_f_map( "rotation", _rota, _data[10], inputs[ 5]);
+			shader_set_m( "movement",     _move, _data[ 9], inputs[ 4]);
+			shader_set_m( "rotation",     _rota, _data[10], inputs[ 5]);
 			shader_set_f( "scale",        _scal );
 			shader_set_f( "gravity",      _grav );
 			

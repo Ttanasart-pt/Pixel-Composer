@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.8.007",
+    "changes": [
+      {
+        "date": "2026-08-07T08:38:42.459Z",
+        "node": "",
+        "commit": "Fix crash when calling command palette."
+      }
+    ]
+  },
+  {
     "version": "1.21.0.2",
     "changes": [
       {

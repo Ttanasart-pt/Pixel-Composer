@@ -1,5 +1,7 @@
 /// @description init
 
+DIALOG_WINDOW_START
+
 var _dialog_pd = 12;
 // draw_sprite_stretched(THEME.textbox, 3, _dialog_x, _dialog_y, dialog_w, dialog_h);
 draw_sprite_stretched(THEME.dialog, 0, _dialog_x - _dialog_pd, _dialog_y - _dialog_pd, dialog_w + _dialog_pd * 2, dialog_h + _dialog_pd * 2);
@@ -19,3 +21,5 @@ draw_line(_dialog_x, _dialog_y + ui(32), _dialog_x + dialog_w - 1, _dialog_y + u
 
 // draw_sprite_stretched_ext(THEME.textbox, 1, _dialog_x, _dialog_y, dialog_w, dialog_h, c_white);
 draw_sprite_stretched_ext(THEME.dialog, 1, _dialog_x - _dialog_pd, _dialog_y - _dialog_pd, dialog_w + _dialog_pd * 2, dialog_h + _dialog_pd * 2, COLORS._main_icon, .2);
+
+DIALOG_WINDOW_END

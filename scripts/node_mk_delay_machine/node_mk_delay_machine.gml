@@ -1,10 +1,11 @@
 function Node_MK_Delay_Machine(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name = "MK Delay Machine";
+	update_on_frame = true;
 	setCacheManual();
 	
 	is_simulation = true;
 	
-	newInput( 0, nodeValue_Surface("Surface"));
+	newInput( 0, nodeValue_Surface( "Surface In" )).setRequired();
 	
 	////- =Delay
 	newInput( 1, nodeValue_Int(     "Delay Amounts", 4 ));
