@@ -7,6 +7,8 @@ varying vec4 v_vColour;
 uniform sampler2D texture;
 uniform vec2  dimension;
 uniform float seed;
+
+uniform float sceneScale;
 uniform float scale;
 uniform float size;
 uniform float blur;
@@ -80,8 +82,10 @@ float flick(vec2 id) {
 
 void main() {
     vec2 scs  = scale * vec2(3., s3 * 2.);
-    vec2 pos  = v_vTexcoord - .5;
-         pos *= scs;
+    
+    vec2 tx   = .5 + (v_vTexcoord - .5) * sceneScale;
+         tx   = floor(tx * dimension) / dimension;
+    vec2 pos  = (tx - .5) * scs;
          
     vec2 hex  = HexCoords(pos);
     vec2  id  = hex;
@@ -100,7 +104,7 @@ void main() {
     if(md(id.y, s3) > s3 / 2.) ind += 1.;
     
     float ints = intensity * flick(id);
-    int   indx = int(mod(ind, 3.));
+    int   indx = int(floor(mod(ind, 3.) + .001));
     vec3  clr  = vec3(0.);
          if(indx == 0) clr.r = ints;
     else if(indx == 1) clr.g = ints;

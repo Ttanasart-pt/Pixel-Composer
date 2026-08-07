@@ -1,0 +1,11 @@
+{
+  "$GMNotes":"v1",
+  "%Name":"note_mk_smoke",
+  "name":"note_mk_smoke",
+  "parent":{
+    "name":"simulation",
+    "path":"folders/nodes/data/MKFX/simulation.yy",
+  },
+  "resourceType":"GMNotes",
+  "resourceVersion":"1.1",
+}

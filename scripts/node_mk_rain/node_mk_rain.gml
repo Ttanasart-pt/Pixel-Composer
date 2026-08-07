@@ -2,36 +2,38 @@ function Node_MK_Rain(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	name = "MK Rain";
 	update_on_frame = true;
 	
-	newInput(0, nodeValue_Surface("Surface In")).setRequired();
+	newInput(0, nodeValue_Surface("Surface In"));
 	newInput(8, nodeValueSeed());
 	
 	////- =Shapes
-	newInput( 9, nodeValue_EScroll(     "Shape",            0, __enum_array_gen([ "Rain", "Snow", "Texture" ], s_node_mk_rain_type)));
-	newInput( 3, nodeValue_Range(       "Raindrop Width",  [1,1]  ));
-	newInput( 4, nodeValue_Range(       "Raindrop Length", [5,10] ));
-	newInput(10, nodeValue_Range(       "Snow Size",       [3,4]  ));
-	newInput(11, nodeValue_Surface(     "Texture"                 ));
+	newInput( 9, nodeValue_EScroll(  "Shape",            0, __enum_array_gen([ "Rain", "Snow", "Texture" ], s_node_mk_rain_type)));
+	newInput( 3, nodeValue_Range(    "Raindrop Width",  [1,1]  ));
+	newInput( 4, nodeValue_Range(    "Raindrop Length", [5,10] ));
+	newInput(10, nodeValue_Range(    "Snow Size",       [3,4]  ));
+	newInput(11, nodeValue_Surface(  "Texture"                 ));
 	
 	////- =Lifespan
-	newInput(14, nodeValue_Bool(         "Limited Lifespan",    false ));
-	newInput(15, nodeValue_Slider_Range( "Lifespan",            [0,1] )).setTooltip("Lifespan of a droplet as a ratio of the entire animation.");
-	newInput(13, nodeValue_Curve(        "Size over Lifetime",  CURVE_DEF_11 ));
-	newInput(16, nodeValue_Curve(        "Alpha over Lifetime", CURVE_DEF_11 ));
+	newInput(14, nodeValue_Bool(     "Limited Lifespan",    false ));
+	newInput(15, nodeValue_SliRange( "Lifespan",            [0,1] )).setTooltip("Lifespan of a droplet as a ratio of the entire animation.");
+	newInput(13, nodeValue_Curve(    "Size over Lifetime",  CURVE_DEF_11 ));
+	newInput(16, nodeValue_Curve(    "Alpha over Lifetime", CURVE_DEF_11 ));
 	
 	////- =Effect
-	newInput( 2, nodeValue_Float(        "Density",         5     ));
-	newInput( 1, nodeValue_Rotation(     "Direction",       45    ));
-	newInput( 7, nodeValue_Range(        "Velocity",        [1,2] ));
-	newInput(12, nodeValue_Slider_Range( "Track Extension", [0,0], { range: [ 0, 10, 0.01 ] }));
+	newInput( 2, nodeValue_Float(    "Density",         5     ));
+	newInput( 1, nodeValue_Rotation( "Direction",       45    ));
+	newInput( 7, nodeValue_Range(    "Velocity",        [1,2] ));
+	newInput(12, nodeValue_SliRange( "Track Extension", [0,0], { range: [ 0, 10, 0.01 ] }));
 	
 	////- =Render
-	newInput( 5, nodeValue_Gradient(     "Color",      gra_white )).addShift(25);
-	newInput( 6, nodeValue_Slider_Range( "Alpha",      [.5,1]    ));
-	newInput(17, nodeValue_Bool(         "Fade Alpha", false     ));
+	newInput( 5, nodeValue_Gradient( "Color",      gra_white )).addShift(25);
+	newInput( 6, nodeValue_SliRange( "Alpha",      [.5,1]    ));
+	newInput(17, nodeValue_Bool(     "Fade Alpha", false     ));
 	
 	////- =Ground
 	newInput(18, nodeValue_Bool(   "Ground",        false   ));
 	newInput(19, nodeValue_Float(  "Ground Start",  64      ));
+	
+		////- =/Ripple
 	newInput(20, nodeValue_Bool(   "Ripple",        false   ));
 	newInput(23, nodeValue_Float(  "Rip. Amount",   1       ));
 	newInput(21, nodeValue_Float(  "Rip. Lifespan", 2       ));
@@ -41,11 +43,12 @@ function Node_MK_Rain(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	// 26
 		
 	input_display_list = [ s_MKFX, 0, 8, 
-		[ "Shape",          false     ],  9,  3,  4, 10, 11, 
-		[ "Rain",           false     ],  2,  1,  7, 
-		[ "Render",         false     ], [5, true], 25, -1,  6, 17, 
-		[ "Lifespan",        true, 14 ], 15, 13, 16, 
-		[ "Ground & Ripple", true, 18 ], 19, new Inspector_Spacer(ui(4), true), 20, 23, 21, 22, 24, 25, 
+		[ "Shape",       false     ],  9,  3,  4, 10, 11, 
+		[ "Rain",        false     ],  2,  1,  7, 
+		[ "Render",      false     ], [5, true], 25, -1,  6, 17, 
+		[ "Lifespan",     true, 14 ], 15, 13, 16, 
+		[ "Ground",       true, 18 ], 19, 
+			[ "/Ripple", false, 20 ], 23, 21, 22, 24, 25, 
 	];
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));

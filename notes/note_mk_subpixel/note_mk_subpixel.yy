@@ -1,0 +1,11 @@
+{
+  "$GMNotes":"v1",
+  "%Name":"note_mk_subpixel",
+  "name":"note_mk_subpixel",
+  "parent":{
+    "name":"filter",
+    "path":"folders/nodes/data/MKFX/filter.yy",
+  },
+  "resourceType":"GMNotes",
+  "resourceVersion":"1.1",
+}

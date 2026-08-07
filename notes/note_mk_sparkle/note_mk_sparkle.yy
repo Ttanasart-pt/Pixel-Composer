@@ -1,0 +1,11 @@
+{
+  "$GMNotes":"v1",
+  "%Name":"note_mk_sparkle",
+  "name":"note_mk_sparkle",
+  "parent":{
+    "name":"generator",
+    "path":"folders/nodes/data/MKFX/generator.yy",
+  },
+  "resourceType":"GMNotes",
+  "resourceVersion":"1.1",
+}

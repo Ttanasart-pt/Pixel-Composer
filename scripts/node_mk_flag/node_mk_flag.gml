@@ -14,17 +14,17 @@ function Node_MK_Flag(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	newInput(15, nodeValue_Path(    "Path 2"                                            ));
 	
 	////- =Wave
-	newInput( 6, nodeValue_Slider(  "Wave width",        1, [0, 4, 0.1]     ));
-	newInput( 7, nodeValue_Slider(  "Wave size",        .2                  ));
-	newInput( 5, nodeValue_Int(     "Wind speed",        2                  ));
+	newInput( 6, nodeValue_Slider(  "Wave Width",        1, [0, 4, 0.1]     ));
+	newInput( 7, nodeValue_Slider(  "Wave Size",        .2                  ));
+	newInput( 5, nodeValue_Int(     "Wind Speed",        2                  ));
 	newInput( 8, nodeValue_Slider(  "Phase",            .1                  ));
 	newInput( 9, nodeValue_Slider(  "Clip",             .2                  ));
 	
 	////- =Rendering
 	newInput( 1, nodeValue_Surface( "Texture"            ));
 	newInput(10, nodeValue_Slider(  "Shadow",           .2                  ));
-	newInput(11, nodeValue_Slider(  "Shadow threshold",  0, [-.1, .1, .001] ));
-	newInput(12, nodeValue_Bool(    "Invert shadow",     0                  ));
+	newInput(11, nodeValue_Slider(  "Shadow Threshold",  0, [-.1, .1, .001] ));
+	newInput(12, nodeValue_Bool(    "Invert Shadow",     false              ));
 	// 16
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));

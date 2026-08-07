@@ -1,0 +1,11 @@
+{
+  "$GMNotes":"v1",
+  "%Name":"note_mk_gridflip",
+  "name":"note_mk_gridflip",
+  "parent":{
+    "name":"filter",
+    "path":"folders/nodes/data/MKFX/filter.yy",
+  },
+  "resourceType":"GMNotes",
+  "resourceVersion":"1.1",
+}

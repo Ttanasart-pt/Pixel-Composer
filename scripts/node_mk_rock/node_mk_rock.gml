@@ -38,16 +38,16 @@ function Node_MK_Rock(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	newInput(20, nodeValue_Bool(     "Nugget",      false       ));
 	newInput(61, nodeValueSeed());
 	newInput(24, nodeValue_Slider(   "Chance",       .5         ));
-	newInput(63, nodeValue_EScroll(  "Shape",    0, [ "Ellipse", "Rectangle" ] ));
+	newInput(63, nodeValue_EScroll(  "Shape",         0, [ "Ellipse", "Rectangle" ] ));
 	newInput(64, nodeValue_Slider(   "Span",         .5         ));
 	newInput(21, nodeValue_Range(    "Size",        [2,2]       ));
 	newInput(22, nodeValue_Range(    "Height",      [1,2]       ));
 	newInput(23, nodeValue_Range(    "Depth",       [1,1]       ));
 	
 		////- =/Rendering
-	newInput(19, nodeValue_Gradient( "Nugget Color",   gra_white )).addShift(46);
-	newInput(62, nodeValue_Color(    "Nugget Shading", ca_white  ));
-	newInput(25, nodeValue_Gradient( "Nugget Outline", gra_white )).addShift(47);
+	newInput(19, nodeValue_Gradient( "Color",   gra_white )).addShift(46);
+	newInput(62, nodeValue_Color(    "Shading", ca_white  ));
+	newInput(25, nodeValue_Gradient( "Outline", gra_white )).addShift(47);
 	
 	////- =Rendering
 	newInput(36, nodeValue_EButton(  "Blend Mode", 0, [ "Normal", "Additive", "Maximum" ] ));

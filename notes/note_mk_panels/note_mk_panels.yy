@@ -1,0 +1,11 @@
+{
+  "$GMNotes":"v1",
+  "%Name":"note_mk_panels",
+  "name":"note_mk_panels",
+  "parent":{
+    "name":"generator",
+    "path":"folders/nodes/data/MKFX/generator.yy",
+  },
+  "resourceType":"GMNotes",
+  "resourceVersion":"1.1",
+}

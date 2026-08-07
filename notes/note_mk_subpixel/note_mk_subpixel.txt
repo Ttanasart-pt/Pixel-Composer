@@ -1,0 +1,17 @@
+Simulate various subpixel patterns.
+
+## Properties
+
+[proptable]
+Subpixel
+Type|Subpixel pattern.
+Density|Pattern scale.
+Scene Scale|Scale original surface.
+
+Effect
+Size|Subpixel size.
+Blur|Blur subpixel.
+
+Ridge
+Ridge|Add wave effect per each subpixel.
+[/proptable]

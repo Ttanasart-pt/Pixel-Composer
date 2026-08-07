@@ -28,7 +28,7 @@ function Node_MK_Dialog(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	////- =Font
 	newInput( 5, nodeValue_Font()).setVisible(true, false);
 	newInput( 6, nodeValue_Int(     "Size",             16    ));
-	newInput( 7, nodeValue_Bool(    "Anti-aliasing ",   false ));
+	newInput( 7, nodeValue_Bool(    "Anti-Aliasing ",   false ));
 	/* unused */ newInput( 8, nodeValue_Float(        "Letter Spacing",   0     ));
 	
 	////- =Rendering

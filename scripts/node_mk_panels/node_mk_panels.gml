@@ -54,7 +54,7 @@ function Node_MK_Panels(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	newInput(34, nodeValue_Slider(  "Glowbar Size",    .5         ));
 	newInput(32, nodeValue_Palette( "Glowbar Color", [ca_white]   ))
 	
-	////- =Glow
+	////- =Shine
 	newInput(36, nodeValue_Bool(   "Shine Use",        false         ));
 	newInput(40, nodeValue_Slider( "Shine Chance",     .5            ));
 	newInput(37, nodeValue_Range(  "Shine Width",     [.1,.1], true  ));
@@ -68,11 +68,11 @@ function Node_MK_Panels(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	// inputs 44
 	
 	input_display_list = [ s_MKFX, 1, 2, 
-		[ "Panels",       false     ], 0, 3, 27, 16, 4, 10, 5, 
-		[ "Split",        false     ], 26, 17, 20, 23, new Inspector_Spacer(ui(4), true), 18, 6, 19, 
-		[ "Shapes",       false     ], 30, 7, 9, 24, 28, 25, 43, 
+		[ "Panels",       false     ],  0,  3, 27, 16,  4, 10,  5, 
+		[ "Split",        false     ], 26, 17, 20, 23, new Inspector_Spacer(ui(4), true), 18,  6, 19, 
+		[ "Shapes",       false     ], 30,  7,  9, 24, 28, 25, 43, 
 		[ "Slot",         false     ], 15, 11, 14, 13, 12, 
-		[ "Highlight",    false     ], 8, 21, 22, 29, 
+		[ "Highlight",    false     ],  8, 21, 22, 29, 
 		[ "Glow",         false,    ], 35, 34, 32, 
 		[ "Shine",        false, 36 ], 40, 37, 39, 42, 38, 41, 
 		[ "Post-Process", false     ], 31, 

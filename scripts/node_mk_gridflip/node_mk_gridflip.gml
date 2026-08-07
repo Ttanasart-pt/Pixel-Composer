@@ -1,37 +1,38 @@
 function Node_MK_GridFlip(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "MK GridFlip";
 	
-	newInput(0, nodeValue_Surface("Surface front"));
+	newInput( 3, nodeValueSeed());
+	newInput( 1, nodeValue_Dimension());
 	
-	newInput(1, nodeValue_Dimension());
+	////- =Surface
+	newInput( 0, nodeValue_Surface( "Surface Front" ));
+	newInput( 4, nodeValue_Surface( "Surface Back"  ));
 	
-	newInput(2, nodeValue_Vec2("Amount", [ 4, 4 ]));
-		
-	newInput(3, nodeValueSeed());
+	////- =Grid
+	newInput( 2, nodeValue_Vec2( "Amount", [4,4] ));
 	
-	newInput(4, nodeValue_Surface("Surface back"));
-	
-	newInput(5, nodeValue_Rotation("Rotation", 0));
-	
-	newInput(6, nodeValue_EButton("Axis",  0, [ "X", "Y" ]));
-	
-	newInput(7, nodeValue_Float("Sweep", 0));
-	
-	newInput(8, nodeValue_Rotation("Sweep direction", 0));
-		
-	newInput(9, nodeValue_Slider("Sweep shift", 0, [ -1, 1, 0.01 ] ));
-	
-	newInput(10, nodeValue_EScroll("Flip limit",  0, [ new scrollItem("None", s_node_mk_grid_flip, 0), 
-												                 new scrollItem("90",   s_node_mk_grid_flip, 1), 
-												                 new scrollItem("180",  s_node_mk_grid_flip, 2), ]));
-	
-	input_display_list = [ s_MKFX, 3, 1, 
-		["Surface",		 true], 0, 4, 
-		["Grid",		false], 2,
-		["Flip",		false], 6, 10, 5, 7, 8, 9, 
-	];
+	////- =Flip
+	newInput( 6, nodeValue_EButton( "Axis",        0, [ "X", "Y" ] ));
+	newInput(10, nodeValue_EScroll( "Flip limit",  0, [ 
+		new scrollItem("None", s_node_mk_grid_flip, 0), 
+		new scrollItem("90",   s_node_mk_grid_flip, 1), 
+		new scrollItem("180",  s_node_mk_grid_flip, 2), 
+	]));
+	newInput( 5, nodeValue_Rotation( "Rotation",        0 ));
+	newInput( 7, nodeValue_Float(    "Sweep",           0 ));
+	newInput( 8, nodeValue_Rotation( "Sweep direction", 0 ));
+	newInput( 9, nodeValue_Slider(   "Sweep shift",     0, [-1,1,.01] ));
+	// 11 
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
+	
+	input_display_list = [ s_MKFX, 3, 1, 
+		[ "Surface",  true ], 0, 4, 
+		[ "Grid",    false ], 2,
+		[ "Flip",    false ], 6, 10, 5, 7, 8, 9, 
+	];
+	
+	////- Node
 	
 	attribute_surface_depth();
 	

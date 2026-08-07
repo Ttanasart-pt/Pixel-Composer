@@ -11,7 +11,7 @@ function Node_MK_Brownian(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	
 	////- =Particles
 	newInput( 1, nodeValue_Surface( "Sprite" )).setArrayDepth(1);
-	newInput(15, nodeValue_Bool(    "Offset Lifespan", false ));
+	newInput(15, nodeValue_Bool(    "Offset Lifespan", true ));
 	
 	////- =Spawn
 	newInput( 3, nodeValue_Area( "Area",   DEF_AREA_REF )).setUnitSimple().setHotkey("A");
@@ -20,7 +20,7 @@ function Node_MK_Brownian(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	////- =Movement
 	newInput( 5, nodeValue_Range(   "Speed",         [1,1]          ));
 	newInput( 4, nodeValue_RotRand( "Direction",     [0,45,135,0,0] ));
-	newInput( 9, nodeValue_Range(   "Angular speed", [-45,45]       ));
+	newInput( 9, nodeValue_Range(   "Angular Speed", [-45,45]       ));
 	
 	////- =Smooth Turn
 	newInput(11, nodeValue_Bool(  "Turn", false ));

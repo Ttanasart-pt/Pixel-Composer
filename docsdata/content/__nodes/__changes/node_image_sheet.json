@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.8.007",
+    "changes": [
+      {
+        "date": "2026-08-07T03:34:22.713Z",
+        "node": "",
+        "commit": "**MK Pile**: Add random offset property."
+      }
+    ]
+  },
+  {
     "version": "1.21.7.110",
     "changes": [
       {

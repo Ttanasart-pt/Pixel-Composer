@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.8.007",
+    "changes": [
+      {
+        "date": "2026-08-07T07:51:56.901Z",
+        "node": "",
+        "commit": "**MK Subpixel**: Fix glitched color when scene scale it set to decimal."
+      }
+    ]
+  },
+  {
     "version": "1.21.7.104",
     "changes": [
       {
