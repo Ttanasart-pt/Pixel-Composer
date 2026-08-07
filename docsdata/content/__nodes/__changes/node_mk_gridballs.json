@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.8.007",
+    "changes": [
+      {
+        "date": "2026-08-07T09:17:52.160Z",
+        "node": "MK Gridball",
+        "commit": "**MK Gridball**: Add scale properties."
+      }
+    ]
+  },
+  {
     "version": "1.21.7.110",
     "changes": [
       {

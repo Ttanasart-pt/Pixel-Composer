@@ -28,7 +28,7 @@ event_inherited();
 		var _dh  = sc_content.surface_h;
 		
 		var hover = sc_content.hover;
-		var focus = hover && sc_content.active;
+		var focus = sc_content.active;
 		
 		sc_content.hover_content = true;
 		

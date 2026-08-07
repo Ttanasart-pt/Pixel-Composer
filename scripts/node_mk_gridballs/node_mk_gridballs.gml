@@ -12,6 +12,7 @@ function Node_MK_GridBalls(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	newInput( 2, nodeValue_Vec2(     "Amount",     [4,4]  ));
 	newInput( 8, nodeValue_Vec2(     "Position",   [0,0]  )).setUnitSimple();
 	newInput(19, nodeValue_Float(    "Ball Size",   1     )).setMappable(32);
+	newInput(35, nodeValue_Range(    "Scale",      [1,1]  )).setMappableConst(36);
 	
 	////- =Scatter
 	newInput(16, nodeValue_Bool(     "Scatter Use", false ));
@@ -36,11 +37,11 @@ function Node_MK_GridBalls(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	newInput( 3, nodeValue_Rotation( "Light",       0     )).setMappable(30);
 	newInput(33, nodeValue_Slider(   "Light Height",1     )).setMappable(34);
 	newInput( 6, nodeValue_Slider(   "Shading",    .5     )).setMappable(31);
-	// input 35
+	// 37
 		
 	input_display_list = [ s_MKFX, 5, 1, 
 		[ "Surface",   true     ],  0,
-		[ "Grid",     false     ],  2,  8, 19, 32, 
+		[ "Grid",     false     ],  2,  8, 19, 32, 35, 36, 
 		[ "Scatter",  false, 16 ],  4, 21,  7, 
 		[ "Stretch",  false, 17 ],  9, 22, 10, 23, 20, 24, 11, 25, 
 		[ "Twist",    false, 18 ], 13, 26, 14, 27, 15, 28, 
@@ -69,6 +70,7 @@ function Node_MK_GridBalls(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 			var _bamo     = _data[ 2];
 			var _posi     = _data[ 8];
 			var _size     = _data[19], _size_samp     = inputs[19].isMapped()? new Surface_Sampler_Grey(_data[32], _size) : undefined;
+			var _scal     = _data[35], _scal_samp     = inputs[35].isMapped()? new Surface_Sampler_Grey(_data[36])        : undefined;
 			
 			var _scat_use = _data[16];
 			var _scat     = _data[ 4], _scat_samp     = inputs[ 4].isMapped()? new Surface_Sampler_Grey(_data[21], _scat) : undefined;
@@ -177,6 +179,7 @@ function Node_MK_GridBalls(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 				}
 				
 				var __size = _size_samp? _size_samp.getPixel(_bu, _bv) : _size;
+				var __scal = _scal_samp? _scal_samp.getPixel(_bu, _bv) : _size;
 				var __rond = _rond_samp? _rond_samp.getPixel(_bu, _bv) : _rond;
 				var __ldir = _ldir_samp? _ldir_samp.getPixel(_bu, _bv) : _ldir;
 				var __lhig = _lhig_samp? _lhig_samp.getPixel(_bu, _bv) : _lhig;
@@ -184,6 +187,8 @@ function Node_MK_GridBalls(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 				
 				var _br      = _rad * __size;
 				var _rnd_rad = _rad * __rond * 2;
+				
+				_br *= 1. + (random_range(_scal[0], _scal[1]) - 1) * __scal;
 				
 				shader_set_f("lightPos", [ lengthdir_x(1, __ldir), lengthdir_y(1, __ldir), __lhig ]);
 				shader_set_f("lightInt", __shad);
