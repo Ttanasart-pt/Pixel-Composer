@@ -17,7 +17,12 @@ def parse_md(path):
     data_html = data_html.replace("</p>",  "</p><br>" )
     data_html = data_html.replace("</ul>", "</ul><br>")
 
-    # print(data_html);
+    reBanner = re.compile(r"\[banner\]([\s\S]*?)\[\/banner\]")
+    banner = reBanner.findall(data_html)
+    for b in banner:
+        b = b.replace("<p>", "").replace("</p>", "")
+        banner_html = f'<p class="banner">{b}</p>'
+        data_html = data_html.replace(f"[banner]{b}[/banner]", banner_html)
 
     reProp = re.compile(r"\[proptable\]([\s\S]*?)\[\/proptable\]")
     proptable = reProp.findall(data_html)
