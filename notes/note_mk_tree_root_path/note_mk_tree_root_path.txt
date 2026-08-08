@@ -1,26 +1,15 @@
-Generate tree trunk. Scatter settings allow for generation of multiple trees.
+Generate trunk from path.
 
 ## Properties
 
 [proptable]
-Scatter
-Distribution|Tree distribution.
-Amount|Tree amount.
-
-Geometry
-Length|Length of each segment.
-Segments|Amount of segment in the trunk.
+Path
+Sample|Amount of points sampled from the <junc path>.
 
 Direction
-Direction|Starting direction.
-
-Direction > Gravity
+Wiggle|Add wiggle to the output trunk.
 Gravity|Strength of the gravity.
 Override|Override default gravity direction defined in <node Node_MK_Tree_Inline>.
-
-Wiggle
-Amplitude|Add wiggling per segment.
-Frequency|Wiggle frequency.
 
 Spiral
 Amplitude|Add spiral effect to the trunk.
@@ -28,11 +17,9 @@ Frequency|Spiral frequency.
 Phase|Spiral phase.
 Curl|Bends spiral part backward to create spring shape.
 
-Thickness
-Thickness|Trunk thickness.
-
 Render
 Draw Mode|Whether to draw trunk as line or using surface.
+Thickness|Trunk thickness.
 
 Render > Base Color
 Length Blending|Blend mode between the <junc Base Color> and <junc Length Color>.

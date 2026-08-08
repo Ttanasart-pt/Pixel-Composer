@@ -10,12 +10,13 @@ function Node_MK_Tree_Path_Root(_x, _y, _group = noone) : Node(_x, _y, _group) c
 	
 	////- =Path
 	newInput( 1, nodeValue_Path( "Path",   noone ));
-	newInput( 2, nodeValue_Int(      "Sample", 8     ));
+	newInput( 2, nodeValue_Int(  "Sample", 8     ));
 	
 	////- =Direction
-	newInput( 8, nodeValue_Range( "Wiggle",   [0,0] ))
+	newInput( 8, nodeValue_Range( "Wiggle",             [0,0] ))
 		.setCurvable(10, CURVE_DEF_11, "Over Length", "curved", THEME.mk_tree_curve_length);
-	newInput( 9, nodeValue_Range( "Gravity",  [0,0] ));
+		
+	newInput( 9, nodeValue_Range( "Gravity",            [0,0] ));
 	newInput(22, nodeValue_Bool(  "Override",           false ))
 	newInput(23, nodeValue_Rot(   "Gravity Direction",  0     ))
 	
@@ -24,6 +25,7 @@ function Node_MK_Tree_Path_Root(_x, _y, _group = noone) : Node(_x, _y, _group) c
 	newInput(12, nodeValue_Range(  "Phase",     [0,0], true ));
 	newInput(13, nodeValue_Range(  "Wave",      [0,0], true ))
 		.setCurvable(14, CURVE_DEF_11, "Over Length", "curved", THEME.mk_tree_curve_length);
+		
 	newInput(15, nodeValue_Range(  "Curl",      [0,0], true ))
 		.setCurvable(16, CURVE_DEF_11, "Over Length", "curved", THEME.mk_tree_curve_length);
 	

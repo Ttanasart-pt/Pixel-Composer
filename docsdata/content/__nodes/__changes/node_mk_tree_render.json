@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.8.007",
+    "changes": [
+      {
+        "date": "2026-08-08T04:01:46.544Z",
+        "node": "MK Render Tree",
+        "commit": "**MK Render Tree**: Fix error when connecting non-array tree to the node."
+      }
+    ]
+  },
+  {
     "version": "1.21.7.108",
     "changes": [
       {
