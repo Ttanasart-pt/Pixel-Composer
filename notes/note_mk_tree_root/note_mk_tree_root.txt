@@ -31,4 +31,7 @@ Curl|Bends spiral part backward to create spring shape.
 Thickness
 Thickness|Trunk thickness.
 
-[/proptable]
+Render
+Draw Mode|Whether to draw trunk as line or using surface.
+
+Render > Base 
