@@ -61,7 +61,8 @@ for root, dirs, files in os.walk("docsdata/content"):
     for file in files:
         # if file != "node_mk_cable.md":
         #     continue
+        if not file.endswith(".md"):
+            continue
 
         path = os.path.join(root, file)
-        if file.endswith(".md"):
-            parse_md(path)
+        parse_md(path)

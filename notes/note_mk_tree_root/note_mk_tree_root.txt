@@ -27,4 +27,8 @@ Amplitude|Add spiral effect to the trunk.
 Frequency|Spiral frequency.
 Phase|Spiral phase.
 Curl|Bends spiral part backward to create spring shape.
+
+Thickness
+Thickness|Trunk thickness.
+
 [/proptable]
