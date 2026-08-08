@@ -228,56 +228,7 @@
         Copy to Clipboard
 </button><br><p>Scatter surface randomly. To repeat surface in fixed pattern use <a class="node" href="/nodes/_index/Node_Repeat.html">Repeat</a> node.</p><br>
 <br><h2><a id="Properties" class="anchor"></a>Properties</h2><br>
-<p>[proptable]
-Surfaces
-Array|Choose surface array processing method:\n
- - Spread Output: Create multiple surfaces for each surface separately.\n
- - Index: Mix all input surfaces using spawn index as array index.\n
- - Random: Mix all input surfaces with random array index.\n
- - Data: Using third value (if exists) to determine array index.\n
- - Texture: Use external surface to select array index.
-Animated|With surface array connected, increase array index per frame.
-Animated End|Select what to do when index outside array range.</p><br>
-<p>Scatter &gt; Source
-Source|Scatter area type.
-Extra Value|In point array source, apply the third and later values in each data point (if exist) to the given properties.
-Distribution|Scatter distribution.</p><br>
-<p>Amount
-Amount|Scatter amount.
-Distance|In poisson distribution, set minimum distance between each copies.
-Attempt|In map distribution, set sampling attempt before gives up.</p><br>
-<p>Path
-Path|Scatter along path.
-Rotate Along Path|Make the copy rotate along path normal.
-Path Range|Range of the path to follow.
-Path Shift|Shift position along path.
-Scatter Distance|Set random shift distance away from the path.</p><br>
-<p>Position
-Random Position|Randomly move surface from it's original place.
-Shift Position|Move surface with fixed amount increase per copy.
-Shift Radial|Move surface based on its rotation.
-Exact|Round drawing position to integer.</p><br>
-<p>Rotation
-Rotation|Base angle.
-Point at Center|Rotate each copy to face the spawn center.
-Random Angle|Rotate surface randomly.</p><br>
-<p>Scale
-Scale|Base scale.
-Offset Scale|Scale surface randomly in both axis independenly.
-Scale Random|Scale surface randomly in both axis uniformly.
-Uniform Scaling|Force the final scaling to have the same value in X and Y axis.</p><br>
-<p>Color
-Random Blend|Apply random color blending per copy.
-Alpha|Apply random opacity per copy.
-Multiply Alpha|Multiply opacity to RGB channel before drawing.</p><br>
-<p>Sample Color
-Sample Surface|Blend surface based on color sampled from additional surface.
-Sample Wiggle|Randomly modify sample point.</p><br>
-<p>Rendering
-Blend Mode|Drawing blend mode.
-Sort Y|Sort drawing order by it's Y position to create top-down depth effect.
-Tile|Draw overflow surface to the other side of the surface to create tiling effect.
-[/proptable]</p><br>
+<p><table class="prop-table cc3070"><tr><td colspan='2' class='prop-section'>Surfaces</td></tr><tr><td><span class="junction" style="border-color: #ff9166AA">Array</span></td><td>Choose surface array processing method:<br> - Spread Output: Create multiple surfaces for each surface separately.<br> - Index: Mix all input surfaces using spawn index as array index.<br> - Random: Mix all input surfaces with random array index.<br> - Data: Using third value (if exists) to determine array index.<br> - Texture: Use external surface to select array index.</td></tr><tr><td><span class="junction" style="border-color: #ffe478AA">Animated</span></td><td>With surface array connected, increase array index per frame.</td></tr><tr><td><span class="junction" style="border-color: #ff9166AA">Animated End</span></td><td>Select what to do when index outside array range.<br></td></tr><tr><td colspan='2' class='prop-section'>Scatter &gt; Source</td></tr><tr><td><span class="junction" style="border-color: #ff9166AA">Source</span></td><td>Scatter area type.</td></tr><tr><td><span class="junction" style="border-color: #66ffe3AA">Extra Value</span></td><td>In point array source, apply the third and later values in each data point (if exist) to the given properties.</td></tr><tr><td><span class="junction" style="border-color: #ff9166AA">Distribution</span></td><td>Scatter distribution.<br></td></tr><tr><td colspan='2' class='prop-section'>Amount</td></tr><tr><td><span class="junction" style="border-color: #ff9166AA">Amount</span></td><td>Scatter amount.</td></tr><tr><td><span class="junction" style="border-color: #ffe478AA">Distance</span></td><td>In poisson distribution, set minimum distance between each copies.</td></tr><tr><td><span class="junction" style="border-color: #ff9166AA">Attempt</span></td><td>In map distribution, set sampling attempt before gives up.<br></td></tr><tr><td colspan='2' class='prop-section'>Path</td></tr><tr><td><span class="junction" style="border-color: #eb004bAA">Path</span></td><td>Scatter along path.</td></tr><tr><td><span class="junction" style="border-color: #8c3f5dAA">Rotate Along Path</span></td><td>Make the copy rotate along path normal.</td></tr><tr><td><span class="junction" style="border-color: #ffe478AA">Path Range</span></td><td>Range of the path to follow.</td></tr><tr><td><span class="junction" style="border-color: #ffe478AA">Path Shift</span></td><td>Shift position along path.</td></tr><tr><td><span class="junction" style="border-color: #ffe478AA">Scatter Distance</span></td><td>Set random shift distance away from the path.<br></td></tr><tr><td colspan='2' class='prop-section'>Position</td></tr><tr><td><span class="junction" style="border-color: #8fde5dAA">Random Position</span></td><td>Randomly move surface from it's original place.</td></tr><tr><td><span class="junction" style="border-color: #ffe478AA">Shift Position</span></td><td>Move surface with fixed amount increase per copy.</td></tr><tr><td><span class="junction" style="border-color: #ffe478AA">Shift Radial</span></td><td>Move surface based on its rotation.</td></tr><tr><td><span class="junction" style="border-color: #8c3f5dAA">Exact</span></td><td>Round drawing position to integer.<br></td></tr><tr><td colspan='2' class='prop-section'>Rotation</td></tr><tr><td><span class="junction" style="border-color: #8fde5dAA">Rotation</span></td><td>Base angle.</td></tr><tr><td><span class="junction" style="border-color: #8c3f5dAA">Point At Center</span></td><td>Rotate each copy to face the spawn center.</td></tr><tr><td><span class="junction" style="border-color: #ffe478AA">Random Angle</span></td><td>Rotate surface randomly.<br></td></tr><tr><td colspan='2' class='prop-section'>Scale</td></tr><tr><td><span class="junction" style="border-color: #8fde5dAA">Scale</span></td><td>Base scale.</td></tr><tr><td><span class="junction" style="border-color: #8fde5dAA">Offset Scale</span></td><td>Scale surface randomly in both axis independenly.</td></tr><tr><td><span class="junction" style="border-color: #ffe478AA">Scale Random</span></td><td>Scale surface randomly in both axis uniformly.</td></tr><tr><td><span class="junction" style="border-color: #8c3f5dAA">Uniform Scaling</span></td><td>Force the final scaling to have the same value in X and Y axis.<br></td></tr><tr><td colspan='2' class='prop-section'>Color</td></tr><tr><td><span class="junction" style="border-color: #8fde5dAA">Random Blend</span></td><td>Apply random color blending per copy.</td></tr><tr><td><span class="junction" style="border-color: #ffe478AA">Alpha</span></td><td>Apply random opacity per copy.</td></tr><tr><td><span class="junction" style="border-color: #8c3f5dAA">Multiply Alpha</span></td><td>Multiply opacity to RGB channel before drawing.<br></td></tr><tr><td colspan='2' class='prop-section'>Sample Color</td></tr><tr><td><span class="junction" style="border-color: #ff6b97AA">Sample Surface</span></td><td>Blend surface based on color sampled from additional surface.</td></tr><tr><td><span class="junction" style="border-color: #8fde5dAA">Sample Wiggle</span></td><td>Randomly modify sample point.<br></td></tr><tr><td colspan='2' class='prop-section'>Rendering</td></tr><tr><td><span class="junction" style="border-color: #ff9166AA">Blend Mode</span></td><td>Drawing blend mode.</td></tr><tr><td><span class="junction" style="border-color: #8c3f5dAA">Sort Y</span></td><td>Sort drawing order by it's Y position to create top-down depth effect.</td></tr><tr><td><span class="junction" style="border-color: #ff9166AA">Tile</span></td><td>Draw overflow surface to the other side of the surface to create tiling effect.</td></tr></table></p><br>
 <br><h2 class="nosidebar">Commit History</h2><br>
 <table class="change-table"><tr><th>1.21.7.105</th><td><ul><li> Fix point selection always always multi-select.</li></ul></td></tr><tr><th>1.21.5.002</th><td><ul><li> Fix alpha not apply when using sampler surface.</li></ul></td></tr><tr><th>1.21.5</th><td><ul><li> Fix sampler position using incorrect position.</li></ul></td></tr><tr><th>1.21.4.002</th><td><ul><li> Tiling option now separate X and Y axis.</li></ul></td></tr><tr><th>1.21.2.003</th><td><ul><li> Fix amount input disappear when setting source to map while setting distribution to poisson.</li><li> Add "Stop" option for ended animation.</li></ul></td></tr><tr><th>1.21.1.0</th><td><ul><li> Fix value map doesn't work.</li><li> Add tiling option for all scatter source type.</li></ul></td></tr><tr><th>1.21.0.2.007</th><td><ul><li> Add offset transformation properties.</li></ul></td></tr></table><br><h2 class="nosidebar">Related Links</h2><br><ul class="link-table"><li><span>Base Code: </span><a href="https://github.com/Ttanasart-pt/Pixel-Composer/blob/main/scripts/node_scatter/node_scatter.gml">/scripts/node_scatter/node_scatter.gml</a></li><li><span>Shader [sh_sample]: </span><a href="https://github.com/Ttanasart-pt/Pixel-Composer/blob/main/shaders/sh_sample/sh_sample.fsh">/shaders/sh_sample/sh_sample.fsh</a></li><li><span>Shader [sh_sample_shape]: </span><a href="https://github.com/Ttanasart-pt/Pixel-Composer/blob/main/shaders/sh_sample_shape/sh_sample_shape.fsh">/shaders/sh_sample_shape/sh_sample_shape.fsh</a></li></ul>
         </div>

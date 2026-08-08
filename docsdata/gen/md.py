@@ -7,6 +7,8 @@ def parse_md(path):
     with open(path, "r") as f:
         data = f.read()
 
+    data = data.replace("\\n\n", "<br>")
+
     data_html = markdown.markdown(data)
     data_html = data_html.replace("</h1>", "</h1><br>")
     data_html = data_html.replace("<h2>",  "<br><h2>", 1)
@@ -15,16 +17,20 @@ def parse_md(path):
     data_html = data_html.replace("</p>",  "</p><br>" )
     data_html = data_html.replace("</ul>", "</ul><br>")
 
+    # print(data_html);
+
     reProp = re.compile(r"\[proptable\]([\s\S]*?)\[\/proptable\]")
     proptable = reProp.findall(data_html)
     for table in proptable:
         table_html = '<table class="prop-table cc3070">'
-        table = table.replace("\\n\n", "<br>")
         rows = table.split("\n")
 
         for row in rows:
             if row.strip() == "":
                 continue
+            
+            row = row.replace("<p>", "").replace("</p>", "")
+            # print(f"row: {row}")
 
             table_html += "<tr>"
             cells = row.split("|")
@@ -53,6 +59,9 @@ def parse_md(path):
 
 for root, dirs, files in os.walk("docsdata/content"):
     for file in files:
+        # if file != "node_mk_cable.md":
+        #     continue
+
         path = os.path.join(root, file)
         if file.endswith(".md"):
             parse_md(path)

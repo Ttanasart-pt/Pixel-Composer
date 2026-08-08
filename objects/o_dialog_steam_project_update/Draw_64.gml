@@ -1,4 +1,6 @@
 /// @description init
+DIALOG_WINDOW_START
+
 #region base UI
 	draw_sprite_stretched(THEME.textbox, 3, _dialog_x, _dialog_y, dialog_w, dialog_h);
 	draw_sprite_stretched(THEME.textbox, 1, _dialog_x, _dialog_y, dialog_w, dialog_h);
@@ -46,3 +48,5 @@
 	
 	if(KEYBOARD_ENTER) update();
 #endregion
+
+DIALOG_WINDOW_END
