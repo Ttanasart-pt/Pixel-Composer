@@ -1,0 +1,48 @@
+Generate multiple branches around one point in a fan pattern.
+
+## Properties
+
+[proptable]
+Tree|Input tree trunk/branch.
+
+Spawning
+Position|Spawn position as ratio over original trunk.
+Chance|A chance that any given original trunk will spawn branches.
+
+Spawning > Settings
+Apply to Property Curves|Set the 'Over Branch' property to use 'Position' range or total range.
+
+Geometry
+Segments|Amount of segment in the trunk.
+
+Fan
+Fan Amount|Amount of branches spawn from one point.
+Aspect|Height to width ratio.
+Random|Apply angle randomization.
+
+Fan > Shape
+Inner Radius|Radius of a circle the branches will be spawned.
+Outer Radius|Radius of a circle the branches will extends to.
+
+Fan > Cone
+Cone Height|Height of the fan. Increasing height will push the branch downward.
+
+Fan > Phase
+Phase|Rotate branch around the fan circle.
+Overlap|Automatically rotate the next fan to the middle of the space of the current fan.
+
+Thickness
+Thickness|Branch thickness.
+
+Render
+Draw Mode|Whether to draw branch as line or using surface.
+
+Render > Base Color
+Length Blending|Blend mode between the <junc Base Color> and <junc Length Color>.
+
+Render > Edge Color
+Edge Blending|Blend mode of edge color.
+
+Render > Texture
+Array Selection|When inputing surface array. Whether to select texture at random or in order.
+[/proptable]

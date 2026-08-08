@@ -1,0 +1,65 @@
+Generate branches over input trunk/branch.
+
+## Properties
+
+[proptable]
+Tree|Input tree trunk/branch.
+
+Spawning
+Position|Spawn position as ratio over original trunk.
+Chance|A chance that any given original trunk will spawn branches.
+
+Spawning > Scatter
+Amount|Amount of branches per trunk.
+Distribution|Distribution type.
+
+Spawning > Settings
+Apply to Property Curves|Set the 'Over Branch' property to use 'Position' range or total range.
+
+Geometry
+Length|Length of each segment.
+Segments|Amount of segment in the trunk.
+
+Direction
+Direction Type|Methods of calculating branch direction.\n
+ - **Random**: Randomized absolute direction from a given range.\n
+ - **Uniform**: Uniformly interpolate direction.\n
+ - **Spread**: Calculate direction away from the spawning trunk direction.
+ 
+Reflect|Flip branch direction over the original trunk.
+Reflect Order|Order of reflection.\n
+ - **Even**: Flip every even branch.
+ - **Odd**: Flip every odd branch.
+ - **Random**: Flip randomly.
+ 
+Clamp Direction|Clamp final direction inside some given range.
+
+Direction > Gravity
+Gravity|Strength of the gravity.
+Override|Override default gravity direction defined in <node Node_MK_Tree_Inline>.
+
+Wiggle
+Amplitude|Add wiggling per segment.
+Frequency|Wiggle frequency.
+
+Spiral
+Amplitude|Add spiral effect to the branch.
+Frequency|Spiral frequency.
+Phase|Spiral phase.
+Curl|Bends spiral part backward to create spring shape.
+
+Thickness
+Thickness|Branch thickness.
+
+Render
+Draw Mode|Whether to draw branch as line or using surface.
+
+Render > Base Color
+Length Blending|Blend mode between the <junc Base Color> and <junc Length Color>.
+
+Render > Edge Color
+Edge Blending|Blend mode of edge color.
+
+Render > Texture
+Array Selection|When inputing surface array. Whether to select texture at random or in order.
+[/proptable]

@@ -29,7 +29,6 @@ function Node_MK_Tree_Branch(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	////- =Geometry
 	newInput( 3, nodeValue_Range(  "Length",     [16,32]   ))
 		.setCurvable(13, CURVE_DEF_11, "Over Branch", "curved", THEME.mk_tree_curve_branch );
-		
 	newInput( 7, nodeValue_Range(  "Segments",   [4,8]     ));
 	
 	////- =Direction
@@ -49,7 +48,6 @@ function Node_MK_Tree_Branch(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	newInput( 9, nodeValue_Range(   "Gravity",        [0,0], true    ))
 		.setCurvable( 16, CURVE_DEF_11, "Over Length", "curved",        THEME.mk_tree_curve_length )
 		.setCurvable( 33, CURVE_DEF_11, "Over Branch", "curved_branch", THEME.mk_tree_curve_branch )
-		
 	newInput(50, nodeValue_Bool(  "Override",           false ))
 	newInput(51, nodeValue_Rot(   "Gravity Direction",  0     ))
 	
@@ -57,21 +55,17 @@ function Node_MK_Tree_Branch(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	newInput(10, nodeValue_Range(   "Amplitude",   [0,0], true )).setInternalName("wiggle_amplitude")
 		.setCurvable( 34, CURVE_DEF_11, "Over Length", "curved",        THEME.mk_tree_curve_length )
 		.setCurvable( 35, CURVE_DEF_11, "Over Branch", "curved_branch", THEME.mk_tree_curve_branch )
-		
 	newInput(42, nodeValue_Range(   "Frequency",   [4,4], true )).setInternalName("wiggle_frequency");
 	newInput(43, nodeValue_Range(   "Phase",       [0,0], true )).setInternalName("wiggle_phase");
 	
 		////- =/Spiral
 	newInput(47, nodeValue_Range(   "Amplitude", [0,0], true )).setInternalName("spiral_amplitude")
 		.setCurvable(48, CURVE_DEF_11, "Over Length", "curved", THEME.mk_tree_curve_length )
-		
 	newInput(25, nodeValue_Range(   "Frequency", [4,4], true )).setInternalName("spiral_frequency")
 		.setCurvable(38, CURVE_DEF_11, "Over Length", "curved", THEME.mk_tree_curve_length );
-		
 	newInput(26, nodeValue_Range(   "Phase",     [0,0], true )).setInternalName("spiral_phase");
 	newInput(21, nodeValue_Range(   "Wave",      [0,0], true ))
 		.setCurvable(22, CURVE_DEF_11, "Over Length", "curved", THEME.mk_tree_curve_length );
-		
 	newInput(23, nodeValue_Range(   "Curl",      [0,0], true ))
 		.setCurvable(24, CURVE_DEF_11, "Over Length", "curved", THEME.mk_tree_curve_length );
 	

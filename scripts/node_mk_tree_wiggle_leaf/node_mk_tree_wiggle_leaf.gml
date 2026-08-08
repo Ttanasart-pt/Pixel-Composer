@@ -99,12 +99,12 @@ function Node_MK_Tree_Wiggle_Leaf(_x, _y, _group = noone) : Node(_x, _y, _group)
 			random_set_seed(_seed);
 		#endregion
 		
-		var _outLeaf = outputs[0].getValue();
+		// _leaf = variable_clone(_leaf);
+		// var _leafArr = array_spread(_leaf);
+		var _leafArr = _leaf;
 		
-		for( var i = 0, n = array_length(_leaf); i < n; i++ ) {
-			var _lf     = _leaf[i];
-			_outLeaf[i] = _lf;
-			
+		for( var i = 0, n = array_length(_leafArr); i < n; i++ ) {
+			var _lf = _leafArr[i];
 			if(!is(_lf, __MK_Tree_Leaf)) continue;
 			
 			var sx  = _lf.x;
@@ -129,7 +129,7 @@ function Node_MK_Tree_Wiggle_Leaf(_x, _y, _group = noone) : Node(_x, _y, _group)
 			_lf.recalDir();
 		}
 		
-		outputs[0].setValue(_outLeaf);
+		outputs[0].setValue(_leafArr);
 	}
 	
 }

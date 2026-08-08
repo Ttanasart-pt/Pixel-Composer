@@ -107,9 +107,10 @@ function Node_MK_Tree_Wiggle(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 		#endregion
 		
 		_tree = variable_clone(_tree);
+		var _treeArr = array_spread(_tree);
 		
-		for( var i = 0, n = array_length(_tree); i < n; i++ ) {
-			var _tr   = _tree[i];
+		for( var i = 0, n = array_length(_treeArr); i < n; i++ ) {
+			var _tr   = _treeArr[i];
 			var _segs = _tr.segments;
 			var _totl = _tr.totalLength;
 			var _wstr = random_range(_strn[0], _strn[1]);

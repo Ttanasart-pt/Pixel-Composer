@@ -63,10 +63,11 @@ function Node_MK_Tree_Grow(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 			var _whoLC = getInputData( 9), curve_whorl = inputs[ 8].attributes.curved? new curveMap(_whoLC) : undefined;
 		#endregion
 			
-		var _ntree = variable_clone(_tree);
+		var _ntree   = variable_clone(_tree);
+		var _treeArr = array_spread(_ntree);
 		
-		for( var i = 0, n = array_length(_ntree); i < n; i++ ) {
-			var _tr = _ntree[i];
+		for( var i = 0, n = array_length(_treeArr); i < n; i++ ) {
+			var _tr = _treeArr[i];
 			
 			var _tdelL = random_range(_delL[0], _delL[1]);
 			var _tfalL = random_range(_falL[0], _falL[1]);

@@ -31,4 +31,15 @@ Curl|Bends spiral part backward to create spring shape.
 Thickness
 Thickness|Trunk thickness.
 
+Render
+Draw Mode|Whether to draw trunk as line or using surface.
+
+Render > Base Color
+Length Blending|Blend mode between the <junc Base Color> and <junc Length Color>.
+
+Render > Edge Color
+Edge Blending|Blend mode of edge color.
+
+Render > Texture
+Array Selection|When inputing surface array. Whether to select texture at random or in order.
 [/proptable]

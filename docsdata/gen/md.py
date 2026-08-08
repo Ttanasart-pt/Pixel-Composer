@@ -30,6 +30,7 @@ def parse_md(path):
         if color:
             color = color[0]
             style = f"style='border-color: {color};background-color: {color}10;'"
+            b = b.replace(f"[color={color}]", "")
 
         banner_html = f'<p class="banner" {style}>{b}</p>'
         data_html = data_html.replace(f"[banner]{b}[/banner]", banner_html)
