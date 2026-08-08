@@ -1,15 +1,18 @@
 img.node-content {
     width: min(100%, calc(100% - 280px));
-    /* max-width: fit-content; */
-
+    
     @media (max-width: 800px) {
-        margin: 0px;
+        margin: auto;
     }
 }
 
 img.node-graph-preview {
-    max-width: 20%;
+    max-width: 40%;
     height: auto;
+
+    @media (max-width: 800px) {
+        max-width: 80%;
+    }
 }
 
 p:has(img.node-content) {

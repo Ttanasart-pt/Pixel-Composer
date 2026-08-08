@@ -908,6 +908,17 @@ table.icon-detail {
 }
 
 table.prop-table {
+    display: flex;
+
+    tbody {
+        width: 100%;
+    }
+
+    tr {
+        width: 100%;
+        display: table;
+    }
+
     td.prop-section, td.prop-section > p {
         font-weight: 600;
         font-size: 0.9rem;
@@ -916,6 +927,10 @@ table.prop-table {
 
     td:nth-child(2) {
         text-align: left !important;
+    }
+
+    @media (max-width: 800px) {
+        width: 100%;
     }
 }
 
