@@ -40,7 +40,7 @@ function sliderRange(_step, _int, _range, _onModify) : widget() constructor {
 		w = _w;
 		h = _h;
 		
-		if(!is_array(_data) || !is_real(_data[0]) || !is_real(_data[1])) {
+		if(!is_array(_data) || array_length(_data) != 2) {
 			tb_value_min.hide = false;
 			tb_value_min.setFocusHover(active, hover);
 			tb_value_min.draw(_x, _y, _w, _h, _data, _m);

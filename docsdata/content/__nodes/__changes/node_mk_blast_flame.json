@@ -6,6 +6,11 @@
         "date": "2026-08-08T06:05:47.226Z",
         "node": "MK Blast Render",
         "commit": "**MK Blast Render**: Add posterize option."
+      },
+      {
+        "date": "2026-08-08T06:47:10.303Z",
+        "node": "MK Blast Flame Ball",
+        "commit": "**MK Blast Flame Ball**: Add depth darkening effect."
       }
     ]
   },

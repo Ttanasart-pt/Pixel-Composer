@@ -66,19 +66,24 @@ function Node_MK_Blast_Flame(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 		////- =/Shape
 	newInput(23, nodeValue_EScroll( "Shape", 0, [ "Circle", "Arrow", "Line", "Path" ] ));
 	newInput(35, nodeValue_Range(   "Arrow Offset", [0,0] ));
-	newInput(46, nodeValue_Path("Path"                ));
+	newInput(46, nodeValue_Path(    "Path"                ));
 	newInput(47, nodeValue_Int(     "Path Sample",   8    ));
 	newInput(36, nodeValue_Range(   "Thickness",    [2,2] )).setMappableRange(45, "Group Varience", THEME.mk_blast_group);
 	newInput(37, nodeValue_Curve(   "Shape",        CURVE_DEF_11 ));
 	
 		////- =/Color
-	newInput(17, nodeValue_Gradient( "Color", new gradientObject([cola(c_red), cola(c_yellow), cola(c_white)]) )).addShift(51);
-	newInput(18, nodeValue_Range(    "Level", [0,1]  ));
+	newInput(17, nodeValue_Gradient( "Color", new gradientObject([cola(c_red), cola(c_yellow), cola(c_white)]) ));
+	newInput(51, nodeValue_SliRange( "Shift", [0,0], [-1,1,.01] ))
+	newInput(18, nodeValue_Range(    "Level", [0,1]             ));
 	
 		////- =/Perspective
-	newInput(15, nodeValue_Vec2(  "View Origin", [.25,.25] )).setUnitSimple();
-	newInput(16, nodeValue_Range( "Perspective", [2,2]     ));
-	// 52
+	newInput(15, nodeValue_Vec2(  "View Origin",  [.25,.25]   )).setUnitSimple();
+	newInput(16, nodeValue_Range( "Perspective",  [2,2]       ));
+	
+		////- =/Depth Darken
+	newInput(52, nodeValue_Range( "Depth Darken",       [0,0], true ));
+	newInput(53, nodeValue_Range( "Depth Darken Range", [0,1]       ));
+	// 54
 	
 	newOutput( 0, nodeValue_Output( "Blast", VALUE_TYPE.struct, [] )).setCustomData(global.MKBLAST_JUNC);
 	
@@ -95,10 +100,11 @@ function Node_MK_Blast_Flame(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 		[ "Spiral",        true, 32 ], 34, 29, 30, 33, 31, 
 		[ "Decay",         true, 25 ], 14, 44, 
 			
-		[ "Render",           false ], 21, 50, 
-			[ "/Shape",       false ], 23, 35, 46, 47, 36, 45, 37, 
-			[ "/Color",       false ], [17, true], 51, -1, 18, 
-			[ "/Perspective", false ], 15, 16, 
+		[ "Render",            false ], 21, 50, 
+			[ "/Shape",        false ], 23, 35, 46, 47, 36, 45, 37, 
+			[ "/Color",        false ], [17, true], 51, -1, 18, 
+			[ "/Perspective",  false ], 15, 16, 
+			[ "/Depth Darken", false ], 52, 53, 
 	];
 	
 	////- Nodes
@@ -174,6 +180,9 @@ function Node_MK_Blast_Flame(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 			var _vorig   = getInputData(15);
 			var _persp   = getInputData(16);
 			
+			var _depInt  = getInputData(52);
+			var _depRng  = getInputData(53);
+			
 			random_set_seed(_seed);
 			
 			inputs[39].setVisible(_mtype == 1);
@@ -234,7 +243,9 @@ function Node_MK_Blast_Flame(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 			
 			var _layer  = new MKBlast_Layer();
 			_layer.colorize   = _color;
-			_layer.color_shft = _colorShf;
+			
+			var _cshf = is_array(_colorShf)? lerp(_colorShf[0], _colorShf[1], _prg) : _colorShf;
+			_layer.color_shft = _cshf;
 			
 			var grX = _grpScal[0];
 			var grY = _grpScal[1];
@@ -288,6 +299,9 @@ function Node_MK_Blast_Flame(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 				
 				_flm.doDecay    = _ddecay;
 				_flm.decay      = _dec + random_range(_decayRand[0], _decayRand[1]);
+				
+				_flm.depthInten      = random_range(_depInt[0], _depInt[1]);
+				_flm.depthRange      = _depRng;
 				
 				_flm.spiralSize      = _spirSize;
 				_flm.spiralPhase     = random_range(_spiPhs[0], _spiPhs[1]);

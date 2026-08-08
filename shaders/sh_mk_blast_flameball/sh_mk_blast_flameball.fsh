@@ -19,6 +19,9 @@ uniform sampler2D texture;
 uniform int   discardBlack;
 uniform float particleDepth;
 
+uniform vec2  depthRange;
+uniform float depthIntensity;
+
 uniform float spiralSize;
 uniform float spiralPhase;
 uniform float spiralIntensity;
@@ -65,6 +68,8 @@ void main() {
 	mat2  rotMat    = mat2(cos(ang), -sin(ang), sin(ang), cos(ang));
 	mat2  rotMatInv = invert(rotMat);
 	
+	float depth = 0.;
+	
 	vtx = .5 + ((vtx - .5) * rotMat / scale) * rotMatInv;
 	
 	if(useTexture == 1) {
@@ -76,10 +81,11 @@ void main() {
 		vec2 tx = (vtx - .5) * scl;
 		
 		float r = length(tx);
+		depth = r;
+		
 		if(r > 1.) discard;
 		
 		float nxy = 1.0 - (pow(origin.x, 2.0) + pow(origin.y, 2.0));
-		// if(nxy < 0.) discard;
 		
 		float nz     = sqrt(abs(nxy)) * sign(nxy);
 		vec3  normal = vec3(origin, nz);
@@ -121,6 +127,10 @@ void main() {
 	
 	g = 1. - g;
 	g = (g - level[0]) / (level[1] - level[0]);
+	
+	float d = (depth - depthRange[0]) / (depthRange[1] - depthRange[0]);
+	g -= clamp(d, 0., 1.) * depthIntensity;
+	
 	gl_FragData[0] = vec4(g * v_vColour.a, 0., 0., v_vColour.a);
 	gl_FragData[1] = vec4(particleDepth, 0., 0., 0.);
 }

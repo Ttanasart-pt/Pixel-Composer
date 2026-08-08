@@ -183,7 +183,10 @@ function MKBlast_Element() constructor {
 	#endregion
 	
 	#region Shape
-		shape    = 0;
+		shape           = 0;
+		
+		depthInten      = 0;
+		depthRange      = [0,1];
 	
 		spiralSize      = 0;
 		spiralIntensity = 0;
@@ -249,22 +252,25 @@ function MKBlast_Element() constructor {
 		
 		BLEND_MAX
 		shader_set(sh_mk_blast_flameball);
-			shader_set_i( "shapeIndex",      shape      );
-			shader_set_i( "mask",            mask       );
-			shader_set_f( "particleDepth",   yy + depth );
+			shader_set_i( "shapeIndex",      shape                  );
+			shader_set_i( "mask",            mask                   );
+			shader_set_f( "particleDepth",   yy + depth             );
 			
-			shader_set_f( "innerRad",        doDecay? blastRad : 0 );
-			shader_set_2( "origin",          normal    );
-			shader_set_i( "discardBlack",    discard   );
+			shader_set_f( "innerRad",        doDecay? blastRad : 0  );
+			shader_set_2( "origin",          normal                 );
+			shader_set_i( "discardBlack",    discard                );
 			
-			shader_set_f( "rotation",        angle     );
-			shader_set_2( "scale",           aspect    );
+			shader_set_f( "rotation",        angle                  );
+			shader_set_2( "scale",           aspect                 );
 			
-			shader_set_f( "spiralSize",      spiralSize      );
-			shader_set_f( "spiralPhase",     spiralPhase     );
-			shader_set_f( "spiralIntensity", spiralIntensity );
+			shader_set_2( "depthRange",      depthRange             );
+			shader_set_f( "depthIntensity",  depthInten             );
+			
+			shader_set_f( "spiralSize",      spiralSize             );
+			shader_set_f( "spiralPhase",     spiralPhase            );
+			shader_set_f( "spiralIntensity", spiralIntensity        );
 			shader_set_f( "spiralRotation",  spiralRotation * life  );
-			shader_set_i( "spiralMultiply",  spiralMultiply  );
+			shader_set_i( "spiralMultiply",  spiralMultiply         );
 			
 			shader_set_i( "useTexture", is_surface(texture) );
 			if(is_surface(texture)) shader_set_s("texture", texture);
