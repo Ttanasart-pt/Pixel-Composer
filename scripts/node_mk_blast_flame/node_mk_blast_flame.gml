@@ -10,11 +10,11 @@ function Node_MK_Blast_Flame(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	newInput( 0, nodeValueSeed());
 	
 	////- =Settings
-	newInput(19, nodeValue_Curve( "Group Interpolation", CURVE_DEF_01 ));
+	newInput(19, nodeValue_Curve( "Layer Interpolation", CURVE_DEF_01 ));
 	newInput(20, nodeValue_Curve( "Anim Interpolation",  CURVE_DEF_01 ));
 	
 	////- =Spawning
-	newInput( 1, nodeValue_Float( "Amount",  3    ));
+	newInput( 1, nodeValue_Float( "Layers",  3    ));
 	newInput( 2, nodeValue_Range( "Frame",  [0,0] ));
 	
 		////- =/Lifespan
@@ -35,7 +35,7 @@ function Node_MK_Blast_Flame(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	newInput(11, nodeValue_Range(   "Speed",     [.2,.6]            )).setMappableRange( 9, "Group Varience", THEME.mk_blast_group);
 	newInput(39, nodeValue_Curve(   "Movemenet Curve", CURVE_DEF_01 ));
 	newInput(24, nodeValue_Range(   "Friction",  [0,0]              )).setMappableRange(42, "Group Varience", THEME.mk_blast_group);;
-	newInput(12, nodeValue_RotRand( "Direction", ROTRAN_DEF_0        ));
+	newInput(12, nodeValue_RotRand( "Direction", ROTRAN_DEF_0       ));
 	newInput(22, nodeValue_Range(   "Gravity",   [0,0]              ));
 	
 	////- =Rotation

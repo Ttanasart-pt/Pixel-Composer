@@ -9,11 +9,11 @@ function Node_MK_Blast_Particle(_x, _y, _group = noone) : Node(_x, _y, _group) c
 	newInput( 0, nodeValueSeed());
 	
 	////- =Settings
-	newInput( 1, nodeValue_Curve( "Group Interpolation", CURVE_DEF_01 ));
+	newInput( 1, nodeValue_Curve( "Layer Interpolation", CURVE_DEF_01 ));
 	newInput( 2, nodeValue_Curve( "Anim Interpolation",  CURVE_DEF_01 ));
 	
 	////- =Spawning
-	newInput( 4, nodeValue_Float( "Amount",   1    ));
+	newInput( 4, nodeValue_Float( "Layer",    1    ));
 	newInput(23, nodeValue_Range( "Scatter", [0,0] ));
 	
 	newInput( 5, nodeValue_Float( "Period",   2    ));

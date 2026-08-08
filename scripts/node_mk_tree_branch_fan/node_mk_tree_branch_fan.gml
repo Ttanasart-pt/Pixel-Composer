@@ -8,6 +8,9 @@ function Node_MK_Tree_Branch_Fan(_x, _y, _group = noone) : Node(_x, _y, _group) 
 	newInput( 1, nodeValueSeed());
 	newInput( 0, nodeValue_Struct( "Branch", noone)).setVisible(true, true).setCustomData(global.MKTREE_JUNC);
 	
+	////- =Output
+	newInput(38, nodeValue_Bool( "Per Tree Array",      false    ));
+	
 	////- =Spawning
 	newInput( 2, nodeValue_SliRange( "Position", [.5,1] ));
 	newInput( 9, nodeValue_Slider(   "Chance",     1    ));
@@ -67,13 +70,14 @@ function Node_MK_Tree_Branch_Fan(_x, _y, _group = noone) : Node(_x, _y, _group) 
 		////- =/Texture
 	newInput(32, nodeValue_Surface(  "Texture" ));
 	newInput(37, nodeValue_EButton(  "Array Selection", 0           )).setChoices([ "Ordered", "Random" ]);
-	// 38
+	// 39
 	
 	newOutput(0, nodeValue_Output("Tree",     VALUE_TYPE.struct, noone)).setCustomData(global.MKTREE_JUNC);
 	newOutput(1, nodeValue_Output("Branches", VALUE_TYPE.struct, noone)).setCustomData(global.MKTREE_JUNC);
 	newOutput(2, nodeValue_Output("Trunk",    VALUE_TYPE.struct, noone)).setCustomData(global.MKTREE_JUNC).setVisible(false);
 	
 	input_display_list = [ s_MKFX, 1, 0, 
+		[ "Output",           true ], 38, 
 		[ "Spawning",        false ],  2,  9,  3,  7,  8,  
 			[ "/Settings",    true ], 33, 
 			
@@ -113,6 +117,8 @@ function Node_MK_Tree_Branch_Fan(_x, _y, _group = noone) : Node(_x, _y, _group) 
 			var _gDir = inline_context.gravityDir;
 			
 			var _tree = getInputData( 0);
+			
+			var _tArr = getInputData(38);
 			
 			var _oriR = getInputData( 2);
 			var _chan = getInputData( 9);
@@ -184,8 +190,10 @@ function Node_MK_Tree_Branch_Fan(_x, _y, _group = noone) : Node(_x, _y, _group) 
 			random_set_seed(_seed);
 		#endregion
 		
-		var _oriRange  = _oriR[1] - _oriR[0];
 		var _branches  = [];
+		var _branchArr = _branches;
+		
+		var _oriRange  = _oriR[1] - _oriR[0];
 		var _spawnIndx = 0;
 		var  bIndex    = 0;
 		var ori = [0,0,0];
@@ -198,6 +206,8 @@ function Node_MK_Tree_Branch_Fan(_x, _y, _group = noone) : Node(_x, _y, _group) 
 		
 		for( var i = 0, n = array_length(_tree); i < n; i++ ) {
 			if(random(1) > _chan) continue;
+			
+			if(_tArr) _branchArr = [];
 			
 			var _tr  = _tree[i];
 			var _amo = irandom_range(_amoR[0], _amoR[1]);
@@ -327,9 +337,12 @@ function Node_MK_Tree_Branch_Fan(_x, _y, _group = noone) : Node(_x, _y, _group) 
 					_t.setPoints(_points);
 					
 					array_push(_tr.children, _t);
-					array_push(_branches,    _t);
+					array_push(_branchArr,   _t);
+				
 				}
 			}
+			
+			if(_tArr) array_push(_branches, _branchArr);
 		}
 		
 		outputs[0].setValue(_tree);

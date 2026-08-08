@@ -13,6 +13,22 @@ function Node_MK_Tree_Render(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 	newInput( 2, nodeValue_Bool(    "Draw From Root", true )).rejectArray();
 	newInput( 3, nodeValue_EScroll( "Blend Mode",     0, [ "Normal", "Add", "Max", "Min" ]  )).rejectArray();
 	
+	////- =Effects
+	
+		////- =/Outline
+	newInput( 9, nodeValue_Bool(    "Use Outline", false    )).rejectArray();
+	newInput(10, nodeValue_EScroll( "Position",    0, [ "Inside", "Outside" ] )).rejectArray();
+	newInput(11, nodeValue_Int(     "Thickness",   0        )).rejectArray();
+	newInput(12, nodeValue_Color(   "Color",       ca_white )).rejectArray();
+	newInput(13, nodeValue_Slider(  "Opacity",     1        )).rejectArray();
+	
+		////- =/Shadow
+	newInput(14, nodeValue_Bool(    "Use Shadow",  false    )).rejectArray();
+	newInput(15, nodeValue_Int(     "Grow",        1        )).rejectArray();
+	newInput(16, nodeValue_Float(   "Blur",        3        )).rejectArray();
+	newInput(17, nodeValue_Color(   "Color",       ca_black )).rejectArray();
+	newInput(18, nodeValue_Slider(  "Intensity",  .5        )).rejectArray();
+	
 	////- =Filter
 	newInput( 4, nodeValue_Bool(    "Filter Root Position", false )).rejectArray();
 	newInput( 5, nodeValue_Range(   "Range",                [0,1] )).rejectArray();
@@ -20,14 +36,19 @@ function Node_MK_Tree_Render(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 	newInput( 6, nodeValue_Bool(    "Filter Random",        false )).rejectArray();
 	newInput( 7, nodeValueSeed());
 	newInput( 8, nodeValue_Slider(  "Chance",               .5    )).rejectArray();
-	// 9
+	// 19
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
 	input_display_list = [ s_MKFX, 0, 
 		[ "Outputs", false ],  1, 
 		[ "Render",  false ],  2,  3, 
-		[ "Filter",   true ],  
+		
+		// [ "Effect",       false     ],  
+		// 	[ "/Outline",  true,  9 ], 10, 11, 12, 13, 
+		// 	[ "/Shadow",   true, 14 ], 15, 16, 17, 18, 
+		
+		[ "Filter",             true     ],  
 			[ "/Root Position", false, 4 ],  5, 
 			[ "/Random",        false, 6 ],  7,  8, 
 	];
@@ -35,6 +56,8 @@ function Node_MK_Tree_Render(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 	////- Nodes
 	
 	drawRoot = false;
+	
+	temp_surface = [ noone, noone, noone ];
 	
 	static getDimension = function() /*=>*/ {return is(inline_context, Node_MK_Tree_Inline)? inline_context.getDimension() : DEF_SURF};
 	
@@ -53,6 +76,47 @@ function Node_MK_Tree_Render(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 		})
 	}
 	
+	static drawEffect = function(_data) {
+		#region data
+			var _oUse = _data[ 9];
+			var _oPos = _data[10];
+			var _oThk = _data[11];
+			var _oCol = _data[12];
+			var _oOpa = _data[13];
+			
+			var _sUse = _data[14];
+			var _sGro = _data[15];
+			var _sBlr = _data[16];
+			var _sCol = _data[17];
+			var _sInt = _data[18];
+		#endregion
+		
+		var _surf = temp_surface[0];
+		var _dim  = surface_get_dimension(_surf);
+		var dSurf = _surf;
+		
+		if(_oUse) {
+			surface_set_shader(temp_surface[1], sh_mk_tree_render_effect);
+				shader_set_2( "dimension", _dim  );
+				
+				shader_set_i( "side",      _oPos );
+				shader_set_f( "thickness", _oThk );
+				shader_set_c( "color",     _oCol );
+				shader_set_f( "opacity",   _oOpa );
+				
+				draw_surface(dSurf, 0, 0);
+			surface_reset_shader();
+			dSurf = temp_surface[1];
+		}
+		
+		if(_sUse) {
+			
+			
+		}
+		
+		draw_surface(dSurf, 0, 0);
+	}
+	
 	static processData = function(_outSurf, _data, _array_index = 0) { 
 		if(!is(inline_context, Node_MK_Tree_Inline)) return _outSurf;
 		
@@ -62,6 +126,9 @@ function Node_MK_Tree_Render(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 			
 			drawRoot  = _data[ 2];
 			var _blnd = _data[ 3];
+			
+			var _oUse = _data[ 9];
+			var _sUse = _data[14];
 			
 			var _fRootPosUse = _data[ 4];
 			var _fRootPos    = _data[ 5];
@@ -76,6 +143,11 @@ function Node_MK_Tree_Render(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 		if(!is_array(_tree)) _tree = [_tree];
 		if(array_empty(_tree)) return _outSurf;
 		
+		var useEffect = _oUse || _sUse;
+		
+		for( var i = 0, n = array_length(temp_surface); i < n; i++ ) 
+			temp_surface[i] = surface_verify(temp_surface[i], _dim[0], _dim[1]);
+			
 		_outSurf = surface_verify(_outSurf, _dim[0], _dim[1]);
 		surface_set_target(_outSurf);
 			DRAW_CLEAR
@@ -106,11 +178,32 @@ function Node_MK_Tree_Render(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 					if(_drawT.drawn) continue;
 					
 					_drawT.drawn = true;
+					
+					if(useEffect) {
+						surface_set_target(temp_surface[0]);
+						DRAW_CLEAR
+					}
+					
 					_drawT.draw();
+					
+					if(useEffect) {
+						surface_reset_target();
+						drawEffect(_data);
+					}
 					continue;
 				}
 				
+				if(useEffect) {
+					surface_set_target(temp_surface[0]);
+					DRAW_CLEAR
+				}
+				
 				_t.draw();
+				
+				if(useEffect) {
+					surface_reset_target();
+					drawEffect(_data);
+				}
 			}
 			
 			BLEND_NORMAL

@@ -96,7 +96,7 @@ function MKBlast_Layer() constructor {
 		surface_reset_target();
 		
 		surface_set_target(_surfs[3]);
-			BLEND_MAX
+			BLEND_NORMAL
 			draw_surface(_surfs[2], 0, 0);
 			BLEND_NORMAL
 		surface_reset_target();

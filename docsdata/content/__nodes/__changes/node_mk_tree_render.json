@@ -6,6 +6,11 @@
         "date": "2026-08-08T04:01:46.544Z",
         "node": "MK Render Tree",
         "commit": "**MK Render Tree**: Fix error when connecting non-array tree to the node."
+      },
+      {
+        "date": "2026-08-08T08:32:57.533Z",
+        "node": "",
+        "commit": "**MK Tree Branch/ Fan Branch**: Add option to output branch array as nested array per tree."
       }
     ]
   },

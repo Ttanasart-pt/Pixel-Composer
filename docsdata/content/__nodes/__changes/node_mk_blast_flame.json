@@ -11,6 +11,11 @@
         "date": "2026-08-08T06:47:10.303Z",
         "node": "MK Blast Flame Ball",
         "commit": "**MK Blast Flame Ball**: Add depth darkening effect."
+      },
+      {
+        "date": "2026-08-08T08:32:57.532Z",
+        "node": "MK Tree Branch/ Fan Branch",
+        "commit": "**MK Tree Branch/ Fan Branch**: Add option to output branch array as nested array per tree."
       }
     ]
   },

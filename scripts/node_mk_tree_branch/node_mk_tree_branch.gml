@@ -11,6 +11,9 @@ function Node_MK_Tree_Branch(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	newInput(14, nodeValueSeed());
 	newInput( 0, nodeValue_Struct( "Tree", noone)).setVisible(true, true).setCustomData(global.MKTREE_JUNC);
 	
+	////- =Output
+	newInput(55, nodeValue_Bool( "Per Tree Array",      false    ));
+	
 	////- =Spawning
 	newInput( 8, nodeValue_SliRange( "Position",       [.5,1]    ));
 	newInput(44, nodeValue_Slider(   "Chance",           1       ));
@@ -26,6 +29,7 @@ function Node_MK_Tree_Branch(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	////- =Geometry
 	newInput( 3, nodeValue_Range(  "Length",     [16,32]   ))
 		.setCurvable(13, CURVE_DEF_11, "Over Branch", "curved", THEME.mk_tree_curve_branch );
+		
 	newInput( 7, nodeValue_Range(  "Segments",   [4,8]     ));
 	
 	////- =Direction
@@ -45,6 +49,7 @@ function Node_MK_Tree_Branch(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	newInput( 9, nodeValue_Range(   "Gravity",        [0,0], true    ))
 		.setCurvable( 16, CURVE_DEF_11, "Over Length", "curved",        THEME.mk_tree_curve_length )
 		.setCurvable( 33, CURVE_DEF_11, "Over Branch", "curved_branch", THEME.mk_tree_curve_branch )
+		
 	newInput(50, nodeValue_Bool(  "Override",           false ))
 	newInput(51, nodeValue_Rot(   "Gravity Direction",  0     ))
 	
@@ -52,17 +57,21 @@ function Node_MK_Tree_Branch(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	newInput(10, nodeValue_Range(   "Amplitude",   [0,0], true )).setInternalName("wiggle_amplitude")
 		.setCurvable( 34, CURVE_DEF_11, "Over Length", "curved",        THEME.mk_tree_curve_length )
 		.setCurvable( 35, CURVE_DEF_11, "Over Branch", "curved_branch", THEME.mk_tree_curve_branch )
+		
 	newInput(42, nodeValue_Range(   "Frequency",   [4,4], true )).setInternalName("wiggle_frequency");
 	newInput(43, nodeValue_Range(   "Phase",       [0,0], true )).setInternalName("wiggle_phase");
 	
 		////- =/Spiral
 	newInput(47, nodeValue_Range(   "Amplitude", [0,0], true )).setInternalName("spiral_amplitude")
 		.setCurvable(48, CURVE_DEF_11, "Over Length", "curved", THEME.mk_tree_curve_length )
+		
 	newInput(25, nodeValue_Range(   "Frequency", [4,4], true )).setInternalName("spiral_frequency")
 		.setCurvable(38, CURVE_DEF_11, "Over Length", "curved", THEME.mk_tree_curve_length );
+		
 	newInput(26, nodeValue_Range(   "Phase",     [0,0], true )).setInternalName("spiral_phase");
 	newInput(21, nodeValue_Range(   "Wave",      [0,0], true ))
 		.setCurvable(22, CURVE_DEF_11, "Over Length", "curved", THEME.mk_tree_curve_length );
+		
 	newInput(23, nodeValue_Range(   "Curl",      [0,0], true ))
 		.setCurvable(24, CURVE_DEF_11, "Over Length", "curved", THEME.mk_tree_curve_length );
 	
@@ -92,13 +101,14 @@ function Node_MK_Tree_Branch(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	
 	////- =Growth
 	newInput(20, nodeValue_Range( "Grow Delay", [0,0], true ));
-	// 55
+	// 56
 	
 	newOutput(0, nodeValue_Output("Tree",     VALUE_TYPE.struct, noone)).setCustomData(global.MKTREE_JUNC);
 	newOutput(1, nodeValue_Output("Branches", VALUE_TYPE.struct, noone)).setCustomData(global.MKTREE_JUNC);
 	newOutput(2, nodeValue_Output("Trunk",    VALUE_TYPE.struct, noone)).setCustomData(global.MKTREE_JUNC).setVisible(false);
 	
 	input_display_list = [ s_MKFX, 14, 0, 
+		[ "Output",           true ], 55, 
 		[ "Spawning",        false ],  8, 44, 
 			[ "/Scatter",    false ],  5, 19, 45, 
 			[ "/Settings",    true ], 32, 
@@ -148,6 +158,8 @@ function Node_MK_Tree_Branch(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 			var _seed = inline_context.seed + getInputData(14);
 			
 			var _tree = getInputData( 0);
+			
+			var _tArr = getInputData(55);
 			
 			var _oriR = getInputData( 8);
 			var _chan = getInputData(44);
@@ -249,6 +261,8 @@ function Node_MK_Tree_Branch(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 		#endregion
 		
 		var _branches  = [];
+		var _branchArr = _branches;
+		
 		var _spawnIndx = 0;
 		var _oriRange  = _oriR[1] - _oriR[0];
 		
@@ -257,6 +271,8 @@ function Node_MK_Tree_Branch(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 		
 		for( var i = 0, n = array_length(_tree); i < n; i++ ) {
 			if(random(1) > _chan) continue;
+			
+			if(_tArr) _branchArr = [];
 			
 			var _tr  = _tree[i];
 			var _amo = irandom_range(_bran[0], _bran[1]);
@@ -373,11 +389,13 @@ function Node_MK_Tree_Branch(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 			    _t.growShift = random_range(_grow[0], _grow[1]);
 				
 				array_push(_tr.children, _t);
-				array_push(_branches,    _t);
+				array_push(_branchArr,   _t);
 				
 				_spawnIndx++;
 				j++;
 			}
+			
+			if(_tArr) array_push(_branches, _branchArr);
 		}
 		
 		outputs[0].setValue(_tree);
