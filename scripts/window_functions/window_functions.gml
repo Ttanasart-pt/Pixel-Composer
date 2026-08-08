@@ -34,7 +34,7 @@ function winwin_start(window, clear = undefined) {
 	if(!is_winwin(window)) return;
 	
 	winwin_draw_begin(window); 
-	winwin_draw_clear(c_black, 0);
+	winwin_draw_clear(COLORS.bg, 0);
 	WINWIN_CURRENT = window;
 }
 

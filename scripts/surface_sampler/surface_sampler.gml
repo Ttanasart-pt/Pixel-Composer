@@ -59,6 +59,13 @@ function Surface_sampler(s = noone) constructor {
     
     getPixel = getPixelU32;
     
+    static getPixelUV = function(_u,_v) /*=>*/ {
+        if(!active) return 0;
+        var _x = round(clamp(_u, 0, 1) * (sw - 1));
+        var _y = round(clamp(_v, 0, 1) * (sh - 1));
+        return getPixel(_x, _y);
+    }
+    
     static free = function() /*=>*/ { buffer_delete_safe(buffer); }
 }
 

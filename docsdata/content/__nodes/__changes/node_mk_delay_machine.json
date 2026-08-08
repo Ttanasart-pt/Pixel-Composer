@@ -6,6 +6,11 @@
         "date": "2026-08-07T08:38:42.445Z",
         "node": "",
         "commit": "Fix crash when calling command palette."
+      },
+      {
+        "date": "2026-08-08T01:23:16.129Z",
+        "node": "MK Delay Machine",
+        "commit": "**MK Delay Machine**: Add stretch palette select type."
       }
     ]
   },

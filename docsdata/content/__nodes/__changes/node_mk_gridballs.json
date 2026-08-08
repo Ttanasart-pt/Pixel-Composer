@@ -6,6 +6,11 @@
         "date": "2026-08-07T09:17:52.160Z",
         "node": "MK Gridball",
         "commit": "**MK Gridball**: Add scale properties."
+      },
+      {
+        "date": "2026-08-08T01:23:16.137Z",
+        "node": "",
+        "commit": "**MK Delay Machine**: Add stretch palette select type."
       }
     ]
   },

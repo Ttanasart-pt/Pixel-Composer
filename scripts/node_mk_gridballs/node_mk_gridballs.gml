@@ -33,11 +33,13 @@ function Node_MK_GridBalls(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	newInput(15, nodeValue_Slider(   "Shift",       0, [ -1, 1, 0.01 ] )).setMappable(28);
 	
 	////- =Render
-	newInput(12, nodeValue_Slider(   "Roundness",   1     )).setMappable(29);
-	newInput( 3, nodeValue_Rotation( "Light",       0     )).setMappable(30);
-	newInput(33, nodeValue_Slider(   "Light Height",1     )).setMappable(34);
-	newInput( 6, nodeValue_Slider(   "Shading",    .5     )).setMappable(31);
-	// 37
+	newInput(12, nodeValue_Slider(   "Roundness",     1  )).setMappable(29);
+	newInput( 3, nodeValue_Rotation( "Light",         0  )).setMappable(30);
+	newInput(37, nodeValue_Slider(   "Light Offset", .75 ));
+	newInput(33, nodeValue_Float(    "Light Height",  1  )).setMappable(34);
+	newInput( 6, nodeValue_Slider(   "Shading",      .5  )).setMappable(31);
+	newInput(38, nodeValue_Bool(     "Cull Transparent", false ));
+	// 39
 		
 	input_display_list = [ s_MKFX, 5, 1, 
 		[ "Surface",   true     ],  0,
@@ -45,7 +47,7 @@ function Node_MK_GridBalls(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 		[ "Scatter",  false, 16 ],  4, 21,  7, 
 		[ "Stretch",  false, 17 ],  9, 22, 10, 23, 20, 24, 11, 25, 
 		[ "Twist",    false, 18 ], 13, 26, 14, 27, 15, 28, 
-		[ "Render",   false     ], 12, 29,  3, 30, 33, 34,  6, 31, 
+		[ "Render",   false     ], 12, 29,  3, 30, 37, 33, 34,  6, 31, 38, 
 	];
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
@@ -89,14 +91,18 @@ function Node_MK_GridBalls(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 			
 			var _rond     = _data[12], _rond_samp     = inputs[12].isMapped()? new Surface_Sampler_Grey(_data[29], _rond ) : undefined;
 			var _ldir     = _data[ 3], _ldir_samp     = inputs[ 3].isMapped()? new Surface_Sampler_Grey(_data[30], _ldir ) : undefined;
+			var _loff     = _data[37];
 			var _lhig     = _data[33], _lhig_samp     = inputs[33].isMapped()? new Surface_Sampler_Grey(_data[34], _lhig ) : undefined;
 			var _shad     = _data[ 6], _shad_samp     = inputs[ 6].isMapped()? new Surface_Sampler_Grey(_data[31], _shad ) : undefined;
+			var _cull     = _data[38], _cull_samp     = _cull? new Surface_sampler(_surf) : undefined;
 		#endregion
 		
 		if(!is_surface(_surf)) return _outSurf;
 		_outSurf = surface_verify(_outSurf, _dim[0], _dim[1]);
 		
 		random_set_seed(_seed);
+		
+		var caldir = _twst_use || _strh_use
 		
 		var _sw  = _dim[0];
 		var _sh  = _dim[1];
@@ -113,16 +119,40 @@ function Node_MK_GridBalls(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 		var _cd = sqrt(_cx * _cx + _cy * _cy);
 		_strh_shf *= _cd;
 		
+		var _ulightPos  = shader_get_uniform(sh_mk_ballGrid, "lightPos");
+		var _ulightHei  = shader_get_uniform(sh_mk_ballGrid, "lightHei");
+		var _ulightInt  = shader_get_uniform(sh_mk_ballGrid, "lightInt");
+		
+		var _uballPos   = shader_get_uniform(sh_mk_ballGrid, "ballPos");
+		var _uballRad   = shader_get_uniform(sh_mk_ballGrid, "ballRad");
+		var _uballShift = shader_get_uniform(sh_mk_ballGrid, "ballShift");
+		var _uroundCorn = shader_get_uniform(sh_mk_ballGrid, "roundness");
+		
+		var _usamplePos = shader_get_uniform(sh_mk_ballGrid, "samplePos");
+		
 		draw_set_circle_precision(32);
-		surface_set_shader(_outSurf, sh_mk_ballGrid);
-			shader_set_surface("texture", _surf);
-			shader_set_f("dimension", _dim);
+		surface_set_shader(_outSurf, sh_mk_ballGrid, true, BLEND.normal);
+			shader_set_s( "texture",   _surf );
+			shader_set_f( "dimension", _dim  );
+			shader_set_f( "lightOff",  _loff );
+			
+			shader_set_uniform_f(_uballShift, 0, 0, 0 );
 			
 			var i = 0, _r = 0, _c = 0;
+			var _br;
 			
 			repeat(_amo) {
 				var _smpw = (_c + .5) * _icol;
 				var _smph = (_r + .5) * _irow;
+				
+				if(_cull) {
+					var _clClr = _cull_samp.getPixelUV(_smpw, _smph);
+					if(color_get_a(_clClr) <= 0) {
+						i++; _c++;
+						if(_c == _col) { _c = 0; _r++; }
+						continue;
+					}
+				}
 				
 				var _bx = (_c + .5) * _grw - 1;
 				var _by = (_r + .5) * _grh - 1;
@@ -134,8 +164,10 @@ function Node_MK_GridBalls(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 				var by = _posi[1] + _by;
 				var bz = 0;
 				
-				var _cdist = point_distance(_cx, _cy, _bx, _by);
-				var _cdirr = point_direction(_cx, _cy, _bx, _by);
+				if(caldir) {
+					var _cdist = point_distance(_cx, _cy, _bx, _by);
+					var _cdirr = point_direction(_cx, _cy, _bx, _by);
+				}
 				
 				if(_twst_use) {
 					var _tw_str = _twst_samp?     _twst_samp.getPixel(_bu, _bv)     : _twst;
@@ -185,22 +217,20 @@ function Node_MK_GridBalls(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 				var __lhig = _lhig_samp? _lhig_samp.getPixel(_bu, _bv) : _lhig;
 				var __shad = _shad_samp? _shad_samp.getPixel(_bu, _bv) : _shad;
 				
-				var _br      = _rad * __size;
-				var _rnd_rad = _rad * __rond * 2;
-				
+				_br  = _rad * __size;
 				_br *= 1. + (random_range(_scal[0], _scal[1]) - 1) * __scal;
 				
-				shader_set_f("lightPos", [ lengthdir_x(1, __ldir), lengthdir_y(1, __ldir), __lhig ]);
-				shader_set_f("lightInt", __shad);
+				shader_set_uniform_f(_ulightPos,  __ldir       );
+				shader_set_uniform_f(_ulightHei,  __lhig       );
+				shader_set_uniform_f(_ulightInt,  __shad       );
 				
-				shader_set_f("ballPos",    bx+1, by+1);
-				shader_set_f("ballRad",   _br);
-				shader_set_f("ballShift", 0, 0, 0);
+				shader_set_uniform_f(_uballPos,   bx+1, by+1   );
+				shader_set_uniform_f(_uballRad,   _br          );
+				shader_set_uniform_f(_uroundCorn, __rond       );
 				
-				shader_set_f("samplePos", _smpw, _smph);
+				shader_set_uniform_f(_usamplePos, _smpw, _smph );
 				
-				if(__rond == 1) draw_circle(bx, by, _br, false);
-				else draw_roundrect_ext(bx - _br, by - _br, bx + _br, by + _br, _rnd_rad, _rnd_rad, false);
+				draw_sprite_stretched(s_fx_pixel, 0, bx-_br+1, by-_br+1, _br*2, _br*2);
 				
 				i++; _c++;
 				if(_c == _col) { _c = 0; _r++; }
