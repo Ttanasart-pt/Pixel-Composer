@@ -60,11 +60,11 @@ function Node_MK_Blast_Render(_x, _y, _group = noone) : Node(_x, _y, _group) con
 			draw_empty();
 		surface_reset_target();
 		
-		var _param = {
-			useDepth : _depth, 
-		}
+		var _param = { useDepth : _depth }
+		var _allL  = array_length(_layers);
+		var _maxL  = _allL;
 		
-		for( var i = 0, n = array_length(_layers); i < n; i++ )
+		for( var i = 0; i < _maxL; i++ )
 			_layers[i].draw(temp_surface, _mask, _param);
 			
 		surface_set_shader(_outSurf, sh_mk_blast_remove_black);

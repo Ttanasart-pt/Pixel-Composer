@@ -170,7 +170,9 @@ void main() {
 		return; 
 	}
 	
-	vec4 colr    = gradientEval(pfract(min(.999, v.r) + gradient_shift));
+	float s = min(.999, v.r) + gradient_shift;
+	
+	vec4 colr    = gradientEval(s);
 	     colr.a *= v.a;
 	gl_FragColor = colr;
 }

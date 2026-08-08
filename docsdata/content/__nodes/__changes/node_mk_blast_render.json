@@ -6,6 +6,11 @@
         "date": "2026-08-08T06:05:47.227Z",
         "node": "",
         "commit": "**MK Blast Render**: Add posterize option."
+      },
+      {
+        "date": "2026-08-08T06:16:10.700Z",
+        "node": "MK Blast Render",
+        "commit": "**MK Blast Render**: Remove gradient fract."
       }
     ]
   },
