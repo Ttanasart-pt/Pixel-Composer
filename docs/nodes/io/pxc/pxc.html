@@ -102,7 +102,22 @@
     function copyToClipboard(text) {
         navigator.clipboard.writeText(text);
     }
-</script><br>
+</script><br><p>Load another Pixel Composer project and output surface connected to <a class="node" href="/nodes/_index/Node_Export.html">Export</a> node.</p><br>
+<br><h2><a id="Properties" class="anchor"></a>Properties</h2><br>
+<p>[proptable]
+Project
+Path|File path.</p><br>
+<p>Animation
+Animated|Update new frame during animation.
+Loop Mode|Loop settings.\n
+ - <strong>Loop</strong>: Loop animation infinitly.\n
+ - <strong>Ping pong</strong>: Loop animation by playing backward.\n
+ - <strong>Hold last frame</strong>: Freeze first/last frame.\n
+ - <strong>Hide</strong>: Display nothing.
+Frame Start|Set starting frame.
+Draw Before Start|Whether to draw before start (subjects to <span class="junction" style="border-color: #ff9166AA">Loop Mode</span> setting) or display nothing.
+Fractional Frame|Allow rendering fractional frame index (e.g. for slow-mo effect). Will not work with simulation-type nodes.
+[/proptable]</p><br>
 <br><h2 class="nosidebar">Commit History</h2><br>
 <table class="change-table"><tr><th>1.20.7.5</th><td><ul><li>Introduced</li></ul></td></tr></table><br><h2 class="nosidebar">Related Links</h2><br><ul class="link-table"><li><span>Base Code: </span><a href="https://github.com/Ttanasart-pt/Pixel-Composer/blob/main/scripts/node_pxc/node_pxc.gml">/scripts/node_pxc/node_pxc.gml</a></li></ul>
         </div>

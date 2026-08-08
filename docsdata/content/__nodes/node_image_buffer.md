@@ -1,0 +1,1 @@
+Load image from internal buffer. Automatically created when pasting image data to the software.

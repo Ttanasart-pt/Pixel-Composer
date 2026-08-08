@@ -195,7 +195,38 @@
     function copyToClipboard(text) {
         navigator.clipboard.writeText(text);
     }
-</script><br>
+</script><br><p>Create an animation of multiple set of texts with transition.</p><br>
+<br><h2><a id="Properties" class="anchor"></a>Properties</h2><br>
+<p>[proptable]
+Text
+Dialogs|Array of texts.
+Change Case|Change text case (for latin alphabet) before rendering.</p><br>
+<p>Alignment
+Max Line Width|Maximum length of the line (in pixel) before entering new line.
+H Align|Horizontal alignment
+V Align|Vertical alignment
+Line Height|Add extra space between each line.</p><br>
+<p>Font
+Font|Font to draw.
+Size|Font size.</p><br>
+<p>Rendering
+Blend Mode|Alpha blend mode. Will have an impact when using tranparent color or anti-aliased font.
+Color|Base text color.
+Color by Letter|Multiply color by letter.</p><br>
+<p>Background
+Render Background|Whether to render background or draw on transparent background.</p><br>
+<p>Timing
+Start Frame|Starting frame.
+Duration Type|Set method for calculating duration of each dialog:\n
+ - <strong>Fixed</strong>: Use the same fix time for all dialog.\n
+ - <strong>Letter Count</strong>: Scale by the amount of letter in the dialog.\n
+ - <strong>Word Count (space)</strong>: Scale by word count in the dialog separated by space.
+Fixed Duration|Set based fixed duration for all dialog.
+Multiply Duration|Add extra time per dialog by multipling value set by the <span class="junction" style="border-color: #ff9166AA">Duration Type</span> with this number.
+Dialog Spacing|Add or reduce time between each dialog. Will not affect the dialog duration.</p><br>
+<p>Manual Timer
+Manual Timer|Set time manually using the timeline object.
+[/proptable]</p><br>
 <br><h2 class="nosidebar">Commit History</h2><br>
 <table class="change-table"><tr><th>1.19.6</th><td><ul><li>Introduced</li></ul></td></tr></table><br><h2 class="nosidebar">Related Links</h2><br><ul class="link-table"><li><span>Base Code: </span><a href="https://github.com/Ttanasart-pt/Pixel-Composer/blob/main/scripts/node_mk_dialog/node_mk_dialog.gml">/scripts/node_mk_dialog/node_mk_dialog.gml</a></li></ul>
         </div>

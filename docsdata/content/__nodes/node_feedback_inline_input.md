@@ -1,0 +1,1 @@
+A node for defining input for the next node to direct to.

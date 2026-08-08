@@ -1,0 +1,1 @@
+A node for defining the end result of the loop.

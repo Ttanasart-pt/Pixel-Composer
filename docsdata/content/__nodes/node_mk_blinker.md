@@ -2,32 +2,15 @@ MK Blinker ramdomly filled region of the same color. It also comes with built-in
 
 ## Properties
 
-### <junc amount/>
+[proptable]
+Blink
+Amount|The ratio of the region to be be filled.
+Target Colors|The color of the region to be selected.
+Light Colors|The color to replace to.
+Tolerance|How different the color can be to be selected.
 
-The ratio of the region to be be filled.
-
-### <junc target colors/>
-
-The color of the region to be selected.
-
-### <junc light colors/>
-
-The color to replace to
-
-### <junc tolerance/>
-
-How different the color can be to be selected.
-
-## Glow Properties
-
-### <junc glow/>
-
-Toggle the glow effect
-
-### <junc size/>
-
-Size of the glow
-
-### <junc strength/>
-
-Glow strength
+Glow
+Glow|Toggle the glow effect.
+Size|Size of the glow.
+Strength|Glow strength.
+[/proptable]

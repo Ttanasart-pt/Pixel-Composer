@@ -1,0 +1,1 @@
+Extract tileset information in a aseprite file.

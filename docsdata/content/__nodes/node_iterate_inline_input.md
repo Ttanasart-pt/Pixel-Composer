@@ -1,0 +1,1 @@
+A node for defining loop starting points.

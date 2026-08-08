@@ -50,7 +50,7 @@
 
 <div class="title">
                                                             <h1>Sort Array Group</h1>
-                                                            <div class="badges"><p class="version-banner" title="This page is updated on version 1.18.1">1.18.1</p></div>
+                                                            <div class="badges"><p class="version-banner" title="This page is written before 1.18, some information might be outdated">pre 1.18</p></div>
                                                         </div>
 <p class="subtitle">Sort array using node graph.</p>
 
@@ -68,9 +68,13 @@
     function copyToClipboard(text) {
         navigator.clipboard.writeText(text);
     }
-</script><br><p>
-Iterate through the input array and sort the elements based on the condition defined by node graph. The sorting is done by checking 2 value whether to swap or not. 
+</script><br><p>Iterate through the input array and sort the elements based on the condition defined by node graph. The sorting is done by checking 2 value whether to swap or not. 
 For example, if you want to sort array of number in ascending order, you can check the return value of a <a class="node" href="/nodes/_index/Node_Compare.html">Compare</a> node with the condition <code>a &gt; b</code>. If the return value is true, the two value will be swapped, thus putting the smaller value in front of the larger one.</p><br>
+<p>The system comes with 2 nodes:</p><br>
+<ul>
+<li><a class="node" href="/nodes/_index/Node_Iterator_Sort_Inline_Input.html">Sort Input</a> A node outputing a pair of values to be checked.</li>
+<li><a class="node" href="/nodes/_index/Node_Iterator_Sort_Inline_Output.html">Sort Output</a> A node for receiving the result whether to swap or not.</li>
+</ul><br>
 <br><h2 class="nosidebar">Commit History</h2><br>
 <table class="change-table"><tr><th>1.14.3</th><td><ul><li>Introduced</li></ul></td></tr></table><br><h2 class="nosidebar">Related Links</h2><br><ul class="link-table"><li><span>Base Code: </span><a href="https://github.com/Ttanasart-pt/Pixel-Composer/blob/main/scripts/node_iterate_sort_inline/node_iterate_sort_inline.gml">/scripts/node_iterate_sort_inline/node_iterate_sort_inline.gml</a></li></ul>
         </div>

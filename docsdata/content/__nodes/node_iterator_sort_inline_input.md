@@ -1,0 +1,1 @@
+A node outputing a pair of values to be checked.
