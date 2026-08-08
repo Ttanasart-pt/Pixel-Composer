@@ -6,6 +6,11 @@
         "date": "2026-08-07T07:51:56.932Z",
         "node": "",
         "commit": "**MK Subpixel**: Fix glitched color when scene scale it set to decimal."
+      },
+      {
+        "date": "2026-08-08T06:05:47.227Z",
+        "node": "",
+        "commit": "**MK Blast Render**: Add posterize option."
       }
     ]
   },

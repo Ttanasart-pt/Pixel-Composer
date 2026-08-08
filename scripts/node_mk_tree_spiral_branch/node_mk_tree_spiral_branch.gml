@@ -8,8 +8,8 @@ function Node_MK_Tree_Spiral_Branch(_x, _y, _group = noone) : Node(_x, _y, _grou
 	newInput( 1, nodeValueSeed());
 	newInput( 0, nodeValue_Struct( "Branch", noone)).setVisible(true, true).setCustomData(global.MKTREE_JUNC);
 	
-	////- =Area
-	newInput( 5, nodeValue_EScroll( "Area Type", 0, [ "All", "Area", "Band" ] ));
+	////- =Selection
+	newInput( 5, nodeValue_EScroll( "Select Type", 0, [ "All", "Area", "Band" ] ));
 	newInput( 6, nodeValue_Area(    "Area",      DEF_AREA_REF )).setUnitSimple();
 	newInput( 9, nodeValue_Vec2(    "Center",    [.5,.5]      )).setUnitSimple();
 	newInput(10, nodeValue_Float(   "Width",       8          ));
@@ -24,8 +24,8 @@ function Node_MK_Tree_Spiral_Branch(_x, _y, _group = noone) : Node(_x, _y, _grou
 	newOutput( 0, nodeValue_Output("Branches", VALUE_TYPE.struct, noone)).setCustomData(global.MKTREE_JUNC);
 	
 	input_display_list = [ s_MKFX, 1, 0, 
-		[ "Area",   false ],  5,  6,  9, 10, 11, [7, false],  8,  
-		[ "Spiral", false ],  2,  3,  4, 
+		[ "Selection", false ],  5,  6,  9, 10, 11, [7, false],  8,  
+		[ "Spiral",    false ],  2,  3,  4, 
 	];
 	
 	////- Nodes

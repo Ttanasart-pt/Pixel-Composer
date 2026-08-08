@@ -12,11 +12,17 @@ function Node_MK_Blast_Render(_x, _y, _group = noone) : Node(_x, _y, _group) con
 	////- =Rendering
 	newInput( 2, nodeValue_Bool( "Depth Sorting", true ));
 	
+		////- =/Posterize
+	newInput( 3, nodeValue_Bool(    "Posterize", true        ));
+	newInput( 4, nodeValue_Palette( "Colors",    DEF_PALETTE ));
+	// 5
+	
 	newOutput( 0, nodeValue_Output( "Rendered", VALUE_TYPE.surface, noone ));
 	
 	input_display_list = [ 
-		[ "Blast",     false ],  0,  1, 
-		[ "Rendering", false ],  2, 
+		[ "Blast",          false    ],  0,  1, 
+		[ "Rendering",      false    ],  2, 
+			[ "/Posterize", false, 3 ],  4, 
 	];
 	
 	////- Nodes
@@ -35,10 +41,13 @@ function Node_MK_Blast_Render(_x, _y, _group = noone) : Node(_x, _y, _group) con
 		#region data
 			var _dim    = getDimension();
 			
-			var _layers = getInputData(0);
-			var _mask   = getInputData(1); 
+			var _layers = getInputData( 0);
+			var _mask   = getInputData( 1);
 			
-			var _depth  = getInputData(2); 
+			var _depth  = getInputData( 2);
+			
+			var _post   = getInputData( 3);
+			var _ppal   = getInputData( 4);
 		#endregion
 		
 		var _outSurf = surface_verify(outputs[0].getValue(), _dim[0], _dim[1]);
@@ -47,13 +56,8 @@ function Node_MK_Blast_Render(_x, _y, _group = noone) : Node(_x, _y, _group) con
 		temp_surface[2] = surface_verify(temp_surface[2], _dim[0], _dim[1], surface_r16float);
 		temp_surface[3] = surface_verify(temp_surface[3], _dim[0], _dim[1], surface_r16float);
 		
-		surface_set_target_ext(0, temp_surface[1]);
-		surface_set_target_ext(1, temp_surface[3]);
-			BLEND_OVERRIDE
-			shader_set(sh_mk_blast_clear);
-				draw_empty();
-			shader_reset();
-			BLEND_NORMAL
+		surface_set_shader([temp_surface[1], temp_surface[3]], sh_mk_blast_clear);
+			draw_empty();
 		surface_reset_target();
 		
 		var _param = {
@@ -63,13 +67,20 @@ function Node_MK_Blast_Render(_x, _y, _group = noone) : Node(_x, _y, _group) con
 		for( var i = 0, n = array_length(_layers); i < n; i++ )
 			_layers[i].draw(temp_surface, _mask, _param);
 			
-		surface_set_target(_outSurf);
-			DRAW_CLEAR
+		surface_set_shader(_outSurf, sh_mk_blast_remove_black);
+			draw_surface(temp_surface[1], 0, 0);
+		surface_reset_shader();
+		
+		if(_post) {
+			surface_set_shader(temp_surface[1], sh_mk_rock_pabble_posterize);
+				shader_set_palette(_ppal);
+				draw_surface(_outSurf, 0, 0);
+			surface_reset_shader();
 			
-			shader_set(sh_mk_blast_remove_black);
+			surface_set_shader(_outSurf);
 				draw_surface(temp_surface[1], 0, 0);
-			shader_reset();
-		surface_reset_target();
+			surface_reset_shader();
+		}
 		
 		outputs[0].setValue(_outSurf);
 	}

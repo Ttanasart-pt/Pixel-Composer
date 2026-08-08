@@ -6,8 +6,9 @@ function Node_MK_Tree_Add_Branch(_x, _y, _group = noone) : Node(_x, _y, _group) 
 	setDrawIcon();
 	setDimension(96, 48);
 	
-	////- =Branches
 	newInput( 0, nodeValue_Struct("Tree", noone)).setVisible(true, true).setCustomData(global.MKTREE_JUNC);
+	
+	////- =Branches
 	// 1
 	
 	newOutput(0, nodeValue_Output("Tree", VALUE_TYPE.struct, noone)).setCustomData(global.MKTREE_JUNC);

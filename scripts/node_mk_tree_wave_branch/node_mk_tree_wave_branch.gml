@@ -8,8 +8,8 @@ function Node_MK_Tree_Wave_Branch(_x, _y, _group = noone) : Node(_x, _y, _group)
 	newInput( 1, nodeValueSeed());
 	newInput( 0, nodeValue_Struct( "Branch", noone)).setVisible(true, true).setCustomData(global.MKTREE_JUNC);
 	
-	////- =Area
-	newInput( 6, nodeValue_EScroll( "Area Type", 0, [ "All", "Area", "Band" ] ));
+	////- =Selection
+	newInput( 6, nodeValue_EScroll( "Select Type", 0, [ "All", "Area", "Band" ] ));
 	newInput( 7, nodeValue_Area(    "Area",      DEF_AREA_REF )).setUnitSimple();
 	newInput(10, nodeValue_Vec2(    "Center",    [.5,.5]      )).setUnitSimple();
 	newInput(11, nodeValue_Float(   "Width",       8          ));
@@ -25,8 +25,8 @@ function Node_MK_Tree_Wave_Branch(_x, _y, _group = noone) : Node(_x, _y, _group)
 	newOutput( 0, nodeValue_Output("Branches", VALUE_TYPE.struct, noone)).setCustomData(global.MKTREE_JUNC);
 	
 	input_display_list = [ s_MKFX, 1, 0, 
-		[ "Area", false ],  6,  7, 10, 11, 12, [8, false],  9,  
-		[ "Wave", false ],  2,  3,  4,  5, 
+		[ "Selection", false ],  6,  7, 10, 11, 12, [8, false],  9,  
+		[ "Wave",      false ],  2,  3,  4,  5, 
 	];
 	
 	////- Nodes

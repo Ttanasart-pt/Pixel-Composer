@@ -10,7 +10,7 @@ function Node_MK_Tree_Leaf_Particle(_x, _y, _group = noone) : Node(_x, _y, _grou
 	newInput( 1, nodeValueSeed());
 	
 	////- =Leaves
-	newInput( 0, nodeValue_Struct( "Leaves")).setVisible(true, true).setCustomData(global.MKTREE_LEAVES_JUNC);
+	newInput( 0, nodeValue_Struct( "Leaves" )).setVisible(true, true).setCustomData(global.MKTREE_LEAVES_JUNC);
 	newInput(13, nodeValue_Range(  "Lifespan", [0,0], true )).setTooltip("Only use for the 'Over Life' properties. Leaf wont disappear after lifespan is zero.");
 	
 	////- =Fall

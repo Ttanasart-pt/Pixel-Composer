@@ -29,6 +29,7 @@ Cone Height|Height of the fan. Increasing height will push the branch downward.
 
 Fan > Phase
 Phase|Rotate branch around the fan circle.
+Overlap|Automatically rotate the next fan to the middle of the space of the current fan.
 
 Thickness
 Thickness|Branch thickness.

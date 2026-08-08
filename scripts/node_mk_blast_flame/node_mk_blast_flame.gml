@@ -3,14 +3,15 @@ function Node_MK_Blast_Flame(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	color = COLORS.node_blend_mkblast;
 	icon  = THEME.mkBlast;
 	update_on_frame = true;
+	parameters.inline_draw_input = true;
 	setDrawIcon();
 	setDimension(96, 48);
 	
 	newInput( 0, nodeValueSeed());
 	
 	////- =Settings
-	newInput(19, nodeValue_Curve( "Group Intpolation", CURVE_DEF_01 ));
-	newInput(20, nodeValue_Curve( "Anim Intpolation",  CURVE_DEF_01 ));
+	newInput(19, nodeValue_Curve( "Group Interpolation", CURVE_DEF_01 ));
+	newInput(20, nodeValue_Curve( "Anim Interpolation",  CURVE_DEF_01 ));
 	
 	////- =Spawning
 	newInput( 1, nodeValue_Float( "Amount",  3    ));

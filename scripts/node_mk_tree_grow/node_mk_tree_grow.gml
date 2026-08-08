@@ -7,8 +7,8 @@ function Node_MK_Tree_Grow(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	setDimension(96, 48);
 	
 	newInput( 1, nodeValueSeed());
-	newInput( 0, nodeValue_Struct("Tree", noone)).setVisible(true, true).setCustomData(global.MKTREE_JUNC);
-	newInput( 2, nodeValue_Slider( "Progress",         1.5, [-1, 4, .001] ));
+	newInput( 0, nodeValue_Struct( "Tree",     noone )).setVisible(true, true).setCustomData(global.MKTREE_JUNC);
+	newInput( 2, nodeValue_Slider( "Progress", 1.5, [-1, 4, .001] ));
 	
 	////- =Branch
 	newInput( 5, nodeValue_Range(  "Branch Speed",     [1,1], true ));
@@ -16,10 +16,8 @@ function Node_MK_Tree_Grow(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	
 	////- =Leaves
 	newInput( 6, nodeValue_Range(  "Leaves Delay",     [0,0], true ));
-	newInput( 4, nodeValue_Range(  "Leaves Falloff",   [4,4], true ))
-		.setCurvable( 7, CURVE_DEF_01, "Falloff" );
-	newInput( 8, nodeValue_Range(  "Whorled Delay",    [0,0], true ))
-		.setCurvable( 9, CURVE_DEF_01, "Falloff" );
+	newInput( 4, nodeValue_Range(  "Leaves Falloff",   [4,4], true )).setCurvable( 7, CURVE_DEF_01, "Falloff" );
+	newInput( 8, nodeValue_Range(  "Whorled Delay",    [0,0], true )).setCurvable( 9, CURVE_DEF_01, "Falloff" );
 	// input 10
 	
 	newOutput(0, nodeValue_Output("Tree", VALUE_TYPE.struct, noone)).setCustomData(global.MKTREE_JUNC);

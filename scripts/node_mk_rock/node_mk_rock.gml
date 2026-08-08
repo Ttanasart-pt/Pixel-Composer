@@ -80,7 +80,7 @@ function Node_MK_Rock(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	newInput(11, nodeValue_Gradient( "Outer Outline", gra_white )).addShift(45);
 	
 		////- =/Posterize
-	newInput(14, nodeValue_Bool(    "Colorize",  true        ));
+	newInput(14, nodeValue_Bool(    "Posterize", true        ));
 	newInput(15, nodeValue_Palette( "Colors",    DEF_PALETTE ));
 	// 64
 	

@@ -15,7 +15,7 @@ function Node_MK_Tree_Subdivide_Branch(_x, _y, _group = noone) : Node(_x, _y, _g
 	newOutput( 0, nodeValue_Output("Branches", VALUE_TYPE.struct, noone)).setCustomData(global.MKTREE_JUNC);
 	
 	input_display_list = [ s_MKFX, 1, 0, 
-		[ "Scatter", false ],  2, 
+		[ "Subdivide", false ],  2, 
 	];
 	
 	////- Nodes

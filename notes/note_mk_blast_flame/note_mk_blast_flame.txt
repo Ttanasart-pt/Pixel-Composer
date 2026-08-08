@@ -1,0 +1,7 @@
+Generate blast particle.
+
+## Properties
+
+[proptable]
+
+[/proptable]

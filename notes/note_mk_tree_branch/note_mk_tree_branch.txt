@@ -26,7 +26,7 @@ Direction Type|Methods of calculating branch direction.\n
  - **Uniform**: Uniformly interpolate direction.\n
  - **Spread**: Calculate direction away from the spawning trunk direction.
  
-Reflect|Flip branch direction around the original trunk.
+Reflect|Flip branch direction over the original trunk.
 Reflect Order|Order of reflection.\n
  - **Even**: Flip every even branch.
  - **Odd**: Flip every odd branch.
