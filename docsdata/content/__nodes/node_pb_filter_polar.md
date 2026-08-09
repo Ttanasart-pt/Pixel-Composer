@@ -1,0 +1,1 @@
+Apply polar mirroring effect.

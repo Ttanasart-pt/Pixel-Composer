@@ -1,2 +1,9 @@
-<v 1.18.0/>
 Apply random velocity to the smoke simulation.
+
+## Properties
+
+[proptable]
+Turbulence
+Strength|Velocity strength.
+Scale|Noise scale.
+[/proptable]

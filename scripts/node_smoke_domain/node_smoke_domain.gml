@@ -12,13 +12,13 @@ function Node_Smoke_Domain(_x, _y, _group = noone) : Node_Smoke(_x, _y, _group) 
 	newInput(12, nodeValue_Float(   "Timestep",  1 ));
 	
 	////- =Properties
-	newInput( 8, nodeValue_Slider( "Initial pressure",   .75     ));
+	newInput( 8, nodeValue_Slider( "Initial Pressure",   .75     ));
 	newInput( 6, nodeValue_Vec2(   "Acceleration",       [0,0]   ));
-	newInput( 7, nodeValue_Vec2(   "Material intertia",  [1,-.2] ));
+	newInput( 7, nodeValue_Vec2(   "Material Intertia",  [1,-.2] ));
 	
 	////- =Dissipation
-	newInput( 3, nodeValue_Slider( "Material dissipation", 0.02, [ 0, 0.1, 0.01 ] ));
-	newInput( 5, nodeValue_Slider( "Velocity dissipation", 0.00, [ 0, 0.1, 0.01 ] ));
+	newInput( 3, nodeValue_Slider( "Material Dissipation", 0.02, [ 0, 0.1, 0.01 ] ));
+	newInput( 5, nodeValue_Slider( "Velocity Dissipation", 0.00, [ 0, 0.1, 0.01 ] ));
 	
 	////- =Advance Settings
 	newInput( 2, nodeValue_EButton( "Material dissipation type",  1, [ "Multiply", "Subtract" ] ));

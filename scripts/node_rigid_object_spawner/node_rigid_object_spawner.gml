@@ -29,8 +29,8 @@ function Node_Rigid_Object_Spawner(_x, _y, _group = noone) : Node(_x, _y, _group
 	newOutput(0, nodeValue_Output("Object", VALUE_TYPE.rigid, objects));
 	
 	input_display_list = [ 0, 7, 
-		["Spawn", false], 6, 1, 2, 3, 5, 4,
-		["Color", false], 8, 9, 
+		[ "Spawn", false ],  6,  1,  2,  3,  5,  4,
+		[ "Color", false ],  8,  9, 
 	];
 	
 	////- Nodes

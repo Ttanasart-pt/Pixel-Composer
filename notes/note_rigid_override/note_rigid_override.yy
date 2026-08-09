@@ -1,0 +1,11 @@
+{
+  "$GMNotes":"v1",
+  "%Name":"note_rigid_override",
+  "name":"note_rigid_override",
+  "parent":{
+    "name":"data",
+    "path":"folders/nodes/data/simulation/rigidSim/data.yy",
+  },
+  "resourceType":"GMNotes",
+  "resourceVersion":"1.1",
+}

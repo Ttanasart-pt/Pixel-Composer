@@ -1,0 +1,11 @@
+{
+  "$GMNotes":"v1",
+  "%Name":"note_rigid_fracture",
+  "name":"note_rigid_fracture",
+  "parent":{
+    "name":"objects",
+    "path":"folders/nodes/data/simulation/rigidSim/objects.yy",
+  },
+  "resourceType":"GMNotes",
+  "resourceVersion":"1.1",
+}

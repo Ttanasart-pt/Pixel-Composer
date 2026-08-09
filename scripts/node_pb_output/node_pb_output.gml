@@ -7,28 +7,32 @@
 function Node_PB_Output(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name  = "PB Output";
 	color = COLORS.node_blend_feedback;
+	setDimension(32, 32);
+	
+	newActiveInput(3);
+	newInput( 0, nodeValue_Surface( "Surface"       ));
+	
+	////- =Rendering
+	newInput( 1, nodeValue_Float(   "Layer",      1 ));
+	newInput( 2, nodeValue_EButton( "Blend Mode", 0, [ "Normal", "Subtract" ] ));
+	// 4
+	
+	input_display_list = [ 3, 0, 
+		[ "Rendering", false ], 1, 2 
+	];
+	
+	////- Node
+	
 	data  = noone;
 	layr  = 0;
 	blend = 0;
 	drawA = true;
-	
-	setDimension(32, 32);
 	
 	junction_hover = noone;
 	isHovering     = false;
 	hover_scale    = 0;
 	hover_scale_to = 0;
 	hover_alpha    = 0;
-	
-	newInput(0, nodeValue_Surface("Surface"));
-	newInput(1, nodeValue_Float("Layer", 1));
-	newInput(2, nodeValue_EButton("Blend Mode", 0, [ "Normal", "Subtract" ]));
-	
-	newActiveInput(3);
-	
-	input_display_list = [ 3, 0, 
-		["Rendering", false], 1, 2 
-	];
 	
 	static update = function() {
 	    data  = inputs[0].getValue();

@@ -1,0 +1,11 @@
+{
+  "$GMNotes":"v1",
+  "%Name":"note_rigid_joint_fix",
+  "name":"note_rigid_joint_fix",
+  "parent":{
+    "name":"joints",
+    "path":"folders/nodes/data/simulation/rigidSim/joints.yy",
+  },
+  "resourceType":"GMNotes",
+  "resourceVersion":"1.1",
+}

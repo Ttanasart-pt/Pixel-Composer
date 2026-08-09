@@ -12,23 +12,23 @@ function Node_Rigid_Sensor(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	sensorIndex = undefined;
 	
 	////- =Objects
-	newInput(0, nodeValue("Detect Objects", self, CONNECT_TYPE.input, VALUE_TYPE.rigid, noone )).setVisible(true, true);
+	newInput( 0, nodeValue( "Detect Objects", self, CONNECT_TYPE.input, VALUE_TYPE.rigid, noone )).setVisible(true, true);
 		
-	////- =Segment
-	newInput(1, nodeValue_EScroll( "Shape", AREA_SHAPE.rectangle, [ 
-		new scrollItem("Rectangle", s_node_shape_rectangle, 0), 
-		new scrollItem("Elipse",	s_node_shape_circle,	0) 
+	////- =Sensor
+	newInput( 1, nodeValue_EScroll( "Shape", AREA_SHAPE.rectangle, [ 
+		new scrollItem( "Rectangle", s_node_shape_rectangle, 0 ), 
+		new scrollItem( "Elipse",    s_node_shape_circle,    0 ) 
 	])); 
 	
-	newInput(2, nodeValue_Vec2(  "Position", [.5,.5] )).setUnitSimple().setHotkey("G");
-	newInput(3, nodeValue_Vec2(  "Span",     [.5,.5] )).setUnitSimple();
-	newInput(4, nodeValue_Float( "Radius",    .5     )).setUnitSimple();
+	newInput( 2, nodeValue_Vec2(  "Position", [.5,.5] )).setUnitSimple().setHotkey("G");
+	newInput( 3, nodeValue_Vec2(  "Span",     [.5,.5] )).setUnitSimple();
+	newInput( 4, nodeValue_Float( "Radius",    .5     )).setUnitSimple();
 	// inputs 5
 		
 	newOutput(0, nodeValue_Output("Detected Objects", VALUE_TYPE.rigid, []));
 	
 	input_display_list = [ 0,
-		["Sensor", false], 1, 2, 3, 4, 
+		[ "Sensor", false ],  1,  2,  3,  4, 
 	];
 	
 	////- Node

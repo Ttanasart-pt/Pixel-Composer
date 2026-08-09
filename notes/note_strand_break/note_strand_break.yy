@@ -1,0 +1,11 @@
+{
+  "$GMNotes":"v1",
+  "%Name":"note_strand_break",
+  "name":"note_strand_break",
+  "parent":{
+    "name":"affectors",
+    "path":"folders/nodes/data/simulation/strandSim/affectors.yy",
+  },
+  "resourceType":"GMNotes",
+  "resourceVersion":"1.1",
+}

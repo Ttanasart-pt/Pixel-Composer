@@ -12,12 +12,12 @@ function Node_Rigid_Path_Collider(_x, _y, _group = noone) : Node(_x, _y, _group)
 	objects    = [];
 	
 	////- =Path
-	newInput(0, nodeValue_Path( "Path" ));
-	newInput(3, nodeValue_Int(      "Samples", 8 ));
+	newInput( 0, nodeValue_Path( "Path"       ));
+	newInput( 3, nodeValue_Int(  "Samples", 8 ));
 		
 	////- =Physics
-	newInput(1, nodeValue_Float(  "Contact Friction", .2 ));
-	newInput(2, nodeValue_Slider( "Bounciness",       .2 ));
+	newInput( 1, nodeValue_Float(  "Friction",   .2 ));
+	newInput( 2, nodeValue_Slider( "Bounciness", .2 ));
 	// inputs 4
 		
 	newOutput(0, nodeValue_Output("Object", VALUE_TYPE.rigid, objects));

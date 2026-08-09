@@ -1,0 +1,11 @@
+{
+  "$GMNotes":"v1",
+  "%Name":"note_timeline_preview",
+  "name":"note_timeline_preview",
+  "parent":{
+    "name":"render",
+    "path":"folders/nodes/data/render.yy",
+  },
+  "resourceType":"GMNotes",
+  "resourceVersion":"1.1",
+}

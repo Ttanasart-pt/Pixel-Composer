@@ -12,16 +12,17 @@ function Node_Rigid_Group_Inline(_x, _y, _group = noone) : Node_Collection_Inlin
 	dimension  = [ 1, 1 ];
 	objects    = [];
 	
-	////- =World
 	newInput(1, nodeValue_Dimension());
-	newInput(0, nodeValue_Vec2(     "Gravity",           [0,10] ));
-	newInput(3, nodeValue_Rotation( "Gravity Direction", -90    ));
-	newInput(4, nodeValue_Float(    "Gravity Strength",   10    ));
+	
+	////- =Gravity
+	newInput( 0, nodeValue_Vec2(     "Gravity",   [0,10] ));
+	newInput( 3, nodeValue_Rotation( "Direction", -90    ));
+	newInput( 4, nodeValue_Float(    "Strength",   10    ));
 	
 	////- =Simulation
-	newInput(2, nodeValue_Float( "Simulation Scale", 50   ));
-	newInput(5, nodeValue_Bool(  "Sleepable",        true ));
-	newInput(6, nodeValue_Bool(  "Continuous",       true ));
+	newInput( 2, nodeValue_Float( "Simulation Scale", 50   ));
+	newInput( 5, nodeValue_Bool(  "Sleepable",        true ));
+	newInput( 6, nodeValue_Bool(  "Continuous",       true ));
 	
 	////- =Wall
 	newInput( 7, nodeValue_Bool(   "Use Wall",       false ));
@@ -30,10 +31,10 @@ function Node_Rigid_Group_Inline(_x, _y, _group = noone) : Node_Collection_Inlin
 	newInput(10, nodeValue_Slider( "Wall Bounciness", .2   ));
 	// inputs 11
 	
-	input_display_list = [ 
-		[ "World",      false ],  1,  3,  4, 
-		[ "Simulation", false ],  2,  5,  6, 
-		[ "Wall",    false, 7 ],  8,  9, 10, 
+	input_display_list = [ 1, 
+		[ "Gravity",    false    ],  3,  4, 
+		[ "Simulation", false    ],  2,  5,  6, 
+		[ "Wall",       false, 7 ],  8,  9, 10, 
 	];
 	
 	////- Nodes

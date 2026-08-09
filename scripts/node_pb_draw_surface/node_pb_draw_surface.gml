@@ -3,16 +3,16 @@ function Node_PB_Draw_Surface(_x, _y, _group = noone) : Node_Processor(_x, _y, _
 	color = COLORS.node_blend_feedback;
 	
 	////- =Layout
-	newInput(0, nodeValue_Pbbox("Base PBBOX" )).setWidget(noone);
-	newInput(1, nodeValue_Pbbox("PBBOX"      ));
+	newInput(0, nodeValue_Pbbox("Base PBbox" )).setWidget(noone);
+	newInput(1, nodeValue_Pbbox("PBbox"      ));
 	
 	////- =Override
-	newInput(2, nodeValue_Float("PBBOX Left",   0 ));
-	newInput(3, nodeValue_Float("PBBOX Top",    0 ));
-	newInput(4, nodeValue_Float("PBBOX Right",  0 ));
-	newInput(5, nodeValue_Float("PBBOX Bottom", 0 ));
-	newInput(6, nodeValue_Float("PBBOX Width",  0 ));
-	newInput(7, nodeValue_Float("PBBOX Height", 0 ));
+	newInput(2, nodeValue_Float("PBbox Left",   0 ));
+	newInput(3, nodeValue_Float("PBbox Top",    0 ));
+	newInput(4, nodeValue_Float("PBbox Right",  0 ));
+	newInput(5, nodeValue_Float("PBbox Bottom", 0 ));
+	newInput(6, nodeValue_Float("PBbox Width",  0 ));
+	newInput(7, nodeValue_Float("PBbox Height", 0 ));
 	
 	////- =Surface
 	newInput(8, nodeValue_Surface( "Surface" ));

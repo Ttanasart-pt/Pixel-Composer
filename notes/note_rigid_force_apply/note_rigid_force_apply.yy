@@ -1,0 +1,11 @@
+{
+  "$GMNotes":"v1",
+  "%Name":"note_rigid_force_apply",
+  "name":"note_rigid_force_apply",
+  "parent":{
+    "name":"modifiers",
+    "path":"folders/nodes/data/simulation/rigidSim/modifiers.yy",
+  },
+  "resourceType":"GMNotes",
+  "resourceVersion":"1.1",
+}

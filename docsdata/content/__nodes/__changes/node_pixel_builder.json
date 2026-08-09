@@ -6,6 +6,11 @@
         "date": "2026-08-09T02:32:38.550Z",
         "node": "VFX",
         "commit": "**VFX**: Fix error when spawning particle with zero lifespan."
+      },
+      {
+        "date": "2026-08-09T04:56:02.686Z",
+        "node": "",
+        "commit": ""
       }
     ]
   },

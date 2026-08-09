@@ -1,0 +1,1 @@
+Activate/deactivate rigidbody physics.

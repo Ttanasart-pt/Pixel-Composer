@@ -10,8 +10,8 @@ function Node_Strand_Update(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	newInput( 0, nodeValue_Strand());
 	
 	////- =Update
-	newInput( 1, nodeValue_Int("Step",      4 ))
-	newInput( 2, nodeValue_Int("Iteration", 8 ))
+	newInput( 1, nodeValue_Int( "Step",      4 ))
+	newInput( 2, nodeValue_Int( "Iteration", 8 ))
 	// 3
 	
 	newOutput(0, nodeValue_Output("Strands", VALUE_TYPE.strands, noone));

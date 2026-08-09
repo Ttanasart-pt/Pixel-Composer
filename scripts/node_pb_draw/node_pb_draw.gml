@@ -12,17 +12,17 @@ function Node_PB_Draw(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	color = COLORS.node_blend_feedback;
 	preview_channel = 1;
 	
-	newInput(0, nodeValue_Pbbox( "Base PBBOX" ));
-	newInput(1, nodeValue_Pbbox( "PBBOX"      ));
+	newInput( 0, nodeValue_Pbbox( "Base PBbox" ));
+	newInput( 1, nodeValue_Pbbox( "PBbox"      ));
 	inputs[0].editWidgetSetted = true;
-	inputs[0].editWidget = noone;
+	inputs[0].editWidget       = noone;
 	
-	newInput(2, nodeValue_Float( "PBBOX Left",   0 ));
-	newInput(3, nodeValue_Float( "PBBOX Top",    0 ));
-	newInput(4, nodeValue_Float( "PBBOX Right",  0 ));
-	newInput(5, nodeValue_Float( "PBBOX Bottom", 0 ));
-	newInput(6, nodeValue_Float( "PBBOX Width",  0 ));
-	newInput(7, nodeValue_Float( "PBBOX Height", 0 ));
+	newInput( 2, nodeValue_Float( "PBbox Left",   0 ));
+	newInput( 3, nodeValue_Float( "PBbox Top",    0 ));
+	newInput( 4, nodeValue_Float( "PBbox Right",  0 ));
+	newInput( 5, nodeValue_Float( "PBbox Bottom", 0 ));
+	newInput( 6, nodeValue_Float( "PBbox Width",  0 ));
+	newInput( 7, nodeValue_Float( "PBbox Height", 0 ));
 	
 	typeList = [ "Fill", "Stroke", "Corner", "Highlight", "Extrude", "Shine" ];
 	
@@ -93,9 +93,8 @@ function Node_PB_Draw(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	
 	////////////////////////////////////////////////////////////////////////////////
 	
-	newOutput(0, nodeValue_Output("PBBOX", VALUE_TYPE.pbBox, noone));
-	
-	newOutput(1, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
+	newOutput( 0, nodeValue_Output( "PBbox",       VALUE_TYPE.pbBox,   noone ));
+	newOutput( 1, nodeValue_Output( "Surface Out", VALUE_TYPE.surface, noone ));
 	
 	pbi = array_length(inputs);
 	
@@ -200,15 +199,15 @@ function Node_PB_Draw(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	});
 	
 	input_display_dynamic = [ 0, 
-		["Properties", false],  2,  9, 10, 11, 12, 13, 19, 20, 21, 22, 23, 24, 
-		["Base Color", false],  1, 14, 15, 16, 17, 
-		["Pattern",    false],  3, 25,  4,  5,  6,  7,  8, 18, 
+		[ "Properties", false ],  2,  9, 10, 11, 12, 13, 19, 20, 21, 22, 23, 24, 
+		[ "Base Color", false ],  1, 14, 15, 16, 17, 
+		[ "Pattern",    false ],  3, 25,  4,  5,  6,  7,  8, 18, 
 	];
 	
 	input_display_list = [
-		["Layout",         false], 0, 1, 
-		["Layout Override", true], 2, 3, 4, 5, 6, 7, 
-		["Effects",        false], effect_renderer, 
+		[ "Layout",   false ], 0, 1, 
+		[ "Override",  true ], 2, 3, 4, 5, 6, 7, 
+		[ "Effects",  false ], effect_renderer, 
 	]
 	
 	input_display_shape_index = array_length(input_display_list) - 2;

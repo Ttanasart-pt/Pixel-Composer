@@ -1,0 +1,11 @@
+{
+  "$GMNotes":"v1",
+  "%Name":"note_pb_box_split",
+  "name":"note_pb_box_split",
+  "parent":{
+    "name":"pbbox",
+    "path":"folders/nodes/data/PB/pbbox.yy",
+  },
+  "resourceType":"GMNotes",
+  "resourceVersion":"1.1",
+}

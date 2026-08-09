@@ -1,18 +1,21 @@
 function Node_PB_Filter_Polar(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "PB Polar";
 	
-	newInput(0, nodeValue_Pbbox());
+	////- =Layout
+	newInput( 0, nodeValue_Pbbox());
+	newInput( 1, nodeValue_Surface( "Surface" ));
 	
-	newInput(1, nodeValue_Surface("Surface"));
-	
-	newInput(2, nodeValue_Int("Copies", 4));
+	////- =Polar
+	newInput( 2, nodeValue_Int( "Copies", 4 ));
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
 	input_display_list = [
-		["Layout", false], 0, 1, 
-		["Polar",  false], 2, 
-	]
+		[ "Layout", false ], 0, 1, 
+		[ "Polar",  false ], 2, 
+	];
+	
+	////- Node
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _params) { 
 		var _pbase = getInputSingle(0);

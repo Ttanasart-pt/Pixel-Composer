@@ -16,15 +16,15 @@ function Node_FLIP_Destroy(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		new scrollItem( "Surface"                           ),
 	]));
 	
-	newInput( 1, nodeValue_Vec2(    "Position", [0,0]         )).setHotkey("G").setUnitSimple();
+	newInput( 1, nodeValue_Vec2(    "Position", [0,0] )).setHotkey("G").setUnitSimple();
 	newInput( 3, nodeValue_Slider(  "Radius",    4, [1,16,.1] ));
-	newInput( 4, nodeValue_Vec2(    "Size",     [4,4]         ));
-	newInput( 6, nodeValue_Surface( "Mask"                    ));
-	newInput( 7, nodeValue_Slider(  "Threshold", .1           ));
-	newInput( 8, nodeValue_Int(     "Expands",    0           ));
+	newInput( 4, nodeValue_Vec2(    "Size",     [4,4] ));
+	newInput( 6, nodeValue_Surface( "Mask"            ));
+	newInput( 7, nodeValue_Slider(  "Threshold", .1   ));
+	newInput( 8, nodeValue_Int(     "Expands",    0   ));
 	
 	////- =Destroy
-	newInput( 5, nodeValue_Slider( "Ratio",    1      ));
+	newInput( 5, nodeValue_Slider(  "Chance",     1   ));
 	// 9
 	
 	newOutput(0, nodeValue_Output("Domain", VALUE_TYPE.fdomain, noone ));

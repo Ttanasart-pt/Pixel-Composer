@@ -11,12 +11,12 @@ function Node_Rigid_Object_Segment(_x, _y, _group = noone) : Node(_x, _y, _group
 	objects    = [];
 	
 	////- =Segment
-	newInput(0, nodeValue_Vec2( "Segment Start",   [0,0] )).setUnitSimple();
-	newInput(1, nodeValue_Vec2( "Segment End",     [1,0] )).setUnitSimple();
+	newInput( 0, nodeValue_Vec2( "Segment Start", [0,0] )).setUnitSimple();
+	newInput( 1, nodeValue_Vec2( "Segment End",   [1,0] )).setUnitSimple();
 		
 	////- =Physics
-	newInput(2, nodeValue_Float(  "Contact Friction", .2 ));
-	newInput(3, nodeValue_Slider( "Bounciness",       .2 ));
+	newInput( 2, nodeValue_Float(  "Friction",   .2 ));
+	newInput( 3, nodeValue_Slider( "Bounciness", .2 ));
 	// inputs 4
 		
 	newOutput(0, nodeValue_Output("Object", VALUE_TYPE.rigid, objects));

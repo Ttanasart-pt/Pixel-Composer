@@ -11,14 +11,17 @@ function Node_Strand_Force_Apply(_x, _y, _group = noone) : _Node_Strand_Affector
 	////- =Force
 	newInput(i+0, nodeValue_Slider( "Strength", 1, [ 0, 5, 0.01 ] ));
 	newInput(i+2, nodeValueSeed());
-	newInput(i+1, nodeValue_Float( "Turbulence",            0 ));
-	newInput(i+3, nodeValue_Float( "Turbulence frequency", .5 ));
-	newInput(i+4, nodeValue_Int(   "Turbulence detail",     2 ));
+	
+	////- =Turbulence
+	newInput(i+1, nodeValue_Float( "Strength",   0 ));
+	newInput(i+3, nodeValue_Float( "Frequency", .5 ));
+	newInput(i+4, nodeValue_Int(   "Detail",     2 ));
 	// i+5
 	
-	array_push(input_display_list, 
-		[ "Force", false ], i+0, i+2, i+1, i+3, i+4, 
-	);
+	array_append(input_display_list, [
+		[ "Force",      false ], i+0, i+2, 
+		[ "Turbulence", false ], i+1, i+3, i+4, 
+	]);
 	
 	static update = function(frame = CURRENT_FRAME) {
 		#region data

@@ -1,0 +1,1 @@
+Output current PB dimension. To set the dimension use the parent <node Node_Pixel_Builder> node.

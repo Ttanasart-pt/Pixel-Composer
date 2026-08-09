@@ -12,7 +12,7 @@ function Node_Rigid_Explode(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	process_amount  = 0;
 	inputs_data_len = [];
 	
-	newInput( 0, nodeValue("Object", self, CONNECT_TYPE.input, VALUE_TYPE.rigid, noone)).setVisible(true, true);
+	newInput( 0, nodeValue( "Object", self, CONNECT_TYPE.input, VALUE_TYPE.rigid, noone)).setVisible(true, true);
 	
 	////- =Timing
 	newInput( 1, nodeValue_Trigger( "Trigger" ));

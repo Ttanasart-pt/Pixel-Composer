@@ -26,7 +26,7 @@ function Node_FLIP_Render(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	newInput(12, nodeValue_Range(    "Velocity Map",        [0,10]       ));
 	newInput( 2, nodeValue_Range(    "Lifespan",            [0, 0], true ));
 	
-	////- =Post Processing
+		////- =/Post Processing
 	newInput( 8, nodeValue_Bool(   "Additive",        true ));
 	newInput( 7, nodeValue_Bool(   "Threshold",       true ));
 	newInput( 1, nodeValue_Slider( "Merge threshold", 0.75 ));
@@ -35,10 +35,10 @@ function Node_FLIP_Render(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	newOutput(0, nodeValue_Output("Rendered", VALUE_TYPE.surface, noone));
 	
 	input_display_list = [ 5, 
-		[ "Domain",          false ],  0, 13, 
-		[ "Rendering",       false ],  6,  3, 10, 14,  4,  9, 
-		[ "Effect",          false ], 11, [12, true], 15, -1,  2, 
-		[ "Post Processing", false ],  8,  7,  1, 
+		[ "Domain",    false ],  0, 13, 
+		[ "Rendering", false ],  6,  3, 10, 14,  4,  9, 
+		[ "Effect",    false ], 11, [12, true], 15, -1,  2, 
+			[ "/Post Processing", false ],  8,  7,  1, 
 	];
 	
 	////- Nodes

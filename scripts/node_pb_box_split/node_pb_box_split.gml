@@ -5,22 +5,22 @@ function Node_PB_Box_Split(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	setDrawIcon();
 	
 	////- Layout
-	newInput(0, nodeValue_Pbbox());
+	newInput( 0, nodeValue_Pbbox());
 	
 	////- Split
-	newInput(1, nodeValue_EButton( "Axis",    0, [ "X", "Y" ]         ));
-	newInput(2, nodeValue_EButton( "Anchor",  0, [ "Start", "End" ]   ));
-	newInput(3, nodeValue_EButton( "Unit",    0, [ "Ratio", "Pixel" ] ));
-	newInput(4, nodeValue_Slider(  "Ratio",  .5 ));
-	newInput(5, nodeValue_Int(     "Size",    4 ));
+	newInput( 1, nodeValue_EButton( "Axis",    0, [ "X", "Y" ]         ));
+	newInput( 2, nodeValue_EButton( "Anchor",  0, [ "Start", "End" ]   ));
+	newInput( 3, nodeValue_EButton( "Unit",    0, [ "Ratio", "Pixel" ] ));
+	newInput( 4, nodeValue_Slider(  "Ratio",  .5 ));
+	newInput( 5, nodeValue_Int(     "Size",    4 ));
 	// 6
 	
-	newOutput(0, nodeValue_Output("PBBOX", VALUE_TYPE.pbBox, noone));
-	newOutput(1, nodeValue_Output("PBBOX", VALUE_TYPE.pbBox, noone));
+	newOutput(0, nodeValue_Output("PBbox", VALUE_TYPE.pbBox, noone));
+	newOutput(1, nodeValue_Output("PBbox", VALUE_TYPE.pbBox, noone));
 	
 	input_display_list = [
-		["Layout", false], 0, 
-		["Split",  false], 1, 2, 3, 4, 5, 
+		[ "Layout", false ],  0, 
+		[ "Split",  false ],  1,  2,  3,  4,  5, 
 	]
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _params) { 

@@ -1,5 +1,13 @@
 Pack sprites nodes allows for quick composition of surfaces array with different sizes.
 
+## Properties
+
+[proptable]
+Packing
+Algorithm|Packing algorithm
+Spacing|Add space between each surface.
+[/proptable]
+
 ## Packing Algorithms
 
 ### Skyline

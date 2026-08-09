@@ -1,5 +1,5 @@
 function Node_Smoke_Update(_x, _y, _group = noone) : Node_Smoke(_x, _y, _group) constructor {
-	name  = "Update Fluid";
+	name  = "Update Smoke";
 	color = COLORS.node_blend_smoke;
 	icon  = THEME.smoke_sim;
 	setDimension(96, 48);

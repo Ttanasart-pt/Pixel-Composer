@@ -19,7 +19,7 @@ function Node_PB_FX_Shine(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	newInput(11, nodeValue_Surface( "Offset"        )); 
 	newInput(12, nodeValue_Range(   "Range", [0,.1] ));
 	
-	////- =Render
+	////- =Rendering
 	newInput( 2, nodeValue_Palette( "Colors",     [ca_white] ));
 	newInput(10, nodeValue_EScroll( "Blend Mode", 0, [ "Normal", "Additive", "Multiply" ] ));
 	newInput( 7, nodeValue_Slider(  "Intensity",  1          ));
@@ -30,10 +30,10 @@ function Node_PB_FX_Shine(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	newOutput( 1, nodeValue_Output( "Mask",        VALUE_TYPE.surface, noone )).setCustomData(global.SURFACE_MASK_JUNC);
 	
 	input_display_list = [ 
-		[ "Surfaces", false ],  0,  1, 14, 15, 
-	    [ "Shine",    false ],  8,  5,  4,  9,  6, 13,  3, 
-	    [ "Offset",    true ], 11, 12, 
-	    [ "Render",   false ],  2, 10,  7, 16, 
+		[ "Surfaces",  false ],  0,  1, 14, 15, 
+	    [ "Shine",     false ],  8,  5,  4,  9,  6, 13,  3, 
+	    [ "Offset",     true ], 11, 12, 
+	    [ "Rendering", false ],  2, 10,  7, 16, 
     ];
 	
 	////- Node

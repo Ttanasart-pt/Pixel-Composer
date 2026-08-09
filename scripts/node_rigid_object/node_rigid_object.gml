@@ -27,22 +27,24 @@ function Node_Rigid_Object(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	attributes.mesh = [];
 	
 	////- =Spawn
-	newInput( 8, nodeValue_Bool(     "Spawn",            true, "Make object spawn when start." ));
+	newInput( 8, nodeValue_Bool(     "Spawn",            true  )).setTooltip("Make object spawn when start.");
 	newInput(20, nodeValue_Int(      "Spawn Frame",      0     ));
 	newInput( 7, nodeValue_Vec2(     "Spawn Position", [.5,.5] )).setHotkey("G").setUnitSimple();
 	newInput(17, nodeValue_Rotation( "Spawn Rotation",   0     )).setHotkey("R");
 	newInput(23, nodeValue_Bool(     "Offset Atlas",     true  ));
 	
-	////- =Initial Velocity
+		////- =/Velocity
 	newInput(18, nodeValue_Bool(     "Use Initial Velocity", false ));
 	newInput(19, nodeValue_Vec2(     "Initial Velocity",     [0,0] ));
 	
 	////- =Shape
 	newInput( 6, nodeValue_Surface(  "Texture" ));
-	newInput( 5, nodeValue_EScroll(  "Shape",  0, [ new scrollItem("Box",    s_node_shape_rectangle, 0), 
-	                                                new scrollItem("Circle", s_node_shape_circle,    0), 
-	                                                new scrollItem("Custom", s_node_shape_misc,      1) ] ));
-	newInput( 9, nodeValue_Trigger(  "Generate Mesh" ));
+	newInput( 5, nodeValue_EScroll(  "Shape",  0, [ 
+		new scrollItem( "Box",    s_node_shape_rectangle, 0 ), 
+	    new scrollItem( "Circle", s_node_shape_circle,    0 ), 
+	    new scrollItem( "Custom", s_node_shape_misc,      1 ) 
+    ]));
+	newInput( 9, nodeValue_Trigger(  "Generate Mesh"                     ));
 	newInput(10, nodeValue_Slider(   "Mesh Expansion",      0, [-2,2,.1] ));
 	newInput(11, nodeValue_Bool(     "Add Pixel for Empty", true         ));
 	
@@ -74,11 +76,12 @@ function Node_Rigid_Object(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		.setIcon(THEME.mesh, 1, COLORS._main_value_positive).iconPad(ui(6)).setBaseSprite(THEME.button_hide_fill);
 	
 	input_display_list = [ 
-		[ "Spawn",            false,  8 ], 20,  7, 17, 23, 
-		[ "Initial Velocity", false, 18 ], 19, 
-		[ "Shape",            false, noone, bMesh], 6,  5, 10, 11, 
-		[ "Physics",          false     ],  0,  1,  2,  3,  4, 13, 
-		[ "Simulation",       true      ], 14, 15, 16, 21, 
+		[ "Spawn",         false,  8 ], 20,  7, 17, 23, 
+			[ "/Velocity", false, 18 ], 19, 
+			
+		[ "Shape",      false, noone, bMesh ],  6,  5, 10, 11, 
+		[ "Physics",    false               ],  0,  1,  2,  3,  4, 13, 
+		[ "Simulation",  true               ], 14, 15, 16, 21, 
 	];
 	
 	////- Node

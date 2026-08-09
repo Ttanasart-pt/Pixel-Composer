@@ -1,0 +1,1 @@
+Add rigidbody object to act as FLIP fluid collider.

@@ -7,7 +7,7 @@ function Node_FLIP_Vortex(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	
 	manual_ungroupable = false;
 	
-	newInput( 0, nodeValue_Fdomain("Domain")).setVisible(true, true);
+	newInput( 0, nodeValue_Fdomain( "Domain" )).setVisible(true, true);
 	
 	////- =Vortex
 	newInput( 1, nodeValue_Vec2(   "Position", [.5,.5] )).setHotkey("G").setUnitSimple();

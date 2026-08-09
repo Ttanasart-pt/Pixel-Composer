@@ -23,7 +23,7 @@ function Node_FLIP_Apply_Force(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	
 	manual_ungroupable = false;
 	
-	newInput( 0, nodeValue_Fdomain("Domain")).setVisible(true, true);
+	newInput( 0, nodeValue_Fdomain( "Domain" )).setVisible(true, true);
 	
 	////- =Collider
 	newInput( 3, nodeValue_EScroll( "Shape", 0, [ 

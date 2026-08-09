@@ -1,0 +1,11 @@
+{
+  "$GMNotes":"v1",
+  "%Name":"note_FLIP_fill",
+  "name":"note_FLIP_fill",
+  "parent":{
+    "name":"fluid",
+    "path":"folders/nodes/data/simulation/FLIP/fluid.yy",
+  },
+  "resourceType":"GMNotes",
+  "resourceVersion":"1.1",
+}

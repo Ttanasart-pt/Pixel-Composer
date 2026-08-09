@@ -2,18 +2,12 @@ Add obstracle to the FLIP fluid system.
 
 ## Properties
 
-### <junc shape/>
+[proptable]
+Collider
+Shape|Collision shape
+Radius|Collision radius
 
-Collision shape
-
-### <junc radius/>
-
-Collision radius
-
-### <junc position/>
-
-Center point of the collision
-
-### <junc texture/>
-
-Rendered texture
+Obstracle
+Position|Center point of the collision
+Texture|Rendered texture
+[/proptable]

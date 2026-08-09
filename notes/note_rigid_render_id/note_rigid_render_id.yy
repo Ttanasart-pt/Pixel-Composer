@@ -1,0 +1,11 @@
+{
+  "$GMNotes":"v1",
+  "%Name":"note_rigid_render_id",
+  "name":"note_rigid_render_id",
+  "parent":{
+    "name":"render",
+    "path":"folders/nodes/data/simulation/rigidSim/render.yy",
+  },
+  "resourceType":"GMNotes",
+  "resourceVersion":"1.1",
+}

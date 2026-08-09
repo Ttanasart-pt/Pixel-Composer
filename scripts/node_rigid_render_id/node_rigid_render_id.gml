@@ -11,17 +11,19 @@ function Node_Rigid_Render_ID(_x, _y, _group = noone) : Node(_x, _y, _group) con
 	worldScale = 100;
 	
 	////- =Simulation
-	newInput(3, nodeValue_Bool(  "Simulate",      false ));
-	newInput(1, nodeValue_Float( "Timestep (ms)", 20    ));
-	newInput(2, nodeValue_Int(   "Quality",       8     ));
+	newInput(3, nodeValue_Bool(  "Simulate", false ));
+	newInput(1, nodeValue_Float( "Timestep", 20    ));
+	newInput(2, nodeValue_Int(   "Quality",  8     ));
 	
 	////- =Outputs
-	newInput( 0, nodeValue_Bool("Round Position",   false ));
-	newInput( 4, nodeValue_Bool("Normalize Output", true  ));
+	newInput( 0, nodeValue_Bool( "Round Position",   false ));
+	newInput( 4, nodeValue_Bool( "Normalize Output", true  ));
 	// inputs 5
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone ));
 	newOutput(1, nodeValue_Output("Amounts",     VALUE_TYPE.integer, 0     ));
+	
+	inputs[1].getEditWidget().setSuffix("ms");
 	
 	input_display_list = [ 
 		[ "Simulation", false, 3 ], 1, 2, 

@@ -10,7 +10,7 @@ function Node_Strand_Render_Texture(_x, _y, _group = noone) : Node(_x, _y, _grou
 	
 	newInput(5, nodeValueSeed());
 	
-	////- =Ouptut
+	////- =Output
 	newInput( 0, nodeValue_Dimension());
 	
 	////- =Strand
@@ -18,8 +18,8 @@ function Node_Strand_Render_Texture(_x, _y, _group = noone) : Node(_x, _y, _grou
 	newInput( 2, nodeValue_Range("Thickness", [ 8, 8 ], { linked : true }));
 	
 	////- =Texture
-	newInput( 4, nodeValue_Surface("Texture"));
-	newInput( 3, nodeValue_Gradient("Random color", gra_white)).addShift(6);
+	newInput( 4, nodeValue_Surface(  "Texture" ));
+	newInput( 3, nodeValue_Gradient( "Random Color", gra_white )).addShift(6);
 	// 7
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));

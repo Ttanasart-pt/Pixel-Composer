@@ -254,6 +254,8 @@ struct PixelShaderOutput {
 		
 	} if(!LOADING && !APPENDING) refreshDynamicInput();
 	
+	////- Node
+	
 	insp1button = button(function() /*=>*/ { refreshShader(); triggerRender(); }).setTooltip(__txt("Compile"))
 		.setIcon(THEME.sequence_control, 1, COLORS._main_value_positive).iconPad(ui(6)).setBaseSprite(THEME.button_hide_fill);
 	
@@ -262,11 +264,22 @@ struct PixelShaderOutput {
 	
 	static step = function() { argument_renderer.showValue = inspector_label_values[1]; }
 	
+	static onValueUpdate = function(index) {
+		var _refresh = index == 0 || index == 1 || (index >= input_fix_len && (index - input_fix_len) % data_length != 2);
+		
+		if(_refresh) {
+			refreshShader();
+			refreshDynamicInput();
+		}
+	}
+	
+	////- Shader
+	
 	static refreshShader = function() {
-		var  vs  = getInputData(0);
-		var  fs  = getInputData(1);
-		var _lib = getInputData(3);
-		var _glo = getInputData(4);
+		var  vs  = inputs[0].getValue();
+		var  fs  = inputs[1].getValue();
+		var _lib = inputs[3].getValue();
+		var _glo = inputs[4].getValue();
 		
 		var _dir = TEMPDIR;
 		directory_verify(_dir);
@@ -352,15 +365,6 @@ struct PixelShaderOutput {
 			noti_warning(d3d11_get_error_string(), noone, self);
 	} if(!LOADING && !APPENDING) refreshShader();
 	
-	static onValueUpdate = function(index) {
-		var _refresh = index == 0 || index == 1 || (index >= input_fix_len && (index - input_fix_len) % data_length != 2);
-		
-		if(_refresh) {
-			refreshShader();
-			refreshDynamicInput();
-		}
-	}
-	
 	static onCodeEdited = function() {
 		var _global_edit = inputs[4].getEditWidget();
 		var _fsmain_edit = inputs[1].getEditWidget();
@@ -445,6 +449,8 @@ struct PixelShaderOutput {
 		
 		return _output;
 	}
+	
+	////- Serialize
 	
 	static postLoad = function() { 
 		refreshShader(); 

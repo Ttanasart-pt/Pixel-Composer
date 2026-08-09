@@ -16,13 +16,13 @@ function Node_Render_Sprite_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group)
 	
 	////- =Surfaces
 	newInput( 0, nodeValue_Surface( "Sprites" ));
-	newInput( 1, nodeValue_EScroll( "Sprite set", 0, [ "Animation", "Sprite array" ])).rejectArray();
-	newInput( 2, nodeValue_Int(     "Frame step", 1, "Number of frames until next sprite. Can be seen as (Step - 1) frame skip.")).rejectArray();
+	newInput( 1, nodeValue_EScroll( "Sprite Set", 0, [ "Animation", "Sprite array" ])).rejectArray();
+	newInput( 2, nodeValue_Int(     "Frame Step", 1, "Number of frames until next sprite. Can be seen as (Step - 1) frame skip.")).rejectArray();
 	newInput(12, nodeValue_Bool(    "Skip Empty", false ));
 	
 	////- =Packing
-	newInput( 3, nodeValue_EScroll( "Packing type", 0, __enum_array_gen(["Horizontal", "Vertical", "Grid"], s_node_alignment))).rejectArray();
-	newInput( 4, nodeValue_Int(     "Grid column",  4        )).rejectArray();
+	newInput( 3, nodeValue_EScroll( "Packing Type", 0, __enum_array_gen(["Horizontal", "Vertical", "Grid"], s_node_alignment))).rejectArray();
+	newInput( 4, nodeValue_Int(     "Grid Column",  4        )).rejectArray();
 	newInput( 5, nodeValue_EButton( "Alignment",    0, [ "First", "Middle", "Last" ])).rejectArray();
 	newInput( 6, nodeValue_Int(     "Spacing",      0        ));
 	newInput( 9, nodeValue_Vec2(    "Spacing",     [0,0]     ));

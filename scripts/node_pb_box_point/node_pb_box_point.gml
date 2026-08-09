@@ -1,18 +1,14 @@
 function Node_PB_Box_Point(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
-	name  = "PBBOX Get Point";
+	name  = "PBbox Get Point";
 	color = COLORS.node_blend_feedback;
 	setDimension(96, 48);
 	setDrawIcon();
 	
-	newInput(0, nodeValue_Pbbox());
+	newInput( 0, nodeValue_Pbbox());
+	newInput( 1, nodeValue_Anchor());
+	newInput( 2, nodeValue_Vec2( "Position", [0,0] )).setUnitSimple();
 	
-	newInput(1, nodeValue_Anchor());
-	
-	newInput(2, nodeValue_Vec2("Position", [ 0, 0 ]))
-		.setUnitSimple();
-	
-	newOutput(0, nodeValue_Output("Point", VALUE_TYPE.float, [ 0, 0 ]))
-		.setDisplay(VALUE_DISPLAY.vector);
+	newOutput(0, nodeValue_Output("Point", VALUE_TYPE.float, [0,0] )).setDisplay(VALUE_DISPLAY.vector);
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _params) { 
 		var _pbbox = getInputSingle(0);

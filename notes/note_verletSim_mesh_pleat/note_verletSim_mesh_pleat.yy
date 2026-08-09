@@ -1,0 +1,11 @@
+{
+  "$GMNotes":"v1",
+  "%Name":"note_verletSim_mesh_pleat",
+  "name":"note_verletSim_mesh_pleat",
+  "parent":{
+    "name":"mesh",
+    "path":"folders/nodes/data/simulation/verletSim/mesh.yy",
+  },
+  "resourceType":"GMNotes",
+  "resourceVersion":"1.1",
+}

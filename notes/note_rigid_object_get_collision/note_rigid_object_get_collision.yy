@@ -1,0 +1,11 @@
+{
+  "$GMNotes":"v1",
+  "%Name":"note_rigid_object_get_collision",
+  "name":"note_rigid_object_get_collision",
+  "parent":{
+    "name":"data",
+    "path":"folders/nodes/data/simulation/rigidSim/data.yy",
+  },
+  "resourceType":"GMNotes",
+  "resourceVersion":"1.1",
+}

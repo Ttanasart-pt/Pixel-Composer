@@ -28,7 +28,7 @@ function Node_Strand_Create(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	newInput( 7, nodeValue_EButton( "Side",         0, [ "Inner", "Outer", "Both" ] ));
 	newInput(13, nodeValue_Mesh(    "Mesh"                                          ));
 	newInput(14, nodeValue_EScroll( "Distribution", 0, [ "Uniform", "Random" ]      ));
-	newInput(15, nodeValue_Trigger( "Bake hair", "Prevent strand reseting to apply manual modification. Unbaking will remove all changes."));
+	newInput(15, nodeValue_Trigger( "Bake Hair" )).setTooltip("Prevent strand reseting to apply manual modification. Unbaking will remove all changes.");
 	
 	b_bake = button(function() /*=>*/ {return toggleGroom()}).setText("Bake Strand");
 		
@@ -43,12 +43,12 @@ function Node_Strand_Create(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	newInput(19, nodeValue_Float(   "Restitution", .01             )).setTooltip("Minimum speed before the strand stops moving completely.");
 	
 	////- =Curl
-	newInput(11, nodeValue_Float(  "Curl frequency", 0 ));
+	newInput(11, nodeValue_Float(  "Curl Frequency", 0 ));
 	newInput(12, nodeValue_Slider( "Curliness",      1 ));
 	
 	////- =Preview
 	newInput(16, nodeValue_Bool( "View fix hair", false ));
-	//// inputs 20
+	// 20
 	
 	newOutput(0, nodeValue_Output("Strands", VALUE_TYPE.strands, noone));
 	

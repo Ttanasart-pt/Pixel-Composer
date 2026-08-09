@@ -12,7 +12,7 @@ function Node_Rigid_Fracture(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	objects    = [];
 	meshes     = [];
 	
-	newInput( 0, nodeValue_Surface( "Base Texture"));
+	newInput( 0, nodeValue_Surface( "Base Texture" ));
 	
 	////- =Fracture
 	newInput( 1, nodeValue_Surface( "Fracture Map"                      ));

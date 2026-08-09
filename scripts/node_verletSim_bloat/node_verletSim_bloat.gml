@@ -18,7 +18,7 @@ function Node_VerletSim_Bloat(_x, _y, _group = noone) : Node(_x, _y, _group) con
 	newInput( 5, nodeValue_Float( "Strength",      1     ));
 	
 	////- =Effect
-	newInput( 6, nodeValue_Bool( "Use origin", true ));
+	newInput( 6, nodeValue_Bool( "Use Origin", true ));
 	// 7
 	
 	newOutput(0, nodeValue_Output("Mesh", VALUE_TYPE.mesh, noone)).setCustomData(global.VERLET_MESH_JUNC);

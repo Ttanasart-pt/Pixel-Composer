@@ -123,9 +123,8 @@
 </script><br><p>Camera node used to capture parts of the scene. You can think of it as a 2D camera with fix dimension 
 looking around your image.</p><br>
 <p>Camera node also allows for parallax and Depth of Field effect.</p><br>
-<br><h2><a id="Camera Properties" class="anchor"></a>Camera Properties</h2><br>
-<p>The <span class="junction">Focus Area</span> is an array data controlling the camera size and position.</p><br>
-<p>The <span class="junction" style="border-color: #ffe478AA">Zoom</span> property allows you to scale the image.</p><br>
+<br><h2><a id="Properties" class="anchor"></a>Properties</h2><br>
+<p><table class="prop-table cc3070"><tr><td colspan='2' class='prop-section'>Camera</td></tr><tr><td><span class="junction" style="border-color: #ffe478AA">Focus Center</span></td><td>Center point of the camera target.</td></tr><tr><td><span class="junction" style="border-color: #ffe478AA">Zoom</span></td><td>Scale the surface.<br></td></tr><tr><td colspan='2' class='prop-section'>FOV</td></tr><tr><td><span class="junction" style="border-color: #8c3f5dAA">Depth Of Field</span></td><td>Apply depth of field effect cased on surface septh.</td></tr><tr><td><span class="junction" style="border-color: #ffe478AA">Focal Distance</span></td><td>Middle depth level for sharp output.</td></tr><tr><td><span class="junction" style="border-color: #ffe478AA">Focal Range</span></td><td>Range depth where output stays sharp.</td></tr></table></p><br>
 <h2><a id="Parallax" class="anchor"></a>Parallax</h2><br>
 <p>Camera node allows for parallax effect by layering multiple surfaces at different depth.</p><br>
 <p>The extra surface can be added to the <span class="junction">Element {_S}</span> properties. When 
@@ -135,13 +134,6 @@ the surface will be moved with the camera.</p><br>
 <p><img class="node-content" src="/src/images/etc/node_camera_parallax.png"></p><br>
 <p>Note that the speed of parallax is depends on both XY and Z axis. If both X and Y are set to 0, then 
 there will be no parallax effect.</p><br>
-<h2><a id="Depth of Field" class="anchor"></a>Depth of Field</h2><br>
-<p>Camera node can simulate basic Depth of Field effect using the Z value of the object as a distance from 
-camera</p><br>
-<p><img class="node-content" src="/src/images/etc/node_camera_dof.png"></p><br>
-<p>The <span class="junction" style="border-color: #ffe478AA">Focal Distance</span> control where the sharpest depth will be, 
-the <span class="junction" style="border-color: #ffe478AA">Focal Range</span> control the range where the object stays sharp 
-and <span class="junction" style="border-color: #ffe478AA">Defocus</span> control how much blur will applies to object further away.</p><br>
 <br><h2 class="nosidebar">Commit History</h2><br>
 <table class="change-table"><tr><th>1.21.5.003</th><td><ul><li> Focus center now use 'scene size' dimension instead of 'camera size' dimension.</li></ul></td></tr><tr><th>1.21.7.101</th><td><ul><li> Fix gizmo scaled incorrectly when so surface connected.</li></ul></td></tr></table><br><h2 class="nosidebar">Related Links</h2><br><ul class="link-table"><li><span>Base Code: </span><a href="https://github.com/Ttanasart-pt/Pixel-Composer/blob/main/scripts/node_camera/node_camera.gml">/scripts/node_camera/node_camera.gml</a></li></ul>
         </div>

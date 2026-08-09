@@ -1,0 +1,11 @@
+{
+  "$GMNotes":"v1",
+  "%Name":"note_verletSim_mesh_cache_lerp",
+  "name":"note_verletSim_mesh_cache_lerp",
+  "parent":{
+    "name":"cache",
+    "path":"folders/nodes/data/simulation/verletSim/cache.yy",
+  },
+  "resourceType":"GMNotes",
+  "resourceVersion":"1.1",
+}

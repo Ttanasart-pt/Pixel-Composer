@@ -1,0 +1,11 @@
+{
+  "$GMNotes":"v1",
+  "%Name":"note_FLIP_solid",
+  "name":"note_FLIP_solid",
+  "parent":{
+    "name":"solid",
+    "path":"folders/nodes/data/simulation/FLIP/solid.yy",
+  },
+  "resourceType":"GMNotes",
+  "resourceVersion":"1.1",
+}

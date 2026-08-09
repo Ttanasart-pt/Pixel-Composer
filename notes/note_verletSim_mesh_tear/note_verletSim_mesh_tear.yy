@@ -1,0 +1,11 @@
+{
+  "$GMNotes":"v1",
+  "%Name":"note_verletSim_mesh_tear",
+  "name":"note_verletSim_mesh_tear",
+  "parent":{
+    "name":"mesh",
+    "path":"folders/nodes/data/simulation/verletSim/mesh.yy",
+  },
+  "resourceType":"GMNotes",
+  "resourceVersion":"1.1",
+}

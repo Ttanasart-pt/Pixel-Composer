@@ -2,17 +2,17 @@ function Node_Pack_Sprites(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	name = "Pack Sprites";
 	
 	////- =Sprties
-	newInput(0, nodeValue_Surface( "Sprites" ));
+	newInput( 0, nodeValue_Surface( "Sprites" ));
 	
 	////- =Packing
-	newInput(1, nodeValue_EScroll( "Algorithm",  0, { data: [ "Skyline", "Shelf", "Top left", "Best fit" ], update_hover: false }));
-	newInput(4, nodeValue_Int(     "Spacing",    0   ));
-	newInput(2, nodeValue_Int(     "Max width",  128 ));
-	newInput(3, nodeValue_Int(     "Max height", 128 ));
+	newInput( 1, nodeValue_EScroll( "Algorithm",  0, { data: [ "Skyline", "Shelf", "Top left", "Best fit" ], update_hover: false }));
+	newInput( 4, nodeValue_Int(     "Spacing",    0   ));
+	newInput( 2, nodeValue_Int(     "Max Width",  128 ));
+	newInput( 3, nodeValue_Int(     "Max Height", 128 ));
 	// 5
 	
-	newOutput(0, nodeValue_Output("Packed image", VALUE_TYPE.surface, noone));
-	newOutput(1, nodeValue_Output("Atlas data", VALUE_TYPE.atlas, []));
+	newOutput( 0, nodeValue_Output( "Packed Image", VALUE_TYPE.surface, noone ));
+	newOutput( 1, nodeValue_Output( "Atlas Data",   VALUE_TYPE.atlas,   []    ));
 	
 	input_display_list = [ 
 		[ "Sprties", false ], 0, 

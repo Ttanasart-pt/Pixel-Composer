@@ -10,11 +10,11 @@ function Node_Strand_Break(_x, _y, _group = noone) : _Node_Strand_Affector(_x, _
 	var i = input_fix_len;
 	
 	////- =Break
-	newInput(i+0, nodeValue_Slider("Chance", 1));
 	newInput(i+1, nodeValueSeed());
+	newInput(i+0, nodeValue_Slider( "Chance", 1 ));
 	
 	array_push(input_display_list, 
-		[ "Break", false ], i+0, i+1
+		[ "Break", false ], i+1, i+0, 
 	);
 	
 	////- Node

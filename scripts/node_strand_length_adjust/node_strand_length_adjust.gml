@@ -9,8 +9,8 @@ function Node_Strand_Length_Adjust(_x, _y, _group = noone) : _Node_Strand_Affect
 	var i = input_fix_len;
 	
 	////- =Length adjust
-	newInput(i+0, nodeValue_EButton("Type",  0, [ "Increase", "Decrease" ]));
-	newInput(i+1, nodeValue_Slider("Strength", 0.1));
+	newInput(i+0, nodeValue_EButton( "Type",      0, [ "Increase", "Decrease" ] ));
+	newInput(i+1, nodeValue_Slider(  "Strength", .1 ));
 		
 	array_push(input_display_list, 
 		[ "Length adjust", false ], i+0, i+1,

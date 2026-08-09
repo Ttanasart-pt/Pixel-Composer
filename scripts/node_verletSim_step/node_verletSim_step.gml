@@ -11,7 +11,7 @@ function Node_VerletSim_Step(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	newInput( 0, nodeValue_Mesh( "Mesh" )).setCustomData(global.VERLET_MESH_JUNC).setVisible(true, true);
 	
 	////- =Simulation
-	newInput( 1, nodeValue_Bool( "Pre-render", false ));
+	newInput( 1, nodeValue_Bool( "Pre-Render", false ));
 	newInput( 2, nodeValue_Int(  "Step",       1     ));
 	// 3
 	

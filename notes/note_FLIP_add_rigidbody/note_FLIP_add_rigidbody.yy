@@ -1,0 +1,11 @@
+{
+  "$GMNotes":"v1",
+  "%Name":"note_FLIP_add_rigidbody",
+  "name":"note_FLIP_add_rigidbody",
+  "parent":{
+    "name":"fluid",
+    "path":"folders/nodes/data/simulation/FLIP/fluid.yy",
+  },
+  "resourceType":"GMNotes",
+  "resourceVersion":"1.1",
+}

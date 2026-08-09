@@ -1,0 +1,11 @@
+{
+  "$GMNotes":"v1",
+  "%Name":"note_pb_crop_pbbox",
+  "name":"note_pb_crop_pbbox",
+  "parent":{
+    "name":"modify",
+    "path":"folders/nodes/data/PB/modify.yy",
+  },
+  "resourceType":"GMNotes",
+  "resourceVersion":"1.1",
+}

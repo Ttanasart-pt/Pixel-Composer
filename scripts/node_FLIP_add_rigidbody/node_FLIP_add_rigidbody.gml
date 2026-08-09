@@ -8,6 +8,8 @@ function Node_FLIP_Add_Rigidbody(_x, _y, _group = noone) : Node(_x, _y, _group) 
 	manual_ungroupable = false;
 	
 	newInput( 0, nodeValue_Fdomain("Domain")).setVisible(true, true);
+	
+	////- =Collider
 	newInput( 1, nodeValue("Objects", self, CONNECT_TYPE.input, VALUE_TYPE.rigid, [] )).setVisible(true, true);
 	
 	input_display_list = [ 0, 

@@ -4,16 +4,19 @@ function Node_PB_Box_Mirror(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	setDimension(96, 48);
 	setDrawIcon();
 	
-	newInput(0, nodeValue_Pbbox("Mirror PBBOX"));
-	newInput(1, nodeValue_Pbbox("PBBOX"));
+	////- =Layout
+	newInput( 0, nodeValue_Pbbox( "Mirror PBbox" ));
+	newInput( 1, nodeValue_Pbbox( "PBbox"        ));
 	
-	newInput(2, nodeValue_Toggle("Axis", 0, { data: [ "X", "Y" ] }));
+	////- =Mirror
+	newInput( 2, nodeValue_Toggle( "Axis", 0, { data: [ "X", "Y" ] } ));
+	// 3
 	
-	newOutput(0, nodeValue_Output("PBBOX", VALUE_TYPE.pbBox, noone));
+	newOutput(0, nodeValue_Output("PBbox", VALUE_TYPE.pbBox, noone));
 	
 	input_display_list = [
-		["Layout", false], 0, 1, 
-		["Mirror", false], 2, 
+		[ "Layout", false ],  0,  1, 
+		[ "Mirror", false ],  2, 
 	]
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _params) { 

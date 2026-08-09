@@ -1,0 +1,11 @@
+{
+  "$GMNotes":"v1",
+  "%Name":"note_pb_draw_ellipse",
+  "name":"note_pb_draw_ellipse",
+  "parent":{
+    "name":"draw",
+    "path":"folders/nodes/data/PB/draw.yy",
+  },
+  "resourceType":"GMNotes",
+  "resourceVersion":"1.1",
+}

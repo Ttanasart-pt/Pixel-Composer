@@ -1,0 +1,11 @@
+{
+  "$GMNotes":"v1",
+  "%Name":"note_pb_dimension",
+  "name":"note_pb_dimension",
+  "parent":{
+    "name":"main",
+    "path":"folders/nodes/data/PB/main.yy",
+  },
+  "resourceType":"GMNotes",
+  "resourceVersion":"1.1",
+}

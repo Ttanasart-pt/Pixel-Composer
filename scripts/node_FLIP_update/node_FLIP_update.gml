@@ -6,19 +6,21 @@ function Node_FLIP_Update(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	setDimension(96, 48);
 	manual_ungroupable = false;
 	
-	newInput(0, nodeValue_Fdomain("Domain")).setVisible(true, true);
+	newInput( 0, nodeValue_Fdomain( "Domain"       )).setVisible(true, true);
+	newInput( 1, nodeValue_Bool(    "Update", true ));
 	
-	newInput(1, nodeValue_Bool("Update", true));
-	
-	newInput(2, nodeValue_Bool("Override timestep", false));
-	
-	newInput(3, nodeValue_Float("Timestep", 0.01));
-	
-	input_display_list = [ 0, 1,
-		["Timestep", false], 2, 3, 
-	];
+	////- =Timestep
+	newInput( 2, nodeValue_Bool(    "Override", false ));
+	newInput( 3, nodeValue_Float(   "Timestep", .01   ));
+	// 4
 	
 	newOutput(0, nodeValue_Output("Domain", VALUE_TYPE.fdomain, noone));
+	
+	input_display_list = [  0,  1,
+		[ "Timestep", false ],  2,  3, 
+	];
+	
+	////- Node
 	
 	static update = function(frame = CURRENT_FRAME) {
 		var domain  = getInputData(0);

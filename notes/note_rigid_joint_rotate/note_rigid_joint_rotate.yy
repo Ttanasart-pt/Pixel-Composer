@@ -1,0 +1,11 @@
+{
+  "$GMNotes":"v1",
+  "%Name":"note_rigid_joint_rotate",
+  "name":"note_rigid_joint_rotate",
+  "parent":{
+    "name":"joints",
+    "path":"folders/nodes/data/simulation/rigidSim/joints.yy",
+  },
+  "resourceType":"GMNotes",
+  "resourceVersion":"1.1",
+}

@@ -1,7 +1,10 @@
 <v 1.18.0/>
 Add a collider to the smoke simulation.
+
 ## Properties
-### <junc collider>
-Surface to collide with the smoke.
-### <junc area>
-Area of the collider.
+
+[proptable]
+Collider
+Collider|Surface to collide with the smoke.
+Area|Area of the collider.
+[/proptable]

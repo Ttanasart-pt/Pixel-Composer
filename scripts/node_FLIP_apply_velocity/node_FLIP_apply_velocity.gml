@@ -9,17 +9,20 @@ function Node_FLIP_Apply_Velocity(_x, _y, _group = noone) : Node(_x, _y, _group)
 	newInput( 0, nodeValue_Fdomain( "Domain" )).setVisible(true, true);
 	
 	////- =Velocity
-	newInput( 4, nodeValue_EScroll( "Shape",  0 , [ new scrollItem("Circle", s_node_shape_circle, 0), new scrollItem("Rectangle", s_node_shape_rectangle, 0) ]));
-	newInput( 1, nodeValue_Vec2(    "Position",  [ 0, 0 ] )).setHotkey("G").setUnitSimple();
-	newInput( 2, nodeValue_Slider(  "Radius",      4, [1, 16, 0.1] ));
-	newInput( 5, nodeValue_Vec2(    "Size",      [ 4, 4 ] ));
-	newInput( 3, nodeValue_Vec2(    "Velocity",  [ 0, 0 ] ));
-	// input 6
+	newInput( 4, nodeValue_EScroll( "Shape",       0, [ 
+		new scrollItem( "Circle",    s_node_shape_circle,    0 ), 
+		new scrollItem( "Rectangle", s_node_shape_rectangle, 0 ) 
+	]));
+	newInput( 1, nodeValue_Vec2(    "Position",  [0,0]         )).setHotkey("G").setUnitSimple();
+	newInput( 2, nodeValue_Slider(  "Radius",     4, [1,16,.1] ));
+	newInput( 5, nodeValue_Vec2(    "Size",      [4,4]         ));
+	newInput( 3, nodeValue_Vec2(    "Velocity",  [0,0]         ));
+	// 6
 	
 	newOutput(0, nodeValue_Output("Domain", VALUE_TYPE.fdomain, noone ));
 		
 	input_display_list = [ 0, 
-		[ "Velocity", false ], 4, 1, 2, 5, 3, 
+		[ "Velocity", false ],  4,  1,  2,  5,  3, 
 	]
 	
 	////- Node

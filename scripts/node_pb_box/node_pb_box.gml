@@ -4,22 +4,27 @@ function Node_PB_Box(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	setDimension(96, 48);
 	setDrawIcon();
 	
-	newInput(0, nodeValue_Pbbox("Base PBBOX"));
-	newInput(1, nodeValue_Pbbox("PBBOX"));
+	////- =Layout
+	newInput( 0, nodeValue_Pbbox( "Base PBbox"      ));
+	newInput( 1, nodeValue_Pbbox( "PBbox"           ));
 	
-	newInput(2, nodeValue_Float("PBBOX Left", 0));
-	newInput(3, nodeValue_Float("PBBOX Top", 0));
-	newInput(4, nodeValue_Float("PBBOX Right", 0));
-	newInput(5, nodeValue_Float("PBBOX Bottom", 0));
-	newInput(6, nodeValue_Float("PBBOX Width", 0));
-	newInput(7, nodeValue_Float("PBBOX Height", 0));
+	////- =Override
+	newInput( 2, nodeValue_Float( "PBbox Left",   0 ));
+	newInput( 3, nodeValue_Float( "PBbox Top",    0 ));
+	newInput( 4, nodeValue_Float( "PBbox Right",  0 ));
+	newInput( 5, nodeValue_Float( "PBbox Bottom", 0 ));
+	newInput( 6, nodeValue_Float( "PBbox Width",  0 ));
+	newInput( 7, nodeValue_Float( "PBbox Height", 0 ));
+	// 8
 	
-	newOutput(0, nodeValue_Output("PBBOX", VALUE_TYPE.pbBox, noone));
+	newOutput(0, nodeValue_Output("PBbox", VALUE_TYPE.pbBox, noone));
 	
 	input_display_list = [
-		["Layout",         false], 0, 1, 
-		["Layout Override", true], 2, 3, 4, 5, 6, 7, 
+		[ "Layout",  false ],  0,  1, 
+		[ "Override", true ],  2,  3,  4,  5,  6,  7, 
 	]
+	
+	////- Node
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _params) { 
 		var _pbbox = getInputSingle(1);

@@ -9,15 +9,15 @@ function Node_VerletSim_Drag(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	newActiveInput(1);
 	
 	////- =Mesh
-	newInput(0, nodeValue_Mesh( "Mesh" )).setCustomData(global.VERLET_MESH_JUNC).setVisible(true, true);
+	newInput( 0, nodeValue_Mesh( "Mesh" )).setCustomData(global.VERLET_MESH_JUNC).setVisible(true, true);
 	
 	////- =Anchor
-	newInput(3, nodeValue_Bool( "Auto Anchor",  true ));
-	newInput(4, nodeValue_Vec2( "Anchor",      [0,0] ));
+	newInput( 3, nodeValue_Bool( "Auto Anchor",  true ));
+	newInput( 4, nodeValue_Vec2( "Anchor",      [0,0] ));
 	
 	////- =Transform
-	newInput(2, nodeValue_Vec2(     "Drag",    [0,0] )).setUnitSimple();
-	newInput(5, nodeValue_Rotation( "Rotation", 0    ));
+	newInput( 2, nodeValue_Vec2(     "Drag",    [0,0] )).setUnitSimple();
+	newInput( 5, nodeValue_Rotation( "Rotation", 0    ));
 	// input 6
 	
 	newOutput(0, nodeValue_Output("Mesh", VALUE_TYPE.mesh, noone)).setCustomData(global.VERLET_MESH_JUNC);

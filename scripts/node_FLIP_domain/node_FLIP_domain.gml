@@ -20,7 +20,7 @@ function Node_FLIP_Domain(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	newInput( 8, nodeValue_Float(  "Time Step",     .05 ));
 	
 	////- =Physics
-	newInput( 6, nodeValue_Slider(   "Damping",           .8   ));
+	newInput( 6, nodeValue_Slider(   "Damping",           .8  ));
 	newInput( 7, nodeValue_Float(    "Gravity",            5  ));
 	newInput(13, nodeValue_Rotation( "Gravity Direction", -90 ));
 	newInput(10, nodeValue_Slider(   "Viscosity",          0., [ -1, 1, 0.01 ] ));

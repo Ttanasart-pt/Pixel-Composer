@@ -1,0 +1,11 @@
+{
+  "$GMNotes":"v1",
+  "%Name":"note_verletSim_group_inline",
+  "name":"note_verletSim_group_inline",
+  "parent":{
+    "name":"verletSim",
+    "path":"folders/nodes/data/simulation/verletSim.yy",
+  },
+  "resourceType":"GMNotes",
+  "resourceVersion":"1.1",
+}

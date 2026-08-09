@@ -1,0 +1,11 @@
+{
+  "$GMNotes":"v1",
+  "%Name":"note_pb_box",
+  "name":"note_pb_box",
+  "parent":{
+    "name":"pbbox",
+    "path":"folders/nodes/data/PB/pbbox.yy",
+  },
+  "resourceType":"GMNotes",
+  "resourceVersion":"1.1",
+}

@@ -1,0 +1,11 @@
+{
+  "$GMNotes":"v1",
+  "%Name":"note_verletSim_bloat",
+  "name":"note_verletSim_bloat",
+  "parent":{
+    "name":"modify",
+    "path":"folders/nodes/data/simulation/verletSim/modify.yy",
+  },
+  "resourceType":"GMNotes",
+  "resourceVersion":"1.1",
+}

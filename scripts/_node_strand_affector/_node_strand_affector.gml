@@ -44,7 +44,7 @@ function _Node_Strand_Affector(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	
 	newInput( 0, nodeValue_Strand());
 	
-	////- =Shape
+	////- =Selection
 	newInput( 1, nodeValue_EScroll(  "Shape",     0, [ "Point", "Band" ] ));
 	newInput( 2, nodeValue_Vec2(     "Position",  [0,0] ));
 	newInput( 3, nodeValue_Float(    "Range",      4    ));
@@ -56,7 +56,7 @@ function _Node_Strand_Affector(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	
 	input_fix_len = array_length(inputs);
 	input_display_list = [ 0, 
-		[ "Shape", false ], 1, 2, 3, 4, 5, 
+		[ "Selection", false ],  1,  2,  3,  4,  5, 
 	];
 	
 	////- Node

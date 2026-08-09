@@ -1,0 +1,11 @@
+{
+  "$GMNotes":"v1",
+  "%Name":"note_strand_render_texture",
+  "name":"note_strand_render_texture",
+  "parent":{
+    "name":"strandSim",
+    "path":"folders/nodes/data/simulation/strandSim.yy",
+  },
+  "resourceType":"GMNotes",
+  "resourceVersion":"1.1",
+}

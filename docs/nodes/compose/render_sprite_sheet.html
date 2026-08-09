@@ -50,7 +50,7 @@
 
 <div class="title">
                                                             <h1>Render Spritesheet</h1>
-                                                            <div class="badges"><p class="version-banner" title="This page is updated on version 1.18.1">1.18.1</p></div>
+                                                            <div class="badges"><p class="version-banner" title="This page is written before 1.18, some information might be outdated">pre 1.18</p></div>
                                                         </div>
 <p class="subtitle">Create spritesheet from image array or animation.</p>
 
@@ -115,26 +115,9 @@
     }
 </script><img class="node-graph-preview" src="/src/images/nodegen/node_render_sprite_sheet/node_render_sprite_sheet-graph.png"><script>const sampleContent = "{\"version\":120076,\"nodes\":[{\"x\":-656,\"y\":-96,\"inputs\":[{\"linked\":true},{},{},{\"unit\":1},{},{},{},{},{},{},{},{},{},{},{\"v\":1},{},{\"unit\":1},{\"unit\":1},{},{\"r\":[[[0,0],0,[0,1],[0,0],0,0,true,0],[[0,11],90,[0,1],[0,0],0,0,true,0]],\"anim\":true,\"m\":1},{},{},{},{},{},{},{},{},{\"r\":{\"d\":0.57999999999999996},\"m\":1},{},{},{},{\"unit\":1},{\"unit\":1},{},{\"unit\":1},{},{},{},{},{\"unit\":1},{},{},{},{},{},{},{},{},{}],\"outputs\":[{},{},{}],\"renamed\":true,\"id\":\"gA8DI57428178BO43lRpmNUQmadKRV9N\",\"version\":120076,\"attriTool\":{},\"name\":\"Draw Shape\",\"inspectInputs\":[{\"v\":1},{\"v\":1},{\"v\":1},{},{\"v\":1}],\"iname\":\"Draw_Shape37064\",\"type\":\"Node_Shape\"},{\"x\":-480,\"y\":-96,\"inputs\":[{\"from_node\":\"gA8DI57428178BO43lRpmNUQmadKRV9N\",\"from_index\":0},{},{},{\"r\":{\"d\":2},\"m\":1},{},{},{},{},{\"r\":{\"d\":[1,12]},\"m\":1},{},{},{},{}],\"outputs\":[{},{}],\"renamed\":true,\"id\":\"gA8DI2739127JS26uqK8FhZyCGvafpwU\",\"version\":120076,\"attriTool\":{},\"name\":\"Render Spritesheet\",\"inspectInputs\":[{\"v\":1},{\"v\":1},{\"v\":1},{},{\"v\":1}],\"iname\":\"Render_Spritesheet30998\",\"type\":\"Node_Render_Sprite_Sheet\"}]}";</script><button class="copy-sample" onclick="copyToClipboard(sampleContent)">
         Copy to Clipboard
-</button><br><p>
-Convert image array, or animation to sprite sheet.</p><br>
+</button><br><p>Convert image array, or animation to sprite sheet.</p><br>
 <br><h2><a id="Properties" class="anchor"></a>Properties</h2><br>
-<h3><a id="Sprites" class="anchor"></a><span class="junction" style="border-color: #ff6b97AA">Sprites</span></h3><br>
-<p>Input image(s) or animation.</p><br>
-<h3><a id="Sprite Set" class="anchor"></a><span class="junction" style="border-color: #ff9166AA">Sprite Set</span></h3><br>
-<p>Whether to convert image array or animation to sprite sheet.
-For animation type, the project need to be played from start to finish to generate the sprite sheet.</p><br>
-<h3><a id="Frame Step" class="anchor"></a><span class="junction" style="border-color: #ff9166AA">Frame Step</span></h3><br>
-<p>Number of frame to progress per sprite sheet frame (set to 1 will render every frame, 2 will render one image per 2 frames, etc.)</p><br>
-<h3><a id="Packing Type" class="anchor"></a><span class="junction" style="border-color: #ff9166AA">Packing Type</span></h3><br>
-<p>How to pack the sprite sheet.</p><br>
-<h3><a id="Alignment" class="anchor"></a><span class="junction" style="border-color: #ff9166AA">Alignment</span></h3><br>
-<p>For <code>horizontal</code> and <code>vertical</code> packing type, how to align the images in the axis (if the source image have different sizes).</p><br>
-<h3><a id="Spacing" class="anchor"></a><span class="junction" style="border-color: #ffe478AA">Spacing</span></h3><br>
-<p>Spacing between each images in the sprite sheet.</p><br>
-<h3><a id="Padding" class="anchor"></a><span class="junction" style="border-color: #8fde5dAA">Padding</span></h3><br>
-<p>Apply extra space around the entire sprite sheet.</p><br>
-<h3><a id="Custom Range" class="anchor"></a><span class="junction" style="border-color: #8c3f5dAA">Custom Range</span></h3><br>
-<p>Set custom range of images to convert to sprite sheet, whether the animation range or array index range.</p><br><br><h2 class="nosidebar">Related Links</h2><br><ul class="link-table"><li><span>Base Code: </span><a href="https://github.com/Ttanasart-pt/Pixel-Composer/blob/main/scripts/node_render_sprite_sheet/node_render_sprite_sheet.gml">/scripts/node_render_sprite_sheet/node_render_sprite_sheet.gml</a></li></ul>
+<p><table class="prop-table cc3070"><tr><td colspan='2' class='prop-section'>Surfaces</td></tr><tr><td><span class="junction" style="border-color: #ff6b97AA">Sprites</span></td><td>Input image(s) or animation.</td></tr><tr><td><span class="junction" style="border-color: #ff9166AA">Sprite Set</span></td><td>Whether to convert image array or animation to sprite sheet.<br>For animation type, the project need to be played from start to finish to generate the sprite sheet.</td></tr><tr><td><span class="junction" style="border-color: #ff9166AA">Frame Step</span></td><td>Number of frame to progress per sprite sheet frame (set to 1 will render every frame, 2 will render one image per 2 frames, etc.)</td></tr><tr><td><span class="junction" style="border-color: #8c3f5dAA">Skip Empty</span></td><td>Skip empty surface.<br></td></tr><tr><td colspan='2' class='prop-section'>Packing</td></tr><tr><td><span class="junction" style="border-color: #ff9166AA">Packing Type</span></td><td>How to pack the sprite sheet.</td></tr><tr><td><span class="junction" style="border-color: #ff9166AA">Alignment</span></td><td>For <code>horizontal</code> and <code>vertical</code> packing type, how to align the images in the axis (if the source image have different sizes).</td></tr><tr><td><span class="junction" style="border-color: #ffe478AA">Spacing</span></td><td>Spacing between each images in the sprite sheet.</td></tr><tr><td><span class="junction" style="border-color: #8fde5dAA">Padding</span></td><td>Apply extra space around the entire sprite sheet.<br></td></tr><tr><td colspan='2' class='prop-section'>Range</td></tr><tr><td><span class="junction" style="border-color: #8c3f5dAA">Custom Range</span></td><td>Set custom range of images to convert to sprite sheet, whether the animation range or array index range.</td></tr><tr><td><span class="junction" style="border-color: #ffe478AA">Range</span></td><td>Starting/ending frames, set end to 0 to default to last frame.</td></tr></table></p><br><br><h2 class="nosidebar">Related Links</h2><br><ul class="link-table"><li><span>Base Code: </span><a href="https://github.com/Ttanasart-pt/Pixel-Composer/blob/main/scripts/node_render_sprite_sheet/node_render_sprite_sheet.gml">/scripts/node_render_sprite_sheet/node_render_sprite_sheet.gml</a></li></ul>
         </div>
     </div>
 

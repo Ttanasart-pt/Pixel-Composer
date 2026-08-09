@@ -1,0 +1,11 @@
+{
+  "$GMNotes":"v1",
+  "%Name":"note_pd_filter_shine",
+  "name":"note_pd_filter_shine",
+  "parent":{
+    "name":"modify",
+    "path":"folders/nodes/data/PB/modify.yy",
+  },
+  "resourceType":"GMNotes",
+  "resourceVersion":"1.1",
+}

@@ -60,7 +60,7 @@
 <tr><th colspan="2" class="summary-topic junction-separator"><p>Layers</p></th></tr><tr>
                 <td class="summary-topic junction-type"><p style="color: #ff9166">dimension</p></td>
                 <td><p>Dimension</p></td>
-            </tr><tr><th colspan="2" class="summary-topic junction-separator"><p>Border</p></th></tr><tr>
+            </tr><tr><th colspan="2" class="summary-topic junction-separator"><p>Outline</p></th></tr><tr>
                 <td class="summary-topic junction-type"><p style="color: #8c3f5d">bool</p></td>
                 <td><p>Outline</p></td>
             </tr><tr>
@@ -86,7 +86,12 @@
     function copyToClipboard(text) {
         navigator.clipboard.writeText(text);
     }
-</script><br>
+</script><br><p>Pixel Builder (PB) is a system for creating parametric pixel art. PB is based on the concept of box (PBBox) composition.</p><br>
+<br><h2><a id="Properties" class="anchor"></a>Properties</h2><br>
+<p><table class="prop-table cc3070"><tr><td colspan='2' class='prop-section'>Outline</td></tr><tr><td><span class="junction" style="border-color: #8c3f5dAA">Outline</span></td><td>Apply output post-processing effect.</td></tr><tr><td><span class="junction" style="border-color: #ff9166AA">Thickness</span></td><td>Outline thickness.</td></tr><tr><td><span class="junction" style="border-color: #8fde5dAA">Color</span></td><td>Outline color.</td></tr></table></p><br>
+<h2><a id="PBBox Composition" class="anchor"></a>PBBox Composition</h2><br>
+<p>PBBox is a composition system based on nested box. Each box contain nestedchildren boxes and its position, scale are defined relative to its parent. </p><br>
+<p>PBBox also used in Custom panel.</p><br>
 <br><h2 class="nosidebar">Commit History</h2><br>
 <table class="change-table"><tr><th>1.15.4</th><td><ul><li>Introduced</li></ul></td></tr></table><br><h2 class="nosidebar">Related Links</h2><br><ul class="link-table"><li><span>Base Code: </span><a href="https://github.com/Ttanasart-pt/Pixel-Composer/blob/main/scripts/node_pixel_builder/node_pixel_builder.gml">/scripts/node_pixel_builder/node_pixel_builder.gml</a></li><li><span>Shader [sh_pb_main_draw]: </span><a href="https://github.com/Ttanasart-pt/Pixel-Composer/blob/main/shaders/sh_pb_main_draw/sh_pb_main_draw.fsh">/shaders/sh_pb_main_draw/sh_pb_main_draw.fsh</a></li></ul>
         </div>
