@@ -346,6 +346,8 @@ function __part(_node) : __particleObject() constructor {
 	}
 	
 	static step = function(_frame = 0) {
+		if(life_total <= 0) return;
+		
 		var lifeRat  = clamp(1 - life / life_total, 0, 1);
 		var spdCurve = speedT == noone? 1 : speedT.getFast(lifeRat);
 		
@@ -537,6 +539,8 @@ function __part(_node) : __particleObject() constructor {
 	}
 	
 	static draw = function(exact, surf_w = 1, surf_h = 1) {
+		if(life_total <= 0) return;
+		
 		var lifeRat = clamp(1 - life / life_total, 0, 1);
 		var scCurve = scT == noone? 1 : scT.getFast(lifeRat);
 		var ss = surf;

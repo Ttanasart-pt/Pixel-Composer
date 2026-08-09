@@ -1103,6 +1103,7 @@
     {"id":{"name":"note_perlin_extra","path":"notes/note_perlin_extra/note_perlin_extra.yy",},},
     {"id":{"name":"note_perlin_smear","path":"notes/note_perlin_smear/note_perlin_smear.yy",},},
     {"id":{"name":"note_perlin","path":"notes/note_perlin/note_perlin.yy",},},
+    {"id":{"name":"note_pixel_builder","path":"notes/note_pixel_builder/note_pixel_builder.yy",},},
     {"id":{"name":"note_pixel_cloud","path":"notes/note_pixel_cloud/note_pixel_cloud.yy",},},
     {"id":{"name":"note_pixel_extract","path":"notes/note_pixel_extract/note_pixel_extract.yy",},},
     {"id":{"name":"note_pixel_math","path":"notes/note_pixel_math/note_pixel_math.yy",},},

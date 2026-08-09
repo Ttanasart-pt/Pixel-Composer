@@ -9,9 +9,9 @@ function Node_Pixel_Builder(_x, _y, _group = noone) : Node_Collection(_x, _y, _g
 	layers = [];
 	
 	////- =Layers
-	newInput(0, nodeValue_Dimension());
+	newInput( 0, nodeValue_Dimension());
 	
-	////- =Border
+	////- =Outline
 	newInput( 1, nodeValue_Bool(  "Outline",   false    ));
 	newInput( 2, nodeValue_Int(   "Thickness", 0        ));
 	newInput( 3, nodeValue_Color( "Color",     ca_white )).setInternalName("Outline Color");
@@ -85,8 +85,8 @@ function Node_Pixel_Builder(_x, _y, _group = noone) : Node_Collection(_x, _y, _g
 	});
 	
 	group_input_display_list  = [ 0, 
-		[ "Layers", false    ], layer_renderer, 
-		[ "Border", false, 1 ], 2, 3, new Inspector_Spacer(ui(4), true, false, ui(4)) 
+		[ "Layers",  false    ], layer_renderer, 
+		[ "Outline", false, 1 ], 2, 3, new Inspector_Spacer(ui(4), true, false, ui(4)) 
 	];
 	group_output_display_list = [ 0, 1 ];
 	

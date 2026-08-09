@@ -1,0 +1,11 @@
+{
+  "$GMNotes":"v1",
+  "%Name":"note_pixel_builder",
+  "name":"note_pixel_builder",
+  "parent":{
+    "name":"main",
+    "path":"folders/nodes/data/PB/main.yy",
+  },
+  "resourceType":"GMNotes",
+  "resourceVersion":"1.1",
+}
