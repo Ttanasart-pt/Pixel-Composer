@@ -13,12 +13,12 @@ function Node_MK_Blast_Force(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	newInput(11, nodeValue_Toggle( "Mask", 0b01, [ "Flame", "Smoke" ] ))
 	
 	////- =Selection
-	newInput( 7, nodeValue_Bool(   "Use Selection", false ))
-	newInput( 8, nodeValue_Area(   "Area",   AREA_DEF_REF )).setUnitSimple();
-	newInput( 9, nodeValue_Float(  "Falloff", 0 )).setCurvable(10, CURVE_DEF_01);
+	newInput( 7, nodeValue_Bool(   "Use Selection", false        ))
+	newInput( 8, nodeValue_Area(   "Area",          AREA_DEF_REF )).setUnitSimple();
+	newInput( 9, nodeValue_Float(  "Falloff",       0            )).setCurvable(10, CURVE_DEF_01);
 	
-	////- =Vector
-	newInput( 2, nodeValue_Range(   "Strength",  [0,1]       ));
+	////- =Force
+	newInput( 2, nodeValue_Range(   "Strength",  [0,1]        ));
 	newInput( 3, nodeValue_RotRand( "Direction", ROTRAN_DEF_0 ));
 	
 	////- =Fixed Curve
@@ -32,7 +32,7 @@ function Node_MK_Blast_Force(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	input_display_list = [ s_MKFX, 1,  
 		[ "Blast",       false    ],  0, 11, 
 		[ "Selection",   false, 7 ],  8,  9, 10, 
-		[ "Vector",      false    ],  2,  3,  
+		[ "Force",       false    ],  2,  3,  
 		[ "Fixed Curve", false, 4 ],  5,  6, 
 	];
 	

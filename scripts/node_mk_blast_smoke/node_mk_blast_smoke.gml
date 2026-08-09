@@ -55,14 +55,14 @@ function Node_MK_Blast_Smoke(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 		////- =/Shape
 	newInput(12, nodeValue_EScroll( "Shape", 0, [ "Circle", "Arrow", "Line", "Path" ] ));
 	newInput(26, nodeValue_Range(   "Arrow Offset", [0,0] ));
-	newInput(27, nodeValue_Path("Path"                ));
+	newInput(27, nodeValue_Path(    "Path"                ));
 	newInput(28, nodeValue_Int(     "Path Sample",   8    ));
 	newInput(29, nodeValue_Range(   "Thickness",    [2,2] ));
 	newInput(30, nodeValue_Curve(   "Shape",        CURVE_DEF_11 ));
 	
 		////- =/Color
 	newInput( 3, nodeValue_Gradient( "Color", gra_black_white )).addShift(33);
-	newInput(10, nodeValue_Range(    "Level", [0,1]  ));
+	newInput(10, nodeValue_Range(    "Level", [0,1]           ));
 	// 34
 	
 	newOutput( 0, nodeValue_Output( "Blast", VALUE_TYPE.struct, [] )).setCustomData(global.MKBLAST_JUNC);

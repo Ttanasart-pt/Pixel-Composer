@@ -1,5 +1,5 @@
 function Node_MK_Blast_Align(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
-	name = "Align";
+	name  = "Align";
 	color = COLORS.node_blend_mkblast;
 	icon  = THEME.mkBlast;
 	update_on_frame = true;
@@ -47,8 +47,8 @@ function Node_MK_Blast_Align(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 			
 			for( var j = 0, m = array_length(_l.flames); j < m; j++ ) {
 				var _flm = _l.flames[j];
-				if(!is(_flm, MKBlast_Element)) continue;
-				if(!(_flm.mask & _mask))       continue;
+				if(!is(_flm, MKBlast_Element))             continue;
+				if(!(_flm.mask & _mask))                   continue;
 				if(_flm.px == _flm.x && _flm.py == _flm.y) continue;
 				
 				_flm.angleS = lerp_angle_direct(_flm.angleS, point_direction(_flm.px, _flm.py, _flm.x, _flm.y), _sped);

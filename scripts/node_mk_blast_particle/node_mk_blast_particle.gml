@@ -36,9 +36,9 @@ function Node_MK_Blast_Particle(_x, _y, _group = noone) : Node(_x, _y, _group) c
 	newInput(22, nodeValue_Bool(    "Flip Rotate", false ));
 	
 	////- =Size
-	newInput(12, nodeValue_Range(      "Size",         [6,10]    ));
-	newInput(24, nodeValue_Range(      "Spawn Size",   [.5,.5]   ));
-	newInput(36, nodeValue_Vec2_Range( "Aspect Ratio", [1,1,1,1] ));
+	newInput(12, nodeValue_Range(   "Size",         [6,10]    ));
+	newInput(24, nodeValue_Range(   "Spawn Size",   [.5,.5]   ));
+	newInput(36, nodeValue_Range2(  "Aspect Ratio", [1,1,1,1] ));
 	
 	////- =Spiral
 	newInput(25, nodeValue_Bool(    "Spiral Use", false   ));
@@ -59,7 +59,7 @@ function Node_MK_Blast_Particle(_x, _y, _group = noone) : Node(_x, _y, _group) c
 		////- =/Shape
 	newInput(15, nodeValue_EScroll( "Shape", 0, [ "Circle", "Arrow", "Line", "Path" ] ));
 	newInput(31, nodeValue_Range(   "Arrow Offset", [0,0] ));
-	newInput(32, nodeValue_Path("Path"                ));
+	newInput(32, nodeValue_Path(    "Path"                ));
 	newInput(33, nodeValue_Int(     "Path Sample",   8    ));
 	newInput(34, nodeValue_Range(   "Thickness",    [2,2] ));
 	newInput(35, nodeValue_Curve(   "Shape",        CURVE_DEF_11 ));

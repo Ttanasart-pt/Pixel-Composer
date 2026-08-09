@@ -13,9 +13,9 @@ function Node_MK_Blast_Gravity(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	newInput( 8, nodeValue_Toggle( "Mask", 0b01, [ "Flame", "Smoke" ] ))
 	
 	////- =Selection
-	newInput( 4, nodeValue_Bool(   "Use Selection", false ))
-	newInput( 5, nodeValue_Area(   "Area",   AREA_DEF_REF )).setUnitSimple();
-	newInput( 6, nodeValue_Float(  "Falloff", 0 )).setCurvable( 7, CURVE_DEF_01);
+	newInput( 4, nodeValue_Bool(   "Use Selection", false        ))
+	newInput( 5, nodeValue_Area(   "Area",          AREA_DEF_REF )).setUnitSimple();
+	newInput( 6, nodeValue_Float(  "Falloff",       0            )).setCurvable( 7, CURVE_DEF_01);
 	
 	////- =Gravity
 	newInput( 2, nodeValue_Range(   "Strength",  [0,1]            ));

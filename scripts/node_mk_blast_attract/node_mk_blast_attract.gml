@@ -13,9 +13,9 @@ function Node_MK_Blast_Attract(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	newInput(10, nodeValue_Toggle( "Mask", 0b01, [ "Flame", "Smoke" ] ))
 	
 	////- =Selection
-	newInput( 5, nodeValue_Bool(   "Use Selection", false ))
-	newInput( 6, nodeValue_Area(   "Area",   AREA_DEF_REF )).setUnitSimple();
-	newInput( 7, nodeValue_Float(  "Falloff", 0 )).setCurvable( 8, CURVE_DEF_01);
+	newInput( 5, nodeValue_Bool(   "Use Selection", false        ))
+	newInput( 6, nodeValue_Area(   "Area",          AREA_DEF_REF )).setUnitSimple();
+	newInput( 7, nodeValue_Float(  "Falloff",       0            )).setCurvable( 8, CURVE_DEF_01);
 	
 	////- =Attract
 	newInput( 3, nodeValue_Vec2(  "Target",    [.5,.5] )).setUnitSimple().setMappableRange(11, "Scatter", THEME.mk_blast_group);
