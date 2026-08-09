@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.8.008",
+    "changes": [
+      {
+        "date": "2026-08-09T00:30:39.931Z",
+        "node": "",
+        "commit": "Library now search recursively in all subdirectory."
+      }
+    ]
+  },
+  {
     "version": "1.21.8",
     "changes": [
       {

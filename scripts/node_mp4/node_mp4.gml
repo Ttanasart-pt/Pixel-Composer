@@ -96,8 +96,8 @@ function Node_Image_mp4(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	////- MP4
 	
 	function ffmpegCheck() {
-		     if(OS == os_windows) ffmpeg = filepath_resolve(PREFERENCES.ffmpeg_path)               + "win/ffmpeg.exe";
-		else if(OS == os_linux)   ffmpeg = string_lower(filepath_resolve(PREFERENCES.ffmpeg_path)) + "ffmpeg";
+		     if(OS == os_windows) ffmpeg = directory_search_file(filepath_resolve(PREFERENCES.ffmpeg_path),               "ffmpeg.exe", -1);
+		else if(OS == os_linux)   ffmpeg = directory_search_file(string_lower(filepath_resolve(PREFERENCES.ffmpeg_path)), "ffmpeg",     -1);
 		else if(OS == os_macosx)  ffmpeg = "/opt/homebrew/bin/ffmpeg";
 		
 		ffmpegPass = file_exists_empty(ffmpeg);
@@ -121,7 +121,7 @@ function Node_Image_mp4(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 			}
 			dia.setData(self, "FFmpeg", _link, ffmpeg, ".mp4", _tfile);
 		}
-			
+		
 	} ffmpegCheck();
 		
 	function updatePaths(path = path_current) {
@@ -196,7 +196,6 @@ function Node_Image_mp4(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		
 		while(true) {
 			var fpath = $"{targ_dir}/frame{string_lead_zero(file_read_cursor,4)}.png";
-			print(fpath)
 			
 			if(!file_exists(fpath)) return loadAll;
 			

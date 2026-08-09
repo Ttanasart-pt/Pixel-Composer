@@ -266,11 +266,11 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	temp_surface = [ noone ]; 
 	
 	if(OS == os_windows) {
-		converter = filepath_resolve(PREFERENCES.ImageMagick_path) + "win/convert.exe";
-		magick    = filepath_resolve(PREFERENCES.ImageMagick_path) + "win/magick.exe";
-		webp      = filepath_resolve(PREFERENCES.webp_path)		   + "win/webpmux.exe";
-		gifski    = filepath_resolve(PREFERENCES.gifski_path) 	   + "win/gifski.exe";
-		ffmpeg    = filepath_resolve(PREFERENCES.ffmpeg_path) 	   + "ffmpeg.exe";
+		converter = directory_search_file(filepath_resolve(PREFERENCES.ImageMagick_path), "convert.exe", -1);
+		magick    = directory_search_file(filepath_resolve(PREFERENCES.ImageMagick_path), "magick.exe",  -1);
+		webp      = directory_search_file(filepath_resolve(PREFERENCES.webp_path),        "webpmux.exe", -1);
+		gifski    = directory_search_file(filepath_resolve(PREFERENCES.gifski_path),      "gifski.exe",  -1);
+		ffmpeg    = directory_search_file(filepath_resolve(PREFERENCES.ffmpeg_path),      "ffmpeg.exe",  -1);
 		
 		var _w = function(s,p) /*=>*/ {return $"No {s} detected at {p}, please make sure the installation is complete and {s} path is set correctly in the preference."};
 		
@@ -280,11 +280,11 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		if(!file_exists_empty(gifski))    noti_warning(_w("gifski",      gifski), noone, self);
 		
 	} else if(OS == os_linux) {
-		converter = string_lower(filepath_resolve(PREFERENCES.ImageMagick_path)) + "linux/imagemagick.appimage";
-		magick    = string_lower(filepath_resolve(PREFERENCES.ImageMagick_path)) + "linux/imagemagick.appimage";
-		webp      = string_lower(filepath_resolve(PREFERENCES.webp_path))        + "linux/webpmux";
-		gifski    = string_lower(filepath_resolve(PREFERENCES.gifski_path))      + "linux/gifski";
-		ffmpeg    = string_lower(filepath_resolve(PREFERENCES.ffmpeg_path))      + "ffmpeg";
+		converter = directory_search_file(string_lower(filepath_resolve(PREFERENCES.ImageMagick_path)), "imagemagick.appimage", -1);
+		magick    = directory_search_file(string_lower(filepath_resolve(PREFERENCES.ImageMagick_path)), "imagemagick.appimage", -1);
+		webp      = directory_search_file(string_lower(filepath_resolve(PREFERENCES.webp_path)),        "webpmux",              -1);
+		gifski    = directory_search_file(string_lower(filepath_resolve(PREFERENCES.gifski_path)),      "gifski",               -1);
+		ffmpeg    = directory_search_file(string_lower(filepath_resolve(PREFERENCES.ffmpeg_path)),      "ffmpeg",               -1);
 		
 		var _w = function(s,p) /*=>*/ {return $"No {s} detected at {p}, please make sure the installation is complete and {s} path is set correctly in the preference."};
 		

@@ -1,3 +1,6 @@
+
+	////- Check
+	
 function directory_verify(path) {
 	var _d = path;
 	var _v = ds_stack_create();
@@ -19,10 +22,27 @@ function directory_clear(path) {
 	directory_create(path);
 }
 
+	////- Data
+
 function directory_size_mb(dir) {
 	if(!directory_exists(dir)) return 0;
 	return directory_size(dir) / (1024*1024);
 }
+
+function directory_file_count(path) {
+	var amo  = 0;
+	var file = file_find_first($"{path}/*", -1);
+	
+	while(file != "") {	
+		amo++;
+		file = file_find_next();
+	}
+	file_find_close();
+	
+	return amo;
+}
+
+	////- Files
 
 function directory_get_files_ext(dir, ext) {
 	var a = [];
@@ -56,7 +76,6 @@ function directory_listdir(path, flag = fa_directory, _full = true) {
 	return _dir;
 }
 
-
 function directory_listdir_all(path) {
 	var files = directory_listdir(path, 0, true);
 	var dirs  = directory_listdir(path, fa_directory, true);
@@ -67,16 +86,20 @@ function directory_listdir_all(path) {
 	return files;
 }
 
-
-function directory_file_count(path) {
-	var amo  = 0;
-	var file = file_find_first($"{path}/*", -1);
+function directory_search_file(dir, file, recur = 0) {
+	var _files = directory_listdir(dir, 0, false);
 	
-	while(file != "") {	
-		amo++;
-		file = file_find_next();
+	for( var i = 0, n = array_length(_files); i < n; i++ ) {
+		if(_files[i] == file) return filename_combine(dir, _files[i]);
 	}
-	file_find_close();
 	
-	return amo;
+	if(recur == 0) return -1;
+	
+	var _dir   = directory_listdir(dir, fa_directory, false);
+	for( var i = 0, n = array_length(_dir); i < n; i++ ) {
+		var _res = directory_search_file(filename_combine(dir, _dir[i]), file, recur - 1);
+		if(_res != -1) return _res;
+	}
+	
+	return -1;
 }
