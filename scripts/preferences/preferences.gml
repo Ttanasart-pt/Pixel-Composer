@@ -728,3 +728,55 @@
 		__regFnPref(__txt("pref_file_watcher_delay",              "File watcher delay (s)"),            "file_watcher_delay"              )
 	}
 #endregion
+
+#region library
+	function libCheck(_lib = "FFmpeg") {
+		var _ldir  = "";
+		var _lpath = "";
+		
+		if(_lib == "FFmpeg") {
+			switch(OS) {
+				case os_windows : _ldir  = filepath_resolve(PREFERENCES.ffmpeg_path);
+					              _lpath = directory_search_file(_ldir, "ffmpeg.exe", -1); break;
+					
+				case os_linux   : _ldir  = string_lower(filepath_resolve(PREFERENCES.ffmpeg_path));
+					              _lpath = directory_search_file(_ldir, "ffmpeg",     -1); break;
+					
+				case os_macosx  : _lpath = "/opt/homebrew/bin/ffmpeg"; break;
+			}
+		}
+		
+		if(file_exists_empty(_lpath)) 
+			return [_ldir, _lpath];
+			
+		var dia    = dialogCall(o_dialog_export_library_missing);
+		
+		var _link  = "";
+		var _tfile = "";
+		var _ext   = "";
+		
+		if(_lib == "FFmpeg") {
+			_ext = ".mp4";
+			
+			switch(OS) {
+				case os_windows : 
+					_link  = "https://www.gyan.dev/ffmpeg/builds/ffmpeg-release-full.7z"; 
+					_tfile = "./bin/ffmpeg.exe";
+					break;
+					
+				case os_linux   : 
+					_link  = "https://github.com/BtbN/FFmpeg-Builds/releases/download/latest/ffmpeg-master-latest-linux64-gpl.tar.xz"; 
+					_tfile = "./bin/ffmpeg";
+					break;
+				
+				case os_macosx  :
+					_link  = "https://ffmpeg.org/download.html";
+					break;
+			}
+		}
+		
+		dia.setData(self, _lib, _link, _ldir, _ext, _tfile);
+		return -1;
+	}
+
+#endregion

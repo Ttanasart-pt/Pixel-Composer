@@ -95,35 +95,46 @@ function Node_Image_mp4(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	
 	////- MP4
 	
-	function ffmpegCheck() {
-		     if(OS == os_windows) ffmpeg = directory_search_file(filepath_resolve(PREFERENCES.ffmpeg_path),               "ffmpeg.exe", -1);
-		else if(OS == os_linux)   ffmpeg = directory_search_file(string_lower(filepath_resolve(PREFERENCES.ffmpeg_path)), "ffmpeg",     -1);
-		else if(OS == os_macosx)  ffmpeg = "/opt/homebrew/bin/ffmpeg";
+	mp4libSub   = "";
+	mp4libLabel = new Inspector_Custom_Renderer(function(_x, _y, _w, _m, _hover, _focus) {
+		var hh = ui(32);
 		
-		ffmpegPass = file_exists_empty(ffmpeg);
+		var cc  = mp4libSub == ""? COLORS._main_value_negative : COLORS._main_accent;
+		var txt = mp4libSub == ""? "Missing FFmpeg library." : "Found FFmpeg library in subfolder.";
 		
-		if(!ffmpegPass) {
-			var dia    = dialogCall(o_dialog_export_library_missing);
-			var _link  = "https://ffmpeg.org/download.html"
-			var _tfile = "";
+		draw_sprite_stretched_ext(THEME.box_r2, 0, _x, _y, _w, hh, cc, .1);
+		draw_sprite_stretched_ext(THEME.box_r2, 1, _x, _y, _w, hh, cc,  1);
+		
+		draw_set_text(f_p2, fa_left, fa_center, cc);
+		draw_text_add(_x + ui(8), _y + hh / 2, __txt(txt));
+		
+		var bw = max(ui(48), _w / 3);
+		var bh = hh - ui(8);
+		var bx = _x + _w - ui(4) - bw;
+		var by = _y + ui(4);
+		
+		if(mp4libSub == "") {
+			if(buttonInstant(THEME.button_def, bx, by, bw, bh, _m, _hover, _focus, "", noone, 0, 0, 1, 1, cc) == 2)
+				checkLib();
 			
-			switch(OS) {
-				case os_windows : 
-					_link  = "https://www.gyan.dev/ffmpeg/builds/ffmpeg-release-full.7z"; 
-					_tfile = "./bin/ffmpeg.exe";
-					break;
-					
-				case os_linux   : 
-					_link  = "https://github.com/BtbN/FFmpeg-Builds/releases/download/latest/ffmpeg-master-latest-linux64-gpl.tar.xz"; 
-					_tfile = "./bin/ffmpeg";
-					break;
-					
+			draw_set_text(f_p2, fa_center, fa_center, COLORS._main_text);
+			draw_text_add(bx + bw / 2, by + bh / 2, "More info...");
+			
+		} else {
+			var tt = $"Append {mp4libSub} to the end of the lib path."
+			if(buttonInstant(THEME.button_def, bx, by, bw, bh, _m, _hover, _focus, tt, noone, 0, 0, 1, 1, cc) == 2) {
+				PREFERENCES.ffmpeg_path = filename_combine(PREFERENCES.ffmpeg_path, mp4libSub);
+				checkLib();
 			}
-			dia.setData(self, "FFmpeg", _link, ffmpeg, ".mp4", _tfile);
+			
+			draw_set_text(f_p2, fa_center, fa_center, COLORS._main_text);
+			draw_text_add(bx + bw / 2, by + bh / 2, "Fix path");
+			
 		}
 		
-	} ffmpegCheck();
-		
+		return hh;
+	});
+	
 	function updatePaths(path = path_current) {
 		if(path == -1) return false;
 		
@@ -143,9 +154,29 @@ function Node_Image_mp4(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		return true;
 	}
 	
+	static checkLib = function() {
+		ffmpeg = libCheck("FFmpeg");
+		
+		if(ffmpeg == -1) {
+			array_insert_unique(input_display_list, 0, mp4libLabel);
+			return;
+			
+		} else {
+			var ldir = ffmpeg[0];
+			ffmpeg   = ffmpeg[1];
+			
+			if(filename_dir(ffmpeg) != ldir) {
+				mp4libSub = string_replace(filename_dir(ffmpeg), ldir, "");
+				array_insert_unique(input_display_list, 0, mp4libLabel);
+				
+			} else 
+				array_remove(input_display_list, mp4libLabel);
+		}
+		
+	}
+	
 	static mp4init = function() {
-		ffmpegCheck();
-		if(!ffmpegPass)  return;
+		if(ffmpeg == -1) return;
 		if(file_reading) return;
 		
 		var _filemod = file_get_modify_s(path_current);

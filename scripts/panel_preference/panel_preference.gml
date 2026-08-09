@@ -316,7 +316,7 @@ function Panel_Preference() : PanelContent() constructor {
     		ds_list_add(pref_global, new __Panel_Linear_Setting_Item_Preference(
     			__txt("pref_directory_webp", "Webp path*"),
     			"webp_path",
-    			textBox_Text(function(txt) /*=>*/ {return prefSet("webp_path")})
+    			textBox_Text(function(txt) /*=>*/ {return prefSet("webp_path", txt)})
     				.setSideButton(button(function() /*=>*/ { PREFERENCES.webp_path = get_open_directory_compat(PREFERENCES.webp_path); PREF_SAVE(); }, THEME.button_path_icon))
     				.setFont(f_p2).setEmpty(),
     		));
@@ -324,7 +324,7 @@ function Panel_Preference() : PanelContent() constructor {
     		ds_list_add(pref_global, new __Panel_Linear_Setting_Item_Preference(
     			__txt("pref_directory_gifski", "Gifski path*"),
     			"gifski_path",
-    			textBox_Text(function(txt) /*=>*/ {return prefSet("gifski_path")})
+    			textBox_Text(function(txt) /*=>*/ {return prefSet("gifski_path", txt)})
     				.setSideButton(button(function() /*=>*/ { PREFERENCES.gifski_path = get_open_directory_compat(PREFERENCES.gifski_path); PREF_SAVE(); }, THEME.button_path_icon))
     				.setFont(f_p2).setEmpty(),
     		));
@@ -332,7 +332,7 @@ function Panel_Preference() : PanelContent() constructor {
     		ds_list_add(pref_global, new __Panel_Linear_Setting_Item_Preference(
     			__txt("pref_directory_FFmpeg", "FFmpeg path*"),
     			"ffmpeg_path",
-    			textBox_Text(function(txt) /*=>*/ {return prefSet("ffmpeg_path")})
+    			textBox_Text(function(txt) /*=>*/ {return prefSet("ffmpeg_path", txt)})
     				.setSideButton(button(function() /*=>*/ { PREFERENCES.ffmpeg_path = get_open_directory_compat(PREFERENCES.ffmpeg_path); PREF_SAVE(); }, THEME.button_path_icon))
     				.setFont(f_p2).setEmpty(),
     		));

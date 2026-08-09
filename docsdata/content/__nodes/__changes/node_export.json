@@ -6,6 +6,11 @@
         "date": "2026-08-09T00:30:39.931Z",
         "node": "",
         "commit": "Library now search recursively in all subdirectory."
+      },
+      {
+        "date": "2026-08-09T01:19:29.321Z",
+        "node": "Preference",
+        "commit": "**Preference**: Fix setting path from the textbox not working."
       }
     ]
   },

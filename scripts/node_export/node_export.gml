@@ -232,6 +232,46 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	inputs[8].attributes.unit = VALUE_UNIT.reference;
 	inputs[8].getEditWidget().setSideButton(framerateUnitToggle);
 	
+	mp4libSub   = "";
+	mp4libLabel = new Inspector_Custom_Renderer(function(_x, _y, _w, _m, _hover, _focus) {
+		var hh = ui(32);
+		
+		var cc  = mp4libSub == ""? COLORS._main_value_negative : COLORS._main_accent;
+		var txt = mp4libSub == ""? "Missing FFmpeg library." : "Found FFmpeg library in subfolder.";
+		
+		draw_sprite_stretched_ext(THEME.box_r2, 0, _x, _y, _w, hh, cc, .1);
+		draw_sprite_stretched_ext(THEME.box_r2, 1, _x, _y, _w, hh, cc,  1);
+		
+		draw_set_text(f_p2, fa_left, fa_center, cc);
+		draw_text_add(_x + ui(8), _y + hh / 2, __txt(txt));
+		
+		var bw = max(ui(48), _w / 3);
+		var bh = hh - ui(8);
+		var bx = _x + _w - ui(4) - bw;
+		var by = _y + ui(4);
+		
+		if(mp4libSub == "") {
+			if(buttonInstant(THEME.button_def, bx, by, bw, bh, _m, _hover, _focus, "", noone, 0, 0, 1, 1, cc) == 2)
+				checkLib();
+			
+			draw_set_text(f_p2, fa_center, fa_center, COLORS._main_text);
+			draw_text_add(bx + bw / 2, by + bh / 2, "More info...");
+			
+		} else {
+			var tt = $"Append {mp4libSub} to the end of the lib path."
+			if(buttonInstant(THEME.button_def, bx, by, bw, bh, _m, _hover, _focus, tt, noone, 0, 0, 1, 1, cc) == 2) {
+				PREFERENCES.ffmpeg_path = filename_combine(PREFERENCES.ffmpeg_path, mp4libSub);
+				checkLib();
+			}
+			
+			draw_set_text(f_p2, fa_center, fa_center, COLORS._main_text);
+			draw_text_add(bx + bw / 2, by + bh / 2, "Fix path");
+			
+		}
+		
+		return hh;
+	});
+	
 	////- Attributes
 	
 	attributes.clear_directory = true;
@@ -262,7 +302,7 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	gif_encoder       = [];
 	gif_frames        = 0;
 	
-	directory = "";
+	directory    = "";
 	temp_surface = [ noone ]; 
 	
 	if(OS == os_windows) {
@@ -270,7 +310,6 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		magick    = directory_search_file(filepath_resolve(PREFERENCES.ImageMagick_path), "magick.exe",  -1);
 		webp      = directory_search_file(filepath_resolve(PREFERENCES.webp_path),        "webpmux.exe", -1);
 		gifski    = directory_search_file(filepath_resolve(PREFERENCES.gifski_path),      "gifski.exe",  -1);
-		ffmpeg    = directory_search_file(filepath_resolve(PREFERENCES.ffmpeg_path),      "ffmpeg.exe",  -1);
 		
 		var _w = function(s,p) /*=>*/ {return $"No {s} detected at {p}, please make sure the installation is complete and {s} path is set correctly in the preference."};
 		
@@ -284,7 +323,6 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		magick    = directory_search_file(string_lower(filepath_resolve(PREFERENCES.ImageMagick_path)), "imagemagick.appimage", -1);
 		webp      = directory_search_file(string_lower(filepath_resolve(PREFERENCES.webp_path)),        "webpmux",              -1);
 		gifski    = directory_search_file(string_lower(filepath_resolve(PREFERENCES.gifski_path)),      "gifski",               -1);
-		ffmpeg    = directory_search_file(string_lower(filepath_resolve(PREFERENCES.ffmpeg_path)),      "ffmpeg",               -1);
 		
 		var _w = function(s,p) /*=>*/ {return $"No {s} detected at {p}, please make sure the installation is complete and {s} path is set correctly in the preference."};
 		
@@ -297,20 +335,17 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		shell_execute("", $"chmod +x {magick}");
 		shell_execute("", $"chmod +x {webp}");
 		shell_execute("", $"chmod +x {gifski}");
-		shell_execute("", $"chmod +x {ffmpeg}");
 		
 	} else if(OS == os_macosx) {
 		var _w = function(str) /*=>*/ {return $"No {str} installed, please install {str} with homebrew or use the provided 'mac-libraries-installer.command'."};
 		
 		if(string_pos(shell_execute_output("convert", ""), "not found")) noti_warning(_w("ImageMagick"), noone, self);
 		if(string_pos(shell_execute_output("webp", ""),    "not found")) noti_warning(_w("webp"),        noone, self);
-		if(string_pos(shell_execute_output("ffmpeg", ""),  "not found")) noti_warning(_w("FFmpeg"),      noone, self);
 		
 		converter = "/opt/homebrew/bin/convert";
 		magick    = "/opt/homebrew/bin/magick";
 		webp      = "/opt/homebrew/bin/webp";
 		gifski    = "/opt/homebrew/bin/gifski";
-		ffmpeg    = "/opt/homebrew/bin/ffmpeg";
 	}
 	
 	static onValueUpdate = function(_index) {
@@ -842,6 +877,27 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	
 	////- Export
 	
+	static checkLib = function() {
+		ffmpeg = libCheck("FFmpeg");
+		
+		if(ffmpeg == -1) {
+			mp4libSub = "";
+			array_insert_unique(input_display_list, 0, mp4libLabel);
+			return;
+			
+		} else {
+			var ldir = ffmpeg[0];
+			ffmpeg   = ffmpeg[1];
+			
+			if(filename_dir(ffmpeg) != ldir) {
+				mp4libSub = string_replace(filename_dir(ffmpeg), ldir, "");
+				array_insert_unique(input_display_list, 0, mp4libLabel);
+				
+			} else 
+				array_remove(input_display_list, mp4libLabel);
+		}
+	}
+	
 	static exportFrame = function(log = true) {
 		randomize();
 		exportLog = log && !IS_CMD;
@@ -1012,29 +1068,11 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		} 
 		
 		switch(current_format) {
-			case ".mp4" : 
-				if(!file_exists_empty(ffmpeg)) {
-					var dia    = dialogCall(o_dialog_export_library_missing);
-					var _link  = "https://ffmpeg.org/download.html"
-					var _tfile = "";
-					
-					switch(OS) {
-						case os_windows : 
-							_link  = "https://www.gyan.dev/ffmpeg/builds/ffmpeg-release-full.7z"; 
-							_tfile = "./bin/ffmpeg.exe";
-							break;
-							
-						case os_linux   : 
-							_link  = "https://github.com/BtbN/FFmpeg-Builds/releases/download/latest/ffmpeg-master-latest-linux64-gpl.tar.xz"; 
-							_tfile = "./bin/ffmpeg";
-							break;
-							
-					}
-					
-					dia.setData(self, "FFmpeg", _link, ffmpeg, ".mp4", _tfile);
-					return;
-				}
-				
+			case ".mp4"  : 
+			case ".webm" : 
+			case ".apng" : 
+				checkLib();
+				if(ffmpeg == -1) return;
 				break;
 		}
 		
