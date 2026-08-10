@@ -102,25 +102,25 @@ function Node_pSystem_Render_Line(_x, _y, _group = noone) : Node(_x, _y, _group)
 				_off += global.pSystem_data_length;
 				
 				var _mask   = use_mask? buffer_read(_masks, buffer_f32) : 1; if(_mask <= 0) continue;
-				var _act    = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.active, buffer_bool );
-				var _stat   = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.stat,   buffer_bool );
-				var _lif    = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.life,   buffer_f64  );
+				var _act    = buffer_peek( _partBuff, _start + PSYSTEM_OFF.active, buffer_bool );
+				var _stat   = buffer_peek( _partBuff, _start + PSYSTEM_OFF.stat,   buffer_bool );
+				var _lif    = buffer_peek( _partBuff, _start + PSYSTEM_OFF.life,   buffer_f64  );
 				
 				if(!_act) continue;
 				
-				var _spwnId = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.sindex, buffer_u32  );
-				var _lifMax = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.mlife,  buffer_f64  );
+				var _spwnId = buffer_peek( _partBuff, _start + PSYSTEM_OFF.sindex, buffer_u32  );
+				var _lifMax = buffer_peek( _partBuff, _start + PSYSTEM_OFF.mlife,  buffer_f64  );
 				
-				var _px = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.posx, buffer_f64  );
-				var _py = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.posy, buffer_f64  );
+				var _px = buffer_peek( _partBuff, _start + PSYSTEM_OFF.posx, buffer_f64  );
+				var _py = buffer_peek( _partBuff, _start + PSYSTEM_OFF.posy, buffer_f64  );
 				
-				var _sx = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.scax, buffer_f64  );
-				var _sy = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.scay, buffer_f64  );
+				var _sx = buffer_peek( _partBuff, _start + PSYSTEM_OFF.scax, buffer_f64  );
+				var _sy = buffer_peek( _partBuff, _start + PSYSTEM_OFF.scay, buffer_f64  );
 				
-				var _cr = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.blnsr, buffer_u8  );
-				var _cg = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.blnsg, buffer_u8  );
-				var _cb = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.blnsb, buffer_u8  );
-				var _ca = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.blnsa, buffer_u8  );
+				var _cr = buffer_peek( _partBuff, _start + PSYSTEM_OFF.blnr, buffer_u8  );
+				var _cg = buffer_peek( _partBuff, _start + PSYSTEM_OFF.blng, buffer_u8  );
+				var _cb = buffer_peek( _partBuff, _start + PSYSTEM_OFF.blnb, buffer_u8  );
+				var _ca = buffer_peek( _partBuff, _start + PSYSTEM_OFF.blna, buffer_u8  );
 				var _cc = make_color_rgba(_cr, _cg, _cb, _ca);
 				
 				random_set_seed(_seed + _spwnId);
@@ -132,129 +132,142 @@ function Node_pSystem_Render_Line(_x, _y, _group = noone) : Node(_x, _y, _group)
 					rat,
 					_px, _py,
 					_sx, _sy,
-					_cc,
+					_cc, _ca / 255,  
 				]);
 			}
 			
 			var ox, oy, nx, ny;
-			var ow, nw, oc, nc;
+			var ow, nw, oc, nc, oa, na;
 			
 			var _lineLen = 0;
 			var _lineAmo = irandom_range(_leng[0], _leng[1]);
 			var _lineWid = irandom_range(_thck[0], _thck[1]);
 			
-			if(_type < 2) {
-				for( var i = 0, n = array_length(_points); i < n; i++ ) {
-					var p   =  _points[i];
-					var sid = p[0];
-					var rat = p[1];
-					var px  = p[2], py = p[3];
-					var sx  = p[4], sy = p[5];
-					var cc  = p[6];
-					
-					nx = px;
-					ny = py;
-					nc = cc;
-					nw = _lineWid * sx;
-					
-					if(_lineLen) draw_line_width2(ox, oy, nx, ny, ow, nw, true, oc, nc);
-					
-					     if(_type == 0) _lineLen++;
-					else if(_type == 1) _lineLen = sid % _lineAmo;
-					
-					if(_lineLen > _lineAmo) {
-						_lineLen = 0;
-						_lineAmo = irandom_range(_leng[0], _leng[1]);
-						_lineWid = irandom_range(_thck[0], _thck[1]);
-					}
-					
-					ox = nx;
-					oy = ny;
-					ow = nw;
-					oc = nc;
-				}
-				
-			} else if(_type == 2) {
-				var _len = array_length(_points);
-				var _closest   = array_create(_len);
-				var _drawnlist = array_create(_len, 0);
-
-				for( var i = 0; i < _len; i++ ) {
-					var p1 = _points[i];
-					var cx = p1[2], cy = p1[3];
-					
-					var closestId = -1;
-					var closestDist = 0;
-					
-					for( var j = 0; j < _len; j++ ) {
-						if(i == j) continue;
+			switch(_type) {
+				case 0 :
+				case 1 :
+					for( var i = 0, n = array_length(_points); i < n; i++ ) {
+						var p   =  _points[i];
+						var sid = p[0];
+						var rat = p[1];
+						var px  = p[2], py = p[3];
+						var sx  = p[4], sy = p[5];
+						var cc  = p[6];
+						var aa  = p[7];
 						
-						var p2 = _points[j];
-						var px = p2[2], py = p2[3];
+						nx = px;
+						ny = py;
+						nc = cc;
+						na = aa;
+						nw = _lineWid * sx;
 						
-						var dist = point_distance(cx, cy, px, py);
-						if(closestId == -1 || dist < closestDist) {
-							closestId = j;
-							closestDist = dist;
+						if(_lineLen) draw_line_width2(ox, oy, nx, ny, ow, nw, true, oc, nc, oa, na);
+						
+						     if(_type == 0) _lineLen++;
+						else if(_type == 1) _lineLen = sid % _lineAmo;
+						
+						if(_lineLen > _lineAmo) {
+							_lineLen = 0;
+							_lineAmo = irandom_range(_leng[0], _leng[1]);
+							_lineWid = irandom_range(_thck[0], _thck[1]);
 						}
-					}
-					
-					_closest[i] = closestId;
-				}
-				
-				for( var i = 0; i < _len; i++ ) {
-					_lineAmo = irandom_range(_leng[0], _leng[1]);
-					_lineWid = irandom_range(_thck[0], _thck[1]);
-					
-					var pp = _points[i];
-					
-					ox = pp[2];
-					oy = pp[3];
-					oc = pp[6];
-					ow = pp[4] * _lineWid;
-
-					repeat(_lineAmo) {
-						var cid = _closest[i];
-						if(cid == -1 || _drawnlist[cid]) break;
 						
-						_drawnlist[cid] = 1;
-						
-						var pc = _points[cid];
-						nx = pc[2];
-						ny = pc[3];
-						nc = pc[6];
-						nw = pc[4] * _lineWid;
-
-						draw_line_width2(ox, oy, nx, ny, ow, nw, true, oc, nc);
-
 						ox = nx;
 						oy = ny;
-						oc = nc;
 						ow = nw;
+						oc = nc;
+						oa = na;
 					}
-				}
+				break;
 				
-			} else if(_type == 3) {
-				for( var i = 0, n = array_length(_points); i < n; i++ ) {
-					var p   =  _points[i];
-					var sid = p[0];
-					var rat = p[1];
-					var px  = p[2], py = p[3];
-					var sx  = p[4], sy = p[5];
-					var cc  = p[6];
+				case 2 : 
+					var _len = array_length(_points);
+					var _closest   = array_create(_len);
+					var _drawnlist = array_create(_len, 0);
+	
+					for( var i = 0; i < _len; i++ ) {
+						var p1 = _points[i];
+						var cx = p1[2], cy = p1[3];
+						
+						var closestId = -1;
+						var closestDist = 0;
+						
+						for( var j = 0; j < _len; j++ ) {
+							if(i == j) continue;
+							
+							var p2 = _points[j];
+							var px = p2[2], py = p2[3];
+							
+							var dist = point_distance(cx, cy, px, py);
+							if(closestId == -1 || dist < closestDist) {
+								closestId = j;
+								closestDist = dist;
+							}
+						}
+						
+						_closest[i] = closestId;
+					}
 					
-					ox = _pont[0];
-					oy = _pont[1];
-					oc = _ctyp? _ctar : cc;
-					ow = _ttyp? irandom_range(_ttar[0], _ttar[1]) : _lineWid * sx;
-					
-					nx = px;
-					ny = py;
-					nc = cc;
-					nw = _lineWid * sx;
-					
-					draw_line_width2(ox, oy, nx, ny, ow, nw, true, oc, nc);
+					for( var i = 0; i < _len; i++ ) {
+						_lineAmo = irandom_range(_leng[0], _leng[1]);
+						_lineWid = irandom_range(_thck[0], _thck[1]);
+						
+						var pp = _points[i];
+						
+						ox = pp[2];
+						oy = pp[3];
+						oc = pp[6];
+						oa = pp[7];
+						ow = pp[4] * _lineWid;
+	
+						repeat(_lineAmo) {
+							var cid = _closest[i];
+							if(cid == -1 || _drawnlist[cid]) break;
+							
+							_drawnlist[cid] = 1;
+							
+							var pc = _points[cid];
+							nx = pc[2];
+							ny = pc[3];
+							nc = pc[6];
+							na = pc[7];
+							nw = pc[4] * _lineWid;
+							
+							draw_line_width2(ox, oy, nx, ny, ow, nw, true, oc, nc, oa, na);
+							ox = nx;
+							oy = ny;
+							oc = nc;
+							oa = na;
+							ow = nw;
+						}
+					}
+				break;
+				
+				case 3 : 
+					for( var i = 0, n = array_length(_points); i < n; i++ ) {
+						var p   =  _points[i];
+						var sid = p[0];
+						var rat = p[1];
+						var px  = p[2], py = p[3];
+						var sx  = p[4], sy = p[5];
+						var cc  = p[6];
+						var aa  = p[7];
+						
+						ox = _pont[0];
+						oy = _pont[1];
+						oc = _ctyp? _ctar : cc;
+						oa = 1;
+						ow = _ttyp? irandom_range(_ttar[0], _ttar[1]) : _lineWid * sx;
+						
+						nx = px;
+						ny = py;
+						nc = cc;
+						na = aa;
+						nw = _lineWid * sx;
+						
+						draw_line_width2(ox, oy, nx, ny, ow, nw, true, oc, nc, oa, na);
 				}
+				break;
 			}
 			
 			draw_set_alpha(1);

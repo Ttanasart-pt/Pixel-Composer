@@ -1,0 +1,12 @@
+{
+  "$GMShader":"",
+  "%Name":"sh_smoke_add_surface",
+  "name":"sh_smoke_add_surface",
+  "parent":{
+    "name":"smoke_add",
+    "path":"folders/nodes/data/simulation/smokeSim/smoke_add.yy",
+  },
+  "resourceType":"GMShader",
+  "resourceVersion":"2.0",
+  "type":1,
+}

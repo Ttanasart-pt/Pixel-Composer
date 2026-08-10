@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.8.009",
+    "changes": [
+      {
+        "date": "2026-08-10T09:22:53.943Z",
+        "node": "Smoke Add",
+        "commit": "**Smoke Add**: Fix surface type use only alpha for determining density."
+      }
+    ]
+  },
+  {
     "version": "1.21.7.104",
     "changes": [
       {
