@@ -58,7 +58,7 @@
     <tr><th class="head first" colspan="2"><p>Node Data</p></th></tr><tr><th colspan="2"><img class="node-content" src="/src/nodeIcons/s_node_path_revolve.png"></th></tr><tr><th colspan="2" class="summary-topic"><p class="subtopic">Display name</p></th></tr><tr><th colspan="2" class="summary-content"><p>Revolve Path</p></th></tr><tr><th colspan="2" class="summary-topic"><p class="subtopic">Internal name</p></th></tr><tr><th colspan="2" class="summary-content"><p>Node_Path_Revolve</p></th></tr><tr height="8px"></tr><tr><th class="head" colspan="2"><p>Inheritances</p></th></tr><tr><th colspan="2" class="inheritance-block"><a href="/nodes/array_processor.html">Node_Processor</a></th></tr><tr><th colspan="2" class="inheritance-block current"><div class="vertical"></div><a href="#">Node_Path_Revolve</a></th></tr><tr height="8px"></tr>
 <tr><th class="head" colspan="2"><p>Inputs</p></th></tr>
 <tr><th colspan="2" class="summary-topic junction-separator"><p>Output</p></th></tr><tr>
-                <td class="summary-topic junction-type"><p style="color: #ff9166">dimension</p></td>
+                <td class="summary-topic junction-type"><p style="color: #ff9166">vec2</p></td>
                 <td><p>Dimension</p></td>
             </tr><tr><th colspan="2" class="summary-topic junction-separator"><p>Paths</p></th></tr><tr>
                 <td class="summary-topic junction-type"><p style="color: #eb004b">path</p></td>
@@ -82,7 +82,7 @@
                 <td class="summary-topic junction-type"><p style="color: #ffe478">rotation</p></td>
                 <td><p>Direction</p></td>
             </tr><tr>
-                <td class="summary-topic junction-type"><p style="color: #ffe478">rotation_range</p></td>
+                <td class="summary-topic junction-type"><p style="color: #ffe478">rotRange</p></td>
                 <td><p>Revolve Range</p></td>
             </tr><tr>
                 <td class="summary-topic junction-type"><p style="color: #ffe478">rotation</p></td>
@@ -181,7 +181,7 @@
     }
 </script><br>
 <br><h2 class="nosidebar">Commit History</h2><br>
-<table class="change-table"><tr><th>1.21.2</th><td><ul><li>Introduced</li></ul></td></tr><tr><th>1.21.3.005</th><td><ul><li> Add mapping option for caps texture.</li></ul></td></tr><tr><th>1.21.6.005</th><td><ul><li> Fix U coordinate goes above 1 causing texture to wrap more than once.</li></ul></td></tr><tr><th>1.21.8.006</th><td><ul><li> Add path-progress based depth sorting.</li></ul></td></tr></table><br><h2 class="nosidebar">Related Links</h2><br><ul class="link-table"><li><span>Base Code: </span><a href="https://github.com/Ttanasart-pt/Pixel-Composer/blob/main/scripts/node_path_revolve/node_path_revolve.gml">/scripts/node_path_revolve/node_path_revolve.gml</a></li><li><span>Shader [sh_coord]: </span><a href="https://github.com/Ttanasart-pt/Pixel-Composer/blob/main/shaders/sh_coord/sh_coord.fsh">/shaders/sh_coord/sh_coord.fsh</a></li><li><span>Shader [sh_path_revolve_combine]: </span><a href="https://github.com/Ttanasart-pt/Pixel-Composer/blob/main/shaders/sh_path_revolve_combine/sh_path_revolve_combine.fsh">/shaders/sh_path_revolve_combine/sh_path_revolve_combine.fsh</a></li><li><span>Shader [sh_path_map_render]: </span><a href="https://github.com/Ttanasart-pt/Pixel-Composer/blob/main/shaders/sh_path_map_render/sh_path_map_render.fsh">/shaders/sh_path_map_render/sh_path_map_render.fsh</a></li><li><span>Shader [sh_path_revolve_render]: </span><a href="https://github.com/Ttanasart-pt/Pixel-Composer/blob/main/shaders/sh_path_revolve_render/sh_path_revolve_render.fsh">/shaders/sh_path_revolve_render/sh_path_revolve_render.fsh</a></li></ul>
+<table class="change-table"><tr><th>1.21.2</th><td><ul><li>Introduced</li></ul></td></tr><tr><th>1.21.3.005</th><td><ul><li> Add mapping option for caps texture.</li></ul></td></tr><tr><th>1.21.6.005</th><td><ul><li> Fix U coordinate goes above 1 causing texture to wrap more than once.</li></ul></td></tr><tr><th>1.21.8.006</th><td><ul><li> Add path-progress based depth sorting.</li></ul></td></tr></table><br><h2 class="nosidebar">Related Links</h2><br><ul class="link-table"><li><span>Base Code: </span><a href="https://github.com/Ttanasart-pt/Pixel-Composer/blob/main/scripts/node_path_revolve/node_path_revolve.gml">/scripts/node_path_revolve/node_path_revolve.gml</a></li><li><span>Shader [sh_path_revolve_combine]: </span><a href="https://github.com/Ttanasart-pt/Pixel-Composer/blob/main/shaders/sh_path_revolve_combine/sh_path_revolve_combine.fsh">/shaders/sh_path_revolve_combine/sh_path_revolve_combine.fsh</a></li><li><span>Shader [sh_coord]: </span><a href="https://github.com/Ttanasart-pt/Pixel-Composer/blob/main/shaders/sh_coord/sh_coord.fsh">/shaders/sh_coord/sh_coord.fsh</a></li><li><span>Shader [sh_path_revolve_render]: </span><a href="https://github.com/Ttanasart-pt/Pixel-Composer/blob/main/shaders/sh_path_revolve_render/sh_path_revolve_render.fsh">/shaders/sh_path_revolve_render/sh_path_revolve_render.fsh</a></li><li><span>Shader [sh_path_map_render]: </span><a href="https://github.com/Ttanasart-pt/Pixel-Composer/blob/main/shaders/sh_path_map_render/sh_path_map_render.fsh">/shaders/sh_path_map_render/sh_path_map_render.fsh</a></li></ul>
         </div>
     </div>
 

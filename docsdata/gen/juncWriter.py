@@ -33,6 +33,24 @@ dispIndex = {
     "bool"            : "boolean",
 }
 
+typeName = {
+    "dimension"       : "vec2",
+
+    "enum_button"     : "enum",
+    "enum_scroll"     : "enum",
+
+    "path_anchor"     : "anchor",
+    "path_anchor_3d"  : "anchor3D",
+
+    "rotation_random" : "rotRand",
+    "rotation_range"  : "rotRange",
+    "slider_range"    : "slider2",
+
+    "vec2_range"      : "vec2[2]",
+    "vec3_range"      : "vec3[2]",
+    "vec4_range"      : "vec4[2]",
+}
+
 # %%
 typeIndex = {}
 typeColor = []
@@ -82,6 +100,13 @@ def getColor(dataType):
     
     return typeColor[ind]
 
+def getTypeName(dataType):
+    dtype = dataType
+    if dtype in typeName:
+        return typeName[dtype]
+    
+    return dtype
+
 def IOTable(nodeData):
     inheritances = nodeData["inheritances"]
     inputRows  = ""
@@ -118,7 +143,7 @@ def IOTable(nodeData):
             jType  = _junc["type"]
 
             inputRows += f"""<tr>
-                <td class="summary-topic junction-type"><p style="color: {getColor(jType)}">{jType}</p></td>
+                <td class="summary-topic junction-type"><p style="color: {getColor(jType)}">{getTypeName(jType)}</p></td>
                 <td><p>{jName.title()}{mapStr}</p></td>
             </tr>"""
 
@@ -134,7 +159,7 @@ def IOTable(nodeData):
                 jType  = _junc["type"]
 
                 dynamicTable += f"""<tr>
-                    <td class="summary-topic junction-type"><p style="color: {getColor(jType)}" >{jType}</p></td>
+                    <td class="summary-topic junction-type"><p style="color: {getColor(jType)}" >{getTypeName(jType)}</p></td>
                     <td><p>{jName.title()}</p></td>
                 </tr>"""
 
@@ -149,7 +174,7 @@ def IOTable(nodeData):
             jType  = _junc["type"]
 
             outputRows += f"""<tr>
-                <td class="summary-topic junction-type"><p style="color: {getColor(jType)}">{jType}</p></td>
+                <td class="summary-topic junction-type"><p style="color: {getColor(jType)}">{getTypeName(jType)}</p></td>
                 <td><p>{jName.title()}</p></td>
             </tr>"""
 
