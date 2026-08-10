@@ -84,7 +84,10 @@ def applyTemplate(template, nodeName, tooltip, summary):
                    .replace("{{summary}}",  summary)
 
 def versionToInt(version):
-    return int(version.replace(".", "") + "0" * (10 - len(version.replace(".", ""))))
+    v  = re.sub(r"[^0-9]", "", version)
+    v += "0" * (10 - len(v))
+
+    return int(v)
 
 def writeChangeTable(metadata, changeData):
     nodeName = metadata["name"]
