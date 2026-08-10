@@ -25,6 +25,7 @@
 		fract,    // 17
 		
 		map,
+		log,
 		
 		length,
 	}
@@ -33,16 +34,16 @@
 									"+", "-", "*", "/", "^", 
 	                        		"sin", "cos", "tan", "modulo", "round", 
 	                        		"ceiling", "floor", "lerp", "abs", "fract", 
-	                        		"clamp", "snap", "map" ];
+	                        		"clamp", "snap", "map", "log" ];
 	
 	global.node_math_keys_map = [	MATH_OPERATOR.add,     MATH_OPERATOR.subtract, MATH_OPERATOR.multiply, MATH_OPERATOR.divide, MATH_OPERATOR.power, MATH_OPERATOR.root, 
 									MATH_OPERATOR.add,     MATH_OPERATOR.subtract, MATH_OPERATOR.multiply, MATH_OPERATOR.divide, MATH_OPERATOR.power, 
 	                        		MATH_OPERATOR.sin,     MATH_OPERATOR.cos,      MATH_OPERATOR.tan,      MATH_OPERATOR.modulo, MATH_OPERATOR.round, 
 	                        		MATH_OPERATOR.ceiling, MATH_OPERATOR.floor,    MATH_OPERATOR.lerp,     MATH_OPERATOR.abs,    MATH_OPERATOR.fract, 
-	                        		MATH_OPERATOR.clamp,   MATH_OPERATOR.snap,     MATH_OPERATOR.map, ];
+	                        		MATH_OPERATOR.clamp,   MATH_OPERATOR.snap,     MATH_OPERATOR.map,      MATH_OPERATOR.log, ];
 	
 	global.node_math_names    = [  /* 0 -  9*/ "Add", "Subtract", "Multiply", "Divide", "Power", "Root", "Sin", "Cos", "Tan", "Modulo", 
-								   /*10 - 20*/ "Floor", "Ceil", "Round", "Lerp", "Abs", "Clamp", "Snap", "Fract", "Map", ];
+								   /*10 - 20*/ "Floor", "Ceil", "Round", "Lerp", "Abs", "Clamp", "Snap", "Fract", "Map", "Log" ];
 	
 	global.node_math_scroll   = array_create_ext(array_length(global.node_math_names), function(i) /*=>*/ {return new scrollItem(global.node_math_names[i], s_node_math_operators, i)});
 	
@@ -94,8 +95,8 @@ function Node_Math(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	newOutput(0, nodeValue_Output("Result", VALUE_TYPE.float, 0));
 	
 	input_display_list = [ 0, 
-		["Values",   false], 1, 2, 5, 6, 7, 
-		["Settings", false], 3, 4, 8, 
+		[ "Values",   false ],  1,  2,  5,  6,  7, 
+		[ "Settings", false ],  3,  4,  8, 
 	];
 	
 	////- Nodes
@@ -137,6 +138,7 @@ function Node_Math(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 			case MATH_OPERATOR.fract :		return frac(a);
 			
 			case MATH_OPERATOR.map :		return lerp(t[0], t[1], (a - f[0]) / (f[1] - f[0]));
+			case MATH_OPERATOR.log :	    return logn(b, a);
 		}
 		return 0;
 	}
@@ -162,9 +164,9 @@ function Node_Math(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		
 		for( var i = 0; i < amo; i++ ) 
 			val[i] = evalArray( 
-				array_safe_get(a, i,, ARRAY_OVERFLOW.loop), 
-				array_safe_get(b, i,, ARRAY_OVERFLOW.loop),
-				array_safe_get(c, i,, ARRAY_OVERFLOW.loop),
+				array_safe_get(a, i, 0, ARRAY_OVERFLOW.loop), 
+				array_safe_get(b, i, 0, ARRAY_OVERFLOW.loop),
+				array_safe_get(c, i, 0, ARRAY_OVERFLOW.loop),
 				f, t, 
 			);
 		
@@ -270,6 +272,12 @@ function Node_Math(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 				
 			case MATH_OPERATOR.snap :
 				inputs[2].name = "Snap";
+				
+				inputs[2].setVisible(true, true);
+				break;
+				
+			case MATH_OPERATOR.log :	
+				inputs[2].name = "base";
 				
 				inputs[2].setVisible(true, true);
 				break;

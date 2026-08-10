@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.8.009",
+    "changes": [
+      {
+        "date": "2026-08-10T23:54:10.121Z",
+        "node": "Math",
+        "commit": "**Math**: Add log operator."
+      }
+    ]
+  },
+  {
     "version": "1.21.4.008",
     "changes": [
       {
