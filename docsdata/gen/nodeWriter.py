@@ -121,7 +121,7 @@ def writeChangeTable(metadata, changeData):
             addString = f"{vMaj}.{vMin}.{vBet}"
 
         # print(f"Node {nodeName} was introduced in version {addString}/{addVersion}.")
-        changeText += f'<tr><th>{addString}</th><td><ul><li>Introduced</li></ul></td></tr>'
+        changeText += f'<tr><td>{addString}</td><td><ul><li>Introduced</li></ul></td></tr>'
         hasAnyChange = True
 
     changeData.reverse()
@@ -129,7 +129,7 @@ def writeChangeTable(metadata, changeData):
         version = change["version"]
         changes = change["changes"]
 
-        changeTextV   = f'<tr><th>{version}</th>'
+        changeTextV   = f'<tr><td>{version}</td>'
         commitMessage = "<ul>"
         hasChanges    = False
 
