@@ -75,8 +75,8 @@ def parse_md(path):
 
 for root, dirs, files in os.walk("docsdata/content"):
     for file in files:
-        if file != "node_mk_tree_inline.md":
-            continue
+        # if file != "node_mk_tree_inline.md":
+        #     continue
         if not file.endswith(".md"):
             continue
 
