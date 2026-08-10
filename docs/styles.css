@@ -118,7 +118,7 @@ ul {
 
     li::marker {
         font-size: 2rem;
-        line-height: 0.8;
+        line-height: 0.2;
     }
 
 }
@@ -175,6 +175,7 @@ table {
 
 table tr {
     height: 2rem;
+    border-radius: 8px;
 }
 
 table tr:nth-child(odd) {
@@ -1079,9 +1080,19 @@ div.node-category {
 }
 
 table.change-table {
-    width: -webkit-fill-available;
+    width: auto;
     margin: 0px;
+    display: flex;
+   
+    tbody {
+        width: 100%;
+    }
     
+    tr {
+        width: 100%;
+        display: table;
+    }
+
     th {
         padding: 4px;
     }
