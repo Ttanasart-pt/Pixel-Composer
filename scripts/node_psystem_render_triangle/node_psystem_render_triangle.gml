@@ -132,7 +132,7 @@ function Node_pSystem_Render_Triangle(_x, _y, _group = noone) : Node(_x, _y, _gr
 					rat,
 					_px, _py,
 					_sx, _sy,
-					_cc,
+					_cc, _ca / 255,  
 				]);
 			}
 			
