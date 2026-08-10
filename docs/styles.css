@@ -538,17 +538,17 @@ table.summary-table {
     }
 
     td {
-        padding: 2px;
+        padding: 1px;
 
         > p {
-            font-size: 0.85rem;
+            font-size: 0.8rem;
             font-weight: 600;
         }
     }
 
     th.summary-topic {
          > p {
-            font-size: 0.85rem;
+            font-size: 0.8rem;
             font-weight: 600;
             color: var(--main_ltgrey);
             
@@ -1088,6 +1088,7 @@ table.change-table {
     th:first-child  { text-align: center; width: 20%; }
     td:nth-child(2) { 
         text-align: left; 
+        padding: 4px;
         
         ul {
             margin: 0px 0px 0px 1rem;

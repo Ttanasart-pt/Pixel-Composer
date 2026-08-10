@@ -46,7 +46,7 @@ function Node_Particle(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 	inputs[60].setTooltip("Speed Curve may conflict with physics-based properties.");
 	
 		////- =/Direction
-	newInput(64, nodeValue_EButton(  "Direction Type",        0, [ "Random", "Uniform" ] ));
+	newInput(64, nodeValue_EButton(  "Direction Distribution",        0, [ "Random", "Uniform" ] ));
 	newInput( 6, nodeValue_RotRand(  "Initial Direction",    [0,45,135,0,0]     )); 
 	
 	newInput(29, nodeValue_Bool(     "Directed From Center", false              )).setTooltip("Make particle move away from the spawn center.");
@@ -56,7 +56,7 @@ function Node_Particle(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 	newInput(67, nodeValue_Toggle(   "Wrap",                  0, [ "X", "Y" ]   ))
 	
 	////- =Rotation
-	newInput( 8, nodeValue_RotRand(  "Initial Rotation",     ROTRAN_DEF_0        ));
+	newInput( 8, nodeValue_RotRand(  "Initial Rotation",     ROTRAN_DEF_0       ));
 	newInput(15, nodeValue_Bool(     "Rotate by Direction",   false             )).setTooltip("Make the particle rotates to follow its movement.");
 	
 		////- =/Animated
