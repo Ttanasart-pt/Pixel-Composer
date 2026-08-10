@@ -6,7 +6,7 @@ function Node_Markov_Gradient(_x, _y, _group = noone) : Node_Processor(_x, _y, _
 	newInput( 0, nodeValue_Surface( "Surface In" )).setRequired();
 	
 	////- =Colors
-	newInput( 3, nodeValue_Palette( "Colors" ));
+	newInput( 3, nodeValue_Palette( "Colors"            ));
 	newInput( 4, nodeValue_Slider(  "Threshold",     .1 ));
 	newInput( 5, nodeValue_Slider(  "Replace Chance", 1 )).setMappable(6);
 	// inputs 7
