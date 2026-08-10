@@ -14,16 +14,16 @@ function Node_pSystem_Collision(_x, _y, _group = noone) : Node(_x, _y, _group) c
 	newInput( 1, nodeValue_Buffer(   "Mask"      ));
 	
 	////- =Collider
-	newInput( 3, nodeValue_EScroll( "Shape",       0, [ "Ground", "Rectangle", "Ellipse" ] )); 
-	newInput( 4, nodeValue_Vec2(        "Position",  [.5,.5] )).setUnitSimple();
-	newInput( 5, nodeValue_Vec2(        "Size",      [.5,.5] )).setUnitSimple();
-	newInput( 6, nodeValue_Rotation(    "Rotation",    0     )).setUnitSimple();
-	newInput( 7, nodeValue_Slider(      "Chance",      1     )); 
+	newInput( 3, nodeValue_EScroll(  "Shape",       0, [ "Ground", "Rectangle", "Ellipse" ] )); 
+	newInput( 4, nodeValue_Vec2(     "Position",  [.5,.5] )).setUnitSimple();
+	newInput( 5, nodeValue_Vec2(     "Size",      [.5,.5] )).setUnitSimple();
+	newInput( 6, nodeValue_Rotation( "Rotation",    0     )).setUnitSimple();
+	newInput( 7, nodeValue_Slider(   "Chance",      1     )); 
 	
 	////- =Physics
-	newInput( 8, nodeValue_Slider( "Bounciness", .5  )); 
-	newInput( 9, nodeValue_Slider( "Friction",   .5  )); 
-	newInput(10, nodeValue_Slider( "Threshold",  .05 )); 
+	newInput( 8, nodeValue_Slider(   "Bounciness",  .5     )); 
+	newInput( 9, nodeValue_Slider(   "Friction",    .5     )); 
+	newInput(10, nodeValue_Slider(   "Restitution", .05    )); 
 	// 11
 	
 	newOutput(0, nodeValue_Output("Particles",      VALUE_TYPE.particle, noone ));

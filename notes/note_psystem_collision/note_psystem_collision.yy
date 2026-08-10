@@ -1,0 +1,11 @@
+{
+  "$GMNotes":"v1",
+  "%Name":"note_psystem_collision",
+  "name":"note_psystem_collision",
+  "parent":{
+    "name":"physics",
+    "path":"folders/nodes/data/simulation/particleSystem/physics.yy",
+  },
+  "resourceType":"GMNotes",
+  "resourceVersion":"1.1",
+}

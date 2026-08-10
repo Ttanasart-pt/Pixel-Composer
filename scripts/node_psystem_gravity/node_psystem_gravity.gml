@@ -16,7 +16,7 @@ function Node_pSystem_Gravity(_x, _y, _group = noone) : Node(_x, _y, _group) con
 	////- =Gravity
 	newInput( 3, nodeValue_Range(    "Strength",  [1,1], true )).setCurvable( 4, CURVE_DEF_11, "Over Lifespan"); 
 	newInput( 5, nodeValue_Rotation( "Direction", -90   ));
-	newInput( 6, nodeValue_Bool(     "Apply",     false ));
+	newInput( 6, nodeValue_Bool(     "Apply Position", false ));
 	// 7
 	
 	newOutput(0, nodeValue_Output("Particles", VALUE_TYPE.particle, noone ));

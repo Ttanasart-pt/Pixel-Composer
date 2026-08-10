@@ -1,3 +1,7 @@
+[banner]
+Associated tutorial: **Rigidsim**
+[/banner]
+
 Parent group for RigidSim system.
 
 ## Properties

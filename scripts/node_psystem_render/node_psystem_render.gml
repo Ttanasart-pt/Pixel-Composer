@@ -14,10 +14,10 @@ function Node_pSystem_Render(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	////- =Surface
 	newInput( 3, nodeValue_Surface(  "Surfaces"  ));
 	
-	newInput( 4, nodeValue_EScroll(  "Surface Array", 0, [ "Random", "Order", "Animation", "Scale" ]));
-	newInput( 5, nodeValue_Range(    "Animation Speed",      [1,1], { linked : true } ));
-	newInput( 6, nodeValue_Bool(     "Stretch Animation",    false                    ));
-	newInput( 7, nodeValue_EButton(  "On Animation End",     ANIM_END_ACTION.loop     )).setChoices([ "Loop", "Ping pong", "Destroy" ]);
+	newInput( 4, nodeValue_EScroll(  "Surface Array",     0,         )).setChoices([ "Random", "Order", "Animation", "Scale" ]);
+	newInput( 5, nodeValue_Range(    "Animation Speed",  [1,1], true ));
+	newInput( 6, nodeValue_Bool(     "Stretch Animation", false      ));
+	newInput( 7, nodeValue_EButton(  "On Animation End",  ANIM_END_ACTION.loop )).setChoices([ "Loop", "Ping pong", "Destroy" ]);
 	// 8
 	
 	newOutput(0, nodeValue_Output( "Rendered", VALUE_TYPE.surface, noone ));

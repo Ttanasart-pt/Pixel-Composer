@@ -1,3 +1,7 @@
+[banner]
+Associated tutorial: **Composing**
+[/banner]
+
 Camera node used to capture parts of the scene. You can think of it as a 2D camera with fix dimension 
 looking around your image.
 

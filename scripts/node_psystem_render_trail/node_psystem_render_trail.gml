@@ -17,7 +17,7 @@ function Node_pSystem_Render_Trail(_x, _y, _group = noone) : Node(_x, _y, _group
 	newInput( 5, nodeValue_Bool(  "End Trail",     true )).setTooltip("Render trail for dead particles.");
 	
 	////- =Render
-	newInput( 7, nodeValue_Bool(  "1px mode",        false ));
+	newInput( 7, nodeValue_Bool(  "1px Mode",        false ));
 	newInput( 6, nodeValue_Range( "Thickness", [1,1], true )).setTooltip("This value then multiply by particle X scale for the final thickness.");
 	// 8
 	

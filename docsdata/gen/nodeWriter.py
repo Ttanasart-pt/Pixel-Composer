@@ -182,7 +182,7 @@ def writeLinks(linkContents, metadata, nodeData):
     linkText = '''<br><h2 class="nosidebar">Related Links</h2><br><ul class="link-table">'''
     for link in linkContents:
         if link[0] is not None:
-            linkText += f'''<li><span>{link[0]}: </span><a href="{link[1]}">{link[0]}</a></li>'''
+            linkText += f'''<li><span>{link[0]}: </span><a href="{link[1]}">{link[1]}</a></li>'''
         else:
             linkText += f'''<li><span><a href="{link[1]}">{link[1]}</a></span></li>'''
 

@@ -1,0 +1,11 @@
+{
+  "$GMNotes":"v1",
+  "%Name":"note_markov",
+  "name":"note_markov",
+  "parent":{
+    "name":"markov",
+    "path":"folders/nodes/data/simulation/markov.yy",
+  },
+  "resourceType":"GMNotes",
+  "resourceVersion":"1.1",
+}

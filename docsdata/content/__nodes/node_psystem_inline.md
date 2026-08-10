@@ -2,6 +2,10 @@
 This node is part of the <a href="https://docs.pixel-composer.com/nodes/particle/psystem">pSystem</a> category.
 [/banner]
 
+[banner]
+Associated tutorial: **Particles System**
+[/banner]
+
 Group parent for the Particle System.
 
 ## Properties

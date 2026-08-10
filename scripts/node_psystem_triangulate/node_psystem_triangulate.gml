@@ -6,14 +6,14 @@ function Node_pSystem_Triangulate(_x, _y, _group = noone) : Node(_x, _y, _group)
 	
 	update_on_frame = true;
 	
-	newInput(2, nodeValueSeed());
+	newInput( 2, nodeValueSeed());
 	
 	////- =Particles
-	newInput(0, nodeValue_Particle( "Particles" ));
-	newInput(1, nodeValue_Buffer(   "Mask"      ));
+	newInput( 0, nodeValue_Particle( "Particles" ));
+	newInput( 1, nodeValue_Buffer(   "Mask"      ));
 	
 	////- =Render
-	newInput(3, nodeValue_Range( "Thickness", [1,1], true )).setTooltip("This value then multiply by particle X scale for final thickness.");
+	newInput( 3, nodeValue_Range( "Thickness", [1,1], true )).setTooltip("This value then multiply by particle X scale for final thickness.");
 	// 
 	
 	newOutput(0, nodeValue_Output( "Rendered", VALUE_TYPE.surface, noone ));

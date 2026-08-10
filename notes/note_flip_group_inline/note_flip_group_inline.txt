@@ -1,3 +1,7 @@
+[banner]
+Associated tutorial: **FLIP Fluid**
+[/banner]
+
 FLIP Fluid simulation is a group of nodes used to simulate fluid behaviour using Fluid-Implicit-Particle (FLIP) 
 algorithm.
 

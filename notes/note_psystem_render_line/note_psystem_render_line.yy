@@ -1,0 +1,11 @@
+{
+  "$GMNotes":"v1",
+  "%Name":"note_psystem_render_line",
+  "name":"note_psystem_render_line",
+  "parent":{
+    "name":"rendering",
+    "path":"folders/nodes/data/simulation/particleSystem/rendering.yy",
+  },
+  "resourceType":"GMNotes",
+  "resourceVersion":"1.1",
+}

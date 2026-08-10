@@ -1,3 +1,7 @@
+[banner]
+Associated tutorial: **Loop**
+[/banner]
+
 Loop system sends an output value back as an input repeatedly.
 
 The system comes with 2 nodes:

@@ -1,0 +1,11 @@
+{
+  "$GMNotes":"v1",
+  "%Name":"note_psystem_triangulate",
+  "name":"note_psystem_triangulate",
+  "parent":{
+    "name":"generators",
+    "path":"folders/nodes/data/simulation/particleSystem/generators.yy",
+  },
+  "resourceType":"GMNotes",
+  "resourceVersion":"1.1",
+}

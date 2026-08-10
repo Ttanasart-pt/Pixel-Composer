@@ -7,14 +7,14 @@ function Node_pSystem_Trail(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	
 	update_on_frame = true;
 	
-	newInput(2, nodeValueSeed());
+	newInput( 2, nodeValueSeed());
 	
 	////- =Particles
-	newInput(0, nodeValue_Particle( "Particles" ));
-	newInput(1, nodeValue_Buffer(   "Mask"      ));
+	newInput( 0, nodeValue_Particle( "Particles" ));
+	newInput( 1, nodeValue_Buffer(   "Mask"      ));
 	
 	////- =Trail
-	newInput(3, nodeValue_Range( "Frames", [4,4], true )).setCurvable( 4, CURVE_DEF_11, "Over Lifespan"); 
+	newInput( 3, nodeValue_Range( "Frames", [4,4], true )).setCurvable( 4, CURVE_DEF_11, "Over Lifespan"); 
 	
 	////- =Render
 	// 
