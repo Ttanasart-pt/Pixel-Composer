@@ -4330,12 +4330,12 @@ function tooltipAnimEnd() constructor {
 		
 		var yy = ui(8);
 		draw_set_text(f_p1b, fa_left, fa_top, COLORS._main_text_sub);
-		draw_text(ui(116), yy,              "Ctrl");
-		draw_text(ui(116), yy + lh + ui(4), "Alt");
+		draw_text_add(ui(116), yy,              "Ctrl");
+		draw_text_add(ui(116), yy + lh + ui(4), "Alt");
 		
 		draw_set_text(f_p1, fa_left, fa_top, COLORS._main_text);
-		draw_text(ui(8), yy,              "Adjust Length");
-		draw_text(ui(8), yy + lh + ui(4), "Stretch");
+		draw_text_add(ui(8), yy,              "Adjust Length");
+		draw_text_add(ui(8), yy + lh + ui(4), "Stretch");
 		surface_reset_shader();
 	}
 }

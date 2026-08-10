@@ -20,23 +20,23 @@ def parse_md(path):
     reColorAttr = re.compile(r"\[color=(.*?)\]")
 
     reBanner = re.compile(r"\[banner\]([\s\S]*?)\[\/banner\]")
-    banner = reBanner.findall(data_html)
+    banner   = reBanner.findall(data_html)
     for b in banner:
-        b = b.replace("<p>", "").replace("</p>", "")
+        bStrip = b.replace("<p>", "").replace("</p>", "")
 
         style = ""
 
-        color = reColorAttr.findall(b)
+        color = reColorAttr.findall(bStrip)
         if color:
             color = color[0]
             style = f"style='border-color: {color};background-color: {color}10;'"
-            b = b.replace(f"[color={color}]", "")
+            bStrip = bStrip.replace(f"[color={color}]", "")
 
-        banner_html = f'<p class="banner" {style}>{b}</p>'
-        data_html = data_html.replace(f"[banner]{b}[/banner]", banner_html)
-
-    reProp = re.compile(r"\[proptable\]([\s\S]*?)\[\/proptable\]")
-    proptable = reProp.findall(data_html)
+        banner_html = f'<p class="banner" {style}>{bStrip}</p>'
+        data_html   = data_html.replace(f"[banner]{b}[/banner]", banner_html)
+        
+    rePropTable = re.compile(r"\[proptable\]([\s\S]*?)\[\/proptable\]")
+    proptable   = rePropTable.findall(data_html)
     for table in proptable:
         table_html = '<table class="prop-table cc3070">'
         rows = table.split("\n")
@@ -75,8 +75,8 @@ def parse_md(path):
 
 for root, dirs, files in os.walk("docsdata/content"):
     for file in files:
-        # if file != "node_mk_cable.md":
-        #     continue
+        if file != "node_mk_tree_inline.md":
+            continue
         if not file.endswith(".md"):
             continue
 

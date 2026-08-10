@@ -32,11 +32,11 @@ function tooltipRecentFile(path, _x, _y, _w, _h) constructor {
 			var ty = ui(6);
 			
 			draw_set_text(f_p0b, fa_left, fa_top, COLORS._main_text_inner);
-			draw_text(tx, ty, fname);
+			draw_text_add(tx, ty, fname);
 		
 			ty += _h1 + ui(2);
 			draw_set_text(f_p2, fa_left, fa_top, COLORS._main_text_sub);
-			draw_text(tx, ty, fdir);
+			draw_text_add(tx, ty, fdir);
 		surface_reset_shader();
 	}
 }

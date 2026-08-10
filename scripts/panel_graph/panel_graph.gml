@@ -5453,7 +5453,7 @@ function Panel_Graph_Drop_tooltip(panel) constructor {
 		draw_sprite_stretched(THEME.textbox, 0, 0, 0, tww, thh);
 		
 		draw_set_text(f_p1, fa_left, fa_top, COLORS._main_text);
-		draw_text(pd, pd, _drop);
+		draw_text_add(pd, pd, _drop);
 		
 		draw_set_font(f_p2);
 		var _hx = ui(12) + string_width("Shift");
@@ -5461,7 +5461,7 @@ function Panel_Graph_Drop_tooltip(panel) constructor {
 		hotkey_draw("Shift", _hx, _hy);
 		
 		draw_set_text(f_p2, fa_left, fa_top, COLORS._main_text);
-		draw_text(_hx + pd, pd + h1 + ui(6), _shft);
+		draw_text_add(_hx + pd, pd + h1 + ui(6), _shft);
 		surface_reset_shader();
 	}
 }

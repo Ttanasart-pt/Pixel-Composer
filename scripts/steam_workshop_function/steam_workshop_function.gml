@@ -822,7 +822,7 @@ function Steam_workshop_item() constructor {
 			cx -= ui(10);
 			
 			draw_set_text(f_p2, fa_right, fa_center, COLORS._main_text);
-			draw_text(cx, cy - ui(2), _vote_down);
+			draw_text_add(cx, cy - ui(2), _vote_down);
 			cx -= string_width(_vote_down) + ui(4);
 			
 			cx -= ui(12);
@@ -831,7 +831,7 @@ function Steam_workshop_item() constructor {
 			cx -= ui(10);
 			
 			draw_set_text(f_p2, fa_right, fa_center, COLORS._main_text);
-			draw_text(cx, cy - ui(2), _vote_up);
+			draw_text_add(cx, cy - ui(2), _vote_up);
 			cx -= string_width(_vote_up) + ui(4);
 			
 			var _comments = pxc_hub_data == undefined? 0 : pxc_hub_data.comment_count;
@@ -841,7 +841,7 @@ function Steam_workshop_item() constructor {
 				cx -= ui(10);
 				
 				draw_set_text(f_p2, fa_right, fa_center, COLORS._main_text);
-				draw_text(cx, cy - ui(2), _comments);
+				draw_text_add(cx, cy - ui(2), _comments);
 			}
 		#endregion
 		
@@ -869,7 +869,7 @@ function Steam_workshop_item() constructor {
 				}
 				
 				draw_sprite_stretched_ext(THEME.box_r5_clr, 0, ui(8) + tx, ty, _ww, hh, COLORS._main_icon, 1);
-				draw_text(ui(8) + tx + ui(8), ty + hh / 2, tags_content[i]);
+				draw_text_add(ui(8) + tx + ui(8), ty + hh / 2, tags_content[i]);
 				
 				tx += _ww + ui(2);
 			}

@@ -135,8 +135,8 @@ function tooltipSurfaceAssetion(expect, got) constructor {
 		var xg = ui(8) + ss + ui(8);
 		
 		draw_set_text(f_p2, fa_center, fa_top, COLORS._main_text_sub);
-		draw_text(xe + ss / 2, ui(4), "Expected");
-		draw_text(xg + ss / 2, ui(4), "Got");
+		draw_text_add(xe + ss / 2, ui(4), "Expected");
+		draw_text_add(xg + ss / 2, ui(4), "Got");
 		
 		for( var i = 0, n = array_length(expect); i < n; i++ ) {
 			var _e = array_safe_get(expect, i);

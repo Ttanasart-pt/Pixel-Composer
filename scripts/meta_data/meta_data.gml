@@ -124,7 +124,7 @@ function MetaDataManager() constructor {
 			draw_sprite_stretched(THEME.textbox, 0, 0, 0, tww, thh);
 			
 			draw_set_text(f_p1, fa_left, fa_top, COLORS._main_text);
-			draw_text(_pdx, _pdy, name);
+			draw_text_add(_pdx, _pdy, name);
 			surface_reset_shader();
 			return;
 		}
@@ -210,7 +210,7 @@ function MetaDataManager() constructor {
 			
 			draw_sprite_stretched_ext(THEME.box_r2, 0, _dx, _dy, ui(56), ui(20), COLORS._main_icon_dark, 1);
 			draw_set_text(f_p3, fa_left, fa_top, COLORS._main_text_accent);
-			draw_text(_dx + ui(4), _dy + ui(2), "Default");
+			draw_text_add(_dx + ui(4), _dy + ui(2), "Default");
 			
 			draw_set_font(f_h5);
 		}
@@ -273,7 +273,7 @@ function MetaDataManager() constructor {
 				}
 				
 				draw_sprite_stretched_ext(THEME.box_r5_clr, 0, ui(8) + tx, ty, ww, hh, COLORS._main_icon, 1);
-				draw_text(ui(8) + tx + ui(8), ty + hh / 2, tags[i]);
+				draw_text_add(ui(8) + tx + ui(8), ty + hh / 2, tags[i]);
 			
 				tx += ww + ui(2);
 			}

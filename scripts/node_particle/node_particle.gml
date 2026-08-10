@@ -13,7 +13,7 @@ function Node_Particle(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 	////- =Sprite
 	newInput( 0, nodeValue_Surface( "Particle Sprite" ));
 	
-	newInput(22, nodeValue_EScroll( "Surface Array", 0, [ "Random", "Order", "Animation", "Scale" ]))
+	newInput(22, nodeValue_EScroll( "Surface Array", 0, [ "Random", "Order", "Animation", "Scale" ] ))
 		.setTooltip("Whether to select image from an array in order, at random, or treat array as animation.");
 	
 	newInput(23, nodeValue_Range(   "Animation Speed",   [1,1], { linked : true } ));
@@ -32,17 +32,17 @@ function Node_Particle(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 	newInput( 5, nodeValue_Range(   "Lifespan",        [20,30]        ));
 	
 		////- =/Source
-	newInput( 4, nodeValue_EScroll( "Spawn Source",     0,            )).setChoices([ "Area Inside", "Area Border", "Map", "Path", "Direct Data" ]);
+	newInput( 4, nodeValue_EScroll( "Spawn Source",     0             )).setChoices([ "Area Inside", "Area Border", "Map", "Path", "Direct Data" ]);
 	newInput( 3, nodeValue_Area(    "Spawn Area",       DEF_AREA_REF  )).setHotkey("A").setUnitSimple();
 	newInput(30, nodeValue_Surface( "Distribution Map"                ));
 	newInput(55, nodeValue_Path(    "Spawn Path"                      ));
 	newInput(62, nodeValue_Vector(  "Spawn Data"                      )).setArrayDepth(1).setTooltip("Array of vec2 points to spawn particles at.");
 	newInput(24, nodeValue_EButton( "Distribution",     1             )).setChoices([ "Uniform", "Random", "Poisson" ]);
-	newInput(79, nodeValue_Float(   "Distance",         8            )).setValidator(VV_min(0));
+	newInput(79, nodeValue_Float(   "Distance",         8             )).setValidator(VV_min(0));
 	newInput(52, nodeValue_Float(   "Uniform Period",   4             ));
 	
 	////- =Movement
-	newInput(18, nodeValue_Range(   "Speed",                [1,2]              )).setCurvable(60, CURVE_DEF_11, "Over Lifespan");
+	newInput(18, nodeValue_Range(   "Speed",                 [1,2]              )).setCurvable(60, CURVE_DEF_11, "Over Lifespan");
 	inputs[60].setTooltip("Speed Curve may conflict with physics-based properties.");
 	
 		////- =/Direction

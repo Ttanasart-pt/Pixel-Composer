@@ -314,7 +314,7 @@ function draw_tooltip_sprite(spr) {
 			draw_sprite_ext(spr, i, sx + i * (sw * ss + 2), sy, ss, ss, 0, c_white, 1);
 		
 		draw_set_text(f_p3, fa_center, fa_bottom, COLORS._main_text_sub);
-		draw_text(tww / 2, thh - ui(4), $"{sw} x {sh} px");
+		draw_text_add(tww / 2, thh - ui(4), $"{sw} x {sh} px");
 	surface_reset_shader();
 }
 
@@ -353,7 +353,7 @@ function draw_tooltip_project(pObj) {
 		draw_sprite_ext(spr, 0, sx, sy, ss, ss, 0, c_white, 1);
 		
 		draw_set_text(f_p3, fa_center, fa_bottom, COLORS._main_text_sub);
-		draw_text(tww / 2, thh - ui(4), txt);
+		draw_text_add(tww / 2, thh - ui(4), txt);
 	surface_reset_shader();
 }
 
@@ -446,7 +446,7 @@ function draw_tooltip_buffer(buff) {
 		
 		if(len > 400) {
 			draw_set_text(f_code, fa_left, fa_bottom, COLORS._main_text_sub);
-			draw_text(pd, th + pd, $"...({buffer_get_size(buff)} bytes)");
+			draw_text_add(pd, th + pd, $"...({buffer_get_size(buff)} bytes)");
 		}
 	surface_reset_shader();
 }
@@ -594,7 +594,7 @@ function tooltip_modifiers(title, keys) constructor {
 			draw_sprite_stretched(THEME.textbox, 0, 0, 0, tww, thh);
 			
 			draw_set_text(f_p2, fa_left, fa_top, COLORS._main_text);
-			draw_text(pd, pd, title);
+			draw_text_add(pd, pd, title);
 			
 			draw_set_font(f_p3);
 			
@@ -604,7 +604,7 @@ function tooltip_modifiers(title, keys) constructor {
 				hotkey_draw(keys[i][0], _hx, _hy);
 				
 				draw_set_text(f_p3, fa_left, fa_top, COLORS._main_text);
-				draw_text(_hx + ui(8), ui(8) + h1 + ui(6), keys[i][1]);
+				draw_text_add(_hx + ui(8), ui(8) + h1 + ui(6), keys[i][1]);
 			}
 		surface_reset_shader();
 	}
@@ -637,10 +637,10 @@ function tooltip_two_lines(title, content) constructor {
 			draw_sprite_stretched(THEME.textbox, 0, 0, 0, tww, thh);
 			
 			draw_set_text(f_p2b, fa_left, fa_top, COLORS._main_text_accent);
-			draw_text(pd, pd, title);
+			draw_text_add(pd, pd, title);
 			
 			draw_set_text(f_p3, fa_left, fa_top, COLORS._main_text);
-			draw_text(pd, pd + h1, content);
+			draw_text_add(pd, pd + h1, content);
 		surface_reset_shader();
 	}
 }

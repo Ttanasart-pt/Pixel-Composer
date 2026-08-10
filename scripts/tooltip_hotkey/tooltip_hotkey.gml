@@ -31,7 +31,9 @@ function tooltipHotkey(_text, context = undefined, name = undefined) constructor
 			
 			draw_set_text(f_p2, fa_left, fa_top, COLORS._main_text);
 			draw_set_color(COLORS._main_text);
+			BLEND_ADD
 			draw_text_line(pd, pd, text, -1, tw);
+			BLEND_NORMAL
 			
 			var _hx = tw + ui(6);
 			var _hy = th / 2 + ui(10);
@@ -67,7 +69,9 @@ function tooltipKey(_text, _keyStr) constructor {
 			
 			draw_set_text(f_p2, fa_left, fa_top, COLORS._main_text);
 			draw_set_color(COLORS._main_text);
+			BLEND_ADD
 			draw_text_line(pd, pd, text, -1, tw);
+			BLEND_NORMAL
 			
 			var _hx = tw + ui(6);
 			var _hy = th / 2 + ui(10);
@@ -117,7 +121,7 @@ function tooltipHotkey_assign(_text, _hotkey = "") constructor {
 				var _t  = _txt[i];
 				var _ts = is_string(_t)? _t : _t.name;
 				
-				draw_text(pd, txy, _ts);
+				draw_text_add(pd, txy, _ts);
 				txy += string_height(_ts);
 			}
 			
