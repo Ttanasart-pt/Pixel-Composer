@@ -417,6 +417,7 @@ function Node_Particle(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 		
 		var _posDist = undefined;
 		var _amo = irandom_range(_spawn_amount[0], _spawn_amount[1]);
+		if(_spawn_period <= 0) _spawn_period = _amo;
 		
 		if(_distrib == 2) {
 			dist_map_cache = get_points_from_dist(_dist_map, _amo, seed, 8, dist_map_cache);

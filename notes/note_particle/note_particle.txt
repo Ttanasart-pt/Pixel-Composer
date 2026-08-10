@@ -7,5 +7,37 @@ Simulate 2D particle effect.
 ## Properties
 
 [proptable]
+Sprite
+Surface Array|Method of procesing surface array:\n
+ - **Random**: Set random surface for each particle.\n
+ - **Order**: Set surface in order of the particle spawning.\n
+ - **Animation**: Use surface array as animation. Particle spawn with the first surface in the array then increase the index over lifespan.\n
+ - **Scale**: Select array index based on particle scale.
+Animation Speed|For animation type, define surface array animating speed (array index per frame of lifespan.)
+Stretch Animation|For animation type, whether to stretch animation to particle lifespan.
+On Animation End|For animation type, choose what to do when animation reach an end.
+
+Spawn
+Spawn Type|Spawn Timing\n
+ - **Stream**: Spawn particles constantly.\n
+ - **Burst**: Spawn particles once in burst.\n
+ - **Trigger**: Spawn particles using manual trigger.
+Spawn Delay|For Stream type, frames delay between each particle spawn.
+Spawn Frame|For Burst type, frame index to spawn.
+Spawn Amount|Amount of particles to spawn per frame.
+
+Spawn > Lifespan
+Lifespan|Particle lifespan.
+
+Spawn > Source
+Spawn Source|Type of particle spawn source.\n
+ - **Area Inside**: Spawn inside an area.\n
+ - **Area Border**: Spawn around area border.\n
+ - **Map**: Spawn based on greyscale surface.\n
+ - **Path**: Spawn along a path.\n
+ - **Direct Data**: Spawn from array of vec2 points.
+Distribution|For area, path source, particle spawning pattern.
+Uniform Period|For uniform distribution, define distribution amount (e.g. if set to 4, particle will spawn at 4 fixed points in the source.)\n
+If set to zero, will use <junc Spawn Amount>.
 
 [/proptable]

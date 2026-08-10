@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.8.009",
+    "changes": [
+      {
+        "date": "2026-08-10T02:06:21.408Z",
+        "node": "Particle",
+        "commit": "**Particle**: Setting Uniform Period to zero will use spawn amount as period."
+      }
+    ]
+  },
+  {
     "version": "1.21.7.101",
     "changes": [
       {
