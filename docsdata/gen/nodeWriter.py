@@ -170,7 +170,7 @@ def writeLinks(linkContents, metadata, nodeData):
     nodeBase = metadata["baseNode"]
     srchub = "https://github.com/Ttanasart-pt/Pixel-Composer/blob/main"
 
-    links = linkContents
+    links = []
     baseLower  = nodeBase.lower()
     links.append(("Base Code", f'/scripts/{baseLower}/{baseLower}.gml'))
 
@@ -180,6 +180,12 @@ def writeLinks(linkContents, metadata, nodeData):
         links.append((f"Shader [{shader}]", f'/shaders/{shaderLower}/{shaderLower}.fsh'))
     
     linkText = '''<br><h2 class="nosidebar">Related Links</h2><br><ul class="link-table">'''
+    for link in linkContents:
+        if link[0] is not None:
+            linkText += f'''<li><span>{link[0]}: </span><a href="{link[1]}">{link[0]}</a></li>'''
+        else:
+            linkText += f'''<li><span><a href="{link[1]}">{link[1]}</a></span></li>'''
+
     for link in links:
         fullLink = srchub + link[1]
         linkText += f'''<li><span>{link[0]}: </span><a href="{fullLink}">{link[1]}</a></li>'''
@@ -219,7 +225,11 @@ def writeNode(metadata, contentPath, changeData = None):
     links  = reLink.findall(rawContent)
     for l in links:
         lStrip = l.replace("<p>", "").replace("</p>", "")
-        linkContents.append(lStrip)
+        ls = lStrip.split("|")
+        if len(ls) == 2:
+            linkContents.append((ls[0].strip(), ls[1].strip()))
+        elif len(ls) == 1:
+            linkContents.append((None, ls[0].strip()))
         rawContent = rawContent.replace(f"[link]{l}[/link]", "")
     
     juncTags = re.findall(r'<junc\s(.*?)>', rawContent)

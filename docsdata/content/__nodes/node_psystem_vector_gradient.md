@@ -10,4 +10,4 @@ Overflow|When particle is outside surface range, whether to sample as repeating 
 Rotate|Rotate vector.
 [/proptable]
 
-[link]https://en.wikipedia.org/wiki/Gradient[/link]
+[link]Gradient|https://en.wikipedia.org/wiki/Gradient[/link]
