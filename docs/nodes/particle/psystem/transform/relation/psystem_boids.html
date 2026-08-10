@@ -65,7 +65,7 @@
                 <td><p>Mask</p></td>
             </tr><tr><th colspan="2" class="summary-topic junction-separator"><p>Separation</p></th></tr><tr>
                 <td class="summary-topic junction-type"><p style="color: #8c3f5d">bool</p></td>
-                <td><p>Separate</p></td>
+                <td><p>Separation</p></td>
             </tr><tr>
                 <td class="summary-topic junction-type"><p style="color: #ffe478">float</p></td>
                 <td><p>Radius</p></td>
@@ -74,7 +74,7 @@
                 <td><p>Influence</p></td>
             </tr><tr><th colspan="2" class="summary-topic junction-separator"><p>Alignment</p></th></tr><tr>
                 <td class="summary-topic junction-type"><p style="color: #8c3f5d">bool</p></td>
-                <td><p>Align</p></td>
+                <td><p>Alignment</p></td>
             </tr><tr>
                 <td class="summary-topic junction-type"><p style="color: #ffe478">float</p></td>
                 <td><p>Radius</p></td>
@@ -83,7 +83,7 @@
                 <td><p>Influence</p></td>
             </tr><tr><th colspan="2" class="summary-topic junction-separator"><p>Grouping</p></th></tr><tr>
                 <td class="summary-topic junction-type"><p style="color: #8c3f5d">bool</p></td>
-                <td><p>Group</p></td>
+                <td><p>Grouping</p></td>
             </tr><tr>
                 <td class="summary-topic junction-type"><p style="color: #ffe478">float</p></td>
                 <td><p>Radius</p></td>
@@ -92,7 +92,7 @@
                 <td><p>Influence</p></td>
             </tr><tr><th colspan="2" class="summary-topic junction-separator"><p>Follow</p></th></tr><tr>
                 <td class="summary-topic junction-type"><p style="color: #8c3f5d">bool</p></td>
-                <td><p>Follow Point</p></td>
+                <td><p>Follow</p></td>
             </tr><tr>
                 <td class="summary-topic junction-type"><p style="color: #ffe478">vec2</p></td>
                 <td><p>Point</p></td>
@@ -113,7 +113,9 @@
     function copyToClipboard(text) {
         navigator.clipboard.writeText(text);
     }
-</script><br>
+</script><br><p>Simulate boid movement to particle.</p><br>
+<br><h2><a id="Properties" class="anchor"></a>Properties</h2><br>
+<p><table class="prop-table cc3070"><tr><td colspan='2' class='prop-section'>Separation</td></tr><tr><td><span class="junction" style="border-color: #8c3f5dAA">Separation</span></td><td>Add separation force, pushing nearby particle away from each other.</td></tr><tr><td><span class="junction" style="border-color: #ffe478AA">Radius</span></td><td>Radius to begin separating particle.</td></tr><tr><td><span class="junction" style="border-color: #ffe478AA">Influence</span></td><td>Strength of the pushing force.<br></td></tr><tr><td colspan='2' class='prop-section'>Alignment</td></tr><tr><td><span class="junction" style="border-color: #8c3f5dAA">Alignment</span></td><td>Make particle align themselves with the surrounding particles.</td></tr><tr><td><span class="junction" style="border-color: #ffe478AA">Radius</span></td><td>Alignment radius.</td></tr><tr><td><span class="junction" style="border-color: #ffe478AA">Influence</span></td><td>Alignment force.<br></td></tr><tr><td colspan='2' class='prop-section'>Grouping</td></tr><tr><td><span class="junction" style="border-color: #8c3f5dAA">Grouping</span></td><td>Pull nearby particle toward each other to create grouping effect.</td></tr><tr><td><span class="junction" style="border-color: #ffe478AA">Radius</span></td><td>Pull radius.</td></tr><tr><td><span class="junction" style="border-color: #ffe478AA">Influence</span></td><td>Strength of the pulling force.<br></td></tr><tr><td colspan='2' class='prop-section'>Follow</td></tr><tr><td><span class="junction" style="border-color: #8c3f5dAA">Follow</span></td><td>Make particle attempt to follow a single point.</td></tr><tr><td><span class="junction" style="border-color: #ffe478AA">Point</span></td><td>Point target.</td></tr></table></p><br>
 <br><h2 class="nosidebar">Commit History</h2><br>
 <table class="change-table"><tr><th>1.19.8</th><td><ul><li><span>Introduced</span></li></ul></td></tr></table><br><h2 class="nosidebar">Related Links</h2><br><ul class="link-table"><li><span>Base Code: </span><a href="https://github.com/Ttanasart-pt/Pixel-Composer/blob/main/scripts/node_psystem_boids/node_psystem_boids.gml">/scripts/node_psystem_boids/node_psystem_boids.gml</a></li></ul>
         </div>

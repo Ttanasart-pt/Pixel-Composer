@@ -1,0 +1,11 @@
+{
+  "$GMNotes":"v1",
+  "%Name":"note_psystem_vector_curl",
+  "name":"note_psystem_vector_curl",
+  "parent":{
+    "name":"transform",
+    "path":"folders/nodes/data/simulation/particleSystem/transform.yy",
+  },
+  "resourceType":"GMNotes",
+  "resourceVersion":"1.1",
+}

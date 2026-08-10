@@ -166,11 +166,11 @@ def writeChangeTable(metadata, changeData):
         return ""
     return changeText
 
-def writeLinks(metadata, nodeData):
+def writeLinks(linkContents, metadata, nodeData):
     nodeBase = metadata["baseNode"]
     srchub = "https://github.com/Ttanasart-pt/Pixel-Composer/blob/main"
 
-    links = []
+    links = linkContents
     baseLower  = nodeBase.lower()
     links.append(("Base Code", f'/scripts/{baseLower}/{baseLower}.gml'))
 
@@ -187,11 +187,6 @@ def writeLinks(metadata, nodeData):
     return linkText
 
 def writeNode(metadata, contentPath, changeData = None):
-    rawContent  = ""
-    if os.path.exists(contentPath):
-        with open(contentPath, "r") as f:
-            rawContent = f.read()
-        editTime = os.path.getmtime(contentPath)
 
     nodeName = metadata["name"]
     nodeBase = metadata["baseNode"]
@@ -214,6 +209,19 @@ def writeNode(metadata, contentPath, changeData = None):
         jName = junc["name"].lower()
         junctions[jName] = junc
 
+    rawContent  = ""
+    if os.path.exists(contentPath):
+        with open(contentPath, "r") as f:
+            rawContent = f.read()
+
+    linkContents = []
+    reLink = re.compile(r"\[link\]([\s\S]*?)\[\/link\]")
+    links  = reLink.findall(rawContent)
+    for l in links:
+        lStrip = l.replace("<p>", "").replace("</p>", "")
+        linkContents.append(lStrip)
+        rawContent = rawContent.replace(f"[link]{l}[/link]", "")
+    
     juncTags = re.findall(r'<junc\s(.*?)>', rawContent)
     for tag in juncTags:
         jName = tag.strip("/").lower()
@@ -254,7 +262,7 @@ def writeNode(metadata, contentPath, changeData = None):
     if changeData:
         content += writeChangeTable(metadata, changeData)
 
-    content += writeLinks(metadata, nodeData)
+    content += writeLinks(linkContents, metadata, nodeData)
     
     return content
 

@@ -14,11 +14,11 @@ function Node_pSystem_Vector_Gradient(_x, _y, _group = noone) : Node(_x, _y, _gr
 	newInput( 1, nodeValue_Buffer(   "Mask"      ));
 	
 	////- =Vector
-	newInput( 3, nodeValue_Surface( "Vector Field" )); 
-	newInput( 4, nodeValue_Range(   "Intensity", [4,4], true )).setCurvable( 5, CURVE_DEF_11, "Over Lifespan"); 
-	newInput( 6, nodeValue_Slider(  "Midpoint", .5 )); 
-	newInput( 7, nodeValue_EScroll( "Overflow",  0, [ "Repeat", "Clamp" ] )); 
-	newInput( 8, nodeValue_Rotation("Rotate",    0 )); 
+	newInput( 3, nodeValue_Surface(  "Vector Field" )); 
+	newInput( 4, nodeValue_Range(    "Intensity", [4,4], true )).setCurvable( 5, CURVE_DEF_11, "Over Lifespan"); 
+	newInput( 6, nodeValue_Slider(   "Midpoint", .5 )); 
+	newInput( 7, nodeValue_EScroll(  "Overflow",  0, [ "Repeat", "Clamp" ] )); 
+	newInput( 8, nodeValue_Rotation( "Rotate",    0 )); 
 	// 9
 	
 	newOutput(0, nodeValue_Output("Particles", VALUE_TYPE.particle, noone ));

@@ -14,9 +14,9 @@ function Node_pSystem_Follow_Path(_x, _y, _group = noone) : Node(_x, _y, _group)
 	newInput( 1, nodeValue_Buffer(   "Mask"      ));
 	
 	////- =Path
-	newInput( 3, nodeValue_Path(   "Path"    ));
+	newInput( 3, nodeValue_Path(       "Path"                         ));
 	newInput( 4, nodeValue_Vec2_Range( "Path Range",     [0,0,1,1]    ));
-	newInput( 5, nodeValue_Curve(      "Path Influence", CURVE_DEF_11 ));
+	newInput( 5, nodeValue_Curve(      "Path Deviation", CURVE_DEF_11 ));
 	
 	////- =Apply
 	newInput( 6, nodeValue_Bool(  "Use Start Position", true ));

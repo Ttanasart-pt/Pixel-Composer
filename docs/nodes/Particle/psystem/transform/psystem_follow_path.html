@@ -71,7 +71,7 @@
                 <td><p>Path Range</p></td>
             </tr><tr>
                 <td class="summary-topic junction-type"><p style="color: #c2c2d1">curve</p></td>
-                <td><p>Path Influence</p></td>
+                <td><p>Path Deviation</p></td>
             </tr><tr><th colspan="2" class="summary-topic junction-separator"><p>Apply</p></th></tr><tr>
                 <td class="summary-topic junction-type"><p style="color: #8c3f5d">bool</p></td>
                 <td><p>Use Start Position</p></td>
@@ -95,7 +95,9 @@
     function copyToClipboard(text) {
         navigator.clipboard.writeText(text);
     }
-</script><br>
+</script><br><p>Move particle along a path.</p><br>
+<br><h2><a id="Properties" class="anchor"></a>Properties</h2><br>
+<p><table class="prop-table cc3070"><tr><td colspan='2' class='prop-section'>Path</td></tr><tr><td><span class="junction" style="border-color: #ffe478AA">Path Range</span></td><td>Range of the path to follow.</td></tr><tr><td><span class="junction" style="border-color: #c2c2d1AA">Path Deviation</span></td><td>How much of the initial position to apply to the final position (Final position = Path position + Simulation position * Deviation).<br></td></tr><tr><td colspan='2' class='prop-section'>Apply</td></tr><tr><td><span class="junction" style="border-color: #8c3f5dAA">Use Start Position</span></td><td>Offset path position by particle spawn position.</td></tr><tr><td><span class="junction" style="border-color: #ffe478AA">Stride</span></td><td>Instead of applying path position directly. Calculate path offset over stride distance and add it to particle position.</td></tr><tr><td><span class="junction" style="border-color: #ffe478AA">Spiral</span></td><td>Apply spiral movement from the spawn position around a path.</td></tr></table></p><br>
 <br><h2 class="nosidebar">Commit History</h2><br>
 <table class="change-table"><tr><th>1.19.8</th><td><ul><li><span>Introduced</span></li></ul></td></tr></table><br><h2 class="nosidebar">Related Links</h2><br><ul class="link-table"><li><span>Base Code: </span><a href="https://github.com/Ttanasart-pt/Pixel-Composer/blob/main/scripts/node_psystem_follow_path/node_psystem_follow_path.gml">/scripts/node_psystem_follow_path/node_psystem_follow_path.gml</a></li></ul>
         </div>

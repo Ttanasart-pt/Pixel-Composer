@@ -14,24 +14,24 @@ function Node_pSystem_Boids(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	newInput( 1, nodeValue_Buffer(   "Mask"      ));
 	
 	////- =Separation
-	newInput( 3, nodeValue_Bool(   "Separate",  true ));
+	newInput( 3, nodeValue_Bool(   "Separation",true ));
 	newInput( 4, nodeValue_Float(  "Radius",    4    )).setInternalName("sep_radius");
 	newInput( 5, nodeValue_Slider( "Influence", 0.2  )).setInternalName("sep_influence");
 	
 	////- =Alignment
-	newInput( 6, nodeValue_Bool(   "Align",     true ));
+	newInput( 6, nodeValue_Bool(   "Alignment", true ));
 	newInput( 7, nodeValue_Float(  "Radius",    32   )).setInternalName("ali_radius");
 	newInput( 8, nodeValue_Slider( "Influence", 0.2  )).setInternalName("ali_influence");
 	
 	////- =Grouping
-	newInput( 9, nodeValue_Bool(   "Group",     true ));
+	newInput( 9, nodeValue_Bool(   "Grouping",  true ));
 	newInput(10, nodeValue_Float(  "Radius",    32   )).setInternalName("grp_radius");
 	newInput(11, nodeValue_Slider( "Influence", 0.2  )).setInternalName("grp_influence");
 	
 	////- =Follow
-	newInput(12, nodeValue_Bool(   "Follow point", false ));
-	newInput(13, nodeValue_Vec2(   "Point",        [0,0] )).setUnitSimple();
-	newInput(14, nodeValue_Slider( "Influence",    .1    )).setInternalName("fol_influence");
+	newInput(12, nodeValue_Bool(   "Follow",    false ));
+	newInput(13, nodeValue_Vec2(   "Point",     [0,0] )).setUnitSimple();
+	newInput(14, nodeValue_Slider( "Influence", .1    )).setInternalName("fol_influence");
 	// 15
 	
 	newOutput(0, nodeValue_Output("Particles", VALUE_TYPE.particle, noone ));
