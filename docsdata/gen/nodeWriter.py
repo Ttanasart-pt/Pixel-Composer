@@ -121,7 +121,7 @@ def writeChangeTable(metadata, changeData):
             addString = f"{vMaj}.{vMin}.{vBet}"
 
         # print(f"Node {nodeName} was introduced in version {addString}/{addVersion}.")
-        changeText += f'<tr><th>{addString}</th><td><ul><li>Introduced</li></ul></td></tr>'
+        changeText += f'<tr><th>{addString}</th><td><ul><li><span>Introduced</span></li></ul></td></tr>'
         hasAnyChange = True
 
     changeData.reverse()
@@ -145,7 +145,7 @@ def writeChangeTable(metadata, changeData):
                 continue
             
             commit = commit.split(":")[1] if ":" in commit else commit
-            commitMessage += f'<li>{commit}</li>'
+            commitMessage += f'<li><span>{commit}</span></li>'
             hasChanges = True
 
         commitMessage += "</ul>"

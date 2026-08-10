@@ -167,7 +167,7 @@ tr td {
 table {
     width: auto;
     border-collapse: separate;
-    margin: 16px auto;
+    margin: 0px auto;
 
     border: 1px solid var(--main_dkgrey);
     border-radius: 8px;
@@ -1086,7 +1086,22 @@ table.change-table {
     display: flex;
    
     th:first-child  { text-align: center; width: 20%; }
-    td:nth-child(2) { text-align: left; }
+    td:nth-child(2) { 
+        text-align: left; 
+        
+        ul {
+            margin: 0px 0px 0px 1rem;
+
+            li {
+                font-size: 0.8rem;
+
+                span {
+                    position: relative;
+                    left: -4px;
+                }
+            }
+        }
+    }
 
     tbody {
         width: 100%;
