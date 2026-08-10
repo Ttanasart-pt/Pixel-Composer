@@ -818,10 +818,11 @@ span.code-block {
 }
 
 p.banner {
-    display: table-cell;
+    display: flex;
+    gap: 0.3em;
     margin: 16px 0px 16px 0px;
     padding: 16px;
-    width: inherit;
+    width: auto;
 
     background-color: #ff916610;
     border: 1px solid var(--accent);
