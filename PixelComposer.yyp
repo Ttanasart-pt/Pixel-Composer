@@ -1144,6 +1144,7 @@
     {"id":{"name":"note_pixel_sort","path":"notes/note_pixel_sort/note_pixel_sort.yy",},},
     {"id":{"name":"note_plot_linear","path":"notes/note_plot_linear/note_plot_linear.yy",},},
     {"id":{"name":"note_posterize","path":"notes/note_posterize/note_posterize.yy",},},
+    {"id":{"name":"note_psystem_inline","path":"notes/note_psystem_inline/note_psystem_inline.yy",},},
     {"id":{"name":"note_pxc","path":"notes/note_pxc/note_pxc.yy",},},
     {"id":{"name":"note_pytagorean_tile","path":"notes/note_pytagorean_tile/note_pytagorean_tile.yy",},},
     {"id":{"name":"note_quasicrystal","path":"notes/note_quasicrystal/note_quasicrystal.yy",},},

@@ -124,8 +124,7 @@ def writeChangeTable(metadata, changeData):
         changeText += f'<tr><th>{addString}</th><td><ul><li><span>Introduced</span></li></ul></td></tr>'
         hasAnyChange = True
 
-    changeData.reverse()
-    for change in changeData:
+    for change in changeData.reverse():
         version = change["version"]
         changes = change["changes"]
 
