@@ -1,0 +1,11 @@
+{
+  "$GMNotes":"v1",
+  "%Name":"note_psystem_spawn",
+  "name":"note_psystem_spawn",
+  "parent":{
+    "name":"main",
+    "path":"folders/nodes/data/simulation/particleSystem/main.yy",
+  },
+  "resourceType":"GMNotes",
+  "resourceVersion":"1.1",
+}

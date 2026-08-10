@@ -24,6 +24,7 @@ Spawn Type|Spawn Timing\n
  - **Trigger**: Spawn particles using manual trigger.
 Spawn Delay|For Stream type, frames delay between each particle spawn.
 Spawn Frame|For Burst type, frame index to spawn.
+Burst Duration|For Burst type, amount of frames to spawn.
 Spawn Amount|Amount of particles to spawn per frame.
 
 Spawn > Lifespan
@@ -63,7 +64,7 @@ Snap|Snap rotation to fixed angle.
 
 Scale
 Scale|Define non-uniform particle scale.
-Size|Uniform paticle scale.
+Size|Uniform particle scale.
 
 Color
 Color on Spawn|Initial particle color.

@@ -17,13 +17,14 @@ function Node_pSystem_Oscillate(_x, _y, _group = noone) : Node(_x, _y, _group) c
 	newInput( 3, nodeValue_Range( "Strength",  [1,1], true )).setCurvable( 4, CURVE_DEF_11, "Over Lifespan"); 
 	newInput( 5, nodeValue_Range( "Amplitude", [4,4], true )).setCurvable( 6, CURVE_DEF_11, "Over Lifespan"); 
 	newInput( 7, nodeValue_Range( "Frequency", [4,4], true )).setCurvable( 8, CURVE_DEF_11, "Over Lifespan"); 
-	// 9
+	newInput( 9, nodeValue_Range( "Phase",     [0,0], true ));
+	//10
 	
 	newOutput(0, nodeValue_Output("Particles", VALUE_TYPE.particle, noone ));
 	
 	input_display_list = [ 2, 
 		[ "Particles", false ], 0, 1, 
-		[ "Oscillate", false ], 3, 4, 5, 6, 7, 8, 
+		[ "Oscillate", false ], 3, 4, 5, 6, 7, 8, 9, 
 	];
 	
 	////- Nodes
@@ -53,6 +54,7 @@ function Node_pSystem_Oscillate(_x, _y, _group = noone) : Node(_x, _y, _group) c
 		var _strn = getInputData( 3), _strn_curved = inputs[3].attributes.curved && curve_strn != undefined;
 		var _ampl = getInputData( 5), _ampl_curved = inputs[5].attributes.curved && curve_ampl != undefined;
 		var _freq = getInputData( 7), _freq_curved = inputs[7].attributes.curved && curve_freq != undefined;
+		var _phas = getInputData( 9);
 		
 		var _partAmo  = _parts.maxCursor;
 		var _partBuff = _parts.buffer;
@@ -95,7 +97,7 @@ function Node_pSystem_Oscillate(_x, _y, _group = noone) : Node(_x, _y, _group) c
 			var _freq_cur = random_range(_freq[0], _freq[1]) * _freq_mod;
 			
 			var _dir = point_direction(_ppx, _ppy, _px + _vx, _py + _vy);
-			var _osc = dsin(rat * _freq_cur * 360) * _ampl_cur * _strn_cur * _mask;
+			var _osc = dsin((_phas + rat) * _freq_cur * 360) * _ampl_cur * _strn_cur * _mask;
 			
 			var _ox = lengthdir_x(_osc, _dir + 90);
 			var _oy = lengthdir_y(_osc, _dir + 90);

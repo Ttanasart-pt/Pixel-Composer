@@ -18,10 +18,10 @@ function Node_pSystem_Transform(_x, _y, _group = noone) : Node(_x, _y, _group) c
 	newInput( 3, nodeValue_Vec2_Range( "Move",    [0,0,0,0] )).setCurvable( 4, CURVE_DEF_11, "Over Lifespan"); 
 	
 	////- =Vector Move
-	newInput(15, nodeValue_Bool(    "Do Vector Move", false       ));
-	newInput(19, nodeValue_Bool(    "Vector Impulse", false       ));
-	newInput( 9, nodeValue_Range(   "Speed",          [0,0], true )).setCurvable(10, CURVE_DEF_11, "Over Lifespan"); 
-	newInput(11, nodeValue_RotRand( "Direction", ROTRAN_DEF_360 ));
+	newInput(15, nodeValue_Bool(    "Do Vector Move", false          ));
+	newInput(19, nodeValue_Bool(    "Vector Impulse", false          ));
+	newInput( 9, nodeValue_Range(   "Speed",          [0,0], true    )).setCurvable(10, CURVE_DEF_11, "Over Lifespan"); 
+	newInput(11, nodeValue_RotRand( "Direction",      ROTRAN_DEF_360 ));
 	
 	////- =Rotation
 	newInput(16, nodeValue_Bool(    "Do Rotate", false ));
@@ -31,8 +31,8 @@ function Node_pSystem_Transform(_x, _y, _group = noone) : Node(_x, _y, _group) c
 	////- =Scale
 	newInput(17, nodeValue_Bool(    "Do Scale", false ));
 	newInput(12, nodeValue_EScroll( "Mode",     1, [ "Add", "Multiply", "Override" ] )).setInternalName("scale_mode");
-	newInput(18, nodeValue_Bool(    "Accumulative", false ));
-	newInput( 7, nodeValue_Vec2_Range(  "Scale",   [1,1,1,1], true )).setCurvable(8, CURVE_DEF_11, "Over Lifespan"); 
+	newInput(18, nodeValue_Bool(    "Accumulative",       false ));
+	newInput( 7, nodeValue_Range2(  "Scale",   [1,1,1,1],  true )).setCurvable(8, CURVE_DEF_11, "Over Lifespan"); 
 	// 20
 	
 	newOutput(0, nodeValue_Output("Particles", VALUE_TYPE.particle, noone ));

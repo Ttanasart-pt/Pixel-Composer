@@ -41,11 +41,11 @@ function Node_pSystem_Mask_Data(_x, _y, _group = noone) : Node(_x, _y, _group) c
 	newOutput(1, nodeValue_Output( "Mask",      VALUE_TYPE.buffer,   noone ));
 	
 	input_display_list = [ 2, 
-		[ "Particles", false ], 0, 
-		[ "Data",      false ], 3, 
-		[ "Remap",     false ], 4, 5,
-		[ "Clamp", false, 9  ], 10, 
-		[ "Curve", false, 8  ], 6, 7,
+		[ "Particles", false     ],  0, 
+		[ "Data",      false     ],  3, 
+		[ "Remap",     false     ],  4,  5,
+		[ "Clamp",     false, 9  ], 10, 
+		[ "Curve",     false, 8  ],  6,  7,
 	];
 	
 	////- Nodes

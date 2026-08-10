@@ -14,35 +14,35 @@ function Node_pSystem_Snap_Transform(_x, _y, _group = noone) : Node(_x, _y, _gro
 	newInput( 1, nodeValue_Buffer(   "Mask"      ));
 	
 	////- =Position
-	newInput(16, nodeValue_Bool(  "Snap Position", false ));
-	newInput( 8, nodeValue_Vec2_Range( "Position Snap",  [0,0,0,0], true )).setCurvable( 9, CURVE_DEF_11, "Over Lifespan"); 
-	newInput(10, nodeValue_Vec2_Range( "Position Shift", [0,0,0,0], true )); 
-	newInput(14, nodeValue_Bool(  "Override Position", false ));
+	newInput(16, nodeValue_Bool(   "Snap Position",     false          ));
+	newInput( 8, nodeValue_Range2( "Position Snap",    [0,0,0,0], true )).setCurvable( 9, CURVE_DEF_11, "Over Lifespan"); 
+	newInput(10, nodeValue_Range2( "Position Shift",   [0,0,0,0], true )); 
+	newInput(14, nodeValue_Bool(   "Override Position", false          ));
 	
 	////- =Angle
-	newInput(17, nodeValue_Bool(  "Snap Angle", false ));
-	newInput( 3, nodeValue_Range( "Angle Snap",  [1,1], true )).setCurvable( 4, CURVE_DEF_11, "Over Lifespan"); 
-	newInput( 5, nodeValue_Range( "Angle Shift", [0,0], true )).setCurvable( 6, CURVE_DEF_11, "Over Lifespan"); 
-	newInput( 7, nodeValue_Bool(  "Override Angle", false ));
+	newInput(17, nodeValue_Bool(   "Snap Angle",        false          ));
+	newInput( 3, nodeValue_Range(  "Angle Snap",       [1,1], true )).setCurvable( 4, CURVE_DEF_11, "Over Lifespan"); 
+	newInput( 5, nodeValue_Range(  "Angle Shift",      [0,0], true )).setCurvable( 6, CURVE_DEF_11, "Over Lifespan"); 
+	newInput( 7, nodeValue_Bool(   "Override Angle",    false          ));
 	
 	////- =Scale
-	newInput(18, nodeValue_Bool(  "Snap Scale", false ));
-	newInput(11, nodeValue_Vec2_Range( "Scale Snap",  [0,0,0,0], true )).setCurvable(12, CURVE_DEF_11, "Over Lifespan"); 
-	newInput(13, nodeValue_Vec2_Range( "Scale Shift", [0,0,0,0], true )); 
-	newInput(15, nodeValue_Bool(  "Override Scale", false ));
+	newInput(18, nodeValue_Bool(   "Snap Scale",        false          ));
+	newInput(11, nodeValue_Range2( "Scale Snap",       [0,0,0,0], true )).setCurvable(12, CURVE_DEF_11, "Over Lifespan"); 
+	newInput(13, nodeValue_Range2( "Scale Shift",      [0,0,0,0], true )); 
+	newInput(15, nodeValue_Bool(   "Override Scale",    false          ));
 	
 	////- =Direction
-	newInput(19, nodeValue_Bool(     "Snap Direction", false ));
-	newInput(20, nodeValue_Rotation( "Direction Snap", 0     ));
+	newInput(19, nodeValue_Bool(     "Snap Direction",  false         ));
+	newInput(20, nodeValue_Rotation( "Direction Snap",  0             ));
 	// 21
 	
 	newOutput(0, nodeValue_Output("Particles", VALUE_TYPE.particle, noone ));
 	
 	input_display_list = [  2, 
 		[ "Particles", false     ],  0,  1, 
-		[ "Position",  false, 16 ],  8,  9, 10, 14, 
-		[ "Angle",     false, 17 ],  3,  4,  5,  6,  7, 
-		[ "Scale",     false, 18 ], 11, 12, 13, 15, 
+		[ "Position",  false, 16 ],  8,  9, 10, 
+		[ "Angle",     false, 17 ],  3,  4,  5,  6,  
+		[ "Scale",     false, 18 ], 11, 12, 13, 
 		[ "Direction", false, 19 ], 20, 
 	];
 	

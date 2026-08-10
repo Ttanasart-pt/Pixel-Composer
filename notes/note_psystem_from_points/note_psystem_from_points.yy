@@ -1,0 +1,11 @@
+{
+  "$GMNotes":"v1",
+  "%Name":"note_psystem_from_points",
+  "name":"note_psystem_from_points",
+  "parent":{
+    "name":"main",
+    "path":"folders/nodes/data/simulation/particleSystem/main.yy",
+  },
+  "resourceType":"GMNotes",
+  "resourceVersion":"1.1",
+}

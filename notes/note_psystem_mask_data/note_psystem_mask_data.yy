@@ -1,0 +1,11 @@
+{
+  "$GMNotes":"v1",
+  "%Name":"note_psystem_mask_data",
+  "name":"note_psystem_mask_data",
+  "parent":{
+    "name":"main",
+    "path":"folders/nodes/data/simulation/particleSystem/main.yy",
+  },
+  "resourceType":"GMNotes",
+  "resourceVersion":"1.1",
+}

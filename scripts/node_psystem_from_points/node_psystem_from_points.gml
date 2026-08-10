@@ -7,7 +7,7 @@ function Node_pSystem_from_Points(_x, _y, _group = noone) : Node(_x, _y, _group)
 	setDimension(96, 0);
 	
 	////- =Spawn
-	newInput( 0, nodeValue_Vec2( "Points Data", [0,0] )).setVisible(true, true).setArrayDepth(1);
+	newInput( 0, nodeValue_Vec2( "Points Data", [[0,0]] )).setVisible(true, true).setArrayDepth(1);
 	
 	////- =Indexing
 	newInput( 1, nodeValue_Float( "Index Start", 0 ));

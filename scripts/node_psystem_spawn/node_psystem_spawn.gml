@@ -29,7 +29,7 @@ function Node_pSystem_Spawn(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	newInput( 8, nodeValue_Area(    "Area", DEF_AREA_REF, { useShape : false } )).setUnitSimple();
 	newInput(26, nodeValue_Vec2(    "Line Start", [0,0] )).setUnitSimple();
 	newInput(27, nodeValue_Vec2(    "Line End",   [1,1] )).setUnitSimple();
-	newInput( 9, nodeValue_Path("Path"              ));
+	newInput( 9, nodeValue_Path(    "Path"              ));
 	newInput(10, nodeValue_Mesh(    "Mesh"              ));
 	newInput(11, nodeValue_Surface( "Spawn Map"         ));
 	newInput(12, nodeValue_Vector(  "Spawn Data"        )).setArrayDepth(1);
@@ -188,6 +188,7 @@ function Node_pSystem_Spawn(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		
 		random_set_seed(_seed + _frame);
 		var _spawn_amount = irandom_range(_sp_amou[0], _sp_amou[1]);
+		if(_sh_perd <= 0) _sh_perd = _spawn_amount;
 		
 		var _sh_area_x = _sh_area[AREA_INDEX.center_x];
 		var _sh_area_y = _sh_area[AREA_INDEX.center_y];

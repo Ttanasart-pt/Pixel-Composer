@@ -14,11 +14,11 @@ function Node_pSystem_Mask(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	newInput( 1, nodeValue_Buffer(   "Mask"      ));
 	
 	////- =Mask
-	newInput( 3, nodeValue_EScroll( "Type",   0, [ "Area", "Linear", "Map" ] )); 
-	newInput( 4, nodeValue_Area(     "Area",      DEF_AREA_REF )).setUnitSimple();
-	newInput( 7, nodeValue_Vec2(     "Center",  [.5,.5]        )).setUnitSimple();
-	newInput( 8, nodeValue_Rotation( "Angle",     0            ));
-	newInput( 9, nodeValue_Surface(  "Map" ));
+	newInput( 3, nodeValue_EScroll(  "Type",     0, [ "Area", "Linear", "Map" ] )); 
+	newInput( 4, nodeValue_Area(     "Area",     DEF_AREA_REF )).setUnitSimple();
+	newInput( 7, nodeValue_Vec2(     "Center", [.5,.5]        )).setUnitSimple();
+	newInput( 8, nodeValue_Rotation( "Angle",    0            ));
+	newInput( 9, nodeValue_Surface(  "Map"                    ));
 	
 	////- =Falloff
 	newInput( 5, nodeValue_Float( "Falloff Distance", 4 )).setCurvable( 6, CURVE_DEF_11, "Curve"); 
