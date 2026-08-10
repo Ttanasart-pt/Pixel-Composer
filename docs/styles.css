@@ -818,7 +818,7 @@ span.code-block {
 }
 
 p.banner {
-    display: flex;
+    display: flow-root;
     gap: 0.3em;
     margin: 16px 0px 16px 0px;
     padding: 16px;
