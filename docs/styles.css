@@ -1085,6 +1085,9 @@ table.change-table {
     margin: 0px;
     display: flex;
    
+    td:first-child  { text-align: center; width: 30%; }
+    td:nth-child(2) { text-align: center; width: 70%; }
+    
     tbody {
         width: 100%;
     }
