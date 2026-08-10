@@ -83,6 +83,9 @@ def applyTemplate(template, nodeName, tooltip, summary):
                    .replace("{{tooltip}}",  tooltip)  \
                    .replace("{{summary}}",  summary)
 
+def versionToInt(version):
+    return int(version.replace(".", "") + "0" * (10 - len(version.replace(".", ""))))
+
 def writeChangeTable(metadata, changeData):
     nodeName = metadata["name"]
     hasAnyChange = False
@@ -124,7 +127,8 @@ def writeChangeTable(metadata, changeData):
         changeText += f'<tr><th>{addString}</th><td><ul><li><span>Introduced</span></li></ul></td></tr>'
         hasAnyChange = True
 
-    for change in changeData.reverse():
+    changeData.sort(key=lambda x: versionToInt(x["version"]), reverse=True)
+    for change in changeData:
         version = change["version"]
         changes = change["changes"]
 
