@@ -1,0 +1,1 @@
+Extract all pixel from a surface into color palette.

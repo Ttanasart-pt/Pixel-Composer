@@ -1,0 +1,11 @@
+{
+  "$GMNotes":"v1",
+  "%Name":"note_struct",
+  "name":"note_struct",
+  "parent":{
+    "name":"struct",
+    "path":"folders/nodes/data/value/struct.yy",
+  },
+  "resourceType":"GMNotes",
+  "resourceVersion":"1.1",
+}

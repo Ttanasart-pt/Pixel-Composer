@@ -1,0 +1,11 @@
+{
+  "$GMNotes":"v1",
+  "%Name":"note_surface_to_buffer",
+  "name":"note_surface_to_buffer",
+  "parent":{
+    "name":"buffer",
+    "path":"folders/nodes/data/value/buffer.yy",
+  },
+  "resourceType":"GMNotes",
+  "resourceVersion":"1.1",
+}

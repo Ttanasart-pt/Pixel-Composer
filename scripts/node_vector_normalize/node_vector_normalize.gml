@@ -16,8 +16,8 @@ function Node_Vector_Normalize(_x, _y, _group = noone) : Node_Processor(_x, _y, 
 		if(!is_array(_vec)) return 0;
 		
 		switch(array_length(_vec)) {
-			case 0 : return 1;
-			case 1 : return [ 1 ];
+			case 0 : return  1;
+			case 1 : return [1];
 			
 			case 2 : 
 			    var _len = sqrt(sqr(_vec[0]) + sqr(_vec[1]));

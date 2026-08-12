@@ -1,0 +1,11 @@
+{
+  "$GMNotes":"v1",
+  "%Name":"note_tiler_rule",
+  "name":"note_tiler_rule",
+  "parent":{
+    "name":"tiler",
+    "path":"folders/nodes/data/tiler.yy",
+  },
+  "resourceType":"GMNotes",
+  "resourceVersion":"1.1",
+}

@@ -1,0 +1,11 @@
+{
+  "$GMNotes":"v1",
+  "%Name":"note_vector_cross_3D",
+  "name":"note_vector_cross_3D",
+  "parent":{
+    "name":"vector",
+    "path":"folders/nodes/data/value/vector.yy",
+  },
+  "resourceType":"GMNotes",
+  "resourceVersion":"1.1",
+}

@@ -1,5 +1,4 @@
-<v 1.18.0/>
-Returns area data. Area data is simply a 5 dimensional vector that represents 2d bounding box. Each element of the vector represents the following:
+Output area data. Area data is simply a 5 dimensional vector that represents 2d bounding box. Each element of the vector represents the following:
 1. X position of the middle point of the area.
 2. Y position of the middle point of the area.
 3. Half width of the area.

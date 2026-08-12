@@ -1,0 +1,11 @@
+{
+  "$GMNotes":"v1",
+  "%Name":"note_move_point",
+  "name":"note_move_point",
+  "parent":{
+    "name":"point",
+    "path":"folders/nodes/data/value/point.yy",
+  },
+  "resourceType":"GMNotes",
+  "resourceVersion":"1.1",
+}

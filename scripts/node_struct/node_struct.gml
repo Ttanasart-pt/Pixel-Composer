@@ -4,7 +4,7 @@ function Node_Struct(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	
 	////- IO
 	
-	newOutput(0, nodeValue_Output("Struct", VALUE_TYPE.struct, {}));
+	newOutput(0, nodeValue_Output( "Struct", VALUE_TYPE.struct, {} ));
 	
 	size_adjust_tool = new Inspector_Custom_Renderer(function(_x, _y, _w, _m, _hover, _focus) {
 		var _h = ui(48);

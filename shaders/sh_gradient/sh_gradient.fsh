@@ -30,12 +30,12 @@
 #endregion -- uv --
 
 #pragma use(curve)
-#region -- curve -- [1780117484.3465736]
+#region -- curve -- [1786510425.6316042]
 
     #ifdef _YY_HLSL11_ 
         #define CURVE_MAX  512
     #else 
-        #define CURVE_MAX  256
+        #define CURVE_MAX  64
     #endif
 
     uniform int   curve_offset;
@@ -161,8 +161,12 @@
 #endregion -- curve --
 
 #pragma use(gradient)
-#region -- gradient -- [1777679826.681391]
-	#define GRADIENT_LIMIT 128
+#region -- gradient -- [1786510427.8689222]
+	#ifdef _YY_HLSL11_ 
+        #define GRADIENT_LIMIT 128
+    #else 
+        #define GRADIENT_LIMIT 64
+    #endif
 	
 	uniform int		  gradient_blend;
 	uniform vec4	  gradient_color[GRADIENT_LIMIT];

@@ -1,38 +1,33 @@
 function Node_Tile_Tilemap_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
     name  = "Export Tilemap";
     
-    newInput( 0, nodeValue_Surface("Tilemap"));
-    
-    newInput( 1, nodeValue_FPath("Path"))
-		.setDisplay(VALUE_DISPLAY.path_save, { filter: "" })
-		.setVisible(true);
-    
     export_format = [ "CSV", "GameMaker" ];
-    newInput( 2, nodeValue_EScroll("Format", 0, export_format));
     
-    newInput( 3, nodeValue_EScroll("GM Export Type", 0, [ "Room" ]));
+    newInput( 7, nodeValue_Tileset()).setVisible(true, true);
+    newInput( 0, nodeValue_Surface( "Tilemap" ));
     
-    newInput( 4, nodeValue_FPath("GM Room"))
-    	.setDisplay(VALUE_DISPLAY.path_load, { filter: "GameMaker Room (.yy)|*.yy" })
-    	.setVisible(false, false);
+    ////- =Output
+    newInput( 1, nodeValue_FPath(   "Path" )).setDisplay(VALUE_DISPLAY.path_save, { filter: "" }).setVisible(true);
+    newInput( 2, nodeValue_EScroll( "Format", 0, export_format ));
     
-    newInput( 5, nodeValue_Text("GM Room Name", "rmRoom"));
+    ////- =Gamemaker
+    newInput( 3, nodeValue_EScroll( "GM Export Type", 0, [ "Room" ] ));
+    newInput( 4, nodeValue_FPath(   "GM Room" )).setDisplay(VALUE_DISPLAY.path_load, { filter: "GameMaker Room (.yy)|*.yy" }).setVisible(false, false);
+    newInput( 5, nodeValue_Text(    "GM Room Name",  "rmRoom"  ));
+    newInput( 6, nodeValue_Text(    "GM Layer Name", "Tiles_1" ));
     
-    newInput( 6, nodeValue_Text("GM Layer Name", "Tiles_1"));
-    
-    newInput( 7, nodeValue_Tileset())
-    	.setVisible(true, true);
-    
-    newInput( 8, nodeValue_FPath("GD Scene"))
-    	.setDisplay(VALUE_DISPLAY.path_load, { filter: "Godot Scene (.tscn)|*.tscn" })
-    	.setVisible(false, false);
+    ////- =Godot
+    newInput( 8, nodeValue_FPath( "GD Scene" )).setDisplay(VALUE_DISPLAY.path_load, { filter: "Godot Scene (.tscn)|*.tscn" }).setVisible(false, false);
+    // 9
     
     input_display_list = [ 7, 0, 
-    	["Output",    false], 1, 2, 
-    	["GameMaker",  true], 3, 4, 5, 6, 
-    	["Godot",      true], 8, 
+    	[ "Output",    false ],  1,  2, 
+    	[ "GameMaker",  true ],  3,  4,  5,  6, 
+    	[ "Godot",      true ],  8, 
 	];
     
+	////- Node
+	
 	insp1button = button(function() /*=>*/ {return export()}).setTooltip(__txt("Export"))
 		.setIcon(THEME.sequence_control, 1, COLORS._main_value_positive).iconPad(ui(6)).setBaseSprite(THEME.button_hide_fill);
 	

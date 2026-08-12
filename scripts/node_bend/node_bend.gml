@@ -17,7 +17,7 @@ function Node_Bend(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	////- =Surfaces
 	newInput( 0, nodeValue_Surface( "Surface In" )).setRequired();
 	
-	////- =Surfaces
+	////- =Bend
 	var _types = __enum_array_gen([ "Arc", "Wave" ], s_node_bend_type);
 	newInput( 2, nodeValue_EScroll( "Type",    0, _types       )).setPieMenu();
 	newInput( 3, nodeValue_EButton( "Axis",    0, [ "X", "Y" ] )).setPieMenu();

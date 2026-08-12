@@ -1,0 +1,1 @@
+Base node for the custom node system.

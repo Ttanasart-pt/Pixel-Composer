@@ -1,0 +1,11 @@
+{
+  "$GMNotes":"v1",
+  "%Name":"note_canvas_s",
+  "name":"note_canvas_s",
+  "parent":{
+    "name":"canvas",
+    "path":"folders/nodes/data/canvas.yy",
+  },
+  "resourceType":"GMNotes",
+  "resourceVersion":"1.1",
+}

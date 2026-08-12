@@ -1,0 +1,11 @@
+{
+  "$GMNotes":"v1",
+  "%Name":"note_layer_output",
+  "name":"note_layer_output",
+  "parent":{
+    "name":"project",
+    "path":"folders/nodes/data/misc/project.yy",
+  },
+  "resourceType":"GMNotes",
+  "resourceVersion":"1.1",
+}

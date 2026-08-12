@@ -1,0 +1,11 @@
+{
+  "$GMNotes":"v1",
+  "%Name":"note_terminal_trigger",
+  "name":"note_terminal_trigger",
+  "parent":{
+    "name":"project",
+    "path":"folders/nodes/data/misc/project.yy",
+  },
+  "resourceType":"GMNotes",
+  "resourceVersion":"1.1",
+}

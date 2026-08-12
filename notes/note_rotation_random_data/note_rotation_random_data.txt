@@ -1,0 +1,1 @@
+Create rotation randomizer data.

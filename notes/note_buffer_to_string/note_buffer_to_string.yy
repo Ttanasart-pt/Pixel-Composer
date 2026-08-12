@@ -1,0 +1,11 @@
+{
+  "$GMNotes":"v1",
+  "%Name":"note_buffer_to_string",
+  "name":"note_buffer_to_string",
+  "parent":{
+    "name":"buffer",
+    "path":"folders/nodes/data/value/buffer.yy",
+  },
+  "resourceType":"GMNotes",
+  "resourceVersion":"1.1",
+}

@@ -4,9 +4,9 @@ function Node_Struct_Get(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	setDimension(96, 48);
 	
 	__type_enum = [ "Auto", "Number", "Text", "Surface", "Buffer", "Struct", "Gradient" ];
-	newInput(0, nodeValue_Struct(  "Struct" )).setVisible(true, true);
-	newInput(1, nodeValue_Text(    "Key"    ));
-	newInput(2, nodeValue_EScroll( "Type", 0, __type_enum ));
+	newInput( 0, nodeValue_Struct(  "Struct" )).setVisible(true, true);
+	newInput( 1, nodeValue_Text(    "Key"    ));
+	newInput( 2, nodeValue_EScroll( "Type", 0, __type_enum ));
 	
 	newOutput(0, nodeValue_Output("Value", VALUE_TYPE.any, noone ));
 	

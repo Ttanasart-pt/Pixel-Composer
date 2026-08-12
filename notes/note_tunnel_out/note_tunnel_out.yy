@@ -1,0 +1,11 @@
+{
+  "$GMNotes":"v1",
+  "%Name":"note_tunnel_out",
+  "name":"note_tunnel_out",
+  "parent":{
+    "name":"tunnel",
+    "path":"folders/nodes/data/misc/flow/tunnel.yy",
+  },
+  "resourceType":"GMNotes",
+  "resourceVersion":"1.1",
+}

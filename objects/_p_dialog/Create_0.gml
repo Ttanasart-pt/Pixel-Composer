@@ -109,8 +109,8 @@
 			if(mouse_lrelease()) dialog_dragging = false;
 		}
 		
-		var diax = window_get_x() + dialog_x;
-		var diay = window_get_y() + dialog_y;
+		var diax = WIN_X + dialog_x;
+		var diay = WIN_Y + dialog_y;
 		
 		var _x0 = diax;
 		var _y0 = diay;
@@ -190,8 +190,8 @@
 		}
 		
 		if(sHOVER) {
-			var diax = window_get_x() + dialog_x;
-			var diay = window_get_y() + dialog_y;
+			var diax = WIN_X + dialog_x;
+			var diay = WIN_Y + dialog_y;
 			
 			var _x0 = diax;
 			var _y0 = diay;
@@ -330,11 +330,11 @@
 		
 		if(MULTI_WINDOWS) {
 			if(is_winwin(window)) {
-				winwin_set_rectangle(window, window_get_x() + dialog_x, window_get_y() + dialog_y, dialog_w, dialog_h);
+				winwin_set_rectangle(window, WIN_X + dialog_x, WIN_Y + dialog_y, dialog_w, dialog_h);
 				
 			} else {
-				var wx = window_get_x() + dialog_x;
-				var wy = window_get_y() + dialog_y;
+				var wx = WIN_X + dialog_x;
+				var wy = WIN_Y + dialog_y;
 				window = winwin_create(wx, wy, dialog_w, dialog_h, windowConfig);
 				winwin_set_shadow(window, false);
 				winwin_enable_per_pixel_alpha(window);

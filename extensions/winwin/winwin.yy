@@ -13,10 +13,10 @@
   "classname":"",
   "ConfigValues":{
     "Steam":{
-      "copyToTargets":"194",
+      "copyToTargets":"64",
     },
     "Itch":{
-      "copyToTargets":"194",
+      "copyToTargets":"64",
     },
   },
   "copyToTargets":113497714299118,
@@ -24,7 +24,14 @@
   "exportToGame":true,
   "extensionVersion":"1.0.0",
   "files":[
-    {"$GMExtensionFile":"v1","%Name":"","constants":[
+    {"$GMExtensionFile":"v1","%Name":"","ConfigValues":{
+        "Itch":{
+          "copyToTargets":"64",
+        },
+        "Steam":{
+          "copyToTargets":"64",
+        },
+      },"constants":[
         {"$GMExtensionConstant":"","%Name":"winwin_kind_normal","hidden":false,"name":"winwin_kind_normal","resourceType":"GMExtensionConstant","resourceVersion":"2.0","value":"0",},
         {"$GMExtensionConstant":"","%Name":"winwin_kind_borderless","hidden":false,"name":"winwin_kind_borderless","resourceType":"GMExtensionConstant","resourceVersion":"2.0","value":"1",},
         {"$GMExtensionConstant":"","%Name":"winwin_kind_tool","hidden":false,"name":"winwin_kind_tool","resourceType":"GMExtensionConstant","resourceVersion":"2.0","value":"2",},

@@ -1,0 +1,1 @@
+Store surfaces across multiple animation loops.

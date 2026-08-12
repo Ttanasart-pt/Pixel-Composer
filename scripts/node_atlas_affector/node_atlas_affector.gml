@@ -20,7 +20,7 @@ function Node_Atlas_Affector(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 	newInput(33, nodeValue_Slider(   "Inf. Noise",   0      ));
 	
 	////- =Position
-	newInput( 7, nodeValue_Bool( "Effect Position", false ));
+	newInput( 7, nodeValue_Bool(    "Effect Position", false ));
 	newInput( 8, nodeValue_EButton( "Mode",         0, [ "Absolute", "Relative" ])).setInternalName("Position mode");
 	newInput( 9, nodeValue_Vec2(    "Position",    [0,0]  ));
 	newInput(28, nodeValue_Toggle(  "Axis",        0b11, [ "X", "Y" ] )).setInternalName("Position axis");

@@ -1,0 +1,11 @@
+{
+  "$GMNotes":"v1",
+  "%Name":"note_custom",
+  "name":"note_custom",
+  "parent":{
+    "name":"custom",
+    "path":"folders/nodes/data/misc/custom.yy",
+  },
+  "resourceType":"GMNotes",
+  "resourceVersion":"1.1",
+}

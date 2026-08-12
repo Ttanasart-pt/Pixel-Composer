@@ -1,23 +1,9 @@
-This node allows you to replace color in a gradient that match the <junc Color from> 
-to the <junc Color to> color.
+This node allows you to replace color in a gradient that match the <junc Color from> to the <junc Color to> color.
 
 ## Properties
 
-<table class="cc4060">
-    <tr>
-        <th>Property</th>
-        <th>Description</th>
-    </tr>
-    <tr>
-        <td><junc Color from></td>
-        <td>Color to replace</td>
-    </tr>
-    <tr>
-        <td><junc Color to></td>
-        <td>Color to replace with</td>
-    </tr>
-    <tr>
-        <td><junc Threshold></td>
-        <td>How different the color can be to be replaced</td>
-    </tr>
-</table>
+[proptable]
+Color from|Color to replace
+Color to|Color to replace with
+Threshold|How different the color can be to be replaced
+[/proptable]

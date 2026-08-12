@@ -13,8 +13,8 @@ var f = e[? "pointer_info_flags"];
 
 var pp = e[? "pointer_info_pen_pressure"];
 var pr = e[? "pointer_info_pen_rotation"];
-var px = e[? "pointer_info_pixel_location_x"] - window_get_x();
-var py = e[? "pointer_info_pixel_location_y"] - window_get_y();
+var px = e[? "pointer_info_pixel_location_x"] - WIN_X;
+var py = e[? "pointer_info_pixel_location_y"] - WIN_Y;
 var pb = e[? "pointer_info_button_change_type"];
 
 var tx = e[? "pointer_info_pen_tilt_x"];

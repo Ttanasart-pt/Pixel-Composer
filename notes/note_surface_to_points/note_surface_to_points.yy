@@ -1,0 +1,11 @@
+{
+  "$GMNotes":"v1",
+  "%Name":"note_surface_to_points",
+  "name":"note_surface_to_points",
+  "parent":{
+    "name":"point",
+    "path":"folders/nodes/data/value/point.yy",
+  },
+  "resourceType":"GMNotes",
+  "resourceVersion":"1.1",
+}

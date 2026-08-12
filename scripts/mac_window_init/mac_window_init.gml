@@ -26,15 +26,15 @@ function mac_window_init() {
 	__win_min_w = 0;
 	__win_min_h = 0;
 	
-	_window_set_showborder(window_handle(), false);
+	// _window_set_showborder(window_handle(), false);
 }
 
 function mac_window_maximize() {
 	if(__win_is_maximized) return;
 	
 	__win_is_maximized = true;
-	__win_min_x = window_get_x();
-	__win_min_y = window_get_y();
+	__win_min_x = WIN_X;
+	__win_min_y = WIN_Y;
 	__win_min_w = window_get_width();
 	__win_min_h = window_get_height();
 	

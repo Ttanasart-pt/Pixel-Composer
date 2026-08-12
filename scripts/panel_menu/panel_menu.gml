@@ -405,7 +405,7 @@ function Panel_Menu() : PanelContent() constructor {
     function drawContent(panel) {
         var _sepFrame  = THEME_VALUE.panel_separation_type == "frame";
         var _right     = PREFERENCES.panel_menu_right_control// || OS != os_windows;
-        var _action    = true//OS == os_windows;
+        var _action    = OS != os_macosx;
         var _draggable = pHOVER && pFOCUS;
         
         draw_clear_alpha(COLORS.panel_bg_clear, 1);
@@ -417,16 +417,14 @@ function Panel_Menu() : PanelContent() constructor {
         
         #region about
             if(hori) {
-                xx = ui(24);
-                
                 if(!_right) {
-                    xx = ui(140);
+                	xx = ui(48);
                     draw_set_color(COLORS._main_icon_dark);
+                    if(_sepFrame) draw_line_round(xx, ui(8), xx, h - ui(8), 3);
                     
-                    if(_sepFrame)
-                    	draw_line_round(xx, ui(8), xx, h - ui(8), 3);
-                }
-        
+                } else 
+                	xx = ui(24);
+                
                 var bx = _right? xx : w - ui(24);
                 if(pHOVER && point_in_rectangle(mx, my, bx - ui(16), 0, bx + ui(16), ui(32))) {
                     draw_sprite_ui_uniform(THEME.icon_24, 0, bx, h / 2);
@@ -669,8 +667,8 @@ function Panel_Menu() : PanelContent() constructor {
         #endregion
         
         #region actions
-        	var bamo = array_length(action_buttons);
-        	var aSpc = ui(THEME_VALUE.panel_menu_action_spacing);
+        	var bamo   = array_length(action_buttons);
+        	var aSpc   = ui(THEME_VALUE.panel_menu_action_spacing);
             var bRight = _right && (hori || w >= vertical_break);
         	
         	var bh = hori? h - _padd * 2 : ui(28);
@@ -707,24 +705,28 @@ function Panel_Menu() : PanelContent() constructor {
                             var b  = buttonInstant(bspr, bx, by, bw, bh, m, pHOVER, true, "", bp, win_max, bc);
                             if(b) _draggable = false;
                             if(b == 2) {
-                                if(OS == os_windows) {
-                                    if(window_is_fullscreen) {
-                                        winMan_setFullscreen(false);
-                                        winMan_Unmaximize();
-                                        
-                                    } else if(window_is_maximized) {
-                                        winMan_Unmaximize();
-                                        DISPLAY_REFRESH
-                                        
-                                    } else {
-                                        winMan_Maximize();
-                                        DISPLAY_REFRESH
-                                    }
-                                    
-                                } else if(OS == os_macosx) {
-                                    if(__win_is_maximized)  mac_window_minimize();
-                                    else                    mac_window_maximize();
-                                }
+                            	switch(OS) {
+                            		case os_windows : 
+                            			if(window_is_fullscreen) {
+	                                        winMan_setFullscreen(false);
+	                                        winMan_Unmaximize();
+	                                        
+	                                    } else if(window_is_maximized) {
+	                                        winMan_Unmaximize();
+	                                        DISPLAY_REFRESH
+	                                        
+	                                    } else {
+	                                        winMan_Maximize();
+	                                        DISPLAY_REFRESH
+	                                    }
+	                                    break;
+
+									case os_macosx:
+										if(__win_is_maximized)  mac_window_minimize();
+	                                    else                    mac_window_maximize();
+										break;
+                            	}
+                            	
                             }
                             break;
                             

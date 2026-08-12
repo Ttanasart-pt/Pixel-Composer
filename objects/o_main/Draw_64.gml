@@ -66,6 +66,12 @@ draw_clear(COLORS.bg);
 	winManDraw();
 #endregion
 
+#region debug
+	// draw_set_color(c_red);  draw_circle(display_mouse_get_x(), display_mouse_get_y(), 6, false);
+	// draw_set_color(c_lime); draw_circle(WIN_X, WIN_Y, 6, false);
+	// draw_set_color(c_blue); draw_circle(mouse_mx, mouse_my, 8, true);
+#endregion
+
 if(DROPPER_DROPPING) {
 	surface_reset_target();
 	draw_surface(APP_SURF, 0, 0);

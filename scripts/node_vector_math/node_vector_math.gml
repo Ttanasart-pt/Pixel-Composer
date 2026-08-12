@@ -48,16 +48,16 @@ function Node_Vector_Math(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	setDimension(96, 48);
 	__mode   = noone;
 	
-	newInput(0, nodeValue_EScroll("Type", 0, global.node_vmath_scroll)).rejectArray();
+	newInput( 0, nodeValue_EScroll("Type", 0, global.node_vmath_scroll)).rejectArray();
 	
 	////- =Values
-	newInput(5, nodeValue_Int(   "Dimension", 2 ));
-	newInput(1, nodeValue_Float( "a", 0 )).setVisible(true, true);
-	newInput(2, nodeValue_Float( "b", 0 )).setVisible(true, true);
+	newInput( 5, nodeValue_Int(   "Dimension", 2 ));
+	newInput( 1, nodeValue_Float( "a", 0 )).setVisible(true, true);
+	newInput( 2, nodeValue_Float( "b", 0 )).setVisible(true, true);
 	
 	////- =Settings
-	newInput(3, nodeValue_Bool( "Degree Angle", true ));
-	newInput(4, nodeValue_Bool( "Scalar B",     true ));
+	newInput( 3, nodeValue_EButton( "Angle", 1, [ "Radians", "Degree" ] ));
+	newInput( 4, nodeValue_Bool( "Scalar B", true ));
 	// inputs 5
 		
 	newOutput(0, nodeValue_Output("Result", VALUE_TYPE.float, 0));

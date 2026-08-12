@@ -1,0 +1,1 @@
+Reverse animation. Requires the animation to be play in full once.

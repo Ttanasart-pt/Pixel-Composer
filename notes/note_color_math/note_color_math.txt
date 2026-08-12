@@ -1,0 +1,1 @@
+Blend two colors using the same blend mode as <node Node_Blend>.

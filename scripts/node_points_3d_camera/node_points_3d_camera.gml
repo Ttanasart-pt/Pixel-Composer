@@ -23,22 +23,19 @@ function Node_Point_3D_Camera(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _
 	newInput(i+10, nodeValue_Dimension());
 	
 	////- =Transform
-	
-	newInput(i+ 4, nodeValue_EScroll( "Postioning Mode",  2, [ "Position + Rotation", "Position + Lookat", "Lookat + Rotation" ] ));
-	newInput(i+ 5, nodeValue_Vec3(        "Lookat Position", [0,0,0]           ));
-	newInput(i+ 6, nodeValue_Rotation(    "Roll",             0                ));
-	newInput(i+ 7, nodeValue_Rotation(    "Horizontal Angle", 45               ));
-	newInput(i+ 8, nodeValue_Slider(      "Vertical Angle",   30, [0, 90, 0.1] ));
-	newInput(i+ 9, nodeValue_Float(       "Distance",         4                ));
+	newInput(i+ 4, nodeValue_EScroll(  "Postioning Mode",  2, [ "Position + Rotation", "Position + Lookat", "Lookat + Rotation" ] ));
+	newInput(i+ 5, nodeValue_Vec3(     "Lookat Position", [0,0,0]           ));
+	newInput(i+ 6, nodeValue_Rotation( "Roll",             0                ));
+	newInput(i+ 7, nodeValue_Rotation( "Horizontal Angle", 45               ));
+	newInput(i+ 8, nodeValue_Slider(   "Vertical Angle",   30, [0, 90, 0.1] ));
+	newInput(i+ 9, nodeValue_Float(    "Distance",         4                ));
 	
 	////- =Camera
-	
-	newInput(i+ 1, nodeValue_EButton( "Projection",          1 , [ "Perspective", "Orthographic" ]));
-	newInput(i+ 0, nodeValue_ISlider(     "FOV",                 60, [  10, 90, .1  ] ));
-	newInput(i+ 3, nodeValue_Slider(      "Orthographic Scale", .5,  [ .01,  4, .01 ] ));
+	newInput(i+ 1, nodeValue_EButton(  "Projection",          1 , [ "Perspective", "Orthographic" ]));
+	newInput(i+ 0, nodeValue_ISlider(  "FOV",                 60, [  10, 90, .1  ] ));
+	newInput(i+ 3, nodeValue_Slider(   "Orthographic Scale", .5,  [ .01,  4, .01 ] ));
 	
 	////- =Remap Range
-	
 	newInput(i+13, nodeValue_Vec2( "Range From",  [-1,1] )).setUnitSimple(false);
 	newInput(i+14, nodeValue_Vec2( "Range To",    [ 0,1] )).setUnitSimple();
 	newInput(i+11, nodeValue_Vec2( "Depth From",  [ 0,1] )).setUnitSimple(false);

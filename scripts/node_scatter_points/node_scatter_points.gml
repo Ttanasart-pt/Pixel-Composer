@@ -15,9 +15,9 @@ function Node_Scatter_Points(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 	dimension_index = -1;
 	
 	////- =Base
-	newInput(5, nodeValueSeed()).rejectArray();
-	newInput(6, nodeValue_Bool( "Fixed Position",      false, "Fix point position, and only select point in the area."));
-	newInput(7, nodeValue_Vec2( "Reference Dimension", PROJ_SURF ));
+	newInput( 5, nodeValueSeed()).rejectArray();
+	newInput( 6, nodeValue_Bool( "Fixed Position",      false, "Fix point position, and only select point in the area."));
+	newInput( 7, nodeValue_Vec2( "Reference Dimension", PROJ_SURF ));
 	
 	////- =Scatter
 	onSurfaceSize = function() /*=>*/ {return PROJ_SURF}; 
@@ -31,10 +31,11 @@ function Node_Scatter_Points(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 	newInput(13, nodeValue_Int(     "Attempt",  8 ));
 	
 	////- =3D
-	newInput( 8, nodeValue_Surface( "Reference Value"       ));
 	newInput( 9, nodeValue_Bool(    "Output 3D",      false ));
 	newInput(10, nodeValue_EButton( "Normal",         0, [ "X", "Y", "Z" ] ));
 	newInput(11, nodeValue_Float(   "Plane Position", 0 ));
+	
+	/**/ newInput( 8, nodeValue_Surface( "Reference Value" ));
 	// inputs 14
 	
 	newOutput(0, nodeValue_Output("Points", VALUE_TYPE.float, [ 0, 0 ])).setDisplay(VALUE_DISPLAY.vector);

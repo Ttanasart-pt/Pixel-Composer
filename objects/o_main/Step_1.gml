@@ -39,7 +39,7 @@ if(os_is_paused()) OS_PAUSED = true;
 		exit;
 		
 	} else if(!minimized)
-		window_preminimize_rect = [ window_get_x(), window_get_y(), window_get_width(), window_get_height() ];
+		window_preminimize_rect = [ WIN_X, WIN_Y, window_get_width(), window_get_height() ];
 
 	if(minimized) {
 		window_set_rectangle(window_preminimize_rect[0], window_preminimize_rect[1], window_preminimize_rect[2], window_preminimize_rect[3]);

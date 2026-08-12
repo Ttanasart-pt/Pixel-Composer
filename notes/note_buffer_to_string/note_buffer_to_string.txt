@@ -1,0 +1,1 @@
+Convert buffer to text.

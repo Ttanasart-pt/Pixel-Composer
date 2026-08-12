@@ -22,8 +22,8 @@ switch(ev_type) {
 		
 	case "file_drag_over" :
 		FILE_IS_DROPPING = true;
-		FILE_DROPPING_X  = async_load[? "x"] - window_get_x();
-		FILE_DROPPING_Y  = async_load[? "y"] - window_get_y();
+		FILE_DROPPING_X  = async_load[? "x"] - WIN_X;
+		FILE_DROPPING_Y  = async_load[? "y"] - WIN_Y;
 		break;
 	
 	case "file_drag_leave" :

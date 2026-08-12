@@ -1,0 +1,11 @@
+{
+  "$GMNotes":"v1",
+  "%Name":"note_revert",
+  "name":"note_revert",
+  "parent":{
+    "name":"cache",
+    "path":"folders/nodes/data/misc/cache.yy",
+  },
+  "resourceType":"GMNotes",
+  "resourceVersion":"1.1",
+}

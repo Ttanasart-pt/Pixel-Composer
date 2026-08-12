@@ -1,0 +1,11 @@
+{
+  "$GMNotes":"v1",
+  "%Name":"note_points_3d_camera",
+  "name":"note_points_3d_camera",
+  "parent":{
+    "name":"point",
+    "path":"folders/nodes/data/value/point.yy",
+  },
+  "resourceType":"GMNotes",
+  "resourceVersion":"1.1",
+}

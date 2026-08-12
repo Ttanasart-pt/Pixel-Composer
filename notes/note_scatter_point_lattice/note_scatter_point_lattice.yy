@@ -1,0 +1,11 @@
+{
+  "$GMNotes":"v1",
+  "%Name":"note_scatter_point_lattice",
+  "name":"note_scatter_point_lattice",
+  "parent":{
+    "name":"point",
+    "path":"folders/nodes/data/value/point.yy",
+  },
+  "resourceType":"GMNotes",
+  "resourceVersion":"1.1",
+}

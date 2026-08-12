@@ -1,0 +1,11 @@
+{
+  "$GMNotes":"v1",
+  "%Name":"note_monitor_capture",
+  "name":"note_monitor_capture",
+  "parent":{
+    "name":"preview",
+    "path":"folders/nodes/data/misc/preview.yy",
+  },
+  "resourceType":"GMNotes",
+  "resourceVersion":"1.1",
+}

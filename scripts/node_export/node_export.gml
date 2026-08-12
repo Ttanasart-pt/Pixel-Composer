@@ -252,7 +252,7 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		
 		if(mp4libSub == "") {
 			if(buttonInstant(THEME.button_def, bx, by, bw, bh, _m, _hover, _focus, "", noone, 0, 0, 1, 1, cc) == 2)
-				checkLib();
+				checkLibFFmpeg();
 			
 			draw_set_text(f_p2, fa_center, fa_center, COLORS._main_text);
 			draw_text_add(bx + bw / 2, by + bh / 2, "More info...");
@@ -261,7 +261,7 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			var tt = $"Append {mp4libSub} to the end of the lib path."
 			if(buttonInstant(THEME.button_def, bx, by, bw, bh, _m, _hover, _focus, tt, noone, 0, 0, 1, 1, cc) == 2) {
 				PREFERENCES.ffmpeg_path = filename_combine(PREFERENCES.ffmpeg_path, mp4libSub);
-				checkLib();
+				checkLibFFmpeg();
 			}
 			
 			draw_set_text(f_p2, fa_center, fa_center, COLORS._main_text);
@@ -305,49 +305,53 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	directory    = "";
 	temp_surface = [ noone ]; 
 	
-	if(OS == os_windows) {
-		converter = directory_search_file(filepath_resolve(PREFERENCES.ImageMagick_path), "convert.exe", -1);
-		magick    = directory_search_file(filepath_resolve(PREFERENCES.ImageMagick_path), "magick.exe",  -1);
-		webp      = directory_search_file(filepath_resolve(PREFERENCES.webp_path),        "webpmux.exe", -1);
-		gifski    = directory_search_file(filepath_resolve(PREFERENCES.gifski_path),      "gifski.exe",  -1);
+	// initial lib check
+	switch(OS) {
+		case os_windows : 
+			converter = directory_search_file(filepath_resolve(PREFERENCES.ImageMagick_path), "convert.exe", -1);
+			magick    = directory_search_file(filepath_resolve(PREFERENCES.ImageMagick_path), "magick.exe",  -1);
+			webp      = directory_search_file(filepath_resolve(PREFERENCES.webp_path),        "webpmux.exe", -1);
+			gifski    = directory_search_file(filepath_resolve(PREFERENCES.gifski_path),      "gifski.exe",  -1);
+			
+			var _w = function(s,p) /*=>*/ {return $"No {s} detected at {p}, please make sure the installation is complete and {s} path is set correctly in the preference."};
+			
+			if(!file_exists_empty(converter)) noti_warning(_w("ImageMagick", magick), noone, self);
+			if(!file_exists_empty(webp))      noti_warning(_w("webp",        webp),   noone, self);
+			if(!file_exists_empty(gifski))    noti_warning(_w("gifski",      gifski), noone, self);
+			break;
 		
-		var _w = function(s,p) /*=>*/ {return $"No {s} detected at {p}, please make sure the installation is complete and {s} path is set correctly in the preference."};
+		case os_linux : 
+			converter = directory_search_file(string_lower(filepath_resolve(PREFERENCES.ImageMagick_path)), "imagemagick.appimage", -1);
+			magick    = directory_search_file(string_lower(filepath_resolve(PREFERENCES.ImageMagick_path)), "imagemagick.appimage", -1);
+			webp      = directory_search_file(string_lower(filepath_resolve(PREFERENCES.webp_path)),        "webpmux",              -1);
+			gifski    = directory_search_file(string_lower(filepath_resolve(PREFERENCES.gifski_path)),      "gifski",               -1);
+			
+			var _w = function(s,p) /*=>*/ {return $"No {s} detected at {p}, please make sure the installation is complete and {s} path is set correctly in the preference."};
+			
+			if(!file_exists_empty(converter)) noti_warning(_w("ImageMagick", magick), noone, self);
+			if(!file_exists_empty(webp))      noti_warning(_w("webp",        webp),   noone, self);
+			if(!file_exists_empty(gifski))    noti_warning(_w("gifski",      gifski), noone, self);
+			
+			shell_execute("", $"chmod +x {converter}");
+			shell_execute("", $"chmod +x {magick}");
+			shell_execute("", $"chmod +x {webp}");
+			shell_execute("", $"chmod +x {gifski}");
+			break;
 		
-		if(!file_exists_empty(converter)) noti_warning(_w("ImageMagick", magick), noone, self);
-		if(!file_exists_empty(magick))    noti_warning(_w("ImageMagick", magick), noone, self);
-		if(!file_exists_empty(webp))      noti_warning(_w("webp",        webp),   noone, self);
-		if(!file_exists_empty(gifski))    noti_warning(_w("gifski",      gifski), noone, self);
-		
-	} else if(OS == os_linux) {
-		converter = directory_search_file(string_lower(filepath_resolve(PREFERENCES.ImageMagick_path)), "imagemagick.appimage", -1);
-		magick    = directory_search_file(string_lower(filepath_resolve(PREFERENCES.ImageMagick_path)), "imagemagick.appimage", -1);
-		webp      = directory_search_file(string_lower(filepath_resolve(PREFERENCES.webp_path)),        "webpmux",              -1);
-		gifski    = directory_search_file(string_lower(filepath_resolve(PREFERENCES.gifski_path)),      "gifski",               -1);
-		
-		var _w = function(s,p) /*=>*/ {return $"No {s} detected at {p}, please make sure the installation is complete and {s} path is set correctly in the preference."};
-		
-		if(!file_exists_empty(converter)) noti_warning(_w("ImageMagick", magick), noone, self);
-		if(!file_exists_empty(magick))    noti_warning(_w("ImageMagick", magick), noone, self);
-		if(!file_exists_empty(webp))      noti_warning(_w("webp",        webp),   noone, self);
-		if(!file_exists_empty(gifski))    noti_warning(_w("gifski",      gifski), noone, self);
-		
-		shell_execute("", $"chmod +x {converter}");
-		shell_execute("", $"chmod +x {magick}");
-		shell_execute("", $"chmod +x {webp}");
-		shell_execute("", $"chmod +x {gifski}");
-		
-	} else if(OS == os_macosx) {
-		var _w = function(str) /*=>*/ {return $"No {str} installed, please install {str} with homebrew or use the provided 'mac-libraries-installer.command'."};
-		
-		if(string_pos(shell_execute_output("convert", ""), "not found")) noti_warning(_w("ImageMagick"), noone, self);
-		if(string_pos(shell_execute_output("webp", ""),    "not found")) noti_warning(_w("webp"),        noone, self);
-		
-		converter = "/opt/homebrew/bin/convert";
-		magick    = "/opt/homebrew/bin/magick";
-		webp      = "/opt/homebrew/bin/webp";
-		gifski    = "/opt/homebrew/bin/gifski";
+		case os_macosx : 
+			converter = "/opt/homebrew/bin/convert";
+			magick    = "/opt/homebrew/bin/magick";
+			webp      = "/opt/homebrew/bin/webpmux";
+			gifski    = "/opt/homebrew/bin/gifski";
+			
+			var _w = function(str,cmd) /*=>*/ {return $"No {str} installed, please install {str} with homebrew '{cmd}'."};
+			
+			if(!file_exists_empty(converter)) noti_warning(_w("ImageMagick", "brew install imagemagick"), noone, self);
+			if(!file_exists_empty(webp))      noti_warning(_w("webp",        "brew install webp"),        noone, self);
+			if(!file_exists_empty(gifski))    noti_warning(_w("gifski",      "brew install gifski"),      noone, self);
+			break;
 	}
-	
+		
 	static onValueUpdate = function(_index) {
 		if(!(NOT_LOAD)) return;
 		
@@ -875,9 +879,9 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		CLI_EXPORT_AMOUNT++;
 	}
 	
-	////- Export
+	////- Libraries
 	
-	static checkLib = function() {
+	static checkLibFFmpeg = function() {
 		ffmpeg = libCheck("FFmpeg");
 		
 		if(ffmpeg == -1) {
@@ -889,14 +893,18 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			var ldir = ffmpeg[0];
 			ffmpeg   = ffmpeg[1];
 			
-			if(filename_dir(ffmpeg) != ldir) {
-				mp4libSub = string_replace(filename_dir(ffmpeg), ldir, "");
-				array_insert_unique(input_display_list, 0, mp4libLabel);
-				
-			} else 
-				array_remove(input_display_list, mp4libLabel);
+			if(OS != os_macosx) {
+				if(filename_dir(ffmpeg) != ldir) {
+					mp4libSub = string_replace(filename_dir(ffmpeg), ldir, "");
+					array_insert_unique(input_display_list, 0, mp4libLabel);
+					
+				} else 
+					array_remove(input_display_list, mp4libLabel);
+			}
 		}
 	}
+	
+	////- Export
 	
 	static exportFrame = function(log = true) {
 		randomize();
@@ -1071,7 +1079,7 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			case ".mp4"  : 
 			case ".webm" : 
 			case ".apng" : 
-				checkLib();
+				checkLibFFmpeg();
 				if(ffmpeg == -1) return;
 				break;
 		}

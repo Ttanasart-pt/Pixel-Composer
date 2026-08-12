@@ -1,0 +1,11 @@
+{
+  "$GMNotes":"v1",
+  "%Name":"note_vec2_polar_to_cart",
+  "name":"note_vec2_polar_to_cart",
+  "parent":{
+    "name":"point",
+    "path":"folders/nodes/data/value/point.yy",
+  },
+  "resourceType":"GMNotes",
+  "resourceVersion":"1.1",
+}

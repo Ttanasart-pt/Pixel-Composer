@@ -1,0 +1,11 @@
+{
+  "$GMNotes":"v1",
+  "%Name":"note_mesh_create_path",
+  "name":"note_mesh_create_path",
+  "parent":{
+    "name":"mesh",
+    "path":"folders/nodes/data/value/mesh.yy",
+  },
+  "resourceType":"GMNotes",
+  "resourceVersion":"1.1",
+}

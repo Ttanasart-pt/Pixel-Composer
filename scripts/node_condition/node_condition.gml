@@ -12,15 +12,15 @@ function Node_Condition(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	
 	cond_array = __enum_array_gen([ "Equal", "Not equal", "Less ", "Less or equal ", "Greater ", "Greater or equal" ], s_node_condition_type);
 	
-	newInput(5, nodeValue_EScroll( "Eval Mode",  0 , ["Boolean", "Number compare", "Text compare" ])).rejectArray();
+	newInput(5, nodeValue_EScroll( "Eval Mode",   0, [ "Boolean", "Number compare", "Text compare" ])).rejectArray();
 	
 	////- =Condition
 	newInput(0, nodeValue_Float(   "Check value", 0             )).setVisible(true, true);
 	newInput(1, nodeValue_EScroll( "Condition",   0, cond_array )).rejectArray();
 	newInput(2, nodeValue_Float(   "Compare to",  0             ));
 	newInput(6, nodeValue_Bool(    "Boolean",     false         )).setVisible(true, true);
-	newInput(7, nodeValue_Text(    "Text 1" ));
-	newInput(8, nodeValue_Text(    "Text 2" ));
+	newInput(7, nodeValue_Text(    "Text 1"                     ));
+	newInput(8, nodeValue_Text(    "Text 2"                     ));
 	
 	////- =Result
 	newInput(3, nodeValue_Any( "True"  )).setVisible(true, true);

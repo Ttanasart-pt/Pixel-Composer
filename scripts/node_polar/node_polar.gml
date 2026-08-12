@@ -11,11 +11,11 @@ function Node_Polar(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	newInput(4, nodeValue_Toggle("Channel", 0b1111, { data: array_create(4, THEME.inspector_channel) }));
 	
 	////- =Surfaces
-	newInput( 0, nodeValue_Surface( "Surface In" )).setRequired();
-	newInput( 1, nodeValue_Surface( "Mask"       ));
-	newInput( 2, nodeValue_Slider(  "Mix", 1     ));
+	newInput( 0, nodeValue_Surface( "Surface In"  )).setRequired();
+	newInput( 1, nodeValue_Surface( "Mask"        ));
+	newInput( 2, nodeValue_Slider(  "Mix",  1     ));
 	__init_mask_modifier(1, 7); // inputs 7, 8, 
-	newInput(12, nodeValue_Vec2("Tile", [ 1, 1 ] ));
+	newInput(12, nodeValue_Vec2(    "Tile", [1,1] ));
 	
 	////- =Polar
 	newInput(18, nodeValue_Vec2(     "Center", [.5,.5] )).setUnitSimple();

@@ -1,0 +1,12 @@
+[
+  {
+    "version": "1.21.8.009",
+    "changes": [
+      {
+        "date": "2026-08-12T06:28:19.263Z",
+        "node": "",
+        "commit": "Fix export problem on mac."
+      }
+    ]
+  }
+]

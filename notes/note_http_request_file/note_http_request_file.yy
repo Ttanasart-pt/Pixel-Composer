@@ -1,0 +1,11 @@
+{
+  "$GMNotes":"v1",
+  "%Name":"note_http_request_file",
+  "name":"note_http_request_file",
+  "parent":{
+    "name":"network",
+    "path":"folders/nodes/data/misc/network.yy",
+  },
+  "resourceType":"GMNotes",
+  "resourceVersion":"1.1",
+}

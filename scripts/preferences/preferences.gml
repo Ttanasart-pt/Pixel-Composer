@@ -769,9 +769,7 @@
 					_tfile = "./bin/ffmpeg";
 					break;
 				
-				case os_macosx  :
-					_link  = "https://ffmpeg.org/download.html";
-					break;
+				case os_macosx  : _link  = "brew install ffmpeg"; break;
 			}
 		}
 		

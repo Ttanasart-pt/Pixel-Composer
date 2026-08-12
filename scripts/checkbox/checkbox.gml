@@ -73,7 +73,7 @@ function checkBox(_onClick) : widget() constructor {
 			
 			draw_sprite_stretched_ext(spr, 2, slot_x, y, w2, h, cc, aa);
 			
-			if(w2 > ui(64)) { 
+			if(w2 > ui(64) && h > line_get_height(f_p4, 8)) { 
 				draw_set_text(f_p4, fa_center, fa_center);
 				
 				if(_value) {

@@ -9,7 +9,7 @@ function Node_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	
 	newActiveInput(5, nodeValue_Bool("Active", true));
 	
-	////- =Surface
+	////- =Surfaces
 	newInput( 0, nodeValue_Surface( "Surface In"   )).setRequired();
 	newInput(10, nodeValue_Surface( "Back Surface" ));
 	newInput( 6, nodeValue_EScroll( "Dimension Type", 0, [ "Input", "Absolute", "Relative" ]));

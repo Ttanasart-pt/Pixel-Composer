@@ -47,8 +47,8 @@ function mac_window_step() {
 				__win_is_dragging = WINDOW_DRAG_MODE._move;
 				__win_drag_mx = mouse_mx;
 				__win_drag_my = mouse_my;
-				__win_drag_sx = window_get_x();
-				__win_drag_sy = window_get_y();
+				__win_drag_sx = WIN_X;
+				__win_drag_sy = WIN_Y;
 				__win_drag_sw = window_get_width();
 				__win_drag_sh = window_get_height();
 			}
@@ -82,8 +82,8 @@ function mac_window_step() {
 				__win_is_dragging = hover;
 				__win_drag_mx = mouse_mx;
 				__win_drag_my = mouse_my;
-				__win_drag_sx = window_get_x();
-				__win_drag_sy = window_get_y();
+				__win_drag_sx = WIN_X;
+				__win_drag_sy = WIN_Y;
 				__win_drag_sw = window_get_width();
 				__win_drag_sh = window_get_height();
 			}

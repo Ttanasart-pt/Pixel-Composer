@@ -1,0 +1,11 @@
+{
+  "$GMNotes":"v1",
+  "%Name":"note_switch",
+  "name":"note_switch",
+  "parent":{
+    "name":"flow",
+    "path":"folders/nodes/data/misc/flow.yy",
+  },
+  "resourceType":"GMNotes",
+  "resourceVersion":"1.1",
+}

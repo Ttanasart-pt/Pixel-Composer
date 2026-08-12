@@ -1,0 +1,11 @@
+{
+  "$GMNotes":"v1",
+  "%Name":"note_onion_skin",
+  "name":"note_onion_skin",
+  "parent":{
+    "name":"preview",
+    "path":"folders/nodes/data/misc/preview.yy",
+  },
+  "resourceType":"GMNotes",
+  "resourceVersion":"1.1",
+}

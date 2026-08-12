@@ -10,7 +10,7 @@ function Node_Tunnel_In(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	
 	var _name = LOADING || APPENDING? "" : $"tunnel{struct_size(project.tunnels_in)}";
 	newInput( 0, nodeValue_Text( "Name", _name )).rejectArray().setAnimable(false);
-	newInput( 1, nodeValue_Any(  "Value in"    )).setVisible(true, true);
+	newInput( 1, nodeValue_Any(  "Value In"    )).setVisible(true, true);
 	
 	////- =Display
 	newInput( 2, nodeValue_EButton( "Label Position", 0, [ "T", "B", "L", "R" ] ));

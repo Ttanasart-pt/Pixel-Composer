@@ -18,8 +18,8 @@ function Node_Padding(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	newInput( 0, nodeValue_Surface( "Surface In" )).setRequired();
 	
 	////- =Padding
-	newInput( 1, nodeValue_IPadding( "Padding",   [0,0,0,0] )).setUnitSimple().setPieMenu();
 	newInput( 5, nodeValue_EButton(  "Pad Mode",  0, [ "Pad out", "Pad to size" ] )).setPieMenu();
+	newInput( 1, nodeValue_IPadding( "Padding",   [0,0,0,0] )).setUnitSimple().setPieMenu();
 	newInput( 6, nodeValue_Vec2(     "Dimension", PROJ_SURF )).setUnitSimple(false).setPieMenu();
 	newInput( 7, nodeValue_EButton(  "H. Align",  0, array_create(3, THEME.inspector_surface_halign) ));
 	newInput( 8, nodeValue_EButton(  "V. Align",  0, array_create(3, THEME.inspector_surface_valign) ));

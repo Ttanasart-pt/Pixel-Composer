@@ -35,23 +35,23 @@ function Node_Frame(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	/*UNUSED*/ newInput(0, nodeValue_Vec2(   "Size",     [240,160] ));
 	
 	////- =Reframe
-	newInput(4, nodeValue_Bool(   "Reframe",   true     ));
-	newInput(5, nodeValue_Float(  "Padding",   32       ));
+	newInput( 4, nodeValue_Bool(   "Reframe",   true     ));
+	newInput( 5, nodeValue_Float(  "Padding",   32       ));
 	
-	////- =Label
-	newInput(1, nodeValue_Color(  "Color",        ca_white ));
-	newInput(2, nodeValue_Slider( "Label Alpha", .75       ));
+	////- =Frame
+	newInput( 1, nodeValue_Color(  "Color", ca_white ));
+	newInput( 2, nodeValue_Slider( "Alpha", .75      ));
 	
 	////- =Text
-	newInput(3, nodeValue_Color(  "Text Color",   ca_white ));
+	newInput( 3, nodeValue_Color(  "Text Color",   ca_white ));
 	
 	input_display_list = [ 
 		[ "Reframe", false, 4 ], 5, 
-		[ "Label",   false ], 1, 2,  
-		[ "Text",    false ], 3, 
+		[ "Frame",   false    ], 1, 2,  
+		[ "Text",    false    ], 3, 
 	];
 	
-	array_foreach(inputs, function(i) /*=>*/ {return i.rejectArray()});
+	array_foreach(inputs, function(i,_) /*=>*/ {return i.rejectArray()});
 	
 	////- Node
 	

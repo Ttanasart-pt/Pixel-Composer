@@ -38,8 +38,8 @@ function winMan_getData(curr = true) {
 		return [ 0, 0, display_get_width(), display_get_height(), 
 		         0, 0, display_get_width(), display_get_height(), ];
 				 
-	var _x = window_get_x();
-	var _y = window_get_y();
+	var _x = WIN_X;
+	var _y = WIN_Y;
 	
 	for( var i = 0, n = array_length(_monitors); i < n; i++ ) {
 		var _monitor = _monitors[i];
@@ -102,8 +102,8 @@ function winMan_initDrag(_index) {
 	window_drag_hold   = 0;
 	window_drag_mx     = mouse_rx;
 	window_drag_my	   = mouse_ry;
-	window_drag_sx	   = window_get_x();
-	window_drag_sy	   = window_get_y();
+	window_drag_sx	   = WIN_X;
+	window_drag_sy	   = WIN_Y;
 	window_drag_sw	   = window_get_width();
 	window_drag_sh	   = window_get_height();
 }
@@ -125,18 +125,18 @@ function winMan_setFullscreen(full) {
 }
 
 function winManStep() {
-	if(OS == os_macosx) {
-		if(__win_to_dock) {
-			_window_set_showborder(window_handle(), true);
-			mac_minimize_to_dock(window_handle());
-			__win_to_dock = false;
-		} else {
-			if(_window_get_showborder(window_handle()))
-				_window_set_showborder(window_handle(), false);
-		}
-	}
+	// if(OS == os_macosx) {
+	// 	if(__win_to_dock) {
+	// 		_window_set_showborder(window_handle(), true);
+	// 		mac_minimize_to_dock(window_handle());
+	// 		__win_to_dock = false;
+	// 	} else {
+	// 		if(_window_get_showborder(window_handle()))
+	// 			_window_set_showborder(window_handle(), false);
+	// 	}
+	// }
 	
-	if(OS == os_linux) {
+	if(OS != os_windows) {
 		if(window_curr_w != undefined && window_curr_h != undefined && (window_curr_w != WIN_W || window_curr_h != WIN_H)) {
 			DISPLAY_REFRESH;
 		}
@@ -147,8 +147,8 @@ function winManStep() {
 	
 	window_monitor = 0;
 	var _monitors = display_measure_all();
-	var _x = window_get_x() + WIN_W / 2;
-	var _y = window_get_y() + WIN_H / 2;
+	var _x = WIN_X + WIN_W / 2;
+	var _y = WIN_Y + WIN_H / 2;
 	
 	if(is_array(_monitors))
 	for( var i = 0, n = array_length(_monitors); i < n; i++ ) {
@@ -246,6 +246,7 @@ function winManStep() {
 }
 
 function winManDraw() {
+	if(OS == os_macosx) return;
 	if(window_is_maximized || window_is_fullscreen) return;
 	
 	var pd = window_resize_padding;

@@ -1,7 +1,8 @@
-<v 1.18.0/>
 Parse csv string into an array.
+
 ## Properties
-### <junc csv string>
-The csv string to parse.
-### <junc skip line>
-Number of lines to skip before start parsing (some csv comes with header line with can mess with number parser).
+
+[proptable]
+CSV String|The csv string to parse.
+Skip Line|Number of lines to skip before start parsing (some csv comes with header line with can mess with number parser).
+[/proptable]

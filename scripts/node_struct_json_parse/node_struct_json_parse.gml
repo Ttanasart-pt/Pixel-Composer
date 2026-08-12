@@ -3,8 +3,7 @@ function Node_Struct_JSON_Parse(_x, _y, _group = noone) : Node(_x, _y, _group) c
 	always_pad = true;
 	setDimension(96, 48);
 	
-	newInput(0, nodeValue_Text("JSON string"))
-		.setVisible(true, true);
+	newInput(0, nodeValue_Text("JSON String")).setVisible(true, true);
 	
 	newOutput(0, nodeValue_Output("Struct", VALUE_TYPE.struct, {} ));
 	

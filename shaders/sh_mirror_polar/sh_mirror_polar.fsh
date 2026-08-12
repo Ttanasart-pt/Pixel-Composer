@@ -1,5 +1,4 @@
 #pragma use(sampler_ext)
-
 #region -- sampler_ext -- [1780129853.1967175]
 	uniform int  interpolation;
 	uniform vec2 sampleDimension;
@@ -329,14 +328,14 @@
 	}
 	vec4 sampleTexture( sampler2D texture, vec2 pos) { return sampleTexture(texture, pos, 0.); }
 #endregion -- sampler_ext --
-#pragma use(curve)
 
-#region -- curve -- [1780117484.3465736]
+#pragma use(curve)
+#region -- curve -- [1786510425.6316042]
 
     #ifdef _YY_HLSL11_ 
         #define CURVE_MAX  512
     #else 
-        #define CURVE_MAX  256
+        #define CURVE_MAX  64
     #endif
 
     uniform int   curve_offset;

@@ -114,8 +114,8 @@ gml_pragma("UnityBuild", "true");
 	
 	#macro NOT_LOAD !LOADING && !APPENDING
 	
-	#macro WIN_X window_get_x()
-	#macro WIN_Y window_get_y()
+	#macro WIN_X (OS != os_macosx? window_get_x() : 0)
+	#macro WIN_Y (OS != os_macosx? window_get_y() : 0)
 	#macro WIN_W window_get_width()
 	#macro WIN_H window_get_height()
 	
@@ -123,16 +123,6 @@ gml_pragma("UnityBuild", "true");
 	#macro WIN_SH window_get_height()
 	
 	#macro UI_SCALE PREFERENCES.display_scaling
-	
-	#macro mouse_mx (PEN_USE? PEN_X : ( winwin_exists(WINWIN_CURRENT)? (display_mouse_get_x() - winwin_get_x(WINWIN_CURRENT)) : (display_mouse_get_x() - window_get_x()) ))
-	#macro mouse_my (PEN_USE? PEN_Y : ( winwin_exists(WINWIN_CURRENT)? (display_mouse_get_y() - winwin_get_y(WINWIN_CURRENT)) : (display_mouse_get_y() - window_get_y()) ))
-	#macro mouse_ui [mouse_mx, mouse_my]
-	
-	#macro mouse_mxs (FILE_IS_DROPPING? FILE_DROPPING_X : mouse_mx)
-	#macro mouse_mys (FILE_IS_DROPPING? FILE_DROPPING_Y : mouse_my)
-	
-	#macro mouse_rx display_mouse_get_x()
-	#macro mouse_ry display_mouse_get_y()
 	
 	#macro sHOVER (HOVER_WINDOW != undefined && !CURSOR_IS_LOCK && HOVER == self.id)
 	#macro sFOCUS (FOCUS_WINDOW != undefined && FOCUS == self.id)

@@ -287,14 +287,14 @@ function Node_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	
 	////- =Output
 	newInput( 9, nodeValue_EScroll( "Output Dimension Type", OUTPUT_SCALING.same_as_input, [
-		new scrollItem("Same as input"),
+		new scrollItem("Same as Input"),
 		new scrollItem("Constant"),
-		new scrollItem("Relative to input").setTooltip("Set dimension as a multiple of input surface."),
-		new scrollItem("Fit content").setTooltip("Automatically set dimension to fit content."),
+		new scrollItem("Relative to Input").setTooltip("Set dimension as a multiple of input surface."),
+		new scrollItem("Fit Content").setTooltip("Automatically set dimension to fit content."),
 	]));
 	newInput( 1, nodeValue_Dimension()).setVisible(false);
-	newInput(15, nodeValue_Vec2( "Dimension Scale", [1,1], { linked: true} ));
-	newInput( 7, nodeValue_EButton( "Render Mode",  0, [ "Normal", "Tile", "Wrap" ] ));
+	newInput(15, nodeValue_Vec2(    "Dimension Scale", [1,1], { linked: true} ));
+	newInput( 7, nodeValue_EButton( "Render Mode",      0, [ "Normal", "Tile", "Wrap" ] ));
 	
 	////- =Position
 	newInput( 2, nodeValue_Vec2( "Position", [.5,.5] )).setUnitSimple().setPieMenu()
@@ -305,7 +305,7 @@ function Node_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			[ "Down",  [ [ 0, [ 0.5,-0.5] ], [ 1, [ 0.5, 1.5] ]], THEME.apreset_down  ], 
 		]);
 	newInput( 3, nodeValue_Anchor());
-	newInput(10, nodeValue_Bool( "Round Position",  false, "Round position to the nearest integer value to avoid jittering."));
+	newInput(10, nodeValue_Bool(     "Round Position",    false )).setTooltip("Round position to the nearest integer value to avoid anti-aliasing.");
 	
 	////- =Rotation
 	newInput( 4, nodeValue_Bool(     "Relative Anchor",    true ));
@@ -316,7 +316,7 @@ function Node_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	newInput( 6, nodeValue_Vec2( "Scale", [1,1], { linked: true} )).setPieMenu();
 	
 	////- =Path
-	newInput(21, nodeValue_Path(   "Path" ));
+	newInput(21, nodeValue_Path(   "Path"                ));
 	newInput(22, nodeValue_Slider( "Position",     0     )).setInternalName("path_position");
 	newInput(24, nodeValue_Bool(   "Loop",         false ));
 	newInput(23, nodeValue_Bool(   "Rotate Along", false ));

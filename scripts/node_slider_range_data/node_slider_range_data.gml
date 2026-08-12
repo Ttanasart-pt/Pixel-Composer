@@ -7,7 +7,7 @@ function Node_Slider_Range_Data(_x, _y, _group = noone) : Node_Processor(_x, _y,
 	////- Rotation
 	
 	newInput(0, nodeValue_Float( "Start", 0 ));
-	newInput(1, nodeValue_Float( "End", 1 ));
+	newInput(1, nodeValue_Float( "End",   1 ));
 	
 	// inputs 2
 	

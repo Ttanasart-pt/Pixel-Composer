@@ -1,0 +1,1 @@
+Return direction of a vec2.

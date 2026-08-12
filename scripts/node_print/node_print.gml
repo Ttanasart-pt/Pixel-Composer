@@ -1,12 +1,10 @@
 function Node_Print(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name  = "Print";
-	always_pad = true;
+	always_pad   = true;
 	draw_padding = 8;
 	setDimension(96, 48); 
 	
-	
 	newActiveInput(0);
-	
 	newInput(1, nodeValue_Text("Text"));
 	
 	static update = function() { 

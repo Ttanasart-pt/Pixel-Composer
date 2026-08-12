@@ -1,0 +1,1 @@
+Returns length of an array.

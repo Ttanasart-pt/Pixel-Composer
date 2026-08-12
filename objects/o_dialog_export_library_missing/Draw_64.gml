@@ -46,20 +46,24 @@ DIALOG_DRAW_BG
 	
 	draw_set_text(f_p1, fa_center, fa_center, COLORS._main_text);
 	var b = buttonInstant(THEME.button_def, bx0, by0, bw, bh, mouse_ui, sHOVER, sFOCUS);
-	draw_text_add(bx0 + bw / 2, by0 + bh / 2, __txt("Cancel"));
+	draw_text_add(bx0 + bw / 2, by0 + bh / 2, __txt("Close"));
 	if(b == 2) instance_destroy();
 	
-	bx0 -= bw + bpad;
-	var b = buttonInstant(THEME.button_def, bx0, by0, bw, bh, mouse_ui, sHOVER, sFOCUS);
-	draw_text_add(bx0 + bw / 2, by0 + bh / 2, __txt("Open Target Folder"));
-	if(b == 2) shellOpenExplorer(filename_dir(file));
-	
-	bx0 -= bw + bpad;
-	var b = buttonInstant(THEME.button_def, bx0, by0, bw, bh, mouse_ui, sHOVER, sFOCUS);
-	draw_text_add(bx0 + bw / 2, by0 + bh / 2, __txt("Open Link"));
-	if(b == 2) {
-		URL_open(link);
-		instance_destroy();
+	if(OS == os_macosx) {
+		
+	} else {
+		bx0 -= bw + bpad;
+		var b = buttonInstant(THEME.button_def, bx0, by0, bw, bh, mouse_ui, sHOVER, sFOCUS);
+		draw_text_add(bx0 + bw / 2, by0 + bh / 2, __txt("Open Target Folder"));
+		if(b == 2) shellOpenExplorer(filename_dir(file));
+		
+		bx0 -= bw + bpad;
+		var b = buttonInstant(THEME.button_def, bx0, by0, bw, bh, mouse_ui, sHOVER, sFOCUS);
+		draw_text_add(bx0 + bw / 2, by0 + bh / 2, __txt("Open Link"));
+		if(b == 2) {
+			URL_open(link);
+			instance_destroy();
+		}
 	}
 #endregion
 

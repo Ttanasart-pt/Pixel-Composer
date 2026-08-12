@@ -126,8 +126,12 @@
 #endregion -- sampler --
 
 #pragma use(gradient)
-#region -- gradient -- [1777679826.681391]
-	#define GRADIENT_LIMIT 128
+#region -- gradient -- [1786510427.8689222]
+	#ifdef _YY_HLSL11_ 
+        #define GRADIENT_LIMIT 128
+    #else 
+        #define GRADIENT_LIMIT 64
+    #endif
 	
 	uniform int		  gradient_blend;
 	uniform vec4	  gradient_color[GRADIENT_LIMIT];

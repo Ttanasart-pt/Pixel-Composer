@@ -1,6 +1,10 @@
 #pragma use(gradient)
-#region -- gradient -- [1777679826.681391]
-	#define GRADIENT_LIMIT 128
+#region -- gradient -- [1786510427.8689222]
+	#ifdef _YY_HLSL11_ 
+        #define GRADIENT_LIMIT 128
+    #else 
+        #define GRADIENT_LIMIT 64
+    #endif
 	
 	uniform int		  gradient_blend;
 	uniform vec4	  gradient_color[GRADIENT_LIMIT];
@@ -188,8 +192,6 @@
 
 varying vec2 v_vTexcoord;
 varying vec4 v_vColour;
-
-#define GRADIENT_LIMIT 128
 
 uniform vec2  dimension;
 uniform vec2  position;

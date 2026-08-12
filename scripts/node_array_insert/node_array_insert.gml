@@ -3,16 +3,11 @@ function Node_Array_Insert(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	always_pad = true;
 	setDimension(96, 48);
 	
-	newInput(0, nodeValue("Array", self, CONNECT_TYPE.input, VALUE_TYPE.any, 0))
-		.setVisible(true, true);
-	
-	newInput(1, nodeValue_Int("Index", 0));
-	
-	newInput(2, nodeValue("Value", self, CONNECT_TYPE.input, VALUE_TYPE.any, 0))
-		.setVisible(true, true);
-	
-	newInput(3, nodeValue_Bool("Spread array", false ))
-		.rejectArray();
+	newInput( 0, nodeValue_Any(  "Array"    )).setVisible(true, true);
+	newInput( 1, nodeValue_Int(  "Index", 0 ));
+	newInput( 2, nodeValue_Any(  "Value"    )).setVisible(true, true);
+	newInput( 3, nodeValue_Bool( "Spread Array", false )).rejectArray();
+	// 4
 		
 	newOutput(0, nodeValue_Output("Array", VALUE_TYPE.any, 0));
 	

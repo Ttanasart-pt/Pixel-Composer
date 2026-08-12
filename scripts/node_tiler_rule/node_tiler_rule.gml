@@ -1,18 +1,16 @@
 function Node_Tile_Rule(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
     name  = "Tileset Rule";
     
-    newInput( 0, nodeValue_Tileset())
-    	.setVisible(true, true);
-    
-    newInput( 1, nodeValue_Surface("Tilemap"));
-    
     newInput( 2, nodeValueSeed());
     
-	newOutput(0, nodeValue_Output("Rendered", VALUE_TYPE.surface, noone));
-	
-	newOutput(1, nodeValue_Output("Tilemap", VALUE_TYPE.surface, noone));
-	
-	newOutput(2, nodeValue_Output("Tileset", VALUE_TYPE.tileset, noone));
+    ////- =Tile data
+    newInput( 0, nodeValue_Tileset()).setVisible(true, true);
+    newInput( 1, nodeValue_Surface( "Tilemap" ));
+    // 3
+    
+	newOutput( 0, nodeValue_Output( "Rendered", VALUE_TYPE.surface, noone ));
+	newOutput( 1, nodeValue_Output( "Tilemap",  VALUE_TYPE.surface, noone ));
+	newOutput( 2, nodeValue_Output( "Tileset",  VALUE_TYPE.tileset, noone ));
 	
 	rules = new Tileset_Rule(noone);
 	

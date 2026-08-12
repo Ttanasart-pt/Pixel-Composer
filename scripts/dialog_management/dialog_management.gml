@@ -5,8 +5,8 @@ function dialogCall(_dia, _x = noone, _y = noone, param = {}, create = false) {
 		if(_x == noone) _x = winwin_get_width(WINWIN_CURRENT)  / 2;
 		if(_y == noone) _y = winwin_get_height(WINWIN_CURRENT) / 2;
 		
-		var wx = winwin_get_x(WINWIN_CURRENT) - window_get_x();
-		var wy = winwin_get_y(WINWIN_CURRENT) - window_get_y();
+		var wx = winwin_get_x(WINWIN_CURRENT) - WIN_X;
+		var wy = winwin_get_y(WINWIN_CURRENT) - WIN_Y;
 		
 		_x += wx;
 		_y += wy;
@@ -57,8 +57,8 @@ function dialogPanelCall(_panel, _x = noone, _y = noone, params = undefined) {
 		if(_x == noone) _x = winwin_get_width(WINWIN_CURRENT)  / 2;
 		if(_y == noone) _y = winwin_get_height(WINWIN_CURRENT) / 2;
 		
-		var wx = winwin_get_x(WINWIN_CURRENT) - window_get_x();
-		var wy = winwin_get_y(WINWIN_CURRENT) - window_get_y();
+		var wx = winwin_get_x(WINWIN_CURRENT) - WIN_X;
+		var wy = winwin_get_y(WINWIN_CURRENT) - WIN_Y;
 		
 		_x += wx;
 		_y += wy;

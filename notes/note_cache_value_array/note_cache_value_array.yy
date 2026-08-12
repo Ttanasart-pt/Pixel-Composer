@@ -1,0 +1,11 @@
+{
+  "$GMNotes":"v1",
+  "%Name":"note_cache_value_array",
+  "name":"note_cache_value_array",
+  "parent":{
+    "name":"cache",
+    "path":"folders/nodes/data/misc/cache.yy",
+  },
+  "resourceType":"GMNotes",
+  "resourceVersion":"1.1",
+}

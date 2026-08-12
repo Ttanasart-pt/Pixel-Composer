@@ -77,20 +77,20 @@ function Node_Math(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	setDimension(96, 48);
 	__mode   = noone;
 	
-	newInput(0, nodeValue_EScroll("Type", 0, global.node_math_scroll)).rejectArray();
+	newInput( 0, nodeValue_EScroll("Type", 0, global.node_math_scroll)).rejectArray();
 	
 	////- =Values
-	newInput(1, nodeValue_Float( "a",      0    )).setVisible(true, true);
-	newInput(2, nodeValue_Float( "b",      0    )).setVisible(true, true);
-	newInput(5, nodeValue_Float( "Amount", 0    ));
-	newInput(6, nodeValue_Vec2(  "From",  [0,1] ));
-	newInput(7, nodeValue_Vec2(  "To",    [0,1] ));
+	newInput( 1, nodeValue_Float( "a",      0    )).setVisible(true, true);
+	newInput( 2, nodeValue_Float( "b",      0    )).setVisible(true, true);
+	newInput( 5, nodeValue_Float( "Amount", 0    ));
+	newInput( 6, nodeValue_Vec2(  "From",  [0,1] ));
+	newInput( 7, nodeValue_Vec2(  "To",    [0,1] ));
 	
 	////- =Settings
-	newInput(3, nodeValue_Bool( "Degree Angle",   true ));
-	newInput(4, nodeValue_Bool( "To integer",    false ));
-	newInput(8, nodeValue_Bool( "Output Vector", false ));
-	// inputs 9
+	newInput( 3, nodeValue_EButton( "Angle",      1, [ "Radians", "Degree" ] ));
+	newInput( 4, nodeValue_Bool( "To Integer",    false ));
+	newInput( 8, nodeValue_Bool( "Output Vector", false ));
+	// 9
 		
 	newOutput(0, nodeValue_Output("Result", VALUE_TYPE.float, 0));
 	

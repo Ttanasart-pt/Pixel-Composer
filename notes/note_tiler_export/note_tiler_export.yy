@@ -1,0 +1,11 @@
+{
+  "$GMNotes":"v1",
+  "%Name":"note_tiler_export",
+  "name":"note_tiler_export",
+  "parent":{
+    "name":"tiler",
+    "path":"folders/nodes/data/tiler.yy",
+  },
+  "resourceType":"GMNotes",
+  "resourceVersion":"1.1",
+}

@@ -1,0 +1,11 @@
+{
+  "$GMNotes":"v1",
+  "%Name":"note_segment_filter",
+  "name":"note_segment_filter",
+  "parent":{
+    "name":"segment",
+    "path":"folders/nodes/data/value/segment.yy",
+  },
+  "resourceType":"GMNotes",
+  "resourceVersion":"1.1",
+}

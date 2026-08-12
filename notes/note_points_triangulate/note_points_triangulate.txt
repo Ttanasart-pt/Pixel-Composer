@@ -1,0 +1,1 @@
+Triangulate array of vec2 points. Output array of triagles (array of 3 points).

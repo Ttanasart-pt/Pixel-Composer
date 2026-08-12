@@ -1,0 +1,11 @@
+{
+  "$GMNotes":"v1",
+  "%Name":"note_pin",
+  "name":"note_pin",
+  "parent":{
+    "name":"preview",
+    "path":"folders/nodes/data/misc/preview.yy",
+  },
+  "resourceType":"GMNotes",
+  "resourceVersion":"1.1",
+}

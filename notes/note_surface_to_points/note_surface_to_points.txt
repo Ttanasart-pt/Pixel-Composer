@@ -1,0 +1,1 @@
+Convert RG value of each pixel in surface to array of points.

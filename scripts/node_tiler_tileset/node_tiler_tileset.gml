@@ -21,7 +21,7 @@ function Node_Tile_Tileset(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	rules       = new Tileset_Rule(self);
     
     newInput( 0, nodeValue_Surface( "Texture" ));
-    newInput( 1, nodeValue_Vec2(    "Tile size", [ 16, 16 ] ));
+    newInput( 1, nodeValue_Vec2(    "Tile Size", [ 16, 16 ] ));
     
 	newOutput(0, nodeValue_Output("Tileset", VALUE_TYPE.tileset, self));
 	
@@ -1883,11 +1883,11 @@ function Node_Tile_Tileset(_x, _y, _group = noone) : Node(_x, _y, _group) constr
     #endregion
     
 	input_display_list = [ 1, 0, 
-		["Tileset",      false, noone, tile_selector.b_toggle        ], tile_selector, 
-		["Autoterrains",  true, noone, autoterrain_selector.b_toggle ], autoterrain_selector, 
-		["Palette",       true, noone, palette_viewer.b_toggle       ], palette_viewer,
-		["Animated tiles",true, noone, animated_viewer.b_toggle      ], animated_viewer,
-		["Rules",         true, noone, rules.b_toggle                ], rules,
+		[ "Tileset",      false, noone, tile_selector.b_toggle        ], tile_selector, 
+		[ "Autoterrains",  true, noone, autoterrain_selector.b_toggle ], autoterrain_selector, 
+		[ "Palette",       true, noone, palette_viewer.b_toggle       ], palette_viewer,
+		[ "Animated tiles",true, noone, animated_viewer.b_toggle      ], animated_viewer,
+		[ "Rules",         true, noone, rules.b_toggle                ], rules,
 	];
 	
 	////- Update

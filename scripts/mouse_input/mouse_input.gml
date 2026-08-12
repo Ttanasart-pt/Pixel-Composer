@@ -32,6 +32,54 @@
 	MOUSE_ZOOM_X  = 0;
 	MOUSE_ZOOM_Y  = 0;
 	MOUSE_PAN     = true;
+#endregion
+
+#region mouse position.
+	function MOUSE_X() {
+		switch(OS) {
+			case os_windows : 
+				if(PEN_USE) return PEN_X;
+				if(winwin_exists(WINWIN_CURRENT)) 
+					return display_mouse_get_x() - winwin_get_x(WINWIN_CURRENT);
+				return display_mouse_get_x() - WIN_X;
+				
+			case os_linux : 
+				return display_mouse_get_x() - WIN_X;
+				
+			case os_macosx : 
+				return display_mouse_get_x();
+		}
+		
+		return 0;
+	}
+	
+	function MOUSE_Y() {
+		switch(OS) {
+			case os_windows : 
+				if(PEN_USE) return PEN_Y;
+				if(winwin_exists(WINWIN_CURRENT)) 
+					return display_mouse_get_y() - winwin_get_y(WINWIN_CURRENT);
+				return display_mouse_get_y() - WIN_Y;
+		
+			case os_linux : 
+				return display_mouse_get_y() - WIN_Y;
+				
+			case os_macosx : 
+				return display_mouse_get_y();
+		}
+		
+		return 0;
+	}
+	
+	#macro mouse_mx MOUSE_X()
+	#macro mouse_my MOUSE_Y()
+	#macro mouse_ui [mouse_mx, mouse_my]
+	
+	#macro mouse_mxs (FILE_IS_DROPPING? FILE_DROPPING_X : mouse_mx)
+	#macro mouse_mys (FILE_IS_DROPPING? FILE_DROPPING_Y : mouse_my)
+	
+	#macro mouse_rx display_mouse_get_x()
+	#macro mouse_ry display_mouse_get_y()
 	
 	#macro MOUSE_MOVED (window_mouse_get_delta_x() != 0 || window_mouse_get_delta_y() != 0)
 	
@@ -55,8 +103,8 @@ function mouse_step() {
 	var _focus  = window_has_focus();
 	var _mouse  = _focus && point_in_rectangle(
 		mouse_rx,                            mouse_ry, 
-		window_get_x(),                      window_get_y(), 
-		window_get_x() + window_get_width(), window_get_y() + window_get_height()
+		WIN_X,                      WIN_Y, 
+		WIN_X + window_get_width(), WIN_Y + window_get_height()
 	);
 	
 	if(MULTI_WINDOWS) _mouse = FOCUS_WINDOW != undefined;

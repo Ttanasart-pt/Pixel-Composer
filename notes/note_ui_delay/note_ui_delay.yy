@@ -1,0 +1,11 @@
+{
+  "$GMNotes":"v1",
+  "%Name":"note_ui_delay",
+  "name":"note_ui_delay",
+  "parent":{
+    "name":"debug",
+    "path":"folders/nodes/data/misc/debug.yy",
+  },
+  "resourceType":"GMNotes",
+  "resourceVersion":"1.1",
+}

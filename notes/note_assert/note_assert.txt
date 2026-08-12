@@ -1,0 +1,1 @@
+Dev mode node for the test system. Compare current output to a stored correct result and returns error if mismatched.

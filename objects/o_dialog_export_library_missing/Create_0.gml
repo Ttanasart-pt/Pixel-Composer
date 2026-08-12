@@ -20,9 +20,17 @@ event_inherited();
 		
 		var fdir = filename_dir(file);
 		
-		ctxt[0] = $"Missing library required to build the {_ext} file. Download the library from:";
-		ctxt[1] = $"{link}";
-		ctxt[2] = $"Extract the file and copy the {_tfile} to {fdir} and try again.";
+		if(OS == os_macosx) {
+			ctxt[0] = $"Missing library required to build the {_ext} file. Runs homebrew command.";
+			ctxt[1] = $"{link}";
+			ctxt[2] = $"and try again.";
+			
+		} else {
+			ctxt[0] = $"Missing library required to build the {_ext} file. Download the library from:";
+			ctxt[1] = $"{link}";
+			ctxt[2] = $"Extract the file and copy the {_tfile} to {fdir} and try again.";
+			
+		}
 		
 		draw_set_font(f_p0);
 		var _hh  = string_height_ext(ctxt[0], -1, dialog_w - ui(48)) + ui(16);

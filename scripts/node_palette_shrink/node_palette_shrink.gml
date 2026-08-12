@@ -8,9 +8,9 @@ function Node_Palette_Shrink(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 	newInput( 2, nodeValue_Int(     "Amount",      4 ));
 	
 	////- =Algorithm
-	newInput( 4, nodeValue_EButton( "Color Space", 0, [ "RGB", "HSV" ] ))
+	newInput( 4, nodeValue_EButton( "Color Space", 0, [ "RGB", "HSV" ]          ));
 	newInput( 1, nodeValue_EButton( "Algorithm",   1, [ "Histogram", "K-mean" ] )).rejectArray();
-	newInput( 5, nodeValue_EScroll( "Sample Type", 0, [ "Uniform", "Random" ] ));
+	newInput( 5, nodeValue_EScroll( "Sample Type", 0, [ "Uniform", "Random" ]   ));
 	newInput( 6, nodeValue_Int(     "Shift",       0 ));
 	// 7
 	

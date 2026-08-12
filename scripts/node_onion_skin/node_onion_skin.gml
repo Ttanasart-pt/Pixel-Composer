@@ -3,26 +3,26 @@ function Node_Onion_Skin(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	clearCacheOnChange = false;
 	setCacheManual();
 	
-	newInput(0, nodeValue_Surface("Surface In")).setRequired();
+	////- =Surface
+	newInput( 0, nodeValue_Surface(  "Surface In" )).setRequired();
+	newInput( 1, nodeValue_SliRange( "Range", [-1, 1], { range: [ -16, 16, 0.1 ] }));
+	newInput( 5, nodeValue_Int(      "Step",    1 ))
 	
-	newInput(1, nodeValue_Slider_Range("Range", [-1, 1], { range: [ -16, 16, 0.1 ] }));
-	
-	newInput(2, nodeValue_Slider("Alpha", 0.5));
-		
-	newInput(3, nodeValue_Color("Color pre", cola(c_red)))
-	
-	newInput(4, nodeValue_Color("Color post", cola(c_blue)))
-	
-	newInput(5, nodeValue_Int("Step", 1))
-	
-	newInput(6, nodeValue_Bool("On top", true, "Render current frame on top of all frames."))
+	////- =Render
+	newInput( 2, nodeValue_Slider( "Alpha",      .5 ));
+	newInput( 3, nodeValue_Color(  "Color pre",  cola(c_red)  ));
+	newInput( 4, nodeValue_Color(  "Color post", cola(c_blue) ));
+	newInput( 6, nodeValue_Bool(   "On top",     true, "Render current frame on top of all frames."));
+	// 7
 	
 	newOutput(0, nodeValue_Output("Output", VALUE_TYPE.surface, noone));
 	
 	input_display_list = [
-		["Surface", false], 0, 1, 5,  
-		["Render",  false], 2, 3, 4, 6, 
+		[ "Surface", false ],  0,  1,  5,  
+		[ "Render",  false ],  2,  3,  4,  6, 
 	];
+	
+	////- Node
 	
 	static update = function() { 
 		if(!inputs[0].value_from) return;

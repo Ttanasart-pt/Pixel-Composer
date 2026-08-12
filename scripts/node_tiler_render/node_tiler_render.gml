@@ -1,17 +1,16 @@
 function Node_Tile_Render(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
     name  = "Render Tilemap";
     
-    newInput( 0, nodeValue_Tileset())
-    	.setVisible(true, true);
-    
-    newInput( 1, nodeValue_Surface("Tilemap"));
-    
-    newInput( 2, nodeValue_Bool("Animated", false));
+    ////- =Tile Data
+    newInput( 0, nodeValue_Tileset()).setVisible(true, true);
+    newInput( 1, nodeValue_Surface( "Tilemap"         ));
+    newInput( 2, nodeValue_Bool(    "Animated", false ));
+    // 3
     
 	newOutput(0, nodeValue_Output("Rendered", VALUE_TYPE.surface, noone));
 	
 	input_display_list = [ 
-	    ["Tile data", false], 0, 1, 2, 
+	    [ "Tile Data", false ], 0, 1, 2, 
 	];
 	
 	////- Node
@@ -35,10 +34,10 @@ function Node_Tile_Render(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	        _outSurf = surface_verify(_outSurf, _outDim[0],  _outDim[1]);
 	    
 	    surface_set_shader(_outSurf, sh_draw_tile_map, true, BLEND.over);
-	        shader_set_2("dimension", _outDim);
+	        shader_set_2( "dimension",    _outDim );
 	        
-	        shader_set_surface("indexTexture", tilemap);
-	        shader_set_2("indexTextureDim", surface_get_dimension(tilemap));
+	        shader_set_s( "indexTexture", tilemap );
+	        shader_set_2( "indexTextureDim", surface_get_dimension(tilemap) );
 	        
 			shader_set_f("frame", CURRENT_FRAME);
 	        tileset.shader_submit();

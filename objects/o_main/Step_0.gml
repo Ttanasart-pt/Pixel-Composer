@@ -112,7 +112,7 @@ if(!LOADING && PROJECT.active && !PROJECT.safeMode) { //node step
 		var cap = "";
 		if(PROJECT.safeMode) cap += "[SAFE MODE] ";
 		if(PROJECT.readonly) cap += "[READ ONLY] ";
-		cap += PROJECT.path + (PROJECT.modified? "*" : "") + " - Pixel Composer";
+		cap += filename_name_only(PROJECT.path) + (PROJECT.modified? "*" : "") + " - Pixel Composer";
 		
 		window_set_caption(cap);
 	}

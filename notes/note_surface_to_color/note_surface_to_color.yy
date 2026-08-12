@@ -1,0 +1,11 @@
+{
+  "$GMNotes":"v1",
+  "%Name":"note_surface_to_color",
+  "name":"note_surface_to_color",
+  "parent":{
+    "name":"surface",
+    "path":"folders/nodes/data/value/surface.yy",
+  },
+  "resourceType":"GMNotes",
+  "resourceVersion":"1.1",
+}

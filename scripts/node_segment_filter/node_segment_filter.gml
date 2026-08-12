@@ -3,23 +3,19 @@ function Node_Segment_Filter(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	setDrawIcon();
 	setDimension(96, 48);
 	
-	newInput(0, nodeValue_Vector("Segment"))
-		.setVisible(true, true)
-		.setArrayDepth(1);
+	////- =Segments
+	newInput( 0, nodeValue_Vector(   "Segment"         )).setVisible(true, true).setArrayDepth(1);
 	
-	newInput(1, nodeValue_Rotation("Angle", 0));
-	
-	newInput(2, nodeValue_Float("Spread", 15));
-	
-	newInput(3, nodeValue_Bool("Both side", true));
+	////- =Filter
+	newInput( 1, nodeValue_Rotation( "Angle",     0    ));
+	newInput( 2, nodeValue_Float(    "Spread",    15   ));
+	newInput( 3, nodeValue_Bool(     "Both side", true ));
 		
-	newOutput(0, nodeValue_Output("Segments", VALUE_TYPE.float, [[]]))
-		.setDisplay(VALUE_DISPLAY.vector)
-		.setArrayDepth(2);
+	newOutput(0, nodeValue_Output("Segments", VALUE_TYPE.float, [[]])).setDisplay(VALUE_DISPLAY.vector).setArrayDepth(2);
 	
 	input_display_list = [
-		["Segments",	false], 0, 
-		["Filter",		false], 1, 2, 3, 
+		[ "Segments", false ],  0, 
+		[ "Filter",   false ],  1,  2,  3, 
 	];
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _params) { 

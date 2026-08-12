@@ -1,0 +1,11 @@
+{
+  "$GMNotes":"v1",
+  "%Name":"note_widget_test",
+  "name":"note_widget_test",
+  "parent":{
+    "name":"debug",
+    "path":"folders/nodes/data/misc/debug.yy",
+  },
+  "resourceType":"GMNotes",
+  "resourceVersion":"1.1",
+}
