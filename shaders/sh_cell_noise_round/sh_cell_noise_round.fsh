@@ -53,5 +53,5 @@ void main() {
     color += m_dist;
 
 	vec3 c = 0.5 + (color - 0.5) * contrast;
-    gl_FragColor = vec4(c, 1.0);
+    gl_FragColor = vec4(c, 1.0) * v_vColour;
 }

@@ -184,5 +184,5 @@ void main() {
 	if(keep_alpha == 1)
 		col.a = _col.a;
 	
-    gl_FragColor = col;
+    gl_FragColor = col * v_vColour;
 }

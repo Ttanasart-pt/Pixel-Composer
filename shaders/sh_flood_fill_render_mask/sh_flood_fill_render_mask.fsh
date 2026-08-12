@@ -9,5 +9,5 @@ void main() {
 	
 	if(invert == 1) rr = 1. - rr;
 	
-	gl_FragColor = vec4(rr, rr, rr, 1.);
+	gl_FragColor = vec4(rr, rr, rr, 1.) * v_vColour;
 }

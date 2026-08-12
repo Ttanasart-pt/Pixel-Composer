@@ -35,5 +35,5 @@ void main() {
 	vec4 col = texture2D( gm_BaseTexture, v_vTexcoord);
 	vec3 hsl = rgb2hsl(col.rgb);
     
-	gl_FragColor = vec4(hsl.b, hsl.b, hsl.b, col.a);
+	gl_FragColor = vec4(hsl.b, hsl.b, hsl.b, col.a) * v_vColour;
 }

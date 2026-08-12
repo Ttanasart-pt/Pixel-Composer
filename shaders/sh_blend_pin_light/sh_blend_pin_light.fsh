@@ -44,5 +44,5 @@ void main() {
 	res.rgb /= al;
 	res.a = preserveAlpha == 1? _col0.a : res.a;
 	
-    gl_FragColor = res;
+    gl_FragColor = res * v_vColour;
 }

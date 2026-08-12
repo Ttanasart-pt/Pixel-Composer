@@ -23,7 +23,7 @@ void main() {
 				
 				vec4 sam = texture2D( gm_BaseTexture, pxs );
 				if(sam.a > 0.) {
-					gl_FragColor = vec4(sam.rgb, 1.);
+					gl_FragColor = vec4(sam.rgb, 1.) * v_vColour;
 					i = size;
 					break;
 				}

@@ -46,6 +46,6 @@ void main() {
 	c4 = sample( 1.,  0., c4);
 	c4 = sample( 1.,  1., c4);
 	
-	gl_FragColor = c4;
+	gl_FragColor = c4 * v_vColour;
 	
 }

@@ -108,5 +108,5 @@ void main() {
 		matchOri += 8. * matchTexture(3);
 	}
 	
-	gl_FragColor = vec4(matchOri / 255.);
+	gl_FragColor = vec4(matchOri / 255.) * v_vColour;
 }

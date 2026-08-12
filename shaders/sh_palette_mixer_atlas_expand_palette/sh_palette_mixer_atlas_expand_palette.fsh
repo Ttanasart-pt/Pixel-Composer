@@ -49,5 +49,5 @@ void main() {
     if(progress < 1.) 
         cc.a *= smoothstep(progress * 1.5, progress * 0.5, minDist);
     
-    gl_FragColor = cc;
+    gl_FragColor = cc * v_vColour;
 }

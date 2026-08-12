@@ -1,5 +1,4 @@
 #pragma use(gradient)
-
 #region -- gradient -- [1786510427.8689222]
 	#ifdef _YY_HLSL11_ 
         #define GRADIENT_LIMIT 128
@@ -146,6 +145,12 @@
 	
 #endregion -- gradient --
 
+#ifdef _YY_HLSL11_ 
+    #define POINT_MAX  1024
+#else 
+    #define POINT_MAX  256
+#endif
+
 varying vec2 v_vTexcoord;
 varying vec4 v_vColour;
 
@@ -164,7 +169,7 @@ uniform sampler2D scaleSurf;
 uniform int type;
 uniform int gradient_loop;
 
-uniform float pathPoints[1024];
+uniform float pathPoints[POINT_MAX];
 uniform int   pathRes;
 
 void main() {
@@ -212,5 +217,5 @@ void main() {
 	else if(gradient_loop == 2) p = 1. - abs(mod(p, 2.) - 1.);
 	
 	vec4 col = gradientEval(p);
-	gl_FragColor = vec4(col.rgb, col.a * maskA);
+	gl_FragColor = vec4(col.rgb, col.a * maskA) * v_vColour;
 }

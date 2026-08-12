@@ -112,5 +112,5 @@ void main() {
     float rad   = maxR / fRes;
     
     float g = theta;
-	gl_FragColor = vec4(g, g, g, 1.);
+	gl_FragColor = vec4(g, g, g, 1.) * v_vColour;
 }

@@ -7,5 +7,5 @@ void main() {
 	vec4 c = texture2D( gm_BaseTexture, v_vTexcoord );
 	
 		 if(alpha == 0) gl_FragColor = vec4(1. - c.rgb, c.a);
-	else if(alpha == 1) gl_FragColor = 1. - c;
+	else if(alpha == 1) gl_FragColor = 1. - c * v_vColour;
 }

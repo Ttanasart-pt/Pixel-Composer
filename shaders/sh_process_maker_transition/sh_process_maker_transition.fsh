@@ -37,5 +37,5 @@ void main() {
 		return;
 	}
 	
-	gl_FragColor = old? texture2D(prevSurf, v_vTexcoord) : texture2D(gm_BaseTexture, v_vTexcoord);
+	gl_FragColor = old? texture2D(prevSurf, v_vTexcoord) : texture2D(gm_BaseTexture, v_vTexcoord) * v_vColour;
 }

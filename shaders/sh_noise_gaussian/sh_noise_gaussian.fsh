@@ -44,5 +44,5 @@ void main() {
 	
 	z0 = mean + z0 * varience;
 	z0 = (z0 - level.x) / (level.y - level.x);
-	gl_FragColor = vec4(z0, z0, z0, 1.);
+	gl_FragColor = vec4(z0, z0, z0, 1.) * v_vColour;
 }

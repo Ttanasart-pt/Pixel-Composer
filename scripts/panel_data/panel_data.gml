@@ -310,13 +310,27 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 		refresh();
 	}
 	
-	function resize(dw, dh, oppose = ANCHOR.left) {
+	function resize(dw, dh, oppose = -1) {
 		if(dw == 0 && dh == 0) return;
 		
 		if(array_length(childs) == 2) {
 			var hori = oppose == ANCHOR.left || oppose == ANCHOR.right;
 			var ind  = hori? childs[1].w > childs[0].w : childs[1].h > childs[0].h;
-			childs[ind].resize(dw, dh, oppose);
+			
+			if(split == "v") {
+				childs[0].resize(dw, 0, oppose);
+				childs[1].resize(dw, 0, oppose);
+				
+				childs[ind].resize(0, dh, oppose);
+				
+			} else if(split == "h") {
+				childs[0].resize(0, dh, oppose);
+				childs[1].resize(0, dh, oppose);
+				
+				childs[ind].resize(dw, 0, oppose);
+				
+			}
+			
 		}
 		
 		w = round(w + dw);
@@ -1459,6 +1473,11 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 			array_remove(parent.childs, self);
 			parent.replacePanel(parent.childs[0]);
 		}
+	}
+	
+	function toString() {
+		if(array_empty(childs)) return instanceof(getContent());
+		return $"[{childs[0]}, {childs[1]}]";
 	}
 }
 

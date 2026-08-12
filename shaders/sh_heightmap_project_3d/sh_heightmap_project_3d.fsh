@@ -439,7 +439,7 @@ void main() {
 		gl_FragData[0] = sampleTexture(textureSide,  vec2(   samPos.x, samPos.y));
 		
 	else if (textureFront_use == 1 && mm.x > 0.5 && (samPos.x <= voxSize/2. || samPos.x >= 1. - voxSize/2.)) 
-		gl_FragData[0] = sampleTexture(textureFront, vec2(1.-samPos.z, samPos.y));
+		gl_FragData[0] = sampleTexture(textureFront, vec2(1.-samPos.z, samPos.y)) * v_vColour;
     
     float g = heightNorm == 1? (1. - samPos.y) / (1. - smHei) : 1. - samPos.y;
           g = pfract(g + heightShift);

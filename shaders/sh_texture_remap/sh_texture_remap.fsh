@@ -156,5 +156,5 @@ void main() {
 	vec4 samp = sampleTexture( gm_BaseTexture, px );
 	samp.a   *= map.a;
 	
-    gl_FragColor = samp;
+    gl_FragColor = samp * v_vColour;
 }

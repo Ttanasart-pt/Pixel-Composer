@@ -40,5 +40,5 @@ void main() {
 	if(next == base) // When putting this as early terminate the compiler complain about loop for some reason.
 		gl_FragColor = vec4(cformat == 0? vec2(.5) : vec2(0.), 0., 1.);
 	else 
-		gl_FragColor = vec4(match, 0., 1.);
+		gl_FragColor = vec4(match, 0., 1.) * v_vColour;
 }

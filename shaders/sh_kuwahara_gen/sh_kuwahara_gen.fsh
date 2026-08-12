@@ -158,5 +158,5 @@ void main() {
         outp += vec4(m[k].rgb * w, w);
     }
 
-    gl_FragColor = clamp(outp / outp.w, 0., 1.);
+    gl_FragColor = clamp(outp / outp.w, 0., 1.) * v_vColour;
 }

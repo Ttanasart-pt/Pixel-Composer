@@ -44,7 +44,7 @@ void main() {
 	}
 	
 	float col = dis <= 0.? 1. : 0.;
-	gl_FragColor = mix(bgC, color, col);
+	gl_FragColor = mix(bgC, color, col) * v_vColour;
 }
 #endregion -- shape_simple --
 

@@ -22,5 +22,5 @@ void main() {
 	vec4 res  = mix(base, lutC, strength);
 	
 	res.a = base.a;
-	gl_FragColor = res;
+	gl_FragColor = res * v_vColour;
 }

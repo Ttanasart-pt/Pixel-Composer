@@ -9,5 +9,5 @@ void main() {
 		return;
 	}
 	
-	gl_FragColor = vec4(v_vTexcoord, v_vTexcoord);
+	gl_FragColor = vec4(v_vTexcoord, v_vTexcoord) * v_vColour;
 }

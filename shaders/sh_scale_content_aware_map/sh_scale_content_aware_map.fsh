@@ -6,5 +6,5 @@ uniform sampler2D oriSurf;
 
 void main() {
 	vec2 coord   = texture2D(coordSurf, v_vTexcoord).xy;
-	gl_FragColor = texture2D(oriSurf, coord);
+	gl_FragColor = texture2D(oriSurf, coord) * v_vColour;
 }

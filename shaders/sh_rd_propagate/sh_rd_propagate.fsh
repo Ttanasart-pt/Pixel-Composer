@@ -79,5 +79,5 @@ void main() {
 	
 	vec2 _new = _4 + (reaction + disipation + diffusion) * _dt;
 	
-    gl_FragColor = vec4(_new, 0., 1.);
+    gl_FragColor = vec4(_new, 0., 1.) * v_vColour;
 }

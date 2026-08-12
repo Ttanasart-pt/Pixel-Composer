@@ -356,5 +356,5 @@ void main() {
 	else cfg = dott;
 	
 	     if(blendMode == 0) gl_FragColor = blend(cbg, cfg);
-	else if(blendMode == 1) gl_FragColor = cbg + cfg;
+	else if(blendMode == 1) gl_FragColor = cbg + cfg * v_vColour;
 }

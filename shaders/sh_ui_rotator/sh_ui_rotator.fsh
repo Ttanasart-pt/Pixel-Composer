@@ -48,6 +48,6 @@ void main() {
 	ring = 1. - abs(ring - 0.7);
 	ring = smoothstep(rad, 1.0, ring) * 25.;
 	
-	gl_FragColor = vec4(mix(c0.rgb, c1.rgb, d1), ring);
+	gl_FragColor = vec4(mix(c0.rgb, c1.rgb, d1), ring) * v_vColour;
 		
 }

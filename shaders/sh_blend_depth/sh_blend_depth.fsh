@@ -407,6 +407,6 @@ void main() {
 	vec4 bg = !depthPass? s1 : s2;
 	vec4 fg =  depthPass? s1 : s2;
 	
-	gl_FragData[0] = blend(bg, fg);
+	gl_FragData[0] = blend(bg, fg) * v_vColour;
 	gl_FragData[1] = vec4(vec3(min(d1, d2)), 1.);
 }

@@ -149,5 +149,5 @@ void main() {
 	baseCol.g *= grass;
 	baseCol.b  = simplex(v_vTexcoord, position.z + 89.6482);
 	
-	gl_FragColor = baseCol;
+	gl_FragColor = baseCol * v_vColour;
 }

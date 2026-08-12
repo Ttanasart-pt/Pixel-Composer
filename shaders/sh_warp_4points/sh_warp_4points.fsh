@@ -446,5 +446,5 @@ void main() {
 	vec2 suv = fract(uv * uvScale - uvPosition);
 	     suv = (suv * sca + pos);
 	
-	gl_FragColor = texture2Dintp( gm_BaseTexture, suv );
+	gl_FragColor = texture2Dintp( gm_BaseTexture, suv ) * v_vColour;
 }

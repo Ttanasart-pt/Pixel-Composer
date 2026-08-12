@@ -19,5 +19,5 @@ vec4 blend(vec4 bg, vec4 fg) {
 void main() {
 	vec4 sbg = texture2D(bg, v_vTexcoord);
 	vec4 sfg = texture2D(fg, v_vTexcoord);
-	gl_FragColor = blend(sbg, sfg);
+	gl_FragColor = blend(sbg, sfg) * v_vColour;
 }

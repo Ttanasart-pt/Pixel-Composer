@@ -17,5 +17,5 @@ void main() {
 	pos.x = fract((v_vTexcoord.x - left) / width) * width + left;
 	pos.y = fract((v_vTexcoord.y - top) / heigh) * heigh + top;
 	
-    gl_FragColor = texture2D( gm_BaseTexture, pos );
+    gl_FragColor = texture2D( gm_BaseTexture, pos ) * v_vColour;
 }

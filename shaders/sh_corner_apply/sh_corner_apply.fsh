@@ -94,5 +94,5 @@ void main() {
 	
 	bool isCorner = (kfill / ksize) < thr;
 	
-	if(!isCorner) gl_FragColor = texture2D(original, v_vTexcoord);
+	if(!isCorner) gl_FragColor = texture2D(original, v_vTexcoord) * v_vColour;
 }

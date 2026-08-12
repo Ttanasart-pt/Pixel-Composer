@@ -16,5 +16,5 @@ void main() {
 	float angle = atan(pos.y, pos.x) + (PI / 2. + angleIO * PI / 2.);
 	float dist  = (1. - rad) * vortex;
 	
-	gl_FragColor = vec4(cos(angle) * dist, sin(angle) * dist, 0., 1.);
+	gl_FragColor = vec4(cos(angle) * dist, sin(angle) * dist, 0., 1.) * v_vColour;
 }

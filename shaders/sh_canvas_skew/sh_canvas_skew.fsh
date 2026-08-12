@@ -16,5 +16,5 @@ void main() {
 		 if(axis == 0) amo = vec2(round(amount * (px.y - origin.y)), 0.);
 	else if(axis == 1) amo = vec2(0., round(amount * (px.x - origin.x)));
 	
-	gl_FragColor = texture2D( gm_BaseTexture, v_vTexcoord - amo / dimension);
+	gl_FragColor = texture2D( gm_BaseTexture, v_vTexcoord - amo / dimension) * v_vColour;
 }

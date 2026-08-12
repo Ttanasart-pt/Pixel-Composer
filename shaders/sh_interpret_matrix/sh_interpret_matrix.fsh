@@ -145,6 +145,12 @@
 	
 #endregion -- gradient --
 
+#ifdef _YY_HLSL11_ 
+    #define POINT_MAX  1024
+#else 
+    #define POINT_MAX  256
+#endif
+
 varying vec2 v_vTexcoord;
 varying vec4 v_vColour;
 
@@ -155,7 +161,7 @@ uniform vec2  size;
 uniform vec2  range;
 uniform float gradient_shift;
 
-uniform float matrix[1024];
+uniform float matrix[POINT_MAX];
 uniform vec2  offset;
 
 #ifdef _YY_HLSL11_ 
@@ -181,6 +187,6 @@ void main() {
 	
 	     if(mode == 0) gl_FragColor = vec4(vec3(grey), 1.);
 	else if(mode == 1) gl_FragColor = palette[imod(int(value), int(paletteAmount))];
-	else if(mode == 2) gl_FragColor = gradientEval(pfract(grey + gradient_shift));
+	else if(mode == 2) gl_FragColor = gradientEval(pfract(grey + gradient_shift)) * v_vColour;
 	
 }

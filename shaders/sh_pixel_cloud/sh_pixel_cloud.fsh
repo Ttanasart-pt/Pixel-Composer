@@ -369,5 +369,5 @@ void main() {
 	_col.rgb *= cc.rgb;
 	_col.a   *= cc.a   * curveEval(alpha_curve, alpha_amount, str + frandom(_pos, 2.984) * randomAmount);
 	
-    gl_FragColor = _col;
+    gl_FragColor = _col * v_vColour;
 }

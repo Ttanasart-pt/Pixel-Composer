@@ -8,7 +8,7 @@ uniform float iteration;
 void main() {
 	vec2 tx  = 1. / dimension;
 	vec4 col = texture2D( gm_BaseTexture, v_vTexcoord );
-    gl_FragColor = col;
+    gl_FragColor = col * v_vColour;
 	
 	if(col.a > 0.) return;
 	
@@ -34,5 +34,5 @@ void main() {
 		if(ss.a > 0.) { col = ss; break; }
 	}
 	
-	gl_FragColor = col;
+	gl_FragColor = col * v_vColour;
 }

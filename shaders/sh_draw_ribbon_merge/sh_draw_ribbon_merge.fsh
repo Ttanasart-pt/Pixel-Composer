@@ -14,5 +14,5 @@ void main() {
 	
 	vec4 bg = d0.x > d1.x? s1 : s0;
 	vec4 fg = d0.x > d1.x? s0 : s1;
-	gl_FragColor = bg * (1. - fg.a) + fg * fg.a;
+	gl_FragColor = bg * (1. - fg.a) + fg * fg.a * v_vColour;
 }

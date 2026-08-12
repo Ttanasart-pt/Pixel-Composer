@@ -19,7 +19,7 @@ void main() {
 		vec4 sc = texture2D( gm_BaseTexture, sx );
 		
 		if(sc.a > 0.) {
-			gl_FragColor = color;
+			gl_FragColor = color * v_vColour;
 			return;
 		}
 	}

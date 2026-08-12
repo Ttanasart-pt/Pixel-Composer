@@ -217,5 +217,5 @@ void main() {
 	
 	delt /= divv;
 	
-	gl_FragColor = vec4(delt, v_vTexcoord, 1.);
+	gl_FragColor = vec4(delt, v_vTexcoord, 1.) * v_vColour;
 }

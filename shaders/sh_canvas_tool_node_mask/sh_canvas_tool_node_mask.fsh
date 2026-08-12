@@ -30,5 +30,5 @@ void main() {
 	if(blending == 2) res = orig * edit;
 	if(blending == 3) res = orig + edit;
 	
-	gl_FragColor = res;
+	gl_FragColor = res * v_vColour;
 }

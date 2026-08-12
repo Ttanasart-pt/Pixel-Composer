@@ -17,6 +17,6 @@ void main() {
 	vec2 px = v_vTexcoord * dimension;
 	px -= position;
 	
-	gl_FragData[0] = texture2D(mask,    px * tx);
+	gl_FragData[0] = texture2D(mask,    px * tx) * v_vColour;
 	gl_FragData[1] = texture2D(content, px * tx);
 }

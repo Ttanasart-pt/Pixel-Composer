@@ -13,5 +13,5 @@ void main() {
 	
 	base.rgb = mix(base.rgb, base.rgb * bgColor.rgb, 1. - base.a);
 	base.a   = 1.;
-	gl_FragColor = base;
+	gl_FragColor = base * v_vColour;
 }

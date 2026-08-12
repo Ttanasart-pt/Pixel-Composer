@@ -13,7 +13,7 @@ void main() {
 	
 	if(amount > 0.) {
 	    if(gl_FragColor.a > 0.) {
-			gl_FragColor = vec4(1.);
+			gl_FragColor = vec4(1.) * v_vColour;
 			return;
 		}
 		
@@ -24,16 +24,16 @@ void main() {
 			vec2 _tx3 = v_vTexcoord + vec2( 0., -tx.y ) * i;
 		
 			vec4 _sm0 = texture2D( gm_BaseTexture, _tx0 );
-			if(_sm0.a > 0.) { gl_FragColor = vec4(1.); return; }
+			if(_sm0.a > 0.) { gl_FragColor = vec4(1.) * v_vColour; return; }
 		
 			vec4 _sm1 = texture2D( gm_BaseTexture, _tx1 );
-			if(_sm1.a > 0.) { gl_FragColor = vec4(1.); return; }
+			if(_sm1.a > 0.) { gl_FragColor = vec4(1.) * v_vColour; return; }
 		
 			vec4 _sm2 = texture2D( gm_BaseTexture, _tx2 );
-			if(_sm2.a > 0.) { gl_FragColor = vec4(1.); return; }
+			if(_sm2.a > 0.) { gl_FragColor = vec4(1.) * v_vColour; return; }
 		
 			vec4 _sm3 = texture2D( gm_BaseTexture, _tx3 );
-			if(_sm3.a > 0.) { gl_FragColor = vec4(1.); return; }
+			if(_sm3.a > 0.) { gl_FragColor = vec4(1.) * v_vColour; return; }
 		}
 		
 		gl_FragColor = vec4(0.);
@@ -59,6 +59,6 @@ void main() {
 			if(_sm3.a == 0.) { gl_FragColor = vec4(0.); return; }
 		}
 		
-		gl_FragColor = vec4(1.);
+		gl_FragColor = vec4(1.) * v_vColour;
 	}
 }

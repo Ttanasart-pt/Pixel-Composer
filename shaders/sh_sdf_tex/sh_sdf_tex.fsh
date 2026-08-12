@@ -6,5 +6,5 @@ uniform float threshold;
 void main() {
 	vec4 colr = texture2D( gm_BaseTexture, v_vTexcoord );
 	float val = (colr.r + colr.g + colr.b) * colr.a;
-    gl_FragColor = vec4(0., 0., step(threshold, val), 1.);
+    gl_FragColor = vec4(0., 0., step(threshold, val), 1.) * v_vColour;
 }

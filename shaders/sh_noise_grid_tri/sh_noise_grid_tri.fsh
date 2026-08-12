@@ -80,6 +80,6 @@ void main() {
 		gl_FragColor = vec4(vec3(n), 1.0);
 	} else {
 		vec2 samPos = floor(hx) / scale + 0.5 / scale;
-		gl_FragColor = sampleTexture( gm_BaseTexture, samPos / vec2(sqrt(3.), 1.1));
+		gl_FragColor = sampleTexture( gm_BaseTexture, samPos / vec2(sqrt(3.), 1.1)) * v_vColour;
 	}
 }

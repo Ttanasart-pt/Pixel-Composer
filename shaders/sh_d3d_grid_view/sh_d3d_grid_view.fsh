@@ -45,5 +45,5 @@ void main() {
     if(abs(pos.y) * scale < miny) gridC = vec4(1., 0., 0., linea * axisBlend * min(1., alpha * 2.));
 	
 	gridC.a *= opacity;
-    gl_FragColor = gridC;
+    gl_FragColor = gridC * v_vColour;
 }

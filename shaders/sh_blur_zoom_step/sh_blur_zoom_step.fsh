@@ -428,5 +428,5 @@ void main() {
 		if(col.a > 0.) { color = col; break; }
     }
     
-	gl_FragColor = color;
+	gl_FragColor = color * v_vColour;
 }

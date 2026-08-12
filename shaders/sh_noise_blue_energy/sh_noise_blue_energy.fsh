@@ -26,5 +26,5 @@ void main() {
 	
 	float cc = texture2D(gm_BaseTexture, v_vTexcoord).r;
 	if(inverted == 0) gl_FragColor = vec4(cc == 1.? 1. : ss, cc == 1.? ss : 0., 0., 1.);
-	else              gl_FragColor = vec4(cc == 0.? ss : 1., 0., 0., 1.);
+	else              gl_FragColor = vec4(cc == 0.? ss : 1., 0., 0., 1.) * v_vColour;
 }

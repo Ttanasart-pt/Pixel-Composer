@@ -79,5 +79,5 @@ void main() {
 	
 	float A = (lambda1 + lambda2 > 0.0) ? (lambda1 - lambda2) / (lambda1 + lambda2) : 0.0;
 	
-	gl_FragColor = vec4(t, phi, A);
+	gl_FragColor = vec4(t, phi, A) * v_vColour;
 }

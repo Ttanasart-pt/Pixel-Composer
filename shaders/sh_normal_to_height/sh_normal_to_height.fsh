@@ -62,5 +62,5 @@ void main() {
 	
 	if(hdiv > 0.) height /= hdiv;
 	
-	gl_FragColor = vec4(height, height, height, 1.);
+	gl_FragColor = vec4(height, height, height, 1.) * v_vColour;
 }

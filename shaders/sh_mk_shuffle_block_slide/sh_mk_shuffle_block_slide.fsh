@@ -27,5 +27,5 @@ void main() {
         newPos.x = fract(newPos.x + shift);
     }
         
-    gl_FragColor = texture2D( gm_BaseTexture, newPos );
+    gl_FragColor = texture2D( gm_BaseTexture, newPos ) * v_vColour;
 }

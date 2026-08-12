@@ -13,5 +13,5 @@ void main() {
 	vec4 col	 = color;
 	col.a *= bright * intensity;
 	
-    gl_FragColor = col;
+    gl_FragColor = col * v_vColour;
 }

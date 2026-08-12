@@ -13,6 +13,6 @@ void main() {
 	gl_FragColor = vec4(0.);
 	
 	if(distance(col, color) < 1.)
-		gl_FragColor = override == 1? overColor : texture2D( original, v_vTexcoord );
+		gl_FragColor = override == 1? overColor : texture2D( original, v_vTexcoord ) * v_vColour;
 	
 }

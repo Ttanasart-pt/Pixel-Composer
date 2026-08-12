@@ -171,5 +171,5 @@ void main() {
 	
 	vec3 rgb = hsv2rgb(hsv);
 	
-    gl_FragColor = vec4(rgb, col.a);
+    gl_FragColor = vec4(rgb, col.a) * v_vColour;
 }

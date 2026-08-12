@@ -92,5 +92,5 @@ void main() {
         lightRes = lAttn * lAttn;
 	}
 	
-	gl_FragColor = vec4(vec3(lightRes), 1.);
+	gl_FragColor = vec4(vec3(lightRes), 1.) * v_vColour;
 }

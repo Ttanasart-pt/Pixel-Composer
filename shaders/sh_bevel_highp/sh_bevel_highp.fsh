@@ -270,6 +270,6 @@ void main() {
 		
 		mx = clamp(mx, 0., 1.);
 		float prg = mix(b1, b0, mx);
-		gl_FragColor = vec4(vec3(prg), col.a);
+		gl_FragColor = vec4(vec3(prg), col.a) * v_vColour;
 	}
 }

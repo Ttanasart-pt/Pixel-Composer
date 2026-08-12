@@ -329,13 +329,19 @@
 	vec4 sampleTexture( sampler2D texture, vec2 pos) { return sampleTexture(texture, pos, 0.); }
 #endregion -- sampler_ext --
 
+#ifdef _YY_HLSL11_ 
+    #define POINT_MAX  1024
+#else 
+    #define POINT_MAX  256
+#endif
+
 varying vec2 v_vTexcoord;
 varying vec4 v_vColour;
 
 uniform vec2 dimension;
 
 uniform int  resolution;
-uniform vec2 points[1024];
+uniform vec2 points[POINT_MAX];
 
 uniform int  side;
 
@@ -387,5 +393,5 @@ void main() {
 	if((side == 0 && lf) || (side == 1 && !lf) || side == 2)
 		sx = reflect2d(p, l0, l1);
 		
-	gl_FragColor = sampleTexture(gm_BaseTexture, sx);
+	gl_FragColor = sampleTexture(gm_BaseTexture, sx) * v_vColour;
 }

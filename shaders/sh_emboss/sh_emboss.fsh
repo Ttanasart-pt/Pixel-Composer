@@ -263,5 +263,5 @@ void main() {
 	}
 		
 	baseC.a = rawC.a;
-	gl_FragColor = baseC;
+	gl_FragColor = baseC * v_vColour;
 }

@@ -174,5 +174,5 @@ void main() {
 	md.z = applyLevel(md.z);
 	
 	if(blendMode == 2) md = 1. - md;
-	gl_FragColor = vec4(md, 1.0);
+	gl_FragColor = vec4(md, 1.0) * v_vColour;
 }

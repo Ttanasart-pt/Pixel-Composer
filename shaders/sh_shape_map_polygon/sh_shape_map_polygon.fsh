@@ -359,5 +359,5 @@ void main() {
 
 	vec2 tx = vec2(x, y);
 	
-    gl_FragColor = texture2Dintp( gm_BaseTexture, fract(tx * scale) );
+    gl_FragColor = texture2Dintp( gm_BaseTexture, fract(tx * scale) ) * v_vColour;
 }

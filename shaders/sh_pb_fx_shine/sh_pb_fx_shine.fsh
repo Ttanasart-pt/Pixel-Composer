@@ -207,7 +207,7 @@ uniform int   keepAlpha;
 void main() {
 	vec4 cc = useSurf == 1? texture2D(gm_BaseTexture, v_vTexcoord) : vec4(0.);
 	vec4 bc = cc;
-	gl_FragData[0] = cc;
+	gl_FragData[0] = cc * v_vColour;
 	gl_FragData[1] = vec4(0.);
 	
 	float ints = intensity;
@@ -282,6 +282,6 @@ void main() {
 		
 	} else {
 		if(keepAlpha == 1) cc.a = bc.a;
-		gl_FragData[0] = cc;
+		gl_FragData[0] = cc * v_vColour;
 	}
 }

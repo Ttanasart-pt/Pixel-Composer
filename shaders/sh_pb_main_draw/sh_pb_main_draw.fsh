@@ -34,7 +34,7 @@ void main() {
 	
 	if(stroke == 1) {
 		if(borDist <= float(stroke_thickness))
-			gl_FragColor = stroke_color;
+			gl_FragColor = stroke_color * v_vColour;
 	}
 	
 }

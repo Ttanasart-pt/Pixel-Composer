@@ -457,5 +457,5 @@ void main() {
 		ncol   = sampleTexture( gm_BaseTexture, samPos );
 	}
 	
-    gl_FragColor = blend(ccol, ncol);
+    gl_FragColor = blend(ccol, ncol) * v_vColour;
 }

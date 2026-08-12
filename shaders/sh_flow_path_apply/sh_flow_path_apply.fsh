@@ -23,5 +23,5 @@ void main() {
 	vec4 c1 = texture2D(gm_BaseTexture, flow1);
 	
 	ft = smoothstep(0., 1., ft);
-	gl_FragColor = mix(c0, c1, ft);
+	gl_FragColor = mix(c0, c1, ft) * v_vColour;
 }

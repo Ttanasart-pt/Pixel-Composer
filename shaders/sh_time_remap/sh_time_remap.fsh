@@ -17,5 +17,5 @@ void main() {
 	gl_FragColor = vec4(0.);
 	
 	if(b >= vMin && b <= vMax)
-		gl_FragColor = texture2D( gm_BaseTexture, v_vTexcoord );
+		gl_FragColor = texture2D( gm_BaseTexture, v_vTexcoord ) * v_vColour;
 }

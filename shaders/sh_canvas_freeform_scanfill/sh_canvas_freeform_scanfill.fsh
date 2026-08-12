@@ -1,9 +1,15 @@
+#ifdef _YY_HLSL11_ 
+    #define POINT_MAX  1024
+#else 
+    #define POINT_MAX  256
+#endif
+
 varying vec2 v_vTexcoord;
 varying vec4 v_vColour;
 
 uniform vec2 dimension;
 
-uniform vec2 points[1024];
+uniform vec2 points[POINT_MAX];
 uniform int  pointAmo;
 
 uniform vec4 color;
@@ -46,5 +52,5 @@ void main() {
 			fillR = !fillR;
 	}
 	
-	if(fillL && fillR) gl_FragColor = color;
+	if(fillL && fillR) gl_FragColor = color * v_vColour;
 }

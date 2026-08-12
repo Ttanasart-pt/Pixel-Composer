@@ -20,5 +20,5 @@ void main() {
 		res.a  = base.a;
 	}
 	
-	gl_FragColor = res;
+	gl_FragColor = res * v_vColour;
 }

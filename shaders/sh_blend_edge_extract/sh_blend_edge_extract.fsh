@@ -32,5 +32,5 @@ void main() {
 	m = clamp(m, 0., 1.);
 	//m = smoothstep(0., 1., m);
 	
-	gl_FragColor = vec4(vec3(m), 1.);
+	gl_FragColor = vec4(vec3(m), 1.) * v_vColour;
 }

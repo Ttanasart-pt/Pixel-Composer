@@ -298,5 +298,5 @@ void main() {
 	}
 	
 	cc /= w;
-	gl_FragColor = cc;
+	gl_FragColor = cc * v_vColour;
 }

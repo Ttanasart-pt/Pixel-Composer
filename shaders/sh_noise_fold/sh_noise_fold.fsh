@@ -67,5 +67,5 @@ void main() {
 	col.g = applyLevel(col.g);
 	col.b = applyLevel(col.b);
 	
-    gl_FragColor = col;
+    gl_FragColor = col * v_vColour;
 }

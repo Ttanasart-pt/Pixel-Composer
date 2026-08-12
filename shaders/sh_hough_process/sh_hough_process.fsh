@@ -87,5 +87,5 @@ void main() {
         }
     }
     
-    gl_FragColor = vec4(vec3(votes / scanCount * intensity), 1.);
+    gl_FragColor = vec4(vec3(votes / scanCount * intensity), 1.) * v_vColour;
 }

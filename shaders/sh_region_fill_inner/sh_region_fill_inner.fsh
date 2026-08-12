@@ -12,7 +12,7 @@ vec4 sample ( vec2 position ) {
 
 void main() {
 	vec2 tx = 1. / dimension;
-    gl_FragColor = texture2D( gm_BaseTexture, v_vTexcoord );
+    gl_FragColor = texture2D( gm_BaseTexture, v_vTexcoord ) * v_vColour;
 	
 	if(gl_FragColor.b == 1.) return;
 	

@@ -288,5 +288,5 @@ void main() {
     sky.rgb  = TonemapACES(sky.rgb * 2.0);
     sky.rgb  = pow(sky.rgb, vec3(1.0 / 2.2)); // gamma
     
-	gl_FragColor = vec4(sky.rgb, 1.0);
+	gl_FragColor = vec4(sky.rgb, 1.0) * v_vColour;
 }

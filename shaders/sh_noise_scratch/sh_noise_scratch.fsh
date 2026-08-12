@@ -136,5 +136,5 @@ void main() {
 	
 	float b  = scratches12(vtx);
 	vec4 res = vec4(b,b,b,a);
-	gl_FragColor = res;
+	gl_FragColor = res * v_vColour;
 }

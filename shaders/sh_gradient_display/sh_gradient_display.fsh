@@ -153,5 +153,5 @@ varying vec4 v_vColour;
 
 void main() {
 	vec4 col = gradientEval(v_vTexcoord.x);
-	gl_FragColor = vec4(col.rgb, 1.);
+	gl_FragColor = vec4(col.rgb, 1.) * v_vColour;
 }

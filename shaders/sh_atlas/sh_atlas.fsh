@@ -35,7 +35,7 @@ void main() {
 			if(sam.a < 1. || dst > minDist) continue;
 			
 			gl_FragColor = sam;
-			// gl_FragColor = vec4(vec3(i / distance_sample), 1.);
+			// gl_FragColor = vec4(vec3(i / distance_sample), 1.) * v_vColour;
 			minDist = dst;
 			
 			samp = true;

@@ -46,5 +46,5 @@ void main() {
 		discard;
 	}
 	
-	gl_FragColor = texture2D( gm_BaseTexture, v_vTexcoord );
+	gl_FragColor = texture2D( gm_BaseTexture, v_vTexcoord ) * v_vColour;
 }

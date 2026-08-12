@@ -30,5 +30,5 @@ void main() {
 		vec4 res = vec4(abs(_col0.rgb - _col1.rgb), 1.);
 	/////////////////////////////////////////////////
 	
-    gl_FragColor = mix(_col0, res, mx);
+    gl_FragColor = mix(_col0, res, mx) * v_vColour;
 }

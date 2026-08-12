@@ -12,7 +12,7 @@ bool sample(vec2 px) {
 void main() {
 	vec2 tx = 1. / dimension;
 	vec4 cc = texture2D(gm_BaseTexture, v_vTexcoord);
-	gl_FragColor = cc;
+	gl_FragColor = cc * v_vColour;
 	if(cc.a == 0.) return;
 	
 	bool hh0 = sample(v_vTexcoord + vec2( tx.x, 0.));
@@ -25,5 +25,5 @@ void main() {
 	if(highlight[2] != 0. && hh2) cc.rgb *= 1. + highlight[2];
 	if(highlight[3] != 0. && hh3) cc.rgb *= 1. + highlight[3];
 	
-	gl_FragColor = cc;
+	gl_FragColor = cc * v_vColour;
 }

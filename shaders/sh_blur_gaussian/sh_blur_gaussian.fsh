@@ -1,5 +1,4 @@
 #pragma use(sampler_simple)
-
 #region -- sampler_simple -- [1765194569.6586206]
     uniform int  sampleMode;
     
@@ -44,6 +43,12 @@
     vec4 sampleTexture( sampler2D texture, vec2 pos) { return sampleTexture(texture, pos, 0.); }
 #endregion -- sampler_simple --
 
+#ifdef _YY_HLSL11_ 
+    #define SIZE_MAX  1024
+#else 
+    #define SIZE_MAX  256
+#endif
+
 varying vec2 v_vTexcoord;
 varying vec4 v_vColour;
 
@@ -54,7 +59,7 @@ uniform vec2      size;
 uniform int       sizeUseSurf;
 uniform sampler2D sizeSurf;
 
-uniform float weight[1024];
+uniform float weight[SIZE_MAX];
 uniform float angle;
 uniform float sizeModulate;
 
@@ -123,7 +128,7 @@ void main() {
 	
 	if(gamma == 1) result.rgb = pow(result.rgb, vec3(1. / 2.2));
 	
-	gl_FragColor = result;
+	gl_FragColor = result * v_vColour;
 	if(overrideColor == 1) {
 		gl_FragColor.rgb = overColor.rgb;
 		gl_FragColor.a  *= overColor.a;

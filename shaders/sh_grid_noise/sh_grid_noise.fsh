@@ -95,6 +95,6 @@ void main() {
 		} 
 	} else {
 		vec2 samPos = floor(pos) / scale + 0.5 / scale;
-		gl_FragColor = texture2D( gm_BaseTexture, samPos );
+		gl_FragColor = texture2D( gm_BaseTexture, samPos ) * v_vColour;
 	}
 }

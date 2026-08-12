@@ -1,8 +1,14 @@
+#ifdef _YY_HLSL11_ 
+    #define COL_MAX  512
+#else 
+    #define COL_MAX  128
+#endif
+
 varying vec2 v_vTexcoord;
 varying vec4 v_vColour;
 
 uniform vec4 color;
-uniform vec4 palette[512];
+uniform vec4 palette[COL_MAX];
 uniform int  paletteAmount;
 
 uniform int  matchAll;
@@ -52,5 +58,5 @@ void main() {
 		}
 	}
 	
-	gl_FragColor = minC == color? c : vec4(0.);
+	gl_FragColor = minC == color? c : vec4(0.) * v_vColour;
 }

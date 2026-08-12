@@ -40,5 +40,5 @@ void main() {
 		
 	} 
 	
-	gl_FragColor = c;
+	gl_FragColor = c * v_vColour;
 }

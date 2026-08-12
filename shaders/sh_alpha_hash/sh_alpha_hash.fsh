@@ -19,7 +19,7 @@ void main() {
     vec4 c = texture2D( gm_BaseTexture, v_vTexcoord );
 	
 	if(c.a == 1.) {
-		gl_FragColor = c;
+		gl_FragColor = c * v_vColour;
 		return;
 	}
 	
@@ -46,5 +46,5 @@ void main() {
 	
 	c.a = c.a > val? 1. : 0.;
 	
-	gl_FragColor = c;
+	gl_FragColor = c * v_vColour;
 }

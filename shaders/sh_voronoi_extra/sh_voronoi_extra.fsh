@@ -260,5 +260,5 @@ void main() {
 	else if(mode == 2) v = squareVoronoi(pos * 4.).r;
 	
 	v = applyLevel(v);
-	gl_FragColor = vec4(vec3(v), 1.0);
+	gl_FragColor = vec4(vec3(v), 1.0) * v_vColour;
 }

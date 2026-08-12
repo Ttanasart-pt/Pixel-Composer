@@ -16,5 +16,5 @@ vec3 ACESFilm(vec3 x) {
 
 void main() {
 	vec4 cc = texture2D( gm_BaseTexture, v_vTexcoord );
-    gl_FragColor = vec4(ACESFilm(cc.rgb), cc.a);
+    gl_FragColor = vec4(ACESFilm(cc.rgb), cc.a) * v_vColour;
 }

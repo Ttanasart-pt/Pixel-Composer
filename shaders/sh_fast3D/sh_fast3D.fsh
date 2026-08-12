@@ -152,7 +152,7 @@ void main() {
 
 	float z   = (dep - viewRange.x) / (viewRange.y - viewRange.x);
 	
-	gl_FragData[0] = res;
+	gl_FragData[0] = res * v_vColour;
 	gl_FragData[1] = vec4(vec3(z),   base.a);
 	gl_FragData[2] = vec4(vec3(rim), base.a);
 }

@@ -271,6 +271,6 @@ void main() {
 	float dripDraw = step(currThr, dripDens);
 	float dripPrgn = dripNor;
 	
-	gl_FragData[0] = vec4(origColor.rgb, dripDraw);
+	gl_FragData[0] = vec4(origColor.rgb, dripDraw) * v_vColour;
 	gl_FragData[1] = vec4(dripPrgn, dripPrgn, dripPrgn, dripDraw);
 }

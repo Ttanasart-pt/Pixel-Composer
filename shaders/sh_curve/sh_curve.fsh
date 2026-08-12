@@ -162,5 +162,5 @@ void main() {
 	if(w == 0.) col.rgb = vec3(wtarget);
 	else col.rgb *= wtarget / w;
 	
-    gl_FragColor = col;
+    gl_FragColor = col * v_vColour;
 }

@@ -38,6 +38,6 @@ void main() {
 		}
 	}
 	
-    gl_FragColor = palette[closet_index];
+    gl_FragColor = palette[closet_index] * v_vColour;
 	gl_FragColor.a = _col.a;
 }

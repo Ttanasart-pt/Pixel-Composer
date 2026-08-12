@@ -1,5 +1,4 @@
 #pragma use(curve)
-
 #region -- curve -- [1786510425.6316042]
 
     #ifdef _YY_HLSL11_ 
@@ -129,8 +128,8 @@
     }
 
 #endregion -- curve --
-#pragma use(sampler)
 
+#pragma use(sampler)
 #region -- sampler -- [1780048120.828549]
 	uniform int  interpolation;
 	uniform vec2 sampleDimension;
@@ -257,6 +256,12 @@
 	vec4 sampleTexture( sampler2D texture, vec2 pos) { return sampleTexture(texture, pos, 0.); }
 #endregion -- sampler --
 
+#ifdef _YY_HLSL11_ 
+    #define POINT_MAX  1024
+#else 
+    #define POINT_MAX  256
+#endif
+
 varying vec2 v_vTexcoord;
 varying vec4 v_vColour;
 
@@ -265,7 +270,7 @@ uniform vec2  pos1;
 uniform vec2  pos2;
 uniform int   usePath;
 uniform int   pathResolution;
-uniform vec2  pathList[1024];
+uniform vec2  pathList[POINT_MAX];
 
 uniform float radius;
 uniform float radius2;
@@ -344,5 +349,5 @@ void main() {
         }
     }
     
-    gl_FragColor = texture2Dintp( gm_BaseTexture, stx );
+    gl_FragColor = texture2Dintp( gm_BaseTexture, stx ) * v_vColour;
 }

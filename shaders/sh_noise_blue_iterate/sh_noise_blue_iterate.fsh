@@ -4,5 +4,5 @@ varying vec4 v_vColour;
 uniform vec2 seed;
 
 void main() {
-	gl_FragColor = texture2D(gm_BaseTexture, v_vTexcoord);
+	gl_FragColor = texture2D(gm_BaseTexture, v_vTexcoord) * v_vColour;
 }

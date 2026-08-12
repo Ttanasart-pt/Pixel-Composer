@@ -10,5 +10,5 @@ void main() {
     if(base.a == 2.) return;
     
     if(distance(base.rgb, target.rgb) < .01)
-        gl_FragColor = vec4(replace, 0., 0., 2.);
+        gl_FragColor = vec4(replace, 0., 0., 2.) * v_vColour;
 }

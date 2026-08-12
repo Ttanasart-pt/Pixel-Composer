@@ -175,5 +175,5 @@ void main() {
 	vec4 res = palette[closet_index];
 	if(alpha == 0) res.a = _col.a;
 	
-    gl_FragColor = res;
+    gl_FragColor = res * v_vColour;
 }

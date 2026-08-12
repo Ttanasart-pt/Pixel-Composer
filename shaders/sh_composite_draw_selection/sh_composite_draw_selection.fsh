@@ -36,5 +36,5 @@ void main() {
 	if(mod(px.x + px.y - time, size * 2.) < size)
 		i = 1. - i;
 	
-	gl_FragColor = vec4(i,i,i,a);
+	gl_FragColor = vec4(i,i,i,a) * v_vColour;
 }

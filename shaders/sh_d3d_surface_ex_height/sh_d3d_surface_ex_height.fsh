@@ -9,5 +9,5 @@ void main() {
 	float bri = (res.r + res.g + res.b) / 3. * res.a;
 	      bri = (bri - level.x) / (level.y - level.x);
 	
-	gl_FragColor = vec4(bri, bri, bri, 1.);
+	gl_FragColor = vec4(bri, bri, bri, 1.) * v_vColour;
 }

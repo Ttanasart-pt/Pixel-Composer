@@ -26,5 +26,5 @@ void main() {
 		grad.x * sin(ang) + grad.y * cos(ang)
 	);
 
-	gl_FragColor = vec4( grad, 0., 1. );
+	gl_FragColor = vec4( grad, 0., 1. ) * v_vColour;
 }

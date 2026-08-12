@@ -19,5 +19,5 @@ void main() {
 		val += pow(2., ind) * brg;// * dist * dist;
 	}
 	
-	gl_FragColor = vec4(val, 0., 0., 1.);
+	gl_FragColor = vec4(val, 0., 0., 1.) * v_vColour;
 }

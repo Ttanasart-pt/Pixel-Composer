@@ -24,5 +24,5 @@ void main() {
 	a = smoothstep(amount.x, amount.y, dist);
 	c = mix(c, color, a);
 	
-	gl_FragColor = c;
+	gl_FragColor = c * v_vColour;
 }

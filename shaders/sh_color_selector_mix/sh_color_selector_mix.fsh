@@ -9,5 +9,5 @@ void main() {
 	float _x = v_vTexcoord.x;
 	vec3 clr = mix(from.rgb, to.rgb, _x);
 	
-	gl_FragColor = vec4(clr, 1.);
+	gl_FragColor = vec4(clr, 1.) * v_vColour;
 }

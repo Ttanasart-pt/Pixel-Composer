@@ -22,5 +22,5 @@ void main() {
 	     clr   *= 1.8;
 	     clr.a  = (clr.r + clr.g + clr.b) / 3.;
 	
-    gl_FragColor = clr;
+    gl_FragColor = clr * v_vColour;
 }

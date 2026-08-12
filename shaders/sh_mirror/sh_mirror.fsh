@@ -37,5 +37,5 @@ void main() {
 	if(ps.x > 0. && ps.x < 1. && ps.y > 0. && ps.y < 1.)
 		cc += texture2D( gm_BaseTexture, ps );
 		
-	gl_FragData[0] = cc;
+	gl_FragData[0] = cc * v_vColour;
 }

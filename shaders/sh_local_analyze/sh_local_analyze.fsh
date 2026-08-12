@@ -121,7 +121,7 @@ void main() {
 				if(acc > mid1 && val1 == 0) val1 = i;
 				if(acc > mid2) { val2 = i; break; }
 			}
-			gl_FragColor = vec4(vec3(float(val1 + val2) / (255. * 2.)), 1.);
+			gl_FragColor = vec4(vec3(float(val1 + val2) / (255. * 2.)), 1.) * v_vColour;
 		}
 		
 	}

@@ -297,5 +297,5 @@ void main() {
 	vec2 tex  = v_vTexcoord * dimension + to * eff * str;
 	     tex /= dimension;
 	     
-    gl_FragColor = sampleTexture( gm_BaseTexture, tex );
+    gl_FragColor = sampleTexture( gm_BaseTexture, tex ) * v_vColour;
 }

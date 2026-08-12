@@ -130,7 +130,7 @@ void main() {
 		else if(!a1  && !a2  &&  a3  && 
 		        !a4  && !a5  &&  a6  && 
 		        !a7  && !a8  &&  a9  &&
-		         a22 &&  a23 &&  a24    ) gl_FragColor = s( x     ,  y * 2.);
+		         a22 &&  a23 &&  a24    ) gl_FragColor = s( x     ,  y * 2.) * v_vColour;
 		      
 		/////////////////////////////////////////////////////////////////////////////////////////////
 		   
@@ -190,7 +190,7 @@ void main() {
 		else if(!a4  && !a5  &&  a6  &&
 				!a7  && !a8  &&  a9  &&
 				!a22 && !a23 &&  a24 && 
-				 a37 &&  a29            ) gl_FragColor = s( x     ,  y * 2.);
+				 a37 &&  a29            ) gl_FragColor = s( x     ,  y * 2.) * v_vColour;
 		        
 		        
 	}

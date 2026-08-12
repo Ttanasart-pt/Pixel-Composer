@@ -123,5 +123,5 @@ void main() {
 		
 	}
 	
-	gl_FragColor = vec4(vec3(pass), 1.);
+	gl_FragColor = vec4(vec3(pass), 1.) * v_vColour;
 }

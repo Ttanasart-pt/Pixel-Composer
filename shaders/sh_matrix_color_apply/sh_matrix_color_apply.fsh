@@ -15,5 +15,5 @@ void main() {
 	cc.g = cb.r * matrix[3] + cb.g * matrix[4] + cb.b * matrix[5];
 	cc.b = cb.r * matrix[6] + cb.g * matrix[7] + cb.b * matrix[8];
 	
-	gl_FragColor = vec4(mix(cb.rgb, cc.rgb, intensity), cb.a);
+	gl_FragColor = vec4(mix(cb.rgb, cc.rgb, intensity), cb.a) * v_vColour;
 }

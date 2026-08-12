@@ -117,6 +117,6 @@ void main() {
         vec4 c = texture2D( gm_BaseTexture, uv.xy );
              c.a *= alp;
         
-        gl_FragColor = blend(gl_FragColor, c);
+        gl_FragColor = blend(gl_FragColor, c) * v_vColour;
     }
 }

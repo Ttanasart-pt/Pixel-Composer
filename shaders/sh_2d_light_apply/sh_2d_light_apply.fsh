@@ -11,5 +11,5 @@ void main() {
     
     b.rgb *= ambient.rgb;
     
-    gl_FragColor = vec4(b.rgb + l.rgb, b.a);
+    gl_FragColor = vec4(b.rgb + l.rgb, b.a) * v_vColour;
 }

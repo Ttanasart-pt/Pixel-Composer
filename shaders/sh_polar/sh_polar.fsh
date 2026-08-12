@@ -417,5 +417,5 @@ void main() {
 	
 	if(swap == 1) coord.xy = coord.yx;
 	
-	gl_FragColor = texture2Dintp( gm_BaseTexture, mix(v_vTexcoord, coord, bld) );
+	gl_FragColor = texture2Dintp( gm_BaseTexture, mix(v_vTexcoord, coord, bld) ) * v_vColour;
 }

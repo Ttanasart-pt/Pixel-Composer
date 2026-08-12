@@ -1,8 +1,14 @@
+#ifdef _YY_HLSL11_ 
+    #define POINT_MAX  1024
+#else 
+    #define POINT_MAX  256
+#endif
+
 varying vec2 v_vTexcoord;
 varying vec4 v_vColour;
 
 uniform vec2  dimension;
-uniform float index[1024];
+uniform float index[POINT_MAX];
 uniform int   axis;
 uniform int   shift;
 
@@ -22,6 +28,6 @@ void main() {
         int   ind = int(min(px.y, 1024.));
         float npy = mod(index[ind] + .5 + (shift == 1? px.x : 1.), dimension.y);
         
-        gl_FragColor = texture2D( gm_BaseTexture, vec2(v_vTexcoord.x, tx.y * npy) );
+        gl_FragColor = texture2D( gm_BaseTexture, vec2(v_vTexcoord.x, tx.y * npy) ) * v_vColour;
     }
 }

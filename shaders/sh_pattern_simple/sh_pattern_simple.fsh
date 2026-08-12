@@ -21,7 +21,7 @@ void main() {
 	vec2 patPos  = mod(px, patSize) + .5;
 	
 	vec4 patSamp = texture2D(pattern, patPos / patSize);
-	gl_FragColor = patSamp.r > .5? color2 : color1;
+	gl_FragColor = patSamp.r > .5? color2 : color1 * v_vColour;
 	
 	if(useMask == 1) {
 		vec4  m  = texture2D(mask, v_vTexcoord);

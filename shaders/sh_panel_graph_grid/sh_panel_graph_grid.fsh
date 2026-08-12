@@ -73,5 +73,5 @@ void main() {
 	
 	if(infx || infy) res.rgb = mix(bgContent.rgb, gridColor.rgb, alpha);
 	
-	gl_FragColor = res;
+	gl_FragColor = res * v_vColour;
 }

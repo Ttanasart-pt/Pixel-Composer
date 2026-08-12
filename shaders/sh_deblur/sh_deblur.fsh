@@ -135,7 +135,7 @@ void main() {
          if(method == 0) gl_FragColor = unsharpMask(uv);
     else if(method == 1) gl_FragColor = edgeEnhancement(uv);
     else if(method == 2) gl_FragColor = wienerFilter(uv);
-    else gl_FragColor = sampleTexture(gm_BaseTexture, uv);
+    else gl_FragColor = sampleTexture(gm_BaseTexture, uv) * v_vColour;
     
     gl_FragColor.a = sampleTexture(gm_BaseTexture, uv).a;
 }

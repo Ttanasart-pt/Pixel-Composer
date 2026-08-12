@@ -56,7 +56,7 @@ uniform vec4  borderColor;
 #define TAU 6.283185307179586
 
 void main() {
-	gl_FragColor = borderColor;
+	gl_FragColor = borderColor * v_vColour;
 	
 	vec2  tx    = v_vTexcoord - shift / dimension;
 	vec2  px    = tx * dimension;

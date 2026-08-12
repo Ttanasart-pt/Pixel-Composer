@@ -43,5 +43,5 @@ void main() {
 		else if(high == 3) cc = highlight_b;
 	}
 	
-	gl_FragColor = cc;
+	gl_FragColor = cc * v_vColour;
 }

@@ -173,5 +173,5 @@ void main() {
 	vec4  c    = sampleTexture(gm_BaseTexture, sptx);
 	
 	gl_FragColor = vec4(0.);
-	if(d > trim) gl_FragColor = c;
+	if(d > trim) gl_FragColor = c * v_vColour;
 }

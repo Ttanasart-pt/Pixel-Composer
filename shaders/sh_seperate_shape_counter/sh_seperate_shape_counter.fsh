@@ -44,5 +44,5 @@ void main() {
 		amo++;
 	}
 	
-	if(floor(pxPos.x) == 0.) gl_FragColor = vec4(amo, 0., 0., 0.);
+	if(floor(pxPos.x) == 0.) gl_FragColor = vec4(amo, 0., 0., 0.) * v_vColour;
 }

@@ -10,5 +10,5 @@ void main() {
 	vec4 _col0 = texture2D( gm_BaseTexture, v_vTexcoord );
 	vec4 _col1 = texture2D( fore, v_vTexcoord );
 	_col0.a -= _col1.a;
-	gl_FragColor = _col0;
+	gl_FragColor = _col0 * v_vColour;
 }

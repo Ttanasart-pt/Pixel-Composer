@@ -532,5 +532,5 @@ void main() {
 	if(mod(floor(ps.x), 2.) > 1.) ps.x = 1. - ps.x;
 	if(mod(floor(ps.y), 2.) > 1.) ps.y = 1. - ps.y;
 	
-	gl_FragColor = sampleTexture( gm_BaseTexture, ps );
+	gl_FragColor = sampleTexture( gm_BaseTexture, ps ) * v_vColour;
 }

@@ -431,5 +431,5 @@ void main() {
 	if(w == 0.) res.rgb = vec3(wtarget);
 	else res.rgb *= wtarget / w;
 	
-	gl_FragColor = res;
+	gl_FragColor = res * v_vColour;
 }

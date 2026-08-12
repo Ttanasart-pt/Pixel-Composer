@@ -1,3 +1,10 @@
+
+#ifdef _YY_HLSL11_ 
+    #define POINT_MAX  1024
+#else 
+    #define POINT_MAX  256
+#endif
+
 varying vec2 v_vTexcoord;
 varying vec4 v_vColour;
 
@@ -10,11 +17,11 @@ uniform int   bothSide;
 uniform vec2  point1;
 uniform vec2  point2;
 
-uniform float pathData[1024];
+uniform float pathData[POINT_MAX];
 uniform int   pathSample;
 
 uniform int   useExpath;
-uniform float expathData[1024];
+uniform float expathData[POINT_MAX];
 uniform int   expathSample;
 
 uniform int   useNormal;
@@ -326,6 +333,6 @@ void main() {
 	
 	vec2 pos = rayHit + (dist - _exLength) * dir;
 	
-	gl_FragData[0] = texture2D(gm_BaseTexture, pos);
+	gl_FragData[0] = texture2D(gm_BaseTexture, pos) * v_vColour;
 	gl_FragData[1] = vec4(0.);
 }

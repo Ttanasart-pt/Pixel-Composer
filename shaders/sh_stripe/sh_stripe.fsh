@@ -292,7 +292,7 @@ void main() {
 			vec4  c0  = _s > rat? palette[ind] : palette[int(mod(float(ind - 1 + paletteAmount), float(paletteAmount)))];
 			vec4  c1  = _s > rat? palette[int(mod(float(ind + 1), float(paletteAmount)))] : palette[ind];
 			
-			gl_FragColor = mix(c0, c1, _s > rat? _s - rat : _s + (1. - rat));
+			gl_FragColor = mix(c0, c1, _s > rat? _s - rat : _s + (1. - rat)) * v_vColour;
 			
 		}
 		

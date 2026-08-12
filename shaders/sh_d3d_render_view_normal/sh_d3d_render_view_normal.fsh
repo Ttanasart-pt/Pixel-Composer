@@ -13,5 +13,5 @@ void main() {
 	norm.y = 1. - norm.y;
 	norm.z = 1. - norm.z;
 	
-	gl_FragColor = vec4(norm, viewNorm.a);
+	gl_FragColor = vec4(norm, viewNorm.a) * v_vColour;
 }

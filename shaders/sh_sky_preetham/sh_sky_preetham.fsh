@@ -164,5 +164,5 @@ void main() {
     vec3 viewDir      = -computeSphericalCoordinates( uv ).xzy;
     vec3 skyLuminance = calculateSkyLuminanceRGB( sunDir, viewDir, turb );
     
-    gl_FragColor = vec4( skyLuminance * 0.05, 1.0 );
+    gl_FragColor = vec4( skyLuminance * 0.05, 1.0 ) * v_vColour;
 }

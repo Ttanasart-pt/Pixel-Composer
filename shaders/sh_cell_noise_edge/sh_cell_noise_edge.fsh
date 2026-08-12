@@ -189,5 +189,5 @@ void main() {
 	      c = applyLevel(c);
 	if(inverted == 1) c = 1. - c;
 	
-    gl_FragColor = vec4(vec3(c), 1.0);
+    gl_FragColor = vec4(vec3(c), 1.0) * v_vColour;
 }

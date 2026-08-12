@@ -134,5 +134,5 @@ void main() {
 	}
     
 	vec4 cs = pbPattern(pattern, v_vTexcoord, pattern_pos, pattern_scale, cc);
-	gl_FragColor = cs;
+	gl_FragColor = cs * v_vColour;
 }

@@ -46,5 +46,5 @@ vec4 textureNoTile( in vec2 uv, float v ) {
 void main() {
 	vec2 uv = v_vTexcoord * scale;
 	
-    gl_FragColor = textureNoTile( uv, blend );
+    gl_FragColor = textureNoTile( uv, blend ) * v_vColour;
 }

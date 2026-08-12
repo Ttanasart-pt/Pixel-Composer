@@ -20,14 +20,14 @@ void main() {
 	if(a < 0.) a = 2. + a;
 	a /= 2.;
 	
-	c = texture2D( gm_BaseTexture, v_vTexcoord + vec2(-tx.x, -tx.y) ).r; if(c == 0.) { gl_FragColor = vec4(a, 0., 0., 1.); return; }
-	c = texture2D( gm_BaseTexture, v_vTexcoord + vec2(   0., -tx.y) ).r; if(c == 0.) { gl_FragColor = vec4(a, 0., 0., 1.); return; }
-	c = texture2D( gm_BaseTexture, v_vTexcoord + vec2( tx.x, -tx.y) ).r; if(c == 0.) { gl_FragColor = vec4(a, 0., 0., 1.); return; }
+	c = texture2D( gm_BaseTexture, v_vTexcoord + vec2(-tx.x, -tx.y) ).r; if(c == 0.) { gl_FragColor = vec4(a, 0., 0., 1.) * v_vColour; return; }
+	c = texture2D( gm_BaseTexture, v_vTexcoord + vec2(   0., -tx.y) ).r; if(c == 0.) { gl_FragColor = vec4(a, 0., 0., 1.) * v_vColour; return; }
+	c = texture2D( gm_BaseTexture, v_vTexcoord + vec2( tx.x, -tx.y) ).r; if(c == 0.) { gl_FragColor = vec4(a, 0., 0., 1.) * v_vColour; return; }
 	
-	c = texture2D( gm_BaseTexture, v_vTexcoord + vec2(-tx.x,    0.) ).r; if(c == 0.) { gl_FragColor = vec4(a, 0., 0., 1.); return; }
-	c = texture2D( gm_BaseTexture, v_vTexcoord + vec2( tx.x,    0.) ).r; if(c == 0.) { gl_FragColor = vec4(a, 0., 0., 1.); return; }
+	c = texture2D( gm_BaseTexture, v_vTexcoord + vec2(-tx.x,    0.) ).r; if(c == 0.) { gl_FragColor = vec4(a, 0., 0., 1.) * v_vColour; return; }
+	c = texture2D( gm_BaseTexture, v_vTexcoord + vec2( tx.x,    0.) ).r; if(c == 0.) { gl_FragColor = vec4(a, 0., 0., 1.) * v_vColour; return; }
 	
-	c = texture2D( gm_BaseTexture, v_vTexcoord + vec2(-tx.x,  tx.y) ).r; if(c == 0.) { gl_FragColor = vec4(a, 0., 0., 1.); return; }
-	c = texture2D( gm_BaseTexture, v_vTexcoord + vec2(   0.,  tx.y) ).r; if(c == 0.) { gl_FragColor = vec4(a, 0., 0., 1.); return; }
-	c = texture2D( gm_BaseTexture, v_vTexcoord + vec2( tx.x,  tx.y) ).r; if(c == 0.) { gl_FragColor = vec4(a, 0., 0., 1.); return; }
+	c = texture2D( gm_BaseTexture, v_vTexcoord + vec2(-tx.x,  tx.y) ).r; if(c == 0.) { gl_FragColor = vec4(a, 0., 0., 1.) * v_vColour; return; }
+	c = texture2D( gm_BaseTexture, v_vTexcoord + vec2(   0.,  tx.y) ).r; if(c == 0.) { gl_FragColor = vec4(a, 0., 0., 1.) * v_vColour; return; }
+	c = texture2D( gm_BaseTexture, v_vTexcoord + vec2( tx.x,  tx.y) ).r; if(c == 0.) { gl_FragColor = vec4(a, 0., 0., 1.) * v_vColour; return; }
 }

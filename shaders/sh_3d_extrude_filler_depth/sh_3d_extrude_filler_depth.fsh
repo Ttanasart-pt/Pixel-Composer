@@ -24,5 +24,5 @@ void main() {
 	if(_c == 0 && _c0 + _c1 + _c2 + _c3 >= 3) {
 		gl_FragColor   = max(c0, max(c1, max(c2, c3)));
 	} else 
-		gl_FragColor = c;
+		gl_FragColor = c * v_vColour;
 }

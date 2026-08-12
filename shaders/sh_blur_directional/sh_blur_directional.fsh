@@ -420,5 +420,5 @@ void main() {
     float r   = radians(dir + 90.);
     vec2 dirr = vec2(sin(r), cos(r)) * str;
     
-    gl_FragColor = dirBlur(dirr);
+    gl_FragColor = dirBlur(dirr) * v_vColour;
 }

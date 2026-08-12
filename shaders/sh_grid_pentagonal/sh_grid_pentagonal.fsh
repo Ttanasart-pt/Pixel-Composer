@@ -335,5 +335,5 @@ void main() {
 	}
 	
 	float _aa = 4. / max(dimension.x, dimension.y);
-    gl_FragColor = mix(gapCol, colr, aa == 1? smoothstep(wid - _aa, wid, dist) : step(wid, dist));
+    gl_FragColor = mix(gapCol, colr, aa == 1? smoothstep(wid - _aa, wid, dist) : step(wid, dist)) * v_vColour;
 }

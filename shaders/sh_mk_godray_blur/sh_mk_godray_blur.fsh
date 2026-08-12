@@ -61,5 +61,5 @@ void main() {
 		lightVal /= weightTo;
 	lightVal.a = max(lightVal.a, 0.);
 	
-	gl_FragColor = lightVal;
+	gl_FragColor = lightVal * v_vColour;
 }

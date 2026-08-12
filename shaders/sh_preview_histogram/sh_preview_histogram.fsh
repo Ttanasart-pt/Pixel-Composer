@@ -35,7 +35,7 @@ void main() {
     float gs = 1. - g / (DIM * DIM);
     float bs = 1. - b / (DIM * DIM);
     
-    gl_FragData[0] = vec4(step(ws, v_vTexcoord.y));
+    gl_FragData[0] = vec4(step(ws, v_vTexcoord.y)) * v_vColour;
     gl_FragData[1] = vec4(step(rs, v_vTexcoord.y));
     gl_FragData[2] = vec4(step(gs, v_vTexcoord.y));
     gl_FragData[3] = vec4(step(bs, v_vTexcoord.y));

@@ -37,11 +37,11 @@ void main() {
 	
 	if(channels == 0) {
 		vec3 clr = (cc.rgb - _lmin) / (_lmax - _lmin);
-		gl_FragColor = vec4(clr, cc.a);
+		gl_FragColor = vec4(clr, cc.a) * v_vColour;
 		
 	} else {
 		vec3 clr = (cc.rgb - _cmin) / (_cmax - _cmin);
-		gl_FragColor = vec4(clr, cc.a);
+		gl_FragColor = vec4(clr, cc.a) * v_vColour;
 		
 	}
 	

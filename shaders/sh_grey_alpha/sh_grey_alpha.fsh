@@ -153,5 +153,5 @@ void main() {
     if(invert == 1) b = 1. - b;
     
 	if(replace == 0) gl_FragColor = vec4(col.rgb, b);
-	else			 gl_FragColor = vec4(color.rgb, b * color.a);
+	else			 gl_FragColor = vec4(color.rgb, b * color.a) * v_vColour;
 }

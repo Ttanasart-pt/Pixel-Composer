@@ -18,5 +18,5 @@ void main() {
 		gl_FragColor = vec4(0., 0., 0., 1.);
 	
 	if(sc == 0. && (st != 0. || sb != 0. || sl != 0. || sr != 0.))
-		gl_FragColor = vec4(1., 1., 1., 1.);
+		gl_FragColor = vec4(1., 1., 1., 1.) * v_vColour;
 }

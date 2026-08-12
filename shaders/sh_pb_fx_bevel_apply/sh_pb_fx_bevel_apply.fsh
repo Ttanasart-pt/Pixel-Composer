@@ -24,13 +24,13 @@ void main() {
     	
     	if(highlightAll == 0) {
 			vec2 hig = vec2(cos(highlightDir), -sin(highlightDir));
-			hsm = val(texture2D(insideSurf, v_vTexcoord + hig * tx)) == 0.; if(hsm) gl_FragColor = highlightColor;
+			hsm = val(texture2D(insideSurf, v_vTexcoord + hig * tx)) == 0.; if(hsm) gl_FragColor = highlightColor * v_vColour;
 			
     	} else {
-    		hsm = val(texture2D(insideSurf, v_vTexcoord + vec2(tx.x, 0.))) == 0.; if(hsm) gl_FragColor = highlightColor;
-			hsm = val(texture2D(insideSurf, v_vTexcoord - vec2(tx.x, 0.))) == 0.; if(hsm) gl_FragColor = highlightColor;
-			hsm = val(texture2D(insideSurf, v_vTexcoord + vec2(0., tx.y))) == 0.; if(hsm) gl_FragColor = highlightColor;
-			hsm = val(texture2D(insideSurf, v_vTexcoord - vec2(0., tx.y))) == 0.; if(hsm) gl_FragColor = highlightColor;
+    		hsm = val(texture2D(insideSurf, v_vTexcoord + vec2(tx.x, 0.))) == 0.; if(hsm) gl_FragColor = highlightColor * v_vColour;
+			hsm = val(texture2D(insideSurf, v_vTexcoord - vec2(tx.x, 0.))) == 0.; if(hsm) gl_FragColor = highlightColor * v_vColour;
+			hsm = val(texture2D(insideSurf, v_vTexcoord + vec2(0., tx.y))) == 0.; if(hsm) gl_FragColor = highlightColor * v_vColour;
+			hsm = val(texture2D(insideSurf, v_vTexcoord - vec2(0., tx.y))) == 0.; if(hsm) gl_FragColor = highlightColor * v_vColour;
     	}
 	}
 	

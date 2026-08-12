@@ -17,5 +17,5 @@ uniform float replaceChange;
 float random (in vec2 st, float seed) { return fract(sin(dot(st.xy + seed / 1000., vec2(1892.9898, 78.23453))) * 437.54123); }
 
 void main() {
-	gl_FragColor = texture2D(gm_BaseTexture, v_vTexcoord);
+	gl_FragColor = texture2D(gm_BaseTexture, v_vTexcoord) * v_vColour;
 }

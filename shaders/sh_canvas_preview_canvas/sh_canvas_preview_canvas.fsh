@@ -65,5 +65,5 @@ void main() {
 		}
 	}
 	
-	gl_FragColor = res;
+	gl_FragColor = res * v_vColour;
 }

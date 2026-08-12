@@ -14,7 +14,7 @@ void main() {
 		vec4 repCol = texture2D( replace, res.rg );
 		if(repCol.a <= 0.) return;
 		
-		gl_FragData[0] = repCol;
+		gl_FragData[0] = repCol * v_vColour;
 		gl_FragData[1] = vec4(1.);
 	}
 }

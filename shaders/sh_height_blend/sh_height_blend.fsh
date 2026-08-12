@@ -67,5 +67,5 @@ void main() {
 	
 	float rr = mode == 0? 1. - hg : hg;
 	
-	gl_FragColor = vec4(vec3(rr), aa);
+	gl_FragColor = vec4(vec3(rr), aa) * v_vColour;
 }

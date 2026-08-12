@@ -35,6 +35,6 @@ void main() {
 	
 	gl_FragColor = vec4(0.);
 	if(angleIn(ang, arcRad.x, arcRad.y))
-		gl_FragColor = vec4(color.rgb, color.a * a);
+		gl_FragColor = vec4(color.rgb, color.a * a) * v_vColour;
 	
 }

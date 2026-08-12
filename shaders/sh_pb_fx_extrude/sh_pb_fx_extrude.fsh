@@ -21,7 +21,7 @@ uniform vec4  highlightColor;
 void main() {
 	vec2 tx = 1. / dimension;
 	vec4 cc = texture2D(gm_BaseTexture, v_vTexcoord);
-	gl_FragColor = cc;
+	gl_FragColor = cc * v_vColour;
 	
 	if(cc.a != 0.) {
 		if(highlight == 1) {
@@ -83,5 +83,5 @@ void main() {
 		}
 	}
 	
-	gl_FragColor = cc;
+	gl_FragColor = cc * v_vColour;
 }

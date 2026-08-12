@@ -33,5 +33,5 @@ void main() {
 	float b = (useB == 1)? sample(texture2D( samplerB, v_vTexcoord ), 2) : bse;
 	float a = (useA == 1)? sample(texture2D( samplerA, v_vTexcoord ), 3) : 1.;
 	
-	gl_FragColor = vec4(r, g, b, a);
+	gl_FragColor = vec4(r, g, b, a) * v_vColour;
 }

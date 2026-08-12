@@ -210,5 +210,5 @@ void main() {
     
     if(blendMode == 1) smpb = samp * base;
     
-    gl_FragColor = mix(samp, smpb, blendIntensity);
+    gl_FragColor = mix(samp, smpb, blendIntensity) * v_vColour;
 }

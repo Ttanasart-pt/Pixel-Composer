@@ -304,5 +304,5 @@ void main() {
 	} else if(externalForceType == 1)
 		txpos += extF * vec2(-cos(extR), sin(extR)) / iter / 10.;
 	
-    gl_FragColor = sampleTexture( gm_BaseTexture, txpos);
+    gl_FragColor = sampleTexture( gm_BaseTexture, txpos) * v_vColour;
 }

@@ -144,5 +144,5 @@ void main() {
 	if(keepAlpha == 1) res.a = base.a;
 	
 	if(invert == 1) res = 1. - res;
-	gl_FragColor = res;
+	gl_FragColor = res * v_vColour;
 }

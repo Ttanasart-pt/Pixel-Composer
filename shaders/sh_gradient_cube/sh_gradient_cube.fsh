@@ -158,7 +158,7 @@ void main() {
 	if(axis == 2) hitPos.xyz = hitPos.zxy;
 	hitPos = objRotMatrix * hitPos * shapeScale;
 	
-	gl_FragData[0] = vec4(sample3D(hitPos).rgb, hit? 1. : 0.);
+	gl_FragData[0] = vec4(sample3D(hitPos).rgb, hit? 1. : 0.) * v_vColour;
 	
 	vec3 crossPos = vec3(0.);
 	if(crossAxis == 0) crossPos = vec3(crossPosition, v_vTexcoord.x, v_vTexcoord.y);

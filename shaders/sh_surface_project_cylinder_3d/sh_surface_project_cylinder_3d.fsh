@@ -300,11 +300,11 @@ void main() {
     vec3 hitPos = (ro + rd * ft) * voxSize;
     vec3 samPos = hitPos * .5 + .5;
     
-    if(sTop_use == 0) gl_FragData[0] = texture2D(sProfile, hitUV);
+    if(sTop_use == 0) gl_FragData[0] = texture2D(sProfile, hitUV) * v_vColour;
     else              gl_FragData[0] = texture2D(sTop, samPos.xz);
     
     // gl_FragData[0].a = 1.;
-    gl_FragData[0] = texture2D(sProfile, hitUV);
+    gl_FragData[0] = texture2D(sProfile, hitUV) * v_vColour;
     if(sTop_use == 1) {
     	vec4 samT = texture2D(sTop, samPos.xz);
     	if(samT.a > 0.) gl_FragData[0] *= samT;

@@ -17,7 +17,7 @@ void main() {
 	for(float j = 0.; j <= sampler.y; j++) {
 		vec4 col = texture2D( gm_BaseTexture, pos + vec2(i, j) / dimension);
 		if(col.a > 0.) {
-			gl_FragColor = vec4(1.);
+			gl_FragColor = vec4(1.) * v_vColour;
 			return;
 		}
 	}

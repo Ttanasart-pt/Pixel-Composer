@@ -80,5 +80,5 @@ void main() {
 	vec4 f8 = sampleTexture( gm_BaseTexture, v_vTexcoord + vec2( tx.x,  tx.y) );
 	
     vec4 clr = (f0 + f1 + f2 + f3 + f4 + f5 + f6 + f7 + f8) / 9.;
-    gl_FragColor = vec4(clr.rgb * clr.a * dis, 1.);
+    gl_FragColor = vec4(clr.rgb * clr.a * dis, 1.) * v_vColour;
 }

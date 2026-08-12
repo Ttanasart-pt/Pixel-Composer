@@ -273,5 +273,5 @@ void main() {
 	if(pCurve_curve_use == 1) prog = curveEval(pCurve_curve, pCurve_amount, prog);
 	
 	vec3 col = pal(prog, _a, _b, _c, _d);
-	gl_FragColor = vec4(col, 1.);
+	gl_FragColor = vec4(col, 1.) * v_vColour;
 }

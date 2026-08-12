@@ -61,5 +61,5 @@ void main() {
 	color  += lightColor * reflec;
 	color.a = gem.a;
 	
-	gl_FragData[0] = color;
+	gl_FragData[0] = color * v_vColour;
 }

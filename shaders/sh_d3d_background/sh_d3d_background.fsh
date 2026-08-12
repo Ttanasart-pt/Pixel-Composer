@@ -20,7 +20,7 @@ void main() {
 	if(env_use_mapping == 1) {
 		vec3  viewDirection = normalize(cameraPosition - v_worldPosition.xyz);
 		vec2  viewSample    = equirectangularUv(viewDirection);
-		gl_FragColor = light_ambient * texture2D(env_map, viewSample);
+		gl_FragColor = light_ambient * v_vColour * texture2D(env_map, viewSample);
 	} else 
-		gl_FragColor = light_ambient;
+		gl_FragColor = light_ambient * v_vColour;
 }

@@ -7,7 +7,7 @@ uniform float expands;
 void main() {
 	vec2 tx = 1. / dimension;
 	float w = texture2D(gm_BaseTexture, v_vTexcoord).r;
-	gl_FragColor = vec4(w, 0., 0., 1.);
+	gl_FragColor = vec4(w, 0., 0., 1.) * v_vColour;
 	
 	if(w == 1.) return;
 	
@@ -18,7 +18,7 @@ void main() {
 		
 		w = texture2D(gm_BaseTexture, sx).r;
 		if(w > 0.) {
-			gl_FragColor = vec4(w, 0., 0., 1.);
+			gl_FragColor = vec4(w, 0., 0., 1.) * v_vColour;
 			return;
 		}
 	}

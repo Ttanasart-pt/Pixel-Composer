@@ -21,19 +21,19 @@ void main() {
 	if(thickness <= 0.) {
 		samp = texture2D(gm_BaseTexture, v_vTexcoord + vec2(tx.x, 0.));
 		if(side == 0 && samp.a >  0.) { gl_FragColor = mix(        samp, colr, color.a); return; }
-		if(side == 1 && samp.a == 0.) { gl_FragColor = mix(gl_FragColor, colr, color.a); return; }
+		if(side == 1 && samp.a == 0.) { gl_FragColor = mix(gl_FragColor, colr, color.a) * v_vColour; return; }
 		
 		samp = texture2D(gm_BaseTexture, v_vTexcoord + vec2(0., tx.y));
 		if(side == 0 && samp.a >  0.) { gl_FragColor = mix(        samp, colr, color.a); return; }
-		if(side == 1 && samp.a == 0.) { gl_FragColor = mix(gl_FragColor, colr, color.a); return; }
+		if(side == 1 && samp.a == 0.) { gl_FragColor = mix(gl_FragColor, colr, color.a) * v_vColour; return; }
 		
 		samp = texture2D(gm_BaseTexture, v_vTexcoord - vec2(tx.x, 0.));
 		if(side == 0 && samp.a >  0.) { gl_FragColor = mix(        samp, colr, color.a); return; }
-		if(side == 1 && samp.a == 0.) { gl_FragColor = mix(gl_FragColor, colr, color.a); return; }
+		if(side == 1 && samp.a == 0.) { gl_FragColor = mix(gl_FragColor, colr, color.a) * v_vColour; return; }
 		
 		samp = texture2D(gm_BaseTexture, v_vTexcoord - vec2(0., tx.y));
 		if(side == 0 && samp.a >  0.) { gl_FragColor = mix(        samp, colr, color.a); return; }
-		if(side == 1 && samp.a == 0.) { gl_FragColor = mix(gl_FragColor, colr, color.a); return; }
+		if(side == 1 && samp.a == 0.) { gl_FragColor = mix(gl_FragColor, colr, color.a) * v_vColour; return; }
 		
 		return;
 	}
@@ -45,7 +45,7 @@ void main() {
 		
 		samp = texture2D(gm_BaseTexture, v_vTexcoord + offs);
 		if(side == 0 && samp.a >  0.) { gl_FragColor = mix(        samp, colr, color.a); return; }
-		if(side == 1 && samp.a == 0.) { gl_FragColor = mix(gl_FragColor, colr, color.a); return; }
+		if(side == 1 && samp.a == 0.) { gl_FragColor = mix(gl_FragColor, colr, color.a) * v_vColour; return; }
 	}
 	
 }

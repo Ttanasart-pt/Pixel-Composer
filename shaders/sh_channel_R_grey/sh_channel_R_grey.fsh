@@ -8,5 +8,5 @@ uniform int keepAlpha;
 
 void main() {
 	vec4 col = texture2D( gm_BaseTexture, v_vTexcoord);
-    gl_FragColor = vec4(col.r, col.r, col.r, keepAlpha == 1? col.a : 1.);
+    gl_FragColor = vec4(col.r, col.r, col.r, keepAlpha == 1? col.a : 1.) * v_vColour;
 }

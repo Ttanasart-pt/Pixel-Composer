@@ -108,5 +108,5 @@ void main() {
 	float w  = WaveletNoise(pos * 5., (2.9864 + prog), detl) * .5 + .5; 
 	      w  = applyLevel(w);
     
-    gl_FragColor = vec4(vec3(w), 1.0);
+    gl_FragColor = vec4(vec3(w), 1.0) * v_vColour;
 }

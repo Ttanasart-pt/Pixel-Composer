@@ -9,5 +9,5 @@ void main() {
 	float m = alpha == 1? c.a : (c.r + c.g + c.b) / 3.;
 	if(invert == 1) m = 1. - m;
 	
-    gl_FragColor = alpha == 0? vec4(m, m, m, c.a) : vec4(1., 1., 1., m);
+    gl_FragColor = alpha == 0? vec4(m, m, m, c.a) : vec4(1., 1., 1., m) * v_vColour;
 }

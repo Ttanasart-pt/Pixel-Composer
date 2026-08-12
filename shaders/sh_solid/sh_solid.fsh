@@ -23,5 +23,5 @@ void main() {
 		res.a *= msk;
 	}
 	
-	gl_FragColor = res;
+	gl_FragColor = res * v_vColour;
 }

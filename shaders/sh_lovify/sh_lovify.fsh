@@ -22,5 +22,5 @@ void main() {
 	vec4 blend = lum > 0.5? (1. - (1. - 2. * (b - 0.5)) * (1. - c)) : ((2. * b) * c);
 	     blend = 0.5 + (blend * 1.75 - 0.5) * 0.66;
 		 
-    gl_FragColor = blend;
+    gl_FragColor = blend * v_vColour;
 }

@@ -98,5 +98,5 @@ void main() {
 	if(tileTx.x < 0. || tileTx.y < 0. || tileTx.x > 1. || tileTx.y > 1.)
 		 gl_FragColor = vec4(0.);
 		 
-	else gl_FragColor = texture2D(gm_BaseTexture, tileTx);
+	else gl_FragColor = texture2D(gm_BaseTexture, tileTx) * v_vColour;
 }

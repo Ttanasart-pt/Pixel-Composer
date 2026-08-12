@@ -27,5 +27,5 @@ void main() {
 	alp = max(alp, smoothstep(2. / side, .5 / side, dist));
 	alp = max(alp, smoothstep(2. / side, .5 / side, line_segment(angle)));
 	
-	gl_FragColor = vec4(color.rgb, alp);
+	gl_FragColor = vec4(color.rgb, alp) * v_vColour;
 }

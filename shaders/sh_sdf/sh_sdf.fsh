@@ -105,5 +105,5 @@ void main() {
 		}
 	}
 	
-	gl_FragColor = vec4(closetPoint, c, 1.);
+	gl_FragColor = vec4(closetPoint, c, 1.) * v_vColour;
 }

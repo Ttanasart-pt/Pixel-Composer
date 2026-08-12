@@ -174,5 +174,5 @@ void main() {
 	}
 	
 	if(mode == 2) cc.a = bc.a;
-	gl_FragColor = cc;
+	gl_FragColor = cc * v_vColour;
 }

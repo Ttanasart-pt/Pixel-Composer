@@ -64,5 +64,5 @@ void main() {
     
     float j = float(julia(px)) / float(iteration);
     
-    gl_FragColor = vec4(vec3(j), 1.);
+    gl_FragColor = vec4(vec3(j), 1.) * v_vColour;
 }

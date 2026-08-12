@@ -323,5 +323,5 @@ void main() {
     vec4 res = colr / alpha;
     if(gamma == 1) res.rgb = pow(res.rgb, vec3(1. / 2.2));
     
-    gl_FragColor = res;
+    gl_FragColor = res * v_vColour;
 }

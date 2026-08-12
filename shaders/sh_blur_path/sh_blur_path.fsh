@@ -1,5 +1,4 @@
 #pragma use(gradient)
-
 #region -- gradient -- [1786510427.8689222]
 	#ifdef _YY_HLSL11_ 
         #define GRADIENT_LIMIT 128
@@ -145,8 +144,8 @@
 	}
 	
 #endregion -- gradient --
-#pragma use(sampler_simple)
 
+#pragma use(sampler_simple)
 #region -- sampler_simple -- [1765194569.6586206]
     uniform int  sampleMode;
     
@@ -190,8 +189,8 @@
     }
     vec4 sampleTexture( sampler2D texture, vec2 pos) { return sampleTexture(texture, pos, 0.); }
 #endregion -- sampler_simple --
-#pragma use(curve)
 
+#pragma use(curve)
 #region -- curve -- [1786510425.6316042]
 
     #ifdef _YY_HLSL11_ 
@@ -395,5 +394,5 @@ void main() {
 	    p.a   /= x;
     }
     
-    gl_FragColor = p;
+    gl_FragColor = p * v_vColour;
 }

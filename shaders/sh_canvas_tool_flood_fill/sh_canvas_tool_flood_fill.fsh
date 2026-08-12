@@ -28,7 +28,7 @@ void main() {
 		s = texture2D(baseSurface,    px);
 		
 		if(distance(s, baseColor) > threshold) break;
-		if(f.a > 0.) { gl_FragColor = vec4(1.); return; }
+		if(f.a > 0.) { gl_FragColor = vec4(1.) * v_vColour; return; }
 	}
 	
 	for(float i = 1.; i <= span; i++) {
@@ -38,7 +38,7 @@ void main() {
 		s = texture2D(baseSurface,    px);
 		
 		if(distance(s, baseColor) > threshold) break;
-		if(f.a > 0.) { gl_FragColor = vec4(1.); return; }
+		if(f.a > 0.) { gl_FragColor = vec4(1.) * v_vColour; return; }
 	}
 	
 	for(float i = 1.; i <= span; i++) {
@@ -48,7 +48,7 @@ void main() {
 		s = texture2D(baseSurface,    px);
 		
 		if(distance(s, baseColor) > threshold) break;
-		if(f.a > 0.) { gl_FragColor = vec4(1.); return; }
+		if(f.a > 0.) { gl_FragColor = vec4(1.) * v_vColour; return; }
 	}
 	
 	for(float i = 1.; i <= span; i++) {
@@ -58,7 +58,7 @@ void main() {
 		s = texture2D(baseSurface,    px);
 		
 		if(distance(s, baseColor) > threshold) break;
-		if(f.a > 0.) { gl_FragColor = vec4(1.); return; }
+		if(f.a > 0.) { gl_FragColor = vec4(1.) * v_vColour; return; }
 	}
 	
 	if(diagonal == 0) return;
@@ -70,7 +70,7 @@ void main() {
 		s = texture2D(baseSurface,    px);
 		
 		if(distance(s, baseColor) > threshold) break;
-		if(f.a > 0.) { gl_FragColor = vec4(1.); return; }
+		if(f.a > 0.) { gl_FragColor = vec4(1.) * v_vColour; return; }
 	}
 	
 	for(float i = 1.; i <= span; i++) {
@@ -80,7 +80,7 @@ void main() {
 		s = texture2D(baseSurface,    px);
 		
 		if(distance(s, baseColor) > threshold) break;
-		if(f.a > 0.) { gl_FragColor = vec4(1.); return; }
+		if(f.a > 0.) { gl_FragColor = vec4(1.) * v_vColour; return; }
 	}
 	
 	for(float i = 1.; i <= span; i++) {
@@ -90,7 +90,7 @@ void main() {
 		s = texture2D(baseSurface,    px);
 		
 		if(distance(s, baseColor) > threshold) break;
-		if(f.a > 0.) { gl_FragColor = vec4(1.); return; }
+		if(f.a > 0.) { gl_FragColor = vec4(1.) * v_vColour; return; }
 	}
 	
 	for(float i = 1.; i <= span; i++) {
@@ -100,7 +100,7 @@ void main() {
 		s = texture2D(baseSurface,    px);
 		
 		if(distance(s, baseColor) > threshold) break;
-		if(f.a > 0.) { gl_FragColor = vec4(1.); return; }
+		if(f.a > 0.) { gl_FragColor = vec4(1.) * v_vColour; return; }
 	}
 	
 }

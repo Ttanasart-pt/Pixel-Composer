@@ -51,5 +51,5 @@ void main() {
 	    // cc = vec3(abs(vct) * 8., 0.) * step(.1, dist);
     }
     
-    gl_FragColor = vec4(cc, aa);
+    gl_FragColor = vec4(cc, aa) * v_vColour;
 }

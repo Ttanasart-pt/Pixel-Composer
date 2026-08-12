@@ -11,5 +11,5 @@ void main() {
 	light.a = max(light.a, 0.);
 	light.rgb *= light.a;
 	
-	gl_FragColor = base + light;
+	gl_FragColor = base + light * v_vColour;
 }

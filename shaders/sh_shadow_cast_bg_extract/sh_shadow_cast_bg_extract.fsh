@@ -9,5 +9,5 @@ void main() {
 	gl_FragColor = vec4(0.);
 	
 	if(distance(base.rgb * base.a, refColor.rgb * refColor.a) >= threshold)
-		gl_FragColor = vec4(1.);
+		gl_FragColor = vec4(1.) * v_vColour;
 }

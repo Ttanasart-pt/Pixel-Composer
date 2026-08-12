@@ -1,3 +1,9 @@
+#ifdef _YY_HLSL11_ 
+    #define POINT_MAX  1024
+#else 
+    #define POINT_MAX  256
+#endif
+
 varying vec2 v_vTexcoord;
 varying vec4 v_vColour;
 
@@ -10,7 +16,7 @@ uniform vec2 tileTextureDim;
 uniform sampler2D indexTexture;
 uniform vec2 indexTextureDim;
 
-uniform int animatedTiles[1024];
+uniform int animatedTiles[POINT_MAX];
 uniform int animatedTilesIndex[128];
 uniform int animatedTilesLength[128];
 uniform float frame;
@@ -60,5 +66,5 @@ void main() {
     if(mRot   == 3) tileTx = vec2(1. - tileTx.y, tileTx.x);
     
     vec2  samTx = texTx + tileTx * tileSize;
-    gl_FragColor = texture2D( tileTexture, samTx / tileTextureDim );
+    gl_FragColor = texture2D( tileTexture, samTx / tileTextureDim ) * v_vColour;
 }

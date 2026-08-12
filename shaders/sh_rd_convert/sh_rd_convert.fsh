@@ -6,5 +6,5 @@ void main() {
 	gl_FragColor = col;
 	
 	//float whi = (col.r + col.g + col.b) / 3. * col.a;
-    //gl_FragColor = vec4(1., whi, 0., 1.);
+    //gl_FragColor = vec4(1., whi, 0., 1.) * v_vColour;
 }

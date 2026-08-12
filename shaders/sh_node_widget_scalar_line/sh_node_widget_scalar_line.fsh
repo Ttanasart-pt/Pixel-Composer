@@ -34,5 +34,5 @@ void main() {
 	a = smoothstep(.25, .30, dist);
 	c = mix(c, color, a);
 	
-	gl_FragColor = c;
+	gl_FragColor = c * v_vColour;
 }

@@ -5,6 +5,6 @@ void main() {
 	vec4 c = texture2D( gm_BaseTexture, v_vTexcoord );
     gl_FragColor = vec4(1.);
 	
-	if(c.b == 1.) gl_FragColor = vec4(0.);
-	if(c.a == 0.) gl_FragColor = vec4(0.);
+	if(c.b == 1.) gl_FragColor = vec4(0.) * v_vColour;
+	if(c.a == 0.) gl_FragColor = vec4(0.) * v_vColour;
 }

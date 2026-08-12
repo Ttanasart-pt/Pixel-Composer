@@ -65,5 +65,5 @@ void main() {
 			occluded++;
 	}
 	
-    gl_FragColor = vec4(vec3(1. - occluded / raysTotal * strength), 1.);
+    gl_FragColor = vec4(vec3(1. - occluded / raysTotal * strength), 1.) * v_vColour;
 }

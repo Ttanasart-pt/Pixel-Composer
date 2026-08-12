@@ -98,7 +98,7 @@ void main() {
 	
 	vec4 bc = texture2D( gm_BaseTexture, v_vTexcoord );
 	
-	gl_FragColor = bc;
+	gl_FragColor = bc * v_vColour;
 	fillAlpha = ero? bc.a : 0.;
 	
 	if(mode == 0) {

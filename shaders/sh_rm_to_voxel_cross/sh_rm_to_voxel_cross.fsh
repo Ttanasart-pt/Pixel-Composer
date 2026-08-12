@@ -733,5 +733,5 @@ void main() {
 	float dist = operateSceneSDF(pos);
 	float rend = 1. - step(0., dist);
 
-    gl_FragColor = vec4(rend, rend, rend, 1.);
+    gl_FragColor = vec4(rend, rend, rend, 1.) * v_vColour;
 }

@@ -261,6 +261,6 @@ void main() {
 	     if(blendMode == 0) res *= aaf;
 	else if(blendMode == 1) res -= aaf;
 	
-	gl_FragColor   = mix(bg, res, blendStrength);
+	gl_FragColor   = mix(bg, res, blendStrength) * v_vColour;
 	gl_FragColor.a = bg.a;
 }

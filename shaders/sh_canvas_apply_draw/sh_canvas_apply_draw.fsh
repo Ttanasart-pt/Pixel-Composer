@@ -42,5 +42,5 @@ void main() {
 	if(channels.b < .5) res.b = bc.b;
 	if(channels.a < .5) res.a = bc.a;
 	
-	gl_FragColor = res;
+	gl_FragColor = res * v_vColour;
 }

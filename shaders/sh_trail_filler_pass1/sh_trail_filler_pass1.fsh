@@ -52,7 +52,7 @@ void main() {
 			if(c0.a > 0. && c1.a > 0.) {
 				c0   *= color;
 				c0.a *= alpha;
-				gl_FragColor = c0;
+				gl_FragColor = c0 * v_vColour;
 				return;
 			}
 			

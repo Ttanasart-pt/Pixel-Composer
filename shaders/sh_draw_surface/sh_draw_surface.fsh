@@ -23,5 +23,5 @@ void main() {
 	vec4 res  = (_cFg * _cFg.a) + (_cBg * _cBg.a * (1. - _cFg.a));
 	res = vec4(res.rgb / al, al);
 	
-	gl_FragColor = res;
+	gl_FragColor = res * v_vColour;
 }

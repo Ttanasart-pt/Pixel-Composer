@@ -110,5 +110,5 @@ void main() {
     float curv = (dxx + dyy + d1 + d2) * 0.5;
     float grey = .5 + .5 * curv * itn;
     
-	gl_FragColor = vec4(vec3(grey), 1.0);
+	gl_FragColor = vec4(vec3(grey), 1.0) * v_vColour;
 }

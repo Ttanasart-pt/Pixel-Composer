@@ -348,5 +348,5 @@ void main() {
 	if(b_col.r >= 0.0) col = b_col;
 	if(u_col.r >= 0.0) col = u_col;
 	
-    gl_FragColor = col;
+    gl_FragColor = col * v_vColour;
 }

@@ -104,6 +104,6 @@ void main() {
     
     if(fadeIteration == 1) col = bas + (col - bas) * (1. - clamp(iteration / maxIteration, 0., 1.));
     
-	gl_FragColor = vec4(scol, col == 0.? 0. : 1.);
+	gl_FragColor = vec4(scol, col == 0.? 0. : 1.) * v_vColour;
 	
 }

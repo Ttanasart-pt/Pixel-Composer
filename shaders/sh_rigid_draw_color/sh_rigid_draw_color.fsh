@@ -8,5 +8,5 @@ void main() {
 	
 	float ind = index * c.a;
 	vec4  res = vec4(ind, ind, ind, c.a);
-	gl_FragColor = res;
+	gl_FragColor = res * v_vColour;
 }

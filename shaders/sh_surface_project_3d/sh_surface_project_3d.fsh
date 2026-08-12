@@ -403,7 +403,7 @@ void main() {
     		
     	} else if(blendFaceEx == 2) {
     		if (mm.y > 0.5) gl_FragData[0] = clrS;
-    		else            gl_FragData[0] = (clrF + clrT) / 2.;
+    		else            gl_FragData[0] = (clrF + clrT) / 2. * v_vColour;
     		
     	}
     	

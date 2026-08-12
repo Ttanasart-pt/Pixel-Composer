@@ -100,5 +100,5 @@ void main() {
          if(type == 0) gl_FragColor = texture2D( surface, fract(posRat) );
     else if(type == 1) gl_FragColor = randomSample( posRat );
     else if(type == 2) gl_FragColor = vec4(cellSample( posRat, 4. ), 1.);
-    else if(type == 3) gl_FragColor = vec4(onionSample( posRat, 4. ), 1.);
+    else if(type == 3) gl_FragColor = vec4(onionSample( posRat, 4. ), 1.) * v_vColour;
 }

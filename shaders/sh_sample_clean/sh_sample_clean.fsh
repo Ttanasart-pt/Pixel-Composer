@@ -340,5 +340,5 @@ vec4 texture2Dclean( sampler2D texture, vec2 uv ) {
 }
 
 void main() {
-    gl_FragColor = texture2Dclean(gm_BaseTexture, v_vTexcoord);
+    gl_FragColor = texture2Dclean(gm_BaseTexture, v_vTexcoord) * v_vColour;
 }

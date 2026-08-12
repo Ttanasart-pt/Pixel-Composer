@@ -1,5 +1,4 @@
 #pragma use(curve)
-
 #region -- curve -- [1786510425.6316042]
 
     #ifdef _YY_HLSL11_ 
@@ -130,6 +129,12 @@
 
 #endregion -- curve --
 
+#ifdef _YY_HLSL11_ 
+    #define POINT_MAX  1024
+#else 
+    #define POINT_MAX  256
+#endif
+
 varying vec2 v_vTexcoord;
 varying vec4 v_vColour;
 
@@ -141,8 +146,8 @@ uniform int  matchIndex;
 uniform float w_curve[CURVE_MAX];
 uniform int   w_amount;
 
-uniform vec2 point1[1024];
-uniform vec2 point2[1024];
+uniform vec2 point1[POINT_MAX];
+uniform vec2 point2[POINT_MAX];
 
 #define PI  3.14159265359
 
@@ -290,5 +295,5 @@ void main() {
     }
     a = curveEval(w_curve, w_amount, a);
     
-    gl_FragColor = vec4(vec3(a), 1.);
+    gl_FragColor = vec4(vec3(a), 1.) * v_vColour;
 }

@@ -1,3 +1,9 @@
+#ifdef _YY_HLSL11_ 
+    #define INSTANCE_MAX  2000
+#else 
+    #define INSTANCE_MAX  256
+#endif
+
 attribute vec3 in_Position;
 attribute vec3 in_Normal;
 attribute vec2 in_TextureCoord;
@@ -14,7 +20,7 @@ varying vec3  v_viewPosition;
 varying vec3  v_viewNormal;
 varying float v_cameraDistance;
 
-uniform vec4 InstanceTransforms[2000];
+uniform vec4 InstanceTransforms[INSTANCE_MAX];
 
 uniform mat4  objectTransform;
 uniform vec3  cameraPosition;

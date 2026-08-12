@@ -187,7 +187,7 @@ void main() {
 		
 	} else if(type == 1) {
 		vec4 colr = gradientEval(pfract(random(c.xy) + gradient_shift));
-		gl_FragColor = colr;
+		gl_FragColor = colr * v_vColour;
 		
 	}
 	

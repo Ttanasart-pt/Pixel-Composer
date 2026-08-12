@@ -100,5 +100,5 @@ void main() {
 	    gl_FragColor = vec4(vec3(mix(noise0, noise1, prog)), 1.);
 	    
 	} else if(mode == 1)
-		gl_FragColor = vec4(vec3(prog), 1.);
+		gl_FragColor = vec4(vec3(prog), 1.) * v_vColour;
 }

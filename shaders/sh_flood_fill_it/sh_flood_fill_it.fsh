@@ -39,7 +39,7 @@ void main() {
 			vec4 sampC = texture2D( gm_BaseTexture, _pos );
 			if(sampC.a == 0.) break;
 			if(sampC.r == 1.) {
-				gl_FragColor = vec4(1., iteration, 0., 1.);
+				gl_FragColor = vec4(1., iteration, 0., 1.) * v_vColour;
 				return;
 			}
 		}

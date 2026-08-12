@@ -199,7 +199,7 @@ void main() {
 		
 	}
 	
-	gl_FragData[0] = resultColor;
+	gl_FragData[0] = resultColor * v_vColour;
 	gl_FragData[1] = resultOutline;
 	
 	#region filter out filled / empty pixel
@@ -208,7 +208,7 @@ void main() {
 		else if(borderSide == 1) isBorder = baseColor.a <      alphaThers;
 	
 		if(!isBorder) {
-			gl_FragData[0] = resultColor;
+			gl_FragData[0] = resultColor * v_vColour;
 			gl_FragData[1] = resultOutline;
 			return;
 		}
@@ -333,6 +333,6 @@ void main() {
 		resultOutline *= samp;
 	}
 	
-    gl_FragData[0] = resultColor;
+    gl_FragData[0] = resultColor * v_vColour;
     gl_FragData[1] = resultOutline;
 }

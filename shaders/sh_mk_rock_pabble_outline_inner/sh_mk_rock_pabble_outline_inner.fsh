@@ -23,16 +23,16 @@ void main() {
 		vec4 side;
 		
 		side = texture2D(gm_BaseTexture, v_vTexcoord - vec2(tx.x, 0.));
-		if(side.a == 0.) { gl_FragColor = blendColor(base); return; }
+		if(side.a == 0.) { gl_FragColor = blendColor(base) * v_vColour; return; }
 		
 		side = texture2D(gm_BaseTexture, v_vTexcoord + vec2(tx.x, 0.));
-		if(side.a == 0.) { gl_FragColor = blendColor(base); return; }
+		if(side.a == 0.) { gl_FragColor = blendColor(base) * v_vColour; return; }
 		
 		side = texture2D(gm_BaseTexture, v_vTexcoord - vec2(0., tx.y));
-		if(side.a == 0.) { gl_FragColor = blendColor(base); return; }
+		if(side.a == 0.) { gl_FragColor = blendColor(base) * v_vColour; return; }
 		
 		side = texture2D(gm_BaseTexture, v_vTexcoord + vec2(0., tx.y));
-		if(side.a == 0.) { gl_FragColor = blendColor(base); return; }
+		if(side.a == 0.) { gl_FragColor = blendColor(base) * v_vColour; return; }
 		
 	}
 }

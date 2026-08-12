@@ -153,5 +153,5 @@ varying vec4 v_vColour;
 
 void main() {
 	float a = gradientEval(v_vTexcoord.x).a; 
-	gl_FragColor = vec4(a, a, a, 1.);
+	gl_FragColor = vec4(a, a, a, 1.) * v_vColour;
 }

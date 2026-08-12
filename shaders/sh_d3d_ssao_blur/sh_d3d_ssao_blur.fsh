@@ -28,5 +28,5 @@ void main() {
 		weight  += str;
 	}
 	
-    gl_FragColor = vec4(sampled / weight, 1.);
+    gl_FragColor = vec4(sampled / weight, 1.) * v_vColour;
 }

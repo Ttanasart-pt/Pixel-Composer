@@ -129,5 +129,5 @@ void main() {
 	
 	float _a = floor(cc.a * alphaStep) / (alphaStep - 1.);
 	
-	gl_FragColor = vec4(fin, _a);
+	gl_FragColor = vec4(fin, _a) * v_vColour;
 }

@@ -398,5 +398,5 @@ void main() {
     vec3  rayDen = marchDensity(eye, dir, hitPos);
     
     vec3 color   = rayDen;
-    gl_FragColor = vec4(color, 1.);
+    gl_FragColor = vec4(color, 1.) * v_vColour;
 }

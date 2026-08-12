@@ -245,7 +245,7 @@ void main() {
 		colr *= tex;
 	}
 	
-	gl_FragData[0] = blendColor(gl_FragData[0], colr);
+	gl_FragData[0] = blendColor(gl_FragData[0], colr) * v_vColour;
 	gl_FragData[1] = vec4(vec3(mix(depth.x, depth.y, prog)), 1.);
 	gl_FragData[2] = colr;
 	

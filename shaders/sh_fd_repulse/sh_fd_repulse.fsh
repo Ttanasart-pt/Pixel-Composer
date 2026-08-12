@@ -22,5 +22,5 @@ void main() {
 		angle = floor(angle / sp) * sp + sp * .5 + rotate;
 	}
 	
-	gl_FragColor = vec4(cos(angle) * dist * drad, sin(angle) * dist * drad, 0., 1.);
+	gl_FragColor = vec4(cos(angle) * dist * drad, sin(angle) * dist * drad, 0., 1.) * v_vColour;
 }

@@ -1,3 +1,9 @@
+#ifdef _YY_HLSL11_ 
+    #define POINT_MAX  1024
+#else 
+    #define POINT_MAX  256
+#endif
+
 varying vec2 v_vTexcoord;
 varying vec4 v_vColour;
 
@@ -9,7 +15,7 @@ uniform vec2      maxDistance;
 uniform int       maxDistanceUseSurf;
 uniform sampler2D maxDistanceSurf;
 
-uniform vec2 points[1024];
+uniform vec2 points[POINT_MAX];
 
 void main() {
 	float dst = maxDistance.x;
@@ -33,5 +39,5 @@ void main() {
 	float distC = minDist / dst;
 	if(inverted == 1) distC = 1. - distC;
 	
-	gl_FragColor = vec4(vec3(distC), 1.);
+	gl_FragColor = vec4(vec3(distC), 1.) * v_vColour;
 }

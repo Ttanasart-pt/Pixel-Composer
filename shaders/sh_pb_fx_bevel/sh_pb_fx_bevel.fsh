@@ -197,6 +197,6 @@ void main() {
     
     vec4 height_color = gradientHeightEval(slope);
     vec4 radius_color = gradientRadiusEval(edgeAng);
-    gl_FragData[0] = height_color * radius_color;
+    gl_FragData[0] = height_color * radius_color * v_vColour;
     
 }

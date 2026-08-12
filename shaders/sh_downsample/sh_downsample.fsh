@@ -53,5 +53,5 @@ void main() {
 	col  /= wei;
 	col.a = alph;
 	
-    gl_FragColor = col;
+    gl_FragColor = col * v_vColour;
 }

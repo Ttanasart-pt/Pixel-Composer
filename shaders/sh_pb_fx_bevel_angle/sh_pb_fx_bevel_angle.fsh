@@ -17,7 +17,7 @@ void main() {
     
     bool u = val(texture2D( gm_BaseTexture, v_vTexcoord + vec2(0., -tx.y) )) != 0.;
     bool d = val(texture2D( gm_BaseTexture, v_vTexcoord + vec2(0.,  tx.y) )) != 0.;
-    if(u && d) { gl_FragColor = vec4(.5, 0., 0., 1.); return; }
+    if(u && d) { gl_FragColor = vec4(.5, 0., 0., 1.) * v_vColour; return; }
     
     bool ru = val(texture2D( gm_BaseTexture, v_vTexcoord + vec2( tx.x, -tx.y) )) != 0.;
     bool ld = val(texture2D( gm_BaseTexture, v_vTexcoord + vec2(-tx.x,  tx.y) )) != 0.;
@@ -28,5 +28,5 @@ void main() {
     if(lu || rd) { gl_FragColor = vec4(.75, 0., 0., 1.); return; }
     
     if(l || r) { gl_FragColor = vec4(0., 0., 0., 1.); return; }
-    if(u || d) { gl_FragColor = vec4(.5, 0., 0., 1.); return; }
+    if(u || d) { gl_FragColor = vec4(.5, 0., 0., 1.) * v_vColour; return; }
 }

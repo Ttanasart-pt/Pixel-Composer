@@ -687,7 +687,7 @@ void main() {
 		else if(bgBlend == 1) gl_FragData[0] = max(bgPixel, fgPixel * cc);
 		else if(bgBlend == 2) gl_FragData[0] = bgPixel + fgPixel * cc;
 		else if(bgBlend == 3) gl_FragData[0] = bgPixel * fgPixel * cc;
-		else if(bgBlend == 4) gl_FragData[0] = bgPixel - fgPixel * cc;
+		else if(bgBlend == 4) gl_FragData[0] = bgPixel - fgPixel * cc * v_vColour;
 	}
 	
 	if(multiplyAlpha == 1) gl_FragData[0].rgb *= gl_FragData[0].a;

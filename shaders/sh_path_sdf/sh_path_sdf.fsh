@@ -1,3 +1,9 @@
+#ifdef _YY_HLSL11_ 
+    #define POINT_MAX  1024
+#else 
+    #define POINT_MAX  256
+#endif
+
 varying vec2 v_vTexcoord;
 varying vec4 v_vColour;
 
@@ -6,7 +12,7 @@ uniform int   subdivision;
 uniform float maxDistance;
 uniform int   inverted;
 
-uniform vec2 points[1024];
+uniform vec2 points[POINT_MAX];
 
 uniform vec2  position;
 uniform vec2  anchor;
@@ -54,5 +60,5 @@ void main() {
 	float distC = minDist / maxDistance;
 	if(inverted == 1) distC = 1. - distC;
 	
-	gl_FragColor = vec4(vec3(distC), 1.);
+	gl_FragColor = vec4(vec3(distC), 1.) * v_vColour;
 }

@@ -20,7 +20,7 @@ void main() {
 	vec4 s2 = texture2D(g2, v_vTexcoord);
 	
 	gl_FragColor   = s1 - s2 * gam;
-	if(edge == 1) gl_FragColor = abs(gl_FragColor);
+	if(edge == 1) gl_FragColor = abs(gl_FragColor) * v_vColour;
 	
 	gl_FragColor.a = 1.;
 }

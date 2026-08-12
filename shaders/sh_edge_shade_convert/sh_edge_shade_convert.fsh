@@ -6,5 +6,5 @@ void main() {
     gl_FragColor = vec4(0.);
 	
 	if((c.r + c.g + c.b) * c.a / 3. > 0.)
-		gl_FragColor = vec4(1.);
+		gl_FragColor = vec4(1.) * v_vColour;
 }

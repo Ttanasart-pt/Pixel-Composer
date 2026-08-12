@@ -95,5 +95,5 @@ void main() {
 	vec3 clr = color.rgb * aa;
 	if(fade == 1) clr *= maxWeigh / (radius * 2. + 1.);
 	
-	gl_FragColor = vec4(clr, 1.);
+	gl_FragColor = vec4(clr, 1.) * v_vColour;
 }

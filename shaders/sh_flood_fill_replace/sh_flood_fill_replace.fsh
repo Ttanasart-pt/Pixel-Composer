@@ -182,5 +182,5 @@ void main() {
 	}
 	
 		 if(blend == 0) gl_FragColor = fillC;
-	else if(blend == 1) gl_FragColor = fillC * col;
+	else if(blend == 1) gl_FragColor = fillC * col * v_vColour;
 }

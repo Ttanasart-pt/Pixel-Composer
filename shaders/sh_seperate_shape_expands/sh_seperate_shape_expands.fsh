@@ -16,7 +16,7 @@ void main() {
 		vec2 pos   = clamp(v_vTexcoord + vec2(i, j) * tx, 0., 1.);
 		vec4 samCl = texture2D(gm_BaseTexture, pos);
 		if(samCl != vec4(0.)) {
-			gl_FragColor = samCl;
+			gl_FragColor = samCl * v_vColour;
 			return;
 		}
 	}

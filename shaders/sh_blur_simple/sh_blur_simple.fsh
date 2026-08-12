@@ -259,5 +259,5 @@ void main() {
 	if(useGradient == 1)
 		clr *= gradientEval(pfract(1. - weiTotal / totalWeight + gradient_shift));
 	
-	gl_FragColor = clr;
+	gl_FragColor = clr * v_vColour;
 }

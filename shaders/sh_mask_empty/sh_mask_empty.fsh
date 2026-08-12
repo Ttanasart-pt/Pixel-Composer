@@ -8,5 +8,5 @@ void main() {
 	vec4 msk = texture2D(mask, v_vTexcoord);
 	
 	float alp = (msk.r + msk.g + msk.b) / 3. * msk.a;
-	gl_FragColor = vec4(cc.rgb, cc.a * alp);
+	gl_FragColor = vec4(cc.rgb, cc.a * alp) * v_vColour;
 }

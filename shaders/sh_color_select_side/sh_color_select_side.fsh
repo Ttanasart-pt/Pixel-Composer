@@ -49,5 +49,5 @@ void main() {
 		else if(mode == 2) c = vec4(hsv2rgb(vec3(hue, 1. - v_vTexcoord.y, 1.)), 1.);
 	}
 	
-	gl_FragColor = c;
+	gl_FragColor = c * v_vColour;
 }

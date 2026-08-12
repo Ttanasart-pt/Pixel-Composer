@@ -238,7 +238,7 @@ void main() {
 			else                gl_FragColor = col2;
 				
 		} else if(useMap == 2) {
-			gl_FragColor = rat < random(v_vTexcoord, seed)? col1 : col2;
+			gl_FragColor = rat < random(v_vTexcoord, seed)? col1 : col2 * v_vColour;
 		}
 	}
 	

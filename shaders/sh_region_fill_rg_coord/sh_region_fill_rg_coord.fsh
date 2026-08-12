@@ -35,5 +35,5 @@ void main() {
 		b = (cn.y * 255. + cn.x) / 256.;
 	}
 	
-	gl_FragColor = vec4( t, b, 1. );
+	gl_FragColor = vec4( t, b, 1. ) * v_vColour;
 }

@@ -75,5 +75,5 @@ void main() {
 	if(minDist == 99999.)
 		gl_FragColor = vec4(0.);
 	else
-		gl_FragColor = texture2D( gm_BaseTexture, hitPos );
+		gl_FragColor = texture2D( gm_BaseTexture, hitPos ) * v_vColour;
 }

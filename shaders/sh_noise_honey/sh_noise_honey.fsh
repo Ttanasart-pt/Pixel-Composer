@@ -135,5 +135,5 @@ void main() {
 	   //  if(mode == 0) col = vec3(noiseHoneycomb(pos));
     // else if(mode == 1) col = vec3(noiseHoneycombStar(pos));
 	
-    gl_FragColor = vec4(col, 1.);
+    gl_FragColor = vec4(col, 1.) * v_vColour;
 }

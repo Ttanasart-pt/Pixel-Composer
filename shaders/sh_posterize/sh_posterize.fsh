@@ -123,5 +123,5 @@ void main() {
 	
 	col.a = alpha == 1? 1. : _col.a;
 	
-	gl_FragColor = col;
+	gl_FragColor = col * v_vColour;
 }

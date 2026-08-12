@@ -62,5 +62,5 @@ void main() {
 	      s *= rangeVal(baseHSV.z, valMinS, valMinE, valMaxS, valMaxE);
 	
 	vec4 res = vec4(s,s,s, alpha == 1? baseCol.a : 1.);
-	gl_FragColor = res;
+	gl_FragColor = res * v_vColour;
 }

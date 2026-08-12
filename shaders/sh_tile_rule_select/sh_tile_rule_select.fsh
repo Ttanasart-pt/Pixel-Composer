@@ -27,7 +27,7 @@ void main() {
             if(_subI == -1.) continue;
             
             if(bs == _subI) {
-                gl_FragColor = vec4(selInd, 0., 0., 1.);
+                gl_FragColor = vec4(selInd, 0., 0., 1.) * v_vColour;
                 return;
             }
         }

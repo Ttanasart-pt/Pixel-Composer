@@ -123,5 +123,5 @@ void main() {
 	else if(blendMode == 1) colr = 1. - (1. - colr) * (1. - blendColor);
 	else if(blendMode == 2) colr = blendColor;
 		
-	gl_FragColor = colr;
+	gl_FragColor = colr * v_vColour;
 }

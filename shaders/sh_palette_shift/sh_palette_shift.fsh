@@ -29,5 +29,5 @@ void main() {
 	}
 	
 	index = mod(index + shift, paletteAmount);
-	gl_FragColor = palette[int(index)];
+	gl_FragColor = palette[int(index)] * v_vColour;
 }

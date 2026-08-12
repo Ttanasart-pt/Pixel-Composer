@@ -17,5 +17,5 @@ void main() {
 	_angle = atan((pixel_pos.y - position.y), (pixel_pos.x - position.x)) + angle;
 	_angle = TAU - (_angle - floor(_angle / TAU) * TAU); 
 	
-	gl_FragColor = (_angle < pi1)? vec4(vec3(1.), 1.) : vec4(vec3(0.), 1.);
+	gl_FragColor = (_angle < pi1)? vec4(vec3(1.), 1.) : vec4(vec3(0.), 1.) * v_vColour;
 }

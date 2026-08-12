@@ -160,5 +160,5 @@ void main() {
 	float ang = atan(to.y, to.x) + eff * str;
 	
 	vec2 tex = center + vec2(cos(ang), sin(ang)) * distance(center, px);
-    gl_FragColor = sampleTexture( gm_BaseTexture, tex / dimension );
+    gl_FragColor = sampleTexture( gm_BaseTexture, tex / dimension ) * v_vColour;
 }

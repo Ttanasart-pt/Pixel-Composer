@@ -72,5 +72,5 @@ void main() {
     ) / 4.;
 
     
-    gl_FragColor = vec4(dot(Sx, Sx), dot(Sy, Sy), dot(Sx, Sy), 1.);
+    gl_FragColor = vec4(dot(Sx, Sx), dot(Sy, Sy), dot(Sx, Sy), 1.) * v_vColour;
 }

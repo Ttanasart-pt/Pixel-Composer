@@ -48,12 +48,12 @@ void main() {
 		else if(a3 && a5) gl_FragColor = vec4(1.);
 		else if(a1 && a7) gl_FragColor = vec4(1.);
 	} else {
-		/**/ if( a0 &&  a1 && !a2 &&  a3 && !a5 && !a6 && !a7 && !a8) gl_FragColor = vec4(0.);
-		else if(!a0 &&  a1 &&  a2 && !a3 &&  a5 && !a6 && !a7 && !a8) gl_FragColor = vec4(0.);
-		else if(!a0 && !a1 && !a2 &&  a3 && !a5 &&  a6 &&  a7 && !a8) gl_FragColor = vec4(0.);
-		else if(!a0 && !a1 && !a2 && !a3 &&  a5 && !a6 &&  a7 &&  a8) gl_FragColor = vec4(0.);
+		/**/ if( a0 &&  a1 && !a2 &&  a3 && !a5 && !a6 && !a7 && !a8) gl_FragColor = vec4(0.) * v_vColour;
+		else if(!a0 &&  a1 &&  a2 && !a3 &&  a5 && !a6 && !a7 && !a8) gl_FragColor = vec4(0.) * v_vColour;
+		else if(!a0 && !a1 && !a2 &&  a3 && !a5 &&  a6 &&  a7 && !a8) gl_FragColor = vec4(0.) * v_vColour;
+		else if(!a0 && !a1 && !a2 && !a3 &&  a5 && !a6 &&  a7 &&  a8) gl_FragColor = vec4(0.) * v_vColour;
 			
-		else if(!a3 && !a5) gl_FragColor = vec4(0.);
-		else if(!a1 && !a7) gl_FragColor = vec4(0.);
+		else if(!a3 && !a5) gl_FragColor = vec4(0.) * v_vColour;
+		else if(!a1 && !a7) gl_FragColor = vec4(0.) * v_vColour;
 	}
 }

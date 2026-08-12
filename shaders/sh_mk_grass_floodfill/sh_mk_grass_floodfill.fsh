@@ -19,7 +19,7 @@ void main() {
 	vec4 currColor = texture2D(baseSurface, v_vTexcoord);
 	if(!colorMatch(baseColor, currColor)) return;
 	
-	if(region == 0) { gl_FragColor = vec4(1.); return; }
+	if(region == 0) { gl_FragColor = vec4(1.) * v_vColour; return; }
 	
 	for(float i = 1.; i < 4.; i++) {
 		vec2 samPos = v_vTexcoord + vec2(tx.x, 0.) * i;
@@ -27,7 +27,7 @@ void main() {
 		if(!colorMatch(baseColor, samCol)) break;
 		
 		vec4 samFil = texture2D(gm_BaseTexture, samPos);
-		if(samFil.a == 1.) { gl_FragColor = vec4(1.); return; }
+		if(samFil.a == 1.) { gl_FragColor = vec4(1.) * v_vColour; return; }
 	}
 	
 	for(float i = 1.; i < 4.; i++) {
@@ -36,7 +36,7 @@ void main() {
 		if(!colorMatch(baseColor, samCol)) break;
 		
 		vec4 samFil = texture2D(gm_BaseTexture, samPos);
-		if(samFil.a == 1.) { gl_FragColor = vec4(1.); return; }
+		if(samFil.a == 1.) { gl_FragColor = vec4(1.) * v_vColour; return; }
 	}
 	
 	for(float i = 1.; i < 4.; i++) {
@@ -45,7 +45,7 @@ void main() {
 		if(!colorMatch(baseColor, samCol)) break;
 		
 		vec4 samFil = texture2D(gm_BaseTexture, samPos);
-		if(samFil.a == 1.) { gl_FragColor = vec4(1.); return; }
+		if(samFil.a == 1.) { gl_FragColor = vec4(1.) * v_vColour; return; }
 	}
 	
 	for(float i = 1.; i < 4.; i++) {
@@ -54,7 +54,7 @@ void main() {
 		if(!colorMatch(baseColor, samCol)) break;
 		
 		vec4 samFil = texture2D(gm_BaseTexture, samPos);
-		if(samFil.a == 1.) { gl_FragColor = vec4(1.); return; }
+		if(samFil.a == 1.) { gl_FragColor = vec4(1.) * v_vColour; return; }
 	}
 	
 }

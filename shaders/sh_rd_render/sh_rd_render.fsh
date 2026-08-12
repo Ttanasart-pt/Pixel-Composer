@@ -8,6 +8,6 @@ void main() {
 		gl_FragColor = vec4(0., 0., 0., 1.);
 	} else {
 		float whi = (col.g) / (col.r + col.g);
-	    gl_FragColor = vec4(whi, whi, whi, 1.);
+	    gl_FragColor = vec4(whi, whi, whi, 1.) * v_vColour;
 	}
 }

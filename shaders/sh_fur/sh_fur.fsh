@@ -268,5 +268,5 @@ void main() {
         }
     }
 
-	gl_FragColor = vec4(fur, 1.);
+	gl_FragColor = vec4(fur, 1.) * v_vColour;
 }

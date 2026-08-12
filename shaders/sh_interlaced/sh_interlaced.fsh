@@ -30,5 +30,5 @@ void main() {
     gl_FragColor = vec4(0.);
     
          if(intl)         gl_FragColor = texture2D( gm_BaseTexture, v_vTexcoord );
-    else if(useSurf == 1) gl_FragColor = texture2D( prevFrame,      v_vTexcoord );
+    else if(useSurf == 1) gl_FragColor = texture2D( prevFrame,      v_vTexcoord ) * v_vColour;
 }

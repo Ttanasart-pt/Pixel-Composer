@@ -109,12 +109,12 @@ void main() {
 	
 	if(blend == 0) gl_FragColor = ch < .5001? col1 : col2;
 	else if(blend == 1) { 
-		gl_FragColor = mix(col1, col2, ch);
+		gl_FragColor = mix(col1, col2, ch) * v_vColour;
 			
 	} else if(blend == 2) { 
 		float px = 2. / max(dimension.x, dimension.y);
 		ch = smoothstep(.5 - px, .5 + px, ch);
 			
-		gl_FragColor = mix(col1, col2, ch);
+		gl_FragColor = mix(col1, col2, ch) * v_vColour;
 	}
 }

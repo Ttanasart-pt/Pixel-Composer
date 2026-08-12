@@ -108,13 +108,13 @@ void main() {
 		if(flip) _h = 1. - _h;
 		// _h = pfract(_h + offset);
 		
-		gl_FragColor = mix(col1, col2, _h);
+		gl_FragColor = mix(col1, col2, _h) * v_vColour;
 		
 	} else if(blend == 2) {
 		_h = _h * .5 + (flip? .5 : 0.);
 		// _h = pfract(_h + offset);
 		
-		gl_FragColor = mix(col1, col2, _h);
+		gl_FragColor = mix(col1, col2, _h) * v_vColour;
 		
 	} else if(blend == 3) { 
 		if(flip) _h = 1. - _h;
@@ -123,6 +123,6 @@ void main() {
 		float px = 1. / max(dimension.x, dimension.y);
 		_h = smoothstep(threshold - px, threshold + px, _h);
 			
-		gl_FragColor = mix(col1, col2, _h);
+		gl_FragColor = mix(col1, col2, _h) * v_vColour;
 	}
 }

@@ -13,15 +13,15 @@ void main() {
     if(val(cc) != 0.) return;
     
     vec4 c0 = texture2D( gm_BaseTexture, v_vTexcoord + vec2( tx.x, 0.) );
-    if(val(c0) == 1.) { gl_FragColor = vec4(1.); return; }
+    if(val(c0) == 1.) { gl_FragColor = vec4(1.) * v_vColour; return; }
     
     vec4 c1 = texture2D( gm_BaseTexture, v_vTexcoord + vec2(-tx.x, 0.) );
-    if(val(c1) == 1.) { gl_FragColor = vec4(1.); return; }
+    if(val(c1) == 1.) { gl_FragColor = vec4(1.) * v_vColour; return; }
     
     vec4 c2 = texture2D( gm_BaseTexture, v_vTexcoord + vec2(0.,  tx.y) );
-    if(val(c2) == 1.) { gl_FragColor = vec4(1.); return; }
+    if(val(c2) == 1.) { gl_FragColor = vec4(1.) * v_vColour; return; }
     
     vec4 c3 = texture2D( gm_BaseTexture, v_vTexcoord + vec2(0., -tx.y) );
-    if(val(c3) == 1.) { gl_FragColor = vec4(1.); return; }
+    if(val(c3) == 1.) { gl_FragColor = vec4(1.) * v_vColour; return; }
     
 }

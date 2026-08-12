@@ -39,7 +39,7 @@ void main() {
 			vec4 colS = texture2D( gm_BaseTexture, posS );
 			if(colS.a <= 0.5) continue;
 			
-			gl_FragColor = colS;
+			gl_FragColor = colS * v_vColour;
 			return;
 		}
 	}

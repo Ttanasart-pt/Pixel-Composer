@@ -128,5 +128,5 @@ void main() {
 	      
 	if(inverted == 1) c = 1. - c;
 	
-    gl_FragColor = vec4(vec3(c), 1.);
+    gl_FragColor = vec4(vec3(c), 1.) * v_vColour;
 }

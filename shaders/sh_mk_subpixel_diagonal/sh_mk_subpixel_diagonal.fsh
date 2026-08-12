@@ -109,5 +109,5 @@ void main() {
     
     gl_FragColor = vec4(baseC, 1.);
     // gl_FragColor = vec4((id - dimension) / 8., 0., 1.);
-    // gl_FragColor = vec4(abs(v_vTexcoord - uv) * 16., 0., 1.);
+    // gl_FragColor = vec4(abs(v_vTexcoord - uv) * 16., 0., 1.) * v_vColour;
 }

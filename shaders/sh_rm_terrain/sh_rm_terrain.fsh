@@ -201,5 +201,5 @@ void main() {
     distNorm = smoothstep(.0, .3, distNorm);
     c = mix(background.rgb, c, mix(1., distNorm, depthInt));
     
-    gl_FragColor = vec4(c, 1.);
+    gl_FragColor = vec4(c, 1.) * v_vColour;
 }

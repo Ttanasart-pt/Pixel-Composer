@@ -237,5 +237,5 @@ void main() {
 	// }
 	
 	float ratio = (curBright - minBright) / (maxBright - minBright);
-	gl_FragColor = vec4(ratio, ratio, ratio, 1.);
+	gl_FragColor = vec4(ratio, ratio, ratio, 1.) * v_vColour;
 }

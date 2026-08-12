@@ -76,5 +76,5 @@ void main() {
 	res   /= al;
 	res.a  = al;
 	
-    gl_FragColor = res;
+    gl_FragColor = res * v_vColour;
 }

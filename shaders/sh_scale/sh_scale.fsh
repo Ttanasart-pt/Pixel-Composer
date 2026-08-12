@@ -337,5 +337,5 @@ uniform vec2 baseDimension;
 uniform vec2 surfDimension;
 
 void main() {
-	gl_FragColor = sampleTexture(gm_BaseTexture, v_vTexcoord);
+	gl_FragColor = sampleTexture(gm_BaseTexture, v_vTexcoord) * v_vColour;
 }

@@ -296,5 +296,5 @@ void main() {
 	
 	if(lightBand > 0.) shadow = ceil(shadow * lightBand) / lightBand;
 	
-	gl_FragColor = vec4(vec3(shadow * lightInt) * lightClr.rgb, bg.a);
+	gl_FragColor = vec4(vec3(shadow * lightInt) * lightClr.rgb, bg.a) * v_vColour;
 }

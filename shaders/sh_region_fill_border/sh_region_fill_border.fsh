@@ -25,7 +25,7 @@ void main() {
 		vec4 s = texture2D( gm_BaseTexture, x );
 		if(s.a == 0.) continue;
 		
-		gl_FragColor = s;
+		gl_FragColor = s * v_vColour;
 		minD = i;
 	}
     
@@ -38,7 +38,7 @@ void main() {
 		vec4 s = texture2D( gm_BaseTexture, x );
 		if(s.a == 0.) continue;
 		
-		gl_FragColor = s;
+		gl_FragColor = s * v_vColour;
 		minD = i;
 	}
     
@@ -51,7 +51,7 @@ void main() {
 		vec4 s = texture2D( gm_BaseTexture, x );
 		if(s.a == 0.) continue;
 		
-		gl_FragColor = s;
+		gl_FragColor = s * v_vColour;
 		minD = i;
 	}
     
@@ -64,7 +64,7 @@ void main() {
 		vec4 s = texture2D( gm_BaseTexture, x );
 		if(s.a == 0.) continue;
 		
-		gl_FragColor = s;
+		gl_FragColor = s * v_vColour;
 		minD = i;
 	}
 }

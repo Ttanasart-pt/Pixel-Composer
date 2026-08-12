@@ -47,7 +47,7 @@ void main() {
 	float gComp = getBrightness(comp.rgb);
 	
 	if (dest != clamp(dest, 0., 1.)) {
-		gl_FragColor = curr;
+		gl_FragColor = curr * v_vColour;
 		return;
 	}
 	
@@ -55,12 +55,12 @@ void main() {
 		if (gCurr > threshold && gComp > gCurr)
 			gl_FragColor = comp;
 		else
-			gl_FragColor = curr;
+			gl_FragColor = curr * v_vColour;
 	} 
 	else {
 		if (gComp > threshold && gCurr >= gComp)
 			gl_FragColor = comp;
 		else
-			gl_FragColor = curr;
+			gl_FragColor = curr * v_vColour;
 	}
 }

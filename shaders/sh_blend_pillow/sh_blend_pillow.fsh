@@ -35,5 +35,5 @@ void main() {
 	vec4 res = (_cFg * _cBg * (_cFg + _cBg - 2.0)) / (_cFg * _cFg - _cFg) + (_cBg * _cBg - _cBg);
 	res.a = preserveAlpha == 1? _cBg.a : al;
 	
-    gl_FragColor = res;
+    gl_FragColor = res * v_vColour;
 }

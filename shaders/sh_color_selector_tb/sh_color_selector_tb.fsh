@@ -182,5 +182,5 @@ void main() {
 		c = palette[index];
 	}
 	
-	gl_FragColor = c;
+	gl_FragColor = c * v_vColour;
 }

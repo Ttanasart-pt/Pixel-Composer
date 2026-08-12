@@ -11,7 +11,7 @@ uniform float ranges[64];
 
 void main() {
 	vec4 res = vec4(0., 0., 0., 1.);
-	if(pointAmount == 0) { gl_FragColor = res; return; }
+	if(pointAmount == 0) { gl_FragColor = res * v_vColour; return; }
 	
 	if(mode == 0) {
 		float distances[64];
@@ -65,5 +65,5 @@ void main() {
 		}
 	}
 	
-	gl_FragColor = res;
+	gl_FragColor = res * v_vColour;
 }

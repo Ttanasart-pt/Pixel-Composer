@@ -45,5 +45,5 @@ void main() {
     float drip = clamp(1. - m_dist, 0., 1.);
 	      drip = mix(level.x, level.y, drip);
 	
-	gl_FragColor = vec4(drip, cell, base.a);
+	gl_FragColor = vec4(drip, cell, base.a) * v_vColour;
 }

@@ -25,7 +25,7 @@ void main() {
 	}
 	
 	vec4 col = texture2D(gm_BaseTexture, v_vTexcoord);
-	gl_FragColor = col;
+	gl_FragColor = col * v_vColour;
 	
 	if(random(v_vTexcoord, seed) > chn) return;
 	
@@ -38,5 +38,5 @@ void main() {
 		}
 	}
 	
-	gl_FragColor = col;
+	gl_FragColor = col * v_vColour;
 }

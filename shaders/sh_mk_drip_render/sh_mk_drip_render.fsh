@@ -180,5 +180,5 @@ void main() {
 	if(blendMode == 1) targ = dripCol * colr;
 	if(blendMode == 2) targ = dripCol + colr;
 	
-	gl_FragColor = mix(gl_FragColor, targ, maskIntens);
+	gl_FragColor = mix(gl_FragColor, targ, maskIntens) * v_vColour;
 }

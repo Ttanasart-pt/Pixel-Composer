@@ -19,5 +19,5 @@ void main() {
 		if(sel == 0.) { gl_FragColor = vec4(0.); return; }
 	}
 	
-	gl_FragColor = vec4( c.xy, 0., 1. );
+	gl_FragColor = vec4( c.xy, 0., 1. ) * v_vColour;
 }

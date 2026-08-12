@@ -65,6 +65,6 @@ void main() {
 	
 	if(match >= 1. - pixelThreshold) {
 		float ind = mode == 0? index : round(random(matchUv) * (size - 1.)) / size;
-		gl_FragColor = vec4(matchPos, ind, 1.);
+		gl_FragColor = vec4(matchPos, ind, 1.) * v_vColour;
 	}
 }

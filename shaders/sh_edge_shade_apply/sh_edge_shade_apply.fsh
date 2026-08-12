@@ -156,5 +156,5 @@ void main() {
 	vec4 c  = texture2D( gm_BaseTexture, v_vTexcoord);
 	
 	if(c.a == 0.)	gl_FragColor = vec4(0.);
-	else			gl_FragColor = gradientEval(c.r);
+	else			gl_FragColor = gradientEval(c.r) * v_vColour;
 }

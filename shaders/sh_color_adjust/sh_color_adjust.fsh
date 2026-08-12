@@ -245,11 +245,11 @@ void main() {
 	if(use_mask == 1) {
 		vec4 mas = texture2D( mask, v_vTexcoord );
 		mas.rgb *= mas.a;
-		gl_FragColor = col_cbh * mas + col * (vec4(1.) - mas);
+		gl_FragColor = col_cbh * v_vColour * mas + col * (vec4(1.) - mas);
 		gl_FragColor.a = col.a * mix(1., alp, mas.r);
 		
 	} else {
-		gl_FragColor = col_cbh;
+		gl_FragColor = col_cbh * v_vColour;
 		gl_FragColor.a = col.a * alp;
 	}
 }

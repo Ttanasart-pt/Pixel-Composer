@@ -55,5 +55,5 @@ void main() {
 		}
 	}
 	
-	gl_FragColor = vec4( _index_min, _index_max );
+	gl_FragColor = vec4( _index_min, _index_max ) * v_vColour;
 }

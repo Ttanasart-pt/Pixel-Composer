@@ -36,5 +36,5 @@ void main() {
 	}
 	
 	u = pos / (pos + tot);
-	gl_FragColor = vec4(u, v, 0., col.a);
+	gl_FragColor = vec4(u, v, 0., col.a) * v_vColour;
 }

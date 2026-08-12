@@ -45,5 +45,5 @@ void main() {
 		cx = min(cx, ss.xy);
 	}
 	
-	gl_FragColor = vec4(cx, 0., 1.);
+	gl_FragColor = vec4(cx, 0., 1.) * v_vColour;
 }

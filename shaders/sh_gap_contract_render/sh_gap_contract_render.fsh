@@ -12,5 +12,5 @@ void main() {
 		colr.a = orig.a;
 	}
 	
-	gl_FragColor = colr;
+	gl_FragColor = colr * v_vColour;
 }

@@ -178,5 +178,5 @@ void main() {
 	
 	vec4 colr    = gradientEval(s);
 	     colr.a *= v.a;
-	gl_FragColor = colr;
+	gl_FragColor = colr * v_vColour;
 }

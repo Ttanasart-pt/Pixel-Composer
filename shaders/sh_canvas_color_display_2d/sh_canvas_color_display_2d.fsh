@@ -109,7 +109,7 @@ void main() {
 		gl_FragColor = vec4(col.rgb, tx.x * alp);
 		
 	} else if(type == 2) { // hue
-		gl_FragColor = vec4(hsv2rgb(vec3(tx.x,1.,1.)), alp);
+		gl_FragColor = vec4(hsv2rgb(vec3(tx.x,1.,1.)), alp) * v_vColour;
 		
 	}
 	

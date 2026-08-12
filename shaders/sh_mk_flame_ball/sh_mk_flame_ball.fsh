@@ -45,7 +45,7 @@ void main() {
 	float g  = i * lo * 4.;
 	float a  = step(0., g);
 	
-	gl_FragColor = vec4(vec3(g), a);
+	gl_FragColor = vec4(vec3(g), a) * v_vColour;
 }
 
 /* 2d version idk which one look nicer
@@ -61,5 +61,5 @@ float g = o * lo * 2. - i;
 float a = o - i;
 
 if(a <= 0.) discard;
-gl_FragColor = vec4(vec3(g), a);
+gl_FragColor = vec4(vec3(g), a) * v_vColour;
 */

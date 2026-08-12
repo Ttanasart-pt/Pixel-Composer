@@ -350,5 +350,5 @@ void main() {
 	float ang = ((atan(cPos.y, cPos.x) + radians(angle)) / PI + 1.) / 2.;
 	vec2  tx  = fract(vec2(ang, dist) * scale);
 	
-    gl_FragColor = texture2Dintp( gm_BaseTexture, tx );
+    gl_FragColor = texture2Dintp( gm_BaseTexture, tx ) * v_vColour;
 }

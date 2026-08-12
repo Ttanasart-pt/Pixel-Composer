@@ -115,5 +115,5 @@ void main() {
 		if(alphaInvert == 1) col.a = 1. - col.a;
 	}
 	
-    gl_FragColor = col;
+    gl_FragColor = col * v_vColour;
 }

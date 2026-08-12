@@ -295,5 +295,5 @@ void main() {
 		 res *= ints;
          res  = max(res, 0.);
 	
-	gl_FragColor = res;
+	gl_FragColor = res * v_vColour;
 }

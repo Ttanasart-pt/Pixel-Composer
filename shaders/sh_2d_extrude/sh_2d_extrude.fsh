@@ -129,6 +129,12 @@
 
 #endregion -- curve --
 
+#ifdef _YY_HLSL11_ 
+    #define PATH_MAX  1024
+#else 
+    #define PATH_MAX  256
+#endif
+
 varying vec2 v_vTexcoord;
 varying vec4 v_vColour;
 
@@ -147,7 +153,7 @@ uniform float scale_curve[CURVE_MAX];
 uniform int   scale_amount;
 
 uniform int   useExpath;
-uniform float expathData[1024];
+uniform float expathData[PATH_MAX];
 uniform int   expathSample;
 
 uniform int   depthOrder;
@@ -222,5 +228,5 @@ void main() {
 		
 	}
 	
-	gl_FragColor = res;
+	gl_FragColor = res * v_vColour;
 }

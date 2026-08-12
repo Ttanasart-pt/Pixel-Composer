@@ -5,5 +5,5 @@ void main() {
     vec4 draw = texture2D( gm_BaseTexture, v_vTexcoord );
     
     if(draw.a == 0.) discard;
-    gl_FragColor = draw;
+    gl_FragColor = draw * v_vColour;
 }

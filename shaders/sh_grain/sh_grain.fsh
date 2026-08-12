@@ -388,5 +388,5 @@ void main() {
 	
 	c.rgb = hsv2rgb(hsv);
 	
-    gl_FragColor = c;
+    gl_FragColor = c * v_vColour;
 }

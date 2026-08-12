@@ -63,5 +63,5 @@ void main() {
 	float x = mix(xRange[0], xRange[1], a);
 	float y = mix(yRange[0], yRange[1], r);
 	
-	gl_FragColor = invert == 0? vec4(x, y, blue, uva) : vec4(y, x, blue, uva);
+	gl_FragColor = invert == 0? vec4(x, y, blue, uva) : vec4(y, x, blue, uva) * v_vColour;
 }

@@ -21,5 +21,5 @@ void main() {
 		if(sel == 0.) { gl_FragColor = vec4(0.); return; }
 	}
 	
-	gl_FragColor = texture2D( colorMap, p );
+	gl_FragColor = texture2D( colorMap, p ) * v_vColour;
 }

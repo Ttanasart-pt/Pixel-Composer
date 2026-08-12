@@ -483,5 +483,5 @@ void main() {
 		chrS = mix(chromaSca.x, chromaSca.y, (_vMap.r + _vMap.g + _vMap.b) / 3.);
 	}
 	
-	gl_FragColor = chroma_continuous(v_vTexcoord, str, itns, chrO, chrS);
+	gl_FragColor = chroma_continuous(v_vTexcoord, str, itns, chrO, chrS) * v_vColour;
 }

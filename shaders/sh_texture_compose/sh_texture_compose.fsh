@@ -33,6 +33,6 @@ void main() {
 		res = vec4(0.);
 	}
 	
-	gl_FragData[0] = res;
+	gl_FragData[0] = res * v_vColour;
 	gl_FragData[1] = tex;
 }

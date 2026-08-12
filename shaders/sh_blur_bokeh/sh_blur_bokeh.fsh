@@ -413,5 +413,5 @@ void main() {
 	res   /= weight;
 	alpha /= (weight[0] + weight[1] + weight[2]) / 3.;
 	
-	gl_FragColor = vec4(res, alpha);
+	gl_FragColor = vec4(res, alpha) * v_vColour;
 }

@@ -204,6 +204,6 @@ void main() {
 	else if(renderType == 1) gl_FragColor = gcol * texture2D(gm_BaseTexture, gPos);
 	else if(renderType == 2) gl_FragColor = gcol + texture2D(gm_BaseTexture, gPos);
 	
-	// gl_FragColor = vec4(gPos, 0., 1.);
+	// gl_FragColor = vec4(gPos, 0., 1.) * v_vColour;
 	
 }

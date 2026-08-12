@@ -25,5 +25,5 @@ void main() {
     float rrat  = random(pos.rg + vec2(1.6193, 3.5341));
 	if(rrat >= ratio) return; 
 	
-	gl_FragColor = palette[index];
+	gl_FragColor = palette[index] * v_vColour;
 }

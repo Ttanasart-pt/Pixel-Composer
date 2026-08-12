@@ -16,11 +16,11 @@ void main() {
 	
 	if(cornerType == 0) {
 		if(px.x <= _w && px.y <= _h && px.x / _w + px.y / _h >= 1.)
-			gl_FragColor = vec4(1.);
+			gl_FragColor = vec4(1.) * v_vColour;
 			
 	} else if(cornerType == 1) {
 		if(px.x <= _w && px.y <= _h && px.x + px.y >= min(_w, _h))
-			gl_FragColor = vec4(1.);
+			gl_FragColor = vec4(1.) * v_vColour;
 			
 	}
 }

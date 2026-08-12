@@ -194,5 +194,5 @@ void main() {
 	if(colorMode == 1) res.rgb = vec3(gr);
 	if(colorMode == 2) res.rgb = vec3(step(.5, gr));
 	
-	gl_FragColor = res;
+	gl_FragColor = res * v_vColour;
 }

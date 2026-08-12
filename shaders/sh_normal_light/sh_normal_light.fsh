@@ -244,5 +244,5 @@ void main() {
 	
 	float d = useNormalMap == 1? max(dot(normal, lightDir), 0.0) : 1.;
 	diffuse = d * lightClr.rgb * lightClr.a * brightness;
-	gl_FragColor = vec4(diffuse, 1.);
+	gl_FragColor = vec4(diffuse, 1.) * v_vColour;
 }

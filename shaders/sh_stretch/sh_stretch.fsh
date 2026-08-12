@@ -352,5 +352,5 @@ void main() {
 	
 	vec2  sx = anchor + px;
 	
-	gl_FragColor = sampleTexture(gm_BaseTexture, sx);
+	gl_FragColor = sampleTexture(gm_BaseTexture, sx) * v_vColour;
 }

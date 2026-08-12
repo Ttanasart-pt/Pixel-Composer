@@ -25,5 +25,5 @@ void main() {
 		gl_FragColor   = ((c0 * c0.a) + (c1 * c1.a) + (c2 * c2.a) + (c3 * c3.a)) / (c0.a + c1.a + c2.a + c3.a);
 		gl_FragColor.a = 1.;
 	} else 
-		gl_FragColor = c;
+		gl_FragColor = c * v_vColour;
 }

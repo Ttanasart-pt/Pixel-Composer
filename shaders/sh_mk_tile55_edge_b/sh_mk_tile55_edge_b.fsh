@@ -62,5 +62,5 @@ void main() {
 		if(!draw) discard;
 	}
 	
-	gl_FragColor = texture2D( gm_BaseTexture, v_vTexcoord );
+	gl_FragColor = texture2D( gm_BaseTexture, v_vTexcoord ) * v_vColour;
 }

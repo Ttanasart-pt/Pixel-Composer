@@ -28,7 +28,7 @@ void main() {
 		float angle = 2. * PI * i / cir;
 		vec4 b = sample( vec2(0.5, 0.5) + vec2(cos(angle), sin(angle)) * dist * 0.5 );
 		if(b.a == 1.) {
-			gl_FragColor = b;
+			gl_FragColor = b * v_vColour;
 			return;
 		}
 	}

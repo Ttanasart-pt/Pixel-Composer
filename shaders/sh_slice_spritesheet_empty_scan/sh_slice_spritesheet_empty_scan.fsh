@@ -23,7 +23,7 @@ void main() {
 		vec4 col = texture2D( gm_BaseTexture, tx );
 		
 		if((empty == 0 && col != color) || (empty == 1 && col.a != 0.)) {
-			gl_FragColor = col;
+			gl_FragColor = col * v_vColour;
 			return;
 		}
 	}

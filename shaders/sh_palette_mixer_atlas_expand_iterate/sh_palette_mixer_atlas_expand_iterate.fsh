@@ -28,5 +28,5 @@ void main() {
     pos = sample( pos, v_vTexcoord + vec2(0.,  tx.y) * dist );
     pos = sample( pos, v_vTexcoord + vec2(0., -tx.y) * dist );
     
-    gl_FragColor = pos;
+    gl_FragColor = pos * v_vColour;
 }

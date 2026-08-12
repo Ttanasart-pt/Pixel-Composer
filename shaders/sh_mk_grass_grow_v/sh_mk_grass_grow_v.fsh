@@ -187,7 +187,7 @@ void main() {
 	
 	gl_FragColor = drawBG == 1? baseCol : vec4(0.);
 	if(groundFill == 1 && grassBase.r > 0.)
-		gl_FragColor = groundColor;
+		gl_FragColor = groundColor * v_vColour;
 	
 	checkGrass(v_vTexcoord);
 	checkGrass(v_vTexcoord + vec2(-tx.x, tx.y));

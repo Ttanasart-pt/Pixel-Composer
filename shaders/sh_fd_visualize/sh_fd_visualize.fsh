@@ -295,6 +295,6 @@ void main() {
 	float dens = curveEval(densityMap_curve, densityMap_amount, clamp(rawV, 0., 1.));
 	vec4  gradSample = gradientEval(pfract(dens + gradient_shift));
 	
-    gl_FragColor = gradSample;
+    gl_FragColor = gradSample * v_vColour;
     if(transparent == 1) gl_FragColor.a *= dens;
 }

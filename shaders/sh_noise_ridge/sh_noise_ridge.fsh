@@ -124,7 +124,7 @@ void main() {
 		
 	} else if(blendMode == 1) {
 		float rid = hgh > 0.5? (1. - (1. - 2. * (hgh - 0.5)) * (1. - str)) : ((2. * hgh) * str);	
-		gl_FragColor = vec4(max(base.rgb, vec3(rid)), 1.);
+		gl_FragColor = vec4(max(base.rgb, vec3(rid)), 1.) * v_vColour;
 		
 	}
 }

@@ -493,5 +493,5 @@ void main() {
 	if(axis == 0) pos.x += (pos.y - cnt.y) * amo;
 	else          pos.y += (pos.x - cnt.x) * amo;
 	
-    gl_FragColor = sampleTexture( gm_BaseTexture, pos );
+    gl_FragColor = sampleTexture( gm_BaseTexture, pos ) * v_vColour;
 }

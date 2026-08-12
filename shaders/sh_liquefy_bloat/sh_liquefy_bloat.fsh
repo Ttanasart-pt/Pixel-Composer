@@ -290,5 +290,5 @@ void main() {
     
     vec2  stx = v_vTexcoord - (v_vTexcoord - p1) * intensity * inf;
     
-    gl_FragColor = texture2Dintp( gm_BaseTexture, stx );
+    gl_FragColor = texture2Dintp( gm_BaseTexture, stx ) * v_vColour;
 }

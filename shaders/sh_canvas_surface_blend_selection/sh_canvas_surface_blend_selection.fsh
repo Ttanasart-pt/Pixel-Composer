@@ -25,5 +25,5 @@ void main() {
 		res = blend(res, slC);
 	}
 	
-	gl_FragColor = res;
+	gl_FragColor = res * v_vColour;
 }

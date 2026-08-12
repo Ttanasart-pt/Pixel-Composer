@@ -13,5 +13,5 @@ void main() {
 	
 	if(ttx.x > .5) base.rgb *= .8;
 	
-	gl_FragColor = base;
+	gl_FragColor = base * v_vColour;
 }

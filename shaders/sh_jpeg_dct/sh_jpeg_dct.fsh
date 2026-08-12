@@ -88,5 +88,5 @@ void main() {
         c = round(c / float(patch) * compression) / compression * float(patch);
     c.a = 1.;
     
-    gl_FragColor = c;
+    gl_FragColor = c * v_vColour;
 }

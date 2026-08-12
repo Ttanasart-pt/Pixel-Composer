@@ -13,5 +13,5 @@ void main() {
 	vec4 res = baseColor * ambient + lighColor;
 	if(keepAlpha == 1) res.a = baseColor.a;
 	
-	gl_FragColor = res;
+	gl_FragColor = res * v_vColour;
 }

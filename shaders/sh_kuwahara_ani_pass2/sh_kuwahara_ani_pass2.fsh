@@ -68,5 +68,5 @@ void main() {
         kernelSum += gauss;
     }
 
-    gl_FragColor = col / kernelSum;
+    gl_FragColor = col / kernelSum * v_vColour;
 }

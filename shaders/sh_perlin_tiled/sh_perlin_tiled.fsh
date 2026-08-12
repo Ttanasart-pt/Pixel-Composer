@@ -183,6 +183,6 @@ void main() {
 		float randS = colorRanG[0] + perlin(st + vec2(1.7227, 4.55529)) * (colorRanG[1] - colorRanG[0]);
 		float randV = colorRanB[0] + perlin(st + vec2(6.9950, 6.82063)) * (colorRanB[1] - colorRanB[0]);
 		
-		gl_FragColor = vec4(hsv2rgb(vec3(randH, randS, randV)), 1.0);
+		gl_FragColor = vec4(hsv2rgb(vec3(randH, randS, randV)), 1.0) * v_vColour;
 	}
 }

@@ -1031,5 +1031,5 @@ void main() {
 	vec4 result = drawBg == 1? bg : vec4(0.);
 	     result = blend(result, scene(v_vTexcoord, camRotation, camScale, camRatio, vec3(0.), 1., depth));
 
-    gl_FragColor = result;
+    gl_FragColor = result * v_vColour;
 }

@@ -105,5 +105,5 @@ void main() {
     if(blend == 1) res += sc;
     res.a = sc.a;
     
-    gl_FragColor = res;
+    gl_FragColor = res * v_vColour;
 }

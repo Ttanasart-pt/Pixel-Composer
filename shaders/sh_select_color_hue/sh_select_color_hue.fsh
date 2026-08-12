@@ -31,5 +31,5 @@ void main() {
 	float s = rangeVal(v_vTexcoord.x, hueMinS, hueMinE, hueMaxS, hueMaxE);
 	if(1. - v_vTexcoord.y > s) cc.a *= .75;
 	
-	gl_FragColor = vec4(hsv2rgb(hsv), cc.a);
+	gl_FragColor = vec4(hsv2rgb(hsv), cc.a) * v_vColour;
 }

@@ -23,7 +23,7 @@ void main() {
 		
 		vec4 sam = texture2D( gm_BaseTexture, pos );
 		if(sam.a == 1.) { //inner pixel
-			gl_FragColor = vec4(0.);
+			gl_FragColor = vec4(0.) * v_vColour;
 			break;
 		}
 	}

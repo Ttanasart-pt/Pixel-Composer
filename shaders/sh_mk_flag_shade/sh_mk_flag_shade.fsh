@@ -30,5 +30,5 @@ void main() {
 	
 	tex.rgb *= shade;
 	
-    gl_FragColor = tex;
+    gl_FragColor = tex * v_vColour;
 }

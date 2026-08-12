@@ -9,5 +9,5 @@ uniform sampler2D alpha_mask;
 void main() {
 	vec4 alpha = texture2D( alpha_mask, v_vTexcoord );
     gl_FragColor = vec4(texture2D( gm_BaseTexture, v_vTexcoord ).rgb, alpha);
-	gl_FragColor = vec4(vec3(1.), alpha);
+	gl_FragColor = vec4(vec3(1.), alpha) * v_vColour;
 }

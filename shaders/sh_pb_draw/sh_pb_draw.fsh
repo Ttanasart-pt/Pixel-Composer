@@ -168,7 +168,7 @@ void main() {
 	vec4 cs      = pbPattern(pattern, patx, pattern_pos, pattern_scale, color);
 	
 	if(type == 0) { // fill
-		if(isShape) gl_FragColor = mmix(cc, cs, intensity);
+		if(isShape) gl_FragColor = mmix(cc, cs, intensity) * v_vColour;
 		return;
 	}
 	
@@ -191,7 +191,7 @@ void main() {
 		else if(stroke_position == 1) isStroke =  isShape && borDist <= float(stroke_thickness);
 		else if(stroke_position == 2) isStroke = !isShape && borDist <= float(stroke_thickness);
 		
-		if(isStroke) gl_FragColor = mmix(cc, cs, intensity);
+		if(isStroke) gl_FragColor = mmix(cc, cs, intensity) * v_vColour;
 		return;
 	}
 	
@@ -211,7 +211,7 @@ void main() {
 		}
 		
 		bool isCorner = (kfill / ksize) < .5;
-		if(isCorner) gl_FragColor = mmix(cc, cs, intensity);
+		if(isCorner) gl_FragColor = mmix(cc, cs, intensity) * v_vColour;
 		return;
 	}
 	
@@ -257,7 +257,7 @@ void main() {
 			
 			vec4 sp = sampleTex(v_vTexcoord - shf * i * tx);
 			if(sp.a != 0.) { 
-				gl_FragColor = mmix(cc, cs, intensity);
+				gl_FragColor = mmix(cc, cs, intensity) * v_vColour;
 				break; 
 			}
 		}
@@ -284,7 +284,7 @@ void main() {
 			ns += _shine;
 			
 			if(fill && px.x > os && px.x <= ns) {
-				gl_FragColor = mmix(cc, cs, intensity);
+				gl_FragColor = mmix(cc, cs, intensity) * v_vColour;
 				break;
 			}
 			

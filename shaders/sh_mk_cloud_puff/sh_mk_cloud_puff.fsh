@@ -126,6 +126,6 @@ void main() {
 	}
 	
 	col.a *= alp;
-	gl_FragData[0] = col;
+	gl_FragData[0] = col * v_vColour;
 	gl_FragData[1] = spr;
 }

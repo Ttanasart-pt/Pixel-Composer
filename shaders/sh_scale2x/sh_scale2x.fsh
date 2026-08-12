@@ -35,6 +35,6 @@ void main() {
 		else if(index == 2.) gl_FragColor = eq(D, H)? D : E;
 		else				 gl_FragColor = eq(H, F)? F : E;
 	} else {
-		gl_FragColor = E;
+		gl_FragColor = E * v_vColour;
 	}
 }

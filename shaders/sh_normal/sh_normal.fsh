@@ -124,5 +124,5 @@ void main() {
 	vec3 n3 = vec3(_n, 1.);
 	if(normal == 1) n3 = normalize(n3);
 	
-    gl_FragColor = vec4(.5 + n3 * .5, c.a);
+    gl_FragColor = vec4(.5 + n3 * .5, c.a) * v_vColour;
 }

@@ -22,6 +22,6 @@ void main() {
          cMin = min(cMin, sample( surfaceMax, v_vTexcoord + vec2(0., 1.) * tx ));
          cMin = min(cMin, sample( surfaceMax, v_vTexcoord + vec2(1., 1.) * tx ));
     
-    gl_FragData[0] = cMax;
+    gl_FragData[0] = cMax * v_vColour;
     gl_FragData[1] = cMin;
 }

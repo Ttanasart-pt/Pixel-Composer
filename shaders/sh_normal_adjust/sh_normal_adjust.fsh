@@ -45,5 +45,5 @@ void main() {
 	
 	if(renormalize == 1) norm = normalize(norm);
 	
-	gl_FragColor = vec4(norm, base.a);
+	gl_FragColor = vec4(norm, base.a) * v_vColour;
 }

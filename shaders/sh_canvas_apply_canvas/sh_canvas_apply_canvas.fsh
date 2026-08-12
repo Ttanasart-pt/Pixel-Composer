@@ -24,5 +24,5 @@ void main() {
 	float al = fg.a + bg.a * (1. - fg.a);
 	vec4 res = ((fg * fg.a) + (bg * bg.a * (1. - fg.a))) / al;
 	
-	gl_FragColor = res;
+	gl_FragColor = res * v_vColour;
 }

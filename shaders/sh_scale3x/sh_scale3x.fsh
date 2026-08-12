@@ -50,16 +50,16 @@ void main() {
 		else if(index == 1. && ((eq(D, B) && !eq(E, C)) || (eq(B, F) && !eq(E, A))))
 			gl_FragColor = B;
 		else if(index == 2. && eq(B, F))
-			gl_FragColor = F;
+			gl_FragColor = F * v_vColour;
 		else if(index == 3. && ((eq(D, B) && !eq(E, G)) || (eq(D, H) && !eq(E, A))))
 			gl_FragColor = D;
 		else if(index == 5. && ((eq(B, F) && !eq(E, I)) || (eq(H, F) && !eq(E, C))))
-			gl_FragColor = F;	
+			gl_FragColor = F * v_vColour;	
 		else if(index == 6. && eq(D, H))
 			gl_FragColor = D;
 		else if(index == 7. && ((eq(D, H) && !eq(E, I)) || (eq(H, F) && !eq(E, G))))
 			gl_FragColor = H;
 		else if(index == 8. && eq(H, F))
-			gl_FragColor = F;
+			gl_FragColor = F * v_vColour;
 	}
 }

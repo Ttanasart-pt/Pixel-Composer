@@ -100,5 +100,5 @@ void main() {
     
     gl_FragColor = vec4(baseC, 1.);
     
-    // gl_FragColor = vec4(px, 0., 1.);
+    // gl_FragColor = vec4(px, 0., 1.) * v_vColour;
 }

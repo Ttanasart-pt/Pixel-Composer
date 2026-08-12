@@ -14,5 +14,5 @@ void main() {
 		accu += texture2D(gm_BaseTexture, tx);
 	}
 	
-	gl_FragColor = accu;
+	gl_FragColor = accu * v_vColour;
 }

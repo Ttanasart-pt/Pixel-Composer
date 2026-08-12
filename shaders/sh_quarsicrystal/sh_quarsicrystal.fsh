@@ -97,5 +97,5 @@ void main() {
     }
 	
     float _s = 1. + sin(value * PI / 2.0);
-	gl_FragColor = mix(color0, color1, _s); 
+	gl_FragColor = mix(color0, color1, _s) * v_vColour; 
 } 

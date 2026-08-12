@@ -19,5 +19,5 @@ float B(vec2 U) {
 
 void main() {
     vec2 u = v_vTexcoord - mod(seed, 1000.);
-    gl_FragColor = vec4(vec3(B(u)), 1.);
+    gl_FragColor = vec4(vec3(B(u)), 1.) * v_vColour;
 }

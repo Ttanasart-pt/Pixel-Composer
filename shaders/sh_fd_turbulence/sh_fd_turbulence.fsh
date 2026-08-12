@@ -30,5 +30,5 @@ void main() {
 	float sX = noise(v_vTexcoord * scale, 1.986458) * 2. - 1.;
 	float sY = noise(v_vTexcoord * scale, 5.648630) * 2. - 1.;
 	
-	gl_FragColor = vec4(sX * strength, sY * strength, 0., 1.);
+	gl_FragColor = vec4(sX * strength, sY * strength, 0., 1.) * v_vColour;
 }

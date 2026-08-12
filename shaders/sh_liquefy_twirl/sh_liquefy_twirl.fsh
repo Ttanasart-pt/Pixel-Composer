@@ -293,5 +293,5 @@ void main() {
     
     stx = p1 + (v_vTexcoord - p1) * mat2(cos(ang), -sin(ang), sin(ang), cos(ang));
     
-    gl_FragColor = texture2Dintp( gm_BaseTexture, stx );
+    gl_FragColor = texture2Dintp( gm_BaseTexture, stx ) * v_vColour;
 }

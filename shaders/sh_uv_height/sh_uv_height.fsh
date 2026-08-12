@@ -54,5 +54,5 @@ void main() {
     float dy = texture2D(heightMap, getUV(fract(ttx + vec2(0., tx.y)))).x - texture2D(heightMap, getUV(fract(ttx - vec2(0., tx.y)))).x;
     vec2  uv = vec2(v_vTexcoord.x, 1. - v_vTexcoord.y) + vec2(dx, dy) * intensity;
 
-    gl_FragColor = vec4(uv, blue, alp);
+    gl_FragColor = vec4(uv, blue, alp) * v_vColour;
 }

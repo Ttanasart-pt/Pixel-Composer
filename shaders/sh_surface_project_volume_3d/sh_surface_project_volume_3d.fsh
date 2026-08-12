@@ -468,5 +468,5 @@ void main() {
     
     vec4 denColor = gradientEval(volume);
     
-    gl_FragColor = vec4(vCol, volume) * colr * denColor;
+    gl_FragColor = vec4(vCol, volume) * colr * denColor * v_vColour;
 }

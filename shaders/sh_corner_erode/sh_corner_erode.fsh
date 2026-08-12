@@ -31,13 +31,13 @@ void main() {
 			vec2 pxs = (pixelPosition + vec2( cos(ang) * i,  sin(ang) * i)) / dimension;
 		
 			if(pxs.x < 0. || pxs.x > 1. || pxs.y < 0. || pxs.y > 1.) {
-				gl_FragColor = vec4(i / size, 0., 0., 1.);
+				gl_FragColor = vec4(i / size, 0., 0., 1.) * v_vColour;
 				return;
 			}
 		
 			vec4 sam = texture2D( gm_BaseTexture, pxs );
 			if(length(sam.rgb) == 0.) {
-				gl_FragColor = vec4(i / size, 0., 0., 1.);
+				gl_FragColor = vec4(i / size, 0., 0., 1.) * v_vColour;
 				return;
 			}
 		}

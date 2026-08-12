@@ -159,5 +159,5 @@ void main() {
     radius = pow(radius, ins);
     vec2 uv = cen + vec2(radius * cos(theta), radius * sin(theta));
     
-	gl_FragColor = sampleTexture(gm_BaseTexture, uv);
+	gl_FragColor = sampleTexture(gm_BaseTexture, uv) * v_vColour;
 }

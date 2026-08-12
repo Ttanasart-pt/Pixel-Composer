@@ -10,7 +10,7 @@ void main() {
 	vec4 dep = texture2D(depthSurf, v_vTexcoord);
 	vec4 cut = texture2D(cutSurf,   v_vTexcoord);
 	
-	gl_FragColor = dep;
+	gl_FragColor = dep * v_vColour;
 	if(cut.a == 0. || dep.a == 0.) return;
 	
 	if(cut.r < dep.r) {

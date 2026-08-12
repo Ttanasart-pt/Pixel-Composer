@@ -26,7 +26,7 @@ void main() {
     float res = step(br, bw);
     
          if(mode == 0) gl_FragColor = vec4(vec3(res), 1.);
-    else if(mode == 1) gl_FragColor = cc;
+    else if(mode == 1) gl_FragColor = cc * v_vColour;
         
     if(alpha == 1) gl_FragColor.a = res;
 }

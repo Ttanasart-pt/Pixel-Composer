@@ -75,5 +75,5 @@ void main() {
     vec2  pos = (ntx - position / dimension) * mat2(cos(ang), -sin(ang), sin(ang), cos(ang)) * scale;
 	
 	float height = noise(pos) * amplitude;
-    gl_FragColor = vec4(height, height, height, 1.);
+    gl_FragColor = vec4(height, height, height, 1.) * v_vColour;
 }

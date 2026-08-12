@@ -153,5 +153,5 @@ void main() {
 		p   *= 2.;
     }
 	
-	gl_FragColor = vec4(vec3(cc), 1.);
+	gl_FragColor = vec4(vec3(cc), 1.) * v_vColour;
 }

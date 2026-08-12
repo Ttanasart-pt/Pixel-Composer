@@ -12,5 +12,5 @@ void main() {
 	vec2 tx = v_vTexcoord * scale / size + frame * .01;
 	     tx = fract(tx);
 	
-	gl_FragColor = vec4(blend.rgb, progress) * texture2D(surface, tx);
+	gl_FragColor = vec4(blend.rgb, progress) * texture2D(surface, tx) * v_vColour;
 }

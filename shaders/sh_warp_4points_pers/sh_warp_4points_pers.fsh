@@ -188,5 +188,5 @@ void main() {
     vec3 warpedCoord = H * vec3(v_vTexcoord, 1.0);
     vec2 finalCoord  = warpedCoord.xy / warpedCoord.z;
 
-    gl_FragColor = texture2D(gm_BaseTexture, finalCoord);
+    gl_FragColor = texture2D(gm_BaseTexture, finalCoord) * v_vColour;
 }

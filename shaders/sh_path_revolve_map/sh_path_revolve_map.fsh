@@ -148,5 +148,5 @@ void main() {
 	samp.a *= uvs.a;
 	
 	gl_FragColor = samp;
-	// gl_FragColor = vec4(tex, 0., 1.);
+	// gl_FragColor = vec4(tex, 0., 1.) * v_vColour;
 }

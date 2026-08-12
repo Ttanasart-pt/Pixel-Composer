@@ -271,5 +271,5 @@ void main() {
 		
 	}
 	
-	gl_FragColor = mix(baseColor, targetColor, str);
+	gl_FragColor = mix(baseColor, targetColor, str) * v_vColour;
 }

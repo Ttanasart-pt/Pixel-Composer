@@ -35,7 +35,7 @@ void main() {
 			if(ccc.a > 0.) {
 				float dist = 1. - i / shadow;
 				      dist = dist * dist * dist;
-				gl_FragColor = vec4(color.rgb, dist * intensity);
+				gl_FragColor = vec4(color.rgb, dist * intensity) * v_vColour;
 				return;
 			}
 		}

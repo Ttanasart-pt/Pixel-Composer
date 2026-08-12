@@ -24,5 +24,5 @@ void main() {
 	// Curl = ∂v/∂x - ∂u/∂y
 	float curl = dvdx - dudy;
 	
-	gl_FragColor = vec4(curl, curl, curl, 1.);
+	gl_FragColor = vec4(curl, curl, curl, 1.) * v_vColour;
 }

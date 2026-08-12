@@ -83,7 +83,7 @@ void main() {
 	else if(mode == 1) fill = it > 0.;
 	
 	if(fill) {
-		gl_FragColor = color;
+		gl_FragColor = color * v_vColour;
 		if(aa == 1) gl_FragColor.a *= min(1., ds);
 	}
 }

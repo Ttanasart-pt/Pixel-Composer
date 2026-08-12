@@ -130,11 +130,11 @@ void main() {
 	
 	if(pattern == 0) {
 		float ch = pat_cross(c, wid);
-		gl_FragColor = mix(col1, col2, ch);
+		gl_FragColor = mix(col1, col2, ch) * v_vColour;
 		
 	} else if(pattern == 1) {
 		float ch = pat_xor(c, iteration);
-		gl_FragColor = mix(col1, col2, ch);
+		gl_FragColor = mix(col1, col2, ch) * v_vColour;
 		
 	}
 }

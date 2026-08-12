@@ -389,5 +389,5 @@ void main() {
     vec3  refr = refract(inci, norm, ior);
     vec2  refSamp = v_vTexcoord + refr.xy * dist;
     
-	gl_FragColor = sampleTexture(gm_BaseTexture, refSamp);
+	gl_FragColor = sampleTexture(gm_BaseTexture, refSamp) * v_vColour;
 }

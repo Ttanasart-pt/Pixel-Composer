@@ -29,5 +29,5 @@ void main() {
 	float r = mix(rotationRandom.x, rotationRandom.y, random(c.xy, seed));
 	t = (t - .5) * mat2(cos(r), -sin(r), sin(r), cos(r)) + .5;
 	
-	gl_FragColor = texture2D( textureMap, t );
+	gl_FragColor = texture2D( textureMap, t ) * v_vColour;
 }

@@ -34,5 +34,5 @@ void main() {
 	vec4 res = vec4(_col0 == _col1? colr : 0.);
 	if(preserveAlpha == 1) res.a = _col0.a;
 	
-    gl_FragColor = res;
+    gl_FragColor = res * v_vColour;
 }

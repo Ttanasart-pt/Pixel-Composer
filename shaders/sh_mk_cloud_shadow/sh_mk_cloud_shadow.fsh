@@ -42,7 +42,7 @@ void main() {
 			vec4 samp = texture2D(gm_BaseTexture, v_vTexcoord - offs);
 			
 			if(samp.a > 0.) {
-				gl_FragColor = vec4(color.rgb, color.a * strength);
+				gl_FragColor = vec4(color.rgb, color.a * strength) * v_vColour;
 				return;
 			}
 		}

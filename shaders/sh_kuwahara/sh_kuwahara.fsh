@@ -161,5 +161,5 @@ void main () {
         ou += vec4(m[k].rgb * w, w);
     }
 
-    gl_FragColor = clamp((ou / ou.w), 0.0, 1.0);
+    gl_FragColor = clamp((ou / ou.w), 0.0, 1.0) * v_vColour;
 }

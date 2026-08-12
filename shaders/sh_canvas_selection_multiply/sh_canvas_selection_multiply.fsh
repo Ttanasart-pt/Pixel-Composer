@@ -9,5 +9,5 @@ void main() {
 	
 	s.a *= m.a;
 	
-	gl_FragColor = s;
+	gl_FragColor = s * v_vColour;
 }

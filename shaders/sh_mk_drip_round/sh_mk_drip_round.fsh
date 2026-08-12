@@ -38,5 +38,5 @@ void main() {
 	res = base * step(threshold, bright);
     
 	if(invert == 1) res = 1. - res;
-	gl_FragColor = res;
+	gl_FragColor = res * v_vColour;
 }

@@ -13,5 +13,5 @@ void main() {
          c = min(c, texture2D( surface, v_vTexcoord + vec2(0., 1.) * tx ));
          c = min(c, texture2D( surface, v_vTexcoord + vec2(1., 1.) * tx ));
     
-    gl_FragColor = c;
+    gl_FragColor = c * v_vColour;
 }

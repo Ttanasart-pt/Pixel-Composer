@@ -75,5 +75,5 @@ void main() {
 	if(erase == 1) res = vec4(res.rgb, res.a - fgC.a);
 	else           res = blend(res, fgC);
 	
-	gl_FragColor = res;
+	gl_FragColor = res * v_vColour;
 }

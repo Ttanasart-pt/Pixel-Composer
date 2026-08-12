@@ -23,5 +23,5 @@ void main() {
 		gl_FragColor = vec4(vec3(0.), 1.);
 		
 	if(useMask == 1) 
-		gl_FragColor = col * texture2D( mask, v_vTexcoord );
+		gl_FragColor = col * texture2D( mask, v_vTexcoord ) * v_vColour;
 }

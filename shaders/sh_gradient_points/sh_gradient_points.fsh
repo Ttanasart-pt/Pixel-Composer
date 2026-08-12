@@ -131,5 +131,5 @@ void main() {
 		        color[3].a * weights[3];
 	}
 	
-	gl_FragColor = clr;
+	gl_FragColor = clr * v_vColour;
 }

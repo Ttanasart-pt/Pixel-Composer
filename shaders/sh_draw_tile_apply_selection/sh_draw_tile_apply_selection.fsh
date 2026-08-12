@@ -10,5 +10,5 @@ void main() {
     if(mask.r ==  0.) discard;
     if(draw.r == -1.) discard;
     
-    gl_FragColor = draw;
+    gl_FragColor = draw * v_vColour;
 }

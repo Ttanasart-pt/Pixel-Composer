@@ -8,5 +8,5 @@ void main() {
 	if(axis == 1 || axis == 3) pos.x = 1. - pos.x;
 	if(axis == 2 || axis == 3) pos.y = 1. - pos.y;
 	
-    gl_FragColor = texture2D( gm_BaseTexture, pos );
+    gl_FragColor = texture2D( gm_BaseTexture, pos ) * v_vColour;
 }

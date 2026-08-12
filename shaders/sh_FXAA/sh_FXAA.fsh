@@ -83,6 +83,6 @@ void main() {
 	vec4 base = texture2D(   gm_BaseTexture, v_vTexcoord );
 	vec4 fxaa = textureFXAA( gm_BaseTexture, v_vTexcoord );
 	
-    gl_FragData[0] = fxaa;
+    gl_FragData[0] = fxaa * v_vColour;
     gl_FragData[1] = vec4(abs(base.rgb - fxaa.rgb), 1.);
 }

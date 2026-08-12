@@ -170,7 +170,7 @@ void main() {
 		if(s(a5) && s(a7) && s(n, a8) && ns(a0) && ns(d, a1) && ns(d, a2) && ns(d, a3) && ns(d, a6)) {	// 0 1 2 
 																										// 3 A A
 																										// 6 A A
-			gl_FragColor = n? sel3(a0, a1, a3) : sel3(sel2(a2, a6), sel2(a1, a3), a0);
+			gl_FragColor = n? sel3(a0, a1, a3) : sel3(sel2(a2, a6), sel2(a1, a3), a0) * v_vColour;
 			return;
 		}
 		
@@ -199,7 +199,7 @@ void main() {
 		if(s(a3, a1) && s(a5) && s(n, a8) && s(a7) && ns(d, a2) && ns(d, a1) && ns(d, a3) && ns(d, a6)) {	// 0 A C
 																											// A B B
 																											// C B B
-			gl_FragColor = n? sel3(a0, a1, a3) : sel3(sel2(a2, a6), sel2(a1, a3), a0);
+			gl_FragColor = n? sel3(a0, a1, a3) : sel3(sel2(a2, a6), sel2(a1, a3), a0) * v_vColour;
 			return;
 		}
 	}

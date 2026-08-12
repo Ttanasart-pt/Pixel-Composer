@@ -26,7 +26,7 @@ void main() {
 		float br = gr * col.a * _w;
 		if(br > v) {
 			v = br;
-			gl_FragColor = vec4(_x, _y, gr, 1.);
+			gl_FragColor = vec4(_x, _y, gr, 1.) * v_vColour;
 		}
 	}
 }

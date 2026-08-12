@@ -29,7 +29,7 @@ void main() {
 	vec2 tx = 1. / dimension;
 	
 	vec4 baseColor = texture2D(gm_BaseTexture, v_vTexcoord);
-	gl_FragColor   = baseColor;
+	gl_FragColor   = baseColor * v_vColour;
 	blndColor      = baseColor;
 	
 	if(isBase(baseColor)) return;

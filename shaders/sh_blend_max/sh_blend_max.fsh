@@ -38,5 +38,5 @@ void main() {
 	res.a = max(_col0.a, _col1.a);
 	if(preserveAlpha == 1) res.a = _col0.a;
 	
-    gl_FragColor = res;
+    gl_FragColor = res * v_vColour;
 }

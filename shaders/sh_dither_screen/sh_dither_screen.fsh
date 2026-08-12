@@ -21,5 +21,5 @@ void main() {
 	
 	c.rgb += r;
 	
-    gl_FragColor = c;
+    gl_FragColor = c * v_vColour;
 }

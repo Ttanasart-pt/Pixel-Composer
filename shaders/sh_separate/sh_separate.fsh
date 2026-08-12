@@ -16,6 +16,6 @@ void main() {
 	vec4 cc = texture2D(gm_BaseTexture, v_vTexcoord);
 	vec4 mm = texture2D(mask, v_vTexcoord);
 	
-	if(masked(mm)) gl_FragData[0] = cc;
+	if(masked(mm)) gl_FragData[0] = cc * v_vColour;
 	else gl_FragData[1] = cc;
 }

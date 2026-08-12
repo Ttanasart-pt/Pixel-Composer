@@ -26,5 +26,5 @@ void main() {
 	if(hasBack == 1 && flip == 1) col = texture2D( textureBack, coord );
 	else						  col = texture2D( texture,     coord );
 	
-    gl_FragColor = col;
+    gl_FragColor = col * v_vColour;
 }

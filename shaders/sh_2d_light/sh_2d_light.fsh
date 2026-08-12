@@ -156,5 +156,5 @@ void main() {
 	bright *= intensity;
 	if(band > 0.) bright = ceil(bright * band) / band;
 	
-    gl_FragColor = vec4(color.rgb * bright, 1.);
+    gl_FragColor = vec4(color.rgb * bright, 1.) * v_vColour;
 }

@@ -22,7 +22,7 @@ void main() {
 	float rat = (useMask == 1? mskAmo : 1.) * mixRatio;
 	      rat = clamp(rat, 0., 1.);
 		  
-	gl_FragColor = mix(ori, edt, rat);
+	gl_FragColor = mix(ori, edt, rat) * v_vColour;
 	if(ori.a == 0.) gl_FragColor.rgb = edt.rgb;
 	if(edt.a == 0.) gl_FragColor.rgb = ori.rgb;
 }

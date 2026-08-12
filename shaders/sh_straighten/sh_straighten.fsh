@@ -371,5 +371,5 @@ void main() {
 		uv = p1 + (p2 - p1) * i + (p3 - p1) * j + (p4 - p3 - p2 + p1) * i * j;
 	}
 	
-	gl_FragColor = sampleTexture(gm_BaseTexture, uv);
+	gl_FragColor = sampleTexture(gm_BaseTexture, uv) * v_vColour;
 }

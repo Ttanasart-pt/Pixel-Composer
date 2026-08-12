@@ -204,5 +204,5 @@ void main() {
 	
 	vec4 col = mix(dcol, lcol, light);
 	
-    gl_FragColor = vec4(col.rgb, samp.a);
+    gl_FragColor = vec4(col.rgb, samp.a) * v_vColour;
 }

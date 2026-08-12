@@ -84,7 +84,7 @@ void main() {
 	if(a4.a == 0.) {
 		if(fill == 0) return;
 		
-		gl_FragColor = sel4(a1, a3, a5, a7);
+		gl_FragColor = sel4(a1, a3, a5, a7) * v_vColour;
 		return;
 	}
 	
@@ -96,11 +96,11 @@ void main() {
 		
 	} else if(strict == 1) {
 		if(!s(a4, a1) && s(a1, a3) && s(a1, a5) && s(a1, a7)) 
-			gl_FragColor = sel4(a1, a3, a5, a7);
+			gl_FragColor = sel4(a1, a3, a5, a7) * v_vColour;
 			
 	} else if(strict == 2) {
 		if(!s(a4, a1) && s(a1, a3) && s(a1, a5) && s(a1, a7)
 		 && s(a1, a0) && s(a1, a2) && s(a1, a6) && s(a1, a8)) 
-			gl_FragColor = sel4(a1, a3, a5, a7);
+			gl_FragColor = sel4(a1, a3, a5, a7) * v_vColour;
 	}
 }

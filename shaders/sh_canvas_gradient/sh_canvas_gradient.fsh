@@ -38,5 +38,5 @@ void main() {
 	
     vec4 res = mix(c0, color, rat);
     if(res.a > 0.) res.rgb /= res.a;
-    gl_FragColor = res;
+    gl_FragColor = res * v_vColour;
 }

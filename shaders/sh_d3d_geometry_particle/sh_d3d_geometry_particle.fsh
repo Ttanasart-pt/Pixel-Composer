@@ -28,7 +28,7 @@ void main() {
 	vec3 normal = v_vNormal;
 	if(use_normal == 1) normal += (texture2D(normal_map, uv_coord).rgb * 2. - 1.) * normal_strength;
 	
-	gl_FragData[0] = vec4( v_worldPosition.xyz, mat_baseColor.a);
+	gl_FragData[0] = vec4( v_worldPosition.xyz, mat_baseColor.a) * v_vColour;
 	gl_FragData[1] = vec4( v_viewPosition,      mat_baseColor.a);
 	gl_FragData[2] = vec4( normalize(normal),   mat_baseColor.a);
 	gl_FragData[3] = vec4( v_viewNormal,        mat_baseColor.a);

@@ -1,9 +1,15 @@
+#ifdef _YY_HLSL11_ 
+    #define COL_MAX  1024
+#else 
+    #define COL_MAX  256
+#endif
+
 varying vec2 v_vTexcoord;
 varying vec4 v_vColour;
 
 uniform sampler2D drawSurface;
 
-uniform int indexes[1024];
+uniform int indexes[COL_MAX];
 uniform int indexSize;
 
 void main() {
@@ -20,5 +26,5 @@ void main() {
     
     res[0] = max(res[0], dd);
     
-    gl_FragColor = res;
+    gl_FragColor = res * v_vColour;
 }

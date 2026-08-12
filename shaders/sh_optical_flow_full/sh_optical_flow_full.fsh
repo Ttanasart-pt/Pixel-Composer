@@ -55,5 +55,5 @@ void main() {
 	
 	match *= intensity;
 	if(cformat == 0) match = 0.5 + match;
-	gl_FragColor = vec4(match, 0., 1.);
+	gl_FragColor = vec4(match, 0., 1.) * v_vColour;
 }

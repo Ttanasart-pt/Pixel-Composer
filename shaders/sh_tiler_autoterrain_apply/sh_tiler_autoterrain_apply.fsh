@@ -1,3 +1,9 @@
+#ifdef _YY_HLSL11_ 
+    #define COL_MAX  1024
+#else 
+    #define COL_MAX  256
+#endif
+
 #define _0(x) (x==0)
 #define _1(x) (x==1)
 #define _A(x) (true)
@@ -8,11 +14,11 @@ varying vec4 v_vColour;
 uniform sampler2D maskSurface;
 
 uniform vec2  dimension;
-uniform int   bitmask[1024];
+uniform int   bitmask[COL_MAX];
 uniform int   bitmaskSize;
 uniform int   bitmaskType;
 
-uniform int   indexes[1024];
+uniform int   indexes[COL_MAX];
 uniform int   indexSize;
 uniform int   erase;
 uniform int   indexMapper48[64];
@@ -374,6 +380,6 @@ void main() {
     }
     
     float res = float(indexes[index]);
-    gl_FragColor = vec4(res + 1., 0., 0., 1.);
+    gl_FragColor = vec4(res + 1., 0., 0., 1.) * v_vColour;
     
 }

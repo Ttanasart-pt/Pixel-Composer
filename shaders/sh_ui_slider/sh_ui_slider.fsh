@@ -27,5 +27,5 @@ void main() {
 	
 	bar = smoothstep(rad, 1.0, bar) * 25.;
 	
-    gl_FragColor = vec4(mix(c0.rgb, c1.rgb, d1), bar);
+    gl_FragColor = vec4(mix(c0.rgb, c1.rgb, d1), bar) * v_vColour;
 }

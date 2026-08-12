@@ -15,7 +15,7 @@ void main() {
 	
 	if(b.a == 0.) return;
 	
-	gl_FragColor = c;
+	gl_FragColor = c * v_vColour;
 	
 	for( float i = 1.; i < ITERATION; i++ ) {
 		vec2 x = v_vTexcoord + vec2(tx.x * i, 0);

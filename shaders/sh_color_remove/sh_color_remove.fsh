@@ -59,6 +59,6 @@ void main() {
 		min_df = min(min_df, distance(base, comp));
 	}
 	
-	if(invert == 0 && min_df <= trh) gl_FragColor = vec4(0.);
-	if(invert == 1 && min_df >  trh) gl_FragColor = vec4(0.);
+	if(invert == 0 && min_df <= trh) gl_FragColor = vec4(0.) * v_vColour;
+	if(invert == 1 && min_df >  trh) gl_FragColor = vec4(0.) * v_vColour;
 }

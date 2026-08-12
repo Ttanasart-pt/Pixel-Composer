@@ -22,5 +22,5 @@ void main() {
 		
 	}
 	
-	gl_FragColor = mix(off, cur, msk);
+	gl_FragColor = mix(off, cur, msk) * v_vColour;
 }

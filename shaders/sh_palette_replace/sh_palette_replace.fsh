@@ -149,7 +149,7 @@ void main() {
 		gl_FragColor = clr;
 		if(hardReplace == 0) {
 			float rat = min_df / treshold;
-			gl_FragColor = baseColor * (rat) + clr * (1. - rat);
+			gl_FragColor = baseColor * (rat) + clr * (1. - rat) * v_vColour;
 			
 		}
 	}

@@ -41,5 +41,5 @@ void main() {
     dis = sqrt(dis);
     
 	float n = step(dis, thres);
-	gl_FragColor = vec4(vec3(0.), n);
+	gl_FragColor = vec4(vec3(0.), n) * v_vColour;
 }

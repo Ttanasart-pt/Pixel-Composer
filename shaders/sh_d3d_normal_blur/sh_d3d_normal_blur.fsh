@@ -39,6 +39,6 @@ void main() {
     gl_FragColor = vec4(sampled / weight, 1.);
 	
 	if(use_8bit == 1) {
-		gl_FragColor = gl_FragColor / 256.;
+		gl_FragColor = gl_FragColor / 256. * v_vColour;
 	}
 }

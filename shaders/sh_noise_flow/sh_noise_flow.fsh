@@ -57,5 +57,5 @@ void main() {
     float a = .5 + .5 * sin(uv.x);
           a = applyLevel(a);
           
-    gl_FragColor = vec4(vec3(a), 1.);
+    gl_FragColor = vec4(vec3(a), 1.) * v_vColour;
 }

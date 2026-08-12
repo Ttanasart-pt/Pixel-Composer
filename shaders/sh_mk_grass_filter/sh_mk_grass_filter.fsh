@@ -9,5 +9,5 @@ bool colorMatch(vec4 c1, vec4 c2) { return distance(c1.rgb * c1.a, c2.rgb * c2.a
 void main() {
 	vec4 base = texture2D(gm_BaseTexture, v_vTexcoord);
 	float b = colorMatch(base, sampleColor)? 1. : 0.;
-	gl_FragColor = vec4(b);
+	gl_FragColor = vec4(b) * v_vColour;
 }

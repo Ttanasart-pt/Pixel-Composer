@@ -120,5 +120,5 @@ void main() {
     float w = shard_noise(16.0 * uv, pow(sharp, 2.) * 20.);
           w = applyLevel(w);
 	
-    gl_FragColor = vec4(vec3(w), 1.);
+    gl_FragColor = vec4(vec3(w), 1.) * v_vColour;
 }

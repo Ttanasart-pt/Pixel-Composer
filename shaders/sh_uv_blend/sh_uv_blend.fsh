@@ -19,5 +19,5 @@ void main() {
 		blendAmo *= blend;
 	}
 	
-	gl_FragColor = vec4(mix(uv0, uv1, blendAmo), 0., 1.);
+	gl_FragColor = vec4(mix(uv0, uv1, blendAmo), 0., 1.) * v_vColour;
 }

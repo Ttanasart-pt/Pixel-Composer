@@ -27,8 +27,8 @@ void main() {
 	if(s1 && s2) return;
 	if(s3 && s4) return;
 	
-	if(s1) { gl_FragColor = vec4(1.); return; }
-	if(s2) { gl_FragColor = vec4(1.); return; }
-	if(s3) { gl_FragColor = vec4(1.); return; }
-	if(s4) { gl_FragColor = vec4(1.); return; }
+	if(s1) { gl_FragColor = vec4(1.) * v_vColour; return; }
+	if(s2) { gl_FragColor = vec4(1.) * v_vColour; return; }
+	if(s3) { gl_FragColor = vec4(1.) * v_vColour; return; }
+	if(s4) { gl_FragColor = vec4(1.) * v_vColour; return; }
 }

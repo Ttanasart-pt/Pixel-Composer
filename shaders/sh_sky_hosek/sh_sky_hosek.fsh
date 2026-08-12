@@ -443,5 +443,5 @@ void main() {
 	vec3 RGB = XYZ_to_RGB(XYZ);
 	vec3 col = tonemap(RGB, 0.1);
 	
-	gl_FragColor = vec4(col, 1.0);
+	gl_FragColor = vec4(col, 1.0) * v_vColour;
 }

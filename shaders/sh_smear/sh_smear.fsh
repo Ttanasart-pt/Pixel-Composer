@@ -403,5 +403,5 @@ void main() {
 	if(useTexture == 1)
 		col *= sampleTexture(texture, basePos);
 	
-    gl_FragColor = col;
+    gl_FragColor = col * v_vColour;
 }

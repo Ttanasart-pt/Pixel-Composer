@@ -11,5 +11,5 @@ void main() {
 	//float angle	= (atan(cen.y, cen.x) / PI + 1.) / 2.;
 	//float dist  = length(cen);
 	
-    gl_FragColor = texture2D( gm_BaseTexture, v_vTexcoord );
+    gl_FragColor = texture2D( gm_BaseTexture, v_vTexcoord ) * v_vColour;
 }

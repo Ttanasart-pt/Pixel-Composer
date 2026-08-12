@@ -8,5 +8,5 @@ void main() {
 	vec4 shad = texture2D(gm_BaseTexture, v_vTexcoord);
 	shad.a = (1. - shad.a) * orig.a;
 	
-	gl_FragColor = shad;
+	gl_FragColor = shad * v_vColour;
 }

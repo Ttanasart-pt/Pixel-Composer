@@ -30,5 +30,5 @@ void main() {
 	// 6 7 8
 	
 	if(!a1 || !a3 || !a5 || !a7)
-		gl_FragColor = vec4(0.);
+		gl_FragColor = vec4(0.) * v_vColour;
 }

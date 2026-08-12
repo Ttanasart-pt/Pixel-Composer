@@ -66,5 +66,5 @@ void main() {
 	float v = (useV == 1)? sample(texture2D( samV, v_vTexcoord ), 2) : 0.;
 	float a = (useA == 1)? sample(texture2D( samA, v_vTexcoord ), 3) : 1.;
 	
-	gl_FragColor = space == 1? vec4(hsl2rgb(vec3(h, s, v)), a) : vec4(hsv2rgb(vec3(h, s, v)), a);
+	gl_FragColor = space == 1? vec4(hsl2rgb(vec3(h, s, v)), a) : vec4(hsv2rgb(vec3(h, s, v)), a) * v_vColour;
 }

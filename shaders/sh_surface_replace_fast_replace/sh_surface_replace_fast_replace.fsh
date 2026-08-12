@@ -39,7 +39,7 @@ void main() {
 			
 			basCol = blendColor(basCol, repCol);
 			
-			gl_FragData[0] = basCol;
+			gl_FragData[0] = basCol * v_vColour;
 			gl_FragData[1] = vec4(1., 1., 1., basCol.a);
 		}
 	}

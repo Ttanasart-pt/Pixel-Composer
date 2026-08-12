@@ -168,5 +168,5 @@ void main() {
 
 	vec4 mask = texture2D(gm_BaseTexture, v_vTexcoord);
 	
-	gl_FragColor = gradColor * mask;
+	gl_FragColor = gradColor * mask * v_vColour;
 }

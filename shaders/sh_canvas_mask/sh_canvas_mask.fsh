@@ -8,5 +8,5 @@ void main() {
 	vec4 drw = texture2D( drawSurface, v_vTexcoord );
 	vec4 msk = texture2D( maskSurface, v_vTexcoord );
 	
-    gl_FragColor = msk.a > 0.5? drw : texture2D( gm_BaseTexture, v_vTexcoord );
+    gl_FragColor = msk.a > 0.5? drw : texture2D( gm_BaseTexture, v_vTexcoord ) * v_vColour;
 }

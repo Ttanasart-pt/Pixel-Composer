@@ -205,5 +205,5 @@ void main() {
     
     res.xyz /= acc;
     
-    gl_FragColor = res;
+    gl_FragColor = res * v_vColour;
 }

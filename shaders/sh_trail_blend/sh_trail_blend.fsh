@@ -13,5 +13,5 @@ void main() {
 	
 	c1.a *= alpha;
 	
-	gl_FragColor = c1.a >= c0.a? c1 : c0;
+	gl_FragColor = c1.a >= c0.a? c1 : c0 * v_vColour;
 }

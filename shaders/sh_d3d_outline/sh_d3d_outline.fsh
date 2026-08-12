@@ -31,7 +31,7 @@ void main() {
 			vec4 sam = texture2D( gm_BaseTexture, pxs );
 			
 			if(sam.r > 0.) {
-				gl_FragColor = outlineColor;
+				gl_FragColor = outlineColor * v_vColour;
 				return;
 			}
 		}

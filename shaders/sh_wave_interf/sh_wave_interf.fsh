@@ -384,5 +384,5 @@ void main() {
 	else if(blendMode == 2) val  = max(val, v0);
 	
 	vec4 clr = gradientEval(pfract(val + color_shift));
-	gl_FragColor = clr;
+	gl_FragColor = clr * v_vColour;
 }

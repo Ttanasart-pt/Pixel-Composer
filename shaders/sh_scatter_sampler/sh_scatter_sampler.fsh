@@ -387,5 +387,5 @@ void main() {
 	
 	res.rgb /= wei;
 	
-	gl_FragColor = res;
+	gl_FragColor = res * v_vColour;
 }

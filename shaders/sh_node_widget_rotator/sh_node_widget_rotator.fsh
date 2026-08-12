@@ -46,5 +46,5 @@ void main() {
 		c = mix(c, vec4(1., 1., 1., 1.), a);
 	} 
 	
-	gl_FragColor = c;
+	gl_FragColor = c * v_vColour;
 }

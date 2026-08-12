@@ -196,7 +196,7 @@ void main() {
 			}
 			
 			if(distance(from, to) <= threshold * 2.) {
-				gl_FragColor = mix(from, to, amount);
+				gl_FragColor = mix(from, to, amount) * v_vColour;
 				return;
 			}
 		}

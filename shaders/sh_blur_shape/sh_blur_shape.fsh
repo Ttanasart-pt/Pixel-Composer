@@ -111,5 +111,5 @@ void main() {
 	
 	if(gamma == 1) col.rgb = pow(col.rgb, vec3(1. / 2.2));
 	
-	gl_FragColor = col;
+	gl_FragColor = col * v_vColour;
 }

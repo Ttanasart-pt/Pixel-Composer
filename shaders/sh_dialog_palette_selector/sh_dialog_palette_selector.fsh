@@ -27,7 +27,7 @@ void main() {
     float a7 = samp( 0.,  2.);
     float a8 = samp( 1.,  1.);
     
-    gl_FragColor = texture2D( gm_BaseTexture, v_vTexcoord );
+    gl_FragColor = texture2D( gm_BaseTexture, v_vTexcoord ) * v_vColour;
     
     if(a4 == 0.) return;
     

@@ -83,5 +83,5 @@ void main() {
     vec4 c = val / float(patch) * 2.;
     c.a = 1.;
     
-    gl_FragColor = c;
+    gl_FragColor = c * v_vColour;
 }

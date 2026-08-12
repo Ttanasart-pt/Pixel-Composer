@@ -78,5 +78,5 @@ void main() {
 		c += w * sampleTexture( gm_BaseTexture, px) / sum;
 	}
 	
-    gl_FragColor = c;
+    gl_FragColor = c * v_vColour;
 }

@@ -35,5 +35,5 @@ void main() {
 	else 
 		col.rgb *= 1. - smoothstep(rng - smoothness, rng + smoothness, abs(bright - mid));
 	
-	gl_FragColor = vec4(col.rgb, col.a);
+	gl_FragColor = vec4(col.rgb, col.a) * v_vColour;
 }

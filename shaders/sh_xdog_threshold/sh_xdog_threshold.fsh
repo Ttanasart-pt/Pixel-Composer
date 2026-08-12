@@ -32,5 +32,5 @@ void main() {
 	
 	float g = smoothstep(max(0., eps - smt), min(eps + smt, 1.), ss);
 	
-	gl_FragColor = vec4(g,g,g,1.);
+	gl_FragColor = vec4(g,g,g,1.) * v_vColour;
 }

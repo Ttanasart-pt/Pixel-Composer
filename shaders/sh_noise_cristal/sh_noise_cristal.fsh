@@ -101,5 +101,5 @@ void main() {
     col.g = applyLevel(col.g);
     col.b = applyLevel(col.b);
     
-    gl_FragColor = vec4(col, 1.0);
+    gl_FragColor = vec4(col, 1.0) * v_vColour;
 }

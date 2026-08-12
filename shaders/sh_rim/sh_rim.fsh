@@ -29,5 +29,5 @@ void main() {
 		}
 	}
 	
-	if(emp >= 1) gl_FragColor = cc;
+	if(emp >= 1) gl_FragColor = cc * v_vColour;
 }

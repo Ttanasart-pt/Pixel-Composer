@@ -9,6 +9,6 @@ float sampVal(vec4 col) { return mode == 1? col.a : length(col.rgb) * col.a; }
 
 void main() {
 	vec2 px = v_vTexcoord * dimension - .5;
-	gl_FragColor = vec4(px.x, px.y, px.x, px.y);
+	gl_FragColor = vec4(px.x, px.y, px.x, px.y) * v_vColour;
 }
  

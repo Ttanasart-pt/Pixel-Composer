@@ -42,7 +42,7 @@ void main() {
 			match++;
 			if(match >= target_pixels) {
 				float ind = mode == 0? index : round(random(v_vTexcoord) * (size - 1.)) / size;
-				gl_FragColor = vec4(1., ind, 0., 1.);
+				gl_FragColor = vec4(1., ind, 0., 1.) * v_vColour;
 				return;
 			}
 		}

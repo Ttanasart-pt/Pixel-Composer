@@ -19,5 +19,5 @@ void main() {
 	float h = hash12(v_vTexcoord * dimension + seed / 1000.);
 	h = step(1. - threshold, h);
 	
-	gl_FragColor = vec4(h,h,h,1.);
+	gl_FragColor = vec4(h,h,h,1.) * v_vColour;
 }

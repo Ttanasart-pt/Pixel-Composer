@@ -99,5 +99,5 @@ void main() {
 	
 	n = applyLevel(n);
 	
-    gl_FragColor = vec4(vec3(n), 1.0);
+    gl_FragColor = vec4(vec3(n), 1.0) * v_vColour;
 }

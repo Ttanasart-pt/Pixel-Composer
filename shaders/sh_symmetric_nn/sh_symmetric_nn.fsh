@@ -105,5 +105,5 @@ void main() {
     }
 
     meanColor /= float(count);
-    gl_FragColor = mix(v, meanColor, itn);
+    gl_FragColor = mix(v, meanColor, itn) * v_vColour;
 }

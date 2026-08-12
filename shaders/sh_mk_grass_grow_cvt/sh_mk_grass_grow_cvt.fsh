@@ -17,6 +17,6 @@ void main() {
 	if(random(px, seed) > density) return;
 	
 	if(grass.r > 0. && grass.g > .5)
-		gl_FragColor = grass;
+		gl_FragColor = grass * v_vColour;
 	
 }

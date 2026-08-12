@@ -193,5 +193,5 @@ void main() {
 	float m2 = smooth_curve_use == 1? curveEval(smooth_curve, smooth_amount, m) : smoothstep(0., 1., m);
 	m = mix(m, m2, smt);
 	
-	gl_FragColor = mix(c1, c2, m);
+	gl_FragColor = mix(c1, c2, m) * v_vColour;
 }

@@ -16,5 +16,5 @@ void main() {
 	vec2 grad  = vec2(cx1.r - cx0.r, cy1.r - cy0.r);
 	float dirr = atan(grad.y, grad.x) / (2. * PI) + 0.5;
 	
-	gl_FragColor = vec4(dirr, 0., 0., 1.);
+	gl_FragColor = vec4(dirr, 0., 0., 1.) * v_vColour;
 }

@@ -337,5 +337,5 @@ void main() {
 		res += chroma_scaling(v_vTexcoord, str * rat, itns) / itr;
 	}
 	
-	gl_FragColor = res;
+	gl_FragColor = res * v_vColour;
 }
