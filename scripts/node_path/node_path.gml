@@ -2160,7 +2160,7 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 				draw_anchor(0, ax, ay, ui(8), 2);
 			}
 			
-			if(active && key_press(vk_delete)) {
+			if(active && keyboard_delete()) {
 				array_sort(anchor_select, false);
 				for( var i = 0, n = array_length(anchor_select); i < n; i++ ) {
 					var _indx = input_fix_len + anchor_select[i];

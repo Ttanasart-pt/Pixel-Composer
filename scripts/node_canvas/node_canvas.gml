@@ -322,7 +322,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			if(key_press(ord("D"), MOD_KEY.ctrl))
 				duplicateSelectedFrame();
 			
-			if(key_press(vk_delete))
+			if(keyboard_delete())
 				removeSelectedFrame();
 			
 		}

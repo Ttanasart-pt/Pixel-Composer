@@ -1390,7 +1390,7 @@ function Node_Armature(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 		#endregion
 		
 		#region hotkey
-			if(active && key_press(vk_delete)) {
+			if(active && keyboard_delete()) {
 				for( var i = 0, n = array_length(bone_select); i < n; i++ ) {
 					var _bone = bone_points[bone_select[i]];
 					if(is(_bone, __Bone)) deleteBone(_bone);

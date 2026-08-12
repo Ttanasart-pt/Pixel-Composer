@@ -16,7 +16,7 @@ yycTemplate = """{{
   "androidsourcedir":"",
   "author":"",
   "classname":"",
-  "copyToTargets":192,
+  "copyToTargets":194,
   "description":"",
   "exportToGame":true,
   "extensionVersion":"0.0.1",
@@ -70,7 +70,7 @@ yycfileTemplate = """{{
   "$GMExtensionFile":"",
   "%Name":"",
   "constants":[],
-  "copyToTargets":192,
+  "copyToTargets":194,
   "filename":"{dllName}",
   "final":"",
   "functions":[{functions} ],
@@ -82,6 +82,7 @@ yycfileTemplate = """{{
   "ProxyFiles":[
     {{"$GMProxyFile":"","%Name":"{dllNameW}","name":"{dllNameW}","resourceType":"GMProxyFile","resourceVersion":"2.0","TargetMask":6,}},
     {{"$GMProxyFile":"","%Name":"{dllNameL}","name":"{dllNameL}","resourceType":"GMProxyFile","resourceVersion":"2.0","TargetMask":7,}},
+    {{"$GMProxyFile":"","%Name":"{dllNameM}","name":"{dllNameM}","resourceType":"GMProxyFile","resourceVersion":"2.0","TargetMask":1,}},
   ],
   "resourceType":"GMExtensionFile",
   "resourceVersion":"2.0",
@@ -90,6 +91,8 @@ yycfileTemplate = """{{
 }},"""
 
 yycfunctionTemplate = """{{"$GMExtensionFunction":"","%Name":"{func_name}","argCount":{iCount},"args":{iArray},"documentation":"","externalName":"{func_name}","help":"","hidden":false,"kind":1,"name":"{func_name}","resourceType":"GMExtensionFunction","resourceVersion":"2.0","returnType":{oType}}},"""
+
+## MSVC
 
 def get_msvc_env(vcvars_path):
     # Run vcvars64.bat and dump environment variables to a temp file
@@ -129,6 +132,12 @@ def compile_with_msvc(src_file, out_dll):
     
     return result.returncode == 0
 
+## DEVICE
+
+mac_ip = "192.168.0.100"
+
+##
+
 srcCache = set()
 
 def getFileHash(filePath):
@@ -153,21 +162,23 @@ def compileFile(srcPath, outDir, _):
     objPath  = os.path.join(outDir, outName + ".o")
     outPathW = os.path.join(outDir, outName + ".dll")
     outPathL = os.path.join(outDir, outName + ".so")
+    outPathM = os.path.join(outDir, outName + ".dylib")
 
     fhash = getFileHash(srcPath)
     if fhash in srcCache:
         print(f"Skipping compilation for {outName}, no changes detected.")
         return {
             "windows": outPathW,
-            "linux": outPathL
+            "linux": outPathL,
+            "mac": outPathM
         }
     
     print(f"Compiling {outName}...")
+
+    ## Windows
     global msvc_env
     if msvc_env is None:
         msvc_env = get_msvc_env(vcvars_path)
-
-    flags = ["-static-libgcc", "-static-libstdc++"]
 
     if os.path.isfile(outPathW):
         os.remove(outPathW)
@@ -175,21 +186,31 @@ def compileFile(srcPath, outDir, _):
     if os.path.isfile(outPathL):
         os.remove(outPathL)
 
-    # gccPath = "C:\\mingw64\\bin\\g++" # 64-bit
-    # cmd = [ gccPath, "-fpic", "-shared", srcPath, "-o", outPathW, "-Wl,--subsystem,windows", "-m64"]
-    # cmd.extend(flags)
-    # executeCmd(cmd)
-
     compile_with_msvc(srcPath, outPathW)
 
     if os.path.isfile(objPath):
         os.remove(objPath)
 
+    ## Linux (WSL)
     srcMntPath  = re.sub(r'^[A-Za-z]:', lambda m: '/mnt/' + m.group(0)[0].lower(), os.path.abspath(srcPath).replace("\\", "/"))
     outMntPathL = re.sub(r'^[A-Za-z]:', lambda m: '/mnt/' + m.group(0)[0].lower(), os.path.abspath(outPathL).replace("\\", "/"))
-    cmd = [ "wsl", "g++", "-fPIC", "-shared", srcMntPath, "-o", outMntPathL]
-    cmd.extend(flags)
-    executeCmd(cmd)
+    flags = ["-static-libgcc", "-static-libstdc++"]
+    wsl_cmd = [ "wsl", "g++", "-fPIC", "-shared", srcMntPath, "-o", outMntPathL]
+    wsl_cmd.extend(flags)
+    executeCmd(wsl_cmd)
+
+    ## MacOS ssh
+
+    scp_cmd = ["scp", srcPath, f"makhamdev@{mac_ip}:/tmp/{outName}.cpp"]
+    executeCmd(scp_cmd)
+
+    ssh_cmd = ["ssh", f"makhamdev@{mac_ip}", f"clang++ -dynamiclib -std=c++17 -target arm64-apple-macos -o /tmp/{outName}.dylib /tmp/{outName}.cpp"]
+    executeCmd(ssh_cmd)
+
+    scp_cmd = ["scp", f"makhamdev@{mac_ip}:/tmp/{outName}.dylib", outPathM]
+    executeCmd(scp_cmd)
+
+    ## Final checks
     
     if(not os.path.isfile(outPathW)):
         raise Exception(f"Compilation failed: output file {outPathW} not found")
@@ -197,9 +218,13 @@ def compileFile(srcPath, outDir, _):
     if(not os.path.isfile(outPathL)):
         raise Exception(f"Compilation failed: output file {outPathL} not found")
 
+    if(not os.path.isfile(outPathM)):
+        raise Exception(f"Compilation failed: output file {outPathM} not found")
+
     return {
         "windows": outPathW,
-        "linux": outPathL
+        "linux": outPathL,
+        "mac": outPathM
     }
 
 def buildInlineH(fileName, code):
@@ -351,6 +376,7 @@ def buildExtension(srcArr, extDir):
         dllPath = compileFile(srcPath, extDir, includes)
         dllPathW = dllPath["windows"]
         dllPathL = dllPath["linux"]
+        dllPathM = dllPath["mac"]
 
         dllName = os.path.basename(dllPathW)
         fnEntry = ""
@@ -374,6 +400,7 @@ def buildExtension(srcArr, extDir):
             dllName=dllName,
             dllNameW=os.path.basename(dllPathW),
             dllNameL=os.path.basename(dllPathL),
+            dllNameM=os.path.basename(dllPathM),
             functions=fnEntry
         ))
             

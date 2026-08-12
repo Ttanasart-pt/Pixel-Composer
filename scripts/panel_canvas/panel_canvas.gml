@@ -798,7 +798,7 @@ function Panel_Canvas() : PanelContent() constructor {
 					}
 				}
 				
-				if(pFOCUS && key_press(vk_delete)) deleteSelection();
+				if(pFOCUS && keyboard_delete()) deleteSelection();
 			}
 		#endregion
 		

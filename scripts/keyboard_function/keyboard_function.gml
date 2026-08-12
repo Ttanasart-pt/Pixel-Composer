@@ -15,3 +15,12 @@ function keyboard_check_pressed_winwin(_key) {
 function keyboard_check_released_winwin(_key) {
 	return is_winwin(WINWIN_CURRENT)? winwin_keyboard_check_released(WINWIN_CURRENT, _key) : __keyboard_check_released(_key);
 }
+
+#macro vk_rcommand 91
+#macro vk_lcommand 92
+function keyboard_delete() { // need special code because macos does not have delete key.
+	switch(OS) {
+		case os_macosx : return keyboard_check_pressed(vk_backspace) && (keyboard_check(vk_lcommand) || keyboard_check(vk_rcommand));
+		default :        return key_press(vk_delete);
+	}
+}

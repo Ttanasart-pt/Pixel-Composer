@@ -1039,7 +1039,7 @@ function Panel_Custom_Editor(_data = undefined) : PanelContent() constructor {
 				if(!hv && hover_preview) element_selecting = undefined;
 			}
 			
-			if(key_press(vk_delete)) {
+			if(keyboard_delete()) {
 				element_selecting.remove();
 				element_selecting = undefined;
 			}

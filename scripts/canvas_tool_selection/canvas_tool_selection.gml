@@ -520,7 +520,7 @@ function canvas_selection_data() : canvas_tool() constructor {
 			if(hover_index) selection_hovering = true;
 		}
 		
-		if(active && key_press(vk_delete)) destroy();
+		if(active && keyboard_delete()) destroy();
 		
 		if(hover_index == noone) {
 			if(PANEL_PREVIEW.tool_current == noone && mouse_lpress(active)) 
@@ -571,7 +571,7 @@ function canvas_selection_data() : canvas_tool() constructor {
 		if(!is_selected && is_surface(selection_surface))
 			apply();
 		
-		if(key_press(vk_delete))
+		if(keyboard_delete())
 			destroy();
 			
 		else if(key_press(vk_escape) || key_press(vk_enter))

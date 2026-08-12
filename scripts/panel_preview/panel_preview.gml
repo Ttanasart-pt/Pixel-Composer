@@ -2093,7 +2093,9 @@ function Panel_Preview() : PanelContent() constructor {
     			shader_set_i("keepAlpha", preview_shader_alpha);
     			shader_reset();
     		}
-    	
+    		
+    		gpu_set_tex_filter(false);
+    		
 	        if(!_ps0 && !_ps1) {
 	        	var _prevS = PROJECT.getOutputSurface();
 				draw_surface_ext_safe(_prevS, canvas_x, canvas_y, canvas_s, canvas_s); 
