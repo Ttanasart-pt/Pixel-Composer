@@ -13,6 +13,7 @@
     "box_r5_clr":                         { "path": "./generic/s_box_r5_colored.png",                       "s": 3, "x":  0, "y":  0, "slice":  7 },
     "section_separator":                  { "path": "./generic/s_section_separator.png",                    "s": 3, "x":  0, "y":  0, "slice":  7 },
     "corner_r4":                          { "path": "./generic/s_corner_r4.png",                            "s": 1, "x":  0, "y":  0, "slice": [0, 1, 1, 0] },
+    "tooltip":                            { "path": "./generic/s_tooltip.png",                              "s": 1, "x":  0, "y":  0, "slice":  5 },
 
     "ac_constant":                        { "path": "./icon/s_ac_constant.png",                             "s": 4, "x":  9, "y":  9 },
     "ac_function":                        { "path": "./icon/s_ac_function.png",                             "s": 1, "x":  9, "y":  9 },

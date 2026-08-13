@@ -120,8 +120,7 @@ function MetaDataManager() constructor {
 			
 			TOOLTIP_SURFACE = surface_verify(TOOLTIP_SURFACE, tww, thh);
 			surface_set_shader(TOOLTIP_SURFACE);
-			draw_sprite_stretched(THEME.textbox, 3, 0, 0, tww, thh);
-			draw_sprite_stretched(THEME.textbox, 0, 0, 0, tww, thh);
+			draw_sprite_stretched(THEME.tooltip, 0, 0, 0, tww, thh);
 			
 			draw_set_text(f_p1, fa_left, fa_top, COLORS._main_text);
 			draw_text_add(_pdx, _pdy, name);

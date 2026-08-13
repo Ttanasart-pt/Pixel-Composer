@@ -50,7 +50,7 @@ function setContent(_content) {
 		title_height = _cnt.title_height;
 	
 	dialog_w         = _dia_w +  padding * 2;
-	dialog_h         = _dia_h + (padding * 2 + title_height);
+	dialog_h         = _dia_h + (padding * 2 + title_height) + ui(24);
 	dialog_w_min     = _cnt.min_w;
 	dialog_h_min     = _cnt.min_h;
 	dialog_resizable = _cnt.resizable;

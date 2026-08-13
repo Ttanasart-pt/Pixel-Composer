@@ -30,7 +30,8 @@ DIALOG_WINDOW_START
 	
 	var bc = COLORS._main_value_positive;
 	if(buttonInstant(bb, bx, by, bs, bs, mouse_ui, sHOVER, sFOCUS, __txt("Accept"), THEME.accept_16, 0, bc) == 2) {
-		onModify(path + filename_name_validate(name)); 
+		onModify(filename_combine(path, filename_name_validate(tb_name._input_text))); 
+		WIDGET_CURRENT = undefined;
 		instance_destroy();
 	}
 	bx -= bs + ui(4); tw -= bs + ui(4);

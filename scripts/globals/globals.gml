@@ -127,8 +127,7 @@ gml_pragma("UnityBuild", "true");
 	#macro sHOVER (HOVER_WINDOW != undefined && !CURSOR_IS_LOCK && HOVER == self.id)
 	#macro sFOCUS (FOCUS_WINDOW != undefined && FOCUS == self.id)
 	
-	#macro CONF_TESTING false
-	globalvar TESTING; TESTING    = CONF_TESTING;
+	globalvar TESTING; TESTING    = false;
 	globalvar TEST_ERROR; TEST_ERROR = false;
 	
 	#macro DEMO	false

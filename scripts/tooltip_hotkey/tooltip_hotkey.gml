@@ -26,8 +26,7 @@ function tooltipHotkey(_text, context = undefined, name = undefined) constructor
 		
 		TOOLTIP_SURFACE = surface_verify(TOOLTIP_SURFACE, tww, thh);
 		surface_set_shader(TOOLTIP_SURFACE);
-			draw_sprite_stretched(THEME.textbox, 3, 0, 0, tww, thh);
-			draw_sprite_stretched(THEME.textbox, 0, 0, 0, tww, thh);
+			draw_sprite_stretched(THEME.tooltip, 0, 0, 0, tww, thh);
 			
 			draw_set_text(f_p2, fa_left, fa_top, COLORS._main_text);
 			draw_set_color(COLORS._main_text);
@@ -64,8 +63,7 @@ function tooltipKey(_text, _keyStr) constructor {
 		
 		TOOLTIP_SURFACE = surface_verify(TOOLTIP_SURFACE, tww, thh);
 			surface_set_shader(TOOLTIP_SURFACE);
-			draw_sprite_stretched(THEME.textbox, 3, 0, 0, tww, thh);
-			draw_sprite_stretched(THEME.textbox, 0, 0, 0, tww, thh);
+			draw_sprite_stretched(THEME.tooltip, 0, 0, 0, tww, thh);
 			
 			draw_set_text(f_p2, fa_left, fa_top, COLORS._main_text);
 			draw_set_color(COLORS._main_text);
@@ -111,8 +109,7 @@ function tooltipHotkey_assign(_text, _hotkey = "") constructor {
 		
 		TOOLTIP_SURFACE = surface_verify(TOOLTIP_SURFACE, tww, thh);
 		surface_set_shader(TOOLTIP_SURFACE);
-			draw_sprite_stretched(THEME.textbox, 3, 0, 0, tww, thh);
-			draw_sprite_stretched(THEME.textbox, 0, 0, 0, tww, thh);
+			draw_sprite_stretched(THEME.tooltip, 0, 0, 0, tww, thh);
 			
 			var txy = pd;
 			

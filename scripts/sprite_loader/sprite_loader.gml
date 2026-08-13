@@ -62,16 +62,16 @@ function _sprite_load_from_struct(str, theme, key) {
 		}
 	}
 	
-	var s = sprite_add(path, numb, false, true, sx, sy);
-	if( s < 0) { log_message("THEME", $"Load sprite {path} failed: Cannot read file."); return 0; }
+	var spr = sprite_add(path, numb, false, true, sx, sy);
+	if( spr < 0) { log_message("THEME", $"Load sprite {path} failed: Cannot read file."); return 0; }
 	
-	if(!struct_has(str, "slice")) return s;
+	if(!has(str, "slice")) return spr;
 	
 	var slice = sprite_nineslice_create();	
 	slice.enabled = true;
 	
-	var _sw = sprite_get_width(s);
-	var _sh = sprite_get_height(s);
+	var _sw = sprite_get_width(spr);
+	var _sh = sprite_get_height(spr);
 	
 	if(is_array(str.slice)) {
 		slice.left    = str.slice[0] > 0? str.slice[0] : _sw / 2 + str.slice[0];
@@ -88,12 +88,12 @@ function _sprite_load_from_struct(str, theme, key) {
 		
 	}
 	
-	if(struct_has(str, "slicemode"))
+	if(has(str, "slicemode"))
 		slice.tilemode = array_create(5, str.slicemode);
 	
-	sprite_set_nineslice(s, slice);
+	sprite_set_nineslice(spr, slice);
 	
-	return s; 
+	return spr; 
 }
 
 function loadGraphic(theme = "default") {

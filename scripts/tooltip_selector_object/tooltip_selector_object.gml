@@ -37,10 +37,9 @@ function tooltipSelector(_title, _data, _index = 0) constructor {
 		
 		TOOLTIP_SURFACE = surface_verify(TOOLTIP_SURFACE, tww, thh);
 		surface_set_shader(TOOLTIP_SURFACE);
-			draw_sprite_stretched(THEME.textbox, 3, 0, 0, tww, thh);
 			if(subtitle != "") 
 				draw_sprite_stretched_ext(THEME.textbox, 3, 0, _h - ui(4), tww, ui(20), COLORS._main_icon_light);
-			draw_sprite_stretched(THEME.textbox, 0, 0, 0, tww, thh);
+			draw_sprite_stretched(THEME.tooltip, 0, 0, 0, tww, thh);
 			
 			var yy = ui(6);
 			draw_set_font(f_p1b);

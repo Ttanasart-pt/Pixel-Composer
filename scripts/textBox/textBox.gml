@@ -963,15 +963,15 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 					
 				} else {
 					MOUSE_BLOCK = true;
-					var _sc = power(10, slider_mulp + !mlock);
-					var _s  = slide_speed * _sc;
+					var _sc  = power(10, slider_mulp);
+					var _sli = slide_speed * _sc;
 					
-					if(!mlock && is_array(slide_range)) _s = (slide_range[1] - slide_range[0]) / _w * _sc;
+					if(!mlock && is_array(slide_range)) _sli = (slide_range[1] - slide_range[0]) / _w * _sc;
 					
 					if(abs(dx) > abs(dy)) {
 						slider_dx      += dx / w;
 						slider_cur_del += dx;
-						slider_cur_val  = slider_def_val + slider_cur_del * _s;
+						slider_cur_val  = slider_def_val + slider_cur_del * _sli;
 						
 						if(slide_range != noone) slider_cur_val = clamp(slider_cur_val, curr_range[0], curr_range[1]);
 						

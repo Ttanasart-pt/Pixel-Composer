@@ -6,7 +6,7 @@ function check_version(path, key = "version") {
 		return true;
 	}
 	
-	if(TESTING) return true;
+	if(TESTING || RUN_IDE) return true;
 	
 	var res = json_load_struct(path);
 	var chk = res[$ key] ?? 0;

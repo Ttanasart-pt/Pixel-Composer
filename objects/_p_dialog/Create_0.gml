@@ -1,27 +1,30 @@
 /// @description init
-#macro DIALOG_PAD ui(8)
+#macro DIALOG_PAD THEME_VALUE.dialog_padding
 #macro DIALOG_SHOW_FOCUS (FOCUS == self.id || (FOCUS && FOCUS[$ "preFocus"] == self.id) || (instance_exists(o_dialog_menubox) && o_dialog_menubox.getContextPanel() == self))
 
 #macro DIALOG_DRAW_BG                           \
 	if(is_winwin(window)) winwin_start(window); \
+	var dpd = THEME_VALUE.dialog_padding;       \
 	var _dialog_x = window? 0 : dialog_x;       \ 
 	var _dialog_y = window? 0 : dialog_y;       \
-	draw_sprite_stretched( THEME.dialog, 0, _dialog_x - 8, _dialog_y - 8, _dialog_w + 16, _dialog_h + 16 );
+	draw_sprite_stretched( THEME.dialog, 0, _dialog_x-dpd, _dialog_y-dpd, _dialog_w+dpd*2, _dialog_h+dpd*2 );
 
 #macro DIALOG_DRAW_FOCUS                                                                                                \
 	var foc = FOCUS == self.id || (FOCUS && FOCUS[$ "preFocus"] == self.id);                                            \
 	var cc  = PREFERENCES.panel_outline_accent? COLORS._main_accent : COLORS.panel_select_border                        \
+	var dpd = THEME_VALUE.dialog_padding;                                                                               \
 	if(foc || (instance_exists(o_dialog_menubox) && o_dialog_menubox.getContextPanel() == self))                        \
-		 draw_sprite_stretched_ext( THEME.dialog, 1, _dialog_x-8, _dialog_y-8, _dialog_w+16, _dialog_h+16, cc, 1 );     \
-	else draw_sprite_stretched_ext( THEME.dialog, 1, _dialog_x-8, _dialog_y-8, _dialog_w+16, _dialog_h+16, COLORS.panel_frame, 1 ); \
+		 draw_sprite_stretched_ext( THEME.dialog, 1, _dialog_x-dpd, _dialog_y-dpd, _dialog_w+dpd*2, _dialog_h+dpd*2, cc, 1 );     \
+	else draw_sprite_stretched_ext( THEME.dialog, 1, _dialog_x-dpd, _dialog_y-dpd, _dialog_w+dpd*2, _dialog_h+dpd*2, COLORS.panel_frame, 1 ); \
 	if(is_winwin(window)) winwin_end();
 
 #macro DIALOG_DRAW_FOCUS_UNEND                                                                                          \
 	var foc = FOCUS == self.id || (FOCUS && FOCUS[$ "preFocus"] == self.id);                                            \
 	var cc  = PREFERENCES.panel_outline_accent? COLORS._main_accent : COLORS.panel_select_border                        \
+	var dpd = THEME_VALUE.dialog_padding;                                                                               \
 	if(foc || (instance_exists(o_dialog_menubox) && o_dialog_menubox.getContextPanel() == self))                        \
-		 draw_sprite_stretched_ext( THEME.dialog, 1, _dialog_x-8, _dialog_y-8, _dialog_w+16, _dialog_h+16, cc, 1 );     \
-	else draw_sprite_stretched_ext( THEME.dialog, 1, _dialog_x-8, _dialog_y-8, _dialog_w+16, _dialog_h+16, COLORS.panel_frame, 1 );
+		 draw_sprite_stretched_ext( THEME.dialog, 1, _dialog_x-dpd, _dialog_y-dpd, _dialog_w+dpd*2, _dialog_h+dpd*2, cc, 1 );     \
+	else draw_sprite_stretched_ext( THEME.dialog, 1, _dialog_x-dpd, _dialog_y-dpd, _dialog_w+dpd*2, _dialog_h+dpd*2, COLORS.panel_frame, 1 );
 
 #macro DIALOG_WINDOW_START                      \
 	if(is_winwin(window)) winwin_start(window); \

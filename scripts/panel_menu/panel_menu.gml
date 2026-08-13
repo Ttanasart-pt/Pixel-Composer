@@ -519,7 +519,7 @@ function Panel_Menu() : PanelContent() constructor {
                 
                 if(_colr != noone) draw_sprite_stretched_ext(THEME.box_r2_clr, 0, x0, y0, x1 - x0, y1 - y0, _colr);
                 
-                if(pHOVER && point_in_rectangle(mx, my, x0, y0, x1, y1)) {
+                if((pHOVER || instance_exists(o_dialog_menubox)) && point_in_rectangle(mx, my, x0, y0, x1, y1)) {
                     _draggable = false;
                     draw_sprite_stretched(THEME.box_r2_clr, 0, x0, y0, x1 - x0, y1 - y0);
                     

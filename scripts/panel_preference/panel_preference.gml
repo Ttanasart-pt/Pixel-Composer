@@ -169,6 +169,7 @@ function Panel_Preference() : PanelContent() constructor {
     			new checkBox(function() /*=>*/ {return prefToggle("expand_hover")})
     		));
     	
+    		if(OS == os_windows) 
     		ds_list_add(pref_global, new __Panel_Linear_Setting_Item_Preference(
     			__txt("pref_expand_lock_mouse_slider", "Lock mouse when sliding"),
     			"slider_lock_mouse",

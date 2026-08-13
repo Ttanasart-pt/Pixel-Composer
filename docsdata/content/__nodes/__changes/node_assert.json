@@ -6,6 +6,11 @@
         "date": "2026-08-12T06:28:19.235Z",
         "node": "",
         "commit": "Fix export problem on mac."
+      },
+      {
+        "date": "2026-08-13T07:09:01.735Z",
+        "node": "Palette Editor",
+        "commit": "**Palette Editor**: Fix double palette created when create new palette using button."
       }
     ]
   },

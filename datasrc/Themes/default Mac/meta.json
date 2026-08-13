@@ -1,5 +1,6 @@
 {
     "version": 121080,
-    "name": "Default HQ",
-    "author": "MakhamDev"
+    "name": "Default Mac",
+    "author": "MakhamDev",
+    "fallback": "default HQ"
 }

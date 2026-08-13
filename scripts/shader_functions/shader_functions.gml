@@ -242,7 +242,7 @@
 	#macro gpu_set_tex_filter gpu_set_tex_filter_override
 	#macro __gpu_set_tex_filter gpu_set_tex_filter
 	function gpu_set_tex_filter_override(_filter) {
-		if(OS != os_windows) __gpu_set_tex_filter(false); //not sure why other OS have problem with filtering.
+		if(OS == os_linux) __gpu_set_tex_filter(false); // not sure why other OS have problem with filtering.
 		else __gpu_set_tex_filter(_filter);
 	}
 
@@ -263,7 +263,7 @@
 		if(is(surface, Atlas)) surface = surface.getSurface();
 		var intp = getAttribute("interpolate");
 		
-		__gpu_set_tex_filter(intp != 1 && intp != 6);
+		gpu_set_tex_filter(intp != 1 && intp != 6);
 		shader_set_i( "interpolation",	intp);
 		shader_set_f( "sampleDimension", _dim == noone? surface_get_dimension(surface) : _dim);
 		shader_set_i( "sampleMode",		getAttribute("oversample"));

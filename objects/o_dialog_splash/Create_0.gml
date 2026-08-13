@@ -99,8 +99,9 @@ event_inherited();
 			if(_hov) {
 				sp_recent.hover_content = true;
 				if(!instance_exists(o_dialog_menubox)) {
-					if(!_thumb) setTOOLTIP(new tooltipRecentFile(_rec, rx + xx, ry + yy + hg - hgt, ww, hg));
-					else        setTOOLTIP(_dat.path);
+					// if(!_thumb) setTOOLTIP(new tooltipRecentFile(_rec, rx + xx, ry + yy + hg - hgt, ww, hg));
+					// else        
+					setTOOLTIP(_dat.path);
 				}
 				
 				if(mouse_lpress(focus)) {

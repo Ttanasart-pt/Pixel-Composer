@@ -125,8 +125,7 @@ function draw_tooltip_text(txt) {
 	
 	TOOLTIP_SURFACE = surface_verify(TOOLTIP_SURFACE, tww, thh);
 	surface_set_shader(TOOLTIP_SURFACE);
-		draw_sprite_stretched(THEME.textbox, 3, 0, 0, tww, thh);
-		draw_sprite_stretched(THEME.textbox, 0, 0, 0, tww, thh);
+		draw_sprite_stretched(THEME.tooltip, 0, 0, 0, tww, thh);
 		var _rect = gpu_get_scissor();
 		gpu_set_scissor(pd, pd, tw, th);
 		draw_text_line(pd, pd, txt, -1, tw);
@@ -147,8 +146,7 @@ function draw_tooltip_color(clr) {
 	
 	TOOLTIP_SURFACE = surface_verify(TOOLTIP_SURFACE, tww, thh);
 	surface_set_shader(TOOLTIP_SURFACE);
-		draw_sprite_stretched(THEME.textbox, 3, 0, 0, tww, thh);
-		draw_sprite_stretched(THEME.textbox, 0, 0, 0, tww, thh);
+		draw_sprite_stretched(THEME.tooltip, 0, 0, 0, tww, thh);
 		
 		draw_sprite_stretched_ext(THEME.box_r2, 0, pd, pd, tw, th, clr, 1);
 		draw_sprite_stretched_add(THEME.box_r2, 1, pd, pd, tw, th, c_white, 0.3);
@@ -174,8 +172,7 @@ function draw_tooltip_palette(clr) {
 	
 	TOOLTIP_SURFACE = surface_verify(TOOLTIP_SURFACE, tww, thh);
 	surface_set_shader(TOOLTIP_SURFACE);
-		draw_sprite_stretched(THEME.textbox, 3, 0, 0, tww, thh);
-		draw_sprite_stretched(THEME.textbox, 0, 0, 0, tww, thh);
+		draw_sprite_stretched(THEME.tooltip, 0, 0, 0, tww, thh);
 		
 		var _y = pd;
 		for( var i = 0, n = array_length(clr); i < n; i++ ) {
@@ -200,8 +197,7 @@ function draw_tooltip_gradient(clr) {
 	
 	TOOLTIP_SURFACE = surface_verify(TOOLTIP_SURFACE, tww, thh);
 	surface_set_shader(TOOLTIP_SURFACE);
-		draw_sprite_stretched(THEME.textbox, 3, 0, 0, tww, thh);
-		draw_sprite_stretched(THEME.textbox, 0, 0, 0, tww, thh);
+		draw_sprite_stretched(THEME.tooltip, 0, 0, 0, tww, thh);
 		
 		var _y = pd;
 		for( var i = 0, n = array_length(clr); i < n; i++ ) {
@@ -236,8 +232,7 @@ function draw_tooltip_surface_array(surf) {
 	
 	TOOLTIP_SURFACE = surface_verify(TOOLTIP_SURFACE, tww, thh);
 	surface_set_shader(TOOLTIP_SURFACE);
-		draw_sprite_stretched(THEME.textbox, 3, 0, 0, tww, thh);
-		draw_sprite_stretched(THEME.textbox, 0, 0, 0, tww, thh);
+		draw_sprite_stretched(THEME.tooltip, 0, 0, 0, tww, thh);
 		
 		for( var ind = 0; ind < amo; ind++ ) {
 			if(!is_surface(surf[ind])) continue;
@@ -277,8 +272,7 @@ function draw_tooltip_surface(surf) {
 	
 	TOOLTIP_SURFACE = surface_verify(TOOLTIP_SURFACE, tww, thh);
 	surface_set_shader(TOOLTIP_SURFACE);
-		draw_sprite_stretched(THEME.textbox, 3, 0, 0, tww, thh);
-		draw_sprite_stretched(THEME.textbox, 0, 0, 0, tww, thh);
+		draw_sprite_stretched(THEME.tooltip, 0, 0, 0, tww, thh);
 		draw_surface_ext_safe(surf, pd, pd, ss, ss);
 	surface_reset_shader();
 }
@@ -304,8 +298,7 @@ function draw_tooltip_sprite(spr) {
 	
 	TOOLTIP_SURFACE = surface_verify(TOOLTIP_SURFACE, tww, thh);
 	surface_set_shader(TOOLTIP_SURFACE);
-		draw_sprite_stretched(THEME.textbox, 3, 0, 0, tww, thh);
-		draw_sprite_stretched(THEME.textbox, 0, 0, 0, tww, thh);
+		draw_sprite_stretched(THEME.tooltip, 0, 0, 0, tww, thh);
 		
 		var sx = pd + ox * ss;
 		var sy = pd + oy * ss;
@@ -344,8 +337,7 @@ function draw_tooltip_project(pObj) {
 	
 	TOOLTIP_SURFACE = surface_verify(TOOLTIP_SURFACE, tww, thh);
 	surface_set_shader(TOOLTIP_SURFACE);
-		draw_sprite_stretched(THEME.textbox, 3, 0, 0, tww, thh);
-		draw_sprite_stretched(THEME.textbox, 0, 0, 0, tww, thh);
+		draw_sprite_stretched(THEME.tooltip, 0, 0, 0, tww, thh);
 		
 		var sx = pd + ox * ss;
 		var sy = pd + oy * ss;
@@ -381,8 +373,7 @@ function draw_tooltip_atlas(atlas) {
 	
 	TOOLTIP_SURFACE = surface_verify(TOOLTIP_SURFACE, tww, thh);
 	surface_set_shader(TOOLTIP_SURFACE);
-		draw_sprite_stretched(THEME.textbox, 3, 0, 0, tww, thh);
-		draw_sprite_stretched(THEME.textbox, 0, 0, 0, tww, thh);
+		draw_sprite_stretched(THEME.tooltip, 0, 0, 0, tww, thh);
 		
 		var sx = pd;
 		var sy = pd;
@@ -440,8 +431,7 @@ function draw_tooltip_buffer(buff) {
 	
 	TOOLTIP_SURFACE = surface_verify(TOOLTIP_SURFACE, tww, thh);
 	surface_set_shader(TOOLTIP_SURFACE);
-		draw_sprite_stretched(THEME.textbox, 3, 0, 0, tww, thh);
-		draw_sprite_stretched(THEME.textbox, 0, 0, 0, tww, thh);
+		draw_sprite_stretched(THEME.tooltip, 0, 0, 0, tww, thh);
 		draw_text_line(pd, pd, txt, -1, tw);
 		
 		if(len > 400) {
@@ -461,8 +451,7 @@ function draw_tooltip_curve(curve) {
 	
 	TOOLTIP_SURFACE = surface_verify(TOOLTIP_SURFACE, tww, thh);
 	surface_set_shader(TOOLTIP_SURFACE);
-		draw_sprite_stretched(THEME.textbox, 3, 0, 0, tww, thh);
-		draw_sprite_stretched(THEME.textbox, 0, 0, 0, tww, thh);
+		draw_sprite_stretched(THEME.tooltip, 0, 0, 0, tww, thh);
 		
 		var x0 = pd, x1 = x0 + tw;
 		var y0 = pd, y1 = y0 + th;
@@ -502,8 +491,7 @@ function draw_tooltip_path(_path) {
 	
 	TOOLTIP_SURFACE = surface_verify(TOOLTIP_SURFACE, tww, thh);
 	surface_set_shader(TOOLTIP_SURFACE);
-		draw_sprite_stretched(THEME.textbox, 3, 0, 0, tww, thh);
-		draw_sprite_stretched(THEME.textbox, 0, 0, 0, tww, thh);
+		draw_sprite_stretched(THEME.tooltip, 0, 0, 0, tww, thh);
 		
 		var x0 = pd, x1 = x0 + tw;
 		var y0 = pd, y1 = y0 + th;
@@ -590,8 +578,7 @@ function tooltip_modifiers(title, keys) constructor {
 		
 		TOOLTIP_SURFACE = surface_verify(TOOLTIP_SURFACE, tww, thh);
 		surface_set_shader(TOOLTIP_SURFACE);
-			draw_sprite_stretched(THEME.textbox, 3, 0, 0, tww, thh);
-			draw_sprite_stretched(THEME.textbox, 0, 0, 0, tww, thh);
+			draw_sprite_stretched(THEME.tooltip, 0, 0, 0, tww, thh);
 			
 			draw_set_text(f_p2, fa_left, fa_top, COLORS._main_text);
 			draw_text_add(pd, pd, title);
@@ -633,8 +620,7 @@ function tooltip_two_lines(title, content) constructor {
 		
 		TOOLTIP_SURFACE = surface_verify(TOOLTIP_SURFACE, tww, thh);
 		surface_set_shader(TOOLTIP_SURFACE);
-			draw_sprite_stretched(THEME.textbox, 3, 0, 0, tww, thh);
-			draw_sprite_stretched(THEME.textbox, 0, 0, 0, tww, thh);
+			draw_sprite_stretched(THEME.tooltip, 0, 0, 0, tww, thh);
 			
 			draw_set_text(f_p2b, fa_left, fa_top, COLORS._main_text_accent);
 			draw_text_add(pd, pd, title);

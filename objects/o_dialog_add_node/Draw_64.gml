@@ -210,8 +210,9 @@ DIALOG_DRAW_BG
 #endregion
 
 if(DIALOG_SHOW_FOCUS) {
-	var cc = node_replace == noone? COLORS._main_accent : COLORS.dialog_add_node_replace_mode;
-	draw_sprite_stretched_ext(THEME.dialog, 1, _dialog_x - 8, _dialog_y - 8, dialog_w + 16, dialog_h + 16, cc, 1);
+	var dpd = THEME_VALUE.dialog_padding;
+	var cc  = node_replace == noone? COLORS._main_accent : COLORS.dialog_add_node_replace_mode;
+	draw_sprite_stretched_ext(THEME.dialog, 1, _dialog_x-dpd, _dialog_y-dpd, dialog_w+dpd*2, dialog_h+dpd*2, cc, 1);
 }
 
 #region tooltip

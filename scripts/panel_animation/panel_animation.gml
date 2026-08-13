@@ -881,8 +881,8 @@ function Panel_Animation() : PanelContent() constructor {
 		    		draw_surface_fit(_surf, _x0 + _ww / 2, _y0 + _hh / 2, _ww - ui(4), _hh - ui(4));
 	    		}
 	    		
-	    		if(fram != GLOBAL_CURRENT_FRAME)
-	    			draw_sprite_stretched_ext(THEME.ui_panel, ii, _x0, _y0, _ww, _hh, cc, .5);
+	    		// if(fram != GLOBAL_CURRENT_FRAME) 
+	    		// 	draw_sprite_stretched_ext(THEME.ui_panel, ii, _x0, _y0, _ww, _hh, cc, .5);
 	    		
 	    		if(is(inspecting, Node) && inspecting.use_cache) { // cache
 	                var cachcol = inspecting.getAnimationCacheExist(fram)? COLORS._main_value_positive : COLORS._main_value_negative;
@@ -890,9 +890,8 @@ function Panel_Animation() : PanelContent() constructor {
 		        }
     		} 
     		
-    		if(fram == GLOBAL_CURRENT_FRAME)
+    		if(fram == GLOBAL_CURRENT_FRAME) 
     			draw_sprite_stretched_ext(THEME.ui_panel, ii, _x0, _y0, _ww, _hh, COLORS._main_accent, 1);
-    		
     		if(hov) draw_sprite_stretched_add(THEME.ui_panel, ii, _x0, _y0, _ww, _hh, c_white, ta * .3);
     		
     		draw_set_text(f_p4, fa_right, fa_bottom, COLORS._main_text_sub, ta);

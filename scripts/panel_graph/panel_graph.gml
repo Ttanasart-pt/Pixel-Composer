@@ -675,6 +675,9 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
 		top_scroll_to  = 0;
 		top_scroll_max = 0;
 		
+		topbar_node_w  = 0;
+		topbar_sett_w  = 0;
+		
 		topbar_widget_dim = new vectorBox(2, function(v,i) /*=>*/ { 
 			PROJECT.attributes.surface_dimension[i] = v; 
 			PROJECT_ATTRIBUTES.surface_dimension = array_clone(PROJECT.attributes.surface_dimension);
@@ -707,6 +710,9 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
         context_frame_ex       = 0;
         context_frame_sy       = 0; 
         context_frame_ey       = 0;
+        
+        toolbar_area_w         = 0;
+        context_area_w         = 0;
     #endregion
     
     #region // ---- search ----
@@ -775,7 +781,7 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
         var ww = maxx - minx;
         var hh = maxy - miny;
         
-        var topbar = project.graphDisplay.show_topbar * topbar_height;
+        var topbar = project.graphDisplay.show_topbar * (topbar_height + THEME_VALUE.panel_toolbar_padding);
         var _w = w;
         var _h = h - toolbar_height - topbar;
         
@@ -1851,7 +1857,7 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
                             ui(8) + d3_view_wz : 
                         w - ui(8) - d3_view_wz;
                         
-        var _d3y = ui(8) + d3_view_wz + project.graphDisplay.show_topbar * topbar_height;
+        var _d3y = ui(8) + d3_view_wz + project.graphDisplay.show_topbar * (topbar_height + THEME_VALUE.panel_toolbar_padding);
         var _hv  = false;
         
         if(_hab && point_in_circle(mx, my, _d3x, _d3y, d3_view_wz)) {
@@ -2985,11 +2991,28 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
     }
     
     function drawContext() { //
+    	var pd  = THEME_VALUE.panel_toolbar_padding;
+    	var mrg = THEME_VALUE.panel_toolbar_merge;
+    	
         draw_set_text(f_p2, fa_left, fa_center);
-        var xx  = ui(10), tt, tw, th;
+        var xx  = pd, tt;
         var bh  = toolbar_height - ui(8);
-        var tbh = h - toolbar_height / 2;
+        var tbh = h - toolbar_height / 2 - pd;
         var cnt = noone;
+        
+    	var tx  = pd;
+        var ty  = h - toolbar_height - pd;
+        var ttw = 0;
+        var tth = toolbar_height;
+        
+        xx  += ui(10);
+        ttw += ui(10);
+        
+        if(!mrg) {
+        	draw_sprite_stretched(THEME.toolbar, 0, tx, ty, context_area_w, tth);
+        	if(pHOVER && point_in_rectangle(mx, my, tx, ty, tx + context_area_w, ty + tth))
+	            mouse_on_graph = false;
+        }
         
         for(var i = hasGlobal? -1 : 0, n = array_length(node_context); i < n; i++) {
             if(i == -1) {
@@ -3001,8 +3024,8 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
                 tt  = cnt.getDisplayName();
             }
             
-            tw = string_width(tt);
-            th = string_height(tt);
+            tw   = string_width(tt);
+            ttw += tw + ui(4);
             
             if(i < n - 1) {
                 if(buttonInstant(THEME.button_hide_fill, xx - ui(6), tbh - bh / 2, tw + ui(12), bh, [mx, my], pHOVER, pFOCUS) == 2) {
@@ -3041,11 +3064,16 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
             	tw = string_width(tt);
             	
             	draw_text_add(xx, tbh, tt);
-            	xx += tw + ui(4);
+            	xx  += tw + ui(4);
+            	ttw += tw + ui(4);
             }
             
-            xx += ui(20);
+            xx  += ui(20);
+            ttw += ui(20);
         }
+        
+        ttw = ttw - ui(20) + ui(6);
+        context_area_w = lerp_float(context_area_w, ttw, 5);
         
         return xx;
     } 
@@ -3079,20 +3107,31 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
     } 
     
     function drawToolBar() { //
-    	var tx = 0;
-        var ty = h - toolbar_height;
-        var tw = w;
+    	var pd  = THEME_VALUE.panel_toolbar_padding;
+    	var mrg = THEME_VALUE.panel_toolbar_merge;
+    	
+    	var tx = pd;
+        var ty = h - toolbar_height - pd;
+        var tw = w - pd * 2;
         var th = toolbar_height;
         
-        if(pHOVER && point_in_rectangle(mx, my, tx, ty, tx + tw, ty + th))
-            mouse_on_graph = false;
+        if(mrg) {
+        	draw_sprite_stretched(THEME.toolbar, 0, tx, ty, tw, th);
+	        if(pHOVER && point_in_rectangle(mx, my, tx, ty, tx + tw, ty + th))
+	            mouse_on_graph = false;
+	        
+        } else {
+        	draw_sprite_stretched(THEME.toolbar, 0, tx + tw - toolbar_area_w, ty, toolbar_area_w, th);
+	        if(pHOVER && point_in_rectangle(mx, my, tx + tw - toolbar_area_w, ty, tx + tw, ty + th))
+	            mouse_on_graph = false;
+	        
+        }
         
-        draw_sprite_stretched(THEME.toolbar, 0, tx, ty, tw, th);
         var cont_x = drawContext();
         
         var bs  = toolbar_height - ui(8);
         var bsc = 1;
-        var tbx = w - ui(4) - bs;
+        var tbx = w - ui(4) - bs - pd;
         var tby = ty + th / 2;
         var _m  = [ mx, my ];
         
@@ -3106,6 +3145,8 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
         
         var tbs = "graph_toolbars_general";
         var tbb = menuItems_gen(tbs);
+        var ttw = 0;
+        
         for( var i = 0, n = array_length(tbb); i < n; i++ ) {
         	var _menu = tbb[i];
 			if(_menu == -1) {
@@ -3114,6 +3155,7 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
 				else       draw_line(tbx + bs - ui(2), ty, tbx + bs - ui(2), ty + th);
 				
 				tbx -= ui(6);
+				ttw += ui(6);
 				continue;
 			} 
 			
@@ -3122,6 +3164,7 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
             
 			_menu.draw(bx, by, bs, bs, _m, hov, foc, tbs);
 			tbx -= bs + ui(2);
+			ttw += bs + ui(2);
 			
 			if(i == n - 1) {
 				draw_set_color(COLORS.panel_separator);
@@ -3131,6 +3174,8 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
         }
         
         tbx -= ui(6);
+        ttw += ui(6);
+        toolbar_area_w = lerp_float(toolbar_area_w, ttw, 5);
         gpu_set_scissor(scs);
         
         if(hk_editing != noone) { 
@@ -3142,37 +3187,53 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
     } 
     
     function drawTopbar() { 
-    	if(!project.graphDisplay.show_topbar)
-    		return;
+    	if(!project.graphDisplay.show_topbar) return;
     	
-    	var tx = 0;
-        var ty = 0;
-        var tw = w;
-        var th = topbar_height;
-        var _lh = topbar_height / 2 - ui(8);
-        
-		if(pHOVER && point_in_rectangle(mx, my, tx, ty, tx + tw, ty + th))
-			mouse_on_graph = false;
-			
-    	draw_sprite_stretched(THEME.toolbar, 1, tx, ty, tw, th);
+    	var pd  = THEME_VALUE.panel_toolbar_padding;
+    	var mrg = THEME_VALUE.panel_toolbar_merge;
     	
     	var _spFrm = THEME_VALUE.panel_separation_type == "frame";
     	var _m = [mx,my];
     	
+    	var tx  = pd;
+        var ty  = pd;
+        var tw  = w - pd * 2;
+        var th  = topbar_height;
+        var _lh = topbar_height / 2 - ui(8);
+        
+        if(mrg) {
+	    	draw_sprite_stretched(THEME.toolbar, 1, tx, ty, tw, th);
+			if(pHOVER && point_in_rectangle(mx, my, tx, ty, tx + tw, ty + th))
+				mouse_on_graph = false;
+				
+        } 
+        
+    	////- =Global settings
+    	
     	if(hasGlobal) {
+    		if(!mrg) {
+				draw_sprite_stretched(THEME.toolbar, 1, tx + tw - topbar_sett_w, ty, topbar_sett_w, th);
+				if(pHOVER && point_in_rectangle(mx, my, tx + tw - topbar_sett_w, ty, tx + tw, ty + th))
+					mouse_on_graph = false;
+	        }
+	    	
 	    	var pad = ui(6);
+	    	var ttw = 0;
+	    	
 	    	var wdw = ui(128);
 	    	var wdh = th - pad * 2 + ui(1);
+	    	
 	    	var wdx = tx + tw - pad - wdw;
-	    	var wdy = pad;
+	    	var wdy = pad + pd;
 	    	
 	    	var bb  = THEME.button_hide_fill;
 	    	var val = PROJECT.attributes.surface_dimension;
 	    	topbar_widget_dim.setFocusHover(pFOCUS, pHOVER);
 	    	topbar_widget_dim.drawParam(new widgetParam(wdx, wdy, wdw, wdh, val, undefined, _m, x, y).setFont(f_p3));
+	    	ttw += wdw + pad;
 	    	
 	    	var pad = topbar_padding;
-	    	var wdy = pad;
+	    	var wdy = pad + pd;
 	    	var bs  = th - pad * 2 + ui(1);
 	    	
 	    	for( var i = 0, n = array_length(topbar_buttons); i < n; i++ ) {
@@ -3184,30 +3245,42 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
 	    		
 	    		tip.index = ind;
 	    		wdx -= bs + ui(2);
+	    		ttw += bs + ui(2);
+	    		
 	    		if(buttonInstant_Pad(bb, wdx, wdy, bs, bs, _m, pHOVER, pFOCUS, tip, spr, ind, COLORS._main_icon, 1, ui(8)) == 2)
 	    			fn();
 	    	}
 	    	
-	    	tw = wdx - ui(4);
+	    	tw   = wdx - ui(4);
+	    	ttw += ui(4);
+	    	topbar_sett_w = lerp_float(topbar_sett_w, ttw, 5);
     	}
     	
     	draw_set_color(COLORS.panel_separator);
 		if(_spFrm) draw_line_width(tw, ty + th / 2 - _lh, tw, ty + th / 2 + _lh, 2);
 		else       draw_line(tw, ty, tw, ty + th);
 		
+    	////- =Nodes bar
+    	
     	var scis = gpu_get_scissor();
     	gpu_set_scissor(tx, ty, tw, th);
     	
     	var _side_m = menuItems_gen("graph_topbar_menu");
     	var _pad = topbar_padding;
 		var _mus = th - _pad * 2;
-		var _mux = top_scroll + _pad;
+		var _mux = top_scroll + _pad + pd;
 		var _muy = ty + _pad;
-		var _ww  = ui(16);
+		
 		var hover = pHOVER && point_in_rectangle(mx, my, tx, ty, tx + tw, ty + th);
+		var _ww   = ui(16);
+		var _cc   = [COLORS._main_icon, c_white];
 		
-		var _cc = [COLORS._main_icon, c_white];
-		
+		if(!mrg) {
+			draw_sprite_stretched(THEME.toolbar, 1, tx, ty, topbar_node_w, th);
+			if(pHOVER && point_in_rectangle(mx, my, tx, ty, tx + topbar_node_w, ty + th))
+				mouse_on_graph = false;
+        }
+    	
 		for( var i = 0, n = array_length(_side_m); i < n; i++ ) {
 			var _menu = _side_m[i];
 			if(_menu == -1) {
@@ -3234,6 +3307,7 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
 			_ww  += _mus + ui(2);
 		}
 		
+		topbar_node_w = lerp_float(topbar_node_w, _ww - ui(8), 5);
 		gpu_set_scissor(scis);
 		
 		top_scroll_max = max(_ww - tw + ui(16), 0);
@@ -3673,7 +3747,7 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
         
         var ovy = ui(2);
         if(project.graphDisplay.show_view_control == 2) ovy += ui(36);
-        if(project.graphDisplay.show_topbar)            ovy += topbar_height;
+        if(project.graphDisplay.show_topbar)            ovy += topbar_height + THEME_VALUE.panel_toolbar_padding;
         
         if(PROJECT.previewSetting.status_display == 1) {
 	    	draw_set_text(f_p2, fa_right, fa_top, COLORS._main_text_sub);
@@ -3772,8 +3846,9 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
     
     static draw_debug_content = function() {
     	var _selNode = array_safe_get_fast(nodes_selecting, 0, noone);
+    	var  pd = THEME_VALUE.panel_toolbar_padding;
     	var _x1 = w - ui(8);
-    	var _y1 = h - toolbar_height - ui(8);
+    	var _y1 = h - toolbar_height - pd - ui(8);
     	
     	if(_selNode) {
     		var _title   = instanceof(_selNode);
@@ -5449,8 +5524,7 @@ function Panel_Graph_Drop_tooltip(panel) constructor {
 		
 		TOOLTIP_SURFACE = surface_verify(TOOLTIP_SURFACE, tww, thh);
 		surface_set_shader(TOOLTIP_SURFACE);
-		draw_sprite_stretched(THEME.textbox, 3, 0, 0, tww, thh);
-		draw_sprite_stretched(THEME.textbox, 0, 0, 0, tww, thh);
+		draw_sprite_stretched(THEME.tooltip, 0, 0, 0, tww, thh);
 		
 		draw_set_text(f_p1, fa_left, fa_top, COLORS._main_text);
 		draw_text_add(pd, pd, _drop);

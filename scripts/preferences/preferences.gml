@@ -23,7 +23,7 @@
 			PREFERENCES.window_shadow                   = true;
 			PREFERENCES.window_multi                    = true;
 			
-			PREFERENCES.theme							= "default";
+			PREFERENCES.theme							= MAC? "default Mac" : "default";
 			PREFERENCES.theme_override					= "override";
 			PREFERENCES.theme_load_unpack				= true;
 			PREFERENCES.theme_boolean                   = 0;
