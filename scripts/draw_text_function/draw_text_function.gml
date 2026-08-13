@@ -1,26 +1,22 @@
 function draw_text_line(_x, _y, _text, _sep, _w, forceCut = false) {
-	INLINE
 	__draw_text_ext_transformed(_x, _y, _text, _sep, _w, 1, 1, 0, forceCut);
 }
 
 function draw_text_add(_x, _y, _text, scale = 1) {
-	INLINE
-	BLEND_ALPHA_MULP
-	// BLEND_OVERRIDE
+	if(OS == os_windows) { BLEND_ALPHA_MULP }
+	else                 { BLEND_ALPHA_MULP }
 	if(scale == 1) draw_text(round(_x), round(_y), _text);
 	else           draw_text_transformed(round(_x), round(_y), _text, scale, scale, 0);
 	BLEND_NORMAL
 }
 
 function draw_text_transform_add(_x, _y, _text, scale = 1, _rot = 0) {
-	INLINE
 	BLEND_ALPHA_MULP
 	draw_text_transformed(round(_x), round(_y), _text, scale, scale, _rot);
 	BLEND_NORMAL
 }
 
 function draw_text_alpha(_x, _y, _text, scale = 1) {
-	INLINE
 	BLEND_ALPHA
 	if(scale == 1) draw_text(round(_x), round(_y), _text);
 	else           draw_text_transformed(round(_x), round(_y), _text, scale, scale, 0);
@@ -28,15 +24,12 @@ function draw_text_alpha(_x, _y, _text, scale = 1) {
 }
 
 function draw_text_over(_x, _y, _text, scale = 1) {
-	INLINE
 	BLEND_OVERRIDE
 	draw_text_transformed(round(_x), round(_y), _text, scale, scale, 0);
 	BLEND_NORMAL
 }
 
 function draw_text_add_float(_x, _y, _text, scale = 1) {
-	INLINE
-	
 	BLEND_ADD
 	if(scale == 1) draw_text(_x, _y, _text); else draw_text_transformed(_x, _y, _text, scale, scale, 0);
 	BLEND_NORMAL
@@ -44,8 +37,6 @@ function draw_text_add_float(_x, _y, _text, scale = 1) {
 }
 
 function draw_text_bm_add(_x, _y, _text, scale = 1) {
-	INLINE
-		
 	if(scale == 1) {
 		gpu_set_colorwriteenable(1, 1, 1, 0);
 			BLEND_OVERRIDE
@@ -68,7 +59,6 @@ function draw_text_bm_add(_x, _y, _text, scale = 1) {
 }
 
 function draw_text_ext_add(_x, _y, _text, _sep, _w, scale = 1, forceCut = false) {
-	INLINE
 	BLEND_ALPHA_MULP
 	if(!forceCut) {
 		draw_text_ext_transformed(_x, _y, _text, _sep, _w, scale, scale, 0);
@@ -82,7 +72,6 @@ function draw_text_ext_add(_x, _y, _text, _sep, _w, scale = 1, forceCut = false)
 }
 
 function draw_text_ext_alpha(_x, _y, _text, _sep, _w, scale = 1, forceCut = false) {
-	INLINE
 	BLEND_ALPHA
 	if(!forceCut) {
 		draw_text_ext_transformed(_x, _y, _text, _sep, _w, scale, scale, 0);
@@ -96,7 +85,6 @@ function draw_text_ext_alpha(_x, _y, _text, _sep, _w, scale = 1, forceCut = fals
 }
 
 function draw_text_bbox(bbox, text, scale = 1) {
-	INLINE
 	var ss = min(bbox.w / string_width(text), bbox.h / string_height(text));
 	if(ss <= 0) return;
 	
@@ -107,7 +95,6 @@ function draw_text_bbox(bbox, text, scale = 1) {
 }
 
 function draw_text_bbox_cut(bbox, text, scale = 1) {
-	INLINE
 	var ss = min(bbox.w / string_width(text), bbox.h / string_height(text));
 	if(ss <= 0) return;
 	
@@ -121,14 +108,12 @@ function draw_text_bbox_cut(bbox, text, scale = 1) {
 }
 
 function draw_text_int(x, y, str) {
-	INLINE
 	draw_text(round(x), round(y), str);
 }
 
 	////- Ext
 
 function __draw_text_ext_transformed(_x, _y, _text, _sep, _w, sx = 1, sy = 1, rotation = 0, _break = LOCALE.config.per_character_line_break) {
-	INLINE
 	_x = round(_x);
 	_y = round(_y);
 	
@@ -206,7 +191,6 @@ function __draw_text_ext_transformed(_x, _y, _text, _sep, _w, sx = 1, sy = 1, ro
 #macro string_width_ext string_width_ext_override
 
 function string_width_ext_override(text, sep, w) {
-	INLINE
 	if(!LOCALE.config.per_character_line_break)
 		return __string_width_ext(text, sep, w);
 	
@@ -233,7 +217,6 @@ function string_width_ext_override(text, sep, w) {
 #macro string_height_ext string_height_ext_override
 
 function string_height_ext_override(text, sep, w, _break = LOCALE.config.per_character_line_break) {
-	INLINE
 	if(!_break) return __string_height_ext(text, sep, w);
 	
 	var lw  = 0;

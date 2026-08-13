@@ -90,8 +90,8 @@ function mouse_step() {
 	if(MOUSE_GLOBAL) global_mouse_step();
 	
 	MOUSE_WHEEL      = 0;
-	if(mouse_wheel_up())   MOUSE_WHEEL =  1;
-	if(mouse_wheel_down()) MOUSE_WHEEL = -1;
+	if(mouse_wheel_up())   MOUSE_WHEEL =  1 * PREFERENCES.mouse_wheel_speed;
+	if(mouse_wheel_down()) MOUSE_WHEEL = -1 * PREFERENCES.mouse_wheel_speed;
 	
 	MOUSE_WHEEL_H    = 0; // mouse_wheel_get_h();
 	

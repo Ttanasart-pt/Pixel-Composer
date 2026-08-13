@@ -2,6 +2,7 @@
     "icon_scale": 2,
     "highlight_corner_radius": 0,
     "selection_corner_radius": 0,
+    "selection_minimum": 11,
     
     "inline_node_radius": 0, 
 

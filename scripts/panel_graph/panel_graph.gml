@@ -2549,7 +2549,7 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
 	                nodes_select_drag  = 2;
 	            
 	            if(nodes_select_drag == 2) {
-	            	draw_sprite_stretched_points_clamp(THEME.ui_selection, 0, nodes_select_mx, nodes_select_my, mx, my, COLORS._main_accent);
+	            	drawSelector(nodes_select_mx, nodes_select_my, mx, my);
 	                // nodes_selecting = [];
 	                var box_selecting = [];
 	                
@@ -3725,6 +3725,7 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
     	if(tooltip_action_time <= 0) return;
     	
     	tooltip_action_time -= DELTA_TIME;
+    	var pd = THEME_VALUE.panel_toolbar_padding;
     	var aa = clamp(tooltip_action_time * 2, 0, 1);
     	
     	draw_set_text(f_p3, fa_right, fa_bottom, COLORS._main_text_sub);
@@ -3733,7 +3734,7 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
     	var th  = string_height(txt) + ui(3 * 2);
     	
     	var tx1 = w - ui(6 + 2);
-    	var ty1 = h - toolbar_height - ui(3);
+     	var ty1 = h - toolbar_height - ui(3) - pd * 2;
     	var tx0 = tx1 - tw;
 		var ty0 = ty1 - th;
 		

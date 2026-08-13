@@ -1013,8 +1013,8 @@ function Panel_Animation_Dopesheet() {
 		var _mod_f0 = _mod_x0 + _mod_fade_st * timeline_scale;
 		var _mod_f1 = _mod_x1 - _mod_fade_ed * timeline_scale;
 		
-    	draw_sprite_stretched_points_clamp(THEME.ui_selection, 0, _mod_x0, _gy0, _mod_x1, _gy1, COLORS._main_icon, .5);
-    	draw_sprite_stretched_points_clamp(THEME.ui_selection, 0, _mod_f0, _gy0, _mod_f1, _gy1, COLORS._main_value_positive, .75);
+    	drawSelector(_mod_x0, _gy0, _mod_x1, _gy1, COLORS._main_icon, .5);
+    	drawSelector(_mod_f0, _gy0, _mod_f1, _gy1, COLORS._main_value_positive, .75);
     	
     	var _hovSt = pHOVER && point_in_rectangle(mmx, mmy, _mod_f0 - ui(12), _gy0, _mod_f0 + ui(12), _gy1);
     	var _hovEd = pHOVER && point_in_rectangle(mmx, mmy, _mod_f1 - ui(12), _gy0, _mod_f1 + ui(12), _gy1);
@@ -1106,7 +1106,7 @@ function Panel_Animation_Dopesheet() {
     	var _gyc    = (_gy0 + _gy1) / 2;
     	var _hov    = point_in_rectangle(mmx, mmy, _mod_x0, _gy0, _mod_x1, _gy1);
     	
-    	draw_sprite_stretched_points_clamp(THEME.ui_selection, 0, _mod_x0, _gy0, _mod_x1, _gy1, COLORS._main_icon, .5);
+    	drawSelector(_mod_x0, _gy0, _mod_x1, _gy1, COLORS._main_icon, .5);
     	
     	if(mouse_lpress()) {
     		if(!_hov) modulate_animator = noone;
@@ -3867,7 +3867,7 @@ function Panel_Animation_Dopesheet() {
         #endregion
         
         if(keyframe_boxing) {
-            draw_sprite_stretched_points_clamp(THEME.ui_selection, 0, keyframe_box_sx, keyframe_box_sy, msx, msy, COLORS._main_accent);
+            drawSelector(keyframe_box_sx, keyframe_box_sy, msx, msy);
             if(mouse_lrelease()) keyframe_boxing = false;
         }
         

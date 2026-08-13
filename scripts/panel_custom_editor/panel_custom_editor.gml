@@ -1223,7 +1223,7 @@ function Panel_Custom_Editor(_data = undefined) : PanelContent() constructor {
 			var y1 = max(my, selection_box_y);
 			
 			element_selectings = [];
-			draw_sprite_stretched_points_clamp(THEME.ui_selection, 0, x0, y0, x1, y1, COLORS._main_accent);
+			drawSelector(x0, y0, x1, y1);
 			data.root.boxSelect(element_selectings, x0 - dx0, y0 - dy0, x1 - dx0, y1 - dy0);
 			
 			if(mouse_lrelease()) {

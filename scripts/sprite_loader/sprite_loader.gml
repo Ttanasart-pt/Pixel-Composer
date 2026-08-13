@@ -300,7 +300,30 @@ function loadNodeIcons() {
 	
 }
 
-///// CMD 
+	////- Draw
+	
+function drawSelector(x0, y0, x1, y1, cc = COLORS._main_accent, aa = 1) {
+	var xx0 = min(x0, x1);
+	var yy0 = min(y0, y1);
+	var ww  = abs(x0 - x1);
+	var hh  = abs(y0 - y1);
+	var crn = THEME_VALUE.selection_corner_radius;
+	
+	if(ww <= THEME_VALUE.selection_minimum || hh <= THEME_VALUE.selection_minimum) {
+		draw_set_color(cc);
+		draw_set_alpha(.05 * aa);
+		draw_roundrect_ext(xx0, yy0, xx0 + ww, yy0 + hh, crn, crn, false);
+		
+		draw_set_alpha(aa);
+		draw_roundrect_ext(xx0, yy0, xx0 + ww, yy0 + hh, crn, crn, true);
+		
+		draw_set_alpha(1);
+		
+	} else 
+		draw_sprite_stretched_ext(THEME.ui_selection, 0, xx0, yy0, ww, hh, cc, aa);
+}
+
+	////- CMD
 
 function __initThemeEmpty() {
 	THEME = {

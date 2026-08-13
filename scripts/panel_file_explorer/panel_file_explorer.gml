@@ -541,7 +541,7 @@ function Panel_File_Explorer() : PanelContent() constructor {
 		
 		var _h = drawDir(rootFile, 0, _y, contentPane.surface_w, _m);
 		
-		if(frame_dragging) draw_sprite_stretched_points_clamp(THEME.ui_selection, 0, frame_drag_mx, frame_drag_my, _m[0], _m[1], COLORS._main_accent);
+		if(frame_dragging) drawSelector(frame_drag_mx, frame_drag_my, _m[0], _m[1]);
 		if(context_hovering == noone) context_hovering = rootFile;
 		
 		if(draggable && mouse_lpress(pFOCUS)) {

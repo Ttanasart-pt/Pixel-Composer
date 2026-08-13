@@ -126,7 +126,7 @@ function Node_Anim_Loop(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		var _x0 = _shf + (loop_start + 1) * _s;
 		var _ww = (loop_range) * _s;
 		BLEND_ADD
-		    draw_sprite_stretched_ext(THEME.ui_selection, 0, _x0, ui(13), _ww, ui(15), COLORS._main_value_positive, .5);
+		    drawSelector(_x0, ui(13), _ww, ui(15), COLORS._main_value_positive, .5);
 		BLEND_NORMAL
 		
 		draw_set_color(COLORS._main_value_positive);

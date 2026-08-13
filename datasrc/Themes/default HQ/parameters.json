@@ -2,6 +2,7 @@
     "icon_scale": 2,
     "highlight_corner_radius": 8,
     "selection_corner_radius": 6,
+    "selection_minimum": 8,
     
     "dialog_padding": 8, 
     "dialog_modal_button_spacing": 8, 
