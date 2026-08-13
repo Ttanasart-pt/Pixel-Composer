@@ -3620,6 +3620,21 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	
 	////- CLEAN UP
 	
+	static purgeData = function() {
+		clearCache();
+		
+		for( var i = 0, n = array_length(outputs); i < n; i++ ) {
+			var _outp = outputs[i];
+			var _oval = _outp.getValue();
+			
+			switch(_outp.type) {
+				case VALUE_TYPE.surface : surface_array_free(_oval); break;
+			}
+		}
+		
+		triggerRender();
+	}
+	
 	static onCleanUp = undefined
 	static cleanUp   = function() {
 		if(onCleanUp) onCleanUp();

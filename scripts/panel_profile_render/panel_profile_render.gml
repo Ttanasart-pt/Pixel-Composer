@@ -736,7 +736,7 @@ function Panel_Profile_Render() : PanelContent() constructor {
 		var _bc = COLORS._main_value_positive;
 		var _m  = [ mx, my ];
 		
-		if(buttonInstant(_b, _bx, _by, _bs, _bs, _m, pHOVER, pFOCUS, "Render all", s_run, 1, _bc, 1, UI_SCALE) == 2) {
+		if(buttonInstant_Pad(_b, _bx, _by, _bs, _bs, _m, pHOVER, pFOCUS, "Render all", s_run, 1, _bc, 1, ui(8)) == 2) {
 			project = PROJECT;
 			
 		    PROFILER_STAT = 1;
@@ -753,7 +753,7 @@ function Panel_Profile_Render() : PanelContent() constructor {
 		}
 		_bx += _bs + ui(2);
 		
-		if(buttonInstant(_b, _bx, _by, _bs, _bs, _m, pHOVER, pFOCUS, "Render partial", s_run_partial, 1, _bc, 1, UI_SCALE) == 2) {
+		if(buttonInstant_Pad(_b, _bx, _by, _bs, _bs, _m, pHOVER, pFOCUS, "Render partial", s_run_partial, 1, _bc, 1, ui(8)) == 2) {
 			project = PROJECT;
 				
 		    PROFILER_STAT = 1;
@@ -770,7 +770,7 @@ function Panel_Profile_Render() : PanelContent() constructor {
 		}
 		_bx += _bs + ui(4);
 		
-		if(buttonInstant(_b, _bx, _by, _bs, _bs, _m, pHOVER, pFOCUS, "Render from selection", s_run_partial, 1, _bc, 1, UI_SCALE) == 2) {
+		if(buttonInstant_Pad(_b, _bx, _by, _bs, _bs, _m, pHOVER, pFOCUS, "Render from selection", s_run_partial, 1, _bc, 1, ui(8)) == 2) {
 			project = PROJECT;
 			
 		    PROFILER_STAT = 1;
@@ -801,27 +801,32 @@ function Panel_Profile_Render() : PanelContent() constructor {
 		var _bx = _pd + list_w - _bs;
 		var _by = _pd;
 		
-		if(buttonInstant(_b, _bx, _by, _bs, _bs, _m, pHOVER, pFOCUS, $"Log level {show_log_level}", 
-			THEME.filter_log_level, show_log_level, COLORS._main_icon, 1, .75) == 2)
+		var _bt = $"Log Level {show_log_level}";
+		var _bc = COLORS._main_icon;
+		if(buttonInstant_Pad(_b, _bx, _by, _bs, _bs, _m, pHOVER, pFOCUS, _bt, THEME.filter_log_level, show_log_level, _bc, 1, ui(8)) == 2)
 		    show_log_level = (show_log_level + 1) % 5;
 		_bx -= _bs + ui(4);
 		
+		var _bt = "Filter Node";
+		var _bc = filter_node == noone? COLORS._main_icon : COLORS._main_accent;
 		if(report_selecting == noone) 
 			draw_sprite_ext(s_filter_node, 0, _bx + _bs / 2, _by + _bs / 2, 1, 1, 0, COLORS._main_icon, 0.25);
-		else if(buttonInstant(_b, _bx, _by, _bs, _bs, _m, pHOVER, pFOCUS, "Filter node", 
-			s_filter_node, 0, filter_node == noone? COLORS._main_icon : COLORS._main_accent, 1, UI_SCALE) == 2) {
+			
+		else if(buttonInstant_Pad(_b, _bx, _by, _bs, _bs, _m, pHOVER, pFOCUS, _bt, s_filter_node, 0, _bc, 1, ui(8)) == 2) {
 		    filter_node = filter_node == report_selecting.node? noone : report_selecting.node;
 		    searchData();
 		}
 		_bx -= _bs + ui(4);
 		
-		if(buttonInstant(_b, _bx, _by, _bs, _bs, _m, pHOVER, pFOCUS, "Match selecting", 
-			s_filter_node_inspector, 0, set_selecting_node? COLORS._main_accent : COLORS._main_icon, 1, UI_SCALE) == 2)
+		var _bt = "Match Selecting";
+		var _bc = set_selecting_node? COLORS._main_accent : COLORS._main_icon;
+		if(buttonInstant_Pad(_b, _bx, _by, _bs, _bs, _m, pHOVER, pFOCUS, _bt, s_filter_node_inspector, 0, _bc, 1, ui(8)) == 2)
 		    set_selecting_node = !set_selecting_node;
 		_bx -= _bs + ui(4);
 		
-		if(buttonInstant(_b, _bx, _by, _bs, _bs, _m, pHOVER, pFOCUS, "Render Print Flag", 
-			THEME.filter_log_level, 0, global.FLAG.render? COLORS._main_accent : COLORS._main_icon, 1, .75) == 2)
+		var _bt = "Render Print Flag";
+		var _bc = global.FLAG.render? COLORS._main_accent : COLORS._main_icon;
+		if(buttonInstant_Pad(_b, _bx, _by, _bs, _bs, _m, pHOVER, pFOCUS, _bt, THEME.filter_log_level, 0, _bc, 1, ui(8)) == 2)
 		    global.FLAG.render = !global.FLAG.render;
 		
 		_bx -= ui(4);

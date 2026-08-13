@@ -4,7 +4,8 @@
     function global_project_close_all() { CALL("close_project_all"); for( var i = array_length(PROJECTS) - 1; i >= 0; i-- ) closeProject(PROJECTS[i]);   }
     function global_theme_reload()      { CALL("reload_theme");      loadGraphic(PREFERENCES.theme); resetPanel();                                       }
     
-    function global_render_all()        { CALL("render_all");        RenderAllReorder();                                                                  }
+    function global_render_all()        { CALL("render_all");        RenderAllReorder();                     }
+    function global_render_all_force()  { CALL("render_all_force");  PROJECT.purgeAll(); RenderAllReorder(); }
     function global_export_all()        { 
         for (var i = 0, n = array_length(PROJECT.allNodes); i < n; i++) {
             var node = PROJECT.allNodes[i];
@@ -22,26 +23,30 @@
     }
     
     function __fnInit_Global() {
-        registerFunction("", "New file", "N", MOD_KEY.ctrl, NEW ).setMenu("new_file", THEME.new_file)
+    	var n = MOD_KEY.none;
+    	var c = MOD_KEY.ctrl;
+    	var s = MOD_KEY.shift;
+    	var a = MOD_KEY.alt;
+    	
+        registerFunction("", "New file", "N", c, NEW ).setMenu("new_file", THEME.new_file)
         
         if(!DEMO) {
-            registerFunction("", "Save",            "S",    MOD_KEY.ctrl,                                 function() /*=>*/ { SAVE(); }        ).setMenu("save",           THEME.save)
-            registerFunction("", "Save as",         "S",    MOD_KEY.ctrl | MOD_KEY.shift,                 function() /*=>*/ { SAVE_AS(); }     ).setMenu("save_as",        THEME.save)
-            registerFunction("", "Save at",         "",     MOD_KEY.none,                                 function() /*=>*/ { SAVE_AT(); }     ).setMenu("save_at",        THEME.save)
+            registerFunction("", "Save",            "S",    c,   SAVE      ).setMenu("save",           THEME.save)
+            registerFunction("", "Save As",         "S",    c|s, SAVE_AS   ).setMenu("save_as",        THEME.save)
+            registerFunction("", "Save At",         "",     n,   SAVE_AT   ).setMenu("save_at",        THEME.save)
                 .setArg([ ARG("project", function() /*=>*/ {return PROJECT}, true), ARG("path", ""), ARG("log", "save at ") ])
             
-            registerFunction("", "Save all",        "S",    MOD_KEY.ctrl | MOD_KEY.alt,                   SAVE_ALL                 ).setMenu("save_all",       THEME.icon_save_all)
-            registerFunction("", "Open",            "O",    MOD_KEY.ctrl,                                 LOAD                     ).setMenu("open",           THEME.noti_icon_file_load)
-            registerFunction("", "Open Safe",       "",     MOD_KEY.none,                                 LOAD_SAFE                ).setMenu("open_safe",      THEME.noti_icon_file_load)
+            registerFunction("", "Save All",        "S",    c|a, SAVE_ALL  ).setMenu("save_all",       THEME.icon_save_all)
+            registerFunction("", "Open",            "O",    c,   LOAD      ).setMenu("open",           THEME.noti_icon_file_load)
+            registerFunction("", "Open Safe",       "",     n,   LOAD_SAFE ).setMenu("open_safe",      THEME.noti_icon_file_load)
             
-            registerFunction("", "Open at",         "",     MOD_KEY.none,                                 LOAD_AT                  ).setMenu("open_at",        THEME.noti_icon_file_load)
+            registerFunction("", "Open At",         "",     n,   LOAD_AT   ).setMenu("open_at",        THEME.noti_icon_file_load)
                 .setArg([ ARG("path", ""), ARG("readonly", false), ARG("override", false) ])
             
-            registerFunction("", "Append",          "",     MOD_KEY.none,                                 APPEND                   ).setMenu("append",         )
+            registerFunction("", "Append",          "",     n,   APPEND    ).setMenu("append",         )
                 .setArg([ ARG("path", ""), ARG("context", function() /*=>*/ {return PANEL_GRAPH.getCurrentContext()}, true) ])
             
-            registerFunction("", "Recent Files",    "R",    MOD_KEY.ctrl | MOD_KEY.shift,
-                function(_dat) { 
+            registerFunction("", "Recent Files",    "R",    c|s, function(_dat) /*=>*/ { 
                     var amo = min(10, ds_list_size(RECENT_FILES));
                     var arr = array_create(amo);
                     var tip = array_create(amo);
@@ -57,36 +62,37 @@
                     return submenuCall(_dat, arr, "recent_files").setTooltip(tip);
                 }).setMenu("recent_files",, true);
                 
-            registerFunction("", "Import project .zip",  "", MOD_KEY.none, __IMPORT_ZIP ).setMenu("import_zip")
-            registerFunction("", "Export project .zip",  "", MOD_KEY.none, __EXPORT_ZIP ).setMenu("export_zip")
-            registerFunction("", "Export project .json", "", MOD_KEY.none, exportJSON   ).setMenu("export_json")
+            registerFunction("", "Import Project .zip",  "", n, __IMPORT_ZIP ).setMenu("import_zip")
+            registerFunction("", "Export Project .zip",  "", n, __EXPORT_ZIP ).setMenu("export_zip")
+            registerFunction("", "Export Project .json", "", n, exportJSON   ).setMenu("export_json")
             
-            registerFunction("", "Import",          "",     MOD_KEY.none, function(_dat) /*=>*/ {return submenuCall(_dat, [ MENU_ITEMS.import_zip ])} ).setMenu("import_menu",, true);
-            registerFunction("", "Export",          "",     MOD_KEY.none, function(_dat) /*=>*/ {return submenuCall(_dat, [ 
+            registerFunction("", "Import",          "",     n, function(_dat) /*=>*/ {return submenuCall(_dat, [ MENU_ITEMS.import_zip ])} ).setMenu("import_menu",, true);
+            registerFunction("", "Export",          "",     n, function(_dat) /*=>*/ {return submenuCall(_dat, [ 
                 MENU_ITEMS.export_zip,
                 MENU_ITEMS.export_json,
             ])} ).setMenu("export_menu",, true);
         }
         
-        registerFunction("", "Undo",                "Z",    MOD_KEY.ctrl,                 UNDO     ).setMenu("undo"            )
-        registerFunction("", "Redo",                "Z",    MOD_KEY.ctrl | MOD_KEY.shift, REDO     ).setMenu("redo"            )
+        registerFunction("", "Undo",                "Z",    c,   UNDO     ).setMenu("undo"            )
+        registerFunction("", "Redo",                "Z",    c|s, REDO     ).setMenu("redo"            )
         
-        registerFunction("", "Full panel",          vk_f9,  MOD_KEY.none, set_focus_fullscreen     ).setMenu("full_panel"      )
-        registerFunction("", "Reset layout",        vk_f10, MOD_KEY.ctrl, resetPanel               ).setMenu("reset_layout"    )
+        registerFunction("", "Full Panel",          vk_f9,  n,   set_focus_fullscreen     ).setMenu("full_panel"      )
+        registerFunction("", "Reset Layout",        vk_f10, c,   resetPanel               ).setMenu("reset_layout"    )
         
-        registerFunction("", "Fullscreen",          vk_f11, MOD_KEY.none, global_fullscreen        ).setMenu("fullscreen"      )
-        registerFunction("", "Render all",          vk_f5,  MOD_KEY.none, global_render_all        ).setMenu("render_all", [ THEME.sequence_control, 1 ])
-        registerFunction("", "Export all",          vk_f6,  MOD_KEY.none, global_export_all        ).setMenu("export_all",   THEME.play_all )
-        registerFunction("", "Clear all cache",     vk_f7,  MOD_KEY.none, global_clear_cache_all   ).setMenu("clear_cache_all", THEME.cache )
+        registerFunction("", "Fullscreen",          vk_f11, n,   global_fullscreen        ).setMenu("fullscreen"      )
+        registerFunction("", "Render All",          vk_f5,  n,   global_render_all        ).setMenu("render_all",       [ THEME.sequence_control, 1 ])
+        registerFunction("", "Force Render All",    vk_f5,  s,   global_render_all_force  ).setMenu("render_all_force", [ THEME.sequence_control, 1 ])
+        registerFunction("", "Export All",          vk_f6,  n,   global_export_all        ).setMenu("export_all",   THEME.play_all )
+        registerFunction("", "Clear All Cache",     vk_f7,  n,   global_clear_cache_all   ).setMenu("clear_cache_all", THEME.cache )
         
-        registerFunction("", "Close file",          "Q",    MOD_KEY.ctrl, global_project_close     ).setMenu("close_file"      )
-        registerFunction("", "Close all files",     "Q",    MOD_KEY.ctrl | MOD_KEY.shift, global_project_close_all ).setMenu("close_all_files" )
-        registerFunction("", "Close program",       vk_f4,  MOD_KEY.alt,  window_close             ).setMenu("close_software", THEME.window_exit_icon )
-        registerFunction("", "Close project",       "",     MOD_KEY.none, closeProject             ).setMenu("close_project"   ).setArg([ ARG("project", function() /*=>*/ {return PROJECT}, true) ])
+        registerFunction("", "Close File",          "Q",    c,   global_project_close     ).setMenu("close_file"      )
+        registerFunction("", "Close All Files",     "Q",    c|s, global_project_close_all ).setMenu("close_all_files" )
+        registerFunction("", "Close Program",       vk_f4,  a,   window_close             ).setMenu("close_software", THEME.window_exit_icon )
+        registerFunction("", "Close Project",       "",     n,   closeProject             ).setMenu("close_project"   ).setArg([ ARG("project", function() /*=>*/ {return PROJECT}, true) ])
             
-        registerFunction("", "Reload theme",        vk_f10, MOD_KEY.ctrl | MOD_KEY.shift,           global_theme_reload        ).setMenu("reload_theme")
+        registerFunction("", "Reload Theme",        vk_f10, c|s, global_theme_reload        ).setMenu("reload_theme")
         
-        registerFunction("", "Addons",              "",     MOD_KEY.none, function(_dat) /*=>*/ {
+        registerFunction("", "Addons",              "",     n, function(_dat) /*=>*/ {
             var arr = [ MENU_ITEMS.addons, -1 ];
             
             for( var i = 0, n = array_length(ADDONS); i < n; i++ )
@@ -95,7 +101,7 @@
             return submenuCall(_dat, arr);
         }).setMenu("addon_menu", THEME.addon_icon, true)
         
-        registerFunction("", "Toggle Recording",   "R", MOD_KEY.shift | MOD_KEY.alt, toggleRecording ).setMenu("toggle_recording")
+        registerFunction("", "Toggle Recording",   "R",     s|a, toggleRecording ).setMenu("toggle_recording")
     }
 #endregion
 
@@ -235,7 +241,9 @@ function Panel_Menu() : PanelContent() constructor {
         ]; menu_animation = [ __txt("Animation"), "main_animation" ];
         global.menuItems_main_rendering = [
             "render_all",
+            "render_all_force",
             "export_all",
+            -1,
             "clear_cache_all",
         ]; menu_rendering = [ __txt("Rendering"), "main_rendering" ];
         

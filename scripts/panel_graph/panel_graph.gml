@@ -47,6 +47,7 @@
     function panel_graph_copy()                    { CALL("graph_copy");                PANEL_GRAPH.doCopy();                 }
     function panel_graph_paste()                   { CALL("graph_paste");               PANEL_GRAPH.doPaste();                }
     function panel_graph_mass_connect()            { CALL("graph_mass_connect");        PANEL_GRAPH.doMassConnect();          }
+    function panel_graph_purge_data()              { CALL("graph_purge_data");          PANEL_GRAPH.doPurge();                }
     
 	function panel_graph_halign_right()            { CALL("graph_halign_right");        node_halign(PANEL_GRAPH.nodes_selecting, fa_right,  PANEL_GRAPH.nodes_select_anchor); }
 	function panel_graph_halign_center()           { CALL("graph_halign_center");       node_halign(PANEL_GRAPH.nodes_selecting, fa_center, PANEL_GRAPH.nodes_select_anchor); }
@@ -194,6 +195,7 @@
         registerFunction(g, "Copy",                  "C", c, panel_graph_copy                ).setMenu("graph_copy",            THEME.copy)
         registerFunction(g, "Paste",                 "V", c, panel_graph_paste               ).setMenu("graph_paste",           THEME.paste)
         registerFunction(g, "Mass Connect",          "",  n, panel_graph_mass_connect        ).setMenu("graph_mass_connect",    THEME.obj_auto_organize)
+        registerFunction(g, "Purge Data",            "",  n, panel_graph_purge_data          ).setMenu("graph_purge")
         
         registerFunction("", "Graph Pan",            "", c,  panel_graph_pan                 ).setMenu("graph_pan")
         registerFunction("", "Graph Zoom",           "", a|c,panel_graph_zoom                ).setMenu("graph_zoom")
@@ -1140,7 +1142,7 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
     		if(array_empty(nodes_selecting)) return;
     		print(nodes_selecting[0])
     		clipboard_set_text(nodes_selecting[0].node_id);
-    	}))
+    	}), "graph_purge");
     	
 	    global.menuItems_graph_junction_select = [
 	    	"graph_group_junction_color",
@@ -4895,6 +4897,13 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
     		
     		inp.setFrom(out);
     	}
+    }
+    
+    function doPurge() {
+    	if(array_empty(nodes_selecting)) return;
+    	
+    	for( var i = 0, n = array_length(nodes_selecting); i < n; i++ ) 
+    		nodes_selecting[i].purgeData();
     }
     
     function dropFile(path) { //

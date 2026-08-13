@@ -221,8 +221,10 @@ function Node_Processor(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 			if(dimension_index > -1) {
 				surface_depth_disable(!use_depth);
 				var _dim = getDimension();
+				
 				for(var i = 0; i < _os; i++) {
 					if(outputs[i].type != VALUE_TYPE.surface || outputs[i].parameters.skip_verify) continue;
+					
 					_out[i] = surface_verify(_out[i], _dim[0], _dim[1], attrDepth());
 				}
 				surface_depth_disable(true);

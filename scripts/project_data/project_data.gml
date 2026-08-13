@@ -514,6 +514,11 @@ function Project() constructor {
 	
 	static getNodeFromID = function(_id) { return ds_map_try_get(nodeMap, _id, noone); }
 	
+	static purgeAll = function() {
+		for( var i = 0, n = array_length(allNodes); i < n; i++ ) 
+			allNodes[i].purgeData();
+	}
+	
 	////- Render
 	
 	static preRender = function() {
