@@ -3,7 +3,7 @@ control the blend progress from <junc Color from> to <junc Color to>.
 
 ## Color Space
 
-<p class="subtitle">For more information, check out the <a href="color_space.html">color space</a> page.
+<p class="subtitle">For more information, check out the <a href="color_space.html">color space</a> page.</p>
 
 A color can be defines as a composition of multiple elements. For example a combination of red, green and 
 blue colors, or hue, saturation and value. The set of thoese elements is called a color space.
