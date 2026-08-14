@@ -23,25 +23,21 @@ function Node_Path_3D_Camera(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _g
 	newInput(i+10, nodeValue_Dimension());
 	
 	////- =Transform
-	
-	newInput(i+ 4, nodeValue_EScroll( "Postioning Mode",  2, [ "Position + Rotation", "Position + Lookat", "Lookat + Rotation" ] ));
-	newInput(i+ 5, nodeValue_Vec3(        "Lookat Position", [0,0,0]           ));
-	newInput(i+ 6, nodeValue_Rotation(    "Roll",             0                ));
-	newInput(i+ 7, nodeValue_Rotation(    "Horizontal Angle", 45               ));
-	newInput(i+ 8, nodeValue_Slider(      "Vertical Angle",   30, [0, 90, 0.1] ));
-	newInput(i+ 9, nodeValue_Float(       "Distance",         4                ));
+	newInput(i+ 4, nodeValue_EScroll(  "Postioning Mode",  2, [ "Position + Rotation", "Position + Lookat", "Lookat + Rotation" ] ));
+	newInput(i+ 5, nodeValue_Vec3(     "Lookat Position", [0,0,0]           ));
+	newInput(i+ 6, nodeValue_Rotation( "Roll",             0                ));
+	newInput(i+ 7, nodeValue_Rotation( "Horizontal Angle", 45               ));
+	newInput(i+ 8, nodeValue_Slider(   "Vertical Angle",   30, [0, 90, 0.1] ));
+	newInput(i+ 9, nodeValue_Float(    "Distance",         4                ));
 	
 	////- =Camera
+	newInput(i+ 1, nodeValue_EButton(  "Projection",          1 , [ "Perspective", "Orthographic" ]));
+	newInput(i+ 0, nodeValue_ISlider(  "FOV",                 60, [  10, 90, .1  ] ));
+	newInput(i+ 3, nodeValue_Slider(   "Orthographic Scale", .5,  [ .01,  4, .01 ] ));
 	
-	newInput(i+ 1, nodeValue_EButton( "Projection",          1 , [ "Perspective", "Orthographic" ]));
-	newInput(i+ 0, nodeValue_ISlider(     "FOV",                 60, [  10, 90, .1  ] ));
-	newInput(i+ 3, nodeValue_Slider(      "Orthographic Scale", .5,  [ .01,  4, .01 ] ));
-	
-	////- =Output
-	
-	newInput(i+11, nodeValue_Bool( "Apply depth to weight", false    ));
-	newInput(i+12, nodeValue_Vec2( "Depth range",           [.1,100] ));
-	
+	////- =Path
+	newInput(i+11, nodeValue_Bool( "Apply Depth to Weight", false    ));
+	newInput(i+12, nodeValue_Vec2( "Depth Range",           [.1,100] ));
 	// input i+13
 	
 	in_cam = array_length(inputs);
@@ -49,9 +45,9 @@ function Node_Path_3D_Camera(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _g
 	newOutput(0, nodeValue_Output("Rendered", VALUE_TYPE.pathnode, self ));
 	
 	input_display_list = [ i+2, i+10,
-		["Transform", false], i+4, 0, 1, i+5, i+6, i+7, i+8, i+9, 
-		["Camera",    false], i+1, i+0, i+3, 
-		["Output",    false], i+11, i+12,
+		[ "Transform", false ], i+4, 0, 1, i+5, i+6, i+7, i+8, i+9, 
+		[ "Camera",    false ], i+1, i+0, i+3, 
+		[ "Path",      false ], i+11, i+12,
 	];
 	
 	tool_lookat  = new NodeTool( "Move Target", THEME.tools_3d_transform_object );
@@ -97,16 +93,19 @@ function Node_Path_3D_Camera(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _g
 		if(array_empty(preObj)) return;
 		preObj = preObj[0];
 		
+		if(!is(preObj, __3dInstance)) return;
+		
 		var _pos  = inputs[0].getValue(,,, true);
 		var _vpos = new __vec3( _pos[0], _pos[1], _pos[2] );
+		var _qrot  = preObj.transform.rotation;
 		
-		if(isUsingTool("Transform"))	tool_object_pos.drawOverlay3D(0, preObj, _vpos, active, _mx, _my, _params);
-		else if(isUsingTool("Rotate"))	tool_object_rot.drawOverlay3D(1, preObj, _vpos, active, _mx, _my, _params);
+		if(isUsingTool("Transform"))	tool_object_pos.drawOverlay3D( 0, _vpos, _qrot, active, _mx, _my, _params);
+		else if(isUsingTool("Rotate"))	tool_object_rot.drawOverlay3D( 1, _vpos, _qrot, active, _mx, _my, _params);
 		else if(isUsingTool("Move Target")) {
 			var _lkpos  = inputs[in_d3d + 5].getValue(,,, true);
 			var _lkvpos = new __vec3( _lkpos[0], _lkpos[1], _lkpos[2] );
 			
-			tool_object_pos.drawOverlay3D(in_d3d + 5, noone, _lkvpos, active, _mx, _my, _params);
+			tool_object_pos.drawOverlay3D(in_d3d + 5, _lkvpos, noone, active, _mx, _my, _params);
 		}
 		
 	}

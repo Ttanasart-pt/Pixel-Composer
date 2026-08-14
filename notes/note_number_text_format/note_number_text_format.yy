@@ -1,0 +1,11 @@
+{
+  "$GMNotes":"v1",
+  "%Name":"note_number_text_format",
+  "name":"note_number_text_format",
+  "parent":{
+    "name":"text",
+    "path":"folders/nodes/data/value/text.yy",
+  },
+  "resourceType":"GMNotes",
+  "resourceVersion":"1.1",
+}

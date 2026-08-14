@@ -22,6 +22,7 @@ function Panel_Profile_Render() : PanelContent() constructor {
 	    title      = __txt("Render Profiler");
 		auto_pin   = true;
 		project    = undefined;
+		padding    = ui(6);
 		
 		w = ui(800);
 		h = ui(500);
@@ -193,11 +194,13 @@ function Panel_Profile_Render() : PanelContent() constructor {
 	    draw_clear_alpha(COLORS.panel_bg_clear_inner, 1);
 		if(project == undefined || !project.active) return 0;
 		
+	    var _hover = sc_profile_list.hover;
+	    var _focus = sc_profile_list.active;
+	    
 	    var _h  = ui(8);
 	    var yy  = _y;
 	    var _ww = sc_profile_list.surface_w;
 	    var _sh = sc_profile_list.surface_h;
-	    var _hovering = sc_profile_list.hover;
 	    
 	    var _wh = ui(20);
 	    gpu_set_texfilter(true);
@@ -209,7 +212,7 @@ function Panel_Profile_Render() : PanelContent() constructor {
 	        var _rtype  = _report.type;
 	        
 	        var _sel = report_selecting == _report;
-	        var _hov = point_in_rectangle(_m[0], _m[1], 0, yy, _ww, yy + _wh);
+	        var _hov = _hover && point_in_rectangle(_m[0], _m[1], 0, yy, _ww, yy + _wh);
 	        var _cy  = yy + _wh / 2;
 	        var _draw = _cy > -_wh && _cy < _sh + _wh;
 	        
@@ -252,12 +255,12 @@ function Panel_Profile_Render() : PanelContent() constructor {
 		        }
 	        }
 	        
-	        if(_hov && pFOCUS) {
-	        	if(mouse_lpress()) {
+	        if(_hov) {
+	        	if(mouse_lpress(_focus)) {
 		            setReport(_sel? noone : _report);
 		            report_clicked   = _report;
 		            
-	        	} else if(mouse_lclick() && report_clicked != noone && report_clicked != _report) {
+	        	} else if(mouse_lclick(_focus) && report_clicked != noone && report_clicked != _report) {
 	        		setReport(_report);
 	        		report_clicked   = _report;
 	        	}
@@ -935,7 +938,7 @@ function Panel_Profile_Render() : PanelContent() constructor {
 		
 		
 		var ndx = _pd;
-		var ndy = ui(44);
+		var ndy = _pd + _bs + ui(4);
 		
     	detail_w  = w - list_w - padding * 2 - ui(8);
     	content_h = h - ndy - padding;
@@ -961,11 +964,12 @@ function Panel_Profile_Render() : PanelContent() constructor {
 		///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		
 		var resx = _pd + list_w + ui(4);
-		var resy = ui(44) + content_h / 2;
+		var resy = ndy + ndh / 2;
 		var resh = pHOVER && point_in_rectangle(mx, my, resx - ui(4), resy - ui(32), resx + ui(4), resy + ui(32));
 		
-		draw_set_color(resh? COLORS._main_icon_light : COLORS._main_icon);
+		draw_set_color_alpha(COLORS._main_icon, .25 + .5 * resh);
 		draw_line(resx, resy - ui(16), resx, resy + ui(16));
+		draw_set_alpha(1);
 		
 		if(width_resize) {
 			var v = width_resize_s + (mx - width_resize_m);

@@ -1,4 +1,7 @@
 {
+    "easing": "liquid", 
+    "ease_duration": 0.7, 
+
     "icon_scale": 2,
     "highlight_corner_radius": 8,
     "selection_corner_radius": 6,
@@ -11,9 +14,9 @@
     "panel_padding": 2,
     "panel_margin": 1.5,
     "panel_corner_radius": 8,
-    "panel_toolbar_padding": 8, 
+
+    "panel_toolbar_padding": 12, 
     "panel_toolbar_merge": false, 
-    "preview_topbar_merge": true, 
 
     "panel_notification_padding": 0,
     "panel_tab_padding": 2,

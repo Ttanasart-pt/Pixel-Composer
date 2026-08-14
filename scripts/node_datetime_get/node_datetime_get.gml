@@ -3,24 +3,24 @@ function Node_Datetime_Get(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	always_pad = true;
 	setDimension(96, 48);
 	
-	newInput( 0, nodeValue_Text("Format", "%y-%m-%dT%h:%n:%s"));
-	newInput( 1, nodeValue_Bool("Update", true));
+	newInput( 0, nodeValue_Text( "Format", "%y-%m-%dT%h:%n:%s" ));
+	newInput( 1, nodeValue_Bool( "Update", true ));
 	
 	newOutput( 0, nodeValue_Output("Data", VALUE_TYPE.text, ""));
 	
 	template_guide = [
-		["%s", "Second",   function() /*=>*/ {return string_lead_zero(current_second,  2)} ],
-		["%n", "Minute",   function() /*=>*/ {return string_lead_zero(current_minute,  2)} ],
-		["%h", "Hour",     function() /*=>*/ {return string_lead_zero(current_hour,    2)} ],
+		[ "%s", "Second",   function() /*=>*/ {return string_lead_zero(current_second,  2)} ],
+		[ "%n", "Minute",   function() /*=>*/ {return string_lead_zero(current_minute,  2)} ],
+		[ "%h", "Hour",     function() /*=>*/ {return string_lead_zero(current_hour,    2)} ],
 		-1,
 		
-		["%d", "Day",      function() /*=>*/ {return string_lead_zero(current_day,     2)} ],
-		["%w", "Week Day", function() /*=>*/ {return current_weekday} ],
-		["%m", "Month",    function() /*=>*/ {return string_lead_zero(current_month,   2)} ],
-		["%y", "Year",     function() /*=>*/ {return current_year}   ],
+		[ "%d", "Day",      function() /*=>*/ {return string_lead_zero(current_day,     2)} ],
+		[ "%w", "Week Day", function() /*=>*/ {return current_weekday}                      ],
+		[ "%m", "Month",    function() /*=>*/ {return string_lead_zero(current_month,   2)} ],
+		[ "%y", "Year",     function() /*=>*/ {return current_year}                         ],
 		
 		-1,
-		["%tm", "Program microsec", function() /*=>*/ {return get_timer()} ],
+		[ "%tm", "Program microsec", function() /*=>*/ {return get_timer()}                 ],
 	];
 	
 	export_template = new Inspector_Custom_Renderer(function(_x, _y, _w, _m, _hover, _focus) {

@@ -1,0 +1,11 @@
+{
+  "$GMNotes":"v1",
+  "%Name":"note_to_text",
+  "name":"note_to_text",
+  "parent":{
+    "name":"text",
+    "path":"folders/nodes/data/value/text.yy",
+  },
+  "resourceType":"GMNotes",
+  "resourceVersion":"1.1",
+}

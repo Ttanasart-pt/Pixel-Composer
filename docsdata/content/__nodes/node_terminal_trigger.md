@@ -1,0 +1,1 @@
+Receive trigger event from terminal.

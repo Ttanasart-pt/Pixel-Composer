@@ -1,0 +1,1 @@
+Multiply matrix with color as RGB vector.

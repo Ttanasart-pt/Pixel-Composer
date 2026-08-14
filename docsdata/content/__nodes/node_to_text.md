@@ -1,0 +1,1 @@
+Convert non-text data to text.

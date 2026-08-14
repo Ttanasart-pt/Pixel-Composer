@@ -4,17 +4,17 @@ function Node_Path_Spiral(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	setDrawIcon();
 	
 	////- =Path
-	newInput( 0, nodeValue_Path(  "Path" ));
+	newInput( 0, nodeValue_Path(  "Path"               ));
 	newInput( 6, nodeValue_Range( "Range",       [0,1] ));
 	newInput( 7, nodeValue_Bool(  "Clamp Curve", false ));
 	newInput( 8, nodeValue_Bool(  "Loop",        false ));
 	
 	////- =Spiral
-	newInput( 1, nodeValue_Float( "Frequency",  4));
-	newInput( 2, nodeValue_Float( "Amplitude",  4)).setCurvable( 5, CURVE_DEF_11);
+	newInput( 1, nodeValue_Float( "Frequency",   4     ));
+	newInput( 2, nodeValue_Float( "Amplitude",   4     )).setCurvable( 5, CURVE_DEF_11);
 	
-	newInput( 3, nodeValue_Slider(   "Spiral",    .75, [-2,2,.01]));
-	newInput( 4, nodeValue_Rotation( "Phase",      0));
+	newInput( 3, nodeValue_Slider(   "Spiral",  .75, [-2,2,.01] ));
+	newInput( 4, nodeValue_Rotation( "Phase",    0     ));
 	// 9
 	
 	newOutput(0, nodeValue_Output("Path", VALUE_TYPE.pathnode, noone));

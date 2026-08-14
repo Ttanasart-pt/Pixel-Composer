@@ -1,0 +1,1 @@
+Overlay multiple frames of animation for visualization. Superseded by preview panel build-in onion skin.

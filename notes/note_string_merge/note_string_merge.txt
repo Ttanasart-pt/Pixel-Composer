@@ -1,0 +1,1 @@
+COmbine multiple texts.

@@ -1,4 +1,4 @@
-#region
+#region global
 	global.node_path_shape_types = [ 
 		    "Rectangle", "Trapezoid", "Parallelogram",
 	    -1, "Ellipse", "Arc", "Squircle", "Hypocycloid", "Epitrochoid", 

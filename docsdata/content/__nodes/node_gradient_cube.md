@@ -1,0 +1,1 @@
+Render cube of colors.

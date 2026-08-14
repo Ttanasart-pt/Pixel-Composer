@@ -9,6 +9,7 @@
       "option_windows_texture_page":"8192x8192",
       "option_windows_version":"1.21.8.0",
       "option_windows_save_location":"1",
+      "option_windows_d3dswapeffectdiscard":"true",
     },
     "ItchDemo":{
       "option_windows_display_name":"Pixel Composer 1.21 demo",
@@ -19,6 +20,7 @@
       "option_windows_save_location":"1",
       "option_windows_texture_page":"8192x8192",
       "option_windows_version":"1.21.8.0",
+      "option_windows_d3dswapeffectdiscard":"true",
     },
     "SteamDemo":{
       "option_windows_display_name":"Pixel Composer 1.21 demo",
@@ -30,7 +32,7 @@
   "option_windows_company_info":"MakhamDev",
   "option_windows_copyright_info":"(c) 2026 MakhamDev",
   "option_windows_copy_exe_to_dest":false,
-  "option_windows_d3dswapeffectdiscard":false,
+  "option_windows_d3dswapeffectdiscard":true,
   "option_windows_description_info":"Pixel Composer",
   "option_windows_disable_sandbox":true,
   "option_windows_display_cursor":true,

@@ -1,0 +1,11 @@
+{
+  "$GMNotes":"v1",
+  "%Name":"note_matrix_transform_3d",
+  "name":"note_matrix_transform_3d",
+  "parent":{
+    "name":"matrix",
+    "path":"folders/nodes/data/value/matrix.yy",
+  },
+  "resourceType":"GMNotes",
+  "resourceVersion":"1.1",
+}

@@ -839,11 +839,11 @@ function Node_Path_3D(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 	
 	////- =Path
 	newInput(1, nodeValue_Bool( "Loop",         false )).rejectArray();
-	newInput(3, nodeValue_Bool( "Round anchor", false )).rejectArray();
+	newInput(3, nodeValue_Bool( "Round Anchor", false )).rejectArray();
 	
 	////- =Sampling
-	newInput(0, nodeValue_Slider(      "Path progress", 0 )).setTooltip("Sample position from path.");
-	newInput(2, nodeValue_EScroll( "Progress mode", 0, ["Entire line", "Segment"])).rejectArray();
+	newInput(0, nodeValue_Slider(  "Sample Path", 0 )).setTooltip("Sample position from path.");
+	newInput(2, nodeValue_EScroll( "Sample Mode", 0, ["Entire line", "Segment"])).rejectArray();
 	// inputs 4 
 		
 	newOutput(0, nodeValue_Output( "Position out", VALUE_TYPE.float,    [0,0] )).setDisplay(VALUE_DISPLAY.vector);

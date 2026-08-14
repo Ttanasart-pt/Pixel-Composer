@@ -1,0 +1,11 @@
+{
+  "$GMNotes":"v1",
+  "%Name":"note_path_weight_adjust",
+  "name":"note_path_weight_adjust",
+  "parent":{
+    "name":"modifier",
+    "path":"folders/nodes/data/value/path/modifier.yy",
+  },
+  "resourceType":"GMNotes",
+  "resourceVersion":"1.1",
+}

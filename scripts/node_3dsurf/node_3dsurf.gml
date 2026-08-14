@@ -3,19 +3,18 @@ function Node_3DSurf(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	cached_object = [];
 	object_class  = dynaSurf_3d;
 	
-	newInput(0, nodeValue_D3Scene("Scene", noone))
-		.setVisible(true, true);
+	newInput( 0, nodeValue_D3Scene( "Scene", noone )).setVisible(true, true);
 	
-	newInput(1, nodeValue_Vec2("Base Dimension", PROJ_SURF));
-	
-	newInput(2, nodeValue_Slider("Vertical Angle", 45, [0, 90, 0.1] ));
-	
-	newInput(3, nodeValue_Float("Distance", 4 ));
+	////- =Camera
+	newInput( 1, nodeValue_Vec2(    "Base Dimension", PROJ_SURF     ));
+	newInput( 2, nodeValue_Slider(  "Vertical Angle", 45, [0,90,.1] ));
+	newInput( 3, nodeValue_Float(   "Distance",       4             ));
+	// 4
 	
 	newOutput(0, nodeValue_Output("3DSurf", VALUE_TYPE.dynaSurface, noone));
 	
 	input_display_list = [ 0,
-		["Camera", false], 1, 2, 3, 
+		[ "Camera", false ], 1, 2, 3, 
 	];
 	
 	static getObject = function(index, class = object_class) { #region

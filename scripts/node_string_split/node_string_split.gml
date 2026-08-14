@@ -9,7 +9,7 @@ function Node_String_Split(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	newInput( 2, nodeValue_EScroll( "Mode",       0, [ "Delimiter", "Periodic" ] ));
 	newInput( 1, nodeValue_Text(    "Delimiter", " " )).setTooltip("Character that used to split text,\nleave blank to create character array.");
 	newInput( 3, nodeValue_Int(     "Period",     1  ));
-	newInput( 4, nodeValue_Bool(    "Trim white-space", false ));
+	newInput( 4, nodeValue_Bool(    "Trim White-Space", false ));
 	// 5
 	
 	newOutput(0, nodeValue_Output("Text", VALUE_TYPE.text, ""));

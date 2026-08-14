@@ -1,0 +1,1 @@
+Get character at the specific position in the text.

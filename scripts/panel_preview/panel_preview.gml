@@ -458,18 +458,18 @@ function Panel_Preview() : PanelContent() constructor {
         tool_ry_max  = 0;
         
         tool_current     = noone;
-        toolbar_width    = ui(32);
-        toolbar_height   = ui(32);
-        topbar_height    = ui(32);
+        toolbar_size     = ui(32);
         
-        topbar_width_l   = 0;
-        topbar_width_r   = 0;
+        topbar_width_l   = new Easer_UI();
+        topbar_width_r   = new Easer_UI();
+        topbar_height_t  = new Easer_UI();
+        topbar_height_b  = new Easer_UI();
         
-        toolbar_bottom_l = 0;
-        toolbar_bottom_r = 0;
+        toolbar_bottom_l = new Easer_UI();
+        toolbar_bottom_r = new Easer_UI();
         
-        toolbar_content_l = 0;
-        toolbar_content_r = 0;
+        toolbar_content_l = new Easer_UI();
+        toolbar_content_r = new Easer_UI();
         
          tool_hovering   = noone;
         _tool_hovering   = noone;
@@ -503,9 +503,10 @@ function Panel_Preview() : PanelContent() constructor {
             	do_fullView = true;
         });
         
-        sbChannelIndex  = [];
-        sbChannel.font  = f_p3;
-        sbChannel.align = fa_left;
+        sbChannelIndex       = [];
+        sbChannel.font       = f_p3;
+        sbChannel.align      = fa_left;
+        sbChannel.useScissor = false;
         
         pen_scroll   = 0;
 		pen_scroll_x = 0;
@@ -645,7 +646,7 @@ function Panel_Preview() : PanelContent() constructor {
     	
     	static subDialogCall = function(_dia) {
     		var pd  = THEME_VALUE.panel_toolbar_padding;
-	    	dialogPanelCall(_dia, x + w - ui(8), y + h - (toolbar_height + pd) - ui(8), { anchor: ANCHOR.bottom | ANCHOR.right });
+	    	dialogPanelCall(_dia, x + w - ui(8), y + h - (toolbar_size + pd) - ui(8), { anchor: ANCHOR.bottom | ANCHOR.right });
 	    }
 	     
         static new_preview_window  = function() /*=>*/ { create_preview_window(getNodePreview()); } 
@@ -980,7 +981,7 @@ function Panel_Preview() : PanelContent() constructor {
         var pd = THEME_VALUE.panel_toolbar_padding;
         canvas_dragging_key = false;
         canvas_zooming_key  = false;
-        canvas_hover        = point_in_rectangle(mx, my, pd, pd + toolbar_height, w - pd * 2, h - toolbar_height - pd);
+        canvas_hover        = point_in_rectangle(mx, my, pd, pd + toolbar_size, w - pd * 2, h - toolbar_size - pd);
     }
     
     static dragCanvas3D = function() {
@@ -1070,7 +1071,7 @@ function Panel_Preview() : PanelContent() constructor {
     	var pd  = THEME_VALUE.panel_toolbar_padding;
         canvas_dragging_key = false;
         canvas_zooming_key  = false;
-        canvas_hover        = point_in_rectangle(mx, my, pd, pd + toolbar_height, w - pd * 2, h - toolbar_height - pd);
+        canvas_hover        = point_in_rectangle(mx, my, pd, pd + toolbar_size, w - pd * 2, h - toolbar_size - pd);
     }
     
     static fullView = function(scale = 0, gizmo = false, sel = false) {
@@ -1108,14 +1109,14 @@ function Panel_Preview() : PanelContent() constructor {
     	var y0 = ui(16), y1 = h - ui(16);
         
     	
-        x0 += (mrg && tool_side_draw_l) * (toolbar_width + ui(8));
-        x1 -= (mrg && tool_side_draw_r) * (toolbar_width + ui(8));
+        x0 += (mrg && tool_side_draw_l) * (toolbar_size + ui(8));
+        x1 -= (mrg && tool_side_draw_r) * (toolbar_size + ui(8));
         
-        y0 += toolbar_height;
-        y1 -= toolbar_height;
+        y0 += toolbar_size;
+        y1 -= toolbar_size;
         
-        y0 += tool_side_draw_t * (toolbar_height + ui(8));
-        y1 -= tool_side_draw_b * (toolbar_height + ui(8));
+        // y0 += tool_side_draw_t * (toolbar_size + ui(8));
+        // y1 -= tool_side_draw_b * (toolbar_size + ui(8));
         
         if(PROJECT.previewSetting.show_ruler && !d3_active) {
         	x0 += ruler_width;
@@ -1132,58 +1133,6 @@ function Panel_Preview() : PanelContent() constructor {
     static fullViewNoTool = function(scale = 0) {
     	if(tool_current == noone || tool_current.getToolObject() == noone)
     		fullView(scale);
-    }
-    
-    static drawNodeChannel = function(_node, _x, _y) {
-    	var _chAmo = _node.getOutputChannelAmount();
-    	_node.preview_channel = min(_node.preview_channel, _chAmo - 1);
-    	
-        sbChannelIndex = [];
-        var chName     = [];
-        
-        draw_set_text(sbChannel.font, fa_center, fa_center);
-        var ww  = 0;
-        var hh  = TEXTBOX_HEIGHT - ui(2);
-        var amo = _node.getOutputJunctionAmount();
-        
-        for( var i = 0; i < amo; i++ ) {
-            var _outi = _node.getOutputJunctionIndex(i);
-            var _name = _node.getOutputChannelName(_outi);
-            
-            array_push(sbChannelIndex, _outi);
-            array_push(chName, _name);
-            
-            ww = max(ww, string_width(_name) + ui(40));
-        }
-        
-        if(TESTING && is_array(_node.temp_surface)) {
-            array_push(sbChannelIndex, -1);
-            array_push(chName, -1);
-            
-	        for( var i = 0, n = array_length(_node.temp_surface); i < n; i++ ) {
-	        	var _outi = -1 - i;
-	        	var _name = $"Temp surface {i}";
-	        	
-	            array_push(sbChannelIndex, _outi);
-	            array_push(chName, _name);
-	            
-	            ww = max(ww, string_width(_name) + ui(40));
-	        }
-        }
-        
-        if(array_length(sbChannelIndex) <= 1) return 0;
-        
-        if(!array_empty(chName)) {
-        	var currName = _node.preview_channel >= 0? _node.getOutputChannelName(_node.preview_channel) : 
-        	                                           $"Temp surface {-_node.preview_channel - 1}";
-        	
-            sbChannel.data_list = chName;
-            sbChannel.setFocusHover(pFOCUS, pHOVER);
-            sbChannel.draw(_x - ww, _y - hh / 2, ww, hh, currName, [mx, my], x, y);
-            right_menu_y += ui(40);
-        }
-        
-        return ww + ui(4);
     }
     
     static selectAll = function() {
@@ -1225,14 +1174,14 @@ function Panel_Preview() : PanelContent() constructor {
     	var pd = THEME_VALUE.panel_toolbar_padding;
     	
     	var x0 = 0;
-    	var y0 = topbar_height;
+    	var y0 = toolbar_size;
     	var x1 = w;
-    	var y1 = h - toolbar_height;
+    	var y1 = h - toolbar_size;
     	
-        x0 += tool_side_draw_l * (toolbar_width + pd);
-        x1 -= tool_side_draw_r * (toolbar_width + pd);
-        y0 += tool_side_draw_t * (toolbar_width + pd);
-        y1 -= tool_side_draw_b * (toolbar_width + pd);
+        x0 += tool_side_draw_l * (toolbar_size + pd);
+        x1 -= tool_side_draw_r * (toolbar_size + pd);
+        y0 += tool_side_draw_t * (toolbar_size + pd);
+        y1 -= tool_side_draw_b * (toolbar_size + pd);
         
     	return [x0, y0, x1, y1];
     }
@@ -1277,19 +1226,26 @@ function Panel_Preview() : PanelContent() constructor {
         
         var aa  = d3_active? 0.8 : 1;
         var txx = pd;
-        var tyy = pd + topbar_height;
+        var tyy = pd + toolbar_size;
+        
+        var scs = gpu_get_scissor();
         
         if(hori) {
 	        var tww = w - pd * 2;
-	        var thh = toolbar_width;
-		    
+	        var thh = toolbar_size;
+		
+	        gpu_set_scissor(pd, 0, tww - ui(2), h);
+	            
         } else {
-        	var tww = toolbar_width;
+        	tyy += pd;
+        	
+        	var tww = toolbar_size;
 	        var thh = h - pd * 2;
-        }
 	        
-        // draw_sprite_stretched_ext(THEME.tool_side, hori * 2 + 0, txx, tyy, tww, thh, c_white, aa);
-        
+	        gpu_set_scissor(0, tyy, w, toolbar_content_l.value - ui(2));
+	            
+        }
+	    
         tool_y_max = 0; 
         tool_y   = lerp_float(tool_y, tool_y_to, 5);
         
@@ -1305,10 +1261,10 @@ function Panel_Preview() : PanelContent() constructor {
         
         if(hori) {
         	var xx = txx + tool_y;
-        	var yy = tyy + toolbar_width / 2;
+        	var yy = tyy + toolbar_size / 2;
         	
         } else {
-	        var xx = txx + toolbar_width / 2;
+	        var xx = txx + toolbar_size / 2;
 	        var yy = tyy + tool_y;	
         }
         
@@ -1324,14 +1280,14 @@ function Panel_Preview() : PanelContent() constructor {
 	        var by = yy + ui(8);
         }
         
-        var ts  = toolbar_width - ui(4);
+        var ts  = toolbar_size - ui(4);
         var ts2 = ts / 2;
-        var pd  = ui(1);
         
         var bi = PROJECT.previewSetting.tool_always_l;
         var bc = bi? COLORS._main_accent : COLORS._main_icon;
         if(buttonInstant_Pad(THEME.button_hide, bx, by, bs, bs, [mx, my], thov, pFOCUS, "", THEME.lock, !bi, bc) == 2)
         	PROJECT.previewSetting.tool_always_l = !PROJECT.previewSetting.tool_always_l;
+        	
         if(hori) xx += bs + ui(10) + ts2;
         else     yy += bs + ui(10) + ts2;
         tool_y_max  += bs + ui(10) + ts2;
@@ -1339,7 +1295,8 @@ function Panel_Preview() : PanelContent() constructor {
         ////- Left tools
         
         var _draw_sep = true;
-    	var _spFrm  = THEME_VALUE.panel_separation_type == "frame";
+    	var _spFrm    = THEME_VALUE.panel_separation_type == "frame";
+        var pd        = ui(1);
     	
         for( var i = 0, n = array_length(_node.tools); i < n; i++ ) {
             var tool = _node.tools[i];
@@ -1626,40 +1583,47 @@ function Panel_Preview() : PanelContent() constructor {
 	        tool_y_max  += _h;
         }
         
-        var ltool_h = clamp(tool_y_max - ui(20), 0, h - toolbar_height * 2 - pd * 4);
-        toolbar_content_l = lerp_float(toolbar_content_l, ltool_h, 5);
+        var pd = THEME_VALUE.panel_toolbar_padding;
+        var ltool_h = clamp(tool_y_max - ui(8), 0, h - toolbar_size * 2 - pd * 4 - array_display_offset * (array_preview_size + pd));
+        toolbar_content_l.goto(ltool_h);
         
-        if(hori) tool_y_max = max(0, tool_y_max - w + toolbar_height * 2);
-        else     tool_y_max = max(0, tool_y_max - h + toolbar_height * 2);
+        if(hori) tool_y_max = max(0, tool_y_max - w + toolbar_size * 2 + pd * 3);
+        else     tool_y_max = max(0, tool_y_max - h + toolbar_size * 2 + pd * 3);
         if(thov && !key_mod_press_any() && MOUSE_WHEEL != 0)
             tool_y_to += ui(64) * MOUSE_WHEEL;
         tool_y_to = clamp(tool_y_to, -tool_y_max, 0);
         
+        gpu_set_scissor(scs);
     }
     
     static drawToolsRight = function(_node) {
+    	var pd    = THEME_VALUE.panel_toolbar_padding;
     	var hori  = PREFERENCES.panel_preview_toolbar_horizontal;
         var toolH = _tool_hovering;
     	
         if(!PROJECT.previewSetting.tool_always_r && _node.rightTools == -1) return;
         
+        var scs = gpu_get_scissor();
         var aa  = d3_active? 0.8 : 1;
+        
         if(hori) {
-        	var txx = 0;
-	        var tyy = h - topbar_height - toolbar_width;
-	        var tww = w;
-	        var thh = toolbar_width;
+        	var txx = pd;
+	        var tyy = h - pd - toolbar_size - toolbar_size;
+	        var tww = w - pd * 2;
+	        var thh = toolbar_size;
 	        
+	        gpu_set_scissor(pd, 0, tww - ui(2), h);
+        	
         } else {
-	        var txx = w + 1 - toolbar_width;
-	        var tyy = topbar_height;
-	        var tww = toolbar_width;
+	        var txx = w + 1 - toolbar_size - pd;
+	        var tyy = pd + toolbar_size + pd;
+	        var tww = toolbar_size;
 	        var thh = h;
+	        
+        	gpu_set_scissor(0, tyy, w, toolbar_content_r.value - ui(2));
         }
         
-        // draw_sprite_stretched_ext(THEME.tool_side, hori * 2 + 1, txx, tyy, tww, thh, c_white, aa);
-        
-        if(!hori) right_menu_x = w - toolbar_width - ui(8);
+        if(!hori) right_menu_x = w - toolbar_size - pd - ui(8);
         tool_ry_max  = 0; 
         tool_ry      = lerp_float(tool_ry, tool_ry_to, 5);
         
@@ -1674,18 +1638,17 @@ function Panel_Preview() : PanelContent() constructor {
         
         if(hori) {
         	var xx = txx + tool_ry;
-        	var yy = tyy + toolbar_width / 2;
+        	var yy = tyy + toolbar_size / 2;
         	
         } else {
-	        var xx = txx + toolbar_width / 2;
+	        var xx = txx + toolbar_size / 2;
 	        var yy = tyy + tool_ry;	
         }
         
         ////- Toolbar Lock
         
-        var ts  = toolbar_width - ui(4);
+        var ts  = toolbar_size - ui(4);
         var ts2 = ts / 2;
-        var pd  = ui(1);
         
         var bs = ui(16);
         if(hori) {
@@ -1708,6 +1671,7 @@ function Panel_Preview() : PanelContent() constructor {
         ////- Right tools
         
         var _spFrm  = THEME_VALUE.panel_separation_type == "frame";
+        var pd      = ui(1);
         
         for(var i = 0; i < array_length(_node.rightTools); i++) {
             var tool = _node.rightTools[i];
@@ -1851,15 +1815,17 @@ function Panel_Preview() : PanelContent() constructor {
             tool_ry_max += ts + 1;
         } 
         
-        var rtool_h = clamp(tool_ry_max - ui(20), 0, h - toolbar_height * 2 - pd * 4);
-        toolbar_content_r = lerp_float(toolbar_content_r, rtool_h, 5);
+        var pd = THEME_VALUE.panel_toolbar_padding;
+        var rtool_h = clamp(tool_ry_max - ui(8), 0, h - toolbar_size * 2 - pd * 4 - array_display_offset * (array_preview_size + pd));
+        toolbar_content_r.goto(rtool_h);
         
         if(hori) tool_ry_max = max(0, tool_ry_max - w);
-        else     tool_ry_max = max(0, tool_ry_max - h + toolbar_height * 2);
+        else     tool_ry_max = max(0, tool_ry_max - h + toolbar_size * 2);
         if(thov && !key_mod_press_any() && MOUSE_WHEEL != 0)
             tool_ry_to += ui(64) * MOUSE_WHEEL;
         tool_ry_to = clamp(tool_ry_to, -tool_ry_max, 0);
         
+        gpu_set_scissor(scs);
     }
     
     static drawToolSettings = function(_node) {
@@ -1886,18 +1852,18 @@ function Panel_Preview() : PanelContent() constructor {
         var tolx  = tool_x + pad + pd;
         var toly  = ui(5)  + pd;
         var tolw  = ui(48);
-        var tolh  = topbar_height - ui(10);
+        var tolh  = toolbar_size - ui(10);
         var tol_max_w = ui(16);
         
         var tbarX = pd;
         var tbarY = pd;
-        var tbarW = topbar_width_l;
-        var tbarH = topbar_height;
+        var tbarW = topbar_width_l.value;
+        var tbarH = toolbar_size;
         
         var _hover = pHOVER && point_in_rectangle(mx, my, tbarX, tbarY, tbarX + tbarW, tbarY + tbarH);
         var _focus = pFOCUS;
         var _scis  = gpu_get_scissor();
-        gpu_set_scissor(tbarX, tbarY, tbarW - pd, tbarH);
+        gpu_set_scissor(tbarX, tbarY, tbarW, tbarH);
         
         for( var i = 0, n = array_length(settings); i < n; i++ ) {
             var sett = settings[i];
@@ -1908,7 +1874,7 @@ function Panel_Preview() : PanelContent() constructor {
             	
             	var _sw = surface_get_width(_data);
             	var _sh = surface_get_height(_data);
-            	var _ss = (topbar_height - ui(16)) / _sh;
+            	var _ss = (toolbar_size - ui(16)) / _sh;
             	
             	draw_surface_ext(_data, tolx, ui(8), _ss, _ss, 0, c_white, 1);
             	
@@ -1928,7 +1894,7 @@ function Panel_Preview() : PanelContent() constructor {
             
             if(is(wdg, checkBox) && (is_numeric(nme) && sprite_exists(nme))) {
             	var cbw = tolh;
-            	var hov = _hover && point_in_rectangle(mx, my, tolx, pd, tolx + cbw, pd + topbar_height);
+            	var hov = _hover && point_in_rectangle(mx, my, tolx, pd, tolx + cbw, pd + toolbar_size);
             	
             	var spr = THEME.button_def;
             	var spi = _val? 2 : 0;
@@ -1942,7 +1908,7 @@ function Panel_Preview() : PanelContent() constructor {
             	
             	var cc = _val? COLORS._main_accent : COLORS._main_icon_light;
             	var ss = (cbw - ui(8)) / max(sprite_get_width(nme), sprite_get_height(nme));
-            	draw_sprite_ext(nme, _val, tolx + cbw / 2, pd + topbar_height / 2, ss, ss, 0, cc);
+            	draw_sprite_ext(nme, _val, tolx + cbw / 2, pd + toolbar_size / 2, ss, ss, 0, cc);
         		if(hov && ttip != "") setTOOLTIP(ttip);
         		
 	            tolx      += cbw + pad;
@@ -1956,15 +1922,15 @@ function Panel_Preview() : PanelContent() constructor {
 	        		tolx      += ui(4);
 	            	tol_max_w += ui(4);
 	            	
-	                draw_text_add(tolx, pd + topbar_height / 2, nme);
+	                draw_text_add(tolx, pd + toolbar_size / 2, nme);
 	                tolx      += string_width(nme) + ui(8);
 	                tol_max_w += string_width(nme) + ui(8);
 	                
 	        	} else if(sprite_exists(nme)) {
-	        		var ss = (topbar_height - ui(16)) / sprite_get_height(nme);
-	        		draw_sprite_ext(nme, 0, tolx + ui(8), pd + topbar_height / 2, ss, ss, 0, COLORS._main_icon);
+	        		var ss = (toolbar_size - ui(16)) / sprite_get_height(nme);
+	        		draw_sprite_ext(nme, 0, tolx + ui(8), pd + toolbar_size / 2, ss, ss, 0, COLORS._main_icon);
 	        		
-	        		if(ttip != "" && _hover && point_in_rectangle(mx, my, tolx, pd, tolx + ui(20), pd + topbar_height))
+	        		if(ttip != "" && _hover && point_in_rectangle(mx, my, tolx, pd, tolx + ui(20), pd + toolbar_size))
 	        			setTOOLTIP(ttip);
 	        		
 	                tolx      += ui(20);
@@ -2762,7 +2728,8 @@ function Panel_Preview() : PanelContent() constructor {
     
     static drawInfo = function() {
     	var pd  = THEME_VALUE.panel_toolbar_padding;
-        right_menu_y = toolbar_height + pd;
+        right_menu_y = toolbar_size + pd;
+        
         if(PROJECT.previewSetting.show_view_control == 2) {
             if(d3_active) right_menu_y += ui(72);
             else          right_menu_y += ui(40);
@@ -2772,7 +2739,7 @@ function Panel_Preview() : PanelContent() constructor {
         	right_menu_y += ruler_width;
         	
         if(tool_side_draw_t)
-        	right_menu_y += toolbar_width;
+        	right_menu_y += toolbar_size;
         	
         toolbar_draw = false;
         var _node = getNodePreview();
@@ -3076,6 +3043,9 @@ function Panel_Preview() : PanelContent() constructor {
     }
     
     static drawDataArray = function() {
+    	var pd  = THEME_VALUE.panel_toolbar_padding;
+    	var mrg = THEME_VALUE.panel_toolbar_merge;
+    	
         if(mouse_lrelease()) preview_selecting = false;
         array_display_offset = false;
         
@@ -3098,16 +3068,19 @@ function Panel_Preview() : PanelContent() constructor {
         }
     	
     	array_display_offset = true;
-        var prevS = array_preview_size;
-        var pd    = ui(4);
+        var pad   = ui(4);
         var arw   = ui(56);
         
-        var x0 =     tool_side_draw_l * toolbar_width + (PROJECT.previewSetting.show_ruler && !d3_active) * ruler_width;
-        var x1 = w - tool_side_draw_r * toolbar_width;
+        // var x0 = pd +     tool_side_draw_l * toolbar_size + (PROJECT.previewSetting.show_ruler && !d3_active) * ruler_width;
+        // var x1 = w - pd - tool_side_draw_r * toolbar_size;
+        var x0 = pd;
+        var x1 = w - pd;
         var ww = x1 - x0;
         
-        var hh = prevS + pd * 2;
-        var y1 = h - toolbar_height - tool_side_draw_b * toolbar_height;
+        var hh    = array_preview_size;
+        var prevS = array_preview_size - pad * 2;
+        
+        var y1 = h - pd - toolbar_size - pd - tool_side_draw_b * toolbar_size;
         var y0 = y1 - hh;
         
     	draw_sprite_stretched_ext(THEME.toolbar, 0, x0, y0, ww, hh+2, COLORS._main_icon, .5);
@@ -3129,19 +3102,19 @@ function Panel_Preview() : PanelContent() constructor {
     	surface_set_target(preview_array_surf);
     	DRAW_CLEAR
     	
-        var sx  = preview_x + pd;
-        var sy  = pd;
+        var sx  = preview_x + pad;
+        var sy  = pad;
         var msx = mx - x0 - arw;
         var msy = my - y0;
         var aHover = hovering && msx > 0;
     	
         for( var i = 0; i < pseql; i++ ) {
             var prev = pseq[i];
-        	var xx   = sx + (prevS + pd) * i;
+        	var xx   = sx + (prevS + pad) * i;
         	var yy   = sy;
         	
-        	if(xx + prevS < -pd * 2) continue;
-        	if(xx > w + pd)          break;
+        	if(xx + prevS < -pad * 2) continue;
+        	if(xx > w + pad)          break;
             
             if(is(prev, __3dObject))    prev = array_safe_get(prev.materials, 0);
             if(is(prev, __d3dMaterial)) prev = prev.surface;
@@ -3198,7 +3171,7 @@ function Panel_Preview() : PanelContent() constructor {
     	tb_arrIndex.setLabel($"/{pseql-1}");
     	tb_arrIndex.draw(bx, by, bw, bh, _node.preview_index, [mx,my]);
     	
-        preview_x_max = max((prevS + pd) * pseql + ui(100) - ww, 0);
+        preview_x_max = max((prevS + pad) * pseql + ui(100) - ww, 0);
         preview_x_to  = clamp(preview_x_to, -preview_x_max, 0);
     }
     
@@ -3209,10 +3182,10 @@ function Panel_Preview() : PanelContent() constructor {
         var _left = PROJECT.previewSetting.show_view_control == 1;
         
         var _side   = _left? 1 : -1;
-        var _view_x = _left? tool_side_draw_l * toolbar_width + ui(8) : 
-                         w - tool_side_draw_r * toolbar_width - ui(8);
+        var _view_x = _left? tool_side_draw_l * toolbar_size + ui(8) : 
+                         w - tool_side_draw_r * toolbar_size - ui(8);
         
-        var _view_y = (pd + topbar_height + ui(8) + tool_side_draw_t) * toolbar_width;
+        var _view_y = (pd + toolbar_size + ui(8) + tool_side_draw_t) * toolbar_size;
         var _hab    = pHOVER && tool_hovering == noone && !view_pan_tool && !view_zoom_tool;
         view_hovering = false;
         
@@ -3373,16 +3346,16 @@ function Panel_Preview() : PanelContent() constructor {
         overHover = overHover && tool_hovering == noone && !overlay_hovering;
         overHover = overHover && !canvas_dragging && !canvas_zooming;
         overHover = overHover && point_in_rectangle(mx, my, 
-        	tool_side_draw_l * toolbar_width, 
-        	(pd + toolbar_height) + tool_side_draw_t * toolbar_width, 
-        	w - tool_side_draw_r * toolbar_width, 
-        	h - (pd + toolbar_height) - tool_side_draw_b * toolbar_width
+        	tool_side_draw_l * toolbar_size, 
+        	(pd + toolbar_size) + tool_side_draw_t * toolbar_size, 
+        	w - tool_side_draw_r * toolbar_size, 
+        	h - (pd + toolbar_size) - tool_side_draw_b * toolbar_size
     	);
         
         overHover = overHover && !key_mod_press(CTRL);
         
         var overActive = active && overHover && !graph_nav;
-        var params = { w, h, toolbar_height };
+        var params = { w, h, toolbar_size };
         params.panel = self;
         
         var _nlist = PANEL_GRAPH.nodes_list;
@@ -3415,17 +3388,17 @@ function Panel_Preview() : PanelContent() constructor {
         overHover = overHover && tool_hovering == noone && !overlay_hovering;
         overHover = overHover && !canvas_dragging && !canvas_zooming;
         overHover = overHover && point_in_rectangle(mx, my, 
-        	tool_side_draw_l * toolbar_width, 
-        	(pd + toolbar_height) + tool_side_draw_t * toolbar_width, 
-        	w - tool_side_draw_r * toolbar_width, 
-        	h - (pd + toolbar_height) - tool_side_draw_b * toolbar_width
+        	tool_side_draw_l * toolbar_size, 
+        	(pd + toolbar_size) + tool_side_draw_t * toolbar_size, 
+        	w - tool_side_draw_r * toolbar_size, 
+        	h - (pd + toolbar_size) - tool_side_draw_b * toolbar_size
     	);
         
         overActive = active && overHover && !graph_nav;
         overHover  = overHover && !key_mod_press(CTRL);
         mouse_on_content = overHover;
         
-        var _params = { w, h, toolbar_height };
+        var _params = { w, h, toolbar_size };
             _params.panel = self;
             _params.scene = d3_scene;
         
@@ -3476,8 +3449,8 @@ function Panel_Preview() : PanelContent() constructor {
 			var _node_ph = surface_get_height_safe(_node_prev);
 			
 			_ovs = render_2d_overlay_size / max(_node_pw, _node_ph);
-			_ovx = w - tool_side_draw_r * toolbar_width -                         ui(8) - _node_pw * _ovs;
-			_ovy = h - tool_side_draw_b * toolbar_width - (pd + toolbar_height) - ui(8) - _node_ph * _ovs;
+			_ovx = w - tool_side_draw_r * toolbar_size -                         ui(8) - _node_pw * _ovs;
+			_ovy = h - tool_side_draw_b * toolbar_size - (pd + toolbar_size) - ui(8) - _node_ph * _ovs;
 			
 			var area_w = _node_pw * _ovs;
 			var area_h = _node_ph * _ovs;
@@ -3523,11 +3496,11 @@ function Panel_Preview() : PanelContent() constructor {
         if(_node.drawPreviewToolOverlay == undefined) return;
         var pd = THEME_VALUE.panel_toolbar_padding;
         
-    	var _param = { x, y, w, h, toolbar_height, 
+    	var _param = { x, y, w, h, toolbar_size, 
             x0: _node.showTool() * ui(40),
             x1: w,
-            y0: toolbar_height - ui(8), 
-            y1: h - toolbar_height 
+            y0: toolbar_size - ui(8), 
+            y1: h - toolbar_size 
         };
     	
         if(_node.drawPreviewToolOverlay(pHOVER, pFOCUS, mx, my, _param)) {
@@ -3553,26 +3526,77 @@ function Panel_Preview() : PanelContent() constructor {
 		});
     }
     
+    static drawNodeChannel = function(_node, _x, _y) {
+    	var _chAmo = _node.getOutputChannelAmount();
+    	_node.preview_channel = min(_node.preview_channel, _chAmo - 1);
+    	
+        sbChannelIndex = [];
+        var chName     = [];
+        
+        draw_set_text(sbChannel.font, fa_center, fa_center);
+        var ww  = 0;
+        var hh  = TEXTBOX_HEIGHT - ui(2);
+        var amo = _node.getOutputJunctionAmount();
+        
+        for( var i = 0; i < amo; i++ ) {
+            var _outi = _node.getOutputJunctionIndex(i);
+            var _name = _node.getOutputChannelName(_outi);
+            
+            array_push(sbChannelIndex, _outi);
+            array_push(chName, _name);
+            
+            ww = max(ww, string_width(_name) + ui(40));
+        }
+        
+        if(TESTING && is_array(_node.temp_surface)) {
+            array_push(sbChannelIndex, -1);
+            array_push(chName, -1);
+            
+	        for( var i = 0, n = array_length(_node.temp_surface); i < n; i++ ) {
+	        	var _outi = -1 - i;
+	        	var _name = $"Temp surface {i}";
+	        	
+	            array_push(sbChannelIndex, _outi);
+	            array_push(chName, _name);
+	            
+	            ww = max(ww, string_width(_name) + ui(40));
+	        }
+        }
+        
+        if(array_length(sbChannelIndex) <= 1) return 0;
+        
+        if(!array_empty(chName)) {
+        	var currName = _node.preview_channel >= 0? _node.getOutputChannelName(_node.preview_channel) : 
+        	                                           $"Temp surface {-_node.preview_channel - 1}";
+        	
+            sbChannel.data_list = chName;
+            sbChannel.setFocusHover(pFOCUS, pHOVER);
+            sbChannel.draw(_x - ww, _y - hh / 2, ww, hh, currName, [mx, my], x, y);
+            right_menu_y += ui(40);
+        }
+        
+        return ww;
+    }
+    
     static drawTopbar = function(_node) {
     	var aa  = d3_active? 0.8 : 1;
     	var pd  = THEME_VALUE.panel_toolbar_padding;
-        var tmr = THEME_VALUE.preview_topbar_merge;
     	var mrg = THEME_VALUE.panel_toolbar_merge;
     	
     	var tx = pd;
         var ty = pd;
         var tw = w - pd * 2;
-        var th = topbar_height;
+        var th = toolbar_size;
         
-        if(tmr && tool_side_draw_t) {
-        	draw_set_color(CDEF.main_dkgrey);
-        	draw_line(tx + ui(8), ty + th, tx + tw - ui(8), ty + th);
-        	
-        } else {
-        	if(mrg) draw_sprite_stretched_ext(THEME.toolbar, 1, tx, ty, tw, th, c_white, aa);
-        	else {
-        		if(topbar_width_l > 0) draw_sprite_stretched_ext(THEME.toolbar, 1, tx, ty, topbar_width_l, th, c_white, aa);
-        		if(topbar_width_r > 0) draw_sprite_stretched_ext(THEME.toolbar, 1, tx+tw-topbar_width_r, ty, topbar_width_r, th, c_white, aa);
+        if(mrg) draw_sprite_stretched_ext(THEME.toolbar, 1, tx, ty, tw, th, c_white, aa);
+        else {
+	        if(tool_side_draw_t) {
+	        	draw_set_color(CDEF.main_dkgrey);
+	        	draw_line(tx + ui(8), ty + th, tx + tw - ui(8), ty + th);
+	        	
+	        } else {
+        		if(topbar_width_l.value > 0) draw_sprite_stretched_ext(THEME.toolbar, 1, tx, ty, topbar_width_l.value, th, c_white, aa);
+        		if(topbar_width_r.value > 0) draw_sprite_stretched_ext(THEME.toolbar, 1, tx+tw-topbar_width_r.value, ty, topbar_width_r.value, th, c_white, aa);
         	}
         }
     	
@@ -3583,7 +3607,7 @@ function Panel_Preview() : PanelContent() constructor {
             var cx = pd + ui(6);
             var cy = pd + ui(6);
             var cw = ui(32);
-            var ch = topbar_height - ui(10);
+            var ch = toolbar_size - ui(10);
             
             var _ty = sample_data.type;
             _tw = ui(6);
@@ -3652,7 +3676,7 @@ function Panel_Preview() : PanelContent() constructor {
 			var m  = [mx,my];
 			
 			var cw = ui(120);
-			var ch = topbar_height - ui(11);
+			var ch = toolbar_size - ui(11);
 			var cx = w - ui(6) - cw - pd;
 			var cy = ui(6) + pd;
             
@@ -3677,8 +3701,8 @@ function Panel_Preview() : PanelContent() constructor {
 			if(_node) _tw = clamp(drawToolSettings(_node) - ui(8), 0, w - _trw - pd * 3);
 		}
         
-        topbar_width_l = lerp_float(topbar_width_l, max(_tw, toolbar_width),  5);
-        topbar_width_r = lerp_float(topbar_width_r, _trw, 5);
+        topbar_width_l.goto(max(_tw, toolbar_size));
+        topbar_width_r.goto(_trw);
             
         sample_data = noone;
     }
@@ -3688,56 +3712,42 @@ function Panel_Preview() : PanelContent() constructor {
     	var mrg = THEME_VALUE.panel_toolbar_merge;
     	
     	var tx = pd;
-        var ty = h - toolbar_height - pd;
+        var ty = h - toolbar_size - pd;
         var tw = w - pd * 2;
-        var th = toolbar_height;
+        var th = toolbar_size;
         
     	var _spFrm = THEME_VALUE.panel_separation_type == "frame";
         var aa = d3_active? 0.8 : 1;
         
         if(mrg) draw_sprite_stretched_ext(THEME.toolbar, 0, tx, ty, tw, th, c_white, aa);
         else {
-        	draw_sprite_stretched_ext(THEME.toolbar, 0, tx, ty, toolbar_bottom_l, th, c_white, aa);
-        	draw_sprite_stretched_ext(THEME.toolbar, 0, tx+tw-toolbar_bottom_r, ty, toolbar_bottom_r, th, c_white, aa);
+        	if(tool_side_draw_b) {
+	        	draw_set_color(CDEF.main_dkgrey);
+	        	draw_line(tx + ui(8), ty, tx + tw - ui(8), ty);
+	        	
+        	} else {
+	        	draw_sprite_stretched_ext(THEME.toolbar, 0, tx, ty, toolbar_bottom_l.value, th, c_white, aa);
+	        	draw_sprite_stretched_ext(THEME.toolbar, 0, tx+tw-toolbar_bottom_r.value, ty, toolbar_bottom_r.value, th, c_white, aa);
+        	}
         }
         
-        var toolbar_right = w - ui(4);
         var scs = gpu_get_scissor();
-        var tbx = w - ui(4) - pd;
-        var tby = ty + toolbar_height / 2;
-        var trw = 0;
         
-        var _m  = [ mx, my ];
+        ////- =Left tools
         
-        var _nodeRaw = __getNodePreview();
-        if(_nodeRaw) {
-        	var chw = drawNodeChannel(_nodeRaw, tbx, tby);
-        	tbx -= chw;
-        	trw += chw;
-        	
-        	draw_set_color(COLORS.panel_separator);
-        	if(_spFrm) draw_line_width(tbx, ty + ui(4), tbx, ty + th - ui(4), 2);
-        	else       draw_line(      tbx, ty,         tbx, ty + th - 1);
-        	
-        	tbx -= ui(2);
-        	trw += ui(2);
-        }
-        toolbar_right = tbx;
+        var _m  = [mx,my];
         
-        if(toolbar_right < ui(6)) {
-        	toolbar_bottom_l = lerp_float(toolbar_bottom_l, tbx - ui(2), 5);
-        	
-        	var tolrw = min(trw + ui(6), w - pd * 3 - tbx);
-        	toolbar_bottom_r = lerp_float(toolbar_bottom_r, tolrw, 5);
-        	return;
-        }
+        var  tbx = tx + ui(4);
+        var  tby = ty + toolbar_size / 2;
         
-        var tbx = ui(4) + pd;
-        var bs  = toolbar_height - ui(8);
+        var  tbw = mrg? tw : toolbar_bottom_l.value;
+        var _tbw = ui(4);
+        
+        var bs  = toolbar_size - ui(8);
         var bsc = 1;
         
         var toolbar_left = 0;
-    	var hov = pHOVER && point_in_rectangle(mx, my, 0, ty, toolbar_right - ui(4), h);
+    	var hov = pHOVER && point_in_rectangle(mx, my, tx, ty, tx + tbw, ty + th);
     	var foc = pFOCUS;
     	
     	var _toolbars = "preview_toolbar";
@@ -3758,7 +3768,8 @@ function Panel_Preview() : PanelContent() constructor {
 				if(_spFrm) draw_line_width( lx, ty + ui(4), lx, ty + th - ui(4), 2);
 				else       draw_line(       lx, ty,         lx, ty + th - 1);
 				
-				tbx += ui(8);
+				 tbx += ui(8);
+				_tbw += ui(8);
 				continue;
 			} 
 			
@@ -3766,68 +3777,101 @@ function Panel_Preview() : PanelContent() constructor {
             var by = tby - bs / 2;
             
 			_menu.draw(bx, by, bs, bs, _m, hov, foc, _toolbars);
-			tbx += bs + ui(2);
+			 tbx += bs + ui(2);
+			_tbw += bs + ui(2);
 		}
 		
+		_tbw += ui(4);
+		
+		toolbar_bottom_l.goto(_tbw);
         toolbar_left = tbx + ui(2);
-        gpu_set_scissor(scs);
-        
-        var tollw = tbx;
-		toolbar_bottom_l = lerp_float(toolbar_bottom_l, tbx - ui(2), 5);
 		if(!mrg) toolbar_left += pd * 2;
 		
-        if(toolbar_right < toolbar_left) {
-        	var tolrw = min(trw + ui(6), w - pd * 3 - tollw);
-        	toolbar_bottom_r = lerp_float(toolbar_bottom_r, tolrw, 5);
-        	return;
+        ////- =Right tools
+        
+        var pad = ui(4);
+        
+        if(mrg) {
+        	gpu_set_scissor(toolbar_left, ty, tw-toolbar_left, toolbar_size);
+        	hov = pHOVER && point_in_rectangle(mx, my, toolbar_left, ty, tx+tw, ty+th);
+        	
+        } else {
+        	gpu_set_scissor(tx+tw-toolbar_bottom_r.value + pad, ty + pad, toolbar_bottom_r.value - pad*2, toolbar_size - pad*2);
+        	hov = pHOVER && point_in_rectangle(mx, my, tx+tw-toolbar_bottom_r.value, ty, tx+tw, ty+th);
         }
         
-        tbx = toolbar_right - bs;
-        gpu_set_scissor(toolbar_left, ty, toolbar_right - toolbar_left, toolbar_height);
-        var hov = pHOVER && point_in_rectangle(mx, my, toolbar_left, ty, toolbar_right, h);
+        var tbx = tx + tw + preview_action_y - ui(4);
+        var trw = ui(4);
+        var sep = false;
         
-        var bx = tbx + preview_action_y;
-        var by = tby - bs / 2;
-        var actW = 0;
+        var _nodeRaw = __getNodePreview();
+        if(_nodeRaw) {
+        	var chw = drawNodeChannel(_nodeRaw, tbx, tby);
+        	tbx -= chw + ui(4);
+        	trw += chw + ui(4);
+        	
+        	sep = true;
+        }
+           
+        ////- =Action buttons
         
         var _action_b = menuItems_gen("preview_actions");
+        if(mrg && sep && !array_empty(_action_b)) {
+        	draw_set_color(COLORS.panel_separator);
+        	if(_spFrm) draw_line_width(tbx, ty + ui(4), tbx, ty + th - ui(4), 2);
+        	else       draw_line(      tbx, ty,         tbx, ty + th - 1);
+        	
+        	tbx -= ui(4);
+        	trw += ui(4);	
+        }
+        
+        var by = tby - bs / 2;
+        
         for( var i = 0, n = array_length(_action_b); i < n; i++ ) {
         	var _menu = _action_b[i];
 			if(_menu == -1) {
 				draw_set_color(COLORS.panel_separator);
-				var lx = bx - ui(4);
+				var lx = tbx - ui(4);
 				if(_spFrm) draw_line_width( lx, ty + ui(4), lx, ty + th - ui(4), 2);
 				else       draw_line(       lx, ty,         lx, ty + th - 1);
 				
-				actW += ui(8);
-				bx   -= ui(8);
+				trw += ui(8);
+				tbx -= ui(8);
 				continue;
 			} 
 			
-			_menu.draw(bx, by, bs, bs, _m, hov, foc, _toolbars);
-			actW += bs + ui(2);
-			bx   -= bs + ui(2);
+			trw += bs;
+			tbx -= bs;
+			
+			_menu.draw(tbx, by, bs, bs, _m, hov, foc, _toolbars);
+			
+			trw += ui(2);
+			tbx -= ui(2);
         }
         
-        tbx -= actW;
-        trw += actW;
+        trw += ui(2);
+        tbx -= ui(2);
         
-        var actMax = max(0, toolbar_left - tbx);
+        var actMax = max(0, toolbar_left - tbx + pd * 2);
         if(hov) preview_action_y_to += MOUSE_WHEEL * (bs + ui(2));
         preview_action_y_to = clamp(preview_action_y_to, 0, actMax);
         preview_action_y    = lerp_float(preview_action_y, preview_action_y_to, 5);
         gpu_set_scissor(scs);
         
-        var _lx = max(toolbar_left, tbx + bs - ui(2));
-        var _ly = tby;
-        var _lh = toolbar_height / 2 - ui(8);
+        if(mrg) {
+	        var _lx = max(toolbar_left, tbx + bs - ui(2));
+	        var _ly = tby;
+	        var _lh = toolbar_size / 2 - ui(8);
         
-        draw_set_color(COLORS.panel_separator);
-        if(_spFrm) draw_line_width(_lx, ty + ui(4), _lx, ty + th - ui(4), 2);
-        else       draw_line(      _lx, ty,         _lx, ty + th - 1);
+	        draw_set_color(COLORS.panel_separator);
+	        if(_spFrm) draw_line_width(_lx, ty + ui(4), _lx, ty + th - ui(4), 2);
+	        else       draw_line(      _lx, ty,         _lx, ty + th - 1);
+        }
         
-        var tolrw = min(trw + ui(6), w - pd * 3 - tollw);
-    	toolbar_bottom_r = lerp_float(toolbar_bottom_r, tolrw, 5);
+    	var tolrw = min(trw, w - pd * 3 - _tbw);
+    	toolbar_bottom_r.goto(tolrw);
+    	toolbar_bottom_r.value = min(toolbar_bottom_r.value, tolrw);
+    	
     }
     
     static drawSplitView = function() {
@@ -3867,7 +3911,7 @@ function Panel_Preview() : PanelContent() constructor {
             
             var pd  = THEME_VALUE.panel_toolbar_padding;
             var spx = splitSelection? sx + ui(16) : sx - ui(16);
-            var spy = pd + toolbar_height + ui(16);
+            var spy = pd + toolbar_size + ui(16);
             draw_sprite_ui_uniform(THEME.icon_active_split, 0, spx, spy, 1, COLORS._main_accent);
             
             if(mouse_on_preview && mouse_lpress(pFOCUS)) {
@@ -3913,7 +3957,7 @@ function Panel_Preview() : PanelContent() constructor {
     	var th  = string_height(txt) + ui(3 * 2);
     	
     	var tx1 = w - ui(6 + 2);
-    	var ty1 = h - (pd + toolbar_height) - ui(3);
+    	var ty1 = h - (pd + toolbar_size) - ui(3);
     	var tx0 = tx1 - tw;
 		var ty0 = ty1 - th;
 		
@@ -3928,18 +3972,18 @@ function Panel_Preview() : PanelContent() constructor {
         
         var pd  = THEME_VALUE.panel_toolbar_padding;
         var mx1 = w - ui(8);
-        var my1 = h - (pd + toolbar_height) - ui(8);
+        var my1 = h - (pd + toolbar_size) - ui(8);
         
-        mx1 -= tool_side_draw_r * toolbar_width;
+        mx1 -= tool_side_draw_r * toolbar_size;
         
-        my1 -= tool_side_draw_b * toolbar_height;
+        my1 -= tool_side_draw_b * toolbar_size;
         my1 -= array_display_offset * array_preview_size;
         
         var mx0 = mx1 - minimap_w;
         var my0 = my1 - minimap_h;
         
         minimap_w = min(minimap_w, w - ui(16));
-        minimap_h = min(minimap_h, h - ui(16) - (pd + toolbar_height));
+        minimap_h = min(minimap_h, h - ui(16) - (pd + toolbar_size));
         
         var mini_hover = false;
         if(pHOVER && point_in_rectangle(mx, my, mx0, my0, mx1, my1)) {
@@ -4168,11 +4212,11 @@ function Panel_Preview() : PanelContent() constructor {
     	var hori  = PREFERENCES.panel_preview_toolbar_horizontal;
     	var pd    = THEME_VALUE.panel_toolbar_padding;
     	
-    	var x0 =     tool_side_draw_l * toolbar_width;
-        var x1 = w - tool_side_draw_r * toolbar_width;
+    	var x0 =     tool_side_draw_l * toolbar_size;
+        var x1 = w - tool_side_draw_r * toolbar_size;
         
-        var y0 =     (topbar_height  + pd)  + tool_side_draw_t * toolbar_width;
-        var y1 = h - (toolbar_height + pd) - tool_side_draw_b * toolbar_width;
+        var y0 =     (toolbar_size  + pd)  + tool_side_draw_t * toolbar_size;
+        var y1 = h - (toolbar_size + pd) - tool_side_draw_b * toolbar_size;
         
 		var prevSurf = is_surface(preview_surfaces[0]);
         var sw = prevSurf? surface_get_width( preview_surfaces[0]) : DEF_SURF_W;
@@ -4449,7 +4493,7 @@ function Panel_Preview() : PanelContent() constructor {
     	}
 		
 		var pd = THEME_VALUE.panel_toolbar_padding;
-    	mouse_on_preview  = pHOVER && point_in_rectangle(mx, my, 0, pd + topbar_height, w, h - (toolbar_height + pd)) && _mouse_on_preview;
+    	mouse_on_preview  = pHOVER && point_in_rectangle(mx, my, 0, pd + toolbar_size, w, h - (toolbar_size + pd)) && _mouse_on_preview;
         _mouse_on_preview = true;
         
         if(do_fullView) fullView();
@@ -4526,7 +4570,9 @@ function Panel_Preview() : PanelContent() constructor {
         	if(PROJECT.previewSetting.show_ruler) drawRuler();
         }
         
-        #region Toolbar overlay
+        ////- =Draw Node Overlay
+        
+        #region Toolbar checking
 	    	var hori = PREFERENCES.panel_preview_toolbar_horizontal;
 	    	var pd   = THEME_VALUE.panel_toolbar_padding;
 	    	var mrg  = THEME_VALUE.panel_toolbar_merge;
@@ -4537,62 +4583,111 @@ function Panel_Preview() : PanelContent() constructor {
 	        
 	        tool_side_draw_l = !hori && (PROJECT.previewSetting.tool_always_l || (toolNode && toolNode.showTool()));
 	        tool_side_draw_r = !hori && (PROJECT.previewSetting.tool_always_r || (toolNode && toolNode.rightTools != -1));
+	        
+	        if(!tool_side_draw_t) topbar_height_t.goto(0);
+	        if(!tool_side_draw_b) topbar_height_b.goto(0);
+	        
+	        if(!tool_side_draw_l) toolbar_content_l.goto(0);
+	        if(!tool_side_draw_r) toolbar_content_r.goto(0);
         #endregion
-        
-        ////- =Draw Node Overlay
         
         if(PANEL_PREVIEW == self) {
         	if(toolNode) {
 				drawNodeActions(pFOCUS, toolNode);
 				drawNodeToolOverlay(toolNode);
 				drawNodeHotkey(toolNode);
-
+				
 				_tool_hovering = tool_hovering;
 				 tool_hovering = noone;
-					
-	        	if(tool_side_draw_t) {
+        	}
+
+        	if(mrg) {
+	        	if(toolNode) {
+		        	if(tool_side_draw_t) {
+			        	var txx  = pd;
+				        var tyy  = pd;
+				        var tww  = w - pd * 2;
+				        var thh  = toolbar_size * 2;
+				        topbar_height_t.goto(thh);
+				        
+			        	if(mrg) draw_sprite_stretched_ext(THEME.tool_side, 2, txx, tyy, tww, thh, c_white, aa);
+		        	} 
+		        	
+		        	if(tool_side_draw_l) {
+		        		var txx  = pd;
+				        var tyy  = toolbar_size + pd * 2;
+				        var tww  = toolbar_size;
+				        var thh  = h - toolbar_size * 2 - pd * 4;
+				        
+				        if(mrg) draw_sprite_stretched_ext(THEME.tool_side, 0, txx, tyy, tww, thh, c_white, aa);
+		        	}
+			        	
+		        	if(tool_side_draw_b) {
+			        	var txx = pd;
+				        var tyy = h - pd;
+				        var tww = w - pd * 2;
+				        var thh = toolbar_size + toolbar_size;
+				        topbar_height_b.goto(thh);
+				        
+			        	if(mrg) draw_sprite_stretched_ext(THEME.tool_side, 3, txx, tyy - thh, tww, thh, c_white, aa);
+			        } 
+			        
+			        if(tool_side_draw_r) {
+				        var txx = w + 1 - toolbar_size - pd;
+				        var tyy = toolbar_size + pd * 2;
+				        var tww = toolbar_size;
+				        var thh = h - toolbar_size - pd * 2;
+				        
+			        	if(mrg) draw_sprite_stretched_ext(THEME.tool_side, 1, txx, tyy, tww, thh, c_white, aa);
+			        }
+		        
+	        	}
+	        	
+        	} else {
+        		if(hori) {
 		        	var txx  = pd;
 			        var tyy  = pd;
 			        var tww  = w - pd * 2;
-			        var thh  = toolbar_width * 2;
+			        var thh  = toolbar_size * 2;
 			        
-		        	draw_sprite_stretched_ext(THEME.tool_side, 2, txx, tyy, tww, thh, c_white, aa);
-	        	} 
-	        	
-	        	if(tool_side_draw_l) {
-	        		var txx  = pd;
-			        var tyy  = toolbar_height + pd * 2 - ui(2);
-			        var tww  = toolbar_width;
-			        var thh  = h - toolbar_height * 2 - pd * 4 + ui(4);
-			        
-			        if(mrg) draw_sprite_stretched_ext(THEME.tool_side, 0, txx, tyy, tww, thh, c_white, aa);
-			        else    draw_sprite_stretched_ext(THEME.tool_side, 0, txx, tyy, tww, toolbar_content_l, c_white, aa);
-	        	}
-		        	
-	        	if(tool_side_draw_b) {
-		        	var txx = pd;
-			        var tyy = h - (pd + topbar_height + toolbar_width);
+			        if(tool_side_draw_t) topbar_height_t.goto(thh);
+			        if(topbar_height_t.value > ui(2))
+			        	draw_sprite_stretched_ext(THEME.tool_side, 2, txx, tyy, tww, topbar_height_t.value, c_white, aa);
+        			
+        			var txx = pd;
+			        var tyy = h - pd;
 			        var tww = w - pd * 2;
-			        var thh = topbar_height + toolbar_width;
+			        var thh = toolbar_size + toolbar_size;
 			        
-		        	draw_sprite_stretched_ext(THEME.tool_side, 3, txx, tyy, tww, thh, c_white, aa);
-		        	
-		        } 
-		        
-		        if(tool_side_draw_r) {
-			        var txx = w + 1 - toolbar_width - pd;
-			        var tyy = toolbar_height + pd;
-			        var tww = toolbar_width;
-			        var thh = h - toolbar_height - pd * 2;
+			        if(tool_side_draw_b) topbar_height_b.goto(thh);
+			        if(topbar_height_b.value > ui(2))
+			        	draw_sprite_stretched_ext(THEME.tool_side, 3, txx, tyy - topbar_height_b.value, tww, topbar_height_b.value, c_white, aa);
 			        
-		        	if(mrg) draw_sprite_stretched_ext(THEME.tool_side, 1, txx, tyy, tww, thh, c_white, aa);
-			        else    draw_sprite_stretched_ext(THEME.tool_side, 0, txx, tyy, tww, toolbar_content_r, c_white, aa);
-		        }
-	        
+        		} else {
+	        		var txx  = pd;
+			        var tyy  = toolbar_size + pd * 2;
+			        var tww  = toolbar_size;
+			        var thh  = h - toolbar_size * 2 - pd * 4;
+			        
+			        if(toolbar_content_l.value > ui(2))
+			        	draw_sprite_stretched_ext(THEME.tool_side, 0, txx, tyy, tww, toolbar_content_l.value, c_white, aa);
+			        	
+			        var txx = w + 1 - toolbar_size - pd;
+			        var tyy = toolbar_size + pd * 2;
+			        var tww = toolbar_size;
+			        var thh = h - toolbar_size - pd * 2;
+			        
+			        if(toolbar_content_r.value > ui(2))
+			        	draw_sprite_stretched_ext(THEME.tool_side, 0, txx, tyy, tww, toolbar_content_r.value, c_white, aa);
+        		}
+        	}
+        	
+        	if(toolNode) {
 				drawToolsLeft(toolNode);
 				drawToolsRight(toolNode);
-				
-            } else {
+            } 
+            
+            if(!is(toolNode, Node)) { // no node selectied
             	mouse_on_content = true;
             	if(tool_current != noone) {
 	                var _tobj = tool_current.getToolObject();

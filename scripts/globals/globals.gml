@@ -16,7 +16,6 @@ gml_pragma("UnityBuild", "true");
 	globalvar CONNECTION_CONFLICT; CONNECTION_CONFLICT = ds_queue_create();
 	
 	globalvar MESSAGE; MESSAGE         = noone;
-	
 	globalvar OS_PAUSED; OS_PAUSED       = false;
 	randomize();
 #endregion
@@ -71,7 +70,7 @@ gml_pragma("UnityBuild", "true");
 	globalvar  HIGHLIGHT_PROP;  HIGHLIGHT_PROP     = undefined;
 	globalvar _HIGHLIGHT_PROP; _HIGHLIGHT_PROP     = undefined;
 	
-	globalvar SURFACE_STACK; SURFACE_STACK = ds_stack_create();
+	globalvar SURFACE_STACK; SURFACE_STACK       = ds_stack_create();
 #endregion
 
 #region input

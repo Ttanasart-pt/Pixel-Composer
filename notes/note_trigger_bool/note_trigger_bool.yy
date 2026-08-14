@@ -1,0 +1,11 @@
+{
+  "$GMNotes":"v1",
+  "%Name":"note_trigger_bool",
+  "name":"note_trigger_bool",
+  "parent":{
+    "name":"trigger",
+    "path":"folders/nodes/data/value/trigger.yy",
+  },
+  "resourceType":"GMNotes",
+  "resourceVersion":"1.1",
+}

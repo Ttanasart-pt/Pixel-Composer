@@ -1,0 +1,11 @@
+{
+  "$GMNotes":"v1",
+  "%Name":"note_path_bake",
+  "name":"note_path_bake",
+  "parent":{
+    "name":"number",
+    "path":"folders/nodes/data/value/path/number.yy",
+  },
+  "resourceType":"GMNotes",
+  "resourceVersion":"1.1",
+}

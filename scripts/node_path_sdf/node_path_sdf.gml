@@ -5,20 +5,20 @@ function Node_Path_SDF(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	newInput( 1, nodeValue_Dimension());
 	
 	////- =Path
-	newInput( 0, nodeValue_Path( "Path" )).rejectArray();
-	newInput( 9, nodeValue_Range(    "Path Range", [0,1] ));
-	newInput(10, nodeValue_Slider(   "Path Shift",  0    ));
-	newInput( 2, nodeValue_Int(      "Subdivision", 64   )).setValidator(VV_min(2)).rejectArray();
+	newInput( 0, nodeValue_Path(   "Path"              )).rejectArray();
+	newInput( 9, nodeValue_Range(  "Path Range", [0,1] ));
+	newInput(10, nodeValue_Slider( "Path Shift",  0    ));
+	newInput( 2, nodeValue_Int(    "Subdivision", 64   )).setValidator(VV_min(2)).rejectArray();
 	
 	////- =Transform
-	newInput( 5, nodeValue_Vec2(     "Position",  [0,0]   )).setUnitSimple();
-	newInput( 6, nodeValue_Anchor(   "Anchor",    [.5,.5] ));
-	newInput( 7, nodeValue_Rot(      "Rotation",   0      ));
-	newInput( 8, nodeValue_Vec2(     "Scale",     [1,1]   ));
+	newInput( 5, nodeValue_Vec2(   "Position",  [0,0]   )).setUnitSimple();
+	newInput( 6, nodeValue_Anchor( "Anchor",    [.5,.5] ));
+	newInput( 7, nodeValue_Rot(    "Rotation",   0      ));
+	newInput( 8, nodeValue_Vec2(   "Scale",     [1,1]   ));
 	
 	////- =Rendering
-	newInput( 3, nodeValue_Float( "Max Distance", 16    ));
-	newInput( 4, nodeValue_Bool(  "Inverted",     false ));
+	newInput( 3, nodeValue_Float(  "Max Distance", 16    ));
+	newInput( 4, nodeValue_Bool(   "Inverted",     false ));
 	// input 11
 		
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));

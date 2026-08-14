@@ -4,17 +4,18 @@ function Node_String_Replace(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 	setDimension(96, 48);
 	
 	////- =Text
-	newInput(0, nodeValue_Text( "Text"    )).setVisible(true, true);
-	newInput(1, nodeValue_Text( "Find"    ));
-	newInput(2, nodeValue_Text( "Replace" ));
+	newInput( 0, nodeValue_Text( "Text"    )).setVisible(true, true);
+	newInput( 1, nodeValue_Text( "Find"    ));
+	newInput( 2, nodeValue_Text( "Replace" ));
 	
 	////- =Amount
-	newInput(3, nodeValue_Bool( "All", true ));
+	newInput( 3, nodeValue_Bool( "All", true ));
 	
 	newOutput(0, nodeValue_Output("Results", VALUE_TYPE.text, ""));
 	
 	input_display_list = [
-		[ "Text",   false ], 0, 1, 2, 3, 
+		[ "Text",   false ], 0, 1, 2, 
+		[ "Amount", false ], 3, 
 	];
 	
 	static processData = function(_output, _data, _index = 0) { 

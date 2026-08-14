@@ -1,0 +1,11 @@
+{
+  "$GMNotes":"v1",
+  "%Name":"note_quarternion_to_euler",
+  "name":"note_quarternion_to_euler",
+  "parent":{
+    "name":"quaternion",
+    "path":"folders/nodes/data/value/quaternion.yy",
+  },
+  "resourceType":"GMNotes",
+  "resourceVersion":"1.1",
+}

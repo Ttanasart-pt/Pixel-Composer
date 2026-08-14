@@ -1,4 +1,7 @@
 {
+    "easing": "none", 
+    "ease_duration": 0, 
+
     "icon_scale": 1,
     "highlight_corner_radius": 8,
     "selection_corner_radius": 6,

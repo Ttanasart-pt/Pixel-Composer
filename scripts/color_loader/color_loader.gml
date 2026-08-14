@@ -182,6 +182,14 @@ function _loadThemeParameter(theme = "default") {
 	
 	var vals = json_load_struct(path);
 	struct_override(THEME_VALUE, vals);
+	
+	var oPath = $"{dirr}/parameters_override.json";
+	if(file_exists_empty(oPath)) {
+		var vals = json_load_struct(oPath);
+		struct_override(THEME_VALUE, vals);
+			
+	}
+	
 	THEME_SCALE = THEME_VALUE.icon_scale;
 }
 

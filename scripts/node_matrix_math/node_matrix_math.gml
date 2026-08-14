@@ -8,12 +8,12 @@ function Node_Matrix_Math(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	newInput( 1, nodeValue_Matrix("Matrix 2", new Matrix(3))).setVisible(true, true);
 	
 	operation_scroll = [
-		new scrollItem("Add",             s_node_math_operators, 0),
-		new scrollItem("Subtract",        s_node_math_operators, 1),
-		new scrollItem("Multiply Scalar", s_node_math_operators, 2),
-		new scrollItem("Divide Scalar",   s_node_math_operators, 3),
+		new scrollItem( "Add",             s_node_math_operators, 0 ),
+		new scrollItem( "Subtract",        s_node_math_operators, 1 ),
+		new scrollItem( "Multiply Scalar", s_node_math_operators, 2 ),
+		new scrollItem( "Divide Scalar",   s_node_math_operators, 3 ),
 		-1,
-		new scrollItem("Multiply Matrix", s_node_math_operators, 2),
+		new scrollItem( "Multiply Matrix", s_node_math_operators, 2 ),
 	];
 	
 	newInput( 2, nodeValue_EScroll( "Operation", 0, operation_scroll ));

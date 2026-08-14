@@ -1,0 +1,1 @@
+Convert boolean to trigger data.

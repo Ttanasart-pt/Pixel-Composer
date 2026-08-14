@@ -2,6 +2,8 @@
 	globalvar TOOLTIP_SURFACE; TOOLTIP_SURFACE = undefined;
 	
 	function setTOOLTIP(_t) {
+		if(_t == "") return;
+		
 		TOOLTIP_WINDOW = WINWIN_CURRENT;
 		TOOLTIP = _t;
 	}

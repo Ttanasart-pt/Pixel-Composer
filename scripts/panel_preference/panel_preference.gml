@@ -744,6 +744,20 @@ function Panel_Preference() : PanelContent() constructor {
     
     	////- =Themes
     	
+    	function overrideParam(k, v) {
+    		var dirr  = $"{DIRECTORY}Themes/{PREFERENCES.theme}";
+    		var oPath = $"{dirr}/parameters_override.json";
+    		var oData = json_load_struct(oPath, {});
+    		
+    		if(v == undefined)
+    			struct_remove_safe(oData, k);
+    		else oData[$ k] = v;
+    		
+    		print(oData)
+    		json_save_struct(oPath, oData);
+    		loadColor(PREFERENCES.theme);
+    	}
+    	
     	themes = [];
     	themeCurrent = noone;
     	
@@ -802,30 +816,58 @@ function Panel_Preference() : PanelContent() constructor {
     	font_override_sb_code = new fontScrollBox(function(v) /*=>*/ { PREFERENCES.font_overwrite_code = v; should_restart = true; PREF_SAVE(); });
     	
     	theme_settings  = [
-    		[
-				__txt("pref_theme_unpack", "Load unpacked"),
+    		[ 
+    			"pref", 
+				__txt("pref_theme_unpack", "Unpacked"),
 	    		new checkBox(function() /*=>*/ {return prefToggle("theme_load_unpack")}),
 	    		"theme_load_unpack",
 	    		true, 
     		],
     		[
+    			"pref", 
 				__txt("pref_theme_bool", "Boolean Style"),
 	    		new scrollBox([ "Slider", "Checkbox" ], function(i) /*=>*/ {return prefSet("theme_boolean", i)}),
 	    		"theme_boolean",
 	    		0 
     		],
     		[
-				__txt("pref_theme_panel_border_accent", "Accent panel border"),
+    			"pref", 
+				__txt("pref_theme_panel_border_accent", "Accent Border"),
 	    		new checkBox(function() /*=>*/ {return prefToggle("panel_outline_accent")}),
 	    		"panel_outline_accent",
 	    		true 
     		],
     		[
+    			"pref", 
 				__txt("pref_theme_tab_expands", "Expands Tabs"),
 	    		new checkBox(function() /*=>*/ {return prefToggle("panel_tab_expands")}),
 	    		"panel_tab_expands",
 	    		false 
     		],
+    		
+    		-1, 
+    		
+    		[
+    			"theme", 
+				__txt("Easing"),
+	    		textBox_Text(function(t) /*=>*/ {return overrideParam("easing", t)}),
+	    		"easing",
+    		],
+    		
+    		[
+    			"theme", 
+				__txt("Easing Duration"),
+	    		textBox_Number(function(t) /*=>*/ {return overrideParam("ease_duration", t)}),
+	    		"ease_duration",
+    		],
+    		
+    		[
+    			"theme", 
+				__txt("Toolbar Padding"),
+	    		textBox_Number(function(t) /*=>*/ {return overrideParam("panel_toolbar_padding", t)}),
+	    		"panel_toolbar_padding",
+    		],
+    		
 		]
     	
     	sp_theme = new scrollPane(panel_width, panel_height - ui(40), function(_y, _m) {
@@ -865,44 +907,6 @@ function Panel_Preference() : PanelContent() constructor {
     		draw_set_text(f_p2, fa_left, fa_center, COLORS._main_text);
     		draw_text_add(ui(8), _y + _h / 2, __txt("Variant"));
     		tb_override.drawParam(_wpar.setY(_y).setData(PREFERENCES.theme_override));
-    		_y += _h + ui(8);
-    		hh += _h + ui(8);
-    		
-    		// Font override
-    		
-    		draw_set_text(f_p2, fa_left, fa_center, COLORS._main_text);
-    		draw_text_add(ui(8), _y + _h / 2, __txt("Font Override"));
-    		
-    		font_override_sb.drawParam(_wpar.setY(_y).setData(PREFERENCES.font_overwrite));
-    		if(buttonInstant(bb, ww - _h, _y, _h, _h, _m, _hover, _focus, __txt("Reset"), br) == 2) {
-    			PREFERENCES.font_overwrite = "";
-    			should_restart = true; 
-    			PREF_SAVE();
-    		}
-    		_y += _h + ui(8);
-    		hh += _h + ui(8);
-    		
-    		draw_set_text(f_p2, fa_left, fa_center, COLORS._main_text);
-    		draw_text_add(ui(24), _y + _h / 2, __txt("Bold"));
-    		
-    		font_override_sb_bold.drawParam(_wpar.setY(_y).setData(PREFERENCES.font_overwrite_bold));
-    		if(buttonInstant(bb, ww - _h, _y, _h, _h, _m, _hover, _focus, __txt("Reset"), br) == 2) {
-    			PREFERENCES.font_overwrite_bold = "";
-    			should_restart = true; 
-    			PREF_SAVE();
-    		}
-    		_y += _h + ui(8);
-    		hh += _h + ui(8);
-    		
-    		draw_set_text(f_p2, fa_left, fa_center, COLORS._main_text);
-    		draw_text_add(ui(24), _y + _h / 2, __txt("Code"));
-    		
-    		font_override_sb_bold.drawParam(_wpar.setY(_y).setData(PREFERENCES.font_overwrite_code));
-    		if(buttonInstant(bb, ww - _h, _y, _h, _h, _m, _hover, _focus, __txt("Reset"), br) == 2) {
-    			PREFERENCES.font_overwrite_code = "";
-    			should_restart = true; 
-    			PREF_SAVE();
-    		}
     		_y += _h + ui(8);
     		hh += _h + ui(8);
     		
@@ -948,19 +952,82 @@ function Panel_Preference() : PanelContent() constructor {
     		_y += _mh + ui(8+4);
     		hh += _mh + ui(8+4);
     		
+    		// Font override
+    		
+    		draw_set_text(f_p2, fa_left, fa_center, COLORS._main_text);
+    		draw_text_add(ui(8), _y + _h / 2, __txt("Font Override"));
+    		
+    		font_override_sb.drawParam(_wpar.setY(_y).setData(PREFERENCES.font_overwrite));
+    		if(buttonInstant(bb, ww - _h, _y, _h, _h, _m, _hover, _focus, __txt("Reset"), br) == 2) {
+    			PREFERENCES.font_overwrite = "";
+    			should_restart = true; 
+    			PREF_SAVE();
+    		}
+    		_y += _h + ui(8);
+    		hh += _h + ui(8);
+    		
+    		draw_set_text(f_p2, fa_left, fa_center, COLORS._main_text);
+    		draw_text_add(ui(24), _y + _h / 2, __txt("Bold"));
+    		
+    		font_override_sb_bold.drawParam(_wpar.setY(_y).setData(PREFERENCES.font_overwrite_bold));
+    		if(buttonInstant(bb, ww - _h, _y, _h, _h, _m, _hover, _focus, __txt("Reset"), br) == 2) {
+    			PREFERENCES.font_overwrite_bold = "";
+    			should_restart = true; 
+    			PREF_SAVE();
+    		}
+    		_y += _h + ui(8);
+    		hh += _h + ui(8);
+    		
+    		draw_set_text(f_p2, fa_left, fa_center, COLORS._main_text);
+    		draw_text_add(ui(24), _y + _h / 2, __txt("Code"));
+    		
+    		font_override_sb_bold.drawParam(_wpar.setY(_y).setData(PREFERENCES.font_overwrite_code));
+    		if(buttonInstant(bb, ww - _h, _y, _h, _h, _m, _hover, _focus, __txt("Reset"), br) == 2) {
+    			PREFERENCES.font_overwrite_code = "";
+    			should_restart = true; 
+    			PREF_SAVE();
+    		}
+    		_y += _h + ui(8);
+    		hh += _h + ui(8);
+    		
+    		// Settings
+    		
     		for( var i = 0, n = array_length(theme_settings); i < n; i++ ) {
     			var _theme = theme_settings[i];
-    			var _name  = _theme[0];
-    			var _widg  = _theme[1];
-    			var _pref  = _theme[2];
-    			var _defv  = _theme[3];
+    			if(_theme == -1) {
+    				draw_set_color(COLORS.panel_separator);
+    				draw_line_width(ui(4), _y, ww - ui(4), _y, 2);
+    				
+		    		_y += ui(8);
+		    		hh += ui(8);
+    				continue;
+    			}
+    			
+    			var _type  = _theme[0];
+    			var _name  = _theme[1];
+    			var _widg  = _theme[2];
+    			var _pref  = _theme[3];
     			
 	    		draw_set_text(f_p2, fa_left, fa_center, COLORS._main_text);
 	    		draw_text_add(ui(8), _y + _h / 2, _name);
-	    		_widg.drawParam(_wpar.setY(_y).setData(PREFERENCES[$ _pref]));
-	    		if(buttonInstant(bb, ww - _h, _y, _h, _h, _m, _hover, _focus, __txt("Reset"), br) == 2)
-	    			prefSet(_pref, _defv);
-	    		_y += _h + ui(8); hh += _h + ui(8);
+	    		
+	    		if(_type == "pref") {
+    				var _defv  = _theme[4];
+    				
+		    		_widg.drawParam(_wpar.setY(_y).setData(PREFERENCES[$ _pref]));
+		    		if(buttonInstant(bb, ww - _h, _y, _h, _h, _m, _hover, _focus, __txt("Reset"), br) == 2)
+		    			prefSet(_pref, _defv);
+		    			
+	    		} else if(_type == "theme") {
+	    			_widg.drawParam(_wpar.setY(_y).setData(THEME_VALUE[$ _pref]));
+		    		if(buttonInstant(bb, ww - _h, _y, _h, _h, _m, _hover, _focus, __txt("Reset"), br) == 2)
+		    			overrideParam(_pref, undefined);
+		    			
+	    			
+	    		}
+	    			
+	    		_y += _h + ui(8); 
+	    		hh += _h + ui(8);
     		}
     		
     		return hh;

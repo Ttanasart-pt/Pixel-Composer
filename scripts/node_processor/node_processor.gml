@@ -219,15 +219,16 @@ function Node_Processor(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 			current_data = inputs_data;
 			
 			if(dimension_index > -1) {
-				surface_depth_disable(!use_depth);
-				var _dim = getDimension();
+				if(use_depth) surface_depth_disable(false);
 				
+				var _dim = getDimension();
 				for(var i = 0; i < _os; i++) {
 					if(outputs[i].type != VALUE_TYPE.surface || outputs[i].parameters.skip_verify) continue;
-					
 					_out[i] = surface_verify(_out[i], _dim[0], _dim[1], attrDepth());
+					// surface_free(_out[i]); _out[i] = surface_create(_dim[0], _dim[1], attrDepth());
 				}
-				surface_depth_disable(true);
+				
+				if(use_depth) surface_depth_disable(true);
 			}
 			
 			if(_os == 1) {
@@ -262,7 +263,8 @@ function Node_Processor(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 				var _dim  = getDimension(l);
 				var i = 0;
 				
-				surface_depth_disable(!use_depth);
+				if(use_depth) surface_depth_disable(false);
+				
 				repeat(_os) {
 					_outa[i] = array_safe_get(_out[i], l);
 					
@@ -270,7 +272,8 @@ function Node_Processor(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 					_outa[i] = surface_verify(_outa[i], _dim[0], _dim[1], attrDepth());
 					i++;
 				}
-				surface_depth_disable(false);
+				
+				if(use_depth) surface_depth_disable(true);
 				
 			} else {
 				var i = 0;
@@ -321,7 +324,7 @@ function Node_Processor(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 			
 		} else {
 			var _dim = getDimension();
-			surface_depth_disable(!use_depth);
+			if(use_depth) surface_depth_disable(false);
 			
 			_outputs = [];
 			for( var i = 0, n = array_length(outputs); i < n; i++ ) {
@@ -335,7 +338,7 @@ function Node_Processor(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 			for( var i = 0, n = array_length(_res); i < n; i++ ) 
 				outputs[i].setValue(_res[i]);
 				
-			surface_depth_disable(false);
+			if(use_depth) surface_depth_disable(true);
 		}
 		
 		if(processData_postbatch != undefined) processData_postbatch(frame);

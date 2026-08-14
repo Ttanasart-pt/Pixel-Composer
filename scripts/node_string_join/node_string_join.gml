@@ -3,15 +3,13 @@ function Node_String_Join(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	always_pad = true;
 	setDimension(96, 48);
 	
-	newInput(0, nodeValue_Text("Text array", []))
-		.setVisible(true, true);
-	
-	newInput(1, nodeValue_Text("Divider"))
-		.rejectArray();
+	newInput( 0, nodeValue_Text( "Text Array", [] )).setVisible(true, true);
+	newInput( 1, nodeValue_Text( "Divider"        )).rejectArray();
+	// 2
 		
-	inputs[1].getEditWidget().format = TEXT_AREA_FORMAT.delimiter;
-	
 	newOutput(0, nodeValue_Output("Text", VALUE_TYPE.text, ""));
+	
+	inputs[1].getEditWidget().format = TEXT_AREA_FORMAT.delimiter;
 	
 	static update = function() { 
 		var _arr = getInputData(0);

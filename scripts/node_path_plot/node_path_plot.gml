@@ -11,32 +11,37 @@ function Node_Path_Plot(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	newInput( 5, nodeValue_Vec2( "Origin",       [ PROJ_SURF_W / 2, PROJ_SURF_H / 2 ] )).setHotkey("G");
 	newInput( 7, nodeValue_Vec2( "Input Scale",  [ 1, 1 ] ));
 	newInput( 8, nodeValue_Vec2( "Input Shift",  [ 0, 0 ] ));
-	newInput( 0, nodeValue_Vec2( "Output scale", [ 8, 8 ] ));
+	newInput( 0, nodeValue_Vec2( "Output Scale", [ 8, 8 ] ));
 	
 	////- =Equation
-	newInput( 1, nodeValue_EScroll( "Coordinate", 0, [ new scrollItem("Cartesian", s_node_axis_type, 0), 
-	                                                       new scrollItem("Polar",     s_node_axis_type, 1) ]));
-	newInput( 2, nodeValue_EScroll(  "Equation type", 0, eq_type_car ));
-	newInput( 3, nodeValue_Text(         "0 function" ));
-	newInput( 4, nodeValue_Text(         "1 function" ));
-	newInput( 6, nodeValue_Slider_Range( "Range", [ 0, 1 ], { range: [ -1, 1, 0.01 ] }));
+	newInput( 1, nodeValue_EScroll( "Coordinate", 0, [ 
+		new scrollItem("Cartesian", s_node_axis_type, 0), 
+	    new scrollItem("Polar",     s_node_axis_type, 1) 
+    ]));
+    
+	newInput( 2, nodeValue_EScroll(  "Equation Type", 0, eq_type_car ));
+	newInput( 3, nodeValue_Text(     "0 Function" ));
+	newInput( 4, nodeValue_Text(     "1 Function" ));
+	newInput( 6, nodeValue_SliRange( "Range", [0,1], { range: [ -1, 1, 0.01 ] }));
 	
 	////- =Weight
 	newInput( 9, nodeValue_Bool( "Use Weight", false ));
-	newInput(10, nodeValue_Text( "w(x)" ));
+	newInput(10, nodeValue_Text( "w(x)"              ));
 	
 	////- =3D
-	newInput(11, nodeValue_Text( "z(x)" ));
-	newInput(12, nodeValue_Bool( "3D", false ));
+	newInput(12, nodeValue_Bool( "3D", false         ));
+	newInput(11, nodeValue_Text( "z(x)"              ));
 	
 	newOutput(0, nodeValue_Output("Path", VALUE_TYPE.pathnode, self));
 	
 	input_display_list = [
-		[ "Variable",  false],     5, 7, 8, 0, 
-		[ "Equation",  false],     1, 2, 3, 4, 6, 
-		[ "Weight",    false,  9], 10, 
-		[ "3D",        false, 12], 11, 
-	]
+		[ "Variable",  false     ],  5,  7,  8,  0, 
+		[ "Equation",  false     ],  1,  2,  3,  4,  6, 
+		[ "Weight",    false,  9 ], 10, 
+		[ "3D",        false, 12 ], 11, 
+	];
+	
+	////- Node
 	
 	boundary   = new BoundingBox( 0, 0, 1, 1 );
 	cached_pos = ds_map_create();
@@ -202,20 +207,24 @@ function Node_Path_Plot(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	}
 	
 	static update = function() { 
-		curr_sca  = getInputData(0);
-		curr_coor = getInputData(1);
-		curr_eqa  = getInputData(2);
-		curr_orig = getInputData(5);
-		curr_ran  = getInputData(6);
-		curr_iran = getInputData(7);
-		curr_shf  = getInputData(8);
-		curr_usew = getInputData(9);
-		curr_wgfn = getInputData(10);
-		curr_d3d  = getInputData(12);
-		
-		var _eq0  = getInputData(3);
-		var _eq1  = getInputData(4);
-		var _eq2  = getInputData(11);
+		#region data
+			curr_orig = getInputData( 5);
+			curr_iran = getInputData( 7);
+			curr_shf  = getInputData( 8);
+			curr_sca  = getInputData( 0);
+			
+			curr_coor = getInputData( 1);
+			curr_eqa  = getInputData( 2);
+			var _eq0  = getInputData( 3);
+			var _eq1  = getInputData( 4);
+			curr_ran  = getInputData( 6);
+			
+			curr_usew = getInputData( 9);
+			curr_wgfn = getInputData(10);
+			
+			var _eq2  = getInputData(11);
+			curr_d3d  = getInputData(12);
+		#endregion
 		
 		fn0 = evaluateFunctionList(_eq0);
 		fn1 = evaluateFunctionList(_eq1);

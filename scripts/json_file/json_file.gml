@@ -33,7 +33,7 @@ function json_save(path, map) {
 function json_load_struct(path, def = {}) {
 	gml_pragma("forceinline");
 	
-	if(!file_exists_empty(path)) return noone;
+	if(!file_exists_empty(path)) return def;
 	
 	var s  = file_read_all(path);
 	var js = json_try_parse(s, def);

@@ -1,0 +1,11 @@
+{
+  "$GMNotes":"v1",
+  "%Name":"note_string_regex_replace",
+  "name":"note_string_regex_replace",
+  "parent":{
+    "name":"text",
+    "path":"folders/nodes/data/value/text.yy",
+  },
+  "resourceType":"GMNotes",
+  "resourceVersion":"1.1",
+}

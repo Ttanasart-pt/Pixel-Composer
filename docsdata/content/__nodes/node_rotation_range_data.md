@@ -1,0 +1,1 @@
+Output vec2 rotation range data.

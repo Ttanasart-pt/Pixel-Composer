@@ -1,0 +1,1 @@
+Convert unicode number to a character.

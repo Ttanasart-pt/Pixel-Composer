@@ -1,0 +1,11 @@
+{
+  "$GMNotes":"v1",
+  "%Name":"note_path_revolve",
+  "name":"note_path_revolve",
+  "parent":{
+    "name":"surface",
+    "path":"folders/nodes/data/value/path/surface.yy",
+  },
+  "resourceType":"GMNotes",
+  "resourceVersion":"1.1",
+}

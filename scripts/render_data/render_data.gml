@@ -13,6 +13,8 @@ enum RENDER_TYPE {
 	globalvar WILL_RENDERING; WILL_RENDERING      = undefined;
 	globalvar RENDER_LEAF; RENDER_LEAF         = [];
 	
+	globalvar RENDER_CONTEXT; RENDER_CONTEXT      = undefined;
+	
 	function RenderAll() { UPDATE |= RENDER_TYPE.full; }
 	function RenderAllReorder() { 
 		UPDATE |= RENDER_TYPE.full;    
@@ -187,7 +189,6 @@ enum RENDER_TYPE {
 		renderQueue = [];
 		
 		logFlag = global.FLAG.render;
-		// logFlag = 1;
 		
 		static init = function() {
 			LOG_END
@@ -267,7 +268,11 @@ enum RENDER_TYPE {
 			
 			try {
 				while( renderIndex < nodeCounts ) {
-					project.nodeTopo[renderIndex++].doUpdate(); 
+					var _node = project.nodeTopo[renderIndex++];
+					
+					RENDER_CONTEXT = _node;
+					_node.doUpdate(); 
+					RENDER_CONTEXT = undefined;
 					
 					if(_maxDuration != infinity && (get_timer() - _time_frame) / 1_000_000 >= _maxDuration)
 						return false;
@@ -300,7 +305,10 @@ enum RENDER_TYPE {
 						
 						// print($" >>> Rendering: {rendering.name}");
 						
+						RENDER_CONTEXT = rendering;
 						rendering.doUpdate(); 
+						RENDER_CONTEXT = undefined;
+						
 						render_time += get_timer() - render_pt;
 						_rendered++;
 						
@@ -617,5 +625,12 @@ enum RENDER_TYPE {
 			_project.nodeTree = _tree;
 		
 		return _tree;
+	}
+#endregion
+
+#region log
+	function logGlobalNode(_txt) {
+		if(!is(RENDER_CONTEXT, __Node_Base)) return;
+		RENDER_CONTEXT.logNode(_txt, false);
 	}
 #endregion

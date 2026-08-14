@@ -1,0 +1,1 @@
+Convert path Y position into animation curve.

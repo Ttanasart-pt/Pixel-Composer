@@ -5,8 +5,8 @@ function Node_Path_Bake(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	
 	////- =Path
 	newInput( 0, nodeValue_Path( "Path" ));
-	newInput( 2, nodeValue_Bool(     "Spread Single Path", true ));
-	newInput( 5, nodeValue_Bool(     "Loop",               true ));
+	newInput( 2, nodeValue_Bool( "Spread Single Path", true ));
+	newInput( 5, nodeValue_Bool( "Loop",               true ));
 	
 	////- =Type
 	newInput( 3, nodeValue_EScroll( "Sample Type",    0, [ "Length", "Amount" ] ));
@@ -14,8 +14,8 @@ function Node_Path_Bake(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	newInput( 4, nodeValue_Int(     "Output Amount",  1 ));
 	// input 6
 	
-	newOutput(0, nodeValue_Output("Segments", VALUE_TYPE.float,    []    )).setDisplay(VALUE_DISPLAY.vector).setArrayDepth(2);
-	newOutput(1, nodeValue_Output("Path",     VALUE_TYPE.pathnode, noone ));
+	newOutput( 0, nodeValue_Output( "Segments", VALUE_TYPE.float,    []    )).setDisplay(VALUE_DISPLAY.vector).setArrayDepth(2);
+	newOutput( 1, nodeValue_Output( "Path",     VALUE_TYPE.pathnode, noone ));
 	
 	input_display_list = [ 
 		[ "Path",   false ], 0, 2, 

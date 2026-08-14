@@ -1,0 +1,11 @@
+{
+  "$GMNotes":"v1",
+  "%Name":"note_matric_set_vector",
+  "name":"note_matric_set_vector",
+  "parent":{
+    "name":"matrix",
+    "path":"folders/nodes/data/value/matrix.yy",
+  },
+  "resourceType":"GMNotes",
+  "resourceVersion":"1.1",
+}

@@ -11,7 +11,7 @@ function Node_Path_Smooth(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	
 	////- =Path
 	newInput( 0, nodeValue_Bool(   "Loop",         false )).rejectArray();
-	newInput( 1, nodeValue_Bool(   "Round anchor", false )).rejectArray();
+	newInput( 1, nodeValue_Bool(   "Round Anchor", false )).rejectArray();
 	newInput( 2, nodeValue_Slider( "Smoothness",   3, [ 1, 5, 0.01 ] ));
 	
 	////- =Sampling

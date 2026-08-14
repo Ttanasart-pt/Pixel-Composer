@@ -64,7 +64,7 @@ DIALOG_WINDOW_START
 			var _wh = _whg   - ui(8);
 			
 			if(sHOVER && point_in_rectangle(mouse_mx, mouse_my, _dialog_x, yy + 1, _dialog_x + dialog_w, yy + _whg - 1)) {
-				draw_sprite_stretched_add(THEME.box_r2, 0, _dialog_x, yy, dialog_w, _whg, COLORS.dialog_menubox_highlight, .1);
+				draw_sprite_stretched_add(THEME.menubox, 0, _dialog_x, yy, dialog_w, _whg, COLORS.dialog_menubox_highlight, .1);
 				selecting = i;
 			}
 			
@@ -102,7 +102,7 @@ DIALOG_WINDOW_START
 		var _key  = _menuItem.hoykeyObject;
 		
 		if(_col != c_white)
-			draw_sprite_stretched_ext(THEME.box_r2, 0, _dialog_x, floor(yy), dialog_w, floor(_h), _col, .1);
+			draw_sprite_stretched_ext(THEME.menubox, 0, _dialog_x, floor(yy), dialog_w, floor(_h), _col, .1);
 		
 		if(_key == noone && _menuItem.hotkey != noone) {
 			_key = find_hotkey(_menuItem.hotkey[0], _menuItem.hotkey[1]);
@@ -117,7 +117,7 @@ DIALOG_WINDOW_START
 		
 		if(selecting == i) {
 			if(_menuItem.active) 
-				draw_sprite_stretched_add(THEME.box_r2, 0, _dialog_x, floor(yy), dialog_w, floor(_h), COLORS.dialog_menubox_highlight, .1);
+				draw_sprite_stretched_add(THEME.menubox, 0, _dialog_x, floor(yy), dialog_w, floor(_h), COLORS.dialog_menubox_highlight, .1);
 			
 			if(_hovering_ch) {
 				if(_lclick && is(_menuItem, MenuItem) && _menuItem.active) {
@@ -256,8 +256,8 @@ DIALOG_WINDOW_START
 				
 				if(_hv) {
 					if(_tlp != "") setTOOLTIP(_tlp);
-					draw_sprite_stretched_add(THEME.box_r2, 0, _bx - _sw/2, _by - _sh/2, _sw, _sh, COLORS.dialog_menubox_highlight, .1);
-					draw_sprite_stretched_add(THEME.box_r2, 1, _bx - _sw/2, _by - _sh/2, _sw, _sh, COLORS.dialog_menubox_highlight, .5);
+					draw_sprite_stretched_add(THEME.menubox, 0, _bx - _sw/2, _by - _sh/2, _sw, _sh, COLORS.dialog_menubox_highlight, .1);
+					draw_sprite_stretched_add(THEME.menubox, 1, _bx - _sw/2, _by - _sh/2, _sw, _sh, COLORS.dialog_menubox_highlight, .5);
 					
 					if(mouse_lpress(sFOCUS)) {
 						_submenu[1](_dat);

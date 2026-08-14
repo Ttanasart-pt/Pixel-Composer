@@ -2,13 +2,14 @@ function Node_Path_Morph(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	name = "Morph Path";
 	dimension_index = 2;
 	
-	newInput( 0, nodeValue_Path(  "Path 1")).rejectArray();
-	newInput( 1, nodeValue_Path(  "Path 2")).rejectArray();
+	////- =Path
+	newInput( 0, nodeValue_Path(  "Path 1" )).rejectArray();
+	newInput( 1, nodeValue_Path(  "Path 2" )).rejectArray();
 	
 	////- =Morphing
 	newInput( 2, nodeValue_Dimension());
 	newInput( 3, nodeValue_Int(   "Subdivision", 64    )).setValidator(VV_min(2)).rejectArray();
-	newInput( 6, nodeValue_Bool(  "Match index", false ))
+	newInput( 6, nodeValue_Bool(  "Match Index", false ))
 	
 	////- =Rendering
 	newInput( 5, nodeValue_Curve( "Curve",       CURVE_DEF_01 ));
@@ -17,7 +18,8 @@ function Node_Path_Morph(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
-	input_display_list = [  0,  1, 
+	input_display_list = [ 
+		[ "Path",      false ],  0,  1, 
 		[ "Morphing",  false ],  2,  3,  6, 
 		[ "Rendering", false ],  5,  4, 
 	];
@@ -111,15 +113,15 @@ function Node_Path_Morph(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 		}
 		
 		surface_set_shader(_outSurf, sh_path_morph);
-			shader_set_2("dimension",   _dim);
+			shader_set_2(  "dimension",   _dim );
 			
-			shader_set_i("subdivision", _sub);
-			shader_set_i("clip",        _clp);
-			shader_set_i("matchIndex",  _mid);
-			shader_set_f("point1",      _p1);
-			shader_set_f("point2",      _p2);
+			shader_set_i(  "subdivision", _sub );
+			shader_set_i(  "clip",        _clp );
+			shader_set_i(  "matchIndex",  _mid );
+			shader_set_f(  "point1",      _p1  );
+			shader_set_f(  "point2",      _p2  );
 			
-			shader_set_curve("w",       _cur);
+			shader_set_cr( "w", _cur );
 			
 			draw_empty();
 		surface_reset_shader();

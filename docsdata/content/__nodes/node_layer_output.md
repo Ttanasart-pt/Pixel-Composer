@@ -1,0 +1,1 @@
+Returns composed global layer output.

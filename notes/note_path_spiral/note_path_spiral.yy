@@ -1,0 +1,11 @@
+{
+  "$GMNotes":"v1",
+  "%Name":"note_path_spiral",
+  "name":"note_path_spiral",
+  "parent":{
+    "name":"modifier",
+    "path":"folders/nodes/data/value/path/modifier.yy",
+  },
+  "resourceType":"GMNotes",
+  "resourceVersion":"1.1",
+}

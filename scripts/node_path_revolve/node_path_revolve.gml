@@ -5,7 +5,7 @@ function Node_Path_Revolve(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	newInput( 1, nodeValue_Dimension());
 	
 	////- =Paths
-	newInput( 0, nodeValue_Path( "Path" )).rejectArray();
+	newInput( 0, nodeValue_Path(     "Path"              )).rejectArray();
 	newInput(14, nodeValue_Range(    "Range",     [0,1]  ));
 	newInput( 4, nodeValue_Slider(   "Shift",      0     ));
 	newInput( 5, nodeValue_Bool(     "Invert",     false ));
@@ -30,9 +30,9 @@ function Node_Path_Revolve(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	////- =Rendering
 	newInput(33, nodeValue_EButton( "Depth Sort", 1, [ "Normal", "Path", "Path Invert" ] ));
 	newInput(17, nodeValue_EButton( "Blend Mode", 0, [ "Normal", "Additive", "Maximum" ] ));
-	newInput( 2, nodeValue_Surface( "Texture"             ));
-	newInput(12, nodeValue_Vec2(    "UV Position", [0,0]  ));
-	newInput( 6, nodeValue_Vec2(    "UV Range",    [1,1]  ));
+	newInput( 2, nodeValue_Surface( "Texture"                    ));
+	newInput(12, nodeValue_Vec2(    "UV Position",         [0,0] ));
+	newInput( 6, nodeValue_Vec2(    "UV Range",            [1,1] ));
 	newInput(30, nodeValue_Bool(    "Scale to Path Range", false ));
 	
 	////- =Caps
@@ -52,9 +52,9 @@ function Node_Path_Revolve(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	newInput(32, nodeValue_EButton( "Mapping",    1, [ "None", "Cartesian", "Polar" ]    ));
 	// 34
 		
-	newOutput( 0, nodeValue_Output("Rendered",  VALUE_TYPE.surface, noone));
-	newOutput( 1, nodeValue_Output("Start Cap", VALUE_TYPE.surface, noone));
-	newOutput( 2, nodeValue_Output("End Cap",   VALUE_TYPE.surface, noone));
+	newOutput( 0, nodeValue_Output( "Rendered",  VALUE_TYPE.surface, noone ));
+	newOutput( 1, nodeValue_Output( "Start Cap", VALUE_TYPE.surface, noone ));
+	newOutput( 2, nodeValue_Output( "End Cap",   VALUE_TYPE.surface, noone ));
 	
 	input_display_list = [ 
 		[ "Output",          false ],  1, 

@@ -1,0 +1,1 @@
+Get a vector from a matrix.

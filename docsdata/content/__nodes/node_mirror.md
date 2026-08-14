@@ -5,10 +5,8 @@ an axis, use the <node flip/> node.
 
 ## Properties
 
-### <junc position/>
-
-The center point for the reflection line.
-
-### <junc angle/>
-
-The angle of the reflection line
+[proptable]
+Mirror
+Position|The center point for the reflection line.
+Angle|The angle of the reflection line
+[/proptable]

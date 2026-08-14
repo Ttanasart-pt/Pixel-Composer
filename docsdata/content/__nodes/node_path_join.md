@@ -1,0 +1,1 @@
+Connect path array, compound path into 1 single path.

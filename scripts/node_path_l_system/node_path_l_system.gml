@@ -21,8 +21,8 @@ function Node_Path_L_System(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	setDimension(96, 48);
 	
 	////- =Origin
-	newInput( 2, nodeValue_Vec2(     "Starting position", [PROJ_SURF_W/2,PROJ_SURF_H/2] )).setHotkey("G");
-	newInput(10, nodeValue_Vec3(     "Starting position", [0,0,0] ));
+	newInput( 2, nodeValue_Vec2(     "Starting Position", [PROJ_SURF_W/2,PROJ_SURF_H/2] )).setHotkey("G");
+	newInput(10, nodeValue_Vec3(     "Starting Position", [0,0,0] ));
 	newInput( 6, nodeValue_Rotation( "Starting Angle",     90     ));
 	
 	////- =Properties
@@ -37,8 +37,9 @@ function Node_Path_L_System(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	
 	////- =Rules
 	newInput( 3, nodeValue_Int(  "Iteration",    4 ));
-	newInput( 4, nodeValue_Text( "Starting rule"   ));
-	newInput( 5, nodeValue_Text( "End replacement" )).setTooltip("Replace symbol of the last generated rule, for example a=F to replace all a with F. Use comma to separate different replacements.");
+	newInput( 4, nodeValue_Text( "Starting Rule"   ));
+	newInput( 5, nodeValue_Text( "End Replacement" )).setTooltip("Replace symbol of the last generated rule, for example a=F to replace all a with F. Use comma to separate different replacements.");
+	// 12
 	
 	newOutput(0, nodeValue_Output("Path", VALUE_TYPE.pathnode, noone));
 	

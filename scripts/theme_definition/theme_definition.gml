@@ -210,17 +210,27 @@ function ThemeColor() constructor {
 }
 
 function ThemeValue() constructor {
+    easing                        = "none";
+    ease_duration                 = 0;
+    
 	icon_scale                    = 1;
 	highlight_corner_radius       = 8;
     selection_corner_radius       = 6;
-    
-    inline_node_radius = 6;
+    selection_minimum             = 4;
+	
+	dialog_padding                = 4;
+	dialog_modal_button_spacing   = 8;
+
+    inline_node_radius            = 6;
     
     panel_separation_type         = "frame";
     panel_padding                 = 2;
     panel_margin                  = 2;
     panel_corner_radius           = 8;
     
+    panel_toolbar_padding         = 0;
+    panel_toolbar_merge           = true;
+
     panel_menu_padding            = 6;
     panel_menu_action_spacing     = 4;
     panel_menu_user_padding       = 10;
@@ -229,8 +239,6 @@ function ThemeValue() constructor {
     panel_tab_padding             = 2;
 	panel_animation_padding       = 6;
 	panel_inspector_prop_paddding = 6;
-	
-	dialog_modal_button_spacing   = 8;
 
     minimap_corner_radius         = 2;
     slider_type                   = "stem";

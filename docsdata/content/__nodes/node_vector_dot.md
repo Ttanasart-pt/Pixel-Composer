@@ -1,0 +1,1 @@
+Calculate 2D, 3D dot product.

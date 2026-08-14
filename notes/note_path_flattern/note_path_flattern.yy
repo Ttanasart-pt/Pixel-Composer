@@ -1,0 +1,11 @@
+{
+  "$GMNotes":"v1",
+  "%Name":"note_path_flattern",
+  "name":"note_path_flattern",
+  "parent":{
+    "name":"combine",
+    "path":"folders/nodes/data/value/path/combine.yy",
+  },
+  "resourceType":"GMNotes",
+  "resourceVersion":"1.1",
+}

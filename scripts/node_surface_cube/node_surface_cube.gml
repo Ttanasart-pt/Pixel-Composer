@@ -25,9 +25,9 @@ function Node_Surface_Cube(_x, _y, _group = noone) : Node_Shader_Generator(_x, _
 	newOutput(1, nodeValue_Output("Cross Section", VALUE_TYPE.surface, noone));
 	
 	input_display_list = [ 7, 
-		[ "Output",     true ],  0,
-		[ "Shape",     false ],  1,  2,  3, 
-		[ "Noise",     false ],  6,  8,  9, 10, 11, 
+		[ "Output",         true ],  0,
+		[ "Shape",         false ],  1,  2,  3, 
+		[ "Noise",         false ],  6,  8,  9, 10, 11, 
 		[ "Cross Section", false ],  4,  5, 
 	];
 	

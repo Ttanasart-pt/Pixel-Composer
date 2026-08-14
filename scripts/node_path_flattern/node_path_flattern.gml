@@ -3,9 +3,9 @@ function Node_Path_Flattern(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	setDimension(96, 48);
 	setDrawIcon();
 	
-	newInput(0, nodeValue_Path( "Path" ));
-	newInput(1, nodeValue_Bool(     "Reverse",   false ));
-	newInput(2, nodeValue_Bool(     "Ping Pong", false ));
+	newInput( 0, nodeValue_Path( "Path"             ));
+	newInput( 1, nodeValue_Bool( "Reverse",   false ));
+	newInput( 2, nodeValue_Bool( "Ping Pong", false ));
 	
 	newOutput(0, nodeValue_Output(  "Path", VALUE_TYPE.pathnode, noone));
 	
@@ -87,7 +87,7 @@ function Node_Path_Flattern(_x, _y, _group = noone) : Node(_x, _y, _group) const
 			if(out == undefined) out = new __vec2P(); else { out.x = 0; out.y = 0; }
 			
 			var _cKey  = _dist;
-			if(struct_has(cached_pos, _cKey)) {
+			if(has(cached_pos, _cKey)) {
 				var _cachep = cached_pos[$ _cKey];
 				out.x = _cachep.x;
 				out.y = _cachep.y;

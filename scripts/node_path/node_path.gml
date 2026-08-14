@@ -397,7 +397,7 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	
 	////- =Path
 	newInput( 1, nodeValue_Bool( "Loop",         false )).rejectArray();
-	newInput( 3, nodeValue_Bool( "Round anchor", false )).rejectArray();
+	newInput( 3, nodeValue_Bool( "Round Anchor", false )).rejectArray();
 	
 	////- =Sampling
 	newInput( 0, nodeValue_Slider(  "Sample Path", 0 )).setTooltip("Sample position from path.");

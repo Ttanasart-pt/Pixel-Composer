@@ -9,7 +9,7 @@ function Node_Path_Shift(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	newInput( 2, nodeValue_Range( "Range", [0,1] ));
 	
 	////- =Shift
-	newInput( 1, nodeValue_Float("Distance", 0)).setHotkey("D");
+	newInput( 1, nodeValue_Float( "Distance", 0  )).setHotkey("D");
 	// 4
 	
 	newOutput(0, nodeValue_Output("Path", VALUE_TYPE.pathnode, self));

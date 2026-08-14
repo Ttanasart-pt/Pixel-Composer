@@ -17,6 +17,10 @@ if(APP_SURF_OVERRIDE || DROPPER_DROPPING) {
 
 draw_clear(COLORS.bg);
 
+#region UI animation
+	easerStep();
+#endregion
+
 #region widget scroll
 	if(!WIDGET_TAB_BLOCK) {
 		if(keyboard_check_pressed(vk_tab)) {

@@ -7,12 +7,12 @@ function Node_Quarternion_Lookat(_x, _y, _group = noone) : Node_3D_Object(_x, _y
 	giz_targ = new __3dGizmoSphere(.25, c_red,    1);
 	
 	////- =Positions
-	newInput(0, nodeValue_Vec3("Origin", [0,0,0]  )).setVisible(true, true);
-	newInput(1, nodeValue_Vec3("Target", [1,0,0]  )).setVisible(true, true);
-	newInput(2, nodeValue_Vec3("Up",     [0,0,-1] ));
+	newInput( 0, nodeValue_Vec3( "Origin", [0,0,0]  )).setVisible(true, true);
+	newInput( 1, nodeValue_Vec3( "Target", [1,0,0]  )).setVisible(true, true);
+	newInput( 2, nodeValue_Vec3( "Up",     [0,0,-1] ));
 	
 	////- =Unit
-	newInput(3, nodeValue_EButton("Unit", 0, [ "Quaternion", "Euler" ] ));
+	newInput( 3, nodeValue_EButton("Unit", 0, [ "Quaternion", "Euler" ] ));
 	
 	newOutput(0, nodeValue_Output("Rotation", VALUE_TYPE.float, [0,0,0,1])).setDisplay(VALUE_DISPLAY.vector);
 	
@@ -31,7 +31,7 @@ function Node_Quarternion_Lookat(_x, _y, _group = noone) : Node_3D_Object(_x, _y
 		var _posi = getInputSingle(_targ);
 		var _vpos = new __vec3( _posi[0], _posi[1], _posi[2] );
 		
-		tool_object_pos.drawOverlay3D(_targ, noone, _vpos, active, _mx, _my, _params);
+		tool_object_pos.drawOverlay3D(_targ, _vpos, noone, active, _mx, _my, _params);
 	}
 	
 	////- Nodes

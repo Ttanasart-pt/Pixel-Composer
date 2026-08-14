@@ -280,7 +280,7 @@ function buttonInstant_Pad(spr, _x, _y, _w, _h, _m, _hvr, _act, _tip = "",
 		var icy = _y + _h / 2;
 		var ica = _icon_alpha == 1 || res == 0? _icon_alpha : 1;
 		
-		gpu_set_tex_filter(true);
+		__gpu_set_tex_filter(true);
 	    if(is(_icon, sprite_drawer)) {
 	    	var ics = min((_w - _icon_padding) / _icon.w, (_h - _icon_padding) / _icon.h);
 	    	_icon.drawScale(icx, icy, ics, cc, ica);
@@ -289,7 +289,7 @@ function buttonInstant_Pad(spr, _x, _y, _w, _h, _m, _hvr, _act, _tip = "",
 			var ics = min((_w - _icon_padding) / sprite_get_width(_icon), (_h - _icon_padding) / sprite_get_height(_icon));
 			draw_sprite_ext(_icon, _icon_index, icx, icy, ics, ics, 0, cc, ica);
 		}
-		gpu_set_tex_filter(false);
+		__gpu_set_tex_filter(false);
 	}
 	
 	return res;

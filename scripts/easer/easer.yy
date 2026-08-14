@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"easer",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"easer",
+  "parent":{
+    "name":"animation",
+    "path":"folders/functions/animation.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

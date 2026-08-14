@@ -66,6 +66,7 @@ function scrollBox(_data, _onModify, _update_hover = true) : widget() constructo
 	displayStr     = undefined;
 	
 	scrollDialog   = noone;
+	useScissor     = true;
 	
 	static setStruct        = function(l) /*=>*/ { displayStr     = l; return self; }
 	static setType          = function(l) /*=>*/ { type           = l; return self; }
@@ -213,8 +214,10 @@ function scrollBox(_data, _onModify, _update_hover = true) : widget() constructo
 		var _yc  = _y + h / 2;
 		var _tx1 = _x;
 		
-		var _sci = gpu_get_scissor();
-		gpu_set_scissor(_x, _y, _w, h);
+		if(useScissor) {
+			var _sci = gpu_get_scissor();
+			gpu_set_scissor(_x, _y, _w, h);
+		}
 		
 		if(show_icon && horizontal == 2) {
 			var _xc = (_x0 + _x1) / 2;
@@ -286,7 +289,7 @@ function scrollBox(_data, _onModify, _update_hover = true) : widget() constructo
 			}
 		}
 		
-		gpu_set_scissor(_sci);
+		if(useScissor) gpu_set_scissor(_sci);
 		if(hide == 0 && type == 0) draw_sprite_stretched_ext(THEME.textbox, _hovering, x, y, w, h, boxColor, .5 + .5 * interactable);
 		
 		if(WIDGET_CURRENT == self)

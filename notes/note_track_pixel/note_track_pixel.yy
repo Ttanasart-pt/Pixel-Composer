@@ -1,0 +1,11 @@
+{
+  "$GMNotes":"v1",
+  "%Name":"note_track_pixel",
+  "name":"note_track_pixel",
+  "parent":{
+    "name":"surface",
+    "path":"folders/nodes/data/value/surface.yy",
+  },
+  "resourceType":"GMNotes",
+  "resourceVersion":"1.1",
+}

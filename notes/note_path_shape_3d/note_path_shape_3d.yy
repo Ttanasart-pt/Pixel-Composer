@@ -1,0 +1,11 @@
+{
+  "$GMNotes":"v1",
+  "%Name":"note_path_shape_3d",
+  "name":"note_path_shape_3d",
+  "parent":{
+    "name":"creator",
+    "path":"folders/nodes/data/value/path/creator.yy",
+  },
+  "resourceType":"GMNotes",
+  "resourceVersion":"1.1",
+}

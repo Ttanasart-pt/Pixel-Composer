@@ -45,20 +45,19 @@ function MenuItem(_name, _func, _spr = noone, _hotkey = noone, _toggle = noone, 
 	
     static deactivate   = function() /*=>*/ { active = false; return self; }
 	
-    static setIsShelf   = function()           /*=>*/ { isShelf    = true;       return self; }
-    static setActive    = function(_active)    /*=>*/ { active     = _active;    return self; }
-    static setActiveFn  = function(_actFn)     /*=>*/ { activeFn   = _actFn;     return self; }
-    static setColor     = function(_color)     /*=>*/ { color      = _color;     return self; }
-    static setColorGet  = function(_color)     /*=>*/ { getColor   = _color;     return self; }
-    static setShiftMenu = function(_shiftMenu) /*=>*/ { shiftMenu  = _shiftMenu; return self; }
-    static setParam     = function(_param)     /*=>*/ { params     = _param;     return self; }
-    static setToggle    = function(_toggle)    /*=>*/ { toggle     = _toggle;    return self; }
-    static setTooltip   = function(_t)         /*=>*/ { tooltip    = _t; scrollable = true; return self; }
-    static setContext   = function(_c)         /*=>*/ { contextMenu  = _c;        return self; }
-    static setScroll    = function()           /*=>*/ { scrollable   = true;      return self; }
-    static setHotkey    = function(_h)         /*=>*/ { hoykeyObject = _h;        return self; }
-	
-	static setSurface   = function(_c)         /*=>*/ { surface = _c;            return self; }
+    static setIsShelf   = function()           /*=>*/ { isShelf      = true;                  return self; }
+    static setActive    = function(_active)    /*=>*/ { active       = _active;               return self; }
+    static setActiveFn  = function(_actFn)     /*=>*/ { activeFn     = _actFn;                return self; }
+    static setColor     = function(_color)     /*=>*/ { color        = _color;                return self; }
+    static setColorGet  = function(_color)     /*=>*/ { getColor     = _color;                return self; }
+    static setShiftMenu = function(_shiftMenu) /*=>*/ { shiftMenu    = _shiftMenu;            return self; }
+    static setParam     = function(_param)     /*=>*/ { params       = _param;                return self; }
+    static setToggle    = function(_toggle)    /*=>*/ { toggle       = _toggle;               return self; }
+    static setTooltip   = function(_t)         /*=>*/ { tooltip      = _t; scrollable = true; return self; }
+    static setContext   = function(_c)         /*=>*/ { contextMenu  = _c;                    return self; }
+    static setScroll    = function()           /*=>*/ { scrollable   = true;                  return self; }
+    static setHotkey    = function(_h)         /*=>*/ { hoykeyObject = _h;                    return self; }
+	static setSurface   = function(_c)         /*=>*/ { surface      = _c;                    return self; }
 	
 	static getSpr       = function() /*=>*/ {return is_callable(spr)? spr() : spr};
 	static getSprInd    = function() /*=>*/ {return 0};
@@ -285,13 +284,15 @@ function pieMenuCall(menu_id = "", menu = [], _x = 0, _y = 0) {
 function submenuCall(_data = undefined, menu = [], menu_id = "") {
 	if(is_undefined(_data)) return menuCall(menu_id, menu);
 	
-	var _xx = _data.x - 1;
-	var dia = instance_create_depth(_xx, _data.y, _data.depth - 1, o_dialog_menubox);
+	var _x = _data.x;
+	var _y = _data.y;
+	
+	var dia = instance_create_depth(_x, _y, _data.depth - 1, o_dialog_menubox);
+	
+	dia.anchor  = ANCHOR.left | ANCHOR.top;
 	dia.context = _data.context;
 	dia.setMenu(menu);
-	
-	if(_xx + dia.dialog_w > WIN_W - ui(2))
-		dia.dialog_x = _data._x - dia.dialog_w + ui(4);
+	dia.resetPosition();
 	
 	return dia;
 }

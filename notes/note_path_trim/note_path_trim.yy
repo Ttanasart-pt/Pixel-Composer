@@ -1,0 +1,11 @@
+{
+  "$GMNotes":"v1",
+  "%Name":"note_path_trim",
+  "name":"note_path_trim",
+  "parent":{
+    "name":"modifier",
+    "path":"folders/nodes/data/value/path/modifier.yy",
+  },
+  "resourceType":"GMNotes",
+  "resourceVersion":"1.1",
+}

@@ -1,0 +1,11 @@
+{
+  "$GMNotes":"v1",
+  "%Name":"note_curve_function",
+  "name":"note_curve_function",
+  "parent":{
+    "name":"number",
+    "path":"folders/nodes/data/value/path/number.yy",
+  },
+  "resourceType":"GMNotes",
+  "resourceVersion":"1.1",
+}

@@ -1,0 +1,1 @@
+Convert matrix to 1D number array.

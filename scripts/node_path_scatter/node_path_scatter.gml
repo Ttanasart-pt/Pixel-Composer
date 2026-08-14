@@ -6,36 +6,36 @@ function Node_Path_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	newInput( 5, nodeValueSeed());
 	
 	////- =Path
-	newInput( 0, nodeValue_Path( "Base Path"      ));
-	newInput( 1, nodeValue_Path( "Scatter Path"   ));
-	newInput(10, nodeValue_Slider(   "Range",       1 ));
-	newInput( 9, nodeValue_Curve(    "Trim over Length", CURVE_DEF_11 ));
+	newInput( 0, nodeValue_Path(    "Base Path"      ));
+	newInput( 1, nodeValue_Path(    "Scatter Path"   ));
+	newInput(10, nodeValue_Slider(  "Range",       1 ));
+	newInput( 9, nodeValue_Curve(   "Trim over Length", CURVE_DEF_11 ));
 	
 	////- =Scatter
 	newInput( 8, nodeValue_EScroll( "Distribution", 0, [ "Uniform", "Random" ]));
-	newInput( 3, nodeValue_Int(         "Amount",       4 ));
+	newInput( 3, nodeValue_Int(     "Amount",       4 ));
 	
 	////- =Position
 	newInput(12, nodeValue_EScroll(  "Origin",      0 , [ "Individual", "First", "Zero" ]));
-	newInput( 2, nodeValue_Slider_Range( "Range",      [0,1] ));
+	newInput( 2, nodeValue_SliRange( "Range",      [0,1] ));
 	
 	////- =Rotation
-	newInput( 7, nodeValue_Rotation_Random( "Rotation", [0,45,135,0,0] ));
-	newInput(11, nodeValue_Bool( "Flip if Negative",     false         ));
+	newInput( 7, nodeValue_RotRand(  "Rotation",        [0,45,135,0,0] ));
+	newInput(11, nodeValue_Bool(     "Flip if Negative", false         ));
 	
 	////- =Scale
-	newInput( 4, nodeValue_Slider_Range( "Scale",     [.5,1]       ));
-	newInput( 6, nodeValue_Curve("Scale over Length", CURVE_DEF_11 ));
+	newInput( 4, nodeValue_SliRange( "Scale",             [.5,1]       ));
+	newInput( 6, nodeValue_Curve(    "Scale over Length", CURVE_DEF_11 ));
 	// input 13
 	
 	newOutput(0, nodeValue_Output("Path", VALUE_TYPE.pathnode, noone));
 	
-	input_display_list = [ 5, 
-		["Paths",     false], 0, 1, 10, 9, 
-		["Scatter",   false], 8, 3, 
-		["Position",  false], 12, 2, 
-		["Rotation",  false], 7, 11, 
-		["Scale",     false], 4, 6, 
+	input_display_list = [  5, 
+		[ "Paths",     false ],  0,  1, 10,  9, 
+		[ "Scatter",   false ],  8,  3, 
+		[ "Position",  false ], 12,  2, 
+		[ "Rotation",  false ],  7, 11, 
+		[ "Scale",     false ],  4,  6, 
 	];
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _params) { 

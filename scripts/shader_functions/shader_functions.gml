@@ -242,8 +242,15 @@
 	#macro gpu_set_tex_filter gpu_set_tex_filter_override
 	#macro __gpu_set_tex_filter gpu_set_tex_filter
 	function gpu_set_tex_filter_override(_filter) {
-		if(OS == os_linux) __gpu_set_tex_filter(false); // not sure why other OS have problem with filtering.
-		else __gpu_set_tex_filter(_filter);
+		switch(OS) {
+			case os_linux : 
+			case os_macosx :
+				return;
+				
+			case os_windows : 
+				__gpu_set_tex_filter(_filter);
+				return;
+		}
 	}
 
 	function shader_preset_interpolation(shader = sh_sample) {

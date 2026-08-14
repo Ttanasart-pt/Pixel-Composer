@@ -1,0 +1,1 @@
+Create empty connection pin/junction for organization.
