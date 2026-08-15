@@ -1,6 +1,15 @@
 Mix color node allows you to blend two colors together. The <junc Mix> property 
 control the blend progress from <junc Color from> to <junc Color to>.
 
+## Properties
+
+[proptable]
+Color Space|Color space for mixing.
+
+Colors
+Mix|Mixing ratio
+[/proptable]
+
 ## Color Space
 
 <p class="subtitle">For more information, check out the <a href="color_space.html">color space</a> page.</p>
