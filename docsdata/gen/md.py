@@ -71,6 +71,33 @@ def parse_md(path):
         table_html += "</table>"
         data_html = data_html.replace(f"[proptable]{table}[/proptable]", table_html)
 
+    reTable = re.compile(r"\[table\]([\s\S]*?)\[\/table\]")
+    tables  = reTable.findall(data_html)
+    for table in tables:
+        table_html = '<table class="cc3070">'
+        rows = table.split("\n")
+
+        for row in rows:
+            if row.strip() == "":
+                continue
+            
+            row = row.replace("<p>", "").replace("</p>", "")
+
+            cells = row.split("|")
+            amo   = len(cells)
+
+            table_html += "<tr>"
+            for i, cell in enumerate(cells):
+                cel = cell.strip()
+                if cel == "":
+                    continue
+                table_html += f"<td>{cel}</td>"
+
+            table_html += "</tr>"
+
+        table_html += "</table>"
+        data_html = data_html.replace(f"[table]{table}[/table]", table_html)
+
     # make sure that there're 2 <br> before h2
     reH2 = re.compile(r"(?:<br>)*<h2>")
     data_html = reH2.sub("<br><br><h2>", data_html)
