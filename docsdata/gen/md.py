@@ -99,8 +99,8 @@ def parse_md(path):
         data_html = data_html.replace(f"[table]{table}[/table]", table_html)
 
     # make sure that there're 2 <br> before h2
-    reH2 = re.compile(r"(?:<br>)*<h2>")
-    data_html = reH2.sub("<br><h2>", data_html)
+    reH2 = re.compile(r"(?:<br>)*<h2")
+    data_html = reH2.sub("<br><h2", data_html)
 
     with open(target, "a") as f:
         f.write(data_html)
