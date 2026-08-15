@@ -130,7 +130,7 @@
 <tr> <td>**\]**</td> <td>Restore state from the top of the stack.</td>    </tr>
 <tr> <td>**\***</td> <td>Rotate the secondary angle positively (3D).</td> </tr>
 <tr> <td>**/**</td>  <td>Rotate the secondary angle negatively (3D).</td> </tr>
-</table>
+</table><br>
 
 <p>Move distance and turn angle are fixed.</p><br>
 <br><h2><a id="Rules Generation" class="anchor"></a>Rules Generation</h2><br>
@@ -139,20 +139,20 @@
 <tr> <td>**X**       </td> <td> Starting rule </td>                                </tr>
 <tr> <td>**X > FX**  </td> <td> Replace X by FX </td>                              </tr>
 <tr> <td>**F > X+F** </td> <td> Replace F by X+F </td>                             </tr>
-</table>
+</table><br>
 
 <p>Applying these rules the first time we will get:</p><br>
 <table>
 <tr> <td>**X**  </td> <td> Starting rule </td>                                     </tr>
 <tr> <td>**FX** </td> <td> Apply the first rule replacing X with FX </td>          </tr>
-</table>
+</table><br>
 
 <p>The second iteration will be:</p><br>
 <table>
 <tr> <td>**FX**     </td> <td> Result from the first iteration </td>               </tr>
 <tr> <td>F **FX**   </td> <td> Applying the first rule replacing X with FX </td>   </tr>
 <tr> <td>**X+F** FX </td> <td> Applying the second rule replacing F with X+F </td> </tr>
-</table>
+</table><br>
 
 <p>Notice that both rules are being applied at the same time, thus the seconds rule won't replace the letter replaced by the first rule. 
 By repeating these operations many times we can construct more complex rule.</p><br>
@@ -161,7 +161,7 @@ By repeating these operations many times we can construct more complex rule.</p>
 <table>
 <tr> <td>**X > F+X** </td> <td> Replace X by F+X </td>                             </tr>
 <tr> <td>**X > F-X** </td> <td> Replace X by F-X </td>                             </tr>
-</table>
+</table><br>
 
 <p>These rules caused every X to has 50% chance to become F+X and 50% chance to become F-X.</p><br>
 <p></p><br>

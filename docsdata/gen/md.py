@@ -16,6 +16,7 @@ def parse_md(path):
     data_html = data_html.replace("</h3>", "</h3><br>")
     data_html = data_html.replace("</p>",  "</p><br>" )
     data_html = data_html.replace("</ul>", "</ul><br>")
+    data_html = data_html.replace("</table>", "</table><br>")
 
     reColorAttr = re.compile(r"\[color=(.*?)\]")
 
