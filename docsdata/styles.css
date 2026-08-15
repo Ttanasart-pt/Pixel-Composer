@@ -250,13 +250,7 @@ a.anchor {
 
 .header-title {
     margin: 0;
-
-    h2 {
-        font-weight: 700;
-        font-size: 1.1rem;
-        color: var(--main_ltgrey);
-        padding-left: 0px;
-    }
+    padding-left: 8px;
 
     > a {
         margin: 0;
@@ -264,17 +258,28 @@ a.anchor {
         display: flex;
         align-items: center;
         justify-content: center;
-        gap: 16px;
+        gap: 8px;
         
+        h2 {
+            font-weight: 700;
+            font-size: 1rem;
+            color: var(--main_ltgrey);
+            padding-left: 0px;
+        }
+
         div.header-icon {
-            width: 48px;
-            height: 48px;
+            width: 32px;
+            height: 32px;
 
             background-image: url("/src/icon_48_grey.png");
             background-size: cover;
         }
 
         &:hover {
+            h2 {
+                color: var(--main_accent);
+            }
+
             div.header-icon {
                 background-image: url("/src/icon_48.png");
             }
