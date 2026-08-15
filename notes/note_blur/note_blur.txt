@@ -18,7 +18,7 @@ Blur node is optimized for uniform bluring. For more complex blur, you can check
 <table class="cc4060">
     <tr>
         <td><node blur/></td>
-        <td>Basic uniform blur</td>
+        <td>Basic gaussian blur</td>
     </tr>
     <tr>
         <td><node blur_simple/></td>

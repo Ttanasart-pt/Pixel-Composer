@@ -120,18 +120,18 @@
 </script><img class="node-graph-preview" src="/src/images/nodegen/node_blur/node_blur-graph.png"><script>const sampleContent = "{\"version\":120076,\"nodes\":[{\"x\":-176,\"y\":-240,\"inputs\":[{\"linked\":true},{},{\"r\":{\"d\":\"Ellipse\"},\"m\":1},{\"unit\":1},{},{},{},{},{},{},{},{},{},{},{\"v\":1},{},{\"unit\":1},{\"unit\":1},{},{},{},{},{},{},{},{},{},{},{\"r\":{\"d\":0.5},\"m\":1},{},{},{},{\"unit\":1},{\"unit\":1},{},{\"unit\":1},{},{},{},{},{\"unit\":1},{},{},{},{},{},{},{},{},{}],\"outputs\":[{},{},{}],\"renamedManual\":true,\"renamed\":true,\"id\":\"gA7Ec4007606XBuGu0PC2n0sfyUuMEhm\",\"version\":120076,\"attriTool\":{},\"name\":\"Draw Shape\",\"inspectInputs\":[{\"v\":1},{\"v\":1},{\"v\":1},{},{\"v\":1}],\"iname\":\"Draw_Shape73725\",\"type\":\"Node_Shape\"},{\"x\":0,\"y\":-240,\"inputs\":[{\"from_node\":\"gA7Ec4007606XBuGu0PC2n0sfyUuMEhm\",\"from_index\":0},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{\"v\":0},{}],\"outputs\":[{}],\"renamedManual\":true,\"renamed\":true,\"id\":\"gA7Ec5007610V1IVWKfqCgKIHIF8uB2u\",\"version\":120076,\"attriTool\":{},\"name\":\"Blur\",\"inspectInputs\":[{\"v\":1},{\"v\":1},{\"v\":1},{},{\"v\":1}],\"iname\":\"Blur45333\",\"type\":\"Node_Blur\"}]}";</script><button class="copy-sample" onclick="copyToClipboard(sampleContent)">
         Copy to Clipboard
 </button><br><p>Blur node applies gaussian blur uniformly on the image.</p><br>
-<br><h2><a id="Properties" class="anchor"></a>Properties</h2><br>
+<br><br><h2><a id="Properties" class="anchor"></a>Properties</h2><br>
 <h3><a id="Size" class="anchor"></a><span class="junction" style="border-color: #ffe478AA">Size</span></h3><br>
 <p>Blur radius.</p><br>
 <h3><a id="Override Color" class="anchor"></a><span class="junction" style="border-color: #8c3f5dAA">Override Color</span></h3><br>
 <p>When blurring image with transparency, sometimes the edge becomes darker (due to the empty pixel being 
 registered as transparent black). Thus this option can be use to replace the final blur color with one uniform color.</p><br>
-<h2><a id="Blur family" class="anchor"></a>Blur family</h2><br>
+<br><br><h2><a id="Blur family" class="anchor"></a>Blur family</h2><br>
 <p>Blur node is optimized for uniform bluring. For more complex blur, you can check out other nodes in the blur family:</p><br>
 <table class="cc4060">
     <tr>
         <td><a class="node" href="/nodes/_index/Node_Blur.html">Blur</a></td>
-        <td>Basic uniform blur</td>
+        <td>Basic gaussian blur</td>
     </tr>
     <tr>
         <td><a class="node" href="/nodes/_index/Node_Blur_Simple.html">Non-Uniform Blur</a></td>
