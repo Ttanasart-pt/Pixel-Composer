@@ -68,7 +68,7 @@ def parse_md(path):
 
             table_html += "</tr>"
 
-        table_html += "</table>"
+        table_html += "</table><br>"
         data_html = data_html.replace(f"[proptable]{table}[/proptable]", table_html)
 
     reTable = re.compile(r"\[table\]([\s\S]*?)\[\/table\]")
@@ -95,7 +95,7 @@ def parse_md(path):
 
             table_html += "</tr>"
 
-        table_html += "</table>"
+        table_html += "</table><br>"
         data_html = data_html.replace(f"[table]{table}[/table]", table_html)
 
     # make sure that there're 2 <br> before h2
