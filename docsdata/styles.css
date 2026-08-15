@@ -242,10 +242,18 @@ a.anchor {
     background-color: var(--main_dkblack);
 
     z-index: 100;
-}
 
-.header a {
-    margin: 0 16px;
+    a {
+        margin: 0 16px;
+    }
+
+    > a {
+        color: var(--main_ltgrey);
+
+        &:hover {
+            color: var(--accent);
+        }
+    }
 }
 
 .header-title {
