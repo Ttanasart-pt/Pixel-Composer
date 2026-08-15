@@ -734,13 +734,13 @@ div.breadcrumb {
     display: flex;
 
     a {
-        color: var(--main_grey);
-        font-weight: 500;
+        color: var(--main_ltgrey);
+        font-weight: 600;
         font-size: .8rem;
         margin: 4px;
 
         &:hover {
-            color: var(--main_accent);
+            color: var(--accent);
         }
     }
 
