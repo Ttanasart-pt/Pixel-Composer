@@ -100,7 +100,7 @@ def parse_md(path):
 
     # make sure that there're 2 <br> before h2
     reH2 = re.compile(r"(?:<br>)*<h2>")
-    data_html = reH2.sub("<br><br><h2>", data_html)
+    data_html = reH2.sub("<br><h2>", data_html)
 
     with open(target, "a") as f:
         f.write(data_html)
