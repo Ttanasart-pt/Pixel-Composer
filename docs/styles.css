@@ -948,12 +948,17 @@ table.prop-table {
     tr {
         width: 100%;
         display: table;
+
+        .prop-section-row {
+            height: 1.5rem;
+        }
     }
 
     td.prop-section, td.prop-section > p {
         font-weight: 600;
         font-size: 0.9rem;
         color: var(--main_ltgrey);
+        padding: 0px;
     }
 
     td:nth-child(2) {

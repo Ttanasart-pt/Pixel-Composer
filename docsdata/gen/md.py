@@ -48,13 +48,14 @@ def parse_md(path):
             row = row.replace("<p>", "").replace("</p>", "")
             # print(f"row: {row}")
 
-            table_html += "<tr>"
             cells = row.split("|")
             amo   = len(cells)
 
             if amo == 1:
+                table_html += "<tr class='prop-section-row'>"
                 table_html += f"<td colspan='2' class='prop-section'>{cells[0].strip()}</td>"
             else:
+                table_html += "<tr>"
                 for i, cell in enumerate(cells):
                     cel = cell.strip()
                     if cel == "":
