@@ -252,6 +252,11 @@ a.anchor {
     margin: 0;
     padding-left: 8px;
 
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    
     > a {
         margin: 0;
         
@@ -732,14 +737,15 @@ div.breadcrumb {
         color: var(--main_grey);
         font-weight: 500;
         font-size: .8rem;
+        margin: 4px;
 
         &:hover {
-            color: var(--main_white);
+            color: var(--main_accent);
         }
     }
 
     .breadcrumb-separator {
-        margin: 0px 6px;
+        margin: 0px 4px;
         width: 10px;
         height: auto;
         background: url("/src/svg/arrow_right.svg") no-repeat center;
