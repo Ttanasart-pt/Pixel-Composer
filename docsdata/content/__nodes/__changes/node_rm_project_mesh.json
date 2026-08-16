@@ -1,0 +1,12 @@
+[
+  {
+    "version": "1.21.8.009",
+    "changes": [
+      {
+        "date": "2026-08-16T00:27:49.379Z",
+        "node": "",
+        "commit": "--replace buffer seek-io with peek, poke"
+      }
+    ]
+  }
+]
