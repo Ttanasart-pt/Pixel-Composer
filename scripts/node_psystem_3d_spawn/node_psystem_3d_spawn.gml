@@ -340,59 +340,59 @@ function Node_pSystem_3D_Spawn(_x, _y, _group = noone) : Node_3D(_x, _y, _group)
 			
 			var _start = partPool.cursor * global.pSystem_data_length;
 			
-			buffer_write_at( _partBuff, _start + PSYSTEM_OFF.active, buffer_bool, true );
-			buffer_write_at( _partBuff, _start + PSYSTEM_OFF.sindex, buffer_u32,  spawn_index );
+			buffer_poke( _partBuff, _start + PSYSTEM_OFF.active, buffer_bool, true );
+			buffer_poke( _partBuff, _start + PSYSTEM_OFF.sindex, buffer_u32,  spawn_index );
 			
-			buffer_write_at( _partBuff, _start + PSYSTEM_OFF.posx,   buffer_f64, _px     );
-			buffer_write_at( _partBuff, _start + PSYSTEM_OFF.posy,   buffer_f64, _py     );
-			buffer_write_at( _partBuff, _start + PSYSTEM_OFF.posz,   buffer_f64, _pz     );
+			buffer_poke( _partBuff, _start + PSYSTEM_OFF.posx,   buffer_f64, _px     );
+			buffer_poke( _partBuff, _start + PSYSTEM_OFF.posy,   buffer_f64, _py     );
+			buffer_poke( _partBuff, _start + PSYSTEM_OFF.posz,   buffer_f64, _pz     );
 			
-			buffer_write_at( _partBuff, _start + PSYSTEM_OFF.scax,   buffer_f64, _sx     );
-			buffer_write_at( _partBuff, _start + PSYSTEM_OFF.scay,   buffer_f64, _sy     );
-			buffer_write_at( _partBuff, _start + PSYSTEM_OFF.scaz,   buffer_f64, _sz     );
+			buffer_poke( _partBuff, _start + PSYSTEM_OFF.scax,   buffer_f64, _sx     );
+			buffer_poke( _partBuff, _start + PSYSTEM_OFF.scay,   buffer_f64, _sy     );
+			buffer_poke( _partBuff, _start + PSYSTEM_OFF.scaz,   buffer_f64, _sz     );
 			
-			buffer_write_at( _partBuff, _start + PSYSTEM_OFF.rotx,    buffer_f64, _rx    );
-			buffer_write_at( _partBuff, _start + PSYSTEM_OFF.rotx,    buffer_f64, _ry    );
-			buffer_write_at( _partBuff, _start + PSYSTEM_OFF.rotx,    buffer_f64, _rz    );
+			buffer_poke( _partBuff, _start + PSYSTEM_OFF.rotx,    buffer_f64, _rx    );
+			buffer_poke( _partBuff, _start + PSYSTEM_OFF.rotx,    buffer_f64, _ry    );
+			buffer_poke( _partBuff, _start + PSYSTEM_OFF.rotx,    buffer_f64, _rz    );
 			
-			buffer_write_at( _partBuff, _start + PSYSTEM_OFF.life,   buffer_f64, _lif    );
-			buffer_write_at( _partBuff, _start + PSYSTEM_OFF.mlife,  buffer_f64, _lifMax );
+			buffer_poke( _partBuff, _start + PSYSTEM_OFF.life,   buffer_f64, _lif    );
+			buffer_poke( _partBuff, _start + PSYSTEM_OFF.mlife,  buffer_f64, _lifMax );
 			
-			buffer_write_at( _partBuff, _start + PSYSTEM_OFF.surf,   buffer_f64, _surf   );
-			buffer_write_at( _partBuff, _start + PSYSTEM_OFF.blnr,   buffer_u8,  _bldR   );
-			buffer_write_at( _partBuff, _start + PSYSTEM_OFF.blng,   buffer_u8,  _bldG   );
-			buffer_write_at( _partBuff, _start + PSYSTEM_OFF.blnb,   buffer_u8,  _bldB   );
-			buffer_write_at( _partBuff, _start + PSYSTEM_OFF.blna,   buffer_u8,  _bldA   );
+			buffer_poke( _partBuff, _start + PSYSTEM_OFF.surf,   buffer_f64, _surf   );
+			buffer_poke( _partBuff, _start + PSYSTEM_OFF.blnr,   buffer_u8,  _bldR   );
+			buffer_poke( _partBuff, _start + PSYSTEM_OFF.blng,   buffer_u8,  _bldG   );
+			buffer_poke( _partBuff, _start + PSYSTEM_OFF.blnb,   buffer_u8,  _bldB   );
+			buffer_poke( _partBuff, _start + PSYSTEM_OFF.blna,   buffer_u8,  _bldA   );
 			
-			buffer_write_at( _partBuff, _start + PSYSTEM_OFF.blnsr,  buffer_u8,  _bldR   );
-			buffer_write_at( _partBuff, _start + PSYSTEM_OFF.blnsg,  buffer_u8,  _bldG   );
-			buffer_write_at( _partBuff, _start + PSYSTEM_OFF.blnsb,  buffer_u8,  _bldB   );
-			buffer_write_at( _partBuff, _start + PSYSTEM_OFF.blnsa,  buffer_u8,  _bldA   );
+			buffer_poke( _partBuff, _start + PSYSTEM_OFF.blnsr,  buffer_u8,  _bldR   );
+			buffer_poke( _partBuff, _start + PSYSTEM_OFF.blnsg,  buffer_u8,  _bldG   );
+			buffer_poke( _partBuff, _start + PSYSTEM_OFF.blnsb,  buffer_u8,  _bldB   );
+			buffer_poke( _partBuff, _start + PSYSTEM_OFF.blnsa,  buffer_u8,  _bldA   );
 			
-			buffer_write_at( _partBuff, _start + PSYSTEM_OFF.possx,  buffer_f64, _px     );
-			buffer_write_at( _partBuff, _start + PSYSTEM_OFF.possy,  buffer_f64, _py     );
-			buffer_write_at( _partBuff, _start + PSYSTEM_OFF.possz,  buffer_f64, _pz     );
+			buffer_poke( _partBuff, _start + PSYSTEM_OFF.possx,  buffer_f64, _px     );
+			buffer_poke( _partBuff, _start + PSYSTEM_OFF.possy,  buffer_f64, _py     );
+			buffer_poke( _partBuff, _start + PSYSTEM_OFF.possz,  buffer_f64, _pz     );
 			
-			buffer_write_at( _partBuff, _start + PSYSTEM_OFF.pospx,  buffer_f64, _px     );
-			buffer_write_at( _partBuff, _start + PSYSTEM_OFF.pospy,  buffer_f64, _py     );
-			buffer_write_at( _partBuff, _start + PSYSTEM_OFF.pospz,  buffer_f64, _pz     );
+			buffer_poke( _partBuff, _start + PSYSTEM_OFF.pospx,  buffer_f64, _px     );
+			buffer_poke( _partBuff, _start + PSYSTEM_OFF.pospy,  buffer_f64, _py     );
+			buffer_poke( _partBuff, _start + PSYSTEM_OFF.pospz,  buffer_f64, _pz     );
 			
-			buffer_write_at( _partBuff, _start + PSYSTEM_OFF.velx,   buffer_f64, _vx     );
-			buffer_write_at( _partBuff, _start + PSYSTEM_OFF.vely,   buffer_f64, _vy     );
-			buffer_write_at( _partBuff, _start + PSYSTEM_OFF.velz,   buffer_f64, _vz     );
+			buffer_poke( _partBuff, _start + PSYSTEM_OFF.velx,   buffer_f64, _vx     );
+			buffer_poke( _partBuff, _start + PSYSTEM_OFF.vely,   buffer_f64, _vy     );
+			buffer_poke( _partBuff, _start + PSYSTEM_OFF.velz,   buffer_f64, _vz     );
 			
-			buffer_write_at( _partBuff, _start + PSYSTEM_OFF.dflag, buffer_u16,  0       );
-			buffer_write_at( _partBuff, _start + PSYSTEM_OFF.dposx, buffer_f64,  0       );
-			buffer_write_at( _partBuff, _start + PSYSTEM_OFF.dposy, buffer_f64,  0       );
-			buffer_write_at( _partBuff, _start + PSYSTEM_OFF.dposz, buffer_f64,  0       );
+			buffer_poke( _partBuff, _start + PSYSTEM_OFF.dflag, buffer_u16,  0       );
+			buffer_poke( _partBuff, _start + PSYSTEM_OFF.dposx, buffer_f64,  0       );
+			buffer_poke( _partBuff, _start + PSYSTEM_OFF.dposy, buffer_f64,  0       );
+			buffer_poke( _partBuff, _start + PSYSTEM_OFF.dposz, buffer_f64,  0       );
 			
-			buffer_write_at( _partBuff, _start + PSYSTEM_OFF.dscax, buffer_f64,  0       );
-			buffer_write_at( _partBuff, _start + PSYSTEM_OFF.dscay, buffer_f64,  0       );
-			buffer_write_at( _partBuff, _start + PSYSTEM_OFF.dscaz, buffer_f64,  0       );
+			buffer_poke( _partBuff, _start + PSYSTEM_OFF.dscax, buffer_f64,  0       );
+			buffer_poke( _partBuff, _start + PSYSTEM_OFF.dscay, buffer_f64,  0       );
+			buffer_poke( _partBuff, _start + PSYSTEM_OFF.dscaz, buffer_f64,  0       );
 			
-			buffer_write_at( _partBuff, _start + PSYSTEM_OFF.drotx, buffer_f64,  0       );
-			buffer_write_at( _partBuff, _start + PSYSTEM_OFF.droty, buffer_f64,  0       );
-			buffer_write_at( _partBuff, _start + PSYSTEM_OFF.drotz, buffer_f64,  0       );
+			buffer_poke( _partBuff, _start + PSYSTEM_OFF.drotx, buffer_f64,  0       );
+			buffer_poke( _partBuff, _start + PSYSTEM_OFF.droty, buffer_f64,  0       );
+			buffer_poke( _partBuff, _start + PSYSTEM_OFF.drotz, buffer_f64,  0       );
 			
 			partPool.cursor    = (partPool.cursor + 1) % partPool.poolSize;
 			partPool.maxCursor = max(partPool.maxCursor, partPool.cursor);
@@ -425,25 +425,25 @@ function Node_pSystem_3D_Spawn(_x, _y, _group = noone) : Node_3D(_x, _y, _group)
 			var _start = _off;
 			_off += global.pSystem_data_length;
 			
-			var _act    = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.active, buffer_bool );
-			var _spwnId = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.sindex, buffer_u32  );
+			var _act    = buffer_peek( _partBuff, _start + PSYSTEM_OFF.active, buffer_bool );
+			var _spwnId = buffer_peek( _partBuff, _start + PSYSTEM_OFF.sindex, buffer_u32  );
 			
-			var _lif    = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.life,   buffer_f64  );
-			var _lifMax = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.mlife,  buffer_f64  );
+			var _lif    = buffer_peek( _partBuff, _start + PSYSTEM_OFF.life,   buffer_f64  );
+			var _lifMax = buffer_peek( _partBuff, _start + PSYSTEM_OFF.mlife,  buffer_f64  );
 			
 			_lif++;
-			buffer_write_at(_partBuff, _start + PSYSTEM_OFF.life,   buffer_f64,  _lif);
+			buffer_poke(_partBuff, _start + PSYSTEM_OFF.life,   buffer_f64,  _lif);
 			if(!_act) continue;
 			
-			var _px  = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.posx,   buffer_f64  );
-			var _py  = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.posy,   buffer_f64  );
-			var _pz  = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.posz,   buffer_f64  );
+			var _px  = buffer_peek( _partBuff, _start + PSYSTEM_OFF.posx,   buffer_f64  );
+			var _py  = buffer_peek( _partBuff, _start + PSYSTEM_OFF.posy,   buffer_f64  );
+			var _pz  = buffer_peek( _partBuff, _start + PSYSTEM_OFF.posz,   buffer_f64  );
 			
-			var _vx  = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.velx,   buffer_f64  );
-			var _vy  = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.vely,   buffer_f64  );
-			var _vz  = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.velz,   buffer_f64  );
+			var _vx  = buffer_peek( _partBuff, _start + PSYSTEM_OFF.velx,   buffer_f64  );
+			var _vy  = buffer_peek( _partBuff, _start + PSYSTEM_OFF.vely,   buffer_f64  );
+			var _vz  = buffer_peek( _partBuff, _start + PSYSTEM_OFF.velz,   buffer_f64  );
 			
-			var _bldsA  = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.blnsa,  buffer_u8   );
+			var _bldsA  = buffer_peek( _partBuff, _start + PSYSTEM_OFF.blnsa,  buffer_u8   );
 			
 			var rat = _lif / max(1, _lifMax - 1);
 			random_set_seed(_seed + _spwnId);
@@ -451,11 +451,11 @@ function Node_pSystem_3D_Spawn(_x, _y, _group = noone) : Node_3D(_x, _y, _group)
 			if(_lif >= _lifMax) {
 				_act = false;
 				
-				var _dfg    = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.dflag,  buffer_u16  );
+				var _dfg    = buffer_peek( _partBuff, _start + PSYSTEM_OFF.dflag,  buffer_u16  );
 				if(bool(_dfg & 0b100)) {
-					var _dpx = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.dposx, buffer_f64  );
-					var _dpy = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.dposy, buffer_f64  );
-					var _dpz = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.dposz, buffer_f64  );
+					var _dpx = buffer_peek( _partBuff, _start + PSYSTEM_OFF.dposx, buffer_f64  );
+					var _dpy = buffer_peek( _partBuff, _start + PSYSTEM_OFF.dposy, buffer_f64  );
+					var _dpz = buffer_peek( _partBuff, _start + PSYSTEM_OFF.dposz, buffer_f64  );
 					
 					buffer_write(destroyTrig, buffer_f64, _dpx);
 					buffer_write(destroyTrig, buffer_f64, _dpy);
@@ -472,18 +472,18 @@ function Node_pSystem_3D_Spawn(_x, _y, _group = noone) : Node_3D(_x, _y, _group)
 				buffer_write(destroyTrig, buffer_f64, _vz);
 				
 				destroyCount++;
-				buffer_write_at(_partBuff, _start + PSYSTEM_OFF.active, buffer_bool, _act);
+				buffer_poke(_partBuff, _start + PSYSTEM_OFF.active, buffer_bool, _act);
 				
 				continue;
 			}
 			
-			buffer_write_at(_partBuff, _start + PSYSTEM_OFF.posx,   buffer_f64,  _px + _vx);
-			buffer_write_at(_partBuff, _start + PSYSTEM_OFF.posy,   buffer_f64,  _py + _vy);
-			buffer_write_at(_partBuff, _start + PSYSTEM_OFF.posz,   buffer_f64,  _pz + _vz);
+			buffer_poke(_partBuff, _start + PSYSTEM_OFF.posx,   buffer_f64,  _px + _vx);
+			buffer_poke(_partBuff, _start + PSYSTEM_OFF.posy,   buffer_f64,  _py + _vy);
+			buffer_poke(_partBuff, _start + PSYSTEM_OFF.posz,   buffer_f64,  _pz + _vz);
 			
-			buffer_write_at(_partBuff, _start + PSYSTEM_OFF.pospx,  buffer_f64,  _px);
-			buffer_write_at(_partBuff, _start + PSYSTEM_OFF.pospy,  buffer_f64,  _py);
-			buffer_write_at(_partBuff, _start + PSYSTEM_OFF.pospz,  buffer_f64,  _pz);
+			buffer_poke(_partBuff, _start + PSYSTEM_OFF.pospx,  buffer_f64,  _px);
+			buffer_poke(_partBuff, _start + PSYSTEM_OFF.pospy,  buffer_f64,  _py);
+			buffer_poke(_partBuff, _start + PSYSTEM_OFF.pospz,  buffer_f64,  _pz);
 			 
 			var _step_mod = _step_curved? curve_step.get(rat) : 1;
 			var _step_cur = round(random_range(_step[0], _step[1]) * _step_mod);
@@ -609,9 +609,9 @@ function Node_pSystem_3D_Spawn(_x, _y, _group = noone) : Node_3D(_x, _y, _group)
 			if(_do_spawn) spawn(_frame);
 		}
 		
-		buffer_write_at(spawnTrig,   0, buffer_u32, spawnCount);
-		buffer_write_at(stepTrig,    0, buffer_u32, stepCount);
-		buffer_write_at(destroyTrig, 0, buffer_u32, destroyCount);
+		buffer_poke(spawnTrig,   0, buffer_u32, spawnCount);
+		buffer_poke(stepTrig,    0, buffer_u32, stepCount);
+		buffer_poke(destroyTrig, 0, buffer_u32, destroyCount);
 		
 		_outData[0] = partPool;
 		_outData[1] = spawnTrig;

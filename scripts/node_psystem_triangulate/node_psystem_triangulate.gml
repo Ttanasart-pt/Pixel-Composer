@@ -77,13 +77,13 @@ function Node_pSystem_Triangulate(_x, _y, _group = noone) : Node(_x, _y, _group)
 			_off += global.pSystem_data_length;
 			
 			var _mask   = use_mask? buffer_read(_masks, buffer_f32) : 1; if(_mask <= 0) continue;
-			var _act    = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.active, buffer_bool );
+			var _act    = buffer_peek( _partBuff, _start + PSYSTEM_OFF.active, buffer_bool );
 			if(!_act) continue;
 			
-			var _dfg    = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.dflag,  buffer_u16  );
+			var _dfg    = buffer_peek( _partBuff, _start + PSYSTEM_OFF.dflag,  buffer_u16  );
 			
-			var _draw_x = buffer_read_at( _partBuff, _start + (bool(_dfg & 0b100)? PSYSTEM_OFF.dposx : PSYSTEM_OFF.posx),   buffer_f64  );
-			var _draw_y = buffer_read_at( _partBuff, _start + (bool(_dfg & 0b100)? PSYSTEM_OFF.dposy : PSYSTEM_OFF.posy),   buffer_f64  );
+			var _draw_x = buffer_peek( _partBuff, _start + (bool(_dfg & 0b100)? PSYSTEM_OFF.dposx : PSYSTEM_OFF.posx),   buffer_f64  );
+			var _draw_y = buffer_peek( _partBuff, _start + (bool(_dfg & 0b100)? PSYSTEM_OFF.dposy : PSYSTEM_OFF.posy),   buffer_f64  );
 			
 			_indexMap[_id++] = _i - 1;
 			buffer_write(position_buffer, buffer_f64, _draw_x);
@@ -107,37 +107,37 @@ function Node_pSystem_Triangulate(_x, _y, _group = noone) : Node(_x, _y, _group)
 				var _st2 = global.pSystem_data_length * p2;
 				var _st3 = global.pSystem_data_length * p3;
 				
-				var _dfg     = buffer_read_at( _partBuff, _st1 + PSYSTEM_OFF.dflag,  buffer_u16  );
-				var _draw_x1 = buffer_read_at( _partBuff, _st1 + (bool(_dfg & 0b100)? PSYSTEM_OFF.dposx : PSYSTEM_OFF.posx),   buffer_f64  );
-				var _draw_y1 = buffer_read_at( _partBuff, _st1 + (bool(_dfg & 0b100)? PSYSTEM_OFF.dposy : PSYSTEM_OFF.posy),   buffer_f64  );
-				var _draw_s1 = buffer_read_at( _partBuff, _st1 + PSYSTEM_OFF.dscax,  buffer_f64  );
+				var _dfg     = buffer_peek( _partBuff, _st1 + PSYSTEM_OFF.dflag,  buffer_u16  );
+				var _draw_x1 = buffer_peek( _partBuff, _st1 + (bool(_dfg & 0b100)? PSYSTEM_OFF.dposx : PSYSTEM_OFF.posx),   buffer_f64  );
+				var _draw_y1 = buffer_peek( _partBuff, _st1 + (bool(_dfg & 0b100)? PSYSTEM_OFF.dposy : PSYSTEM_OFF.posy),   buffer_f64  );
+				var _draw_s1 = buffer_peek( _partBuff, _st1 + PSYSTEM_OFF.dscax,  buffer_f64  );
 				
-				var _bldR1   = buffer_read_at( _partBuff, _st1 + PSYSTEM_OFF.blnr, buffer_u8 );
-				var _bldG1   = buffer_read_at( _partBuff, _st1 + PSYSTEM_OFF.blng, buffer_u8 );
-				var _bldB1   = buffer_read_at( _partBuff, _st1 + PSYSTEM_OFF.blnb, buffer_u8 );
-				var _bldA1   = buffer_read_at( _partBuff, _st1 + PSYSTEM_OFF.blna, buffer_u8 );
+				var _bldR1   = buffer_peek( _partBuff, _st1 + PSYSTEM_OFF.blnr, buffer_u8 );
+				var _bldG1   = buffer_peek( _partBuff, _st1 + PSYSTEM_OFF.blng, buffer_u8 );
+				var _bldB1   = buffer_peek( _partBuff, _st1 + PSYSTEM_OFF.blnb, buffer_u8 );
+				var _bldA1   = buffer_peek( _partBuff, _st1 + PSYSTEM_OFF.blna, buffer_u8 );
 				var _cc1     = make_color_rgb(_bldR1, _bldG1, _bldB1);
 				
-				var _dfg     = buffer_read_at( _partBuff, _st2 + PSYSTEM_OFF.dflag,  buffer_u16  );
-				var _draw_x2 = buffer_read_at( _partBuff, _st2 + (bool(_dfg & 0b100)? PSYSTEM_OFF.dposx : PSYSTEM_OFF.posx),   buffer_f64  );
-				var _draw_y2 = buffer_read_at( _partBuff, _st2 + (bool(_dfg & 0b100)? PSYSTEM_OFF.dposy : PSYSTEM_OFF.posy),   buffer_f64  );
-				var _draw_s2 = buffer_read_at( _partBuff, _st2 + PSYSTEM_OFF.dscax,  buffer_f64  );
+				var _dfg     = buffer_peek( _partBuff, _st2 + PSYSTEM_OFF.dflag,  buffer_u16  );
+				var _draw_x2 = buffer_peek( _partBuff, _st2 + (bool(_dfg & 0b100)? PSYSTEM_OFF.dposx : PSYSTEM_OFF.posx),   buffer_f64  );
+				var _draw_y2 = buffer_peek( _partBuff, _st2 + (bool(_dfg & 0b100)? PSYSTEM_OFF.dposy : PSYSTEM_OFF.posy),   buffer_f64  );
+				var _draw_s2 = buffer_peek( _partBuff, _st2 + PSYSTEM_OFF.dscax,  buffer_f64  );
 				
-				var _bldR2   = buffer_read_at( _partBuff, _st2 + PSYSTEM_OFF.blnr, buffer_u8 );
-				var _bldG2   = buffer_read_at( _partBuff, _st2 + PSYSTEM_OFF.blng, buffer_u8 );
-				var _bldB2   = buffer_read_at( _partBuff, _st2 + PSYSTEM_OFF.blnb, buffer_u8 );
-				var _bldA2   = buffer_read_at( _partBuff, _st2 + PSYSTEM_OFF.blna, buffer_u8 );
+				var _bldR2   = buffer_peek( _partBuff, _st2 + PSYSTEM_OFF.blnr, buffer_u8 );
+				var _bldG2   = buffer_peek( _partBuff, _st2 + PSYSTEM_OFF.blng, buffer_u8 );
+				var _bldB2   = buffer_peek( _partBuff, _st2 + PSYSTEM_OFF.blnb, buffer_u8 );
+				var _bldA2   = buffer_peek( _partBuff, _st2 + PSYSTEM_OFF.blna, buffer_u8 );
 				var _cc2     = make_color_rgb(_bldR2, _bldG2, _bldB2);
 				
-				var _dfg     = buffer_read_at( _partBuff, _st3 + PSYSTEM_OFF.dflag,  buffer_u16  );
-				var _draw_x3 = buffer_read_at( _partBuff, _st3 + (bool(_dfg & 0b100)? PSYSTEM_OFF.dposx : PSYSTEM_OFF.posx),   buffer_f64  );
-				var _draw_y3 = buffer_read_at( _partBuff, _st3 + (bool(_dfg & 0b100)? PSYSTEM_OFF.dposy : PSYSTEM_OFF.posy),   buffer_f64  );
-				var _draw_s3 = buffer_read_at( _partBuff, _st3 + PSYSTEM_OFF.dscax,  buffer_f64  );
+				var _dfg     = buffer_peek( _partBuff, _st3 + PSYSTEM_OFF.dflag,  buffer_u16  );
+				var _draw_x3 = buffer_peek( _partBuff, _st3 + (bool(_dfg & 0b100)? PSYSTEM_OFF.dposx : PSYSTEM_OFF.posx),   buffer_f64  );
+				var _draw_y3 = buffer_peek( _partBuff, _st3 + (bool(_dfg & 0b100)? PSYSTEM_OFF.dposy : PSYSTEM_OFF.posy),   buffer_f64  );
+				var _draw_s3 = buffer_peek( _partBuff, _st3 + PSYSTEM_OFF.dscax,  buffer_f64  );
 				
-				var _bldR3   = buffer_read_at( _partBuff, _st3 + PSYSTEM_OFF.blnr, buffer_u8 );
-				var _bldG3   = buffer_read_at( _partBuff, _st3 + PSYSTEM_OFF.blng, buffer_u8 );
-				var _bldB3   = buffer_read_at( _partBuff, _st3 + PSYSTEM_OFF.blnb, buffer_u8 );
-				var _bldA3   = buffer_read_at( _partBuff, _st3 + PSYSTEM_OFF.blna, buffer_u8 );
+				var _bldR3   = buffer_peek( _partBuff, _st3 + PSYSTEM_OFF.blnr, buffer_u8 );
+				var _bldG3   = buffer_peek( _partBuff, _st3 + PSYSTEM_OFF.blng, buffer_u8 );
+				var _bldB3   = buffer_peek( _partBuff, _st3 + PSYSTEM_OFF.blnb, buffer_u8 );
+				var _bldA3   = buffer_peek( _partBuff, _st3 + PSYSTEM_OFF.blna, buffer_u8 );
 				var _cc3     = make_color_rgb(_bldR3, _bldG3, _bldB3);
 				
 				var _thck_base = random_range(_thck[0], _thck[1]);

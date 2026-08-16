@@ -132,21 +132,21 @@ function Node_pSystem_Wiggle(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 			_off += global.pSystem_data_length;
 			
 			var _mask   = use_mask? buffer_read(_masks, buffer_f32) : 1; if(_mask <= 0) continue;
-			var _act    = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.active, buffer_bool );
-			var _stat   = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.stat,   buffer_bool );
-			var _spwnId = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.sindex, buffer_u32  );
+			var _act    = buffer_peek( _partBuff, _start + PSYSTEM_OFF.active, buffer_bool );
+			var _stat   = buffer_peek( _partBuff, _start + PSYSTEM_OFF.stat,   buffer_bool );
+			var _spwnId = buffer_peek( _partBuff, _start + PSYSTEM_OFF.sindex, buffer_u32  );
 			if(!_act) continue;
 			
-			var _lif    = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.life,   buffer_f64  );
-			var _lifMax = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.mlife,  buffer_f64  );
+			var _lif    = buffer_peek( _partBuff, _start + PSYSTEM_OFF.life,   buffer_f64  );
+			var _lifMax = buffer_peek( _partBuff, _start + PSYSTEM_OFF.mlife,  buffer_f64  );
 			
 			var rat = _stat? (_frame + _lif + _spwnId * _lifMax) / TOTAL_FRAMES : _lif / max(1, _lifMax - 1);
 			    rat = clamp(rat, 0, 1);
 			random_set_seed(_seed + _spwnId);
 			
 			if(_pos_use) {
-				var _px = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.posx,   buffer_f64  );
-				var _py = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.posy,   buffer_f64  );
+				var _px = buffer_peek( _partBuff, _start + PSYSTEM_OFF.posx,   buffer_f64  );
+				var _py = buffer_peek( _partBuff, _start + PSYSTEM_OFF.posy,   buffer_f64  );
 			
 				var _pos_mod = _pos_curved? curve_pos.get(rat) : 1;
 				var _pos_cur = random_range(_pos_amp[0], _pos_amp[1]) * _pos_mod * _mask;
@@ -154,24 +154,24 @@ function Node_pSystem_Wiggle(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 				_px  += wig_psx.getDelta(_seed + _lif) * _pos_cur * _mask;
 				_py  += wig_psy.getDelta(_seed + _lif) * _pos_cur * _mask;
 				
-				buffer_write_at( _partBuff, _start + PSYSTEM_OFF.posx, buffer_f64, _px  );
-				buffer_write_at( _partBuff, _start + PSYSTEM_OFF.posy, buffer_f64, _py  );
+				buffer_poke( _partBuff, _start + PSYSTEM_OFF.posx, buffer_f64, _px  );
+				buffer_poke( _partBuff, _start + PSYSTEM_OFF.posy, buffer_f64, _py  );
 			}
 			
 			if(_rot_use) {
-				var _rot = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.rotx,    buffer_f64  );
+				var _rot = buffer_peek( _partBuff, _start + PSYSTEM_OFF.rotx,    buffer_f64  );
 				
 				var _rot_mod = _rot_curved? curve_rot.get(rat) : 1;
 				var _rot_cur = random_range(_rot_amp[0], _rot_amp[1]) * _rot_mod * _mask;
 				
 				_rot += wig_rot.getDelta(_seed + _lif) * _rot_cur * _mask;
 				
-				buffer_write_at( _partBuff, _start + PSYSTEM_OFF.rotx,  buffer_f64, _rot );
+				buffer_poke( _partBuff, _start + PSYSTEM_OFF.rotx,  buffer_f64, _rot );
 			}
 			
 			if(_sca_use) {
-				var _sx = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.scax,   buffer_f64  );
-				var _sy = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.scay,   buffer_f64  );
+				var _sx = buffer_peek( _partBuff, _start + PSYSTEM_OFF.scax,   buffer_f64  );
+				var _sy = buffer_peek( _partBuff, _start + PSYSTEM_OFF.scay,   buffer_f64  );
 				
 				var _sca_mod = _sca_curved? curve_sca.get(rat) : 1;
 				var _sca_cur = random_range(_sca_amp[0], _sca_amp[1]) * _sca_mod * _mask;
@@ -179,13 +179,13 @@ function Node_pSystem_Wiggle(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 				_sx += wig_scy.getDelta(_seed + _lif) * _sca_cur * _mask;
 				_sy += wig_scy.getDelta(_seed + _lif) * _sca_cur * _mask;
 				
-				buffer_write_at( _partBuff, _start + PSYSTEM_OFF.dscax, buffer_f64, _sx  );
-				buffer_write_at( _partBuff, _start + PSYSTEM_OFF.dscay, buffer_f64, _sy  );
+				buffer_poke( _partBuff, _start + PSYSTEM_OFF.dscax, buffer_f64, _sx  );
+				buffer_poke( _partBuff, _start + PSYSTEM_OFF.dscay, buffer_f64, _sy  );
 			}
 			
 			if(_dir_use) {
-				var _vx = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.velx,   buffer_f64  );
-				var _vy = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.vely,   buffer_f64  );
+				var _vx = buffer_peek( _partBuff, _start + PSYSTEM_OFF.velx,   buffer_f64  );
+				var _vy = buffer_peek( _partBuff, _start + PSYSTEM_OFF.vely,   buffer_f64  );
 			
 				var _dir_mod = _dir_curved? curve_dir.get(rat) : 1;
 				var _dir_cur = random_range(_dir_amp[0], _dir_amp[1]) * _dir_mod * _mask;
@@ -197,8 +197,8 @@ function Node_pSystem_Wiggle(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 				_vx = lengthdir_x( _dis, _dir );
 				_vy = lengthdir_y( _dis, _dir );
 				
-				buffer_write_at( _partBuff, _start + PSYSTEM_OFF.velx, buffer_f64, _vx  );
-				buffer_write_at( _partBuff, _start + PSYSTEM_OFF.vely, buffer_f64, _vy  );
+				buffer_poke( _partBuff, _start + PSYSTEM_OFF.velx, buffer_f64, _vx  );
+				buffer_poke( _partBuff, _start + PSYSTEM_OFF.vely, buffer_f64, _vy  );
 			}
 		}
 		

@@ -1,13 +1,14 @@
 
 	////- Check
 	
-function directory_verify(path) {
-	var _d = path;
-	var _v = ds_stack_create();
+function directory_verify(path, maxDepth = -1) {
+	var _d   = path;
+	var _v   = ds_stack_create();
 	
 	while(!directory_exists(_d)) {
 		ds_stack_push(_v, _d);
 		_d = filename_dir(_d);
+		if(maxDepth-- == 0) break;
 	}
 	
 	repeat(ds_stack_size(_v)) 

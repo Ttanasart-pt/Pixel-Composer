@@ -13,7 +13,7 @@
   "classname":"",
   "ConfigValues":{
     "Itch":{
-      "copyToTargets":"192",
+      "copyToTargets":"194",
     },
     "Steam":{
       "copyToTargets":"194",
@@ -24,7 +24,11 @@
   "exportToGame":true,
   "extensionVersion":"1.0.0",
   "files":[
-    {"$GMExtensionFile":"v1","%Name":"libdlgmod.dll","ConfigValues":{"Itch":{"copyToTargets":"192",},},"constants":[
+    {"$GMExtensionFile":"v1","%Name":"libdlgmod.dll","ConfigValues":{
+        "Itch":{
+          "copyToTargets":"194",
+        },
+      },"constants":[
         {"$GMExtensionConstant":"","%Name":"ws_win32","hidden":false,"name":"ws_win32","resourceType":"GMExtensionConstant","resourceVersion":"2.0","value":"\"Win32\"",},
         {"$GMExtensionConstant":"","%Name":"ws_cocoa","hidden":false,"name":"ws_cocoa","resourceType":"GMExtensionConstant","resourceVersion":"2.0","value":"\"Cocoa\"",},
         {"$GMExtensionConstant":"","%Name":"ws_x11_zenity","hidden":false,"name":"ws_x11_zenity","resourceType":"GMExtensionConstant","resourceVersion":"2.0","value":"\"Zenity\"",},

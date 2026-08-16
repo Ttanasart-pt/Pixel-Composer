@@ -151,7 +151,14 @@
         {"$GMProxyFile":"","%Name":"libfilesystem.so","name":"libfilesystem.so","resourceType":"GMProxyFile","resourceVersion":"2.0","TargetMask":7,},
       ],"resourceType":"GMExtensionFile","resourceVersion":"2.0","uncompress":false,"usesRunnerInterface":false,},
     {"$GMExtensionFile":"v1","%Name":"libfilesystem.zip","constants":[],"copyToTargets":0,"filename":"libfilesystem.zip","final":"","functions":[],"init":"","kind":4,"name":"libfilesystem.zip","origname":"extensions\\libfilesystem.zip","ProxyFiles":[],"resourceType":"GMExtensionFile","resourceVersion":"2.0","uncompress":false,"usesRunnerInterface":false,},
-    {"$GMExtensionFile":"v1","%Name":"libfilesystem.gml","constants":[],"copyToTargets":194,"filename":"libfilesystem.gml","final":"","functions":[
+    {"$GMExtensionFile":"v1","%Name":"libfilesystem.gml","ConfigValues":{
+        "Itch":{
+          "copyToTargets":"192",
+        },
+        "Steam":{
+          "copyToTargets":"192",
+        },
+      },"constants":[],"copyToTargets":194,"filename":"libfilesystem.gml","final":"","functions":[
         {"$GMExtensionFunction":"","%Name":"generate_working_directory","argCount":0,"args":[],"documentation":"","externalName":"generate_working_directory","help":"","hidden":false,"kind":2,"name":"generate_working_directory","resourceType":"GMExtensionFunction","resourceVersion":"2.0","returnType":1,},
       ],"init":"generate_working_directory","kind":2,"name":"libfilesystem.gml","origname":"","ProxyFiles":[],"resourceType":"GMExtensionFile","resourceVersion":"2.0","uncompress":false,"usesRunnerInterface":false,},
   ],

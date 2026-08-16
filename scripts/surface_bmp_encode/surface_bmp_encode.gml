@@ -82,8 +82,8 @@ function surface_bmp_encode(surface, path, param = {}) {
     }
     
     var total_size = buffer_tell(b);
-    buffer_write_at(b,  2, buffer_u32, total_size);
-    buffer_write_at(b, 34, buffer_u32, bitmap_size);
+    buffer_poke(b,  2, buffer_u32, total_size);
+    buffer_poke(b, 34, buffer_u32, bitmap_size);
     
     buffer_save(b, path);
     buffer_delete(b );

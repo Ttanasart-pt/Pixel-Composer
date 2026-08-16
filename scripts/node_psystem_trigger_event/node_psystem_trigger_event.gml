@@ -67,13 +67,13 @@ function Node_pSystem_Trigger_Event(_x, _y, _group = noone) : Node(_x, _y, _grou
 			_off += global.pSystem_data_length;
 			
 			var _mask   = use_mask? buffer_read(_masks, buffer_f32) : 1; if(_mask <= 0) continue;
-			var _act    = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.active, buffer_bool );
-			var _stat   = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.stat,   buffer_bool );
-			var _spwnId = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.sindex, buffer_u32  );
+			var _act    = buffer_peek( _partBuff, _start + PSYSTEM_OFF.active, buffer_bool );
+			var _stat   = buffer_peek( _partBuff, _start + PSYSTEM_OFF.stat,   buffer_bool );
+			var _spwnId = buffer_peek( _partBuff, _start + PSYSTEM_OFF.sindex, buffer_u32  );
 			if(!_act) continue;
 				
-			var _lif    = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.life,   buffer_f64  );
-			var _lifMax = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.mlife,  buffer_f64  );
+			var _lif    = buffer_peek( _partBuff, _start + PSYSTEM_OFF.life,   buffer_f64  );
+			var _lifMax = buffer_peek( _partBuff, _start + PSYSTEM_OFF.mlife,  buffer_f64  );
 					
 			var rat = _stat? (_frame + _lif + _spwnId * _lifMax) / TOTAL_FRAMES : _lif / max(1, _lifMax - 1);
 			    rat = clamp(rat, 0, 1);
@@ -86,12 +86,12 @@ function Node_pSystem_Trigger_Event(_x, _y, _group = noone) : Node(_x, _y, _grou
 			var _chan_cur = random_range(_chan[0], _chan[1]) * _chan_mod * _mask;
 			
 			if((_step_cur == 0 || _lif % _step_cur == 0) && random(1) <= _chan_cur) {
-				var _dfg      = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.dflag,  buffer_u16  );
-				var _draw_x   = buffer_read_at( _partBuff, _start + (bool(_dfg & 0b100)? PSYSTEM_OFF.dposx : PSYSTEM_OFF.posx), buffer_f64 );
-				var _draw_y   = buffer_read_at( _partBuff, _start + (bool(_dfg & 0b100)? PSYSTEM_OFF.dposy : PSYSTEM_OFF.posy), buffer_f64 );
+				var _dfg      = buffer_peek( _partBuff, _start + PSYSTEM_OFF.dflag,  buffer_u16  );
+				var _draw_x   = buffer_peek( _partBuff, _start + (bool(_dfg & 0b100)? PSYSTEM_OFF.dposx : PSYSTEM_OFF.posx), buffer_f64 );
+				var _draw_y   = buffer_peek( _partBuff, _start + (bool(_dfg & 0b100)? PSYSTEM_OFF.dposy : PSYSTEM_OFF.posy), buffer_f64 );
 				
-				var _vx = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.velx, buffer_f64  );
-				var _vy = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.vely, buffer_f64  );
+				var _vx = buffer_peek( _partBuff, _start + PSYSTEM_OFF.velx, buffer_f64  );
+				var _vy = buffer_peek( _partBuff, _start + PSYSTEM_OFF.vely, buffer_f64  );
 						
 				buffer_write(stepTrig, buffer_f64, _draw_x);
 				buffer_write(stepTrig, buffer_f64, _draw_y);
@@ -104,7 +104,7 @@ function Node_pSystem_Trigger_Event(_x, _y, _group = noone) : Node(_x, _y, _grou
 			}
 		}
 		
-		buffer_write_at(stepTrig, 0, buffer_u32, stepCount);
+		buffer_poke(stepTrig, 0, buffer_u32, stepCount);
 		outputs[0].setValue(stepTrig);
 	}
 	

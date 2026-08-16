@@ -117,28 +117,30 @@ function Node_pSystem_3D_Trail_Mesh(_x, _y, _group = noone) : Node_3D(_x, _y, _g
 			var _start = _off;
 			_off += global.pSystem_data_length;
 			
-			var _act    = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.active, buffer_bool );
-			var _spwnId = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.sindex, buffer_u32  );
-			var _lif    = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.life,   buffer_f64  );
+			var _act    = buffer_peek( _partBuff, _start + PSYSTEM_OFF.active, buffer_bool );
+			var _spwnId = buffer_peek( _partBuff, _start + PSYSTEM_OFF.sindex, buffer_u32  );
+			var _lif    = buffer_peek( _partBuff, _start + PSYSTEM_OFF.life,   buffer_f64  );
 			
 			if(!_act) continue;
 			
-			var _dfg    = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.dflag,  buffer_u16  );
-			var _dx     = buffer_read_at( _partBuff, _start + (bool(_dfg & 0b100)? PSYSTEM_OFF.dposx : PSYSTEM_OFF.posx), buffer_f64  );
-			var _dy     = buffer_read(    _partBuff, buffer_f64  );
-			var _dz     = buffer_read(    _partBuff, buffer_f64  );
+			var _dfg    = buffer_peek( _partBuff, _start + PSYSTEM_OFF.dflag,  buffer_u16  );
+			var _dx     = buffer_peek( _partBuff, _start + (bool(_dfg & 0b100)? PSYSTEM_OFF.dposx : PSYSTEM_OFF.posx), buffer_f64  );
+			var _dy     = buffer_peek( _partBuff, _start + (bool(_dfg & 0b100)? PSYSTEM_OFF.dposy : PSYSTEM_OFF.posy), buffer_f64  );
+			var _dz     = buffer_peek( _partBuff, _start + (bool(_dfg & 0b100)? PSYSTEM_OFF.dposz : PSYSTEM_OFF.posz), buffer_f64  );
 			
-			var _cc     = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.blnr,   buffer_u32  );
+			var _cc     = buffer_peek( _partBuff, _start + PSYSTEM_OFF.blnr,   buffer_u32  );
 			
 			var _buffOffStart = _bufDatLen * _spwnId;
 			var _buffInd = _lif % _lenMax;
 			var _buffOff = _buffOffStart + 2 + _buffInd * buffer_data_size;
 			
-			buffer_write_at( trail_buffer, _buffOffStart, buffer_u16, _lif);
-			buffer_write_at( trail_buffer, _buffOff, buffer_f64, _dx);
-			buffer_write(    trail_buffer,           buffer_f64, _dy);
-			buffer_write(    trail_buffer,           buffer_f64, _dz);
-			buffer_write(    trail_buffer,           buffer_u32, _cc);
+			buffer_poke( trail_buffer, _buffOffStart, buffer_u16, _lif);
+			buffer_poke( trail_buffer, _buffOff, buffer_f64, _dx);
+			
+			buffer_seek(  trail_buffer, buffer_seek_start, _buffOff );
+			buffer_write( trail_buffer, buffer_f64, _dy);
+			buffer_write( trail_buffer, buffer_f64, _dz);
+			buffer_write( trail_buffer, buffer_u32, _cc);
 		}
 		
 		if(!is(inline_context, Node_pSystem_3D_Inline) || inline_context.prerendering) return;
@@ -158,13 +160,13 @@ function Node_pSystem_3D_Trail_Mesh(_x, _y, _group = noone) : Node_3D(_x, _y, _g
 			_off += global.pSystem_data_length;
 			
 			var _mask   = use_mask? buffer_read(_masks, buffer_f32) : 1; if(_mask <= 0) continue;
-			var _act    = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.active, buffer_bool );
-			var _lif    = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.life,   buffer_f64  );
+			var _act    = buffer_peek( _partBuff, _start + PSYSTEM_OFF.active, buffer_bool );
+			var _lif    = buffer_peek( _partBuff, _start + PSYSTEM_OFF.life,   buffer_f64  );
 			
 			if(!_act && _lif == 0) continue;
 			
-			var _spwnId = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.sindex, buffer_u32  );
-			var _lifMax = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.mlife,  buffer_f64  );
+			var _spwnId = buffer_peek( _partBuff, _start + PSYSTEM_OFF.sindex, buffer_u32  );
+			var _lifMax = buffer_peek( _partBuff, _start + PSYSTEM_OFF.mlife,  buffer_f64  );
 			
 			var rat = clamp(_lif / max(1, _lifMax - 1), 0, 1);
 			var _fram_mod = _fram_curved? curve_fram.get(rat) : 1;
@@ -193,10 +195,12 @@ function Node_pSystem_3D_Trail_Mesh(_x, _y, _group = noone) : Node_3D(_x, _y, _g
 				var _buffInd = _posIndx % _lenMax;
 				var _buffOff = _buffOffStart + 2 + _buffInd * buffer_data_size;
 				
-				nx = buffer_read_at( trail_buffer, _buffOff, buffer_f64 );
-				ny = buffer_read(    trail_buffer,           buffer_f64 );
-				nz = buffer_read(    trail_buffer,           buffer_f64 );
-				nc = buffer_read(    trail_buffer,           buffer_u32 );
+				buffer_seek( trail_buffer, buffer_seek_start, _buffOff );
+				
+				nx = buffer_read( trail_buffer, buffer_f64 );
+				ny = buffer_read( trail_buffer, buffer_f64 );
+				nz = buffer_read( trail_buffer, buffer_f64 );
+				nc = buffer_read( trail_buffer, buffer_u32 );
 				
 				if(_segI) {
 					var dx = nx - ox;

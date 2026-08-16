@@ -36,25 +36,25 @@ function Surface_sampler(s = noone) constructor {
     
     setSurface(s);
     
-    static getPixelF16 = function(_x,_y) /*=>*/ {return buffer_read_at(buffer, (clamp(round(_y), 0, sh - 1) * sw + clamp(round(_x), 0, sw - 1)) * 2, buffer_f16)};
-    static getPixelF32 = function(_x,_y) /*=>*/ {return buffer_read_at(buffer, (clamp(round(_y), 0, sh - 1) * sw + clamp(round(_x), 0, sw - 1)) * 4, buffer_f32)};
+    static getPixelF16 = function(_x,_y) /*=>*/ {return buffer_peek(buffer, (clamp(round(_y), 0, sh - 1) * sw + clamp(round(_x), 0, sw - 1)) * 2, buffer_f16)};
+    static getPixelF32 = function(_x,_y) /*=>*/ {return buffer_peek(buffer, (clamp(round(_y), 0, sh - 1) * sw + clamp(round(_x), 0, sw - 1)) * 4, buffer_f32)};
     
-    static getPixelU8  = function(_x,_y) /*=>*/ {return buffer_read_at(buffer, (clamp(round(_y), 0, sh - 1) * sw + clamp(round(_x), 0, sw - 1)) * 1, buffer_u8)};
-    static getPixelU16 = function(_x,_y) /*=>*/ {return buffer_read_at(buffer, (clamp(round(_y), 0, sh - 1) * sw + clamp(round(_x), 0, sw - 1)) * 2, buffer_u16)};
-    static getPixelU32 = function(_x,_y) /*=>*/ {return buffer_read_at(buffer, (clamp(round(_y), 0, sh - 1) * sw + clamp(round(_x), 0, sw - 1)) * 4, buffer_u32)};
+    static getPixelU8  = function(_x,_y) /*=>*/ {return buffer_peek(buffer, (clamp(round(_y), 0, sh - 1) * sw + clamp(round(_x), 0, sw - 1)) * 1, buffer_u8)};
+    static getPixelU16 = function(_x,_y) /*=>*/ {return buffer_peek(buffer, (clamp(round(_y), 0, sh - 1) * sw + clamp(round(_x), 0, sw - 1)) * 2, buffer_u16)};
+    static getPixelU32 = function(_x,_y) /*=>*/ {return buffer_peek(buffer, (clamp(round(_y), 0, sh - 1) * sw + clamp(round(_x), 0, sw - 1)) * 4, buffer_u32)};
     
     static getPixel4F16 = function(_x,_y) /*=>*/ {return [
-        buffer_read_at(buffer, (clamp(round(_y), 0, sh - 1) * sw + clamp(round(_x), 0, sw - 1)) * 8 + 0, buffer_f16),
-        buffer_read_at(buffer, (clamp(round(_y), 0, sh - 1) * sw + clamp(round(_x), 0, sw - 1)) * 8 + 2, buffer_f16),
-        buffer_read_at(buffer, (clamp(round(_y), 0, sh - 1) * sw + clamp(round(_x), 0, sw - 1)) * 8 + 4, buffer_f16),
-        buffer_read_at(buffer, (clamp(round(_y), 0, sh - 1) * sw + clamp(round(_x), 0, sw - 1)) * 8 + 6, buffer_f16),
+        buffer_peek(buffer, (clamp(round(_y), 0, sh - 1) * sw + clamp(round(_x), 0, sw - 1)) * 8 + 0, buffer_f16),
+        buffer_peek(buffer, (clamp(round(_y), 0, sh - 1) * sw + clamp(round(_x), 0, sw - 1)) * 8 + 2, buffer_f16),
+        buffer_peek(buffer, (clamp(round(_y), 0, sh - 1) * sw + clamp(round(_x), 0, sw - 1)) * 8 + 4, buffer_f16),
+        buffer_peek(buffer, (clamp(round(_y), 0, sh - 1) * sw + clamp(round(_x), 0, sw - 1)) * 8 + 6, buffer_f16),
     ]};
     
     static getPixel4F32 = function(_x,_y) /*=>*/ {return [
-        buffer_read_at(buffer, (clamp(round(_y), 0, sh - 1) * sw + clamp(round(_x), 0, sw - 1)) * 16 + 0, buffer_f32),
-        buffer_read_at(buffer, (clamp(round(_y), 0, sh - 1) * sw + clamp(round(_x), 0, sw - 1)) * 16 + 2, buffer_f32),
-        buffer_read_at(buffer, (clamp(round(_y), 0, sh - 1) * sw + clamp(round(_x), 0, sw - 1)) * 16 + 4, buffer_f32),
-        buffer_read_at(buffer, (clamp(round(_y), 0, sh - 1) * sw + clamp(round(_x), 0, sw - 1)) * 16 + 6, buffer_f32),
+        buffer_peek(buffer, (clamp(round(_y), 0, sh - 1) * sw + clamp(round(_x), 0, sw - 1)) * 16 + 0, buffer_f32),
+        buffer_peek(buffer, (clamp(round(_y), 0, sh - 1) * sw + clamp(round(_x), 0, sw - 1)) * 16 + 2, buffer_f32),
+        buffer_peek(buffer, (clamp(round(_y), 0, sh - 1) * sw + clamp(round(_x), 0, sw - 1)) * 16 + 4, buffer_f32),
+        buffer_peek(buffer, (clamp(round(_y), 0, sh - 1) * sw + clamp(round(_x), 0, sw - 1)) * 16 + 6, buffer_f32),
     ]};
     
     getPixel = getPixelU32;
@@ -109,21 +109,21 @@ function Surface_Sampler_Grey(s = noone, _rng = undefined) constructor {
     
     setSurface(s);
     
-    static getPixelDirect      = function(_x,_y) /*=>*/ { return buffer_read_at(buffer, (_y * sw + _x) * 2, buffer_f16); }
-    static getPixelDirectClamp = function(_x,_y) /*=>*/ { return buffer_read_at(buffer, (clamp(_y, 0, sh-1) * sw + clamp(_x, 0, sw-1)) * 2, buffer_f16); }
+    static getPixelDirect      = function(_x,_y) /*=>*/ { return buffer_peek(buffer, (_y * sw + _x) * 2, buffer_f16); }
+    static getPixelDirectClamp = function(_x,_y) /*=>*/ { return buffer_peek(buffer, (clamp(_y, 0, sh-1) * sw + clamp(_x, 0, sw-1)) * 2, buffer_f16); }
     
     static getPixel = function(_u,_v) /*=>*/ {
         if(!active) return rangeMin;
         var _x = round(clamp(_u, 0, 1) * (sw - 1));
         var _y = round(clamp(_v, 0, 1) * (sh - 1));
-        return lerp(rangeMin, rangeMax, buffer_read_at(buffer, (_y * sw + _x) * 2, buffer_f16));
+        return lerp(rangeMin, rangeMax, buffer_peek(buffer, (_y * sw + _x) * 2, buffer_f16));
     }
     
     static getPixelNorm = function(_u,_v) /*=>*/ {
         if(!active) return 0;
         var _x = round(clamp(_u, 0, sw - 1));
         var _y = round(clamp(_v, 0, sh - 1));
-        return buffer_read_at(buffer, (_y * sw + _x) * 2, buffer_f16);
+        return buffer_peek(buffer, (_y * sw + _x) * 2, buffer_f16);
     }
     
     static free = function() /*=>*/ { 

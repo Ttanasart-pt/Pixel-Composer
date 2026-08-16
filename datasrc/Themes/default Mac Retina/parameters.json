@@ -1,0 +1,28 @@
+{
+    "easing": "liquid", 
+    "ease_duration": 0.7, 
+
+    "icon_scale": 2,
+    "highlight_corner_radius": 8,
+    "selection_corner_radius": 6,
+    "selection_minimum": 22,
+    
+    "dialog_padding": 4, 
+    "dialog_modal_button_spacing": 8, 
+
+    "panel_separation_type": "frame",
+    "panel_padding": 2,
+    "panel_margin": 1.5,
+    "panel_corner_radius": 8,
+
+    "panel_toolbar_padding": 12, 
+    "panel_toolbar_merge": false, 
+
+    "panel_notification_padding": 0,
+    "panel_tab_padding": 2,
+    "panel_animation_padding": 6, 
+
+    "minimap_corner_radius": 2,
+    "slider_type": "stem",
+    "font_aa": true
+}

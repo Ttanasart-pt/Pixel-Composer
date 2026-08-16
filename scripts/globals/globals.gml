@@ -1,5 +1,7 @@
+// if(os_type == os_windows) {
 gml_release_mode(true);
 gml_pragma("UnityBuild", "true");
+// }
 
 #region save
 	globalvar LOADING; LOADING		  = false;
@@ -23,7 +25,9 @@ gml_pragma("UnityBuild", "true");
 #region //// MAIN ////
 	globalvar OS; OS = os_type;
 	#macro MAC (OS == os_macosx)
-	window_set_showborder(OS != os_windows);
+	
+	if(OS == os_windows)
+		window_set_showborder(false);
 	
 	globalvar CMD; CMD      = [];
 	globalvar CMDIN; CMDIN    = [];

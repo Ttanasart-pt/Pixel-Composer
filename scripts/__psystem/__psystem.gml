@@ -93,7 +93,7 @@ function pSystem_Particles() constructor {
 	
 	static getPartData = function(_index, _key, _type) {
 		var _pos = global.pSystem_data_length * _index + _key;
-		return buffer_read_at( buffer, _pos, _type );
+		return buffer_peek( buffer, _pos, _type );
 	}	
 	
 	////- Draw
@@ -110,11 +110,11 @@ function pSystem_Particles() constructor {
 			buffer_seek(_partBuff, buffer_seek_start, _start);
 			_off += global.pSystem_data_length;
 			
-			var _act = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.active, buffer_bool );
+			var _act = buffer_peek( _partBuff, _start + PSYSTEM_OFF.active, buffer_bool );
 			if(!_act) continue;
 			
-			var _px = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.posx,   buffer_f64  );
-			var _py = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.posy,   buffer_f64  );
+			var _px = buffer_peek( _partBuff, _start + PSYSTEM_OFF.posx,   buffer_f64  );
+			var _py = buffer_peek( _partBuff, _start + PSYSTEM_OFF.posy,   buffer_f64  );
 			var __x = _x + _px * _s;
 			var __y = _y + _py * _s;
 			

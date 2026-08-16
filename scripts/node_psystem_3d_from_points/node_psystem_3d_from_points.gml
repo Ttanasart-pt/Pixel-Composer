@@ -63,25 +63,25 @@ function Node_pSystem_3D_from_Points(_x, _y, _group = noone) : Node(_x, _y, _gro
 			var py = pp[1];
 			var pz = pp[2];
 			
-			buffer_write_at( b, o + PSYSTEM_OFF.active, buffer_bool, true );
-			buffer_write_at( b, o + PSYSTEM_OFF.stat,   buffer_bool, true );
-			buffer_write_at( b, o + PSYSTEM_OFF.sindex, buffer_u32,  i    );
+			buffer_poke( b, o + PSYSTEM_OFF.active, buffer_bool, true );
+			buffer_poke( b, o + PSYSTEM_OFF.stat,   buffer_bool, true );
+			buffer_poke( b, o + PSYSTEM_OFF.sindex, buffer_u32,  i    );
 			
-			buffer_write_at( b, o + PSYSTEM_OFF.life,   buffer_f64,  _idStart );
-			buffer_write_at( b, o + PSYSTEM_OFF.mlife,  buffer_f64,  _idStep  );
+			buffer_poke( b, o + PSYSTEM_OFF.life,   buffer_f64,  _idStart );
+			buffer_poke( b, o + PSYSTEM_OFF.mlife,  buffer_f64,  _idStep  );
 			
-			buffer_write_at( b, o + PSYSTEM_OFF.posx,   buffer_f64,  px   );
-			buffer_write_at( b, o + PSYSTEM_OFF.posy,   buffer_f64,  py   );
-			buffer_write_at( b, o + PSYSTEM_OFF.posz,   buffer_f64,  pz   );
+			buffer_poke( b, o + PSYSTEM_OFF.posx,   buffer_f64,  px   );
+			buffer_poke( b, o + PSYSTEM_OFF.posy,   buffer_f64,  py   );
+			buffer_poke( b, o + PSYSTEM_OFF.posz,   buffer_f64,  pz   );
 			
-			buffer_write_at( b, o + PSYSTEM_OFF.scax,   buffer_f64,  1    );
-			buffer_write_at( b, o + PSYSTEM_OFF.scay,   buffer_f64,  1    );
-			buffer_write_at( b, o + PSYSTEM_OFF.scaz,   buffer_f64,  1    );
+			buffer_poke( b, o + PSYSTEM_OFF.scax,   buffer_f64,  1    );
+			buffer_poke( b, o + PSYSTEM_OFF.scay,   buffer_f64,  1    );
+			buffer_poke( b, o + PSYSTEM_OFF.scaz,   buffer_f64,  1    );
 			
-			buffer_write_at( b, o + PSYSTEM_OFF.blnr,   buffer_u8,   255  );
-			buffer_write_at( b, o + PSYSTEM_OFF.blng,   buffer_u8,   255  );
-			buffer_write_at( b, o + PSYSTEM_OFF.blnb,   buffer_u8,   255  );
-			buffer_write_at( b, o + PSYSTEM_OFF.blna,   buffer_u8,   255  );
+			buffer_poke( b, o + PSYSTEM_OFF.blnr,   buffer_u8,   255  );
+			buffer_poke( b, o + PSYSTEM_OFF.blng,   buffer_u8,   255  );
+			buffer_poke( b, o + PSYSTEM_OFF.blnb,   buffer_u8,   255  );
+			buffer_poke( b, o + PSYSTEM_OFF.blna,   buffer_u8,   255  );
 			
 			o += global.pSystem_data_length;
 		}

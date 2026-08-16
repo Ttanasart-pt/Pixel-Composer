@@ -69,12 +69,12 @@ function Node_pSystem_Destroy(_x, _y, _group = noone) : Node(_x, _y, _group) con
 			_off += global.pSystem_data_length;
 			
 			var _mask   = use_mask? buffer_read(_masks, buffer_f32) : 1; if(_mask <= 0) continue;
-			var _act    = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.active, buffer_bool );
-			var _spwnId = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.sindex, buffer_u32  );
+			var _act    = buffer_peek( _partBuff, _start + PSYSTEM_OFF.active, buffer_bool );
+			var _spwnId = buffer_peek( _partBuff, _start + PSYSTEM_OFF.sindex, buffer_u32  );
 			if(!_act) continue;
 			
-			var _lif    = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.life,   buffer_f64  );
-			var _lifMax = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.mlife,  buffer_f64  );
+			var _lif    = buffer_peek( _partBuff, _start + PSYSTEM_OFF.life,   buffer_f64  );
+			var _lifMax = buffer_peek( _partBuff, _start + PSYSTEM_OFF.mlife,  buffer_f64  );
 			
 			var rat = _lif / max(1, _lifMax - 1);
 			random_set_seed(_seed + _spwnId);
@@ -84,15 +84,15 @@ function Node_pSystem_Destroy(_x, _y, _group = noone) : Node(_x, _y, _group) con
 			
 			if(random(1) > _strn_cur * _mask) continue;
 			
-			var _dfg      = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.dflag,  buffer_u16  );
-			var _draw_x   = buffer_read_at( _partBuff, _start + (bool(_dfg & 0b100)? PSYSTEM_OFF.dposx : PSYSTEM_OFF.posx), buffer_f64 );
-			var _draw_y   = buffer_read_at( _partBuff, _start + (bool(_dfg & 0b100)? PSYSTEM_OFF.dposy : PSYSTEM_OFF.posy), buffer_f64 );
+			var _dfg      = buffer_peek( _partBuff, _start + PSYSTEM_OFF.dflag,  buffer_u16  );
+			var _draw_x   = buffer_peek( _partBuff, _start + (bool(_dfg & 0b100)? PSYSTEM_OFF.dposx : PSYSTEM_OFF.posx), buffer_f64 );
+			var _draw_y   = buffer_peek( _partBuff, _start + (bool(_dfg & 0b100)? PSYSTEM_OFF.dposy : PSYSTEM_OFF.posy), buffer_f64 );
 			
-			var _vx = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.velx, buffer_f64  );
-			var _vy = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.vely, buffer_f64  );
+			var _vx = buffer_peek( _partBuff, _start + PSYSTEM_OFF.velx, buffer_f64  );
+			var _vy = buffer_peek( _partBuff, _start + PSYSTEM_OFF.vely, buffer_f64  );
 			
-			buffer_write_at(_partBuff, _start + PSYSTEM_OFF.active, buffer_bool, false );
-			buffer_write_at(_partBuff, _start + PSYSTEM_OFF.mlife,  buffer_f64,  _lif  );
+			buffer_poke(_partBuff, _start + PSYSTEM_OFF.active, buffer_bool, false );
+			buffer_poke(_partBuff, _start + PSYSTEM_OFF.mlife,  buffer_f64,  _lif  );
 			
 			buffer_write(destroyTrig, buffer_f64, _draw_x);
 			buffer_write(destroyTrig, buffer_f64, _draw_y);
@@ -104,7 +104,7 @@ function Node_pSystem_Destroy(_x, _y, _group = noone) : Node(_x, _y, _group) con
 			destroyCount++;
 		}
 		
-		buffer_write_at(destroyTrig, 0, buffer_u32, destroyCount);
+		buffer_poke(destroyTrig, 0, buffer_u32, destroyCount);
 		outputs[1].setValue(destroyTrig);
 	}
 	

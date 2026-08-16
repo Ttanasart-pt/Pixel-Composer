@@ -120,7 +120,7 @@ function Node_pSystem_Blend(_x, _y, _group = noone) : Node(_x, _y, _group) const
 			
 			if(_alph_use && _alph_curved) {
 				var _bldA = _bldsA * curve_alph.get(rat);
-				buffer_write_at( _partBuff, _start + PSYSTEM_OFF.blna, buffer_u8, round(_bldA) );
+				buffer_poke( _partBuff, _start + PSYSTEM_OFF.blna, buffer_u8, round(_bldA) );
 			}
 			
 			if(_sold_use) {
@@ -215,9 +215,9 @@ function Node_pSystem_Blend(_x, _y, _group = noone) : Node(_x, _y, _group) const
 				}
 			}
 			
-			buffer_write_at( _partBuff, _start + PSYSTEM_OFF.blnr, buffer_u8, round(_bldR) );
-			buffer_write_at( _partBuff, _start + PSYSTEM_OFF.blng, buffer_u8, round(_bldG) );
-			buffer_write_at( _partBuff, _start + PSYSTEM_OFF.blnb, buffer_u8, round(_bldB) );
+			buffer_poke( _partBuff, _start + PSYSTEM_OFF.blnr, buffer_u8, round(_bldR) );
+			buffer_poke( _partBuff, _start + PSYSTEM_OFF.blng, buffer_u8, round(_bldG) );
+			buffer_poke( _partBuff, _start + PSYSTEM_OFF.blnb, buffer_u8, round(_bldB) );
 		}
 		
 	}

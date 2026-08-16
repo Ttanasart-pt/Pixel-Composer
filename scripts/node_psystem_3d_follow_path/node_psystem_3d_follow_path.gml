@@ -78,24 +78,24 @@ function Node_pSystem_3D_Follow_Path(_x, _y, _group = noone) : Node_3D(_x, _y, _
 			_off += global.pSystem_data_length;
 				
 			var _mask   = use_mask? buffer_read(_masks, buffer_f32) : 1; if(_mask <= 0) continue;
-			var _act    = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.active, buffer_bool );
-			var _spwnId = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.sindex, buffer_u32  );
+			var _act    = buffer_peek( _partBuff, _start + PSYSTEM_OFF.active, buffer_bool );
+			var _spwnId = buffer_peek( _partBuff, _start + PSYSTEM_OFF.sindex, buffer_u32  );
 			if(!_act) continue;
 			
-			var _px     = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.posx,   buffer_f64  );
-			var _py     = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.posy,   buffer_f64  );
-			var _pz     = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.posz,   buffer_f64  );
+			var _px     = buffer_peek( _partBuff, _start + PSYSTEM_OFF.posx,   buffer_f64  );
+			var _py     = buffer_peek( _partBuff, _start + PSYSTEM_OFF.posy,   buffer_f64  );
+			var _pz     = buffer_peek( _partBuff, _start + PSYSTEM_OFF.posz,   buffer_f64  );
 			
-			var _psx    = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.possx,  buffer_f64  );
-			var _psy    = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.possy,  buffer_f64  );
-			var _psz    = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.possz,  buffer_f64  );
+			var _psx    = buffer_peek( _partBuff, _start + PSYSTEM_OFF.possx,  buffer_f64  );
+			var _psy    = buffer_peek( _partBuff, _start + PSYSTEM_OFF.possy,  buffer_f64  );
+			var _psz    = buffer_peek( _partBuff, _start + PSYSTEM_OFF.possz,  buffer_f64  );
 			
-			var _ppx    = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.pospx,  buffer_f64  );
-			var _ppy    = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.pospy,  buffer_f64  );
-			var _ppz    = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.pospz,  buffer_f64  );
+			var _ppx    = buffer_peek( _partBuff, _start + PSYSTEM_OFF.pospx,  buffer_f64  );
+			var _ppy    = buffer_peek( _partBuff, _start + PSYSTEM_OFF.pospy,  buffer_f64  );
+			var _ppz    = buffer_peek( _partBuff, _start + PSYSTEM_OFF.pospz,  buffer_f64  );
 			
-			var _lif    = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.life,   buffer_f64  );
-			var _lifMax = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.mlife,  buffer_f64  );
+			var _lif    = buffer_peek( _partBuff, _start + PSYSTEM_OFF.life,   buffer_f64  );
+			var _lifMax = buffer_peek( _partBuff, _start + PSYSTEM_OFF.mlife,  buffer_f64  );
 			
 			var rat = _lif / max(1, _lifMax - 1);
 			random_set_seed(_seed + _spwnId);
@@ -160,9 +160,9 @@ function Node_pSystem_3D_Follow_Path(_x, _y, _group = noone) : Node_3D(_x, _y, _
 				_pz += (_z1 - _z0) * _path_dev;
 			}
 			
-			buffer_write_at( _partBuff, _start + PSYSTEM_OFF.posx, buffer_f64, _px );
-			buffer_write_at( _partBuff, _start + PSYSTEM_OFF.posy, buffer_f64, _py );
-			buffer_write_at( _partBuff, _start + PSYSTEM_OFF.posz, buffer_f64, _pz );
+			buffer_poke( _partBuff, _start + PSYSTEM_OFF.posx, buffer_f64, _px );
+			buffer_poke( _partBuff, _start + PSYSTEM_OFF.posy, buffer_f64, _py );
+			buffer_poke( _partBuff, _start + PSYSTEM_OFF.posz, buffer_f64, _pz );
 		}
 		
 		return _parts;

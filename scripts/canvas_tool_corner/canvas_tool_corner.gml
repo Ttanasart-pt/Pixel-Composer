@@ -64,7 +64,7 @@ function canvas_tool_corner() : canvas_tool_shader() constructor {
 		var _daw = false;
 		
 		do {
-			buffer_write_at(_buff, (yy * _w + xx) * 4, buffer_u32, 0);
+			buffer_poke(_buff, (yy * _w + xx) * 4, buffer_u32, 0);
 			
 			_nx = xx;
 			_ny = yy;
@@ -77,7 +77,7 @@ function canvas_tool_corner() : canvas_tool_shader() constructor {
 			
 			_px = _nx; _py = _ny;
 			
-		    if(xx < _w - 1 && buffer_read_at(_buff, ((yy    ) * _w + xx + 1) * 4, buffer_u32)) { 
+		    if(xx < _w - 1 && buffer_peek(_buff, ((yy    ) * _w + xx + 1) * 4, buffer_u32)) { 
 		     	if(corner == 2) {
 					_a[_ind++] = [ xx, yy ];
 					// print($"{corner} - 0 : {[ xx, yy ]}");
@@ -90,7 +90,7 @@ function canvas_tool_corner() : canvas_tool_shader() constructor {
 		     	
 				xx++;
 			}
-			else if(yy < _h - 1 && buffer_read_at(_buff, ((yy + 1) * _w + xx    ) * 4, buffer_u32)) { 
+			else if(yy < _h - 1 && buffer_peek(_buff, ((yy + 1) * _w + xx    ) * 4, buffer_u32)) { 
 				if(corner == 0) {
 					_a[_ind++] = [ xx + 1, yy ];
 					// print($"{corner} - 1 : {[ xx + 1, yy ]}");
@@ -103,7 +103,7 @@ function canvas_tool_corner() : canvas_tool_shader() constructor {
 		     	
 				yy++; 
 			}
-			else if(xx > 0      && buffer_read_at(_buff, ((yy    ) * _w + xx - 1) * 4, buffer_u32)) { 
+			else if(xx > 0      && buffer_peek(_buff, ((yy    ) * _w + xx - 1) * 4, buffer_u32)) { 
 				if(corner == 1) {
 					_a[_ind++] = [ xx + 1, yy + 1 ];
 					// print($"{corner} - 3 : {[ xx + 1, yy + 1 ]}");
@@ -116,7 +116,7 @@ function canvas_tool_corner() : canvas_tool_shader() constructor {
 		     	
 				xx--; 
 			}
-			else if(yy > 0      && buffer_read_at(_buff, ((yy - 1) * _w + xx    ) * 4, buffer_u32)) { 
+			else if(yy > 0      && buffer_peek(_buff, ((yy - 1) * _w + xx    ) * 4, buffer_u32)) { 
 				if(corner == 3) {
 					_a[_ind++] = [ xx, yy + 1 ];
 					// print($"{corner} - 2 : {[ xx, yy + 1 ]}");
@@ -130,7 +130,7 @@ function canvas_tool_corner() : canvas_tool_shader() constructor {
 				yy--; 
 			}
 			
-			else if(xx < _w - 1 && yy < _h - 1 && buffer_read_at(_buff, ((yy + 1) * _w + xx + 1) * 4, buffer_u32)) { 
+			else if(xx < _w - 1 && yy < _h - 1 && buffer_peek(_buff, ((yy + 1) * _w + xx + 1) * 4, buffer_u32)) { 
 				if(corner == 0) { _a[_ind++] = [ xx + 1, yy ];     /*print($"{corner} ++ : {[ xx + 1, yy     ]}");*/ }
 				if(corner == 1) { _a[_ind++] = [ xx + 1, yy + 1 ]; /*print($"{corner} ++ : {[ xx + 1, yy + 1 ]}");*/ }
 				if(corner == 2) { _a[_ind++] = [ xx + 1, yy + 1 ]; /*print($"{corner} ++ : {[ xx + 1, yy + 1 ]}");*/ }
@@ -139,7 +139,7 @@ function canvas_tool_corner() : canvas_tool_shader() constructor {
 				xx++; yy++; 
 			}
 			
-			else if(xx < _w - 1 && yy > 0      && buffer_read_at(_buff, ((yy - 1) * _w + xx + 1) * 4, buffer_u32)) { 
+			else if(xx < _w - 1 && yy > 0      && buffer_peek(_buff, ((yy - 1) * _w + xx + 1) * 4, buffer_u32)) { 
 				if(corner == 0) { _a[_ind++] = [ xx + 1, yy ];     /*print($"{corner} +- : {[ xx + 1, yy     ]}");*/ }
 				if(corner == 1) { _a[_ind++] = [ xx + 1, yy - 1 ]; /*print($"{corner} +- : {[ xx + 1, yy - 1 ]}");*/ }
 				if(corner == 2) { _a[_ind++] = [ xx, yy ];         /*print($"{corner} +- : {[ xx,     yy     ]}");*/ }
@@ -148,7 +148,7 @@ function canvas_tool_corner() : canvas_tool_shader() constructor {
 				xx++; yy--; 
 			}
 			
-			else if(xx > 0      && yy < _h - 1 && buffer_read_at(_buff, ((yy + 1) * _w + xx - 1) * 4, buffer_u32)) { 
+			else if(xx > 0      && yy < _h - 1 && buffer_peek(_buff, ((yy + 1) * _w + xx - 1) * 4, buffer_u32)) { 
 				if(corner == 0) { _a[_ind++] = [ xx, yy + 1 ];     /*print($"{corner} -+ : {[ xx,     yy + 1 ]}");*/ }
 				if(corner == 1) { _a[_ind++] = [ xx, yy ];         /*print($"{corner} -+ : {[ xx,     yy     ]}");*/ }
 				if(corner == 2) { _a[_ind++] = [ xx - 1, yy + 1 ]; /*print($"{corner} -+ : {[ xx - 1, yy + 1 ]}");*/ }
@@ -157,7 +157,7 @@ function canvas_tool_corner() : canvas_tool_shader() constructor {
 				xx--; yy++; 
 			}
 			
-			else if(xx > 0      && yy > 0      && buffer_read_at(_buff, ((yy - 1) * _w + xx - 1) * 4, buffer_u32)) { 
+			else if(xx > 0      && yy > 0      && buffer_peek(_buff, ((yy - 1) * _w + xx - 1) * 4, buffer_u32)) { 
 				if(corner == 0) { _a[_ind++] = [ xx, yy - 1 ]; /*print($"{corner} -- : {[ xx,     yy - 1 ]}");*/ }
 				if(corner == 1) { _a[_ind++] = [ xx, yy ];     /*print($"{corner} -+ : {[ xx,     yy     ]}");*/ }
 				if(corner == 2) { _a[_ind++] = [ xx, yy ];     /*print($"{corner} -+ : {[ xx,     yy     ]}");*/ }

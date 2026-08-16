@@ -58,19 +58,19 @@ function Node_pSystem_Turbulence(_x, _y, _group = noone) : Node(_x, _y, _group) 
 			_off += global.pSystem_data_length;
 			
 			var _mask   = use_mask? buffer_read(_masks, buffer_f32) : 1; if(_mask <= 0) continue;
-			var _act    = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.active, buffer_bool );
-			var _stat   = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.stat,   buffer_bool );
-			var _spwnId = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.sindex, buffer_u32  );
+			var _act    = buffer_peek( _partBuff, _start + PSYSTEM_OFF.active, buffer_bool );
+			var _stat   = buffer_peek( _partBuff, _start + PSYSTEM_OFF.stat,   buffer_bool );
+			var _spwnId = buffer_peek( _partBuff, _start + PSYSTEM_OFF.sindex, buffer_u32  );
 			if(!_act) continue;
 			
-			var _px     = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.posx,   buffer_f64  );
-			var _py     = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.posy,   buffer_f64  );
+			var _px     = buffer_peek( _partBuff, _start + PSYSTEM_OFF.posx,   buffer_f64  );
+			var _py     = buffer_peek( _partBuff, _start + PSYSTEM_OFF.posy,   buffer_f64  );
 			
-			var _lif    = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.life,   buffer_f64  );
-			var _lifMax = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.mlife,  buffer_f64  );
+			var _lif    = buffer_peek( _partBuff, _start + PSYSTEM_OFF.life,   buffer_f64  );
+			var _lifMax = buffer_peek( _partBuff, _start + PSYSTEM_OFF.mlife,  buffer_f64  );
 			
-			var _vx     = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.velx,   buffer_f64  );
-			var _vy     = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.vely,   buffer_f64  );
+			var _vx     = buffer_peek( _partBuff, _start + PSYSTEM_OFF.velx,   buffer_f64  );
+			var _vy     = buffer_peek( _partBuff, _start + PSYSTEM_OFF.vely,   buffer_f64  );
 			
 			var rat = _stat? (_frame + _lif + _spwnId * _lifMax) / TOTAL_FRAMES : _lif / max(1, _lifMax - 1);
 			    rat = clamp(rat, 0, 1);
@@ -86,8 +86,8 @@ function Node_pSystem_Turbulence(_x, _y, _group = noone) : Node(_x, _y, _group) 
 			_vx += _gx * _strn_cur;
 			_vy += _gy * _strn_cur;
 			
-			buffer_write_at(_partBuff, _start + PSYSTEM_OFF.velx, buffer_f64, _vx );
-			buffer_write_at(_partBuff, _start + PSYSTEM_OFF.vely, buffer_f64, _vy );
+			buffer_poke(_partBuff, _start + PSYSTEM_OFF.velx, buffer_f64, _vx );
+			buffer_poke(_partBuff, _start + PSYSTEM_OFF.vely, buffer_f64, _vy );
 		}
 		
 	}

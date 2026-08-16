@@ -35,9 +35,13 @@
 	} else if(OS == os_macosx) {
 		APP_DIRECTORY = working_directory;
 		DIRECTORY     = game_save_id;
+		DIRECTORY     = working_directory;
 	    APP_LOCATION  = working_directory;
 	    
+	    // var _user = string_trim(shell_execute("", "whoami"));
+	    // DIRECTORY = $"/Users/makhamdev/Library/Application Support/com.MakhamDev.PixelComposer/"
 		PREFERENCES_DIR = $"{DIRECTORY}Preferences/{PREF_VERSION}/";
+		
 		directory_verify($"{DIRECTORY}Cache");
 		directory_verify($"{DIRECTORY}log");
 		
@@ -103,6 +107,7 @@
     
     directory_verify(PREFERENCES_DIR);
 #endregion
+
 	pid = ProcIdFromSelf();
 	
 	__t = get_timer();

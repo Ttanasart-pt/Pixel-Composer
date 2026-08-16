@@ -597,8 +597,8 @@
 			}
 			
 			var _app;
-			if (_name == "NETSCAPE" && _version == "2.0" && buffer_read_at(_bytes, 0, buffer_u8)) 
-				_app = new gifAppLoop(buffer_read_at(_bytes, 1, buffer_u16));
+			if (_name == "NETSCAPE" && _version == "2.0" && buffer_peek(_bytes, 0, buffer_u8)) 
+				_app = new gifAppLoop(buffer_peek(_bytes, 1, buffer_u16));
 			else 
 				_app = new gifAppUnknown(_name, _version, _bytes);
 			

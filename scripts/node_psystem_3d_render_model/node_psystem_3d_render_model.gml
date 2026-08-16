@@ -90,40 +90,40 @@ function Node_pSystem_3D_Render_Model(_x, _y, _group = noone) : Node_3D(_x, _y, 
 				_off += global.pSystem_data_length;
 				
 				var _mask   = use_mask? buffer_read(_masks, buffer_f32) : 1; if(_mask <= 0) continue;
-				var _act    = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.active, buffer_bool );
+				var _act    = buffer_peek( _partBuff, _start + PSYSTEM_OFF.active, buffer_bool );
 				if(!_act) continue;
 				
-				var _spwnId = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.sindex, buffer_u32  );
-				var _life   = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.life,   buffer_u32  );
-				var _mlife  = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.mlife,  buffer_u32  );
+				var _spwnId = buffer_peek( _partBuff, _start + PSYSTEM_OFF.sindex, buffer_u32  );
+				var _life   = buffer_peek( _partBuff, _start + PSYSTEM_OFF.life,   buffer_u32  );
+				var _mlife  = buffer_peek( _partBuff, _start + PSYSTEM_OFF.mlife,  buffer_u32  );
 				
-				var _surf_  = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.surf,   buffer_f64 );
-				var _bldR   = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.blnr,   buffer_u8  );
-				var _bldG   = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.blng,   buffer_u8  );
-				var _bldB   = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.blnb,   buffer_u8  );
-				var _bldA   = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.blna,   buffer_u8  );
+				var _surf_  = buffer_peek( _partBuff, _start + PSYSTEM_OFF.surf,   buffer_f64 );
+				var _bldR   = buffer_peek( _partBuff, _start + PSYSTEM_OFF.blnr,   buffer_u8  );
+				var _bldG   = buffer_peek( _partBuff, _start + PSYSTEM_OFF.blng,   buffer_u8  );
+				var _bldB   = buffer_peek( _partBuff, _start + PSYSTEM_OFF.blnb,   buffer_u8  );
+				var _bldA   = buffer_peek( _partBuff, _start + PSYSTEM_OFF.blna,   buffer_u8  );
 				
-				var _dfg    = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.dflag,  buffer_u16  );
+				var _dfg    = buffer_peek( _partBuff, _start + PSYSTEM_OFF.dflag,  buffer_u16  );
 				
-				var _px  = buffer_read_at( _partBuff, _start + (bool(_dfg & 0b100)? PSYSTEM_OFF.dposx : PSYSTEM_OFF.posx), buffer_f64 );
-				var _py  = buffer_read_at( _partBuff, _start + (bool(_dfg & 0b100)? PSYSTEM_OFF.dposy : PSYSTEM_OFF.posy), buffer_f64 );
-				var _pz  = buffer_read_at( _partBuff, _start + (bool(_dfg & 0b100)? PSYSTEM_OFF.dposz : PSYSTEM_OFF.posz), buffer_f64 );
+				var _px  = buffer_peek( _partBuff, _start + (bool(_dfg & 0b100)? PSYSTEM_OFF.dposx : PSYSTEM_OFF.posx), buffer_f64 );
+				var _py  = buffer_peek( _partBuff, _start + (bool(_dfg & 0b100)? PSYSTEM_OFF.dposy : PSYSTEM_OFF.posy), buffer_f64 );
+				var _pz  = buffer_peek( _partBuff, _start + (bool(_dfg & 0b100)? PSYSTEM_OFF.dposz : PSYSTEM_OFF.posz), buffer_f64 );
 				
-				var _sx  = buffer_read_at( _partBuff, _start + (bool(_dfg & 0b010)? PSYSTEM_OFF.dscax : PSYSTEM_OFF.scax), buffer_f64 );
-				var _sy  = buffer_read_at( _partBuff, _start + (bool(_dfg & 0b010)? PSYSTEM_OFF.dscay : PSYSTEM_OFF.scay), buffer_f64 );
-				var _sz  = buffer_read_at( _partBuff, _start + (bool(_dfg & 0b010)? PSYSTEM_OFF.dscaz : PSYSTEM_OFF.scaz), buffer_f64 );
+				var _sx  = buffer_peek( _partBuff, _start + (bool(_dfg & 0b010)? PSYSTEM_OFF.dscax : PSYSTEM_OFF.scax), buffer_f64 );
+				var _sy  = buffer_peek( _partBuff, _start + (bool(_dfg & 0b010)? PSYSTEM_OFF.dscay : PSYSTEM_OFF.scay), buffer_f64 );
+				var _sz  = buffer_peek( _partBuff, _start + (bool(_dfg & 0b010)? PSYSTEM_OFF.dscaz : PSYSTEM_OFF.scaz), buffer_f64 );
 				
-				var _rx  = buffer_read_at( _partBuff, _start + (bool(_dfg & 0b001)? PSYSTEM_OFF.drotx : PSYSTEM_OFF.rotx), buffer_f64 );
-				var _ry  = buffer_read_at( _partBuff, _start + (bool(_dfg & 0b001)? PSYSTEM_OFF.droty : PSYSTEM_OFF.roty), buffer_f64 );
-				var _rz  = buffer_read_at( _partBuff, _start + (bool(_dfg & 0b001)? PSYSTEM_OFF.drotz : PSYSTEM_OFF.rotz), buffer_f64 );
+				var _rx  = buffer_peek( _partBuff, _start + (bool(_dfg & 0b001)? PSYSTEM_OFF.drotx : PSYSTEM_OFF.rotx), buffer_f64 );
+				var _ry  = buffer_peek( _partBuff, _start + (bool(_dfg & 0b001)? PSYSTEM_OFF.droty : PSYSTEM_OFF.roty), buffer_f64 );
+				var _rz  = buffer_peek( _partBuff, _start + (bool(_dfg & 0b001)? PSYSTEM_OFF.drotz : PSYSTEM_OFF.rotz), buffer_f64 );
 				
-				var _vx  = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.velx, buffer_f64 );
-				var _vy  = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.vely, buffer_f64 );
-				var _vz  = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.velz, buffer_f64 );
+				var _vx  = buffer_peek( _partBuff, _start + PSYSTEM_OFF.velx, buffer_f64 );
+				var _vy  = buffer_peek( _partBuff, _start + PSYSTEM_OFF.vely, buffer_f64 );
+				var _vz  = buffer_peek( _partBuff, _start + PSYSTEM_OFF.velz, buffer_f64 );
 				
-				var _psx = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.possx, buffer_f64 );
-				var _psy = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.possy, buffer_f64 );
-				var _psz = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.possz, buffer_f64 );
+				var _psx = buffer_peek( _partBuff, _start + PSYSTEM_OFF.possx, buffer_f64 );
+				var _psy = buffer_peek( _partBuff, _start + PSYSTEM_OFF.possy, buffer_f64 );
+				var _psz = buffer_peek( _partBuff, _start + PSYSTEM_OFF.possz, buffer_f64 );
 				
 				var _nx  = 0;
 				var _ny  = 0;

@@ -8,6 +8,11 @@ function __loadParams(readonly = false, override = false, apply_layout = false) 
 function readProjectFileContent(path) {
 	var _ext    = filename_ext_raw(path), s;
 	var rawBuff = buffer_load(path);
+	if(!buffer_exists(rawBuff)) {
+		noti_warning($"Load failed: Cannot read {path}");
+		return undefined;
+	}
+	
 	var offset  = 0;
 	buffer_to_start(rawBuff);
 	

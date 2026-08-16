@@ -159,28 +159,28 @@ function Node_pSystem_Render_Path(_x, _y, _group = noone) : Node(_x, _y, _group)
 			var _start = _off;
 			_off += global.pSystem_data_length;
 			
-			var _act    = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.active, buffer_bool );
-			var _spwnId = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.sindex, buffer_u32  );
-			var _lif    = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.life,   buffer_f64  );
+			var _act    = buffer_peek( _partBuff, _start + PSYSTEM_OFF.active, buffer_bool );
+			var _spwnId = buffer_peek( _partBuff, _start + PSYSTEM_OFF.sindex, buffer_u32  );
+			var _lif    = buffer_peek( _partBuff, _start + PSYSTEM_OFF.life,   buffer_f64  );
 			
 			if(!_act) continue;
 			
-			var _dfg    = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.dflag,  buffer_u16  );
+			var _dfg    = buffer_peek( _partBuff, _start + PSYSTEM_OFF.dflag,  buffer_u16  );
 			
-			var _bldR   = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.blnr,   buffer_u8  );
-			var _bldG   = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.blng,   buffer_u8  );
-			var _bldB   = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.blnb,   buffer_u8  );
-			var _bldA   = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.blna,   buffer_u8  );
+			var _bldR   = buffer_peek( _partBuff, _start + PSYSTEM_OFF.blnr,   buffer_u8  );
+			var _bldG   = buffer_peek( _partBuff, _start + PSYSTEM_OFF.blng,   buffer_u8  );
+			var _bldB   = buffer_peek( _partBuff, _start + PSYSTEM_OFF.blnb,   buffer_u8  );
+			var _bldA   = buffer_peek( _partBuff, _start + PSYSTEM_OFF.blna,   buffer_u8  );
 			
-			var _draw_x  = buffer_read_at( _partBuff, _start + (bool(_dfg & 0b100)? PSYSTEM_OFF.dposx : PSYSTEM_OFF.posx),   buffer_f64  );
-			var _draw_y  = buffer_read_at( _partBuff, _start + (bool(_dfg & 0b100)? PSYSTEM_OFF.dposy : PSYSTEM_OFF.posy),   buffer_f64  );
-			var _draw_sx = buffer_read_at( _partBuff, _start + (bool(_dfg & 0b010)? PSYSTEM_OFF.dscax : PSYSTEM_OFF.scax),   buffer_f64  );
+			var _draw_x  = buffer_peek( _partBuff, _start + (bool(_dfg & 0b100)? PSYSTEM_OFF.dposx : PSYSTEM_OFF.posx),   buffer_f64  );
+			var _draw_y  = buffer_peek( _partBuff, _start + (bool(_dfg & 0b100)? PSYSTEM_OFF.dposy : PSYSTEM_OFF.posy),   buffer_f64  );
+			var _draw_sx = buffer_peek( _partBuff, _start + (bool(_dfg & 0b010)? PSYSTEM_OFF.dscax : PSYSTEM_OFF.scax),   buffer_f64  );
 			
 			var _buffOffStart = _bufDatLen * _spwnId;
 			var _buffInd = _lif % _lenMax;
 			var _buffOff = _buffOffStart + 2 + _buffInd * buffer_data_size;
 			
-			buffer_write_at(trail_buffer, _buffOffStart, buffer_u16, _lif);
+			buffer_poke(trail_buffer, _buffOffStart, buffer_u16, _lif);
 			buffer_seek(trail_buffer, buffer_seek_start, _buffOff);
 			
 			buffer_write(trail_buffer, buffer_f64, _draw_x);
@@ -210,14 +210,14 @@ function Node_pSystem_Render_Path(_x, _y, _group = noone) : Node(_x, _y, _group)
 			_off += global.pSystem_data_length;
 			
 			var _mask   = use_mask? buffer_read(_masks, buffer_f32) : 1; if(_mask <= 0) continue;
-			var _act    = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.active, buffer_bool );
-			var _stat   = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.stat,   buffer_bool );
-			var _lif    = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.life,   buffer_f64  );
+			var _act    = buffer_peek( _partBuff, _start + PSYSTEM_OFF.active, buffer_bool );
+			var _stat   = buffer_peek( _partBuff, _start + PSYSTEM_OFF.stat,   buffer_bool );
+			var _lif    = buffer_peek( _partBuff, _start + PSYSTEM_OFF.life,   buffer_f64  );
 			
 			if(!_act && (_lif == 0 || !_endt)) continue;
 			
-			var _spwnId = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.sindex, buffer_u32  );
-			var _lifMax = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.mlife,  buffer_f64  );
+			var _spwnId = buffer_peek( _partBuff, _start + PSYSTEM_OFF.sindex, buffer_u32  );
+			var _lifMax = buffer_peek( _partBuff, _start + PSYSTEM_OFF.mlife,  buffer_f64  );
 			
 			random_set_seed(_seed + _spwnId);
 			var rat = _stat? (_frame + _lif + _spwnId * _lifMax) / TOTAL_FRAMES : _lif / max(1, _lifMax - 1);

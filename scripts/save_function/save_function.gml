@@ -160,11 +160,11 @@ function SAVE_AT(project = PROJECT, path = "", _param = new save_param()) {
 		buffer_write(_buf, buffer_u32,    SAVE_VERSION);
 		buffer_write(_buf, buffer_string, VERSION_STRING);
 		var _metaCon = buffer_tell(_buf);
-		buffer_write_at(_buf, _metaPos, buffer_u32, _metaCon - _metaPos - 4);
+		buffer_poke(_buf, _metaPos, buffer_u32, _metaCon - _metaPos - 4);
 		buffer_seek(_buf, buffer_seek_start, _metaCon);
 		
 		var _headerSize = buffer_tell(_buf);
-		buffer_write_at(_buf, 4, buffer_u32, _headerSize);
+		buffer_poke(_buf, 4, buffer_u32, _headerSize);
 		
 		buffer_copy(_raw, 0, buffer_get_size(_raw), _buf, _headerSize);
 	    buffer_save(_buf, path);

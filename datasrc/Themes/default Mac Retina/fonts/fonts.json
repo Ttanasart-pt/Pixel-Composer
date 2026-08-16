@@ -1,0 +1,18 @@
+{
+    "h1":         { "path": "./NotoSans-Bold.ttf",         "size": 48 },
+    "h2":         { "path": "./NotoSans-Bold.ttf",         "size": 32 },
+    "h3":         { "path": "./NotoSans-Bold.ttf",         "size": 20 },
+    "h5":         { "path": "./NotoSans-Bold.ttf",         "size": 16 },
+    "p0":         { "path": "./NotoSans-Medium.ttf",       "size": 12 },
+    "p0b":        { "path": "./NotoSans-Bold.ttf",         "size": 12 },
+    "p1":         { "path": "./NotoSans-SemiBold.ttf",     "size": 11 },
+    "p1b":        { "path": "./NotoSans-Bold.ttf",         "size": 11 },
+    "p2":         { "path": "./NotoSans-Medium.ttf",       "size": 10 },
+    "p2b":        { "path": "./NotoSans-Bold.ttf",         "size": 10 },
+    "p3":         { "path": "./NotoSans-Medium.ttf",       "size":  9 },
+    "p4":         { "path": "./NotoSans-Medium.ttf",       "size":  8 },
+    "p5":         { "path": "./NotoSans-Medium.ttf",       "size":  7 },
+    "code":       { "path": "./FiraCode-Medium.ttf",       "size": 10 },
+    "sdf":        { "path": "./NotoSans-Bold.ttf",         "size": 32, "sdf": true },
+    "sdf_medium": { "path": "./NotoSans-Medium.ttf",       "size": 22, "sdf": true },
+}

@@ -55,12 +55,6 @@ function buffer_pack_doubles(args) {
 	return b;
 }
 
-function buffer_write_at(buffer, position, type, data) {
-	INLINE
-	buffer_seek(buffer, buffer_seek_start, position);
-	return buffer_write(buffer, type, data);
-}
-
 function buffer_setPixel(buffer, _w, _h, _x, _y, _c) {
 	if(_x < 0 || _y < 0 || _x >= _w || _y >= _h) return 0;
 	
@@ -76,12 +70,6 @@ function buffer_clear(buffer) {
 }
 
 	////- Get
-
-function buffer_read_at(buffer, position, type) {
-	INLINE
-	buffer_seek(buffer, buffer_seek_start, position);
-	return buffer_read(buffer, type);
-}
 
 function buffer_read_text(buffer, len) {
 	INLINE

@@ -110,24 +110,24 @@ function Node_pSystem_3D_Collision(_x, _y, _group = noone) : Node_3D_Object(_x, 
 			_off += global.pSystem_data_length;
 			
 			var _mask   = use_mask? buffer_read(_masks, buffer_f32) : 1; if(_mask <= 0) continue;
-			var _act    = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.active, buffer_bool );
-			var _spwnId = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.sindex, buffer_u32  );
+			var _act    = buffer_peek( _partBuff, _start + PSYSTEM_OFF.active, buffer_bool );
+			var _spwnId = buffer_peek( _partBuff, _start + PSYSTEM_OFF.sindex, buffer_u32  );
 			if(!_act) { buffer_write(mask_buffer, buffer_f32, 0); continue; }
 			
-			var _px     = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.posx,   buffer_f64  );
-			var _py     = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.posy,   buffer_f64  );
-			var _pz     = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.posz,   buffer_f64  );
+			var _px     = buffer_peek( _partBuff, _start + PSYSTEM_OFF.posx,   buffer_f64  );
+			var _py     = buffer_peek( _partBuff, _start + PSYSTEM_OFF.posy,   buffer_f64  );
+			var _pz     = buffer_peek( _partBuff, _start + PSYSTEM_OFF.posz,   buffer_f64  );
 			
-			var _sx     = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.scax,   buffer_f64  );
-			var _sy     = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.scay,   buffer_f64  );
-			var _sz     = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.scaz,   buffer_f64  );
+			var _sx     = buffer_peek( _partBuff, _start + PSYSTEM_OFF.scax,   buffer_f64  );
+			var _sy     = buffer_peek( _partBuff, _start + PSYSTEM_OFF.scay,   buffer_f64  );
+			var _sz     = buffer_peek( _partBuff, _start + PSYSTEM_OFF.scaz,   buffer_f64  );
 			
-			var _lif    = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.life,   buffer_f64  );
-			var _lifMax = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.mlife,  buffer_f64  );
+			var _lif    = buffer_peek( _partBuff, _start + PSYSTEM_OFF.life,   buffer_f64  );
+			var _lifMax = buffer_peek( _partBuff, _start + PSYSTEM_OFF.mlife,  buffer_f64  );
 			
-			var _vx     = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.velx,   buffer_f64  );
-			var _vy     = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.vely,   buffer_f64  );
-			var _vz     = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.velz,   buffer_f64  );
+			var _vx     = buffer_peek( _partBuff, _start + PSYSTEM_OFF.velx,   buffer_f64  );
+			var _vy     = buffer_peek( _partBuff, _start + PSYSTEM_OFF.vely,   buffer_f64  );
+			var _vz     = buffer_peek( _partBuff, _start + PSYSTEM_OFF.velz,   buffer_f64  );
 			
 			var rat = _lif / max(1, _lifMax - 1);
 			random_set_seed(_seed + _spwnId);
@@ -202,18 +202,18 @@ function Node_pSystem_3D_Collision(_x, _y, _group = noone) : Node_3D_Object(_x, 
 				collideCount++;
 			}
 			
-			buffer_write_at( _partBuff, _start + PSYSTEM_OFF.posx, buffer_f64, _cx );
-			buffer_write_at( _partBuff, _start + PSYSTEM_OFF.posy, buffer_f64, _cy );
-			buffer_write_at( _partBuff, _start + PSYSTEM_OFF.posz, buffer_f64, _cz );
+			buffer_poke( _partBuff, _start + PSYSTEM_OFF.posx, buffer_f64, _cx );
+			buffer_poke( _partBuff, _start + PSYSTEM_OFF.posy, buffer_f64, _cy );
+			buffer_poke( _partBuff, _start + PSYSTEM_OFF.posz, buffer_f64, _cz );
 			
-			buffer_write_at( _partBuff, _start + PSYSTEM_OFF.velx, buffer_f64, _vx );
-			buffer_write_at( _partBuff, _start + PSYSTEM_OFF.vely, buffer_f64, _vy );
-			buffer_write_at( _partBuff, _start + PSYSTEM_OFF.velz, buffer_f64, _vz );
+			buffer_poke( _partBuff, _start + PSYSTEM_OFF.velx, buffer_f64, _vx );
+			buffer_poke( _partBuff, _start + PSYSTEM_OFF.vely, buffer_f64, _vy );
+			buffer_poke( _partBuff, _start + PSYSTEM_OFF.velz, buffer_f64, _vz );
 			
 			buffer_write(mask_buffer, buffer_f32, 1);
 		}
 		
-		buffer_write_at(collideTrig, 0, buffer_u32, collideCount);
+		buffer_poke(collideTrig, 0, buffer_u32, collideCount);
 		
 		_outData[0] = _parts;
 		_outData[1] = collideTrig;

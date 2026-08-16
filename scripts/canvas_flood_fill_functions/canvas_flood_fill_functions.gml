@@ -1,4 +1,4 @@
-function _ff_getPixel(_x, _y) { return buffer_read_at(_ff_buff, (_y * _ff_w + _x) * 4, buffer_u32); }
+function _ff_getPixel(_x, _y) { return buffer_peek(_ff_buff, (_y * _ff_w + _x) * 4, buffer_u32); }
 	
 function canvas_ff_fillable(colorBase, colorFill, _x, _y, _thres) {
 	var c = _ff_getPixel(_x, _y);

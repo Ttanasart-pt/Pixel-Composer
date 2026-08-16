@@ -35,7 +35,7 @@ function tiler_tool_fill(_node, _brush, toolAttr) : tiler_tool(_node) constructo
 	}
 }
 
-function _tiler_ff_getPixel(_x, _y) { return round(buffer_read_at(_ff_buff, (_y * _ff_w + _x) * 8, buffer_f16)); }
+function _tiler_ff_getPixel(_x, _y) { return round(buffer_peek(_ff_buff, (_y * _ff_w + _x) * 8, buffer_f16)); }
 
 function tiler_flood_fill_scanline(_surf, _x, _y, brush, _corner = false) {
 	if(brush.brush_height * brush.brush_width == 0) return;
@@ -88,7 +88,7 @@ function tiler_flood_fill_scanline(_surf, _x, _y, brush, _corner = false) {
 			shader_set_f("varient", _b[1]);
 			draw_point(x1, y1);
 			
-			buffer_write_at(_ff_buff, (y1 * _ff_w + x1) * 8, buffer_f16, 1);
+			buffer_poke(_ff_buff, (y1 * _ff_w + x1) * 8, buffer_f16, 1);
 			
 			if(y1 > 0) {
 				if(_corner && x1 > 0 && baseC == _tiler_ff_getPixel(x1 - 1, y1 - 1)) {	//Check top left pixel

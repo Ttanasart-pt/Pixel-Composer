@@ -63,8 +63,6 @@ function Node_RM_Project_Mesh(_x, _y, _group = noone) : Node(_x, _y, _group) con
 			var idT = i * _res + j;
 			var idF = j * _res + k;
 			var idS = k * _res + i;
-			
-			var smT = buffer_read_at()
 		}
 		
 		buffer_delete(_bTop);

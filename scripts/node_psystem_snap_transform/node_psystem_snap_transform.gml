@@ -102,24 +102,24 @@ function Node_pSystem_Snap_Transform(_x, _y, _group = noone) : Node(_x, _y, _gro
 			_off += global.pSystem_data_length;
 			
 			var _mask   = use_mask? buffer_read(_masks, buffer_f32) : 1; if(_mask <= 0) continue;
-			var _act    = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.active, buffer_bool );
-			var _stat   = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.stat,   buffer_bool );
+			var _act    = buffer_peek( _partBuff, _start + PSYSTEM_OFF.active, buffer_bool );
+			var _stat   = buffer_peek( _partBuff, _start + PSYSTEM_OFF.stat,   buffer_bool );
 			if(!_act) continue;
 			
-			var _spwnId = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.sindex, buffer_u32  );
+			var _spwnId = buffer_peek( _partBuff, _start + PSYSTEM_OFF.sindex, buffer_u32  );
 			
-			var _px     = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.posx,   buffer_f64  );
-			var _py     = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.posy,   buffer_f64  );
+			var _px     = buffer_peek( _partBuff, _start + PSYSTEM_OFF.posx,   buffer_f64  );
+			var _py     = buffer_peek( _partBuff, _start + PSYSTEM_OFF.posy,   buffer_f64  );
 			
-			var _sx     = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.dscax,  buffer_f64  );
-			var _sy     = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.dscay,  buffer_f64  );
+			var _sx     = buffer_peek( _partBuff, _start + PSYSTEM_OFF.dscax,  buffer_f64  );
+			var _sy     = buffer_peek( _partBuff, _start + PSYSTEM_OFF.dscay,  buffer_f64  );
 			
-			var _rot    = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.rotx,   buffer_f64  );
+			var _rot    = buffer_peek( _partBuff, _start + PSYSTEM_OFF.rotx,   buffer_f64  );
 			
-			var _dfg    = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.dflag,  buffer_u16  );
+			var _dfg    = buffer_peek( _partBuff, _start + PSYSTEM_OFF.dflag,  buffer_u16  );
 			
-			var _lif    = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.life,   buffer_f64  );
-			var _lifMax = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.mlife,  buffer_f64  );
+			var _lif    = buffer_peek( _partBuff, _start + PSYSTEM_OFF.life,   buffer_f64  );
+			var _lifMax = buffer_peek( _partBuff, _start + PSYSTEM_OFF.mlife,  buffer_f64  );
 			
 			var rat = _stat? (_frame + _lif + _spwnId * _lifMax) / TOTAL_FRAMES : _lif / max(1, _lifMax - 1);
 			    rat = clamp(rat, 0, 1);
@@ -138,8 +138,8 @@ function Node_pSystem_Snap_Transform(_x, _y, _group = noone) : Node(_x, _y, _gro
 				
 				_dfg |= 0b100 * !_posi_over;
 				
-				buffer_write_at( _partBuff, _start + PSYSTEM_OFF.posx, buffer_f64, _px  );
-				buffer_write_at( _partBuff, _start + PSYSTEM_OFF.posy, buffer_f64, _py  );
+				buffer_poke( _partBuff, _start + PSYSTEM_OFF.posx, buffer_f64, _px  );
+				buffer_poke( _partBuff, _start + PSYSTEM_OFF.posy, buffer_f64, _py  );
 			}
 			
 			if(_rota) {
@@ -153,7 +153,7 @@ function Node_pSystem_Snap_Transform(_x, _y, _group = noone) : Node(_x, _y, _gro
 				
 				_dfg |= 0b001 * !_rota_over;
 				
-				buffer_write_at( _partBuff, _start + PSYSTEM_OFF.rotx, buffer_f64, _rot );
+				buffer_poke( _partBuff, _start + PSYSTEM_OFF.rotx, buffer_f64, _rot );
 			}
 			
 			if(_scal) {
@@ -169,13 +169,13 @@ function Node_pSystem_Snap_Transform(_x, _y, _group = noone) : Node(_x, _y, _gro
 				
 				_dfg |= 0b010 * !_scal_over;
 				
-				buffer_write_at( _partBuff, _start + PSYSTEM_OFF.dscax, buffer_f64, _sx  );
-				buffer_write_at( _partBuff, _start + PSYSTEM_OFF.dscay, buffer_f64, _sy  );
+				buffer_poke( _partBuff, _start + PSYSTEM_OFF.dscax, buffer_f64, _sx  );
+				buffer_poke( _partBuff, _start + PSYSTEM_OFF.dscay, buffer_f64, _sy  );
 			}
 			
 			if(_dirr) {
-				var _vx = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.velx,   buffer_f64  );
-				var _vy = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.vely,   buffer_f64  );
+				var _vx = buffer_peek( _partBuff, _start + PSYSTEM_OFF.velx,   buffer_f64  );
+				var _vy = buffer_peek( _partBuff, _start + PSYSTEM_OFF.vely,   buffer_f64  );
 				
 				var _dir = point_direction( 0, 0, _vx, _vy );
 				var _dis = point_distance(  0, 0, _vx, _vy );
@@ -184,11 +184,11 @@ function Node_pSystem_Snap_Transform(_x, _y, _group = noone) : Node(_x, _y, _gro
 				_vx = lengthdir_x(_dis, _dir);
 				_vy = lengthdir_y(_dis, _dir);
 				
-				buffer_write_at( _partBuff, _start + PSYSTEM_OFF.velx, buffer_f64, _vx );
-				buffer_write_at( _partBuff, _start + PSYSTEM_OFF.vely, buffer_f64, _vy );
+				buffer_poke( _partBuff, _start + PSYSTEM_OFF.velx, buffer_f64, _vx );
+				buffer_poke( _partBuff, _start + PSYSTEM_OFF.vely, buffer_f64, _vy );
 			}
 			
-			// buffer_write_at( _partBuff, _start + PSYSTEM_OFF.dflag, buffer_u16, _dfg );
+			// buffer_poke( _partBuff, _start + PSYSTEM_OFF.dflag, buffer_u16, _dfg );
 		}
 		
 	}

@@ -102,25 +102,25 @@ function Node_pSystem_Render_Triangle(_x, _y, _group = noone) : Node(_x, _y, _gr
 				_off += global.pSystem_data_length;
 				
 				var _mask   = use_mask? buffer_read(_masks, buffer_f32) : 1; if(_mask <= 0) continue;
-				var _act    = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.active, buffer_bool );
-				var _stat   = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.stat,   buffer_bool );
-				var _lif    = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.life,   buffer_f64  );
+				var _act    = buffer_peek( _partBuff, _start + PSYSTEM_OFF.active, buffer_bool );
+				var _stat   = buffer_peek( _partBuff, _start + PSYSTEM_OFF.stat,   buffer_bool );
+				var _lif    = buffer_peek( _partBuff, _start + PSYSTEM_OFF.life,   buffer_f64  );
 				
 				if(!_act) continue;
 				
-				var _spwnId = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.sindex, buffer_u32  );
-				var _lifMax = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.mlife,  buffer_f64  );
+				var _spwnId = buffer_peek( _partBuff, _start + PSYSTEM_OFF.sindex, buffer_u32  );
+				var _lifMax = buffer_peek( _partBuff, _start + PSYSTEM_OFF.mlife,  buffer_f64  );
 				
-				var _px = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.posx,  buffer_f64  );
-				var _py = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.posy,  buffer_f64  );
+				var _px = buffer_peek( _partBuff, _start + PSYSTEM_OFF.posx,  buffer_f64  );
+				var _py = buffer_peek( _partBuff, _start + PSYSTEM_OFF.posy,  buffer_f64  );
 				
-				var _sx = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.dscax, buffer_f64  );
-				var _sy = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.dscay, buffer_f64  );
+				var _sx = buffer_peek( _partBuff, _start + PSYSTEM_OFF.dscax, buffer_f64  );
+				var _sy = buffer_peek( _partBuff, _start + PSYSTEM_OFF.dscay, buffer_f64  );
 				
-				var _cr = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.blnr,  buffer_u8  );
-				var _cg = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.blng,  buffer_u8  );
-				var _cb = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.blnb,  buffer_u8  );
-				var _ca = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.blna,  buffer_u8  );
+				var _cr = buffer_peek( _partBuff, _start + PSYSTEM_OFF.blnr,  buffer_u8  );
+				var _cg = buffer_peek( _partBuff, _start + PSYSTEM_OFF.blng,  buffer_u8  );
+				var _cb = buffer_peek( _partBuff, _start + PSYSTEM_OFF.blnb,  buffer_u8  );
+				var _ca = buffer_peek( _partBuff, _start + PSYSTEM_OFF.blna,  buffer_u8  );
 				var _cc = make_color_rgba(_cr, _cg, _cb, _ca);
 				
 				random_set_seed(_seed + _spwnId);

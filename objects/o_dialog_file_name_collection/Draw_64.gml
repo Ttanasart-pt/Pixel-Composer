@@ -38,16 +38,16 @@ DIALOG_WINDOW_START
 	var bb = THEME.button_hide_fill;
 	var bc = COLORS._main_value_negative;
 	
-	if(buttonInstant(bb, bx, by, bs, bs, mouse_ui, sHOVER, sFOCUS, __txt("Close"), THEME.cross_16, 0, bc) == 2)
+	if(buttonInstant(bb, bx, by, bs, bs, mouse_ui, sHOVER, sFOCUS, "", THEME.cross_16, 0, bc) == 2)
 		instance_destroy();
 	bx -= bs + ui(4);
 		
-	var txt  = __txt("new_collection_create", "Create collection");
+	var txt  = __txt("new_collection_create", "Create Collection");
 	var icon = THEME.accept_16;
 	var clr  = COLORS._main_value_positive;
 	
 	if(updating != noone)
-		txt  = __txt("new_collection_update", "Update collection");
+		txt  = __txt("new_collection_update", "Update Collection");
 	
 	if(ugc == 1) {
 		txt  = __txt("panel_inspector_workshop_upload", "Upload to Steam Workshop");
@@ -115,7 +115,7 @@ DIALOG_WINDOW_START
 	
 	if(!meta_expand) {
 		bx -= bs + ui(4);
-		var txt = __txt("new_collection_meta_edit", "Edit metadata");
+		var txt = __txt("new_collection_meta_edit", "Edit Metadata");
 		if(buttonInstant(THEME.button_hide_fill, bx, by, bs, bs, mouse_ui, sHOVER, sFOCUS, txt, THEME.arrow, meta_expand? 3 : 0) == 2)
 			doExpand();
 	}

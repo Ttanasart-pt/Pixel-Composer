@@ -24,12 +24,12 @@ DIALOG_WINDOW_START
 	var bb = THEME.button_hide_fill;
 	
 	var bc = COLORS._main_value_negative;
-	if(buttonInstant(bb, bx, by, bs, bs, mouse_ui, sHOVER, sFOCUS, __txt("Close"), THEME.cross_16, 0, bc) == 2)
+	if(buttonInstant(bb, bx, by, bs, bs, mouse_ui, sHOVER, sFOCUS, "", THEME.cross_16, 0, bc) == 2)
 		instance_destroy();
 	bx -= bs + ui(4); tw -= bs + ui(4);
 	
 	var bc = COLORS._main_value_positive;
-	if(buttonInstant(bb, bx, by, bs, bs, mouse_ui, sHOVER, sFOCUS, __txt("Accept"), THEME.accept_16, 0, bc) == 2) {
+	if(buttonInstant(bb, bx, by, bs, bs, mouse_ui, sHOVER, sFOCUS, "", THEME.accept_16, 0, bc) == 2) {
 		onModify(filename_combine(path, filename_name_validate(tb_name._input_text))); 
 		WIDGET_CURRENT = undefined;
 		instance_destroy();

@@ -164,12 +164,12 @@ function Node_pSystem_Mask(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 			buffer_seek(_partBuff, buffer_seek_start, _start);
 			_off += global.pSystem_data_length;
 			
-			var _act    = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.active, buffer_bool );
-			var _spwnId = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.sindex, buffer_u32  );
+			var _act    = buffer_peek( _partBuff, _start + PSYSTEM_OFF.active, buffer_bool );
+			var _spwnId = buffer_peek( _partBuff, _start + PSYSTEM_OFF.sindex, buffer_u32  );
 			if(!_act) { buffer_write(mask_buffer, buffer_f32, 0); continue; }
 			
-			var _px  = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.posx,   buffer_f64  );
-			var _py  = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.posy,   buffer_f64  );
+			var _px  = buffer_peek( _partBuff, _start + PSYSTEM_OFF.posx,   buffer_f64  );
+			var _py  = buffer_peek( _partBuff, _start + PSYSTEM_OFF.posy,   buffer_f64  );
 			
 			var _inf = 0;
 			

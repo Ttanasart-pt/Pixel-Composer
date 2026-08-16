@@ -16,17 +16,21 @@
       "copyToTargets":"64",
     },
   },
-  "copyToTargets":-1,
+  "copyToTargets":64,
   "description":"",
   "exportToGame":true,
   "extensionVersion":"0.0.1",
   "files":[
-    {"$GMExtensionFile":"v1","%Name":"","ConfigValues":{"Steam":{"copyToTargets":"64",},},"constants":[],"copyToTargets":-1,"filename":"libsysdata.dll","final":"","functions":[
+    {"$GMExtensionFile":"v1","%Name":"","ConfigValues":{
+        "Steam":{
+          "copyToTargets":"64",
+        },
+      },"constants":[],"copyToTargets":-1,"filename":"libsysdata.dll","final":"","functions":[
         {"$GMExtensionFunction":"","%Name":"getMemoryUsage","argCount":0,"args":[2,],"documentation":"","externalName":"getMemoryUsage","help":"","hidden":false,"kind":1,"name":"getMemoryUsage","resourceType":"GMExtensionFunction","resourceVersion":"2.0","returnType":2,},
       ],"init":"","kind":1,"name":"","origname":"","ProxyFiles":[],"resourceType":"GMExtensionFile","resourceVersion":"2.0","uncompress":false,"usesRunnerInterface":false,},
   ],
   "gradleinject":null,
-  "hasConvertedCodeInjection":false,
+  "hasConvertedCodeInjection":true,
   "helpfile":"",
   "HTML5CodeInjection":"",
   "html5Props":false,

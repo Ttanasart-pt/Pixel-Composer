@@ -56,25 +56,25 @@ function Node_pSystem_Acceleration(_x, _y, _group = noone) : Node(_x, _y, _group
 			_off += global.pSystem_data_length;
 			
 			var _mask   = use_mask? buffer_read(_masks, buffer_f32) : 1; if(_mask <= 0) continue;
-			var _act    = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.active, buffer_bool );
-			var _stat   = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.stat,   buffer_bool );
-			var _spwnId = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.sindex, buffer_u32  );
+			var _act    = buffer_peek( _partBuff, _start + PSYSTEM_OFF.active, buffer_bool );
+			var _stat   = buffer_peek( _partBuff, _start + PSYSTEM_OFF.stat,   buffer_bool );
+			var _spwnId = buffer_peek( _partBuff, _start + PSYSTEM_OFF.sindex, buffer_u32  );
 			if(!_act) continue;
 			
-			var _lif    = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.life,   buffer_f64  );
-			var _lifMax = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.mlife,  buffer_f64  );
+			var _lif    = buffer_peek( _partBuff, _start + PSYSTEM_OFF.life,   buffer_f64  );
+			var _lifMax = buffer_peek( _partBuff, _start + PSYSTEM_OFF.mlife,  buffer_f64  );
 			
-			var _px     = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.posx,   buffer_f64  );
-			var _py     = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.posy,   buffer_f64  );
+			var _px     = buffer_peek( _partBuff, _start + PSYSTEM_OFF.posx,   buffer_f64  );
+			var _py     = buffer_peek( _partBuff, _start + PSYSTEM_OFF.posy,   buffer_f64  );
 			
-			var _ppx    = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.pospx,  buffer_f64  );
-			var _ppy    = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.pospy,  buffer_f64  );
+			var _ppx    = buffer_peek( _partBuff, _start + PSYSTEM_OFF.pospx,  buffer_f64  );
+			var _ppy    = buffer_peek( _partBuff, _start + PSYSTEM_OFF.pospy,  buffer_f64  );
 			
-			var _vx     = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.velx,   buffer_f64  );
-			var _vy     = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.vely,   buffer_f64  );
+			var _vx     = buffer_peek( _partBuff, _start + PSYSTEM_OFF.velx,   buffer_f64  );
+			var _vy     = buffer_peek( _partBuff, _start + PSYSTEM_OFF.vely,   buffer_f64  );
 			
-			var _vpx    = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.velpx,  buffer_f64  );
-			var _vpy    = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.velpy,  buffer_f64  );
+			var _vpx    = buffer_peek( _partBuff, _start + PSYSTEM_OFF.velpx,  buffer_f64  );
+			var _vpy    = buffer_peek( _partBuff, _start + PSYSTEM_OFF.velpy,  buffer_f64  );
 			
 			if(_lif <= 1) continue;
 			
@@ -96,8 +96,8 @@ function Node_pSystem_Acceleration(_x, _y, _group = noone) : Node(_x, _y, _group
 			_dx = lengthdir_x(_ds, _dr);
 			_dy = lengthdir_y(_ds, _dr);
 			
-			buffer_write_at(_partBuff, _start + PSYSTEM_OFF.posx, buffer_f64, _ppx + _dx );
-			buffer_write_at(_partBuff, _start + PSYSTEM_OFF.posy, buffer_f64, _ppy + _dy );
+			buffer_poke(_partBuff, _start + PSYSTEM_OFF.posx, buffer_f64, _ppx + _dx );
+			buffer_poke(_partBuff, _start + PSYSTEM_OFF.posy, buffer_f64, _ppy + _dy );
 			
 			// Vector move
 			var _ds = point_distance(  0, 0, _vx, _vy );
@@ -108,8 +108,8 @@ function Node_pSystem_Acceleration(_x, _y, _group = noone) : Node(_x, _y, _group
 				_vx = lengthdir_x(_ds, _dr);
 				_vy = lengthdir_y(_ds, _dr);
 				
-				buffer_write_at(_partBuff, _start + PSYSTEM_OFF.velx, buffer_f64, _vx );
-				buffer_write_at(_partBuff, _start + PSYSTEM_OFF.vely, buffer_f64, _vy );
+				buffer_poke(_partBuff, _start + PSYSTEM_OFF.velx, buffer_f64, _vx );
+				buffer_poke(_partBuff, _start + PSYSTEM_OFF.vely, buffer_f64, _vy );
 			}
 		}
 		

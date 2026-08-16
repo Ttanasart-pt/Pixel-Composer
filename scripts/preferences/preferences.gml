@@ -23,7 +23,7 @@
 			PREFERENCES.window_shadow                   = true;
 			PREFERENCES.window_multi                    = true;
 			
-			PREFERENCES.theme							= MAC? "default Mac" : "default";
+			PREFERENCES.theme							= "default";
 			PREFERENCES.theme_override					= "override";
 			PREFERENCES.theme_load_unpack				= true;
 			PREFERENCES.theme_boolean                   = 0;
@@ -340,7 +340,7 @@
 			
 			PREFERENCES.annotation   = false;
 		#endregion
-			
+		
 		PREFERENCES_DEF = variable_clone(PREFERENCES);
 		
 		global.menuItems_pie_add_node = [
@@ -445,6 +445,10 @@
 		
 		if(disp > 1) PREFERENCES.theme = "default HQ";
 		
+		if(MAC) {
+			PREFERENCES.theme = "default Mac"; PREFERENCES_DEF.theme = PREFERENCES.theme;
+		}
+		
 		print($"Init with theme {PREFERENCES.theme}")
 	}
 	
@@ -494,9 +498,12 @@
 	function PREF_LOAD() {
 		try {
 			directory_verify($"{DIRECTORY}Preferences");
+			
 			if(!directory_exists(PREFERENCES_DIR)) PREF_UPDATE();
 			
 			var path = filename_combine(PREFERENCES_DIR, "keys.json");
+			// show_message($"[{file_exists(path)}]: {path}");
+			
 			if(file_exists(path)) {
 				var _map = json_load_struct(path);
 				var _prf = struct_has(_map, "preferences")? _map.preferences : _map;

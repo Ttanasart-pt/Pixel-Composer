@@ -67,25 +67,28 @@ var _cnt = panel.getContent();
 		
 		draw_sprite_stretched_ext(THEME.ui_panel_bg, 3, dx, dy, dw, dh, COLORS._main_icon_light, 1);
 		
-		var _bx = _dialog_x + dialog_w - ui(8);
-		var _by = _dialog_y + ui(6);
-		var _bs = ui(20);
+		var bs = ui(20);
+		
+		var bx = MAC? _dialog_x + ui(6) : _dialog_x + dialog_w - ui(6) - bs;
+		var by = _dialog_y + ui(6);
 		var overBut = content.title_actions_override && !array_empty(content.title_actions);
 		
 		if(instanceof(content) != "Panel_Menu" && !overBut) {
 			var bb = THEME.button_hide_fill;
 			
-			if(buttonInstant(bb, _bx-_bs, _by, _bs, _bs, mouse_ui, hov, foc, "", THEME.window_exit_icon, 0, CARRAY.button_negative) == 2) {
+			if(buttonInstant(bb, bx, by, bs, bs, mouse_ui, hov, foc, "", THEME.window_exit_icon, 0, CARRAY.button_negative) == 2) {
 				onDestroy();
 				instance_destroy();
-			} _bx -= _bs + ui(2);
+			}
+			bx -= (bs + ui(2)) * (MAC? -1 : 1);
 			
 		    if(is(_cnt, PanelContent)) {
-				if(buttonInstant(bb, _bx-_bs, _by, _bs, _bs, mouse_ui, hov, foc, "", THEME.window_pan_icon) == 2) {
+				if(buttonInstant(bb, bx, by, bs, bs, mouse_ui, hov, foc, "", THEME.window_pan_icon) == 2) {
 					_cnt.dragSurface = undefined;
 					o_main.panel_dragging = _cnt;
 					instance_destroy();
-				} _bx -= _bs + ui(4);
+				} 
+				bx -= (bs + ui(2)) * (MAC? -1 : 1);
 		    }
 		}
 		
@@ -96,31 +99,31 @@ var _cnt = panel.getContent();
 			var _act = array_safe_get(_b, 2);
 			var _par = array_safe_get(_b, 3);
 			
-			if(buttonInstant(THEME.button_hide_fill, _bx - _bs, _by, _bs, _bs, mouse_ui, hov, foc, _txt, _spr[0], _spr[1], _spr[2]) == 2)
+			if(buttonInstant(THEME.button_hide_fill, bx, by, bs, bs, mouse_ui, hov, foc, _txt, _spr[0], _spr[1], _spr[2]) == 2)
 				_act(_par);
 			
-			_bx -= _bs + ui(4);
+			bx -= (bs + ui(2)) * (MAC? -1 : 1);
 		}
 		
-		var _tx   = _dialog_x + ui(32);
+		if(instanceof(content) != "Panel_Menu") {
+			if(!MAC) bx = _dialog_x + ui(6);
+			
+			var txt = destroy_on_click_out? __txt("Pin") : __txt("Unpin");
+			var cc  = destroy_on_click_out? COLORS._main_icon : COLORS._main_icon_light;
+			var ind = !destroy_on_click_out;
+			
+			var b = buttonInstant(THEME.button_hide_fill, bx, by, bs, bs, mouse_ui, hov, foc, txt, THEME.pin, ind, cc, 1, .75);
+			bx += bs + ui(2);
+			if(b == 2) destroy_on_click_out = !destroy_on_click_out;
+		}
+		
+		var _tx   = bx + ui(2);
 		var _scis = gpu_get_scissor();
-		gpu_set_scissor(_tx, _dialog_y, _bx - _tx, title_height);
+		gpu_set_scissor(_tx, _dialog_y, bx - _tx, title_height);
 			draw_set_text(f_p2, fa_left, fa_top, COLORS._main_text_sub);
 			draw_text_add(_tx, _dialog_y + ui(8), title);
 		gpu_set_scissor(_scis);
 		
-		var bx  = _dialog_x + ui(8);
-		var by  = _dialog_y + ui(6);
-		var txt = destroy_on_click_out? __txt("Pin") : __txt("Unpin");
-		var cc  = destroy_on_click_out? COLORS._main_icon : COLORS._main_icon_light;
-		var ind = !destroy_on_click_out;
-		var ss  = ui(20);
-		var sc  = 0.75;
-		
-		if(instanceof(content) != "Panel_Menu") {
-			var b = buttonInstant(THEME.button_hide_fill, bx, by, ss, ss, mouse_ui, hov, foc, txt, THEME.pin, ind, cc, 1, sc);
-			if(b == 2) destroy_on_click_out = !destroy_on_click_out;
-		}
 	}
 #endregion
 

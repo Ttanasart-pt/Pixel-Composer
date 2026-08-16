@@ -79,36 +79,36 @@ function Node_pSystem_3D_Transform(_x, _y, _group = noone) : Node_3D(_x, _y, _gr
 			_off += global.pSystem_data_length;
 			
 			var _mask   = use_mask? buffer_read(_masks, buffer_f32) : 1; if(_mask <= 0) continue;
-			var _act    = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.active, buffer_bool );
+			var _act    = buffer_peek( _partBuff, _start + PSYSTEM_OFF.active, buffer_bool );
 			if(!_act) continue;
 			
-			var _spwnId = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.sindex, buffer_u32  );
+			var _spwnId = buffer_peek( _partBuff, _start + PSYSTEM_OFF.sindex, buffer_u32  );
 				
-			var _lif    = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.life,  buffer_f64  );
-			var _lifMax = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.mlife, buffer_f64  );
+			var _lif    = buffer_peek( _partBuff, _start + PSYSTEM_OFF.life,  buffer_f64  );
+			var _lifMax = buffer_peek( _partBuff, _start + PSYSTEM_OFF.mlife, buffer_f64  );
 			
 			var rat = _lif / max(1, _lifMax - 1);
 			random_set_seed(_seed + _spwnId);
 			
 			if(_do_move) {
-				var _px     = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.posx, buffer_f64  );
-				var _py     = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.posy, buffer_f64  );
-				var _pz     = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.posz, buffer_f64  );
+				var _px     = buffer_peek( _partBuff, _start + PSYSTEM_OFF.posx, buffer_f64  );
+				var _py     = buffer_peek( _partBuff, _start + PSYSTEM_OFF.posy, buffer_f64  );
+				var _pz     = buffer_peek( _partBuff, _start + PSYSTEM_OFF.posz, buffer_f64  );
 				
 				var _move_mod = _move_curved? curve_move.get(rat) : 1;
 				_px += random_range(_move[0], _move[1]) * _move_mod * _mask;
 				_py += random_range(_move[2], _move[3]) * _move_mod * _mask;
 				_pz += random_range(_move[4], _move[5]) * _move_mod * _mask;
 				
-				buffer_write_at( _partBuff, _start + PSYSTEM_OFF.posx, buffer_f64, _px );
-				buffer_write_at( _partBuff, _start + PSYSTEM_OFF.posy, buffer_f64, _py );
-				buffer_write_at( _partBuff, _start + PSYSTEM_OFF.posz, buffer_f64, _pz );
+				buffer_poke( _partBuff, _start + PSYSTEM_OFF.posx, buffer_f64, _px );
+				buffer_poke( _partBuff, _start + PSYSTEM_OFF.posy, buffer_f64, _py );
+				buffer_poke( _partBuff, _start + PSYSTEM_OFF.posz, buffer_f64, _pz );
 			}
 			
 			if(_do_rota) {
-				var _rx = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.rotx,  buffer_f64  );
-				var _ry = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.roty,  buffer_f64  );
-				var _rz = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.rotz,  buffer_f64  );
+				var _rx = buffer_peek( _partBuff, _start + PSYSTEM_OFF.rotx,  buffer_f64  );
+				var _ry = buffer_peek( _partBuff, _start + PSYSTEM_OFF.roty,  buffer_f64  );
+				var _rz = buffer_peek( _partBuff, _start + PSYSTEM_OFF.rotz,  buffer_f64  );
 				
 				var _rota_mod = _rota_curved? curve_rota.get(rat) : 1;
 				var _rot_dx = random_range(_rota[0], _rota[1]) * _rota_mod;
@@ -137,15 +137,15 @@ function Node_pSystem_3D_Transform(_x, _y, _group = noone) : Node_3D(_x, _y, _gr
 				_ry = lerp(_ry, _rot_ty, _mask);
 				_rz = lerp(_rz, _rot_tz, _mask);
 				
-				buffer_write_at( _partBuff, _start + PSYSTEM_OFF.rotx, buffer_f64, _rx );
-				buffer_write_at( _partBuff, _start + PSYSTEM_OFF.roty, buffer_f64, _ry );
-				buffer_write_at( _partBuff, _start + PSYSTEM_OFF.rotz, buffer_f64, _rz );
+				buffer_poke( _partBuff, _start + PSYSTEM_OFF.rotx, buffer_f64, _rx );
+				buffer_poke( _partBuff, _start + PSYSTEM_OFF.roty, buffer_f64, _ry );
+				buffer_poke( _partBuff, _start + PSYSTEM_OFF.rotz, buffer_f64, _rz );
 			}
 			
 			if(_do_scal) {
-				var _sx     = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.scax, buffer_f64  );
-				var _sy     = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.scay, buffer_f64  );
-				var _sz     = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.scaz, buffer_f64  );
+				var _sx     = buffer_peek( _partBuff, _start + PSYSTEM_OFF.scax, buffer_f64  );
+				var _sy     = buffer_peek( _partBuff, _start + PSYSTEM_OFF.scay, buffer_f64  );
+				var _sz     = buffer_peek( _partBuff, _start + PSYSTEM_OFF.scaz, buffer_f64  );
 				
 				var _scal_mod = _scal_curved? curve_scal.get(rat) : 1;
 				var _sx_t = _sx, _sx_d = random_range(_scal[0], _scal[1]) * _scal_mod;
@@ -170,9 +170,9 @@ function Node_pSystem_3D_Transform(_x, _y, _group = noone) : Node_3D(_x, _y, _gr
 				_sy = lerp(_sy, _sy_t, _mask);
 				_sz = lerp(_sz, _sz_t, _mask);
 				
-				buffer_write_at( _partBuff, _start + PSYSTEM_OFF.scax, buffer_f64, _sx );
-				buffer_write_at( _partBuff, _start + PSYSTEM_OFF.scay, buffer_f64, _sy );
-				buffer_write_at( _partBuff, _start + PSYSTEM_OFF.scaz, buffer_f64, _sz );
+				buffer_poke( _partBuff, _start + PSYSTEM_OFF.scax, buffer_f64, _sx );
+				buffer_poke( _partBuff, _start + PSYSTEM_OFF.scay, buffer_f64, _sy );
+				buffer_poke( _partBuff, _start + PSYSTEM_OFF.scaz, buffer_f64, _sz );
 			}
 			
 		}

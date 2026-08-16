@@ -120,20 +120,20 @@ function Node_pSystem_3D_Boids(_x, _y, _group = noone) : Node_3D(_x, _y, _group)
 			_off += global.pSystem_data_length;
 			
 			var _mask   = use_mask? buffer_read(_masks, buffer_f32) : 1; if(_mask <= 0) continue;
-			var _act    = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.active, buffer_bool );
-			var _spwnId = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.sindex, buffer_u32  );
+			var _act    = buffer_peek( _partBuff, _start + PSYSTEM_OFF.active, buffer_bool );
+			var _spwnId = buffer_peek( _partBuff, _start + PSYSTEM_OFF.sindex, buffer_u32  );
 			if(!_act) continue;
 			
-			var _px     = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.posx,   buffer_f64  );
-			var _py     = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.posy,   buffer_f64  );
-			var _pz     = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.posz,   buffer_f64  );
+			var _px     = buffer_peek( _partBuff, _start + PSYSTEM_OFF.posx,   buffer_f64  );
+			var _py     = buffer_peek( _partBuff, _start + PSYSTEM_OFF.posy,   buffer_f64  );
+			var _pz     = buffer_peek( _partBuff, _start + PSYSTEM_OFF.posz,   buffer_f64  );
 			
-			var _vx     = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.velx,   buffer_f64  );
-			var _vy     = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.vely,   buffer_f64  );
-			var _vz     = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.velz,   buffer_f64  );
+			var _vx     = buffer_peek( _partBuff, _start + PSYSTEM_OFF.velx,   buffer_f64  );
+			var _vy     = buffer_peek( _partBuff, _start + PSYSTEM_OFF.vely,   buffer_f64  );
+			var _vz     = buffer_peek( _partBuff, _start + PSYSTEM_OFF.velz,   buffer_f64  );
 			
-			var _lif    = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.life,   buffer_f64  );
-			var _lifMax = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.mlife,  buffer_f64  );
+			var _lif    = buffer_peek( _partBuff, _start + PSYSTEM_OFF.life,   buffer_f64  );
+			var _lifMax = buffer_peek( _partBuff, _start + PSYSTEM_OFF.mlife,  buffer_f64  );
 			
 			var rat = _lif / max(1, _lifMax - 1);
 			random_set_seed(_seed + _spwnId);
@@ -164,16 +164,16 @@ function Node_pSystem_3D_Boids(_x, _y, _group = noone) : Node_3D(_x, _y, _group)
 				_off2 += global.pSystem_data_length;
 				if(_start == _start2) continue;
 				
-				var _act = buffer_read_at( _partBuff, _start2 + PSYSTEM_OFF.active, buffer_bool );
+				var _act = buffer_peek( _partBuff, _start2 + PSYSTEM_OFF.active, buffer_bool );
 				if(!_act) continue;
 				
-				p1x  = buffer_read_at( _partBuff, _start2 + PSYSTEM_OFF.posx,   buffer_f64  );
-				p1y  = buffer_read_at( _partBuff, _start2 + PSYSTEM_OFF.posy,   buffer_f64  );
-				p1z  = buffer_read_at( _partBuff, _start2 + PSYSTEM_OFF.posz,   buffer_f64  );
+				p1x  = buffer_peek( _partBuff, _start2 + PSYSTEM_OFF.posx,   buffer_f64  );
+				p1y  = buffer_peek( _partBuff, _start2 + PSYSTEM_OFF.posy,   buffer_f64  );
+				p1z  = buffer_peek( _partBuff, _start2 + PSYSTEM_OFF.posz,   buffer_f64  );
 				
-				p1vx = buffer_read_at( _partBuff, _start2 + PSYSTEM_OFF.velx,   buffer_f64  );
-				p1vy = buffer_read_at( _partBuff, _start2 + PSYSTEM_OFF.vely,   buffer_f64  );
-				p1vz = buffer_read_at( _partBuff, _start2 + PSYSTEM_OFF.velz,   buffer_f64  );
+				p1vx = buffer_peek( _partBuff, _start2 + PSYSTEM_OFF.velx,   buffer_f64  );
+				p1vy = buffer_peek( _partBuff, _start2 + PSYSTEM_OFF.vely,   buffer_f64  );
+				p1vz = buffer_peek( _partBuff, _start2 + PSYSTEM_OFF.velz,   buffer_f64  );
 				
 				var _dx = p0x - p1x;
 				var _dy = p0y - p1y;
@@ -242,9 +242,9 @@ function Node_pSystem_3D_Boids(_x, _y, _group = noone) : Node_3D(_x, _y, _group)
 			var _vy = _dy / _dd * _disn;
 			var _vz = _dz / _dd * _disn;
 			
-			buffer_write_at(_partBuff, _start + PSYSTEM_OFF.velx, buffer_f64, _vx );
-			buffer_write_at(_partBuff, _start + PSYSTEM_OFF.vely, buffer_f64, _vy );
-			buffer_write_at(_partBuff, _start + PSYSTEM_OFF.velz, buffer_f64, _vz );
+			buffer_poke(_partBuff, _start + PSYSTEM_OFF.velx, buffer_f64, _vx );
+			buffer_poke(_partBuff, _start + PSYSTEM_OFF.vely, buffer_f64, _vy );
+			buffer_poke(_partBuff, _start + PSYSTEM_OFF.velz, buffer_f64, _vz );
 		}
 		
 		return _parts;

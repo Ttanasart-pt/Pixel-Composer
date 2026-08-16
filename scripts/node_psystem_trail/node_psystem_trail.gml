@@ -84,18 +84,18 @@ function Node_pSystem_Trail(_x, _y, _group = noone) : Node(_x, _y, _group) const
 			var _start = _off;
 			_off += global.pSystem_data_length;
 			
-			var _act    = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.active, buffer_bool );
-			var _spwnId = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.sindex, buffer_u32  );
-			var _lif    = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.life,   buffer_f64  );
+			var _act    = buffer_peek( _partBuff, _start + PSYSTEM_OFF.active, buffer_bool );
+			var _spwnId = buffer_peek( _partBuff, _start + PSYSTEM_OFF.sindex, buffer_u32  );
+			var _lif    = buffer_peek( _partBuff, _start + PSYSTEM_OFF.life,   buffer_f64  );
 			
 			if(!_act) continue;
 			
-			var _px     = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.posx,   buffer_f64  );
-			var _py     = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.posy,   buffer_f64  );
+			var _px     = buffer_peek( _partBuff, _start + PSYSTEM_OFF.posx,   buffer_f64  );
+			var _py     = buffer_peek( _partBuff, _start + PSYSTEM_OFF.posy,   buffer_f64  );
 			
-			var _dfg    = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.dflag,  buffer_u16  );
-			var _dpx    = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.dposx,  buffer_f64  );
-			var _dpy    = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.dposy,  buffer_f64  );
+			var _dfg    = buffer_peek( _partBuff, _start + PSYSTEM_OFF.dflag,  buffer_u16  );
+			var _dpx    = buffer_peek( _partBuff, _start + PSYSTEM_OFF.dposx,  buffer_f64  );
+			var _dpy    = buffer_peek( _partBuff, _start + PSYSTEM_OFF.dposy,  buffer_f64  );
 			
 			var _draw_x = round(bool(_dfg & 0b100)? _dpx : _px);
 			var _draw_y = round(bool(_dfg & 0b100)? _dpy : _py);
@@ -104,9 +104,9 @@ function Node_pSystem_Trail(_x, _y, _group = noone) : Node(_x, _y, _group) const
 			var _buffInd = _lif % _lenMax;
 			var _buffOff = _buffOffStart + 2 + _buffInd * buffer_data_size;
 			
-			buffer_write_at(trail_buffer, _buffOffStart, buffer_u16, _lif);
-			buffer_write_at(trail_buffer, _buffOff +  0, buffer_f64, _draw_x);
-			buffer_write_at(trail_buffer, _buffOff +  8, buffer_f64, _draw_y);
+			buffer_poke(trail_buffer, _buffOffStart, buffer_u16, _lif);
+			buffer_poke(trail_buffer, _buffOff +  0, buffer_f64, _draw_x);
+			buffer_poke(trail_buffer, _buffOff +  8, buffer_f64, _draw_y);
 		}
 		
 		if(!is(inline_context, Node_pSystem_Inline) || inline_context.prerendering) return;
@@ -120,13 +120,13 @@ function Node_pSystem_Trail(_x, _y, _group = noone) : Node(_x, _y, _group) const
 			_off += global.pSystem_data_length;
 			
 			var _mask   = use_mask? buffer_read(_masks, buffer_f32) : 1; if(_mask <= 0) continue;
-			var _act    = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.active, buffer_bool );
-			var _lif    = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.life,   buffer_f64  );
+			var _act    = buffer_peek( _partBuff, _start + PSYSTEM_OFF.active, buffer_bool );
+			var _lif    = buffer_peek( _partBuff, _start + PSYSTEM_OFF.life,   buffer_f64  );
 			
 			if(!_act && _lif == 0) continue;
 			
-			var _spwnId = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.sindex, buffer_u32  );
-			var _lifMax = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.mlife,  buffer_f64  );
+			var _spwnId = buffer_peek( _partBuff, _start + PSYSTEM_OFF.sindex, buffer_u32  );
+			var _lifMax = buffer_peek( _partBuff, _start + PSYSTEM_OFF.mlife,  buffer_f64  );
 			
 			var rat = clamp(_lif / max(1, _lifMax - 1), 0, 1);
 			var _fram_mod = _fram_curved? curve_fram.get(rat) : 1;
@@ -152,8 +152,8 @@ function Node_pSystem_Trail(_x, _y, _group = noone) : Node(_x, _y, _group) const
 				var _buffInd = _posIndx % _lenMax;
 				var _buffOff = _buffOffStart + 2 + _buffInd * buffer_data_size;
 				
-				nx = buffer_read_at( trail_buffer, _buffOff + 0, buffer_f64 );
-				ny = buffer_read_at( trail_buffer, _buffOff + 8, buffer_f64 );
+				nx = buffer_peek( trail_buffer, _buffOff + 0, buffer_f64 );
+				ny = buffer_peek( trail_buffer, _buffOff + 8, buffer_f64 );
 				
 				if(_segIndex) {
 					var _cc = _segIndex / _trailLife;

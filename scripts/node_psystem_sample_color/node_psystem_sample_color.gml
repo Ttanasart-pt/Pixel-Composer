@@ -70,20 +70,20 @@ function Node_pSystem_Sample_Color(_x, _y, _group = noone) : Node(_x, _y, _group
 			_off += global.pSystem_data_length;
 			
 			var _mask   = use_mask? buffer_read(_masks, buffer_f32) : 1; if(_mask <= 0) continue;
-			var _act    = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.active, buffer_bool );
-			var _spwnId = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.sindex, buffer_u32  );
+			var _act    = buffer_peek( _partBuff, _start + PSYSTEM_OFF.active, buffer_bool );
+			var _spwnId = buffer_peek( _partBuff, _start + PSYSTEM_OFF.sindex, buffer_u32  );
 			if(!_act) continue;
 			
-			var _life   = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.life,   buffer_f64  );
+			var _life   = buffer_peek( _partBuff, _start + PSYSTEM_OFF.life,   buffer_f64  );
 			if(_spwn && _life) continue;
 			
-			var _px     = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.posx,   buffer_f64  );
-			var _py     = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.posy,   buffer_f64  );
+			var _px     = buffer_peek( _partBuff, _start + PSYSTEM_OFF.posx,   buffer_f64  );
+			var _py     = buffer_peek( _partBuff, _start + PSYSTEM_OFF.posy,   buffer_f64  );
 			
-			var _bldR   = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.blnr,   buffer_u8  );
-			var _bldG   = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.blng,   buffer_u8  );
-			var _bldB   = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.blnb,   buffer_u8  );
-			var _bldA   = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.blna,   buffer_u8  );
+			var _bldR   = buffer_peek( _partBuff, _start + PSYSTEM_OFF.blnr,   buffer_u8  );
+			var _bldG   = buffer_peek( _partBuff, _start + PSYSTEM_OFF.blng,   buffer_u8  );
+			var _bldB   = buffer_peek( _partBuff, _start + PSYSTEM_OFF.blnb,   buffer_u8  );
+			var _bldA   = buffer_peek( _partBuff, _start + PSYSTEM_OFF.blna,   buffer_u8  );
 			
 			random_set_seed(_seed + _spwnId);
 			
@@ -102,10 +102,10 @@ function Node_pSystem_Sample_Color(_x, _y, _group = noone) : Node(_x, _y, _group
 				_bldA *= _color_get_alpha(_cc);
 			}
 			
-			buffer_write_at( _partBuff, _start + PSYSTEM_OFF.blnr, buffer_u8, round(_bldR) );
-			buffer_write_at( _partBuff, _start + PSYSTEM_OFF.blng, buffer_u8, round(_bldG) );
-			buffer_write_at( _partBuff, _start + PSYSTEM_OFF.blnb, buffer_u8, round(_bldB) );
-			buffer_write_at( _partBuff, _start + PSYSTEM_OFF.blna, buffer_u8, round(_bldA) );
+			buffer_poke( _partBuff, _start + PSYSTEM_OFF.blnr, buffer_u8, round(_bldR) );
+			buffer_poke( _partBuff, _start + PSYSTEM_OFF.blng, buffer_u8, round(_bldG) );
+			buffer_poke( _partBuff, _start + PSYSTEM_OFF.blnb, buffer_u8, round(_bldB) );
+			buffer_poke( _partBuff, _start + PSYSTEM_OFF.blna, buffer_u8, round(_bldA) );
 		}
 		
 	}

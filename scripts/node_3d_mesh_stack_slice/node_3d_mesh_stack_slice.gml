@@ -143,7 +143,7 @@ function Node_3D_Mesh_Stack_Slice(_x, _y, _group = noone) : Node(_x, _y, _group)
 									_uu = frac(_uu) < 0? 1 + frac(_uu) : frac(_uu);
 									_vv = frac(_vv) < 0? 1 + frac(_vv) : frac(_vv);
 									var _uvPx = round(_vv * (_surfH - 1)) * _surfW + round(_uu * (_surfW - 1));
-									_pnt[9] = buffer_read_at(_surfBuff, _uvPx * 4, buffer_u32);
+									_pnt[9] = buffer_peek(_surfBuff, _uvPx * 4, buffer_u32);
 								}
 								
 								_pnt[10] = max(_pnt[0], _pnt[3], _pnt[6]);

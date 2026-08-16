@@ -124,10 +124,10 @@ function read_kra_layer_pixel(_fname) {
             var r = buffer_peek( bf, tile_w * tile_h * 2 + idx, buffer_u8 );
             var a = buffer_peek( bf, tile_w * tile_h * 3 + idx, buffer_u8 );
 			
-			buffer_write_at(buffer, idx * 4 + 0, buffer_u8, r);
-			buffer_write_at(buffer, idx * 4 + 1, buffer_u8, g);
-			buffer_write_at(buffer, idx * 4 + 2, buffer_u8, b);
-			buffer_write_at(buffer, idx * 4 + 3, buffer_u8, a);
+			buffer_poke(buffer, idx * 4 + 0, buffer_u8, r);
+			buffer_poke(buffer, idx * 4 + 1, buffer_u8, g);
+			buffer_poke(buffer, idx * 4 + 2, buffer_u8, b);
+			buffer_poke(buffer, idx * 4 + 3, buffer_u8, a);
         }
         
         tileData[t] = [ tx, ty, buffer ];
