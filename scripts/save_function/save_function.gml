@@ -186,6 +186,23 @@ function SAVE_AT(project = PROJECT, path = "", _param = new save_param()) {
 	return true;
 }
 
+function SAVE_AUTO(_project = PROJECT) {
+	var loc = DIRECTORY + "Autosave/";
+	directory_verify(loc);
+	
+	var fname = $"{filename_name_only(_project.path)}_autosave"
+	    + string(current_year)                + "-" 
+		+ string_lead_zero(current_month,  2) + "-"
+		+ string_lead_zero(current_day,    2) + "T" 
+		+ string_lead_zero(current_hour,   2) 
+		+ string_lead_zero(current_minute, 2)
+		+ string_lead_zero(current_second, 2) 
+		+ ".pxc";
+	
+	try		 { SAVE_AT(_project, loc + fname, new save_param(false, "Autosaved", true, true, false)); }
+	catch(e) { print(exception_print(e)); }
+}
+
 /////////////////////////////////////////////////////// COLLECTION ///////////////////////////////////////////////////////
 
 function SAVE_COLLECTIONS(_list, _path, save_surface = true, metadata = noone, context = PANEL_GRAPH.getCurrentContext()) {

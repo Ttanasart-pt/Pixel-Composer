@@ -1,5 +1,11 @@
 
+	////- Check
+
 function ref_buffer(s) { return typeof(s) == "ref" && string_pos("buffer", string(s)); }
+	
+#macro buffer_exists buffer_exists_ext
+#macro __buffer_exists buffer_exists
+function buffer_exists_ext(b) { return b >= 0 && __buffer_exists(b); }
 	
 function buffer_verify(buffer, _size, buffer_kind = buffer_fixed, alignment = 1) {
 	if(buffer <= 0)            return buffer_create(_size, buffer_kind, alignment);

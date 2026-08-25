@@ -8,6 +8,7 @@ function __loadParams(readonly = false, override = false, apply_layout = false) 
 function readProjectFileContent(path) {
 	var _ext    = filename_ext_raw(path), s;
 	var rawBuff = buffer_load(path);
+	
 	if(!buffer_exists(rawBuff)) {
 		noti_warning($"Load failed: Cannot read {path}");
 		return undefined;
@@ -136,8 +137,7 @@ function LOAD_AT(path, params = new __loadParams()) {
 	
 	if(params.override) {
 		nodeCleanUp();
-		clearPanel();
-		setPanel();
+		refreshPanel();
 		if(!TESTING) instance_destroy(_p_dialog);
 		ds_list_clear(ERRORS);
 	}
@@ -152,13 +152,14 @@ function LOAD_AT(path, params = new __loadParams()) {
 	if(file_exists_empty(temp_file_path)) file_delete(temp_file_path);
 	file_copy(path, temp_file_path);
 	
-	PROJECT.readonly = params.readonly;
-	SET_PATH(PROJECT, path);
-	
 	printIf(log, $" > Create temp : {(get_timer() - t1) / 1000} ms"); t1 = get_timer();
 	
 	var content = readProjectFileContent(path);
 	printIf(log, $" > Load struct : {(get_timer() - t1) / 1000} ms");
+	if(content == undefined) { LOADING = false; return; }
+	
+	PROJECT.readonly = params.readonly;
+	SET_PATH(PROJECT, path);
 	
 	return instance_create(0, 0, project_loader, { path, content, log, params, t0, t1 });
 }

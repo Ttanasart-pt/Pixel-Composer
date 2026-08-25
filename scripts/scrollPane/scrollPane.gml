@@ -95,6 +95,7 @@ function scrollPane(_w, _h, ondraw) : widget() constructor {
 		hover   = hover && pen_scrolling != 2;
 		
 		if(use_depth) surface_depth_disable(false);
+		
 		surface = surface_verify(surface, surface_w, surface_h);
 		if(use_depth) surface_depth_disable(true);
 		

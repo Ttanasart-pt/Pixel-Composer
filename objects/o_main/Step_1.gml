@@ -89,6 +89,10 @@ if(os_is_paused()) OS_PAUSED = true;
 		}
 	}
 	
+	if(CLICK_REFRESH) {
+		CLICK_REFRESH = false;
+		display_refresh();
+	}
 #endregion
 
 #region FPS
@@ -198,20 +202,7 @@ if(os_is_paused()) OS_PAUSED = true;
 	
 	if(PROJECT.modified && PREFERENCES.auto_save_time > 0 && AUTO_SAVE_TIMER > PREFERENCES.auto_save_time) {
 		AUTO_SAVE_TIMER = 0;
-		var loc = DIRECTORY + "Autosave/";
-		directory_verify(loc);
-		
-		var fname = $"{filename_name_only(PROJECT.path)}_autosave"
-		    + string(current_year)                + "-" 
-			+ string_lead_zero(current_month,  2) + "-"
-			+ string_lead_zero(current_day,    2) + "T" 
-			+ string_lead_zero(current_hour,   2) 
-			+ string_lead_zero(current_minute, 2)
-			+ string_lead_zero(current_second, 2) 
-			+ ".pxc";
-		
-		try		 { SAVE_AT(PROJECT, loc + fname, new save_param(false, "Autosaved", true, true, false)); }
-		catch(e) { print(exception_print(e)); }
+		SAVE_AUTO(PROJECT);
 	}
 #endregion
 
@@ -319,22 +310,26 @@ if(os_is_paused()) OS_PAUSED = true;
 	
 	if(MOUSE_WRAP) {
 		var _pad = 2;
+		var _mx0 = MOUSE_WRAP_MON[0];
+		var _my0 = MOUSE_WRAP_MON[1];
+		var _mx1 = MOUSE_WRAP_MON[2];
+		var _my1 = MOUSE_WRAP_MON[3];
 		
-		if(mouse_mx < _pad) {
-			window_mouse_set(window_get_width() - _pad, mouse_my);
+		if(mouse_rx < _mx0 + _pad) {
+			window_mouse_set(_mx1 - _pad - WIN_X, mouse_ry - WIN_Y);
 			MOUSE_WRAPPING = 2;
 			
-		} else if(mouse_mx > window_get_width() - _pad) {
-			window_mouse_set(_pad, mouse_my);
+		} else if(mouse_rx > _mx1 - _pad) {
+			window_mouse_set(_mx0 + _pad - WIN_X, mouse_ry - WIN_Y);
 			MOUSE_WRAPPING = 2;
 		}
 			
-		if(mouse_my < _pad) {
-			window_mouse_set(mouse_mx, window_get_height() - _pad);
+		if(mouse_ry < _my0 + _pad) {
+			window_mouse_set(mouse_rx - WIN_X, _my1 - _pad - WIN_Y);
 			MOUSE_WRAPPING = 2;
 			
-		} else if(mouse_my > window_get_height() - _pad) {
-			window_mouse_set(mouse_mx, _pad);
+		} else if(mouse_ry > _my1 - _pad) {
+			window_mouse_set(mouse_rx - WIN_X, _my0 + _pad - WIN_Y);
 			MOUSE_WRAPPING = 2;
 		}
 	}

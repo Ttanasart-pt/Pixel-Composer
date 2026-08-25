@@ -202,7 +202,7 @@ function Panel_Linear_Setting() : PanelContent() constructor {
 					
 								
 					if(_key) {
-						draw_set_font(font);
+						draw_set_font(f_hotkey);
 						var _ktxt = _key.getKeyName();
 						var _tw   = string_width(_ktxt);
 						var _th   = line_get_height();
@@ -216,11 +216,11 @@ function Panel_Linear_Setting() : PanelContent() constructor {
 						var _bh = _th + ui(6);
 						
 						if(hk_editing == _key) {
-							draw_set_text(font, fa_right, fa_center, COLORS._main_accent);
+							draw_set_text(f_hotkey, fa_right, fa_center, COLORS._main_accent);
 							draw_sprite_stretched_ext(THEME.ui_panel, 1, _bx, _by, _bw, _bh, COLORS._main_text_accent);
 							
 						} else if(_ktxt != "") {
-							draw_set_text(font, fa_right, fa_center, COLORS._main_text_sub);
+							draw_set_text(f_hotkey, fa_right, fa_center, COLORS._main_text_sub);
 							// draw_sprite_stretched_ext(THEME.ui_panel, 1, _bx, _by, _bw, _bh, CDEF.main_dkgrey);
 						}
 						

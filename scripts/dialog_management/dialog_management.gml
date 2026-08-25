@@ -1,12 +1,13 @@
 function dialogCall(_dia, _x = noone, _y = noone, param = {}, create = false) {
 	if(DIALOG_JUST_CLOSED == object_get_name(_dia)) return undefined;
 	
-	if(is_winwin(WINWIN_CURRENT)) {
-		if(_x == noone) _x = winwin_get_width(WINWIN_CURRENT)  / 2;
-		if(_y == noone) _y = winwin_get_height(WINWIN_CURRENT) / 2;
+	var winTarg = get_winwin_content();
+	if(is_winwin(winTarg)) {
+		if(_x == noone) _x = winwin_get_width(winTarg)  / 2;
+		if(_y == noone) _y = winwin_get_height(winTarg) / 2;
 		
-		var wx = winwin_get_x(WINWIN_CURRENT) - WIN_X;
-		var wy = winwin_get_y(WINWIN_CURRENT) - WIN_Y;
+		var wx = winwin_get_x(winTarg) - WIN_X;
+		var wy = winwin_get_y(winTarg) - WIN_Y;
 		
 		_x += wx;
 		_y += wy;
@@ -53,12 +54,13 @@ function dialogPanelCall(_panel, _x = noone, _y = noone, params = undefined) {
 		if(_open) return undefined;
 	} 
 	
-	if(is_winwin(WINWIN_CURRENT)) {
-		if(_x == noone) _x = winwin_get_width(WINWIN_CURRENT)  / 2;
-		if(_y == noone) _y = winwin_get_height(WINWIN_CURRENT) / 2;
+	var winTarg = get_winwin_content();
+	if(is_winwin(winTarg)) {
+		if(_x == noone) _x = winwin_get_width(winTarg)  / 2;
+		if(_y == noone) _y = winwin_get_height(winTarg) / 2;
 		
-		var wx = winwin_get_x(WINWIN_CURRENT) - WIN_X;
-		var wy = winwin_get_y(WINWIN_CURRENT) - WIN_Y;
+		var wx = winwin_get_x(winTarg) - WIN_X;
+		var wy = winwin_get_y(winTarg) - WIN_Y;
 		
 		_x += wx;
 		_y += wy;

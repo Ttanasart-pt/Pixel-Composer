@@ -6,9 +6,10 @@ DIALOG_WINDOW_START
 	var lbw = string_width(label) + ui(8);
 	dialog_w = lbw + tb_width + padding * 2;
 
-	draw_sprite_stretched(THEME.textbox, 3, _dialog_x, _dialog_y, dialog_w, dialog_h);
-	draw_sprite_stretched(THEME.textbox, 1, _dialog_x, _dialog_y, dialog_w, dialog_h);
+	// draw_sprite_stretched(THEME.textbox, 3, _dialog_x, _dialog_y, dialog_w, dialog_h);
+	// draw_sprite_stretched(THEME.textbox, 1, _dialog_x, _dialog_y, dialog_w, dialog_h);
 	
+	draw_sprite_stretched(THEME.ui_panel_bg, 3, _dialog_x, _dialog_y, dialog_w, dialog_h);
 	draw_sprite_stretched(THEME.ui_panel_bg, 1, _dialog_x + ui(4), _dialog_y + ui(4), dialog_w - ui(8), dialog_h - ui(8));
 #endregion
 
@@ -24,14 +25,13 @@ DIALOG_WINDOW_START
 	var bb = THEME.button_hide_fill;
 	
 	var bc = COLORS._main_value_negative;
-	if(buttonInstant(bb, bx, by, bs, bs, mouse_ui, sHOVER, sFOCUS, "", THEME.cross_16, 0, bc) == 2)
+	if(buttonInstant(bb, bx, by, bs, bs, mouse_ui, sHOVER, sFOCUS, "", THEME.cross_16, 0, bc) == 2) 
 		instance_destroy();
 	bx -= bs + ui(4); tw -= bs + ui(4);
 	
 	var bc = COLORS._main_value_positive;
 	if(buttonInstant(bb, bx, by, bs, bs, mouse_ui, sHOVER, sFOCUS, "", THEME.accept_16, 0, bc) == 2) {
 		onModify(filename_combine(path, filename_name_validate(tb_name._input_text))); 
-		WIDGET_CURRENT = undefined;
 		instance_destroy();
 	}
 	bx -= bs + ui(4); tw -= bs + ui(4);

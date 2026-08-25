@@ -8,12 +8,14 @@ event_inherited();
 	selecting   		 = -1;
 	parentPanel          = noone; 
 	context              = noone;
+	isSubwindow          = true;
 	
 	menu_id   = "";
 	menu      = 1;
 	editable  = true;
 	
 	waitmenu  = 0;
+	padding   = ui(THEME_VALUE.dialog_menubox_padding);
 	
 	align     = fa_left;
 	tooltips  = [];
@@ -90,7 +92,7 @@ event_inherited();
 			var ww   = string_width(_menuItem.name) + ui(64);
 			var _key = _menuItem.hoykeyObject;
 			
-			draw_set_font(font);
+			draw_set_font(f_hotkey);
 			var _kw = _key? string_width(_key.getKeyName()) + ui(16) : 0;
 			
 			if(is(_menuItem, MenuItemGroup)) {
@@ -128,12 +130,12 @@ event_inherited();
 			case fa_right:	dialog_x = round(max(dialog_x - dialog_w, 2)); break;
 		}
 		
+		dialog_w = ceil(dialog_w + padding * 2);
+		dialog_h = ceil(dialog_h + padding * 2);
+		
 		mouse_init_inside = point_in_rectangle(mouse_mx, mouse_my, dialog_x, dialog_y, dialog_x + dialog_w, dialog_y + dialog_h);
 		init_rclick = !mouse_init_inside && mouse_rclick();
 		ready       = true;
-		
-		dialog_w = ceil(dialog_w);
-		dialog_h = ceil(dialog_h);
 		
 		if(is_array(_premenu) && is_winwin(window)) {
 			winwin_set_visible(window, false);

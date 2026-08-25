@@ -62,7 +62,7 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 	border_rb_close = menuItem(__txt("Close"), function() /*=>*/ { var con = getContent(); if(con == noone) return; con.close(); }, THEME.cross);
 	
 	border_rb_menu = [
-		menuItem(__txt("Move"),    function() /*=>*/ { extract(); panel_mouse = 1; }),
+		menuItem(__txt("Move"),    function() /*=>*/ { extract(); PANEL_DRAG_MOUSE = 1; }),
 		menuItem(__txt("Pop out"), function() /*=>*/ { popWindow(); }, THEME.node_goto),
 		menuItem(__txt("Centralize Split"), function() /*=>*/ { if(parent) parent.centralize_split(); }),
 		-1,
@@ -585,7 +585,7 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 		for( var i = 0, n = array_length(content); i < n; i++ ) 
 			content[i].panelStepBegin(self);
 		
-		if(o_main.panel_dragging != noone) dragging = -1;
+		if(PANEL_DRAGGING != noone) dragging = -1;
 		
 		if(dragging == 1) {
 			var _mx = clamp(mouse_mx, ui(16), WIN_W - ui(16));
@@ -763,7 +763,7 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 			}
 		}
 		
-		if(self == PANEL_MAIN && o_main.panel_dragging != noone && key_mod_press(CTRL))
+		if(self == PANEL_MAIN && PANEL_DRAGGING != noone && key_mod_press(CTRL))
 			checkHover();
 		
 		if(THEME_VALUE.panel_separation_type == "line") {
@@ -788,8 +788,8 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 		
 		var tsx   = x + padding;
 		var tsy   = _top? y + padding : y + h - padding - tab_h;
-		var msx   = mouse_x - tsx;
-		var msy   = mouse_y - tsy;
+		var msx   = mouse_mx - tsx;
+		var msy   = mouse_my - tsy;
 		
 		var hover = hovering;
 		var focus = focusing;
@@ -797,7 +797,7 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 		var _len  = array_length(content);
 		var ppad  = ui(THEME_VALUE.panel_tab_padding);
 		var expd  = PREFERENCES.panel_tab_expands;
-		var expw  = (w - ppad * (_len + 1)) / _len;
+		var expw  = (w - ppad - ppad * (_len + 1)) / _len;
 		
 		tab_surface = surface_verify(tab_surface, tab_w, tab_h);
 		if(expd) {
@@ -980,8 +980,8 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 		
 		var tsx   = _left? x + padding : x + w - tab_w - padding;
 		var tsy   = y + padding;
-		var msx   = mouse_x - tsx;
-		var msy   = mouse_y - tsy;
+		var msx   = mouse_mx - tsx;
+		var msy   = mouse_my - tsy;
 		
 		var hover = hovering;
 		var focus = focusing;
@@ -989,7 +989,7 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 		var _len  = array_length(content);
 		var ppad  = ui(THEME_VALUE.panel_tab_padding);
 		var expd  = PREFERENCES.panel_tab_expands;
-		var expw  = (h - ppad * (_len + 1)) / _len;
+		var expw  = (h - ppad - ppad * (_len + 1)) / _len;
 		
 		tab_surface = surface_verify(tab_surface, tab_w, tab_h);
 		if(expd) {
@@ -1267,7 +1267,7 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 			
 			if(DOUBLE_CLICK) {
 				extract();
-				panel_mouse = 0;
+				PANEL_DRAG_MOUSE = 0;
 				
 			} else if(mouse_rpress()) {
 				var menu = array_clone(border_rb_menu);
@@ -1308,7 +1308,7 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 	function extract() {
 		var con = getContent();
 		con.dragSurface = surface_clone(content_surface);
-		o_main.panel_dragging = con;
+		PANEL_DRAGGING = con;
 				
 		array_remove(content, con);
 		refresh();
@@ -1356,19 +1356,29 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 		
 		dialogPanelCall(con);
 		extract();
-		o_main.panel_dragging = noone;
+		PANEL_DRAGGING = noone;
 	}
 	
 	function checkHover() {
-		if(o_main.panel_dragging == noone || key_mod_press(CTRL))
+		if(PANEL_DRAGGING == noone || key_mod_press(CTRL))
 			return;
-			
-		var dx = (mouse_mx - x) / w;
-		var dy = (mouse_my - y) / h;
+		
+		var _mx = mouse_mx;
+		var _my = mouse_my;
+		
+		if(dialog && is_winwin(dialog.window)) {
+			_mx = mouse_rx - winwin_get_x(dialog.window);
+			_my = mouse_ry - winwin_get_y(dialog.window);
+		}
+		
+		var dx = (_mx - x) / w;
+		var dy = (_my - y) / h;
 		var p  = ui(8);
+		
+		// print(x, y, w, h, _mx, _my, dx, dy)
 			
 		draw_set_color(COLORS._main_accent);
-		o_main.panel_hovering = self;
+		PANEL_HOVERING = self;
 		
 		var x0 = x + p;
 		var y0 = y + p;
@@ -1377,46 +1387,46 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 		var xc = x + w / 2;
 		var yc = y + h / 2;
 			
-		if(point_in_rectangle(mouse_mx, mouse_my, x + w * 1 / 3, y + h * 1 / 3, x + w * 2 / 3, y + h * 2 / 3)) {
-			o_main.panel_split = 4;
+		if(point_in_rectangle(_mx, _my, x + w * 1 / 3, y + h * 1 / 3, x + w * 2 / 3, y + h * 2 / 3)) {
+			PANEL_DRAW_SPLIT = 4;
 			
-			o_main.panel_draw_x0_to = x + w * 1 / 3;
-			o_main.panel_draw_y0_to = y + h * 1 / 3;
-			o_main.panel_draw_x1_to = x + w * 2 / 3;
-			o_main.panel_draw_y1_to = y + h * 2 / 3;
+			PANEL_DRAW_X0 = x + w * 1 / 3;
+			PANEL_DRAW_Y0 = y + h * 1 / 3;
+			PANEL_DRAW_X1 = x + w * 2 / 3;
+			PANEL_DRAW_Y1 = y + h * 2 / 3;
 			
 		} else {
 			if(dx + dy > 1) {
 				if((1 - dx) + dy > 1) {
-					o_main.panel_draw_x0_to = x0;
-					o_main.panel_draw_y0_to = yc;
-					o_main.panel_draw_x1_to = x1;
-					o_main.panel_draw_y1_to = y1;
+					PANEL_DRAW_X0 = x0;
+					PANEL_DRAW_Y0 = yc;
+					PANEL_DRAW_X1 = x1;
+					PANEL_DRAW_Y1 = y1;
 					
-					o_main.panel_split = 3;
+					PANEL_DRAW_SPLIT = 3;
 				} else {
-					o_main.panel_draw_x0_to = xc;
-					o_main.panel_draw_y0_to = y0;
-					o_main.panel_draw_x1_to = x1;
-					o_main.panel_draw_y1_to = y1;
+					PANEL_DRAW_X0 = xc;
+					PANEL_DRAW_Y0 = y0;
+					PANEL_DRAW_X1 = x1;
+					PANEL_DRAW_Y1 = y1;
 					
-					o_main.panel_split = 1;
+					PANEL_DRAW_SPLIT = 1;
 				}
 			} else {
 				if((1 - dx) + dy > 1) {
-					o_main.panel_draw_x0_to = x0;
-					o_main.panel_draw_y0_to = y0;
-					o_main.panel_draw_x1_to = xc;
-					o_main.panel_draw_y1_to = y1;
+					PANEL_DRAW_X0 = x0;
+					PANEL_DRAW_Y0 = y0;
+					PANEL_DRAW_X1 = xc;
+					PANEL_DRAW_Y1 = y1;
 					
-					o_main.panel_split = 2;
+					PANEL_DRAW_SPLIT = 2;
 				} else {
-					o_main.panel_draw_x0_to = x0;
-					o_main.panel_draw_y0_to = y0;
-					o_main.panel_draw_x1_to = x1;
-					o_main.panel_draw_y1_to = yc;
+					PANEL_DRAW_X0 = x0;
+					PANEL_DRAW_Y0 = y0;
+					PANEL_DRAW_X1 = x1;
+					PANEL_DRAW_Y1 = yc;
 					
-					o_main.panel_split = 0;
+					PANEL_DRAW_SPLIT = 0;
 				}
 			}
 		}
@@ -1572,7 +1582,7 @@ function PanelContent() constructor {
 	static draw = function(_panel) /*=>*/ {
 		panel = _panel;
 		
-		if(o_main.panel_dragging == noone) {
+		if(PANEL_DRAGGING == noone) {
 			pHOVER = HOVER_WINDOW != undefined && !CURSOR_IS_LOCK && HOVER == self && (panel.mouse_active || mouse_overflow);
 			pFOCUS = FOCUS_WINDOW != undefined && FOCUS == self;
 			

@@ -73,12 +73,12 @@ function Panel_Addon() : PanelContent() constructor {
 				
 				var hover = _hover && point_in_rectangle(_m[0], _m[1], 0, by, ww, by + hh);
 				
-				if(_addon.open) draw_sprite_stretched_ext(THEME.ui_panel_bg, 1, 0, by, ww, hh, COLORS._main_icon_light, 1);
+				if(_addon.open) draw_sprite_stretched_ext(THEME.box_r2_clr, 1, 0, by, ww, hh, COLORS._main_icon_light, 1);
 				
 				var cc = hover? COLORS.section_hover : COLORS.section_bg;
 				if(hover) sc_addon.hover_content = true;
 				
-				draw_sprite_stretched_ext(THEME.ui_panel_bg, 0, 0, by, ww, hg, cc, 1);
+				draw_sprite_stretched_ext(THEME.box_r2_clr, 0, 0, by, ww, hg, cc, 1);
 				draw_set_text(font_title, fa_left, fa_center, COLORS._main_text);
 				draw_text_add(bpd + bs + ui(8), by + hg / 2, _addon.name);
 				
@@ -157,7 +157,7 @@ function Panel_Addon() : PanelContent() constructor {
 					
 				}
 				
-				draw_sprite_stretched_add(THEME.ui_panel, 1, 0, by, ww, _addon.open? hh : hg, COLORS._main_icon, .4);
+				draw_sprite_stretched_ext(THEME.box_r2_clr, 1, 0, by, ww, _addon.open? hh : hg, c_white, .5 + _addon.open * .5);
 				
 				_y += hh + ui(4);
 				_h += hh + ui(4);

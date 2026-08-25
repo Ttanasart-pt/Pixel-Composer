@@ -148,7 +148,12 @@ function tooltipHotkey_multiple(_keys, _cmod) constructor {
 		
 		for( var j = 0, m = array_length(_hks); j < m; j++ ) {
 			var _hk = _hks[j];
-			ww = max(ww, string_width(_hk.name) + ui(32) + string_width(_hk.getKeyName()));
+			
+			var hkw = ui(32);
+			draw_set_font(f_p2);     hkw += string_width(_hk.name);
+			draw_set_font(f_hotkey); hkw += string_width(_hk.getKeyName());
+			
+			ww = max(ww, hkw);
 			hh += lh;
 		}
 	}
@@ -180,7 +185,7 @@ function tooltipHotkey_multiple(_keys, _cmod) constructor {
 						draw_set_text(f_p2, fa_left, fa_top, _press? COLORS._main_text_accent : COLORS._main_text);
 						draw_text_add(tx, ty, _hk.name);
 						
-						draw_set_text(f_p2, fa_right, fa_top, _press? COLORS._main_text : COLORS._main_text_sub);
+						draw_set_text(f_hotkey, fa_right, fa_top, _press? COLORS._main_text : COLORS._main_text_sub);
 						draw_text_add(hx, ty, _hk.getKeyName());
 						
 						ty += lh;

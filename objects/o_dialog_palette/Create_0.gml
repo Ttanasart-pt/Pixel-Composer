@@ -154,10 +154,10 @@ function __PaletteColor(_color = c_black) constructor {
 		
 		var isHover = _hov && point_in_rectangle(_m[0], _m[1], _x, _y, _x + ww, _y + _height);
 		var select  = isHover;
-		draw_sprite_stretched(THEME.ui_panel_bg, 3, _x, _y, ww, _height);
+		draw_sprite_stretched_ext(THEME.box_r5_clr, 0, _x, _y, ww, _height, CDEF.main_mdwhite);
 		
 		if(isHover) {
-			draw_sprite_stretched_ext(THEME.node_bg, 1, _x, _y, ww, _height, COLORS._main_accent, 1);
+			draw_sprite_stretched_ext(THEME.box_r5, 1, _x, _y, ww, _height, COLORS._main_accent, 1);
 			sp_presets.hover_content = true;
 		}
 		
@@ -251,7 +251,7 @@ function __PaletteColor(_color = c_black) constructor {
 			
 			var _favFol = _sub.path == "Favorites";
 			var _hovSec = _hov && point_in_rectangle(_m[0], _m[1], _x, _y, _x + ww, _y + lbh);
-			draw_sprite_stretched(THEME.ui_panel_bg, 3, _x, _y, ww, lbh);
+			draw_sprite_stretched_ext(THEME.box_r5_clr, 0, _x, _y, ww, lbh, CDEF.main_mdwhite);
 			
 			#region buttons
 				var bx = _x + ww - ui(2) - bs;
@@ -272,7 +272,7 @@ function __PaletteColor(_color = c_black) constructor {
 			#endregion
 			
 			if(!sch && _hovSec) {
-				draw_sprite_stretched_ext(THEME.node_bg, 1, _x, _y, ww, lbh, COLORS._main_icon, 1);
+				draw_sprite_stretched_ext(THEME.box_r5, 1, _x, _y, ww, lbh, COLORS._main_icon, 1);
 				if(DOUBLE_CLICK && _foc) {
 					palCollAll = _open? 1 : -1;
 					
@@ -429,11 +429,11 @@ function __PaletteColor(_color = c_black) constructor {
 			
 			var isHover = _hov && point_in_rectangle(_m[0], _m[1], 0, _y, gw, _y + gh);
 			
-			draw_sprite_stretched(THEME.ui_panel_bg, 3, 0, _y, gw, gh);
+			draw_sprite_stretched_ext(THEME.box_r5_clr, 0, 0, _y, gw, gh, CDEF.main_mdwhite);
 			drawPalette(_palt, pd, _y + pd, gw - pd*2, gh - pd*2);
 				
 			if(isHover) {
-				draw_sprite_stretched_ext(THEME.node_bg, 1, 0, _y, gw, gh, COLORS._main_accent, 1);
+				draw_sprite_stretched_ext(THEME.box_r5, 1, 0, _y, gw, gh, COLORS._main_accent, 1);
 				sp_subpresets.hover_content = true;
 				
 				if(mouse_lpress(_foc)) setPalette(_palt, true, false);

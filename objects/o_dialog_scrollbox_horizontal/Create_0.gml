@@ -1,7 +1,7 @@
 /// @description init
 event_inherited();
 
-#region 
+#region data
 	max_w  = ui(640);
 	max_h  = ui(640);
 	anchor = ANCHOR.top | ANCHOR.left;
@@ -11,6 +11,8 @@ event_inherited();
 	align	 = fa_center;
 	text_pad = ui(8);
 	item_pad = ui(8);
+	padding  = ui(THEME_VALUE.dialog_menubox_padding);
+	
 	minWidth = 0;
 	widths   = [];
 	heights  = [];
@@ -25,30 +27,14 @@ event_inherited();
 	data		  = [];
 	initVal		  = undefined;
 	update_hover  = true;
-	
+#endregion
+
+#region search
 	KEYBOARD_RESET
 	search_string = "";
 	tb_search     = textBox_Text(function(s) /*=>*/ { search_string = string(s); filterSearch(); })
 					.setFont(f_p2).setAutoUpdate().setAlign(fa_left).activate();
 	searchIndex   = undefined;
-	
-	function initScroll(_scroll, _initVal) {
-		scrollbox    = _scroll;
-		
-		data         = _scroll.data;
-		displayStr   = _scroll.displayStr;
-		
-		font         = _scroll.font;
-		align        = _scroll.align;
-		text_pad     = _scroll.padding;
-		item_pad     = _scroll.item_pad;
-		update_hover = _scroll.update_hover;
-		minWidth     = _scroll.minWidth;
-		
-		initVal      = _initVal;
-		
-		setSize();
-	}
 	
 	function filterSearch() {
 		if(search_string == "") {
@@ -70,6 +56,27 @@ event_inherited();
 				array_push(searchIndex, i);
 			}
 		}
+		
+		setSize();
+	}
+	
+#endregion
+
+#region content
+	function initScroll(_scroll, _initVal) {
+		scrollbox    = _scroll;
+		
+		data         = _scroll.data;
+		displayStr   = _scroll.displayStr;
+		
+		font         = _scroll.font;
+		align        = _scroll.align;
+		text_pad     = _scroll.padding;
+		item_pad     = _scroll.item_pad;
+		update_hover = _scroll.update_hover;
+		minWidth     = _scroll.minWidth;
+		
+		initVal      = _initVal;
 		
 		setSize();
 	}
@@ -177,10 +184,8 @@ event_inherited();
 			dialog_h = max(sh + lhMax + ui(8), hh);
 		}
 		
-		dialog_w = min( dialog_w, WIN_W - ui(16) );
-		dialog_h = min( dialog_h, WIN_H - ui(16) );
-		sc_content.resize(dialog_w - _tpad * 2, dialog_h - sh);
-		
+		dialog_w = min( ceil(dialog_w + padding * 2), WIN_W - ui(16) );
+		dialog_h = min( ceil(dialog_h + padding * 2), WIN_H - ui(16) );
 		resetPosition();
 	}
 	
@@ -273,7 +278,7 @@ event_inherited();
 				}
 			
 				if(selecting == i) {
-					draw_sprite_stretched_ext(THEME.box_r2, 0, _lx, _ly, _dw, hght, COLORS.dialog_menubox_highlight, .1);
+					draw_sprite_stretched_ext(THEME.menubox, 0, _lx, _ly, _dw, hght, COLORS.dialog_menubox_highlight, .1);
 				
 					if(sc_content.active && (mouse_lpress(_hov) || KEYBOARD_ENTER)) {
 						initVal = i;
@@ -334,6 +339,5 @@ event_inherited();
 		
 		return _h + ui(8);
 	});
-	
 	sc_content.scroll_resize = false;
 #endregion

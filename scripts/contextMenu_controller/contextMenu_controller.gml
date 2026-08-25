@@ -282,6 +282,7 @@ function pieMenuCall(menu_id = "", menu = [], _x = 0, _y = 0) {
 }
 
 function submenuCall(_data = undefined, menu = [], menu_id = "") {
+	if(array_empty(menu))   return undefined;
 	if(is_undefined(_data)) return menuCall(menu_id, menu);
 	
 	var _x = _data.x;

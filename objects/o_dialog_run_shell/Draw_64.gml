@@ -1,5 +1,6 @@
 /// @description init
 if !ready exit;
+if(!is(node, Node) || !node.active) instance_destroy();
 
 #region dim BG
 	var lowest = true;

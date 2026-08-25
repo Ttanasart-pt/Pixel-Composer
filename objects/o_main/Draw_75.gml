@@ -12,7 +12,7 @@ if(USE_TEXTUREGROUP && texturegroup_get_status("UI") == texturegroup_status_load
 #endregion
 
 #region dragging
-	panelDraw();
+	PANEL_DRAW();
 	
 	if(DRAGGING != noone) {
 		var mx = mouse_mx + ui(8);
@@ -106,8 +106,8 @@ if(USE_TEXTUREGROUP && texturegroup_get_status("UI") == texturegroup_status_load
 	} else	
 		NODE_DROPPER_TARGET_CAN = false;
 		
-	panelDisplayDraw();
-	dialogGUIDraw();
+	PANEL_DRAW_GUI();
+	PANEL_DRAW_EXTRA();
 #endregion
 
 #region debug

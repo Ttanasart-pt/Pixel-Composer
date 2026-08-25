@@ -50,7 +50,7 @@ var mdis = point_distance( x, y, mouse_mx, mouse_my);
 	var edit  = false;
 	var widg  = false;
 	
-	var mouse_rel  = global_mouse_right_is_released() || mouse_lpress();
+	var mouse_rel  = MOUSE_EVENT.rrelease || mouse_lpress();
 	    mouse_rel |= activate_key_release && keyboard_check_released(vk_anykey);
 	    // mouse_rel &= WIDGET_CURRENT == undefined;
 	
@@ -315,7 +315,7 @@ var mdis = point_distance( x, y, mouse_mx, mouse_my);
 			if(_hov) mouse_rel = false;
 		}
 		
-		draw_sprite_stretched(THEME.dialog_menu, 1, _bx0, _by0, _spw, _sph);
+		draw_sprite_stretched(THEME.textbox, 1, _bx0, _by0, _spw, _sph);
 	}
 	
 	gpu_set_scissor(scis);

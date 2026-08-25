@@ -32,10 +32,8 @@ function __initTheme() {
 	var t    = get_timer();
 	
 	directory_verify(root);
-	if(check_version($"{root}/version")) {
+	if(check_version($"{root}/version")) 
 		zip_unzip($"{working_directory}pack/themes.zip", root);	
-		printDebug($"  - Unzip theme  | complete in {(get_timer()-t)/1000}ms");    t = get_timer();
-	}
 	
 	loadColor(PREFERENCES.theme);			printDebug($"  - Load color   | complete in {(get_timer()-t)/1000}ms");    t = get_timer();
 	loadGraphic(PREFERENCES.theme);			printDebug($"  - Load graphic | complete in {(get_timer()-t)/1000}ms");    t = get_timer();
@@ -150,6 +148,7 @@ function loadGraphic(theme = "default") {
 			
 			THEME[$ key]   = _sprite_load_from_struct(str, theme, key);
 			SPRITES[$ key] = THEME[$ key];
+			
 		}
 	}
 	

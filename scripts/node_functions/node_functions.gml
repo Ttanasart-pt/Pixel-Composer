@@ -316,12 +316,12 @@
 		if(preJ == noone) return;
 		
 		if(preJ.type == VALUE_TYPE.surface) {
-			var win = new Panel_Preview_Window().setPreview(node, node.preview_channel);
-			var dia = dialogPanelCall(win, mouse_mx, mouse_my);
+			var win = new Panel_Preview_Window().setPreview(node, node.preview_channel, true);
+			var dia = dialogPanelCall(win);
 			dia.destroy_on_click_out = false;
 			
 		} else {
-			var pan = panelAdd("Panel_Preview", true);
+			var pan = dialogPanelCall(new Panel_Preview());
 			pan.content.setNodePreview(node, true);
 			pan.destroy_on_click_out = false;
 		}

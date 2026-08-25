@@ -16,13 +16,13 @@ if(init_press_l) {
 if(submenu != noone && !instance_exists(submenu)) 
 	submenu = noone;
 
-var _mx = window? mouse_rx - WIN_X : mouse_mx;
-var _my = window? mouse_ry - WIN_Y : mouse_my;
+var _mx = is_winwin(window)? mouse_rx - WIN_X : mouse_mx;
+var _my = is_winwin(window)? mouse_ry - WIN_Y : mouse_my;
 var hov = point_in(_mx, _my);
 
 if(instance_exists(submenu)) {
-	var _mx = submenu.window? mouse_rx - WIN_X : mouse_mx;
-	var _my = submenu.window? mouse_ry - WIN_Y : mouse_my;
+	var _mx = is_winwin(submenu.window)? mouse_rx - WIN_X : mouse_mx;
+	var _my = is_winwin(submenu.window)? mouse_ry - WIN_Y : mouse_my;
 	hov = hov || submenu.point_in(_mx, _my);
 }
 

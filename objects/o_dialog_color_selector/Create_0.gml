@@ -88,9 +88,9 @@ if(!variable_global_exists("COLOR_SELECTOR_PALETTE_COLLAPSED")) globalvar COLOR_
 		
 		var isHover = _hov && point_in_rectangle(_m[0], _m[1], _x, _y, _x + ww, _y + _height);
 		
-		draw_sprite_stretched(THEME.ui_panel_bg, 3, _x, _y, ww, _height);
+		draw_sprite_stretched_ext(THEME.box_r5_clr, 0, _x, _y, ww, _height, CDEF.main_mdwhite);
 		if(isHover) {
-			draw_sprite_stretched_ext(THEME.ui_panel, 1, _x, _y, ww, _height, COLORS._main_accent, 1);
+			draw_sprite_stretched_ext(THEME.box_r5, 1, _x, _y, ww, _height, COLORS._main_accent, 1);
 			sp_presets.hover_content = true;
 		}
 		
@@ -168,9 +168,9 @@ if(!variable_global_exists("COLOR_SELECTOR_PALETTE_COLLAPSED")) globalvar COLOR_
 			var _open = sch || _sub.open;
 			if(_sub.name == "Mixer") continue;
 			
-			draw_sprite_stretched(THEME.ui_panel_bg, 3, _x, _y, ww, lbh);
+			draw_sprite_stretched_ext(THEME.box_r5_clr, 0, _x, _y, ww, lbh, CDEF.main_mdwhite);
 			if(!sch && _hov && point_in_rectangle(_m[0], _m[1], _x, _y, _x + ww, _y + lbh)) {
-				draw_sprite_stretched_ext(THEME.node_bg, 1, _x, _y, ww, lbh, COLORS._main_icon, 1);
+				draw_sprite_stretched_ext(THEME.box_r5, 1, _x, _y, ww, lbh, COLORS._main_icon, 1);
 				if(DOUBLE_CLICK && _foc) {
 					palCollAll = _open? 1 : -1;
 					

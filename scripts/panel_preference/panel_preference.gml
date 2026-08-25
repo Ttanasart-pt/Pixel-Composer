@@ -169,25 +169,51 @@ function Panel_Preference() : PanelContent() constructor {
     			new checkBox(function() /*=>*/ {return prefToggle("expand_hover")})
     		));
     	
-    		if(OS == os_windows) 
-    		ds_list_add(pref_global, new __Panel_Linear_Setting_Item_Preference(
-    			__txt("pref_expand_lock_mouse_slider", "Lock mouse when sliding"),
-    			"slider_lock_mouse",
-    			new checkBox(function() /*=>*/ {return prefToggle("slider_lock_mouse")})
-    		));
+    		if(OS == os_macosx) {
+	    		ds_list_add(pref_global, new __Panel_Linear_Setting_Item_Preference(
+	    			__txt("pref_gesture_enabled", "Use Gesture for Pan/Zoom"),
+	    			"gesture_enabled",
+	    			new checkBox(function() /*=>*/ {return prefToggle("gesture_enabled")})
+	    		));
+	    		
+	    		ds_list_add(pref_global, new __Panel_Linear_Setting_Item_Preference(
+	    			__txt("pref_gesture_sensitivity", "Pan Sensitivity"),
+	    			"gesture_pan_sensitivity",
+	    			textBox_Number(function(val) /*=>*/ {return prefSet("gesture_pan_sensitivity", max(0, val))})
+	    		));
+	    		
+	    		ds_list_add(pref_global, new __Panel_Linear_Setting_Item_Preference(
+	    			__txt("pref_gesture_sensitivity", "Zoom Sensitivity"),
+	    			"gesture_zoom_sensitivity",
+	    			textBox_Number(function(val) /*=>*/ {return prefSet("gesture_zoom_sensitivity", max(0, val))})
+	    		));
+    		}
     		
-    		ds_list_add(pref_global, new __Panel_Linear_Setting_Item_Preference(
-    			__txt("pref_pen_pool_delay", "Pen leave delay"),
-    			"pen_pool_delay",
-    			textBox_Number(function(val) /*=>*/ {return prefSet("pen_pool_delay", max(0, val))})
-    		));
+    		if(OS == os_windows) {
+	    		ds_list_add(pref_global, new __Panel_Linear_Setting_Item_Preference(
+	    			__txt("pref_expand_lock_mouse_slider", "Lock mouse when sliding"),
+	    			"slider_lock_mouse",
+	    			new checkBox(function() /*=>*/ {return prefToggle("slider_lock_mouse")})
+	    		));
+	    		
+	    		ds_list_add(pref_global, new __Panel_Linear_Setting_Item_Preference(
+	    			__txt("pref_pen_pool_delay", "Pen leave delay"),
+	    			"pen_pool_delay",
+	    			textBox_Number(function(val) /*=>*/ {return prefSet("pen_pool_delay", max(0, val))})
+	    		));
+	    		
+    		}
     		
     	ds_list_add(pref_global, __txt("Save/Load"));
     		
     		ds_list_add(pref_global, new __Panel_Linear_Setting_Item_Preference(
-    			__txt("pref_auto_save_time", "Autosave delay (-1 to disable)"),
+    			__txt("pref_auto_save_time", "Autosave delay (in seconds, -1 to disable)"),
     			"auto_save_time",
-    			textBox_Number(function(val) /*=>*/ {return prefSet("auto_save_time", val)})
+    			textBox_Number(function(val) /*=>*/ {return prefSet("auto_save_time", val)}).setSideButton(
+					button(function() /*=>*/ {return SAVE_AUTO()})
+						.setIcon(THEME.save_auto, 0, COLORS._main_icon).iconPad(ui(8))
+						.setTooltip(__txt("Autosave now"))
+				)
     		));
     		
     		ds_list_add(pref_global, new __Panel_Linear_Setting_Item_Preference(
@@ -220,8 +246,9 @@ function Panel_Preference() : PanelContent() constructor {
     			textBox_Number(function(val) /*=>*/ {return prefSet("save_thumbnail_size", max(32, val))})
     		));
     		
+		if(OS == os_windows) {
     	ds_list_add(pref_global, __txt("Crash"));
-    		
+		
     		ds_list_add(pref_global, new __Panel_Linear_Setting_Item_Preference(
     			__txt("pref_legacy_exception", "Use legacy exception handler"),
     			"use_legacy_exception",
@@ -233,6 +260,7 @@ function Panel_Preference() : PanelContent() constructor {
     			"show_crash_dialog",
     			new checkBox(function() /*=>*/ {return prefToggle("show_crash_dialog", true)})
     		));
+		}
     		
     	ds_list_add(pref_global, __txt("Misc"));
     		
@@ -263,6 +291,7 @@ function Panel_Preference() : PanelContent() constructor {
     		
 		}
     	
+    	if(OS != os_macosx) {
     	ds_list_add(pref_global, __txt("Paths"));
     		
     		ds_list_add(pref_global, new __Panel_Linear_Setting_Item(
@@ -337,7 +366,8 @@ function Panel_Preference() : PanelContent() constructor {
     				.setSideButton(button(function() /*=>*/ { PREFERENCES.ffmpeg_path = get_open_directory_compat(PREFERENCES.ffmpeg_path); PREF_SAVE(); }, THEME.button_path_icon))
     				.setFont(f_p2).setEmpty(),
     		));
-    	
+    	}
+	    	
     	ds_list_add(pref_global, __txt("Cleanups"));
     		
     		ds_list_add(pref_global, new __Panel_Linear_Setting_Item(
@@ -753,7 +783,6 @@ function Panel_Preference() : PanelContent() constructor {
     			struct_remove_safe(oData, k);
     		else oData[$ k] = v;
     		
-    		print(oData)
     		json_save_struct(oPath, oData);
     		loadColor(PREFERENCES.theme);
     	}
@@ -1935,7 +1964,7 @@ function Panel_Preference() : PanelContent() constructor {
 	    			
 	    			draw_sprite_stretched_ext(THEME.box_r5, 0, bx, by, bw, bh, CDEF.main_black);
 	    			draw_sprite_stretched_add(THEME.box_r5, 1, bx, by, bw, bh, CDEF.main_mdblack);
-	    			draw_set_text(f_p2, fa_left, fa_top, cc);
+	    			draw_set_text(f_hotkey, fa_left, fa_top, cc);
 	    			draw_text_add(tx, _yy, keyTxt);
 	    			
 	    			if(hk_editing == hotkey && hk_edit_key == _key) {
@@ -2424,23 +2453,24 @@ function Panel_Preference() : PanelContent() constructor {
     		    break;
     		
     	    case 3 : //Theme
-        		var _sp_x = ui(296);
-        		var _sp_y = ui(28);
+        		var theme_meta_w = ui(320);
         		
-        		var x1 = px + _sp_x - ui(8);
-        		sp_theme.verify(_sp_x - ui(8), ph);
+        		var x1 = px + theme_meta_w - ui(8);
+        		sp_theme.verify(theme_meta_w - ui(8), ph);
         		sp_theme.setFocusHover(pFOCUS, pHOVER);
         		sp_theme.drawOffset(px, py, mx, my);
         		
-        		var _res_w = panel_width - _sp_x;
+        		var _res_w = panel_width - theme_meta_w;
         		
+        		var _tabh = ui(24);
         		tab_resources.setFocusHover(pFOCUS, pHOVER);
-                tab_resources.draw(px + _sp_x + ui(32), py, _res_w - ui(64), ui(24), theme_page, [ mx, my ]);
+                tab_resources.draw(px + theme_meta_w + ui(32), py, _res_w - ui(64), _tabh, theme_page, [ mx, my ]);
+        		_tabh += ui(4);
         		
         		var sp = theme_pages[theme_page];
-        		sp.verify(_res_w, ph - _sp_y);
+        		sp.verify(_res_w, ph - _tabh);
         		sp.setFocusHover(pFOCUS, pHOVER);
-        		sp.drawOffset(px + _sp_x, py + _sp_y, mx, my);
+        		sp.drawOffset(px + theme_meta_w, py + _tabh, mx, my);
     		    break;
     		
     	    case 4 : //Hotkeys

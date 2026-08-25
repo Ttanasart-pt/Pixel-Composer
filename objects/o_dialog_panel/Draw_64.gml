@@ -19,12 +19,12 @@ var _cnt = panel.getContent();
 	var cnw =  dialog_w -  padding * 2;
 	var cnh =  dialog_h - (padding * 2 + title_height);
 	
-	if(title_height) {
-		cnx += 3;
-		cny += 3;
-		cnw -= 6;
-		cnh -= 6;
-	}
+	// if(title_height) {
+	// 	cnx += 3;
+	// 	cny += 3;
+	// 	cnw -= 6;
+	// 	cnh -= 6;
+	// }
 	
 	panel.x = cnx;
 	panel.y = cny;
@@ -58,19 +58,15 @@ var _cnt = panel.getContent();
 #region header
 	var hov = sHOVER;
 	var foc = sFOCUS;
+	var x1 = _dialog_x + dialog_w - ui(6);
 	
 	if(title_height) {
-		var dx = _dialog_x + 3;
-		var dy = _dialog_y + 3;
-		var dw =  dialog_w - 6;
-		var dh = title_height + 2;
-		
-		draw_sprite_stretched_ext(THEME.ui_panel_bg, 3, dx, dy, dw, dh, COLORS._main_icon_light, 1);
+		var dh = title_height;
+		draw_sprite_stretched_ext( THEME.dialog, 2, _dialog_x, _dialog_y, _dialog_w, dh, COLORS._main_icon_light, 1);
 		
 		var bs = ui(20);
-		
 		var bx = MAC? _dialog_x + ui(6) : _dialog_x + dialog_w - ui(6) - bs;
-		var by = _dialog_y + ui(6);
+		var by = _dialog_y + dh / 2 - bs / 2;
 		var overBut = content.title_actions_override && !array_empty(content.title_actions);
 		
 		if(instanceof(content) != "Panel_Menu" && !overBut) {
@@ -85,7 +81,7 @@ var _cnt = panel.getContent();
 		    if(is(_cnt, PanelContent)) {
 				if(buttonInstant(bb, bx, by, bs, bs, mouse_ui, hov, foc, "", THEME.window_pan_icon) == 2) {
 					_cnt.dragSurface = undefined;
-					o_main.panel_dragging = _cnt;
+					PANEL_DRAGGING = _cnt;
 					instance_destroy();
 				} 
 				bx -= (bs + ui(2)) * (MAC? -1 : 1);
@@ -119,9 +115,9 @@ var _cnt = panel.getContent();
 		
 		var _tx   = bx + ui(2);
 		var _scis = gpu_get_scissor();
-		gpu_set_scissor(_tx, _dialog_y, bx - _tx, title_height);
-			draw_set_text(f_p2, fa_left, fa_top, COLORS._main_text_sub);
-			draw_text_add(_tx, _dialog_y + ui(8), title);
+		gpu_set_scissor(_tx, _dialog_y, x1 - _tx, title_height);
+			draw_set_text(f_p2, fa_left, fa_center, COLORS._main_text_sub);
+			draw_text_add(_tx, _dialog_y + dh / 2, title);
 		gpu_set_scissor(_scis);
 		
 	}
@@ -130,14 +126,12 @@ var _cnt = panel.getContent();
 DIALOG_DRAW_FOCUS_UNEND
 
 if(sFOCUS && !m_in && m_ot) {
-	var p  = DIALOG_PAD;
-	var p2 = DIALOG_PAD * 2;
-	draw_sprite_stretched_ext(THEME.dialog, 1, _dialog_x - p, _dialog_y - p, dialog_w + p2, dialog_h + p2, c_white, 0.4);
+	draw_sprite_stretched_ext(THEME.dialog, 1, _dialog_x, _dialog_y, dialog_w, dialog_h, c_white, .4);
 	
 	if(is(_cnt, PanelContent)) {
 		if(DOUBLE_CLICK) {
 			_cnt.dragSurface = undefined;
-			o_main.panel_dragging = _cnt;
+			PANEL_DRAGGING = _cnt;
 		
 			instance_destroy();
 			
@@ -147,9 +141,9 @@ if(sFOCUS && !m_in && m_ot) {
 					var _cnt = panel.getContent();
 					if(!is(_cnt, PanelContent)) return;
 			
-					_cnt.dragSurface      = undefined;
-					o_main.panel_dragging = _cnt;
-					panel_mouse           = 1;
+					_cnt.dragSurface = undefined;
+					PANEL_DRAGGING   = _cnt;
+					PANEL_DRAG_MOUSE      = 1;
 					
 					instance_destroy();
 				}),
@@ -157,5 +151,8 @@ if(sFOCUS && !m_in && m_ot) {
 		}
 	}
 }
+
+if(HOVER_WINDOW == window)
+	PANEL_DRAW_DRAG();
 
 if(is_winwin(window)) winwin_end();

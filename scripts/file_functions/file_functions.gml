@@ -277,6 +277,27 @@ function filename_combine(_p1, _p2) {
 	return _p1 + "/" + _p2;
 }
 
+function filenames_combine(_p1) {
+	var pp = "";
+	var _p;
+	
+	for(var i = 0; i < argument_count; i++) {
+		_p = argument[i];
+		_p = string_replace_all( _p, "\\", "/" );
+		
+		if(i > 0) 
+			_p = string_trim_start( _p, ["/"] );
+		if(i < argument_count - 1) 
+			_p = string_trim_end( _p, ["/"] );
+			
+		pp = pp + _p;
+		if(i < argument_count - 1)
+			pp += "/";
+	}
+	
+	return pp;
+}
+
 	////- Actions
 
 function file_copy_override(src, dest) {
@@ -343,7 +364,37 @@ function directory_create_os(_p) {
  
 #macro __zip_unzip zip_unzip
 #macro zip_unzip zip_unzip_os
-function zip_unzip_os(p0, p1) { return __zip_unzip(filename_os(p0), filename_os(p1)); }
+function zip_unzip_os(p0, p1) { 
+	p0 = filename_os(p0);
+	p1 = filename_os(p1);
+	
+	printDebug($" - Unzipping {p0} [{file_exists_empty(p0)}] to {p1} [{file_exists_empty(p1)}].")
+	
+	if(OS != os_macosx) return __zip_unzip(p0, p1); 
+	
+	// show_debug_message($"{p0}, {file_exists_empty(p0)}")
+	
+	if(file_exists_empty(p0))
+		return __zip_unzip(p0, p1);
+	
+	// sometime mac double folder in the resource folder.
+	var fname = filename_name(p0);
+	var fdir  = filename_dir(p0);
+	var fdirn = filename_name(fdir);
+	var fdirr = filename_dir(fdir);
+	
+	// show_debug_message($"fname: {fname}");
+	// show_debug_message($"fdir: {fdir}");
+	
+	// show_debug_message($"fdirn: {fdirn}");
+	// show_debug_message($"fdirr: {fdirr}");
+	
+	var newf  = filenames_combine(fdirr, fdirn, fdirn, fname);
+	
+	// show_debug_message($"{newf}: {file_exists_empty(newf)}");
+	
+	return __zip_unzip(newf, p1);
+}
 
 function zip_add_folder(_zip, _zipDir, _dir) {
 	var _list = directory_listdir(_dir, fa_none);

@@ -11,6 +11,11 @@
   "androidsourcedir":"",
   "author":"",
   "classname":"",
+  "ConfigValues":{
+    "Itch":{
+      "copyToTargets":"194",
+    },
+  },
   "copyToTargets":194,
   "description":"",
   "exportToGame":true,
@@ -153,7 +158,7 @@
     {"$GMExtensionFile":"v1","%Name":"libfilesystem.zip","constants":[],"copyToTargets":0,"filename":"libfilesystem.zip","final":"","functions":[],"init":"","kind":4,"name":"libfilesystem.zip","origname":"extensions\\libfilesystem.zip","ProxyFiles":[],"resourceType":"GMExtensionFile","resourceVersion":"2.0","uncompress":false,"usesRunnerInterface":false,},
     {"$GMExtensionFile":"v1","%Name":"libfilesystem.gml","ConfigValues":{
         "Itch":{
-          "copyToTargets":"192",
+          "copyToTargets":"194",
         },
         "Steam":{
           "copyToTargets":"192",

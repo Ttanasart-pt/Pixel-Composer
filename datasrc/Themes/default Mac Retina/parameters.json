@@ -1,14 +1,17 @@
 {
     "easing": "liquid", 
-    "ease_duration": 0.7, 
+    "ease_duration": 0, 
 
     "icon_scale": 2,
     "highlight_corner_radius": 8,
     "selection_corner_radius": 6,
-    "selection_minimum": 22,
+    "selection_minimum": 44,
     
-    "dialog_padding": 4, 
+    "dialog_padding": 16, 
     "dialog_modal_button_spacing": 8, 
+    "dialog_menubox_padding": 4, 
+    "dialog_menu_submenu_offset": 8, 
+    "dialog_addnode_offset": 16, 
 
     "panel_separation_type": "frame",
     "panel_padding": 2,
@@ -21,6 +24,7 @@
     "panel_notification_padding": 0,
     "panel_tab_padding": 2,
     "panel_animation_padding": 6, 
+    "panel_animation_min_h": 32, 
 
     "minimap_corner_radius": 2,
     "slider_type": "stem",

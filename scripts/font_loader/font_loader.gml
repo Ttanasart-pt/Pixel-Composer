@@ -1,6 +1,7 @@
 globalvar FONT_DEF, FONT_ISLOADED, FONT_CACHE, FONT_CUST_CACHE, FONT_LIST;
 globalvar f_h1, f_h2, f_h3, f_h5, f_p0, f_p0b, f_p1, f_p1b, f_p2, f_p2b, f_p3, f_p4;
 globalvar f_code, f_sdf, f_sdf_medium;
+globalvar f_hotkey;
 
 global.LINE_HEIGHTS = {};
 
@@ -175,37 +176,40 @@ function loadFonts() {
 		f_sdf_medium  = _font_load_default("sdf_medium", _f_sdf_medium);
 		FONT_ISLOADED = false;
 		
-		__font_refresh();
-		return;
+	} else {
+	
+		var s = file_read_all(path);
+		var fontDef = json_try_parse(s);
+		
+		f_h1  = _font_load_from_struct(fontDef, "h1",    _f_h1,   UI_FONT_TYPE.bold    );
+		f_h2  = _font_load_from_struct(fontDef, "h2",    _f_h2,   UI_FONT_TYPE.bold    );
+		f_h3  = _font_load_from_struct(fontDef, "h3",    _f_h3,   UI_FONT_TYPE.bold    );
+		f_h5  = _font_load_from_struct(fontDef, "h5",    _f_h5,   UI_FONT_TYPE.bold    );
+		
+		f_p0  = _font_load_from_struct(fontDef, "p0",    _f_p0,   UI_FONT_TYPE.medium  );
+		f_p0b = _font_load_from_struct(fontDef, "p0b",   _f_p0b,  UI_FONT_TYPE.bold    );
+		
+		f_p1  = _font_load_from_struct(fontDef, "p1",    _f_p1,   UI_FONT_TYPE.medium  );
+		f_p1b = _font_load_from_struct(fontDef, "p1b",   _f_p1b,  UI_FONT_TYPE.bold    );
+		
+		f_p2  = _font_load_from_struct(fontDef, "p2",    _f_p2,   UI_FONT_TYPE.medium  );
+		f_p2b = _font_load_from_struct(fontDef, "p2b",   _f_p2b,  UI_FONT_TYPE.bold    );
+		
+		f_p3  = _font_load_from_struct(fontDef, "p3",    _f_p3,   UI_FONT_TYPE.medium  );
+		f_p4  = _font_load_from_struct(fontDef, "p4",    _f_p4,   UI_FONT_TYPE.medium  );
+		
+		f_code       = _font_load_from_struct(fontDef, "code",        _f_code,       UI_FONT_TYPE.code );
+		f_sdf        = _font_load_from_struct(fontDef, "sdf",         _f_sdf,        UI_FONT_TYPE.bold );
+		f_sdf_medium = _font_load_from_struct(fontDef, "sdf_medium",  _f_sdf_medium, UI_FONT_TYPE.bold );
+		
+		FONT_ISLOADED = true;
 	}
 	
-	var s = file_read_all(path);
-	var fontDef = json_try_parse(s);
+	f_hotkey = f_p2;
 	
-	f_h1  = _font_load_from_struct(fontDef, "h1",    _f_h1,   UI_FONT_TYPE.bold    );
-	f_h2  = _font_load_from_struct(fontDef, "h2",    _f_h2,   UI_FONT_TYPE.bold    );
-	f_h3  = _font_load_from_struct(fontDef, "h3",    _f_h3,   UI_FONT_TYPE.bold    );
-	f_h5  = _font_load_from_struct(fontDef, "h5",    _f_h5,   UI_FONT_TYPE.bold    );
-	
-	f_p0  = _font_load_from_struct(fontDef, "p0",    _f_p0,   UI_FONT_TYPE.medium  );
-	f_p0b = _font_load_from_struct(fontDef, "p0b",   _f_p0b,  UI_FONT_TYPE.bold    );
-	
-	f_p1  = _font_load_from_struct(fontDef, "p1",    _f_p1,   UI_FONT_TYPE.medium  );
-	f_p1b = _font_load_from_struct(fontDef, "p1b",   _f_p1b,  UI_FONT_TYPE.bold    );
-	
-	f_p2  = _font_load_from_struct(fontDef, "p2",    _f_p2,   UI_FONT_TYPE.medium  );
-	f_p2b = _font_load_from_struct(fontDef, "p2b",   _f_p2b,  UI_FONT_TYPE.bold    );
-	
-	f_p3  = _font_load_from_struct(fontDef, "p3",    _f_p3,   UI_FONT_TYPE.medium  );
-	f_p4  = _font_load_from_struct(fontDef, "p4",    _f_p4,   UI_FONT_TYPE.medium  );
-	
-	f_code       = _font_load_from_struct(fontDef, "code",        _f_code,       UI_FONT_TYPE.code );
-	f_sdf        = _font_load_from_struct(fontDef, "sdf",         _f_sdf,        UI_FONT_TYPE.bold );
-	f_sdf_medium = _font_load_from_struct(fontDef, "sdf_medium",  _f_sdf_medium, UI_FONT_TYPE.bold );
-	
-	FONT_ISLOADED = true;
+	if(OS == os_macosx) { // load SF pro font with special shortcut characters
+		f_hotkey = _font_load_from_struct(fontDef, "hotkey", _f_p2, UI_FONT_TYPE.code );
+	}
 	
 	__font_refresh();
-	
-	// font_texture_page_size = 1024;
 }

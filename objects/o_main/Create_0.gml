@@ -1,6 +1,10 @@
 /// @description init
+
 #region log
 	var path = "log_temp.txt";
+	if(os_type == os_macosx) // adding log file in resource directory will causes code-signing problem on macos.
+		path = "~/Library/Application Support/PixelComposer/log_temp.txt";
+		
 	var file = file_text_open_append(path);
 	file_text_write_string(file, $"[MESSAGE] {_log_template()}session begin\n");
 	file_text_close(file);
@@ -134,7 +138,7 @@
 	watcher_surface = surface_create(1, 1);
 	windows_focused = true;
 	
-	panelInit();
+	PANEL_INIT();
 #endregion
 
 #region Loader

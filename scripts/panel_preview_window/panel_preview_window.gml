@@ -40,9 +40,10 @@ function Panel_Preview_Window() : PanelContent() constructor {
 		content_surface = noone;
 		
 		function toggleNodeLock() { node_lock = !node_lock; return self; }
-		function setPreview(_node, _channel = 0) {
+		function setPreview(_node, _channel = 0, _lock = false) {
 			node_target     = _node;
 			preview_channel = _channel;
+			node_lock       = _lock;
 			return self;
 		}
 		

@@ -38,7 +38,7 @@
     function __fnInit_Inspector() {
     	var i = "Inspector";
     	var n = MOD_KEY.none;
-    	var c = MOD_KEY.ctrl;
+    	var c = MOD_KEY_CTRL;
     	var a = MOD_KEY.alt;
     	var s = MOD_KEY.shift;
     	
@@ -2953,7 +2953,7 @@ function Panel_Inspector() : PanelContent() constructor {
 }
 
 function New_Inspect_Node_Panel(node, pin = true) {
-    panel = panelAdd("Panel_Inspector", true, false);
+    panel = dialogPanelCall(new Panel_Inspector());
 	panel.content.setInspecting(node, true, false);
 	panel.destroy_on_click_out = !pin;
 	

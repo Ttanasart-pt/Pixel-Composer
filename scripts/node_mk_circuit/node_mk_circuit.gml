@@ -128,8 +128,8 @@ function Node_MK_Circuit(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 		
 		random_set_seed(_seed);
 		
-		var _cellX = _celc[0];
-		var _cellY = _celc[1];
+		var _cellX = max(1, _celc[0]);
+		var _cellY = max(1, _celc[1]);
 		var _cellW = floor(_dim[0] / _cellX);
 		var _cellH = floor(_dim[1] / _cellY);
 		

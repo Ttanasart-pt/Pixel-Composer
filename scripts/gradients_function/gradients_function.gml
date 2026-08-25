@@ -176,10 +176,10 @@ function gradientObject(color = ca_black) constructor {
 	////- Draw
 	
 	static draw = function(_x, _y, _w, _h, _a = 1) {
-		var uniform_grad_blend	= shader_get_uniform(sh_gradient_display, "gradient_blend");
-		var uniform_grad		= shader_get_uniform(sh_gradient_display, "gradient_color");
-		var uniform_grad_time	= shader_get_uniform(sh_gradient_display, "gradient_time");
-		var uniform_grad_key	= shader_get_uniform(sh_gradient_display, "gradient_keys");
+		static uniform_grad_blend = shader_get_uniform(sh_gradient_display, "gradient_blend");
+		static uniform_grad       = shader_get_uniform(sh_gradient_display, "gradient_color");
+		static uniform_grad_time  = shader_get_uniform(sh_gradient_display, "gradient_time");
+		static uniform_grad_key   = shader_get_uniform(sh_gradient_display, "gradient_keys");
 	
 		var _grad_color = [];
 		var _grad_time  = [];
@@ -201,7 +201,7 @@ function gradientObject(color = ca_black) constructor {
 		}
 		
 		var _gh = aa? _h - ui(8) : _h;
-		draw_sprite_stretched_ext(THEME.ui_panel_bg, 4, _x, _y, _w, _gh, c_white, _a)
+		draw_sprite_stretched_ext(THEME.palette_mask, 1, _x, _y, _w, _gh, c_white, _a)
 		
 		if(len) {
 			BLEND_MULTIPLY
@@ -219,7 +219,7 @@ function gradientObject(color = ca_black) constructor {
 		}
 		
 		if(aa) {
-			draw_sprite_stretched_ext(THEME.ui_panel_bg, 4, _x, _y + _h - ui(6), _w, ui(6), c_white, _a)
+			draw_sprite_stretched_ext(THEME.palette_mask, 1, _x, _y + _h - ui(6), _w, ui(6), c_white, _a)
 			
 			BLEND_MULTIPLY
 			

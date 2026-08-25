@@ -3120,6 +3120,8 @@ function Panel_Animation_Dopesheet() {
         	timeline_snap_points = array_verify(timeline_snap_points, _len + 1);
         	timeline_snap_line   = [];
         	
+        	////- =Draw Timeline Content
+        	
             for( var i = 0; i < _len; i++ ) {
                 var _cont = timeline_contents[i];
                 if(_cont.type != "node") continue;
@@ -3154,10 +3156,12 @@ function Panel_Animation_Dopesheet() {
 	                	var _keyFirst = (_rs + 1) * timeline_scale + timeline_shift;
 	        			var _keyLast  = (_re + 1) * timeline_scale + timeline_shift;
 	                	
+	                	var _cny = _cont.y + ui(10);
+	                	
 	                	var _ex0 = _keyFirst;
 	                	var _ex1 = _keyLast;
-	                	var _ey0 = _cont.y + ui(10) - ui(8);
-	                	var _ey1 = _cont.y + ui(10) + ui(8);
+	                	var _ey0 = _cny + _cny - ui(8);
+	                	var _ey1 = _cny + _cny + ui(8);
 	                	
 	                	var frameFirst = (_keyFirst - timeline_shift) / timeline_scale;
 	                	var frameLast  = (_keyLast  - timeline_shift) / timeline_scale;
@@ -3180,21 +3184,21 @@ function Panel_Animation_Dopesheet() {
 	                	
 	                	var _drg = timeline_content_dragging != undefined && timeline_content_dragging.node == _cont.node;
 	                	var _hlg = _hov || _drg;
-	                	draw_sprite_stretched_ext(THEME.box_r2, 0, _ex0, _ey0, _ew, _eh, baseC, .2 + _hlg * .3);
-	                	draw_sprite_stretched_add(THEME.box_r2, 1, _ex0, _ey0, _ew, _eh, baseC, .2);
+	                	draw_sprite_stretched_ext(THEME.timeline_content, 0, _ex0, _ey0, _ew, _eh, baseC, .2 + _hlg * .3);
+	                	draw_sprite_stretched_add(THEME.timeline_content, 1, _ex0, _ey0, _ew, _eh, baseC, .2);
 	                	
-	                	if(_drg) draw_sprite_stretched_ext(THEME.box_r2, 1, _ex0, _ey0, _ew, _eh, COLORS._main_accent, 1);
+	                	if(_drg) draw_sprite_stretched_ext(THEME.timeline_content, 1, _ex0, _ey0, _ew, _eh, COLORS._main_accent, 1);
 	                	
 	                	var _hlg = _hovF || (_drg && timeline_content_drag_type == 2);
 	                	if(_hlg) {
 	                		var cc = _drg && timeline_content_drag_type == 2? COLORS._main_accent : baseC;
-	                		draw_sprite_stretched_ext(THEME.box_r2, 0, _ex0 - _es, _ey0, _es*2, _eh, cc, 1);
+	                		draw_sprite_stretched_ext(THEME.timeline_content, 0, _ex0 - _es, _ey0, _es*2, _eh, cc, 1);
 	                	}
 	                	
 	                	var _hlg = _hovL || (_drg && timeline_content_drag_type == 3);
 	                	if(_hlg) {
 	                		var cc = _drg && timeline_content_drag_type == 3? COLORS._main_accent : baseC;
-	                		draw_sprite_stretched_ext(THEME.box_r2, 0, _ex1 - _es, _ey0, _es*2, _eh, cc, 1);
+	                		draw_sprite_stretched_ext(THEME.timeline_content, 0, _ex1 - _es, _ey0, _es*2, _eh, cc, 1);
 	                	}
 	                	
 	                	if(_hov) {

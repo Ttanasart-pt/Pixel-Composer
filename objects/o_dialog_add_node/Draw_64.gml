@@ -203,7 +203,7 @@ DIALOG_DRAW_BG
 		_txx += string_width(_txt);
 		
 		var _key  = hk_editing.getKeyName();
-		draw_set_text(f_p2, fa_left, fa_center, COLORS._main_text);
+		draw_set_text(f_hotkey, fa_left, fa_center, COLORS._main_text);
 		draw_text(_txx, ty + th / 2, _key);
 	}
 	
@@ -212,7 +212,7 @@ DIALOG_DRAW_BG
 if(DIALOG_SHOW_FOCUS) {
 	var dpd = THEME_VALUE.dialog_padding;
 	var cc  = node_replace == noone? COLORS._main_accent : COLORS.dialog_add_node_replace_mode;
-	draw_sprite_stretched_ext(THEME.dialog, 1, _dialog_x-dpd, _dialog_y-dpd, dialog_w+dpd*2, dialog_h+dpd*2, cc, 1);
+	draw_sprite_stretched_ext(THEME.dialog, 1, _dialog_x, _dialog_y, dialog_w, dialog_h, cc, 1);
 }
 
 #region tooltip
@@ -275,7 +275,7 @@ if(DIALOG_SHOW_FOCUS) {
 			hh = ui(16) + _th;
 			
 			if(hk != noone) {
-				draw_set_font(f_p2);
+				draw_set_font(f_hotkey);
 				ww += string_width(hk.getKeyName()) + ui(8);
 			}
 		}
@@ -295,7 +295,7 @@ if(DIALOG_SHOW_FOCUS) {
 			} 
 			
 			if(hk != noone) {
-				draw_set_text(f_p2, fa_right, fa_top, COLORS._main_text_sub);
+				draw_set_text(f_hotkey, fa_right, fa_top, COLORS._main_text_sub);
 				draw_text_add(ww - ui(8), ui(8), hk.getKeyName());
 			}
 			

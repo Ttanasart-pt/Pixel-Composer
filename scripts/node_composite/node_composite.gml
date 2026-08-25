@@ -744,7 +744,7 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 						draw_text_add(_mtx, _mdy + ehg / 2 - ui(2), _modi.display_name);
 						
 						if(_mhov && DOUBLE_CLICK) {
-							var pan = panelAdd("Panel_Inspector", true);
+							var pan = dialogPanelCall(new Panel_Inspector());
 							pan.content.setInspecting(_modi, true);
 						}
 						

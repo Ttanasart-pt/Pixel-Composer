@@ -43,7 +43,7 @@ draw_clear(COLORS.bg);
 #endregion
 
 #region panels
-	if(PANEL_MAIN == 0) resetPanel();
+	if(PANEL_MAIN == 0) refreshPanel();
 	
 	var surf = surface_get_target();
 	try {

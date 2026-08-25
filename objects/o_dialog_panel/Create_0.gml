@@ -5,7 +5,7 @@ event_inherited();
 	dialog_w             = ui(640);
 	dialog_h             = ui(480);
 	padding              = ui(4);
-	title_height         = ui(24);
+	title_height         = ui(28);
 	dialog_resizable     = true;
 	destroy_on_click_out = true;
 	destroy_on_escape    = true;

@@ -15,7 +15,8 @@ var y1  = y0 + hh;
 
 var _m  = use_mouse || mouse_lpress();
 
-draw_sprite_stretched(THEME.dialog, 0, x0 - ui(8), y0 - ui(8), ww + ui(8) * 2, hh + ui(8) * 2);
+draw_sprite_stretched(THEME.dialog_shadow, 0, x0-DIALOG_PAD, y0-DIALOG_PAD, ww+DIALOG_PAD*2, hh+DIALOG_PAD*2);
+draw_sprite_stretched(THEME.dialog, 0, x0, y0, ww, hh);
 
 for( var i = 0, n = array_length(pal); i < n; i++ ) {
 	var r = floor(i / col);

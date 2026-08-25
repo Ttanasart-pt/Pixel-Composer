@@ -54,7 +54,7 @@ function Node_Liquefy(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		newInput(index+ 9, nodeValue_Int(   "Push resolution",  16 ));
 		newInput(index+ 3, nodeValue_Float( "Radius",            8 )).hideLabel();
 		newInput(index+10, nodeValue_Float( "Radius 2",          8 ));
-		newInput(index+ 5, nodeValue_Float( "Falloff",           0 )).setCurvable(i + 6, CURVE_DEF_01).hideLabel();
+		newInput(index+ 5, nodeValue_Float( "Falloff",           0 )).setCurvable(index+ 6, CURVE_DEF_01).hideLabel();
 		
 		////- =Effect
 		newInput(index+ 4, nodeValue_Slider( "Intensity", .1, [ -1, 1, 0.01] ));

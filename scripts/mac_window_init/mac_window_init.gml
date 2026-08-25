@@ -27,6 +27,8 @@ function mac_window_init() {
 	__win_min_h = 0;
 	
 	// _window_set_showborder(window_handle(), false);
+	var _gestInit = mac_gesture_init(window_handle());
+	var _zoomInit = mac_enable_zoom_button(window_handle());
 }
 
 function mac_window_maximize() {

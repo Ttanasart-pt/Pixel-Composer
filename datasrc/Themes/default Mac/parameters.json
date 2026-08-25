@@ -1,6 +1,6 @@
 {
     "easing": "liquid", 
-    "ease_duration": 0.7, 
+    "ease_duration": 0, 
 
     "icon_scale": 2,
     "highlight_corner_radius": 8,
@@ -9,6 +9,8 @@
     
     "dialog_padding": 4, 
     "dialog_modal_button_spacing": 8, 
+    "dialog_menubox_padding": 4, 
+    "dialog_addnode_offset": 8, 
 
     "panel_separation_type": "frame",
     "panel_padding": 2,

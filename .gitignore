@@ -28,3 +28,5 @@ gmedit
 !*.yy
 
 *.afdesign~lock~
+
+post_run_step.sh

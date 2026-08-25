@@ -26,4 +26,14 @@ function winwin_buffer_write_string_u32(_buf, _string) {
     });
 }
 
-function is_winwin(_window) { return _window && winwin_exists(_window); }
+function is_winwin(_window) { return OS == os_windows && _window && winwin_exists(_window); }
+
+function get_winwin_content() { // trace to the topmost content window ignoring o_dialog_menubox
+    var _winPtr = WINWIN_CURRENT;
+	if(!is_winwin(_winPtr)) return winwin_main;
+		
+	while(has(WINWIN_MAP, _winPtr) && WINWIN_MAP[$ _winPtr].isSubwindow)
+		_winPtr = WINWIN_MAP[$ _winPtr].parentWindow;
+	
+	return _winPtr;
+}

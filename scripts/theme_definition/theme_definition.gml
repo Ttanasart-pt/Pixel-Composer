@@ -219,7 +219,10 @@ function ThemeValue() constructor {
     selection_minimum             = 4;
 	
 	dialog_padding                = 4;
+	dialog_menu_submenu_offset    = 0;
 	dialog_modal_button_spacing   = 8;
+	dialog_menubox_padding        = 0;
+	dialog_addnode_offset         = 8;
 
     inline_node_radius            = 6;
     
@@ -238,6 +241,7 @@ function ThemeValue() constructor {
     panel_notification_padding    = 0;
     panel_tab_padding             = 2;
 	panel_animation_padding       = 6;
+	panel_animation_min_h         = 28;
 	panel_inspector_prop_paddding = 6;
 
     minimap_corner_radius         = 2;

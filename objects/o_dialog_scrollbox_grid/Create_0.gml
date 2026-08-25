@@ -9,6 +9,7 @@ event_inherited();
 	align	 = fa_center;
 	text_pad = ui(8);
 	item_pad = ui(8);
+	padding  = ui(THEME_VALUE.dialog_menubox_padding);
 	
 	grid_width  = ui(80);
 	grid_height = ui(88);
@@ -23,13 +24,42 @@ event_inherited();
 	initVal		  = 0;
 	update_hover  = true;
 	
+#endregion
+
+#region search
 	KEYBOARD_RESET
 	search_string = "";
 	tb_search     = textBox_Text(function(s) /*=>*/ { search_string = string(s); filterSearch(); })
 					.setAutoUpdate().setEmpty().setFont(f_p2).setAlign(fa_left).activate();
 	searchIndex   = undefined;
 	
+	function filterSearch() {
+		if(search_string == "") {
+			data = scrollbox.data;
+			setSize();
+			return;
+		}
+		
+		data = [];
+		searchIndex = [];
+		
+		for( var i = 0, n = array_length(scrollbox.data); i < n; i++ ) {
+			var val = scrollbox.data[i];
+			if(val == -1) continue;
+			
+			var _txt = is(val, scrollItem)? val.name : val;
+			if(string_pos(string_lower(search_string), string_lower(_txt)) > 0) {
+				array_push(data, val);
+				array_push(searchIndex, i);
+			}
+		}
+		
+		setSize();
+	}
 	
+#endregion
+
+#region content
 	function initScroll(_scroll, _initVal) {
 		scrollbox    = _scroll;
 		dialog_w     = max(ui(200), _scroll.w);
@@ -61,30 +91,6 @@ event_inherited();
 		setSize();
 	}
 	
-	function filterSearch() {
-		if(search_string == "") {
-			data = scrollbox.data;
-			setSize();
-			return;
-		}
-		
-		data = [];
-		searchIndex = [];
-		
-		for( var i = 0, n = array_length(scrollbox.data); i < n; i++ ) {
-			var val = scrollbox.data[i];
-			if(val == -1) continue;
-			
-			var _txt = is(val, scrollItem)? val.name : val;
-			if(string_pos(string_lower(search_string), string_lower(_txt)) > 0) {
-				array_push(data, val);
-				array_push(searchIndex, i);
-			}
-		}
-		
-		setSize();
-	}
-	
 	function setSize() {
 		var len = array_length(data);
 		var col = min(len, 6);
@@ -93,10 +99,8 @@ event_inherited();
 		var ww = grid_width  * col + grid_pad * (col - 1);
 		var hh = grid_height * row + grid_pad * (row - 1) + ui(40);
 		
-		dialog_w = ww;
-		dialog_h = hh;
-		
-		sc_content.resize(dialog_w, dialog_h - ui(40));
+		dialog_w = ceil(ww + padding * 2);
+		dialog_h = ceil(hh + padding * 2);
 		
 		resetPosition();
 	}
@@ -141,7 +145,7 @@ event_inherited();
 				}
 			
 				if(selecting == i) {
-					draw_sprite_stretched_ext(THEME.box_r2, 0, _xx, _yy, gw, gh, COLORS.dialog_menubox_highlight, .1);
+					draw_sprite_stretched_ext(THEME.menubox, 0, _xx, _yy, gw, gh, COLORS.dialog_menubox_highlight, .1);
 					
 					if(sc_content.active && (mouse_lpress() || KEYBOARD_ENTER)) {
 						initVal = i;
@@ -202,6 +206,5 @@ event_inherited();
 		
 		return _h;
 	});
-	
 	sc_content.scroll_resize = false;
 #endregion

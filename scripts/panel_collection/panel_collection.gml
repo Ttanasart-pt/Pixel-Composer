@@ -17,7 +17,7 @@
 	function __fnInit_Collection() {
 		var o = "Collection";
 		var n = MOD_KEY.none;
-		var c = MOD_KEY.ctrl;
+		var c = MOD_KEY_CTRL;
 		
 		registerFunction(o, "Toggle Search",             "F", c, panel_collection_search_toggle     ).setMenu("collection_search_toggle")
 		

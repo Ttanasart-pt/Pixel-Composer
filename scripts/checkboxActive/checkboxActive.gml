@@ -33,7 +33,7 @@ function checkBoxActive(_onClick) : widget() constructor {
 				deactivate();
 		}
 		
-		draw_set_text(f_p1, fa_center, fa_center, _value? COLORS._main_value_positive : COLORS._main_value_negative);
+		draw_set_text(f_p2, fa_center, fa_center, _value? COLORS._main_value_positive : COLORS._main_value_negative);
 		draw_text_add(bx + bw / 2, by + bh / 2, _value? "ACTIVE" : "INACTIVE");
 		
 		if(WIDGET_CURRENT == self)

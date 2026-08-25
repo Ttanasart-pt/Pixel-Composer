@@ -13,13 +13,18 @@
 		#region GENERAL UI
 			PREFERENCES.display_scaling					= 1;
 			PREFERENCES.text_scaling					= 1;
+			
+			PREFERENCES.window_x					    = 0;
+			PREFERENCES.window_y					    = 0;
 			PREFERENCES.window_width					= 1600;
 			PREFERENCES.window_height					= 800;
 			PREFERENCES.window_maximize					= false;
 			PREFERENCES.window_monitor					= "";
+			
 			PREFERENCES.window_fix					    = false;
 			PREFERENCES.window_fix_width				= 1600;
 			PREFERENCES.window_fix_height				= 800;
+			
 			PREFERENCES.window_shadow                   = true;
 			PREFERENCES.window_multi                    = true;
 			
@@ -61,6 +66,9 @@
 					
 			PREFERENCES.double_click_delay              = 0.25;
 			PREFERENCES.mouse_wheel_speed               = 1.00;
+			PREFERENCES.gesture_enabled                 = true;
+			PREFERENCES.gesture_pan_sensitivity         = 1.5;
+			PREFERENCES.gesture_zoom_sensitivity        = 1;
 			
 			PREFERENCES.pen_pool_delay                  = 1;
 			PREFERENCES.slider_lock_mouse               = os_type == os_windows;
@@ -445,8 +453,9 @@
 		
 		if(disp > 1) PREFERENCES.theme = "default HQ";
 		
-		if(MAC) {
-			PREFERENCES.theme = "default Mac"; PREFERENCES_DEF.theme = PREFERENCES.theme;
+		if(MAC) { // retina
+			PREFERENCES.display_scaling = 2;          PREFERENCES_DEF.display_scaling = PREFERENCES.display_scaling;
+			PREFERENCES.theme = "default Mac Retina"; PREFERENCES_DEF.theme = PREFERENCES.theme;
 		}
 		
 		print($"Init with theme {PREFERENCES.theme}")
@@ -581,41 +590,58 @@
 		if(TESTING && GM_build_type == "run")
 			log_message("PREFERENCE", "Dev mode enabled", function() /*=>*/ {return THEME.dev_mode});
 		
-		_=PREFERENCES.use_legacy_exception? resetException() : setException();
+		if(PREFERENCES.use_legacy_exception) resetException() else setException();
 		
-		var dw = display_get_width();
-		var dh = display_get_height();
-		
-		var ww = PREFERENCES.window_fix? PREFERENCES.window_fix_width  : PREFERENCES.window_width;
-		var hh = PREFERENCES.window_fix? PREFERENCES.window_fix_height : PREFERENCES.window_height;
-		
-		ww = min(ww, dw);
-		hh = min(hh, dh);
-		
-		window_minimize_size = [ ww, hh ];
-		var cx = dw / 2;
-		var cy = dh / 2;
-		
-		if(OS == os_windows) {
-			DISPLAY_DATA = display_measure_all();
+		#region window position/size
+			var dw = display_get_width();
+			var dh = display_get_height();
 			
-			if(is_array(DISPLAY_DATA))
-			for( var i = 0, n = array_length(DISPLAY_DATA); i < n; i++ ) {
-				var _m = DISPLAY_DATA[i];
-				if(!is_array(_m) || array_length(_m) < 10) continue;
-				
-				if(PREFERENCES.window_monitor == _m[9]) {
-					cx = _m[0] + _m[2] / 2;
-					cy = _m[1] + _m[3] / 2;
-				}
+			var cx = dw / 2;
+			var cy = dh / 2;
+			
+			var ww = PREFERENCES.window_fix? PREFERENCES.window_fix_width  : PREFERENCES.window_width;
+			var hh = PREFERENCES.window_fix? PREFERENCES.window_fix_height : PREFERENCES.window_height;
+			
+			if(OS != os_macosx) {
+				ww = min(ww, dw);
+				hh = min(hh, dh);
 			}
-		}
-		
-		MULTI_WINDOWS = OS == os_windows? PREFERENCES.window_multi : false;
-		
-		window_set_rectangle(cx - ww / 2, cy - hh / 2, ww, hh);
-		if(PREFERENCES.window_maximize) winMan_Maximize();
-		window_refresh();
+			
+			window_minimize_size = [ ww, hh ];
+			MULTI_WINDOWS        = false;
+			
+			if(OS == os_windows) {
+				DISPLAY_DATA  = display_measure_all();
+				MULTI_WINDOWS = PREFERENCES.window_multi;
+				
+				if(is_array(DISPLAY_DATA))
+				for( var i = 0, n = array_length(DISPLAY_DATA); i < n; i++ ) {
+					var _m = DISPLAY_DATA[i];
+					if(!is_array(_m) || array_length(_m) < 10) continue;
+					
+					if(PREFERENCES.window_monitor == _m[9]) { // put the window in the last active monitor
+						cx = _m[0] + _m[2] / 2;
+						cy = _m[1] + _m[3] / 2;
+					}
+				}
+				
+			} 
+			
+			if(OS == os_macosx) {
+				window_set_size(ww, hh);
+				mac_window_center(window_handle());
+				
+			} else {
+				var wx = cx - ww / 2;
+				var wy = cy - hh / 2;
+				window_set_rectangle(wx, wy, ww, hh);
+			}
+			
+			if(PREFERENCES.window_maximize) winMan_Maximize();
+			window_refresh();
+			
+			if(OS == os_linux) CLICK_REFRESH = true;
+		#endregion
 		
 		if(PREFERENCES.check_update) checkVersion();
 	}

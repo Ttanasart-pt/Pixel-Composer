@@ -6,7 +6,7 @@
     "forum_grey":                         { "path": "./meta/s_forum_grey.png",                              "s": 1, "x": 32, "y": 32 },
     
     "ui_panel_bg_cover":                  { "path": "./generic/s_empty.png",                                "s": 1, "x":  0, "y":  0 },
-    "fade_up":                            { "path": "./generic/fade_up.png",                                "s": 1, "x":  0, "y":  0 },
+    "fade_up":                            { "path": "./generic/fade_up.png",                                "s": 1, "x":  0, "y":  0, "slice": [5, 5, 0, 5] },
     "box_r2":                             { "path": "./generic/s_box_r2.png",                               "s": 3, "x":  0, "y":  0, "slice":  2 },
     "box_r2_clr":                         { "path": "./generic/s_box_r2_colored.png",                       "s": 3, "x":  0, "y":  0, "slice":  7 },
     "box_r5":                             { "path": "./generic/s_box_r5.png",                               "s": 3, "x":  0, "y":  0, "slice":  7 },
@@ -231,6 +231,7 @@
     "noti_icon_log":                      { "path": "./icon/s_noti_icon_log.png",                           "s": 2, "x": 10, "y": 10 },
     "noti_icon_tick":                     { "path": "./icon/s_noti_icon_tick.png",                          "s": 1, "x": 10, "y": 10 },
     "noti_icon_warning":                  { "path": "./icon/s_noti_icon_warning.png",                       "s": 2, "x": 10, "y": 10 },
+    "menu_shelf":                         { "path": "./icon/s_menu_shelf.png",                                "s": 1, "x": 24, "y": 24 },
     "mesh":                               { "path": "./icon/s_mesh.png",                                    "s": 1, "x": 12, "y": 12 },
     "onion_skin":                         { "path": "./icon/s_onion_skin.png",                              "s": 2, "x": 12, "y": 12 },
     "panel_animation_icon":               { "path": "./icon/s_panel_animation.png",                         "s": 1, "x":  8, "y":  8 },
@@ -421,8 +422,8 @@
 
     "node_junction_group":                { "path": "./node/s_node_junction_group.png",                     "s": 6, "x":  0, "y":  0  },
     "node_junction_group_bg":             { "path": "./node/s_node_junction_group_bg.png",                  "s": 1, "x":  0, "y":  0, "slice": 15 },
-    "node_bg":                            { "path": "./node/s_node.png",                                    "s": 3, "x":  0, "y":  0, "slice":  7 },
-    "node_frame_bg":                      { "path": "./node/s_node_frame.png",                              "s": 3, "x":  0, "y":  0, "slice":  7 },
+    "node_bg":                            { "path": "./node/s_node.png",                                    "s": 4, "x":  0, "y":  0, "slice":  7 },
+    "node_frame_bg":                      { "path": "./node/s_node_frame.png",                              "s": 4, "x":  0, "y":  0, "slice":  7 },
     "node_deprecated_badge":              { "path": "./node/s_node_deprecated_badge.png",                   "s": 2, "x": 18, "y":  9 },
     "node_glow_border":                   { "path": "./node/s_node_glow.png",                               "s": 1, "x": 15, "y": 15, "slice": 15 },
     "node_junction_name_bg":              { "path": "./node/s_node_junction_name_bg.png",                   "s": 1, "x":  0, "y":  0, "slice": 15 },
@@ -436,9 +437,12 @@
     "node_websocket_receive":             { "path": "./node/assets/s_websocket_receive.png",                "s": 1, "x": 64, "y": 64 },
     "node_websocket_send":                { "path": "./node/assets/s_websocket_send.png",                   "s": 1, "x": 64, "y": 64 },
 
-    "dialog":                             { "path": "./panel/s_dialog.png",                                 "s": 2, "x":  0, "y":  0, "slice": 15 },
+    "dialog":                             { "path": "./panel/s_dialog.png",                                 "s": 3, "x":  0, "y":  0, "slice":  7 },
+    "dialog_shadow":                      { "path": "./panel/s_dialog_shadow.png",                          "s": 1, "x":  0, "y":  0, "slice": 11 },
+    "dialog_title":                       { "path": "./panel/s_dialog_title.png",                           "s": 1, "x":  0, "y":  0, "slice": 11 },
     "dialog_menu":                        { "path": "./panel/s_dialog_menu.png",                            "s": 2, "x":  0, "y":  0, "slice":  7 },
     "panel_tab_align":                    { "path": "./panel/s_panel_tab_align.png",                        "s": 4, "x":  8, "y":  8 },
+    "panel_menu_widget":                  { "path": "./panel/s_panel_menu_widget.png",                      "s": 2, "x": 12, "y": 12, "slice": 11 },
     "tool_side":                          { "path": "./panel/s_tool_side.png",                              "s": 4, "x":  0, "y":  0, "slice":  4 },
     "toolbar":                            { "path": "./panel/s_toolbar.png",                                "s": 2, "x":  0, "y":  0, "slice":  4 },
     "ui_panel":                           { "path": "./panel/s_ui_panel.png",                               "s": 3, "x":  0, "y":  0, "slice":  4 },
@@ -483,6 +487,9 @@
     "key_display":                        { "path": "./misc/s_key_display.png",                             "s": 1, "x":  0, "y":  0, "slice": 10 },
     "add_node_bg":                        { "path": "./misc/s_add_node_bg.png",                             "s": 1, "x":  0, "y":  0, "slice": [ 0, 0, 23, 0 ] },
     "key_display_mouse":                  { "path": "./misc/s_key_display_mouse.png",                       "s": 5, "x": 24, "y": 32 },
+
+    "font_backspace":                     { "path": "./misc/font/s_font_backspace.png",                     "s": 1, "x": 16, "y": 16 },
+    "font_command":                       { "path": "./misc/font/s_font_command.png",                       "s": 1, "x": 16, "y": 16 },
     
     "color_3d":                           { "path": "./preview/s_color_3d.png",                             "s": 3, "x": 16, "y": 16 },
     "color_3d_selected":                  { "path": "./preview/s_color_3d_selected.png",                    "s": 3, "x": 16, "y": 16 },
@@ -521,6 +528,7 @@
     "timeline_marker_select":             { "path": "./timeline/s_timeline_marker_select.png",              "s": 2, "x": 16, "y": 16 },
     "timeline_onion_skin":                { "path": "./timeline/s_timeline_onion_skin.png",                 "s": 2, "x":  8, "y":  8, "slice": 7 },
     "timeline_frame_box":                 { "path": "./timeline/s_frame_box.png",                           "s": 2, "x":  0, "y":  0, "slice": 5 },
+    "timeline_content":                   { "path": "./timeline/s_timeline_content.png",                    "s": 3, "x":  0, "y":  0, "slice": 5 },
 
     "curve_presets":                      { "path": "./inspector/s_inspector_curve_presets.png",            "s": 4, "x": 12, "y": 12 },
     "curve_type":                         { "path": "./inspector/s_inspector_curve_type.png",               "s": 4, "x": 12, "y": 12 },

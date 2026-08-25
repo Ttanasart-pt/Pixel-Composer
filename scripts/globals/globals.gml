@@ -38,11 +38,11 @@ gml_pragma("UnityBuild", "true");
 	globalvar DEBUG; DEBUG    = false;
 	
 	globalvar LATEST_VERSION; LATEST_VERSION = 1_21_00_0;
-	globalvar VERSION; VERSION        = 1_21_08_0;
+	globalvar VERSION; VERSION        = 1_21_09_0;
 	globalvar SAVE_VERSION; SAVE_VERSION   = 1_21_07_0;
-	globalvar VERSION_STRING; VERSION_STRING = "1.21.8.009";          // Display on menu panel, workshop thumbnail
-	globalvar RELEASE_STRING; RELEASE_STRING = "1.21.8";              // Use for searching release note from github
-	globalvar BUILD_NUMBER; BUILD_NUMBER   = 1_21_08_0.09;
+	globalvar VERSION_STRING; VERSION_STRING = "1.21.9.0";        // Display on menu panel, workshop thumbnail
+	globalvar RELEASE_STRING; RELEASE_STRING = "1.21.9";          // Use for searching release note from github
+	globalvar BUILD_NUMBER; BUILD_NUMBER   = 1_21_09_0.00;
 	globalvar PREF_VERSION; PREF_VERSION   = 1_17_1;
 	
 	globalvar NEW_VERSION; NEW_VERSION    = false;
@@ -101,6 +101,7 @@ gml_pragma("UnityBuild", "true");
 	
 	globalvar WINWIN_CURRENT; WINWIN_CURRENT    = undefined;
 	globalvar WINWIN_ALL; WINWIN_ALL        = [];
+	globalvar WINWIN_MAP; WINWIN_MAP        = {};
 	
 	globalvar DISPLAY_DATA; DISPLAY_DATA      = undefined;
 #endregion
@@ -117,8 +118,8 @@ gml_pragma("UnityBuild", "true");
 	
 	#macro NOT_LOAD !LOADING && !APPENDING
 	
-	#macro WIN_X (OS != os_macosx? window_get_x() : 0)
-	#macro WIN_Y (OS != os_macosx? window_get_y() : 0)
+	#macro WIN_X window_get_x()
+	#macro WIN_Y window_get_y()
 	#macro WIN_W window_get_width()
 	#macro WIN_H window_get_height()
 	

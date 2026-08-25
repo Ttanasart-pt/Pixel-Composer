@@ -210,7 +210,7 @@ sc_content = new scrollPane(dialog_w - ui(4), dialog_h - ui(32), function(_y, _m
 			var _hx  = _dw - ui(6);
 			var _hy  = _ty + ui(1);
 			
-			draw_set_text(f_p3, fa_right, fa_center, COLORS._main_accent);
+			draw_set_text(f_hotkey, fa_right, fa_center, COLORS._main_accent);
 			
 			var _ktxt = _key.getKeyName();
 			var _tw = string_width(_ktxt);

@@ -2,7 +2,7 @@
     function global_fullscreen()        { CALL("fullscreen");        winMan_setFullscreen(!window_is_fullscreen);                                        }
     function global_project_close()     { CALL("close_project");     PANEL_GRAPH.close();                                                                }
     function global_project_close_all() { CALL("close_project_all"); for( var i = array_length(PROJECTS) - 1; i >= 0; i-- ) closeProject(PROJECTS[i]);   }
-    function global_theme_reload()      { CALL("reload_theme");      loadGraphic(PREFERENCES.theme); resetPanel();                                       }
+    function global_theme_reload()      { CALL("reload_theme");      loadGraphic(PREFERENCES.theme); refreshPanel();                                       }
     
     function global_render_all()        { CALL("render_all");        RenderAllReorder();                     }
     function global_render_all_force()  { CALL("render_all_force");  PROJECT.purgeAll(); RenderAllReorder(); }
@@ -24,7 +24,7 @@
     
     function __fnInit_Global() {
     	var n = MOD_KEY.none;
-    	var c = MOD_KEY.ctrl;
+    	var c = MOD_KEY_CTRL;
     	var s = MOD_KEY.shift;
     	var a = MOD_KEY.alt;
     	
@@ -77,7 +77,7 @@
         registerFunction("", "Redo",                "Z",    c|s, REDO     ).setMenu("redo"            )
         
         registerFunction("", "Full Panel",          vk_f9,  n,   set_focus_fullscreen     ).setMenu("full_panel"      )
-        registerFunction("", "Reset Layout",        vk_f10, c,   resetPanel               ).setMenu("reset_layout"    )
+        registerFunction("", "Reset Layout",        vk_f10, c,   refreshPanel               ).setMenu("reset_layout"    )
         
         registerFunction("", "Fullscreen",          vk_f11, n,   global_fullscreen        ).setMenu("fullscreen"      )
         registerFunction("", "Render All",          vk_f5,  n,   global_render_all        ).setMenu("render_all",       [ THEME.sequence_control, 1 ])
@@ -250,7 +250,7 @@ function Panel_Menu() : PanelContent() constructor {
         menu_panels = [ __txt("Panels"), [
             MENU_ITEMS.full_panel,
             MENU_ITEMS.reset_layout,
-            menuItemShelf(__txt("Workspace"), function(_dat) { 
+            menuItemShelf(__txt("Workspace"), function(_dat) /*=>*/ { 
                 var arr = [];
                 var lay = [];
                 
@@ -260,10 +260,10 @@ function Panel_Menu() : PanelContent() constructor {
                     f = file_find_next();
                 }
                 
-                array_push(arr, menuItem(__txt("panel_menu_save_layout", "Save layout"), function() {
+                array_push(arr, menuItem(__txt("panel_menu_save_layout", "Save layout"), function() /*=>*/ {
                     var dia = dialogCall(o_dialog_file_name, mouse_mx + ui(8), mouse_my + ui(8));
                     dia.name = PREFERENCES.panel_layout_file;
-                    dia.onModify = function(name) { 
+                    dia.onModify = function(name) /*=>*/ { 
                         var cont = panelSerialize();
                         json_save_struct(DIRECTORY + "layouts/" + name + ".json", cont);
                     };
@@ -419,20 +419,40 @@ function Panel_Menu() : PanelContent() constructor {
         draw_clear_alpha(COLORS.panel_bg_clear, 1);
         var hori = w > h;
         var font = f_p3;
-        var xx   = ui(40);
-        var yy   = ui(8);
         var m    = [mx, my];
+        
+        var profile = PREFERENCES.panel_menu_show_profile && os_is_network_connected() && OS != os_macosx;
+        
+        #region starting position
+        	var xx = ui(40);
+        	var yy = ui(8);
+        
+        	if(hori) {
+        		xx = ui(24);
+        		
+                if(!_right) {
+                	xx = profile? ui(48): ui(4);
+                	
+                	if(OS == os_macosx) {
+                		if(!window_get_fullscreen()) {
+                			xx += 144; // space for window buttons.
+                			draw_set_color(COLORS._main_icon_dark);
+                    		draw_line_round(xx, ui(8), xx, h - ui(8), 3);
+                		}
+                	}
+                	
+                    if(profile && _sepFrame) {
+                    	draw_set_color(COLORS._main_icon_dark);
+                    	draw_line_round(xx, ui(8), xx, h - ui(8), 3);
+                    }
+                    
+                }
+                
+            }
+        #endregion
         
         #region about
             if(hori) {
-                if(!_right) {
-                	xx = ui(48);
-                    draw_set_color(COLORS._main_icon_dark);
-                    if(_sepFrame) draw_line_round(xx, ui(8), xx, h - ui(8), 3);
-                    
-                } else 
-                	xx = ui(24);
-                
                 var bx = _right? xx : w - ui(24);
                 if(pHOVER && point_in_rectangle(mx, my, bx - ui(16), 0, bx + ui(16), ui(32))) {
                     draw_sprite_ui_uniform(THEME.icon_24, 0, bx, h / 2);
@@ -577,7 +597,7 @@ function Panel_Menu() : PanelContent() constructor {
             if(RENDERING != undefined) {
                 var nw = hori? ui(104) : w - ui(16);
                 
-                draw_sprite_stretched_ext(THEME.ui_panel_bg, 1, nx0, ny0 - nh/2, nw, nh);
+                draw_sprite_stretched_ext(THEME.panel_menu_widget, 1, nx0, ny0 - nh/2, nw, nh);
                 
                 draw_sprite_ui(THEME.loading_s, 0, nx0 + nh/2, ny0, .65, .65, current_time / 2, COLORS._main_icon, .8);
                 
@@ -605,15 +625,16 @@ function Panel_Menu() : PanelContent() constructor {
                 var ev = animation_curve_eval(ac_flash, noti_flash);
                 var cc = merge_color(c_white, noti_flash_color, ev);
                 
+                draw_sprite_stretched_ext(THEME.panel_menu_widget, 0, nx0, ny0 - nh / 2, nw, nh, cc, 1);
+                
                 if(pHOVER && point_in_rectangle(mx, my, nx0, ny0 - nh / 2, nx0 + nw, ny0 + nh / 2)) {
                     _draggable = false;
-                    draw_sprite_stretched_ext(THEME.box_r2_clr, 0, nx0, ny0 - nh / 2, nw, nh, cc, 1);
+                    draw_sprite_stretched_add(THEME.panel_menu_widget, 1, nx0, ny0 - nh / 2, nw, nh, cc, .3);
                     if(mouse_lpress(pFOCUS))
                         dialogPanelCall(new Panel_Notification(), nx0, ny0 + nh / 2 + ui(4), { anchor: ANCHOR.left | ANCHOR.top });
                     
                     setTOOLTIP($"{warning_amo} {__txt("Warnings")} {error_amo} {__txt("Errors")}");
-                } else
-                    draw_sprite_stretched_ext(THEME.ui_panel_bg, 1, nx0, ny0 - nh / 2, nw, nh, cc, 1);
+                }
                 
                 gpu_set_blendmode(bm_add);
                 draw_sprite_stretched_ext(THEME.box_r2, 0, nx0, ny0 - nh / 2, nw, nh, cc, ev / 2);
@@ -656,15 +677,16 @@ function Panel_Menu() : PanelContent() constructor {
                     ww  = w - ui(16);
                 }
                 
+                draw_sprite_stretched(THEME.panel_menu_widget, 0, nx0, ny0 - wh / 2, ww, wh);
+                
                 if(pHOVER && point_in_rectangle(mx, my, nx0, ny0 - wh / 2, nx0 + ww, ny0 + wh / 2)) {
                     _draggable = false;
                     setTOOLTIP(__txt("Addons"));
-                    draw_sprite_stretched(THEME.box_r2_clr, 0, nx0, ny0 - wh / 2, ww, wh);
+                    draw_sprite_stretched_add(THEME.panel_menu_widget, 1, nx0, ny0 - wh / 2, ww, wh, c_white, .3);
                     if(mouse_lpress(pFOCUS)) dialogPanelCall(new Panel_Addon());
                     
-                } else 
-                    draw_sprite_stretched(THEME.ui_panel_bg, 1, nx0, ny0 - wh / 2, ww, wh);
-                    
+                }
+                
                 draw_text_add(tx + ui(8), ny0 - ui(1), name);
                 draw_sprite_ui_uniform(THEME.addon_icon, 0, tx + ui(18) + string_width(name), ny0, .75, COLORS._main_icon);
                     
@@ -793,7 +815,7 @@ function Panel_Menu() : PanelContent() constructor {
         #region profile
             var uPad = ui(THEME_VALUE.panel_menu_user_padding);
             
-            if(PREFERENCES.panel_menu_show_profile && os_is_network_connected()) {
+            if(profile) {
                 if(hori) {
                     var _sts = h - uPad * 2;
                     var _stx = x1 - _sts;
@@ -1119,7 +1141,7 @@ function Panel_Menu() : PanelContent() constructor {
                     var dx = hori? x + tcx : x + w;
                     var dy = hori? y + h   : y + tby0;
                     
-                    var _pan = panelAdd("Panel_File_Explorer", true);
+                    var _pan = dialogPanelCall(new Panel_File_Explorer());
                     var _dir = filename_dir(PROJECT.path);
                     _pan.content.setRoot(_dir);
                 }
@@ -1137,13 +1159,23 @@ function Panel_Menu() : PanelContent() constructor {
         
         #region drag
             if(_draggable) {
-                if(DOUBLE_CLICK) {
-                    if(window_is_maximized) winMan_Unmaximize();
-                    else                    winMan_Maximize();
-                    DISPLAY_REFRESH
-                }
-                
-                if(mouse_lpress() && OS == os_windows) winMan_initDrag(0b10000);
+            	switch(OS) {
+            		case os_windows :
+		                if(DOUBLE_CLICK) {
+		                    if(window_is_maximized) winMan_Unmaximize();
+		                    else                    winMan_Maximize();
+		                    DISPLAY_REFRESH
+		                }
+		                
+		                if(mouse_lpress())
+		                	winMan_initDrag(0b1_0000);
+            			break;
+            			
+            		case os_macosx : 
+		                if(mouse_lpress()) 
+		                	winMan_initDrag(0b1_0000);
+            			break;
+            	}
             }
         #endregion
     }

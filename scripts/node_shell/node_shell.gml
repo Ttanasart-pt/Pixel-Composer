@@ -3,8 +3,8 @@ function Node_Shell(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	always_pad = true;
 	setDimension(96, 48);
 	
-	newInput(0, nodeValue_FPath( "Path"  ));
-	newInput(1, nodeValue_Text(  "Script" ));
+	newInput( 0, nodeValue_FPath( "Path"  ));
+	newInput( 1, nodeValue_Text(  "Script" ));
 	
 	trust_label = new Inspector_Label(PROGRAM_ARGUMENTS._trusted? "Trusted" : "Untrusted");
 	
@@ -16,7 +16,8 @@ function Node_Shell(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	////- =Node
 	
 	insp1button = button(function() /*=>*/ {return update()}).setTooltip(__txt("Run"))
-		.setIcon(THEME.sequence_control, 1, COLORS._main_value_positive).iconPad(ui(6)).setBaseSprite(THEME.button_hide_fill);
+		.setIcon(THEME.sequence_control, 1, COLORS._main_value_positive).iconPad(ui(6))
+		.setBaseSprite(THEME.button_hide_fill);
 	trusted = PROGRAM_ARGUMENTS._trusted;
 	
 	static onValueUpdate = function() { trusted = false; }

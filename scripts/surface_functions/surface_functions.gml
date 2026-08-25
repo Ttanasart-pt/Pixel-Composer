@@ -967,7 +967,7 @@
 		var _sw  = surface_get_width_safe(surface); 
 		var _sh  = surface_get_height_safe(surface); 
 		var _sf  = surface_get_format(surface);
-		var buff = buffer_create(_sw * _sh * surface_format_get_bytes(_sf), buffer_fixed, 1);
+		var buff = buffer_create(_sw * _sh * surface_format_get_bytes(_sf), buffer_grow, 1);
 		
 		buffer_get_surface(buff, surface, 0);
 		var comp = buffer_compress(buff, 0, buffer_get_size(buff));

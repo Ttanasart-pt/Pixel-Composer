@@ -1,0 +1,68 @@
+{
+  "fill" : {
+    "linear-gradient" : [
+      "display-p3:0.31373,0.31373,0.40000,1.00000",
+      "display-p3:0.11765,0.11765,0.17255,1.00000"
+    ]
+  },
+  "groups" : [
+    {
+      "blur-material" : null,
+      "layers" : [
+        {
+          "glass" : false,
+          "image-name" : "s_icon_liq4.png",
+          "name" : "s_icon_liq4"
+        },
+        {
+          "glass" : true,
+          "image-name" : "s_icon_liq2.png",
+          "name" : "s_icon_liq2"
+        }
+      ],
+      "lighting" : "individual",
+      "shadow" : {
+        "kind" : "layer-color",
+        "opacity" : 0.4
+      },
+      "specular" : true,
+      "translucency" : {
+        "enabled" : true,
+        "value" : 0.1
+      }
+    },
+    {
+      "blend-mode" : "darken",
+      "hidden" : false,
+      "layers" : [
+        {
+          "fill" : {
+            "linear-gradient" : [
+              "display-p3:0.15294,0.15294,0.21176,1.00000",
+              "srgb:0.03137,0.03137,0.07059,1.00000"
+            ]
+          },
+          "glass" : true,
+          "image-name" : "s_icon_liq1.png",
+          "name" : "s_icon_liq1"
+        }
+      ],
+      "opacity" : 1,
+      "shadow" : {
+        "kind" : "none",
+        "opacity" : 0.5
+      },
+      "specular" : false,
+      "translucency" : {
+        "enabled" : true,
+        "value" : 0.5
+      }
+    }
+  ],
+  "supported-platforms" : {
+    "circles" : [
+      "watchOS"
+    ],
+    "squares" : "shared"
+  }
+}

@@ -319,3 +319,19 @@
 			shader_reset();
 	}
 #endregion
+
+#region gpu
+	#macro gpu_set_scissor gpu_set_scissor_ext
+	#macro __gpu_set_scissor gpu_set_scissor
+	function gpu_set_scissor_ext(_x, _y=undefined, _w=undefined, _h=undefined) {
+		if(is_struct(_x)) {
+			if(_x.w <= 0 || _x.h <= 0) return;
+			__gpu_set_scissor(_x.x, _x.y, _x.w, _x.h);	
+			
+		} else {
+			if(_w <= 0 || _h <= 0) return;
+			__gpu_set_scissor(_x, _y, _w, _h);	
+		}
+		
+	}
+#endregion

@@ -1,15 +1,20 @@
 #region key list
+	#macro vk_command  900
+	#macro vk_lcommand 91
+	#macro vk_rcommand 92
+
 	global.KEYS_VK = [ 
 		vk_left, vk_right, vk_up, vk_down, vk_space, vk_backspace, vk_tab, vk_home, vk_end, vk_delete, vk_insert, 
 		vk_pageup, vk_pagedown, vk_pause, vk_printscreen, 
 		vk_f1, vk_f2, vk_f3, vk_f4, vk_f5, vk_f6, vk_f7, vk_f8, vk_f9, vk_f10, vk_f11, vk_f12,
+		vk_lcommand, vk_rcommand, 
 	];
 #endregion
 
 #region keyboard
 	#macro KEYBOARD_ENTER ENTER
 	#macro KEYBOARD_RESET keyboard_lastchar = ""; keyboard_lastkey = -1; KEYBOARD_PRESSED_STRING = ""; KEYBOARD_STRING = "";
-	#macro KEYBOARD_MOD_RESET CTRL = KEY_STAT.idle; SHIFT = KEY_STAT.idle; ALT = KEY_STAT.idle; 
+	#macro KEYBOARD_MOD_RESET CTRL = KEY_STAT.idle; SHIFT = KEY_STAT.idle; ALT = KEY_STAT.idle; COMM = KEY_STAT.idle; 
 		
 	enum KEY_STAT {
 		idle,
@@ -27,13 +32,11 @@
 	globalvar KEYBOARD_PRESSED; KEYBOARD_PRESSED        = vk_nokey;
 	globalvar KEYBOARD_BLOCK; KEYBOARD_BLOCK          = false;
 	
-	globalvar CTRL, ALT, SHIFT, ENTER;
-	
-	WIDGET_ACTIVE = [];
-	CTRL  = KEY_STAT.idle;
-	ALT   = KEY_STAT.idle;
-	SHIFT = KEY_STAT.idle;
-	ENTER = 0;
+	globalvar CTRL; CTRL  = KEY_STAT.idle;
+	globalvar ALT; ALT   = KEY_STAT.idle;
+	globalvar SHIFT; SHIFT = KEY_STAT.idle;
+	globalvar COMM; COMM  = KEY_STAT.idle;
+	globalvar ENTER; ENTER = 0;
 	
 	function key_mod_init() {
 		kb_time  = 0;
@@ -43,6 +46,7 @@
 		kd_ctrl  = 0;
 		kd_shift = 0;
 		kd_alt   = 0;
+		kd_comm  = 0;
 		
 		ENTER    = false;
 	}
@@ -53,6 +57,7 @@
 		kd_ctrl  += DELTA_TIME;
 		kd_shift += DELTA_TIME;
 		kd_alt   += DELTA_TIME;
+		kd_comm  += DELTA_TIME;
 		
 		switch(CTRL) {
 			case KEY_STAT.idle: 
@@ -102,10 +107,27 @@
 			case KEY_STAT.up: ALT = KEY_STAT.idle; break;
 		}
 		
+		switch(COMM) {
+			case KEY_STAT.idle: 
+				if(keyboard_check_direct(vk_lcommand) || keyboard_check_direct(vk_rcommand)) { 
+					COMM = kd_comm < _d? KEY_STAT.double : KEY_STAT.down;  
+					kd_comm = 0; 
+				}
+				break;
+			
+			case KEY_STAT.down: case KEY_STAT.double: case KEY_STAT.pressing:
+				COMM = KEY_STAT.pressing;
+				if(!keyboard_check_direct(vk_lcommand) && !keyboard_check_direct(vk_rcommand)) COMM = KEY_STAT.up;
+				break;
+				
+			case KEY_STAT.up: COMM = KEY_STAT.idle; break;
+		}
+		
 		HOTKEY_MOD = 0;
 		if(CTRL  == KEY_STAT.pressing) HOTKEY_MOD |= MOD_KEY.ctrl;
 		if(SHIFT == KEY_STAT.pressing) HOTKEY_MOD |= MOD_KEY.shift;
 		if(ALT   == KEY_STAT.pressing) HOTKEY_MOD |= MOD_KEY.alt;
+		if(COMM  == KEY_STAT.pressing) HOTKEY_MOD |= MOD_KEY.comm;
 		
 		if(ENTER && !keyboard_check_direct(vk_enter)) keyboard_lastchar = "";
 		ENTER = keyboard_check_direct(vk_enter) || ord(keyboard_lastchar) == 13;
@@ -119,19 +141,24 @@
 		CTRL  = KEY_STAT.up;	
 		ALT   = KEY_STAT.up;	
 		SHIFT = KEY_STAT.up;	
+		COMM  = KEY_STAT.up;	
 		
 		keyboard_key_release(vk_control);
 		keyboard_key_release(vk_shift);
 		keyboard_key_release(vk_alt);
+		
+		keyboard_key_release(vk_lcommand);
+		keyboard_key_release(vk_rcommand);
 	}
 	
-	function key_mod_press_any() { INLINE return CTRL == KEY_STAT.pressing || ALT == KEY_STAT.pressing || SHIFT == KEY_STAT.pressing; }
+	function key_mod_press_any() { return HOTKEY_MOD > 0; }
 	
 	function key_mod_enum(key)     { INLINE 
 		switch(key) {
 			case MOD_KEY.alt   : return ALT;
 			case MOD_KEY.shift : return SHIFT;
 			case MOD_KEY.ctrl  : return CTRL;
+			case MOD_KEY.comm  : return COMM;
 		}
 	}
 	
@@ -148,6 +175,7 @@
 			case 1 : return argument[0] == KEY_STAT.pressing;
 			case 2 : return argument[0] == KEY_STAT.pressing && argument[1] == KEY_STAT.pressing;
 			case 3 : return argument[0] == KEY_STAT.pressing && argument[1] == KEY_STAT.pressing && argument[2] == KEY_STAT.pressing;
+			case 4 : return argument[0] == KEY_STAT.pressing && argument[1] == KEY_STAT.pressing && argument[2] == KEY_STAT.pressing && argument[3] == KEY_STAT.pressing;
 		}
 		return false; 
 	}
@@ -159,6 +187,7 @@
 			case MOD_KEY.alt   : return ALT   == KEY_STAT.pressing;
 			case MOD_KEY.shift : return SHIFT == KEY_STAT.pressing;
 			case MOD_KEY.ctrl  : return CTRL  == KEY_STAT.pressing;
+			case MOD_KEY.comm  : return COMM  == KEY_STAT.pressing;
 		}
 		
 		return false;

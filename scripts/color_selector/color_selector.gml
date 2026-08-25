@@ -189,17 +189,17 @@ function colorSelector(_onModify = noone) constructor {
 	
 		var defv = 0;
 		switch(_type) {
-			case 0 : defv = hue; break;
-			case 1 : defv = sat; break;
-			case 2 : defv = val; break;
+			case  0 : defv = hue; break;
+			case  1 : defv = sat; break;
+			case  2 : defv = val; break;
 			
-			case 3 : defv = r; break;
-			case 4 : defv = g; break;
-			case 5 : defv = b; break;
+			case  3 : defv = r; break;
+			case  4 : defv = g; break;
+			case  5 : defv = b; break;
 			
-			case 6 : defv = color_oklch(current_color)[0]; break;
-			case 7 : defv = color_oklch(current_color)[1]; break;
-			case 8 : defv = color_oklch(current_color)[2]; break;
+			case  6 : defv = color_oklch(current_color)[0]; break;
+			case  7 : defv = color_oklch(current_color)[1]; break;
+			case  8 : defv = color_oklch(current_color)[2]; break;
 			
 			case 99 : defv = a; break;
 		}
@@ -369,7 +369,7 @@ function colorSelector(_onModify = noone) constructor {
 				if(i == 0)      _i = 2;
 				if(i == _amo-1) _i = 3;
 				
-				draw_sprite_stretched_ext(THEME.palette_mask, _i, ax, ay, aw, ah, cc, _color_get_alpha(cc));
+				draw_sprite_stretched_ext(THEME.palette_mask, _i, floor(ax), ay, ceil(aw), ah, cc, _color_get_alpha(cc));
 				
 				var _hovBar = interactable && hover && point_in_rectangle(_m[0], _m[1], ax, ay, ax + aw, ay + ah);
 				if(_hovBar) {
@@ -1033,8 +1033,8 @@ function colorSelector(_onModify = noone) constructor {
 		var cy = cont_y + cont_h + ui(40);
 		var aa = _color_get_alpha(current_color);
 		
-		draw_sprite_stretched_ext(THEME.color_picker_box, 0, cx - ui(20), cy - ui(20), ui(40), ui(40), COLORS._main_icon_dark, 1);
-		draw_sprite_stretched_ext(THEME.color_picker_box, 1, cx - ui(18), cy - ui(18), ui(36), ui(36), current_color, aa);
+		draw_sprite_stretched_ext(THEME.color_picker_box, 0, round(cx - ui(20)), round(cy - ui(20)), ui(40), ui(40), COLORS._main_icon_dark, 1);
+		draw_sprite_stretched_ext(THEME.color_picker_box, 1, round(cx - ui(18)), round(cy - ui(18)), ui(36), ui(36), current_color, aa);
 		
 		cx += ui(48);
 		if(interactable)

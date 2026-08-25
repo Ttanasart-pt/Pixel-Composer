@@ -2,16 +2,38 @@
 #region key detection
 	var key = "";
 	
-	if(keyboard_check(vk_control)) key += key == ""? "Ctrl"  : " + " + "Ctrl";
-	if(keyboard_check(vk_shift))   key += key == ""? "Shift" : " + " + "Shift";
-	if(keyboard_check(vk_alt))     key += key == ""? "Alt"   : " + " + "Alt";
+	switch(OS) {
+		case os_windows: 
+		case os_linux: 
+			if(keyboard_check(vk_control)) key += "Ctrl + ";
+			if(keyboard_check(vk_shift))   key += "Shift + ";
+			if(keyboard_check(vk_alt))     key += "Alt + ";
+			break;
+			
+		case os_macosx : 
+			if(keyboard_check(vk_control)) key += "⌃ ";
+			if(keyboard_check(vk_shift))   key += "⇧ ";
+			if(keyboard_check(vk_alt))     key += "⌥ ";
+			if(keyboard_check_direct(vk_lcommand) || keyboard_check_direct(vk_rcommand))
+				key += "⌘ ";
+			break;
+			
+	}
 	
+	key = string_trim_end(key, ["+", " "]);
+	
+	var _pres = 0;
 	for( var i = 0, n = array_length(KEY_STRING_KEY); i < n; i++ ) {
 		var _k = KEY_STRING_KEY[i];
 		var _s = KEY_STRING_MAP[$ _k];
 		
-		if(keyboard_check(_k)) key += key == ""? _s : " + " + _s;
+		if(keyboard_check(_k)) {
+			_pres++;
+			key += key == ""? _s : " + " + _s;
+		}
 	}
+	
+	if(_pres > 10) key = "";
 	
 	var pressing = key != "";
 	if(key != "") {
@@ -77,10 +99,10 @@
 			// draw_set_alpha(1);
 			
 			var mp = 0;
-			if(DOUBLE_CLICK)				 mp = 2;
-			else if(mouse_lpress())	 mp = 1.3;
+			     if(DOUBLE_CLICK)     mp = 2;
+			else if(mouse_lpress())   mp = 1.3;
 			else if(mouse_lrelease()) mp = 1.3;
-			else if(mouse_lclick())	 mp = 1;
+			else if(mouse_lclick())   mp = 1;
 		
 			array_push(mouse_left, mp);
 			if(array_length(mouse_left) > WIN_W)
@@ -131,8 +153,8 @@
 		draw_sprite_ext_add(THEME.key_display_mouse, 1, mxs, mys, dispScale, dispScale, 0, cc, dispAlpha);
 	#endregion
 	
-	draw_set_text(_f_sdf, fa_right, fa_bottom, COLORS._main_icon_dark);
-	var ts = dispScale * .75;
+	draw_set_text(f_hotkey, fa_right, fa_bottom, COLORS._main_icon_dark);
+	var ts = dispScale * 2;
 	var pd = dispScale * ui(4);
 	var ww = ts * string_width(disp_key)  + pd * 2;
 	var hh = ts * string_height(disp_key) + pd * 2;
@@ -160,10 +182,10 @@
 		draw_set_alpha(1);
 	}
 		
-	draw_set_text(_f_sdf_medium, align_x? fa_right : fa_left, align_y? fa_bottom : fa_top, COLORS._main_text_sub);
+	draw_set_text(f_hotkey, align_x? fa_right : fa_left, align_y? fa_bottom : fa_top, COLORS._main_text_sub);
 	var tx = align_x? x1 : x0;
 	var ty = align_y? y0 - pd : y1 + pd;
-	var ts = dispScale * .9;
+	var ts = dispScale * 1.5;
 	var a  = 0;
 	
 	for( var i = array_length(disp_keys) - 1; i >= 0; i-- ) {

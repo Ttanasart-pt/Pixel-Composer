@@ -1021,7 +1021,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		var _inline_input = noone;
 		for( var i = 0, n = array_length(inputs); i < n; i++ ) {
 			var _j = inputs[i];
-			if(_j.value_from == noone) continue;
+			if(!is(_j, NodeValue) || _j.value_from == noone) continue;
 			
 			var _n = _j.value_from.node;
 			if(_n.inline_context == noone) continue;
@@ -1035,6 +1035,8 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		var _inline_output = noone;
 		for( var i = 0, n = array_length(outputs); i < n; i++ ) {
 			var _j = outputs[i];
+			if(!is(_j, NodeValue)) continue;
+			
 			var _t = _j.getJunctionTo();
 			
 			for( var j = 0, m = array_length(_t); j < m; j++ ) {
@@ -1096,7 +1098,6 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		
 		for( var i = 0, n = array_length(outputs); i < n; i++ ) {
 			var _to = outputs[i].value_to;
-			
 			for( var j = 0, m = array_length(_to); j < m; j++ )
 				if(_to[j].node.active) array_push(_nodes, _to[j].node);
 		}
@@ -1150,7 +1151,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		}
 	}
 	
-	////- PRESETS
+	////- PRESETS 
 	
 	set_default        = true;
 	overwrited_default = false;
@@ -2176,7 +2177,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		var ba = aa;
 		
 		if(_panel && _panel.node_hovering == self) ba = .1;
-		draw_sprite_stretched_ext(bg_spr, 2, xx, yy, w * _s, nh, nodeC, ba);
+		draw_sprite_stretched_ext(bg_spr, 3, xx, yy, w * _s, nh, nodeC, ba);
 		
 		var cc = renderActive? COLORS._main_text : COLORS._main_text_sub;
 		if(PREFERENCES.node_show_render_status && !rendered)
@@ -2880,8 +2881,8 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 				case 2 : cc = COLORS.node_border_file_drop; break;
 			}
 			
-			draw_sprite_stretched_ext(bg_spr, 1, xx, yy, w * _s, hh * _s, cc, 1);
-			if(active_draw_anchor) draw_sprite_stretched_add(bg_spr, 1, xx, yy, w * _s, hh * _s, COLORS._main_accent, .5);
+			draw_sprite_stretched_ext(bg_spr, 2, xx, yy, w * _s, hh * _s, cc, 1);
+			if(active_draw_anchor) draw_sprite_stretched_add(bg_spr, 2, xx, yy, w * _s, hh * _s, COLORS._main_accent, .5);
 			
 			if(_panel.pHOVER && key_mod_press(ALT)) { 
 				var x1 = xx +  w * _s;

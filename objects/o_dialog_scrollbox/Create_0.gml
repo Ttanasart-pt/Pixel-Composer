@@ -10,6 +10,7 @@ doRefocus();
 	align	 = fa_center;
 	text_pad = ui(8);
 	item_pad = ui(8);
+	padding  = ui(THEME_VALUE.dialog_menubox_padding);
 	
 	draggable = false;
 	destroy_on_click_out = true;
@@ -84,12 +85,14 @@ doRefocus();
 			hh += data[i] == -1? ui(8) : hght;
 		
 		dialog_h = min(max_h, hh);
-		sc_content.resize(dialog_w, dialog_h - ui(40));
+		
+		dialog_w = ceil(dialog_w + padding * 2);
+		dialog_h = ceil(dialog_h + padding * 2);
 		
 		resetPosition();
 	}
 	
-	sc_content = new scrollPane(0, 0, function(_y, _m) {
+	sc_content = new scrollPane(0, 0, function(_y, _m) /*=>*/ {
 		draw_clear_alpha(COLORS.panel_bg_clear, 1);
 		
 		var hght = line_get_height(font) + item_pad;
@@ -103,7 +106,7 @@ doRefocus();
 		
 		if(MOUSE_MOVED) selecting = noone;
 		
-		for(var i = 0; i < array_length(data); i++) {
+		for( var i = 0, n = array_length(data); i < n; i++ ) {
 			var _val = data[i];
 			if(has(displayStr, _val))
 				_val = displayStr[$ _val];
@@ -149,7 +152,7 @@ doRefocus();
 				}
 			
 				if(selecting == i) {
-					draw_sprite_stretched_ext(THEME.box_r2, 0, 0, _ly, _dw, hght, COLORS.dialog_menubox_highlight, .1);
+					draw_sprite_stretched_ext(THEME.menubox, 0, 0, _ly, _dw, hght, COLORS.dialog_menubox_highlight, .1);
 					
 					if(_active && (mouse_lpress() || KEYBOARD_ENTER)) {
 						initVal = searchIndex == undefined? i : array_safe_get_fast(searchIndex, i, 0);

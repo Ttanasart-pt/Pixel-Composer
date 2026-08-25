@@ -56,6 +56,8 @@ function Panel_Nodes() : PanelContent() constructor {
 		_node_hovering  = noone;
 		 item_hovering  = noone;
 		_item_hovering  = noone;
+		
+		node_label_color_width = max(ui(6), sprite_get_width(THEME.box_r2));
 	#endregion
 	
 	#region sidebar
@@ -254,9 +256,10 @@ function Panel_Nodes() : PanelContent() constructor {
 		}
 		
 		if(colr != c_white) {
-			draw_sprite_stretched_add(THEME.box_r2, 0, tx, _y + ui(3), ui(6), hg - ui(6), colr, .25);
-			draw_sprite_stretched_add(THEME.box_r2, 1, tx, _y + ui(3), ui(6), hg - ui(6), colr, .25);
-			tx += ui(6 + 4);
+			var _lbw = node_label_color_width;
+			draw_sprite_stretched_add(THEME.box_r2, 0, tx, _y + ui(3), _lbw, hg - ui(6), colr, .25);
+			draw_sprite_stretched_add(THEME.box_r2, 1, tx, _y + ui(3), _lbw, hg - ui(6), colr, .25);
+			tx += _lbw + ui(4);
 		}
 		
 		var tc  = sel? COLORS._main_text_accent : COLORS._main_text;
@@ -301,7 +304,7 @@ function Panel_Nodes() : PanelContent() constructor {
 		return _h;
 	}
 	
-	sc_nodes = new scrollPane(w - padding * 2, h - padding * 2 + ui(40), function(_y, _m) {
+	sc_nodes = new scrollPane(w - padding * 2, h - padding * 2 + ui(40), function(_y, _m) /*=>*/ {
 		draw_clear_alpha(COLORS.panel_bg_clear_inner, 1);
 		
 		var _tree = PROJECT.nodeTree;

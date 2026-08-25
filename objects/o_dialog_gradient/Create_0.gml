@@ -137,7 +137,7 @@ GRADIENTS_FOLDER.forEach(function(f) /*=>*/ { if(f.content == undefined) f.conte
 			
 			var _favFol = _sub.path == "Favorites";
 			var _hovSec = _hover && point_in_rectangle(_m[0], _m[1], _x, _y, _x + ww, _y + lbh);
-			draw_sprite_stretched(THEME.ui_panel_bg, 3, _x, _y, ww, lbh);
+			draw_sprite_stretched_ext(THEME.box_r5_clr, 0, _x, _y, ww, lbh, CDEF.main_mdwhite);
 			
 			#region buttons
 				var bx = _x + ww - ui(2) - bs;
@@ -169,7 +169,7 @@ GRADIENTS_FOLDER.forEach(function(f) /*=>*/ { if(f.content == undefined) f.conte
 			#endregion
 			
 			if(!sch && _hovSec) {
-				draw_sprite_stretched_ext(THEME.node_bg, 1, _x, _y, ww, lbh, COLORS._main_icon, 1);
+				draw_sprite_stretched_ext(THEME.box_r5, 1, _x, _y, ww, lbh, COLORS._main_icon, 1);
 				if(DOUBLE_CLICK && _focus) {
 					graCollAll = _open? 1 : -1;
 					
@@ -211,10 +211,10 @@ GRADIENTS_FOLDER.forEach(function(f) /*=>*/ { if(f.content == undefined) f.conte
 			
 			var isHover = point_in_rectangle(_m[0], _m[1], _x, _y, _x + ww, _y + hg);
 			
-			draw_sprite_stretched(THEME.ui_panel_bg, 3, _x, _y, ww, hg);
+			draw_sprite_stretched_ext(THEME.box_r5_clr, 0, _x, _y, ww, hg, CDEF.main_mdwhite);
 			if(_hover && isHover) {
 				sp_presets.hover_content = true;
-				draw_sprite_stretched_ext(THEME.node_bg, 1, _x, _y, ww, hg, COLORS._main_accent, 1);
+				draw_sprite_stretched_ext(THEME.box_r5, 1, _x, _y, ww, hg, COLORS._main_accent, 1);
 			}
 				
 			draw_set_text(f_p4, fa_left, fa_top, COLORS._main_text);
@@ -368,10 +368,10 @@ GRADIENTS_FOLDER.forEach(function(f) /*=>*/ { if(f.content == undefined) f.conte
 		
 		var isHover = _hover && point_in_rectangle(_m[0], _m[1], _x, _y, _x + ww, _y + _height);
 		
-		draw_sprite_stretched(THEME.ui_panel_bg, 3, _x, _y, ww, _height);
+		draw_sprite_stretched_ext(THEME.box_r5_clr, 0, _x, _y, ww, _height, CDEF.main_mdwhite);
 		if(isHover) {
 			sp_palettes.hover_content = true;
-			draw_sprite_stretched_ext(THEME.node_bg, 1, _x, _y, ww, _height, COLORS._main_accent, 1);
+			draw_sprite_stretched_ext(THEME.box_r5, 1, _x, _y, ww, _height, COLORS._main_accent, 1);
 		}
 		
 		if(preset_show_name) {
@@ -529,9 +529,9 @@ GRADIENTS_FOLDER.forEach(function(f) /*=>*/ { if(f.content == undefined) f.conte
 			var _open = sch || _sub.open;
 			if(_sub.name == "Mixer") continue;
 			
-			draw_sprite_stretched(THEME.ui_panel_bg, 3, _x, _y, ww, lbh);
+			draw_sprite_stretched_ext(THEME.box_r5_clr, 0, _x, _y, ww, lbh, CDEF.main_mdwhite);
 			if(!sch && _hover && point_in_rectangle(_m[0], _m[1], _x, _y, _x + ww, _y + lbh)) {
-				draw_sprite_stretched_ext(THEME.node_bg, 1, _x, _y, ww, lbh, COLORS._main_icon, 1);
+				draw_sprite_stretched_ext(THEME.box_r5, 1, _x, _y, ww, lbh, COLORS._main_icon, 1);
 				if(DOUBLE_CLICK && _focus) {
 					palCollAll = _open? 1 : -1;
 					

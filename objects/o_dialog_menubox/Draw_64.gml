@@ -25,7 +25,10 @@ DIALOG_WINDOW_START
 #region draw
 	menu_building = false;
 	
-	var yy = _dialog_y;
+	var xx = _dialog_x + padding;
+	var yy = _dialog_y + padding;
+	var ww =  dialog_w - padding * 2;
+	
 	var _lclick = sFOCUS && (!mouse_init_inside && mouse_lrelease())
 								|| (KEYBOARD_ENTER && hk_editing == noone)
 								|| (init_rclick && mouse_rrelease());
@@ -40,13 +43,12 @@ DIALOG_WINDOW_START
 	draw_sprite_stretched(THEME.dialog_menu, 0, _dialog_x, _dialog_y, dialog_w, dialog_h);
 	
 	var to_del = noone;
-	
 	for( var i = 0, n = array_length(menu); i < n; i++ ) {
 		var _menuItem = menu[i];
 		
 		if(is_string(_menuItem)) {
 			draw_set_text(f_p3, fa_left, fa_top, COLORS._main_text_sub);
-			draw_text_add(_dialog_x + ui(8), yy + ui(4), _menuItem);
+			draw_text_add(xx + ui(8), yy + ui(4), _menuItem);
 			yy += string_height(_menuItem) + ui(8);
 			continue;
 		}
@@ -58,18 +60,18 @@ DIALOG_WINDOW_START
 			var _val = _menuItem.getter(_par);
 			var _whg = ui(32);
 			
-			var _wx = _dialog_x + ui(4 + 64);
-			var _wy = yy       + ui(4);
-			var _ww = dialog_w - ui(8 + 64);
-			var _wh = _whg   - ui(8);
+			var _wx = xx   + ui(4 + 64);
+			var _wy = yy   + ui(4);
+			var _ww = ww   - ui(8 + 64);
+			var _wh = _whg - ui(8);
 			
 			if(sHOVER && point_in_rectangle(mouse_mx, mouse_my, _dialog_x, yy + 1, _dialog_x + dialog_w, yy + _whg - 1)) {
-				draw_sprite_stretched_add(THEME.menubox, 0, _dialog_x, yy, dialog_w, _whg, COLORS.dialog_menubox_highlight, .1);
+				draw_sprite_stretched_add(THEME.menubox, 0, xx, yy, ww, _whg, COLORS.dialog_menubox_highlight, .1);
 				selecting = i;
 			}
 			
 			draw_set_text(f_p3, fa_left, fa_center, COLORS._main_text_sub);
-			draw_text_add(_dialog_x + ui(8), yy + _whg / 2, _txt)
+			draw_text_add(xx + ui(8), yy + _whg / 2, _txt)
 			
 			var _param = new widgetParam(_wx, _wy, _ww, _wh, _val).setFont(f_p3);
 			_edt.setFocusHover(sFOCUS, sHOVER);
@@ -85,12 +87,12 @@ DIALOG_WINDOW_START
 		if(_menuItem == -1) {
 			draw_set_color(COLORS.panel_separator);
 			if(THEME_VALUE.panel_separation_type == "frame") {
-				var bx = _dialog_x + ui(16);
-				var bw = dialog_w - ui(32);
+				var bx = xx + ui(16);
+				var bw = ww - ui(32);
 				draw_line_width(bx, yy + ui(3), bx + bw, yy + ui(3), 2);
 				
 			} else
-				draw_line(_dialog_x, yy + ui(3), _dialog_x + dialog_w, yy + ui(3));
+				draw_line(xx, yy + ui(3), xx + ww, yy + ui(3));
 			
 			yy += ui(8);
 			continue;
@@ -102,14 +104,14 @@ DIALOG_WINDOW_START
 		var _key  = _menuItem.hoykeyObject;
 		
 		if(_col != c_white)
-			draw_sprite_stretched_ext(THEME.menubox, 0, _dialog_x, floor(yy), dialog_w, floor(_h), _col, .1);
+			draw_sprite_stretched_ext(THEME.menubox, 0, floor(xx), floor(yy), floor(ww), floor(_h), _col, .1);
 		
 		if(_key == noone && _menuItem.hotkey != noone) {
 			_key = find_hotkey(_menuItem.hotkey[0], _menuItem.hotkey[1]);
 			_menuItem.hoykeyObject = _key;
 		}
 		
-		if(sHOVER && point_in_rectangle(mouse_mx, mouse_my, _dialog_x, yy + 1, _dialog_x + dialog_w, yy + _h - 1)) {
+		if(sHOVER && point_in_rectangle(mouse_mx, mouse_my, xx, yy + 1, xx + ww, yy + _h - 1)) {
 			selecting = i;
 			var tips = array_safe_get_fast(tooltips, i, noone);
 			if(tips != noone) setTOOLTIP(tips);
@@ -117,7 +119,7 @@ DIALOG_WINDOW_START
 		
 		if(selecting == i) {
 			if(_menuItem.active) 
-				draw_sprite_stretched_add(THEME.menubox, 0, _dialog_x, floor(yy), dialog_w, floor(_h), COLORS.dialog_menubox_highlight, .1);
+				draw_sprite_stretched_add(THEME.menubox, 0, floor(xx), floor(yy), floor(ww), floor(_h), COLORS.dialog_menubox_highlight, .1);
 			
 			if(_hovering_ch) {
 				if(_lclick && is(_menuItem, MenuItem) && _menuItem.active) {
@@ -135,7 +137,7 @@ DIALOG_WINDOW_START
 						} else {
 							var _dat = {
 								_x:      dialog_x,
-								x:       dialog_x + dialog_w,
+								x:       dialog_x + dialog_w - ui(THEME_VALUE.dialog_menu_submenu_offset),
 								y:       yy + (dialog_y - _dialog_y),
 								name:    _menuItem.name,
 								index:   i,
@@ -145,8 +147,10 @@ DIALOG_WINDOW_START
 							};
 							
 							var _res  = _menuItem.toggleFunction(_dat);
-							submenu   = _res;
-							submenuIt = _menuItem;
+							if(_res) {
+								submenu   = _res;
+								submenuIt = _menuItem;
+							}
 							
 						}
 						
@@ -202,19 +206,19 @@ DIALOG_WINDOW_START
 			}
 		} 
 		
-		var _hx = _dialog_x + dialog_w - ui(16);
+		var _hx = xx + ww - ui(16);
 		var _hy = yy + hght / 2 + ui(2);
 			
 		if(is(_menuItem, MenuItemGroup)) {
 			var _submenus = _menuItem.group;
 			draw_set_text(font, fa_center, fa_center, COLORS._main_text_sub);
 			draw_set_alpha(_menuItem.active * 0.75 + 0.25);
-			draw_text_add(_dialog_x + dialog_w / 2, yy + hght / 2, label);
+			draw_text_add(xx + ww / 2, yy + hght / 2, label);
 			draw_set_alpha(1);
 			
 			var amo = array_length(_submenus);
 			var _w  = (amo - 1) / 2 * (_menuItem.spacing + ui(4));
-			var _sx = _dialog_x + dialog_w / 2 - _w;
+			var _sx = xx + ww / 2 - _w;
 			
 			for(var j = 0; j < amo; j++) {
 				var _submenu = _submenus[j];
@@ -285,16 +289,16 @@ DIALOG_WINDOW_START
 				var clr = array_safe_get_fast(_spr, 3, COLORS._main_icon);
 				
 				gpu_set_tex_filter(true);
-				draw_sprite_ext(spr, ind, _dialog_x + ui(24), yy + hght / 2, sca, sca, 0, clr, _menuItem.active * 0.5 + 0.25);
+				draw_sprite_ext(spr, ind, xx + ui(24), yy + hght / 2, sca, sca, 0, clr, _menuItem.active * 0.5 + 0.25);
 				gpu_set_tex_filter(false);
 			}
 			
 			if(_menuItem.toggle != noone) {
 				var tog = _menuItem.toggle(_menuItem);
-				if(tog) draw_sprite_ui(THEME.icon_toggle, 0, _dialog_x + ui(24), yy + hght / 2,,,, COLORS._main_icon);
+				if(tog) draw_sprite_ui(THEME.icon_toggle, 0, xx + ui(24), yy + hght / 2,,,, COLORS._main_icon);
 			}
 			
-			var tx = _dialog_x + show_icon * ui(32) + ui(16);
+			var tx = xx + show_icon * ui(32) + ui(16);
 			var ty = yy + hght / 2;
 			var ta = _menuItem.active * 0.75 + 0.25;
 			
@@ -318,13 +322,13 @@ DIALOG_WINDOW_START
 			draw_set_alpha(1);
     		
 			if(_menuItem.isShelf) {
-				draw_sprite_ui_uniform(THEME.arrow, 0, _dialog_x + dialog_w - ui(20), yy + hght / 2, 1, COLORS._main_icon);	
+				draw_sprite_ui_uniform(THEME.arrow, 0, xx + ww - ui(20), yy + hght / 2, 1, COLORS._main_icon);	
 				_hx -= ui(24);
 			}
 		}
 		
 		if(_key) {
-			draw_set_font(font);
+			draw_set_font(f_hotkey);
 			
 			var _ktxt = _key.getKeyName();
 			var _tw = string_width(_ktxt);
@@ -335,7 +339,7 @@ DIALOG_WINDOW_START
 			var _bw = _tw + ui(8);
 			var _bh = _th + ui(6);
 			
-			draw_set_text(font, fa_right, fa_center, COLORS._main_accent);
+			draw_set_text(f_hotkey, fa_right, fa_center, COLORS._main_accent);
 			
 			if(hk_editing == _menuItem) {
 				draw_sprite_stretched_ext(THEME.ui_panel, 1, _bx, _by, _bw, _bh, COLORS._main_text_accent);
@@ -390,7 +394,7 @@ DIALOG_WINDOW_START
 		draw_rectangle_border(_dialog_x, _dialog_y, _dialog_x + dialog_w, _dialog_y + dialog_h, 2);
 		
 		draw_set_text(f_p0, fa_left, fa_bottom);
-		draw_text_add(_dialog_x, _dialog_y - ui(2), menu_id);
+		draw_text_add(xx, _dialog_y + padding - ui(2), menu_id);
 	}
 #endregion
 

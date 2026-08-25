@@ -47,15 +47,16 @@ DIALOG_WINDOW_START
 	var content_x = _dialog_x + presets_w;
 	var palette_x = content_x + content_w;
 	
-	var p   = DIALOG_PAD;
-	var p2  = DIALOG_PAD * 2;
 	var foc = sFOCUS || (FOCUS && FOCUS[$ "preFocus"] == id);
 	
-	draw_sprite_stretched(THEME.dialog, 0, _dialog_x - p, _dialog_y - p, dialog_w + p2, dialog_h + p2);
+	if(!is_winwin(window))
+		draw_sprite_stretched(THEME.dialog_shadow, 0, _dialog_x-DIALOG_PAD, _dialog_y-DIALOG_PAD, dialog_w+DIALOG_PAD*2, dialog_h+DIALOG_PAD*2);
+	draw_sprite_stretched(THEME.dialog, 0, _dialog_x, _dialog_y, dialog_w, dialog_h);
+	
 	draw_set_color(COLORS.panel_separator);
 	draw_line(content_x, _dialog_y, content_x, _dialog_y + dialog_h);
 	draw_line(palette_x, _dialog_y, palette_x, _dialog_y + dialog_h);
-	if(foc) draw_sprite_stretched_ext(THEME.dialog, 1, _dialog_x - p, _dialog_y - p, dialog_w + p2, dialog_h + p2, COLORS._main_accent, 1);
+	if(foc) draw_sprite_stretched_ext(THEME.dialog, 1, _dialog_x, _dialog_y, dialog_w, dialog_h, COLORS._main_accent, 1);
 	
 	draw_set_text(f_p1, fa_left, fa_top, COLORS._main_text);
 	draw_text(presets_x + ui(24), _dialog_y + ui(16), __txt("Presets"));

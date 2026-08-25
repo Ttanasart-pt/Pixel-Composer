@@ -481,7 +481,7 @@ event_inherited();
 				catagory_pane.hover_content = true;
 				
 				BLEND_OVERRIDE
-				draw_sprite_stretched_ext(THEME.ui_panel_bg, 0, 0, _y + hh, ww, hg, CDEF.main_white, 1);
+				draw_sprite_stretched_ext(THEME.box_r5_clr, 0, 0, _y + hh, ww, hg, CDEF.main_ltgrey, 1);
 				BLEND_NORMAL
 				
 				_hov = true;
@@ -565,7 +565,7 @@ event_inherited();
 			if(_sz == 0) continue;
 			
 			if(_hv) {
-				draw_sprite_stretched_ext(THEME.ui_panel_bg, 0, ui(4), yy, ww - ui(4), hg, CDEF.main_ltgrey, 1);
+				draw_sprite_stretched_ext(THEME.box_r5_clr, 0, ui(4), yy, ww - ui(4), hg, CDEF.main_grey, 1);
 				if(mouse_lclick(_active) || init_rclick) setSubgroup(i);
 			}
 			
@@ -698,7 +698,7 @@ event_inherited();
 				
 				if(_hoverContent && point_in_rectangle(_m[0], _m[1], _nx, yy, _nx + grid_width, yy + grid_size)) {
 					content_pane.hover_content = true;
-					draw_sprite_stretched_ext(THEME.node_bg, 1, _nx, yy, grid_width, grid_size, COLORS._main_accent, 1);
+					draw_sprite_stretched_ext(THEME.node_bg, 2, _nx, yy, grid_width, grid_size, COLORS._main_accent, 1);
 					
 					if(sFOCUS) {
 						if(mouse_lrelease(left_free) || (init_rclick && mouse_rrelease())) 
@@ -718,7 +718,7 @@ event_inherited();
 				
 				if(_node == node_goto_draw && node_goto_fade > 0) {
 					var aa = node_goto_fade * 1;
-					draw_sprite_stretched_ext(THEME.node_bg, 0, _nx, yy, grid_width, grid_size, COLORS._main_accent, aa);
+					draw_sprite_stretched_ext(THEME.node_bg, 2, _nx, yy, grid_width, grid_size, COLORS._main_accent, aa);
 					node_goto_fade = lerp_float(node_goto_fade, 0, 50);
 				}
 				
@@ -906,7 +906,7 @@ event_inherited();
 					node_icon_y    = content_pane.y + yy + list_height / 2;
 					node_icon_fil  = true;
 					
-					draw_sprite_stretched_ext(THEME.node_bg, 1, pd, yy, list_width - pd * 2, list_height, COLORS._main_accent, 1);
+					draw_sprite_stretched_ext(THEME.node_bg, 2, pd, yy, list_width - pd * 2, list_height, COLORS._main_accent, 1);
 					
 					if(sFOCUS) {
 						if(mouse_lrelease(left_free) || (init_rclick && mouse_rrelease()))
@@ -936,7 +936,7 @@ event_inherited();
 					tx = _node.drawList(pd, yy, _m[0], _m[1], list_height, list_width - pd);
 					var _hotkey = GRAPH_ADD_NODE_MAPS[$ _node.nodeName];
 					if(_hotkey != undefined) {
-						draw_set_text(f_p2, fa_right, fa_center, COLORS._main_text_sub);
+						draw_set_text(f_hotkey, fa_right, fa_center, COLORS._main_text_sub);
 						draw_text_add(ww - ui(16), yy + list_height / 2, _hotkey.getKeyName());
 					}
 					
@@ -1454,7 +1454,7 @@ event_inherited();
 					}
 					
 					if(node_selecting == i) {
-						draw_sprite_stretched_ext(THEME.node_bg, 1, _nx, yy, grid_width, grid_size, COLORS._main_accent, 1);
+						draw_sprite_stretched_ext(THEME.node_bg, 2, _nx, yy, grid_width, grid_size, COLORS._main_accent, 1);
 						if(hk_editing == noone && KEYBOARD_ENTER)
 							buildNode(_node, _param);
 					}
@@ -1630,7 +1630,7 @@ event_inherited();
 				}
 				
 				if(node_selecting == i) {
-					draw_sprite_stretched_ext(THEME.node_bg, 1, pd, yy, list_width - pd * 2, list_height, COLORS._main_accent, 1);
+					draw_sprite_stretched_ext(THEME.node_bg, 2, pd, yy, list_width - pd * 2, list_height, COLORS._main_accent, 1);
 					if(hk_editing == noone && KEYBOARD_ENTER) buildNode(_node, _param);
 				}
 				
@@ -1641,7 +1641,7 @@ event_inherited();
 					
 					var _hotkey = GRAPH_ADD_NODE_MAPS[$ _node.nodeName];
 					if(_hotkey != undefined) {
-						draw_set_text(f_p2, fa_right, fa_center, COLORS._main_text_sub);
+						draw_set_text(f_hotkey, fa_right, fa_center, COLORS._main_text_sub);
 						draw_text_add(ww - ui(16), yc, _hotkey.getKeyName());
 					}
 					

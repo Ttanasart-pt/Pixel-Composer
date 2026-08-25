@@ -4,11 +4,14 @@
 	HOTKEY_BLOCK = false;
 	HOTKEY_ACT   = false;
 	
+	#macro MOD_KEY_CTRL (OS == os_macosx? MOD_KEY.comm : MOD_KEY.ctrl)
+	
 	enum MOD_KEY {
 		none   = 0,
 		ctrl   = 1 << 0,
 		shift  = 1 << 1,
-		alt    = 1 << 2
+		alt    = 1 << 2,
+		comm   = 1 << 3,
 	}
 	
 	enum KEY_GROUP {
@@ -72,6 +75,9 @@
 	KEY_STRING_MAP[$ 88] = "X"
 	KEY_STRING_MAP[$ 89] = "Y"
 	KEY_STRING_MAP[$ 90] = "Z"
+	
+	// KEY_STRING_MAP[$ 91] = "Comm" // mac os
+	// KEY_STRING_MAP[$ 92] = "Comm" // mac os
 
 	KEY_STRING_MAP[$ 96]  = "Num 0"
 	KEY_STRING_MAP[$ 97]  = "Num 1"
@@ -157,17 +163,30 @@
 		if(!is_numeric(_key) || (_key <= 0 && _mod == MOD_KEY.none)) return "";
 		
 		var dk = "";
-		if(_mod & MOD_KEY.ctrl)		dk += "Ctrl+";
-		if(_mod & MOD_KEY.shift)	dk += "Shift+";
-		if(_mod & MOD_KEY.alt)		dk += "Alt+";
+		switch(OS) {
+			case os_windows: 
+			case os_linux: 
+				if(_mod & MOD_KEY.ctrl)		dk += "Ctrl+";
+				if(_mod & MOD_KEY.shift)	dk += "Shift+";
+				if(_mod & MOD_KEY.alt)		dk += "Alt+";
+				break;
+				
+			case os_macosx : 
+				if(_mod & MOD_KEY.ctrl)		dk += "⌃ ";
+				if(_mod & MOD_KEY.shift)	dk += "⇧ ";
+				if(_mod & MOD_KEY.alt)		dk += "⌥ ";
+				if(_mod & MOD_KEY.comm)		dk += "⌘ ";
+				break;
+				
+		}
 		
-		if(struct_has(KEY_STRING_MAP, _key)) 
+		if(has(KEY_STRING_MAP, _key)) 
 			dk += KEY_STRING_MAP[$ _key];
 			
 		else if(_key > 0) 
 			dk += ansi_char(_key);	
 		
-		dk = string_trim_end(dk, ["+"]);
+		dk = string_trim_end(dk, ["+", " "]);
 		return dk;
 	}
 #endregion

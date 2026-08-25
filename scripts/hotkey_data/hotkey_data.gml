@@ -39,8 +39,8 @@ function KeyCombination(_key = "", _modi = MOD_KEY.none) constructor {
 
 function Hotkey(_context, _name, _key = "", _mod = MOD_KEY.none, _action = noone, _param = noone) constructor {
 	tooltipContext = undefined;
-	context   = _context;
-	name      = _name;
+	context        = _context;
+	name           = _name;
 	
 	dkey = new KeyCombination(_key, _mod);
 	key  = new KeyCombination(_key, _mod);
@@ -238,7 +238,7 @@ function hotkey_draw(keyStr, _x, _y, _status = 0) {
 		case 2 : bc = COLORS._main_accent; tc = COLORS._main_text_accent; break;
 	}
 	
-	draw_set_text(f_p2, fa_right, fa_center, tc);
+	draw_set_text(f_hotkey, fa_right, fa_center, tc);
 	draw_text(_x, _y - ui(2), keyStr);
 }
 

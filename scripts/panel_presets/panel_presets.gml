@@ -276,7 +276,7 @@ function Panel_Presets(_node) : PanelContent() constructor {
 			draw_text_add(_xx, _yy + _hh / 2, _name);
 			
 			// Hotkeys
-			draw_set_text(f_p2, fa_right, fa_center, COLORS._main_text);
+			draw_set_text(f_hotkey, fa_right, fa_center, COLORS._main_text);
 			var _hotkey = GRAPH_ADD_NODE_MAPS[$ fName];
 			var _hkC    = COLORS._main_text_sub;
 			

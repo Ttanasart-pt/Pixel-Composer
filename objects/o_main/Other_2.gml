@@ -35,11 +35,8 @@
 	} else if(OS == os_macosx) {
 		APP_DIRECTORY = working_directory;
 		DIRECTORY     = game_save_id;
-		DIRECTORY     = working_directory;
 	    APP_LOCATION  = working_directory;
 	    
-	    // var _user = string_trim(shell_execute("", "whoami"));
-	    // DIRECTORY = $"/Users/makhamdev/Library/Application Support/com.MakhamDev.PixelComposer/"
 		PREFERENCES_DIR = $"{DIRECTORY}Preferences/{PREF_VERSION}/";
 		
 		directory_verify($"{DIRECTORY}Cache");
@@ -99,11 +96,15 @@
 		// }
 	}
 	
+	log_clear();
+	log_newline();
+	
 	printDebug($"===================== WORKING DIRECTORIES =====================\n");
-    show_debug_message($"APP_DIRECTORY: {APP_DIRECTORY}");
-    show_debug_message($"DIRECTORY: {DIRECTORY}");
-    show_debug_message($"PREFERENCES_DIR: {PREFERENCES_DIR}");
-    show_debug_message($"working_directory: {working_directory}");
+    printDebug($"APP_DIRECTORY: {APP_DIRECTORY}");
+    printDebug($"DIRECTORY: {DIRECTORY}");
+    printDebug($"PREFERENCES_DIR: {PREFERENCES_DIR}");
+    printDebug($"working_directory: {working_directory}");
+    printDebug($"program_directory: {program_directory}");
     
     directory_verify(PREFERENCES_DIR);
 #endregion
@@ -128,12 +129,9 @@
 	if(!IS_CMD) { __initLocale();         printDebug($"- init Locale        | {__log_tr()}"); }
 	if(!IS_CMD) { __initHotKey();         printDebug($"- init Hotkeys       | {__log_tr()}"); }
 	
-	log_clear();
-	log_newline();
 	printDebug("Begin");
-	printDebug($"DIRECTORY {DIRECTORY}");
-	
 	PREF_APPLY();
+	
 	var t0   = get_timer();
 	var t    = get_timer();
 	var _lua = !IS_CMD || PROGRAM_ARGUMENTS._lua;
@@ -141,7 +139,7 @@
 	
 				  __initSurfaceFormat();  printDebug($"- init SurfaceFormat | {__log_tr()}"); 
 				  __initUser();           printDebug($"- init User          | {__log_tr()}"); 
-	if(!IS_CMD) __initTheme(); else __initThemeEmpty(); printDebug($"- init Theme         | {__log_tr()}");
+	if(!IS_CMD)   __initTheme(); else __initThemeEmpty(); printDebug($"- init Theme         | {__log_tr()}");
 	if(!IS_CMD) { loadFonts();            printDebug($"- init Font          | {__log_tr()}");  }
 	              __initProject();        printDebug($"- init Project       | {__log_tr()}");
 	if(!IS_CMD) { __fnInit();             printDebug($"- init Functions     | {__log_tr()}");  }
@@ -162,40 +160,20 @@
 	if(!IS_CMD) { INIT_FOLDERS();         printDebug($"- init Folders       | {__log_tr()}"); }
 	if(!IS_CMD) { RECENT_LOAD();          printDebug($"- init Recents       | {__log_tr()}"); }
 	
+	if(!IS_CMD) __initPanel(true);
+	
+	if(!IS_CMD && file_exists_empty("icon.png"))
+		file_copy("icon.png", DIRECTORY + "icon.png");
+		
 	printDebug($"-- Initialization complete in {(get_timer()-t0)/1000}ms [{string_byte_format(getMemoryUsage(pid) - _r0)}]");
 	display_set_timing_method(tm_countvsyncs);
 	
-	if(!IS_CMD) { 
-		__initPanel();
-		
-		if(file_exists_empty("icon.png"))
-			file_copy("icon.png", DIRECTORY + "icon.png");
-		
-		var _prg_path = $"{program_directory}PixelComposer.exe";
-		// var cmd = ".pxc=\"" + string(program_directory) + "PixelComposer.exe\"";
-		// shell_execute_async("assoc", cmd);
-	
-		// var cmd = ".pxcc=\"" + string(program_directory) + "PixelComposer.exe\"";
-		// shell_execute_async("assoc", cmd);
-		
-		// shell_execute_async("reg",  "ADD HKCU\\Software\\Classes\\pxc");
-		// shell_execute_async("reg",  "ADD HKCU\\Software\\Classes\\pxc /v \"URL Protocol\" /t REG_SZ");
-		// shell_execute_async("reg",  "ADD HKCU\\Software\\Classes\\pxc\\shell");
-		// shell_execute_async("reg",  "ADD HKCU\\Software\\Classes\\pxc\\shell\\open");
-		
-		// shell_execute_async("reg", $"DELETE HKCU\\Software\\Classes\\pxc\\shell\\open\\command");
-		// shell_execute_async("reg", $"ADD HKCU\\Software\\Classes\\pxc\\shell\\open\\command /t REG_SZ /d \"{_prg_path} -m %1\"");
-	}
-
 #region post init
 	directory_set_current_working(DIRECTORY);
-	
-	print($"working: {working_directory}");
-	print($"project: {program_directory}");
-	
-	// if(RUN_IDE) __test_update_theme();
 	
 	if(PREFERENCES.video_mode)
 		APP_SURF_OVERRIDE = true;
 	
+	ds_stack_clear(UNDO_STACK);
+	ds_stack_clear(REDO_STACK);
 #endregion

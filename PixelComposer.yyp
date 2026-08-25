@@ -43,6 +43,7 @@
     {"$GMFolder":"","%Name":"GMD3D11","folderPath":"folders/__extensions/GMD3D11.yy","name":"GMD3D11","resourceType":"GMFolder","resourceVersion":"2.0",},
     {"$GMFolder":"","%Name":"IO","folderPath":"folders/__extensions/IO.yy","name":"IO","resourceType":"GMFolder","resourceVersion":"2.0",},
     {"$GMFolder":"","%Name":"OS compat","folderPath":"folders/__extensions/OS compat.yy","name":"OS compat","resourceType":"GMFolder","resourceVersion":"2.0",},
+    {"$GMFolder":"","%Name":"LINUX","folderPath":"folders/__extensions/OS compat/LINUX.yy","name":"LINUX","resourceType":"GMFolder","resourceVersion":"2.0",},
     {"$GMFolder":"","%Name":"MAC","folderPath":"folders/__extensions/OS compat/MAC.yy","name":"MAC","resourceType":"GMFolder","resourceVersion":"2.0",},
     {"$GMFolder":"","%Name":"patreon","folderPath":"folders/__extensions/patreon.yy","name":"patreon","resourceType":"GMFolder","resourceVersion":"2.0",},
     {"$GMFolder":"","%Name":"SNAP","folderPath":"folders/__extensions/SNAP.yy","name":"SNAP","resourceType":"GMFolder","resourceVersion":"2.0",},
@@ -605,14 +606,6 @@
           "CopyToMask":"128",
         },
       },"CopyToMask":-1,"filePath":"datafiles/gifski/linux","name":"gifski","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
-    {"$GMIncludedFile":"","%Name":"gifski","ConfigValues":{
-        "Itch":{
-          "CopyToMask":"2",
-        },
-        "Steam":{
-          "CopyToMask":"2",
-        },
-      },"CopyToMask":-1,"filePath":"datafiles/gifski/mac","name":"gifski","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"README.md","CopyToMask":-1,"filePath":"datafiles/gifski","name":"README.md","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"gifski.dll","ConfigValues":{
         "Itch":{
@@ -683,11 +676,6 @@
     {"$GMIncludedFile":"","%Name":"presets.zip","CopyToMask":-1,"filePath":"datafiles/pack","name":"presets.zip","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"themes.zip","CopyToMask":-1,"filePath":"datafiles/pack","name":"themes.zip","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"welcome_files.zip","CopyToMask":-1,"filePath":"datafiles/pack","name":"welcome_files.zip","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
-    {"$GMIncludedFile":"","%Name":"PixelComposer_profile-2.provisionprofile","ConfigValues":{
-        "Itch":{
-          "CopyToMask":"2",
-        },
-      },"CopyToMask":2,"filePath":"datafiles","name":"PixelComposer_profile-2.provisionprofile","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"data.win","CopyToMask":-1,"filePath":"datafiles/report","name":"data.win","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"execute_shell_simple_ext_x64.dll","CopyToMask":-1,"filePath":"datafiles/report","name":"execute_shell_simple_ext_x64.dll","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"options.ini","CopyToMask":-1,"filePath":"datafiles/report","name":"options.ini","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
@@ -764,7 +752,9 @@
     {"id":{"name":"libsysdata","path":"extensions/libsysdata/libsysdata.yy",},},
     {"id":{"name":"libsysinfo","path":"extensions/libsysinfo/libsysinfo.yy",},},
     {"id":{"name":"libxprocess","path":"extensions/libxprocess/libxprocess.yy",},},
+    {"id":{"name":"LinuxBuild","path":"extensions/LinuxBuild/LinuxBuild.yy",},},
     {"id":{"name":"macMinimize","path":"extensions/macMinimize/macMinimize.yy",},},
+    {"id":{"name":"macWindowManager","path":"extensions/macWindowManager/macWindowManager.yy",},},
     {"id":{"name":"patreon_key","path":"extensions/patreon_key/patreon_key.yy",},},
     {"id":{"name":"PRIVATE_KEYS","path":"extensions/PRIVATE_KEYS/PRIVATE_KEYS.yy",},},
     {"id":{"name":"Spout","path":"extensions/Spout/Spout.yy",},},

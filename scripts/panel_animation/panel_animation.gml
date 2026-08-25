@@ -39,7 +39,7 @@
 	function __fnInit_Animation() {
 		var an = "Animation";
 		var n  = MOD_KEY.none;
-		var c  = MOD_KEY.ctrl;
+		var c  = MOD_KEY_CTRL;
 		var s  = MOD_KEY.shift;
 		var a  = MOD_KEY.alt;
 		
@@ -165,7 +165,7 @@ function Panel_Animation() : PanelContent() constructor {
 	    tool_width     = tool_width_min;
 	    
 	    timeline_w = w - tool_width - ui(68);
-	    timeline_h = ui(28);
+	    timeline_h = ui(THEME_VALUE.panel_animation_min_h);
 	    
 	    bar_x = 0;
 	    bar_y = 0;
@@ -886,13 +886,13 @@ function Panel_Animation() : PanelContent() constructor {
 	    		
 	    		if(is(inspecting, Node) && inspecting.use_cache) { // cache
 	                var cachcol = inspecting.getAnimationCacheExist(fram)? COLORS._main_value_positive : COLORS._main_value_negative;
-	                draw_sprite_stretched_add(THEME.ui_panel, ii, _x0, _y0, _ww, _hh, cachcol, .2);
+	                draw_sprite_stretched_add(THEME.box_r2, ii, _x0, _y0, _ww, _hh, cachcol, .2);
 		        }
     		} 
     		
     		if(fram == GLOBAL_CURRENT_FRAME) 
-    			draw_sprite_stretched_ext(THEME.ui_panel, ii, _x0, _y0, _ww, _hh, COLORS._main_accent, 1);
-    		if(hov) draw_sprite_stretched_add(THEME.ui_panel, ii, _x0, _y0, _ww, _hh, c_white, ta * .3);
+    			draw_sprite_stretched_ext(THEME.box_r2, ii, _x0, _y0, _ww, _hh, COLORS._main_accent, 1);
+    		if(hov) draw_sprite_stretched_add(THEME.box_r2, ii, _x0, _y0, _ww, _hh, c_white, ta * .3);
     		
     		draw_set_text(f_p4, fa_right, fa_bottom, COLORS._main_text_sub, ta);
     		draw_text(_x1 - ui(3), _y1 - ui(2), fram + 1);

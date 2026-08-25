@@ -74,12 +74,12 @@
 		function panel_preview_overlay_2d_toggle()    { PANEL_PREVIEW.render_2d_overlay = !PANEL_PREVIEW.render_2d_overlay; }
 		                                                         
 	    function __fnInit_Preview() {
-	    	var p = "Preview";
-	    	var n = MOD_KEY.none;
-	    	var s = MOD_KEY.shift;
-	    	var c = MOD_KEY.ctrl;
-	    	var a = MOD_KEY.alt;
-	    	var cs = MOD_KEY.ctrl | MOD_KEY.shift;
+	    	var p  = "Preview";
+	    	var n  = MOD_KEY.none;
+	    	var s  = MOD_KEY.shift;
+	    	var c  = MOD_KEY_CTRL;
+	    	var a  = MOD_KEY.alt;
+	    	var cs = c | MOD_KEY.shift;
 	    	
 	    	registerFunction(p, "Add Node",                 "A",       s, panel_preview_add_node           ).setMenu("preview_add_node", THEME.add_20)
 	        registerFunction(p, "Clear Tool",               vk_escape, n, panel_preview_clear_tool         ).setMenu("preview_focus_content" );
@@ -877,8 +877,10 @@ function Panel_Preview() : PanelContent() constructor {
     }
     
     static dragCanvas = function() {
+    	var useGesture = GESTURE_USE && OS == os_macosx;
+    	
         if(canvas_dragging) {
-            if(!MOUSE_WRAPPING) {
+        	if(!MOUSE_WRAPPING) {
                 var dx = mx - canvas_drag_mx;
                 var dy = my - canvas_drag_my;
                 
@@ -923,59 +925,69 @@ function Panel_Preview() : PanelContent() constructor {
             }
         }
         
+        var _canvas_s = canvas_s;
+        
         if(pHOVER && canvas_hover) {
-            var _doDragging = false;
-            var _doZooming  = false;
-            
-            if(canvas_dragging_key) CURSOR = cr_size_all;
-            
-            if(mouse_press(PREFERENCES.pan_mouse_key)) {
-                _doDragging = true;
-                canvas_drag_key = PREFERENCES.pan_mouse_key;
-                
-            } else if(mouse_lpress() && canvas_dragging_key) {
-                _doDragging = true;
-                canvas_drag_key = mb_left;
-                
-            } else if(mouse_lpress() && canvas_zooming_key) {
-                _doZooming = true;
-                canvas_drag_key = mb_left;
-            }
-            
-            if(_doDragging) {
-                canvas_dragging = true;    
-                canvas_drag_mx  = mx;
-                canvas_drag_my  = my;
-                canvas_drag_sx  = canvas_x;
-                canvas_drag_sy  = canvas_y;
-            }
-            
-            if(_doZooming) {
-                canvas_zooming  = true;    
-                canvas_zoom_mx  = mx;
-                canvas_zoom_my  = my;
-                canvas_zoom_m   = my;
-                canvas_zoom_s   = canvas_s;
-            }
-            
-            var _canvas_s = canvas_s;
-            var inc = .1;
-                 if(canvas_s > 16) inc =  2;
-            else if(canvas_s >  8) inc =  1;
-            else if(canvas_s >  3) inc = .50;
-            else if(canvas_s >  1) inc = .25;
-            
-            if(!key_mod_press_any() && MOUSE_WHEEL != 0) {
-            	if(frac(MOUSE_WHEEL) == 0) canvas_s = clamp(value_snap(canvas_s + MOUSE_WHEEL * inc, inc), 0.10, 1024);
-            	else                       canvas_s = clamp(canvas_s + MOUSE_WHEEL * inc, 0.10, 1024);
-            }
-            
-            if(_canvas_s != canvas_s) {
-                var dx = (canvas_s - _canvas_s) * ((mx - canvas_x) / _canvas_s);
-                var dy = (canvas_s - _canvas_s) * ((my - canvas_y) / _canvas_s);
-                canvas_x -= dx;
-                canvas_y -= dy;
-            }
+	        if(useGesture) {
+	        	canvas_x += GESTURE_PAN_X;
+	            canvas_y += GESTURE_PAN_Y;
+	        	
+	        	canvas_s = clamp(canvas_s * (1 + GESTURE_PINCH), 0.10, 64);
+	        	
+	        } else {
+	            var _doDragging = false;
+	            var _doZooming  = false;
+	            
+	            if(canvas_dragging_key) CURSOR = cr_size_all;
+	            
+	            if(mouse_press(PREFERENCES.pan_mouse_key)) {
+	                _doDragging = true;
+	                canvas_drag_key = PREFERENCES.pan_mouse_key;
+	                
+	            } else if(mouse_lpress() && canvas_dragging_key) {
+	                _doDragging = true;
+	                canvas_drag_key = mb_left;
+	                
+	            } else if(mouse_lpress() && canvas_zooming_key) {
+	                _doZooming = true;
+	                canvas_drag_key = mb_left;
+	            }
+	            
+	            if(_doDragging) {
+	                canvas_dragging = true;    
+	                canvas_drag_mx  = mx;
+	                canvas_drag_my  = my;
+	                canvas_drag_sx  = canvas_x;
+	                canvas_drag_sy  = canvas_y;
+	            }
+	            
+	            if(_doZooming) {
+	                canvas_zooming  = true;    
+	                canvas_zoom_mx  = mx;
+	                canvas_zoom_my  = my;
+	                canvas_zoom_m   = my;
+	                canvas_zoom_s   = canvas_s;
+	            }
+	            
+	            var inc = .1;
+	                 if(canvas_s > 16) inc =  2;
+	            else if(canvas_s >  8) inc =  1;
+	            else if(canvas_s >  3) inc = .50;
+	            else if(canvas_s >  1) inc = .25;
+	            
+	            if(!key_mod_press_any() && MOUSE_WHEEL != 0) {
+	            	if(frac(MOUSE_WHEEL) == 0) canvas_s = clamp(value_snap(canvas_s + MOUSE_WHEEL * inc, inc), 0.10, 1024);
+	            	else                       canvas_s = clamp(canvas_s + MOUSE_WHEEL * inc, 0.10, 1024);
+	            }
+	            
+	        }
+        }
+	        
+        if(_canvas_s != canvas_s) {
+            var dx = (canvas_s - _canvas_s) * ((mx - canvas_x) / _canvas_s);
+            var dy = (canvas_s - _canvas_s) * ((my - canvas_y) / _canvas_s);
+            canvas_x -= dx;
+            canvas_y -= dy;
         }
         
         var pd = THEME_VALUE.panel_toolbar_padding;
@@ -3178,14 +3190,14 @@ function Panel_Preview() : PanelContent() constructor {
     static drawViewController = function() {
         if(!PROJECT.previewSetting.show_view_control) return;
         
-        var pd    = THEME_VALUE.panel_toolbar_padding;
+        var pd    = max(ui(8), THEME_VALUE.panel_toolbar_padding);
         var _left = PROJECT.previewSetting.show_view_control == 1;
         
         var _side   = _left? 1 : -1;
-        var _view_x = _left? tool_side_draw_l * toolbar_size + ui(8) : 
-                         w - tool_side_draw_r * toolbar_size - ui(8);
+        var _view_x = _left? tool_side_draw_l * (toolbar_size + pd) + pd : 
+                         w - tool_side_draw_r * (toolbar_size + pd) - pd;
+        var _view_y = pd + toolbar_size + pd + tool_side_draw_t * toolbar_size;
         
-        var _view_y = (pd + toolbar_size + ui(8) + tool_side_draw_t) * toolbar_size;
         var _hab    = pHOVER && tool_hovering == noone && !view_pan_tool && !view_zoom_tool;
         view_hovering = false;
         

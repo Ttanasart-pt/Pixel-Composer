@@ -86,6 +86,8 @@ if __name__ == "__main__":
     print(f"Updating data files for version {version}...")
     updateThemeMeta("default")
     updateThemeMeta("default HQ")
+    updateThemeMeta("default Mac")
+    updateThemeMeta("default Mac Retina")
     updateThemeMeta("True Dark")
 
     packFolder("Actions", "actions")

@@ -202,5 +202,6 @@ function printCallStack(maxDepth = 32) {
 			text += _txt + "\n";
 		}
 	}
-	print(text);
+	
+	show_debug_message(text);
 }

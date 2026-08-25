@@ -26,13 +26,13 @@
 #endregion
 
 function winManInit() { 
-	if(OS == os_macosx) mac_window_init();
+	if(OS == os_macosx)
+		mac_window_init();
 	
 	window_preminimize_rect = [ 0, 0, 1, 1 ];
 } 
 
 function winMan_getData(curr = true) {
-	INLINE
 	var _monitors = display_measure_all();
 	if(!is_array(_monitors) || array_empty(_monitors)) 
 		return [ 0, 0, display_get_width(), display_get_height(), 
@@ -72,8 +72,7 @@ function winMan_isMinimized() {
 }
 
 function winMan_Maximize() { 
-	INLINE
-	if(winMan_is_minimized_ext(window_handle())) return;
+	if(OS == os_windows) if(winMan_is_minimized_ext(window_handle())) return;
 	window_is_maximized = true;
 	
 	var _mon = winMan_getData();
@@ -81,8 +80,7 @@ function winMan_Maximize() {
 }
 
 function winMan_Unmaximize() {
-	INLINE
-	if(winMan_is_minimized_ext(window_handle())) return;
+	if(OS == os_windows) if(winMan_is_minimized_ext(window_handle())) return;
 	window_is_maximized = false;
 	
 	var _mon = winMan_getData();
@@ -106,6 +104,8 @@ function winMan_initDrag(_index) {
 	window_drag_sy	   = WIN_Y;
 	window_drag_sw	   = window_get_width();
 	window_drag_sh	   = window_get_height();
+	
+	// print("drag:", window_drag_sx, window_drag_sy, window_drag_sw, window_drag_sh)
 }
 
 function winMan_setFullscreen(full) {
@@ -124,25 +124,21 @@ function winMan_setFullscreen(full) {
 	run_in(5, function() /*=>*/ { DISPLAY_REFRESH });
 }
 
+	////- Step
+
 function winManStep() {
-	// if(OS == os_macosx) {
-	// 	if(__win_to_dock) {
-	// 		_window_set_showborder(window_handle(), true);
-	// 		mac_minimize_to_dock(window_handle());
-	// 		__win_to_dock = false;
-	// 	} else {
-	// 		if(_window_get_showborder(window_handle()))
-	// 			_window_set_showborder(window_handle(), false);
-	// 	}
-	// }
-	
 	if(OS != os_windows) {
 		if(window_curr_w != undefined && window_curr_h != undefined && (window_curr_w != WIN_W || window_curr_h != WIN_H)) {
+			window_minimize_size[0] = WIN_W;
+			window_minimize_size[1] = WIN_H;
 			DISPLAY_REFRESH;
 		}
 		
 		window_curr_w = WIN_W;
 		window_curr_h = WIN_H;
+		
+		PREFERENCES.window_x = window_get_x();
+		PREFERENCES.window_y = window_get_y();
 	}
 	
 	window_monitor = 0;
@@ -192,10 +188,16 @@ function winManStep() {
 				DISPLAY_REFRESH
 				
 			} else {
-				sx = _sx + (mx - _mx);
-				sy = _sy + (my - _my);
-				
-				winMan_setRect(sx, sy, sw, sh);
+				if(OS == os_macosx) {
+					sx = _sx + (mx - _mx);
+					sy = _sy - (my - _my);
+					window_set_position(sx, sy);
+					
+				} else {
+					sx = _sx + (mx - _mx);
+					sy = _sy + (my - _my);
+					window_set_position(sx, sy);
+				}
 			}
 		}
 		
