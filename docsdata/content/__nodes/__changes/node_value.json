@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.9.101",
+    "changes": [
+      {
+        "date": "2026-08-27T10:14:19.981Z",
+        "node": "",
+        "commit": "Fix struct output cause software to slowdown."
+      }
+    ]
+  },
+  {
     "version": "1.21.8.006",
     "changes": [
       {

@@ -126,7 +126,7 @@
 #endregion -- sampler --
 
 #pragma use(gradient)
-#region -- gradient -- [1786510427.8689222]
+#region -- gradient -- [1787822570.23723]
 	#ifdef _YY_HLSL11_ 
         #define GRADIENT_LIMIT 128
     #else 
@@ -158,7 +158,7 @@
 	         0.0514575653,  0.1074065790,  0.6302613616);
 	    
 		c = pow(c, vec3(2.2));
-		c = pow( kCONEtoLMS * c, vec3(1.0 / 3.0) );
+		c = pow( max(vec3(0.), kCONEtoLMS * c), vec3(1.0 / 3.0) );
 		
 		return c;
 	}
@@ -170,7 +170,7 @@
 	         0.2307590544, -0.3411344290,  1.7068625689);
         
 		c = kLMStoCONE * (c * c * c);
-		c = pow(c, vec3(1. / 2.2));
+		c = pow( max(vec3(0.), c), vec3(1. / 2.2));
 		
 	    return c;
 	}

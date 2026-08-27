@@ -203,5 +203,5 @@ function printCallStack(maxDepth = 32) {
 		}
 	}
 	
-	show_debug_message(text);
+	print(text);
 }

@@ -72,14 +72,32 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	#region ---- Value ----
 		
 		static setDefValue = function(_value, _serialize = true) {
-			def_val    = variable_clone(_value);
+			if(connect_type == CONNECT_TYPE.input) {
+				def_val    = variable_clone(_value);
+				def_length = is_array(def_val)? array_length(def_val) : 0;
+				def_depth  = array_get_depth(def_val);
 			
-			sepable    = is_array(_value) && array_length(_value) > 1;
-			animVector = array_safe_length(_value, -1);
-			animator   = new valueAnimator(_value, self, false);
+				sepable    = is_array(_value) && array_length(_value) > 1;
+				animVector = array_safe_length(_value, -1);
+				animator   = new valueAnimator(_value, self, false);
+				
+				animators      = undefined;
+				animatorSuffix = array_create(max(1, animVector), "");
+				
+			} else if(connect_type == CONNECT_TYPE.output) {
+				def_val    = undefined;
+				def_length = 0;
+				def_depth  = 0;
 			
-			animators      = undefined;
-			animatorSuffix = array_create(max(1, animVector), "");
+				sepable    = false;
+				animVector = 0;
+				animator   = new valueAnimator(_value, self, false);
+				
+				animators      = undefined;
+				animatorSuffix = array_create(max(1, animVector), "");
+				
+			}
+			
 			return self;
 		}
 		
@@ -91,8 +109,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		loop_range  = -1;
 		
 		setDefValue(_value, false);
-		def_length    = is_array(def_val)? array_length(def_val) : 0;
-		def_depth     = array_get_depth(def_val);
+		
 		def_preset    = false;
 		unitUse       = false;
 		unit		  = new nodeValueUnit(self);

@@ -20,7 +20,6 @@ function Node_create_ASE_File_Read_path(_x, _y, path) {
 	var node = new Node_ASE_File_Read(_x, _y, PANEL_GRAPH.getCurrentContext());
 	node.skipDefault();
 	node.inputs[0].setValue(path);
-	node.doUpdate();
 	
 	return node;	
 } 
@@ -30,8 +29,8 @@ function Node_ASE_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	w    = 128;
 	update_on_frame = false;
 	
-	newInput( 0, nodeValue_FPath(    "Path" )).setDisplay(VALUE_DISPLAY.path_load, { filter: "Aseprite File (.ase, .aseprite)|*.ase;*.aseprite" });
-	/*UNUSED*/ newInput( 1, nodeValue_Trigger( "Generate layers" ));
+	newInput( 0, nodeValue_FPath(   "Path" )).setDisplay(VALUE_DISPLAY.path_load, { filter: "Aseprite File (.ase, .aseprite)|*.ase;*.aseprite" });
+	newInput( 1, nodeValue_Trigger( "Generate Layers" ));
 	
 	////- =Layers
 	newInput( 3, nodeValue_Bool(    "Use cel Dimension", false ));
@@ -416,6 +415,8 @@ function Node_ASE_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		if(path == -1) return false;
 		if(!file_exists_empty(path)) { noti_warning("File not exist.", noone, self); return false; }
 		
+		edit_time = max(edit_time, file_get_modify_s(path));
+		
 		// File
 		path_current = path;
 		var ext = string_lower(filename_ext(path));
@@ -559,10 +560,8 @@ function Node_ASE_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		if(!attributes.file_checker) return;
 		if(!file_exists_empty(path_current)) return;
 		
-		if(file_get_modify_s(path_current) > edit_time) {
-			edit_time = max(edit_time, file_get_modify_s(path_current));
+		if(file_get_modify_s(path_current) > edit_time) 
 			run_in_s(PREFERENCES.file_watcher_delay, function() /*=>*/ { updatePaths(); triggerRender(); });
-		}
 	}
 	
 	static update = function(frame = CURRENT_FRAME) { 
@@ -644,7 +643,6 @@ function Node_ASE_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		
 		outputs[4].setValue(_layerNames);
 		surface_set_shader(surf);
-			DRAW_CLEAR
 			draw_surface_safe(temp_surface[!_bg]);
 		surface_reset_shader();
 	} 
@@ -653,12 +651,7 @@ function Node_ASE_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	
 	static attributeDeserialize = function(attr) { 
 		struct_append(attributes, attr); 
-		
-		if(struct_has(attr, "layer_visible"))
-			attributes.layer_visible = attr.layer_visible;
-			
-		if(struct_has(attr, "layer_visible"))
-			attributes.layer_visible = attr.layer_visible;
+		if(has(attr, "layer_visible")) attributes.layer_visible = attr.layer_visible;
 	} 
 	
 	////- Actions
