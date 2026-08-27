@@ -8,6 +8,9 @@ if (os_type != os_macosx) { return true; }
 
 success = false; 
 exe_pname = executable_get_directory();          // = "/Path/To/YourAppBundle.app/Contents/MacOS/";
+if(exe_pname == "/" || !directory_exists(exe_pname))
+    exe_pname = program_directory;
+
 macos_dname = filename_dir(exe_pname);           // = "/Path/To/YourAppBundle.app/Contents/MacOS";
 macos_bname = filename_name(macos_dname);        // = "MacOS";
 contents_dname = filename_dir(macos_dname);      // = "/Path/To/YourAppBundle.app/Contents";

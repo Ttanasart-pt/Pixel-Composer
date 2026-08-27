@@ -833,7 +833,7 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 					var _oup = _group.outputs[j];
 					
 					if(_oup.from.inputs[0].value_from == _frm) {
-						for( var k = 0; k < p; k++ )
+						for( var k = 0, p = array_length(_tos); k < p; k++ )
 							_tos[k].setFrom(_oup);
 						
 						_conn = true;

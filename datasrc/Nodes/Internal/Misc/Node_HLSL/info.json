@@ -1,10 +1,8 @@
 {
-  "tooltip":"Execute HLSL shader on a surface.",
-  "spr":"s_node_hlsl",
-  "pxc_version":11520.0,
-  "baseNode":"Node_HLSL",
-  "io":[
-    "any"
-  ],
-  "name":"HLSL"
+    "name":          "HLSL",
+    "tooltip":       "Execute HLSL shader on a surface.",
+    "spr":           "s_node_hlsl",
+    "baseNode":      "Node_HLSL",
+    "pxc_version":    11520,
+    "io":             ["any"],
 }

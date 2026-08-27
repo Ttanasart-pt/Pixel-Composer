@@ -33,6 +33,7 @@ function Panel_Nodes_Manager() : PanelContent() constructor {
 		arr_io  = [ "surface" ];
 		arr_ali = [];
 		arr_tag = [ "Patreon" ];
+		arr_os  = [ "Windows", "Linux", "MacOS" ];
 		
 		parseArray = function(t) /*=>*/ {return (t != "" && !string_pos(",", t))? [ t ] : json_try_parse(t, [])};
 		
@@ -47,6 +48,7 @@ function Panel_Nodes_Manager() : PanelContent() constructor {
 		tb_io    = new textArrayBox(function() /*=>*/ {return selectNode.info[$ "io"]    ?? []}, arr_io,  function(a) /*=>*/ { selectNode.info[$ "io"]    = a; update(); }).setAddable();
 		tb_alias = new textArrayBox(function() /*=>*/ {return selectNode.info[$ "alias"] ?? []}, arr_ali, function(a) /*=>*/ { selectNode.info[$ "alias"] = a; update(); }).setAddable();
 		ta_tags  = new textArrayBox(function() /*=>*/ {return selectNode.info[$ "tags"]  ?? []}, arr_tag, function(a) /*=>*/ { selectNode.info[$ "tags"]  = a; update(); }).setAddable();
+		ta_oses  = new textArrayBox(function() /*=>*/ {return selectNode.info[$ "os"]    ?? []}, arr_os,  function(a) /*=>*/ { selectNode.info[$ "os"]    = a; update(); });
 		
 		cb_recent = new checkBox(function(t) /*=>*/ { selectNode.info[$ "show_in_recent"] = !(selectNode.info[$ "show_in_recent"] ?? true); update(); });
 		cb_dep    = new checkBox(function(t) /*=>*/ { selectNode.info[$ "deprecated"]     = !(selectNode.info[$ "deprecated"] ?? false);    update(); });
@@ -56,6 +58,7 @@ function Panel_Nodes_Manager() : PanelContent() constructor {
 			[ "name",       tb_name,   function() /*=>*/ {return selectNode.info[$ "name"]           ?? ""}    ], 
 			[ "tips",       tb_tips,   function() /*=>*/ {return selectNode.info[$ "tooltip"]        ?? ""}    ], 
 			[ "spr",        tb_spr,    function() /*=>*/ {return selectNode.info[$ "spr"]            ?? ""}    ], 
+			[ "OS",         ta_oses,   function() /*=>*/ {return selectNode.info[$ "os"]             ?? []}    ], 
 			[ "version",    tb_vers,   function() /*=>*/ {return selectNode.info[$ "pxc_version"]    ?? 0}     ], 
 			[ "recent",     cb_recent, function() /*=>*/ {return selectNode.info[$ "show_in_recent"] ?? true}  ], 
 			[ "io",         tb_io,     function() /*=>*/ {return selectNode.info[$ "io"]             ?? []}    ], 

@@ -33,6 +33,37 @@
 		shell_execute("", $"chmod +x \"{FS_PATH}\"");
 		
 	} else if(OS == os_macosx) {
+		// copied from the libfilesystem extension.
+		var exe_pname = string_trim(executable_get_directory()); // = "/Path/To/YourAppBundle.app/Contents/MacOS/";
+		if(exe_pname == "/" || !directory_exists(exe_pname))
+		    exe_pname = program_directory;
+		
+		var macos_dname     = filename_dir(exe_pname);           // = "/Path/To/YourAppBundle.app/Contents/MacOS";
+		var macos_bname     = filename_name(macos_dname);        // = "MacOS";
+		var contents_dname  = filename_dir(macos_dname);         // = "/Path/To/YourAppBundle.app/Contents";
+		var contents_bname  = filename_name(contents_dname);     // = "Contents";
+		var app_dname       = filename_dir(contents_dname);      // = "/Path/To/YourAppBundle.app";
+		var app_ename       = filename_ext(app_dname);           // = ".app";
+		var contents_pname  = filename_path(macos_dname);        // = "/Path/To/YourAppBundle.app/Contents/";
+		var resources_pname = contents_pname + "Resources/";     // = "/Path/To/YourAppBundle.app/Contents/Resources/";
+		
+		printDebug($"===================== MACOS PATHS =====================\n");
+    	printDebug($"exe_pname: {exe_pname}");
+    	printDebug($"resources_pname: {resources_pname}");
+		
+		// if running from the IDE change working directory to:
+		if (GM_build_type == "run") {
+		    var _dirr = filename_path(parameter_string(1));
+		    _dirr += "PixelComposer/PixelComposer/Supporting Files/" // Also noted that most folders inside are doubled (e.g. pack/pack/)
+		    directory_set_current_working(_dirr); 
+		} 
+		
+		// if "/Path/To/YourAppBundle.app/Contents/MacOS/YourExe" and "/Path/To/YourAppBundle.app/Contents/Resources/" exists
+		else if (macos_bname == "MacOS" && contents_bname == "Contents" && app_ename == ".app" && directory_exists(resources_pname)) {
+		  // set working directory to "/Path/To/YourAppBundle.app/Contents/Resources/" and allow loading normal included files
+		  directory_set_current_working(resources_pname);
+		}
+		
 		APP_DIRECTORY = working_directory;
 		DIRECTORY     = game_save_id;
 	    APP_LOCATION  = working_directory;

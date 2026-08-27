@@ -23,6 +23,7 @@ function NodeObject(_name, _node, _tooltip = "") constructor {
 	nodekey = "";
 	context = noone;
 	allow_outside = false;
+	supported_os  = true;
 	
 	spr     = undefined;
 	sprPath = undefined;
@@ -414,6 +415,14 @@ function NodeObject(_name, _node, _tooltip = "") constructor {
 		
 		if(has(_data, "params"))
 			setParam(_data.params);
+		
+		if(has(_data, "os") && is_array(_data.os)) {
+			switch(OS) {
+				case os_windows : supported_os = array_exists(_data.os, "Windows"); break;
+				case os_linux   : supported_os = array_exists(_data.os, "Linux");   break;
+				case os_macosx  : supported_os = array_exists(_data.os, "MacOS");   break;
+			}
+		}
 		
     	allow_outside = _data[$ "allow_outside"] ?? allow_outside;
 		testable      = _data[$ "testable"] ?? testable;

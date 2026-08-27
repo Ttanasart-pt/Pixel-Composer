@@ -27,7 +27,7 @@ function sprite_drawer_white(_spr, _col = c_white) : sprite_drawer(_spr) constru
 	}
 }
 
-function __initTheme() {
+function __initTheme(_retry = true) {
 	var root = DIRECTORY + "Themes";
 	var t    = get_timer();
 	

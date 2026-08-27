@@ -152,6 +152,7 @@ event_inherited();
 	function checkValid(node, skipConnect = false) {
 		if(!is(node, NodeObject))             return true;
 		if(!node.show_in_global && is_global) return false;
+		if(!node.supported_os)                return false;
 		
 		return true;
 	}

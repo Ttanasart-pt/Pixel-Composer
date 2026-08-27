@@ -38,11 +38,11 @@ gml_pragma("UnityBuild", "true");
 	globalvar DEBUG; DEBUG    = false;
 	
 	globalvar LATEST_VERSION; LATEST_VERSION = 1_21_00_0;
-	globalvar VERSION; VERSION        = 1_21_09_0;
+	globalvar VERSION; VERSION        = 1_21_09_1;
 	globalvar SAVE_VERSION; SAVE_VERSION   = 1_21_07_0;
-	globalvar VERSION_STRING; VERSION_STRING = "1.21.9.0";        // Display on menu panel, workshop thumbnail
-	globalvar RELEASE_STRING; RELEASE_STRING = "1.21.9";          // Use for searching release note from github
-	globalvar BUILD_NUMBER; BUILD_NUMBER   = 1_21_09_0.00;
+	globalvar VERSION_STRING; VERSION_STRING = "1.21.9.101"; // Display on menu panel, workshop thumbnail
+	globalvar RELEASE_STRING; RELEASE_STRING = "1.21.9";     // Use for searching release note from github ALSO for automated build folder.
+	globalvar BUILD_NUMBER; BUILD_NUMBER   = 1_21_09_1.01;
 	globalvar PREF_VERSION; PREF_VERSION   = 1_17_1;
 	
 	globalvar NEW_VERSION; NEW_VERSION    = false;
