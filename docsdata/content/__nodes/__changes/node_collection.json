@@ -6,6 +6,11 @@
         "date": "2026-08-27T01:11:46.267Z",
         "node": "",
         "commit": "Fix crash when grouping nodes with multiple outputs."
+      },
+      {
+        "date": "2026-08-27T02:44:02.766Z",
+        "node": "Linux",
+        "commit": "**Linux**: Fix file selector not show up on Steam build."
       }
     ]
   },

@@ -780,11 +780,10 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 				var _tos = _io.inputs[$ _inKey[i]];
 				if(_frm == undefined || _tos == undefined) continue;
 				
-				_x = 0
+				_x = 0;
 				_y = 0;
-				 m = array_length(_tos);
 				
-				for( var j = 0; j < m; j++ ) {
+				for( var j = 0, m = array_length(_tos); j < m; j++ ) {
 					var _to = _tos[j];
 					
 					_x  = min(_x, _to.node.x);
@@ -792,14 +791,14 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 				}
 				
 				_x = value_snap(_x - 64 - 128, 32);
-				_y = value_snap(_y / m, 32);
+				_y = value_snap(_y / array_length(_tos), 32);
 				
 				// connect to parent input if one of the input already connect to outside junction
 				var _conn = false;
 				for( var j = 0, _gi = array_length(_group.inputs); j < _gi; j++ ) {
 					var _inp = _group.inputs[j];
 					if(_inp.value_from == _frm) {
-						for( var k = 0; k < m; k++ )
+						for( var k = 0, m = array_length(_tos); k < m; k++ )
 							_tos[k].setFrom(_inp.from.outputs[0]);
 						_conn = true;
 						break;
