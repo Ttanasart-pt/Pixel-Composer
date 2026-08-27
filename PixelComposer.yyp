@@ -747,6 +747,7 @@
     {"id":{"name":"inlineC","path":"extensions/inlineC/inlineC.yy",},},
     {"id":{"name":"libborderless","path":"extensions/libborderless/libborderless.yy",},},
     {"id":{"name":"libdlgmodule","path":"extensions/libdlgmodule/libdlgmodule.yy",},},
+    {"id":{"name":"libfiledialogs","path":"extensions/libfiledialogs/libfiledialogs.yy",},},
     {"id":{"name":"libfilesystem","path":"extensions/libfilesystem/libfilesystem.yy",},},
     {"id":{"name":"libPixelData","path":"extensions/libPixelData/libPixelData.yy",},},
     {"id":{"name":"libsysdata","path":"extensions/libsysdata/libsysdata.yy",},},

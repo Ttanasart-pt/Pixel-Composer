@@ -127,7 +127,7 @@ function get_open_filenames_compat(ext, fname, caption = "Open", _dir = PREFEREN
 		case os_windows : _native = PREFERENCES.use_native_file_browser; break;
 		case os_macosx  : _native = true;  break;
 		
-		case os_linux   : return get_open_filenames_ext(ext, fname, _dir, caption);
+		case os_linux   : return GetOpenFileNames(ext, fname, _dir, caption);
 	}
 	
 	if(_native) {
@@ -160,7 +160,7 @@ function get_open_filename_compat(ext, fname, caption = "Open", _dir = PREFERENC
 		case os_windows : _native = PREFERENCES.use_native_file_browser; break;
 		case os_macosx  : _native = true;  break;
 		
-		case os_linux   : return get_open_filename_lib(ext, fname); break;
+		case os_linux   : return GetOpenFileNames(ext, fname, _dir, caption);
 	}
 	
 	if(_native) {
@@ -185,7 +185,7 @@ function get_open_directory_compat(fname, _dir = PREFERENCES.dialog_path) {
 		case os_windows : _native = PREFERENCES.use_native_file_browser; break;
 		case os_macosx  : _native = true;  break;
 		
-		case os_linux   : return get_directory(filename_combine(_dir, fname)); 
+		case os_linux   : return GetDirectory("Select Directory", filename_combine(_dir, fname)); 
 	}
 	
 	if(_native) return get_directory(filename_combine(_dir, fname));
@@ -207,7 +207,7 @@ function get_save_filename_compat(ext, fname, caption = "Save as", _dir = PREFER
 		case os_windows : _native = PREFERENCES.use_native_file_browser; break;
 		case os_macosx  : _native = true;  break;
 		
-		case os_linux   : return get_save_filename_lib(ext, fname);
+		case os_linux   : return GetSaveFileName(ext, fname, _dir, caption);
 	}
 	
 	if(_native) {
