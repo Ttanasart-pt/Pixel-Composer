@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.9.101",
+    "changes": [
+      {
+        "date": "2026-08-27T09:01:23.706Z",
+        "node": "",
+        "commit": "**Cache**: Disable \"Serialize data\" will also stop node from storing cache data to save file."
+      }
+    ]
+  },
+  {
     "version": "1.21.7.110",
     "changes": [
       {

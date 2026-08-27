@@ -570,7 +570,7 @@
 		} catch(e) {
 			var _dir = $"{DIRECTORY}Preferences";
 			
-			print($"Loading preference failed. Backup and delete {DIRECTORY} folder and re-start the software.")
+			print($"Loading preference failed. Backup and delete {DIRECTORY} folder and re-start the software. [{e}]")
 			PREFERENCES = variable_clone(PREFERENCES_DEF);
 			useDefaultLocale(true);
 			

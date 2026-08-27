@@ -229,11 +229,27 @@ function get_save_filename_compat(ext, fname, caption = "Save as", _dir = PREFER
 
 	////- File name
 	
-function filepath_resolve(path) {
+function filepath_resolve(path, refPath = PROJECT? PROJECT.path : "") {
 	path = string_replace_all(path, "%DIR%/", DIRECTORY);
 	path = string_replace_all(path, "%APP%/", APP_LOCATION);
 	path = string_replace_all(path, "\\", "/");
-	if(PROJECT) path = string_replace_all(path, "./", filename_dir(PROJECT.path) + "/");
+	
+	if(refPath != "") {
+		var pth = path;
+		var dir = filename_dir(refPath);
+
+		if(string_starts_with(pth, "./")) {
+			path = string_replace(path, "./", dir + "/");
+			
+		} else {
+			while(string_starts_with(pth, "../")) {
+				dir = filename_dir(dir);
+				pth = string_replace(pth, "../", ""); 
+			}
+			
+			path = filename_combine(dir, pth);
+		}
+	}
 	
 	return path;
 }

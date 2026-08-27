@@ -82,13 +82,13 @@ function Node_Cache_Array(_x, _y, _group = noone) : __Node_Cache(_x, _y, _group)
 	////- Serialize
 	
 	static doSerialize = function(_map) {
-		_map.cache = surface_array_serialize(cached_output);
+		if(attributes.serialize) _map.cache = surface_array_serialize(cached_output);
 	}
 	
 	static postDeserialize = function() {
 		refreshCacheGroup();
 		
-		if(!attributes.serialize) return; 
+		if(!attributes.serialize)          return; 
 		if(!struct_has(load_map, "cache")) return;
 		cache_content			= json_try_parse(load_map.cache);
 		cache_loading_progress  = 0;
