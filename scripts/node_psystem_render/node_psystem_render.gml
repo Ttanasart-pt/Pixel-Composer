@@ -186,7 +186,7 @@ function Node_pSystem_Render(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 				var _lif    = buffer_peek( _partBuff, _start + PSYSTEM_OFF.life,   buffer_f64  );
 				var _lifMax = buffer_peek( _partBuff, _start + PSYSTEM_OFF.mlife,  buffer_f64  );
 				
-				var _surf   = buffer_peek( _partBuff, _start + PSYSTEM_OFF.surf,   buffer_f64 );
+				// var _surf   = buffer_peek( _partBuff, _start + PSYSTEM_OFF.surf,   buffer_f64 );
 				var _cc     = buffer_peek( _partBuff, _start + PSYSTEM_OFF.blnr,   buffer_u32 );
 				
 				var _dfg      = buffer_peek( _partBuff, _start + PSYSTEM_OFF.dflag,  buffer_u16  );

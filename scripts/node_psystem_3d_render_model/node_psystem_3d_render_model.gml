@@ -97,7 +97,7 @@ function Node_pSystem_3D_Render_Model(_x, _y, _group = noone) : Node_3D(_x, _y, 
 				var _life   = buffer_peek( _partBuff, _start + PSYSTEM_OFF.life,   buffer_u32  );
 				var _mlife  = buffer_peek( _partBuff, _start + PSYSTEM_OFF.mlife,  buffer_u32  );
 				
-				var _surf_  = buffer_peek( _partBuff, _start + PSYSTEM_OFF.surf,   buffer_f64 );
+				// var _surf_  = buffer_peek( _partBuff, _start + PSYSTEM_OFF.surf,   buffer_f64 );
 				var _bldR   = buffer_peek( _partBuff, _start + PSYSTEM_OFF.blnr,   buffer_u8  );
 				var _bldG   = buffer_peek( _partBuff, _start + PSYSTEM_OFF.blng,   buffer_u8  );
 				var _bldB   = buffer_peek( _partBuff, _start + PSYSTEM_OFF.blnb,   buffer_u8  );

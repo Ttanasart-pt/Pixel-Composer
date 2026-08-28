@@ -48,6 +48,7 @@
 		kd_shift = 0;
 		kd_alt   = 0;
 		kd_comm  = 0;
+		kd_enter = 0;
 		
 		ENTER    = false;
 	}
@@ -134,10 +135,21 @@
 		
 		ENTER = false;
 		if(keyboard_check_direct(vk_enter) || ord(keyboard_lastchar) == 13) {
-			if(kb_enter == false)
-				ENTER = true;
-			kb_enter = true;
-		} else kb_enter = false;
+			if(kb_enter == false) {
+				kb_enter = true;
+				ENTER    = true;
+			}
+			
+			kd_enter -= DELTA_TIME;
+			if(kd_enter <= 0) {
+				kd_enter += PREFERENCES.keyboard_repeat_speed;
+				ENTER     = true;
+			}
+			
+		} else {
+			kb_enter = false;
+			kd_enter = PREFERENCES.keyboard_repeat_start;
+		}
 		
 		if(os_is_paused()) { KEYBOARD_MOD_RESET }
 	}

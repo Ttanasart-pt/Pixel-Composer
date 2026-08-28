@@ -612,7 +612,7 @@
 			
 			if(OS == os_windows) {
 				DISPLAY_DATA  = display_measure_all();
-				MULTI_WINDOWS = PREFERENCES.window_multi;
+				MULTI_WINDOWS = code_is_compiled()? PREFERENCES.window_multi : false;
 				
 				if(is_array(DISPLAY_DATA))
 				for( var i = 0, n = array_length(DISPLAY_DATA); i < n; i++ ) {

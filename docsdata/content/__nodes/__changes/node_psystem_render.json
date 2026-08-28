@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.9.102",
+    "changes": [
+      {
+        "date": "2026-08-28T07:42:05.238Z",
+        "node": "",
+        "commit": "**pSystem Render**: Fix error when connecting surface."
+      }
+    ]
+  },
+  {
     "version": "1.21.8.009",
     "changes": [
       {
