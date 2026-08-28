@@ -65,6 +65,8 @@ function textArea(_input, _onModify) : textInput(_input, _onModify) constructor 
 	text_scrolling = false;
 	text_scroll_sy = 0;
 	text_scroll_my = 0;
+	text_scroll_vert = 0;
+	
 	mouse_lhold    = false;
 	
 	border_heightlight_color = COLORS._main_accent;
@@ -214,29 +216,45 @@ function textArea(_input, _onModify) : textInput(_input, _onModify) constructor 
 		var aut = o_dialog_textbox_autocomplete;
 		var autoCompleteActive = aut.active && aut.textbox == self && array_length(aut.data);
 		
+		draw_set_font(font);
+		
 		if(!autoCompleteActive) {
 			if(key == vk_up) {
 				var _target;
 				
+				if(keyboard_lastkey != vk_up)
+					text_scroll_vert = cursor_pos_x_to;
+					
 				if(cursor_line == 0) 
 					_target = 0;
 				else {
 					var _l   = cursor_line - 1;
 					var _str = array_safe_get_fast(_input_text_line, _l, "");
 					var _run = cursor_tx;
-					var _char = 0;
-						
+					var _r0  = _run;
+					var _r1  = _run;
+					var _chr;
+					
+					var _char = 1;
 					for( var i = 0; i < _l; i++ )
 						_char += string_length(array_safe_get_fast(_input_text_line, i, ""));
 						
 					for( var i = 1; i < string_length(_str); i++ ) {
-						var _chr = string_char_at(_str, i);
+						_chr  = string_char_at(_str, i);
 						_run += string_width(_chr);
-						if(_run > cursor_pos_x_to)
-							break;
-						_char++;
-					}
 						
+						if(_run <= text_scroll_vert) {
+							_char++;
+							_r0 = _run;
+						} else {
+							_r1 = _run;
+							break;
+						}
+					}
+					
+					if(abs(_r1 - text_scroll_vert) < abs(_r0 - text_scroll_vert))
+						_char++;
+					
 					_target = _char;
 				}
 					
@@ -249,28 +267,43 @@ function textArea(_input, _onModify) : textInput(_input, _onModify) constructor 
 				cursor = _target;
 				onModified();
 			}
-		
+			
 			if(key == vk_down) {
 				var _target;
+				
+				if(keyboard_lastkey != vk_down)
+					text_scroll_vert = cursor_pos_x_to;
 					
-				if(cursor_line == array_length(_input_text_line) - 1) 
+				if(cursor_line == array_length(_input_text_line) - 1) // at last line, go to line ending
 					_target = string_length(_input_text);
 				else {
-					var _l = cursor_line + 1;
+					var _l   = cursor_line + 1;
 					var _str = array_safe_get_fast(_input_text_line, _l, "");
 					var _run = cursor_tx;
-					var _char = 0;
-						
+					var _r0  = _run;
+					var _r1  = _run;
+					var _chr;
+					
+					var _char = 1; // character index upto the targeted line
 					for( var i = 0; i < _l; i++ )
-						_char += string_length(array_safe_get_fast(_input_text_line, i, ""));
+						_char += string_length(array_safe_get_fast(_input_text_line, i, "")); 
 						
 					for( var i = 1; i < string_length(_str); i++ ) {
-						var _chr = string_char_at(_str, i);
+						_chr  = string_char_at(_str, i);
 						_run += string_width(_chr);
-						if(_run > cursor_pos_x_to) break;
-						_char++;
+						
+						if(_run <= text_scroll_vert) {
+							_char++;
+							_r0 = _run;
+						} else {
+							_r1 = _run;
+							break;
+						}
 					}
-				
+					
+					if(abs(_r1 - text_scroll_vert) < abs(_r0 - text_scroll_vert))
+						_char++;
+						
 					_target = _char;
 				}
 					
