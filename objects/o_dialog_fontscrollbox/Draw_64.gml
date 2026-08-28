@@ -31,7 +31,7 @@ DIALOG_WINDOW_START
 	
 	sc_content.verify(dialog_w - ui(6), dialog_h - ui(40));
 	sc_content.setFocusHover(sFOCUS, sHOVER);
-	sc_content.draw(_dialog_x, _dialog_y + ui(40));
+	sc_content.drawOffset(_dialog_x, _dialog_y + ui(40), mouse_mx, mouse_my);
 	
 	draw_sprite_stretched(THEME.textbox, 1, _dialog_x, _dialog_y, dialog_w, dialog_h);
 #endregion

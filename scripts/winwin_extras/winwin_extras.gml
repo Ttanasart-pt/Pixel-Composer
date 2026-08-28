@@ -37,3 +37,13 @@ function get_winwin_content() { // trace to the topmost content window ignoring 
 	
 	return _winPtr;
 }
+
+function winwin_set_rect(win, _x, _y, _w, _h) {
+	var wx = winwin_get_x(win);
+	var wy = winwin_get_y(win);
+	var ww = winwin_get_width(win);
+	var wh = winwin_get_height(win);
+	
+	if(wx == _x && wy == _y && ww == _w && wh == _h) return;
+	winwin_set_rectangle(win, _x, _y, _w, _h);
+}

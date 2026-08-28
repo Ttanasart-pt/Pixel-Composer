@@ -1,5 +1,5 @@
 /// @description Insert description here
-if(is_winwin(window)) winwin_set_rectangle(window, WIN_X + dialog_x, WIN_Y + dialog_y, dialog_w, dialog_h);
+if(is_winwin(window)) winwin_set_rect(window, WIN_X + dialog_x, WIN_Y + dialog_y, dialog_w, dialog_h);
 
 if(item_sel_submenu) { 
 	if(!instance_exists(item_sel_submenu))

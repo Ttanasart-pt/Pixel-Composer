@@ -36,7 +36,7 @@ event_inherited();
 			var _ly = _y + i * hght;	
 			var fullpath = data[i];
 			
-			if(hover && MOUSE_MOVED && point_in_rectangle(_m[0], _m[1], 0, _ly + 1, _dw, _ly + hght - 1))
+			if(hover && point_in_rectangle(_m[0], _m[1], 0, _ly + 1, _dw, _ly + hght - 1))
 				selecting = i;
 			
 			if(selecting == i) {
@@ -93,7 +93,7 @@ event_inherited();
 #region search
 	search_string = "";
 	KEYBOARD_RESET
-	tb_search = new textBox(TEXTBOX_INPUT.text, function(s) /*=>*/ { search_string = string(s); filterSearch(); })
+	tb_search = textBox_Text(function(s) /*=>*/ { search_string = string(s); filterSearch(); })
 					.setFont(f_p2).setAutoUpdate().setEmpty().setAlign(fa_left);
 	
 	tb_search.activate();

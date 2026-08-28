@@ -139,7 +139,7 @@ event_inherited();
 		
 		if(is_array(_premenu) && is_winwin(window)) {
 			winwin_set_visible(window, false);
-			winwin_set_rectangle(window, WIN_X + dialog_x, WIN_Y + dialog_y, dialog_w, dialog_h);
+			winwin_set_rect(window, WIN_X + dialog_x, WIN_Y + dialog_y, dialog_w, dialog_h);
 			winwin_order_front(window);
 			waitmenu = 2;
 		}

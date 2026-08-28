@@ -6,6 +6,11 @@
         "date": "2026-08-28T02:13:15.921Z",
         "node": "Canvas] Fix Node tool not deleting node when closing the canvas dialog without canceling the tool first. - [Canvas",
         "commit": "**Canvas] Fix Node tool not deleting node when closing the canvas dialog without canceling the tool first. - [Canvas**: Fix node created by Node tool saved between session."
+      },
+      {
+        "date": "2026-08-28T05:27:59.084Z",
+        "node": "Font Selector Box",
+        "commit": "**Font Selector Box**: Fix dialog not responding to mouse in multi-windows mode."
       }
     ]
   },
