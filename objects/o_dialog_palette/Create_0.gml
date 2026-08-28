@@ -219,7 +219,7 @@ function __PaletteColor(_color = c_black) constructor {
 					array_insert(PALETTES_REC_DIR.content, 0, p.file);
 					PALETTES_REC_DIR.content = array_unique(PALETTES_REC_DIR.content);
 					
-					preset_name = p.name;
+					preset_name = p.file.name;
 					setPalette(array_clone(p.palette)); 
 					applyPalette(palette);
 					
