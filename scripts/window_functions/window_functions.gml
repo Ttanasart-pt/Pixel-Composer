@@ -13,13 +13,20 @@ function window_close() {
 	CALL("exit");
 	
 	var noSave = true;
-	
 	for( var i = 0, n = array_length(PROJECTS); i < n; i++ ) {
-		var project = PROJECTS[i];
+		var _project = PROJECTS[i];
 		
-		if(project.modified && !project.readonly) {
-			var dia = dialogCall(o_dialog_exit,,,, true);
-			dia.project = project;
+		if(_project.modified && !_project.readonly) {
+			var _hasExitDia = false;
+			with(o_dialog_exit) {
+				if(project == _project)
+					_hasExitDia = true;
+			}
+			
+			if(!_hasExitDia) {
+				with(dialogCall(o_dialog_exit, noone, noone,, true))
+					project = _project;
+			}
 			
 			noSave = false;
 		}

@@ -18,17 +18,18 @@ function buttonPalette(_onModify, dialog = noone) : widget() constructor {
 	////- Actions
 	
 	static trigger = function() {
-		var dialog = dialogCall(o_dialog_palette);
+		var parDia = parentDialog;
 		
-		if(dialog) {
-			dialog.setDefault(current_palette);
-			dialog.onModify     = onModify;
-			dialog.outputPreset = outputName;
-			dialog.interactable = interactable;
-			dialog.drop_target  = self;
+		with(dialogCall(o_dialog_palette)) {
+			setDefault(other.current_palette);
+			onModify     = other.onModify;
+			outputPreset = other.outputName;
+			interactable = other.interactable;
+			drop_target  = other;
 			
-			if(parentDialog) parentDialog.addChildren(dialog);
+			if(parDia) parDia.addChildren(self);
 		}
+		
 	}
 	
 	static triggerSingle = function(_index) {
