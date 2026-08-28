@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.9.102",
+    "changes": [
+      {
+        "date": "2026-08-28T03:42:06.947Z",
+        "node": "MK Cables",
+        "commit": "**MK Cables**: Double the swing speed to make every integer frequency results in perfect loop instead of every multiples of 2."
+      }
+    ]
+  },
+  {
     "version": "1.21.7.104",
     "changes": [
       {

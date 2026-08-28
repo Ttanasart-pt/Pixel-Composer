@@ -76,6 +76,9 @@ function Node_MK_Cable(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _params) { 
 		var _type = getInputSingle(15);
 		
+		var _swng = getInputSingle(11);
+		var _swne = _swng && getInputSingle(24);
+		
 		switch(_type) {
 			case 0 : 
 				var _pos1 = getInputSingle( 1);
@@ -93,6 +96,29 @@ function Node_MK_Cable(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 				draw_set_color(COLORS._main_accent);
 				draw_circle_dash(_p1x, _p1y, _rad1*_s);
 				draw_circle_dash(_p2x, _p2y, _rad2*_s);
+				
+				if(_swne) {
+					var _grv = getInputSingle(14);
+					var _rat = getInputSingle(26);
+					
+					var _dir = point_direction(_p1x, _p1y, _p2x, _p2y);
+					var _dis = point_distance(_p1x, _p1y, _p2x, _p2y);
+					var _del = angle_difference(_grv, _dir);
+					
+					var _ta  = _dis * dcos(_del);
+					var _tb  = _dis * dsin(_del);
+					
+					var _gDx = _p1x + lengthdir_x(_ta, _grv);
+					var _gDy = _p1y + lengthdir_y(_ta, _grv);
+					
+					draw_set_alpha(.75);
+					draw_set_color(COLORS._main_icon);
+					draw_line_dashed(_p1x, _p1y, _gDx, _gDy);
+					draw_line_dashed(_p2x, _p2y, _gDx, _gDy);
+					draw_set_alpha(1);
+					
+					draw_ellipse_dash(_gDx, _gDy, _tb, _tb * _rat, 1, 8, _grv + 90);
+				}
 				
 				drawOverlayInput(inputs[1].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my));
 				drawOverlayInput(inputs[2].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my));
@@ -190,7 +216,7 @@ function Node_MK_Cable(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	        
 	        if(_swng) {
 	        	var _swphs = swing_precal[c] + (CURRENT_FRAME / TOTAL_FRAMES) * _sfrq;
-	        	var _swamo = cos(_swphs * pi) * _samp;
+	        	var _swamo = cos(_swphs * pi * 2) * _samp;
 	        	
 	        	nx += _swamo * _drop * gravsx;
 	        	ny += _swamo * _drop * gravsy;

@@ -1296,8 +1296,6 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 	////- Actions
 	
 	function onClose() {
-		print("onClose panel");
-		
 		for( var i = 0, n = array_length(content); i < n; i++ )
 			content[i].onClose();
 		
