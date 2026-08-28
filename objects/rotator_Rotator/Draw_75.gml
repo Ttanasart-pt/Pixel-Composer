@@ -1,0 +1,1 @@
+if(mouse_lrelease()) instance_destroy();

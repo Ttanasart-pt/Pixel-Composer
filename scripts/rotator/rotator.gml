@@ -109,8 +109,8 @@ function rotator(_onModify, _step = -1) : widget() constructor {
 				_kc = COLORS._main_icon_light;
 			
 				if(mouse_lpress(active)) {
-					dragging = instance_create(0, 0, rotator_Rotator).init(_m, _kx, _ky);
 					drag_sv  = _data;
+					dragging = instance_create(0, 0, rotator_Rotator).init(_m, _kx, _ky);
 				}
 			
 				if(key_mod_press(SHIFT)) {

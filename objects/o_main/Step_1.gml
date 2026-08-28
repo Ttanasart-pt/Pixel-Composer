@@ -163,9 +163,6 @@ if(os_is_paused()) OS_PAUSED = true;
 	PEN_Y_DELTA = 0;
 	
 	if(!IS_CMD) tabletstuff_perform_event(id, ev_other, ev_user10);
-	
-	// print($"{PEN_USE} : {PEN_CONTACT} > {PEN_RIGHT_CLICK} | {PEN_RIGHT_PRESS}, {PEN_RIGHT_RELEASE}");
-	// print($"{mouse_mxs}, {mouse_mys}");
 #endregion
 
 #region Hover & Focus
