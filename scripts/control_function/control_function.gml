@@ -42,6 +42,7 @@
 		kb_time  = 0;
 		kb_hold  = false;
 		kb_hkey  = 0;
+		kb_enter = false;
 		
 		kd_ctrl  = 0;
 		kd_shift = 0;
@@ -130,7 +131,13 @@
 		if(COMM  == KEY_STAT.pressing) HOTKEY_MOD |= MOD_KEY.comm;
 		
 		if(ENTER && !keyboard_check_direct(vk_enter)) keyboard_lastchar = "";
-		ENTER = keyboard_check_direct(vk_enter) || ord(keyboard_lastchar) == 13;
+		
+		ENTER = false;
+		if(keyboard_check_direct(vk_enter) || ord(keyboard_lastchar) == 13) {
+			if(kb_enter == false)
+				ENTER = true;
+			kb_enter = true;
+		} else kb_enter = false;
 		
 		if(os_is_paused()) { KEYBOARD_MOD_RESET }
 	}

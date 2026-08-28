@@ -237,9 +237,9 @@ GRADIENTS_FOLDER.forEach(function(f) /*=>*/ { if(f.content == undefined) f.conte
 					app = _grad;
 				
 				if(mouse_rpress(_focus)) {
-					menuCall("gradient_window_preset_menu", [ 
-						menuItem(__txt("gradient_editor_delete", "Delete gradient"), 
-							function(p) /*=>*/ { file_delete(p); __refreshGradient(); }).setParam(g.path)
+					menuCall("gradient_window_preset_menu", [
+						menuItem(__txt("Set Gradient"), function(p) /*=>*/ {return setGradient(p)}).setParam(_grad.clone()),
+						menuItem(__txt("gradient_editor_delete", "Delete gradient"), function(p) /*=>*/ { file_delete(p); __refreshGradient(); }).setParam(g.path)
 					]);
 				}
 			}
@@ -253,7 +253,6 @@ GRADIENTS_FOLDER.forEach(function(f) /*=>*/ { if(f.content == undefined) f.conte
 			for( var i = 0, n = array_length(app.keys); i < n; i++ ) {
 				var k = app.keys[i].clone();
 				gradient.keys[i] = k;
-				
 				if(is_real(k.value)) k.value = cola(k.value);
 			}
 			
