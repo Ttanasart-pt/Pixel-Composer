@@ -1,1 +1,1 @@
-if(mouse_lrelease()) instance_destroy();
+if(mouse_lrelease()) run_in(1, function() /*=>*/ { instance_destroy(); });

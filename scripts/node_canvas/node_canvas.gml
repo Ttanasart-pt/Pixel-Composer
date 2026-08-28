@@ -2174,7 +2174,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		
 		for( var i = 0; i < attributes.frames; i++ ) {
 			var buff = array_safe_get(canvas_buffer, i, noone);
-			if(buff == noone) continue;
+			if(!buffer_exists(buff)) continue;
 			
 			var comp = buffer_compress(buff, 0, buffer_get_size(buff));
 			_buff[i] = buffer_base64_encode(comp, 0, buffer_get_size(comp));
@@ -2189,9 +2189,10 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		if(!has(load_map, "surfaces")) {
 			if(has(load_map, "surface")) {
 				var buff = buffer_base64_decode(load_map.surface);
-				
-				canvas_buffer[0]  = buffer_decompress(buff);
-				canvas_surface[0] = surface_create_from_buffer(_dim[0], _dim[1], canvas_buffer[0]);
+				if(buffer_exists(buff)) {
+					canvas_buffer[0]  = buffer_decompress(buff);
+					canvas_surface[0] = surface_create_from_buffer(_dim[0], _dim[1], canvas_buffer[0]);
+				}
 			}
 			return;
 		}
@@ -2201,6 +2202,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		
 		for( var i = 0, n = array_length(load_map.surfaces); i < n; i++ ) {
 			var buff = buffer_base64_decode(load_map.surfaces[i]);
+			if(!buffer_exists(buff)) continue;
 			
 			canvas_buffer[i]  = buffer_decompress(buff);
 			canvas_surface[i] = surface_create_from_buffer(_dim[0], _dim[1], canvas_buffer[i]);

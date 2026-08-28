@@ -998,10 +998,9 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 			}
 		
 		} else {
-			if(slider_object) {
+			if(slider_object && instance_exists(slider_object)) 
 				slider_object.anim = 1;
-				slider_object = noone;
-			}
+			slider_object = noone;
 		}
 		
 		////- Main Draw
