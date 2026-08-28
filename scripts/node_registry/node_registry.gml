@@ -14,6 +14,8 @@
 	globalvar NODE_FAV_MAP; NODE_FAV_MAP = {};
 	
 	globalvar NODE_COMMONS; NODE_COMMONS = [];
+	
+	globalvar NODE_ADD_GLOBAL; NODE_ADD_GLOBAL = true;
 #endregion
 
 function NodeObject(_name, _node, _tooltip = "") constructor {

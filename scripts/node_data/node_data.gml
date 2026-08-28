@@ -53,7 +53,8 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			array_push(_parentGroup, self);
 		}
 		
-		array_push(project.allNodes, self);
+		if(NODE_ADD_GLOBAL)
+			array_push(project.allNodes, self);
 		
 		inline_input   = true;
 		inline_output  = true;

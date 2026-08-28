@@ -44,7 +44,9 @@ function canvas_s_tool_node() : canvas_s_tool() constructor {
 	}
 	
 	function addNodeTool(_node) {
+		NODE_ADD_GLOBAL = false;
 		nodeObject = _node.build(0, 0, canvas.node);
+		NODE_ADD_GLOBAL = true;
 		
 		if(!is(nodeObject, Node)) {
 			nodeObject = undefined;
@@ -90,17 +92,6 @@ function canvas_s_tool_node() : canvas_s_tool() constructor {
 			if(is_winwin(inWin) && is_winwin(cnWin))
 				winwin_set_owner(inWin, cnWin);
 		}
-	}
-	
-	function destroy() {
-		if(nodeObject) nodeObject.destroy();
-		nodeObject = undefined;
-		
-		if(inspector && instance_exists(inspector)) {
-			instance_destroy(inspector);
-			inspector = undefined;
-		}
-		
 	}
 	
 	function drawing(_drawingSurface) {
@@ -155,11 +146,24 @@ function canvas_s_tool_node() : canvas_s_tool() constructor {
 		canvas.applyToNode(process_surface);
 		canvas.resetTool();
 		
+		if(nodeObject) nodeObject.destroy();
+		
 		preview_override = undefined;
 		if(inspector && instance_exists(inspector)) {
 			instance_destroy(inspector);
 			inspector = undefined;
 		}
+	}
+	
+	function destroy() {
+		if(nodeObject) nodeObject.destroy();
+		nodeObject = undefined;
+		
+		if(inspector && instance_exists(inspector)) {
+			instance_destroy(inspector);
+			inspector = undefined;
+		}
+		
 	}
 	
 }

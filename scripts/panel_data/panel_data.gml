@@ -1296,6 +1296,8 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 	////- Actions
 	
 	function onClose() {
+		print("onClose panel");
+		
 		for( var i = 0, n = array_length(content); i < n; i++ )
 			content[i].onClose();
 		
@@ -1601,7 +1603,7 @@ function PanelContent() constructor {
 	
 	static checkClosable = function() /*=>*/ { return true; }
 	static close         = function() /*=>*/ { panel.remove(self); }
-	static closeDialog   = function() /*=>*/ { if(panel.dialog) instance_destroy(panel.dialog); }
+	static closeDialog   = function() /*=>*/ { if(panel.dialog) { instance_destroy(panel.dialog); panel.dialog.onDestroy(); } }
 	static onClose       = function() /*=>*/ {}
 	
 	static asyncCallback = function(async_load) /*=>*/ {}

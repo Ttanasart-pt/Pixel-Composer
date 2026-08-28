@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.9.102",
+    "changes": [
+      {
+        "date": "2026-08-28T02:13:15.921Z",
+        "node": "Canvas] Fix Node tool not deleting node when closing the canvas dialog without canceling the tool first. - [Canvas",
+        "commit": "**Canvas] Fix Node tool not deleting node when closing the canvas dialog without canceling the tool first. - [Canvas**: Fix node created by Node tool saved between session."
+      }
+    ]
+  },
+  {
     "version": "1.21.9.0",
     "changes": [
       {

@@ -1178,4 +1178,8 @@ function Panel_Canvas() : PanelContent() constructor {
 		
 		applyToNode(_rotSurf, true);
 	}
+	
+	static onClose = function() /*=>*/ {
+		if(tool_current) tool_current.destroy();
+	}
 }
