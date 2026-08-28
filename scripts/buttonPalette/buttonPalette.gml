@@ -20,14 +20,15 @@ function buttonPalette(_onModify, dialog = noone) : widget() constructor {
 	static trigger = function() {
 		var dialog = dialogCall(o_dialog_palette);
 		
-		dialog.setDefault(current_palette);
-		dialog.onModify     = onModify;
-		dialog.outputPreset = outputName;
-		dialog.interactable = interactable;
-		dialog.drop_target  = self;
-		
-		if(parentDialog)
-			parentDialog.addChildren(dialog);
+		if(dialog) {
+			dialog.setDefault(current_palette);
+			dialog.onModify     = onModify;
+			dialog.outputPreset = outputName;
+			dialog.interactable = interactable;
+			dialog.drop_target  = self;
+			
+			if(parentDialog) parentDialog.addChildren(dialog);
+		}
 	}
 	
 	static triggerSingle = function(_index) {
