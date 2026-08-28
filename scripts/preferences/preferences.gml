@@ -781,8 +781,6 @@
 		
 		if(file_exists_empty(_lpath)) 
 			return [_ldir, _lpath];
-			
-		var dia    = dialogCall(o_dialog_export_library_missing);
 		
 		var _link  = "";
 		var _tfile = "";
@@ -806,7 +804,8 @@
 			}
 		}
 		
-		dia.setData(self, _lib, _link, _ldir, _ext, _tfile);
+		var dia = dialogCall(o_dialog_export_library_missing);
+		if(dia) dia.setData(self, _lib, _link, _ldir, _ext, _tfile);
 		return -1;
 	}
 

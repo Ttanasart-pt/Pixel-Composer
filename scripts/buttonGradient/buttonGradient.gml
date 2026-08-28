@@ -44,14 +44,15 @@ function buttonGradient(_onModify, dialog = noone) : widget() constructor {
 	#endregion
 	
 	static trigger = function() {
-		var dialog = dialogCall(o_dialog_gradient, WIN_W / 2, WIN_H / 2);
-						
-		dialog.setDefault(current_gradient.clone());
-		dialog.onModify      = onModify;
-		dialog.interactable = interactable;
-		dialog.drop_target  = self;
-		
-		if(parentDialog) parentDialog.addChildren(dialog);
+		var pdia = parentDialog;
+		with(dialogCall(o_dialog_gradient)) {
+			setDefault(other.current_gradient.clone());
+			onModify     = other.onModify;
+			interactable = other.interactable;
+			drop_target  = other;
+			
+			if(pdia) pdia.addChildren(self);
+		}
 	}
 	
 	static triggerSingle = function(_index) {

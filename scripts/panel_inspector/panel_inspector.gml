@@ -864,8 +864,10 @@ function Panel_Inspector() : PanelContent() constructor {
                 	}
                 	
                 	var _txt = __txt("panel_inspector_workshop_update",  "Update Steam Workshop content");
-                	if(buttonInstant(bb, bx, by, bs, bs, mse, hov, foc, _txt, THEME.workshop_update, 0, c_white) == 2)
-                        dialogCall(o_dialog_steam_project_update, mouse_mx + 8, mouse_my + 8).activate("Update note");
+                	if(buttonInstant(bb, bx, by, bs, bs, mse, hov, foc, _txt, THEME.workshop_update, 0, c_white) == 2) {
+                        var dia = dialogCall(o_dialog_steam_project_update, mouse_mx + 8, mouse_my + 8);
+                        if(dia) dia.activate("Update note");
+                	}
                 }
             }
             

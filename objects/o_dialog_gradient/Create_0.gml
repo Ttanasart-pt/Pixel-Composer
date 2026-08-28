@@ -150,18 +150,19 @@ GRADIENTS_FOLDER.forEach(function(f) /*=>*/ { if(f.content == undefined) f.conte
 					if(b) { _hovSec = false; isHover = false; };
 					if(b == 2) {
 						var dia = dialogCall(o_dialog_file_name, mouse_mx + ui(8), mouse_my + ui(8));
-						dia.onModify = function (txt) {
-							var gradStr = "";
-							
-							for(var i = 0; i < array_length(gradient.keys); i++) {
-								var gr = gradient.keys[i];
-								gradStr += $"{gr.value},{gr.time}\n";
-							}
-							
-							file_text_write_all(txt + ".txt", gradStr);
-							__refreshGradient();
-						};
-						dia.path = _sub.path;
+						if(dia) {
+							dia.onModify = function(txt) /*=>*/ {
+								var gradStr = "";
+								for(var i = 0; i < array_length(gradient.keys); i++) {
+									var gr = gradient.keys[i];
+									gradStr += $"{gr.value},{gr.time}\n";
+								}
+								
+								file_text_write_all(txt + ".txt", gradStr);
+								__refreshGradient();
+							};
+							dia.path = _sub.path;
+						}
 					}
 				}
 				

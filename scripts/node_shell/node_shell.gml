@@ -33,7 +33,7 @@ function Node_Shell(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 			shell_execute_async(_pro, _scr);
 		} else {
 			var dia = dialogCall(o_dialog_run_shell);
-			dia.setData(self, _pro, _scr);
+			if(dia) dia.setData(self, _pro, _scr);
 		}
 	}
 	

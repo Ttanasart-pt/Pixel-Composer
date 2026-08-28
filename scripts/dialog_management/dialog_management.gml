@@ -91,9 +91,11 @@ function dialogPanelCall(_panel, _x = noone, _y = noone, params = undefined) {
 }
 
 function colorSelectorCall(defColor = undefined, onModify = undefined) {
-	var dialog = dialogCall(o_dialog_color_selector);
-	if(defColor != undefined) dialog.setDefault(defColor);
-	if(onModify != undefined) dialog.setApply(onModify);
+	var dia = dialogCall(o_dialog_color_selector);
+	if(dia) {
+		if(defColor != undefined) dia.setDefault(defColor);
+		if(onModify != undefined) dia.setApply(onModify);
+	}
 	
-	return dialog;
+	return dia;
 }

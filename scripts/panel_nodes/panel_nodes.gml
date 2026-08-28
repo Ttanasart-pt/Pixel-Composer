@@ -420,22 +420,22 @@ function Panel_Nodes() : PanelContent() constructor {
 	
 	function add_node() {
 		var _ctx = PANEL_GRAPH.getCurrentContext();
-		var _dia = dialogCall(o_dialog_add_node, mouse_mx + 8, mouse_my + 8, { context: _ctx });
         
         var _fFrom = noone;
-        var _nx = 0;
-        var _ny = 0;
+        var _nx    = 0;
+        var _ny    = 0;
         
         if(node_selecting != noone) {
         	_fFrom = node_selecting.getOutput();
-        	_nx = node_selecting.x + node_selecting.w + ui(32);
-			_ny = node_selecting.y;
+        	_nx    = node_selecting.x + node_selecting.w + ui(32);
+			_ny    = node_selecting.y;
         }
         
+		var _dia = dialogCall(o_dialog_add_node, mouse_mx + 8, mouse_my + 8, { context: _ctx });
         with(_dia) {
-        	node_target_x     = _nx;
-            node_target_y     = _ny;
-            junction_called   = _fFrom;
+            junction_called = _fFrom;
+        	node_target_x   = _nx;
+            node_target_y   = _ny;
             
             resetPosition();
             alarm[0] = 1;

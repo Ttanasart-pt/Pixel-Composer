@@ -18,8 +18,7 @@ function buttonPalette(_onModify, dialog = noone) : widget() constructor {
 	////- Actions
 	
 	static trigger = function() {
-		var parDia = parentDialog;
-		
+		var pdia = parentDialog;
 		with(dialogCall(o_dialog_palette)) {
 			setDefault(other.current_palette);
 			onModify     = other.onModify;
@@ -27,7 +26,7 @@ function buttonPalette(_onModify, dialog = noone) : widget() constructor {
 			interactable = other.interactable;
 			drop_target  = other;
 			
-			if(parDia) parDia.addChildren(self);
+			if(pdia) pdia.addChildren(self);
 		}
 		
 	}

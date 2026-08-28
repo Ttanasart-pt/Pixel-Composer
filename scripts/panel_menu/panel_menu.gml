@@ -262,11 +262,13 @@ function Panel_Menu() : PanelContent() constructor {
                 
                 array_push(arr, menuItem(__txt("panel_menu_save_layout", "Save layout"), function() /*=>*/ {
                     var dia = dialogCall(o_dialog_file_name, mouse_mx + ui(8), mouse_my + ui(8));
-                    dia.name = PREFERENCES.panel_layout_file;
-                    dia.onModify = function(name) /*=>*/ { 
-                        var cont = panelSerialize();
-                        json_save_struct(DIRECTORY + "layouts/" + name + ".json", cont);
-                    };
+                    if(dia) {
+	                    dia.name = PREFERENCES.panel_layout_file;
+	                    dia.onModify = function(name) /*=>*/ { 
+	                        var cont = panelSerialize();
+	                        json_save_struct(DIRECTORY + "layouts/" + name + ".json", cont);
+	                    };
+                    }
                 }));
                 
                 array_push(arr, MENU_ITEMS.reset_layout);

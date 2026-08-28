@@ -50,9 +50,11 @@ function __NodeValue_Palette(_name, _node, _value, _tooltip = "") : NodeValue(_n
 	////- Draw
 	
 	static drawOverlayToggle = function() /*=>*/ { 
-		var dialog = dialogCall(o_dialog_palette, WIN_W / 2, WIN_H / 2);
-			dialog.setDefault(getValue());
-			dialog.onModify = function(c) /*=>*/ {return setValueInspector(c)};
+		var dia = dialogCall(o_dialog_palette, WIN_W / 2, WIN_H / 2);
+		if(dia) {
+			dia.setDefault(getValue());
+			dia.onModify = function(c) /*=>*/ {return setValueInspector(c)};
+		}
 	}
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _typ = 0, _sca = [ 1, 1 ], _rot = 0) {

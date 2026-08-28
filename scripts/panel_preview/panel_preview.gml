@@ -4917,8 +4917,7 @@ function Panel_Preview() : PanelContent() constructor {
     static callAddDialog = function() {
     	var  ctx = PANEL_GRAPH.getCurrentContext();
     	var _dia = dialogCall(o_dialog_add_node, mouse_mx + 8, mouse_my + 8, { context: ctx });
-    	
-    	_dia.buildCallback = function(n) /*=>*/ {return addNodeCallback(n)};
+    	if(_dia) _dia.buildCallback = function(n) /*=>*/ {return addNodeCallback(n)};
     }
     
     static addNodeCallback = function(_node) {

@@ -94,18 +94,21 @@ DIALOG_WINDOW_START
 	var b  = buttonInstant_Pad(bb, bx, by, bs, bs, m, hov, foc, bt, THEME.add);
 	if(b == 2) {
 		var dia = dialogCall(o_dialog_file_name, mouse_mx + ui(8), mouse_my + ui(8));
-		dia.onModify = function (txt) {
-			var gradStr = "";
+		
+		if(dia) {
+			dia.onModify = function(txt) /*=>*/ {
+				var gradStr = "";
+				for(var i = 0; i < array_length(gradient.keys); i++) {
+					var gr = gradient.keys[i];
+					gradStr += $"{gr.value},{gr.time}\n";
+				}
+				
+				file_text_write_all(txt + ".txt", gradStr);
+				__refreshGradient();
+			};
 			
-			for(var i = 0; i < array_length(gradient.keys); i++) {
-				var gr = gradient.keys[i];
-				gradStr += $"{gr.value},{gr.time}\n";
-			}
-			
-			file_text_write_all(txt + ".txt", gradStr);
-			__refreshGradient();
-		};
-		dia.path = DIRECTORY + "Gradients/"
+			dia.path = DIRECTORY + "Gradients/";
+		}
 	}
 	draggable = draggable && !b;
 	bx -= bs + ui(2);

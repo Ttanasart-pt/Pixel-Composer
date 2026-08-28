@@ -40,7 +40,7 @@ function canvas_s_tool_node() : canvas_s_tool() constructor {
 		var _ctx = self;
 		
 		var _add = dialogCall(o_dialog_add_node, mouse_mx + 8, mouse_my + 8, { context: _ctx });
-		_add.canvas = true;
+		if(_add) _add.canvas = true;
 	}
 	
 	function addNodeTool(_node) {

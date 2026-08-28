@@ -292,10 +292,10 @@ function Panel_Collection() : PanelContent() constructor {
 			if(meta != noone && meta != undefined) 
 				dia.meta = meta;
 			
-			dia.node		= _node;
-			dia.data_path	= data_path;
-			dia.ugc			= 2;
-			dia.updating	= _menu_node;
+			dia.node      = _node;
+			dia.data_path = data_path;
+			dia.ugc       = 2;
+			dia.updating  = _menu_node;
 			dia.doExpand();
 		}
 		

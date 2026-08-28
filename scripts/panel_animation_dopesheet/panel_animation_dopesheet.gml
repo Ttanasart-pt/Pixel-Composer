@@ -802,12 +802,14 @@ function Panel_Animation_Dopesheet() {
                 	
                     case VALUE_DISPLAY.palette : 
                         var dia = dialogCall(o_dialog_palette);
-	        			dia.setDefault(keyframe.value);
-	        			dia.setApply(function(val) /*=>*/ { 
-	        				__keyframe_editing.value = val; 
-	        				__keyframe_editing.anim.node.triggerRender(); 
-	        			});
-	        			dia.setDrop(_wid);
+                        if(dia) {
+		        			dia.setDefault(keyframe.value);
+		        			dia.setApply(function(val) /*=>*/ { 
+		        				__keyframe_editing.value = val; 
+		        				__keyframe_editing.anim.node.triggerRender(); 
+		        			});
+		        			dia.setDrop(_wid);
+                        }
                         break;
                     
                     default :
@@ -821,9 +823,11 @@ function Panel_Animation_Dopesheet() {
             
             case VALUE_TYPE.gradient : 
             	var dia = dialogCall(o_dialog_gradient);
-                dia.setDefault(keyframe.value.clone());
-	            dia.setApply(function(val) /*=>*/ { __keyframe_editing.value = val; });
-	            dia.setDrop(_wid);
+            	if(dia) {
+	                dia.setDefault(keyframe.value.clone());
+		            dia.setApply(function(val) /*=>*/ { __keyframe_editing.value = val; });
+		            dia.setDrop(_wid);
+            	}
                 break;
                 
             default : 

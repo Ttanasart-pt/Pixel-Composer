@@ -228,29 +228,32 @@ function Panel_File_Explorer() : PanelContent() constructor {
 		menu_general = [ 
 			menuItem("New Canvas", function() /*=>*/ { 
 				var dia = dialogCall(o_dialog_file_name, mouse_mx + 8, mouse_my + 8);
-				dia.onModify = function (txt) {
-					var _s = surface_create(DEF_SURF_W, DEF_SURF_H);
-					surface_clear(_s);
-					surface_save(_s, txt);
-					surface_free(_s);
-					
-					var node = nodeBuild("Node_Canvas_S", PANEL_GRAPH.graph_cx, PANEL_GRAPH.graph_cy).loadImagePath(txt);
-					PANEL_PREVIEW.setNodePreview(node);
-					PANEL_INSPECTOR.inspecting = node;
-					
-					__menu_cnxt_selecting.getContent();
-				};
-				dia.path = __menu_cnxt_selecting.path + "/";
+				if(dia) {
+					dia.onModify = function(txt) /*=>*/ {
+						var _s = surface_create(DEF_SURF_W, DEF_SURF_H);
+						surface_clear(_s);
+						surface_save(_s, txt);
+						surface_free(_s);
+						
+						var node = nodeBuild("Node_Canvas_S", PANEL_GRAPH.graph_cx, PANEL_GRAPH.graph_cy).loadImagePath(txt);
+						PANEL_PREVIEW.setNodePreview(node);
+						PANEL_INSPECTOR.inspecting = node;
+						
+						__menu_cnxt_selecting.getContent();
+					};
+					dia.path = __menu_cnxt_selecting.path + "/";
+				}
+				
 			}, THEME.new_file), 
 			
 			menuItem("New Folder", function() /*=>*/ { 
 				var dia = dialogCall(o_dialog_file_name, mouse_mx + 8, mouse_my + 8);
-				dia.name = "New Folder";
-				dia.onModify = function (txt) {
-					directory_create(txt);
-					__menu_cnxt_selecting.getContent();
-				};
-				dia.path = __menu_cnxt_selecting.path + "/";
+				if(dia) {
+					dia.name     = "New Folder";
+					dia.onModify = function(txt) /*=>*/ { directory_create(txt); __menu_cnxt_selecting.getContent(); };
+					dia.path     = __menu_cnxt_selecting.path + "/";
+				}
+				
 			}, THEME.folder), 
 			
 			-1,

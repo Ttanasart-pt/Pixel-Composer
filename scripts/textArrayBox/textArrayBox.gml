@@ -150,8 +150,11 @@ function textArrayBox(_arraySet, _data, _onModify = noone) : widget() constructo
 		
 		h = th;
 		
-		if(_hoverEmpty && pressed && mouse_lrelease(active))
-			dialogCall(o_dialog_arrayBox, _rx + _x, _ry + _y + h).setArrayBox(self);
+		if(_hoverEmpty && pressed && mouse_lrelease(active)) {
+			var dia = dialogCall(o_dialog_arrayBox, _rx + _x, _ry + _y + h);
+			if(dia) dia.setArrayBox(self);
+		}
+		
 		if(mouse_lrelease()) pressed = false;
 			
 		resetFocus();

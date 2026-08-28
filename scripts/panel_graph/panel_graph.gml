@@ -3021,7 +3021,6 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
     	if(!is(_target, Node)) return;
     	
     	var _dia = dialogCall(o_dialog_add_node, mouse_mx + 8, mouse_my + 8, { context: ctx });
-        
         with(_dia) {    
             node_target_x = _target.x;
             node_target_y = _target.y;
@@ -5238,7 +5237,7 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
 			    	var _url  = $"https://docs.pixel-composer.com/nodes/_index/{_type}.html";
 			    	URL_open(_url);
 			    } ],
-				[ __txt("Cancel"), function() /*=>*/ {} ],
+				[ __txt("Cancel"), undefined ],
 			]);
     }
     
@@ -5254,7 +5253,7 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
 			    	var _url  = $"https://github.com/Ttanasart-pt/Pixel-Composer/blob/main/scripts/{_type}/{_type}.gml";
 			    	URL_open(_url);
 			    } ],
-				[ __txt("Cancel"), function() /*=>*/ {} ],
+				[ __txt("Cancel"), undefined ],
 			]);
     }
     
@@ -5478,8 +5477,12 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
             return;
         }
         
-        var dia = dialogCall(o_dialog_save);
-        dia.project = project;
+        var hasDia = false;
+        with(o_dialog_save) 
+        	if(project == other.project) hasDia = true;
+        
+        if(!hasDia)  
+	        with(dialogCall(o_dialog_save)) project = other.project;
     } 
     
     setProject(_project);

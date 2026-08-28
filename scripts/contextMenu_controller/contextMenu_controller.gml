@@ -251,9 +251,11 @@ function menuCall(menu_id = "", menu = [], _x = 0, _y = 0, align = fa_left, _pie
 		array_push(menu, -1, menuItem(__txt("Create pie menu..."), function(m) /*=>*/ {return menuItemEdit(m,true)}).setParam(pie_id));
 	
 	var dia  = dialogCall(o_dialog_menubox, _x, _y);
-	dia.context  = self;
-	dia.menu_id  = menu_id;
-	dia.setMenu(menu, align);
+	if(dia) {
+		dia.context  = self;
+		dia.menu_id  = menu_id;
+		dia.setMenu(menu, align);
+	}
 	
 	return dia;
 }

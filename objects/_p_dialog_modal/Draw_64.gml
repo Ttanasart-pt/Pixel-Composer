@@ -54,7 +54,8 @@ WIDGET_TAB_BLOCK = true;
 		
 		var _trg = b == 2 || (buttonIndex == i && KEYBOARD_ENTER);
 		if(_trg) { 
-			_fn(); 
+			if(is_callable(_fn))
+				_fn(); 
 			_des = true; 
 		}
 		
