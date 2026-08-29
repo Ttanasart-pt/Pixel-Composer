@@ -223,6 +223,18 @@ function Panel_Preference() : PanelContent() constructor {
     		));
     		
     		ds_list_add(pref_global, new __Panel_Linear_Setting_Item_Preference(
+    			__txt("pref_save_preview", "Save preview settings"),
+    			"save_preview_settings",
+    			new checkBox(function() /*=>*/ {return prefToggle("save_preview_settings")})
+    		));
+    		
+    		ds_list_add(pref_global, new __Panel_Linear_Setting_Item_Preference(
+    			__txt("pref_save_graph", "Save graph settings"),
+    			"save_graph_settings",
+    			new checkBox(function() /*=>*/ {return prefToggle("save_graph_settings")})
+    		));
+    		
+    		ds_list_add(pref_global, new __Panel_Linear_Setting_Item_Preference(
     			__txt("pref_save_file_minify", "Minify save file"),
     			"save_file_minify",
     			new checkBox(function() /*=>*/ {return prefToggle("save_file_minify")})

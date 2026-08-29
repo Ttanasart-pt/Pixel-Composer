@@ -209,7 +209,6 @@
 		#endregion
 		
 		#region SAVE
-		
 			PREFERENCES.save_file_minify				= true;
 			PREFERENCES.save_backup						= 1;
 			PREFERENCES.save_thumbnail					= false;
@@ -218,6 +217,8 @@
 			PREFERENCES.save_compress                   = true;
 			PREFERENCES.save_auto                       = false;
 		
+			PREFERENCES.save_preview_settings           = true;
+			PREFERENCES.save_graph_settings             = true;
 		#endregion
 		
 		#region MISC

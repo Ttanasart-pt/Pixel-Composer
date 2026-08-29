@@ -885,20 +885,25 @@ function Project() constructor {
 		readonly    = _map[$ "readonly"]    ?? readonly;
 		usage_timer = _map[$ "usage_timer"] ?? usage_timer;
 		
-		if(has(_map, "onion_skin"))      struct_override(onion_skin,      _map.onion_skin);
-		if(has(_map, "previewGrid"))     struct_override(previewGrid,     _map.previewGrid);
-		if(has(_map, "previewRuler"))    previewRuler = _map.previewRuler;
-		
 		if(has(_map, "attributes"))      struct_override(attributes,      _map.attributes);
 		if(has(_map, "metadata"))        meta.deserialize(_map.metadata);
 		if(has(_map, "composer"))        composer = _map.composer;
 		if(has(_map, "freeze"))          freeze   = _map.freeze;
 		if(has(_map, "data"))            data     = variable_clone(_map.data);
 		
-		if(has(_map, "graphGrid"))               struct_override(graphGrid,       _map.graphGrid);
-		if(has(_map, "graphConnection"))         struct_override(graphConnection, _map.graphConnection);
-		if(has(_map, "graph_display_parameter")) struct_override(graphDisplay,    _map.graph_display_parameter);
-		if(has(_map, "graphBGIndexData"))        graphBGIndexData = _map.graphBGIndexData;
+		if(PREFERENCES.save_preview_settings) {
+			if(has(_map, "onion_skin"))      struct_override(onion_skin,      _map.onion_skin);
+			if(has(_map, "previewGrid"))     struct_override(previewGrid,     _map.previewGrid);
+		}
+		
+		if(has(_map, "previewRuler"))    previewRuler = _map.previewRuler;
+		
+		if(PREFERENCES.save_graph_settings) {
+			if(has(_map, "graphGrid"))               struct_override(graphGrid,       _map.graphGrid);
+			if(has(_map, "graphConnection"))         struct_override(graphConnection, _map.graphConnection);
+			if(has(_map, "graph_display_parameter")) struct_override(graphDisplay,    _map.graph_display_parameter);
+			if(has(_map, "graphBGIndexData"))        graphBGIndexData = _map.graphBGIndexData;
+		}
 		
 		is_nightly	= _map[$ "is_nightly"]  ?? is_nightly;
 		load_layout	= _map[$ "load_layout"] ?? load_layout;
