@@ -60,7 +60,7 @@ doRefocus();
 #region content
 	function initScroll(_scroll, _initVal) {
 		scrollbox    = _scroll;
-		dialog_w     = max(ui(200), _scroll.w);
+		dialog_w     = max(ui(200), _scroll.w) + padding * 2;
 		
 		data         = _scroll.data;
 		displayStr   = _scroll.displayStr;
@@ -85,8 +85,6 @@ doRefocus();
 			hh += data[i] == -1? ui(8) : hght;
 		
 		dialog_h = min(max_h, hh);
-		
-		dialog_w = ceil(dialog_w + padding * 2);
 		dialog_h = ceil(dialog_h + padding * 2);
 		
 		resetPosition();

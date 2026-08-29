@@ -130,8 +130,8 @@ event_inherited();
 			case fa_right:	dialog_x = round(max(dialog_x - dialog_w, 2)); break;
 		}
 		
-		// dialog_w = ceil(dialog_w + padding * 2);
-		// dialog_h = ceil(dialog_h + padding * 2);
+		dialog_w = ceil(dialog_w + padding * 2);
+		dialog_h = ceil(dialog_h + padding * 2);
 		
 		dialog_w = ceil(dialog_w);
 		dialog_h = ceil(dialog_h);
