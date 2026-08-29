@@ -29,10 +29,10 @@ event_inherited();
 		
 		if(file_exists_empty(propPath)) {
 			var meta = json_load_struct(propPath);
-			if(struct_has(meta, "scripts")) 
+			if(has(meta, "scripts")) 
 				scripts = meta.scripts;
 				
-			if(struct_has(meta, "panels")) {
+			if(has(meta, "panels")) {
 				panels = meta.panels;
 				
 				var arr = variable_struct_get_names(panels);
@@ -48,7 +48,7 @@ event_inherited();
 					dialogPanelCall(new addonPanel(self, panelMain));
 			}
 			
-			if(struct_has(meta, "context_menu_callbacks")) {
+			if(has(meta, "context_menu_callbacks")) {
 				context_menus =  meta.context_menu_callbacks;
 				
 				var arr = variable_struct_get_names(context_menus);
