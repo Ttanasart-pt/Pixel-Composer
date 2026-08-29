@@ -109,6 +109,7 @@ function winMan_initDrag(_index) {
 }
 
 function winMan_setFullscreen(full) {
+	if(MAC) return;
 	if(full == window_is_fullscreen) return;
 	window_is_fullscreen = full;
 	

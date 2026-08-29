@@ -147,6 +147,8 @@ function Panel_Menu() : PanelContent() constructor {
             "close_software",
         ]; 
         
+        if(MAC) array_remove(menu_file_content, "fullscreen");
+        
         global.menuItems_main_file = menu_file_content;
         if(!DEMO) {
             global.menuItems_main_file = array_append([
@@ -715,6 +717,7 @@ function Panel_Menu() : PanelContent() constructor {
             if(_action) {
                 for( var i = 0, n = array_length(action_buttons); i < n; i++ ) {
                     var action = action_buttons[i];
+                    if(MAC && action == WINDOW_ACTION.Fullscreen) continue;
                     
                     var bx = x1 - bw;
                     var by = _padd;
