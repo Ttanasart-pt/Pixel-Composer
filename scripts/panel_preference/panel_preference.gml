@@ -552,6 +552,26 @@ function Panel_Preference() : PanelContent() constructor {
     			new checkBox(function() /*=>*/ {return prefToggle("show_supporter_icon")})
     		));
     	
+    	ds_list_add(pref_appr, __txt("Window")); // Window
+    	
+    		ds_list_add(pref_appr, new __Panel_Linear_Setting_Item_Preference(
+    			__txt("pref_ui_fix_window_size", "Fix Window size on start"),
+    			"window_fix",
+    			new checkBox(function() /*=>*/ {return prefToggle("window_fix")})
+    		));
+    		
+    		ds_list_add(pref_appr, new __Panel_Linear_Setting_Item_Preference(
+    			__txt("pref_ui_fix_width", "Fix Width"),
+    			"window_fix_width",
+    			textBox_Number(function(str) /*=>*/ {return prefSet("window_fix_width", max(1, round(real(str))))})
+    		));
+    		
+    		ds_list_add(pref_appr, new __Panel_Linear_Setting_Item_Preference(
+    			__txt("pref_ui_fix_height", "Fix Height"),
+    			"window_fix_height",
+    			textBox_Number(function(str) /*=>*/ {return prefSet("window_fix_height", max(1, round(real(str))))})
+    		));
+    	
     	ds_list_add(pref_appr, __txt("Menu")); // Menu
     	
     		ds_list_add(pref_appr, new __Panel_Linear_Setting_Item_Preference(
@@ -566,26 +586,6 @@ function Panel_Preference() : PanelContent() constructor {
     			new checkBox(function() /*=>*/ {return prefToggle("hotkey_use_pie")})
     		));
     		
-    	ds_list_add(pref_appr, __txt("Window")); // Window
-    	
-    		ds_list_add(pref_appr, new __Panel_Linear_Setting_Item_Preference(
-    			__txt("pref_ui_fix_window_size", "Fix Window size on start"),
-    			"window_fix",
-    			new checkBox(function() /*=>*/ {return prefToggle("window_fix")})
-    		));
-    		
-    		ds_list_add(pref_appr, new __Panel_Linear_Setting_Item_Preference(
-    			__txt("pref_ui_fix_width", "Fix width"),
-    			"window_fix_width",
-    			textBox_Number(function(str) /*=>*/ {return prefSet("window_fix_width", max(1, round(real(str))))})
-    		));
-    		
-    		ds_list_add(pref_appr, new __Panel_Linear_Setting_Item_Preference(
-    			__txt("pref_ui_fix_height", "Fix height"),
-    			"window_fix_height",
-    			textBox_Number(function(str) /*=>*/ {return prefSet("window_fix_height", max(1, round(real(str))))})
-    		));
-    	
     	ds_list_add(pref_appr, __txt("Menu Bar")); // Menubar
     	
     		if(OS == os_windows) 
@@ -608,6 +608,12 @@ function Panel_Preference() : PanelContent() constructor {
     		));
     		
     	ds_list_add(pref_appr, __txt("Graph")); // Graph
+    	
+    		ds_list_add(pref_appr, new __Panel_Linear_Setting_Item_Preference(
+    			__txt("pref_reset_panel", "Reset view on display refresh."),
+    			"panel_reset_view_on_display_refresh",
+    			new checkBox(function() /*=>*/ {return prefToggle("panel_reset_view_on_display_refresh")})
+    		));
     	
     		ds_list_add(pref_appr, new __Panel_Linear_Setting_Item_Preference(
     			__txt("pref_add_node_remember", "Remember add node position"),

@@ -98,8 +98,8 @@
 			PREFERENCES.dialog_add_node_view        = 1;
 			PREFERENCES.dialog_add_node_grouping    = 2;
 			
-			PREFERENCES.dialog_add_node_w           = 600;
-			PREFERENCES.dialog_add_node_h           = 400;
+			PREFERENCES.dialog_add_node_width       = 600;
+			PREFERENCES.dialog_add_node_height      = 400;
 			PREFERENCES.dialog_add_node_search_high = true;
 			PREFERENCES.dialog_add_node_search_fav  = false;
 			PREFERENCES.dialog_add_node_search_typ  = true;
@@ -118,6 +118,7 @@
 		#endregion
 		
 		#region PANEL
+			PREFERENCES.panel_reset_view_on_display_refresh = true;
 			PREFERENCES.panel_layout_file                 = "__default";
 			
 			PREFERENCES.panel_graph_dragging              = MOD_KEY.alt;
@@ -448,9 +449,6 @@
 		PREFERENCES.window_fix_width   = PREFERENCES.window_width;
 		PREFERENCES.window_fix_height  = PREFERENCES.window_height;
 		
-		PREFERENCES.dialog_add_node_w *= disp;
-		PREFERENCES.dialog_add_node_h *= disp;
-		
 		if(disp > 1) PREFERENCES.theme = "default HQ";
 		
 		if(MAC) { // retina
@@ -629,7 +627,7 @@
 			
 			if(OS == os_macosx) {
 				if(RUN_IDE) {
-					PREFERENCES.display_scaling /= 2;
+					PREFERENCES.display_scaling = 1;
 					PREFERENCES.theme = "default Mac";
 				}
 				

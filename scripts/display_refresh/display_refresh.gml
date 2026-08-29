@@ -13,8 +13,10 @@ function display_refresh() {
 	window_refresh();
 	refreshPanel();
 		
-	if(PANEL_GRAPH)   PANEL_GRAPH.fullView();
-	if(PANEL_PREVIEW) PANEL_PREVIEW.fullView();
+	if(PREFERENCES.panel_reset_view_on_display_refresh) {
+		if(PANEL_GRAPH)   PANEL_GRAPH.fullView();
+		if(PANEL_PREVIEW) PANEL_PREVIEW.fullView();
+	}
 		
 	run_in(10, Render);
 	PREF_SAVE();

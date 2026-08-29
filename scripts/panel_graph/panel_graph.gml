@@ -749,6 +749,8 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
     #endregion
     
     function toCenterNode(_arr = nodes_list, _zoom = true) {
+    	printCallStack();
+    	
         if(!project.active) return; 
         
         if(array_empty(_arr)) {
@@ -3813,7 +3815,7 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
 	        var _zms  = $"x{graph_s_to}";
 	        var _zmw  = string_width(_zms) + ui(16);
 	        var _zmh  = string_height(_zms);
-	        var _zmx  = w;
+	        var _zmx  = w - THEME_VALUE.panel_toolbar_padding;
 	        var _zmc  = _zmsl? COLORS._main_text : COLORS._main_text_sub;
 	        if(tb_zoom_level.hovering) mouse_on_graph = false;
 	        
@@ -3839,7 +3841,7 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
 	        var _zms  = $"x{graph_s_to}";
 	        var _zmw  = string_width(_zms) + ui(8);
 	        var _zmh  = string_height(_zms);
-	        var _zmx  = w - ui(4);
+	        var _zmx  = w - THEME_VALUE.panel_toolbar_padding;
 	        var _zmy  = ovy;
 	        
 	        if(WIDGET_CURRENT == tb_zoom_level) {

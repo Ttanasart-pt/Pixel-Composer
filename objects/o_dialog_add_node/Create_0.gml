@@ -3,8 +3,8 @@ event_inherited();
 
 #region data
 	draggable = false;
-	dialog_w  = PREFERENCES.dialog_add_node_w;
-	dialog_h  = PREFERENCES.dialog_add_node_h;
+	dialog_w  = PREFERENCES.dialog_add_node_width;
+	dialog_h  = PREFERENCES.dialog_add_node_height;
 	volatile  = true;
 	destroy_on_click_out = true;
 	
@@ -1086,12 +1086,12 @@ event_inherited();
 	dialog_resizable = true;
 	dialog_w_min = ui(320);
 	dialog_h_min = ui(320);
-	dialog_w_max = ui(960);
-	dialog_h_max = ui(800);
+	dialog_w_max = min(ui(960), WIN_W - ui(32));
+	dialog_h_max = min(ui(800), WIN_H - ui(32));
 	
 	onResize = function() {
-		PREFERENCES.dialog_add_node_w = dialog_w;
-		PREFERENCES.dialog_add_node_h = dialog_h;
+		PREFERENCES.dialog_add_node_width = dialog_w;
+		PREFERENCES.dialog_add_node_height = dialog_h;
 	}
 #endregion
 

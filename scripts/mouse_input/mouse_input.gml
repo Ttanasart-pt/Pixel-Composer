@@ -219,8 +219,8 @@ function mouse_step() {
 		buffer_delete(_gestBuff);
 		
 		if(GESTURE_PAN_Y == 0) {
-			if(mouse_wheel_up())   MOUSE_WHEEL = -PREFERENCES.mouse_wheel_speed;
-			if(mouse_wheel_down()) MOUSE_WHEEL =  PREFERENCES.mouse_wheel_speed;
+			if(mouse_wheel_up())   MOUSE_WHEEL =  PREFERENCES.mouse_wheel_speed;
+			if(mouse_wheel_down()) MOUSE_WHEEL = -PREFERENCES.mouse_wheel_speed;
 			
 		} else MOUSE_WHEEL = GESTURE_PAN_Y * PREFERENCES.mouse_wheel_speed / 32;
 		
