@@ -628,6 +628,11 @@
 			} 
 			
 			if(OS == os_macosx) {
+				if(RUN_IDE) {
+					PREFERENCES.display_scaling /= 2;
+					PREFERENCES.theme = "default Mac";
+				}
+				
 				window_set_size(ww, hh);
 				mac_window_center(window_handle());
 				

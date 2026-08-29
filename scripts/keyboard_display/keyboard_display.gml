@@ -69,7 +69,7 @@ function KeyboardDisplay() constructor {
         __key(     "'",          222,  12,   3.1),
         __key( "Enter",           -1,  13,   3.1, 2),
          
-        __key( "Shift",     vk_shift,   0,   4.1, 2.5),
+        __key( MAC? "⇧":"Shift", vk_shift,   0,   4.1, 2.5),
         __key(     "Z",     ord("Z"),   2.5, 4.1),
         __key(     "X",     ord("X"),   3.5, 4.1),
         __key(     "C",     ord("C"),   4.5, 4.1),
@@ -80,7 +80,7 @@ function KeyboardDisplay() constructor {
         __key(     ",",          188,   9.5, 4.1),
         __key(     ".",          190,  10.5, 4.1),
         __key(     "/",          191,  11.5, 4.1),
-        __key( "Shift",     vk_shift,  12.5, 4.1, 2.5),
+        __key( MAC? "⇧":"Shift", vk_shift,  12.5, 4.1, 2.5),
          
         //////////////////////////////////////////////////////
         

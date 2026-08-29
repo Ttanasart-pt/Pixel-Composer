@@ -52,10 +52,15 @@
     	printDebug($"resources_pname: {resources_pname}");
 		
 		// if running from the IDE change working directory to:
-		if (GM_build_type == "run") {
-		    var _dirr = filename_path(parameter_string(1));
-		    _dirr += "PixelComposer/PixelComposer/Supporting Files/" // Also noted that most folders inside are doubled (e.g. pack/pack/)
-		    directory_set_current_working(_dirr); 
+		if (RUN_IDE) {
+		    var _reszip = parameter_string(1);
+		    var _resdir = filename_dir(_reszip);
+		    zip_unzip(_reszip, _resdir);
+		    
+		    var wdir = filename_combine(_resdir, "assets"); // Also noted that most folders inside are doubled (e.g. pack/pack/)
+		    directory_set_current_working(wdir); 
+		    
+		    printDebug($"wdir: {wdir}");
 		} 
 		
 		// if "/Path/To/YourAppBundle.app/Contents/MacOS/YourExe" and "/Path/To/YourAppBundle.app/Contents/Resources/" exists
@@ -65,7 +70,7 @@
 		}
 		
 		APP_DIRECTORY = working_directory;
-		DIRECTORY     = game_save_id;
+		DIRECTORY     = string_replace(game_save_id, "com.yoyogames.macyoyorunner", "com.MakhamDev.PixelComposer");
 	    APP_LOCATION  = working_directory;
 	    
 		PREFERENCES_DIR = $"{DIRECTORY}Preferences/{PREF_VERSION}/";
