@@ -273,14 +273,18 @@ function Panel_Test() : PanelContent() constructor {
 				case 4 : 
 					if(RENDERING != undefined) break;
 				
-					if(save_file && PROJECT.path != "") SAVE_AT(PROJECT, PROJECT.path);
+					if(save_file && PROJECT.path != "") {
+						var _tdir = filenames_combine(filename_dir(test_dir), "vers", BUILD_NUMBER);
+						var _path = string_replace(PROJECT.path, test_dir, _tdir);
+						SAVE_AT(PROJECT, _path);
+					}
 					
 					closeProject(PROJECT);
 					test_result[test_index] = [ ASSERT_AMOUNT, ASSERT_PASSED ];
 					
 					test_result_total.assertion      += ASSERT_AMOUNT;
 					test_result_total.assertion_pass += ASSERT_PASSED;
-
+					
 					if(ASSERT_AMOUNT == ASSERT_PASSED) test_result_total.project_pass++;
 					
 					ASSERT_AMOUNT = 0;

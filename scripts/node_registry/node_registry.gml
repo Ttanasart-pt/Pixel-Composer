@@ -25,7 +25,9 @@ function NodeObject(_name, _node, _tooltip = "") constructor {
 	nodekey = "";
 	context = noone;
 	allow_outside = false;
-	supported_os  = true;
+	
+	supported_os    = [];
+	is_supported_os = true;
 	
 	spr     = undefined;
 	sprPath = undefined;
@@ -163,6 +165,11 @@ function NodeObject(_name, _node, _tooltip = "") constructor {
 	}
 	
 	static build = function(_x = 0, _y = 0, _group = PANEL_GRAPH.getCurrentContext(), _param = {}, _skip_context = false) {
+		if(!is_supported_os) {
+			noti_warning($"{name} node not supported on the current operating system.");
+			return noone;
+		}
+		
 		if(!allow_outside && !_skip_context && NOT_LOAD && context != noone && !array_exists(context, instanceof(_group))) {
 			noti_warning($"Cannot create node outside context.");
 			return noone;
@@ -419,10 +426,11 @@ function NodeObject(_name, _node, _tooltip = "") constructor {
 			setParam(_data.params);
 		
 		if(has(_data, "os") && is_array(_data.os)) {
+			supported_os = _data.os;
 			switch(OS) {
-				case os_windows : supported_os = array_exists(_data.os, "Windows"); break;
-				case os_linux   : supported_os = array_exists(_data.os, "Linux");   break;
-				case os_macosx  : supported_os = array_exists(_data.os, "MacOS");   break;
+				case os_windows : is_supported_os = array_exists(_data.os, "Windows"); break;
+				case os_linux   : is_supported_os = array_exists(_data.os, "Linux");   break;
+				case os_macosx  : is_supported_os = array_exists(_data.os, "MacOS");   break;
 			}
 		}
 		

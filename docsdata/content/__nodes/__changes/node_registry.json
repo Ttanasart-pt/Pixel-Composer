@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.9.103",
+    "changes": [
+      {
+        "date": "2026-08-29T01:17:56.637Z",
+        "node": "",
+        "commit": "Add warning popup when trying to load project with unsupported node (basically just HLSL node on non-Windows OSes)."
+      }
+    ]
+  },
+  {
     "version": "1.21.9.102",
     "changes": [
       {
