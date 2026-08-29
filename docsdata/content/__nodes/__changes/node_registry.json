@@ -6,6 +6,11 @@
         "date": "2026-08-29T01:17:56.637Z",
         "node": "",
         "commit": "Add warning popup when trying to load project with unsupported node (basically just HLSL node on non-Windows OSes)."
+      },
+      {
+        "date": "2026-08-29T05:23:35.724Z",
+        "node": "",
+        "commit": "--hlsl os check"
       }
     ]
   },

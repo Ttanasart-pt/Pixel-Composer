@@ -165,11 +165,9 @@ function NodeObject(_name, _node, _tooltip = "") constructor {
 	}
 	
 	static build = function(_x = 0, _y = 0, _group = PANEL_GRAPH.getCurrentContext(), _param = {}, _skip_context = false) {
-		if(!is_supported_os) {
+		if(!is_supported_os)
 			noti_warning($"{name} node not supported on the current operating system.");
-			return noone;
-		}
-		
+			
 		if(!allow_outside && !_skip_context && NOT_LOAD && context != noone && !array_exists(context, instanceof(_group))) {
 			noti_warning($"Cannot create node outside context.");
 			return noone;

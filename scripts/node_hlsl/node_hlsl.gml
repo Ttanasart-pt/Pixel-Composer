@@ -276,6 +276,8 @@ struct PixelShaderOutput {
 	////- Shader
 	
 	static refreshShader = function() {
+		if(OS != os_windows) return;
+		
 		var  vs  = inputs[0].getValue();
 		var  fs  = inputs[1].getValue();
 		var _lib = inputs[3].getValue();
@@ -376,6 +378,7 @@ struct PixelShaderOutput {
 	}
 	
 	static processData = function(_output, _data, _array_index = 0, _frame = CURRENT_FRAME) {
+		if(OS != os_windows) return;
 		onCodeEdited();
 		
 		var _surf = _data[2];
