@@ -126,8 +126,8 @@ function mouse_step() {
 	if(MOUSE_GLOBAL) global_mouse_step();
 	
 	MOUSE_WHEEL      = 0;
-	if(mouse_wheel_up())   MOUSE_WHEEL =  1 * PREFERENCES.mouse_wheel_speed;
-	if(mouse_wheel_down()) MOUSE_WHEEL = -1 * PREFERENCES.mouse_wheel_speed;
+	if(mouse_wheel_up())   MOUSE_WHEEL =  PREFERENCES.mouse_wheel_speed;
+	if(mouse_wheel_down()) MOUSE_WHEEL = -PREFERENCES.mouse_wheel_speed;
 	
 	MOUSE_WHEEL_H    = 0; // mouse_wheel_get_h();
 	
@@ -171,8 +171,8 @@ function mouse_step() {
 			MOUSE_EVENT.mpress   |= winwin_mouse_check_button_pressed(  win, mb_middle );
 			MOUSE_EVENT.mrelease |= winwin_mouse_check_button_released( win, mb_middle );
 			
-			if(winwin_mouse_wheel_up(win))   MOUSE_WHEEL =  1;
-			if(winwin_mouse_wheel_down(win)) MOUSE_WHEEL = -1;
+			if(winwin_mouse_wheel_up(win))   MOUSE_WHEEL =  PREFERENCES.mouse_wheel_speed;
+			if(winwin_mouse_wheel_down(win)) MOUSE_WHEEL = -PREFERENCES.mouse_wheel_speed;
 		}
 		
 	} else {
@@ -218,7 +218,11 @@ function mouse_step() {
 		GESTURE_PINCH = buffer_read(_gestBuff, buffer_f64) * PREFERENCES.gesture_zoom_sensitivity;
 		buffer_delete(_gestBuff);
 		
-		MOUSE_WHEEL = GESTURE_PAN_Y * PREFERENCES.mouse_wheel_speed / 32;
+		if(GESTURE_PAN_Y == 0) {
+			if(mouse_wheel_up())   MOUSE_WHEEL = -PREFERENCES.mouse_wheel_speed;
+			if(mouse_wheel_down()) MOUSE_WHEEL =  PREFERENCES.mouse_wheel_speed;
+			
+		} else MOUSE_WHEEL = GESTURE_PAN_Y * PREFERENCES.mouse_wheel_speed / 32;
 		
 		// print($"[{_gest}] drag_x: {drag_x}", $"drag_y: {drag_y}", $"drag_p: {drag_p}");
 	}
