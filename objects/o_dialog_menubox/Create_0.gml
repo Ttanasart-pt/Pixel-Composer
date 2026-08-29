@@ -130,8 +130,11 @@ event_inherited();
 			case fa_right:	dialog_x = round(max(dialog_x - dialog_w, 2)); break;
 		}
 		
-		dialog_w = ceil(dialog_w + padding * 2);
-		dialog_h = ceil(dialog_h + padding * 2);
+		// dialog_w = ceil(dialog_w + padding * 2);
+		// dialog_h = ceil(dialog_h + padding * 2);
+		
+		dialog_w = ceil(dialog_w);
+		dialog_h = ceil(dialog_h);
 		
 		mouse_init_inside = point_in_rectangle(mouse_mx, mouse_my, dialog_x, dialog_y, dialog_x + dialog_w, dialog_y + dialog_h);
 		init_rclick = !mouse_init_inside && mouse_rclick();

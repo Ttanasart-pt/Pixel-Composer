@@ -140,9 +140,7 @@ function Node_Image_mp4(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	function updatePaths(path = path_current) {
 		if(path == -1) return false;
 		
-		edit_time = file_get_modify_s(path_current);
 		path_current = path;
-		
 		var ext   = string_lower(filename_ext(path));
 		if(ext != ".mp4") return false;
 		
@@ -160,31 +158,37 @@ function Node_Image_mp4(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		ffmpeg = libCheck("FFmpeg");
 		
 		if(ffmpeg == -1) {
-			array_insert_unique(input_display_list, 0, mp4libLabel);
+			if(!MAC) array_insert_unique(input_display_list, 0, mp4libLabel);
 			return;
 			
 		} else {
 			var ldir = ffmpeg[0];
 			ffmpeg   = ffmpeg[1];
 			
-			if(filename_dir(ffmpeg) != ldir) {
-				mp4libSub = string_replace(filename_dir(ffmpeg), ldir, "");
-				array_insert_unique(input_display_list, 0, mp4libLabel);
-				
-			} else 
-				array_remove(input_display_list, mp4libLabel);
+			if(!MAC) {
+				if(filename_dir(ffmpeg) != ldir) {
+					mp4libSub = string_replace(filename_dir(ffmpeg), ldir, "");
+					array_insert_unique(input_display_list, 0, mp4libLabel);
+					
+				} else 
+					array_remove(input_display_list, mp4libLabel);
+			}
 		}
 		
 	}
 	
 	static mp4init = function() {
+		checkLib();
+		
 		if(ffmpeg == -1) return;
 		if(file_reading) return;
 		
+		logNode($"==== metadata ====")
 		var _filemod = file_get_modify_s(path_current);
 		
 		shell_cmd = $"-v error -stats -i \"{path_current}\" -map 0:v:0 -f null NUL";
 		frame_res = shell_execute(ffmpeg, shell_cmd)
+		logNode($"raw_result: {frame_res}")
 		
 		if(!string_pos("frame=", frame_res)) { noti_warning("Can't read file metadata."); return; }
 		
@@ -196,12 +200,16 @@ function Node_Image_mp4(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		frame_counts_raw = array_safe_get_fast(res, ind + 1);
 		frame_counts     = toNumber(frame_counts_raw);
 		
+		logNode($"frame_counts: {frame_counts}")
+		
 		file_reading     = true;
 		file_hash        = md5_string_unicode($"{path_current}{_filemod}");
 		file_read_cursor =  1;
 		file_reader_pid  = -1;
 		var targ_dir = $"{DIRECTORY}Cache/{file_hash}";
 		var cached   = directory_exists(targ_dir);
+		
+		logNode($"cache_directory: {targ_dir}")
 		
 		if(cached) {
 			var cacheAmo = directory_file_count(targ_dir);
@@ -210,6 +218,8 @@ function Node_Image_mp4(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 				cached = false;
 			}
 		}
+		
+		logNode($"cache_stat: {cached}")
 		
 		if(!cached) { // no cached frames
 			directory_verify(targ_dir);

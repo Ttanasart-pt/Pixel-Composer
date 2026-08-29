@@ -344,11 +344,11 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			webp      = "/opt/homebrew/bin/webpmux";
 			gifski    = "/opt/homebrew/bin/gifski";
 			
-			var _w = function(str,cmd) /*=>*/ {return $"No {str} installed, please install {str} with homebrew '{cmd}'."};
+			var _w = function(str,cmd) /*=>*/ {return $"No {str} installed, please install {str} with homebrew 'brew install {cmd}'."};
 			
-			if(!file_exists_empty(converter)) noti_warning(_w("ImageMagick", "brew install imagemagick"), noone, self);
-			if(!file_exists_empty(webp))      noti_warning(_w("webp",        "brew install webp"),        noone, self);
-			if(!file_exists_empty(gifski))    noti_warning(_w("gifski",      "brew install gifski"),      noone, self);
+			if(!file_exists_empty(converter)) noti_warning(_w("ImageMagick", "imagemagick"), noone, self);
+			if(!file_exists_empty(webp))      noti_warning(_w("webp",        "webp"),        noone, self);
+			if(!file_exists_empty(gifski))    noti_warning(_w("gifski",      "gifski"),      noone, self);
 			break;
 	}
 		
@@ -868,10 +868,10 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 					notify($"Export gif at {target_path}", true, target_path);
 				break;
 				
-				case ".webp" : renderWebp(directory + "/",      target_path); break;
-				case ".mp4"  : renderMp4( directory + "/",      target_path); break;
-				case ".apng" : renderApng(directory + "/",      target_path); break;
-				case ".webm" : renderWebm(directory + "/",      target_path); break;
+				case ".webp" : renderWebp(directory + "/", target_path); break;
+				case ".mp4"  : renderMp4( directory + "/", target_path); break;
+				case ".apng" : renderApng(directory + "/", target_path); break;
+				case ".webm" : renderWebm(directory + "/", target_path); break;
 			}
 		}
 		
@@ -886,14 +886,14 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		
 		if(ffmpeg == -1) {
 			mp4libSub = "";
-			array_insert_unique(input_display_list, 0, mp4libLabel);
+			if(!MAC) array_insert_unique(input_display_list, 0, mp4libLabel);
 			return;
 			
 		} else {
 			var ldir = ffmpeg[0];
 			ffmpeg   = ffmpeg[1];
 			
-			if(OS != os_macosx) {
+			if(!MAC) {
 				if(filename_dir(ffmpeg) != ldir) {
 					mp4libSub = string_replace(filename_dir(ffmpeg), ldir, "");
 					array_insert_unique(input_display_list, 0, mp4libLabel);

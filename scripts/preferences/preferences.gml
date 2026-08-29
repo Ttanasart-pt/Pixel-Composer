@@ -803,7 +803,7 @@
 					_tfile = "./bin/ffmpeg";
 					break;
 				
-				case os_macosx  : _link  = "brew install ffmpeg"; break;
+				case os_macosx  : _link = "brew install ffmpeg"; break;
 			}
 		}
 		

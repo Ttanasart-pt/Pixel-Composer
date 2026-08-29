@@ -113,19 +113,11 @@
 			if(mouse_lrelease()) dialog_dragging = false;
 		}
 		
-		var mx = mouse_rx;
-		var my = mouse_ry;
+		var mx = MULTI_WINDOWS? mouse_rx : mouse_mx;
+		var my = MULTI_WINDOWS? mouse_ry : mouse_my;
 		
-		var diax = WIN_X + dialog_x;
-		var diay = WIN_Y + dialog_y;
-		
-		if(OS != os_windows) {
-			mx = mouse_mx;
-			my = mouse_my;
-			
-			diax = dialog_x;
-			diay = dialog_y;
-		}
+		var diax = MULTI_WINDOWS? WIN_X + dialog_x : dialog_x;
+		var diay = MULTI_WINDOWS? WIN_Y + dialog_y : dialog_y;
 		
 		var _x0 = diax;
 		var _y0 = diay;
@@ -205,8 +197,11 @@
 		}
 		
 		if(sHOVER) {
-			var diax = WIN_X + dialog_x;
-			var diay = WIN_Y + dialog_y;
+			var mx = MULTI_WINDOWS? mouse_rx : mouse_mx;
+			var my = MULTI_WINDOWS? mouse_ry : mouse_my;
+			
+			var diax = MULTI_WINDOWS? WIN_X + dialog_x : dialog_x;
+			var diay = MULTI_WINDOWS? WIN_Y + dialog_y : dialog_y;
 			
 			var _x0 = diax;
 			var _y0 = diay;
@@ -214,11 +209,11 @@
 			var _y1 = diay + dialog_h;
 			var _sel_mask = 0;
 			
-			if(point_in_rectangle(mouse_rx, mouse_ry, _x0, _y0, _x1, _y1)) {
-				if(distance_to_line(mouse_rx, mouse_ry, _x1, _y0, _x1, _y1) < DIALOG_PAD) _sel_mask |= 1 << 0;
-				if(distance_to_line(mouse_rx, mouse_ry, _x0, _y1, _x1, _y1) < DIALOG_PAD) _sel_mask |= 1 << 1;
-				if(distance_to_line(mouse_rx, mouse_ry, _x0, _y0, _x0, _y1) < DIALOG_PAD) _sel_mask |= 1 << 2;
-				if(distance_to_line(mouse_rx, mouse_ry, _x0, _y0, _x1, _y0) < DIALOG_PAD) _sel_mask |= 1 << 3;
+			if(point_in_rectangle(mx, my, _x0, _y0, _x1, _y1)) {
+				if(distance_to_line(mx, my, _x1, _y0, _x1, _y1) < DIALOG_PAD) _sel_mask |= 1 << 0;
+				if(distance_to_line(mx, my, _x0, _y1, _x1, _y1) < DIALOG_PAD) _sel_mask |= 1 << 1;
+				if(distance_to_line(mx, my, _x0, _y0, _x0, _y1) < DIALOG_PAD) _sel_mask |= 1 << 2;
+				if(distance_to_line(mx, my, _x0, _y0, _x1, _y0) < DIALOG_PAD) _sel_mask |= 1 << 3;
 			}
 			
 			if(_sel_mask != 0) {

@@ -1,6 +1,8 @@
 #region global
 	#macro FILE_SEL_IMAGE "Image (.png, .jpg, .bmp, .webp)|*.png;*.jpg;*.bmp;*.webp"
 	#macro FILE_EXT_IMAGE ".png;.jpg;.jpeg;.bmp;.webp"
+	
+	#macro TEMPDIR filepath_resolve(PREFERENCES.temp_path)
 #endregion
 
 	////- Verify
@@ -230,6 +232,7 @@ function get_save_filename_compat(ext, fname, caption = "Save as", _dir = PREFER
 	////- File name
 	
 function filepath_resolve(path, refPath = PROJECT? PROJECT.path : "") {
+	var _path = path;
 	path = string_replace_all(path, "%DIR%/", DIRECTORY);
 	path = string_replace_all(path, "%APP%/", APP_LOCATION);
 	path = string_replace_all(path, "\\", "/");
@@ -241,7 +244,7 @@ function filepath_resolve(path, refPath = PROJECT? PROJECT.path : "") {
 		if(string_starts_with(pth, "./")) {
 			path = string_replace(path, "./", dir + "/");
 			
-		} else {
+		} else if(string_starts_with(pth, "../")) {
 			while(string_starts_with(pth, "../")) {
 				dir = filename_dir(dir);
 				pth = string_replace(pth, "../", ""); 

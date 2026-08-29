@@ -114,8 +114,6 @@ gml_pragma("UnityBuild", "true");
 	
 	#macro super static_get(static_get(self))
 	
-	#macro TEMPDIR filepath_resolve(PREFERENCES.temp_path)
-	
 	#macro NOT_LOAD !LOADING && !APPENDING
 	
 	#macro WIN_X window_get_x()
