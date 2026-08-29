@@ -13,7 +13,7 @@
 		weight   = _weight;
 		
 		function clone() { return new __LinePoint(x, y, prog, progCrop, weight); }
-		function toString() { return $"[{prog}]({x},{y})"; }
+		function toString() { return $"[{prog}/{progCrop}]({x},{y},{weight})"; }
 	}
 	
 #endregion
@@ -182,6 +182,11 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	
 	static processData = function(_outData, _data, _array_index) {
 		#region data
+			// print("========================================================================")
+			// for( var i = 0, n = array_length(_data); i < n; i++ )
+			// 	print(i, inputs[i].name, _data[i]);
+			// print("========================================================================\n")
+			
 			var _seed     = _data[39];
 			
 			var _bg       = _data[ 1];
@@ -432,8 +437,8 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 					
 					lines = array_verify(lines, lineCount);
 					
-					var _useDistance = _fixL && struct_has(_pat, "getLength");
-					var _lineAmo     =  0;
+					var dist = _fixL && has(_pat, "getLength");
+					var lamo =  0;
 					var wmin =  infinity;
 					var wmax = -infinity;
 					
@@ -443,14 +448,14 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 					
 					for( var i = 0; i < lineCount; i++ ) {
 						var _pathRaw = _pat.getLength(i);
-						_pathLength  = _useDistance? _pathRaw : 1;
+						_pathLength  = dist? _pathRaw : 1;
 						if(_pathRaw <= 0) continue;
 						
-						var _pamo = _useDistance? ceil(_pathLength / _segL) + 1 : _seg;
+						var _pamo = dist? ceil(_pathLength / _segL) + 1 : _seg;
 						points = array_create(_pamo);
 						
 						for( var j = 0; j < _pamo; j++ ) {
-							if(_useDistance) {
+							if(dist) {
 								_pl   = min(j * _segL, _pathLength);
 								 p    = _pat.getPointDistance(_pl, i, p);
 								_prog = _pl / _pathLength; 
@@ -559,14 +564,14 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 						if(_loop)   array_push(points, points[0]);
 						if(_ratInv) array_reverse_ext(points);
 						
-						lines[_lineAmo]     = points;
-						line_data[_lineAmo] = { length: _pathLength };
+						lines[lamo]     = points;
+						line_data[lamo] = { length: _pathLength };
 						
-						_lineAmo++;
+						lamo++;
 					}
 					
-					array_resize(lines,     _lineAmo);
-					array_resize(line_data, _lineAmo);
+					array_resize(lines,     lamo);
+					array_resize(line_data, lamo);
 					
 					if(wmax == wmin) { wmin = 0; wmax = 1; }
 					
@@ -788,6 +793,8 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 					shader_set_i("sampleMode", getAttribute("oversample"));
 					
 					shader_set_i("widthPass",  false   );
+					shader_set_i("useTexture", _useTex );
+					
 					shader_set_2("position",   _texPos );
 					shader_set_f("rotation",   _texRot );
 					shader_set_2("scale",      _texSca );
@@ -891,7 +898,8 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 							var _nny = p2.y + _pady;
 							
 							_nd1 = point_direction(_nx, _ny, _nnx, _nny);
-							_nd = _nd0 + angle_difference(_nd1, _nd0) / 2;
+							_nd  = _nd0 + angle_difference(_nd1, _nd0) / 2;
+							
 						} else 
 							_nd = _nd0;
 						
@@ -902,7 +910,7 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 							var _d0y = lengthdir_y(_ow / 2, _od + 90);
 							var _d1x = lengthdir_x(_nw / 2, _nd + 90);
 							var _d1y = lengthdir_y(_nw / 2, _nd + 90);
-
+							
 							var ox0 = _ox + _d0x;
 							var oy0 = _oy + _d0y;
 							var nx0 = _nx + _d1x;
@@ -931,11 +939,13 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 							var ly0 = _oy * _aa;
 							var lx1 = _nx * _aa;
 							var ly1 = _ny * _aa;
+							
 							var lw0 = _ow * _aa;
 							var lw1 = _nw * _aa;
+							
 							var la0 = _od +  90;
 							var la1 = _nd +  90;
-							                       
+	                    	
 							var _d0x = lengthdir_x(lw0 / 2, la0);
 							var _d0y = lengthdir_y(lw0 / 2, la0);
 							var _d1x = lengthdir_x(lw1 / 2, la1);

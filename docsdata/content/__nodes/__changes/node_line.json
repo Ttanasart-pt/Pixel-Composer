@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.9.103",
+    "changes": [
+      {
+        "date": "2026-08-29T08:07:14.477Z",
+        "node": "",
+        "commit": "**Draw Line**: Fix \"Scale Texture to Length\" cause rendering issue even when not using texture."
+      }
+    ]
+  },
+  {
     "version": "1.21.8.006",
     "changes": [
       {

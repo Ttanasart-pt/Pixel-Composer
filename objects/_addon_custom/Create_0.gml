@@ -14,6 +14,12 @@ event_inherited();
 		name      = filename_name_only(directory);
 		ready     = false;
 		thread    = lua_create();
+		
+		if(thread == 0) {
+			instance_destroy();
+			return;
+		}
+		
 		__addon_lua_setup(thread, self);
 		
 		var propPath  = $"{directory}/meta.json";

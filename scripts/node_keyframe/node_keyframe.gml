@@ -847,7 +847,7 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 					
 				}
 			} else if(!prop.accept_array && is_array(_val)) {
-				_val = 0;
+				_val = base;
 			}
 			
 			// if(is(node, Node_Particle) && prop.name == "Rotation Type") print($"Deserialize {prop.name} = {_keyframe}, {_val}, {base}, {prop.def_val} ");

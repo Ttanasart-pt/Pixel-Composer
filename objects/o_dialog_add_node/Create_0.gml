@@ -1090,7 +1090,7 @@ event_inherited();
 	dialog_h_max = min(ui(800), WIN_H - ui(32));
 	
 	onResize = function() {
-		PREFERENCES.dialog_add_node_width = dialog_w;
+		PREFERENCES.dialog_add_node_width  = dialog_w;
 		PREFERENCES.dialog_add_node_height = dialog_h;
 	}
 #endregion

@@ -130,6 +130,8 @@ varying vec2 v_vTexcoord;
 varying vec4 v_vColour;
 
 uniform int   widthPass;
+uniform int   useTexture;
+
 uniform vec2  position;
 uniform float rotation;
 uniform vec2  scale;
@@ -196,6 +198,11 @@ void main() {
 	pos.y = pos.x * sin(rotation) + pos.y * cos(rotation);
 	pos = pos * scale + .5 - position;
 	
-    gl_FragColor = v_vColour * sampleTexture( gm_BaseTexture, pos );
+	if(useTexture == 1)
+    	gl_FragColor = v_vColour * sampleTexture( gm_BaseTexture, pos );
+    else 
+    	gl_FragColor = v_vColour;
+    	
+    // gl_FragColor = sampleTexture( gm_BaseTexture, pos );
     // gl_FragColor = vec4( pos, 0., 1. );
 }

@@ -16,6 +16,11 @@
         "date": "2026-08-29T06:16:47.036Z",
         "node": "",
         "commit": "Add checks for preventing loading array data to value with 'rejectArray' tag."
+      },
+      {
+        "date": "2026-08-29T08:07:14.470Z",
+        "node": "Draw Line",
+        "commit": "**Draw Line**: Fix \"Scale Texture to Length\" cause rendering issue even when not using texture."
       }
     ]
   },

@@ -303,6 +303,11 @@ function __initLua() {
 
 function lua_create() {
 	var state = lua_state_create();
+	if(!lua_state_exists(state)) {
+		noti_warning("Lua initialization error");
+		return 0;
+	}
+	
 	var k = ds_map_find_first(LUA_API);
 	
 	repeat(ds_map_size(LUA_API)) {
