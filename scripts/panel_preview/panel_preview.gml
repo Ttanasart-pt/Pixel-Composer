@@ -877,8 +877,6 @@ function Panel_Preview() : PanelContent() constructor {
     }
     
     static dragCanvas = function() {
-    	var useGesture = GESTURE_USE && OS == os_macosx;
-    	
         if(canvas_dragging) {
         	if(!MOUSE_WRAPPING) {
                 var dx = mx - canvas_drag_mx;
@@ -928,59 +926,58 @@ function Panel_Preview() : PanelContent() constructor {
         var _canvas_s = canvas_s;
         
         if(pHOVER && canvas_hover) {
-	        if(useGesture) {
+	        if(GESTURE_USE) {
 	        	canvas_x += GESTURE_PAN_X;
 	            canvas_y += GESTURE_PAN_Y;
+	        	canvas_s  = clamp(canvas_s * (1 + GESTURE_PINCH), 0.10, 64);
 	        	
-	        	canvas_s = clamp(canvas_s * (1 + GESTURE_PINCH), 0.10, 64);
-	        	
-	        } else {
-	            var _doDragging = false;
-	            var _doZooming  = false;
-	            
-	            if(canvas_dragging_key) CURSOR = cr_size_all;
-	            
-	            if(mouse_press(PREFERENCES.pan_mouse_key)) {
-	                _doDragging = true;
-	                canvas_drag_key = PREFERENCES.pan_mouse_key;
-	                
-	            } else if(mouse_lpress() && canvas_dragging_key) {
-	                _doDragging = true;
-	                canvas_drag_key = mb_left;
-	                
-	            } else if(mouse_lpress() && canvas_zooming_key) {
-	                _doZooming = true;
-	                canvas_drag_key = mb_left;
-	            }
-	            
-	            if(_doDragging) {
-	                canvas_dragging = true;    
-	                canvas_drag_mx  = mx;
-	                canvas_drag_my  = my;
-	                canvas_drag_sx  = canvas_x;
-	                canvas_drag_sy  = canvas_y;
-	            }
-	            
-	            if(_doZooming) {
-	                canvas_zooming  = true;    
-	                canvas_zoom_mx  = mx;
-	                canvas_zoom_my  = my;
-	                canvas_zoom_m   = my;
-	                canvas_zoom_s   = canvas_s;
-	            }
-	            
-	            var inc = .1;
-	                 if(canvas_s > 16) inc =  2;
-	            else if(canvas_s >  8) inc =  1;
-	            else if(canvas_s >  3) inc = .50;
-	            else if(canvas_s >  1) inc = .25;
-	            
-	            if(!key_mod_press_any() && MOUSE_WHEEL != 0) {
-	            	if(frac(MOUSE_WHEEL) == 0) canvas_s = clamp(value_snap(canvas_s + MOUSE_WHEEL * inc, inc), 0.10, 1024);
-	            	else                       canvas_s = clamp(canvas_s + MOUSE_WHEEL * inc, 0.10, 1024);
-	            }
-	            
 	        }
+	        
+            var _doDragging = false;
+            var _doZooming  = false;
+            
+            if(canvas_dragging_key) CURSOR = cr_size_all;
+            
+            if(mouse_press(PREFERENCES.pan_mouse_key)) {
+                _doDragging = true;
+                canvas_drag_key = PREFERENCES.pan_mouse_key;
+                
+            } else if(mouse_lpress() && canvas_dragging_key) {
+                _doDragging = true;
+                canvas_drag_key = mb_left;
+                
+            } else if(mouse_lpress() && canvas_zooming_key) {
+                _doZooming = true;
+                canvas_drag_key = mb_left;
+            }
+            
+            if(_doDragging) {
+                canvas_dragging = true;    
+                canvas_drag_mx  = mx;
+                canvas_drag_my  = my;
+                canvas_drag_sx  = canvas_x;
+                canvas_drag_sy  = canvas_y;
+            }
+            
+            if(_doZooming) {
+                canvas_zooming  = true;    
+                canvas_zoom_mx  = mx;
+                canvas_zoom_my  = my;
+                canvas_zoom_m   = my;
+                canvas_zoom_s   = canvas_s;
+            }
+            
+            var inc = .1;
+                 if(canvas_s > 16) inc =  2;
+            else if(canvas_s >  8) inc =  1;
+            else if(canvas_s >  3) inc = .50;
+            else if(canvas_s >  1) inc = .25;
+            
+            if(!key_mod_press_any() && MOUSE_WHEEL != 0) {
+            	if(frac(MOUSE_WHEEL) == 0) canvas_s = clamp(value_snap(canvas_s + MOUSE_WHEEL * inc, inc), 0.10, 1024);
+            	else                       canvas_s = clamp(canvas_s + MOUSE_WHEEL * inc, 0.10, 1024);
+            }
+            
         }
 	        
         if(_canvas_s != canvas_s) {

@@ -82,14 +82,16 @@ function KeyboardDisplay() constructor {
         __key(     "/",          191,  11.5, 4.1),
         __key( "Shift",     vk_shift,  12.5, 4.1, 2.5),
          
-        __key(  "Ctrl",   vk_control,     0,   5.1),
-        __key(   "Win",           -1,     1,   5.1),
-        __key(   "Alt",       vk_alt,     2,   5.1),
-        __key(      "",     vk_space,     3,   5.1, 8),
-        __key(   "Alt",       vk_alt,    11,   5.1),
-        __key(   "Win",           -1,    12,   5.1),
-        __key(    "Fn",           -1,    13,   5.1),
-        __key(  "Ctrl",   vk_control,    14,   5.1),
+        //////////////////////////////////////////////////////
+        
+        // __key(  "Ctrl",   vk_control,     0,   5.1),
+        // __key(   "Win",           -1,     1,   5.1),
+        // __key(   "Alt",       vk_alt,     2,   5.1),
+        // __key(      "",     vk_space,     3,   5.1, 8),
+        // __key(   "Alt",       vk_alt,    11,   5.1),
+        // __key(   "Win",           -1,    12,   5.1),
+        // __key(    "Fn",           -1,    13,   5.1),
+        // __key(  "Ctrl",   vk_control,    14,   5.1),
         
         //////////////////////////////////////////////////////
         
@@ -131,6 +133,37 @@ function KeyboardDisplay() constructor {
         __key(      ".",  vk_decimal,     20.2, 5.1),
         
     ];
+    
+    switch(OS) {
+        case os_windows : 
+        case os_linux :
+            array_append(keys, [
+                __key(  "Ctrl",   vk_control,     0,   5.1),
+                __key(   "Win",           -1,     1,   5.1),
+                __key(   "Alt",       vk_alt,     2,   5.1),
+                __key(      "",     vk_space,     3,   5.1, 8),
+                __key(   "Alt",       vk_alt,    11,   5.1),
+                __key(   "Win",           -1,    12,   5.1),
+                __key(    "Fn",           -1,    13,   5.1),
+                __key(  "Ctrl",   vk_control,    14,   5.1),
+            ]);
+            break;
+            
+        case os_macosx :
+            array_append(keys, [
+                __key(  "Fn",           -1,     0,   5.1),
+                __key(  "⌃",    vk_control,     1,   5.1),
+                __key(  "⌥",        vk_alt,     2,   5.1),
+                __key(  "⌘",    vk_command,     3,   5.1),
+                __key(  "",       vk_space,     4,   5.1, 5),
+                
+                __key(   "⌘",   vk_command,    11,   5.1),
+                __key(   "⌥",       vk_alt,    12,   5.1),
+            ]);
+            break;
+            
+        
+    }
     
     width  = 22.2;
     height = 6.1;

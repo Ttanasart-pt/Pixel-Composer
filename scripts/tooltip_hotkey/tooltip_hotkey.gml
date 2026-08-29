@@ -11,10 +11,10 @@ function tooltipHotkey(_text, context = undefined, name = undefined) constructor
 		var keyStr = hotkey? hotkey.getKeyName() : "";
 		if(keyStr == "") { draw_tooltip_text(text); return; }
 		
-		draw_set_font(f_p2);
+		draw_set_font(f_hotkey);
 		var _w1 = string_width(text);
 		
-		draw_set_font(f_p2);
+		draw_set_font(f_hotkey);
 		var _w2 = string_width(keyStr);
 		
 		var tw = min(WIN_W - ui(32), _w1 + ui(24) + _w2);
@@ -25,10 +25,10 @@ function tooltipHotkey(_text, context = undefined, name = undefined) constructor
 		var thh = th + pd * 2;
 		
 		TOOLTIP_SURFACE = surface_verify(TOOLTIP_SURFACE, tww, thh);
-		surface_set_shader(TOOLTIP_SURFACE);
+		surface_set_shader(TOOLTIP_SURFACE, noone);
 			draw_sprite_stretched(THEME.tooltip, 0, 0, 0, tww, thh);
 			
-			draw_set_text(f_p2, fa_left, fa_top, COLORS._main_text);
+			draw_set_text(f_hotkey, fa_left, fa_top, COLORS._main_text);
 			draw_set_color(COLORS._main_text);
 			BLEND_ADD
 			draw_text_line(pd, pd, text, -1, tw);
@@ -48,10 +48,10 @@ function tooltipKey(_text, _keyStr) constructor {
 	static drawTooltip = function() {
 		if(keyStr == "") { draw_tooltip_text(text); return; }
 		
-		draw_set_font(f_p2);
+		draw_set_font(f_hotkey);
 		var _w1 = string_width(text);
 		
-		draw_set_font(f_p2);
+		draw_set_font(f_hotkey);
 		var _w2 = string_width(keyStr);
 		
 		var tw = min(WIN_W - ui(32), _w1 + ui(24) + _w2);
@@ -62,10 +62,10 @@ function tooltipKey(_text, _keyStr) constructor {
 		var thh = th + pd * 2;
 		
 		TOOLTIP_SURFACE = surface_verify(TOOLTIP_SURFACE, tww, thh);
-			surface_set_shader(TOOLTIP_SURFACE);
+			surface_set_shader(TOOLTIP_SURFACE, noone);
 			draw_sprite_stretched(THEME.tooltip, 0, 0, 0, tww, thh);
 			
-			draw_set_text(f_p2, fa_left, fa_top, COLORS._main_text);
+			draw_set_text(f_hotkey, fa_left, fa_top, COLORS._main_text);
 			draw_set_color(COLORS._main_text);
 			BLEND_ADD
 			draw_text_line(pd, pd, text, -1, tw);
@@ -86,10 +86,10 @@ function tooltipHotkey_assign(_text, _hotkey = "") constructor {
 		var _uns = text == noone;
 		var _txt = _uns? [ __txt("Unassigned") ] : text;
 		
-		draw_set_font(f_p2);
+		draw_set_font(f_hotkey);
 		var _w1 = string_width(hotkey);
 		
-		draw_set_font(f_p2);
+		draw_set_font(f_hotkey);
 		var _w2 = 0;
 		var  th = 0;
 		
@@ -108,12 +108,12 @@ function tooltipHotkey_assign(_text, _hotkey = "") constructor {
 		var thh = th + pd * 2;
 		
 		TOOLTIP_SURFACE = surface_verify(TOOLTIP_SURFACE, tww, thh);
-		surface_set_shader(TOOLTIP_SURFACE);
+		surface_set_shader(TOOLTIP_SURFACE, noone);
 			draw_sprite_stretched(THEME.tooltip, 0, 0, 0, tww, thh);
 			
 			var txy = pd;
 			
-			draw_set_text(f_p2, fa_left, fa_top, _uns? COLORS._main_text_sub : COLORS._main_text);
+			draw_set_text(f_hotkey, fa_left, fa_top, _uns? COLORS._main_text_sub : COLORS._main_text);
 			for (var i = 0, n = array_length(_txt); i < n; i++) {
 				var _t  = _txt[i];
 				var _ts = is_string(_t)? _t : _t.name;
@@ -133,8 +133,8 @@ function tooltipHotkey_multiple(_keys, _cmod) constructor {
 	keys = _keys;
 	cmod = _cmod;
 	
-	draw_set_font(f_p2);
-	lh = line_get_height(f_p2, 2);
+	draw_set_font(f_hotkey);
+	lh = line_get_height(f_hotkey, 2);
 	
 	list = struct_get_names(keys);
 	array_sort(list, true);
@@ -150,7 +150,7 @@ function tooltipHotkey_multiple(_keys, _cmod) constructor {
 			var _hk = _hks[j];
 			
 			var hkw = ui(32);
-			draw_set_font(f_p2);     hkw += string_width(_hk.name);
+			draw_set_font(f_hotkey); hkw += string_width(_hk.name);
 			draw_set_font(f_hotkey); hkw += string_width(_hk.getKeyName());
 			
 			ww = max(ww, hkw);
@@ -167,7 +167,7 @@ function tooltipHotkey_multiple(_keys, _cmod) constructor {
 		var thh = th + pd * 2;
 		
 		TOOLTIP_SURFACE = surface_verify(TOOLTIP_SURFACE, tww, thh);
-		surface_set_shader(TOOLTIP_SURFACE);
+		surface_set_shader(TOOLTIP_SURFACE, noone);
 			draw_sprite_stretched(THEME.textbox, 3, 0, 0, tw, th);
 			draw_sprite_stretched(THEME.textbox, 0, 0, 0, tw, th);
 				var tx = ui(8);
@@ -182,7 +182,7 @@ function tooltipHotkey_multiple(_keys, _cmod) constructor {
 						var _hk = _hks[j];
 						var _press = cmod == _hk.key._M;
 						
-						draw_set_text(f_p2, fa_left, fa_top, _press? COLORS._main_text_accent : COLORS._main_text);
+						draw_set_text(f_hotkey, fa_left, fa_top, _press? COLORS._main_text_accent : COLORS._main_text);
 						draw_text_add(tx, ty, _hk.name);
 						
 						draw_set_text(f_hotkey, fa_right, fa_top, _press? COLORS._main_text : COLORS._main_text_sub);

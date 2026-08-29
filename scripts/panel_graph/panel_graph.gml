@@ -1254,8 +1254,6 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
     }
     
     function dragGraph() {
-    	var useGesture = GESTURE_USE && OS == os_macosx;
-    	
         if(graph_autopan) {
         	refreshDraw(1);
         	
@@ -1332,7 +1330,7 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
         var _s = graph_s;
         
         if(mouse_on_graph && graph_draggable) {
-	        if(useGesture) {
+	        if(GESTURE_USE) {
 	        	if(pHOVER) {
 		        	graph_x += GESTURE_PAN_X / graph_s;
 		            graph_y += GESTURE_PAN_Y / graph_s;
@@ -1341,73 +1339,73 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
 		        	graph_s    = graph_s_to;
 	        	}
 	        	
-	        } else {
-		        if(pFOCUS) {
-		            var _doDragging = false;
-		            var _doZooming  = false;
-		            
-		            if(graph_dragging_key) {
-		            	if(mouse_rclick()) CURSOR_SPRITE = THEME.scissor;
-		            	else CURSOR = cr_size_all;
-		            }
-		            
-		            if(mouse_press(PREFERENCES.pan_mouse_key)) {
-		                _doDragging = true;
-		                drag_key = PREFERENCES.pan_mouse_key;
+	        } 
+	        
+	        if(pFOCUS) {
+	            var _doDragging = false;
+	            var _doZooming  = false;
+	            
+	            if(graph_dragging_key) {
+	            	if(mouse_rclick()) CURSOR_SPRITE = THEME.scissor;
+	            	else CURSOR = cr_size_all;
+	            }
+	            
+	            if(mouse_press(PREFERENCES.pan_mouse_key)) {
+	                _doDragging = true;
+	                drag_key = PREFERENCES.pan_mouse_key;
+	                
+	            } else if(mouse_lpress() && graph_dragging_key) {
+	                _doDragging = true;
+	                drag_key = mb_left;
+	                
+	            } else if(mouse_lpress() && graph_zooming_key) {
+	                _doZooming = true;
+	                drag_key = mb_left;
+	            }
+	            
+	            if(_doDragging) {
+	                graph_dragging = true;    
+	                graph_drag_mx  = mx;
+	                graph_drag_my  = my;
+	                graph_drag_sx  = graph_x;
+	                graph_drag_sy  = graph_y;
+	            }
+	            
+	            if(_doZooming) {
+	                graph_zooming  = true;    
+	                graph_zoom_mx  = mx;
+	                graph_zoom_my  = my;
+	                graph_zoom_m   = my;
+	                graph_zoom_s   = graph_s;
+	            }
+	        }
+	        
+	        if(pHOVER) {
+	            if((!key_mod_press_any() || key_mod_press(CTRL)) && MOUSE_WHEEL != 0) {
+		            if(MOUSE_WHEEL == -1) {
+		            	if(graph_s_to > array_last(scale)) graph_s_to = array_last(scale);
+		            	
+		                for( var i = 1, n = array_length(scale); i < n; i++ ) {
+		                    if(scale[i - 1] < graph_s_to && graph_s_to <= scale[i]) {
+		                        graph_s_to = scale[i - 1];
+		                        break;
+		                    }
+		                }
 		                
-		            } else if(mouse_lpress() && graph_dragging_key) {
-		                _doDragging = true;
-		                drag_key = mb_left;
-		                
-		            } else if(mouse_lpress() && graph_zooming_key) {
-		                _doZooming = true;
-		                drag_key = mb_left;
-		            }
-		            
-		            if(_doDragging) {
-		                graph_dragging = true;    
-		                graph_drag_mx  = mx;
-		                graph_drag_my  = my;
-		                graph_drag_sx  = graph_x;
-		                graph_drag_sy  = graph_y;
-		            }
-		            
-		            if(_doZooming) {
-		                graph_zooming  = true;    
-		                graph_zoom_mx  = mx;
-		                graph_zoom_my  = my;
-		                graph_zoom_m   = my;
-		                graph_zoom_s   = graph_s;
-		            }
-		        }
-		        
-		        if(pHOVER) {
-		            if((!key_mod_press_any() || key_mod_press(CTRL)) && MOUSE_WHEEL != 0) {
-			            if(MOUSE_WHEEL == -1) {
-			            	if(graph_s_to > array_last(scale)) graph_s_to = array_last(scale);
-			            	
-			                for( var i = 1, n = array_length(scale); i < n; i++ ) {
-			                    if(scale[i - 1] < graph_s_to && graph_s_to <= scale[i]) {
-			                        graph_s_to = scale[i - 1];
-			                        break;
-			                    }
-			                }
-			                
-			            } else if(MOUSE_WHEEL == 1) { 
-			                if(graph_s_to < array_first(scale)) graph_s_to = array_first(scale);
-			            	
-			            	for( var i = 1, n = array_length(scale); i < n; i++ ) {
-			                    if(scale[i - 1] <= graph_s_to && graph_s_to < scale[i]) {
-			                        graph_s_to = scale[i];
-			                        break;
-			                    }
-			                }
-			            } else
-			            	graph_s_to = clamp(graph_s_to + MOUSE_WHEEL * .1, scale[0], array_last(scale));
-		            }
-		            
-		            graph_s = lerp_float(graph_s, graph_s_to, PREFERENCES.graph_zoom_smoooth, .001);
-		        }
+		            } else if(MOUSE_WHEEL == 1) { 
+		                if(graph_s_to < array_first(scale)) graph_s_to = array_first(scale);
+		            	
+		            	for( var i = 1, n = array_length(scale); i < n; i++ ) {
+		                    if(scale[i - 1] <= graph_s_to && graph_s_to < scale[i]) {
+		                        graph_s_to = scale[i];
+		                        break;
+		                    }
+		                }
+		            } else
+		            	graph_s_to = clamp(graph_s_to + MOUSE_WHEEL * .1, scale[0], array_last(scale));
+	            }
+	            
+	            graph_s = lerp_float(graph_s, graph_s_to, PREFERENCES.graph_zoom_smoooth, .001);
 	        }
         }
         

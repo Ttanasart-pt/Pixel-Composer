@@ -210,7 +210,7 @@ function mouse_step() {
 		
 		var _gest = mac_gesture_get(window_handle(), buffer_get_address(_gestBuff));
 		
-		GESTURE_USE   = PREFERENCES.gesture_enabled;
+		GESTURE_USE   = PREFERENCES.gesture_enabled && OS == os_macosx;
 		
 		buffer_to_start(_gestBuff);
 		GESTURE_PAN_X = buffer_read(_gestBuff, buffer_f64) * PREFERENCES.gesture_pan_sensitivity;
