@@ -749,9 +749,7 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
     #endregion
     
     function toCenterNode(_arr = nodes_list, _zoom = true) {
-    	printCallStack();
-    	
-        if(!project.active) return; 
+    	if(!project.active) return; 
         
         if(array_empty(_arr)) {
 	        graph_s    = graph_s_def;

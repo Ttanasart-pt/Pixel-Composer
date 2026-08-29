@@ -102,8 +102,6 @@
 					MOUSE_WRAP_MON[3] = _monitor[1] + _monitor[3];
 				}
 			}
-	
-			
 		}
 	}
 	
@@ -115,7 +113,7 @@
 	
 	#macro mouse_ry mouse_real_y()
 	function mouse_real_y() {
-		if(MAC) return mac_screen_mouse_y();
+		if(MAC) return display_get_height() - mac_screen_mouse_y(); // wtf macos?
 		return display_mouse_get_y();
 	}
 #endregion

@@ -113,15 +113,26 @@
 			if(mouse_lrelease()) dialog_dragging = false;
 		}
 		
+		var mx = mouse_rx;
+		var my = mouse_ry;
+		
 		var diax = WIN_X + dialog_x;
 		var diay = WIN_Y + dialog_y;
+		
+		if(OS != os_windows) {
+			mx = mouse_mx;
+			my = mouse_my;
+			
+			diax = dialog_x;
+			diay = dialog_y;
+		}
 		
 		var _x0 = diax;
 		var _y0 = diay;
 		var _x1 = diax + dialog_w;
 		var _y1 = diay + title_height;
 		
-		if(mouse_draggable && !dialog_resizing && point_in_rectangle(mouse_rx, mouse_ry, _x0, _y0, _x1, _y1)) {
+		if(mouse_draggable && !dialog_resizing && point_in_rectangle(mx, my, _x0, _y0, _x1, _y1)) {
 			mouse_active = false;
 			if(mouse_lpress(sFOCUS)) {
 				dialog_dragging = true;
