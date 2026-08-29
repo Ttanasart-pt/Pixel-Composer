@@ -104,15 +104,13 @@ function rotatorRandom(_onModify) : widget() constructor {
 	
 	static draw = function(_x, _y, _w, _h, _data, _m) {
 		if(!is_array(_data)) return;
+		_data = array_verify(_data, ROTRAN_LENGTH);
 		
 		x = _x;
 		y = _y;
 		w = _w;
 		h = _data[0] > 1? _h * 2 : _h;
 		
-		// if(array_any(_data, (a,i) => !is_real(a))) return;
-		
-		_data    = array_verify(_data, ROTRAN_LENGTH);
 		_data[0] = clamp(_data[0], 0, ROTATOR_RANDOM_TYPE.length - 1);
 		mode     = _data[0];
 		

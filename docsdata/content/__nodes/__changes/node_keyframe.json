@@ -6,6 +6,11 @@
         "date": "2026-08-29T05:48:04.198Z",
         "node": "",
         "commit": "Fix dimension loading error on older project."
+      },
+      {
+        "date": "2026-08-29T05:55:31.341Z",
+        "node": "",
+        "commit": "Fix default value loading error on some array value."
       }
     ]
   },

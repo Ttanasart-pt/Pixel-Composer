@@ -3088,8 +3088,10 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		expTree    = expression == ""? noone : evaluateFunctionList(expression); 
 		
 		curveMode  = _map[$ "curveMode"]  ?? curveMode;
-		if(has(_map, "def_val") && _map.def_val != noone)
-			def_val = _map.def_val;
+		if(has(_map, "def_val") && _map.def_val != noone) {
+			if(array_safe_length(def_val) == array_safe_length(_map.def_val)) // some older version store empty array or scalar for array value
+				def_val = _map.def_val;
+		}
 		
 		sep_axis   = _map[$ "sep_axis"]   ?? sep_axis;
 		favorited  = _map[$ "favorited"]  ?? favorited;
