@@ -60,7 +60,8 @@ function Node_Particle(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 	newInput(15, nodeValue_Bool(     "Rotate by Direction",   false             )).setTooltip("Make the particle rotates to follow its movement.");
 	
 		////- =/Animated
-	newInput(68, nodeValue_EScroll(  "Rotation Type",         0, [ "Speed", "Fix Relative", "Fix Angle" ] )).setTooltip("Rotation method:\n\t- Speed: Add rotation angle per frame.\n\t- Fix Relative: Lerp to angle ralative to orignal angle.\n\t- Fix target: Lerp to fix angle.");
+	newInput(68, nodeValue_EScroll(  "Rotation Type",         0, [ "Speed", "Fix Relative", "Fix Angle" ] )).rejectArray()
+		.setTooltip("Rotation method:\n\t- Speed: Add rotation angle per frame.\n\t- Fix Relative: Lerp to angle ralative to orignal angle.\n\t- Fix target: Lerp to fix angle.");
 	newInput( 9, nodeValue_RotRand(  "Rotational Speed",     ROTRAN_DEF_0        )).setCurvable(59, CURVE_DEF_11, "Over Lifespan");
 	newInput(69, nodeValue_RotRand(  "Target Angle",         ROTRAN_DEF_0        )).setCurvable(70, CURVE_DEF_01, "Over Lifespan");
 	

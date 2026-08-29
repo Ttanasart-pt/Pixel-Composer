@@ -846,10 +846,11 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 					}
 					
 				}
-			} 
+			} else if(!prop.accept_array && is_array(_val)) {
+				_val = 0;
+			}
 			
-			if(is(node, Node_Particle) && is(prop, __NodeValue_Rotation_Random))
-				print($"Deserialize {prop.name} = {_keyframe}, {_val}, {base}, {prop.def_val} ");
+			// if(is(node, Node_Particle) && prop.name == "Rotation Type") print($"Deserialize {prop.name} = {_keyframe}, {_val}, {base}, {prop.def_val} ");
 				
 			var vk = new valueKey(_time, _val, self);
 			vk.type          = _type;

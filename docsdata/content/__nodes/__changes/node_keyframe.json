@@ -11,6 +11,11 @@
         "date": "2026-08-29T05:55:31.341Z",
         "node": "",
         "commit": "Fix default value loading error on some array value."
+      },
+      {
+        "date": "2026-08-29T06:16:47.036Z",
+        "node": "",
+        "commit": "Add checks for preventing loading array data to value with 'rejectArray' tag."
       }
     ]
   },

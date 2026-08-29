@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.9.103",
+    "changes": [
+      {
+        "date": "2026-08-29T06:16:47.043Z",
+        "node": "",
+        "commit": "Add checks for preventing loading array data to value with 'rejectArray' tag."
+      }
+    ]
+  },
+  {
     "version": "1.21.8.009",
     "changes": [
       {
