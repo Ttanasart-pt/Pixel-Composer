@@ -77,6 +77,7 @@ function __NodeValue_Dimension(_node, value, _name = "Dimension") : __NodeValue_
 		if(editWidget)  editWidget.setSuffix(attributes.use_project_dimension? "x" : "");
 		
 		getValueRecursive(self.__curr_get_val, _time);
+		
 		var val = __curr_get_val[0];
 		var nod = __curr_get_val[1]; if(!is(nod, NodeValue)) return val;
 		
@@ -154,7 +155,7 @@ function __NodeValue_Dimension(_node, value, _name = "Dimension") : __NodeValue_
 		
 		if(!getAnim()) {
 			if(sep_axis) return array_create_ext(2, function(i) /*=>*/ {return animators[i].values[0].value});
-			return array_empty(animator.values)? 0 : animator.values[0].value;
+			return array_empty(animator.values)? DEF_SURF : animator.values[0].value;
 		}
 		
 		if(sep_axis) return [ animators[0].getValue(_time), animators[1].getValue(_time) ];

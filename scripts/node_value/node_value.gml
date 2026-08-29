@@ -3088,7 +3088,9 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		expTree    = expression == ""? noone : evaluateFunctionList(expression); 
 		
 		curveMode  = _map[$ "curveMode"]  ?? curveMode;
-		def_val    = _map[$ "def_val"]    ?? def_val;
+		if(has(_map, "def_val") && _map.def_val != noone)
+			def_val = _map.def_val;
+		
 		sep_axis   = _map[$ "sep_axis"]   ?? sep_axis;
 		favorited  = _map[$ "favorited"]  ?? favorited;
 		if(has(_map, "anim")) setAnim(_map[$ "anim"]);

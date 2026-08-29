@@ -831,8 +831,10 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 						
 				} else if(is_array(base)) {
 					for(var j = 0, m = array_length(base); j < m; j++)
-						_val[j] = value;
+						_val[j] = base[j];
 				}
+				
+				// if(is(node, Node_Particle) && prop.name == "Dimension") print($"Deserialize", _val, value, base);
 				
 				if(prop.type == VALUE_TYPE.curve) {
 					var _pd = array_length(_val) % 6;
@@ -848,7 +850,7 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 				}
 			} 
 			
-			// print($"Deserialize {node.name}:{prop.name} = {_val} ");
+			// if(is(node, Node_Particle) && prop.name == "Dimension") print($"Deserialize {prop.name} = {_keyframe}, {_val}, {base}, {prop.def_val} ");
 			var vk = new valueKey(_time, _val, self);
 			vk.type          = _type;
 			vk.color         = color;

@@ -625,7 +625,7 @@ function Panel_Menu() : PanelContent() constructor {
                 
                 var nw = hori? ui(8) + wr_w + ui(4) + er_w + noti_icon_show * ui(32) : w - ui(16);
                 
-                noti_flash = lerp_linear(noti_flash, 0, 0.02);
+                noti_flash = lerp_linear(noti_flash, 0, .02);
                 var ev = animation_curve_eval(ac_flash, noti_flash);
                 var cc = merge_color(c_white, noti_flash_color, ev);
                 
@@ -641,12 +641,12 @@ function Panel_Menu() : PanelContent() constructor {
                 }
                 
                 gpu_set_blendmode(bm_add);
-                draw_sprite_stretched_ext(THEME.box_r2, 0, nx0, ny0 - nh / 2, nw, nh, cc, ev / 2);
+                draw_sprite_stretched_ext(THEME.panel_menu_widget, 0, nx0, ny0 - nh / 2, nw, nh, cc, ev / 2);
                 gpu_set_blendmode(bm_normal);
                 
                 var _prg = noone;
                 for( var i = 0, n = array_length(STATS_PROGRESS); i < n; i++ ) _prg = max(_prg, STATS_PROGRESS[i].progress);
-                if(_prg > noone) draw_sprite_stretched_ext(THEME.box_r2, 0, nx0, ny0 - nh / 2, nw * clamp(_prg, 0, 1), nh, COLORS._main_value_positive, .5);
+                if(_prg > noone) draw_sprite_stretched_ext(THEME.panel_menu_widget, 0, nx0, ny0 - nh / 2, nw * clamp(_prg, 0, 1), nh, COLORS._main_value_positive, .5);
                 
                 if(noti_icon_show > 0) draw_sprite_ui_uniform(noti_icon, 0, nx0 + nw - ui(16), ny0, .75, c_white, noti_icon_show);
                 

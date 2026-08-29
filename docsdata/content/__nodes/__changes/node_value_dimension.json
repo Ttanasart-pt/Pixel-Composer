@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.9.103",
+    "changes": [
+      {
+        "date": "2026-08-29T05:48:04.200Z",
+        "node": "",
+        "commit": "Fix dimension loading error on older project."
+      }
+    ]
+  },
+  {
     "version": "1.21.6.003",
     "changes": [
       {
