@@ -246,24 +246,25 @@ function Node_Shadow_Cast(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 				bg = !bg;
 				
 				surface_set_shader(temp_surface[bg], sh_sdf);
-					shader_set_i("sampleMode", 0);
-					shader_set_f("dimension", _n, _n);
-					shader_set_f("stepSize",  stepSize);
-					shader_set_i("side",      2);
+					shader_set_i( "sampleMode", 0       );
+					shader_set_f( "dimension", _n, _n   );
+					shader_set_f( "stepSize",  stepSize );
+					shader_set_i( "side",      2        );
 					
 					draw_surface_safe(temp_surface[!bg]);
 				surface_reset_shader();
 			}
 			
 			surface_set_shader(temp_surface[!bg], sh_sdf_dist);
-				shader_set_s( "original",      temp_surface[2] );
-				shader_set_f( "max_distance",       1 );
-				shader_set_i( "max_distanceUseSurf",0 );
+				shader_set_s( "original", temp_surface[2] );
+				shader_set_f( "max_distance",       [1,1] );
+				shader_set_i( "max_distanceUseSurf", 0    );
 				
 				shader_set_i( "side",   2 );
 				shader_set_i( "alpha",  0 );
 				shader_set_i( "invert", 1 );
 				shader_set_i( "angle",  0 );
+				shader_set_i( "doFill", 0 );
 				
 				draw_surface_safe(temp_surface[bg]);
 			surface_reset_shader();

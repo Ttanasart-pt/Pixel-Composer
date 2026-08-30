@@ -99,10 +99,10 @@ function Node_SDF(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) const
 			bg = !bg;
 			
 			surface_set_shader(temp_surface[bg], sh_sdf);
-				shader_set_i("sampleMode", getAttribute("oversample"));
-				shader_set_f("dimension", _n, _n);
-				shader_set_f("stepSize",  stepSize);
-				shader_set_i("side",     _side);
+				shader_set_i( "sampleMode", getAttribute("oversample"));
+				shader_set_f( "dimension", _n, _n   );
+				shader_set_f( "stepSize",  stepSize );
+				shader_set_i( "side",     _side     );
 				
 				draw_surface_safe(temp_surface[!bg]);
 			surface_reset_shader();
@@ -111,6 +111,7 @@ function Node_SDF(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) const
 		surface_set_shader(_outSurf, sh_sdf_dist);
 			shader_set_s( "original",     inSurf);
 			shader_set_m( "max_distance", _dist, _data[7], inputs[3]);
+			
 			shader_set_i( "side",         _side);
 			shader_set_i( "alpha",        _alph);
 			shader_set_i( "invert",       _invt);

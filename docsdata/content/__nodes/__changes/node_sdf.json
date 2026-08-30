@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.9.104",
+    "changes": [
+      {
+        "date": "2026-08-30T06:36:09.198Z",
+        "node": "Cast Shadow",
+        "commit": "**Cast Shadow**: Fix incorrect shadow calculation."
+      }
+    ]
+  },
+  {
     "version": "1.21.7.110",
     "changes": [
       {

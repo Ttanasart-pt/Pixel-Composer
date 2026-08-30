@@ -1,7 +1,3 @@
-#region global
-	
-#endregion
-
 function Process_Anim_Track(_node = undefined) constructor {
 	node        = _node;
 	node_id     = "";
@@ -13,9 +9,11 @@ function Process_Anim_Track(_node = undefined) constructor {
 	title   = "";
 	color   = c_white;
 	
-	animated = true;
-	start    = 0;
-	duration = GLOBAL_TOTAL_FRAMES;
+	animated   = true;
+	start      = 0;
+	duration   = GLOBAL_TOTAL_FRAMES;
+	frameRange = [0,0];
+	
 	trans    = 0;
 	tranRat  = .8;
 	
@@ -86,18 +84,19 @@ function Process_Anim_Track(_node = undefined) constructor {
 		var _m = {};
 		getNode();
 		
-		_m.node      = node?     node.node_id     : "";
-		_m.onode     = node_out? node_out.node_id : "";
+		_m.node       = node?     node.node_id     : "";
+		_m.onode      = node_out? node_out.node_id : "";
 		
-		_m.title     = title;
-		_m.output    = output;
-		_m.values    = variable_clone(values);
-		_m.color     = color;
-		_m.duration  = duration;
-		_m.trans     = trans;
-		_m.store     = store;
-		_m.shadow    = shadow;
-		_m.animated  = animated;
+		_m.title      = title;
+		_m.output     = output;
+		_m.values     = variable_clone(values);
+		_m.color      = color;
+		_m.duration   = duration;
+		_m.frameRange = [frameRange[0], frameRange[1]];
+		_m.trans      = trans;
+		_m.store      = store;
+		_m.shadow     = shadow;
+		_m.animated   = animated;
 		
 		return _m;
 	}
@@ -108,14 +107,15 @@ function Process_Anim_Track(_node = undefined) constructor {
 		
 		values   = variable_clone(_m.values);
 		
-		title    = _m[$ "title"]    ?? title;
-		output   = _m[$ "output"]   ?? output;
-		color    = _m[$ "color"]    ?? color;
-		duration = _m[$ "duration"] ?? duration;
-		trans    = _m[$ "trans"]    ?? trans;
-		store    = _m[$ "store"]    ?? store;
-		shadow   = _m[$ "shadow"]   ?? shadow;
-		animated = _m[$ "animated"] ?? animated;
+		title      = _m[$ "title"]      ?? title;
+		output     = _m[$ "output"]     ?? output;
+		color      = _m[$ "color"]      ?? color;
+		duration   = _m[$ "duration"]   ?? duration;
+		frameRange = _m[$ "frameRange"] ?? frameRange;
+		trans      = _m[$ "trans"]      ?? trans;
+		store      = _m[$ "store"]      ?? store;
+		shadow     = _m[$ "shadow"]     ?? shadow;
+		animated   = _m[$ "animated"]   ?? animated;
 		
 		return self;
 	}
@@ -304,6 +304,12 @@ function Panel_Process_Maker() : PanelContent() constructor {
 			else                      track_sel.duration = t; 
 			
 		}).setFont(f_p3).setEmpty();
+		
+		tb_track_range = new vectorBox(2, function(val,i) /*=>*/ { 
+			if(is(track_sel, Process_Anim_Track)) track_sel.frameRange[i] = val; 
+		}).setFont(f_p3);
+		tb_track_range.linkable = false;
+		
 		tb_track_speed = textBox_Number( function(t) /*=>*/ { 
 			if(track_sel == undefined) return;
 			
@@ -662,7 +668,14 @@ function Panel_Process_Maker() : PanelContent() constructor {
 				t.apply(rt);
 				if(play_frame >= ts && play_frame < te) {
 					if(PROJECT.trackAnim.animated && t.animated) {
-						var fr = floor((play_frame - ts) / t.duration * GLOBAL_TOTAL_FRAMES);
+						var fst = t.frameRange[0];
+						var fed = t.frameRange[1];
+						if(fed == 0) fed = GLOBAL_TOTAL_FRAMES;
+						
+						var fr = (play_frame - ts) / t.duration;
+						fr = lerp(fst, fed, fr);
+						fr = floor(fr);
+						
 						PROJECT.animator.force_progress = true;
 						PROJECT.animator.setFrame(fr);
 					}
@@ -1625,6 +1638,13 @@ function Panel_Process_Maker() : PanelContent() constructor {
 			}
 			
 			if(is(track_sel, Process_Anim_Track)) {
+				var dw = ui(64);
+				
+				tb_track_range.setFocusHover(pFOCUS, pHOVER);
+				tb_track_range.draw(dx, ty, dw, th, track_sel.frameRange, {}, m);
+			    dx += dw + ui(4);
+			    tw -= dw + ui(4);
+			    
 				tb_track_title.setFocusHover(pFOCUS, pHOVER);
 				tb_track_title.draw(dx, ty, tw, th, track_sel.title, m);
 				
