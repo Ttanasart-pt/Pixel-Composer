@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.9.104",
+    "changes": [
+      {
+        "date": "2026-08-30T01:45:20.550Z",
+        "node": "Command Palette",
+        "commit": "**Command Palette**: Add all missing preferences topics."
+      }
+    ]
+  },
+  {
     "version": "1.21.7.110",
     "changes": [
       {

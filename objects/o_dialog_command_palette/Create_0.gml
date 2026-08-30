@@ -1,6 +1,16 @@
 /// @description init
 event_inherited();
 
+#region init functions
+	if(!PREFERENCE_FUNCTION_INIT) {
+		PREFERENCE_FUNCTION_INIT = true;
+		
+		var _pref = new Panel_Preference();
+		_pref.onClose();
+		delete _pref;
+	}
+#endregion
+
 #region data
 	destroy_on_click_out = true;
 	destroy_on_escape    = false;

@@ -289,7 +289,7 @@ function __initLua() {
 	];
 	
 	globalvar LUA_API; LUA_API = ds_map_create();
-	if(OS == os_windows) lua_register_log();
+	lua_error_handler = _lua_error;
 	
 	for( var i = 0, n = array_length(global.lua_functions); i < n; i++ ) {
 		var _luaf = global.lua_functions[i];

@@ -1,8 +1,13 @@
-function __Panel_Linear_Setting_Item_Preference(name, key, editWidget, _data = noone) : __Panel_Linear_Setting_Item(name, editWidget, _data) constructor {
-	self.key = key;
+globalvar PREFERENCE_FUNCTION_INIT; PREFERENCE_FUNCTION_INIT = false;
+
+function __Panel_Linear_Setting_Item_Preference(_name, _key, _editWidget, _data = noone) : __Panel_Linear_Setting_Item(_name, _editWidget, _data) constructor {
+	key = _key;
+	
 	data       = function( ) /*=>*/ {return getPreference(key)};
 	onEdit     = function(v) /*=>*/ {return setPreference(key, v)};
 	getDefault = function( ) /*=>*/ {return getPreference(key, PREFERENCES_DEF)};
+	
+	registerLFunction("Preference", name, "", 0, function(k) /*=>*/ {return prefOpenKey(k)}, key);
 }
 
 function Panel_Preference() : PanelContent() constructor {
@@ -2724,3 +2729,15 @@ function Panel_Preference() : PanelContent() constructor {
 	    ds_list_destroy(pref_global);
 	}
 }
+
+#region command palette
+	function prefOpenKey(key) { dialogPanelCall(new Panel_Preference().goto(key)); }
+	function prefOpenHotkey(key) {
+		var _panel = new Panel_Preference();
+		_panel.page_current = 4;
+		_panel.setSearch($"key:{key}");
+		dialogPanelCall(_panel);
+	}
+	
+	function __regFnPref(name, key) { registerLFunction("Preference", name, "", 0, function(k) /*=>*/ {return prefOpenKey(k)}, key); }
+#endregion

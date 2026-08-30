@@ -44,7 +44,7 @@ def main():
 
             with open(config_file, 'w') as f:
                 f.write(content)
-                print(f" ✓ Updated {target} configuration complete.")
+                print(f" > Updated {target} configuration complete.")
 
     print("\n")
 

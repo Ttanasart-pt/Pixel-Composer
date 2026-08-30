@@ -34,8 +34,6 @@
 		__fnInit_Notification();
 		__fnInit_Preview_Window();
 		__fnInit_Nodes();
-		
-		__fnInit_Preference();
 	}
 #endregion
 

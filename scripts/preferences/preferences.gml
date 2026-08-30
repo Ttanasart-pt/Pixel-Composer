@@ -704,68 +704,6 @@
     }
 #endregion
 
-#region command palette
-	function prefOpenKey(key) { dialogPanelCall(new Panel_Preference().goto(key)); }
-	function prefOpenHotkey(key) {
-		var _panel = new Panel_Preference();
-		_panel.page_current = 4;
-		_panel.setSearch($"key:{key}");
-		dialogPanelCall(_panel);
-	}
-	
-	function __regFnPref(name, key) { registerLFunction("Preference", name, "", 0, function(k) /*=>*/ {return prefOpenKey(k)}, key); }
-	
-	function __fnInit_Preference() {
-		__regFnPref(__txt("pref_double_click_delay",              "Double click delay"),                "double_click_delay"              )
-		__regFnPref(__txt("pref_mouse_wheel_speed",               "Scroll speed"),                      "mouse_wheel_speed"               )
-		__regFnPref(__txt("pref_keyboard_hold_start",             "Keyboard hold start"),               "keyboard_repeat_start"           )
-		__regFnPref(__txt("pref_keyboard_repeat_delay",           "Keyboard repeat delay"),             "keyboard_repeat_speed"           )
-		__regFnPref(__txt("pref_expand_hovering_panel",           "Expand hovering panel"),             "expand_hover"                    )
-		__regFnPref(__txt("pref_expand_lock_mouse_slider",        "Lock mouse when sliding"),           "slider_lock_mouse"               )
-		__regFnPref(__txt("pref_pen_pool_delay",                  "Pen leave delay"),                   "pen_pool_delay"                  )
-		
-		__regFnPref(__txt("pref_auto_save_time",                  "Autosave delay (-1 to disable)"),    "auto_save_time"                  )
-		__regFnPref(__txt("pref_save_layout",                     "Save layout"),                       "save_layout"                     )
-		__regFnPref(__txt("pref_save_file_minify",                "Minify save file"),                  "save_file_minify"                )
-		__regFnPref(__txt("pref_save_backups",                    "Backup saves"),                      "save_backup"                     )
-		__regFnPref(__txt("pref_legacy_exception",                "Use legacy exception handler"),      "use_legacy_exception"            )
-		__regFnPref(__txt("pref_crash_dialog",                    "Show dialog after crash"),           "show_crash_dialog"               )
-		__regFnPref(__txt("pref_clear_temp",                      "Clear temp file on close"),          "clear_temp_on_close"             )
-		__regFnPref(__txt("pref_enable_test_mode",                "Enable developer mode") + "*",       "test_mode"                       )
-		__regFnPref(__txt("pref_exp_popup_dialog",                "Pop-up Dialog"),                     "multi_window"                    )
-		
-		__regFnPref(__txt("pref_gui_scaling",                     "GUI scaling"),                       "ui_scale"                        )
-		__regFnPref(__txt("pref_ui_frame_rate",                   "UI frame rate"),                     "ui_framerate"                    )
-		__regFnPref(__txt("pref_ui_frame_rate",                   "UI inactive frame rate"),            "ui_framerate_non_focus"          )
-		__regFnPref(__txt("pref_interface_language",              "Interface Language") + "*",          "local"                           )
-		__regFnPref(__txt("pref_ui_font",                         "Overwrite UI font") + "*",           "font_overwrite"                  )
-		__regFnPref(__txt("pref_windows_control",                 "Use Windows style window control."), "panel_menu_right_control"        )
-		__regFnPref(__txt("pref_ui_fix_window_size",              "Fix Window size on start"),          "window_fix"                      )
-		__regFnPref(__txt("pref_ui_fix_width",                    "Fix width"),                         "window_fix_width"                )
-		__regFnPref(__txt("pref_ui_fix_height",                   "Fix height"),                        "window_fix_height"               )
-		__regFnPref(__txt("pref_supporter_icon",                  "Show supporter icon"),               "show_supporter_icon"             )
-		
-		__regFnPref(__txt("pref_add_node_remember",               "Remember add node position"),        "add_node_remember"               )
-		
-		__regFnPref(__txt("pref_graph_group_in_tab",              "Open group in new tab"),             "graph_open_group_in_tab"         )
-		__regFnPref(__txt("pref_graph_zoom_smoothing",            "Graph zoom smoothing"),              "graph_zoom_smoooth"              )
-		__regFnPref(__txt("panel_graph_group_require_shift",      "Hold Shift to enter group"),         "panel_graph_group_require_shift" )
-		__regFnPref(__txt("pref_use_alt",                         "Use ALT for"),                       "alt_picker"                      )
-		__regFnPref(__txt("pref_preview_show_real_fps",           "Show real fps"),                     "panel_preview_show_real_fps"     )
-		__regFnPref(__txt("pref_inspector_focus_on_double_click", "Focus on double click"),             "inspector_focus_on_double_click" )
-		__regFnPref(__txt("pref_collection_preview_speed",        "Collection preview speed"),          "collection_preview_speed"        )
-		__regFnPref(__txt("pref_warning_notification_time",       "Warning notification time"),         "notification_time"               )
-		__regFnPref(__txt("pref_widget_autocomplete_delay",       "Code Autocomplete delay"),           "widget_autocomplete_delay"       )
-		__regFnPref(__txt("pref_widget_textbox_shake",            "Textbox shake"),                     "textbox_shake"                   )
-		__regFnPref(__txt("pref_widget_textbox_particles",        "Textbox particles"),                 "textbox_particle"                )
-		
-		__regFnPref(__txt("pref_node_param_show",                 "Show parameter on new node"),        "node_param_show"                 )
-		__regFnPref(__txt("pref_node_param_width",                "Default param width"),               "node_param_width"                )
-		__regFnPref(__txt("pref_node_3d_preview",                 "Preview surface size"),              "node_3d_preview_size"            )
-		__regFnPref(__txt("pref_file_watcher_delay",              "File watcher delay (s)"),            "file_watcher_delay"              )
-	}
-#endregion
-
 #region library
 	function libCheck(_lib = "FFmpeg") {
 		var _ldir  = "";
