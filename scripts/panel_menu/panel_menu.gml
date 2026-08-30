@@ -85,10 +85,18 @@
         registerFunction("", "Export All",          vk_f6,  n,   global_export_all        ).setMenu("export_all",   THEME.play_all )
         registerFunction("", "Clear All Cache",     vk_f7,  n,   global_clear_cache_all   ).setMenu("clear_cache_all", THEME.cache )
         
-        registerFunction("", "Close File",          "Q",    c,   global_project_close     ).setMenu("close_file"      )
-        registerFunction("", "Close All Files",     "Q",    c|s, global_project_close_all ).setMenu("close_all_files" )
-        registerFunction("", "Close Program",       vk_f4,  a,   window_close             ).setMenu("close_software", THEME.window_exit_icon )
-        registerFunction("", "Close Project",       "",     n,   closeProject             ).setMenu("close_project"   ).setArg([ ARG("project", function() /*=>*/ {return PROJECT}, true) ])
+        if(MAC) {
+        	registerFunction("", "Close File",          "W",    c,   global_project_close     ).setMenu("close_file"      )
+	        registerFunction("", "Close All Files",     "W",    c|s, global_project_close_all ).setMenu("close_all_files" )
+	        registerFunction("", "Close Program",       "Q",    c,   window_close             ).setMenu("close_software", THEME.window_exit_icon )
+	        registerFunction("", "Close Project",       "",     n,   closeProject             ).setMenu("close_project"   ).setArg([ ARG("project", function() /*=>*/ {return PROJECT}, true) ])
+	        
+        } else {
+	        registerFunction("", "Close File",          "Q",    c,   global_project_close     ).setMenu("close_file"      )
+	        registerFunction("", "Close All Files",     "Q",    c|s, global_project_close_all ).setMenu("close_all_files" )
+	        registerFunction("", "Close Program",       vk_f4,  a,   window_close             ).setMenu("close_software", THEME.window_exit_icon )
+	        registerFunction("", "Close Project",       "",     n,   closeProject             ).setMenu("close_project"   ).setArg([ ARG("project", function() /*=>*/ {return PROJECT}, true) ])
+        }
             
         registerFunction("", "Reload Theme",        vk_f10, c|s, global_theme_reload        ).setMenu("reload_theme")
         

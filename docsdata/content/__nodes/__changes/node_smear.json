@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.9.104",
+    "changes": [
+      {
+        "date": "2026-08-30T02:14:48.012Z",
+        "node": "MacOS",
+        "commit": "**MacOS**: Change default close project hotkey to Command+W."
+      }
+    ]
+  },
+  {
     "version": "1.21.7.110",
     "changes": [
       {

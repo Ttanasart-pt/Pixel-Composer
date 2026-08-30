@@ -34,13 +34,14 @@ function Node_Smear(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	newInput(16, nodeValue_EScroll(  "Render Mode", 0, [ "Distance", "Distance Normalized", "Base Color", "Texture" ] ));
 	newInput(15, nodeValue_EScroll(  "Blend Mode",  0, [ "Maximum", "Additive" ] ));
 	newInput(17, nodeValue_Color(    "Blend Side",  ca_white ));
-	newInput(21, nodeValue_Surface(  "Texture" ));
-	// 23
+	newInput(21, nodeValue_Surface(  "Texture"               ));
+	newInput(23, nodeValue_Int(      "Resolution",  1        ));
+	// 24
 	
 	input_display_list = [ 5, 6, 
-		["Surfaces", true],  0, 18, 19,  3,  4,  7,  8, 
-		["Smear",	false], 11, 14,  1,  9, 20,  2, 10, 13, 22, 12, 
-		["Render",  false], 16, 15, 17, 21, 
+		[ "Surfaces",  true ],  0, 18, 19,  3,  4,  7,  8, 
+		[ "Smear",    false ], 11, 14,  1,  9, 20,  2, 10, 13, 22, 12, 
+		[ "Render",   false ], 16, 15, 17, 21, 23, 
 	]
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
@@ -83,6 +84,7 @@ function Node_Smear(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 			var _blnd = _data[15];
 			var _bsid = _data[17];
 			var _text = _data[21], _useText = is_surface(_text);
+			var _res  = _data[23];
 			
 			var _dim  = surface_get_dimension(_surf);
 		#endregion
@@ -93,6 +95,7 @@ function Node_Smear(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 			
 			shader_set_f( "dimension",   _dim     );
 			shader_set_f( "size",        max(_dim[0], _dim[1]) );
+			shader_set_f( "resolution",  _res     );
 			
 			shader_set_i( "alpha",       _mode    );
 			shader_set_i( "inv",         _invt    );

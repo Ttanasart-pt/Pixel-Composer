@@ -1,5 +1,4 @@
 #pragma use(sampler)
-
 #region -- sampler -- [1780048120.828549]
 	uniform int  interpolation;
 	uniform vec2 sampleDimension;
@@ -257,11 +256,11 @@
 
 #endregion -- curve --
 
-
 varying vec2 v_vTexcoord;
 varying vec4 v_vColour;
 
 uniform float size;
+uniform float resolution;
 
 uniform float spread;
 uniform float spread_curve[CURVE_MAX];
@@ -291,7 +290,7 @@ uniform int  useTexture;
 uniform sampler2D texture;
 
 vec4 smear(vec2 shift, out vec2 basePosition) {
-	float delta  = 1. / size;
+	float delta  = 1. / size / resolution;
 	
 	vec4  base = sampleTexture( gm_BaseTexture, v_vTexcoord );
 	      base.rgb *= base.a;
