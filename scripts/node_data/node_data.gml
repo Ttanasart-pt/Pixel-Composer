@@ -3042,6 +3042,64 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	__preview_bbox = new BBOX();
 	static getPreviewBoundingBoxExpanded = function() /*=>*/ {return __preview_bbox};
 	
+	__shortProgress       = 0;
+	__shortPreviewSurface = undefined;
+	static getShortsPreviewSurface = function(_channel) {
+		var _dim  = getDimension();
+		
+		var _outp = outputs[_channel];
+		var _outv = _outp.getValue();
+		
+		switch(_outp.type) {
+			case VALUE_TYPE.pathnode : 
+				if(!is_path(_outv)) break;
+				
+				__shortPreviewSurface = surface_verify(__shortPreviewSurface, _dim[0], _dim[1]);
+				
+				surface_set_target(__shortPreviewSurface);
+					DRAW_CLEAR
+					
+					var _res = 64;
+					var __p  = new __vec2P();
+					var ox, oy, nx, ny;
+					
+					draw_set_color(COLORS._main_accent);
+					for( var i = 0; i <= _res; i++ ) {
+						var t = i / _res * __shortProgress;
+						__p = _outv.getPointRatio(t);
+						
+						nx = __p.x;
+						ny = __p.y;
+						
+						if(i) draw_line_round(ox, oy, nx, ny, 3);
+						
+						ox = nx;
+						oy = ny;
+					}
+				surface_reset_target();
+				return __shortPreviewSurface;
+				
+			case VALUE_TYPE.struct : 
+				if(_outp.custom_type == global.MKTREE_JUNC) {
+					__shortPreviewSurface = surface_verify(__shortPreviewSurface, _dim[0], _dim[1]);
+					
+					if(!is_array(_outv)) _outv = [_outv];
+					
+					surface_set_target(__shortPreviewSurface);
+						DRAW_CLEAR
+						for( var i = 0, n = array_length(_outv); i < n; i++ ) 
+							_outv[i].draw();
+					surface_reset_target();
+					
+					return __shortPreviewSurface;
+				}
+				
+				break;
+		}
+		
+		return getGraphPreviewSurface();
+	}
+	
 	static getGraphPreviewSurface = function() { 
 		var _node = array_safe_get(outputs, max(0, preview_channel_temp ?? preview_channel));
 		if(!is(_node, NodeValue)) return noone;

@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.9.104",
+    "changes": [
+      {
+        "date": "2026-08-30T05:46:06.341Z",
+        "node": "",
+        "commit": "**3D Camera Light**: Fix light gizmo show up in render result."
+      }
+    ]
+  },
+  {
     "version": "1.21.9.103",
     "changes": [
       {

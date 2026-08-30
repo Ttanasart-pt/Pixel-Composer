@@ -17,6 +17,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		forward     = true;
 		_initName   = _name;
 		name_custom = false;
+		custom_type = undefined;
 		
 		inactive_tooltip = "";
 		
@@ -461,6 +462,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	static setIcon = function(_ico, _colr = undefined) { custom_icon = _ico; custom_color = _colr; return self; }
 	
 	static setCustomData = function(param) {
+		custom_type  = param;
 		custom_icon  = param.icon(); 
 		custom_color = param.color(); 
 		

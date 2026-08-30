@@ -15,8 +15,9 @@ function Node_3D_Camera(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _group)
 	lookLine = noone;
 	lookRad  = new __3dGizmoCircleZ(0.5, c_yellow, 0.5);
 	
-	scene      = new __3dScene(camera, "Camera");
-	deferData  = noone;
+	scene        = new __3dScene(camera, "Camera");
+	scene.render = true;
+	deferData    = noone;
 	
 	global.SKY_SPHERE = new __3dUVSphere(0.5, 16, 8, true);
 	var i = in_d3d;

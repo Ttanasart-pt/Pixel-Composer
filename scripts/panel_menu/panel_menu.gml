@@ -77,7 +77,7 @@
         registerFunction("", "Redo",                "Z",    c|s, REDO     ).setMenu("redo"            )
         
         registerFunction("", "Full Panel",          vk_f9,  n,   set_focus_fullscreen     ).setMenu("full_panel"      )
-        registerFunction("", "Reset Layout",        vk_f10, c,   refreshPanel               ).setMenu("reset_layout"    )
+        registerFunction("", "Reset Layout",        vk_f10, c,   refreshPanel             ).setMenu("reset_layout"    )
         
         registerFunction("", "Fullscreen",          vk_f11, n,   global_fullscreen        ).setMenu("fullscreen"      )
         registerFunction("", "Render All",          vk_f5,  n,   global_render_all        ).setMenu("render_all",       [ THEME.sequence_control, 1 ])

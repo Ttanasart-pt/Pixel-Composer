@@ -1,3 +1,7 @@
+#region global
+	
+#endregion
+
 function Process_Anim_Track(_node = undefined) constructor {
 	node        = _node;
 	node_id     = "";
@@ -11,7 +15,7 @@ function Process_Anim_Track(_node = undefined) constructor {
 	
 	animated = true;
 	start    = 0;
-	duration = 30;
+	duration = GLOBAL_TOTAL_FRAMES;
 	trans    = 0;
 	tranRat  = .8;
 	
@@ -43,6 +47,8 @@ function Process_Anim_Track(_node = undefined) constructor {
 	static apply = function(_t) {
 		getNode();
 		if(!is(node, Node)) return;
+		
+		node.__shortProgress = _t;
 		
 		for( var i = 0, n = array_length(values); i < n; i++ ) {
 			var ky = values[i];
@@ -131,7 +137,20 @@ function Process_Anim() constructor {
 	audio_outtro  = "";
 	
 	animated = false;
+	
+	if(directory_exists(PREFERENCES.process_maker_audio_dir)) {
+		var _auds = directory_listdir(PREFERENCES.process_maker_audio_dir, fa_none);
+		_auds = array_filter(_auds, function(f,i) /*=>*/ {
+			var _ext = string_lower(filename_ext(f));
+			return _ext == ".wav" || _ext == ".ogg" || _ext == ".mp3";
+		});
 		
+		if(!array_empty(_auds)) {
+			randomize();
+			audio_loop = array_get_random(_auds);
+		}
+	}
+
 	static getOutputNode = function() {
 		if(outputNode != undefined || outputNodeID == -1) return outputNode;
 		outputNode = PROJECT.nodeMap[? outputNodeID];
@@ -342,15 +361,17 @@ function Panel_Process_Maker() : PanelContent() constructor {
 		var _inp, _ind;
 		
 		for( var i = 0; i < amo; i++ ) {
-			if(!dsp) {
-				_ind = i;
-				_inp = _node.inputs[i];
-				
-			} else {
+			_ind = i;
+			
+			if(dsp) {
 				_ind = _node.input_display_list[i];
+				
+				if(is_handle(_ind))   continue;
 				if(!is_numeric(_ind)) continue;
-				_inp = _node.inputs[_ind];
 			}
+			
+			if(_ind < 0 || _ind >= array_length(_node.inputs)) continue;
+			_inp = _node.inputs[_ind];
 			
 			if(!is(_inp, NodeValue) || (!show_all_prop && !_inp.show_in_inspector)) continue;
 			
@@ -422,15 +443,17 @@ function Panel_Process_Maker() : PanelContent() constructor {
 		var amo = dsp? array_length(_node.input_display_list) : array_length(_node.inputs);
 		
 		for( var i = 0; i < amo; i++ ) {
-			if(!dsp) {
-				_ind = i;
-				_inp = _node.inputs[i];
-				
-			} else {
+			_ind = i;
+			
+			if(dsp) {
 				_ind = _node.input_display_list[i];
+				
+				if(is_handle(_ind))   continue;
 				if(!is_numeric(_ind)) continue;
-				_inp = _node.inputs[_ind];
 			}
+			
+			if(_ind < 0 || _ind >= array_length(_node.inputs)) continue;
+			_inp = _node.inputs[_ind];
 			
 			if(!is(_inp, NodeValue) || (!show_all_prop && !_inp.show_in_inspector)) continue;
 			
@@ -727,6 +750,12 @@ function Panel_Process_Maker() : PanelContent() constructor {
 		    shell_cmd += $"-c:v libx264 -r {rate} -pix_fmt yuv420p -crf {qual} ";
 		    shell_cmd += $"-y {target_path} ";
 		var ffmpeg     = filepath_resolve(PREFERENCES.ffmpeg_path) + "bin/ffmpeg.exe";
+		
+		ffmpeg = libCheck("FFmpeg");
+		if(is_array(ffmpeg))
+			ffmpeg = ffmpeg[1];
+		else return;
+			
 		shell_execute(ffmpeg, shell_cmd, self);
 		
 		shellOpenExplorer(parent_path);
@@ -815,7 +844,7 @@ function Panel_Process_Maker() : PanelContent() constructor {
 					
 					if(_outp.type == VALUE_TYPE.surface || is(_node, Node_Array))
 						 _outv = _outp.getValue();
-					else _outv = _node.getGraphPreviewSurface();
+					else _outv = _node.getShortsPreviewSurface(_data.output);
 					
 					_data.array = is_array(_outv);
 					
@@ -917,7 +946,7 @@ function Panel_Process_Maker() : PanelContent() constructor {
 							if(prev_output) {
 								_prev_surface = prev_output.getValue();
 								if(!is_surface(_prev_surface))
-									_prev_surface = prev_output.node.getGraphPreviewSurface();
+									_prev_surface = prev_output.node.getShortsPreviewSurface(prev_track.output);
 									
 								if(is_surface(_prev_surface) && !prev_track.shadow) {
 									prev_surface = surface_verify(prev_surface, sw * ss, sh * ss);
@@ -1238,8 +1267,10 @@ function Panel_Process_Maker() : PanelContent() constructor {
 			var cc = playing && play_speed == 3? COLORS._main_value_positive : COLORS._main_icon;
 			if(buttonInstant(bb, bx, by, bs, bs, m, pHOVER, pFOCUS, "", THEME.save, 0, cc, 1, .75) == 2) {
 				var tt = PROJECT.trackAnim.title == ""? filename_name_only(PROJECT.path) : PROJECT.trackAnim.title;
-				var path   = get_save_filename_compat("Mp4|*.mp4", tt);
+				var path = get_save_filename_compat("Mp4|*.mp4", tt, "Export to", PREFERENCES.process_maker_export_path);
 				if(path != "") {
+					PREFERENCES.process_maker_export_path = filename_dir(path);
+					
 					play_speed = infinity;
 					export_dir = string_replace(path, ".mp4", "");
 					
@@ -1271,7 +1302,10 @@ function Panel_Process_Maker() : PanelContent() constructor {
 			if(b == 3) PROJECT.trackAnim.audio_loop = "";
 			if(b == 2) {
 				var _path  = get_open_filename_compat("Audio Files (.wav, .ogg, .mp3)|*.wav;*.ogg;*.mp3", "");
-				if(_path != "") PROJECT.trackAnim.audio_loop = _path;
+				if(_path != "") {
+					PREFERENCES.process_maker_audio_dir = filename_dir(_path);
+					PROJECT.trackAnim.audio_loop = _path;
+				}
 			} bx += bs + ui(2);
 			
 			if(PROJECT.trackAnim.audio_loop != "") {

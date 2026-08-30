@@ -7,15 +7,15 @@ function __3dLight() : __3dObject() constructor {
 	color = c_white;
 	intensity = 1;
 	
-	shadow_mapper = sh_d3d_shadow_depth;
-	shadow_active = false;
-	shadow_map    = noone;
+	shadow_mapper     = sh_d3d_shadow_depth;
+	shadow_active     = false;
+	shadow_map        = noone;
 	shadow_map_size   = 1024;
 	shadow_map_scale  = 4;
 	shadow_map_camera = camera_create();
 	shadow_map_view   = array_create(16, 0);
 	shadow_map_proj   = array_create(16, 0);
-	shadow_bias	  = 0.001;
+	shadow_bias	      = 0.001;
 	
 	static getCenter = function() /*=>*/ {return new __vec3(transform.position.x, transform.position.y, transform.position.z)};
 	static getBBOX   = function() /*=>*/ {return new __bbox3D(new __vec3(-1,-1,-1), new __vec3(1,1,1))};
@@ -23,6 +23,7 @@ function __3dLight() : __3dObject() constructor {
 	////- Submit
 	
 	static submitVertex = function(_sc = noone, _sh = noone, _selection = false) {
+		if(_sc.render) return;
 		preSubmitVertex(_sc);
 		
 		transform.submitMatrix();

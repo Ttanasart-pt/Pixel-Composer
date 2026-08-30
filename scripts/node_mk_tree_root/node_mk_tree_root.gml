@@ -341,5 +341,5 @@ function Node_MK_Tree_Root(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		outputs[0].setValue(_roots);
 		
 	}
-	
+
 }

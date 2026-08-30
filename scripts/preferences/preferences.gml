@@ -231,6 +231,7 @@
 			PREFERENCES.welcome_file_order				= [ "Getting started", "Sample Projects" ];
 			PREFERENCES.welcome_file_closed				= [];
 		
+			PREFERENCES.process_maker_audio_dir         = "";
 		#endregion
 		
 		#region PATHS
@@ -241,8 +242,9 @@
 			PREFERENCES.gifski_path			= "%APP%/gifski/";
 			PREFERENCES.ffmpeg_path			= "%APP%/ffmpeg/";
 			
-			PREFERENCES.file_explorer       = "";
-			PREFERENCES.dialog_path         = "";
+			PREFERENCES.file_explorer             = "";
+			PREFERENCES.dialog_path               = "";
+			PREFERENCES.process_maker_export_path = "";
 			
 			PREFERENCES.path_assets         = [];
 			PREFERENCES.path_fonts          = [];

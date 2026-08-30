@@ -42,6 +42,7 @@
 function __3dScene(_camera, _name = "New scene") constructor {
 	camera = _camera;
 	name   = _name;
+	render = false;
 	
 	apply_transform     = false;
 	custom_transform    = new __transform();
