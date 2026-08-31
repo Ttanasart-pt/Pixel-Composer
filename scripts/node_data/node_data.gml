@@ -1480,7 +1480,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	static onValueFromUpdate = function(i=noone) /*=>*/ {}
 	
 	static getDimension      = function() /*=>*/ {
-		if(dimension_index < 0) return PROJ_SURF;
+		if(dimension_index < 0 || dimension_index >= array_length(inputs)) return PROJ_SURF;
 		var _inp = inputs[dimension_index];
 		
 		if(is(_inp, __NodeValue_Surface))   return surface_get_dimension(_inp.getValue());
@@ -3076,6 +3076,54 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 						
 						ox = nx;
 						oy = ny;
+					}
+				surface_reset_target();
+				return __shortPreviewSurface;
+				
+			case VALUE_TYPE.armature : 
+				if(!is(_outv, __Bone)) break;
+				
+				__shortPreviewSurface = surface_verify(__shortPreviewSurface, _dim[0], _dim[1]);
+				surface_set_target(__shortPreviewSurface);
+					DRAW_CLEAR
+					
+					var _points = _outv.toPoints();
+					var namo = array_length(_points) / 3;
+					var pamo = namo;
+					
+					draw_set_color(COLORS._main_accent);
+					for( var i = 0; i < namo; i++ ) {
+						var _p0 = _points[i*3 + 1];
+						var _p1 = _points[i*3 + 2];
+						var _pr = clamp(pamo - i, 0, 1);
+						if(_pr <= 0) continue;
+						
+						var x0 = _p0.x;
+						var y0 = _p0.y;
+						var x1 = lerp(_p0.x, _p1.x, _pr);
+						var y1 = lerp(_p0.y, _p1.y, _pr);
+						
+						draw_line_round(x0, y0, x1, y1, 2);
+					}
+					
+					for( var i = 0; i < namo; i++ ) {
+						var _p0 = _points[i*3 + 1];
+						var _p1 = _points[i*3 + 2];
+						var _pr = clamp(pamo - i, 0, 1);
+						if(_pr <= 0) continue;
+						
+						var x0 = _p0.x;
+						var y0 = _p0.y;
+						var x1 = lerp(_p0.x, _p1.x, _pr);
+						var y1 = lerp(_p0.y, _p1.y, _pr);
+						
+						draw_set_color(c_white);
+						draw_circle(x0-1, y0-1, 2, false);
+						draw_circle(x1-1, y1-1, 2, false);
+						
+						draw_set_color(COLORS._main_accent);
+						draw_circle_border(x0, y0, 2, 1);
+						draw_circle_border(x1, y1, 2, 1);
 					}
 				surface_reset_target();
 				return __shortPreviewSurface;

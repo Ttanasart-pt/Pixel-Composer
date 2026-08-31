@@ -6,6 +6,11 @@
         "date": "2026-08-31T06:14:20.221Z",
         "node": "",
         "commit": "--line uv error"
+      },
+      {
+        "date": "2026-08-31T07:59:14.040Z",
+        "node": "",
+        "commit": "Fix error when animating mappable values."
       }
     ]
   },

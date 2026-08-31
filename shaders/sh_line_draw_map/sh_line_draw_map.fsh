@@ -193,10 +193,8 @@ void main() {
 		pos.x += capSide == 0? -1. : 1.;
 	} 
 	
-	pos -= .5;
-	pos.x = pos.x * cos(rotation) - pos.y * sin(rotation);
-	pos.y = pos.x * sin(rotation) + pos.y * cos(rotation);
-	pos = pos * scale + .5 - position;
+	float ang = rotation;
+	pos = (pos - .5) * mat2(cos(ang), -sin(ang), sin(ang), cos(ang)) * scale + .5 - position;
 	
 	if(useTexture == 1)
     	gl_FragColor = v_vColour * sampleTexture( gm_BaseTexture, pos );
