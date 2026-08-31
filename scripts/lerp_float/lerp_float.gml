@@ -7,6 +7,11 @@ function lerp_float(from, to, speed, pre = 0.01) {
     return lerp(from, to, _rat);
 }
 
+function lerp_float_step(from, to, speed, pre = 0.01) {
+	if(abs(from - to) < pre) return to;
+    return lerp(from, to, 1 / speed);
+}
+
 function lerp_linear(from, to, speed) {
     if(abs(from - to) < speed) return to;
     return from + sign(to - from) * speed;

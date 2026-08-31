@@ -20,18 +20,19 @@ function Node_Normal(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	newInput( 9, nodeValue_Bool(   "Trim Flat", false       )).setPieMenu();
 	
 	////- =Rendering
-	newInput( 5, nodeValue_Bool( "Flip X",      true )).setPieMenu();
-	newInput( 8, nodeValue_Bool( "Flip Y",     false )).setPieMenu();
-	newInput( 4, nodeValue_Bool( "Normalize",   true )).setPieMenu();
-	newInput(10, nodeValue_Bool( "Solid BG",   false ));
-	// inputs 11
+	newInput(11, nodeValue_Slider( "Mix",            1 ))
+	newInput( 5, nodeValue_Bool(   "Flip X",      true )).setPieMenu();
+	newInput( 8, nodeValue_Bool(   "Flip Y",     false )).setPieMenu();
+	newInput( 4, nodeValue_Bool(   "Normalize",   true )).setPieMenu();
+	newInput(10, nodeValue_Bool(   "Solid BG",   false ));
+	// 12
 		
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
 	input_display_list = [  3,
 		[ "Surfaces",  false ],  0,
 		[ "Normal",    false ],  1,  6,  2,  7, 9, 
-		[ "Rendering", false ],  5,  8,  4, 10, 
+		[ "Rendering", false ], 11,  5,  8,  4, 10, 
 	];
 	
 	////- Node
@@ -60,6 +61,7 @@ function Node_Normal(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 			var _smt  = _data[ 2];
 			var _igb  = _data[ 9];
 			
+			var _mix  = _data[11];
 			var _swx  = _data[ 5];
 			var _swy  = _data[ 8];
 			var _nor  = _data[ 4];
@@ -70,6 +72,7 @@ function Node_Normal(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 			gpu_set_texfilter(true);
 			shader_set_i( "sampleMode", getAttribute("oversample")   );
 			shader_set_f( "dimension",  surface_get_dimension(_surf) );
+			shader_set_f( "blend",   _mix );
 			
 			shader_set_m( "height",  _hei, _data[6], inputs[1]);
 			shader_set_m( "smooth",  _smt, _data[7], inputs[2]);

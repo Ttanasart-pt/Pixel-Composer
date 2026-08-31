@@ -51,7 +51,6 @@ function AnimationManager(_project = PROJECT) constructor {
 	is_playing		= false;
 	is_rendering	= false;
 	frame_progress	= false;
-	force_progress	= false;
 	
 	frame_range_start = undefined;
 	frame_range_end   = undefined;

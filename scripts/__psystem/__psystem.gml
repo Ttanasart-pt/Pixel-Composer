@@ -101,6 +101,7 @@ function pSystem_Particles() constructor {
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _params) {
 		var _partBuff = buffer;
 		var _partAmo  = maxCursor;
+		var _siz = _params[$ "size"] ?? 4;
 		var _off = 0;
 		
 		draw_set_color(COLORS._main_accent);
@@ -118,8 +119,8 @@ function pSystem_Particles() constructor {
 			var __x = _x + _px * _s;
 			var __y = _y + _py * _s;
 			
-			draw_line(__x - 4, __y, __x + 4, __y);
-			draw_line(__x, __y - 4, __x, __y + 4);
+			draw_line(__x - _siz, __y, __x + _siz, __y);
+			draw_line(__x, __y - _siz, __x, __y + _siz);
 		}
 		
 	}

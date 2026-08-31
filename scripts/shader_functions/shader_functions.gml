@@ -152,7 +152,7 @@
 		
 		var t = shader_get_sampler_index(shader, sampler);
 		if(is(surface, dynaSurf)) surface = surface.surfaces[0];
-		if(!surface_exists(surface)) return t;
+		if(!is_just_surface(surface)) return t;
 		
 		texture_set_stage(t, surface_get_texture(surface));
 		gpu_set_tex_filter_ext(t, linear);

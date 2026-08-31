@@ -52,6 +52,7 @@ uniform int   swapx;
 uniform int   swapy;
 uniform int   ignoreBlack;
 uniform int   solidBG;
+uniform float blend;
 
 uniform vec2      height;
 uniform int       heightUseSurf;
@@ -124,5 +125,6 @@ void main() {
 	vec3 n3 = vec3(_n, 1.);
 	if(normal == 1) n3 = normalize(n3);
 	
-    gl_FragColor = vec4(.5 + n3 * .5, c.a) * v_vColour;
+    vec4 clr = vec4(.5 + n3 * .5, c.a) * v_vColour;
+    gl_FragColor = mix(c, clr, blend);
 }

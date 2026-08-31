@@ -153,7 +153,7 @@ function Panel_Inspector() : PanelContent() constructor {
         title       = __txt("Inspector");
         icon        = THEME.panel_inspector_icon;
         pause_when_rendering = true;
-    
+    	
         w     = ui(400);
         h     = ui(640);
         min_w = ui(160);

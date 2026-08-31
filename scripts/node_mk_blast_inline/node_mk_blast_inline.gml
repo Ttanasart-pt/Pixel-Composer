@@ -102,6 +102,10 @@ function MKBlast_Layer() constructor {
 		surface_reset_target();
 	}
 	
+	static drawUI = function() {
+		for( var i = 0, m = array_length(flames); i < m; i++ )
+			flames[i].drawUI();
+	}
 }
 
 enum MKBlast_Mask {
@@ -200,6 +204,8 @@ function MKBlast_Element() constructor {
 		pathData        = [];
 	#endregion
 		
+	////- =Step
+	
 	static step = function() {
 		var _life = max(life / lifeTotal, 0);
 		var _blas = max((life - decay) / lifeTotal, 0);
@@ -232,6 +238,8 @@ function MKBlast_Element() constructor {
 		
 		angleS = direction;
 	}
+	
+	////- =Draw
 	
 	static draw = function(_x = 0, _y = 0, _r = 0, _s = 1) {
 		var rad = lerp(size[0], size[1], lifeRatio);
@@ -382,6 +390,18 @@ function MKBlast_Element() constructor {
 			}
 		shader_reset();
 		BLEND_NORMAL
+		
+	}
+	
+	static drawUI = function() {
+		draw_set_circle_precision(32);
+		
+		// draw_set_color_alpha(COLORS._main_icon, .5);
+		// draw_circle(x, y, size[1], true);
+		// draw_set_alpha(1);
+		
+		draw_set_color(COLORS._main_accent);
+		draw_circle(x, y, size[0], true);
 		
 	}
 }

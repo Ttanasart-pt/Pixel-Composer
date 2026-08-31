@@ -292,7 +292,7 @@ function gradientObject(color = ca_black) constructor {
 	static deserialize = function(str) {
 		var s;
 		
-		if(is_array(str)) {			
+		if(is_array(str)) {	
 			keys = [];
 			for( var i = 0, n = array_length(str); i < n; i++ )
 				keys[i] = new gradientKey(str[i].time, str[i].value); 

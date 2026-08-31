@@ -802,7 +802,7 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 					shader_set_i("drawCap",    false   );
 					
 					shader_set_interpolation(_tex);
-					if(_scaleTex) shader_set_2("scale", [ _texSca[0] * _len, _texSca[1] ]);
+					// if(_scaleTex) shader_set_2("scale", [ _texSca[0] * _len, _texSca[1] ]);
 				}
 				
 				draw_primitive_begin_texture(pr_trianglelist, _texId);

@@ -60,10 +60,10 @@ function Node_Blend(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	newInput( 7, nodeValue_Vec2(    "Constant dimension", PROJ_SURF    ));
 	
 	////- =Blend
-	newInput(2, nodeValue_EScroll(  "Blend mode",     0, BLEND_TYPES ))
+	newInput( 2, nodeValue_EScroll( "Blend mode",     0, BLEND_TYPES ))
 		.setHistory([ BLEND_TYPES, { cond: function() /*=>*/ {return LOADING_VERSION < 1_18_00_0}, list: global.BLEND_TYPES_18 } ]).setPieMenu();
-	newInput(3, nodeValue_Slider(   "Opacity",        1     )).setPieMenu();
-	newInput(9, nodeValue_Bool(     "Preserve alpha", false )).setPieMenu();
+	newInput( 3, nodeValue_Slider(  "Opacity",        1     )).setPieMenu();
+	newInput( 9, nodeValue_Bool(    "Preserve alpha", false )).setPieMenu();
 	
 	////- =Transform
 	newInput( 5, nodeValue_EScroll( "Fill mode",         0, [ "None", "Stretch", "Tile" ] ));

@@ -3138,8 +3138,10 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		if(is_anim) animator.updateKeyMap();
 		
 		if(con_node != -1) unit.mode = def_unit;
-		if(unitUse && !has(_map, "unit") && is_modified)
+		if(unitUse && !has(_map, "unit") && is_modified) {
 			node.project.addError($"{toStringS()}: unit unset.", self, THEME.unit_ref);
+			_map[$ "unit"] = 0;
+		}
 		unit.mode = _map[$ "unit"] ?? unit.mode;
 		
 		setBypass(_map[$ "bypass"] ?? false);

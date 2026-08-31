@@ -3055,18 +3055,19 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 				if(!is_path(_outv)) break;
 				
 				__shortPreviewSurface = surface_verify(__shortPreviewSurface, _dim[0], _dim[1]);
-				
 				surface_set_target(__shortPreviewSurface);
 					DRAW_CLEAR
 					
 					var _res = 64;
 					var __p  = new __vec2P();
 					var ox, oy, nx, ny;
+					var lamo = _outv.getLineCount();
 					
 					draw_set_color(COLORS._main_accent);
+					for( var j = 0; j < lamo; j++ ) 
 					for( var i = 0; i <= _res; i++ ) {
 						var t = i / _res * __shortProgress;
-						__p = _outv.getPointRatio(t);
+						__p = _outv.getPointRatio(t, j, __p);
 						
 						nx = __p.x;
 						ny = __p.y;
@@ -3077,6 +3078,17 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 						oy = ny;
 					}
 				surface_reset_target();
+				return __shortPreviewSurface;
+				
+			case VALUE_TYPE.particle : 
+				if(!is(_outv, pSystem_Particles)) break;
+				__shortPreviewSurface = surface_verify(__shortPreviewSurface, _dim[0], _dim[1]);
+			
+				surface_set_target(__shortPreviewSurface);
+					DRAW_CLEAR
+					_outv.drawOverlay(false, false, 0, 0, 1, 0, 0, { size : 3 });
+				surface_reset_target();
+					
 				return __shortPreviewSurface;
 				
 			case VALUE_TYPE.struct : 
@@ -3092,6 +3104,18 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 					surface_reset_target();
 					
 					return __shortPreviewSurface;
+					
+				} else if(_outp.custom_type == global.MKBLAST_JUNC) {
+					__shortPreviewSurface = surface_verify(__shortPreviewSurface, _dim[0], _dim[1]);
+					
+					surface_set_target(__shortPreviewSurface);
+						DRAW_CLEAR
+						for( var i = 0, n = array_length(_outv); i < n; i++ ) 
+							_outv[i].drawUI();
+					surface_reset_target();
+					
+					return __shortPreviewSurface;
+					
 				}
 				
 				break;

@@ -204,5 +204,5 @@ void main() {
     	gl_FragColor = v_vColour;
     	
     // gl_FragColor = sampleTexture( gm_BaseTexture, pos );
-    // gl_FragColor = vec4( pos, 0., 1. );
+    gl_FragColor = vec4( pos, 0., 1. );
 }

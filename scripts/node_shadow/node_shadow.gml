@@ -140,8 +140,7 @@ function Node_Shadow(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		_blurSurf = surface_apply_gaussian(args);
 		
 		surface_set_shader(_outShad, noone, true, BLEND.over);
-			if(_blurSurf != noone)
-				draw_surface(_blurSurf, 0, 0);
+			if(_blurSurf != noone) draw_surface(_blurSurf, 0, 0);
 		surface_reset_shader();
 		
 		surface_set_shader(_outSurf, sh_shadow_apply, true, BLEND.over);
