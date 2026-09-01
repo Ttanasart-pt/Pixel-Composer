@@ -3164,8 +3164,8 @@ function Panel_Animation_Dopesheet() {
 	                	
 	                	var _ex0 = _keyFirst;
 	                	var _ex1 = _keyLast;
-	                	var _ey0 = _cny + _cny - ui(8);
-	                	var _ey1 = _cny + _cny + ui(8);
+	                	var _ey0 = _cny - ui(8);
+	                	var _ey1 = _cny + ui(8);
 	                	
 	                	var frameFirst = (_keyFirst - timeline_shift) / timeline_scale;
 	                	var frameLast  = (_keyLast  - timeline_shift) / timeline_scale;
