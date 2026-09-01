@@ -199,7 +199,7 @@ function mouse_step() {
 	if(MOUSE_EVENT.toPress) MOUSE_EVENT.toPress--;
 	else MOUSE_EVENT.toPress = _fclick;
 	
-	if(OS == os_macosx) {
+	if(MAC) {
 		var _gestBuff = buffer_create(1, buffer_grow, 1);
 		buffer_to_start(_gestBuff);
 		buffer_write(_gestBuff, buffer_f64, 0);
@@ -216,12 +216,10 @@ function mouse_step() {
 		GESTURE_PINCH = buffer_read(_gestBuff, buffer_f64) * PREFERENCES.gesture_zoom_sensitivity;
 		buffer_delete(_gestBuff);
 		
-		if(GESTURE_PAN_Y == 0) {
-			if(mouse_wheel_up())   MOUSE_WHEEL =  PREFERENCES.mouse_wheel_speed;
-			if(mouse_wheel_down()) MOUSE_WHEEL = -PREFERENCES.mouse_wheel_speed;
+		MOUSE_WHEEL = GESTURE_PAN_Y * PREFERENCES.mouse_wheel_speed / 32;
+		if(mouse_wheel_up())   MOUSE_WHEEL =  PREFERENCES.mouse_wheel_speed;
+		if(mouse_wheel_down()) MOUSE_WHEEL = -PREFERENCES.mouse_wheel_speed;
 			
-		} else MOUSE_WHEEL = GESTURE_PAN_Y * PREFERENCES.mouse_wheel_speed / 32;
-		
 		// print($"[{_gest}] drag_x: {drag_x}", $"drag_y: {drag_y}", $"drag_p: {drag_p}");
 	}
 }

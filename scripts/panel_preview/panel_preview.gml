@@ -931,6 +931,8 @@ function Panel_Preview() : PanelContent() constructor {
 	            canvas_y += GESTURE_PAN_Y;
 	        	canvas_s  = clamp(canvas_s * (1 + GESTURE_PINCH), 0.10, 64);
 	        	
+	        	if(GESTURE_PAN_Y != 0)
+	        		MOUSE_WHEEL = 0;
 	        }
 	        
             var _doDragging = false;
@@ -3295,8 +3297,7 @@ function Panel_Preview() : PanelContent() constructor {
             draw_circle_ui(_d3x, _d3y, d3_view_wz, _hv? 0 : 0.02, COLORS._main_icon, 0.3);
             draw_sprite_ui(THEME.view_pan, 0, _d3x, _d3y, 1, 1, 0, view_pan_tool? COLORS._main_accent : COLORS._main_icon, 1);
             
-            _d3x += (d3_view_wz + ui(4) + d3_view_wz) * _side;
-            _d3y =  _view_y + d3_view_wz;
+            _d3x += (d3_view_wz * 2 + ui(4)) * _side;
             _hv  =  false;
             
             if(_hab && point_in_circle(mx, my, _d3x, _d3y, d3_view_wz)) {
@@ -3320,6 +3321,25 @@ function Panel_Preview() : PanelContent() constructor {
             
             draw_circle_ui(_d3x, _d3y, d3_view_wz, _hv? 0 : 0.02, COLORS._main_icon, 0.3);
             draw_sprite_ui(THEME.view_zoom, 0, _d3x, _d3y, 1, 1, 0, view_zoom_tool? COLORS._main_accent : COLORS._main_icon, 1);
+            
+            if(MAC) {
+	            _d3x += (d3_view_wz * 2 + ui(4)) * _side;
+	            _hv  =  false;
+	            
+	            if(_hab && point_in_circle(mx, my, _d3x, _d3y, d3_view_wz)) {
+	                _hv = true;
+	                view_hovering = true;
+	                
+	                if(mouse_lpress(pFOCUS)) {
+	                    PREFERENCES.gesture_enabled = !PREFERENCES.gesture_enabled;
+	                    PREF_SAVE();
+	                }
+	            }
+	            
+	            draw_circle_ui(_d3x, _d3y, d3_view_wz, _hv? 0 : 0.02, COLORS._main_icon, 0.3);
+	            draw_sprite_ui(THEME.view_trackpad, GESTURE_USE, _d3x, _d3y, 1, 1, 0, COLORS._main_icon, 1);
+	            
+            }
         }
         
         if(view_hovering) mouse_on_content = false;

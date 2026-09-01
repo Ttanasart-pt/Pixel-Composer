@@ -39,6 +39,7 @@ function Process_Anim_Track(_node = undefined) constructor {
 			case "Node_Polar"     : autoAnim( 6, 0);       break;
 			
 			case "Node_Blend"     : if(node.inputs[2].getValue() == 0) trans = 1; else autoAnim( 3, 0); break;
+			case "Node_Colorize"  : 
 			case "Node_Posterize" : trans = 1;             break;
 		}
 		

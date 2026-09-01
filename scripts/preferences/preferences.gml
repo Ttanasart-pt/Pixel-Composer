@@ -454,7 +454,7 @@
 		
 		if(disp > 1) PREFERENCES.theme = "default HQ";
 		
-		if(MAC) { // retina
+		if(MAC) { // mac default
 			PREFERENCES.display_scaling = 2;          PREFERENCES_DEF.display_scaling = PREFERENCES.display_scaling;
 			PREFERENCES.theme = "default Mac Retina"; PREFERENCES_DEF.theme = PREFERENCES.theme;
 		}
