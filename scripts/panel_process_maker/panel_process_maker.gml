@@ -38,7 +38,7 @@ function Process_Anim_Track(_node = undefined) constructor {
 			case "Node_Gradient"  : autoAnim( 5, 1);       break;
 			case "Node_Polar"     : autoAnim( 6, 0);       break;
 			
-			case "Node_Blend"     : if(node.inputs[2].getValue() == 0) trans = 1; else autoAnim( 3, 0); break;
+			case "Node_Blend"     : 
 			case "Node_Colorize"  : 
 			case "Node_Posterize" : trans = 1;             break;
 		}
@@ -974,8 +974,8 @@ function Panel_Process_Maker() : PanelContent() constructor {
 								var _sx1 = x0 + _gw / 2 - sw * ss / 2;
 								var _sy1 = y0 + _gh / 2 - sh * ss / 2;
 								
-								var sx = prev_track.array? _sx1 : lerp(cx - sw * ss / 2, _sx1, _trans);
-								var sy = prev_track.array? _sy1 : lerp(cy - sh * ss / 2, _sy1, _trans);
+								var sx = prev_track && prev_track.array? _sx1 : lerp(cx - sw * ss / 2, _sx1, _trans);
+								var sy = prev_track && prev_track.array? _sy1 : lerp(cy - sh * ss / 2, _sy1, _trans);
 								
 								draw_surface_ext(_outvD, sx, sy, ss, ss, 0, c_white, 1);
 							}

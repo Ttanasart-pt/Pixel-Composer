@@ -83,7 +83,7 @@ function __file_selector(_mode = "save", _dir = PREFERENCES.dialog_path, _fname 
 	var _resPath = filepath_resolve(PREFERENCES.temp_path) + "fs_selected.txt"
 	file_delete_safe(_resPath);
 	
-	_ftype = string_replace(_ftype, "All Files|*", ""); // Remove All files because file selector already have all file selection.
+	_ftype = string_replace(_ftype, "All Files|*", ""); // Remove All files because file selector already have all files selection.
 	
 	var _arg = {};
 	_arg[$ "--out"]   = _resPath;
@@ -101,24 +101,19 @@ function __file_selector(_mode = "save", _dir = PREFERENCES.dialog_path, _fname 
 	if(OS == os_linux) rep = FS_PATH;
 	
 	print("###file_start###");
-	var args = shellCommandBuilder(_arg);
-	var _out = shell_execute(rep, args);
+	var _out = shell_execute(rep, shellCommandBuilder(_arg));
 	var _res = undefined;
 	
-	if(true) {
-		var _lines = string_split(_out, "\n");
-		for( var i = 0, n = array_length(_lines); i < n; i++ ) {
-			var _l = _lines[i];
-			if(!string_starts_with(_l, "result:")) continue;
-			
-			var _ll = string_split(_l, "|");
-			var _rs = array_safe_get(_ll, 1);
-			
-			_res = json_try_parse(_rs, undefined);
-		}
+	var _lines = string_split(_out, "\n");
+	for( var i = 0, n = array_length(_lines); i < n; i++ ) {
+		var _l = _lines[i];
+		if(!string_starts_with(_l, "result:")) continue;
 		
-	} else
-		_res = json_load_struct(_resPath, undefined);
+		var _ll = string_split(_l, "|");
+		var _rs = array_safe_get(_ll, 1);
+		
+		_res = json_try_parse(_rs, undefined);
+	}
 	
 	return _res;
 }

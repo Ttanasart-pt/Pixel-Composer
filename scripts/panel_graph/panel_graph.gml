@@ -3178,18 +3178,20 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
         var tw = w - pd * 2;
         var th = toolbar_height;
         
-        var cont_x = drawContext();
-        
         var scs = gpu_get_scissor();
         
         if(mrg) {
         	draw_sprite_stretched(THEME.toolbar, 0, tx, ty, tw, th);
+        	var cont_x = drawContext();
+        
 	        if(pHOVER && point_in_rectangle(mx, my, tx, ty, tx + tw, ty + th))
 	            mouse_on_graph = false;
 	        
 	        gpu_set_scissor(cont_x, ty, w - cont_x, th);
 	        
         } else {
+        	var cont_x = drawContext();
+        	
         	draw_sprite_stretched(THEME.toolbar, 0, tx + tw - toolbar_area_w.value, ty, toolbar_area_w.value, th);
 	        if(pHOVER && point_in_rectangle(mx, my, tx + tw - toolbar_area_w.value, ty, tx + tw, ty + th))
 	            mouse_on_graph = false;

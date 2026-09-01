@@ -22,7 +22,7 @@ function shellOpenExplorer(path) {
 
 function shell_execute_output(path, command, ref = noone, _log = true) { return ExecutedProcessReadFromStandardOutput(shell_execute(path, command)); }
 
-function shell_execute(path, command, ref = noone, _log = true) {
+function shell_execute(path, command, ref = noone, stdOut = true) {
 	INLINE
 	
 	path    = string_replace_all(path,    "\\", "/");
@@ -30,7 +30,7 @@ function shell_execute(path, command, ref = noone, _log = true) {
 	
 	var cmd = $"{path} {command}";
 	var res = ProcessExecute(cmd);
-	if(!_log) return "";
+	if(!stdOut) return "";
 	
 	var out = ExecutedProcessReadFromStandardOutput(res);
 	print($"Execute {path} {command} [{res}] > {out}");
