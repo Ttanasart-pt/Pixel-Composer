@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.9.201",
+    "changes": [
+      {
+        "date": "2026-09-01T06:39:18.416Z",
+        "node": "Draw Line 2 Points",
+        "commit": "**Draw Line 2 Points**: Fix error whne using gradient shift."
+      }
+    ]
+  },
+  {
     "version": "1.21.7.104",
     "changes": [
       {

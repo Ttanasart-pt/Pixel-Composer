@@ -35,14 +35,14 @@ function Node_Line_2Points(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	newInput(10, nodeValue_EScroll(  "Blend Mode", 0, [ "Normal", "Additive", "Maximum" ] ));
 	
 		////- =/Colors
-	newInput( 7, nodeValue_Gradient( "Base Color",        gra_white )).addShift(16);
-	newInput( 8, nodeValue_Gradient( "Color Over Length", gra_white )).addShift(17);
+	newInput( 7, nodeValue_Gradient( "Base Color",        gra_white )).addShift(20);
+	newInput( 8, nodeValue_Gradient( "Color Over Length", gra_white )).addShift(21);
 	
 		////- =/Texture
 	newInput(13, nodeValue_Surface(  "Texture" ));
 	newInput(14, nodeValue_Vec2(     "UV Position", [0,0] ));
 	newInput(15, nodeValue_Vec2(     "UV Scale",    [1,1] ));
-	// 18
+	// 22
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
@@ -51,7 +51,7 @@ function Node_Line_2Points(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		[ "Points",       false ], 16,  2,  3, 17, 18, 19, 
 		[ "Line",         false ],  4,  5,  6,  9, 11, 
 		[ "Rendering",    false ], 10, 
-			[ "/Colors",  false ], [7, true], 16, -1, [8, true], 17, -1, 
+			[ "/Colors",  false ], [7, true], 20, -1, [8, true], 21, -1, 
 			[ "/Texture", false ], 13, 14, 15, 
 	];
 	
@@ -85,8 +85,8 @@ function Node_Line_2Points(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 			var _segs  = getInputData(11);
 			
 			var _blnd  = getInputData(10);
-			var _cBase = getInputData( 7), _cBaseS = getInputData(16);
-			var _cLen  = getInputData( 8), _cLenS  = getInputData(17);
+			var _cBase = getInputData( 7), _cBaseS = getInputData(20);
+			var _cLen  = getInputData( 8), _cLenS  = getInputData(21);
 			
 			var _text  = getInputData(13);
 			var _tpos  = getInputData(14);
