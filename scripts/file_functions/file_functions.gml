@@ -94,6 +94,7 @@ function __file_selector(_mode = "save", _dir = PREFERENCES.dialog_path, _fname 
 	_arg[$ "--file"]  = _fname;
 	_arg[$ "--ftype"] = _ftype;
 	_arg[$ "--project"] = PROJECT.path;
+	// _arg[$ "--preview"] = RUN_IDE? "true" : "false";
 	_arg[$ "-x"]      = WIN_X + WIN_W / 2;
 	_arg[$ "-y"]      = WIN_Y + WIN_H / 2;
 	

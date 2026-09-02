@@ -191,7 +191,7 @@ function winManStep() {
 			} else {
 				if(OS == os_macosx) {
 					sx = _sx + (mx - _mx);
-					sy = _sy - (my - _my);
+					sy = _sy + (my - _my);
 					window_set_position(sx, sy);
 					
 				} else {

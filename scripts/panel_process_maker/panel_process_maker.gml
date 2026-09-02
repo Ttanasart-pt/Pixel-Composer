@@ -32,12 +32,12 @@ function Process_Anim_Track(_node = undefined) constructor {
 		var autoAnim = function(i,st=0) /*=>*/ { if(!node.inputs[i].is_anim) values[i] = { valueStart : st, valueEnd : node.inputs[i].getValue() }; }
 		switch(instanceof(node)) {
 			case "Node_Shape"     : autoAnim(28, 0);       break;
-			case "Node_Outline"   : autoAnim( 1, 0);       break;
 			case "Node_Line"      : autoAnim( 8, [0,.01]); break;
 			case "Node_Vignette"  : autoAnim( 3, 0);       break;
 			case "Node_Gradient"  : autoAnim( 5, 1);       break;
 			case "Node_Polar"     : autoAnim( 6, 0);       break;
 			
+			case "Node_Outline"   : 
 			case "Node_Blend"     : 
 			case "Node_Colorize"  : 
 			case "Node_Posterize" : trans = 1;             break;
@@ -347,7 +347,7 @@ function Panel_Process_Maker() : PanelContent() constructor {
 			track_sel.duration = t; 
 			if(key_mod_press(CTRL)) {
 				for( var i = 0, n = array_length(PROJECT.trackAnim.tracks); i < n; i++ )
-					PROJECT.trackAnim.tracks[i] = t;
+					PROJECT.trackAnim.tracks[i].duration = t;
 			}
 			
 		}).setFont(f_p3).setEmpty();
@@ -426,6 +426,13 @@ function Panel_Process_Maker() : PanelContent() constructor {
 			
 			if(!is(_inp, NodeValue) || (!show_all_prop && !_inp.show_in_inspector)) continue;
 			
+			switch(_inp.type) {
+				case VALUE_TYPE.integer : 
+				case VALUE_TYPE.float   : 
+				case VALUE_TYPE.boolean : break;
+				default : continue;
+			}
+				
 			var _name = _inp.getName();
 			var _val  = array_safe_get(_vals, _ind, noone);
 			
@@ -508,6 +515,13 @@ function Panel_Process_Maker() : PanelContent() constructor {
 			
 			if(!is(_inp, NodeValue) || (!show_all_prop && !_inp.show_in_inspector)) continue;
 			
+			switch(_inp.type) {
+				case VALUE_TYPE.integer : 
+				case VALUE_TYPE.float   : 
+				case VALUE_TYPE.boolean : break;
+				default : continue;
+			}
+				
 			var _name = _inp.getName();
 			var _val  = array_safe_get(_vals, _ind, noone);
 			

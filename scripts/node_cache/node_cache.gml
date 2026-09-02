@@ -5,12 +5,13 @@ function Node_Cache(_x, _y, _group = noone) : __Node_Cache(_x, _y, _group) const
 	
 	////- =Surfaces
 	newInput( 0, nodeValue_Surface("Surface In")).setRequired();
-	// 1
+	newInput( 1, nodeValue_Bool("Animated", false));
+	// 2
 	
 	newOutput(0, nodeValue_Output("Cache surface", VALUE_TYPE.surface, noone));
 	
 	input_display_list = [
-		[ "Surfaces", false ],  0, 
+		[ "Surfaces", false ],  0,  1, 
 	];
 	
 	////- Node
@@ -36,6 +37,8 @@ function Node_Cache(_x, _y, _group = noone) : __Node_Cache(_x, _y, _group) const
 	}
 	
 	static update = function() {
+		update_on_frame = inputs[1].getValue();
+		
 		if(!IS_PLAYING) {
 			recoverCache();
 			return;
