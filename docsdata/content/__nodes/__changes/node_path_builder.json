@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.9.202",
+    "changes": [
+      {
+        "date": "2026-09-02T08:56:00.441Z",
+        "node": "Path Builder",
+        "commit": "**Path Builder**: Add dynamic inputs."
+      }
+    ]
+  },
+  {
     "version": "1.21.5.008",
     "changes": [
       {

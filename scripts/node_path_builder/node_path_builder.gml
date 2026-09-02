@@ -10,6 +10,18 @@ function Node_Path_Builder(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	
 	newOutput(0, nodeValue_Output("Path", VALUE_TYPE.pathnode, self));
 	
+	input_display_list = [  1, 
+		[ "Points", false ], 0, 
+	]
+	
+	function createNewInput(index = array_length(inputs)) {
+		newInput(index, nodeValue_Float( "Points", [] )).setVisible(true, true).setArrayDepth(2);
+		
+		array_push(input_display_list, index);
+		postCreateNewInput(index);
+		return inputs[index];
+	} setDynamicInput(1);
+	
 	////- Tool
 	
 	tool_addP = new NodeTool( "Add Point", THEME.control_add );
@@ -248,11 +260,35 @@ function Node_Path_Builder(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		path_loop   = getInputData(1);
 		path_amount = 0;
 		
+		print(_anc)
 		if(!is_array(_anc)) return;
 		
 		var _d = array_get_depth(_anc);
-		if(_d < 2 || _d > 3) return;
-		else if(_d == 2)     _anc = [ _anc ];
+		switch(_d) {
+			case 1  : // single point
+				_anc = [_anc]; 
+				for( var i = input_fix_len, n = array_length(inputs); i < n; i++ ) {
+					var panc = getInputData(i);
+					if(array_get_depth(panc) == 1)
+						array_push(_anc, panc);
+				}
+				
+				_anc = [_anc];
+				break;
+				
+			case 2  : // point array
+				_anc = [_anc]; 
+				for( var i = input_fix_len, n = array_length(inputs); i < n; i++ ) {
+					var panc = getInputData(i);
+					if(array_get_depth(panc) == 2)
+						array_push(_anc, panc);
+				}
+				
+				break;
+			
+			case 3  : break;
+			default : return;
+		}
 		
 		path_amount = array_length(_anc);
 		anchors     = array_create(path_amount);
