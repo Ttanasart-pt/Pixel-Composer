@@ -86,6 +86,17 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 	
 	static getContent = function() /*=>*/ {return array_safe_get_fast(content, content_index, noone)};
 	
+	static getContentRecurs = function() /*=>*/ {
+		if(!array_empty(content)) return content[0];
+		
+		for( var i = 0, n = array_length(childs); i < n; i++ ) {
+			var _cont = childs[i].getContentRecurs();
+			if(_cont != undefined) return _cont;
+		}
+		
+		return undefined;
+	}
+	
 	static getContentFromType = function(_type) /*=>*/ {
 		for( var i = 0, n = array_length(content); i < n; i++ ) {
 			if(instanceof(content[i]) == _type) return content[i];

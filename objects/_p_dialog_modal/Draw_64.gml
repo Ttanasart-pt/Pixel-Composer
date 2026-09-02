@@ -31,10 +31,10 @@ WIDGET_TAB_BLOCK = true;
 	var bpad = ui(THEME_VALUE.dialog_modal_button_spacing);
 	
 	var amo = array_length(buttons);
-	var bw  = (dialog_w - DIALOG_PAD - bpad * (amo + 1)) / amo;
+	var bw  = (dialog_w - bpad * (amo + 1)) / amo;
 	var bh  = line_get_height(f_p2, 10);
-	var bx1 = dialog_x + dialog_w - DIALOG_PAD / 2 - bpad;
-	var by1 = dialog_y + dialog_h - DIALOG_PAD / 2 - bpad;
+	var bx1 = dialog_x + dialog_w - bpad;
+	var by1 = dialog_y + dialog_h - bpad;
 	var bx0 = bx1 - bw;
 	var by0 = by1 - bh;
 	

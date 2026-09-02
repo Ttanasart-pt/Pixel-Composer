@@ -257,19 +257,20 @@ function Panel_Menu() : PanelContent() constructor {
             "clear_cache_all",
         ]; menu_rendering = [ __txt("Rendering"), "main_rendering" ];
         
-        menu_panels = [ __txt("Panels"), [
+        menu_panels  = [ __txt("Panels"), [
             MENU_ITEMS.full_panel,
             MENU_ITEMS.reset_layout,
             menuItemShelf(__txt("Workspace"), function(_dat) /*=>*/ { 
+		        var lay = [];
+		        var f = file_find_first(DIRECTORY + "layouts/*", 0);
+		        while(f != "") {
+		        	var fname = filename_name_only(f);
+		        	if(!string_starts_with(fname, "__") && filename_ext(f) == ".json")
+		            	array_push(lay, fname);
+		            f = file_find_next();
+		        } file_find_close();
+		            
                 var arr = [];
-                var lay = [];
-                
-                var f   = file_find_first(DIRECTORY + "layouts/*", 0);
-                while(f != "") {
-                    array_push(lay, filename_name_only(f));
-                    f = file_find_next();
-                }
-                
                 array_push(arr, menuItem(__txt("panel_menu_save_layout", "Save layout"), function() /*=>*/ {
                     var dia = dialogCall(o_dialog_file_name, mouse_mx + ui(8), mouse_my + ui(8));
                     if(dia) {
@@ -288,6 +289,33 @@ function Panel_Menu() : PanelContent() constructor {
                     array_push(arr, menuItem(lay[i], 
                         function(_dat) /*=>*/ { PREFERENCES.panel_layout_file = _dat.path; PREF_SAVE(); setPanel(); }, noone, noone, 
                         function(item) /*=>*/ {return item.name == PREFERENCES.panel_layout_file},
+                        { path: lay[i] }));
+                }
+                
+                return submenuCall(_dat, arr);
+            }),
+            menuItemShelf(__txt("New Floating Workspace"), function(_dat) /*=>*/ { 
+		        var lay = [];
+		        var f = file_find_first(DIRECTORY + "layouts/*", 0);
+		        while(f != "") {
+		            var fname = filename_name_only(f);
+		        	if(!string_starts_with(fname, "__") && filename_ext(f) == ".json")
+		            	array_push(lay, fname);
+		            f = file_find_next();
+		        } file_find_close();
+		            
+                var arr = [];
+                for(var i = 0; i < array_length(lay); i++)  {
+                    array_push(arr, menuItem(lay[i], 
+                        function(_dat) /*=>*/ { 
+                        	var _layout = json_load_struct($"{DIRECTORY}layouts/{_dat.path}.json");
+                        	var _pdata  = _layout[$ "panel"];
+                        	if(!is_struct(_pdata)) return;
+                        	
+                        	var _panel  = dialogPanelCall(_pdata);
+                        	if(_panel) _panel.title_height = 0;
+                        	
+                        }, noone, noone, noone,
                         { path: lay[i] }));
                 }
                 
@@ -741,7 +769,10 @@ function Panel_Menu() : PanelContent() constructor {
                         	var bc = COLORS._main_accent;
                             var b  = buttonInstant(bspr, bx, by, bw, bh, m, pHOVER, true, "", bp, 0, bc);
                             if(b) _draggable = false;
-                            if(b == 2) window_close();
+                            if(b == 2) {
+                            	if(panel.dialog) instance_destroy(panel.dialog);
+                            	else window_close();
+                            }
                             break;
                             
                         case WINDOW_ACTION.Maximize:
@@ -1185,13 +1216,19 @@ function Panel_Menu() : PanelContent() constructor {
 		                    DISPLAY_REFRESH
 		                }
 		                
-		                if(mouse_lpress())
-		                	winMan_initDrag(0b1_0000);
+		                if(mouse_lpress()) {
+		                	if(panel.dialog)
+		                		panel.dialog.dragStart();
+		                	else winMan_initDrag(0b1_0000);
+		                }
             			break;
             			
             		case os_macosx : 
-		                if(mouse_lpress()) 
-		                	winMan_initDrag(0b1_0000);
+		                if(mouse_lpress()) {
+		                	if(panel.dialog)
+		                		panel.dialog.dragStart();
+		                	else winMan_initDrag(0b1_0000);
+		                }
             			break;
             	}
             }

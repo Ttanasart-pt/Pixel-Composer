@@ -28,8 +28,12 @@ function setContent(_content) {
 		_cnt = panel.getContent();
 		
 	} else if(typeof(_content) == "struct") {
-		_dia_w = min(ui(_content[$ "pref_w"]) ?? WIN_W, WIN_W);
-		_dia_h = min(ui(_content[$ "pref_h"]) ?? WIN_H, WIN_H);
+		_dia_w = _content[$ "pref_w"]? ui(_content[$ "pref_w"]) : WIN_W * .75;
+		_dia_h = _content[$ "pref_h"]? ui(_content[$ "pref_h"]) : WIN_H * .75;
+		
+		_dia_w = min(_dia_w, WIN_W);
+		_dia_h = min(_dia_h, WIN_H);
+		
 		panel.verify(_dia_w, _dia_h);
 		
 		_cnt = __loadPanelStruct(panel, _content);
@@ -38,7 +42,7 @@ function setContent(_content) {
 			_cnt = panel.getContentFromType(_content[$ "main"]);
 		
 		if(!is(_cnt, PanelContent)) 
-			_cnt = panel.getContent();
+			_cnt = panel.getContentRecurs();
 	}
 	
 	if(!is(_cnt, PanelContent)) {
