@@ -12,6 +12,7 @@ function Node_Image_Grid(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	////- =Grid
 	newInput( 0, nodeValue_EScroll( "Main Axis",  0, __axis ));
 	newInput( 1, nodeValue_Int(     "Column",     4         )).setValidator(VV_min(1));
+	newInput( 8, nodeValue_EScroll( "Origin",     0, [ "Top Left", "Top Right", "Bottom Left", "Bottom Right" ] ));
 	newInput( 2, nodeValue_Vec2(    "Spacing",   [0,0]      ));
 	newInput( 3, nodeValue_IPadding("Padding",   [0,0,0,0]  ));
 	
@@ -22,15 +23,15 @@ function Node_Image_Grid(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	
 	////- =Grouping
 	newInput( 4, nodeValue_Text(    "Group",     noone      )).setVisible(true, true).setArrayDepth(1);
-	// 8
+	// 9
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	newOutput(1, nodeValue_Output("Atlas data", VALUE_TYPE.atlas, []));
 	
-	array_foreach(inputs, function(v,i) /*=>*/ { if(i != 4) v.rejectArray(); });
+	array_foreach(inputs, function(v,i) /*=>*/ { if(i != 4) v.rejectArray(); return false; });
 	
 	input_display_list = [
-		[ "Grid",     false    ],  0,  1,  2,  3, 
+		[ "Grid",     false    ],  0,  1,  8,  2,  3, 
 		[ "Fix Grid", false, 5 ],  6,  7, 
 		[ "Grouping", false    ],  4, 
 		[ "Surfaces", false    ], 
@@ -58,16 +59,17 @@ function Node_Image_Grid(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	
 	static update = function(frame = CURRENT_FRAME) {
 		#region data
-			var _axis = getInputData(0);
-			var _col  = getInputData(1);
-			var _spac = getInputData(2);
-			var _padd = getInputData(3);
+			var _axis = getInputData( 0);
+			var _col  = getInputData( 1);
+			var _orig = getInputData( 8);
+			var _spac = getInputData( 2);
+			var _padd = getInputData( 3);
 			
-			var _fixg = getInputData(5);
-			var _fixa = getInputData(6);
-			var _fdim = getInputData(7);
+			var _fixg = getInputData( 5);
+			var _fixa = getInputData( 6);
+			var _fdim = getInputData( 7);
 			
-			var _grup = getInputData(4);
+			var _grup = getInputData( 4);
 		#endregion
 		
 		var ww = 0;
@@ -147,13 +149,32 @@ function Node_Image_Grid(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		
 		var atlas = [];
 		var ppind = 0;
-		var sx = 0;
-		var sy = 0;
 		
 		var _mains = 0;
 		var _subs  = 0;
 		var _coli  = 0;
 		var _curG  = array_safe_get(_grup, 0);
+		
+		var sx = 0, sy = 0;
+		var ox = 1, oy = 1;
+		
+		switch(_orig) {
+			case 0 : sx = _padd[PADDING.left]; sy = _padd[PADDING.top];
+				     ox =  1; oy =  1; break;
+	    	
+	    	case 1 : sx = ww - _padd[PADDING.right]; sy = _padd[PADDING.top];
+				     ox = -1; oy =  1; break;
+			
+	    	case 2 : sx = _padd[PADDING.left]; sy = hh - _padd[PADDING.bottom];
+				     ox =  1; oy = -1; break;
+	    	
+	    	case 3 : sx = ww - _padd[PADDING.right]; sy = hh - _padd[PADDING.bottom];
+				     ox = -1; oy = -1; break;
+	    	
+		}
+		
+		var lx = sx;
+		var ly = sy;
 		
 		for( var j = 0; j < min(_amo, _len); j++ ) {
 			var _s = surfs[j];
@@ -162,20 +183,38 @@ function Node_Image_Grid(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 			var sw = surface_get_width_safe(_s);
 			var sh = surface_get_height_safe(_s);
 			
-			array_push(atlas, new SurfaceAtlas(_s, sx, sy));
-			surface_set_shader(temp_surface[!ppind], sh_draw_surface);
-				shader_set_f("dimension", ww, hh);
+			var dx = sx;
+			var dy = sy;
+			
+			switch(_orig) {
+				case 0 : dx = sx; 
+					     dy = sy;      break;
+		    	
+		    	case 1 : dx = sx - sw; 
+					     dy = sy;      break;
 				
-				shader_set_surface("fore", _s);
-				shader_set_f("fdimension", sw, sh);
-				shader_set_f("position",   sx + _padd[PADDING.left], sy + _padd[PADDING.top]);
+		    	case 2 : dx = sx; 
+					     dy = sy - sh; break;
+		    	
+		    	case 3 : dx = sx - sw; 
+					     dy = sy - sh; break;
+		    	
+			}
+			
+			array_push(atlas, new SurfaceAtlas(_s, dx, dy));
+			surface_set_shader(temp_surface[!ppind], sh_draw_surface);
+				shader_set_f( "dimension",  ww, hh );
+				
+				shader_set_s( "fore",       _s     );
+				shader_set_f( "fdimension", sw, sh );
+				shader_set_f( "position",   dx, dy );
 					
 				draw_surface_safe(temp_surface[ppind]);
 			surface_reset_shader();
 			ppind = !ppind;
 			
-			if(_axis == 0) { sx += sw + _spac[0]; _subs = max(_subs, sh); }
-			else           { sy += sh + _spac[1]; _subs = max(_subs, sw); }
+			if(_axis == 0) { sx += (sw + _spac[0]) * ox; _subs = max(_subs, sh); }
+			else           { sy += (sh + _spac[1]) * oy; _subs = max(_subs, sw); }
 			
 			_coli++;
 			var _newL = _coli >= _col;
@@ -189,8 +228,8 @@ function Node_Image_Grid(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 			if(_newL) {
 				_coli = 0;
 				
-				if(_axis == 0) { sy += _subs + _spac[1]; sx = 0; } 
-				else		   { sx += _subs + _spac[0]; sy = 0; } 
+				if(_axis == 0) { sy += (_subs + _spac[1]) * oy; sx = lx; } 
+				else		   { sx += (_subs + _spac[0]) * ox; sy = ly; } 
 			}
 		}
 		

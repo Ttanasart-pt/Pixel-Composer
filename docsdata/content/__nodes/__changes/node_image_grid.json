@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.9.202",
+    "changes": [
+      {
+        "date": "2026-09-02T07:11:23.576Z",
+        "node": "Image Grid",
+        "commit": "**Image Grid**: Add origin corner control."
+      }
+    ]
+  },
+  {
     "version": "1.21.8.003",
     "changes": [
       {
