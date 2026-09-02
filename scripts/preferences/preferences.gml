@@ -630,8 +630,14 @@
 			
 			if(OS == os_macosx) {
 				if(RUN_IDE) {
-					PREFERENCES.display_scaling = 1;
-					PREFERENCES.theme = "default Mac";
+					if(code_is_compiled()) {
+						PREFERENCES.display_scaling = 2;
+						PREFERENCES.theme = "default Mac Retina";
+						
+					} else {
+						PREFERENCES.display_scaling = 1;
+						PREFERENCES.theme = "default Mac";
+					}
 				}
 				
 				window_set_size(ww, hh);

@@ -107,13 +107,13 @@
 	
 	#macro mouse_rx mouse_real_x()
 	function mouse_real_x() {
-		if(MAC) return mac_screen_mouse_x();
+		if(MAC) return mac_screen_mouse_x() * (1+YYC);
 		return display_mouse_get_x();
 	}
 	
 	#macro mouse_ry mouse_real_y()
 	function mouse_real_y() {
-		if(MAC) return display_get_height() - mac_screen_mouse_y(); // wtf macos?
+		if(MAC) return display_get_height() - mac_screen_mouse_y() * (1+YYC); // wtf macos?
 		return display_mouse_get_y();
 	}
 #endregion

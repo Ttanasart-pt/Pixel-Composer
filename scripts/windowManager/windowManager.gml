@@ -189,9 +189,9 @@ function winManStep() {
 				DISPLAY_REFRESH
 				
 			} else {
-				if(OS == os_macosx) {
-					sx = _sx + (mx - _mx);
-					sy = _sy + (my - _my);
+				if(MAC) {
+					sx = _sx + (mx - _mx) / (1+YYC);
+					sy = _sy + (my - _my) / (1+YYC);
 					window_set_position(sx, sy);
 					
 				} else {
