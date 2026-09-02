@@ -471,7 +471,9 @@ function __fnInit_Panels() {
         registerFunction("", "Preferences",               "", n, function() /*=>*/ {return dialogPanelCall(new Panel_Preference())}        ).setMenu("preference",      THEME.gear)
         registerFunction("", "Splash screen",             "", n, function() /*=>*/ {return dialogCall(o_dialog_splash)}                    ).setMenu("splash_screen")
         registerFunction("", "Release note",              "", n, function() /*=>*/ {return dialogCall(o_dialog_release_note)}              ).setMenu("release_note")
-        registerFunction("", "Command Palette",     vk_space, c, function() /*=>*/ {return dialogCall(o_dialog_command_palette)}           ).setMenu("command_palette")
+        
+        if(MAC) registerFunction("", "Command Palette", vk_space, c|s, function() /*=>*/ {return dialogCall(o_dialog_command_palette)}     ).setMenu("command_palette")
+        else    registerFunction("", "Command Palette", vk_space, c,   function() /*=>*/ {return dialogCall(o_dialog_command_palette)}     ).setMenu("command_palette")
         registerFunction("", "Open Autosave Folder",      "", n, function() /*=>*/ {return shellOpenExplorer(DIRECTORY + "autosave")}      ).setMenu("autosave_folder", THEME.save_auto)
         
         registerFunction("", "Addons",                 "",  n,   function() /*=>*/ {return dialogPanelCall(new Panel_Addon())}             ).setMenu("addons")
