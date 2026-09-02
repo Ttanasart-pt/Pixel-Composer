@@ -36,6 +36,8 @@ function Node_Kuwahara(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 		[ "Effects",  false ],  9,  2, 16, 10, 11, 12, 13, 
 	];
 	
+	////- Node
+	
 	temp_surface = array_create(4);
 	
 	attribute_surface_depth();

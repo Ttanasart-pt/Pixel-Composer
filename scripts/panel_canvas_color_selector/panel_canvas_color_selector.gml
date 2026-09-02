@@ -13,8 +13,8 @@ function Panel_Canvas_Color() : PanelContent() constructor {
 	hue = 0;
 	col = undefined;
 	
-	bColor    = new buttonColor(  function(c) /*=>*/ { canvas.tool_color     = col; });
-	bColorSub = new buttonColor(  function(c) /*=>*/ { canvas.tool_color_sub = col; });
+	bColor    = new buttonColor(  function(c) /*=>*/ { canvas.tool_color     = c; });
+	bColorSub = new buttonColor(  function(c) /*=>*/ { canvas.tool_color_sub = c; });
 	
 	sbar = undefined;
 	scon = undefined;

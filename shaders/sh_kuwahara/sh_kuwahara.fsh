@@ -1,5 +1,4 @@
 #pragma use(sampler_simple)
-
 #region -- sampler_simple -- [1765194569.6586206]
     uniform int  sampleMode;
     
@@ -55,7 +54,13 @@ varying vec2 v_vTexcoord;
 varying vec4 v_vColour;
 
 #define PI 3.14159265358979323846;
-#define MAX_RAD 64
+
+#ifdef _YY_HLSL11_ 
+    #define MAX_RAD 64
+#else 
+    #define MAX_RAD 16
+#endif
+
 
 const float q = 18.;
 

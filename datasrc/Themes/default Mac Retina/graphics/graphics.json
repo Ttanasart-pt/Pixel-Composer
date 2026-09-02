@@ -76,7 +76,7 @@
     "dialog_title":                       { "path": "./panel/s_dialog_title.png",                           "s": 1, "x":  0, "y":  0, "slice": 31 },
     "dialog_menu":                        { "path": "./panel/s_dialog_menu.png",                            "s": 2, "x":  0, "y":  0, "slice": 31 },
     "panel_tab_align":                    { "path": "./panel/s_panel_tab_align.png",                        "s": 4, "x":  8, "y":  8 },
-    "panel_menu_widget":                  { "path": "./panel/s_panel_menu_widget.png",                      "s": 2, "x": 12, "y": 12, "slice": 31 },
+    "panel_menu_widget":                  { "path": "./panel/s_panel_menu_widget.png",                      "s": 2, "x": 12, "y": 12, "slice": 26 },
     "tool_side":                          { "path": "./panel/s_tool_side.png",                              "s": 1, "x":  0, "y":  0, "slice": 31 },
     "toolbar":                            { "path": "./panel/s_toolbar.png",                                "s": 1, "x":  0, "y":  0, "slice": 31 },
     "ui_panel":                           { "path": "./panel/s_ui_panel.png",                               "s": 3, "x":  0, "y":  0, "slice": 31 },

@@ -606,10 +606,12 @@ function Panel_Menu() : PanelContent() constructor {
                 nh  = ui(24);
             }
             
+            var ny00 = ny0 - nh / 2;
+            
             if(RENDERING != undefined) {
                 var nw = hori? ui(104) : w - ui(16);
                 
-                draw_sprite_stretched_ext(THEME.panel_menu_widget, 1, nx0, ny0 - nh/2, nw, nh);
+                draw_sprite_stretched_ext(THEME.panel_menu_widget, 1, nx0, ny00, nw, nh);
                 
                 draw_sprite_ui(THEME.loading_s, 0, nx0 + nh/2, ny0, .65, .65, current_time / 2, COLORS._main_icon, .8);
                 
@@ -637,11 +639,11 @@ function Panel_Menu() : PanelContent() constructor {
                 var ev = animation_curve_eval(ac_flash, noti_flash);
                 var cc = merge_color(c_white, noti_flash_color, ev);
                 
-                draw_sprite_stretched_ext(THEME.panel_menu_widget, 0, nx0, ny0 - nh / 2, nw, nh, cc, 1);
+                draw_sprite_stretched_ext(THEME.panel_menu_widget, 0, nx0, ny00, nw, nh, cc, 1);
                 
-                if(pHOVER && point_in_rectangle(mx, my, nx0, ny0 - nh / 2, nx0 + nw, ny0 + nh / 2)) {
+                if(pHOVER && point_in_rectangle(mx, my, nx0, ny00, nx0 + nw, ny0 + nh / 2)) {
                     _draggable = false;
-                    draw_sprite_stretched_add(THEME.panel_menu_widget, 1, nx0, ny0 - nh / 2, nw, nh, cc, .3);
+                    draw_sprite_stretched_add(THEME.panel_menu_widget, 1, nx0, ny00, nw, nh, cc, .3);
                     if(mouse_lpress(pFOCUS))
                         dialogPanelCall(new Panel_Notification(), nx0, ny0 + nh / 2 + ui(4), { anchor: ANCHOR.left | ANCHOR.top });
                     
@@ -649,12 +651,15 @@ function Panel_Menu() : PanelContent() constructor {
                 }
                 
                 gpu_set_blendmode(bm_add);
-                draw_sprite_stretched_ext(THEME.panel_menu_widget, 0, nx0, ny0 - nh / 2, nw, nh, cc, ev / 2);
+                draw_sprite_stretched_ext(THEME.panel_menu_widget, 0, nx0, ny00, nw, nh, cc, ev / 2);
                 gpu_set_blendmode(bm_normal);
                 
                 var _prg = noone;
                 for( var i = 0, n = array_length(STATS_PROGRESS); i < n; i++ ) _prg = max(_prg, STATS_PROGRESS[i].progress);
-                if(_prg > noone) draw_sprite_stretched_ext(THEME.panel_menu_widget, 0, nx0, ny0 - nh / 2, nw * clamp(_prg, 0, 1), nh, COLORS._main_value_positive, .5);
+                if(_prg > noone) {
+                	var _prw = nw * clamp(_prg, 0, 1);
+                	draw_sprite_stretched_ext(THEME.panel_menu_widget, 0, nx0, ny00, _prw, nh, COLORS._main_value_positive, .5);
+                }
                 
                 if(noti_icon_show > 0) draw_sprite_ui_uniform(noti_icon, 0, nx0 + nw - ui(16), ny0, .75, c_white, noti_icon_show);
                 
