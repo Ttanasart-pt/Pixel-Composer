@@ -1,3 +1,21 @@
+function NewCanvasPanel(node) {
+	var _layout = CANVAS_PANEL_LAYOUT;
+	var _lpath  = DIRECTORY + "layouts/__canvas.json";
+	if(file_exists_empty(_lpath))
+		_layout = json_load_struct(_lpath);
+	
+	editorPanel = dialogPanelCall(_layout);
+	if(!editorPanel) return;
+	
+	editorPanel.title  = "Canvas";
+	var _canvas   = editorPanel.content;
+	_canvas.node  = node;
+	
+	var _conten = editorPanel.panel.getAllContent();
+	for( var i = 0, n = array_length(_conten); i < n; i++ ) 
+		_conten[i].canvas = _canvas;
+}
+
 function Panel_Canvas() : PanelContent() constructor {
 	context_str  = "Canvas";
 	title        = "Canvas";

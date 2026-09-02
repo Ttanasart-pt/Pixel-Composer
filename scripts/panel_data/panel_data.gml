@@ -86,6 +86,19 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 	
 	static getContent = function() /*=>*/ {return array_safe_get_fast(content, content_index, noone)};
 	
+	static getContentFromType = function(_type) /*=>*/ {
+		for( var i = 0, n = array_length(content); i < n; i++ ) {
+			if(instanceof(content[i]) == _type) return content[i];
+		}
+		
+		for( var i = 0, n = array_length(childs); i < n; i++ ) {
+			var _cont = childs[i].getContentFromType(_type);
+			if(_cont != undefined) return _cont;
+		}
+		
+		return undefined;
+	}
+	
 	function setContent(_content = noone, _switch = false) {
 		if(is(_content, Panel)) {
 			content = _content.content;
@@ -257,8 +270,8 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 				var w0 = round(childs[fixChild].w / _tw * w);
 				var w1 = round(w - childs[fixChild].w);
 				
-				var mw0 = childs[0].getmin_w();
-				var mw1 = childs[1].getmin_w();
+				var mw0 = childs[ fixChild].getmin_w();
+				var mw1 = childs[!fixChild].getmin_w();
 				
 				var dw0 = max(0, mw0 - w0);
 				var dw1 = max(0, mw1 - w1);
@@ -282,8 +295,10 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 				var h0 = round(childs[fixChild].h / _th * h);
 				var h1 = round(h - childs[fixChild].h);
 				
-				var mh0 = childs[0].getmin_h();
-				var mh1 = childs[1].getmin_h();
+				var mh0 = childs[ fixChild].getmin_h();
+				var mh1 = childs[!fixChild].getmin_h();
+				
+				// print($"{fixChild}|", childs[0].y, childs[1].y, childs[0].h, childs[1].h, mh0, mh1);
 				
 				var dh0 = max(0, mh0 - h0);
 				var dh1 = max(0, mh1 - h1);

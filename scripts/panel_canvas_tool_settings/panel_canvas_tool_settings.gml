@@ -174,6 +174,35 @@ function Panel_Canvas_Tool_Settings() : PanelContent() constructor {
 			var aa = .75 + hv * .25;
 			
 			draw_sprite_ui(THEME.icon_canvas_24, 0, bw / 2, bh / 2, 1, 1, 0, cc, aa);
+			if(hv) {
+				_draggable = false;
+				if(mouse_lpress(pFOCUS) || mouse_rpress(pFOCUS)) {
+					menuCall("", [
+						menuItem(__txt("Inspect Parent Node"), function() /*=>*/ {
+							if(!is(canvas, Panel_Canvas)) return;
+							panelFocusNode(canvas.node);
+						}),
+						-1, 
+						menuItem(__txt("Reset Layout"), function() /*=>*/ {
+							if(!panel.dialog) return;
+							instance_destroy(panel.dialog);
+							NewCanvasPanel(canvas.node);
+						}),
+						menuItem(__txt("Save Current Layout"), function() /*=>*/ {
+							if(!panel.dialog) return;
+							var cont = __panelSerialize(panel.dialog.panel, true);
+							cont.main   = "Panel_Canvas";
+							cont.pref_w = round(panel.dialog.panel.w / UI_SCALE);
+							cont.pref_h = round(panel.dialog.panel.h / UI_SCALE);
+							
+							json_save_struct(DIRECTORY + "layouts/__canvas.json", cont);
+						}),
+						menuItem(__txt("Delete Saved Layout"), function() /*=>*/ {
+							file_delete_safe(DIRECTORY + "layouts/__canvas.json");
+						}).setActive(file_exists(DIRECTORY + "layouts/__canvas.json")),
+					]);
+				}
+			}
 			
 			var x0 = bw + pad;
 		#endregion

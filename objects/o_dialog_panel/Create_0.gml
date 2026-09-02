@@ -28,11 +28,14 @@ function setContent(_content) {
 		_cnt = panel.getContent();
 		
 	} else if(typeof(_content) == "struct") {
-		_dia_w = min(ui(_content.pref_w), WIN_W);
-		_dia_h = min(ui(_content.pref_h), WIN_H);
+		_dia_w = min(ui(_content[$ "pref_w"]) ?? WIN_W, WIN_W);
+		_dia_h = min(ui(_content[$ "pref_h"]) ?? WIN_H, WIN_H);
 		panel.verify(_dia_w, _dia_h);
 		
 		_cnt = __loadPanelStruct(panel, _content);
+		
+		if(!is(_cnt, PanelContent) && has(_content, "main")) 
+			_cnt = panel.getContentFromType(_content[$ "main"]);
 		
 		if(!is(_cnt, PanelContent)) 
 			_cnt = panel.getContent();

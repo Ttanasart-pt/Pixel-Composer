@@ -41,6 +41,7 @@
         split: "v",
         width: 40,
         
+        main: "Panel_Canvas",
         pref_w: 1200,
         pref_h: 800,
         
@@ -132,16 +133,7 @@ function Node_Canvas_S(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 	}
 	
 	function onDoubleClick(panel) {
-		editorPanel = dialogPanelCall(CANVAS_PANEL_LAYOUT);
-		if(!editorPanel) return;
-		
-		editorPanel.title  = "Canvas";
-		var _canvas = editorPanel.content;
-		_canvas.node  = self;
-		
-		var _conten = editorPanel.panel.getAllContent();
-		for( var i = 0, n = array_length(_conten); i < n; i++ ) 
-			_conten[i].canvas = _canvas;
+		NewCanvasPanel(self);
 	}
 	
 	////- Actions

@@ -6,6 +6,11 @@
         "date": "2026-09-02T04:56:32.397Z",
         "node": "Canvas Panel",
         "commit": "**Canvas Panel**: Fix color panel calculate height incorrectly."
+      },
+      {
+        "date": "2026-09-02T06:09:51.433Z",
+        "node": "Canvas",
+        "commit": "**Canvas**: Add the ability to save canvas panel layout."
       }
     ]
   },

@@ -96,7 +96,7 @@ function Panel_Workspace() : PanelContent() constructor {
 		
 		for( var i = 0; i <= amo; i++ ) {
 			var str = i == amo? "+" : workspaces[i];
-			if(str == "__default") continue;
+			if(string_starts_with(str, "__")) continue;
 			
 			var tw  = string_width(str)  + ui(12);
 			var th  = string_height(str) + ui(8);
