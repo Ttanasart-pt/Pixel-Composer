@@ -6,6 +6,11 @@
         "date": "2026-09-02T08:56:00.441Z",
         "node": "Path Builder",
         "commit": "**Path Builder**: Add dynamic inputs."
+      },
+      {
+        "date": "2026-09-02T09:24:13.460Z",
+        "node": "",
+        "commit": "**Path Sample**: Add path index selector."
       }
     ]
   },

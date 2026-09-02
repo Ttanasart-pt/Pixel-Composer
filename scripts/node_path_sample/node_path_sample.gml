@@ -4,21 +4,22 @@ function Node_Path_Sample(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	setDimension(96, 48);
 	
 	////- =Path
-	newInput( 0, nodeValue_Path(     "Path"         ));
-	newInput( 3, nodeValue_SliRange( "Range", [0,1] ));
-	newInput( 4, nodeValue_Slider(   "Shift",  0    ));
+	newInput( 0, nodeValue_Path(     "Path"          ));
+	newInput( 5, nodeValue_Int(      "Path Index", 0 ));
+	newInput( 3, nodeValue_SliRange( "Range", [0,1]  ));
+	newInput( 4, nodeValue_Slider(   "Shift",  0     ));
 	
 	////- =Sample
 	newInput( 2, nodeValue_EScroll(  "Type",  0, [ "Loop", "Ping pong", "Clamp" ] ));
 	newInput( 1, nodeValue_Float(    "Ratio", 0 ));
-	// 5
+	// 6
 	
 	newOutput( 0, nodeValue_Output( "Position",  VALUE_TYPE.float, [0,0] )).setDisplay(VALUE_DISPLAY.vector);
 	newOutput( 1, nodeValue_Output( "Direction", VALUE_TYPE.float,  0    ));
 	newOutput( 2, nodeValue_Output( "Weight",    VALUE_TYPE.float,  0    ));
 	
 	input_display_list = [
-		[ "Path",   false ],  0,  3,  4, 
+		[ "Path",   false ],  0,  5,  3,  4, 
 		[ "Sample", false ],  2,  1, 
 	];
 	
@@ -49,6 +50,7 @@ function Node_Path_Sample(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	static processData = function(_output, _data, _array_index = 0, _frame = CURRENT_FRAME) {
 		#region data
 			var _path = _data[ 0];
+			var _pind = _data[ 5];
 			var _rng  = _data[ 3];
 			var _shft = _data[ 4];
 			
@@ -78,7 +80,7 @@ function Node_Path_Sample(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 			case 2 : _rat = clamp(_rat, 0, 0.999); break;
 		}
 		
-		__temp_p = _path.getPointRatio(_rat, 0, __temp_p);
+		__temp_p = _path.getPointRatio(_rat, _pind, __temp_p);
 		
 		var _px = __temp_p.x;
 		var _py = __temp_p.y;
@@ -87,8 +89,8 @@ function Node_Path_Sample(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 		var r0 = clamp(_rat - 0.0001, 0, 1);
 		var r1 = clamp(_rat + 0.0001, 0, 1);
 		
-		__temp_p0 = _path.getPointRatio(r0, 0, __temp_p0);
-		__temp_p1 = _path.getPointRatio(r1, 0, __temp_p1);
+		__temp_p0 = _path.getPointRatio(r0, _pind, __temp_p0);
+		__temp_p1 = _path.getPointRatio(r1, _pind, __temp_p1);
 		
 		var arr = __temp_p.toArray();
 		var dir = 0;

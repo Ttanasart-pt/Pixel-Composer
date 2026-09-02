@@ -580,14 +580,14 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 					break;
 					
 				case 2 :
-					if(!is_array(_segs[0][0])) //spreaded single path
+					if(!is_array(_segs[0][0])) //spreaded single segment
 						_segs = [ _segs ];
 					
 					lines     = array_create(array_length(_segs));
 					line_data = array_create(array_length(_segs));
 					
 					for (var i = 0, n = array_length(_segs); i < n; i++) {
-						var _seg    = _segs[i];
+						var _seg = _segs[i];
 						if(array_empty(_seg)) continue;
 						
 						var m = array_length(_seg);
@@ -634,8 +634,6 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 					
 					if(_pbbox) _surfDim = [ max(1, maxx - minx + _ppadd[0] + _ppadd[2]), max(1, maxy - miny + _ppadd[1] + _ppadd[3]) ];
 					break;
-					
-					
 			}
 		#endregion
 			
