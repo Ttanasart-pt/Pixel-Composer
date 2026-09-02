@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.9.202",
+    "changes": [
+      {
+        "date": "2026-09-02T04:56:32.397Z",
+        "node": "Canvas Panel",
+        "commit": "**Canvas Panel**: Fix color panel calculate height incorrectly."
+      }
+    ]
+  },
+  {
     "version": "1.21.8.003",
     "changes": [
       {

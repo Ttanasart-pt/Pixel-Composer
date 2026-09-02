@@ -4,7 +4,7 @@
 
 #macro DIALOG_DRAW_BG                           \
 	if(is_winwin(window)) winwin_start(window); \
-	var dpd = THEME_VALUE.dialog_padding;     \
+	var dpd = THEME_VALUE.dialog_padding;       \
 	var _dialog_x = window? 0 : dialog_x;       \ 
 	var _dialog_y = window? 0 : dialog_y;       \
 	if(!is_winwin(window)) draw_sprite_stretched( THEME.dialog_shadow, 0, _dialog_x-dpd, _dialog_y-dpd, dialog_w+dpd*2, dialog_h+dpd*2 ); \

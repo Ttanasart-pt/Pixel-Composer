@@ -19,14 +19,14 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 	padding = ui(THEME_VALUE.panel_margin);
 	content = [];
 	childs  = [];
-	anchor  = ANCHOR.none;
 	content_index = 0;
 	
 	x  = _x; tx = _x;
 	y  = _y; ty = _y;
 	w  = _w; tw = _w;  
 	h  = _h; th = _h;
-	split = "";
+	anchor = ANCHOR.none; static setAnchor = function(_a) /*=>*/ { anchor = _a; return self; }
+	split  = "";          static setSplit  = function(_s) /*=>*/ { split  = _s; return self; }
 	
 	hovering    = false;
 	focusing    = false;
@@ -243,8 +243,10 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 		if(array_length(childs) == 2) {
 			//print("=== Refreshing (" + string(w) + ", " + string(h) + ") " + string(split) + " ===");
 			
-			var _tw = childs[0].w + childs[1].w;
-			var _th = childs[0].h + childs[1].h;
+			// var _tw = childs[0].w + childs[1].w;
+			// var _th = childs[0].h + childs[1].h;
+			var _tw = w;
+			var _th = h;
 			
 			var fixChild = split == "h"? childs[1].x < childs[0].x : childs[1].y < childs[0].y;
 			
@@ -359,30 +361,24 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 			return noone;
 		}
 		
+		var W = w;
 		if(_w < 0) _w = w + _w;
-		var _panelParent = new Panel(parent, x, y, w, h);
-		_panelParent.anchor = anchor;
-		_panelParent.split  = "h";
+		w = _w;
 		
+		var _panelParent = new Panel(parent, x, y, W, h).setAnchor(anchor).setSplit("h");
 		var _panelL = self;
+		var _panelR = new Panel(_panelParent, x + _w, y, W - _w, h).setAnchor(ANCHOR.right);
+		
 		array_push(_panelParent.childs, _panelL);
 		
-		var _panelR = new Panel(_panelParent, x + _w, y, w - _w, h);
-		_panelR.anchor = ANCHOR.right;
-		
-		var prev_w = w;
-		w = _w;
 		for( var i = 0, n = array_length(content); i < n; i++ ) {
 			content[i].w = w;
 			content[i].onResize();
 		}
 		
-		if(isGlobal()) 
-			PANEL_MAIN = _panelParent;
-		else if(dialog != undefined)
-			dialog.panel = _panelParent;
-		else if(parent != noone)
-			array_remove(parent.childs, self);
+		     if(isGlobal())          PANEL_MAIN = _panelParent;
+		else if(dialog != undefined) dialog.panel = _panelParent;
+		else if(parent != noone)     array_remove(parent.childs, self);
 			
 		parent	= _panelParent;
 		anchor	= ANCHOR.left;
@@ -402,29 +398,24 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 			return noone;
 		}
 		
-		if(_h < 0) _h = h + _h;
-		var _panelParent = new Panel(parent, x, y, w, h);
-		_panelParent.anchor = anchor;
-		_panelParent.split  = "v";
-		
-		var _panelT = self;
-		array_push(_panelParent.childs, _panelT);
-		var _panelB = new Panel(_panelParent, x, y + _h, w, h - _h);
-		_panelB.anchor = ANCHOR.bottom;
-		
-		var prev_h = h;
+		var H = h;
+		if(_h < 0) _h = H + _h;
 		h = _h;
+		
+		var _panelParent = new Panel(parent, x, y, w, H).setAnchor(anchor).setSplit("v");
+		var _panelT = self;
+		var _panelB = new Panel(_panelParent, x, y + _h, w, H - _h).setAnchor(ANCHOR.bottom);
+		
+		array_push(_panelParent.childs, _panelT);
+		
 		for( var i = 0, n = array_length(content); i < n; i++ ) {
 			content[i].h = h;
 			content[i].onResize();
 		}
 		
-		if(isGlobal()) 
-			PANEL_MAIN = _panelParent;
-		else if(dialog != undefined)
-			dialog.panel = _panelParent;
-		else if(parent != noone)
-			array_remove(parent.childs, self);
+		     if(isGlobal())          PANEL_MAIN   = _panelParent;
+		else if(dialog != undefined) dialog.panel = _panelParent;
+		else if(parent != noone)     array_remove(parent.childs, self);
 		
 		parent	= _panelParent;
 		anchor	= ANCHOR.top;

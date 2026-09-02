@@ -21,6 +21,7 @@
 					            main: true, 
 	        				},
 	        				{
+	        					// content: "Panel_Canvas_Color"
 			        			content: [
 			        				{ content: "Panel_Canvas_Palette" },
 			        				{ content: "Panel_Canvas_Color"   }

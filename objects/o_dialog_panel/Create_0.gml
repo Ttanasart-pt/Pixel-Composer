@@ -33,6 +33,7 @@ function setContent(_content) {
 		panel.verify(_dia_w, _dia_h);
 		
 		_cnt = __loadPanelStruct(panel, _content);
+		
 		if(!is(_cnt, PanelContent)) 
 			_cnt = panel.getContent();
 	}
