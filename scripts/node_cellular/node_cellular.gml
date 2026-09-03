@@ -23,6 +23,7 @@ function Node_Cellular(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	newInput( 6, nodeValue_EButton(  "Pattern",    0, [ "Tiled", "Uniform", "Radial" ]       )).setPieMenu();
 	newInput(14, nodeValue_Rotation( "Phase",      0  ));
 	newInput(23, nodeValue_Slider(   "Randomness", 1  ));
+	newInput(25, nodeValue_Slider(   "Gap",        0  ));
 	
 	////- =Transform
 	newInput( 1, nodeValue_Vec2(     "Position", [.5,.5] )).setHotkey("G").setUnitSimple().setPieMenu();
@@ -41,20 +42,21 @@ function Node_Cellular(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	newInput(17, nodeValue_EScroll( "Blend Mode",      0, [ "Additive", "Maximum", "Minimum" ] ));
 	
 	////- =Rendering
-	newInput(22, nodeValue_SliRange( "Level",     [0,1] ));
-	newInput(15, nodeValue_Bool(     "Inverted",  false ))
+	newInput(22, nodeValue_SliRange( "Level",     [0,1]    ));
+	newInput(15, nodeValue_Bool(     "Inverted",  false    ))
+	newInput(26, nodeValue_Color(    "Gap Color", ca_black ))
 	newInput( 5, nodeValue_Slider(   "Contrast",  1, [0, 4, 0.01] ));
 	newInput( 7, nodeValue_Slider(   "Middle",   .5, [0, 1, 0.01] ));
 	newInput(10, nodeValue_Bool(     "Colored",   false ))
-	// 25
+	// 28
 	
 	input_display_list = [  3,
 		[ "Output",    false ],  0, 20, 21, 13, 
-		[ "Noise",     false ],  4,  6, 14, 23, 
+		[ "Noise",     false ],  4,  6, 14, 23, 25, 
 		[ "Iteration", false ], 16, 18, 19, 17, 
 		[ "Transform", false ],  1, 12,  2, 11, 24,  
 		[ "Radial",    false ],  8,  9,
-		[ "Rendering", false ], 22, 15,  5,  7, 10, 
+		[ "Rendering", false ], 22, 15, 26,  5,  7, 10, 
 	];
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
@@ -83,8 +85,9 @@ function Node_Cellular(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 			
 			var _type   = _data[ 4];
 			var _pat    = _data[ 6];
-			var _phs    = _data[14];
+			var _phs    = _data[14]; _phs /= 360;
 			var _rand   = _data[23];
+			var _gap    = _data[25];
 			
 			var _pos    = _data[ 1];
 			var _rot    = _data[12];
@@ -100,12 +103,15 @@ function Node_Cellular(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 			
 			var _lvl    = _data[22];
 			var _inv    = _data[15];
+			var _gcol   = _data[26];
 			var _con    = _data[ 5];
 			var _mid    = _data[ 7];
 			var _col    = _data[10];
 			
 			inputs[ 8].setVisible(_pat  == 2);
 			inputs[ 9].setVisible(_pat  == 2);
+			inputs[25].setVisible(_type == 2);
+			inputs[26].setVisible(_type == 2);
 			inputs[10].setVisible(_type == 2);
 			inputs[14].setVisible(_type != 3);
 		#endregion
@@ -125,7 +131,7 @@ function Node_Cellular(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 			shader_set_f( "dimension",     _dim  );
 			shader_set_f( "seed",          _seed );
 			shader_set_f( "randomness",    _rand );
-			shader_set_f( "phase",         _phs / 360 );
+			shader_set_f( "phase",         _phs  );
 			
 			shader_set_2( "position",      _pos );
 			shader_set_m( "scale",         _data[2], _data[11], inputs[2] );
@@ -136,6 +142,9 @@ function Node_Cellular(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 			shader_set_f( "radiusScale",   _rad );
 			shader_set_f( "radiusShatter", _sht );
 			shader_set_i( "pattern",       _pat );
+			
+			shader_set_f( "gap",           _gap    );
+			shader_set_c( "gapColor",      _gcol   );
 			
 			shader_set_i( "iteration",     _itr    );
 			shader_set_f( "iterScale",     _iscale );

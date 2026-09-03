@@ -293,7 +293,7 @@ function Panel_Process_Maker() : PanelContent() constructor {
 		exporting     = false;
 		export_dir    = "";
 		
-		view_thumbnail = false;
+		view_thumbnail =  true;
 		show_all_prop  = false;
 	#endregion
 	

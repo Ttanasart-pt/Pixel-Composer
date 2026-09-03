@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.9.203",
+    "changes": [
+      {
+        "date": "2026-09-03T02:12:52.096Z",
+        "node": "Cellular Noise",
+        "commit": "**Cellular Noise**: Add gap for Cell type."
+      }
+    ]
+  },
+  {
     "version": "1.21.7.101",
     "changes": [
       {

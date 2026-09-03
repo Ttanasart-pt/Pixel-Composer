@@ -23,7 +23,9 @@ void main() {
 	float ang;
 	for(float i = -shadow; i <= shadow; i++) {
 		vec2 pxs = v_vTexcoord;
-		pxs[process] += i * tx;
+		if(process == 0)
+			 pxs.x += i * tx;
+		else pxs.y += i * tx;
 		
 		vec4 ccc = texture2D(gm_BaseTexture, pxs);
 		

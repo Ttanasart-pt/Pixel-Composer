@@ -1,5 +1,4 @@
 #pragma use(uv)
-
 #region -- uv -- [1779523757.7465837]
     uniform sampler2D uvMap;
     uniform int   useUvMap;
@@ -51,6 +50,9 @@ uniform int   colored;
 uniform float rotation;
 uniform int   tiled;
 
+uniform float gap;
+uniform vec4  gapColor;
+
 uniform vec2      size;
 uniform vec2      scale;
 uniform int       scaleUseSurf;
@@ -75,50 +77,83 @@ vec3 colorNoise(in vec2 st) {
 	return vec3(randR, randG, randB);
 }
 
-vec2 cellNoise(vec2 ntx, vec2 pos, float sca, float scaMax, float ang, float _seed) {
+vec3 cellNoise(vec2 ntx, vec2 pos, float sca, float scaMax, float ang, float _seed) {
 	vec2 st   = (ntx - pos) * mat2(cos(ang), -sin(ang), sin(ang), cos(ang)) * sca / size;
     vec2 i_st = floor(st);
     vec2 f_st = fract(st);
 
-    float m_dist = 1.;
-	vec2  mp;
+    float md = 1.;
+	vec2  mp, mr, mg;
 	
 	if(pattern < 2) {
-	    for (int y = -1; y <= 1; y++) {
-	        for (int x = -1; x <= 1; x++) {
-	            vec2 neighbor = vec2(float(x), float(y));
-	            vec2 point    = random2(pattern == 0? mod(i_st + neighbor, scaMax) : i_st + neighbor);
-				vec2 pointSam = 0.5 + 0.5 * sin(_seed + TAU * (point + phase)) * randomness;
+	    for (int y = -1; y <= 1; y++) 
+        for (int x = -1; x <= 1; x++) {
+            vec2 neighbor = vec2(float(x), float(y));
+            vec2 point    = random2(pattern == 0? mod(i_st + neighbor, scaMax) : i_st + neighbor);
+			vec2 pointSam = 0.5 + 0.5 * sin(_seed + TAU * (point + phase)) * randomness;
+		
+            vec2 _diff = neighbor + pointSam - f_st;
+            float dist = length(_diff);
 			
-	            vec2 _diff = neighbor + pointSam - f_st;
-	            float dist = length(_diff);
-				
-				if(dist < m_dist) {
-					m_dist = dist;
-					mp     = point;
-				}
-	        }
-	    }
+			if(dist < md) {
+				md = dist;
+				mr = _diff;
+				mp = point;
+				mg = neighbor;
+			}
+        }
+	    
+		md = 8.;
+		for(int y = -2; y <= 2; y++)
+		for(int x = -2; x <= 2; x++) {
+			vec2 g = mg + vec2(float(x), float(y));
+			vec2 point = random2(mod(i_st + g, scaMax));
+			point = 0.5 + 0.5 * sin(_seed + TAU * fract(point + phase));
+		
+			vec2 r = g + point - f_st;
+			if(dot(mr - r, mr - r) > .000001)
+				md = min( md, dot( 0.5 * (mr + r), normalize(r - mr)) );
+		}
+		
 	} else if(pattern == 2) {
 		for (int j = 0; j <= int(sca / 2.); j++) {
 			int _amo = int(sca) + int(float(j) * radiusShatter);
 			for (int i = 0; i <= _amo; i++) {
 				float ang  = TAU / float(_amo) * float(i) + float(j) + random(vec2(0.684, 1.387)) + _seed;
 				float rad  = pow(float(j) / sca, radiusScale) * sca * .5 + random(vec2(ang)) * 0.1 * randomness;
-				vec2 point = vec2(cos(ang + TAU * phase) * rad, sin(ang + TAU * phase) * rad) + pos;
+				
+				vec2 neighbor = vec2(cos(ang + TAU * phase) * rad, sin(ang + TAU * phase) * rad);
+				vec2 point    = neighbor + pos;
 				
 			    vec2 _diff = point - ntx;
 			    float dist = length(_diff);
 			    
-				if(dist < m_dist) {
-					m_dist = dist;
-					mp     = point;
+				if(dist < md) {
+					md = dist;
+					mr = _diff;
+					mp = point;
+					mg = neighbor;
 				}
+			}
+		}
+		
+		md = 1.;
+		for (int j = 0; j <= int(sca / 2.); j++) {
+			int _amo = int(sca) + int(float(j) * radiusShatter);
+			for (int i = 0; i <= _amo; i++) {
+				float ang = TAU / float(_amo) * float(i) + float(j) + random(vec2(0.684, 1.387)) + _seed;
+				float rad = pow(float(j) / sca, radiusScale) * sca * .5 + random(vec2(ang)) * 0.1;
+				vec2 neighbor = vec2(cos(ang + TAU * phase) * rad, sin(ang + TAU * phase) * rad);
+				vec2 point = neighbor + pos;
+			
+			    vec2 r = point - ntx;
+				if(dot(mr - r, mr - r) > .0001)
+					md = min( md, dot( 0.5 * (mr + r), normalize(r - mr)) );
 			}
 		}
 	}
 
-	return mp;
+	return vec3(mp, md);
 }
 
 void main() {
@@ -147,7 +182,10 @@ void main() {
     vec3  md  = vec3(.0);
     
 	for(int i = 0; i < iteration; i++) {
-		vec2 _f = cellNoise(ntx, pos, sca, scaMax, ang, _seed);
+		vec3  cel = cellNoise(ntx, pos, sca, scaMax, ang, _seed);
+		vec2  _f  = cel.xy;
+		float dis = cel.z;
+		
 		vec3 _noise;
 		
 		if(colored == 0) {
@@ -158,6 +196,9 @@ void main() {
 		    
 		} else if(colored == 1)
 			_noise = colorNoise(_f) * amp;
+		
+		float _gap = step(gap, dis);
+		_noise = _gap == 1.? _noise : gapColor.rgb;
 		
 		     if(blendMode == 0) md += _noise * amp;
 		else if(blendMode == 1) md  = max(md, _noise);
