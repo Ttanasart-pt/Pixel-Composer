@@ -205,7 +205,7 @@ vec3 overlay(vec3 a, vec3 b, float w) {
 // float random  (in vec2 st) { return fract(sin(dot(st.xy + vec2(seed / 1000., 0.), vec2(12.9898, 78.233))) * 43758.5453123); }
 float gaussian(   float z, float u, float o) { return (1.0 / (o * sqrt(2.0 * 3.1415))) * exp(-(((z - u) * (z - u)) / (2.0 * (o * o)))); }
 float grandom (in vec2 st) { 
-	float n = fract(sin(dot(st, vec2(12.9898, 78.233))) * 43758.5453 + seed);
+	float n = fract(sin(dot(st, vec2(12.9898, 78.233))) * 43758.5453 + mod(seed, 100000.) / 10.);
 	float r = gaussian(n, 0., .5 * .5);
 	
 	return r;

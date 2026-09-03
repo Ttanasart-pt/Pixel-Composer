@@ -223,7 +223,7 @@ uniform int   paletteAmount;
 vec2 amoVec;
 
 float pfract(in float f) { return fract(fract(f) + 1.); }
-float random (in vec2 st, float seed) { return fract(sin(dot(st.xy, vec2(1892.9898, 78.23453))) * (seed + 437.54123)); }
+float random (in vec2 st, float seed) { return fract(sin(dot(st.xy, vec2(1892.9898, 78.23453))) * mod(seed + 437.54123, 100000.) / 10.); }
 
 float getDist(vec2 tx, vec2 _frc) {
 	float thr = dothr.x;

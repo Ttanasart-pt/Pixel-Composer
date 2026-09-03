@@ -47,15 +47,15 @@ uniform int   iteration;
 
 uniform vec2  level;      float applyLevel(float f) { return (f - level.x) / (level.y - level.x); }
 
-float hash(float x) { return fract(fract(x * (0.3183098861 + seed / 100000.)) * fract(x * (0.15915494309 + seed / 100000.)) * 265871.1723); }
-vec3  hash(vec3 x)  { return fract(fract(x * (0.3183098861 + seed / 100000.)) * fract(x * (0.15915494309 + seed / 100000.)) * 265871.1723); }
+float hash(float x) { return fract(fract(x * (0.3183098861 + mod(seed, 100000.) / 10.)) * fract(x * (0.15915494309 + mod(seed, 100000.) / 10.)) * 265871.1723); }
+vec3  hash(vec3 x)  { return fract(fract(x * (0.3183098861 + mod(seed, 100000.) / 10.)) * fract(x * (0.15915494309 + mod(seed, 100000.) / 10.)) * 265871.1723); }
 
 float hash2(vec2 x) { return hash(dot(mod(x, 100.0), vec2(127.1, 311.7))); }
 vec3  hash3x2(vec2 x1,vec2 x2,vec2 x3) { return hash(vec3(dot(mod(x1, 100.0), vec2(127.1, 311.7)), 
                                                           dot(mod(x2, 100.0), vec2(127.1, 311.7)), 
                                                           dot(mod(x3, 100.0), vec2(127.1, 311.7)) )); }
 
-vec4 hash4( vec4 n ) { return fract(sin(n) * (753.5453123 + seed / 100000.)); }
+vec4 hash4( vec4 n ) { return fract(sin(n) * (753.5453123 + mod(seed, 100000.) / 10.)); }
 
 float noiseHoneycomb(vec2 i) {
     vec2 c3;

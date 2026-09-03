@@ -71,7 +71,7 @@ vec3 hsv2rgb(vec3 c) {
     return c.z * mix(K.xxx, clamp(p - K.xxx, 0.0, 1.0), c.y);
 }
 
-float random (in vec2 st, float seed) { return fract(sin(dot(st.xy + vec2(21.4564, 46.8564), vec2(12.9898, 78.233))) * (43758.5453123 + seed)); }
+float random (in vec2 st, float seed) { return fract(sin(dot(st.xy + vec2(21.4564, 46.8564), vec2(12.9898, 78.233))) * mod(43758.5453123 + seed, 100000.) / 10.); }
 float randomFloat (in vec2 st, float seed) {
 	float sedSt = floor(seed);
 	float sedFr = fract(seed);

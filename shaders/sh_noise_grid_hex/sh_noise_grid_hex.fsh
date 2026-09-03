@@ -54,9 +54,7 @@ uniform float seed;
 
 uniform int useSampler;
 
-float random (in vec2 st, float seed) {
-    return fract(sin(dot(st.xy + seed, vec2(1892.9898, 78.23453))) * 437.54123);
-}
+float random (in vec2 st, float seed) { return fract(sin(dot(st.xy + mod(seed, 100000.) / 10., vec2(1892.9898, 78.23453))) * 437.54123); }
 
 vec2 hexagonGetID( in vec2 p ) {
 	vec2  q = vec2( p.x, p.x * 0.5 + p.y * 0.8660254037 );

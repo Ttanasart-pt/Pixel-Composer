@@ -51,7 +51,7 @@ uniform float thickness;
 
 uniform vec2  level;      float applyLevel(float f) { return (f - level.x) / (level.y - level.x); }
 
-float random  (in vec2 st) { return fract(sin(dot(st.xy + vec2(1., 6.), vec2(2., 7.))) * (1. + seed / 100.)); }
+float random  (in vec2 st) { return fract(sin(dot(st.xy + vec2(1., 6.), vec2(2., 7.))) * (1. + mod(seed, 100000.) / 10.)); }
 
 void main() {
 	vec2 vtx = getUV(v_vTexcoord);

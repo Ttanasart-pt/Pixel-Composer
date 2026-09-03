@@ -14,7 +14,7 @@ uniform int  usePalette;
 uniform vec4 palette[PALETTE_LIMIT];
 uniform int  paletteAmount;
 
-float random (in vec2 st) { return fract(sin(dot(st.xy, vec2(12.9898, 78.233))) * (43758.5453123 + seed)); }
+float random (in vec2 st) { return fract(sin(dot(st.xy, vec2(12.9898, 78.233))) * (43758.5453123 + mod(seed, 100000.) / 10.)); }
 
 void main() {
 	vec4 pos = texture2D( gm_BaseTexture, v_vTexcoord );

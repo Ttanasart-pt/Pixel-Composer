@@ -43,8 +43,8 @@ uniform float amplitude;
 #define PI  3.141592653589793
 #define TAU 6.283185307179586
 
-float hash(float x) { return fract(fract(x * (0.3183098861 + seed / 100000.)) * fract(x * (0.15915494309 + seed / 100000.)) * 265871.1723); }
-vec2  hash(vec2 x)  { return fract(fract(x * (0.3183098861 + seed / 100000.)) * fract(x * (0.15915494309 + seed / 100000.)) * 265871.1723); }
+float hash(float x) { return fract(fract(x * (0.3183098861 + mod(seed, 100000.) / 10.)) * fract(x * (0.15915494309 + mod(seed, 100000.) / 10.)) * 265871.1723); }
+vec2  hash(vec2 x)  { return fract(fract(x * (0.3183098861 + mod(seed, 100000.) / 10.)) * fract(x * (0.15915494309 + mod(seed, 100000.) / 10.)) * 265871.1723); }
 float hash2(vec2 x) { return hash(dot(mod(x, 100.0), vec2(127.1, 311.7))); }
 
 vec2 iq_hash( vec2 p ) {

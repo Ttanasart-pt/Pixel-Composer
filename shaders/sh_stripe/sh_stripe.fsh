@@ -222,7 +222,7 @@ uniform float gradient_shift;
 
 float pfract(in float f) { return fract(fract(f) + 1.); }
 
-float random (in vec2 st) { return fract(sin(dot(st.xy, vec2(12.9898, 78.233))) * (seed + 43758.5453123)); }
+float random (in vec2 st) { return fract(sin(dot(st.xy, vec2(12.9898, 78.233))) * mod(43758.5453123 + seed, 100000.) / 10.); }
 
 void main() { 
 	#region params

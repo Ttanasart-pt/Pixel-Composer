@@ -13,7 +13,7 @@ uniform float ditherSize;
 uniform float dither[64];
 uniform float seed;
 
-float random (in vec2 st, float seed) { return fract(sin(dot(st.xy, vec2(1892.9898, 78.23453))) * (seed + 437.54123)); }
+float random (in vec2 st, float seed) { return fract(sin(dot(st.xy, vec2(1892.9898, 78.23453))) * mod(seed + 437.54123, 100000.) / 10.); }
 
 void main() {
     vec4 c = texture2D( gm_BaseTexture, v_vTexcoord );

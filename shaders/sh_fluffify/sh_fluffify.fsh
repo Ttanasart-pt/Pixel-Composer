@@ -26,8 +26,8 @@ uniform int   multiBright;
 #define PI 3.14159265359
 #define TAU 6.283185307179586
 
-vec2 random2( in vec2 st ) { return fract(sin(phase + vec2(dot(st, vec2(127.1, 311.7)), dot(st, vec2(269.5, 183.3)))) * seed); }
-float random( in vec2 st ) { return fract(sin(dot(st, vec2(12.9898, 78.233))) * seed); }
+vec2 random2( in vec2 st ) { return fract(sin(phase + vec2(dot(st, vec2(127.1, 311.7)), dot(st, vec2(269.5, 183.3)))) * mod(seed, 100000.) / 10.); }
+float random( in vec2 st ) { return fract(sin(dot(st, vec2(12.9898, 78.233))) * mod(seed, 100000.) / 10.); }
 
 void main() {
 	float str = size.x;

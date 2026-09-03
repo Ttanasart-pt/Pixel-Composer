@@ -227,7 +227,7 @@ uniform float textureFlip;
 #define PI  3.14159265359
 #define TAU 6.28318530718
 
-float random (in vec2 st) {	return fract(sin(dot(st.xy + vec2(85.456034, 64.54065), vec2(12.9898, 78.233))) * (43758.5453123 + seed) ); }
+float random (in vec2 st) {	return fract(sin(dot(st.xy + vec2(85.456034, 64.54065), vec2(12.9898, 78.233))) * mod(43758.5453123 + seed, 100000.) / 10. ); }
 float random (in float sd) { return random(vec2(sd)); }
 
 float round(float val) { return fract(val) >= 0.5? ceil(val) : floor(val); }

@@ -1038,8 +1038,13 @@ uniform float camRatio;
 
 uniform int   drawBg;
 
-float random (in vec2 st, in float seed ) { return fract(sin(dot(st.xy + 253.6897, vec2(12.9898, 78.233))) * (43758.5453123 + seed)); }
-vec2 random2( in vec2 p,  in float seed ) { return fract(sin(vec2(dot(p - 146.4654, vec2(127.1, 311.7)), dot(p - 986.4785, vec2(269.5, 183.3)))) * (43758.5453 + seed)); }
+float random (in vec2 st, in float seed ) { 
+	return fract(sin(dot(st.xy + 253.6897, vec2(12.9898, 78.233))) * mod(43758.5453123 + seed, 100000.) / 10.); 
+}
+	
+vec2 random2( in vec2 p,  in float seed ) { 
+	return fract(sin(vec2(dot(p - 146.4654, vec2(127.1, 311.7)), dot(p - 986.4785, vec2(269.5, 183.3)))) * mod(43758.5453 + seed, 100000.) / 10.); 
+}
 
 vec4 sampleGrid(in vec2 tx, in vec2 off, in float seed, out float depth) {
 	vec2 frx = floor(tx * grid) / grid;

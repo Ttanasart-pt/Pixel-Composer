@@ -15,7 +15,7 @@ uniform sampler2D matchChanceSurf;
 
 #define s3 1.7320508076
 
-float random(in vec2 st, float seed) { return fract(sin(dot(st.xy + seed / 1000., vec2(853.98598, 78.2345543))) * 47.687523); }
+float random(in vec2 st, float seed) { return fract(sin(dot(st.xy + mod(seed, 100000.) / 10., vec2(853.98598, 78.2345543))) * 47.687523); }
 
 void main() {
 	float chn = matchChance.x;

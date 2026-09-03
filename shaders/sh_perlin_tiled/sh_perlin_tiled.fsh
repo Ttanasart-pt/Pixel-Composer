@@ -72,7 +72,7 @@ vec3 hsv2rgb(vec3 c) {
     return c.z * mix(K.xxx, clamp(p - K.xxx, 0.0, 1.0), c.y);
 }
 
-float random  (in vec2 st) { return smoothstep(0., 1., abs(fract(sin(dot(st.xy + vec2(21.456, 46.856), vec2(12.989, 78.233))) * (43758.545 + seed)) * 2. - 1.)); }
+float random  (in vec2 st) { return smoothstep(0., 1., abs(fract(sin(dot(st.xy + vec2(21.456, 46.856), vec2(12.989, 78.233))) * (43758.545 + mod(seed, 100000.))) * 2. - 1.)); }
 vec2  random2 (in vec2 st) { float a = fract(random(st) + phase / 360.) * 6.28319; return vec2(cos(a), sin(a)); }
 
 float noise (in vec2 st, in vec2 scale) {

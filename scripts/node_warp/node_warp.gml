@@ -26,10 +26,10 @@ function Node_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	newInput( 4, nodeValue_Vec2( "Bottom Right",   [1,1] )).hideLabel().setUnitSimple();
 	
 	////- =Render
-	newInput(12, nodeValue_Vec2(   "UV Position",  [0,0]            ));
-	newInput(11, nodeValue_Vec2(   "UV Scale",     [1,1]            ));
-	newInput( 8, nodeValue_Toggle( "Tile",          0, [ "X", "Y" ] ));
-	newInput(14, nodeValue_Bool(   "Draw Original", false           ));
+	newInput(12, nodeValue_Vec2(   "UV Position",  [0,0]         ));
+	newInput(11, nodeValue_Vec2(   "UV Scale",     [1,1]         ));
+	newInput( 8, nodeValue_Toggle( "Tile",          0, ["X","Y"] ));
+	newInput(14, nodeValue_Bool(   "Draw Original", false        ));
 	// 15
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));

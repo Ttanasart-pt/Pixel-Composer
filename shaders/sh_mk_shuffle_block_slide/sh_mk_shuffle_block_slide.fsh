@@ -7,7 +7,7 @@ uniform vec2  dimension;
 uniform vec2  block;
 uniform int   axis;
 
-float random (in vec2 st, float seed) { return fract(sin(dot(st.xy, vec2(1892.9898, 78.23453))) * (seed + 437.54123)); }
+float random (in vec2 st, float seed) { return fract(sin(dot(st.xy, vec2(1892.9898, 78.23453))) * mod(seed + 437.54123, 100000.) / 10.); }
 
 void main() {
     vec2 newPos = v_vTexcoord;

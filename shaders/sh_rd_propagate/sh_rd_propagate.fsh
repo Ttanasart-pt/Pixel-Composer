@@ -28,7 +28,7 @@ uniform vec2      db;
 uniform int       dbUseSurf;
 uniform sampler2D dbSurf;
 
-float random (in vec2 st, float seed) { return fract(sin(dot(st.xy + vec2(21.456, 46.856), vec2(12.989, 78.233))) * (43758.545 + seed)); }
+float random (in vec2 st, float seed) { return fract(sin(dot(st.xy + vec2(21.456, 46.856), vec2(12.989, 78.233))) * mod(43758.545 + seed, 100000.) / 10.); }
 
 vec2 samp(float sx, float sy) { return texture2D( gm_BaseTexture, v_vTexcoord + vec2(sx, sy) / dimension ).xy; }
 

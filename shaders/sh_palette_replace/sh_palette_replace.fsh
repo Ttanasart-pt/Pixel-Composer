@@ -74,7 +74,7 @@ uniform vec4	replaceColor;
 
 #endregion
 
-float random( in float st  ) { return fract(sin(st * 12.9898 + 53.4856) * (seed + 43758.5453123)); }
+float random( in float st  ) { return fract(sin(st * 12.9898 + 53.4856) * mod(43758.5453123 + seed, 100000.) / 10.); }
 float round(  in float val ) { return fract(val) >= 0.5? ceil(val) : floor(val); }
 
 float compareHSVrand(vec2 st, vec3 hsv1, vec3 hsv2) {

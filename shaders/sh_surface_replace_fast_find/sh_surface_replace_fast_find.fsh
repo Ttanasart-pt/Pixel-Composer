@@ -14,7 +14,7 @@ uniform int mode;
 uniform float seed;
 uniform float size;
 
-float random (in vec2 st) { return fract(sin(dot(st.xy + seed, vec2(12.9898, 78.233))) * 43758.5453123); }
+float random (in vec2 st) { return fract(sin(dot(st.xy + mod(seed, 100000.) / 10., vec2(12.9898, 78.233))) * 43758.5453123); }
 float round(float val) { return fract(val) > 0.5? ceil(val) : floor(val); }
 
 void main() {

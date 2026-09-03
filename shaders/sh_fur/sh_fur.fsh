@@ -1,5 +1,4 @@
 #pragma use(curve)
-
 #region -- curve -- [1786510425.6316042]
 
     #ifdef _YY_HLSL11_ 
@@ -129,8 +128,8 @@
     }
 
 #endregion -- curve --
-#pragma use(uv)
 
+#pragma use(uv)
 #region -- uv -- [1779523757.7465837]
     uniform sampler2D uvMap;
     uniform int   useUvMap;
@@ -200,7 +199,7 @@ uniform sampler2D colorSample;
 
 #define PI 3.1415926535897932384626433832795
 
-float random ( vec2 st, float seed ) { return fract(sin(dot(st.xy, vec2(12.9898, 78.233) + seed)) * 43758.5453123); }
+float random ( vec2 st, float seed ) { return fract(sin(dot(st.xy, vec2(12.9898, 78.233) + mod(seed, 100000.) / 10.)) * 43758.5453123); }
 
 float distToLine(vec2 p, vec2 a, vec2 b, out float prog) {
     vec2 pa = p - a;

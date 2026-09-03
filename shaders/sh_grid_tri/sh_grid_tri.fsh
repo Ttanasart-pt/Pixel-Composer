@@ -234,7 +234,7 @@ uniform float gradient_seed;
 uniform float gradient_shift;
 
 float pfract(in float f) { return fract(fract(f) + 1.); }
-float random (in vec2 st) { return fract(sin(dot(st.xy + vec2(85.456034, 64.54065), vec2(12.9898, 78.233))) * (43758.5453123 + seed) ); }
+float random (in vec2 st) { return fract(sin(dot(st.xy + vec2(85.456034, 64.54065), vec2(12.9898, 78.233))) * mod(43758.5453123 + seed, 100000.) / 10. ); }
 float random (in float sd) { return random(vec2(sd)); }
 
 vec3 triGrid(vec2 _pos) {

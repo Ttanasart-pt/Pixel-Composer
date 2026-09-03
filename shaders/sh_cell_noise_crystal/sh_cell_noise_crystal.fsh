@@ -111,7 +111,7 @@ void main() {
     float md  = .0;
     
 	for(int i = 0; i < iteration; i++) {
-		float _noise = voronoi3d(vec3(st, seed), sca);
+		float _noise = voronoi3d(vec3(st, mod(seed, 100000.) / 10.), sca);
 		
 		     if(blendMode == 0) md += _noise * amp;
 		else if(blendMode == 1) md  = max(md, _noise);

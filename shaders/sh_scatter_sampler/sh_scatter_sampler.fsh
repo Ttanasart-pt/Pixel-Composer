@@ -1,5 +1,4 @@
 #pragma use(sampler)
-
 #region -- sampler -- [1780048120.828549]
 	uniform int  interpolation;
 	uniform vec2 sampleDimension;
@@ -125,8 +124,8 @@
 	}
 	vec4 sampleTexture( sampler2D texture, vec2 pos) { return sampleTexture(texture, pos, 0.); }
 #endregion -- sampler --
-#pragma use(curve)
 
+#pragma use(curve)
 #region -- curve -- [1786510425.6316042]
 
     #ifdef _YY_HLSL11_ 
@@ -291,7 +290,7 @@ uniform vec2      radius;
 uniform int       radiusUseSurf;
 uniform sampler2D radiusSurf;
 
-float random  (in vec2 st, float seed) { return fract(sin(dot(st.xy + seed / 1000., vec2(1892.9898, 78.23453))) * 437.54123); }
+float random  (in vec2 st, float seed) { return fract(sin(dot(st.xy + mod(seed, 100000.) / 10., vec2(1892.9898, 78.23453))) * 437.54123); }
 vec2  random2 (in vec2 st, float seed) { return vec2(random(st, seed), random(st, seed + 56.5742)); }
 
 vec4 sample(vec2 px, float tile) {

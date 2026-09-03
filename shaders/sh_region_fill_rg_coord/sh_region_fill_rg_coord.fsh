@@ -8,7 +8,7 @@ uniform vec2  rotationRandom;
 uniform float seed;
 uniform int   outIndex;
 
-float random (in vec2 st, float seed) { return fract(sin(dot(st.xy + seed / 1000., vec2(1892.9898, 78.23453))) * 437.54123); }
+float random (in vec2 st, float seed) { return fract(sin(dot(st.xy + mod(seed, 100000.) / 10., vec2(1892.9898, 78.23453))) * 437.54123); }
 
 void main() {
     vec4 c = texture2D( gm_BaseTexture, v_vTexcoord );

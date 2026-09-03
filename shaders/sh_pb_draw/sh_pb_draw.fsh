@@ -41,7 +41,7 @@ uniform float shines_slope;
 
 #define TAU 6.283185307179586
 
-float random (in vec2 st) { return fract(sin(dot(st.xy + seed / 1000., vec2(1892.9898, 78.23453))) * 437.54123); }
+float random (in vec2 st) { return fract(sin(dot(st.xy + mod(seed, 100000.) / 10., vec2(1892.9898, 78.23453))) * 437.54123); }
 
 bool patDiag(vec2 px, vec2 sc) {
 	vec2 _px = mod(px, sc + 1.);

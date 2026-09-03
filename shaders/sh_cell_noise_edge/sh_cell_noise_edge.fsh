@@ -166,7 +166,7 @@ void main() {
 	vec2 ntx = vtx * vec2(1., dimension.y / dimension.x);
 	vec2 pos = position / dimension;
     
-    float _seed = seed;
+    float _seed = mod(seed, 100000.);
     float amp = pow(1. / iterAmpli, float(iteration) - 1.) / (pow(1. / iterAmpli, float(iteration)) - 1.);
     float md  = .0;
     

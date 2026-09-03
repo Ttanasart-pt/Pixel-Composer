@@ -38,7 +38,7 @@ uniform float bsteps;
 uniform vec4  palette[PALETTE_LIMIT];
 uniform int   keys;
 
-float random  (in vec2 st, float seed) { return fract(sin(dot(st.xy, vec2(1892.9898, 78.23453))) * (seed + 437.54123)); }
+float random  (in vec2 st, float seed) { return fract(sin(dot(st.xy, vec2(1892.9898, 78.23453))) * mod(seed + 437.54123, 100000.) / 10.); }
 vec2  random2 (in vec2 st, float seed) { float a = random(st, seed) * 6.28319; return vec2(cos(a), sin(a)); }
 
 #region ============================== COLOR SPACES ==============================

@@ -31,11 +31,12 @@ function Process_Anim_Track(_node = undefined) constructor {
 		
 		var autoAnim = function(i,st=0) /*=>*/ { if(!node.inputs[i].is_anim) values[i] = { valueStart : st, valueEnd : node.inputs[i].getValue() }; }
 		switch(instanceof(node)) {
-			case "Node_Shape"     : autoAnim(28, 0);       break;
+			case "Node_Shape"     : autoAnim(28,  0); break;
 			case "Node_Line"      : autoAnim( 8, [0,.01]); break;
-			case "Node_Vignette"  : autoAnim( 3, 0);       break;
-			case "Node_Gradient"  : autoAnim( 5, 1);       break;
-			case "Node_Polar"     : autoAnim( 6, 0);       break;
+			case "Node_Vignette"  : autoAnim( 3,  0); break;
+			case "Node_Gradient"  : autoAnim( 5,  1); break;
+			case "Node_Polar"     : autoAnim( 6,  0); break;
+			case "Node_Checker"   : autoAnim( 1, 64); break;
 			
 			case "Node_Outline"   : 
 			case "Node_Blend"     : 

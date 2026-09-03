@@ -338,7 +338,7 @@ uniform float gradient_shift;
 
 float pfract(in float f) { return fract(fract(f) + 1.); }
 float frandom (in vec2 st, in float _seed) {
-	float f = fract(sin(dot(st.xy, vec2(12.9898, 78.233)) * mod(15.15 + seed, 32.156 + _seed) * 12.588) * 43758.5453123);
+	float f = fract(sin(dot(st.xy, vec2(12.9898, 78.233)) * mod(15.15 + mod(seed, 100000.) / 10., 32.156 + _seed) * 12.588) * 43758.5453123);
     return mix(-1., 1., f);
 }
 

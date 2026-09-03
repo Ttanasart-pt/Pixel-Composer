@@ -19,7 +19,7 @@ uniform int   ridgeUse;
 uniform float ridgeCount;
 uniform float ridgeIntens;
 
-float random (in vec2 st, float seed) { return fract(sin(dot(st.xy + seed, vec2(1892.9898, 78.23453))) * 437.54123); }
+float random (in vec2 st, float seed) { return fract(sin(dot(st.xy + mod(seed, 100000.) / 10., vec2(1892.9898, 78.23453))) * 437.54123); }
 float md(float val, float div) { return val - floor(val / div) * div; }
 vec2  md(vec2  val, vec2  div) { return vec2(md(val.x, div.x), md(val.y, div.y)); }
 

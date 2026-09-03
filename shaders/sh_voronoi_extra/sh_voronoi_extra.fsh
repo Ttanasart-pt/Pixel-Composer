@@ -1,5 +1,4 @@
 #pragma use(uv)
-
 #region -- uv -- [1779523757.7465837]
     uniform sampler2D uvMap;
     uniform int   useUvMap;
@@ -54,7 +53,7 @@ uniform vec2  level;      float applyLevel(float f) { return (f - level.x) / (le
 float PI = 3.14159265359;
 float s3 = sin(PI / 3.);
 
-vec2 hash2( vec2 p ) { return fract(sin(vec2(dot(p, vec2(127.1 + seed, 311.7)), dot(p, vec2(269.5, 183.3 + seed)))) * 43758.5453); }
+vec2 hash2( vec2 p ) { return fract(sin(vec2(dot(p, vec2(127.1 + seed, 311.7)), dot(p, vec2(269.5, 183.3 + mod(seed, 100000.) / 10.)))) * 43758.5453); }
 
 vec3 voronoi( in vec2 x ) { #region // IQ classic voronoi - shadertoy.com/view/ldl3W8
     vec2 ip = floor(x);

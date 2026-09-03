@@ -7,7 +7,7 @@ uniform float scale;
 uniform float strength;
 uniform float seed;
 
-float random (in vec2 st, float _seed) { return fract(sin(dot(st.xy, vec2(12.9898, 78.233))) * (43758.5453123 + (seed + _seed))); }
+float random (in vec2 st, float _seed) { return fract(sin(dot(st.xy, vec2(12.9898, 78.233))) * (43758.5453123 + (mod(seed, 100000.) / 10. + _seed))); }
 
 float noise (in vec2 st, float _seed) {
     vec2 i = floor(st);

@@ -168,7 +168,7 @@ uniform float expand;
 #define TAU 6.283185307179586
 
 float pfract(in float f) { return fract(fract(f) + 1.); }
-float random (in vec2 st, float seed) { return fract(sin(dot(st.xy + seed / 1000., vec2(1892.9898, 78.23453))) * 437.54123); }
+float random (in vec2 st, float seed) { return fract(sin(dot(st.xy + mod(seed, 100000.) / 10., vec2(1892.9898, 78.23453))) * 437.54123); }
 
 vec2  tx   = 1./dimension;
 float maxx = floor(max(grassSize.x, grassSize.y));
