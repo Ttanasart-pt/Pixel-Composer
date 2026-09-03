@@ -8,12 +8,12 @@ function Node_Iterator_Index(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	
 	newOutput(0, nodeValue_Output("Loop index", VALUE_TYPE.integer, 0));
 	
-	static update = function(frame = CURRENT_FRAME) { #region
+	static update = function(frame = CURRENT_FRAME) {
 		var gr = is(group, Node_Iterator)? group : noone;
 		if(inline_context != noone) gr = inline_context;
 		
 		if(gr == noone) return;
 		outputs[0].setValue(gr.iterated - 1);
-	} #endregion
+	}
 	
 }

@@ -106,6 +106,7 @@ function Node_Path_Bridge(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		if(out == undefined) out = new __vec2P(); else { out.x = 0; out.y = 0; }
 		
 		var _cKey = $"{string_format(_dist, 0, 6)},{ind}";
+		if(ind < 0 || ind >= array_length(anchors)) return out;
 		
 		var _a   = anchors[ind];
 		var _la  = lengthAccs[ind];

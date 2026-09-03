@@ -20,7 +20,7 @@ function Node_Path_Builder(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		array_push(input_display_list, index);
 		postCreateNewInput(index);
 		return inputs[index];
-	} setDynamicInput(1);
+	} setDynamicInput(1, true, VALUE_TYPE.float);
 	
 	////- Tool
 	
@@ -187,6 +187,9 @@ function Node_Path_Builder(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		if(inputs[0].value_from != noone) return w_hovering;
 		
 		var _points = inputs[0].getValue();
+		var _d = array_get_depth(_points);
+		if(_d != 2) return;
+		
 		var msx = (_mx - _x) / _s;
 		var msy = (_my - _y) / _s;
 		
