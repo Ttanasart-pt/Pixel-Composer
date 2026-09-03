@@ -18,6 +18,7 @@ function Node_Random(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	newInput(13, nodeValue_Slider(  "p",              .5            ));
 	newInput(14, nodeValue_Float(   "t",               1            ));
 	newInput(22, nodeValue_Bool(    "Deterministic",   true         ));
+	newInput(23, nodeValue_Bool(    "Integer",         false        ));
 	
 	////- =Shuffle
 	newInput( 3, nodeValue_Bool(    "Shuffle",         false        ));
@@ -35,13 +36,12 @@ function Node_Random(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	newInput(17, nodeValue_Int(     "Kernel Span",     3            ));
 	newInput(18, nodeValue_Curve(   "Kernel",          CURVE_DEF_11 ));
 	newInput(19, nodeValue_Slider(  "Lerp Ratio",     .5            ));
-	
-	// inputs 23
+	// inputs 24
 	
 	newOutput(0, nodeValue_Output("Result", VALUE_TYPE.float, 0));
 	
 	input_display_list = [ 
-		[ "Random",  false    ],  0,  9, 10,  1,  2, 11, 12, 13, 14, 22, 
+		[ "Random",  false    ],  0,  9, 10,  1,  2, 11, 12, 13, 14, 22, 23, 
 		[ "Shuffle", false, 3 ],  4,  5,  6,  7,  8, 20, 21, 
 		[ "Smooth",  false    ], 15, 16, 17, 18, 19, 
 	];
@@ -86,6 +86,7 @@ function Node_Random(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 			var _smtLrp  = _data[19];
 			
 			var _deter   = _data[22];
+			var _inter   = _data[23];
 			
 			update_on_frame = _shuffle;
 			
@@ -232,6 +233,7 @@ function Node_Random(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		    case 3 : _res = lerp(_output, _res, _smtLrp); break;
 		}
 		
+		if(_inter) _res = round(_res);
 		return _res;
 	}
 	
