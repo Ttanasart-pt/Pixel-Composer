@@ -289,7 +289,10 @@ uniform vec4 blendSide;
 uniform int  useTexture;
 uniform sampler2D texture;
 
-vec4 smear(vec2 shift, out vec2 basePosition) {
+uniform int  useTextureSide;
+uniform sampler2D textureSide;
+
+vec4 smear(vec2 shift, out vec2 basePosition, out float depth) {
 	float delta  = 1. / size / resolution;
 	
 	vec4  base = sampleTexture( gm_BaseTexture, v_vTexcoord );
@@ -321,8 +324,9 @@ vec4 smear(vec2 shift, out vec2 basePosition) {
 			
 			if(bright > mBri) {
 				basePosition = sampPos;
-				mBri = bright;
-				res  = i == 0.? col : col * blendSide;
+				depth = i/bright;
+				mBri  = bright;
+				res   = i == 0.? col : col * blendSide;
 			}
 		}
 		
@@ -364,6 +368,7 @@ vec4 smear(vec2 shift, out vec2 basePosition) {
 			
 			if(abs(i - bright) >= delta) res *= blendSide;
 			basePosition = sampPos;
+			depth = i/bright;
 		}
 	}
 	
@@ -385,6 +390,10 @@ void main() {
 	
 	vec4 col = vec4(0.);
 	vec2 basePos;
+	float depth = 0.;
+	
+	vec4  bcol    = sampleTexture( gm_BaseTexture, v_vTexcoord );
+	float bbright = (bcol.r + bcol.g + bcol.b) / 3. * bcol.a;
 	
 	for(float i = -spread; i <= spread; i++) {
 		float spAng = i;
@@ -393,7 +402,9 @@ void main() {
 		
 		float r    = radians(dir + 90. + spAng);
 		vec2  dirr = vec2(sin(r), cos(r)) * str;
-		vec4  smr  = smear(dirr, basePos);
+		float dep  = 0.;
+		vec4  smr  = smear(dirr, basePos, dep);
+		depth = max(depth, dep);
 		
 			 if(blend == 0) col  = max(col, smr);
 		else if(blend == 1) col += smr;
@@ -402,5 +413,6 @@ void main() {
 	if(useTexture == 1)
 		col *= sampleTexture(texture, basePos);
 	
-    gl_FragColor = col * v_vColour;
+    gl_FragData[0] = col * v_vColour;
+    gl_FragData[1] = vec4(depth,depth,depth,1.);
 }

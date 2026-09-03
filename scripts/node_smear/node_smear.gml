@@ -28,15 +28,16 @@ function Node_Smear(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	newInput( 1, nodeValue_Slider(   "Strength",  .2, [0,.5,.001] )).setHotkey("S").setMappable( 9).setCurvable(20).setPieMenu();
 	newInput( 2, nodeValue_Rotation( "Direction",  0              )).setHotkey("R").setMappable(10).hideLabel().setPieMenu();
 	newInput(13, nodeValue_Slider(   "Spread",     0, [0,30,1 ]   )).setCurvable(22).setPieMenu();
-	newInput(12, nodeValue_EButton(  "Modulate strength", 0, [ "Distance", "Color", "None" ] ));
+	newInput(12, nodeValue_EButton(  "Modulate Strength", 0, [ "Distance", "Color", "None" ] ));
 	
 	////- Render
 	newInput(16, nodeValue_EScroll(  "Render Mode", 0, [ "Distance", "Distance Normalized", "Base Color", "Texture" ] ));
 	newInput(15, nodeValue_EScroll(  "Blend Mode",  0, [ "Maximum", "Additive" ] ));
 	newInput(17, nodeValue_Color(    "Blend Side",  ca_white ));
 	newInput(21, nodeValue_Surface(  "Texture"               ));
+	newInput(24, nodeValue_Surface(  "Side Texture"          ));
 	newInput(23, nodeValue_Int(      "Resolution",  1        ));
-	// 24
+	// 25
 	
 	input_display_list = [ 5, 6, 
 		[ "Surfaces",  true ],  0, 18, 19,  3,  4,  7,  8, 
@@ -44,7 +45,8 @@ function Node_Smear(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 		[ "Render",   false ], 16, 15, 17, 21, 23, 
 	]
 	
-	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
+	newOutput( 0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
+	newOutput( 1, nodeValue_Output("Depth Pass",  VALUE_TYPE.surface, noone));
 	
 	////- Node
 	
@@ -69,7 +71,7 @@ function Node_Smear(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 		return w_hovering;
 	}
 	
-	static processData = function(_outSurf, _data, _array_index) {
+	static processData = function(_outData, _data, _array_index) {
 		#region data
 			var _surf = _data[ 0];
 			
@@ -84,12 +86,13 @@ function Node_Smear(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 			var _blnd = _data[15];
 			var _bsid = _data[17];
 			var _text = _data[21], _useText = is_surface(_text);
+			var _txts = _data[24], _useTexs = is_surface(_txts);
 			var _res  = _data[23];
 			
 			var _dim  = surface_get_dimension(_surf);
 		#endregion
 		
-		surface_set_shader(_outSurf, sh_smear);
+		surface_set_shader(_outData, sh_smear);
 			shader_set_interpolation(_surf);
 			shader_set_uv(_data[18], _data[19]);
 			
@@ -114,13 +117,17 @@ function Node_Smear(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 			shader_set_i( "useTexture",  _useText );
 			shader_set_s( "texture",     _text    );
 			
+			shader_set_i( "useTextureSide",  _useTexs );
+			shader_set_s( "textureSide",     _txts    );
+			
 			draw_surface_safe(_surf);
 		surface_reset_shader();
 		
 		__process_mask_modifier(_data);
+		var _outSurf = _outData[0];
 		_outSurf = mask_apply_input(_surf, _outSurf, _data[3], _data[4], inputs[3]);
 		_outSurf = channel_apply(_surf, _outSurf, _data[6]);
 		
-		return _outSurf;
+		return _outData;
 	}
 }
