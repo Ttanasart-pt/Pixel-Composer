@@ -62,6 +62,8 @@ function Node_Delay(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 		var _sh = surface_get_height_safe(_surf);
 		
 		var _ind = _arr? _arri : _array_index;
+		if(_ind < 0) return _output;
+		
 		surf_indexes = array_verify_min(surf_indexes, _ind+1);
 		surf_indexes[_ind] = array_verify(surf_indexes[_ind], TOTAL_FRAMES);
 		

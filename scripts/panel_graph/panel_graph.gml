@@ -2686,7 +2686,11 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
         		
             // } else if(array_empty(nodes_selecting) && !value_focus && !drag_locking) {
             } else if(node_hovering == noone && !value_focus && !drag_locking) {
-                nodes_select_drag  = 1;
+            	if(frame_hovering == noone)
+                	nodes_select_drag  = 1;
+                else
+                	nodes_select_drag  = DOUBLE_CLICK? 0 : 1;
+                
                 nodes_select_frame = frame_hovering == noone;
                 drag_box_selecting = array_clone(nodes_selecting, 1);
                 

@@ -6,6 +6,11 @@
         "date": "2026-09-03T00:19:16.672Z",
         "node": "Delay",
         "commit": "**Delay**: Add custom array index control (for using inside loop.)"
+      },
+      {
+        "date": "2026-09-03T00:32:06.071Z",
+        "node": "Graph Panel",
+        "commit": "**Graph Panel**: Fix selection box shows up when double click on the inline group."
       }
     ]
   },
