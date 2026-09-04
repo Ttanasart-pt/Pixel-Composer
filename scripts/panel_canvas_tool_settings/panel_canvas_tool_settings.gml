@@ -143,7 +143,7 @@ function Panel_Canvas_Tool_Settings() : PanelContent() constructor {
 			
 			if(_set == -1) {
 				draw_set_color(COLORS.panel_separator);
-				if(_spFrm) draw_line_width( sx, 0 + ui(4), sx, h - ui(4), 2);
+				if(_spFrm) draw_line_width( sx, 0 + ui(8), sx, h - ui(8), 2);
         		else       draw_line(       sx, 0,         sx, h - 1);
         		sx  += ui(4) * sgn;
         		sww += ui(4);
@@ -165,15 +165,21 @@ function Panel_Canvas_Tool_Settings() : PanelContent() constructor {
 		var _draggable = pHOVER && pFOCUS;
 		var m = [mx, my];
 		
-		#region icon
-			var bw = ui(48);
-			var bh = h;
+		var pd = ui(2);
+		var bh = h - pd * 2;
+    	var bw = min(ui(32), bh);
 			
-			var hv = pHOVER && point_in_rectangle(mx, my, 0, 0, bw, bh);
+		#region icon
+			var bx = MAC? pd + bw + ui(2) : pd;
+			var by = pd;
+			
+			var x0 = bx + bw + pad;
+			
+			var hv = pHOVER && point_in_rectangle(mx, my, bx, by, bx + bw, by + bh);
 			var cc = hv? COLORS._main_accent : COLORS._main_icon;
 			var aa = .75 + hv * .25;
 			
-			draw_sprite_ui(THEME.icon_canvas_24, 0, bw / 2, bh / 2, 1, 1, 0, cc, aa);
+			draw_sprite_ui(THEME.icon_canvas_24, 0, bx + bw / 2, by + bh / 2, 1, 1, 0, cc, aa);
 			if(hv) {
 				_draggable = false;
 				if(mouse_lpress(pFOCUS) || mouse_rpress(pFOCUS)) {
@@ -204,16 +210,11 @@ function Panel_Canvas_Tool_Settings() : PanelContent() constructor {
 				}
 			}
 			
-			var x0 = bw + pad;
 		#endregion
 		
 		#region window control
-			var pd = ui(2);
-			var bh = h - pd * 2;
-        	var bw = min(ui(32), bh);
-        	
-			var bx = w - pd - bw;
-			var by = h / 2 - bh / 2;
+			var bx = MAC? pd : w - pd - bw;
+			var by = pd;
 			
 			var bspr = THEME.button_hide_fill;
 			var bp   = THEME.window_exit_icon;
@@ -225,12 +226,19 @@ function Panel_Canvas_Tool_Settings() : PanelContent() constructor {
             
             bx -= pd;
             
-            var x1 = bx;
-            draw_set_color(COLORS.panel_separator);
-            x1 -= ui(4);
-        	if(_sepFrame)
-            	 draw_line_width(x1, ui(8), x1, h - ui(8), 2);
-            else draw_line_width(x1, 0, x1, h, 1);
+            var x1;
+            if(!MAC) {
+            	x1 = bx - ui(4);
+            	
+	            draw_set_color(COLORS.panel_separator);
+	        	if(_sepFrame)
+	            	 draw_line_width(x1, ui(8), x1, h - ui(8), 2);
+	            else draw_line_width(x1, 0, x1, h, 1);
+            } else {
+            	x1 = w - pd - ui(4);
+            	
+            }
+            
             x1 -= ui(4);
 		#endregion
 		
