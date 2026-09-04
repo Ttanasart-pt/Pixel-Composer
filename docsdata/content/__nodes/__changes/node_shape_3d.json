@@ -6,6 +6,11 @@
         "date": "2026-09-04T01:39:12.675Z",
         "node": "Draw Shape 3D",
         "commit": "**Draw Shape 3D**: Add anchor property."
+      },
+      {
+        "date": "2026-09-04T02:13:59.961Z",
+        "node": "Draw Shape 3D",
+        "commit": "**Draw Shape 3D**: Add toggle to apply surface array to each faces instead of spread to multiple outputs."
       }
     ]
   },

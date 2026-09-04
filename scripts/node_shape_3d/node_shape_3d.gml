@@ -71,6 +71,7 @@ function Node_Shape_3D(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	newInput(11, nodeValue_Bool(    "Smooth",     0        ));
 	
 		////- =/UV
+	newInput(22, nodeValue_Bool(    "Array Texture", false ));
 	newInput( 6, nodeValue_Surface( "Texture"              ));
 	newInput(17, nodeValue_Vec2(    "UV Position", [0,0]   ));
 	newInput(18, nodeValue_Vec2(    "UV Scale",    [1,1]   ));
@@ -79,7 +80,7 @@ function Node_Shape_3D(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	newInput( 4, nodeValue_Range(   "View Range", [.0,.25]      ));
 	newInput(19, nodeValue_Surface( "Displacement Map"          ));
 	newInput(20, nodeValue_Range(   "Displacement Range", [0,1] ));
-	// 22
+	// 23
 	
 	newOutput( 0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	newOutput( 1, nodeValue_Output("Depth",       VALUE_TYPE.surface, noone));
@@ -90,7 +91,7 @@ function Node_Shape_3D(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 		[ "Transform", false ],  1, 21,  2,  3, 
 		[ "Shape",     false ],  7,  8,  9, 13, 12, 14, 15, 
 		[ "Texturing", false ],  5, 10, 11, 
-			[ "/UV",   false ],  6, 17, 18, 
+			[ "/UV",   false ], 22,  6, 17, 18, 
 		[ "Depth",     false ],  4, 
 	];
 	
@@ -111,6 +112,11 @@ function Node_Shape_3D(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _params) { 
 		drawOverlayInput(inputs[1].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my));
+	}
+	
+	static preGetInputs = function() {
+		var _texta = inputs[22].getValue();
+		inputs[ 6].setArrayDepth(1 + _texta);
 	}
 	
 	static processData = function(_outData, _data, _array_index = 0) { 
@@ -135,6 +141,7 @@ function Node_Shape_3D(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 			var _uvsca = _data[10];
 			var _smt   = _data[11];
 			
+			var _texta = _data[22];
 			var _textr = _data[ 6];
 			var _uvPos = _data[17];
 			var _uvSca = _data[18];
@@ -336,13 +343,16 @@ function Node_Shape_3D(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 			shader_set_2("uvPosition", _uvPos );
 			shader_set_2("uvScale",    _uvSca );
 			
-			var _clen = array_length(_color);
-			var _ttex = is_surface(_textr)? surface_get_texture(_textr) : -1;
+			var _clen = array_safe_length(_color);
+			var _tlen = array_safe_length(_textr);
 			
 			for( var i = 0, n = array_length(VB); i < n; i++ ) {
 				if(VB[i] == noone) continue;
 				
 				shader_set_c("color", _color[i % _clen]);
+				
+				var _texs = is_array(_textr)? _textr[i % _tlen] : _textr;
+				var _ttex = surface_get_texture_safe(_texs);
 				vertex_submit(VB[i], pr_trianglelist, _ttex);
 			}
 			
