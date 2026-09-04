@@ -265,12 +265,13 @@ function Node_Processor(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 				
 				if(use_depth) surface_depth_disable(false);
 				
-				repeat(_os) {
+				for(var i = 0; i < _os; i++) {
 					_outa[i] = array_safe_get(_out[i], l);
 					
 					if(outputs[i].type != VALUE_TYPE.surface || outputs[i].parameters.skip_verify) continue;
+					if(is(_outa[i], Atlas)) continue;
+					
 					_outa[i] = surface_verify(_outa[i], _dim[0], _dim[1], attrDepth());
-					i++;
 				}
 				
 				if(use_depth) surface_depth_disable(true);

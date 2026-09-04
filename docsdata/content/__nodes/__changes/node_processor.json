@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.9.204",
+    "changes": [
+      {
+        "date": "2026-09-04T03:17:59.127Z",
+        "node": "Array Processor",
+        "commit": "**Array Processor**: Fix outputting atlas causes error."
+      }
+    ]
+  },
+  {
     "version": "1.21.8.009",
     "changes": [
       {
