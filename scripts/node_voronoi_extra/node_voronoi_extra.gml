@@ -20,13 +20,14 @@ function Node_Voronoi_Extra(_x, _y, _group = noone) : Node_Shader_Generator(_x, 
 	
 	////- =Rendering
 	newInput(11, nodeValue_SliRange( "Level",     [0,1] )).setShaderProp("level");
+	newInput(12, nodeValue_Bool(     "Tile",      true  )).setShaderProp("tile");
 	// input 12
 	
 	input_display_list = [
 		[ "Output",      true ],  0,  9, 10,  8, 
 		[ "Noise",      false ],  3,  5,  4,  6, 
 		[ "Transform",  false ],  1,  7,  2,
-		[ "Rendering",  false ], 11, 
+		[ "Rendering",  false ], 11, 12, 
 	];
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _params) { 
@@ -40,4 +41,9 @@ function Node_Voronoi_Extra(_x, _y, _group = noone) : Node_Shader_Generator(_x, 
 		
 		return w_hovering;
 	}
+	
+	static onProcessData = function(_outSurf, _data, _array_index) {
+		inputs[12].setVisible(_data[ 5] == 1);
+	}
+	
 }

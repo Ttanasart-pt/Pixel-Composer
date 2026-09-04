@@ -47,8 +47,11 @@ uniform vec2  position;
 uniform float rotation;
 uniform vec2  scale;
 uniform int   mode;
+uniform int   tile;
 
 uniform vec2  level;      float applyLevel(float f) { return (f - level.x) / (level.y - level.x); }
+
+bool tiling;
 
 float PI = 3.14159265359;
 float s3 = sin(PI / 3.);
@@ -149,15 +152,20 @@ vec3 squareVoronoi( in vec2 x ) { #region // IQ classic voronoi - shadertoy.com/
 	    return max(abs(p.x) * (.866 + paramA) + p.y * .5, -p.y);
 	}
 
-	float blockVoronoi(vec2 p) { 
+	float blockVoronoi(vec2 p, vec2 scale) { 
 	    vec2 o  = sin(vec2(1.93, 0) + progress) * .166;
 	    float a = blockVoronoiDistanceMetrix(p + vec2(o.x, 0));
 		float b = blockVoronoiDistanceMetrix(p + vec2(0, .5 + o.y));
     
-	    p = -mat2(.5, -.866, .866, .5) * (p + .5); // Rotate the layer (coordinates) by 120 degrees. 
+    	float ang = radians(120.);
+	    p = mat2(cos(ang), -sin(ang), sin(ang), cos(ang))  * (p + .5); // Rotate the layer (coordinates) by 120 degrees. 
+	    
+	    // p = -mat2(.5, -.866, .866, .5) * (p + .5); // Rotate the layer (coordinates) by 120 degrees. 
+	    
 	    float c = blockVoronoiDistanceMetrix(p + vec2(o.x, 0));
 		float d = blockVoronoiDistanceMetrix(p + vec2(0, .5 + o.y)); 
-    
+    	
+    	// return d;
 	    return min(min(a, b), min(c, d)) * 2.;
 	} 
 #endregion
@@ -197,7 +205,7 @@ vec3 squareVoronoi( in vec2 x ) { #region // IQ classic voronoi - shadertoy.com/
 	    return abs(d);
 	}
 	
-	vec3 triangleVoronoi( in vec2 x ) {
+	vec3 triangleVoronoi( in vec2 x, in vec2 scale ) {
 	    vec2 n = floor(x);
 	    vec2 f = fract(x);
 
@@ -210,8 +218,9 @@ vec3 squareVoronoi( in vec2 x ) { #region // IQ classic voronoi - shadertoy.com/
 	    float closestDist = 8.0;
 	    for( int j = -reach; j <= reach; j++ )
 	    for( int i = -reach; i <= reach; i++ ) {
-	        vec2 cell = vec2(float(i),float(j));
-			vec2 o = hash2( n + cell );
+	        vec2 cell   = vec2(float(i),float(j));
+	        vec2 celPos = tiling? mod(n + cell, scale * 2.) : n + cell;
+			vec2 o = hash2( celPos );
 			
 	        o = 0.5 + 0.5 * sin( progress * PI * 2. + 6.2831 * o );
 	        
@@ -231,8 +240,9 @@ vec3 squareVoronoi( in vec2 x ) { #region // IQ classic voronoi - shadertoy.com/
 	    closestDist = 8.0;
 	    for( int j = -reach - 1; j <= reach + 1; j++ )
 	    for( int i = -reach - 1; i <= reach + 1; i++ ) {
-	        vec2 cell = closestCell + vec2(float(i), float(j));
-			vec2 o = hash2( n + cell );
+	        vec2 cell   = closestCell + vec2(float(i), float(j));
+	        vec2 celPos = tiling? mod(n + cell, scale * 2.) : n + cell;
+			vec2 o = hash2( celPos );
 			
 	        o = 0.5 + 0.5 * sin( progress * PI * 2. + 6.2831 * o );
 	        
@@ -250,12 +260,16 @@ vec3 squareVoronoi( in vec2 x ) { #region // IQ classic voronoi - shadertoy.com/
 void main() {
 	vec2  vtx = getUV(v_vTexcoord);
 	vec2  ntx = vtx * vec2(1., dimension.y / dimension.x);
-	float ang = radians(rotation);
-    vec2  pos = (ntx - position / dimension) * mat2(cos(ang), -sin(ang), sin(ang), cos(ang)) * scale / 4.;
+	
+	tiling = mode == 1 && tile == 1;
+	float ang = tiling? radians(floor(rotation / 90.) * 90.) : radians(rotation);
+	vec2  sca = tiling? floor(scale / 4.) : scale / 4.;
+    
+    vec2  pos = (ntx - position / dimension) * mat2(cos(ang), -sin(ang), sin(ang), cos(ang)) * sca;
     float v = 0.;
     
-	     if(mode == 0) v = .1 + blockVoronoi(pos * vec2(1., -1.));
-	else if(mode == 1) v = triangleVoronoi(pos * 2.).r;
+	     if(mode == 0) v = .1 + blockVoronoi(pos * vec2(1., -1.), sca);
+	else if(mode == 1) v = triangleVoronoi(pos * 2., sca).r;
 	else if(mode == 2) v = squareVoronoi(pos * 4.).r;
 	
 	v = applyLevel(v);
