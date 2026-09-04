@@ -46,6 +46,7 @@ function Node_Shape_3D(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	
 	////- =Transform
 	newInput( 1, nodeValue_Vec2( "Position", [.5,.5]    )).setUnitSimple();
+	newInput(21, nodeValue_Vec3( "Anchor",   [.5,.5,.5] ));
 	newInput( 2, nodeValue_Vec3( "Rotation", [30,0,45]  ));
 	newInput( 3, nodeValue_Vec3( "Scale",    [.5,.5,.5] ));
 	
@@ -78,7 +79,7 @@ function Node_Shape_3D(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	newInput( 4, nodeValue_Range(   "View Range", [.0,.25]      ));
 	newInput(19, nodeValue_Surface( "Displacement Map"          ));
 	newInput(20, nodeValue_Range(   "Displacement Range", [0,1] ));
-	// 21
+	// 22
 	
 	newOutput( 0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	newOutput( 1, nodeValue_Output("Depth",       VALUE_TYPE.surface, noone));
@@ -86,7 +87,7 @@ function Node_Shape_3D(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	
 	input_display_list = [
 		[ "Output",    false ],  0, 16, 
-		[ "Transform", false ],  1,  2,  3, 
+		[ "Transform", false ],  1, 21,  2,  3, 
 		[ "Shape",     false ],  7,  8,  9, 13, 12, 14, 15, 
 		[ "Texturing", false ],  5, 10, 11, 
 			[ "/UV",   false ],  6, 17, 18, 
@@ -106,7 +107,7 @@ function Node_Shape_3D(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	
 	attribute_surface_depth();
 	attribute_oversample();
-	attribute_interpolation();
+	attribute_interpolation(false, true);
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _params) { 
 		drawOverlayInput(inputs[1].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my));
@@ -118,6 +119,7 @@ function Node_Shape_3D(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 			var _bg    = _data[16];
 			
 			var _pos   = _data[ 1];
+			var _anc   = _data[21];
 			var _rot   = _data[ 2];
 			var _sca   = _data[ 3];
 			
@@ -157,6 +159,10 @@ function Node_Shape_3D(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 			var py = 0;
 			var pz = -(_pos[1] - _dim[1] / 2) / _dim[1];
 			
+			var ax = (_anc[0] - .5) * .5;
+			var ay = (_anc[1] - .5) * .5;
+			var az = (_anc[2] - .5) * .5;
+			
 			var rx =  _rot[0];
 			var ry =  _rot[1];
 			var rz = -_rot[2];
@@ -166,11 +172,13 @@ function Node_Shape_3D(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 			var sz = _sca[2];
 			
 			matrix_stack_clear();
-			matrix_stack_push(matrix_build(px, py, pz, /**/  0,  0,  0, /**/  1,  1,  1));
-			matrix_stack_push(matrix_build( 0,  0,  0, /**/ rx,  0,  0, /**/  1,  1,  1));
-			matrix_stack_push(matrix_build( 0,  0,  0, /**/  0, ry,  0, /**/  1,  1,  1));
-			matrix_stack_push(matrix_build( 0,  0,  0, /**/  0,  0, rz, /**/  1,  1,  1));
-			matrix_stack_push(matrix_build( 0,  0,  0, /**/  0,  0,  0, /**/ sx, sy, sz));
+			matrix_stack_push(matrix_build( px,  py,  pz, /**/  0,  0,  0, /**/  1,  1,  1));
+			matrix_stack_push(matrix_build( ax,  ay,  az, /**/  0,  0,  0, /**/  1,  1,  1));
+			matrix_stack_push(matrix_build(  0,   0,   0, /**/ rx,  0,  0, /**/  1,  1,  1));
+			matrix_stack_push(matrix_build(  0,   0,   0, /**/  0, ry,  0, /**/  1,  1,  1));
+			matrix_stack_push(matrix_build(  0,   0,   0, /**/  0,  0, rz, /**/  1,  1,  1));
+			matrix_stack_push(matrix_build(-ax, -ay, -az, /**/  0,  0,  0, /**/  1,  1,  1));
+			matrix_stack_push(matrix_build(  0,   0,   0, /**/  0,  0,  0, /**/ sx, sy, sz));
 		#endregion
 		  
 		#region shape

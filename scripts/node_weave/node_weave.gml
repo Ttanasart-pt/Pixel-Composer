@@ -11,7 +11,7 @@ function Node_Weave(_x, _y, _group = noone) : Node_Shader_Generator(_x, _y, _gro
 	
 	////- =Transform
 	newInput( 4, nodeValue_Vec2(     "Position", [.5,.5]   )).setHotkey("G").setShaderProp("position").setUnitSimple().setPieMenu();
-	newInput( 6, nodeValue_Rotation( "Angle",    0         )).setShaderProp("rotation").setPieMenu();
+	newInput( 6, nodeValue_Rotation( "Angle",      0       )).setShaderProp("rotation").setPieMenu();
 	newInput( 5, nodeValue_Vec2(     "Scale",    [.25,.25] )).setHotkey("S").setShaderProp("scale").setUnitSimple().setPieMenu();
 	
 	////- =Weave
@@ -47,9 +47,9 @@ function Node_Weave(_x, _y, _group = noone) : Node_Shader_Generator(_x, _y, _gro
 	    var _px  = _x + _pos[0] * _s;
 	    var _py  = _y + _pos[1] * _s;
 	    
-	    drawOverlayInput(inputs[4].drawOverlay(w_hoverable, active,  _x,  _y, _s, _mx, _my));
-	    drawOverlayInput(inputs[6].drawOverlay(w_hoverable, active, _px, _py, _s, _mx, _my));
-	    drawOverlayInput(inputs[5].drawOverlay(w_hoverable, active, _px, _py, _s, _mx, _my));
+	    drawOverlayInput(inputs[4].drawOverlay(w_hoverable, active,  _x,  _y, _s, _mx, _my    ));
+	    drawOverlayInput(inputs[6].drawOverlay(w_hoverable, active, _px, _py, _s, _mx, _my    ));
+	    drawOverlayInput(inputs[5].drawOverlay(w_hoverable, active, _px, _py, _s, _mx, _my, 1 ));
 	    
 	    return w_hovering;
 	}

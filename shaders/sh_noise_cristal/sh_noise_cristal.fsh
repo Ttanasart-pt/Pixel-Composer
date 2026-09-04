@@ -1,5 +1,4 @@
 #pragma use(uv)
-
 #region -- uv -- [1779523757.7465837]
     uniform sampler2D uvMap;
     uniform int   useUvMap;
@@ -71,11 +70,13 @@ vec3 Oilnoise(in vec2 pos, in vec3 RGB) {
     float gain = 6.6 / float(iteration);
     vec2 aPos  = abs2d(pos) * 0.5;//add pos
 
+    float sed = mod(seed, 100000.) / 10.;
+
     for(int i = 0; i < iteration; i++) {
         pos *= rotMat(phase);
         
-        q =  pos * s + seed;
-        q =  pos * s + aPos + seed;
+        q =  pos * s + sed;
+        q =  pos * s + aPos + sed;
         q = vec2(cos(q));
 
         result += sin1d(dot(q, vec2(0.3))) * gain;

@@ -3888,7 +3888,7 @@ function Panel_Preview() : PanelContent() constructor {
         gpu_set_scissor(scs);
         
         if(mrg) {
-	        var _lx = max(toolbar_left, tbx + bs - ui(2));
+	        var _lx = max(toolbar_left, tbx - ui(2));
 	        var _ly = tby;
 	        var _lh = toolbar_size / 2 - ui(8);
         

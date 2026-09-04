@@ -52,6 +52,7 @@ function Panel_Linear_Setting() : PanelContent() constructor {
 	
 	static setHeight   = function() { 
 		h = ui(16) + hpad; 
+		h = 0; 
 		
 		for( var i = 0, n = array_length(properties); i < n; i++ ) {
 			var _prop = properties[i];

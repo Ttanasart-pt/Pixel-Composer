@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.9.204",
+    "changes": [
+      {
+        "date": "2026-09-04T01:39:12.676Z",
+        "node": "",
+        "commit": "**Draw Shape 3D**: Add anchor property."
+      }
+    ]
+  },
+  {
     "version": "1.21.7.104",
     "changes": [
       {

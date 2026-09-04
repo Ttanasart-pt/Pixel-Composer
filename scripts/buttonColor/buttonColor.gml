@@ -165,10 +165,10 @@ function buttonColor(_onModify, dialog = noone) : widget() constructor {
 				draw_sprite_stretched_ext(THEME.palette_mask, 1, _bx, _by, _bww, _bh, current_color, 1);
 			} else {
 				draw_sprite_stretched_ext(THEME.button_backdroup, 4, _bx, _by, _bww, _bh, boxColor, 1);
-				draw_sprite_stretched_ext(THEME.palette_mask,     1, _bx, _by, _bww, _bh - ui(8), current_color, 1);
+				draw_sprite_stretched_ext(THEME.palette_mask,     4, _bx, _by, _bww, _bh - ui(8), current_color, 1);
 			
-				draw_sprite_stretched_ext(THEME.palette_mask, 1, _bx, _by + _bh - ui(6), _bww,      ui(6), c_black, 1);
-				draw_sprite_stretched_ext(THEME.palette_mask, 1, _bx, _by + _bh - ui(6), _bww * _a, ui(6), c_white, 1);
+				draw_sprite_stretched_ext(THEME.palette_mask, 5, _bx, _by + _bh - ui(6), _bww,      ui(6), c_black, 1);
+				draw_sprite_stretched_ext(THEME.palette_mask, 5, _bx, _by + _bh - ui(6), _bww * _a, ui(6), c_white, 1);
 			}
 		}	
 		
