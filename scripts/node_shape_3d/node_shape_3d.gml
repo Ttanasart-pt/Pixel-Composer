@@ -351,7 +351,7 @@ function Node_Shape_3D(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 				
 				shader_set_c("color", _color[i % _clen]);
 				
-				var _texs = is_array(_textr)? _textr[i % _tlen] : _textr;
+				var _texs = _tlen > 0? _textr[i % _tlen] : _textr;
 				var _ttex = surface_get_texture_safe(_texs);
 				vertex_submit(VB[i], pr_trianglelist, _ttex);
 			}

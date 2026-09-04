@@ -473,9 +473,9 @@ function Panel_Menu() : PanelContent() constructor {
                 if(!_right) {
                 	xx = profile? ui(48): ui(4);
                 	
-                	if(OS == os_macosx) {
+                	if(MAC) {
                 		if(!window_get_fullscreen()) {
-                			xx += 144; // space for window buttons.
+                			xx += 72 * (1+YYC); // space for window buttons.
                 			draw_set_color(COLORS._main_icon_dark);
                     		draw_line_round(xx, ui(8), xx, h - ui(8), 3);
                 		}

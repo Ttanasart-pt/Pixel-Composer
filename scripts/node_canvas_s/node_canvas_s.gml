@@ -55,7 +55,8 @@ function Node_Canvas_S(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 	preview_select_boxable = false;
 	
 	////- =Surface
-	newInput( 0, nodeValue_Dimension()).setAnimable(false);
+	newInput( 0, nodeValue_Vec2("Dimension", DEF_SURF)).setAnimable(false);
+	// newInput( 0, nodeValue_Dimension()).setAnimable(false);
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
@@ -91,7 +92,6 @@ function Node_Canvas_S(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 	static update = function(frame = CURRENT_FRAME) {
 		#region data
 			var _dim = getInputData( 0);
-			
 			resources = [];
 		#endregion
 		
@@ -187,4 +187,18 @@ function Node_Canvas_S(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 		if(has(_attr, "pixel_data"))
 			pixel_data = buffer_deserialize(_attr.pixel_data);
 	}
+	
+	static postDeserialize = function() {
+		if(CLONING) return;
+		
+		if(LOADING_VERSION < 1_21_09_2) {
+			var _inp = load_map.inputs[0];
+			if(_inp.attri.use_project_dimension) {
+				var _rel = _inp.r.d;
+				_inp.r.d[0] *= DEF_SURF_W;
+				_inp.r.d[1] *= DEF_SURF_H;
+			}
+		}
+	}
+	
 }

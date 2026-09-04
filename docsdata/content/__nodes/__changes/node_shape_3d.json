@@ -11,6 +11,11 @@
         "date": "2026-09-04T02:13:59.961Z",
         "node": "Draw Shape 3D",
         "commit": "**Draw Shape 3D**: Add toggle to apply surface array to each faces instead of spread to multiple outputs."
+      },
+      {
+        "date": "2026-09-04T05:53:20.841Z",
+        "node": "",
+        "commit": "**Canvas**: Dimension value is now a simple vec2 to prevent content reset when changing project dimension."
       }
     ]
   },
