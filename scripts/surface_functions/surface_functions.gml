@@ -230,6 +230,7 @@
 	function surface_verify(surf, w, h, format = surface_rgba8unorm) {
 		INLINE
 		
+		if(is(surf, Atlas)) return surf;
 		if(!is_surface(surf)) return surface_create_valid(w, h, format);
 		return surface_size_to(surf, w, h, format, true);
 	}

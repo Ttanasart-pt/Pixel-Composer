@@ -10,7 +10,8 @@ function Node_Seperate_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 	name = "Separate Shape";
 	
 	////- =Shape
-	newInput( 0, nodeValue_Surface( "Surface In" )).setRequired();
+	newInput( 0, nodeValue_Surface( "Shapes Map" )).setRequired();
+	
 	newInput( 5, nodeValue_EButton( "Mode",        0, [ "Greyscale", "Alpha" ] ))
 	newInput( 1, nodeValue_Slider(  "Tolerance",  .2, { range: [ 0, 1, 0.01 ], update_stat: SLIDER_UPDATE.release }));
 	newInput( 4, nodeValue_EButton( "Blank",       0, [ "Include", "Ignore" ] ));
@@ -18,17 +19,18 @@ function Node_Seperate_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 	newInput( 7, nodeValue_Bool(    "Diagonal",   true ));
 	
 	////- =Output
+	newInput( 9, nodeValue_Surface( "Texture"   ));
 	newInput( 2, nodeValue_Bool(  "Override Color", false    ));
 	newInput( 3, nodeValue_Color( "Color",          ca_white ));
 	newInput( 6, nodeValue_Bool(  "Crop",           true     ))
-	// inputs 9
+	// 10
 		
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	newOutput(1, nodeValue_Output("Atlas", VALUE_TYPE.atlas, []));
 	
 	input_display_list = [
 		[ "Shape",  false ],  0,  5,  1,  4,  8,  7, 
-		[ "Output", false ],  2,  3,  6, 
+		[ "Output", false ],  9,  2,  3,  6, 
 	]
 	
 	////- Node
@@ -47,6 +49,7 @@ function Node_Seperate_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 			var _expan  = _data[ 8];
 			var _diag   = _data[ 7];
 			
+			var _text   = _data[ 9], useText = is_surface(_text);
 			var _ovr    = _data[ 2];
 			var _ovrclr = _data[ 3];
 			var _crop   = _data[ 6];
@@ -144,7 +147,8 @@ function Node_Seperate_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 				_val[_ind] = surface_verify(_val[_ind], _sw, _sh);
 				
 				surface_set_shader(_val[_ind], sh_seperate_shape_sep);
-					shader_set_s( "original",  _inSurf );
+					shader_set_s( "original",  useText? _text : _inSurf );
+					
 					shader_set_f( "color",     _cc     );
 					shader_set_i( "override",  _ovr    );
 					shader_set_c( "overColor", _ovrclr );

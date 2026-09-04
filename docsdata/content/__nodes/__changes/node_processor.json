@@ -6,6 +6,11 @@
         "date": "2026-09-04T03:17:59.127Z",
         "node": "Array Processor",
         "commit": "**Array Processor**: Fix outputting atlas causes error."
+      },
+      {
+        "date": "2026-09-04T03:21:29.904Z",
+        "node": "Separate Shape",
+        "commit": "**Separate Shape**: Add option to override texture with another surface."
       }
     ]
   },
