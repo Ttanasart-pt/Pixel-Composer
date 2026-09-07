@@ -11,6 +11,11 @@
         "date": "2026-09-07T00:45:26.657Z",
         "node": "",
         "commit": "**Mac**: Hotkey inside textbox now use command key."
+      },
+      {
+        "date": "2026-09-07T02:21:44.438Z",
+        "node": "",
+        "commit": "**Path**: Fix error popup when using arc tool."
       }
     ]
   },

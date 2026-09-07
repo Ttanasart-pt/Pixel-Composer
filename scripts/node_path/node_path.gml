@@ -1322,7 +1322,7 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 			}
 			
 			if(_showAnchor)
-			for(var i = 0; i < ansize; i++) { // draw anchor
+			for(var i = 0; i < array_length(_pth.anchors); i++) { // draw anchor
 				var _a   = _pth.anchors[i];
 				var xx   = _x + _a[0] * _s;
 				var yy   = _y + _a[1] * _s;

@@ -8,7 +8,7 @@ void main() {
 	vec2  tx  = 1. / dimension;
 	float ang = radians(direction);
 	
-	vec2  stp = vec2(cos(ang), -sin(ang)) * tx;
+	vec2  stp = vec2(cos(ang), sin(ang)) * tx;
 	vec4 base = texture2D(gm_BaseTexture, v_vTexcoord);
 	gl_FragColor = base * v_vColour;
 	if(base.a > 0.) return;

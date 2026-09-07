@@ -35,7 +35,7 @@ function Node_Atlas(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 			
 			var _meth = _data[ 2];
 			var _reso = _data[ 3];
-			var _dirr = _data[ 5];
+			var _dirr = _data[ 9];
 			
 			inputs[ 3].setVisible(_meth != 2);
 			inputs[ 9].setVisible(_meth == 2);

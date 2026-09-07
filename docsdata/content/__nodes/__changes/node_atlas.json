@@ -6,6 +6,11 @@
         "date": "2026-09-07T01:48:03.842Z",
         "node": "Pixel Expand",
         "commit": "**Pixel Expand**: Add linear mode."
+      },
+      {
+        "date": "2026-09-07T02:21:44.438Z",
+        "node": "Path",
+        "commit": "**Path**: Fix error popup when using arc tool."
       }
     ]
   },
