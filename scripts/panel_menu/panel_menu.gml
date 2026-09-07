@@ -501,7 +501,7 @@ function Panel_Menu() : PanelContent() constructor {
         	
             if(hori) {
                 var bx  = _right? xx : w - ui(24);
-        		var ics = min(1, (h - _padd * 2) * .75 / sprite_get_height(THEME.icon_24));
+        		var ics = min(1, (h - _padd * 2) * (MAC? .9 : .75) / sprite_get_height(THEME.icon_24));
                 
                 if(pHOVER && point_in_rectangle(mx, my, bx - ui(16), 0, bx + ui(16), ui(32))) {
                     draw_sprite_ext(THEME.icon_24, 0, bx, h/2, ics, ics);

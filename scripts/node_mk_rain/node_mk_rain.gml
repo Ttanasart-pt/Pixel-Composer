@@ -122,7 +122,7 @@ function Node_MK_Rain(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		var _tw  = surface_get_width_safe(_text);
 		var _th  = surface_get_height_safe(_text);
 		
-		var _rad = sqrt(_sw * _sw + _sh * _sh) / 2;
+		var _surfDiag = sqrt(_sw * _sw + _sh * _sh) / 2;
 		var _rx  = _sw / 2;
 		var _ry  = _sh / 2;
 		
@@ -166,8 +166,8 @@ function Node_MK_Rain(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 				_vel    = _velRaw < 1? _velRaw : floor(_velRaw);
 				_vex    = _velRaw < 1?       0 : frac(_velRaw);
 				
-				_rrad   = _rad * (1 + _vex);
-				_r_shf  = random_range( -_rad,  _rad);
+				_rrad   = _surfDiag * (1 + _vex);
+				_r_shf  = random_range( -_surfDiag/2,  _surfDiag/2);
 				_y_shf  = random(1);
 				
 				switch(_shap) {
@@ -227,7 +227,9 @@ function Node_MK_Rain(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 							if(_ripRx <= 1) break;
 							
 							draw_set_alpha(_ripAlp * _ripA);
-							draw_ellipse(_x0 - _ripRx, _y0 - _ripRy, _x0 + _ripRx, _y0 + _ripRy, true);
+							draw_ellipse(_x0     - _ripRx, _y0 - _ripRy, _x0     + _ripRx, _y0 + _ripRy, true);
+							draw_ellipse(_x0-_sw - _ripRx, _y0 - _ripRy, _x0-_sw + _ripRx, _y0 + _ripRy, true);
+							draw_ellipse(_x0+_sw - _ripRx, _y0 - _ripRy, _x0+_sw + _ripRx, _y0 + _ripRy, true);
 							
 							_ripPrg -= _ripDel;
 						}
@@ -251,10 +253,28 @@ function Node_MK_Rain(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 						} 
 						
 						draw_set_color_alpha(_lcc, _aa * _aaL);
-						if(_afad) { if(_drpW == 1) draw_line_color(       _x0, _y0, _x1, _y1,        _lcc, c_black );
-							        else           draw_line_width_color( _x0, _y0, _x1, _y1, _drpW, _lcc, c_black ); } 
-				        else {      if(_drpW == 1) draw_line(             _x0, _y0, _x1, _y1                       );
-							        else           draw_line_width(       _x0, _y0, _x1, _y1, _drpW                ); }
+						if( _afad && _drpW == 1) {
+						   	draw_line_color(       _x0    , _y0, _x1    , _y1,        _lcc, c_black );
+						   	draw_line_color(       _x0-_sw, _y0, _x1-_sw, _y1,        _lcc, c_black );
+						   	draw_line_color(       _x0+_sw, _y0, _x1+_sw, _y1,        _lcc, c_black );
+						   	
+						} else if( _afad && _drpW >  1) {
+							draw_line_width_color( _x0    , _y0, _x1    , _y1, _drpW, _lcc, c_black ); 
+							draw_line_width_color( _x0-_sw, _y0, _x1-_sw, _y1, _drpW, _lcc, c_black ); 
+							draw_line_width_color( _x0+_sw, _y0, _x1+_sw, _y1, _drpW, _lcc, c_black ); 
+							
+						} else if(!_afad && _drpW == 1) {
+							draw_line(             _x0    , _y0, _x1    , _y1                       );
+							draw_line(             _x0-_sw, _y0, _x1-_sw, _y1                       );
+							draw_line(             _x0+_sw, _y0, _x1+_sw, _y1                       );
+							
+						} else if(!_afad && _drpW >  1) {
+							draw_line_width(       _x0    , _y0, _x1    , _y1, _drpW                ); 
+							draw_line_width(       _x0-_sw, _y0, _x1-_sw, _y1, _drpW                ); 
+							draw_line_width(       _x0+_sw, _y0, _x1+_sw, _y1, _drpW                ); 
+							
+						}
+							
 						break;
 						
 					case 1 : draw_circle(round(_x0), round(_y0), _drpW * _scaL, false); break;

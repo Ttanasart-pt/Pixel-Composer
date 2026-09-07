@@ -524,6 +524,7 @@ function textArea(_input, _onModify) : textInput(_input, _onModify) constructor 
 						
 						_input_text		= str_before + str_after;
 						cut_line();
+						
 					} else {
 						var minc = min(cursor, cursor_select);
 						var maxc = max(cursor, cursor_select);
