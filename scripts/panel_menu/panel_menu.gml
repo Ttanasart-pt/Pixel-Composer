@@ -414,7 +414,7 @@ function Panel_Menu() : PanelContent() constructor {
                 menuItem("Timer",              function() /*=>*/ {return dialogPanelCall(new Panel_Timer())}     ), 
                 menuItem("Node credit dialog", function() /*=>*/ {return dialogPanelCall(new Panel_Node_Cost())} ), 
             ])}),
-        ]];
+        ], CDEF.red];
         
         menus = [
             menu_file,
@@ -598,12 +598,13 @@ function Panel_Menu() : PanelContent() constructor {
                 if(_colr != noone) {
                 	var cc = colorMultiply(COLORS.dialog_menubox_highlight, _colr);
                 	// draw_sprite_stretched_ext(THEME.box_r2_clr, 0, x0, y0, x1 - x0, y1 - y0, _colr);
-                	draw_sprite_stretched_ext(THEME.box_r5, 0, x0, y0, x1 - x0, y1 - y0, cc);
+                	draw_sprite_stretched_ext(THEME.box_r5, 0, x0, y0, x1 - x0, y1 - y0, cc, .5);
                 }
                 
                 if((pHOVER || instance_exists(o_dialog_menubox)) && point_in_rectangle(mx, my, x0, y0, x1, y1)) {
                     _draggable = false;
                     // draw_sprite_stretched(THEME.box_r2_clr, 0, x0, y0, x1 - x0, y1 - y0);
+                    var aa = MAC? .5 : .25;
                     var aa = MAC? .5 : .25;
                     draw_sprite_stretched_ext(THEME.box_r5, 0, x0, y0, x1 - x0, y1 - y0, COLORS.dialog_menubox_highlight, aa);
                     
@@ -683,7 +684,7 @@ function Panel_Menu() : PanelContent() constructor {
                 var ev = animation_curve_eval(ac_flash, noti_flash);
                 var cc = merge_color(c_white, noti_flash_color, ev);
                 
-                if(!MAC) draw_sprite_stretched_ext(THEME.panel_menu_widget, 0, nx0, ny00, nw, nh, cc, 1);
+                draw_sprite_stretched_ext(THEME.panel_menu_widget, 0, nx0, ny00, nw, nh, cc, 1);
                 
                 if(pHOVER && point_in_rectangle(mx, my, nx0, ny00, nx0 + nw, ny0 + nh / 2)) {
                     _draggable = false;
@@ -694,7 +695,7 @@ function Panel_Menu() : PanelContent() constructor {
                     setTOOLTIP($"{warning_amo} {__txt("Warnings")} {error_amo} {__txt("Errors")}");
                 }
                 
-                if(!MAC) draw_sprite_stretched_add(THEME.panel_menu_widget, 0, nx0, ny00, nw, nh, cc, ev/2);
+                draw_sprite_stretched_add(THEME.panel_menu_widget, 0, nx0, ny00, nw, nh, cc, ev/2);
                 
                 var _prg = noone;
                 for( var i = 0, n = array_length(STATS_PROGRESS); i < n; i++ ) _prg = max(_prg, STATS_PROGRESS[i].progress);
@@ -974,7 +975,8 @@ function Panel_Menu() : PanelContent() constructor {
                     if(pHOVER && point_in_rectangle(mx, my, _x0, _y0, _x1, _y1)) {
                         _draggable = false;
                         // draw_sprite_stretched_ext(THEME.button_hide_fill, 1, _x0, _y0, _x1 - _x0, _y1 - _y0, sc, 1);
-                        draw_sprite_stretched_ext(THEME.box_r5, 0, _x0, _y0, _x1 - _x0, _y1 - _y0, COLORS.dialog_menubox_highlight, .2);
+                        var aa = MAC? .5 : .25;
+                        draw_sprite_stretched_ext(THEME.box_r5, 0, _x0, _y0, _x1 - _x0, _y1 - _y0, COLORS.dialog_menubox_highlight, aa);
                         
                         if(NEW_VERSION) setTOOLTIP(__txt("New Version Available"));
                         
@@ -1008,7 +1010,8 @@ function Panel_Menu() : PanelContent() constructor {
                 if(pHOVER && point_in_rectangle(mx, my, _xx1, y1 - ui(16), _xx1 + ww, y1 + ui(16))) {
                     _draggable = false;
                     // draw_sprite_stretched_ext(THEME.button_hide_fill, 1, _xx1, y1 - ui(12), ww, ui(24), sc, 1);
-                    draw_sprite_stretched_ext(THEME.box_r5, 0, _xx1, y1 - ui(12), ww, ui(24), COLORS.dialog_menubox_highlight, .2);
+                    var aa = MAC? .5 : .25;
+                    draw_sprite_stretched_ext(THEME.box_r5, 0, _xx1, y1 - ui(12), ww, ui(24), COLORS.dialog_menubox_highlight, aa);
                     
                     if(NEW_VERSION) setTOOLTIP(__txt("New Version Available"));
                     
