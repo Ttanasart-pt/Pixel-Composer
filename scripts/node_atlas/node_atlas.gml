@@ -11,15 +11,16 @@ function Node_Atlas(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	__init_mask_modifier(5, 7); // inputs 7, 8
 	
 	////- =Expands
-	newInput( 2, nodeValue_EScroll( "Method",     0, [ "Radial", "Scan" ]));
+	newInput( 2, nodeValue_EScroll( "Method",     0, [ "Radial", "Scan", "Linear" ]));
 	newInput( 3, nodeValue_Int(     "Resolution", 32 ));
-	// 5
+	newInput( 9, nodeValue_Rot(     "Direction",  0  ));
+	// 10
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
 	input_display_list = [ 1, 4, 
 		[ "Surface", false ],  0,  5,  6,  7,  8, 
-		[ "Expands", false ],  2,  3, 
+		[ "Expands", false ],  2,  3,  9, 
 	];
 	
 	////- Node
@@ -34,6 +35,10 @@ function Node_Atlas(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 			
 			var _meth = _data[ 2];
 			var _reso = _data[ 3];
+			var _dirr = _data[ 5];
+			
+			inputs[ 3].setVisible(_meth != 2);
+			inputs[ 9].setVisible(_meth == 2);
 			
 			if(!is_surface(_surf)) return _outSurf;
 		#endregion
@@ -42,50 +47,62 @@ function Node_Atlas(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 		temp_surface[0] = surface_verify(temp_surface[0], _dim[0], _dim[1]);
 		temp_surface[1] = surface_verify(temp_surface[1], _dim[0], _dim[1]);
 		
-		if(_meth == 0) {
-			var _bg  = 0;
-			var _itr = ceil(max(_dim[0], _dim[1]) / 16);
-		
-			surface_set_shader(temp_surface[!_bg]);
-				draw_surface_safe(_surf);
-			surface_reset_shader();
-		
-			repeat(_itr) {
-				surface_set_shader(temp_surface[_bg], sh_atlas);
-					shader_set_f("dimension",   _dim  );
-					shader_set_f("resolution",  _reso );
-					
-					draw_surface_safe(temp_surface[!_bg]);
+		switch(_meth) {
+			case 0 :
+				var _bg  = 0;
+				var _itr = ceil(max(_dim[0], _dim[1]) / 16);
+			
+				surface_set_shader(temp_surface[!_bg]);
+					draw_surface_safe(_surf);
 				surface_reset_shader();
 			
-				_bg = !_bg;
-			}
-			
-			surface_set_shader(_outSurf);
-				draw_surface_safe(temp_surface[!_bg]);
-			surface_reset_shader();
-			
-		} else if(_meth == 1) {
-			
-			surface_set_shader(temp_surface[0], sh_atlas_scan);
-				shader_set_f("dimension", _dim);
-				shader_set_f("iteration", _dim[0]);
-				shader_set_i("axis", 0);
+				repeat(_itr) {
+					surface_set_shader(temp_surface[_bg], sh_atlas);
+						shader_set_f( "dimension",   _dim  );
+						shader_set_f( "resolution",  _reso );
+						
+						draw_surface_safe(temp_surface[!_bg]);
+					surface_reset_shader();
 				
-				draw_surface_safe(_surf);
-			surface_reset_shader();
-			
-			surface_set_shader(temp_surface[1], sh_atlas_scan);
-				shader_set_f("dimension", _dim);
-				shader_set_f("iteration", _dim[1]);
-				shader_set_i("axis", 1);
+					_bg = !_bg;
+				}
 				
-				draw_surface_safe(temp_surface[0]);
-			surface_reset_shader();
+				surface_set_shader(_outSurf);
+					draw_surface_safe(temp_surface[!_bg]);
+				surface_reset_shader();
+				break;
 			
-			surface_set_shader(_outSurf);
-				draw_surface_safe(temp_surface[1]);
-			surface_reset_shader();
+			case 1 : 
+				surface_set_shader(temp_surface[0], sh_atlas_scan);
+					shader_set_f( "dimension", _dim    );
+					shader_set_f( "iteration", _dim[0] );
+					shader_set_i( "axis",      0       );
+					
+					draw_surface_safe(_surf);
+				surface_reset_shader();
+				
+				surface_set_shader(temp_surface[1], sh_atlas_scan);
+					shader_set_f( "dimension", _dim    );
+					shader_set_f( "iteration", _dim[1] );
+					shader_set_i( "axis",      1       );
+					
+					draw_surface_safe(temp_surface[0]);
+				surface_reset_shader();
+				
+				surface_set_shader(_outSurf);
+					draw_surface_safe(temp_surface[1]);
+				surface_reset_shader();
+				break;
+				
+			case 2 : 
+				surface_set_shader(_outSurf, sh_atlas_linear);
+					shader_set_f( "dimension", _dim  );
+					shader_set_f( "direction", _dirr );
+					
+					draw_surface_safe(_surf);
+				surface_reset_shader();
+				
+				
 		}
 		
 		__process_mask_modifier(_data);

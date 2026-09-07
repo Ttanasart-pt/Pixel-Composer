@@ -1,0 +1,12 @@
+{
+  "$GMShader":"",
+  "%Name":"sh_atlas_linear",
+  "name":"sh_atlas_linear",
+  "parent":{
+    "name":"atlas",
+    "path":"folders/nodes/data/filter/effects/atlas.yy",
+  },
+  "resourceType":"GMShader",
+  "resourceVersion":"2.0",
+  "type":1,
+}

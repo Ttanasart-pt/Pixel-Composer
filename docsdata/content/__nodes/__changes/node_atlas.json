@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.9.206",
+    "changes": [
+      {
+        "date": "2026-09-07T01:48:03.842Z",
+        "node": "Pixel Expand",
+        "commit": "**Pixel Expand**: Add linear mode."
+      }
+    ]
+  },
+  {
     "version": "1.21.7.110",
     "changes": [
       {

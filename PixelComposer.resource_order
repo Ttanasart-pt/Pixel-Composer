@@ -3022,6 +3022,7 @@
     {"name":"sh_alpha_hash","order":43,"path":"shaders/sh_alpha_hash/sh_alpha_hash.yy",},
     {"name":"sh_ani_noise","order":5,"path":"shaders/sh_ani_noise/sh_ani_noise.yy",},
     {"name":"sh_armature_skin_render","order":20,"path":"shaders/sh_armature_skin_render/sh_armature_skin_render.yy",},
+    {"name":"sh_atlas_linear","order":3,"path":"shaders/sh_atlas_linear/sh_atlas_linear.yy",},
     {"name":"sh_atlas_scan","order":1,"path":"shaders/sh_atlas_scan/sh_atlas_scan.yy",},
     {"name":"sh_average","order":1,"path":"shaders/sh_average/sh_average.yy",},
     {"name":"sh_background","order":11,"path":"shaders/sh_background/sh_background.yy",},
