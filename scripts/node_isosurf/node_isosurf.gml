@@ -177,12 +177,12 @@ function Node_IsoSurf(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		var _oy = sy + _off[1] * ss - 1;
 		
 		draw_set_color(c_black);
-		draw_line_width(_ox - 5, _oy, _ox + 5, _oy, 4);
-		draw_line_width(_ox, _oy - 5, _ox, _oy + 5, 4);
+		draw_line_width(_ox - 5, _oy, _ox + 5, _oy, ui(2));
+		draw_line_width(_ox, _oy - 5, _ox, _oy + 5, ui(2));
 		
 		draw_set_color(c_white);
-		draw_line_width(_ox - 4, _oy, _ox + 4, _oy, 2);
-		draw_line_width(_ox, _oy - 4, _ox, _oy + 4, 2);
+		draw_line_width(_ox - 4, _oy, _ox + 4, _oy, ui(1));
+		draw_line_width(_ox, _oy - 4, _ox, _oy + 4, ui(1));
 		
 		return hh;
 	});

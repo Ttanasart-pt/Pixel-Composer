@@ -1681,13 +1681,13 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			draw_rectangle_border_points(p0x, p0y, p1x, p1y, p2x, p2y, p3x, p3y, 2);
 			
 			if(isNotUsingTool() || isUsingTool("Rotate")) {
-				draw_line_width(rcx, rcy, rx,  ry,  2);
+				draw_line_width(rcx, rcy, rx,  ry,  ui(1));
 				
 				draw_anchor(_ri,      rx,  ry,  ui(8), 1);
 			}
 			
 			if(isNotUsingTool() || isUsingTool("Scale")) {
-				draw_line_width(p3x, p3y, sx,  sy,  2);
+				draw_line_width(p3x, p3y, sx,  sy,  ui(1));
 				
 				draw_anchor(_si,      sx,  sy,  ui(8), 1);
 				draw_anchor(_bi == 0, p0x, p0y, ui(8), 2);
@@ -1845,10 +1845,10 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 				
 				draw_rectangle_border(_selx0, _sely0, _selx1, _sely1, 2);
 				
-				draw_line_width(_selxc, _sely0 - 24, _selxc, _sely0,  2);
+				draw_line_width(_selxc, _sely0 - 24, _selxc, _sely0,  ui(1));
 				draw_anchor(_ri, _selxc, _sely0 - 24,  ui(8), 1);
 				
-				draw_line_width(_selx1, _sely1, _selx1 + 16, _sely1 + 16,  2);
+				draw_line_width(_selx1, _sely1, _selx1 + 16, _sely1 + 16,  ui(1));
 				draw_anchor(_si, _selx1 + 16, _sely1 + 16,  ui(8), 1);
 				// draw_anchor(_bi == 0, _selx0, _sely0, ui(8), 2);
 				// draw_anchor(_bi == 1, _selx1, _sely0, ui(8), 2);

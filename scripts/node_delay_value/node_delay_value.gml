@@ -79,7 +79,7 @@ function Node_Delay_Value(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 		draw_set_alpha(1);
 		
 		var _x = _shf + (curr_frame + 1) * _s;
-		draw_line_width(_x, 0, _x, _h, 1);
+		draw_line_width(_x, 0, _x, _h, ui(1));
 		draw_set_alpha(1);
 	}
 	

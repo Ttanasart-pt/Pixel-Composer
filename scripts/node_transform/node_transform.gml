@@ -491,12 +491,12 @@ function Node_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			else if(point_in_circle(_mx, _my, _brx, _bry, 8)) { hov_corner = 3; hov_ax = _tlx; hov_ay = _tly; }
 			
 			draw_set_color(COLORS._main_accent);
-			draw_line_width(_tlx, _tly, _trx, _try, 2);
-			draw_line_width(_tlx, _tly, _blx, _bly, 2);
-			draw_line_width(_trx, _try, _brx, _bry, 2);
-			draw_line_width(_blx, _bly, _brx, _bry, 2);
-			draw_line_width(_rcx, _rcy, _rrx, _rry, 2);
-			draw_line_width(_brx, _bry, _szx, _szy, 2);
+			draw_line_width(_tlx, _tly, _trx, _try, ui(1));
+			draw_line_width(_tlx, _tly, _blx, _bly, ui(1));
+			draw_line_width(_trx, _try, _brx, _bry, ui(1));
+			draw_line_width(_blx, _bly, _brx, _bry, ui(1));
+			draw_line_width(_rcx, _rcy, _rrx, _rry, ui(1));
+			draw_line_width(_brx, _bry, _szx, _szy, ui(1));
 			
 			draw_anchor(sz_index, _szx, _szy, ui(8), 1);
 			draw_anchor(r_index,  _rrx, _rry, ui(8), 1);

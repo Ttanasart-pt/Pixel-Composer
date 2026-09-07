@@ -185,7 +185,7 @@ function Panel_Keyframe_Driver() : PanelContent() constructor {
 			
 			if(_prop == -1) {
 				draw_set_color(CDEF.main_mdblack);
-				draw_line_round(ui(16), yy + ui(4), _w - ui(16), yy + ui(4), 2);
+				draw_line_round(ui(16), yy + ui(4), _w - ui(16), yy + ui(4), ui(1));
 				yy += ui(8);
 				hh += ui(8);
 				continue;

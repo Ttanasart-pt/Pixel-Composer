@@ -170,11 +170,11 @@ function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 			
 		    if(hover && point_in_rectangle(_mx, _my, _tbx0, _tby0, _tbxc, _tby1)) {
 		     	_cr_hover = i;
-		     	draw_set_color(COLORS._main_icon); draw_set_alpha(.5); draw_line_width(_tbx0, _tby0, _tbx0, _tby1, 2); draw_set_alpha(1);
+		     	draw_set_color(COLORS._main_icon); draw_set_alpha(.5); draw_line_width(_tbx0, _tby0, _tbx0, _tby1, ui(1)); draw_set_alpha(1);
 				
 			} else if(hover && point_in_rectangle(_mx, _my, _tbxc, _tby0, _tbx1, _tby1)) {
 				_cr_hover = i + 1;
-				draw_set_color(COLORS._main_icon); draw_set_alpha(.5); draw_line_width(_tbx1, _tby0, _tbx1, _tby1, 2); draw_set_alpha(1);
+				draw_set_color(COLORS._main_icon); draw_set_alpha(.5); draw_line_width(_tbx1, _tby0, _tbx1, _tby1, ui(1)); draw_set_alpha(1);
 				
 			}
 			

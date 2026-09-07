@@ -54,7 +54,7 @@ function Node_VerletSim_Mesh_Tear(_x, _y, _group = noone) : Node(_x, _y, _group)
 				var _p1y = _y + _edge.p1.sy * _s;
 				
 				draw_set_color(COLORS._main_accent);
-				draw_line_width(_p0x, _p0y, _p1x, _p1y, 2);
+				draw_line_width(_p0x, _p0y, _p1x, _p1y, ui(1));
 				break;
 		}
 		

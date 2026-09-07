@@ -177,7 +177,7 @@ function Node_Path_Builder(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 				_nx = _x + _seg[j + 0] * _s;
 				_ny = _y + _seg[j + 1] * _s;
 					
-				if(j) draw_line_width(_ox, _oy, _nx, _ny, 1);
+				if(j) draw_line_width(_ox, _oy, _nx, _ny, ui(1));
 				
 				_ox = _nx;
 				_oy = _ny;

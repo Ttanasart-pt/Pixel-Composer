@@ -217,8 +217,8 @@ function Panel_Global_Layer_Drawer() constructor {
 			if(hv && dragging != noone) {
 				draw_set_color(COLORS._main_accent);
 				
-				if(_hovIndex < dragging) draw_line_round(_sx0, _sy0, _sx1, _sy0, 2);
-				if(_hovIndex > dragging) draw_line_round(_sx0, _sy1, _sx1, _sy1, 2);
+				if(_hovIndex < dragging) draw_line_round(_sx0, _sy0, _sx1, _sy0, ui(1));
+				if(_hovIndex > dragging) draw_line_round(_sx0, _sy1, _sx1, _sy1, ui(1));
 			}
 		}
 		

@@ -159,7 +159,7 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 				var x1 = _x + points[j  ].x * _s;
 				var y1 = _y + points[j  ].y * _s;
 				
-				draw_line_width(x0, y0, x1, y1, 4);
+				draw_line_width(x0, y0, x1, y1, ui(2));
 			}
 		}
 		

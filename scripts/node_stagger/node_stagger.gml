@@ -93,7 +93,7 @@ function Node_Stagger(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		draw_set_alpha(1);
 		
 		var _x = _shf + target_frame * _s;
-		draw_line_width(_x, 0, _x, _h, 1);
+		draw_line_width(_x, 0, _x, _h, ui(1));
 		draw_set_alpha(1);
 	}
 	

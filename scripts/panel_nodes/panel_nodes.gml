@@ -360,7 +360,7 @@ function Panel_Nodes() : PanelContent() constructor {
 				var _menu = _side_m[i];
 				if(_menu == -1) {
 					draw_set_color(CDEF.main_mdblack);
-					draw_line_width(_mux, _muy + ui(3), _mux + _mus, _muy + ui(3), 2);
+					draw_line_width(_mux, _muy + ui(3), _mux + _mus, _muy + ui(3), ui(1));
 					
 					_muy += ui(8);
 					_hh  += ui(8);

@@ -684,7 +684,7 @@ function Node_Armature(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 		
 		if(constrains_dragging != noone) {
 			draw_set_color(COLORS._main_accent);
-			draw_line_round(ui(8), _hoverY, _w - ui(16), _hoverY, 2);
+			draw_line_round(ui(8), _hoverY, _w - ui(16), _hoverY, ui(1));
 			
 			if(mouse_lrelease()) {
 				array_insert(constrains, _hoverInd, constrains_dragging);

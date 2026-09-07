@@ -146,10 +146,10 @@ function Node_Camera(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 				if(layer_dragging != noone) {
 					draw_set_color(COLORS._main_accent);
 					if(layer_dragging > ind)
-						draw_line_width(_x + ui(16), _cy + lh + 2, _x + _w - ui(16), _cy + lh + ui(2), 2);
+						draw_line_width(_x + ui(16), _cy + lh + 2, _x + _w - ui(16), _cy + lh + ui(2), ui(1));
 						
 					else if(layer_dragging < ind)
-						draw_line_width(_x + ui(16), _cy - 2, _x + _w - ui(16), _cy - ui(2), 2);
+						draw_line_width(_x + ui(16), _cy - 2, _x + _w - ui(16), _cy - ui(2), ui(1));
 				}
 			}
 			

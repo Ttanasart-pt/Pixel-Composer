@@ -51,8 +51,8 @@ function preview_overlay_gradient_range(interact, active, _x, _y, _s, _mx, _my, 
 	var _tw = string_width(txt) + ui(16);
 	
 	draw_set_color(cc);
-	draw_line_round(tx0, ty0, tx0 + lengthdir_x(dis / 2 - _tw / 2, dir), ty0 + lengthdir_y(dis / 2 - _tw / 2, dir), 2);
-	draw_line_round(tx1, ty1, tx1 - lengthdir_x(dis / 2 - _tw / 2, dir), ty1 - lengthdir_y(dis / 2 - _tw / 2, dir), 2);
+	draw_line_round(tx0, ty0, tx0 + lengthdir_x(dis / 2 - _tw / 2, dir), ty0 + lengthdir_y(dis / 2 - _tw / 2, dir), ui(1));
+	draw_line_round(tx1, ty1, tx1 - lengthdir_x(dis / 2 - _tw / 2, dir), ty1 - lengthdir_y(dis / 2 - _tw / 2, dir), ui(1));
 	
 	var d0 = false;
 	var d1 = false;

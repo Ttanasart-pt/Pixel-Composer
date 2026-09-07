@@ -322,11 +322,11 @@ function Panel_Palette_Mixer(_selector = noone) : PanelContent() constructor {
 					var _hv = _hov == noone && _con_hover == i;
 					if(shade_mode == 0) {
 						draw_set_alpha(0.75);
-						draw_line_width_color(_frx, _fry, _tox, _toy, (_hv? 8 : 4) + 2, c_white, c_white);
+						draw_line_width_color(_frx, _fry, _tox, _toy, ui(_hv? 4 : 2) + ui(1), c_white, c_white);
 						draw_set_alpha(1);
 					}
 					
-					draw_line_width_color(_frx, _fry, _tox, _toy, _hv? 8 : 4, _fr.color, _to.color);
+					draw_line_width_color(_frx, _fry, _tox, _toy, _hv? ui(4) : ui(2), _fr.color, _to.color);
 					
 					if(_pHover && _bln_hover == noone && shade_mode == 0 && distance_to_line(_msx, _msy, _frx, _fry, _tox, _toy) < 6) {
 						conn_hovering = i;
@@ -367,10 +367,10 @@ function Panel_Palette_Mixer(_selector = noone) : PanelContent() constructor {
 					if(_hov) {
 						var _tox = round(_mx_x + _hov.x);
 						var _toy = round(_mx_y + _hov.y);
-						draw_line_width_color(_frx, _fry, _tox, _toy, 8, _fr.color, _hov.color);
+						draw_line_width_color(_frx, _fry, _tox, _toy, ui(4), _fr.color, _hov.color);
 						
 					} else
-						draw_line_width_color(_frx, _fry, _msx, _msy, 8, _fr.color, _fr.color);
+						draw_line_width_color(_frx, _fry, _msx, _msy, ui(4), _fr.color, _fr.color);
 				}
 			surface_reset_target();
 			

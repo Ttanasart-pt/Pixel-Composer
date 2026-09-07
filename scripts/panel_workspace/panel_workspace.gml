@@ -167,7 +167,7 @@ function Panel_Workspace() : PanelContent() constructor {
 		
 		var _spFrm = THEME_VALUE.panel_separation_type == "frame";
 		draw_set_color(COLORS.panel_separator);
-		if(_spFrm) draw_line_round(currW, ui(8), currW, h - ui(8), 3);
+		if(_spFrm) draw_line_round(currW, ui(8), currW, h - ui(8), ui(1));
 		else       draw_line(currW, 0, currW, h);
 		
 		scroll     = lerp_float(scroll, scroll_to, 5);

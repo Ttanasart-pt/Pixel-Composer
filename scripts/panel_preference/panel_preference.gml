@@ -1048,7 +1048,7 @@ function Panel_Preference() : PanelContent() constructor {
     			var _theme = theme_settings[i];
     			if(_theme == -1) {
     				draw_set_color(COLORS.panel_separator);
-    				draw_line_width(ui(4), _y, ww - ui(4), _y, 2);
+    				draw_line_width(ui(4), _y, ww - ui(4), _y, ui(1));
     				
 		    		_y += ui(8);
 		    		hh += ui(8);

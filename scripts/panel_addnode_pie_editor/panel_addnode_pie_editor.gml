@@ -149,7 +149,7 @@ function Panel_Addnode_Pie_Editor() : PanelContent() constructor {
 		if(dragging != "") { 
 			if(hoverI != noone) {
 				draw_set_color(COLORS._main_accent);
-				draw_line_width(hoverX + ui(4), hoverY - 1, sw - ui(8) - hoverX, hoverY - 1, 2);
+				draw_line_width(hoverX + ui(4), hoverY - 1, sw - ui(8) - hoverX, hoverY - 1, ui(1));
 				
 				if(mouse_lrelease())
 					array_insert(menu, hoverI, dragging);

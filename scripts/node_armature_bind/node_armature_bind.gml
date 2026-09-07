@@ -601,8 +601,8 @@ function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 					
 					if(layer_dragging != noone) {
 						draw_set_color(COLORS._main_accent);
-							 if(layer_dragging > _ind) draw_line_width(_x + ui(16), _cy + lh + 2, _x + _w - ui(16), _cy + lh + 2, 2);
-						else if(layer_dragging < _ind) draw_line_width(_x + ui(16), _cy - 2,      _x + _w - ui(16), _cy - 2,      2);
+							 if(layer_dragging > _ind) draw_line_width(_x + ui(16), _cy + lh + 2, _x + _w - ui(16), _cy + lh + 2, ui(1));
+						else if(layer_dragging < _ind) draw_line_width(_x + ui(16), _cy - 2,      _x + _w - ui(16), _cy - 2,      ui(1));
 					}
 				}
 			}
@@ -1102,19 +1102,19 @@ function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 				}
 				
 				draw_set_color(COLORS._main_accent);
-				draw_line_width(p0x, p0y, p1x, p1y, 2);
-				draw_line_width(p0x, p0y, p2x, p2y, 2);
-				draw_line_width(p3x, p3y, p1x, p1y, 2);
-				draw_line_width(p3x, p3y, p2x, p2y, 2);
+				draw_line_width(p0x, p0y, p1x, p1y, ui(1));
+				draw_line_width(p0x, p0y, p2x, p2y, ui(1));
+				draw_line_width(p3x, p3y, p1x, p1y, ui(1));
+				draw_line_width(p3x, p3y, p2x, p2y, ui(1));
 				
 				if(isNotUsingTool() || isUsingTool("Rotate")) {
-					draw_line_width(rcx, rcy, rx,  ry,  2);
+					draw_line_width(rcx, rcy, rx,  ry,  ui(1));
 					
 					draw_anchor(_ri,      rx,  ry,  ui(8), 1);
 				}
 				
 				if(isNotUsingTool() || isUsingTool("Scale")) {
-					draw_line_width(p3x, p3y, sx,  sy,  2);
+					draw_line_width(p3x, p3y, sx,  sy,  ui(1));
 					
 					draw_anchor(_si,      sx,  sy,  ui(8), 1);
 					draw_anchor(_bi == 0, p0x, p0y, ui(8), 2);

@@ -40,7 +40,7 @@ function audioObject(_sample = 8, _channel = 2) constructor {
 				nx = i / len * 320;
 				ny = h / 2 + sound[0][i] * h;
 				
-				if(i) draw_line_width(ox, oy, nx, ny, 4);
+				if(i) draw_line_width(ox, oy, nx, ny, ui(2));
 				
 				ox = nx;
 				oy = ny;

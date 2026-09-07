@@ -60,10 +60,10 @@ function Node_Rigid_Group_Inline(_x, _y, _group = noone) : Node_Collection_Inlin
 			var y1 = _y + dimension[1] * _s;
 			
 			draw_set_color(COLORS._main_accent);
-			if(_walls & 0b0001) draw_line_width(x0, y0, x1, y0, 2);
-			if(_walls & 0b0010) draw_line_width(x0, y1, x1, y1, 2);
-			if(_walls & 0b0100) draw_line_width(x0, y0, x0, y1, 2);
-			if(_walls & 0b1000) draw_line_width(x1, y0, x1, y1, 2);
+			if(_walls & 0b0001) draw_line_width(x0, y0, x1, y0, ui(1));
+			if(_walls & 0b0010) draw_line_width(x0, y1, x1, y1, ui(1));
+			if(_walls & 0b0100) draw_line_width(x0, y0, x0, y1, ui(1));
+			if(_walls & 0b1000) draw_line_width(x1, y0, x1, y1, ui(1));
 		}
 	}
 	

@@ -131,7 +131,7 @@ function textArrayBox(_arraySet, _data, _onModify = noone) : widget() constructo
 			if(hovi != noone && hovi[0] != dragging) {
 				draw_set_color(COLORS._main_accent);
 				var _tx = hovi[0] > dragging? hovi[3] : hovi[1];
-				draw_line_width(_tx, hovi[2], _tx, hovi[4], 2);
+				draw_line_width(_tx, hovi[2], _tx, hovi[4], ui(1));
 			}
 			
 			if(mouse_lrelease()) {

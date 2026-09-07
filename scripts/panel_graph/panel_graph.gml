@@ -3223,7 +3223,7 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
         	var _menu = tbb[i];
 			if(_menu == -1) {
 				draw_set_color(COLORS.panel_separator);
-				if(_spFrm) draw_line_width(tbx + bs - ui(2), tby - _lh, tbx + bs - ui(2), tby + _lh, 2);
+				if(_spFrm) draw_line_width(tbx + bs - ui(2), tby - _lh, tbx + bs - ui(2), tby + _lh, ui(1));
 				else       draw_line(tbx + bs - ui(2), ty, tbx + bs - ui(2), ty + th);
 				
 				tbx -= ui(6);
@@ -3240,7 +3240,7 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
 			
 			if(mrg && i == n - 1) {
 				draw_set_color(COLORS.panel_separator);
-				if(_spFrm) draw_line_width(tbx + bs - ui(2), tby - _lh, tbx + bs - ui(2), tby + _lh, 2);
+				if(_spFrm) draw_line_width(tbx + bs - ui(2), tby - _lh, tbx + bs - ui(2), tby + _lh, ui(1));
 				else       draw_line(tbx + bs - ui(2), ty, tbx + bs - ui(2), ty + th);
 			}
         }
@@ -3334,7 +3334,7 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
     	
     	if(mrg) {
 	    	draw_set_color(COLORS.panel_separator);
-			if(_spFrm) draw_line_width(tw, ty + th / 2 - _lh, tw, ty + th / 2 + _lh, 2);
+			if(_spFrm) draw_line_width(tw, ty + th / 2 - _lh, tw, ty + th / 2 + _lh, ui(1));
 			else       draw_line(tw, ty, tw, ty + th);
     	}
 		
@@ -3363,7 +3363,7 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
 			var _menu = _side_m[i];
 			if(_menu == -1) {
 				draw_set_color(COLORS.panel_separator);
-				if(_spFrm) draw_line_width(_mux + ui(1), ty + th / 2 - _lh, _mux + ui(1), ty + th / 2 + _lh, 2);
+				if(_spFrm) draw_line_width(_mux + ui(1), ty + th / 2 - _lh, _mux + ui(1), ty + th / 2 + _lh, ui(1));
 				else       draw_line(_mux + ui(1), ty, _mux + ui(1), ty + th);
 				
 				_mux += ui(6);

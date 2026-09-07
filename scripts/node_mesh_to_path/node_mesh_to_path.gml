@@ -23,7 +23,7 @@ function Node_Mesh_To_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		
 		for( var i = 0, n = array_length(segments); i < n; i += 1 ) {
 			np = segments[i];
-			if(i) draw_line_round(_x + op.x * _s, _y + op.y * _s, _x + np.x * _s, _y + np.y * _s, 2);
+			if(i) draw_line_round(_x + op.x * _s, _y + op.y * _s, _x + np.x * _s, _y + np.y * _s, ui(1));
 			op = np;
 		}
 	}

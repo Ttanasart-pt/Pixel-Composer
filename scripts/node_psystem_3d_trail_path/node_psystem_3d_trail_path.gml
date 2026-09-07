@@ -182,7 +182,7 @@ function Node_pSystem_3D_Trail(_x, _y, _group = noone) : Node(_x, _y, _group) co
 				_nx = _posView.x;
 				_ny = _posView.y;
 				
-				if(j) draw_line_width(_ox, _oy, _nx, _ny, 1);
+				if(j) draw_line_width(_ox, _oy, _nx, _ny, ui(1));
 				
 				_ox = _nx;
 				_oy = _ny;

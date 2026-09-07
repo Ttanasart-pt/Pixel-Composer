@@ -159,7 +159,7 @@ function Node_Path_Bake(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 				nx = _x + _seg[j][0] * _s;
 				ny = _y + _seg[j][1] * _s;
 				
-				if(j) draw_line_width(ox, oy, nx, ny, 3);
+				if(j) draw_line_width(ox, oy, nx, ny, ui(2));
 				
 				ox = nx; 
 				oy = ny;

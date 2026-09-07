@@ -389,7 +389,7 @@
 					}
 					
 					var _nv = _qview.Rotate(_qinv.Rotate(drag_rot_axis));
-					draw_line_round(cx, cy, cx + _nv.X * 100, cy + _nv.Y * 100, 2);
+					draw_line_round(cx, cy, cx + _nv.X * 100, cy + _nv.Y * 100, ui(1));
 						
 					if(drag_prev != undefined) {
 						var _rd    = (mAng - drag_prev) * (_nv.Z > 0? 1 : -1);

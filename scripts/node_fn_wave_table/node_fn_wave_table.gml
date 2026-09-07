@@ -119,7 +119,7 @@ function Node_Fn_WaveTable(_x, _y, _group = noone) : Node_Fn(_x, _y, _group) con
 			nx = _gra_x + j    * _gra_p;
 			ny = _gra_y - _val * _gra_h / 2;
 			
-			if(j) draw_line_width(ox, oy, nx, ny, 2);
+			if(j) draw_line_width(ox, oy, nx, ny, ui(1));
 			
 			ox = nx;
 			oy = ny;

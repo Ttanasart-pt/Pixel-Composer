@@ -15,10 +15,7 @@ event_inherited();
 		ready     = false;
 		thread    = lua_create();
 		
-		if(thread == 0) {
-			instance_destroy();
-			return;
-		}
+		if(thread == undefined) { instance_destroy(); return; }
 		
 		__addon_lua_setup(thread, self);
 		

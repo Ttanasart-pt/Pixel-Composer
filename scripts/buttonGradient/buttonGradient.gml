@@ -195,7 +195,7 @@ function buttonGradient(_onModify, dialog = noone) : widget() constructor {
 					else
 						draw_set_color_alpha(c_white, .5);
 					
-					draw_line_round(_kx, _ggy + _ggh - ui(8), _kx, _ky, 1);
+					draw_line_round(_kx, _ggy + _ggh - ui(8), _kx, _ky, ui(1));
 					draw_set_alpha(1);
 					
 					_kx = clamp(_kx, _ggx + _ks / 2, _ggx + _ggw - _ks / 2);

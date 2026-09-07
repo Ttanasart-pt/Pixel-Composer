@@ -52,7 +52,7 @@ function Node_FLIP_Apply_Velocity(_x, _y, _group = noone) : Node(_x, _y, _group)
 		
 		draw_set_color(COLORS._main_accent);
 		draw_set_alpha(0.5);
-		draw_line_width2(_px, _py, _vx, _vy, 6, 2);
+		draw_line_width2(_px, _py, _vx, _vy, 6, ui(1));
 		draw_set_alpha(1);
 		
 		drawOverlayInput(inputs[1].drawOverlay(w_hoverable, active,  _x,  _y, _s, _mx, _my));

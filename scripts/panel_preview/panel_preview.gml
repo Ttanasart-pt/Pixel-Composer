@@ -1325,12 +1325,12 @@ function Panel_Preview() : PanelContent() constructor {
                 draw_set_color(COLORS.panel_separator);
                 if(hori) {
                 	var lx = _x0 + ui(4);
-                	if(_spFrm) draw_line_width(lx, tyy + ui(4), lx, tyy + thh - ui(4), 2);
+                	if(_spFrm) draw_line_width(lx, tyy + ui(4), lx, tyy + thh - ui(4), ui(1));
 	                else       draw_line(      lx, tyy,         lx, tyy + thh - 1);
 	                
                 } else {
                 	var ly = _y0 + ui(4);
-	                if(_spFrm) draw_line_width(txx + ui(4), ly, txx + tww - ui(4), ly, 2);
+	                if(_spFrm) draw_line_width(txx + ui(4), ly, txx + tww - ui(4), ly, ui(1));
 	                else       draw_line(      txx,         ly, txx + tww - 1,     ly);
                 }
                 
@@ -1463,12 +1463,12 @@ function Panel_Preview() : PanelContent() constructor {
         		draw_set_color(COLORS.panel_separator);
         		if(hori) {
         			var lx = _x0 + ui(4);
-                	if(_spFrm) draw_line_width(lx, tyy + ui(4), lx, tyy + thh - ui(4), 2);
+                	if(_spFrm) draw_line_width(lx, tyy + ui(4), lx, tyy + thh - ui(4), ui(1));
 	                else       draw_line(      lx, tyy,         lx, tyy + thh - 1);
 	                
                 } else {
                 	var ly = _y0 + ui(4);
-	                if(_spFrm) draw_line_width(txx + ui(4), ly, txx + tww - ui(4), ly, 2);
+	                if(_spFrm) draw_line_width(txx + ui(4), ly, txx + tww - ui(4), ly, ui(1));
 	                else       draw_line(      txx,         ly, txx + tww - 1,     ly);
                 }
                 
@@ -1540,12 +1540,12 @@ function Panel_Preview() : PanelContent() constructor {
 	            draw_set_color(COLORS.panel_separator);
 	    		if(hori) {
 	    			var lx = _x0 + ui(4);
-	            	if(_spFrm) draw_line_width(lx, tyy + ui(4), lx, tyy + thh - ui(4), 2);
+	            	if(_spFrm) draw_line_width(lx, tyy + ui(4), lx, tyy + thh - ui(4), ui(1));
 	                else       draw_line(      lx, tyy,         lx, tyy + thh - 1);
 	                
 	            } else {
 	            	var ly = _y0 + ui(4);
-	                if(_spFrm) draw_line_width(txx + ui(4), ly, txx + tww - ui(4), ly, 2);
+	                if(_spFrm) draw_line_width(txx + ui(4), ly, txx + tww - ui(4), ly, ui(1));
 	                else       draw_line(      txx,         ly, txx + tww - 1,     ly);
 	            }
 	            
@@ -1576,14 +1576,14 @@ function Panel_Preview() : PanelContent() constructor {
     		if(hori) {
     			xx += ui(4);
     			var x0 = xx - ts2;
-            	if(_spFrm) draw_line_width(x0, tyy + ui(4), x0, tyy + thh - ui(4), 2);
+            	if(_spFrm) draw_line_width(x0, tyy + ui(4), x0, tyy + thh - ui(4), ui(1));
                 else       draw_line(      x0, tyy,         x0, tyy + thh - 1);
     			xx += ui(4);
                 
             } else {
     			yy += ui(4);
     			var y0 = yy - ts2;
-                if(_spFrm) draw_line_width(txx + ui(4), y0, txx + tww - ui(4), y0, 2);
+                if(_spFrm) draw_line_width(txx + ui(4), y0, txx + tww - ui(4), y0, ui(1));
                 else       draw_line(      txx,         y0, txx + tww - 1,     y0);
     			yy += ui(4);
             }
@@ -1700,12 +1700,12 @@ function Panel_Preview() : PanelContent() constructor {
                 draw_set_color(COLORS.panel_separator);
                 if(hori) {
                 	var lx = _x0 + ui(4);
-                	if(_spFrm) draw_line_width( lx, tyy + ui(4), lx, tyy + thh - ui(4), 2);
+                	if(_spFrm) draw_line_width( lx, tyy + ui(4), lx, tyy + thh - ui(4), ui(1));
 	                else       draw_line(       lx, tyy,         lx, tyy + thh - 1);
 	                
                 } else {
                 	var ly = _y0 + ui(4);
-	                if(_spFrm) draw_line_width(txx + ui(4), ly, txx + tww - ui(4), ly, 2);
+	                if(_spFrm) draw_line_width(txx + ui(4), ly, txx + tww - ui(4), ly, ui(1));
 	                else       draw_line(      txx,         ly, txx + tww - 1,     ly);
                 }
                 
@@ -3242,7 +3242,7 @@ function Panel_Preview() : PanelContent() constructor {
                 _as[i] = _qview.Rotate(_as[i]);
                 
                 draw_set_color(COLORS.axis[i]);
-                draw_line_round(_d3x, _d3y, _d3x + _as[i].X * (d3_view_wr * 0.75), _d3y + _as[i].Y * (d3_view_wr * 0.75), 3);
+                draw_line_round(_d3x, _d3y, _d3x + _as[i].X * (d3_view_wr * 0.75), _d3y + _as[i].Y * (d3_view_wr * 0.75), ui(1));
             }
             
             var d3_view_wz = ui(16);
@@ -3794,7 +3794,7 @@ function Panel_Preview() : PanelContent() constructor {
 				draw_set_color(COLORS.panel_separator);
 				
 				var lx = tbx + ui(3);
-				if(_spFrm) draw_line_width( lx, ty + ui(4), lx, ty + th - ui(4), 2);
+				if(_spFrm) draw_line_width( lx, ty + ui(4), lx, ty + th - ui(4), ui(1));
 				else       draw_line(       lx, ty,         lx, ty + th - 1);
 				
 				 tbx += ui(8);
@@ -3847,7 +3847,7 @@ function Panel_Preview() : PanelContent() constructor {
         var _action_b = menuItems_gen("preview_actions");
         if(mrg && sep && !array_empty(_action_b)) {
         	draw_set_color(COLORS.panel_separator);
-        	if(_spFrm) draw_line_width(tbx, ty + ui(4), tbx, ty + th - ui(4), 2);
+        	if(_spFrm) draw_line_width(tbx, ty + ui(4), tbx, ty + th - ui(4), ui(1));
         	else       draw_line(      tbx, ty,         tbx, ty + th - 1);
         	
         	tbx -= ui(4);
@@ -3861,7 +3861,7 @@ function Panel_Preview() : PanelContent() constructor {
 			if(_menu == -1) {
 				draw_set_color(COLORS.panel_separator);
 				var lx = tbx - ui(4);
-				if(_spFrm) draw_line_width( lx, ty + ui(4), lx, ty + th - ui(4), 2);
+				if(_spFrm) draw_line_width( lx, ty + ui(4), lx, ty + th - ui(4), ui(1));
 				else       draw_line(       lx, ty,         lx, ty + th - 1);
 				
 				trw += ui(8);
@@ -3893,7 +3893,7 @@ function Panel_Preview() : PanelContent() constructor {
 	        var _lh = toolbar_size / 2 - ui(8);
         
 	        draw_set_color(COLORS.panel_separator);
-	        if(_spFrm) draw_line_width(_lx, ty + ui(4), _lx, ty + th - ui(4), 2);
+	        if(_spFrm) draw_line_width(_lx, ty + ui(4), _lx, ty + th - ui(4), ui(1));
 	        else       draw_line(      _lx, ty,         _lx, ty + th - 1);
         }
         
@@ -3927,7 +3927,7 @@ function Panel_Preview() : PanelContent() constructor {
             
             if(mouse_on_preview && point_in_rectangle(mx, my, sx - ui(4), 0, sx + ui(4), h)) {
             	mouse_on_content = false;
-                draw_line_width(sx, 0, sx, h, 2);
+                draw_line_width(sx, 0, sx, h, ui(1));
                 
                 if(mouse_lpress(pFOCUS)) {
                     splitViewDragging = true;
@@ -3936,7 +3936,7 @@ function Panel_Preview() : PanelContent() constructor {
                 }
                 
             } else 
-                draw_line_width(sx, 0, sx, h, 1);
+                draw_line_width(sx, 0, sx, h, ui(1));
             
             var pd  = THEME_VALUE.panel_toolbar_padding;
             var spx = splitSelection? sx + ui(16) : sx - ui(16);
@@ -3953,7 +3953,7 @@ function Panel_Preview() : PanelContent() constructor {
             
             if(mouse_on_preview && point_in_rectangle(mx, my, 0, sy - ui(4), w, sy + ui(4))) {
                 mouse_on_content = false;
-            	draw_line_width(0, sy, w, sy, 2);
+            	draw_line_width(0, sy, w, sy, ui(1));
             	
                 if(mouse_lpress(pFOCUS)) {
                     splitViewDragging = true;
@@ -3962,7 +3962,7 @@ function Panel_Preview() : PanelContent() constructor {
                 }
                 
             } else
-                draw_line_width(0, sy, w, sy, 1);
+                draw_line_width(0, sy, w, sy, ui(1));
             draw_sprite_ui_uniform(THEME.icon_active_split, 0, ui(16), splitSelection? sy + ui(16) : sy - ui(16),, COLORS._main_accent);
             
             if(mouse_on_preview && mouse_lpress(pFOCUS)) {
@@ -4303,14 +4303,14 @@ function Panel_Preview() : PanelContent() constructor {
         			if(ruler_edit_hi == _r && hov_h) draw_set_color(COLORS._main_value_negative);
         			var _line_y = canvas_y + v;
         			_h = pHOVER && point_in_rectangle(mx, my, x0, _line_y - 2, x0 + ruler_width, _line_y + 2);
-        			draw_line_width(0, _line_y, w, _line_y, 1 + (ruler_hover == i) * 2);
+        			draw_line_width(0, _line_y, w, _line_y, ui(1) + (ruler_hover == i) * 2);
         		}
         		
         		if(a == 1) {
         			if(ruler_edit_vi == _r && hov_v) draw_set_color(COLORS._main_value_negative);
         			var _line_x = canvas_x + v;
         			_h = pHOVER && point_in_rectangle(mx, my, _line_x - 2, y0, _line_x + 2, y0 + ruler_width);
-        			draw_line_width(_line_x, 0, _line_x, h, 1 + (ruler_hover == i) * 2);
+        			draw_line_width(_line_x, 0, _line_x, h, ui(1) + (ruler_hover == i) * 2);
         		}
         		
         		if(_h) hv = i;
@@ -4560,8 +4560,8 @@ function Panel_Preview() : PanelContent() constructor {
         }
         
         draw_set_color(COLORS._main_icon_dark);
-        draw_line_width(canvas_x, 0, canvas_x, h, 1);
-        draw_line_width(0, canvas_y, w, canvas_y, 1);
+        draw_line_width(canvas_x, 0, canvas_x, h, ui(1));
+        draw_line_width(0, canvas_y, w, canvas_y, ui(1));
         
         title = __txt("Preview");
         getPreviewData();

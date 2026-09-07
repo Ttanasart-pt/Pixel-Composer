@@ -790,14 +790,14 @@ function Node_Path_Shape(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 			        nx = 4 + (_pth.points[i][0] - xx) / ww * 120;
 			        ny = 4 + (_pth.points[i][1] - yy) / hh * 120;
 			        
-		            if(i) draw_line_width(ox, oy, nx, ny, 8);
+		            if(i) draw_line_width(ox, oy, nx, ny, ui(6));
 		            else  { x0 = nx; y0 = ny; }
 			        
 			        ox = nx;
 			        oy = ny;
 			    }
 			    
-			    if(_pth.loop) draw_line_width(ox, oy, x0, y0, 8);
+			    if(_pth.loop) draw_line_width(ox, oy, x0, y0, ui(6));
 		    }
     	surface_reset_target();
 	}

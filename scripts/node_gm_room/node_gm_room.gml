@@ -548,8 +548,8 @@ function Node_GMRoom(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
     		}
     		
     		draw_set_color(COLORS._main_accent);
-    		if(_dgx != undefined) draw_line_width(_x + _dgx * _s, 0, _x + _dgx * _s, WIN_H, 2);
-    		if(_dgy != undefined) draw_line_width(0, _y + _dgy * _s, WIN_W, _y + _dgy * _s, 2);
+    		if(_dgx != undefined) draw_line_width(_x + _dgx * _s, 0, _x + _dgx * _s, WIN_H, ui(1));
+    		if(_dgy != undefined) draw_line_width(0, _y + _dgy * _s, WIN_W, _y + _dgy * _s, ui(1));
     		
     		if(mouse_lrelease())
     			room_resizing_t = noone;

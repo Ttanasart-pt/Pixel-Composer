@@ -89,7 +89,7 @@ DIALOG_WINDOW_START
 			if(THEME_VALUE.panel_separation_type == "frame") {
 				var bx = xx + ui(16);
 				var bw = ww - ui(32);
-				draw_line_width(bx, yy + ui(3), bx + bw, yy + ui(3), 2);
+				draw_line_width(bx, yy + ui(3), bx + bw, yy + ui(3), ui(1));
 				
 			} else
 				draw_line(xx, yy + ui(3), xx + ww, yy + ui(3));

@@ -1,10 +1,31 @@
 /// @description init
 event_inherited();
 
+#region resize
+	dialog_resizable = true;
+	dialog_w_min = ui(320);
+	dialog_h_min = ui(320);
+	dialog_w_max = min(ui(960), WIN_W - ui(32));
+	dialog_h_max = min(ui(800), WIN_H - ui(32));
+	
+	onResize = function() {
+		PREFERENCES.dialog_add_node_width  = dialog_w;
+		PREFERENCES.dialog_add_node_height = dialog_h;
+	}
+	
+	onResetPosition = function() {
+		dialog_w_max = min(dialog_w_max, WIN_W - ui(8) - dialog_x);
+		dialog_h_max = min(dialog_h_max, WIN_H - ui(8) - dialog_y);
+		
+		dialog_w  = clamp(dialog_w, dialog_w_min, dialog_w_max);
+		dialog_h  = clamp(dialog_h, dialog_h_min, dialog_h_max);
+	}
+#endregion
+
 #region data
 	draggable = false;
-	dialog_w  = PREFERENCES.dialog_add_node_width;
-	dialog_h  = PREFERENCES.dialog_add_node_height;
+	dialog_w  = clamp(PREFERENCES.dialog_add_node_width,  dialog_w_min, dialog_w_max);
+	dialog_h  = clamp(PREFERENCES.dialog_add_node_height, dialog_h_min, dialog_h_max);
 	volatile  = true;
 	destroy_on_click_out = true;
 	
@@ -1080,19 +1101,6 @@ event_inherited();
 	}
 	
 	setPage(ADD_NODE_PAGE, ADD_NODE_SUBPAGE);
-#endregion
-
-#region resize
-	dialog_resizable = true;
-	dialog_w_min = ui(320);
-	dialog_h_min = ui(320);
-	dialog_w_max = min(ui(960), WIN_W - ui(32));
-	dialog_h_max = min(ui(800), WIN_H - ui(32));
-	
-	onResize = function() {
-		PREFERENCES.dialog_add_node_width  = dialog_w;
-		PREFERENCES.dialog_add_node_height = dialog_h;
-	}
 #endregion
 
 #region search

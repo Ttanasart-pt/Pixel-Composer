@@ -314,7 +314,7 @@ function Node_Mesh_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 				var _dx1 = _x + _px1 * _s;
 				var _dy1 = _y + _py1 * _s;
 			
-				draw_line_width(_dx0, _dy0, _dx1, _dy1, hover == i + 0.5? 4 : 2);
+				draw_line_width(_dx0, _dy0, _dx1, _dy1, hover == i + 0.5? ui(2) : ui(1));
 			
 				if(isUsingTool("Mesh edit") && distance_to_line(_mx, _my, _dx0, _dy0, _dx1, _dy1) < 6)
 					_hover = i + 0.5;

@@ -152,8 +152,8 @@ function Node_PB_Draw(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 					hoverIndex = i;
 					
 					draw_set_color(COLORS._main_accent);
-					     if(effect_dragging > i) draw_line_width(_x + ui(16), _yy - lh / 2 + 2, _x + _w - ui(16), _yy - lh / 2 + ui(2), 2);
-					else if(effect_dragging < i) draw_line_width(_x + ui(16), _yy + lh / 2 - 2, _x + _w - ui(16), _yy + lh / 2 - ui(2), 2);
+					     if(effect_dragging > i) draw_line_width(_x + ui(16), _yy - lh / 2 + 2, _x + _w - ui(16), _yy - lh / 2 + ui(2), ui(1));
+					else if(effect_dragging < i) draw_line_width(_x + ui(16), _yy + lh / 2 - 2, _x + _w - ui(16), _yy + lh / 2 - ui(2), ui(1));
 				}
 			}
 			

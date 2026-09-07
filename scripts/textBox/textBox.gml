@@ -1133,7 +1133,7 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 					gpu_set_scissor(_x + 1, _y + 1, _w - 2, _h - 2);
 					draw_set_color(COLORS._main_text_accent);
 					draw_set_alpha((typing || current_time % (PREFERENCES.caret_blink * 2000) > PREFERENCES.caret_blink * 1000) * 0.8 + 0.2);
-					draw_line_width(cursor_pos, c_y0, cursor_pos, c_y1, 2);
+					draw_line_width(cursor_pos, c_y0, cursor_pos, c_y1, ui(1));
 					draw_set_alpha(1);
 					gpu_set_scissor(scis);
 					

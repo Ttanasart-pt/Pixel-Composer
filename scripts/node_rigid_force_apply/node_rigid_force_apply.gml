@@ -69,7 +69,7 @@ function Node_Rigid_Force_Apply(_x, _y, _group = noone) : Node(_x, _y, _group) c
 			
 			draw_set_color(COLORS._main_accent);
 			draw_set_alpha(0.5);
-			draw_line_width2(px, py, fx, fy, 8, 2);
+			draw_line_width2(px, py, fx, fy, 8, ui(1));
 			draw_set_alpha(1);
 			
 			drawOverlayInput(inputs[5].drawOverlay(w_hoverable, active, px, py, _s * attributes.display_scale, _mx, _my, 0, 10));

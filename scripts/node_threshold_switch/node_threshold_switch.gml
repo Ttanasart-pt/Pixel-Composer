@@ -214,7 +214,7 @@ function Node_Threshold_Switch(_x, _y, _group = noone) : Node(_x, _y, _group) co
 		
 		draw_set_color(c0);
 		draw_set_alpha(0.5);
-		draw_line_width(_frm.x, _frm.y, to.x, to.y, _s * 4);
+		draw_line_width(_frm.x, _frm.y, to.x, to.y, _s * ui(2));
 		draw_set_alpha(1);
 		
 		draw_set_text(f_sdf, fa_left, fa_center);
@@ -251,7 +251,7 @@ function Node_Threshold_Switch(_x, _y, _group = noone) : Node(_x, _y, _group) co
 		
 		for( var i = 0, n = array_length(frames); i < n; i++ ) {
 			var _x = _shf + (frames[i]) * _s;
-			draw_line_width(_x, _h/2, _x, _h, 1);
+			draw_line_width(_x, _h/2, _x, _h, ui(1));
 		}
 	}
 	

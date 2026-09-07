@@ -187,7 +187,7 @@ function Node_Switch(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		
 		draw_set_color(c0);
 		draw_set_alpha(0.5);
-		draw_line_width(_frm.x, _frm.y, to.x, to.y, _s * 4);
+		draw_line_width(_frm.x, _frm.y, to.x, to.y, _s * ui(2));
 		draw_set_alpha(1);
 		
 		draw_set_text(f_sdf, fa_left, fa_center);

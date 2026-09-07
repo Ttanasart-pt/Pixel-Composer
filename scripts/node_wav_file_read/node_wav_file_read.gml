@@ -253,7 +253,7 @@ function Node_WAV_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 			nx = _shf + i * _s;
 			ny = _h / 2 + _dat * _h;
 			
-			if(i) draw_line_width(ox, oy, nx, ny, 2);
+			if(i) draw_line_width(ox, oy, nx, ny, ui(1));
 			
 			ox = nx;
 			oy = ny;

@@ -86,8 +86,8 @@ function Node_Level(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 			}
 		}
 		
-		draw_set_color(level_dragging == 0? COLORS._main_accent : COLORS._main_icon); draw_line_width(_x0, y0, _x0, y1, 1 + (_hv == 0 || level_dragging == 0));
-		draw_set_color(level_dragging == 1? COLORS._main_accent : COLORS._main_icon); draw_line_width(_x1, y0, _x1, y1, 1 + (_hv == 1 || level_dragging == 1));
+		draw_set_color(level_dragging == 0? COLORS._main_accent : COLORS._main_icon); draw_line_width(_x0, y0, _x0, y1, ui(1) + (_hv == 0 || level_dragging == 0));
+		draw_set_color(level_dragging == 1? COLORS._main_accent : COLORS._main_icon); draw_line_width(_x1, y0, _x1, y1, ui(1) + (_hv == 1 || level_dragging == 1));
 		
 		if(_hv != noone) {
 			if(mouse_lpress(_focus)) {

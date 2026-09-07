@@ -1298,7 +1298,7 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 							
 						} else {
 							var lHov = line_hover == i || anchor_hovering == i || anchor_hovering == i+1;
-							draw_line_width(_ox, _oy, _nx, _ny, 1 + lHov * 2);
+							draw_line_width(_ox, _oy, _nx, _ny, ui(1) + lHov * ui(2));
 						}
 					}
 					

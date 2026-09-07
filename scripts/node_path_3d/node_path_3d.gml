@@ -1198,7 +1198,7 @@ function Node_Path_3D(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 					if(j) {
 						if((key_mod_press(CTRL) || isUsingTool(1)) && distance_to_line(_mx, _my, _ox, _oy, _nx, _ny) < 4)
 							_line_hover = i;
-						draw_line_width(_ox, _oy, _nx, _ny, 1 + 2 * (line_hover == i));
+						draw_line_width(_ox, _oy, _nx, _ny, ui(1) + ui(2) * (line_hover == i));
 					}
 					
 					_ox = _nx;

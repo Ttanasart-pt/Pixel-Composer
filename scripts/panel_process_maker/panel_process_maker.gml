@@ -1507,7 +1507,7 @@ function Panel_Process_Maker() : PanelContent() constructor {
 	    		var hl = ss % 2 == 0;
     			draw_set_color(COLORS._main_icon);
     			draw_set_alpha(.6 + .4 * hl);
-	    		draw_line_width(lx, _try, lx, _try + _tlh - 1, 1);
+	    		draw_line_width(lx, _try, lx, _try + _tlh - 1, ui(1));
 				draw_set_alpha(1);
 	    		
 	    		draw_set_text(f_p4, fa_left, fa_top, COLORS._main_icon);
@@ -1652,7 +1652,7 @@ function Panel_Process_Maker() : PanelContent() constructor {
         	var px = _trx + ui(4) - track_x + play_frame * tss;
         	var cc = playing || scrubbing? COLORS._main_accent : COLORS._main_icon;
         	draw_set_color(cc);
-        	draw_line_width(px, _try + _tlh, px, _try + _trh, 2);
+        	draw_line_width(px, _try + _tlh, px, _try + _trh, ui(1));
         	draw_sprite_stretched_ext(THEME.box_r2, 0, px - ui(3), _try + 1, ui(6) + 1, _tlh, cc);
 	        
 	        gpu_set_scissor(_scis);

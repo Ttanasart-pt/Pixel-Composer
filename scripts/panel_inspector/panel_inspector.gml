@@ -1318,7 +1318,7 @@ function Panel_Inspector() : PanelContent() constructor {
 		                var txw = string_width(name);
 		                if(subk) {
 		                	draw_set_color_alpha(hov? COLORS._main_text : COLORS._main_text_sub, .75 + hov * .1);
-		                	draw_line_width(ltx + txw + ui(8), txy, con_ww, txy, 1);
+		                	draw_line_width(ltx + txw + ui(8), txy, con_ww, txy, ui(1));
 		                	draw_set_alpha(1);
 		                }
 		        	#endregion
@@ -1763,8 +1763,8 @@ function Panel_Inspector() : PanelContent() constructor {
                 
                 var lbw = string_width(txt) / 2;
                 draw_set_color(COLORS._main_text_sub);
-                draw_line_round(xc + lbw + ui(16), lby,   wx1, lby, 2);
-                draw_line_round(xc - lbw - ui(16), lby, ui(8), lby, 2);
+                draw_line_round(xc + lbw + ui(16), lby,   wx1, lby, ui(1));
+                draw_line_round(xc - lbw - ui(16), lby, ui(8), lby, ui(1));
                 draw_set_alpha(1.0);
                 
                 yy += _att_h;

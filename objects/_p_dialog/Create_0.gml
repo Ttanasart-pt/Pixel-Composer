@@ -319,7 +319,7 @@
 	function onFocusBegin() {}
 	function onFocusEnd()   {}
 	
-	function onResetPosition() {}
+	onResetPosition = undefined;
 	function resetPosition()   {
 		if(!active) return;
 		
@@ -336,7 +336,7 @@
 		
 		dialog_x = round(clamp(dialog_x, 2, WIN_SW - dialog_w - 2));
 		dialog_y = round(clamp(dialog_y, 2, WIN_SH - dialog_h - 2));
-		onResetPosition();
+		if(onResetPosition != undefined) onResetPosition();
 		
 		if(MULTI_WINDOWS) {
 			if(is_winwin(window)) {

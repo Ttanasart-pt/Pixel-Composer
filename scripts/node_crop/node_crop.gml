@@ -148,10 +148,10 @@ function Node_Crop(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 				}
 				
 				draw_set_color(COLORS._main_accent);
-				draw_line_width(sp_r, sp_t - 1, sp_r, sp_b + 1, 2);
-				draw_line_width(sp_l, sp_t - 1, sp_l, sp_b + 1, 2);
-				draw_line_width(sp_l - 1, sp_t, sp_r + 1, sp_t, 2);
-				draw_line_width(sp_l - 1, sp_b, sp_r + 1, sp_b, 2);
+				draw_line_width(sp_r, sp_t - 1, sp_r, sp_b + 1, ui(1));
+				draw_line_width(sp_l, sp_t - 1, sp_l, sp_b + 1, ui(1));
+				draw_line_width(sp_l - 1, sp_t, sp_r + 1, sp_t, ui(1));
+				draw_line_width(sp_l - 1, sp_b, sp_r + 1, sp_b, ui(1));
 				return true;
 			}
 			
@@ -163,10 +163,10 @@ function Node_Crop(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 			draw_line(0, sp_b, params.w, sp_b);
 			draw_set_alpha(1);
 			
-			draw_line_width(sp_r, sp_t - 1, sp_r, sp_b + 1, 2);
-			draw_line_width(sp_l, sp_t - 1, sp_l, sp_b + 1, 2);
-			draw_line_width(sp_l - 1, sp_t, sp_r + 1, sp_t, 2);
-			draw_line_width(sp_l - 1, sp_b, sp_r + 1, sp_b, 2);
+			draw_line_width(sp_r, sp_t - 1, sp_r, sp_b + 1, ui(1));
+			draw_line_width(sp_l, sp_t - 1, sp_l, sp_b + 1, ui(1));
+			draw_line_width(sp_l - 1, sp_t, sp_r + 1, sp_t, ui(1));
+			draw_line_width(sp_l - 1, sp_b, sp_r + 1, sp_b, ui(1));
 			
 			var _hov = noone;
 			
@@ -218,50 +218,50 @@ function Node_Crop(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 			
 			if(hover) {
 				if(drag_side == 4 || point_in_circle(_mx, _my, sp_l, sp_t, 12)) {
-					draw_line_width(sp_l, 0, sp_l, params.h, 4);
-					draw_line_width(0, sp_t, params.w, sp_t, 4);
+					draw_line_width(sp_l, 0, sp_l, params.h, ui(2));
+					draw_line_width(0, sp_t, params.w, sp_t, ui(2));
 					draw_sprite_colored(THEME.anchor_selector, 1, sp_l, sp_t);
 					_hov = 4;
 					
 				} else if(drag_side == 5 || point_in_circle(_mx, _my, sp_r, sp_t, 12)) {
-					draw_line_width(sp_r, 0, sp_r, params.h, 4);
-					draw_line_width(0, sp_t, params.w, sp_t, 4);
+					draw_line_width(sp_r, 0, sp_r, params.h, ui(2));
+					draw_line_width(0, sp_t, params.w, sp_t, ui(2));
 					draw_sprite_colored(THEME.anchor_selector, 1, sp_r, sp_t);
 					_hov = 5;
 					
 				} else if(drag_side == 6 || point_in_circle(_mx, _my, sp_l, sp_b, 12)) {
-					draw_line_width(sp_l, 0, sp_l, params.h, 4);
-					draw_line_width(0, sp_b, params.w, sp_b, 4);
+					draw_line_width(sp_l, 0, sp_l, params.h, ui(2));
+					draw_line_width(0, sp_b, params.w, sp_b, ui(2));
 					draw_sprite_colored(THEME.anchor_selector, 1, sp_l, sp_b);
 					_hov = 6;
 					
 				} else if(drag_side == 7 || point_in_circle(_mx, _my, sp_r, sp_b, 12)) {
-					draw_line_width(sp_r, 0, sp_r, params.h, 4);
-					draw_line_width(0, sp_b, params.w, sp_b, 4);
+					draw_line_width(sp_r, 0, sp_r, params.h, ui(2));
+					draw_line_width(0, sp_b, params.w, sp_b, ui(2));
 					draw_sprite_colored(THEME.anchor_selector, 1, sp_r, sp_b);
 					_hov = 7;
 					
 				} else if(drag_side == 0 || distance_to_line(_mx, _my, sp_r, 0, sp_r, params.h) < 12) {
-					draw_line_width(sp_r, 0, sp_r, params.h, 4);
+					draw_line_width(sp_r, 0, sp_r, params.h, ui(2));
 					_hov = 0;
 					
 				} else if(drag_side == 1 || distance_to_line(_mx, _my, 0, sp_t, params.w, sp_t) < 12) {
-					draw_line_width(0, sp_t, params.w, sp_t, 4);
+					draw_line_width(0, sp_t, params.w, sp_t, ui(2));
 					_hov = 1;
 					
 				} else if(drag_side == 2 || distance_to_line(_mx, _my, sp_l, 0, sp_l, params.h) < 12) {
-					draw_line_width(sp_l, 0, sp_l, params.h, 4);
+					draw_line_width(sp_l, 0, sp_l, params.h, ui(2));
 					_hov = 2;
 					
 				} else if(drag_side == 3 || distance_to_line(_mx, _my, 0, sp_b, params.w, sp_b) < 12) {
-					draw_line_width(0, sp_b, params.w, sp_b, 4);
+					draw_line_width(0, sp_b, params.w, sp_b, ui(2));
 					_hov = 3;
 					
 				} else if(drag_side == 8 || point_in_rectangle(_mx, _my, sp_l, sp_t, sp_r, sp_b)) {
-					draw_line_width(sp_r, sp_t - 1, sp_r, sp_b + 1, 4);
-					draw_line_width(sp_l, sp_t - 1, sp_l, sp_b + 1, 4);
-					draw_line_width(sp_l - 1, sp_t, sp_r + 1, sp_t, 4);
-					draw_line_width(sp_l - 1, sp_b, sp_r + 1, sp_b, 4);
+					draw_line_width(sp_r, sp_t - 1, sp_r, sp_b + 1, ui(2));
+					draw_line_width(sp_l, sp_t - 1, sp_l, sp_b + 1, ui(2));
+					draw_line_width(sp_l - 1, sp_t, sp_r + 1, sp_t, ui(2));
+					draw_line_width(sp_l - 1, sp_b, sp_r + 1, sp_b, ui(2));
 					_hov = 8;
 				}
 			}

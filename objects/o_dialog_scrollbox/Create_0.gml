@@ -134,7 +134,7 @@ doRefocus();
 			
 			if(data[i] == -1) {
 				draw_set_color(CDEF.main_mdblack);
-				draw_line_width(ui(8), _ly + ui(3), _dw - ui(8), _ly + ui(3), 2);
+				draw_line_width(ui(8), _ly + ui(3), _dw - ui(8), _ly + ui(3), ui(1));
 				_ly += ui(8);
 				_h  += ui(8);
 				continue;

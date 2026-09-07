@@ -915,7 +915,7 @@ function Panel_Profile_Render() : PanelContent() constructor {
 			    	
 			    	if(pHOVER && point_in_rectangle(mx, my, _rx - 4, _py0, _rx + 4, _py1)) {
 			    		setTOOLTIP(_report.text);
-			    		draw_line_width(_rx, _py0, _rx, _py0 + _ph - ui(2), 2);
+			    		draw_line_width(_rx, _py0, _rx, _py0 + _ph - ui(2), ui(1));
 			    		
 			    	} else
 			    		draw_line(_rx, _py0, _rx, _py0 + _ph - ui(2));

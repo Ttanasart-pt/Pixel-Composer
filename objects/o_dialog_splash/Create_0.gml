@@ -992,7 +992,7 @@ event_inherited();
 		hh += row * thh + ui(8);
 		
 		draw_set_color(CDEF.main_mdblack);
-		draw_line_round(ui(16), _y, ww - ui(16), _y, 2);
+		draw_line_round(ui(16), _y, ww - ui(16), _y, ui(1));
 		
 		_y += ui(8);
 		hh += ui(8);

@@ -58,7 +58,7 @@ function Panel_History() : PanelContent() constructor {
 		var connect_line_ed = 0;
 		
 		draw_set_color(COLORS._main_icon);
-		draw_line_round(0, sep_y, sc_history.surface_w, sep_y, 2);
+		draw_line_round(0, sep_y, sc_history.surface_w, sep_y, ui(1));
 		
 		var _skip = 0;
 		
@@ -175,8 +175,8 @@ function Panel_History() : PanelContent() constructor {
 			var _cr  = ui(4);
 			
 			draw_set_color(COLORS._main_icon);
-			draw_line_round(_c0x, _c0y, _c1x, _c1y + _cr * sign(_c0y - _c1y), 1);
-			draw_line_round(_c1x + _cr, _c1y, _c2x, _c2y, 1);
+			draw_line_round(_c0x, _c0y, _c1x, _c1y + _cr * sign(_c0y - _c1y), ui(1));
+			draw_line_round(_c1x + _cr, _c1y, _c2x, _c2y, ui(1));
 			draw_corner(_c1x, _c1y + _cr * sign(_c0y - _c1y), _c1x, _c1y, _c1x + _cr, _c1y, 1, COLORS._main_icon);
 		}
 		

@@ -79,7 +79,11 @@
       ],"init":"","kind":1,"name":"","origname":"extensions\\Apollo.dll","ProxyFiles":[
         {"$GMProxyFile":"","%Name":"Apollo_x64.dll","name":"Apollo_x64.dll","resourceType":"GMProxyFile","resourceVersion":"2.0","TargetMask":6,},
         {"$GMProxyFile":"","%Name":"Apollo.so","name":"Apollo.so","resourceType":"GMProxyFile","resourceVersion":"2.0","TargetMask":7,},
-        {"$GMProxyFile":"","%Name":"Apollo.dylib","name":"Apollo.dylib","resourceType":"GMProxyFile","resourceVersion":"2.0","TargetMask":1,},
+        {"$GMProxyFile":"","%Name":"Apollo.dylib","ConfigValues":{
+            "Itch":{
+              "TargetMask":"1",
+            },
+          },"name":"Apollo.dylib","resourceType":"GMProxyFile","resourceVersion":"2.0","TargetMask":0,},
       ],"resourceType":"GMExtensionFile","resourceVersion":"2.0","uncompress":false,"usesRunnerInterface":false,},
     {"$GMExtensionFile":"v1","%Name":"","constants":[],"copyToTargets":-1,"filename":"apollo_buffer.gml","final":"","functions":[
         {"$GMExtensionFunction":"","%Name":"lua_buffer_write","argCount":2,"args":[2,2,],"documentation":"","externalName":"lua_buffer_write","help":"","hidden":true,"kind":11,"name":"lua_buffer_write","resourceType":"GMExtensionFunction","resourceVersion":"2.0","returnType":2,},

@@ -49,10 +49,10 @@ function Node_Rigid_Wall(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		var fl = _offs[2] * _s;
 		var fr = _offs[3] * _s;
 		
-		if(_sids & 0b0001) draw_line_round(x0, y0+ft, x1, y0+ft, 4);
-		if(_sids & 0b0010) draw_line_round(x0, y1-fb, x1, y1-fb, 4);
-		if(_sids & 0b0100) draw_line_round(x0+fl, y0, x0+fl, y1, 4);
-		if(_sids & 0b1000) draw_line_round(x1-fr, y0, x1-fr, y1, 4);
+		if(_sids & 0b0001) draw_line_round(x0, y0+ft, x1, y0+ft, ui(2));
+		if(_sids & 0b0010) draw_line_round(x0, y1-fb, x1, y1-fb, ui(2));
+		if(_sids & 0b0100) draw_line_round(x0+fl, y0, x0+fl, y1, ui(2));
+		if(_sids & 0b1000) draw_line_round(x1-fr, y0, x1-fr, y1, ui(2));
 		
 	}
 	

@@ -22,7 +22,7 @@ function preview_overlay_puppet(hover, active, _x, _y, _s, _mx, _my) {
 	
 	switch(_val[PUPPET_CONTROL.mode]) {
 		case PUPPET_FORCE_MODE.move :
-			draw_line_width2(_ax, _ay, _ax1, _ay1, 6, 1);
+			draw_line_width2(_ax, _ay, _ax1, _ay1, 6, ui(1));
 			draw_circle_prec(_ax, _ay, __wd * _s, true);
 			
 			draw_sprite_colored(THEME.anchor_selector, 0, _ax, _ay);
@@ -101,7 +101,7 @@ function preview_overlay_puppet(hover, active, _x, _y, _s, _mx, _my) {
 				draw_sprite_colored(THEME.anchor_rotate, drag_type == 6, rx, ry,, dir - 45);
 			break;
 		case PUPPET_FORCE_MODE.puppet :
-			draw_line_width2(_ax, _ay, _ax1, _ay1, 6, 1);
+			draw_line_width2(_ax, _ay, _ax1, _ay1, 6, ui(1));
 			
 			draw_sprite_colored(THEME.anchor_selector, 0, _ax, _ay);
 			draw_anchor(0, _ax1, _ay1, _r, 2);

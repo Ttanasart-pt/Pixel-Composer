@@ -199,7 +199,7 @@ function Node_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		#region edit
 			draw_set_color(COLORS.node_overlay_gizmo_inactive);
 			if(drag_side == 0) {
-				draw_line_width_infinite(tlX, tlY, trX, trY, 3);
+				draw_line_width_infinite(tlX, tlY, trX, trY, ui(2));
 			
 				var _tlx = PANEL_PREVIEW.snapX(drag_s[0][0] + dx);
 				var _tly = PANEL_PREVIEW.snapY(drag_s[0][1] + dy);
@@ -213,7 +213,7 @@ function Node_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 				if(_up1 || _up2) UNDO_HOLDING = true;
 				
 			} else if(drag_side == 1) {
-				draw_line_width_infinite(tlX, tlY, blX, blY, 3);
+				draw_line_width_infinite(tlX, tlY, blX, blY, ui(2));
 			
 				var _tlx = PANEL_PREVIEW.snapX(drag_s[0][0] + dx);
 				var _tly = PANEL_PREVIEW.snapY(drag_s[0][1] + dy);
@@ -227,7 +227,7 @@ function Node_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 				if(_up1 || _up3) UNDO_HOLDING = true;
 				
 			} else if(drag_side == 2) {
-				draw_line_width_infinite(brX, brY, trX, trY, 3);
+				draw_line_width_infinite(brX, brY, trX, trY, ui(2));
 			
 				var _brx = PANEL_PREVIEW.snapX(drag_s[0][0] + dx);
 				var _bry = PANEL_PREVIEW.snapY(drag_s[0][1] + dy);
@@ -241,7 +241,7 @@ function Node_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 				if(_up4 || _up2) UNDO_HOLDING = true;
 				
 			} else if(drag_side == 3) {
-				draw_line_width_infinite(brX, brY, blX, blY, 3);
+				draw_line_width_infinite(brX, brY, blX, blY, ui(2));
 			
 				var _brx = PANEL_PREVIEW.snapX(drag_s[0][0] + dx);
 				var _bry = PANEL_PREVIEW.snapY(drag_s[0][1] + dy);
@@ -255,10 +255,10 @@ function Node_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 				if(_up4 || _up3) UNDO_HOLDING = true;
 				
 			} else if(drag_side == 4) {
-				draw_line_width(tlX, tlY, trX, trY, 3);
-				draw_line_width(tlX, tlY, blX, blY, 3);
-				draw_line_width(brX, brY, trX, trY, 3);
-				draw_line_width(brX, brY, blX, blY, 3);
+				draw_line_width(tlX, tlY, trX, trY, ui(2));
+				draw_line_width(tlX, tlY, blX, blY, ui(2));
+				draw_line_width(brX, brY, trX, trY, ui(2));
+				draw_line_width(brX, brY, blX, blY, ui(2));
 				
 				var _tlx = PANEL_PREVIEW.snapX(drag_s[0][0] + dx);
 				var _tly = PANEL_PREVIEW.snapY(drag_s[0][1] + dy);
@@ -282,7 +282,7 @@ function Node_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 			} else if(hover) {
 				draw_set_color(COLORS._main_accent);
 				if(distance_to_line_infinite(_mx, _my, tlX, tlY, trX, trY) < 12) {
-					draw_line_width_infinite(tlX, tlY, trX, trY, 3);
+					draw_line_width_infinite(tlX, tlY, trX, trY, ui(2));
 					w_hovering = true;
 					
 					if(mouse_lpress(_hactive)) {
@@ -293,7 +293,7 @@ function Node_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 					}
 					
 				} else if(distance_to_line_infinite(_mx, _my, tlX, tlY, blX, blY) < 12) {
-					draw_line_width_infinite(tlX, tlY, blX, blY, 3);
+					draw_line_width_infinite(tlX, tlY, blX, blY, ui(2));
 					w_hovering = true;
 					
 					if(mouse_lpress(_hactive)) {
@@ -304,7 +304,7 @@ function Node_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 					}
 					
 				} else if(distance_to_line_infinite(_mx, _my, brX, brY, trX, trY) < 12) {
-					draw_line_width_infinite(brX, brY, trX, trY, 3);
+					draw_line_width_infinite(brX, brY, trX, trY, ui(2));
 					w_hovering = true;
 					
 					if(mouse_lpress(_hactive)) {
@@ -315,7 +315,7 @@ function Node_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 					}
 					
 				} else if(distance_to_line_infinite(_mx, _my, brX, brY, blX, blY) < 12) {
-					draw_line_width_infinite(brX, brY, blX, blY, 3);
+					draw_line_width_infinite(brX, brY, blX, blY, ui(2));
 					w_hovering = true;
 					
 					if(mouse_lpress(_hactive)) {
@@ -326,10 +326,10 @@ function Node_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 					}
 					
 				} else if(point_in_rectangle_points(_mx, _my, tlX, tlY, trX, trY, blX, blY, brX, brY)) {
-					draw_line_width(tlX, tlY, trX, trY, 3);
-					draw_line_width(tlX, tlY, blX, blY, 3);
-					draw_line_width(brX, brY, trX, trY, 3);
-					draw_line_width(brX, brY, blX, blY, 3);
+					draw_line_width(tlX, tlY, trX, trY, ui(2));
+					draw_line_width(tlX, tlY, blX, blY, ui(2));
+					draw_line_width(brX, brY, trX, trY, ui(2));
+					draw_line_width(brX, brY, blX, blY, ui(2));
 					w_hovering = true;
 					
 					if(mouse_lpress(_hactive)) {

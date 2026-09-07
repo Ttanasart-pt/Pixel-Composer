@@ -2229,7 +2229,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			
 			draw_set_color(c_black); draw_text_transformed(_tx+1, ty+1, _name, _ts, _ts, 0);
 			draw_set_color(cc);      draw_text_transformed(_tx,   ty,   _name, _ts, _ts, 0);
-			if(active_index != -1 && !active_value) draw_line_width(_tx, ty, _tx + string_width(_name) * _ts, ty, 2);
+			if(active_index != -1 && !active_value) draw_line_width(_tx, ty, _tx + string_width(_name) * _ts, ty, ui(1));
 			
 			BLEND_NORMAL
 		draw_set_alpha(1);
@@ -3072,7 +3072,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 						nx = __p.x;
 						ny = __p.y;
 						
-						if(i) draw_line_round(ox, oy, nx, ny, 3);
+						if(i) draw_line_round(ox, oy, nx, ny, ui(1));
 						
 						ox = nx;
 						oy = ny;
@@ -3103,7 +3103,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 						var x1 = lerp(_p0.x, _p1.x, _pr);
 						var y1 = lerp(_p0.y, _p1.y, _pr);
 						
-						draw_line_round(x0, y0, x1, y1, 2);
+						draw_line_round(x0, y0, x1, y1, ui(1));
 					}
 					
 					for( var i = 0; i < namo; i++ ) {

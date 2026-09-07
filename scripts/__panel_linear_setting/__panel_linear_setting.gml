@@ -98,7 +98,7 @@ function Panel_Linear_Setting() : PanelContent() constructor {
 			if(_prop == -1) {
 				draw_set_color(COLORS.panel_separator);
 				if(THEME_VALUE.panel_separation_type == "frame") 
-				     draw_line_round(ui(16), yy + ui(4), w - ui(16), yy + ui(4), 2);
+				     draw_line_round(ui(16), yy + ui(4), w - ui(16), yy + ui(4), ui(1));
 				else draw_line(0, yy + ui(4), w, yy + ui(4));
 				yy += ui(8);
 				continue;
