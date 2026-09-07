@@ -188,7 +188,7 @@ function textArea(_input, _onModify) : textInput(_input, _onModify) constructor 
 				cursor_select	= -1;
 						
 			move_cursor(-1);
-			if(key_mod_press(CTRL)) {
+			if(key_mod_press(KCONTROL)) {
 				while(cursor > 0) {
 					var ch = string_char_at(_input_text, cursor);
 					if(breakCharacter(ch)) break;
@@ -204,7 +204,7 @@ function textArea(_input, _onModify) : textInput(_input, _onModify) constructor 
 				cursor_select	= -1;
 					
 			move_cursor(1);
-			if(key_mod_press(CTRL)) {
+			if(key_mod_press(KCONTROL)) {
 				while(cursor < string_length(_input_text)) {
 					var ch = string_char_at(_input_text, cursor);
 					if(breakCharacter(ch)) break;
@@ -408,11 +408,11 @@ function textArea(_input, _onModify) : textInput(_input, _onModify) constructor 
 				winwin_keyboard_set_string(WINWIN_CURRENT, "");
 			}
 			
-			if(key_mod_press(CTRL) && keyboard_check_pressed(ord("A"))) {
+			if(key_mod_press(KCONTROL) && keyboard_check_pressed(ord("A"))) {
 				cursor        = string_length(_input_text);
 				cursor_select = 0;
 				
-			} else if(key_mod_press(CTRL) && !key_mod_press(SHIFT) && keyboard_check_pressed(ord("Z"))) {			// UNDO
+			} else if(key_mod_press(KCONTROL) && !key_mod_press(SHIFT) && keyboard_check_pressed(ord("Z"))) {			// UNDO
 				while(!ds_stack_empty(undo_stack) && _input_text == ds_stack_top(undo_stack)[0])
 					ds_stack_pop(undo_stack);
 				
@@ -427,7 +427,7 @@ function textArea(_input, _onModify) : textInput(_input, _onModify) constructor 
 					undoing  = true;
 					modified = true;
 				}
-			} else if(key_mod_press(CTRL) && key_mod_press(SHIFT) && keyboard_check_pressed(ord("Z"))) {			// REDO
+			} else if(key_mod_press(KCONTROL) && key_mod_press(SHIFT) && keyboard_check_pressed(ord("Z"))) {			// REDO
 				if(!ds_stack_empty(redo_stack)) {
 					ds_stack_push(undo_stack, [_input_text, cursor, cursor_select]);
 					var _pop = ds_stack_pop(redo_stack);
@@ -439,14 +439,14 @@ function textArea(_input, _onModify) : textInput(_input, _onModify) constructor 
 					undoing  = true;
 					modified = true;
 				}
-			} else if(key_mod_press(CTRL) && (keyboard_check_pressed(ord("C")) || keyboard_check_pressed(ord("X")))) {
+			} else if(key_mod_press(KCONTROL) && (keyboard_check_pressed(ord("C")) || keyboard_check_pressed(ord("X")))) {
 				if(cursor_select != -1) {
 					var minc = min(cursor, cursor_select);
 					var maxc = max(cursor, cursor_select);
 					clipboard_set_text(string_copy(_input_text, minc + 1, maxc - minc));
 				}
 			} else {
-				if(key_mod_press(CTRL) && keyboard_check_pressed(ord("V"))) {
+				if(key_mod_press(KCONTROL) && keyboard_check_pressed(ord("V"))) {
 					var _ctxt = clipboard_get_text();
 					    _ctxt = string_replace_all(_ctxt, "\t", "    ");
 					str = _ctxt;
@@ -483,7 +483,7 @@ function textArea(_input, _onModify) : textInput(_input, _onModify) constructor 
 					if(cursor_select == -1) {
 						var str_before, str_after;
 						
-						if(key_mod_press(CTRL)) {
+						if(key_mod_press(KCONTROL)) {
 							var _c = cursor - 1;
 							while(_c > 0) {
 								var ch = string_char_at(_input_text, _c);
@@ -517,7 +517,7 @@ function textArea(_input, _onModify) : textInput(_input, _onModify) constructor 
 					move_cursor(-1);
 					modified = true;
 					
-				} else if(keyboard_check_pressed(vk_delete) || (keyboard_check_pressed(ord("X")) && key_mod_press(CTRL) && cursor_select != -1)) {
+				} else if(keyboard_check_pressed(vk_delete) || (keyboard_check_pressed(ord("X")) && key_mod_press(KCONTROL) && cursor_select != -1)) {
 					if(cursor_select == -1) {
 						var str_before	= string_copy(_input_text, 1, cursor);
 						var str_after	= string_copy(_input_text, cursor + 2, string_length(_input_text) - cursor - 1);

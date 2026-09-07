@@ -2236,7 +2236,7 @@ function Panel_Preview() : PanelContent() constructor {
             sample_y         = noone;
         	var _sampleable  = !is(_node, Node) || _node.preview_surface_sample;
         
-            if(_sampleable && mouse_on_preview && (mouse_rpress() || key_mod_press(CTRL))) {
+            if(_sampleable && mouse_on_preview && (mouse_rpress() || key_mod_press(KCONTROL))) {
                 var _sx = sample_x;
                 var _sy = sample_y;
                 
@@ -3359,7 +3359,7 @@ function Panel_Preview() : PanelContent() constructor {
         var cy = canvas_y;
         var _snx = 0, _sny = 0;
         
-        if(key_mod_press(CTRL)) {
+        if(key_mod_press(KCONTROL)) {
             _snx = PROJECT.previewGrid.show? PROJECT.previewGrid.size[0] : 1;
             _sny = PROJECT.previewGrid.show? PROJECT.previewGrid.size[1] : 1;
             
@@ -3381,7 +3381,7 @@ function Panel_Preview() : PanelContent() constructor {
         	h - (pd + toolbar_size) - tool_side_draw_b * toolbar_size
     	);
         
-        overHover = overHover && !key_mod_press(CTRL);
+        overHover = overHover && !key_mod_press(KCONTROL);
         
         var overActive = active && overHover && !graph_nav;
         var params = { w, h, toolbar_size };
@@ -3424,7 +3424,7 @@ function Panel_Preview() : PanelContent() constructor {
     	);
         
         overActive = active && overHover && !graph_nav;
-        overHover  = overHover && !key_mod_press(CTRL);
+        overHover  = overHover && !key_mod_press(KCONTROL);
         mouse_on_content = overHover;
         
         var _params = { w, h, toolbar_size };
@@ -3439,7 +3439,7 @@ function Panel_Preview() : PanelContent() constructor {
     	switch(_node.is_3D) {
     		case NODE_3D.polygon :
     		case NODE_3D.sdf : 
-	            if(key_mod_press(CTRL) || PROJECT.previewSetting.d3_tool_snap) {
+	            if(key_mod_press(KCONTROL) || PROJECT.previewSetting.d3_tool_snap) {
 	                _snx = PROJECT.previewSetting.d3_tool_snap_position;
 	                _sny = PROJECT.previewSetting.d3_tool_snap_rotation;
 	            }
@@ -3448,7 +3448,7 @@ function Panel_Preview() : PanelContent() constructor {
 	            break;
         }
         
-        if(key_mod_press(CTRL)) {
+        if(key_mod_press(KCONTROL)) {
             _snx = PROJECT.previewGrid.show? PROJECT.previewGrid.size[0] : 1;
             _sny = PROJECT.previewGrid.show? PROJECT.previewGrid.size[1] : 1;
             
@@ -4136,7 +4136,7 @@ function Panel_Preview() : PanelContent() constructor {
     	var mmx = mx;
     	var mmy = my;
     	
-    	if(PROJECT.previewGrid.snap || key_mod_press(CTRL)) {
+    	if(PROJECT.previewGrid.snap || key_mod_press(KCONTROL)) {
 	    	var _snx = PROJECT.previewGrid.show? PROJECT.previewGrid.size[0] : 1;
 	        var _sny = PROJECT.previewGrid.show? PROJECT.previewGrid.size[1] : 1;
 	        
@@ -4338,7 +4338,7 @@ function Panel_Preview() : PanelContent() constructor {
         		if(abs(v - sh) < 8 / canvas_s) v = sh;
         		
         		if(_snap) v = value_snap(v, _size[1]);
-        		if(key_mod_press(CTRL)) v = round(v);
+        		if(key_mod_press(KCONTROL)) v = round(v);
         		
         		ruler_edit_hi[1] = v;
         		
@@ -4355,7 +4355,7 @@ function Panel_Preview() : PanelContent() constructor {
         		if(abs(v - sw) < 8 / canvas_s) v = sw;
         		
         		if(_snap) v = value_snap(v, _size[0]);
-        		if(key_mod_press(CTRL)) v = round(v);
+        		if(key_mod_press(KCONTROL)) v = round(v);
         		
         		ruler_edit_vi[1] = v;
         		
@@ -4967,7 +4967,7 @@ function Panel_Preview() : PanelContent() constructor {
     
     static snapX = function(v) {
     	var _snx = 0;
-    	     if(key_mod_press(CTRL))      _snx = PROJECT.previewGrid.show? PROJECT.previewGrid.size[0] : 1;
+    	     if(key_mod_press(KCONTROL))      _snx = PROJECT.previewGrid.show? PROJECT.previewGrid.size[0] : 1;
         else if(PROJECT.previewGrid.snap) _snx = PROJECT.previewGrid.size[0];
     	v = value_snap(v, _snx);
         
@@ -4985,7 +4985,7 @@ function Panel_Preview() : PanelContent() constructor {
     
     static snapY = function(v) {
         var _sny = 0;
-    	     if(key_mod_press(CTRL))      _sny = PROJECT.previewGrid.show? PROJECT.previewGrid.size[1] : 1;
+    	     if(key_mod_press(KCONTROL))      _sny = PROJECT.previewGrid.show? PROJECT.previewGrid.size[1] : 1;
         else if(PROJECT.previewGrid.snap) _sny = PROJECT.previewGrid.size[1];
         v = value_snap(v, _sny);
         

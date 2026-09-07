@@ -40,7 +40,7 @@ function Node_Tunnel_Out(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	inputs[0].getEditWidget().autocomplete_subt   = "Ctrl: Change connected";
 	inputs[0].is_modified = true;
 	inputs[0].onSetValue  = function(newKey, oldValue) /*=>*/ {
-		if(!key_mod_press(CTRL)) return;
+		if(!key_mod_press(KCONTROL)) return;
 		
 		var node = project.tunnels_in[$ $"{getNodeID(group)}|{__key}"] ?? project.tunnels_in[$ __key];
 		if(is(node, Node_Tunnel_In)) node.inputs[0].setValueDirect(newKey);

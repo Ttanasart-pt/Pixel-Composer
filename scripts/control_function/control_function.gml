@@ -15,6 +15,7 @@
 	#macro KEYBOARD_ENTER ENTER
 	#macro KEYBOARD_RESET keyboard_lastchar = ""; keyboard_lastkey = -1; KEYBOARD_PRESSED_STRING = ""; KEYBOARD_STRING = "";
 	#macro KEYBOARD_MOD_RESET CTRL = KEY_STAT.idle; SHIFT = KEY_STAT.idle; ALT = KEY_STAT.idle; COMM = KEY_STAT.idle; 
+	#macro KCONTROL (OS==os_macosx? COMM : CTRL)
 		
 	enum KEY_STAT {
 		idle,

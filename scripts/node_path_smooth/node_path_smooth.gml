@@ -242,7 +242,7 @@ function Node_Path_Smooth(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 					_ny = _y + _seg[j + 1] * _s;
 						
 					if(i || j) {
-						if((key_mod_press(CTRL) || isUsingTool(0)) && distance_to_line(_mx, _my, _ox, _oy, _nx, _ny) < 4)
+						if((key_mod_press(KCONTROL) || isUsingTool(0)) && distance_to_line(_mx, _my, _ox, _oy, _nx, _ny) < 4)
 							_line_hover = i;
 						draw_line_width(_ox, _oy, _nx, _ny, ui(1) + ui(2) * (line_hover == i));
 					}
@@ -268,7 +268,7 @@ function Node_Path_Smooth(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		
 		line_hover = _line_hover;
 		
-		if(key_mod_press(CTRL) || isUsingTool(0)) {	// anchor edit
+		if(key_mod_press(KCONTROL) || isUsingTool(0)) {	// anchor edit
 			CURSOR_SPRITE = _anchor_hover == -1? THEME.cursor_add : THEME.cursor_remove;
 			hovering = true;
 			

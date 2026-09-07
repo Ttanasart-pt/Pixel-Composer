@@ -783,7 +783,7 @@ function Panel_Canvas() : PanelContent() constructor {
 							select_edit_rd += angle_difference(a1, a0);
 							selection_rot   = select_edit_rot + select_edit_rd;
 							
-							if(key_mod_press(CTRL))  selection_rot = round(selection_rot);
+							if(key_mod_press(KCONTROL))  selection_rot = round(selection_rot);
 							if(key_mod_press(SHIFT)) selection_rot = value_snap(selection_rot, 15);
 							
 							var p = point_rotate_origin(-select_edit_w/2, -select_edit_h/2, selection_rot);
@@ -833,7 +833,7 @@ function Panel_Canvas() : PanelContent() constructor {
 						if(key_mod_press(SHIFT)) {
 							select_bool = 1;
 							if(key_mod_press(ALT))  select_bool = 3;
-							if(key_mod_press(CTRL)) select_bool = 2;
+							if(key_mod_press(KCONTROL)) select_bool = 2;
 						}
 					} else 
 						bolc = COLORS._main_icon;

@@ -17,7 +17,7 @@ function preview_overlay_rotation(interact, active, _x, _y, _s, _mx, _my, _rad, 
 		var _vx = preview_hotkey_s + preview_hotkey_s1;
 		if(KEYBOARD_NUMBER != undefined) _vx = preview_hotkey_s + KEYBOARD_NUMBER;
 		else {
-			if(key_mod_press(CTRL))  _vx = round(_vx);
+			if(key_mod_press(KCONTROL))  _vx = round(_vx);
 			if(key_mod_press(SHIFT)) _vx = value_snap(_vx, 15);
 		}
 		

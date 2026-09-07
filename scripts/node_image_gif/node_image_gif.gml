@@ -363,7 +363,7 @@ function Node_Image_gif(_x, _y, _group = noone) : Node(_x, _y, _group) construct
     		var _st   = _targ;
     		var _ed   = _targ + _plen;
     		
-    		if(!key_mod_press(CTRL)) {
+    		if(!key_mod_press(KCONTROL)) {
 	    		var _snaps = _panel.timeline_snap_points;
 	    		var _sntr  = undefined;
 	    		var _sntrP = undefined;

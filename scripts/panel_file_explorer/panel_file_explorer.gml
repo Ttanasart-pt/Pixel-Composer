@@ -396,7 +396,7 @@ function Panel_File_Explorer() : PanelContent() constructor {
 					
 					file_hovering = _fil;
 					
-					if(pFOCUS && mouse_lpress() && key_mod_press(CTRL)) {
+					if(pFOCUS && mouse_lpress() && key_mod_press(KCONTROL)) {
 						if(_sel) array_remove(file_selectings, _fil);
 						else     array_push(file_selectings, _fil);
 					} 
@@ -409,7 +409,7 @@ function Panel_File_Explorer() : PanelContent() constructor {
 					}
 					
 					if(pFOCUS && DOUBLE_CLICK) {
-						if(key_mod_press(CTRL)) global_project_close_all();
+						if(key_mod_press(KCONTROL)) global_project_close_all();
 						load_file_path([ _fil.path ], _graph_x, _graph_y);
 					}
 				}
@@ -484,7 +484,7 @@ function Panel_File_Explorer() : PanelContent() constructor {
 					
 					file_hovering = _fil;
 					
-					if(pFOCUS && mouse_lpress() && key_mod_press(CTRL)) {
+					if(pFOCUS && mouse_lpress() && key_mod_press(KCONTROL)) {
 						if(_sel) array_remove(file_selectings, _fil);
 						else     array_push(file_selectings, _fil);
 					}
@@ -497,7 +497,7 @@ function Panel_File_Explorer() : PanelContent() constructor {
 					}
 					
 					if(pFOCUS && DOUBLE_CLICK) {
-						if(key_mod_press(CTRL)) global_project_close_all();
+						if(key_mod_press(KCONTROL)) global_project_close_all();
 						load_file_path([ _fil.path ], _graph_x, _graph_y);
 					}
 				}
@@ -657,7 +657,7 @@ function Panel_File_Explorer() : PanelContent() constructor {
 			}
 		}
 		
-		if(pHOVER && key_mod_press(CTRL) && MOUSE_WHEEL != 0) {
+		if(pHOVER && key_mod_press(KCONTROL) && MOUSE_WHEEL != 0) {
 			if(view_mode == FILE_EXPLORER_VIEW.grid)
 				grid_size = clamp(grid_size + MOUSE_WHEEL, ui(32), ui(128));
 				

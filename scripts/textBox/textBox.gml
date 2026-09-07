@@ -261,7 +261,7 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 				cursor_select = -1;
 			}
 			
-			if(key_mod_press(CTRL)) {
+			if(key_mod_press(KCONTROL)) {
 				while(cursor > 0) {
 					var ch = string_char_at(_input_text, cursor);
 					if(breakCharacter(ch)) break;
@@ -283,7 +283,7 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 				cursor_select = -1;
 			}
 			
-			if(key_mod_press(CTRL)) {
+			if(key_mod_press(KCONTROL)) {
 				while(cursor < string_length(_input_text)) {
 					var ch = string_char_at(_input_text, cursor);
 					if(breakCharacter(ch)) break;
@@ -347,11 +347,11 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 		}
 		
 		#region text editor
-			if(key_mod_press(CTRL) && keyboard_check_pressed(ord("A"))) {
+			if(key_mod_press(KCONTROL) && keyboard_check_pressed(ord("A"))) {
 				cursor        = string_length(_input_text);
 				cursor_select = 0;
 			
-			} else if(key_mod_press(CTRL) && !key_mod_press(SHIFT) && keyboard_check_pressed(ord("Z"))) {			// UNDO
+			} else if(key_mod_press(KCONTROL) && !key_mod_press(SHIFT) && keyboard_check_pressed(ord("Z"))) {			// UNDO
 				while(!ds_stack_empty(undo_stack) && _input_text == ds_stack_top(undo_stack)[0])
 					ds_stack_pop(undo_stack);
 				
@@ -365,7 +365,7 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 					undoing  = true;
 					modified = true;
 				}
-			} else if(key_mod_press(CTRL) && key_mod_press(SHIFT) && keyboard_check_pressed(ord("Z"))) {			// REDO
+			} else if(key_mod_press(KCONTROL) && key_mod_press(SHIFT) && keyboard_check_pressed(ord("Z"))) {			// REDO
 				if(!ds_stack_empty(redo_stack)) {
 					ds_stack_push(undo_stack, [_input_text, cursor, cursor_select]);
 					var _pop = ds_stack_pop(redo_stack);
@@ -376,14 +376,14 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 					undoing  = true;
 					modified = true;
 				}
-			} else if(key_mod_press(CTRL) && (keyboard_check_pressed(ord("C")) || keyboard_check_pressed(ord("X")))) {
+			} else if(key_mod_press(KCONTROL) && (keyboard_check_pressed(ord("C")) || keyboard_check_pressed(ord("X")))) {
 				if(cursor_select != -1) {
 					var _selecting = string_copy(_input_text, minc + 1, maxc - minc);
 					clipboard_set_text(_selecting);
 				}
 			
 			} else {
-				if(key_mod_press(CTRL) && keyboard_check_pressed(ord("V"))) {
+				if(key_mod_press(KCONTROL) && keyboard_check_pressed(ord("V"))) {
 					var _ctxt = clipboard_get_text();
 					    _ctxt = string_replace_all(_ctxt, "\t", "    ");
 					    
@@ -396,7 +396,7 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 					if(cursor_select == -1) {
 						var str_before, str_after;
 						
-						if(key_mod_press(CTRL)) {
+						if(key_mod_press(KCONTROL)) {
 							var _c = cursor - 1;
 							while(_c > 0) {
 								var ch = string_char_at(_input_text, _c);
@@ -426,7 +426,7 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 					cursor_select = -1;
 					moveCursor(-1);
 					
-				} else if(keyboard_check_pressed(vk_delete) || (keyboard_check_pressed(ord("X")) && key_mod_press(CTRL) && cursor_select != -1)) {
+				} else if(keyboard_check_pressed(vk_delete) || (keyboard_check_pressed(ord("X")) && key_mod_press(KCONTROL) && cursor_select != -1)) {
 					if(cursor_select == -1) {
 						var str_before	= string_copy(_input_text, 1, cursor);
 						var str_after	= string_copy(_input_text, cursor + 2, string_length(_input_text) - cursor - 1);
@@ -476,8 +476,8 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 		
 		if(input == TEXTBOX_INPUT.number) {
 			var _inc = 1;
-			if(key_mod_press(CTRL)) _inc *= 10;
-			if(key_mod_press(ALT))  _inc /= 10;
+			if(key_mod_press(KCONTROL)) _inc *= 10;
+			if(key_mod_press(ALT))      _inc /= 10;
 			
 			if(keyboard_check_pressed(vk_up))   { _input_text = string(toNumber(_input_text) + _inc); apply(); }
 			if(keyboard_check_pressed(vk_down)) { _input_text = string(toNumber(_input_text) - _inc); apply(); }
@@ -741,8 +741,8 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 			var bc = [COLORS._main_icon, COLORS._main_icon_light];
 			if(buttonInstant(noone, _bx, _by, _bs, _bs, _m, hover, active, "", THEME.add_16, 0, bc, .75, .75) == 2) {
 				var dx = slide_range == noone || slide_int? 1 : (slide_range[1] - slide_range[0]) / 10;
-				if(key_mod_press(CTRL)) dx *= 10;
-				if(key_mod_press(ALT))  dx /= 10;
+				if(key_mod_press(KCONTROL)) dx *= 10;
+				if(key_mod_press(ALT))      dx /= 10;
 				
 				_input_text = string_real(toNumber(_text) + dx);
 				apply();
@@ -752,8 +752,8 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 			
 			if(buttonInstant(noone, _bx, _by, _bs, _bs, _m, hover, active, "", THEME.minus_16, 0, bc, .75, .75) == 2) {
 				var dx = slide_range == noone || slide_int? 1 : (slide_range[1] - slide_range[0]) / 10;
-				if(key_mod_press(CTRL)) dx *= 10;
-				if(key_mod_press(ALT))  dx /= 10;
+				if(key_mod_press(KCONTROL)) dx *= 10;
+				if(key_mod_press(ALT))      dx /= 10;
 				
 				_input_text = string_real(toNumber(_text) - dx);
 				apply();
@@ -1174,8 +1174,8 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 				
 				if(input == TEXTBOX_INPUT.number && key_mod_press(SHIFT)) {
 					var amo = slide_speed;
-					if(key_mod_press(CTRL)) amo *= 10;
-					if(key_mod_press(ALT))  amo /= 10;
+					if(key_mod_press(KCONTROL)) amo *= 10;
+					if(key_mod_press(ALT))      amo /= 10;
 					if(MOUSE_WHEEL != 0)    modifyValue(toNumber(_text) + MOUSE_WHEEL);
 				}
 				

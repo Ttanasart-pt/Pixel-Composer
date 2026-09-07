@@ -800,7 +800,7 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 				}
 				
 				var inp = inputs[input_fix_len + drag_point];
-				var rnd = key_mod_press(CTRL);
+				var rnd = key_mod_press(KCONTROL);
 				
 				var onc = drag_point_data[input_fix_len + drag_point];
 				var anc = array_clone(inp.getValue());
@@ -1012,10 +1012,10 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 			var _mmy = weight_drag_sy + (_my - weight_drag_my);
 			
 			var _wei = max(0, weight_drag_v + (_mx - weight_drag_mx) / _s);
-			if(key_mod_press(CTRL)) _wei = round(_wei);
+			if(key_mod_press(KCONTROL)) _wei = round(_wei);
 			
 			// var _wei = point_distance(weight_drag_sx, weight_drag_sy, _mmx, _mmy) / _s;
-			// if(key_mod_press(CTRL)) _wei = round(_wei);
+			// if(key_mod_press(KCONTROL)) _wei = round(_wei);
 			
 			attributes.weight[weight_drag][1] = _wei;
 			if(_pth.loop && weight_drag == 0) array_last(attributes.weight)[1] = _wei;

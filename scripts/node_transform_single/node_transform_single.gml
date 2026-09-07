@@ -125,7 +125,7 @@ function Node_Transform_Single(_x, _y, _group = noone) : Node_Processor(_x, _y, 
 				pos_y = overlay_drag_sy + py / _s;
 			}
 			
-			if(key_mod_press(CTRL)) {
+			if(key_mod_press(KCONTROL)) {
 				pos_x = round(pos_x);
 				pos_y = round(pos_y);
 			}

@@ -87,8 +87,8 @@ function Node_Vector2(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		if(gz_dragging) {
 			_nx = PANEL_PREVIEW.snapX(gz_drag_sx + (_mx - gz_drag_mx) / gz_factor[0] / _s);
 			_ny = PANEL_PREVIEW.snapY(gz_drag_sy + (_my - gz_drag_my) / gz_factor[1] / _s);
-			_vx = key_mod_press(CTRL)? round(_nx) : _nx;
-			_vy = key_mod_press(CTRL)? round(_ny) : _ny;
+			_vx = key_mod_press(KCONTROL)? round(_nx) : _nx;
+			_vy = key_mod_press(KCONTROL)? round(_ny) : _ny;
 			
 			var s0 = inputs[0].setValue(_vx);
 			var s1 = inputs[1].setValue(_vy);
@@ -242,7 +242,7 @@ function Node_Vector2(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 			var mx = wd_minx + (_mx - bbox.x0) / bbox.w * (wd_maxx - wd_minx);
 			var my = wd_maxy - (_my - bbox.y0) / bbox.h * (wd_maxy - wd_miny);
 			
-			if(key_mod_press(CTRL)) {
+			if(key_mod_press(KCONTROL)) {
 				mx = round(mx);
 				my = round(my);
 			}

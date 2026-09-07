@@ -468,7 +468,7 @@ GRADIENTS_FOLDER.forEach(function(f) /*=>*/ { if(f.content == undefined) f.conte
 		
 		if(!click_block && _focus) {
 			if(mouse_lclick()) {
-				if(key_mod_press(CTRL)) {
+				if(key_mod_press(KCONTROL)) {
 					if(palette_spread == undefined && _hoverIndex != noone) {
 						palette_spread       = _path;
 						palette_spread_index = _hoverIndex;

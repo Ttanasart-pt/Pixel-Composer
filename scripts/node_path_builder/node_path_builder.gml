@@ -240,7 +240,7 @@ function Node_Path_Builder(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 			p = _points[point_editing];
 			p[0] = point_editing_sx + dx;
 			p[1] = point_editing_sy + dy;
-			if(key_mod_press(CTRL)) {
+			if(key_mod_press(KCONTROL)) {
 				p[0] = round(p[0]);
 				p[1] = round(p[1]);
 			}

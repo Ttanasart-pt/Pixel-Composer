@@ -404,7 +404,7 @@ function Panel_Animation() : PanelContent() constructor {
         
         if(timeline_scubbing) {
             var rfrm = (mx - bar_x - timeline_shift) / timeline_scale - 1;
-            if(!key_mod_press(CTRL)) rfrm = clamp(rfrm, 0, GLOBAL_TOTAL_FRAMES - 1);
+            if(!key_mod_press(KCONTROL)) rfrm = clamp(rfrm, 0, GLOBAL_TOTAL_FRAMES - 1);
             
             PROJECT.animator.setFrame(rfrm, !key_mod_press(ALT));
             
@@ -1057,7 +1057,7 @@ function Panel_Animation() : PanelContent() constructor {
             if(point_in_rectangle(mx, my, padding, y0, w - padding*2, y1) && timeline_stretch == 0) {
                 if(mouse_lclick(pFOCUS)) {
                     var rfrm = (mx - padding) / (w - padding*2) * GLOBAL_TOTAL_FRAMES;
-                    if(!key_mod_press(CTRL)) rfrm = clamp(rfrm, 0, GLOBAL_TOTAL_FRAMES - 1); // clamp to animating region
+                    if(!key_mod_press(KCONTROL)) rfrm = clamp(rfrm, 0, GLOBAL_TOTAL_FRAMES - 1); // clamp to animating region
                     PROJECT.animator.setFrame(rfrm);
                 }
             }

@@ -2029,7 +2029,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		
 		_dummy_curr  = 0; 
 		_dummy_start = 0;
-		_dummy       = _dummy && key_mod_press(CTRL);
+		_dummy       = _dummy && key_mod_press(KCONTROL);
 		if(_dummy) dummy_insert = 0;
 		
 		array_foreach(inputDisplayList, function(jun, i) /*=>*/ { 

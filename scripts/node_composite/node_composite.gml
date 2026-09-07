@@ -1465,7 +1465,7 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 					var _px = dragging_px;
 					var _py = dragging_py;
 						
-					if(key_mod_press(CTRL)) {
+					if(key_mod_press(KCONTROL)) {
 						_px += _p[0] * _sw;
 						_py += _p[1] * _sh;
 					}

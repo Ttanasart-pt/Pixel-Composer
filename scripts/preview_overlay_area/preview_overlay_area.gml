@@ -362,7 +362,7 @@ function preview_overlay_area_span(hover, active, _x, _y, _s, _mx, _my, _flag) {
 			var _xx = PANEL_PREVIEW.snapX(drag_sx + (_mx - drag_mx) / _s);
 			var _yy = PANEL_PREVIEW.snapY(drag_sy + (_my - drag_my) / _s);
 								
-			if(key_mod_press(CTRL)) {
+			if(key_mod_press(KCONTROL)) {
 				_val[0] = round(_xx);
 				_val[1] = round(_yy);
 				
@@ -376,7 +376,7 @@ function preview_overlay_area_span(hover, active, _x, _y, _s, _mx, _my, _flag) {
 			var _xx = PANEL_PREVIEW.snapX(drag_sx + (_mx - drag_mx) / _s);
 			var _yy = PANEL_PREVIEW.snapY(drag_sy + (_my - drag_my) / _s);
 								
-			if(key_mod_press(CTRL)) {
+			if(key_mod_press(KCONTROL)) {
 				_val[2] = round(_xx);
 				_val[3] = round(_yy);
 				
@@ -395,7 +395,7 @@ function preview_overlay_area_span(hover, active, _x, _y, _s, _mx, _my, _flag) {
 			var _xx = PANEL_PREVIEW.snapX(drag_sx + (_mx - drag_mx) / _s);
 			var _yy = PANEL_PREVIEW.snapY(drag_sy + (_my - drag_my) / _s);
 			
-			if(key_mod_press(CTRL)) {
+			if(key_mod_press(KCONTROL)) {
 				_xx = round(_xx);
 				_yy = round(_yy);
 			}
@@ -410,7 +410,7 @@ function preview_overlay_area_span(hover, active, _x, _y, _s, _mx, _my, _flag) {
 			var _xx = PANEL_PREVIEW.snapX(drag_sx + (_mx - drag_mx) / _s);
 			var _yy = PANEL_PREVIEW.snapY(drag_sy + (_my - drag_my) / _s);
 			
-			if(key_mod_press(CTRL)) {
+			if(key_mod_press(KCONTROL)) {
 				_xx = round(_xx);
 				_yy = round(_yy);
 			}
@@ -425,7 +425,7 @@ function preview_overlay_area_span(hover, active, _x, _y, _s, _mx, _my, _flag) {
 			var _xx = PANEL_PREVIEW.snapX(drag_sx + (_mx - drag_mx) / _s);
 			var _yy = PANEL_PREVIEW.snapY(drag_sy + (_my - drag_my) / _s);
 			
-			if(key_mod_press(CTRL)) {
+			if(key_mod_press(KCONTROL)) {
 				_xx = round(_xx);
 				_yy = round(_yy);
 			}
@@ -440,7 +440,7 @@ function preview_overlay_area_span(hover, active, _x, _y, _s, _mx, _my, _flag) {
 			var _xx = PANEL_PREVIEW.snapX(drag_sx + (_mx - drag_mx) / _s);
 			var _yy = PANEL_PREVIEW.snapY(drag_sy + (_my - drag_my) / _s);
 			
-			if(key_mod_press(CTRL)) {
+			if(key_mod_press(KCONTROL)) {
 				_xx = round(_xx);
 				_yy = round(_yy);
 			}

@@ -516,7 +516,7 @@ function Panel_Collection() : PanelContent() constructor {
 			}
 			
 			var hov = pHOVER && point_in_rectangle(_m[0], _m[1], 0, 0, contentPane.surface_w, contentPane.surface_h);
-			if(hov && key_mod_press(CTRL)) grid_size_to = clamp(grid_size_to + ui(4) * MOUSE_WHEEL, ui(32), ui(160));
+			if(hov && key_mod_press(KCONTROL)) grid_size_to = clamp(grid_size_to + ui(4) * MOUSE_WHEEL, ui(32), ui(160));
 			grid_size = lerp_float(grid_size, grid_size_to, 5);
 			
 		} else {
@@ -817,7 +817,7 @@ function Panel_Collection() : PanelContent() constructor {
 		yy += hght;
 		
 		var hov = pHOVER && point_in_rectangle(_m[0], _m[1], 0, 0, nodecontentPane.surface_w, nodecontentPane.surface_h);
-		if(hov && key_mod_press(CTRL)) grid_size_to = clamp(grid_size_to + ui(4) * MOUSE_WHEEL, ui(32), ui(160));
+		if(hov && key_mod_press(KCONTROL)) grid_size_to = clamp(grid_size_to + ui(4) * MOUSE_WHEEL, ui(32), ui(160));
 		grid_size = lerp_float(grid_size, grid_size_to, 5);
 		
 		return hh + ui(16);

@@ -31,7 +31,7 @@ function Node_Tunnel_In(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	inputs[0].getEditWidget().autocomplete_subt   = "Ctrl: Change connected";
 	inputs[0].is_modified = true;
 	inputs[0].onSetValue  = function(newKey, oldValue) /*=>*/ {
-		if(!key_mod_press(CTRL)) return;
+		if(!key_mod_press(KCONTROL)) return;
 		
 		var _rec = project.tunnels_out[$ __key];
 		if(!is_array(_rec)) return;

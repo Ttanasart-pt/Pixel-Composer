@@ -186,7 +186,7 @@ function curveBox(_onModify) : widget() constructor {
 				var node_point = (node_dragging - CURVE_PADD - 2) / 6;
 				if(node_point > 0 && node_point < points - 1) {
 					
-					if(key_mod_press(CTRL) || grid_snap)
+					if(key_mod_press(KCONTROL) || grid_snap)
 						_mx = value_snap(_mx, grid_step);
 					
 					var bfx = _data[node_dragging - 6];
@@ -195,7 +195,7 @@ function curveBox(_onModify) : widget() constructor {
 					if(_mx > bfx && _mx < afx) _data[node_dragging + 0] = _mx;
 				}
 				
-				if(key_mod_press(CTRL) || grid_snap) 
+				if(key_mod_press(KCONTROL) || grid_snap) 
 					_my = value_snap(_my, grid_step);
 				_data[node_dragging + 1] = _my;
 				
@@ -219,8 +219,8 @@ function curveBox(_onModify) : widget() constructor {
 				var _my = 1 - (_m[1] - _y) / ch;
 					_my = lerp(edit_miny, edit_maxy, _my);
 				
-				if(key_mod_press(CTRL) || grid_snap) _mx = value_snap(_mx, grid_step);
-				if(key_mod_press(CTRL) || grid_snap) _my = value_snap(_my, grid_step);
+				if(key_mod_press(KCONTROL) || grid_snap) _mx = value_snap(_mx, grid_step);
+				if(key_mod_press(KCONTROL) || grid_snap) _my = value_snap(_my, grid_step);
 					
 				if(node_drag_break) {
 					if(node_drag_typ == 1) {
@@ -442,14 +442,14 @@ function curveBox(_onModify) : widget() constructor {
 				if(dragging == 1 || dragging == 3) {
 					miny = clamp(drag_s[0] + _mdy, zminy, min(maxy - 0.1, zmaxy));
 					
-					if(dragging == 1 && key_mod_press(CTRL))
+					if(dragging == 1 && key_mod_press(KCONTROL))
 						maxy = clamp(drag_s[1] - _mdy, max(miny + 0.1, zminy), zmaxy);
 				}
 				
 				if(dragging == 2 || dragging == 3) {
 					maxy = clamp(drag_s[1] + _mdy, max(miny + 0.1, zminy), zmaxy);
 					
-					if(dragging == 2 && key_mod_press(CTRL))
+					if(dragging == 2 && key_mod_press(KCONTROL))
 						miny = clamp(drag_s[0] - _mdy, zminy, min(maxy - 0.1, zmaxy));
 				}
 			} 
@@ -462,8 +462,8 @@ function curveBox(_onModify) : widget() constructor {
 			draw_sprite_stretched_ext(THEME.box_r2, 0, bx, by, bs, byH, CDEF.main_black, 1);
 			draw_sprite_stretched_ext(THEME.box_r2, 0, bx, zy1, bs, zy0 - zy1, cc);
 			
-			var hlg1 = drag_h == 1 || dragging == 1 || ((drag_h == 2 || dragging == 2) && key_mod_press(CTRL));
-			var hlg2 = drag_h == 2 || dragging == 2 || ((drag_h == 1 || dragging == 1) && key_mod_press(CTRL));
+			var hlg1 = drag_h == 1 || dragging == 1 || ((drag_h == 2 || dragging == 2) && key_mod_press(KCONTROL));
+			var hlg2 = drag_h == 2 || dragging == 2 || ((drag_h == 1 || dragging == 1) && key_mod_press(KCONTROL));
 			
 			draw_sprite_stretched_ext(THEME.box_r2, 0, bx, zy0 - bs/2, bs, bs, hlg1? COLORS._main_icon_light : COLORS._main_icon);
 			draw_sprite_stretched_ext(THEME.box_r2, 0, bx, zy1 - bs/2, bs, bs, hlg2? COLORS._main_icon_light : COLORS._main_icon);
@@ -486,14 +486,14 @@ function curveBox(_onModify) : widget() constructor {
 				if(dragging == 4 || dragging == 6) {
 					minx = clamp(drag_s[2] + _mdx, zminx, min(maxx - 0.1, zmaxx));
 					
-					if(dragging == 4 && key_mod_press(CTRL))
+					if(dragging == 4 && key_mod_press(KCONTROL))
 						maxx = clamp(drag_s[3] - _mdx, max(minx + 0.1, zminx), zmaxx);
 				}
 				
 				if(dragging == 5 || dragging == 6) {
 					maxx = clamp(drag_s[3] + _mdx, max(minx + 0.1, zminx), zmaxx);
 					
-					if(dragging == 5 && key_mod_press(CTRL))
+					if(dragging == 5 && key_mod_press(KCONTROL))
 						minx = clamp(drag_s[2] - _mdx, zminx, min(maxx - 0.1, zmaxx));
 				}
 			} 
@@ -506,8 +506,8 @@ function curveBox(_onModify) : widget() constructor {
 			draw_sprite_stretched_ext(THEME.box_r2, 0, bx, by, bxW, bs, CDEF.main_black, 1);
 			draw_sprite_stretched_ext(THEME.box_r2, 0, zx0, by, zx1 - zx0, bs, cc, 1);
 			
-			var hlg4 = drag_h == 4 || dragging == 4 || ((drag_h == 5 || dragging == 5) && key_mod_press(CTRL));
-			var hlg5 = drag_h == 5 || dragging == 5 || ((drag_h == 4 || dragging == 4) && key_mod_press(CTRL));
+			var hlg4 = drag_h == 4 || dragging == 4 || ((drag_h == 5 || dragging == 5) && key_mod_press(KCONTROL));
+			var hlg5 = drag_h == 5 || dragging == 5 || ((drag_h == 4 || dragging == 4) && key_mod_press(KCONTROL));
 			
 			draw_sprite_stretched_ext(THEME.box_r2, 0, zx0 - bs/2, by, bs, bs, hlg4? COLORS._main_icon_light : COLORS._main_icon, 1);
 			draw_sprite_stretched_ext(THEME.box_r2, 0, zx1 - bs/2, by, bs, bs, hlg5? COLORS._main_icon_light : COLORS._main_icon, 1);

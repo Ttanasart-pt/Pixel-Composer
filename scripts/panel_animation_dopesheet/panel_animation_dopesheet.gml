@@ -564,7 +564,7 @@ function Panel_Animation_Dopesheet() {
         
         if(timeline_scubbing) {
             var rfrm = (mx - bar_x - timeline_shift) / timeline_scale - 1;
-            if(!key_mod_press(CTRL)) rfrm = clamp(rfrm, 0, GLOBAL_TOTAL_FRAMES - 1);
+            if(!key_mod_press(KCONTROL)) rfrm = clamp(rfrm, 0, GLOBAL_TOTAL_FRAMES - 1);
             
             PROJECT.animator.setFrame(rfrm, !key_mod_press(ALT));
             
@@ -761,7 +761,7 @@ function Panel_Animation_Dopesheet() {
 	                UNDO_HOLDING = true;
                 }
                 
-            } else if(key_mod_press(CTRL)) {
+            } else if(key_mod_press(KCONTROL)) {
                 setTOOLTIP(__txt("panel_animation_adjust_length", "Adjust animation length"));
         		
                 if(DOUBLE_CLICK) {
@@ -3312,7 +3312,7 @@ function Panel_Animation_Dopesheet() {
 	            if(mouse_rpress(pFOCUS) && key_hover == noone)
 	                keyframe_selecting = [];
 	                
-	            var _ctrl = key_mod_press(CTRL);
+	            var _ctrl = key_mod_press(KCONTROL);
 	            
 	            if(_ctrl) {
 	                var _fr = round((mx - bar_x - timeline_shift) / timeline_scale) - 1;

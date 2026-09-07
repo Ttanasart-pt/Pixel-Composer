@@ -6,6 +6,11 @@
         "date": "2026-09-07T00:38:33.862Z",
         "node": "",
         "commit": "**Mac**: Lua now works on MacOS (Lua nodes, custom addons.)"
+      },
+      {
+        "date": "2026-09-07T00:45:26.653Z",
+        "node": "",
+        "commit": "**Mac**: Hotkey inside textbox now use command key."
       }
     ]
   },

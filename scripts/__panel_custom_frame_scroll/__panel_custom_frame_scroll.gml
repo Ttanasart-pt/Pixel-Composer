@@ -79,7 +79,7 @@ function Panel_Custom_Frame_Scroll(_data) : Panel_Custom_Frame(_data) constructo
 		if(_hov) {
 			if(mouseEvent) panel.hovering_element = self;
 			
-			if(is_container || key_mod_press(CTRL)) 
+			if(is_container || key_mod_press(KCONTROL)) 
 				panel.hovering_frame = self;
 				
 			panel.hovering_scroll = self;

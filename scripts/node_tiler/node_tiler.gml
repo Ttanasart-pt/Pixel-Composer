@@ -235,7 +235,7 @@ function Node_Tile_Drawer(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 				surface_reset_target();
 				
 				if(_tool.brush_resizable) { 
-					if(hover && key_mod_press(CTRL) && MOUSE_WHEEL != 0)
+					if(hover && key_mod_press(KCONTROL) && MOUSE_WHEEL != 0)
 						tool_attribute.size = clamp(tool_attribute.size + sign(MOUSE_WHEEL), 1, 64);
 					
 					brush.sizing(hover, active, _x, _y, _s, _mx, _my);

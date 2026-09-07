@@ -48,7 +48,7 @@ function canvas_s_tool_line() : canvas_s_tool() constructor {
 				}
 			}
 
-			if(key_mod_press(CTRL)) {
+			if(key_mod_press(KCONTROL)) {
 				x0 = x0 - (x1 - x0);
 				y0 = y0 - (y1 - y0);
 			}

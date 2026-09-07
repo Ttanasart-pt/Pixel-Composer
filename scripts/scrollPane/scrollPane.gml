@@ -133,7 +133,7 @@ function scrollPane(_w, _h, ondraw) : widget() constructor {
 		if(tool_w) draw_sprite_stretched(THEME.ui_panel_tool, 0, x + w + ui(8) - tool_w, y - ui(8), tool_w, tool_h);
 		
 		if(hover && !scroll_lock) {
-			if(!key_mod_press(SHIFT) && !key_mod_press(CTRL) && MOUSE_WHEEL != 0)
+			if(!key_mod_press(SHIFT) && !key_mod_press(KCONTROL) && MOUSE_WHEEL != 0)
 				scroll_y_to = clamp(scroll_y_to + scroll_step * MOUSE_WHEEL, -content_h, 0);
 				
 			if(scroll_dragable && mouse_press(mb_middle)) {

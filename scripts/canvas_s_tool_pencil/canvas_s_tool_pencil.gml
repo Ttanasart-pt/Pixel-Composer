@@ -103,7 +103,7 @@ function canvas_s_tool_pencil() : canvas_s_tool() constructor {
 					var lx = mpx;
 					var ly = mpy;
 						
-					if(key_mod_press(CTRL)) {
+					if(key_mod_press(KCONTROL)) {
 						var _dx = lx - draw_last_x;
 						var _dy = ly - draw_last_y;
 						

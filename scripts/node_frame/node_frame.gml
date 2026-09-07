@@ -258,7 +258,7 @@ function Node_Frame(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 			var _dx = (mouse_mx - size_dragging_mx) / _s;
 			var _dy = (mouse_my - size_dragging_my) / _s;
 
-			if(!key_mod_press(CTRL)) { 
+			if(!key_mod_press(KCONTROL)) { 
 				_dx = value_snap(_dx, 16);
 				_dy = value_snap(_dy, 16);
 			}

@@ -780,7 +780,7 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 			}
 		}
 		
-		if(self == PANEL_MAIN && PANEL_DRAGGING != noone && key_mod_press(CTRL))
+		if(self == PANEL_MAIN && PANEL_DRAGGING != noone && key_mod_press(KCONTROL))
 			checkHover();
 		
 		if(THEME_VALUE.panel_separation_type == "line") {
@@ -1382,7 +1382,7 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 	}
 	
 	function checkHover() {
-		if(PANEL_DRAGGING == noone || key_mod_press(CTRL))
+		if(PANEL_DRAGGING == noone || key_mod_press(KCONTROL))
 			return;
 		
 		var _mx = mouse_mx;

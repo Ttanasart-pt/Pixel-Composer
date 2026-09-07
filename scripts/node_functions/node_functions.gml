@@ -58,7 +58,7 @@
 				var da = angle_difference(dragging_mx, aa);
 				
 				_rot = dragging_sx - da;
-				if(key_mod_press(CTRL))  _rot = round(_rot);
+				if(key_mod_press(KCONTROL))  _rot = round(_rot);
 				if(key_mod_press(SHIFT)) _rot = value_snap(_rot, 15);
 				
 				if(inputs[_rotInd].setValue(_rot))

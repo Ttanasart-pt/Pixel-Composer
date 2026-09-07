@@ -175,7 +175,7 @@ function dynaDraw_canvas() : dynaDraw() constructor {
 			
 			tool_scroll = lerp_float(tool_scroll, tool_scroll_to, 2);
 			if(phov && MOUSE_WHEEL != 0) {
-				if(key_mod_press(CTRL))
+				if(key_mod_press(KCONTROL))
 					 tool_scroll_to = clamp(tool_scroll_to - MOUSE_WHEEL * 32, 0, tool_scroll_max);
 				else wheel_tooltip = 3;
 			}

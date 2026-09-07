@@ -34,7 +34,7 @@ function canvas_s_selector_shape_ellipse() : canvas_s_tool() constructor {
 				else                  x1 = x0 + sign(dx) * abs(dy);
 			}
 
-			if(key_mod_press(CTRL)) {
+			if(key_mod_press(KCONTROL)) {
 				x0 = x0 - (x1 - x0);
 				y0 = y0 - (y1 - y0);
 			}

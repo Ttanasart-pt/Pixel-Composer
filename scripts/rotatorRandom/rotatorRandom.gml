@@ -176,8 +176,8 @@ function rotatorRandom(_onModify) : widget() constructor {
 					hover = false;
 					
 					var _dt = (_m[0] - rangeDrag_mx) / w * 180;
-					var _vx = value_snap(rangeDrag_ss[1] + _dt, key_mod_press(CTRL)? 15 : 1);
-					var _vy = value_snap(rangeDrag_ss[2] + _dt, key_mod_press(CTRL)? 15 : 1);
+					var _vx = value_snap(rangeDrag_ss[1] + _dt, key_mod_press(KCONTROL)? 15 : 1);
+					var _vy = value_snap(rangeDrag_ss[2] + _dt, key_mod_press(KCONTROL)? 15 : 1);
 					
 					var u0 = onModify(_vx, 1); 
 					var u1 = onModify(_vy, 2); 
@@ -361,8 +361,8 @@ function rotatorRandom(_onModify) : widget() constructor {
 					hover = false;
 					
 					var _dt = (_m[0] - rangeDrag_mx) / w * 180;
-					var _vx = value_snap(rangeDrag_ss[(rangeDrag - 1) * 2 + 1] + _dt, key_mod_press(CTRL)? 15 : 1);
-					var _vy = value_snap(rangeDrag_ss[(rangeDrag - 1) * 2 + 2] + _dt, key_mod_press(CTRL)? 15 : 1);
+					var _vx = value_snap(rangeDrag_ss[(rangeDrag - 1) * 2 + 1] + _dt, key_mod_press(KCONTROL)? 15 : 1);
+					var _vy = value_snap(rangeDrag_ss[(rangeDrag - 1) * 2 + 2] + _dt, key_mod_press(KCONTROL)? 15 : 1);
 					
 					var u0 = onModify(_vx, (rangeDrag - 1) * 2 + 1); 
 					var u1 = onModify(_vy, (rangeDrag - 1) * 2 + 2); 

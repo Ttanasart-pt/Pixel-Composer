@@ -194,7 +194,7 @@ function Panel_Palette() : PanelContent() constructor {
 		sp_palettes.setFocusHover(pFOCUS, pHOVER);
 		sp_palettes.draw(px, py, mx - px, my - py);
 		
-		if(pHOVER && key_mod_press(CTRL) && MOUSE_WHEEL != 0)
+		if(pHOVER && key_mod_press(KCONTROL) && MOUSE_WHEEL != 0)
 			grid_size_to = clamp(grid_size_to + ui(4) * MOUSE_WHEEL, ui(8), ui(32));
 		grid_size = lerp_float(grid_size, grid_size_to, 10);
 		

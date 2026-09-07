@@ -298,7 +298,7 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 				p[0] = point_editing_sx + dx;
 				p[1] = point_editing_sy + dy;
 				
-				if(key_mod_press(CTRL)) {
+				if(key_mod_press(KCONTROL)) {
 					p[0] = round(p[0]);
 					p[1] = round(p[1]);
 				}
@@ -311,7 +311,7 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 					p[0] = point_edit_value[_pedit][0] + dx;
 					p[1] = point_edit_value[_pedit][1] + dy;
 						
-					if(key_mod_press(CTRL)) {
+					if(key_mod_press(KCONTROL)) {
 						p[0] = round(p[0]);
 						p[1] = round(p[1]);
 					}

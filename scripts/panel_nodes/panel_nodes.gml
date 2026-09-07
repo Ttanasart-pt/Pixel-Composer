@@ -178,7 +178,7 @@ function Panel_Nodes() : PanelContent() constructor {
 					else if(mouse_lpress()) {
 						PANEL_INSPECTOR.setInspecting(node);
 						
-						if(key_mod_press(CTRL))
+						if(key_mod_press(KCONTROL))
 							selectNodeTree(_item);
 						else if(key_mod_press(SHIFT))
 							array_toggle(PANEL_GRAPH.nodes_selecting, node);
@@ -331,7 +331,7 @@ function Panel_Nodes() : PanelContent() constructor {
 			if(mouse_lpress(focus) && node_hovering == noone)
 			PANEL_GRAPH.nodes_selecting = [];
 			
-			if(key_mod_press(CTRL))   item_height = clamp(item_height + MOUSE_WHEEL * ui(4), ui(16), ui(128));
+			if(key_mod_press(KCONTROL))   item_height = clamp(item_height + MOUSE_WHEEL * ui(4), ui(16), ui(128));
 			if(key_mod_double(SHIFT)) PREFERENCES.nodes_panel_show_preview = !PREFERENCES.nodes_panel_show_preview;
 		}
 		

@@ -1067,7 +1067,7 @@ function Node_Path_3D(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 					anc[_ANCHOR3.y] = vy;
 					anc[_ANCHOR3.z] = vz;
 					
-					if(key_mod_press(CTRL)) {
+					if(key_mod_press(KCONTROL)) {
 						anc[_ANCHOR3.x] = round(anc[_ANCHOR3.x]);
 						anc[_ANCHOR3.y] = round(anc[_ANCHOR3.y]);
 						anc[_ANCHOR3.z] = round(anc[_ANCHOR3.z]);
@@ -1088,7 +1088,7 @@ function Node_Path_3D(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 						anc[_ANCHOR3.c2z] = -anc[_ANCHOR3.c1z];
 					}
 					
-					if(key_mod_press(CTRL)) {
+					if(key_mod_press(KCONTROL)) {
 						anc[_ANCHOR3.c1x] = round(anc[_ANCHOR3.c1x]);
 						anc[_ANCHOR3.c1y] = round(anc[_ANCHOR3.c1y]);
 						anc[_ANCHOR3.c1z] = round(anc[_ANCHOR3.c1z]);
@@ -1115,7 +1115,7 @@ function Node_Path_3D(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 						anc[_ANCHOR3.c1z] = -anc[_ANCHOR3.c2z];
 					}
 					
-					if(key_mod_press(CTRL)) {
+					if(key_mod_press(KCONTROL)) {
 						anc[_ANCHOR3.c2x] = round(anc[_ANCHOR3.c2x]);
 						anc[_ANCHOR3.c2y] = round(anc[_ANCHOR3.c2y]);
 						anc[_ANCHOR3.c2z] = round(anc[_ANCHOR3.c2z]);
@@ -1196,7 +1196,7 @@ function Node_Path_3D(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 					maxx = max(maxx, _nx); maxy = max(maxy, _ny);
 					
 					if(j) {
-						if((key_mod_press(CTRL) || isUsingTool(1)) && distance_to_line(_mx, _my, _ox, _oy, _nx, _ny) < 4)
+						if((key_mod_press(KCONTROL) || isUsingTool(1)) && distance_to_line(_mx, _my, _ox, _oy, _nx, _ny) < 4)
 							_line_hover = i;
 						draw_line_width(_ox, _oy, _nx, _ny, ui(1) + ui(2) * (line_hover == i));
 					}
@@ -1408,7 +1408,7 @@ function Node_Path_3D(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 				}
 			}
 		
-		} else if(key_mod_press(CTRL) || toolEditing) {	// anchor add
+		} else if(key_mod_press(KCONTROL) || toolEditing) {	// anchor add
 			CURSOR_SPRITE = THEME.cursor_add;
 			var rz = sign(ray.direction.z);
 			

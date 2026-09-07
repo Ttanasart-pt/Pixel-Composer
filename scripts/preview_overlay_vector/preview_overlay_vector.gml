@@ -54,7 +54,7 @@ function preview_overlay_vector(interact, active, _x, _y, _s, _mx, _my, _type = 
 			}
 		}
 		
-		if(key_mod_press(CTRL)) {
+		if(key_mod_press(KCONTROL)) {
 			_nx = round(_nx);
 			_ny = round(_ny);
 		} 

@@ -50,7 +50,7 @@ function canvas_s_tool_shape_ellipse(_fill = false) : canvas_s_tool() constructo
 				else                  x1 = x0 + sign(dx) * abs(dy);
 			}
 			
-			if(key_mod_press(CTRL)) {
+			if(key_mod_press(KCONTROL)) {
 				x0 = x0 - (x1 - x0);
 				y0 = y0 - (y1 - y0);
 			}

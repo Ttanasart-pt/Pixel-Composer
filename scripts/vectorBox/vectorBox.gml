@@ -387,7 +387,7 @@ function vectorBox(_size, _onModify, _unit = noone) : widget() constructor {
 				var _vx = scaleDrag_ss[0] * _sc;
 				var _vy = scaleDrag_ss[1] * _sc;
 				
-				if(key_mod_press(CTRL)) {
+				if(key_mod_press(KCONTROL)) {
 					_vx = round(_vx);
 					_vy = round(_vy);
 				}

@@ -479,7 +479,7 @@ function Node_Tile_Tileset(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 					var z1 = tile_selector_s_max;
 					
 		    		if(MOUSE_WHEEL != 0) {
-			    		if(key_mod_press(CTRL) || tile_selector.popupPanel != noone)
+			    		if(key_mod_press(KCONTROL) || tile_selector.popupPanel != noone)
 				    		tile_selector_s_to = clamp(tile_selector_s_to * (1 + .2 * MOUSE_WHEEL), z0, z1);
 				    	else
 				    		tile_selector_zoom_tooltip = 3;
@@ -1404,7 +1404,7 @@ function Node_Tile_Tileset(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 				var z1 = tile_selector_s_max;
 				
 	    		if(MOUSE_WHEEL != 0) {
-		    		if(key_mod_press(CTRL) || palette_viewer.popupPanel != noone)
+		    		if(key_mod_press(KCONTROL) || palette_viewer.popupPanel != noone)
 			    		palette_selector_s_to = clamp(palette_selector_s_to * (1 + .2 * MOUSE_WHEEL), z0, z1);
 			    	else
 			    		palette_selector_zoom_tooltip = 3;

@@ -59,7 +59,7 @@ function preview_overlay_scalar(interact, active, _x, _y, _s, _mx, _my, _angle, 
 		index = 1;
 		
 		var _dist = point_project_distance_line_angle(_mx, _my, _x, _y, _angle) / (_s * _scale);
-		if(key_mod_press(CTRL)) _dist = round(_dist);
+		if(key_mod_press(KCONTROL)) _dist = round(_dist);
 		
 		if(setValueInspector( unit.invApply(_dist) ))
 			UNDO_HOLDING = true;

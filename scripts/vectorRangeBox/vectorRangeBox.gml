@@ -190,7 +190,7 @@ function vectorRangeBox(_size, _type, _onModify, _unit = noone) : widget() const
 				for( var i = 0; i < dim; i++ ) {
 					var ind = i * 2 + rangeDrag - 1;
 					var _v = rangeDrag_ss[ind] * _sc;
-					if(key_mod_press(CTRL))
+					if(key_mod_press(KCONTROL))
 						_v = round(_v);
 					
 					var u = onModify(_v, ind); _ed |= u;
@@ -200,7 +200,7 @@ function vectorRangeBox(_size, _type, _onModify, _unit = noone) : widget() const
 				for( var i = 0; i < dim; i++ ) {
 					var ind = i * 2;
 					var _v = rangeDrag_ss[ind] * _sc;
-					if(key_mod_press(CTRL))
+					if(key_mod_press(KCONTROL))
 						_v = round(_v);
 					
 					var u = onModify(_v, ind); _ed |= u;

@@ -436,7 +436,7 @@ function Node_Display_Text(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 			
 			case "mouse_wheel" :            return MOUSE_WHEEL != 0;
 			
-			case "ctrl" :                   return key_mod_press(CTRL);
+			case "ctrl" :                   return key_mod_press(KCONTROL);
 			case "alt" :                    return key_mod_press(ALT);
 			case "shift" :                  return key_mod_press(SHIFT);
 			

@@ -346,7 +346,7 @@ function Panel_Process_Maker() : PanelContent() constructor {
 			if(!is(track_sel, Process_Anim_Track)) return;
 			
 			track_sel.duration = t; 
-			if(key_mod_press(CTRL)) {
+			if(key_mod_press(KCONTROL)) {
 				for( var i = 0, n = array_length(PROJECT.trackAnim.tracks); i < n; i++ )
 					PROJECT.trackAnim.tracks[i].duration = t;
 			}

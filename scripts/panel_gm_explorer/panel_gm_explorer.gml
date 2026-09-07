@@ -207,7 +207,7 @@ function GM_Explore_draw(gmBinder, _x, _y, _w, _h, _m, _hover, _focus) {
 			_res[i].closed = _call == 1? false : true;
 	}
 	
-	if(_hover && key_mod_press(CTRL) && point_in_rectangle(_m[0], _m[1], 0, 0, _w, _h) && MOUSE_WHEEL != 0)
+	if(_hover && key_mod_press(KCONTROL) && point_in_rectangle(_m[0], _m[1], 0, 0, _w, _h) && MOUSE_WHEEL != 0)
 		grid_size_to = clamp(grid_size_to + ui(4) * MOUSE_WHEEL, ui(32), ui(160));
 	grid_size = lerp_float(grid_size, grid_size_to, 5);
 	

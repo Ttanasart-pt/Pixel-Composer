@@ -160,7 +160,7 @@ function rangeBox(_onModify) : widget() constructor {
 			var _vx = rangeDrag_ss[0] * _sc;
 			var _vy = rangeDrag_ss[1] * _sc;
 			
-			if(key_mod_press(CTRL)) {
+			if(key_mod_press(KCONTROL)) {
 				_vx = round(_vx);
 				_vy = round(_vy);
 			}

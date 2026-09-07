@@ -221,7 +221,7 @@ function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 				if(_cr_hover != edit_cursor) edit_cursor_sel = _cr_hover;
 			}
 			
-			if(keyboard_check_pressed(ord("A")) && key_mod_press(CTRL)) {
+			if(keyboard_check_pressed(ord("A")) && key_mod_press(KCONTROL)) {
 				edit_cursor     = 0;
 				edit_cursor_sel = string_length(_currStr);
 				

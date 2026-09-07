@@ -70,7 +70,7 @@ function Panel_Canvas_Palette() : PanelContent() constructor {
 			
 		}
 		
-		if(hover && key_mod_press(CTRL) && MOUSE_WHEEL != 0)
+		if(hover && key_mod_press(KCONTROL) && MOUSE_WHEEL != 0)
 			grid_size = clamp(grid_size + MOUSE_WHEEL * ui(4), ui(16), ui(64));
 		
 		return _h;

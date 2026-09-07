@@ -1384,7 +1384,7 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
 	        }
 	        
 	        if(pHOVER) {
-	            if((!key_mod_press_any() || key_mod_press(CTRL)) && MOUSE_WHEEL != 0) {
+	            if((!key_mod_press_any() || key_mod_press(KCONTROL)) && MOUSE_WHEEL != 0) {
 		            if(MOUSE_WHEEL == -1) {
 		            	if(graph_s_to > array_last(scale)) graph_s_to = array_last(scale);
 		            	
@@ -1705,7 +1705,7 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
         		
 	            var  nx  = node_drag_sx + (_mgx - node_drag_mx);
 	            var  ny  = node_drag_sy + (_mgy - node_drag_my);
-	            var  sn  = !key_mod_press(CTRL) && project.graphGrid.snap;
+	            var  sn  = !key_mod_press(KCONTROL) && project.graphGrid.snap;
 	            if(sn) { nx = value_snap(nx, _grd); ny = value_snap(ny, _grd); }
 	            
 	            if(node_drag_ox == -1 || node_drag_oy == -1) {
@@ -1761,7 +1761,7 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
         		
 	            var  nw  = node_drag_sw + (_mgx - node_drag_mx);
 	            var  nh  = node_drag_sh + (_mgy - node_drag_my);
-	            var  sn  = !key_mod_press(CTRL) && project.graphGrid.snap;
+	            var  sn  = !key_mod_press(KCONTROL) && project.graphGrid.snap;
 	            if(sn) { nw = value_snap(nw, _grd); nh = value_snap(nh, _grd); }
 	            
 	            if(node_dragging.attributes.show_parameter)
@@ -1783,7 +1783,7 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
 		if(!_focus || !mouse_on_graph)                  return;
 		if(cache_group_edit != noone)                   return;
 		if(value_focus != noone)                        return;
-		if(key_mod_press(CTRL) || key_mod_press(SHIFT)) return;
+		if(key_mod_press(KCONTROL) || key_mod_press(SHIFT)) return;
 		
         var _node = getFocusingNode();
 		if(!is(_node, Node) || !_node.draggable) return;
@@ -2231,7 +2231,7 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
                         if(array_length(nodes_selecting) > 1)
                             _anc = nodes_select_anchor == node_hovering? noone : node_hovering;
                             
-                        if(is(node_hovering, Node_Frame) && key_mod_press(CTRL)) { // Select Everything in Frame
+                        if(is(node_hovering, Node_Frame) && key_mod_press(KCONTROL)) { // Select Everything in Frame
                         	nodes_selecting = [ node_hovering ];
                         	array_append(nodes_selecting, node_hovering.__nodes);
                         }
@@ -2262,7 +2262,7 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
                 nodes_select_anchor = _anc;
             
             	// Context Menu
-	            if(mouse_rpress(_focus) && !key_mod_press(CTRL) && !key_mod_press(SHIFT)) {
+	            if(mouse_rpress(_focus) && !key_mod_press(KCONTROL) && !key_mod_press(SHIFT)) {
 	                node_hover = node_hovering;    
 	                __junction_hovering = noone;
 	                
@@ -2663,8 +2663,8 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
             var shx = nodes_junction_dx + (mx - nodes_select_mx) / graph_s;
             var shy = nodes_junction_dy + (my - nodes_select_my) / graph_s;
             
-            shx = value_snap(shx, key_mod_press(CTRL)? 1 : 4);
-            shy = value_snap(shy, key_mod_press(CTRL)? 1 : 4);
+            shx = value_snap(shx, key_mod_press(KCONTROL)? 1 : 4);
+            shy = value_snap(shy, key_mod_press(KCONTROL)? 1 : 4);
             
             nodes_junction_d.draw_line_shift_x = shx;
             nodes_junction_d.draw_line_shift_y = shy;
@@ -2854,7 +2854,7 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
             if(value_focus && value_focus != value_dragging)
                 target = value_focus;
                 
-            else if(!key_mod_press(CTRL) && node_hovering != noone) {
+            else if(!key_mod_press(KCONTROL) && node_hovering != noone) {
                 if(value_dragging.connect_type == CONNECT_TYPE.input) {
                     target = node_hovering.getOutput(my, value_dragging);
                     if(target != noone) node_hovering.drawActive(1);
@@ -2918,7 +2918,7 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
             }
             
             if(value_dragging.connect_type == CONNECT_TYPE.output) {
-                if(key_mod_press(CTRL)) { // detach output
+                if(key_mod_press(KCONTROL)) { // detach output
                     var _to = value_dragging.getJunctionTo();
                     
                     if(array_length(_to)) {
@@ -2959,7 +2959,7 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
             } 
             
             if(value_dragging.connect_type == CONNECT_TYPE.input) {
-                if(key_mod_press(CTRL) && value_dragging.value_from) {
+                if(key_mod_press(KCONTROL) && value_dragging.value_from) {
                     value_drag_from = value_dragging;
                     
                     var fr = value_dragging.value_from;

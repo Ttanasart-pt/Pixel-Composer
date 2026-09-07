@@ -2955,7 +2955,7 @@ function Panel_Steam_Workshop(_contentPage = 0, _page = 0) : PanelContent() cons
 			sc_filter.setFocusHover(pFOCUS, pHOVER);
 			sc_filter.drawOffset(padding, py + ui(8), mx, my);
 			
-			if(pHOVER && key_mod_press(CTRL) && MOUSE_WHEEL != 0) {
+			if(pHOVER && key_mod_press(KCONTROL) && MOUSE_WHEEL != 0) {
 				if(MOUSE_WHEEL > 0) grid_size_to = clamp(grid_size_to + ui(8), ui(32), ui(240));
 				if(MOUSE_WHEEL < 0) grid_size_to = clamp(grid_size_to - ui(8), ui(32), ui(240));
 			}

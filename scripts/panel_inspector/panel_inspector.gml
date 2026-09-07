@@ -1223,7 +1223,7 @@ function Panel_Inspector() : PanelContent() constructor {
 		                	if(pFOCUS) {
 								if(DOUBLE_CLICK && !subk) _cAll = jun[@ 1]? -1 : 1;
 								else if(mouse_lpress()) { 
-									if(key_mod_press(CTRL)) {
+									if(key_mod_press(KCONTROL)) {
 										_cAll = jun[@ 1]? 1 : -1;
 										
 									} else {

@@ -64,7 +64,7 @@ function preview_overlay_gradient_range(interact, active, _x, _y, _s, _mx, _my, 
 		var _nx = PANEL_PREVIEW.snapX((drag_sx + (_mx - drag_mx) - _x) / _s);
 		var _ny = PANEL_PREVIEW.snapY((drag_sy + (_my - drag_my) - _y) / _s);
 		
-		if(key_mod_press(CTRL)) {
+		if(key_mod_press(KCONTROL)) {
 			_nx = round(_nx);
 			_ny = round(_ny);
 		}

@@ -229,7 +229,7 @@ function canvas_tool_brush(_eraser = false, _toolAttr = undefined) : canvas_tool
 		var shiftLine = key_mod_press(SHIFT) && !mouse_rclick();
 		
 		if(mouse_pre_draw_x != undefined && mouse_pre_draw_y != undefined && shiftLine) {
-			if(key_mod_press(CTRL)) {
+			if(key_mod_press(KCONTROL)) {
 				var _dx = mouse_cur_x - mouse_pre_draw_x;
 				var _dy = mouse_cur_y - mouse_pre_draw_y;
 				

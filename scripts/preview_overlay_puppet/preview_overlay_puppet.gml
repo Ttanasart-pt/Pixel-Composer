@@ -108,7 +108,7 @@ function preview_overlay_puppet(hover, active, _x, _y, _s, _mx, _my) {
 			break;
 	}
 		
-	var _rnd = key_mod_press(CTRL);
+	var _rnd = key_mod_press(KCONTROL);
 	
 	switch(drag_type) {
 		case 1 : 

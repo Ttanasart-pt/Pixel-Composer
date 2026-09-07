@@ -137,8 +137,8 @@ function rotatorRange(_onModify) : widget() constructor {
 			hover = false;
 			
 			var _dt = (_m[0] - rangeDrag_mx) / w * 180;
-			var _vx = value_snap(rangeDrag_ss[0] + _dt, key_mod_press(CTRL)? 15 : 1);
-			var _vy = value_snap(rangeDrag_ss[1] + _dt, key_mod_press(CTRL)? 15 : 1);
+			var _vx = value_snap(rangeDrag_ss[0] + _dt, key_mod_press(KCONTROL)? 15 : 1);
+			var _vy = value_snap(rangeDrag_ss[1] + _dt, key_mod_press(KCONTROL)? 15 : 1);
 			
 			var u0 = onModify(_vx, 0); 
 			var u1 = onModify(_vy, 1); 

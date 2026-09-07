@@ -229,7 +229,7 @@ function Node_MK_IsoCube(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 				if((corner_dragging & 1 << i) == 0) continue;
 				
 				_dd[i] = corner_drag_sv[i] + _dy;
-				if(key_mod_press(CTRL)) _dd[i] = round(_dd[i]);
+				if(key_mod_press(KCONTROL)) _dd[i] = round(_dd[i]);
 			}
 			
 			if(inputs[2].setValue(_dd)) UNDO_HOLDING = true;

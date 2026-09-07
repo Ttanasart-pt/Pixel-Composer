@@ -2577,7 +2577,7 @@ function Panel_Preference() : PanelContent() constructor {
         		    [ [ 3, c_control ], [ 4, c_shift ], [ 5, c_alt ] ], 
     		    ];
         		
-        		var _cur_mod  = MOD_KEY.ctrl  * key_mod_press(CTRL)
+        		var _cur_mod  = MOD_KEY.ctrl  * key_mod_press(KCONTROL)
         		              + MOD_KEY.shift * key_mod_press(SHIFT)
         		              + MOD_KEY.alt   * key_mod_press(ALT)
         		
