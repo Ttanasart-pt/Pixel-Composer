@@ -334,8 +334,8 @@
 			if(anchor & ANCHOR.bottom) dialog_y = max(ystart - dialog_h, 0);
 		}
 		
-		dialog_x = round(clamp(dialog_x, 2, WIN_SW - dialog_w - 2));
-		dialog_y = round(clamp(dialog_y, 2, WIN_SH - dialog_h - 2));
+		dialog_x = round(clamp(dialog_x, ui(8), WIN_SW - dialog_w - ui(8)));
+		dialog_y = round(clamp(dialog_y, ui(8), WIN_SH - dialog_h - ui(8)));
 		if(onResetPosition != undefined) onResetPosition();
 		
 		if(MULTI_WINDOWS) {

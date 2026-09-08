@@ -5,8 +5,8 @@ event_inherited();
 	dialog_resizable = true;
 	dialog_w_min = ui(320);
 	dialog_h_min = ui(320);
-	dialog_w_max = min(ui(960), WIN_W - ui(32));
-	dialog_h_max = min(ui(800), WIN_H - ui(32));
+	dialog_w_max = WIN_W - ui(32);
+	dialog_h_max = WIN_H - ui(32);
 	
 	onResize = function() {
 		PREFERENCES.dialog_add_node_width  = dialog_w;

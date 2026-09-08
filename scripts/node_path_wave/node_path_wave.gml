@@ -18,9 +18,9 @@ function Node_Path_Wave(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	newInput(18, nodeValue_Bool(  "Loop",        false ));
 	
 	////- =Wave
-	newInput( 1, nodeValue_Range( "Frequency", [4,4], { linked : true }));
-	newInput( 2, nodeValue_Range( "Amplitude", [4,4], { linked : true })).setCurvable(9).addShift(17);
-	newInput( 3, nodeValue_Range( "Phase",     [0,0], { linked : true }));
+	newInput( 1, nodeValue_Range( "Frequency", [4,4], true ));
+	newInput( 2, nodeValue_Range( "Amplitude", [4,4], true )).setCurvable(9).addShift(17);
+	newInput( 3, nodeValue_Range( "Phase",     [0,0], true ));
 	
 	newInput( 4, nodeValue_EButton( "Mode",    0, [ "Zigzag", "Sine", "Square" ]  ));
 	newInput(10, nodeValue_EButton( "Post Fn", 0, [ "None", "Absolute", "Clamp" ] ));
@@ -35,15 +35,21 @@ function Node_Path_Wave(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	newInput( 6, nodeValue_Bool(  "Wiggle",           false  ));
 	newInput( 7, nodeValue_Range( "Wiggle Amplitude", [-2,2] ));
 	newInput( 8, nodeValue_Float( "Wiggle Frequency",  8     ));
-	// 19
+	
+	////- =Weight
+	newInput(19, nodeValue_Bool(    "Use Weight",  false ));
+	newInput(20, nodeValue_EScroll( "Weight Mode", 0, [ "Replace", "Additive", "Multiplicative" ] ));
+	newInput(21, nodeValue_Range(   "Range",       [0,1] ));
+	// 22
 	
 	newOutput(0, nodeValue_Output("Path", VALUE_TYPE.pathnode, noone));
 	
 	input_display_list = [ 5, 
-		[ "Path",       true    ],  0, 11, 12, 18,  
-		[ "Wave",      false    ],  1,  [2, true],  9, 17, -1,  3,  4, 10, 
-		[ "Iterative", false    ], 13, 14, 15, 16, 
-		[ "Wiggle",     true, 6 ],  7,  8, 
+		[ "Path",       true     ],  0, 11, 12, 18,  
+		[ "Wave",      false     ],  1,  [2, true],  9, 17, -1,  3,  4, 10, 
+		[ "Iterative", false     ], 13, 14, 15, 16, 
+		[ "Wiggle",     true,  6 ],  7,  8, 
+		[ "Weight",     true, 19 ], 20, 21, 
 	];
 	
 	////- Node
@@ -72,6 +78,10 @@ function Node_Path_Wave(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		wig_map   = noone;
 		amp_curve = noone;
 		ampS      = 0;
+		
+		wei    = false;
+		weiMod = 0;
+		weiRng = [0,1];
 		
 		p  = new __vec2P();
 		p0 = new __vec2P();
@@ -217,6 +227,16 @@ function Node_Path_Wave(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			out.y = p.y + lengthdir_y(_amp * _prg, dir);
 			out.weight = p.weight;
 			
+			if(wei) {
+				var weiVal = lerp(weiRng[0], weiRng[1], _prg);
+				
+				switch(weiMod) {
+					case 0 : out.weight  = weiVal; break;
+					case 1 : out.weight += weiVal; break;
+					case 2 : out.weight *= weiVal; break;
+				}
+			}
+			
 			cached_pos[$ _cKey] = new __vec2P(out.x, out.y, out.weight);
 			
 			return out;
@@ -257,6 +277,10 @@ function Node_Path_Wave(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		_outData.itrFre = _data[14];
 		_outData.itrAmp = _data[15];
 		_outData.itrShf = _data[16];
+		
+		_outData.wei    = _data[19];
+		_outData.weiMod = _data[20];
+		_outData.weiRng = _data[21];
 		
 		return _outData;
 	}

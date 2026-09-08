@@ -616,7 +616,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		if(attributes.show_update_trigger) {
 			if(updatedInTrigger.getValue()) { 
 				getInputs();
-				update();
+				update(); 
 				updatedInTrigger.setValue(false);
 			}
 			updatedOutTrigger.setValue(false);

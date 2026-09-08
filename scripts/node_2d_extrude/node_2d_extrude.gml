@@ -179,7 +179,7 @@ function Node_2D_Extrude(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	    temp_surface[0] = surface_verify(temp_surface[0], _dim[0], _dim[1], surface_rgba16float);
 	    
 	    surface_set_shader(temp_surface[0], sh_2d_extrude);
-	        shader_set_2( "dimension",  _dim     );
+	        shader_set_2( "dimension",  _dim      );
 	        shader_set_s( "mask",       _mask     );
 	        shader_set_i( "useMask",    _use_mask );
 	        
@@ -201,7 +201,7 @@ function Node_2D_Extrude(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	    surface_reset_shader();
 	    
 	    surface_set_shader(_outData, sh_2d_extrude_apply);
-	    	shader_set_2( "dimension",    _dim           );
+	    	shader_set_2( "dimension",    _dim            );
 	    	shader_set_s( "extrudeMap",   temp_surface[0] );
 	    	shader_set_s( "mask",         _mask           );
 	        shader_set_i( "useMask",      _use_mask       );

@@ -84,7 +84,8 @@ event_inherited();
 			var thmb = _thumb? _dat.getThumbnail() : noone;
 			var _hov = hover && point_in_rectangle(_m[0], _m[1], xx, yy, xx + ww, yy + hg);
 			
-			draw_sprite_stretched(THEME.ui_panel_bg, 1, xx, yy, ww, hg);
+			draw_sprite_stretched(THEME.ui_panel_bg, 3, xx, yy, ww, hg);
+			
 			if(thmb) {
 				var sw = surface_get_width_safe(thmb);
 				var sh = surface_get_height_safe(thmb);
@@ -92,8 +93,13 @@ event_inherited();
 				var ss = (ww - ui(8)) / sw;
 				var sy = (((sh * ss) - hg) * clamp((yy + hg) / (sph + hg), 0, 1)) / ss;
 				
-				draw_surface_part_ext(thmb, 0, sy, sw, (hg - ui(8)) / ss, xx + ui(4), yy + ui(4), ss, ss, COLORS._main_icon_light, 0.9);
-				draw_sprite_stretched_ext(THEME.fade_up, 0, xx + ui(4), yy + hg - ui(64), ww - ui(8), ui(64), COLORS._main_icon_dark, 1);
+				var fdx = xx + ui(4);
+				var fdy = yy + ui(4);
+				var fdw = ww - ui(8);
+				var fdh = ui(64);
+				
+				draw_surface_part_ext(thmb, 0, sy, sw, (hg - ui(8)) / ss, fdx, fdy, ss, ss, COLORS._main_icon_light, 0.9);
+				draw_sprite_stretched_ext(THEME.fade_up, 0, fdx, yy + 1 - ui(4) + hg - fdh, fdw, fdh, COLORS._main_icon_dark, 1);
 			}
 		
 			if(_hov) {

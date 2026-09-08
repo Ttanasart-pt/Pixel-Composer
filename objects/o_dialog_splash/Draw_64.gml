@@ -46,11 +46,12 @@ DIALOG_DRAW_BG
 	var y0 = _dialog_y + ui(128);
 	var y1 = _dialog_y + dialog_h - ui(16);
 	
+	draw_sprite_stretched_ext(THEME.ui_panel_bg, 1, x0, y0, x1 - x0, y1 - y0);
 	sp_recent.setFocusHover(sFOCUS, sHOVER);
 	sp_recent.rx = x0 + ui(6);
 	sp_recent.ry = y0;
 	sp_recent.draw(x0 + ui(6), y0);
-	draw_sprite_stretched_ext(THEME.ui_panel, 1, x0, y0, x1 - x0, y1 - y0, COLORS.panel_frame);
+	// draw_sprite_stretched_ext(THEME.ui_panel,    1, x0, y0, x1 - x0, y1 - y0, COLORS.panel_frame);
 	
 	var bs  = ui(28);
 	var bx  = x1 - bs;
@@ -219,8 +220,9 @@ DIALOG_DRAW_BG
 		bx += tabW + ppad;
 	}
 	
-	draw_sprite_stretched(THEME.ui_panel_bg, 0, x0, y0, x1 - x0, y1 - y0);
-	draw_sprite_stretched_ext(THEME.ui_panel, 1, x0, y0, x1 - x0, y1 - y0, COLORS.panel_frame);
+	// draw_sprite_stretched(THEME.ui_panel_bg, 0, x0, y0, x1 - x0, y1 - y0);
+	// draw_sprite_stretched_ext(THEME.ui_panel, 1, x0, y0, x1 - x0, y1 - y0, COLORS.panel_frame);
+	draw_sprite_stretched(THEME.ui_panel_bg, 1, x0, y0, x1 - x0, y1 - y0);
 	
 	var leftX = bx;
 	var bs = ui(32);

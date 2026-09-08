@@ -70,7 +70,7 @@ function Node_Path_Revolve(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	////- Node
 	
 	attribute_surface_depth();
-	attribute_interpolation();
+	attribute_interpolation(false, true);
 	
 	temp_surface = [ noone, noone, noone, noone ];
 	
