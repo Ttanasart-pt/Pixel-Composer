@@ -16,6 +16,7 @@ function Node_Ribbon(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	
 	////- =Ribbon
 	newInput( 4, nodeValue_Float(    "Size",       8 )).setHotkey("S").setCurvable(8, CURVE_DEF_01);
+	newInput(20, nodeValue_Slider(   "Position",   0, [-1,1,.01] ));
 	newInput( 5, nodeValue_Rotation( "Direction", 90 ));
 	newInput(15, nodeValue_Float(    "Thickness",  0 ));
 	
@@ -27,14 +28,14 @@ function Node_Ribbon(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	newInput(16, nodeValue_Rotation( "Texture Rotation",   0        ));
 	newInput(14, nodeValue_Vec2(     "Texture Scale",     [1,1]     ));
 	newInput( 9, nodeValue_Bool(     "Shade Side",        false     ));
-	// 20
+	// 21
 	
 	newOutput( 0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone ));
 	
 	input_display_list = [  0, 
 		[ "Output", false ],  1, 
 		[ "Path",   false ],  2, 17, 11,  3, 10, 
-		[ "Ribbon", false ],  4,  8, 15,  5, 
+		[ "Ribbon", false ],  4,  8, 20,  5, 15, 
 		[ "Render", false ], [6, true], 18, [7, true], 19, -1, 12, 13, 16, 14,  9, 
 	];
 	
@@ -71,6 +72,7 @@ function Node_Ribbon(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 			
 			var _size    = _data[ 4];
 			var _sizeLen = _data[ 8], _sizeLenUse = inputs[4].attributes.curved;
+			var _offs    = _data[20];
 			var _dirc    = _data[ 5];
 			var _thck    = _data[15];
 			
@@ -148,11 +150,15 @@ function Node_Ribbon(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 				ndy = lengthdir_y(nw, _dirc);
 				
 				if(i) {
-					var ox0 = ox - odx, oy0 = oy - ody;
-					var ox1 = ox + odx, oy1 = oy + ody;
+					var ox0 = ox  - odx + odx * _offs;
+					var oy0 = oy  - ody + ody * _offs;
+					var ox1 = ox0 + odx * 2;
+					var oy1 = oy0 + ody * 2;
 					
-					var nx0 = nx - ndx, ny0 = ny - ndy;
-					var nx1 = nx + ndx, ny1 = ny + ndy;
+					var nx0 = nx  - ndx + ndx * _offs;
+					var ny0 = ny  - ndy + ndy * _offs;
+					var nx1 = nx0 + ndx * 2;
+					var ny1 = ny0 + ndy * 2;
 					
 					if(!_useThick) {
 						shader_set_i( "passes", 0 );

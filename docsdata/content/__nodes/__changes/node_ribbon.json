@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.9.207",
+    "changes": [
+      {
+        "date": "2026-09-08T07:48:39.603Z",
+        "node": "Draw Ribbon",
+        "commit": "**Draw Ribbon**: Add ribbon position control."
+      }
+    ]
+  },
+  {
     "version": "1.21.7.104",
     "changes": [
       {
