@@ -417,7 +417,7 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	
 	output_display_list = [ 1, 0, 2, 3 ];
 	
-	setDynamicInput(1, true, VALUE_TYPE.float);
+	setDynamicInput(1, true, VALUE_TYPE.float, DYNA_INPUT_COND.none);
 	
 	////- Nodes
 	
