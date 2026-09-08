@@ -5,8 +5,9 @@ function Node_Path_Map(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	newInput( 1, nodeValue_Dimension());
 	
 	////- =Mapping
-	newInput( 3, nodeValue_Int( "Path Subdivision",  16     )).setValidator(VV_min(2)).rejectArray();
-	newInput(13, nodeValue_Int( "Line Subdivision",  1      )).rejectArray();
+	newInput( 3, nodeValue_Int(   "Path Subdivision",  16     )).setValidator(VV_min(2)).rejectArray();
+	newInput(13, nodeValue_Int(   "Line Subdivision",  1      )).rejectArray();
+	newInput(23, nodeValue_Curve( "Path Interpolation", CURVE_DEF_01 )).rejectArray();
 	
 	////- =Transform
 	newInput( 8, nodeValue_Vec2(     "Position",    [0,0]   )).setUnitSimple();
@@ -33,13 +34,13 @@ function Node_Path_Map(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	newInput( 4, nodeValue_Slider(   "Shift",        0      ));
 	newInput( 5, nodeValue_Bool(     "Invert",       false  ));
 	newInput( 0, nodeValue_Path(     "Path"                 )).rejectArray();
-	// 23
+	// 24
 		
 	newOutput(0, nodeValue_Output("Rendered", VALUE_TYPE.surface, noone));
 	
 	input_display_list = [ 
 		[ "Output",    false     ],  1, 
-		[ "Mapping",   false     ],  3, 13, 
+		[ "Mapping",   false     ],  3, 13, 23, 
 		[ "Transform", false     ],  8,  9, 10, 11, 
 		[ "Wave",       true, 14 ], 15, 18, 16, 19, 17, 20, 21, 
 		[ "Rendering", false     ], 22,  2,  7,  6, 
@@ -76,6 +77,7 @@ function Node_Path_Map(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 			
 			var _sub   = _data[ 3];
 			var _reso  = _data[13];
+			var _intp  = _data[23], _intpCurve = new curveMap(_intp);
 			
 		    var _pos   = _data[ 8];
 		    var _anc   = _data[ 9];
@@ -189,10 +191,16 @@ function Node_Path_Map(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 					var p2x = p2[0], p2y = p2[1];
 					var p3x = p3[0], p3y = p3[1];
 					
-					var p0u = (j + 0) / (_sub - 1), p0v = (i + 0) / (_lines - 1);
-					var p1u = (j + 0) / (_sub - 1), p1v = (i + 1) / (_lines - 1);
-					var p2u = (j + 1) / (_sub - 1), p2v = (i + 0) / (_lines - 1);
-					var p3u = (j + 1) / (_sub - 1), p3v = (i + 1) / (_lines - 1);
+					var j0 = (j + 0) / (_sub - 1);
+					var j1 = (j + 1) / (_sub - 1);
+					
+					var i0 = (i + 0) / (_lines - 1);
+					var i1 = (i + 1) / (_lines - 1);
+					
+					var p0u = j0, p0v = i0;
+					var p1u = j0, p1v = i1;
+					var p2u = j1, p2v = i0;
+					var p3u = j1, p3v = i1;
 					
 					if(_reso <= 1) {
 						draw_vertex_texture(p0x, p0y, p0u, p0v);
@@ -217,6 +225,12 @@ function Node_Path_Map(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 							var k0 = (k + 0) * _resoI;
 							var k1 = (k + 1) * _resoI;
 							
+							var kk0 = (i + k0) / (_lines - 1);
+							var kk1 = (i + k1) / (_lines - 1);
+							
+							// var in0 = _intpCurve.get(kk0);
+							// var in1 = _intpCurve.get(kk1);
+							
 							var p01x = lerp(p0x, p1x, k0);
 							var p01y = lerp(p0y, p1y, k0);
 							
@@ -230,7 +244,6 @@ function Node_Path_Map(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 							var p32y = lerp(p2y, p3y, k1);
 							
 							if(_wave) {
-								var  kk0   = (i + k0) / (_lines - 1);
 								var _wcAmp = _wAmp * (_wAmpCurve? _wAmpCurve.get(kk0) : 1);
 								var _wcFre = _wFre * (_wFreCurve? _wFreCurve.get(kk0) : 1);
 								
@@ -241,7 +254,6 @@ function Node_Path_Map(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 								p23x += lengthdir_x(waveL, _dir23);
 								p23y += lengthdir_y(waveL, _dir23);
 								
-								var  kk1   = (i + k1) / (_lines - 1);
 								var _wcAmp = _wAmp * (_wAmpCurve? _wAmpCurve.get(kk1) : 1);
 								var _wcFre = _wFre * (_wFreCurve? _wFreCurve.get(kk1) : 1);
 								

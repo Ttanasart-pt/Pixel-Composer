@@ -6,6 +6,11 @@
         "date": "2026-09-08T01:19:22.475Z",
         "node": "",
         "commit": "**Wave Path**: Add option to apply wave to path weight."
+      },
+      {
+        "date": "2026-09-08T02:14:02.612Z",
+        "node": "",
+        "commit": "**Wave Path**: Add fixed direction type."
       }
     ]
   },

@@ -18,9 +18,11 @@ function Node_Path_Wave(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	newInput(18, nodeValue_Bool(  "Loop",        false ));
 	
 	////- =Wave
-	newInput( 1, nodeValue_Range( "Frequency", [4,4], true ));
-	newInput( 2, nodeValue_Range( "Amplitude", [4,4], true )).setCurvable(9).addShift(17);
-	newInput( 3, nodeValue_Range( "Phase",     [0,0], true ));
+	newInput( 1, nodeValue_Range(    "Frequency",   [4,4], true ));
+	newInput( 2, nodeValue_Range(    "Amplitude",   [4,4], true )).setCurvable(9).addShift(17);
+	newInput( 3, nodeValue_Range(    "Phase",       [0,0], true ));
+	newInput(22, nodeValue_EButton(  "Direction",    0, [ "Path Normal", "Fixed" ] ));
+	newInput(23, nodeValue_Range(    "Angle",       [0,0], true )).setCurvable(24);
 	
 	newInput( 4, nodeValue_EButton( "Mode",    0, [ "Zigzag", "Sine", "Square" ]  ));
 	newInput(10, nodeValue_EButton( "Post Fn", 0, [ "None", "Absolute", "Clamp" ] ));
@@ -40,13 +42,13 @@ function Node_Path_Wave(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	newInput(19, nodeValue_Bool(    "Use Weight",  false ));
 	newInput(20, nodeValue_EScroll( "Weight Mode", 0, [ "Replace", "Additive", "Multiplicative" ] ));
 	newInput(21, nodeValue_Range(   "Range",       [0,1] ));
-	// 22
+	// 24
 	
 	newOutput(0, nodeValue_Output("Path", VALUE_TYPE.pathnode, noone));
 	
 	input_display_list = [ 5, 
 		[ "Path",       true     ],  0, 11, 12, 18,  
-		[ "Wave",      false     ],  1,  [2, true],  9, 17, -1,  3,  4, 10, 
+		[ "Wave",      false     ],  1,  [2, true],  9, 17, -1,  3, 22, 23, 24,  4, 10, 
 		[ "Iterative", false     ], 13, 14, 15, 16, 
 		[ "Wiggle",     true,  6 ],  7,  8, 
 		[ "Weight",     true, 19 ], 20, 21, 
@@ -66,6 +68,10 @@ function Node_Path_Wave(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		mode = 0;
 		post = 0;
 		
+		dirType  = 0;
+		dirRange = [0,0];
+		dirCurve = undefined;
+
 		itr    = 1;
 		itrFre = 2;
 		itrAmp = .7;
@@ -169,20 +175,38 @@ function Node_Path_Wave(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			var _wigs = wigs;
 			var _wigf = wigf;
 			
-			if(loop) {
-				p0 = _path.getPointRatio( pfract(_rat - .01), ind, p0 );
-				p  = _path.getPointRatio( pfract(_rat      ), ind, p  );
-				p1 = _path.getPointRatio( pfract(_rat + .01), ind, p1 );
-				
-			} else {
-				_rat = clamp(_rat, 0., 0.99);
-				p0 = _path.getPointRatio( clamp(_rat - .01, 0, .99), ind, p0 );
-				p  = _path.getPointRatio( clamp(_rat      , 0, .99), ind, p  );
-				p1 = _path.getPointRatio( clamp(_rat + .01, 0, .99), ind, p1 );
-				
+			switch(dirType) {
+				case 0 :
+					if(loop) {
+						p0 = _path.getPointRatio( pfract(_rat - .01), ind, p0 );
+						p  = _path.getPointRatio( pfract(_rat      ), ind, p  );
+						p1 = _path.getPointRatio( pfract(_rat + .01), ind, p1 );
+						
+					} else {
+						_rat = clamp(_rat, 0., 0.99);
+						p0 = _path.getPointRatio( clamp(_rat - .01, 0, .99), ind, p0 );
+						p  = _path.getPointRatio( clamp(_rat      , 0, .99), ind, p  );
+						p1 = _path.getPointRatio( clamp(_rat + .01, 0, .99), ind, p1 );
+						
+					}
+					
+					dir = point_direction(p0.x, p0.y, p1.x, p1.y) + 90;
+					break;
+					
+				case 1 : 
+					if(loop) {
+						p = _path.getPointRatio( pfract(_rat), ind, p );
+						
+					} else {
+						_rat = clamp(_rat, 0., 0.99);
+						p = _path.getPointRatio( clamp(_rat, 0, .99), ind, p );
+						
+					}
+					
+					var t = dirCurve? dirCurve.get(_rat) : _rat;
+					dir = lerp(dirRange[0], dirRange[1], t);
+					break;
 			}
-			
-			dir = point_direction(p0.x, p0.y, p1.x, p1.y) + 90;
 			
 			_amp = random_range_seed(_amp[0], _amp[1], _seed + ind);
 			_shf = random_range_seed(_shf[0], _shf[1], _seed + ind + 1);
@@ -251,6 +275,14 @@ function Node_Path_Wave(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	}
 	
 	static processData = function(_outData, _data, _array_index = 0) { 
+		#region data
+			var _dirType  = _data[22];
+			var _dirRange = _data[23];
+			var _dirCurve = inputs[23].attributes.curved? new curveMap(_data[24]) : undefined;
+			
+			inputs[23].setVisible(_dirType == 1);
+		#endregion
+		
 		if(!is(_outData, _wavePath)) 
 			_outData = new _wavePath(self);
 		
@@ -265,6 +297,10 @@ function Node_Path_Wave(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		_outData.amp  = _data[ 2]; _outData.amp_curve = new curveMap(_data[9], 128);
 		_outData.ampS = _data[17];
 		_outData.shf  = _data[ 3];
+		
+		_outData.dirType  = _dirType;
+		_outData.dirRange = _dirRange;
+		_outData.dirCurve = _dirCurve;
 		
 		_outData.mode = _data[ 4];
 		_outData.post = _data[10];
