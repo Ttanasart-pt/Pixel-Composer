@@ -11,6 +11,11 @@
         "date": "2026-09-08T02:14:02.612Z",
         "node": "",
         "commit": "**Wave Path**: Add fixed direction type."
+      },
+      {
+        "date": "2026-09-08T06:46:48.582Z",
+        "node": "",
+        "commit": "All node with uv input now apply uv alpha to the output."
       }
     ]
   },

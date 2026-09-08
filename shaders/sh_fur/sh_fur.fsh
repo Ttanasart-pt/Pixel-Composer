@@ -213,8 +213,9 @@ void main() {
 	vec2  tx  = 1. / dimension;
     vec2  pos = position / dimension;
     float rot = radians(rotation);
+    float uva = 1.;
 	vec2  vtx = (v_vTexcoord - pos) * mat2(cos(rot), -sin(rot), sin(rot), cos(rot)) * scale;
-          vtx = getUV(fract(vtx));
+          vtx = getUVA(fract(vtx), uva);
 
     vec2  denTx   = vec2(density);
 	vec2  furRoot = floor(vtx * denTx) / denTx;
@@ -268,4 +269,5 @@ void main() {
     }
 
 	gl_FragColor = vec4(fur, 1.) * v_vColour;
+	gl_FragColor.a *= uva;
 }

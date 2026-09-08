@@ -129,15 +129,17 @@ void main() {
 		}
 	#endregion
 	
-	float r     = radians(trRotation);
-	vec2 vtx    = getUV(v_vTexcoord);
-	vec2 pos    = vtx;
-	     pos.x *= (dimension.x / dimension.y);
-         pos    = (pos - position / dimension) * mat2(cos(r), -sin(r), sin(r), cos(r)) * scale;
+	float r      = radians(trRotation);
+	float uva    = 1.;
+	vec2  vtx    = getUVA(v_vTexcoord, uva);
+	vec2  pos    = vtx;
+	      pos.x *= (dimension.x / dimension.y);
+          pos    = (pos - position / dimension) * mat2(cos(r), -sin(r), sin(r), cos(r)) * scale;
     
 	float f  = gabor_wave(pos).x;
 	      f  = applyLevel(f);
 	vec3 col = vec3(0.5 + 0.5 * f);
 	
     gl_FragColor = vec4( col, 1.0 ) * v_vColour;
+    gl_FragColor.a *= uva;
 }

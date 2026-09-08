@@ -162,9 +162,10 @@ void main() {
 		float ang = rotation;
 	#endregion
 	
-	vec2 vtx = getUV(v_vTexcoord);
-	vec2 ntx = vtx * vec2(1., dimension.y / dimension.x);
-	vec2 pos = position / dimension;
+	float uva = 1.;
+	vec2  vtx = getUVA(v_vTexcoord, uva);
+	vec2  ntx = vtx * vec2(1., dimension.y / dimension.x);
+	vec2  pos = position / dimension;
     
     float _seed = mod(seed, 100000.);
     float amp = pow(1. / iterAmpli, float(iteration) - 1.) / (pow(1. / iterAmpli, float(iteration)) - 1.);
@@ -189,4 +190,5 @@ void main() {
 	if(inverted == 1) c = 1. - c;
 	
     gl_FragColor = vec4(vec3(c), 1.0) * v_vColour;
+    gl_FragColor.a *= uva;
 }

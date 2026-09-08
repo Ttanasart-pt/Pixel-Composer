@@ -71,7 +71,8 @@ float sampleHeight(vec2 uv) { return texture2D( gm_BaseTexture, uv ).x; }
 
 void main() {
 	vec2  tx  = 1. / dimension;
-	vec2  vtx = getUV(v_vTexcoord);
+	float uva = 1.;
+	vec2  vtx = getUVA(v_vTexcoord, uva);
 	vec2  ntx = vtx * vec2(1., dimension.y / dimension.x);
 	float ang = radians(rotation);
     vec2  pos = (ntx - position / dimension) * mat2(cos(ang), -sin(ang), sin(ang), cos(ang)) * scale;
@@ -127,4 +128,6 @@ void main() {
 		gl_FragColor = vec4(max(base.rgb, vec3(rid)), 1.) * v_vColour;
 		
 	}
+	
+	gl_FragColor.a *= uva;
 }

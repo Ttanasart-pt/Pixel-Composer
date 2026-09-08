@@ -37,9 +37,10 @@ uniform float down;
 uniform vec2  dimension;
 
 void main() {
-	vec2 vtx  = getUV(v_vTexcoord);
-	vec4 col  = vec4(0.);
-	vec2 tx   = 1. / dimension;
+	float uva = 1.;
+	vec2  vtx = getUVA(v_vTexcoord, uva);
+	vec4  col = vec4(0.);
+	vec2  tx  = 1. / dimension;
 	float wei = 0.;
 	
 	for( float i = 0.; i < down; i++ ) 
@@ -54,4 +55,5 @@ void main() {
 	col.a = alph;
 	
     gl_FragColor = col * v_vColour;
+	gl_FragColor.a *= uva;
 }

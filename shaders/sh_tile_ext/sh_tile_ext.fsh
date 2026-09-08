@@ -1,5 +1,5 @@
 #pragma use(sampler_simple)
-#region -- sampler_simple -- [1765194569.6586206]
+#region -- sampler_simple -- [1788846732.6884737]
     uniform int  sampleMode;
     
     uniform sampler2D uvMap;
@@ -15,6 +15,20 @@
         return tx;
     }
 
+    vec2 getUVA(in vec2 uv, out float alpha) {
+        if(useUvMap == 0) {
+            alpha = 1.0;
+            return uv;
+        }
+
+        vec4 samUV = texture2D( uvMap, uv );
+        vec2 vuv = vec2(samUV.x, 1. - samUV.y);
+        alpha    = samUV.a;
+
+        vec2 vtx = mix(uv, vuv, uvMapMix);
+        return vtx;
+    }
+    
     vec4 sampleTexture( sampler2D texture, vec2 pos, float mapBlend) {
         if(useUvMap == 1) {
             vec2 map = texture2D(uvMap, pos).xy;
@@ -63,10 +77,11 @@ uniform float shiftAlt;
 uniform int   pattern;
 
 void main() {
-	vec2 tx  = getUV(v_vTexcoord) * dimension;
-	     tx -= position;
-	     tx /= scale;
-	     tx *= mat2(cos(rotation), -sin(rotation), sin(rotation), cos(rotation));
+	float uva = 1.;
+	vec2  tx  = getUVA(v_vTexcoord, uva) * dimension;
+	      tx -= position;
+	      tx /= scale;
+	      tx *= mat2(cos(rotation), -sin(rotation), sin(rotation), cos(rotation));
 	
 	vec2 repeatSize = surfDimension + spacing;
 	vec2 tileId     = floor(tx / repeatSize);
@@ -97,6 +112,7 @@ void main() {
 	
 	if(tileTx.x < 0. || tileTx.y < 0. || tileTx.x > 1. || tileTx.y > 1.)
 		 gl_FragColor = vec4(0.);
-		 
 	else gl_FragColor = texture2D(gm_BaseTexture, tileTx) * v_vColour;
+	
+	gl_FragColor.a *= uva;
 }

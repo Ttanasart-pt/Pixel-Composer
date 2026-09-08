@@ -110,7 +110,8 @@ void main() {
 		}
 	#endregion
 	
-	vec2  vtx = getUV(v_vTexcoord);
+	float uva = 1.;
+	vec2  vtx = getUVA(v_vTexcoord, uva);
 	vec2  ntx = vtx * vec2(1., dimension.y / dimension.x);
 	float ang = radians(rotation);
     vec2  pos = (ntx - position / dimension) * mat2(cos(ang), -sin(ang), sin(ang), cos(ang)) * sca / 16.;
@@ -121,4 +122,5 @@ void main() {
           w = applyLevel(w);
 	
     gl_FragColor = vec4(vec3(w), 1.) * v_vColour;
+    gl_FragColor.a *= uva;
 }

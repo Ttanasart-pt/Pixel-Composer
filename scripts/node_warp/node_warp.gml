@@ -342,10 +342,20 @@ function Node_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 				}
 			}
 			
-			drawOverlayInput(inputs[1].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my));
-			drawOverlayInput(inputs[2].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my));
-			drawOverlayInput(inputs[3].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my));
-			drawOverlayInput(inputs[4].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my));
+			for( var i = 1; i <= 4; i++ ) {
+				var _inp = inputs[i];
+				drawOverlayInput(_inp.drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my));
+				
+				if(PANEL_INSPECTOR.prop_hover == _inp || PANEL_ANIMATION.value_hovering == _inp) {
+					var p  = current_data[i];
+					var xx = _x + p[0] * _s;
+					var yy = _y + p[1] * _s;
+					
+					draw_set_text(f_p1, fa_left, fa_bottom, COLORS._main_accent);
+					draw_text(xx + ui(4), yy - ui(4), _inp.name);
+				}
+					
+			}
 		#endregion
 		
 		return w_hovering;
@@ -431,7 +441,7 @@ function Node_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 			
 			case 1 : sw = _dim[0];
 				     sh = _dim[1]; break;
-				
+			
 			case 2 : sw = _sdim[0] * surface_get_width_safe(_surfF);
 				     sh = _sdim[1] * surface_get_height_safe(_surfF); break;
 		}

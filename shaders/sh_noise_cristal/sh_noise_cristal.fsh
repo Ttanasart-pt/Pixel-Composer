@@ -93,14 +93,16 @@ vec3 Oilnoise(in vec2 pos, in vec3 RGB) {
 }
 
 void main() {
-    vec2 vtx = getUV(v_vTexcoord);
-    vec2 ntx = vtx * vec2(1., dimension.y / dimension.x) - position / dimension;
-    vec2 pos = ntx * scale;
-    vec3 col = Oilnoise(pos, color.rgb * gamma);
+    float uva = 1.;
+    vec2  vtx = getUVA(v_vTexcoord, uva);
+    vec2  ntx = vtx * vec2(1., dimension.y / dimension.x) - position / dimension;
+    vec2  pos = ntx * scale;
+    vec3  col = Oilnoise(pos, color.rgb * gamma);
     
     col.r = applyLevel(col.r);
     col.g = applyLevel(col.g);
     col.b = applyLevel(col.b);
     
     gl_FragColor = vec4(col, 1.0) * v_vColour;
+    gl_FragColor.a *= uva;
 }

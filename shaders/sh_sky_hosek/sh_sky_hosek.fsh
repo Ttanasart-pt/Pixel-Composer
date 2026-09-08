@@ -1,5 +1,4 @@
 #pragma use(uv)
-
 #region -- uv -- [1779523757.7465837]
     uniform sampler2D uvMap;
     uniform int   useUvMap;
@@ -426,9 +425,10 @@ void main() {
 	
     init();
     
-    vec2 vtx = getUV(v_vTexcoord);
-    vec2 uv  = (vtx - position / dimension) * scale;
-    vec2 sun = (sunPosition - position) * scale / dimension;
+    float uva = 1.;
+    vec2  vtx = getUVA(v_vTexcoord, uva);
+    vec2  uv  = (vtx - position / dimension) * scale;
+    vec2  sun = (sunPosition - position) * scale / dimension;
     
     uv.y  = 1. - uv.y;
     sun.y = 1. - sun.y;
@@ -444,4 +444,5 @@ void main() {
 	vec3 col = tonemap(RGB, 0.1);
 	
 	gl_FragColor = vec4(col, 1.0) * v_vColour;
+	gl_FragColor.a *= uva;
 }

@@ -1,5 +1,5 @@
 #pragma use(sampler)
-#region -- sampler -- [1780048120.828549]
+#region -- sampler -- [1788846700.1110575]
 	uniform int  interpolation;
 	uniform vec2 sampleDimension;
 	uniform int  sampleMode;
@@ -97,6 +97,20 @@
         return tx;
     }
 
+    vec2 getUVA(in vec2 uv, out float alpha) {
+        if(useUvMap == 0) {
+            alpha = 1.0;
+            return uv;
+        }
+
+        vec4 samUV = texture2D( uvMap, uv );
+        vec2 vuv = vec2(samUV.x, 1. - samUV.y);
+        alpha    = samUV.a;
+
+        vec2 vtx = mix(uv, vuv, uvMapMix);
+        return vtx;
+    }
+	
 	vec4 sampleTexture( sampler2D texture, vec2 pos, float mapBlend) {
         if(useUvMap == 1) {
             vec2 map = texture2D(uvMap, pos).xy;
@@ -359,8 +373,9 @@ void main() {
 		}
 	#endregion
 	
-	vec2 ntx = getUV(v_vTexcoord);
-	vec2 asp = vec2(dimension.x / dimension.y, 1.);
+	float uva = 1.;
+	vec2  ntx = getUVA(v_vTexcoord, uva);
+	vec2  asp = vec2(dimension.x / dimension.y, 1.);
 	
 	sca *= asp;
 	ntx *= asp;
@@ -435,7 +450,7 @@ void main() {
 	gl_FragData[1] = vec4(vec3(h), 1.);
 	
 	if(mode == 2) {
-		gl_FragData[0] = vec4(vec3(h), 1.);
+		gl_FragData[0] = vec4(vec3(h), uva);
 		return;
 	}
 	
@@ -480,4 +495,5 @@ void main() {
 	
 	float _aa = 4. / max(dimension.x, dimension.y);
 	gl_FragData[0] = mix(gapCol, colr, aa == 1? smoothstep(gpp - _aa, gpp, dist) : step(gpp, dist)) * v_vColour;
+	gl_FragData[0].a *= uva;
 }

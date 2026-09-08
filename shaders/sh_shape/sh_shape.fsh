@@ -596,7 +596,8 @@ float sdQuadrilateral( in vec2 p, in vec2 p0, in vec2 p1, in vec2 p2, in vec2 p3
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 void main() {
-	vec2 vtx = getUV(v_vTexcoord);
+	float uva = 1.;
+	vec2  vtx = getUVA(v_vTexcoord, uva);
 	
 	vec2 coordUni = (vtx - center) * mat2(cos(rotation), -sin(rotation), sin(rotation), cos(rotation));
 	vec2 coord    = coordUni / scale;
@@ -690,6 +691,7 @@ void main() {
 		else if(bgBlend == 4) gl_FragData[0] = bgPixel - fgPixel * cc * v_vColour;
 	}
 	
+	gl_FragData[0].a *= uva;
 	if(multiplyAlpha == 1) gl_FragData[0].rgb *= gl_FragData[0].a;
 	
 	gl_FragData[1] = vec4(cc, cc, cc, 1.);

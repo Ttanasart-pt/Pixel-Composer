@@ -92,7 +92,8 @@ uniform int cspace;
 void main() {
 	vec4  distances = vec4(0.);
 	float maxDist   = 0.;
-	vec2  vtx       = getUV(v_vTexcoord);
+	float uva = 1.;
+	vec2  vtx = getUVA(v_vTexcoord, uva);
 	int i;
 	
 	for( i = 0; i < 4; i++ ) {
@@ -132,4 +133,5 @@ void main() {
 	}
 	
 	gl_FragColor = clr * v_vColour;
+	gl_FragColor.a *= uva;
 }

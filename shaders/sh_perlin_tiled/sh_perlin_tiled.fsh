@@ -156,8 +156,9 @@ void main() {
 	#endregion
 	
 	vec2 st;
-	vec2 pos = position / dimension;
-	vec2 vtx = getUV(v_vTexcoord);
+	vec2  pos = position / dimension;
+	float uva = 1.;
+	vec2  vtx = getUVA(v_vTexcoord, uva);
 	
 	if(tile == 1) {
 		sca = floor(sca);
@@ -185,4 +186,6 @@ void main() {
 		
 		gl_FragColor = vec4(hsv2rgb(vec3(randH, randS, randV)), 1.0) * v_vColour;
 	}
+	
+	gl_FragColor.a *= uva;
 }

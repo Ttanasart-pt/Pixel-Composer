@@ -258,7 +258,8 @@ vec3 squareVoronoi( in vec2 x ) { #region // IQ classic voronoi - shadertoy.com/
 #endregion
 
 void main() {
-	vec2  vtx = getUV(v_vTexcoord);
+	float uva = 1.;
+	vec2  vtx = getUVA(v_vTexcoord, uva);
 	vec2  ntx = vtx * vec2(1., dimension.y / dimension.x);
 	
 	tiling = mode == 1 && tile == 1;
@@ -274,4 +275,5 @@ void main() {
 	
 	v = applyLevel(v);
 	gl_FragColor = vec4(vec3(v), 1.0) * v_vColour;
+	gl_FragColor.a *= uva;
 }

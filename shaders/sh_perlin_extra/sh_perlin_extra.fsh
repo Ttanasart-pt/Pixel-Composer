@@ -234,7 +234,8 @@ void main() {
 		}
 	#endregion
 	
-	vec2  vtx = getUV(v_vTexcoord);
+	float uva = 1.;
+	vec2  vtx = getUVA(v_vTexcoord, uva);
 	vec2  ntx = vtx * vec2(1., dimension.y / dimension.x);
 	float ang = radians(rotation);
     vec2  uv  = (ntx - position / dimension) * mat2(cos(ang), -sin(ang), sin(ang), cos(ang)) * sca;
@@ -256,4 +257,6 @@ void main() {
 		
 		gl_FragColor = vec4(hsv2rgb(vec3(randH, randS, randV)), 1.0) * v_vColour;
 	}
+	
+	gl_FragColor.a *= uva;
 }

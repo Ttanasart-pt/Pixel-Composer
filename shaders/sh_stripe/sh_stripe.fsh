@@ -255,7 +255,8 @@ void main() {
 		rat += .001;
 	#endregion
 	
-	vec2  vtx     = getUV(v_vTexcoord);
+	float uva;
+	vec2  vtx     = getUVA(v_vTexcoord, uva);
 	vec2  pos     = vtx - position;
 	float aspect  = dimension.x / dimension.y;
 	float prog    = pos.x * aspect * cos(ang) - pos.y * sin(ang);
@@ -297,8 +298,8 @@ void main() {
 		}
 		
 	} else if(coloring == 2) {
-		gl_FragColor = gradientEval(
-			pfract(random(vec2(_s > rat? slot : slot + 1.)) + gradient_shift)
-		);
+		gl_FragColor = gradientEval(pfract(random(vec2(_s > rat? slot : slot + 1.)) + gradient_shift));
 	}
+	
+	gl_FragColor.a *= uva;
 } 

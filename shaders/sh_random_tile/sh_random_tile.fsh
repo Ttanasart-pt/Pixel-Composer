@@ -146,7 +146,7 @@
 #endregion -- gradient --
 
 #pragma use(sampler_simple)
-#region -- sampler_simple -- [1765194569.6586206]
+#region -- sampler_simple -- [1788846732.6884737]
     uniform int  sampleMode;
     
     uniform sampler2D uvMap;
@@ -162,6 +162,20 @@
         return tx;
     }
 
+    vec2 getUVA(in vec2 uv, out float alpha) {
+        if(useUvMap == 0) {
+            alpha = 1.0;
+            return uv;
+        }
+
+        vec4 samUV = texture2D( uvMap, uv );
+        vec2 vuv = vec2(samUV.x, 1. - samUV.y);
+        alpha    = samUV.a;
+
+        vec2 vtx = mix(uv, vuv, uvMapMix);
+        return vtx;
+    }
+    
     vec4 sampleTexture( sampler2D texture, vec2 pos, float mapBlend) {
         if(useUvMap == 1) {
             vec2 map = texture2D(uvMap, pos).xy;
@@ -296,10 +310,11 @@ void main() {
 		}
 	#endregion
 	
-	vec2 vtx = getUV(v_vTexcoord);
-	mat2 rot = mat2(cos(ang), - sin(ang), sin(ang), cos(ang));
-	vec2 asp = vec2(dimension.x / dimension.y, 1.);
-	vec2 pos = (vtx - position) * asp;
+	float uva = 1.;
+	vec2  vtx = getUVA(v_vTexcoord, uva);
+	mat2  rot = mat2(cos(ang), - sin(ang), sin(ang), cos(ang));
+	vec2  asp = vec2(dimension.x / dimension.y, 1.);
+	vec2  pos = (vtx - position) * asp;
 	vec2 _pos = pos * rot * sca;
 	
     vec4 hc = RandomCoords(_pos);
@@ -308,6 +323,7 @@ void main() {
 	if(mode == 1) {
 		float dist = (hc.y - level.x) / (level.y - level.x);
 		gl_FragColor = vec4(vec3(dist), 1.0);
+		gl_FragColor.a *= uva;
 		return;
 	}
 	
@@ -347,4 +363,5 @@ void main() {
 	
 	float _aa = 3. / max(dimension.x, dimension.y);
 	gl_FragColor = mix(gapCol, colr, aa == 1? smoothstep(thk - _aa, thk, hc.y) : step(thk, hc.y)) * v_vColour;
+	gl_FragColor.a *= uva;
 }

@@ -1,10 +1,10 @@
 #pragma use(sampler_ext)
 
-#region -- sampler_ext -- [1780129853.1967175]
+#region -- sampler_ext -- [1788846724.3057852]
 	uniform int  interpolation;
 	uniform vec2 sampleDimension;
 	uniform int  sampleMode;
-	
+
     uniform sampler2D uvMap;
     uniform int   useUvMap;
     uniform float uvMapMix;
@@ -302,6 +302,20 @@
         return tx;
     }
 
+    vec2 getUVA(in vec2 uv, out float alpha) {
+        if(useUvMap == 0) {
+            alpha = 1.0;
+            return uv;
+        }
+
+        vec4 samUV = texture2D( uvMap, uv );
+        vec2 vuv = vec2(samUV.x, 1. - samUV.y);
+        alpha    = samUV.a;
+
+        vec2 vtx = mix(uv, vuv, uvMapMix);
+        return vtx;
+    }
+	
 	vec4 sampleTexture( sampler2D texture, vec2 pos, float mapBlend) {
         if(useUvMap == 1) {
             vec2 map = texture2D(uvMap, pos).xy;

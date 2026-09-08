@@ -40,7 +40,7 @@ function Node_Path_Wave(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	
 	////- =Weight
 	newInput(19, nodeValue_Bool(    "Use Weight",  false ));
-	newInput(20, nodeValue_EScroll( "Weight Mode", 0, [ "Replace", "Additive", "Multiplicative" ] ));
+	newInput(20, nodeValue_EScroll( "Weight Mode",  0, [ "Replace", "Additive", "Multiplicative" ] ));
 	newInput(21, nodeValue_Range(   "Range",       [0,1] ));
 	// 24
 	

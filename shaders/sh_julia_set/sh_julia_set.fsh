@@ -58,11 +58,13 @@ int julia(in vec2 z) {
 }
 
 void main() {
-    vec2 vtx = getUV(v_vTexcoord);
-    vec2 px  = (vtx - position / dimension) * 4. / scale;
-         px *= mat2(cos(rotation), -sin(rotation), sin(rotation), cos(rotation));
+    float uva = 1.;
+    vec2  vtx = getUVA(v_vTexcoord, uva);
+    vec2  px  = (vtx - position / dimension) * 4. / scale;
+          px *= mat2(cos(rotation), -sin(rotation), sin(rotation), cos(rotation));
     
     float j = float(julia(px)) / float(iteration);
     
     gl_FragColor = vec4(vec3(j), 1.) * v_vColour;
+    gl_FragColor.a *= uva;
 }

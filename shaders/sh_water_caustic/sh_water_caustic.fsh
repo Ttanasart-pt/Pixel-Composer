@@ -131,10 +131,11 @@ void main() {
 		}
 	#endregion
 	
-	vec2 vtx  = getUV(v_vTexcoord);
-	vec2 p    = vtx;
-	     p.x *= (dimension.x / dimension.y);
-         p    = (p - position / dimension) * dimension / scale;
+	float uva  = 1.;
+	vec2  vtx  = getUVA(v_vTexcoord, uva);
+	vec2  p    = vtx;
+	      p.x *= (dimension.x / dimension.y);
+          p    = (p - position / dimension) * dimension / scale;
 	
     float amp = pow(2., float(detail) - 1.) / (pow(2., float(detail)) - 1.);
     float cc  = 0.;
@@ -154,4 +155,5 @@ void main() {
     }
 	
 	gl_FragColor = vec4(vec3(cc), 1.) * v_vColour;
+	gl_FragColor.a *= uva;
 }

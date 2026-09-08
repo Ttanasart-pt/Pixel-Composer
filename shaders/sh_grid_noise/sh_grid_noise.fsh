@@ -60,9 +60,10 @@ float randomSeed (in vec2 st, float _seed) { return fract(sin(dot(st.xy + vec2(5
 float random (in vec2 st) { return mix(randomSeed(st, floor(seed)), randomSeed(st, floor(seed) + 1.), fract(seed)); }
 
 void main() {
-	vec2 vtx = getUV(v_vTexcoord);
-	vec2 st  = vtx - position / dimension;
-    vec2 pos = vec2(st * scale);
+	float uva = 1.;
+	vec2  vtx = getUVA(v_vTexcoord, uva);
+	vec2  st  = vtx - position / dimension;
+    vec2  pos = vec2(st * scale);
 	
 	if(shiftAxis == 0) {
 		//pos.x += random(vec2(0., floor(pos.y)));
@@ -97,4 +98,6 @@ void main() {
 		vec2 samPos = floor(pos) / scale + 0.5 / scale;
 		gl_FragColor = texture2D( gm_BaseTexture, samPos ) * v_vColour;
 	}
+	
+	gl_FragColor.a *= uva;
 }

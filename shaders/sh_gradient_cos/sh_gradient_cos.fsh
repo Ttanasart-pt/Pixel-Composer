@@ -243,7 +243,8 @@ void main() {
 		float sca = scale;
 	#endregion
 	
-	vec2  vtx  = getUV(v_vTexcoord);
+	float uva  = 1.;
+	vec2  vtx  = getUVA(v_vTexcoord, uva);
 	vec2  asp  = dimension / dimension.y;
 	vec2  cent = center / dimension;
 	float prog = 0.;
@@ -274,4 +275,5 @@ void main() {
 	
 	vec3 col = pal(prog, _a, _b, _c, _d);
 	gl_FragColor = vec4(col, 1.) * v_vColour;
+	gl_FragColor.a *= uva;
 }

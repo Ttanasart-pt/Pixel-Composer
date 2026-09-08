@@ -310,10 +310,11 @@ void main() {
 		wid -= 0.05;
 	#endregion
 	
-	vec2 vtx = getUV(v_vTexcoord);
-	mat2 rot = mat2(cos(ang), - sin(ang), sin(ang), cos(ang));
-	vec2 asp = vec2(dimension.x / dimension.y, 1.);
-	vec2 pos = (vtx - position) * asp;
+	float uva = 1.;
+	vec2  vtx = getUVA(v_vTexcoord, uva);
+	mat2  rot = mat2(cos(ang), - sin(ang), sin(ang), cos(ang));
+	vec2  asp = vec2(dimension.x / dimension.y, 1.);
+	vec2  pos = (vtx - position) * asp;
 	vec2 _pos = pos * rot * sca;
 	
 	vec2  coord = pentacoords(_pos);
@@ -336,4 +337,5 @@ void main() {
 	
 	float _aa = 4. / max(dimension.x, dimension.y);
     gl_FragColor = mix(gapCol, colr, aa == 1? smoothstep(wid - _aa, wid, dist) : step(wid, dist)) * v_vColour;
+    gl_FragColor.a *= uva;
 }

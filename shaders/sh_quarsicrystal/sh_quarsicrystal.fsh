@@ -79,9 +79,10 @@ void main() {
 		
 	#endregion
 	
-	vec2 vtx = getUV(v_vTexcoord);
-	vec2 ntx = vtx * vec2(1., dimension.y / dimension.x);
-	vec2 pos = (ntx - position) * mat2(cos(ang), -sin(ang), sin(ang), cos(ang)) * amo;
+	float uva = 1.;
+	vec2  vtx = getUVA(v_vTexcoord, uva);
+	vec2  ntx = vtx * vec2(1., dimension.y / dimension.x);
+	vec2  pos = (ntx - position) * mat2(cos(ang), -sin(ang), sin(ang), cos(ang)) * amo;
 	
     float value = 0.0;
     int   num = 4;
@@ -98,4 +99,5 @@ void main() {
 	
     float _s = 1. + sin(value * PI / 2.0);
 	gl_FragColor = mix(color0, color1, _s) * v_vColour; 
+	gl_FragColor.a *= uva;
 } 

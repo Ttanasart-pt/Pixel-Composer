@@ -81,9 +81,10 @@ void main() {
 		ang = radians(ang);
 	#endregion
 	
-	vec2 vtx = getUV(v_vTexcoord);
-	vec2 a   = dimension / dimension.y;
-	vec2 c   = (vtx - position) * a * vec2(1., aspect);
+	float uva = 1.; 
+	vec2  vtx = getUVA(v_vTexcoord, uva);
+	vec2  a   = dimension / dimension.y;
+	vec2  c   = (vtx - position) * a * vec2(1., aspect);
 	float ch;
 	
 	if(diagonal == 0 || blend != 0) {
@@ -117,4 +118,6 @@ void main() {
 			
 		gl_FragColor = mix(col1, col2, ch) * v_vColour;
 	}
+	
+	gl_FragColor.a *= uva;
 }

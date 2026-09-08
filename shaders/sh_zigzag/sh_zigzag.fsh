@@ -71,10 +71,11 @@ void main() {
 		ang = radians(ang);
 	#endregion
 	
-	vec2 asp = vec2(dimension.x / dimension.y, 1.);
-	vec2 vtx = getUV(v_vTexcoord);
-	vec2 ptx = floor(vtx * dimension) / dimension;
-	vec2 pos = (ptx - position / dimension) * asp;
+	vec2  asp = vec2(dimension.x / dimension.y, 1.);
+	float uva = 1.;
+	vec2  vtx = getUVA(v_vTexcoord, uva);
+	vec2  ptx = floor(vtx * dimension) / dimension;
+	vec2  pos = (ptx - position / dimension) * asp;
 	
 	pos.y += offset / amo;
 	pos   *= mat2(cos(ang), -sin(ang), sin(ang), cos(ang));
@@ -125,4 +126,6 @@ void main() {
 			
 		gl_FragColor = mix(col1, col2, _h) * v_vColour;
 	}
+	
+	gl_FragColor.a *= uva;
 }

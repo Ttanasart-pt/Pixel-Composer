@@ -54,10 +54,11 @@ uniform vec2  level;      float applyLevel(float f) { return (f - level.x) / (le
 float random  (in vec2 st) { return fract(sin(dot(st.xy + vec2(1., 6.), vec2(2., 7.))) * (1. + mod(seed, 100000.) / 10.)); }
 
 void main() {
-	vec2 vtx = getUV(v_vTexcoord);
-	vec2 ntx = vtx * vec2(1., dimension.y / dimension.x);
-	vec2 tx  = 1. / dimension;
-	vec2 ps  = ntx + position;
+	float uva = 1.;
+	vec2  vtx = getUVA(v_vTexcoord, uva);
+	vec2  ntx = vtx * vec2(1., dimension.y / dimension.x);
+	vec2  tx  = 1. / dimension;
+	vec2  ps  = ntx + position;
 	float w  = 0.;
 	
 	vec2 dim = axis == 0? dimension : dimension.yx;
@@ -96,4 +97,5 @@ void main() {
     
     w = applyLevel(w);
     gl_FragColor = vec4(vec3(w), 1.) * v_vColour;
+    gl_FragColor.a *= uva;
 }

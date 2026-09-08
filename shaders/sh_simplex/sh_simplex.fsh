@@ -223,8 +223,9 @@ float simplexTiled(vec2 pos, float ang, vec2 sca, vec2 ntx) { // That's... not h
 }
 
 void main() {
-	vec2 vtx = getUV(v_vTexcoord);
-	vec2 ntx = vtx * vec2(1., dimension.y / dimension.x);
+	float uva = 1.;
+	vec2  vtx = getUVA(v_vTexcoord, uva);
+	vec2  ntx = vtx * vec2(1., dimension.y / dimension.x);
 	
 	sca = scale;
 	if(scaleUseSurf == 1) {
@@ -260,4 +261,6 @@ void main() {
 		
 		gl_FragColor = vec4(hsv2rgb(vec3(randH, randS, randV)), 1.0) * v_vColour;
 	}
+	
+	gl_FragColor.a *= uva;
 }

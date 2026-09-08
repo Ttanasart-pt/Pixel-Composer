@@ -130,7 +130,7 @@
 #endregion -- curve --
 
 #pragma use(sampler_simple)
-#region -- sampler_simple -- [1765194569.6586206]
+#region -- sampler_simple -- [1788846732.6884737]
     uniform int  sampleMode;
     
     uniform sampler2D uvMap;
@@ -146,6 +146,20 @@
         return tx;
     }
 
+    vec2 getUVA(in vec2 uv, out float alpha) {
+        if(useUvMap == 0) {
+            alpha = 1.0;
+            return uv;
+        }
+
+        vec4 samUV = texture2D( uvMap, uv );
+        vec2 vuv = vec2(samUV.x, 1. - samUV.y);
+        alpha    = samUV.a;
+
+        vec2 vtx = mix(uv, vuv, uvMapMix);
+        return vtx;
+    }
+    
     vec4 sampleTexture( sampler2D texture, vec2 pos, float mapBlend) {
         if(useUvMap == 1) {
             vec2 map = texture2D(uvMap, pos).xy;
@@ -378,10 +392,11 @@ float pfract(in float f) { return fract(fract(f) + 1.); }
 void main() {
 	float ang = radians(rotation);
 	
-	vec2 tx  = getUV(v_vTexcoord);
-	     tx -= position / dimension;
-	     tx *= mat2(cos(ang), -sin(ang), sin(ang), cos(ang));
-	     tx /= scale / dimension;
+	float uva = 1.;
+	vec2  tx  = getUVA(v_vTexcoord, uva);
+	      tx -= position / dimension;
+	      tx *= mat2(cos(ang), -sin(ang), sin(ang), cos(ang));
+	      tx /= scale / dimension;
     
     vec2 wIndex = floor(tx);
     vec2 wUV    = tx - wIndex;
@@ -391,7 +406,11 @@ void main() {
 	
 	bool fX = abs(wUV.x - .5) < wx;
 	bool fY = abs(wUV.y - .5) < wy;
-	if(!fX && !fY) { gl_FragColor = color1; return; }
+	if(!fX && !fY) { 
+		gl_FragColor = color1; 
+		gl_FragColor.a *= uva;
+		return; 
+	}
 	
 	bool ax  = getWeaveAxis(wIndex);
 	vec4 res = color2;
@@ -448,4 +467,5 @@ void main() {
 	}
 	
 	gl_FragColor = res * v_vColour;
+	gl_FragColor.a *= uva;
 }

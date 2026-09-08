@@ -1,6 +1,5 @@
 #pragma use(sampler_simple)
-
-#region -- sampler_simple -- [1765194569.6586206]
+#region -- sampler_simple -- [1788846732.6884737]
     uniform int  sampleMode;
     
     uniform sampler2D uvMap;
@@ -16,6 +15,20 @@
         return tx;
     }
 
+    vec2 getUVA(in vec2 uv, out float alpha) {
+        if(useUvMap == 0) {
+            alpha = 1.0;
+            return uv;
+        }
+
+        vec4 samUV = texture2D( uvMap, uv );
+        vec2 vuv = vec2(samUV.x, 1. - samUV.y);
+        alpha    = samUV.a;
+
+        vec2 vtx = mix(uv, vuv, uvMapMix);
+        return vtx;
+    }
+    
     vec4 sampleTexture( sampler2D texture, vec2 pos, float mapBlend) {
         if(useUvMap == 1) {
             vec2 map = texture2D(uvMap, pos).xy;
@@ -71,8 +84,9 @@ void main() {
 		itn = mix(intensity.x, intensity.y, (_vMap.r + _vMap.g + _vMap.b) / 3.);
 	}
 	
-    vec2 tx = 1. / dimension;
-    vec2 uv = getUV(v_vTexcoord);
+    vec2  tx  = 1. / dimension;
+    float uva = 1.;
+    vec2  uv  = getUVA(v_vTexcoord, uva);
 
 	vec4 meanColor = vec4(0.);
     vec4 v = sampleTexture( gm_BaseTexture, uv );
@@ -106,4 +120,5 @@ void main() {
 
     meanColor /= float(count);
     gl_FragColor = mix(v, meanColor, itn) * v_vColour;
+    gl_FragColor.a *= uva;
 }

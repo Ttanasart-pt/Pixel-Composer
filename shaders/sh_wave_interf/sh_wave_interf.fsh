@@ -355,8 +355,9 @@ float valueProcess(float t) {
 void main() {
 	float ang = radians(rotation);
     mat2  rot = mat2(cos(ang), - sin(ang), sin(ang), cos(ang));
-        
-	vec2  pos = getUV(v_vTexcoord);
+       
+    float uva = 1.;
+	vec2  pos = getUVA(v_vTexcoord, uva);
 	float val = 0., v0, v1;
     float d0, d1;
     
@@ -385,4 +386,5 @@ void main() {
 	
 	vec4 clr = gradientEval(pfract(val + color_shift));
 	gl_FragColor = clr * v_vColour;
+	gl_FragColor.a *= uva;
 }

@@ -150,9 +150,10 @@ void main() {
 		turb = mix(turbidity.x, turbidity.y, (_vMap.r + _vMap.g + _vMap.b) / 3.);
 	}
 	
-	vec2 vtx = getUV(v_vTexcoord);
-    vec2 uv  = (vtx - position / dimension) * scale;
-    vec2 sun = (sunPosition - position) * scale / dimension;
+	float uva = 1.;
+	vec2  vtx = getUVA(v_vTexcoord, uva);
+    vec2  uv  = (vtx - position / dimension) * scale;
+    vec2  sun = (sunPosition - position) * scale / dimension;
     
     uv.y  = 1. - uv.y;
     sun.y = 1. - sun.y;
@@ -165,4 +166,5 @@ void main() {
     vec3 skyLuminance = calculateSkyLuminanceRGB( sunDir, viewDir, turb );
     
     gl_FragColor = vec4( skyLuminance * 0.05, 1.0 ) * v_vColour;
+    gl_FragColor.a *= uva;
 }

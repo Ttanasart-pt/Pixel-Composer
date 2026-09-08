@@ -90,8 +90,9 @@ float fbm (in vec2 st) {
 }
 
 void main() {
-	vec2 vtx = getUV(v_vTexcoord);
-	vec2 pos = position + vtx * scale;
+	float uva = 1.;
+	vec2  vtx = getUVA(v_vTexcoord, uva);
+	vec2  pos = position + vtx * scale;
     
 	if(colored == 0)
 		gl_FragColor = vec4(vec3(fbm(pos)), 1.0);
@@ -108,4 +109,6 @@ void main() {
 		
 		gl_FragColor = vec4(hsv2rgb(vec3(randH, randS, randV)), 1.0) * v_vColour;
 	}
+	
+	gl_FragColor.a *= uva;
 }

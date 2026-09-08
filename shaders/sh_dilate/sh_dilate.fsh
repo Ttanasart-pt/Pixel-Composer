@@ -131,7 +131,7 @@
 #endregion -- curve --
 #pragma use(sampler)
 
-#region -- sampler -- [1780048120.828549]
+#region -- sampler -- [1788846700.1110575]
 	uniform int  interpolation;
 	uniform vec2 sampleDimension;
 	uniform int  sampleMode;
@@ -229,6 +229,20 @@
         return tx;
     }
 
+    vec2 getUVA(in vec2 uv, out float alpha) {
+        if(useUvMap == 0) {
+            alpha = 1.0;
+            return uv;
+        }
+
+        vec4 samUV = texture2D( uvMap, uv );
+        vec2 vuv = vec2(samUV.x, 1. - samUV.y);
+        alpha    = samUV.a;
+
+        vec2 vtx = mix(uv, vuv, uvMapMix);
+        return vtx;
+    }
+	
 	vec4 sampleTexture( sampler2D texture, vec2 pos, float mapBlend) {
         if(useUvMap == 1) {
             vec2 map = texture2D(uvMap, pos).xy;
@@ -287,7 +301,8 @@ void main() {
 		str = mix(strength.x, strength.y, (_vMap.r + _vMap.g + _vMap.b) / 3.);
 	}
 	
-	vec2  px  = getUV(v_vTexcoord) * dimension;
+	float uva = 1.;
+	vec2  px  = getUVA(v_vTexcoord, uva) * dimension;
 	vec2  to  = center - px;
 	float dis = distance(center, px) / rad;
 	if(strength_curve_use == 1) dis = curveEval(strength_curve, strength_amount, dis);
@@ -298,4 +313,5 @@ void main() {
 	     tex /= dimension;
 	     
     gl_FragColor = sampleTexture( gm_BaseTexture, tex ) * v_vColour;
+    gl_FragColor.a *= uva;
 }

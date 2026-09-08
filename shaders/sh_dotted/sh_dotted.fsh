@@ -307,10 +307,11 @@ void main() {
 		amoVec = (dimension / vec2(amo)) / spacing;
 	#endregion
 	
-	vec2 vtx  = getUV(v_vTexcoord);
-	vec2 asp  = vec2(dimension.x / dimension.y, 1.);
-	vec2 pos  = (vtx - position / dimension);
-	     pos *= mat2(cos(ang), -sin(ang), sin(ang), cos(ang));
+	float uva  = 1.;
+	vec2  vtx  = getUVA(v_vTexcoord, uva);
+	vec2  asp  = vec2(dimension.x / dimension.y, 1.);
+	vec2  pos  = (vtx - position / dimension);
+	      pos *= mat2(cos(ang), -sin(ang), sin(ang), cos(ang));
 	      
 	vec4 cbg  = colorBG;
 	vec4 dott = vec4(0.);
@@ -357,4 +358,5 @@ void main() {
 	
 	     if(blendMode == 0) gl_FragColor = blend(cbg, cfg);
 	else if(blendMode == 1) gl_FragColor = cbg + cfg * v_vColour;
+	gl_FragColor.a *= uva;
 }

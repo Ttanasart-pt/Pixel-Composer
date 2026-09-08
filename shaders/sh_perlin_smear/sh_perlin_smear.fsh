@@ -82,7 +82,8 @@ float noise (in vec2 st) {
 }
 
 void main() {
-	vec2  vtx = getUV(v_vTexcoord);
+	float uva = 1.;
+	vec2  vtx = getUVA(v_vTexcoord, uva);
 	float ang = radians(rotation);
 	vec2  pos = position / dimension;
 	vec2  st  = (vtx - pos) * mat2(cos(ang), -sin(ang), sin(ang), cos(ang)) * scale;
@@ -100,4 +101,5 @@ void main() {
 	n = applyLevel(n);
 	
     gl_FragColor = vec4(vec3(n), 1.0) * v_vColour;
+    gl_FragColor.a *= uva;
 }
