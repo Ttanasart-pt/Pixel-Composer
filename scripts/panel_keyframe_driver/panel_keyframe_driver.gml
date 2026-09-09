@@ -50,6 +50,7 @@ function Panel_Keyframe_Driver() : PanelContent() constructor {
 					
 				recordAction_variable_change(key, "driverObject", key.driverObject, "Setting Driver Type");
 				key.driverObject = d;
+				key.anim.node.refreshAnimationRange();
 				driver = d;
 				
 			} else {
@@ -59,6 +60,7 @@ function Panel_Keyframe_Driver() : PanelContent() constructor {
 					
 					recordAction_variable_change(k, "driverObject", k.driverObject, "Setting Driver Type");
 					k.driverObject = d;
+					k.anim.node.refreshAnimationRange();
 					driver = d;
 				}
 			}

@@ -95,10 +95,11 @@ function __Node_Base(_x, _y) constructor {
 			        var _anim  = _anims[j];
 			        
 			        for(var k = 0, p = array_length(_anim.values); k < p; k++) {
-			            animation_range_start = min(animation_range_start, _anim.values[k].time);
-			    		animation_range_end   = max(animation_range_end,   _anim.values[k].time);
+			        	var _key = _anim.values[k];
+			            animation_range_start = min(animation_range_start, _key.time);
+			    		animation_range_end   = max(animation_range_end,   _key.time);
 			    		
-			    		if(k == p - 1 && _anim.values[k].driverObject != undefined)
+			    		if(k == p - 1 && _key.driverObject != undefined)
 			    			animation_range_end = max(animation_range_end, TOTAL_FRAMES);
 			        }
 			    }
