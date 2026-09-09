@@ -1952,6 +1952,9 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
 	            _hv = true;
 	            view_hovering = true;
 	            
+	            var txt = PREFERENCES.gesture_enabled? "Disable Trackpad Gesture" : "Enable Trackpad Gesture"
+	            setTOOLTIP(__txt(txt));
+	            
 	            if(mouse_lpress(pFOCUS)) {
 	                PREFERENCES.gesture_enabled = !PREFERENCES.gesture_enabled;
                     PREF_SAVE();

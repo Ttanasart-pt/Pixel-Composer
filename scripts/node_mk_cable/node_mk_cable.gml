@@ -31,6 +31,7 @@ function Node_MK_Cable(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	newInput(11, nodeValue_Bool(     "Swing",     false         ));
 	newInput(12, nodeValue_Range(    "Amplitude", [.5,.5], true ));
 	newInput(13, nodeValue_Range(    "Frequency", [1,1],   true ));
+	newInput(33, nodeValue_Rotation( "Phase",      0            ));
 	
 		////- =/End Swing
 	newInput(24, nodeValue_Bool(     "End Swing", false ));
@@ -47,7 +48,7 @@ function Node_MK_Cable(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	newInput(28, nodeValue_Surface(  "Texture"                ));
 	newInput(29, nodeValue_Vec2(     "UV Position", [0,0]     ));
 	newInput(30, nodeValue_Vec2(     "UV Scale",    [1,1]     ));
-	// 33
+	// 34
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
@@ -55,7 +56,7 @@ function Node_MK_Cable(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 		[ "Output",         false     ],  0, 19, 
 		[ "Anchors",        false     ], 15,  1,  2,  9, 10, 16, 17, 18, 22, 23, 
 		[ "Cable",          false     ],  5, 14,  4,  8, 
-		[ "Swing",          false, 11 ], 12, 13, 
+		[ "Swing",          false, 11 ], 12, 13, 33, 
 			[ "/End Swing", false, 24 ], 27, 25, 26, 
 		[ "Render",         false     ],  6, 20, [7, true], 32, -1, 21, 31, 
 			[ "/Texture",   false     ], 28, 29, 30, 
@@ -273,6 +274,8 @@ function Node_MK_Cable(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 			var _tens = _data[ 4];
 			var _segs = _data[ 8];
 			
+			__swng_phs = _data[33] / 360;
+			
 			var _thks     = _data[ 6];
 			var _colr     = _data[ 7]; _colr.cache();
 			var _colrShf  = _data[32];
@@ -311,7 +314,7 @@ function Node_MK_Cable(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 		
 		#region precalc
 			random_set_seed(_seed);
-			swing_precal = array_create_ext(_amo, function(i) /*=>*/ {return random(1)});
+			swing_precal = array_create_ext(_amo, function(i) /*=>*/ {return __swng_phs + random(1)});
 			
 			gravx = lengthdir_x(1, _grav); gravsx = lengthdir_x(1, _grav + 90);
 			gravy = lengthdir_y(1, _grav); gravsy = lengthdir_y(1, _grav + 90);

@@ -3329,7 +3329,10 @@ function Panel_Preview() : PanelContent() constructor {
 	            if(_hab && point_in_circle(mx, my, _d3x, _d3y, d3_view_wz)) {
 	                _hv = true;
 	                view_hovering = true;
-	                
+		                
+		            var txt = PREFERENCES.gesture_enabled? "Disable Trackpad Gesture" : "Enable Trackpad Gesture"
+		            setTOOLTIP(__txt(txt));
+		            
 	                if(mouse_lpress(pFOCUS)) {
 	                    PREFERENCES.gesture_enabled = !PREFERENCES.gesture_enabled;
 	                    PREF_SAVE();
