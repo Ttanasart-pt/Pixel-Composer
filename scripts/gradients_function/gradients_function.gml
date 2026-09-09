@@ -236,7 +236,7 @@ function gradientObject(color = ca_black) constructor {
 		}
 	}
 	
-	static cache = function(res = 128, offset = 0) {
+	static cache = function(res = 128) {
 		cacheRes  = res;
 		caches    = array_verify(caches, cacheRes + 1);
 		keyLength = array_length(keys);
@@ -250,7 +250,7 @@ function gradientObject(color = ca_black) constructor {
 				
 			default : 
 				var i = -1;
-				repeat( cacheRes + 1 ) caches[++i] = eval(frac(frac(i / cacheRes - offset) + 1));
+				repeat( cacheRes + 1 ) caches[++i] = eval(i / cacheRes);
 				break;
 			
 		}

@@ -1,5 +1,4 @@
 #pragma use(sampler_ext)
-
 #region -- sampler_ext -- [1788846724.3057852]
 	uniform int  interpolation;
 	uniform vec2 sampleDimension;
@@ -345,7 +344,6 @@
 #endregion -- sampler_ext --
 
 #pragma use(gradient)
-
 #region -- gradient -- [1787822570.23723]
 	#ifdef _YY_HLSL11_ 
         #define GRADIENT_LIMIT 128
@@ -491,8 +489,8 @@
 	}
 	
 #endregion -- gradient --
-#pragma use(curve)
 
+#pragma use(curve)
 #region -- curve -- [1786510425.6316042]
 
     #ifdef _YY_HLSL11_ 

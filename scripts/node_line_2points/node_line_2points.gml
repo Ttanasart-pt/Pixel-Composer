@@ -169,8 +169,11 @@ function Node_Line_2Points(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 					var j0 = _subSt *  j;
 					var j1 = _subSt * (j + 1);
 					
-					var c0 = colorMultiply(baseColor, _cLen.evalFast(pfract(min(j0, .999) + _cLenS)) );
-					var c1 = colorMultiply(baseColor, _cLen.evalFast(pfract(min(j1, .999) + _cLenS)) );
+					var ci0 = pfract(min(j0, .999) + _cLenS);
+					var ci1 = pfract(min(j1, .999) + _cLenS);
+					
+					var c0 = colorMultiply(baseColor, _cLen.evalFast(ci0));
+					var c1 = colorMultiply(baseColor, _cLen.evalFast(ci1));
 					
 					var p0x = lerp(p0[0], p1[0], j0);
 					var p0y = lerp(p0[1], p1[1], j0);
