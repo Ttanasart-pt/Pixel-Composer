@@ -2224,13 +2224,16 @@ function Panel_Animation_Dopesheet() {
                 
                 if(pFOCUS && !key_mod_press(SHIFT)) {
                     if(DOUBLE_CLICK) {
-                        keyframe_dragging  = keyframe;
-                        keyframe_drag_type = KEYFRAME_DRAG_TYPE.ease_both;
-                        keyframe_dragout   = false;
-                        keyframe_drag_mx   = mx;
-                        keyframe_drag_my   = my;
+                        keyframe_dragging    = keyframe;
+                        keyframe_drag_type   = KEYFRAME_DRAG_TYPE.ease_both;
+                        keyframe_dragout     = false;
+                        keyframe_drag_mx     = mx;
+                        keyframe_drag_my     = my;
                         keyframe_dragging_mx = mx;
                         
+                    	if(keyframe.driverObject != undefined)
+                    		dialogPanelCall(new Panel_Keyframe_Driver().setKeyLock(keyframe));
+                    	
                     } else if(mouse_lpress()) {
                         if(key_mod_check(MOD_KEY.ctrl)) {
                             editKeyFrame(keyframe);
