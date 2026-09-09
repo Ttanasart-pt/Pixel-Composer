@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.9.208",
+    "changes": [
+      {
+        "date": "2026-09-09T01:25:24.268Z",
+        "node": "",
+        "commit": "**TextArea**: Fix cursor move to the wrong place vertically."
+      }
+    ]
+  },
+  {
     "version": "1.21.7.110",
     "changes": [
       {

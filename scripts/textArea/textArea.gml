@@ -58,16 +58,16 @@ function textArea(_input, _onModify) : textInput(_input, _onModify) constructor 
 	undo_stack = ds_stack_create();
 	redo_stack = ds_stack_create();
 	
-	text_surface   = noone;
-	text_y         = 0;
-	text_y_to      = 0;
-	text_y_max     = 0;
-	text_scrolling = false;
-	text_scroll_sy = 0;
-	text_scroll_my = 0;
+	text_surface     = noone;
+	text_y           = 0;
+	text_y_to        = 0;
+	text_y_max       = 0;
+	text_scrolling   = false;
+	text_scroll_sy   = 0;
+	text_scroll_my   = 0;
 	text_scroll_vert = 0;
 	
-	mouse_lhold    = false;
+	mouse_lhold      = false;
 	
 	border_heightlight_color = COLORS._main_accent;
 	
@@ -186,8 +186,8 @@ function textArea(_input, _onModify) : textInput(_input, _onModify) constructor 
 					cursor_select = cursor;
 			} else 
 				cursor_select	= -1;
-						
-			move_cursor(-1);
+			
+			moveCursor(-1);
 			if(key_mod_press(KCONTROL)) {
 				while(cursor > 0) {
 					var ch = string_char_at(_input_text, cursor);
@@ -203,7 +203,7 @@ function textArea(_input, _onModify) : textInput(_input, _onModify) constructor 
 			} else 
 				cursor_select	= -1;
 					
-			move_cursor(1);
+			moveCursor(1);
 			if(key_mod_press(KCONTROL)) {
 				while(cursor < string_length(_input_text)) {
 					var ch = string_char_at(_input_text, cursor);
@@ -220,22 +220,23 @@ function textArea(_input, _onModify) : textInput(_input, _onModify) constructor 
 		
 		if(!autoCompleteActive) {
 			if(key == vk_up) {
-				var _target;
-				
-				if(keyboard_lastkey != vk_up)
-					text_scroll_vert = cursor_pos_x_to;
+				if(KEYBOARD_LASTKEY != vk_up && KEYBOARD_LASTKEY != vk_down)
+					text_scroll_vert = cursor_pos_x_to - cursor_tx;
 					
+				var _target;
+				var _targetX = text_scroll_vert;
+				
 				if(cursor_line == 0) 
 					_target = 0;
 				else {
 					var _l   = cursor_line - 1;
 					var _str = array_safe_get_fast(_input_text_line, _l, "");
-					var _run = cursor_tx;
+					var _run = 0;
 					var _r0  = _run;
 					var _r1  = _run;
 					var _chr;
 					
-					var _char = 1;
+					var _char = 0;
 					for( var i = 0; i < _l; i++ )
 						_char += string_length(array_safe_get_fast(_input_text_line, i, ""));
 						
@@ -243,7 +244,7 @@ function textArea(_input, _onModify) : textInput(_input, _onModify) constructor 
 						_chr  = string_char_at(_str, i);
 						_run += string_width(_chr);
 						
-						if(_run <= text_scroll_vert) {
+						if(_run < _targetX) {
 							_char++;
 							_r0 = _run;
 						} else {
@@ -252,7 +253,7 @@ function textArea(_input, _onModify) : textInput(_input, _onModify) constructor 
 						}
 					}
 					
-					if(abs(_r1 - text_scroll_vert) < abs(_r0 - text_scroll_vert))
+					if(abs(_r1 - _targetX) < abs(_r0 - _targetX))
 						_char++;
 					
 					_target = _char;
@@ -263,28 +264,30 @@ function textArea(_input, _onModify) : textInput(_input, _onModify) constructor 
 						cursor_select = cursor;
 				} else 
 					cursor_select	= -1;
-					
+				
+				typing = 100;
 				cursor = _target;
 				onModified();
 			}
 			
 			if(key == vk_down) {
-				var _target;
+				if(KEYBOARD_LASTKEY != vk_up && KEYBOARD_LASTKEY != vk_down)
+					text_scroll_vert = cursor_pos_x_to - cursor_tx;
 				
-				if(keyboard_lastkey != vk_down)
-					text_scroll_vert = cursor_pos_x_to;
-					
-				if(cursor_line == array_length(_input_text_line) - 1) // at last line, go to line ending
+				var _target;
+				var _targetX = text_scroll_vert;
+				
+				if(cursor_line == array_length(_input_text_line) - 1) // at last line, go to line end
 					_target = string_length(_input_text);
 				else {
 					var _l   = cursor_line + 1;
 					var _str = array_safe_get_fast(_input_text_line, _l, "");
-					var _run = cursor_tx;
+					var _run = 0;
 					var _r0  = _run;
 					var _r1  = _run;
 					var _chr;
 					
-					var _char = 1; // character index upto the targeted line
+					var _char = 0; // character index upto the targeted line
 					for( var i = 0; i < _l; i++ )
 						_char += string_length(array_safe_get_fast(_input_text_line, i, "")); 
 						
@@ -292,7 +295,7 @@ function textArea(_input, _onModify) : textInput(_input, _onModify) constructor 
 						_chr  = string_char_at(_str, i);
 						_run += string_width(_chr);
 						
-						if(_run <= text_scroll_vert) {
+						if(_run < _targetX) {
 							_char++;
 							_r0 = _run;
 						} else {
@@ -301,10 +304,11 @@ function textArea(_input, _onModify) : textInput(_input, _onModify) constructor 
 						}
 					}
 					
-					if(abs(_r1 - text_scroll_vert) < abs(_r0 - text_scroll_vert))
+					if(abs(_r1 - _targetX) < abs(_r0 - _targetX))
 						_char++;
 						
 					_target = _char;
+					
 				}
 					
 				if(key_mod_press(SHIFT)) {
@@ -313,15 +317,17 @@ function textArea(_input, _onModify) : textInput(_input, _onModify) constructor 
 				} else 
 					cursor_select	= -1;
 					
+				typing = 100;
 				cursor = _target;
 				onModified();
 			}
 		}
 	}
 	
-	static move_cursor = function(delta) {
+	static moveCursor = function(delta) {
 		var ll = string_length(_input_text);
 		cursor = clamp(cursor + delta, 0, ll);
+		typing = 100;
 		
 		onModified();
 	}
@@ -409,7 +415,8 @@ function textArea(_input, _onModify) : textInput(_input, _onModify) constructor 
 			}
 			
 			if(key_mod_press(KCONTROL) && keyboard_check_pressed(ord("A"))) {
-				cursor        = string_length(_input_text);
+				typing = 100;
+				cursor = string_length(_input_text);
 				cursor_select = 0;
 				
 			} else if(key_mod_press(KCONTROL) && !key_mod_press(SHIFT) && keyboard_check_pressed(ord("Z"))) {			// UNDO
@@ -419,6 +426,7 @@ function textArea(_input, _onModify) : textInput(_input, _onModify) constructor 
 				if(!ds_stack_empty(undo_stack)) {
 					ds_stack_push(redo_stack, [_input_text, cursor, cursor_select]);
 					var _pop = ds_stack_pop(undo_stack);
+					typing        = 100;
 					_input_text   = _pop[0];
 					cursor        = _pop[1];
 					cursor_select = _pop[2];
@@ -431,6 +439,7 @@ function textArea(_input, _onModify) : textInput(_input, _onModify) constructor 
 				if(!ds_stack_empty(redo_stack)) {
 					ds_stack_push(undo_stack, [_input_text, cursor, cursor_select]);
 					var _pop = ds_stack_pop(redo_stack);
+					typing        = 100;
 					_input_text   = _pop[0];
 					cursor        = _pop[1];
 					cursor_select = _pop[2];
@@ -463,7 +472,7 @@ function textArea(_input, _onModify) : textInput(_input, _onModify) constructor 
 						
 						_input_text		= str_before + ch + str_after;
 						cut_line();
-						move_cursor(string_length(ch));
+						moveCursor(string_length(ch));
 						
 					} else {
 						var minc = min(cursor, cursor_select);
@@ -475,6 +484,7 @@ function textArea(_input, _onModify) : textInput(_input, _onModify) constructor 
 						_input_text		= str_before + ch + str_after;
 						cut_line();
 						cursor = minc + string_length(ch);
+						typing = 100;
 					}
 					modified   = true;
 					ds_stack_push(undo_stack, [_input_text, cursor, cursor_select]);
@@ -494,6 +504,8 @@ function textArea(_input, _onModify) : textInput(_input, _onModify) constructor 
 							str_before	= string_copy(_input_text, 1, _c);
 							str_after	= string_copy(_input_text, cursor + 1, string_length(_input_text) - cursor);
 							cursor = _c + 1;
+							typing = 100;
+							
 						} else {
 							str_before	= string_copy(_input_text, 1, cursor - 1);
 							str_after	= string_copy(_input_text, cursor + 1, string_length(_input_text) - cursor);
@@ -509,12 +521,13 @@ function textArea(_input, _onModify) : textInput(_input, _onModify) constructor 
 						var str_after	= string_copy(_input_text, maxc + 1, string_length(_input_text) - maxc);
 						
 						cursor = minc + 1;
+						typing = 100;
 						_input_text	= str_before + str_after;
 						cut_line();
 					}
 					
 					cursor_select = -1;
-					move_cursor(-1);
+					moveCursor(-1);
 					modified = true;
 					
 				} else if(keyboard_check_pressed(vk_delete) || (keyboard_check_pressed(ord("X")) && key_mod_press(KCONTROL) && cursor_select != -1)) {
@@ -533,6 +546,7 @@ function textArea(_input, _onModify) : textInput(_input, _onModify) constructor 
 						var str_after	= string_copy(_input_text, maxc + 1, string_length(_input_text) - maxc);
 						
 						cursor = minc;
+						typing = 100;
 						_input_text	= str_before + str_after;
 						cut_line();
 					}
@@ -550,7 +564,7 @@ function textArea(_input, _onModify) : textInput(_input, _onModify) constructor 
 						_input_text		= str_before + ch + str_after;
 						
 						cut_line();
-						move_cursor(string_length(ch));
+						moveCursor(string_length(ch));
 						
 					} else {
 						var minc = min(cursor, cursor_select);
@@ -562,6 +576,7 @@ function textArea(_input, _onModify) : textInput(_input, _onModify) constructor 
 						_input_text		= str_before + ch + str_after;
 						cut_line();
 						cursor = minc + string_length(ch);
+						typing = 100;
 					}
 					
 					if(string_pos(" ", ch)) ds_stack_push(undo_stack, [_input_text, cursor, cursor_select]);
@@ -571,7 +586,6 @@ function textArea(_input, _onModify) : textInput(_input, _onModify) constructor 
 			}
 			
 			KEYBOARD_RESET
-			keyboard_lastkey = -1;
 		#endregion
 		
 		if(modified) {
@@ -602,7 +616,7 @@ function textArea(_input, _onModify) : textInput(_input, _onModify) constructor 
 				cursor_select	= -1;
 			
 			if(cursor_line == 0) 
-				move_cursor(-cursor);
+				moveCursor(-cursor);
 			else {
 				var _str = array_safe_get_fast(_input_text_line, cursor_line, "");
 				while(string_char_at(_input_text, cursor) != "\n") {
@@ -611,6 +625,7 @@ function textArea(_input, _onModify) : textInput(_input, _onModify) constructor 
 				}
 			}
 			
+			typing = 100;
 			autocomplete_delay = 0;
 			o_dialog_textbox_autocomplete.deactivate(self);
 			o_dialog_textbox_function_guide.deactivate(self);
@@ -627,6 +642,7 @@ function textArea(_input, _onModify) : textInput(_input, _onModify) constructor 
 				cursor++;
 			}
 			
+			typing = 100;
 			autocomplete_delay = 0;
 			o_dialog_textbox_autocomplete.deactivate(self);
 			o_dialog_textbox_function_guide.deactivate(self);
@@ -755,12 +771,14 @@ function textArea(_input, _onModify) : textInput(_input, _onModify) constructor 
 		if(target != undefined && !click_block) {
 			if(mouse_lpress(active) && HOVER != o_dialog_textbox_autocomplete.id) {
 				cursor_select = target;
-				cursor		  = target;
+				cursor = target;
+				typing = 100;
 				
 				o_dialog_textbox_autocomplete.deactivate(self);
 				
 			} else if(mouse_lclick(active)) {
 				cursor = target;
+				typing = 100;
 			}
 		}
 		
@@ -834,7 +852,7 @@ function textArea(_input, _onModify) : textInput(_input, _onModify) constructor 
 		}
 		
 		if(_stretch_width) line_width = 9999999;
-		cursor_tx = _x + tx;
+		cursor_tx = tx;
 		
 		var line_count = max(min_lines, array_length(_input_text_line));
 		
@@ -1015,7 +1033,7 @@ function textArea(_input, _onModify) : textInput(_input, _onModify) constructor 
 			BLEND_ALPHA
 				draw_surface(text_surface, _x, _y);
 			BLEND_NORMAL
-			
+		
 			if(typing) typing--;
 			
 			draw_sprite_stretched_ext(THEME.textbox, 2, x, y, w, hh, border_heightlight_color, 1);
@@ -1141,11 +1159,12 @@ function textArea(_input, _onModify) : textInput(_input, _onModify) constructor 
 			cursor        = string_length(_current_text);
 			cursor_select = 0;
 			click_block   = 1;
+			typing        = 100;
 		}
 		
 		KEYBOARD_RESET
-		keyboard_lastkey = -1;
-					
+		KEYBOARD_LASTKEY = -1;
+		
 		cut_line();
 		
 		ds_stack_clear(undo_stack);

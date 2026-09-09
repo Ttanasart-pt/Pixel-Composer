@@ -193,7 +193,7 @@
         "widget_rotator_range_hover": "main_ltgrey",
         "widget_rotator_guide": "main_ltgrey",
         "widget_surface_frame": "main_dkgrey",
-        "widget_text_highlight": "main_dkgrey",
+        "widget_text_highlight": "main_ltgrey",
         "widget_slider_step": "main_dkgrey",
 
         "widget_text_dec_d": "cyan",

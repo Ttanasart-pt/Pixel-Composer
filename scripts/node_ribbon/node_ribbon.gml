@@ -41,6 +41,8 @@ function Node_Ribbon(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	
 	////- Nodes
 	
+	attribute_interpolation(true, true);
+	
 	sizeLenMap = new curveMap(undefined, 128);
 	__p  = new __vec2P();
 	__p0 = new __vec2P();

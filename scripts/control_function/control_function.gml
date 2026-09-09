@@ -32,6 +32,7 @@
 	globalvar KEYBOARD_PRESSED_STRING; KEYBOARD_PRESSED_STRING = "";
 	globalvar KEYBOARD_PRESSED; KEYBOARD_PRESSED        = vk_nokey;
 	globalvar KEYBOARD_BLOCK; KEYBOARD_BLOCK          = false;
+	globalvar KEYBOARD_LASTKEY; KEYBOARD_LASTKEY        = 0;
 	
 	globalvar CTRL; CTRL  = KEY_STAT.idle;
 	globalvar ALT; ALT   = KEY_STAT.idle;
@@ -61,6 +62,8 @@
 		kd_shift += DELTA_TIME;
 		kd_alt   += DELTA_TIME;
 		kd_comm  += DELTA_TIME;
+		
+		KEYBOARD_LASTKEY = keyboard_lastkey == -1? KEYBOARD_LASTKEY : keyboard_lastkey;
 		
 		switch(CTRL) {
 			case KEY_STAT.idle: 
@@ -135,7 +138,7 @@
 		if(ENTER && !keyboard_check_direct(vk_enter)) keyboard_lastchar = "";
 		
 		ENTER = false;
-		if(keyboard_check_direct(vk_enter) || ord(keyboard_lastchar) == 13) {
+		if(FOCUS_WINDOW && keyboard_check_direct(vk_enter) || ord(keyboard_lastchar) == 13) {
 			if(kb_enter == false) {
 				kb_enter = true;
 				ENTER    = true;

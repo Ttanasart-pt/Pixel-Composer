@@ -85,6 +85,8 @@ function Node_Tile(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 			
 			inputs[2].setVisible(_type == 0);
 			inputs[3].setVisible(_type == 1);
+			
+			if(!is_surface(_surf)) return _outSurf;
 		#endregion
 		
 		var _idim = surface_get_dimension(_surf);

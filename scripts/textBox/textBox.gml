@@ -212,7 +212,6 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 		}
 		
 		KEYBOARD_RESET
-		keyboard_lastkey = -1;
 		
 		ds_stack_clear(undo_stack);
 		ds_stack_clear(redo_stack);
@@ -468,7 +467,6 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 			}
 			
 			KEYBOARD_RESET
-			keyboard_lastkey = -1;
 		#endregion
 		
 		if(keyboard_check_pressed(vk_left))  onKey(vk_left);
@@ -1103,7 +1101,7 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 					
 					var scis = gpu_get_scissor();
 					
-					if(cursor_select > -1) { //draw highlight
+					if(cursor_select > -1) { // Draw highlight
 						if(highlight_color == -1) highlight_color = COLORS.widget_text_highlight;
 						gpu_set_scissor(_x + 1, _y + 1, _w - 2, _h - 2);
 						draw_set_color(highlight_color);
