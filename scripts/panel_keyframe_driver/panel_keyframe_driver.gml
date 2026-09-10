@@ -14,7 +14,7 @@ function Panel_Keyframe_Driver() : PanelContent() constructor {
 		title_actions_show_graph = [ THEME.timeline_graph, 0, COLORS._main_icon ];
 		title_actions_override = false;
 		title_actions = [
-			[ "Graph",  title_actions_show_graph, function() /*=>*/ { 
+			[ "Toggle Graph",  title_actions_show_graph, function() /*=>*/ { 
 				if(key == noone) return; 
 				var p = key.anim.prop; 
 				p.attributes.show_graph = !p.attributes.show_graph; 

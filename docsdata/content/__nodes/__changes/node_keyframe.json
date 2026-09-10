@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.9.209",
+    "changes": [
+      {
+        "date": "2026-09-10T01:21:32.443Z",
+        "node": "Menu Editor",
+        "commit": "**Menu Editor**: Fix crash when displaying node items."
+      }
+    ]
+  },
+  {
     "version": "1.21.9.103",
     "changes": [
       {

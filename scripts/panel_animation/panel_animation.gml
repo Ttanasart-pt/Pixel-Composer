@@ -108,19 +108,19 @@
         registerFunction(an, "Keyframe Color",  "", MOD_KEY.none, function() /*=>*/ { menuCall("", [ MENU_ITEMS.animation_keyframe_color ]); });
         
         MENU_ITEMS.animation_group_ease_in = menuItemGroup(__txt($"{t}_in", "Ease in"),  [ 
-			[ [s,0], function() /*=>*/ { array_foreach(PANEL_ANIMATION.keyframe_selecting, function(k,i) /*=>*/ { k.ease_in_type = CURVE_TYPE.linear; k.ease_in = [0, 1]; }) }, __txt($"{t}_linear",    "Linear")    ],
-			[ [s,1], function() /*=>*/ { array_foreach(PANEL_ANIMATION.keyframe_selecting, function(k,i) /*=>*/ { k.ease_in_type = CURVE_TYPE.bezier; k.ease_in = [1, 1]; }) }, __txt($"{t}_smooth",    "Smooth")    ],
-			[ [s,2], function() /*=>*/ { array_foreach(PANEL_ANIMATION.keyframe_selecting, function(k,i) /*=>*/ { k.ease_in_type = CURVE_TYPE.bezier; k.ease_in = [1, 2]; }) }, __txt($"{t}_overshoot", "Overshoot") ],
-			[ [s,3], function() /*=>*/ { array_foreach(PANEL_ANIMATION.keyframe_selecting, function(k,i) /*=>*/ { k.ease_in_type = CURVE_TYPE.bezier; k.ease_in = [0, 0]; }) }, __txt($"{t}_sharp",     "Sharp")     ],
-			[ [s,4], function() /*=>*/ { array_foreach(PANEL_ANIMATION.keyframe_selecting, function(k,i) /*=>*/ { k.ease_in_type = CURVE_TYPE.cut;    k.ease_in = [0, 0]; }) }, __txt($"{t}_hold",      "Hold")      ],
+			[ [s,0], function() /*=>*/ {return PANEL_ANIMATION.setKeyEase(0,0)}, __txt($"{t}_linear",    "Linear")    ],
+			[ [s,1], function() /*=>*/ {return PANEL_ANIMATION.setKeyEase(0,1)}, __txt($"{t}_smooth",    "Smooth")    ],
+			[ [s,2], function() /*=>*/ {return PANEL_ANIMATION.setKeyEase(0,2)}, __txt($"{t}_overshoot", "Overshoot") ],
+			[ [s,3], function() /*=>*/ {return PANEL_ANIMATION.setKeyEase(0,3)}, __txt($"{t}_sharp",     "Sharp")     ],
+			[ [s,4], function() /*=>*/ {return PANEL_ANIMATION.setKeyEase(0,4)}, __txt($"{t}_hold",      "Hold")      ],
         ], [ "Animation", "Ease In" ]);
         registerFunction(an, "Ease In",  "", MOD_KEY.none, function() /*=>*/ { menuCall("", [ MENU_ITEMS.animation_group_ease_in ]); });
         
         MENU_ITEMS.animation_group_ease_out = menuItemGroup(__txt($"{t}_out", "Ease out"),  [ 
-            [ [s,0], function() /*=>*/ { array_foreach(PANEL_ANIMATION.keyframe_selecting, function(k,i) /*=>*/ { k.ease_out_type = CURVE_TYPE.linear; k.ease_out = [0, 0]; }) }, __txt($"{t}_linear",    "Linear")    ],
-            [ [s,1], function() /*=>*/ { array_foreach(PANEL_ANIMATION.keyframe_selecting, function(k,i) /*=>*/ { k.ease_out_type = CURVE_TYPE.bezier; k.ease_out = [1, 0]; }) }, __txt($"{t}_smooth",    "Smooth")    ],
-            [ [s,2], function() /*=>*/ { array_foreach(PANEL_ANIMATION.keyframe_selecting, function(k,i) /*=>*/ { k.ease_out_type = CURVE_TYPE.bezier; k.ease_out = [1,-1]; }) }, __txt($"{t}_overshoot", "Overshoot") ],
-            [ [s,3], function() /*=>*/ { array_foreach(PANEL_ANIMATION.keyframe_selecting, function(k,i) /*=>*/ { k.ease_out_type = CURVE_TYPE.bezier; k.ease_out = [0, 1]; }) }, __txt($"{t}_sharp",     "Sharp")     ],
+            [ [s,0], function() /*=>*/ {return PANEL_ANIMATION.setKeyEase(1,0)}, __txt($"{t}_linear",    "Linear")    ],
+            [ [s,1], function() /*=>*/ {return PANEL_ANIMATION.setKeyEase(1,1)}, __txt($"{t}_smooth",    "Smooth")    ],
+            [ [s,2], function() /*=>*/ {return PANEL_ANIMATION.setKeyEase(1,2)}, __txt($"{t}_overshoot", "Overshoot") ],
+            [ [s,3], function() /*=>*/ {return PANEL_ANIMATION.setKeyEase(1,3)}, __txt($"{t}_sharp",     "Sharp")     ],
         ], [ "Animation", "Ease Outs" ]);
         registerFunction(an, "Ease Out", "", MOD_KEY.none, function() /*=>*/ { menuCall("", [ MENU_ITEMS.animation_group_ease_out ]); });
         
@@ -145,6 +145,7 @@
         MENU_ITEMS.animation_group_label_color = menuItemGroup(__txt("Color"), _item, ["Animation", "Label Color"]).setSpacing(ui(24));
         registerFunction(an, "Label Color", "", MOD_KEY.none, function() /*=>*/ { menuCall("", [ MENU_ITEMS.animation_group_label_color ]); });
     }
+    
 #endregion
 
 function Panel_Animation() : PanelContent() constructor {
@@ -1113,7 +1114,28 @@ function Panel_Animation() : PanelContent() constructor {
     }
     
     ////- Actions
-
+	
+    static setKeyEase = function(_side = 0, _type = 0) {
+    	if(_side == 0) {
+    		switch(_type) {
+	    		case 0 : array_foreach(keyframe_selecting, function(k,i) /*=>*/ { k.ease_in_type = CURVE_TYPE.linear; k.ease_in = [0, 1]; }); break;
+				case 1 : array_foreach(keyframe_selecting, function(k,i) /*=>*/ { k.ease_in_type = CURVE_TYPE.bezier; k.ease_in = [1, 1]; }); break;
+				case 2 : array_foreach(keyframe_selecting, function(k,i) /*=>*/ { k.ease_in_type = CURVE_TYPE.bezier; k.ease_in = [1, 2]; }); break;
+				case 3 : array_foreach(keyframe_selecting, function(k,i) /*=>*/ { k.ease_in_type = CURVE_TYPE.bezier; k.ease_in = [0, 0]; }); break;
+				case 4 : array_foreach(keyframe_selecting, function(k,i) /*=>*/ { k.ease_in_type = CURVE_TYPE.cut;    k.ease_in = [0, 0]; }); break;
+    		}
+    		
+    	} else {
+    		switch(_type) {
+	    		case 0 : array_foreach(keyframe_selecting, function(k,i) /*=>*/ { k.ease_out_type = CURVE_TYPE.linear; k.ease_out = [0, 0]; }); break;
+				case 1 : array_foreach(keyframe_selecting, function(k,i) /*=>*/ { k.ease_out_type = CURVE_TYPE.bezier; k.ease_out = [1, 0]; }); break;
+				case 2 : array_foreach(keyframe_selecting, function(k,i) /*=>*/ { k.ease_out_type = CURVE_TYPE.bezier; k.ease_out = [1,-1]; }); break;
+				case 3 : array_foreach(keyframe_selecting, function(k,i) /*=>*/ { k.ease_out_type = CURVE_TYPE.bezier; k.ease_out = [0, 1]; }); break;
+    		}
+    		
+    	}
+    }
+    
     function setSelectingKeyColor(c) { 
         __temp_color = c;
         array_foreach(keyframe_selecting, function(k,i) /*=>*/ {return k.setColor(__temp_color)});

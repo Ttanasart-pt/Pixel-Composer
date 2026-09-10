@@ -227,13 +227,13 @@ function Panel_MenuItems_Editor(_menuId, _pie = false) : PanelContent() construc
 		draw_set_text(f_p4, fa_left, fa_center, COLORS._main_text_sub);
 		draw_text_add(tx, yy + hg / 2, _menu);
 		
+		if(is_callable(_spr)) _spr = _spr();
 		if(is_array(_spr)) {
 			_spri = _spr[1];
 			_spr  = _spr[0];
 		}
 		
-		if(is_callable(_spr)) _spr = _spr();
-		if(sprite_exists(_spr)) {
+		if(is_real(_spr) && sprite_exists(_spr)) {
 			var _ss = min((hg - ui(4)) / sprite_get_width(_spr), (hg - ui(4)) / sprite_get_height(_spr));
 			gpu_set_texfilter(true);
 			draw_sprite_ext(_spr, _spri, xx + ui(12), yy + hg / 2, _ss, _ss, 0, COLORS._main_icon);

@@ -19,16 +19,13 @@ enum DRIVER_TYPE { none, linear, wiggle, sine }
 			eix /= _total;
 		}
 		
-		if(eox > 1) eiy -= min(eox - 1, 1);
-		eox = clamp(eox, 0, .9);
+		eiy -= clamp(eox-1, 0,  1);
+		eox  = clamp(eox,   0, .9);
 		
-		if(eix > 1) eoy += min(eix - 1, 1);
-	    eix = clamp(eix, 0, .9);
+		eoy += clamp(eix-1, 0,  1);
+	    eix  = clamp(eix,   0, .9);
 	    
-		eix = 1 - eix;
-		eiy =     eiy;
-		
-		return eval_curve_segment_x(0, eox, eoy, eix, eiy, 1, rat);
+		return eval_curve_segment_x(0, eox, eoy, 1 - eix, eiy, 1, rat);
 	}
 #endregion
 
@@ -234,7 +231,7 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 				return prop.lerpAnimKeys(from, to, rat);
 			}
 			
-			return values[0].value; //First frame
+			return values[0].value; // First Frame
 		}
 		
 		//////////////////////////////////////////////////// AFTER LAST //////////////////////////////////////////////////////
