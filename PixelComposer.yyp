@@ -4504,7 +4504,6 @@
     {"id":{"name":"s_node_canvas","path":"sprites/s_node_canvas/s_node_canvas.yy",},},
     {"id":{"name":"s_node_cart_to_polar","path":"sprites/s_node_cart_to_polar/s_node_cart_to_polar.yy",},},
     {"id":{"name":"s_node_caustic","path":"sprites/s_node_caustic/s_node_caustic.yy",},},
-    {"id":{"name":"s_node_cellular","path":"sprites/s_node_cellular/s_node_cellular.yy",},},
     {"id":{"name":"s_node_character","path":"sprites/s_node_character/s_node_character.yy",},},
     {"id":{"name":"s_node_checker","path":"sprites/s_node_checker/s_node_checker.yy",},},
     {"id":{"name":"s_node_chromatic_aberration","path":"sprites/s_node_chromatic_aberration/s_node_chromatic_aberration.yy",},},

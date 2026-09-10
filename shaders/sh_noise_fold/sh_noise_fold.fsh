@@ -43,6 +43,7 @@ uniform vec2  scale;
 uniform int   iteration;
 uniform float stretch;
 uniform float amplitude;
+uniform vec2  density;
 
 uniform int   mode;
 uniform vec2  levelIn, levelOut; float applyLevel(float v) { return mix(levelOut.x, levelOut.y, (v - levelIn.x) / (levelIn.y - levelIn.x)); }
@@ -56,8 +57,8 @@ void main() {
 	vec4  col = vec4(0., 0., 0., 1.);
 	
     for (int i = 0; i < iteration; i++) {
-    	pos += cos( pos.yx * 3. + vec2(0.0, stretch)) / 3.;
-        pos += sin( pos.yx      + vec2(stretch, 0.0)) / 2.;
+    	pos += cos( pos.yx * density.x + vec2(0., stretch)) / 3.;
+        pos += sin( pos.yx * density.y + vec2(stretch, 0.)) / 2.;
         pos *= amplitude;
     }
     

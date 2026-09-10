@@ -10,6 +10,7 @@ function Node_Fold_Noise(_x, _y, _group = noone) : Node_Shader_Generator(_x, _y,
 	newInput( 3, nodeValue_ISlider(  "Iteration",   2, [ 0, 6, 0.1 ]    )).setShaderProp("iteration").setPieMenu();
 	newInput( 4, nodeValue_Float(    "Stretch",     2                   )).setShaderProp("stretch");
 	newInput( 5, nodeValue_Slider(   "Amplitude",   1.3, [ 0, 2, 0.01 ] )).setShaderProp("amplitude");
+	newInput(13, nodeValue_Vec2(     "Detail",     [3,1]                )).setShaderProp("density");
 	
 	////- =Transform
 	newInput( 1, nodeValue_Vec2(     "Position",   [0,0] )).setHotkey("G").setShaderProp("position").setUnitSimple().setPieMenu();
@@ -20,11 +21,11 @@ function Node_Fold_Noise(_x, _y, _group = noone) : Node_Shader_Generator(_x, _y,
 	newInput(11, nodeValue_SliRange( "Level In",   [0,1] )).setShaderProp("levelIn");
 	newInput(12, nodeValue_SliRange( "Level Out",  [0,1] )).setShaderProp("levelOut");
 	newInput( 6, nodeValue_EButton(  "Mode",   0, [ "Greyscale", "Map" ])).setShaderProp("mode");
-	// input 12
+	// input 14
 	
 	input_display_list = [
 		[ "Output",     true ],  0,  9, 10,  8, 
-		[ "Noise",     false ],  3,  4,  5, 
+		[ "Noise",     false ],  3,  4,  5, 13, 
 		[ "Transform", false ],  1,  7,  2, 
 		[ "Rendering", false ], 11, 12,  6, 
 	];

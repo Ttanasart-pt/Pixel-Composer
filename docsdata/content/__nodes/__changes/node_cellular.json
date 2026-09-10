@@ -6,6 +6,11 @@
         "date": "2026-09-10T03:31:27.776Z",
         "node": "",
         "commit": "Generator nodes with level property now separate level in and out values."
+      },
+      {
+        "date": "2026-09-10T04:54:04.939Z",
+        "node": "Fold Noise",
+        "commit": "**Fold Noise**: Add detail control."
       }
     ]
   },

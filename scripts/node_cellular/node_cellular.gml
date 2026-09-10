@@ -43,13 +43,13 @@ function Node_Cellular(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	
 	////- =Rendering
 	newInput(22, nodeValue_SliRange( "Level In",   [0,1]        ));
-	newInput(28, nodeValue_SliRange( "Level Out",  [0,1]        ));
+	newInput(27, nodeValue_SliRange( "Level Out",  [0,1]        ));
 	newInput(15, nodeValue_Bool(     "Inverted",   false        ));
 	newInput(26, nodeValue_Color(    "Gap Color",  ca_black     ));
 	newInput( 5, nodeValue_Slider(   "Contrast",   1, [0,4,.01] ));
 	newInput( 7, nodeValue_Slider(   "Middle",    .5, [0,1,.01] ));
 	newInput(10, nodeValue_Bool(     "Colored",    false        ));
-	// 29
+	// 28
 	
 	input_display_list = [  3,
 		[ "Output",    false ],  0, 20, 21, 13, 
@@ -57,7 +57,7 @@ function Node_Cellular(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 		[ "Iteration", false ], 16, 18, 19, 17, 
 		[ "Transform", false ],  1, 12,  2, 11, 24,  
 		[ "Radial",    false ],  8,  9,
-		[ "Rendering", false ], 22, 28, 15, 26,  5,  7, 10, 
+		[ "Rendering", false ], 22, 27, 15, 26,  5,  7, 10, 
 	];
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
@@ -103,7 +103,7 @@ function Node_Cellular(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 			var _iblend = _data[17];
 			
 			var _lvl    = _data[22];
-			var _lvo    = _data[28];
+			var _lvo    = _data[27];
 			var _inv    = _data[15];
 			var _gcol   = _data[26];
 			var _con    = _data[ 5];
