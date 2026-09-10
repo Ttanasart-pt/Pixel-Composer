@@ -117,8 +117,21 @@ function Node_Blur_Directional(_x, _y, _group = noone) : Node_Processor(_x, _y, 
 			surface_reset_shader()
 			
 			_args.surface   = temp_surface[0];
-			_args.size[0]  *= _smth;
-			_args.angle[0] += 90;
+			
+			if(is_real(_args.size[0]))
+				_args.size[0] *= _smth;
+			else {
+				_args.size[0][0] *= _smth;
+				_args.size[0][1] *= _smth;
+			}
+			
+			if(is_real(_args.angle[0]))
+				_args.angle[0] += 90;
+			else {
+				_args.angle[0][0] += 90;
+				_args.angle[0][1] += 90;
+			}
+			
 			_outSurf = surface_apply_blur_directional(_outSurf, _args);
 		}
 		

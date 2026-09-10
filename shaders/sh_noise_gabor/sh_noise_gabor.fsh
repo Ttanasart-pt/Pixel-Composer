@@ -66,8 +66,8 @@ uniform vec2  augment;
 uniform vec2  levelIn, levelOut; float applyLevel(float v) { return mix(levelOut.x, levelOut.y, (v - levelIn.x) / (levelIn.y - levelIn.x)); }
 
 vec2 hash(vec2 p) { return fract(sin(vec2(
-										dot(p, vec2(127.1324, 311.7874)) * (152.6178612 + mod(seed, 100000.) / 10.), 
-										dot(p, vec2(269.8355, 183.3961)) * (437.5453123 + mod(seed, 100000.) / 10.)
+										dot(p, vec2(127.1324, 311.7874)) * (152.6178612 + mod(seed, 10000.) / 100.), 
+										dot(p, vec2(269.8355, 183.3961)) * (437.5453123 + mod(seed, 10000.) / 100.)
 									)) * 43758.5453); }
 
 vec3 gabor_wave(in vec2 p) {

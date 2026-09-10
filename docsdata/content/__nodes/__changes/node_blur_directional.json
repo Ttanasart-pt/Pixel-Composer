@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.9.209",
+    "changes": [
+      {
+        "date": "2026-09-10T06:14:44.811Z",
+        "node": "Directional Blur",
+        "commit": "**Directional Blur**: Fix error when using smooth blur on mapped strength, direction."
+      }
+    ]
+  },
+  {
     "version": "1.21.7.110",
     "changes": [
       {

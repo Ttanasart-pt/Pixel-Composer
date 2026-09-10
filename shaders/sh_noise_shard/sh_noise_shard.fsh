@@ -60,15 +60,15 @@ uniform vec2  levelIn, levelOut; float applyLevel(float v) { return mix(levelOut
 #define tau 6.283185307179586
 
 vec3 hash(vec3 p) { return fract(sin(vec3(
-										dot(p, vec3(127.1324, 311.7874, 829.3683)) * (152.6178612 + mod(seed, 100000.) / 10.), 
-										dot(p, vec3(269.8355, 183.3961, 614.5965)) * (437.5453123 + mod(seed, 100000.) / 10.),
-										dot(p, vec3(615.2689, 264.1657, 278.1687)) * (962.6718165 + mod(seed, 100000.) / 10.)
+										dot(p, vec3(127.1324, 311.7874, 829.3683)) * (152.6178612 + mod(seed, 10000.) / 100.), 
+										dot(p, vec3(269.8355, 183.3961, 614.5965)) * (437.5453123 + mod(seed, 10000.) / 100.),
+										dot(p, vec3(615.2689, 264.1657, 278.1687)) * (962.6718165 + mod(seed, 10000.) / 100.)
 									)) * 43758.5453); }
 
 float shard_noise(in vec3 p, in float _sharp) {
     vec3 ip = floor(p);
     vec3 fp = fract(p);
-
+	
     float v = 0., t = 0.;
 	
     for (int z = -1; z <= 1; z++)
