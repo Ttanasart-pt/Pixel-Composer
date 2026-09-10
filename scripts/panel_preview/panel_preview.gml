@@ -3189,13 +3189,14 @@ function Panel_Preview() : PanelContent() constructor {
     static drawViewController = function() {
         if(!PROJECT.previewSetting.show_view_control) return;
         
+        var mrg   = THEME_VALUE.panel_toolbar_merge;
         var pd    = max(ui(8), THEME_VALUE.panel_toolbar_padding);
         var _left = PROJECT.previewSetting.show_view_control == 1;
         
         var _side   = _left? 1 : -1;
         var _view_x = _left? tool_side_draw_l * (toolbar_size + pd) + pd : 
                          w - tool_side_draw_r * (toolbar_size + pd) - pd;
-        var _view_y = pd + toolbar_size + pd + tool_side_draw_t * toolbar_size;
+        var _view_y = pd + toolbar_size + pd * !mrg + tool_side_draw_t * toolbar_size;
         
         var _hab    = pHOVER && tool_hovering == noone && !view_pan_tool && !view_zoom_tool;
         view_hovering = false;

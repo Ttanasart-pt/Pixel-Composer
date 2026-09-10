@@ -19,15 +19,16 @@ function Node_Voronoi_Extra(_x, _y, _group = noone) : Node_Shader_Generator(_x, 
 	newInput( 2, nodeValue_Vec2(     "Scale",     [4,4] )).setHotkey("S").setShaderProp("scale").setPieMenu();
 	
 	////- =Rendering
-	newInput(11, nodeValue_SliRange( "Level",     [0,1] )).setShaderProp("level");
-	newInput(12, nodeValue_Bool(     "Tile",      true  )).setShaderProp("tile");
-	// input 12
+	newInput(11, nodeValue_SliRange( "Level In",   [0,1] )).setShaderProp("levelIn");
+	newInput(13, nodeValue_SliRange( "Level Out",  [0,1] )).setShaderProp("levelOut");
+	newInput(12, nodeValue_Bool(     "Tile",       true  )).setShaderProp("tile");
+	// input 14
 	
 	input_display_list = [
 		[ "Output",      true ],  0,  9, 10,  8, 
 		[ "Noise",      false ],  3,  5,  4,  6, 
 		[ "Transform",  false ],  1,  7,  2,
-		[ "Rendering",  false ], 11, 12, 
+		[ "Rendering",  false ], 11, 13, 12, 
 	];
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _params) { 

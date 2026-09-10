@@ -59,7 +59,8 @@ uniform int       paramBUseSurf;
 uniform sampler2D paramBSurf;
         float     B;
 
-uniform vec2 level;      float applyLevel(float f) { return (f - level.x) / (level.y - level.x); }
+uniform vec2 levelIn, levelOut; float applyLevel(float v) { return mix(levelOut.x, levelOut.y, (v - levelIn.x) / (levelIn.y - levelIn.x)); }
+
 uniform int  colored;
 uniform vec2 colorRanR;
 uniform vec2 colorRanG;

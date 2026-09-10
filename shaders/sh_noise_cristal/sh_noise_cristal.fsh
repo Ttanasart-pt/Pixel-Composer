@@ -45,7 +45,7 @@ uniform vec2  position;
 uniform int   iteration;
 uniform float seed;
 
-uniform vec2  level;      float applyLevel(float f) { return (f - level.x) / (level.y - level.x); }
+uniform vec2  levelIn, levelOut; float applyLevel(float v) { return mix(levelOut.x, levelOut.y, (v - levelIn.x) / (levelIn.y - levelIn.x)); }
 uniform vec4  color;
 uniform float gamma;
 uniform float phase;

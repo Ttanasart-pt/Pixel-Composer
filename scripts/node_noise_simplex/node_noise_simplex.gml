@@ -28,19 +28,20 @@ function Node_Noise_Simplex(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	newInput(12, nodeValue_Slider( "Amplitude", .5));
 	
 	////- =Render
-	newInput(18, nodeValue_SliRange( "Level",         [0,1] ));
+	newInput(18, nodeValue_SliRange( "Level In",      [0,1] ));
+	newInput(19, nodeValue_SliRange( "Level Out",     [0,1] ));
 	newInput( 4, nodeValue_EButton(  "Color Mode",     0, [ "Greyscale", "RGB", "HSV" ]));
 	newInput( 5, nodeValue_SliRange( "Color R Range", [0,1] ));
 	newInput( 6, nodeValue_SliRange( "Color G Range", [0,1] ));
 	newInput( 7, nodeValue_SliRange( "Color B Range", [0,1] ));
-	// 19
+	// 20
 	
 	input_display_list = [
 		[ "Output",     true ],  0, 15, 16, 13, 
 		[ "Noise",     false ], 14,  3,  9, 17, 
 		[ "Transform", false ],  1, 10,  2,  8, 
 		[ "Iteration",  true ], 11, 12, 
-		[ "Render",    false ], 18,  4,  5,  6,  7, 
+		[ "Render",    false ], 18, 19,  4,  5,  6,  7, 
 	];
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
@@ -75,6 +76,7 @@ function Node_Noise_Simplex(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 			var _sed  = _data[14];
 			
 			var _lvl  = _data[18];
+			var _lvo  = _data[19];
 			
 			var _adv_scale  = _data[11];
 			var _adv_amplit = _data[12];
@@ -104,7 +106,9 @@ function Node_Noise_Simplex(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 			shader_set_f("itrScaling",   _adv_scale);
 			shader_set_i("tiled",        _tile);
 		
-			shader_set_2("level",     _lvl);
+			shader_set_2("levelIn",   _lvl);
+			shader_set_2("levelOut",  _lvo);
+			
 			shader_set_i("colored",   _col);
 			shader_set_2("colorRanR", _clr);
 			shader_set_2("colorRanG", _clg);

@@ -21,19 +21,20 @@ function Node_Noise_FBM(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	newInput( 4, nodeValue_Int(  "Iteration",  4      )).setPieMenu();
 	
 	////- =Rendering
-	newInput(12, nodeValue_SliRange( "Level",         [0,1] ));
+	newInput(12, nodeValue_SliRange( "Level In",      [0,1] ));
+	newInput(13, nodeValue_SliRange( "Level Out",     [0,1] ));
 	newInput( 5, nodeValue_EButton(  "Color Mode",     0, [ "Greyscale", "RGB", "HSV" ] ));
 	newInput( 6, nodeValue_SliRange( "Color R Range", [0,1] ));
 	newInput( 7, nodeValue_SliRange( "Color G Range", [0,1] ));
 	newInput( 8, nodeValue_SliRange( "Color B Range", [0,1] ));
-	// input 13
+	// input 14
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
 	input_display_list = [
 		[ "Output",    false ],  0, 10, 11, 9, 
 		[ "Noise",     false ],  1,  2,  3,  4, 
-		[ "Rendering", false ], 12,  5,  6,  7,  8, 
+		[ "Rendering", false ], 12, 13,  5,  6,  7,  8, 
 	];
 	
 	////- Node
@@ -49,6 +50,8 @@ function Node_Noise_FBM(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			var _itr = _data[ 4];
 			
 			var _lvl = _data[12];
+			var _lvo = _data[13];
+			
 			var _col = _data[ 5];
 			var _clr = _data[ 6];
 			var _clg = _data[ 7];
@@ -73,7 +76,9 @@ function Node_Noise_FBM(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			shader_set_f("seed",      _sed);
 			shader_set_i("iteration", _itr);
 			
-			shader_set_2("level",     _lvl);
+			shader_set_2("levelIn",   _lvl);
+			shader_set_2("levelOut",  _lvo);
+			
 			shader_set_i("colored",   _col);
 			shader_set_2("colorRanR", _clr);
 			shader_set_2("colorRanG", _clg);

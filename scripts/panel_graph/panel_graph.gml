@@ -1886,6 +1886,7 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
         view_hovering = false;
         if(!project.graphDisplay.show_view_control) return;
         
+        var mrg   = THEME_VALUE.panel_toolbar_merge;
         var pd    = max(ui(8), THEME_VALUE.panel_toolbar_padding);
         var _left = project.graphDisplay.show_view_control == 1;
         
@@ -1894,7 +1895,7 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
         
         var d3_view_wz = ui(16);
         var _d3x = _left? pd + d3_view_wz : w - pd - d3_view_wz;
-        var _d3y = pd + project.graphDisplay.show_topbar * (topbar_height + pd) + d3_view_wz;
+        var _d3y = pd + project.graphDisplay.show_topbar * (topbar_height + pd * !mrg) + d3_view_wz;
         var _hv  = false;
         
         if(_hab && point_in_circle(mx, my, _d3x, _d3y, d3_view_wz)) {

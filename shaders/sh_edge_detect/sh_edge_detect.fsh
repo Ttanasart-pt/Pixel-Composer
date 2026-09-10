@@ -66,7 +66,7 @@ uniform int  filter;
 uniform int  sides[9];
 
 uniform int  colorMode;
-uniform vec2 level;
+uniform vec2 levelIn, levelOut; float applyLevel(float v) { return mix(levelOut.x, levelOut.y, (v - levelIn.x) / (levelIn.y - levelIn.x)); }
 
 #region matrices
 	const mat3 sobel     = mat3( -1., -2., -1., 
@@ -202,7 +202,9 @@ void main() {
 	else if(filter == 2) res = vec4(hColor.rgb / 2., point.a);
 	else if(filter == 3) res = vec4(abs(hColor.rgb), point.a);
 	
-	res = (res - level.x) / (level.y - level.x);
+	res.r = applyLevel(res.r);
+	res.g = applyLevel(res.g);
+	res.b = applyLevel(res.b);
 	
 	float gr = bright(res);
 	if(colorMode == 1) res.rgb = vec3(gr);

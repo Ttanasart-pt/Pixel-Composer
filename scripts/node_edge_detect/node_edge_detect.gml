@@ -22,15 +22,16 @@ function Node_Edge_Detect(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	
 	////- =Rendering
 	newInput( 9, nodeValue_EScroll(  "Color", 0, [ "Color", "Greyscale", "BW" ] ));
-	newInput(10, nodeValue_Range(    "Level", [0,1] ));
-	// 11
+	newInput(10, nodeValue_Range(    "Level In",  [0,1] ));
+	newInput(11, nodeValue_Range(    "Level Out", [0,1] ));
+	// 12
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
 	input_display_list = [ 5, 6, 
 		[ "Surfaces",     true ],  0,  3,  4,  7,  8, 
 		[ "Edge detect", false ],  1, 
-		[ "Rendering",   false ],  9, 10, 
+		[ "Rendering",   false ],  9, 10, 11, 
 	];
 	
 	////- Nodes
@@ -56,6 +57,7 @@ function Node_Edge_Detect(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 			
 			var colr  = _data[ 9];
 			var levl  = _data[10];
+			var levo  = _data[11];
 			
 			var over  = getAttribute("oversample");
 		#endregion
@@ -69,7 +71,8 @@ function Node_Edge_Detect(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 			shader_set_i(   "sampleMode",  over );
 			
 			shader_set_i(   "colorMode",  colr );
-			shader_set_2(   "level",      levl );
+			shader_set_2(   "levelIn",    levl );
+			shader_set_2(   "levelOut",   levo );
 			
 			shader_set_i(   "sides",       attributes.filter );
 			

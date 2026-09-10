@@ -20,14 +20,15 @@ function Node_Gabor_Noise(_x, _y, _group = noone) : Node_Shader_Generator(_x, _y
 	newInput( 2, nodeValue_Vec2(     "Scale",     [4,4] )).setHotkey("S").setShaderProp("scale").setMappable(8).setPieMenu();
 	
 	////- =Rendering
-	newInput(16, nodeValue_SliRange( "Level",     [0,1] )).setShaderProp("level");
-	// input 17
+	newInput(16, nodeValue_SliRange( "Level In",   [0,1] )).setShaderProp("levelIn");
+	newInput(17, nodeValue_SliRange( "Level Out",  [0,1] )).setShaderProp("levelOut");
+	// input 18
 	
 	input_display_list = [ 3, 
 		[ "Output",     true ],  0, 14, 15, 13, 
 		[ "Noise",     false ],  4,  9,  7, 11,  5, 10, 
 		[ "Transform", false ],  1, 12,  2,  8, 
-		[ "Rendering", false ], 16, 
+		[ "Rendering", false ], 16, 17, 
 	];
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _params) {

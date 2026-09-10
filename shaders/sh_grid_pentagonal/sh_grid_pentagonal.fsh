@@ -202,7 +202,7 @@ uniform sampler2D widthSurf;
 
 uniform vec4  gapCol;
 uniform int   gradient_use;
-uniform vec2  level;
+uniform vec2  levelIn, levelOut; float applyLevel(float v) { return mix(levelOut.x, levelOut.y, (v - levelIn.x) / (levelIn.y - levelIn.x)); }
 
 uniform float gradient_shift;
 
@@ -326,7 +326,7 @@ void main() {
 		colr = gradientEval(pfract(random(coordw) + gradient_shift));
 		
 	} else if(mode == 1) {
-		dist = (dist - level.x) / (level.y - level.x);
+		dist = applyLevel(dist);
 		colr = vec4(vec3(dist), 1.);
 		
 	} else if(mode == 2) {

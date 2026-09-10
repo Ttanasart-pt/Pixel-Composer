@@ -23,17 +23,18 @@ function Node_Noise_Aniso(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	newInput(12, nodeValue_Bool(  "Tile",      false ));
 	
 	////- =Rendering
-	newInput(15, nodeValue_SliRange( "Level",      [0,1] ));
+	newInput(15, nodeValue_SliRange( "Level In",   [0,1] ));
+	newInput(16, nodeValue_SliRange( "Level Out",  [0,1] ));
 	newInput( 9, nodeValue_EScroll(  "Render Mode", 0, [ "Blend", "Waterfall" ] ));
 	newInput(10, nodeValueSeed());
-	// input 16
+	// input 17
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
 	input_display_list = [
 		[ "Output",    false ],  0, 13, 14, 11, 
 		[ "Noise",     false ],  2,  1,  6,  5,  7,  3,  4,  8, 12, 
-		[ "Rendering", false ], 15,  9, 10, 
+		[ "Rendering", false ], 15, 16,  9, 10, 
 	];
 	
 	////- Node
@@ -60,6 +61,8 @@ function Node_Noise_Aniso(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 			var _tile   = _data[12];
 			
 			var _lvl    = _data[15];
+			var _lvo    = _data[16];
+			
 			var _mod    = _data[ 9];
 			var _sedClr = _data[10];
 		
@@ -77,11 +80,12 @@ function Node_Noise_Aniso(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 			shader_set_f( "colrSeed",  _sedClr );
 			shader_set_i( "tile",      _tile   );
 			
-			shader_set_m( "noiseX",    _data[1], _data[6], inputs[1]);
-			shader_set_m( "noiseY",    _data[5], _data[7], inputs[5]);
-			shader_set_m( "angle",     _data[4], _data[8], inputs[4]);
+			shader_set_m( "noiseX",    _data[1], _data[6], inputs[1] );
+			shader_set_m( "noiseY",    _data[5], _data[7], inputs[5] );
+			shader_set_m( "angle",     _data[4], _data[8], inputs[4] );
 			
-			shader_set_2( "level",     _lvl    );
+			shader_set_2( "levelIn",   _lvl    );
+			shader_set_2( "levelOut",  _lvo    );
 			shader_set_i( "mode",      _mod    );
 			
 			draw_sprite_stretched(s_fx_pixel, 0, 0, 0, _dim[0], _dim[1]);

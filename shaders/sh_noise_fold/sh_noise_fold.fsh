@@ -45,7 +45,7 @@ uniform float stretch;
 uniform float amplitude;
 
 uniform int   mode;
-uniform vec2  level;      float applyLevel(float f) { return (f - level.x) / (level.y - level.x); }
+uniform vec2  levelIn, levelOut; float applyLevel(float v) { return mix(levelOut.x, levelOut.y, (v - levelIn.x) / (levelIn.y - levelIn.x)); }
 
 void main() {
 	float uva = 1.;

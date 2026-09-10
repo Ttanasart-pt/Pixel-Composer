@@ -17,7 +17,8 @@ function Node_Fold_Noise(_x, _y, _group = noone) : Node_Shader_Generator(_x, _y,
 	newInput( 2, nodeValue_Vec2(     "Scale",      [2,2] )).setHotkey("S").setShaderProp("scale").setPieMenu();
 	
 	////- =Rendering
-	newInput(11, nodeValue_SliRange( "Level", [0,1] )).setShaderProp("level");
+	newInput(11, nodeValue_SliRange( "Level In",   [0,1] )).setShaderProp("levelIn");
+	newInput(12, nodeValue_SliRange( "Level Out",  [0,1] )).setShaderProp("levelOut");
 	newInput( 6, nodeValue_EButton(  "Mode",   0, [ "Greyscale", "Map" ])).setShaderProp("mode");
 	// input 12
 	
@@ -25,7 +26,7 @@ function Node_Fold_Noise(_x, _y, _group = noone) : Node_Shader_Generator(_x, _y,
 		[ "Output",     true ],  0,  9, 10,  8, 
 		[ "Noise",     false ],  3,  4,  5, 
 		[ "Transform", false ],  1,  7,  2, 
-		[ "Rendering", false ], 11,  6, 
+		[ "Rendering", false ], 11, 12,  6, 
 	];
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _params) {

@@ -28,18 +28,19 @@ function Node_Perlin_Extra(_x, _y, _group = noone) : Node_Shader_Generator(_x, _
 	newInput( 2, nodeValue_Vec2(     "Scale",       [4,4] )).setHotkey("S").setShaderProp("scale").setMappable(13).setPieMenu();
 	
 	////- =Rendering
-	newInput(20, nodeValue_SliRange( "Level",         [0,1] )).setShaderProp("level");
+	newInput(20, nodeValue_SliRange( "Level In",      [0,1] )).setShaderProp("levelIn");
+	newInput(21, nodeValue_SliRange( "Level Out",     [0,1] )).setShaderProp("levelOut");
 	newInput( 6, nodeValue_EButton(  "Color Mode",     0, [ "Greyscale", "RGB", "HSV" ] )).setShaderProp("colored");
 	newInput( 7, nodeValue_SliRange( "Color R Range", [0,1] )).setShaderProp("colorRanR");
 	newInput( 8, nodeValue_SliRange( "Color G Range", [0,1] )).setShaderProp("colorRanG");
 	newInput( 9, nodeValue_SliRange( "Color B Range", [0,1] )).setShaderProp("colorRanB");
-	// input 21
-	
+	// input 22
+
 	input_display_list = [
 		[ "Output",     true ],  0, 18, 19, 17, 
 		[ "Noise",     false ],  5, 10,  3,  4, 11, 14, 12, 15,
 		[ "Transform", false ],  1, 16,  2, 13, 
-		[ "Rendering", false ], 20,  6,  7,  8,  9, 
+		[ "Rendering", false ], 20, 21,  6,  7,  8,  9, 
 	];
 	
 	////- Nodes

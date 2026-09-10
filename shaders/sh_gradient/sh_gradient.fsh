@@ -347,7 +347,7 @@ uniform int gradient_loop;
 uniform int uniAsp;
 
 uniform vec2 cirScale;
-uniform vec2 level;
+uniform vec2 levelIn, levelOut; float applyLevel(float v) { return mix(levelOut.x, levelOut.y, (v - levelIn.x) / (levelIn.y - levelIn.x)); }
 
 #define TAU 6.283185307179586
 
@@ -425,7 +425,10 @@ void main() {
 	vec4 col = gradientEval(prog);
 	vec4 res = vec4(col.rgb, col.a * texture2D( gm_BaseTexture, v_vTexcoord ).a * alp);
 	
-	res.rgb = (res.rgb - level.x) / (level.y - level.x);
+	res.r = applyLevel(res.r);
+	res.g = applyLevel(res.g);
+	res.b = applyLevel(res.b);
+	
 	float w = (res.r + res.g + res.b) / 3.;
 	float wtarget = curveEval(wcurve_curve, wcurve_amount, w);
 	if(w == 0.) res.rgb = vec3(wtarget);

@@ -18,14 +18,15 @@ function Node_Wavelet_Noise(_x, _y, _group = noone) : Node_Shader_Generator(_x, 
 	newInput( 2, nodeValue_Vec2(     "Scale",    [4,4] )).setHotkey("S").setShaderProp("scale").setMappable(6).setPieMenu();
 	
 	////- =Rendering
-	newInput(13, nodeValue_SliRange( "Level",    [0,1] )).setShaderProp("level");
-	// input 14
+	newInput(13, nodeValue_SliRange( "Level In",   [0,1] )).setShaderProp("levelIn");
+	newInput(14, nodeValue_SliRange( "Level Out",  [0,1] )).setShaderProp("levelOut");
+	// input 15
 	
 	input_display_list = [
 		[ "Output",      true ],  0, 11, 12, 10, 
 		[ "Noise",      false ],  3,  4,  7,  5,  8, 
 		[ "Transform",  false ],  1,  9,  2,  6, 
-		[ "Rendering",  false ], 13, 
+		[ "Rendering",  false ], 13, 14, 
 	];
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _params) { 

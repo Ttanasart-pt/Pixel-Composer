@@ -29,18 +29,19 @@ function Node_Noise_Strand(_x, _y, _group = noone) : Node_Shader_Generator(_x, _
 	newInput( 8, nodeValue_Float(    "Curve Shift",  0 )).setShaderProp("curveShift");
 	
 	////- =Rendering
-	newInput(15, nodeValue_SliRange( "Level",       [0,1] )).setShaderProp("level");
+	newInput(15, nodeValue_SliRange( "Level In",    [0,1] )).setShaderProp("levelIn");
+	newInput(16, nodeValue_SliRange( "Level Out",   [0,1] )).setShaderProp("levelOut");
 	newInput(10, nodeValue_EButton(  "Mode",         0, [ "Line", "Band", "Area" ] )).setShaderProp("mode");
 	newInput( 7, nodeValue_Slider(   "Thickness",    0    )).setShaderProp("thickness");
 	newInput(11, nodeValue_SliRange( "Opacity",     [0,1] )).setShaderProp("alpha");
-	// input 16
+	// input 17
 	
 	input_display_list = [ 
 		[ "Output",      true ],  0, 13, 14, 12, 
 		[ "Noise",      false ],  3,  9,  2,  4, 
 		[ "Transform",  false ],  1, 
 		[ "Curve",      false ],  5,  6,  8, 
-		[ "Rendering",  false ], 15, 10,  7, 11, 
+		[ "Rendering",  false ], 15, 16, 10,  7, 11, 
 	];
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _params) { 

@@ -24,14 +24,15 @@
 	newInput( 2, nodeValue_Vec2(     "Scale",     [2,2] )).setHotkey("S").setShaderProp("scale").setPieMenu();
 	
 	////- =Rendering
-	newInput(10, nodeValue_SliRange( "Level",     [0,1] )).setShaderProp("level");
-	// input 11
+	newInput(10, nodeValue_SliRange( "Level In",   [0,1] )).setShaderProp("levelIn");
+	newInput(11, nodeValue_SliRange( "Level Out",  [0,1] )).setShaderProp("levelOut");
+	// input 12
 	
 	input_display_list = [ 
 		[ "Output",     true ],  0,  8,  9,  7, 
 		[ "Noise",     false ],  5,  4,  6, 
 		[ "Transform", false ],  1,  3,  2, 
-		[ "Rendering", false ], 10, 
+		[ "Rendering", false ], 10, 11, 
 	];
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _params) { 

@@ -69,6 +69,7 @@ function NodeObject(_name, _node, _tooltip = "") constructor {
 	
 	buildFn = undefined;
 	if(node != -1) { 
+		fnKey   = $"graph_add_{nodeName}";
 		buildFn = registerLFunction("_", nodeName, "", 0, function(n) /*=>*/ { 
 			var _node = PANEL_GRAPH.doNewNode(n); 
 			if(!is(_node, Node)) return;
@@ -76,11 +77,11 @@ function NodeObject(_name, _node, _tooltip = "") constructor {
 			if(PREFERENCES.node_add_select)
 				PANEL_GRAPH.selectDragNode(_node, true);
 			
-		}, nodeName).setMenuName($"graph_add_{nodeName}", getName(), spr).setCommandName(getName());
+		}, nodeName).setMenuName(fnKey, getName(), function() /*=>*/ {return getSpr()}).setCommandName(getName());
 		buildFn.nodeName = nodeName;
 	}
 	
-	static setSpr     = function(_s) /*=>*/ { spr = _s; if(buildFn) buildFn.setSpr(_s);           return self; }
+	static setSpr     = function(_s) /*=>*/ { spr = _s;                                           return self; }
 	static setTags    = function(_t) /*=>*/ { array_append(tags, _t);                             return self; }
 	static setTooltip = function(_t) /*=>*/ { tooltip     = _t;                                   return self; }
 	static setParam   = function(_p) /*=>*/ { createParam = _p;                                   return self; }
@@ -159,7 +160,7 @@ function NodeObject(_name, _node, _tooltip = "") constructor {
 		
 		if(sprLoad) return THEME.loading;
 		
-		sprite_add_center_async(sprPath, function(s) /*=>*/ {return setSpr(s)})
+		sprite_add_center_async(sprPath, function(s) /*=>*/ {return setSpr(s)});
 		sprLoad = true;
 		return THEME.loading;
 	}

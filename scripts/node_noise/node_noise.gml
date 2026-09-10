@@ -17,19 +17,20 @@ function Node_Noise(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	newInput( 1, nodeValueSeed());
 	
 	////- =Rendering
-	newInput( 9, nodeValue_SliRange( "Level",         [0,1] ));
-	newInput( 2, nodeValue_EButton(  "Color Mode",      0, [ "Greyscale", "RGB", "HSV" ] ));
+	newInput( 9, nodeValue_SliRange( "Level In",      [0,1] ));
+	newInput(10, nodeValue_SliRange( "Level Out",     [0,1] ));
+	newInput( 2, nodeValue_EButton(  "Color Mode",     0, [ "Greyscale", "RGB", "HSV" ] ));
 	newInput( 3, nodeValue_SliRange( "Color R Range", [0,1] ));
 	newInput( 4, nodeValue_SliRange( "Color G Range", [0,1] ));
 	newInput( 5, nodeValue_SliRange( "Color B Range", [0,1] ));
-	// input 10
+	// input 11
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
 	input_display_list = [
 		[ "Output",     false ],  0,  7,  8,  6, 
 		[ "Noise",      false ],  1,  
-		[ "Rendering",  false ],  9,  2,  3,  4,  5, 
+		[ "Rendering",  false ],  9, 10,  2,  3,  4,  5, 
 	];
 	
 	////- Nodes
@@ -42,6 +43,8 @@ function Node_Noise(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 			var _sed = _data[ 1];
 			
 			var _lvl = _data[ 9];
+			var _lvo = _data[10];
+			
 			var _col = _data[ 2];
 			var _clr = _data[ 3];
 			var _clg = _data[ 4];
@@ -59,13 +62,15 @@ function Node_Noise(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 		surface_set_shader(_outSurf, sh_noise);
 			shader_set_uv(_data[7], _data[8]);
 			
-			shader_set_f("seed", _sed);
+			shader_set_f( "seed", _sed );
 			
-			shader_set_2("level",     _lvl);
-			shader_set_i("colored",   _col);
-			shader_set_2("colorRanR", _clr);
-			shader_set_2("colorRanG", _clg);
-			shader_set_2("colorRanB", _clb);
+			shader_set_2( "levelIn",   _lvl );
+			shader_set_2( "levelOut",  _lvo );
+			
+			shader_set_i( "colored",   _col );
+			shader_set_2( "colorRanR", _clr );
+			shader_set_2( "colorRanG", _clg );
+			shader_set_2( "colorRanB", _clb );
 			draw_empty();
 		surface_reset_shader();
 		

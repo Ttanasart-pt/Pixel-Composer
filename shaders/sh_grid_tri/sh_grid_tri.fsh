@@ -230,7 +230,8 @@ uniform sampler2D widthSurf;
 
 uniform vec4  gapCol;
 uniform int   gradient_use;
-uniform vec2  level;
+
+uniform vec2  levelIn, levelOut; float applyLevel(float v) { return mix(levelOut.x, levelOut.y, (v - levelIn.x) / (levelIn.y - levelIn.x)); }
 
 uniform float shift;
 uniform float secShift;
@@ -306,7 +307,7 @@ void main() {
 	float dist = max(0., tri.z);
 	vec4 colr;
 	
-	float h = (dist - level.x) / (level.y - level.x);
+	float h = applyLevel(dist);
 	gl_FragData[1] = vec4(vec3(h), 1.);
 	
 	if(mode == 1) { 

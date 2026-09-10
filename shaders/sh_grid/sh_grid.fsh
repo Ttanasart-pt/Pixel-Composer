@@ -318,7 +318,8 @@ uniform float secShift;
 uniform float gapAcc;
 uniform vec4  gapCol;
 uniform int   gradient_use;
-uniform vec2  level;
+
+uniform vec2  levelIn, levelOut; float applyLevel(float v) { return mix(levelOut.x, levelOut.y, (v - levelIn.x) / (levelIn.y - levelIn.x)); }
 
 uniform int   diagonal;
 uniform int   uniformSize;
@@ -446,7 +447,7 @@ void main() {
 		 if(shiftAxis == 0) { dist = 1. - max((nPos.x - 1.) * rat + 1., nPos.y); }
 	else if(shiftAxis == 1) { dist = 1. - max((nPos.y - 1.) * rat + 1., nPos.x); }
 	
-	float h = (dist - level.x) / (level.y - level.x);
+	float h = applyLevel(dist);
 	gl_FragData[1] = vec4(vec3(h), 1.);
 	
 	if(mode == 2) {

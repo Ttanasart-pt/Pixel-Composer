@@ -2321,6 +2321,14 @@ function Panel_Inspector() : PanelContent() constructor {
             draw_set_text(fnt, fa_left, fa_center, COLORS._main_text);
             
             var tx = ui(32);
+            switch(_tag) {
+            	case "favorites": 
+            		tx += ui(4);
+            		draw_sprite_ui(THEME.favorite, 1, tx, yy + lbh / 2, .75, .75, 0, CDEF.yellow);
+            		tx += ui(12);
+            		break;
+            }
+            
             draw_text_add(tx, yy + lbh / 2, _txt);
             tx += string_width(_txt) + ui(4);
     		draw_set_color(COLORS._main_text_sub);

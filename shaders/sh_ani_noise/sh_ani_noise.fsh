@@ -52,7 +52,7 @@ uniform vec2      angle;
 uniform int       angleUseSurf;
 uniform sampler2D angleSurf;
 
-uniform vec2  level;      float applyLevel(float f) { return (f - level.x) / (level.y - level.x); }
+uniform vec2  levelIn, levelOut; float applyLevel(float v) { return mix(levelOut.x, levelOut.y, (v - levelIn.x) / (levelIn.y - levelIn.x)); }
 
 float random1D (in vec2 st, float _seed) { return fract(sin(dot(st.xy, vec2(12.9898, 78.233)) * mod(_seed + 453.456, 100.) * 12.588) * 43758.5453123); }
 float random   (in vec2 st, float _seed) { return mix(random1D(st, floor(_seed)), random1D(st, floor(_seed) + 1.), fract(_seed)); }

@@ -16,14 +16,15 @@ function Node_Flow_Noise(_x, _y, _group = noone) : Node_Shader_Generator(_x, _y,
 	newInput( 2, nodeValue_Vec2(     "Scale",      [2,2] )).setHotkey("S").setShaderProp("scale").setPieMenu();
 	
 	////- =Rendering
-	newInput( 9, nodeValue_SliRange( "Level",      [0,1] )).setShaderProp("level");
-	// input 10
+	newInput( 9, nodeValue_SliRange( "Level In",   [0,1] )).setShaderProp("levelIn");
+	newInput(10, nodeValue_SliRange( "Level Out",  [0,1] )).setShaderProp("levelOut");
+	// input 11
 	
 	input_display_list = [
 		[ "Output",     true ],  0,  7,  8,  6, 
 		[ "Noise",     false ],  3,  4, 
 		[ "Transform", false ],  1,  5,  2, 
-		[ "Rendering", false ],  9, 
+		[ "Rendering", false ],  9, 10, 
 	];
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _params) { 

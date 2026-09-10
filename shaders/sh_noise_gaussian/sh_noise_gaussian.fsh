@@ -11,7 +11,7 @@ uniform vec2  position;
 uniform float rotation;
 uniform vec2  scale;
 
-uniform vec2  level;
+uniform vec2  levelIn, levelOut; float applyLevel(float v) { return mix(levelOut.x, levelOut.y, (v - levelIn.x) / (levelIn.y - levelIn.x)); }
 
 uniform int       convertMode;
 uniform sampler2D convertSurface1;
@@ -43,6 +43,6 @@ void main() {
 	float z1 = sqrt(-2. * log(n1)) * sin(2. * PI * n2);
 	
 	z0 = mean + z0 * varience;
-	z0 = (z0 - level.x) / (level.y - level.x);
+	z0 = applyLevel(z0);
 	gl_FragColor = vec4(z0, z0, z0, 1.) * v_vColour;
 }

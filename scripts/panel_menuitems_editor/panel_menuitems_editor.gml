@@ -133,16 +133,22 @@ function Panel_MenuItems_Editor(_menuId, _pie = false) : PanelContent() construc
 		var _item  = _menu.items;
 		var _cat_h = (array_length(_item) + 1) * (hg + ui(4));
 		
+		var sx = xx;
+		var sy = yy - ui(2);
+		var sw = ww - hg * 2;
+		var sh = hg - 1;
+		
 		var _name = _menu.name;
-		var _hov  = _m == infinity || (hover && point_in_rectangle(_m[0], _m[1], xx, yy - ui(2), xx + ww, yy + hg + ui(2) - 1));
+		var _hov  = _m == infinity || (hover && point_in_rectangle(_m[0], _m[1], sx, sy, sx + sw, sy + sh));
 		
 		var _cc = CDEF.cyan;
-		if(_cont) draw_sprite_stretched_ext(THEME.box_r2_clr, 0, xx, yy, ww, _cat_h, _cc, 1);
+		if(_cont) draw_sprite_stretched_ext(THEME.box_r2_clr, 0, sx, yy, ww, _cat_h, _cc, 1);
 		draw_sprite_stretched_ext(THEME.box_r2_clr, 0, xx, yy, ww, hg, _cc, 1);
 		draw_set_text(f_p3, fa_left, fa_center, _cc);
 		if(item_renaming == _menu) {
 			tb_rename.setFocusHover(pFOCUS, pHOVER);
-			tb_rename.drawParam(new widgetParam(xx, yy, ww, hg, _name, undefined, _m));
+			tb_rename.drawParam(new widgetParam(xx, yy, ww, hg, _name, undefined, _m == infinity? [0,0] : _m).setFont(f_p3));
+			_hov = false;
 			
 		} else 
 			draw_text_add(xx + ui(8), yy + hg / 2, _name);
@@ -231,9 +237,11 @@ function Panel_MenuItems_Editor(_menuId, _pie = false) : PanelContent() construc
 		if(is_array(_spr)) {
 			_spri = _spr[1];
 			_spr  = _spr[0];
+			
+			if(is_callable(_spr)) _spr = _spr();
 		}
 		
-		if(is_real(_spr) && sprite_exists(_spr)) {
+		if((is_handle(_spr) || is_numeric(_spr)) && sprite_exists(_spr)) {
 			var _ss = min((hg - ui(4)) / sprite_get_width(_spr), (hg - ui(4)) / sprite_get_height(_spr));
 			gpu_set_texfilter(true);
 			draw_sprite_ext(_spr, _spri, xx + ui(12), yy + hg / 2, _ss, _ss, 0, COLORS._main_icon);

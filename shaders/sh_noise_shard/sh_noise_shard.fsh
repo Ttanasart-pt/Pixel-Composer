@@ -55,7 +55,7 @@ uniform vec2  dimension;
 uniform vec2  position;
 uniform float rotation;
 
-uniform vec2  level;      float applyLevel(float f) { return (f - level.x) / (level.y - level.x); }
+uniform vec2  levelIn, levelOut; float applyLevel(float v) { return mix(levelOut.x, levelOut.y, (v - levelIn.x) / (levelIn.y - levelIn.x)); }
 
 #define tau 6.283185307179586
 

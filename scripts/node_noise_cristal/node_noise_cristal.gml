@@ -17,16 +17,17 @@ function Node_Noise_Cristal(_x, _y, _group = noone) : Node_Shader_Generator(_x, 
 	newInput( 2, nodeValue_Vec2( "Scale",    [1,1] )).setHotkey("S").setShaderProp("scale").setPieMenu().hideLabel();
 	
 	////- =Render
-	newInput(11, nodeValue_SliRange( "Level", [0,1]             )).setShaderProp("level");
-	newInput( 5, nodeValue_Color(    "Color", ca_white          )).setShaderProp("color");
-	newInput( 6, nodeValue_Slider(   "Gamma", 1, [ 0, 2, 0.01 ] )).setShaderProp("gamma");
-	// input 12
+	newInput(11, nodeValue_SliRange( "Level In",   [0,1]   )).setShaderProp("levelIn");
+	newInput(12, nodeValue_SliRange( "Level Out",  [0,1]   )).setShaderProp("levelOut");
+	newInput( 5, nodeValue_Color(    "Color", ca_white     )).setShaderProp("color");
+	newInput( 6, nodeValue_Slider(   "Gamma", 1, [0,2,.01] )).setShaderProp("gamma");
+	// input 13
 	
 	input_display_list = [ 
 		[ "Output",     true ],  0,  9, 10,  8, 
 		[ "Noise",     false ],  3,  7,  4, 
 		[ "Transform", false ],  1,  2, 
-		[ "Render",    false ], 11,  5,  6, 
+		[ "Render",    false ], 11, 12,  5,  6, 
 	];
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _params) { 

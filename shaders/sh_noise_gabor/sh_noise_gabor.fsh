@@ -63,7 +63,7 @@ uniform vec2  position;
 uniform float trRotation;
 
 uniform vec2  augment;
-uniform vec2  level;      float applyLevel(float f) { return (f - level.x) / (level.y - level.x); }
+uniform vec2  levelIn, levelOut; float applyLevel(float v) { return mix(levelOut.x, levelOut.y, (v - levelIn.x) / (levelIn.y - levelIn.x)); }
 
 vec2 hash(vec2 p) { return fract(sin(vec2(
 										dot(p, vec2(127.1324, 311.7874)) * (152.6178612 + mod(seed, 100000.) / 10.), 

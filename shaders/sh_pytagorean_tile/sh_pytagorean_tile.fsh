@@ -225,7 +225,7 @@ uniform vec2      thick;
 uniform int       thickUseSurf;
 uniform sampler2D thickSurf;
 
-uniform vec2  level;
+uniform vec2  levelIn, levelOut; float applyLevel(float v) { return mix(levelOut.x, levelOut.y, (v - levelIn.x) / (levelIn.y - levelIn.x)); }
 
 uniform float gradient_shift;
 
@@ -346,7 +346,7 @@ void main() {
 	vec4 colr;
 	
 	if(mode == 1) {
-		float dist = (hc.y * 2. - level.x) / (level.y - level.x);
+		float dist = applyLevel(hc.y * 2.);
 		gl_FragColor = vec4(vec3(dist), uva);
 		return;
 	}

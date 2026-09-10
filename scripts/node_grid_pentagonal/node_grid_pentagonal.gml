@@ -27,13 +27,14 @@ function Node_Grid_Pentagonal(_x, _y, _group = noone) : Node_Processor(_x, _y, _
 	newInput( 7, nodeValue_Surface(  "Texture"               ));
 	newInput(17, nodeValue_Bool(     "Use Texture Dimension", false ));
 	newInput(10, nodeValue_Bool(     "Anti-aliasing",         false ));
-	newInput(16, nodeValue_SliRange( "Level",                 [0,1] ));
-	// inputs 22
+	newInput(16, nodeValue_SliRange( "Level In",              [0,1] ));
+	newInput(22, nodeValue_SliRange( "Level Out",             [0,1] ));
+	// inputs 23
 	
 	input_display_list = [
 		[ "Output",  false ],  0, 19, 20, 18, 
 		[ "Pattern", false ],  1,  4, 13,  2, 11,  3, 12, 
-		[ "Render",  false ],  8,  9, [5, true], 14, 21, -1,  6,  7, 17, 10, 16, 
+		[ "Render",  false ],  8,  9, [5, true], 14, 21, -1,  6,  7, 17, 10, 16, 22, 
 	];
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
@@ -89,16 +90,17 @@ function Node_Grid_Pentagonal(_x, _y, _group = noone) : Node_Processor(_x, _y, _
 			shader_set_f("position",	_pos[0] / _dim[0], _pos[1] / _dim[1]);
 			shader_set_f("dimension",	_dim[0], _dim[1]);
 			
-			shader_set_f_map("scale",	_data[ 2], _data[11], inputs[2]);
-			shader_set_f_map("width",	_data[ 3], _data[12], inputs[3]);
-			shader_set_f_map("angle",	_data[ 4], _data[13], inputs[4]);
+			shader_set_m( "scale", _data[ 2], _data[11], inputs[2] );
+			shader_set_m( "width", _data[ 3], _data[12], inputs[3] );
+			shader_set_m( "angle", _data[ 4], _data[13], inputs[4] );
 			
-			shader_set_i("mode",	_mode);
-			shader_set_f("seed", 	_data[ 9]);
-			shader_set_i("aa",		_data[10]);
-			shader_set_2("level",   _data[16]);
+			shader_set_i( "mode",     _mode     );
+			shader_set_f( "seed",     _data[ 9] );
+			shader_set_i( "aa",       _data[10] );
+			shader_set_2( "levelIn",  _data[16] );
+			shader_set_2( "levelOut", _data[22] );
 			
-			shader_set_color("gapCol",  _col_gap);
+			shader_set_c( "gapCol",   _col_gap  );
 			
 			shader_set_f("gradient_shift", _data[21]);
 			shader_set_gradient(_data[5], _data[14], _data[15], inputs[5]);

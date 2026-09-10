@@ -18,14 +18,15 @@ function Node_Noise_Gaussian(_x, _y, _group = noone) : Node_Shader_Generator(_x,
 	newInput(10, nodeValue_Surface( "Conv. Surf 2"          )).setShaderProp("convertSurface2");
 	
 	////- =Rendering
-	newInput( 5, nodeValue_SliRange( "Level",   [0,1] )).setShaderProp("level");
-	// 11
+	newInput( 5, nodeValue_SliRange( "Level In",   [0,1] )).setShaderProp("levelIn");
+	newInput(11, nodeValue_SliRange( "Level Out",  [0,1] )).setShaderProp("levelOut");
+	// 12
 	
 	input_display_list = [ 1, 
 		[ "Output",      true    ],  0,
 		[ "Noise",      false    ],  2,  3,  4,  6,  7,  
 		[ "Conversion", false, 8 ],  9, 10, 
-		[ "Rendering",  false    ],  5,
+		[ "Rendering",  false    ],  5, 11, 
 	];
 	
 	////- Nodes

@@ -23,11 +23,12 @@ function Node_Herringbone_Tile(_x, _y, _group = noone) : Node_Processor(_x, _y, 
 	////- =Render
 	newInput( 7, nodeValue_EScroll(  "Render Type", 0, ["Colored tile", "Height map", "Texture grid"]));
 	newInput( 8, nodeValueSeed());
-	newInput( 5, nodeValue_Gradient(     "Tile Color", gra_white )).setMappable(18).addShift(27);
-	newInput( 6, nodeValue_Color(        "Gap Color",  ca_black ));
-	newInput( 9, nodeValue_Surface(      "Texture" ));
-	newInput(10, nodeValue_Bool(         "Anti-aliasing", false ));
-	newInput(21, nodeValue_Slider_Range( "Level",         [0,1] ));
+	newInput( 5, nodeValue_Gradient( "Tile Color", gra_white )).setMappable(18).addShift(27);
+	newInput( 6, nodeValue_Color(    "Gap Color",  ca_black  ));
+	newInput( 9, nodeValue_Surface(  "Texture"               ));
+	newInput(10, nodeValue_Bool(     "Anti-aliasing", false  ));
+	newInput(21, nodeValue_SliRange( "Level In",      [0,1]  ));
+	newInput(28, nodeValue_SliRange( "Level Out",     [0,1]  ));
 	
 	////- =Texture Transform
 	newInput(14, nodeValue_Bool(       "Truchet",         false           ));
@@ -36,12 +37,12 @@ function Node_Herringbone_Tile(_x, _y, _group = noone) : Node_Processor(_x, _y, 
 	newInput(20, nodeValue_RotRange(   "Random Angle",    [0,0]           ));
 	newInput(26, nodeValue_Vec2_Range( "Random Scale",    [1,1,1,1], true ));
 	newInput(16, nodeValue_Slider(     "Flip Threshold",  .5              ));
-	// input 28
+	// input 29
 	
 	input_display_list = [
 		[ "Output",           false     ],  0, 23, 24, 22, 
 		[ "Pattern",          false     ],  1,  3, 12,  2, 11, 17,  4, 13,
-		[ "Render",           false     ],  7,  8, [5, true],  18, 27, -1,  6,  9, 10, 21, 
+		[ "Render",           false     ],  7,  8, [5, true],  18, 27, -1,  6,  9, 10, 21, 28, 
 		[ "Texture Transform", true, 14 ], 15, 25, 20, 26, 16, 
 	];
 	
@@ -99,7 +100,8 @@ function Node_Herringbone_Tile(_x, _y, _group = noone) : Node_Processor(_x, _y, 
 			shader_set_f( "tileLength", _data[17]);
 			shader_set_c( "gapCol", _col_gap);
 			
-			shader_set_2( "level",          _data[21]);
+			shader_set_2( "levelIn",  _data[21] );
+			shader_set_2( "levelOut", _data[28] );
 			
 			shader_set_i( "textureTransform", _data[14] );
 			shader_set_f( "textureSeed",      _data[15] );

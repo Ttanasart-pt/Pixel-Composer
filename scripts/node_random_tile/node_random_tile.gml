@@ -17,16 +17,17 @@ function Node_Random_Tile(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	newInput( 1, nodeValue_Vec2(     "Position",  [.5,.5]   )).setHotkey("G").setUnitSimple().setPieMenu();
 	newInput( 3, nodeValue_Rotation( "Angle",      0        )).setHotkey("R").setMappable(12).setPieMenu();
 	newInput( 2, nodeValue_Vec2(     "Scale",     [.25,.25] )).setHotkey("S").setUnitSimple().setMappable(11).setPieMenu();
-	newInput( 4, nodeValue_Slider(   "Gap",       .1, [0, 0.5, 0.001] )).setMappable(13).setPieMenu();
+	newInput( 4, nodeValue_Slider(   "Gap", .1, [0,.5,.001] )).setMappable(13).setPieMenu();
 	
 	////- =Render
 	newInput( 7, nodeValue_EScroll( "Render Type",  0, ["Colored tile", "Height map", "Texture grid"]));
 	newInput( 8, nodeValueSeed());
-	newInput( 5, nodeValue_Gradient(     "Tile Color", gra_white)).setMappable(17).addShift(26);
-	newInput( 6, nodeValue_Color(        "Gap Color",  ca_black ));
-	newInput( 9, nodeValue_Surface(      "Texture" ));
-	newInput(10, nodeValue_Bool(         "Anti-aliasing", false ));
-	newInput(20, nodeValue_Slider_Range( "Level",         [0,1] ));
+	newInput( 5, nodeValue_Gradient( "Tile Color", gra_white)).setMappable(17).addShift(26);
+	newInput( 6, nodeValue_Color(    "Gap Color",  ca_black ));
+	newInput( 9, nodeValue_Surface(  "Texture"              ));
+	newInput(10, nodeValue_Bool(     "Anti-aliasing", false ));
+	newInput(20, nodeValue_SliRange( "Level In",      [0,1] ));
+	newInput(27, nodeValue_SliRange( "Level Out",     [0,1] ));
 	
 	////- =Texture Transform
 	newInput(14, nodeValue_Bool(       "Truchet",         false           ));
@@ -35,12 +36,12 @@ function Node_Random_Tile(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	newInput(19, nodeValue_RotRange(   "Random Angle",    [0,0]           ));
 	newInput(25, nodeValue_Vec2_Range( "Random Scale",    [1,1,1,1], true ));
 	newInput(16, nodeValue_Slider(     "Flip Threshold",  .5              ));
-	// 27
+	// 28
 	
 	input_display_list = [
 		[ "Output",  false ],  0, 22, 23, 21, 
 		[ "Pattern", false ],  1,  3, 12,  2, 11,  4, 13,
-		[ "Render",  false ],  7,  8,  [5, true], 17, 26, -1,  6,  9, 10, 20, 
+		[ "Render",  false ],  7,  8,  [5, true], 17, 26, -1,  6,  9, 10, 20, 27, 
 		[ "Texture Transform", true, 14 ],15, 24, 19, 25, 16, 
 	];
 	
@@ -99,7 +100,8 @@ function Node_Random_Tile(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 			shader_set_i( "aa",    _data[10]);
 			shader_set_c( "gapCol", _col_gap);
 			
-			shader_set_2( "level",            _data[20]);
+			shader_set_2( "levelIn",          _data[20] );
+			shader_set_2( "levelOut",         _data[27] );
 			
 			shader_set_i( "textureTransform", _data[14] );
 			shader_set_f( "textureSeed",      _data[15] );

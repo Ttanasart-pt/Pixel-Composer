@@ -46,9 +46,10 @@ function Node_Gradient(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	newInput(14, nodeValue_Bool(     "Uniform ratio",  true   ));
 	
 	////- =Rendering
-	newInput(23, nodeValue_Range( "Level",  [0,1]        ));
+	newInput(23, nodeValue_Range( "Level In",  [0,1]     ));
+	newInput(25, nodeValue_Range( "Level Out", [0,1]     ));
 	newInput(24, nodeValue_Curve( "Curve",  CURVE_DEF_01 ));
-	// 25
+	// 26
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
@@ -57,7 +58,7 @@ function Node_Gradient(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 		[ "Gradient",  false ],  1, 15,  5, 12,  9, 13,  7, 
 		[ "Remapper",  true  ], 20, 21, 22, 
 		[ "Shape",     false ],  2,  3, 10,  4, 11,  6, 17, 14, 
-		[ "Rendering", false ], 23, 24, 
+		[ "Rendering", false ], 23, 25, 24, 
 	];
 	
 	////- Node
@@ -102,6 +103,7 @@ function Node_Gradient(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 			var _uni  = _data[14];
 			
 			var _lvl  = _data[23];
+			var _lvo  = _data[25];
 			var _curv = _data[24];
 			
 			inputs[ 3].setVisible(_typ != 1);
@@ -131,7 +133,8 @@ function Node_Gradient(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 			shader_set_i(  "uniAsp",        _uni  );
 			shader_set_2(  "cirScale",      _csca );
 			
-			shader_set_2(  "level",         _lvl  );
+			shader_set_2(  "levelIn",       _lvl  );
+			shader_set_2(  "levelOut",      _lvo  );
 			shader_set_cr( "wcurve",        _curv );
 			
 			shader_set_m(  "angle",  _data[3], _data[10], inputs[3] );

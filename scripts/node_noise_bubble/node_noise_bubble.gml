@@ -20,16 +20,17 @@ function Node_Noise_Bubble(_x, _y, _group = noone) : Node_Shader_Generator(_x, _
 	newInput( 3, nodeValue_SliRange( "Scale",    [.5,.8] )).setShaderProp("scale").setPieMenu();
 	
 	////- =Rendering
-	newInput(11, nodeValue_SliRange( "Level",      [0,1] )).setShaderProp("level");
+	newInput(11, nodeValue_SliRange( "Level In",   [0,1] )).setShaderProp("levelIn");
+	newInput(12, nodeValue_SliRange( "Level Out",  [0,1] )).setShaderProp("levelOut");
 	newInput( 5, nodeValue_EButton(  "Mode",        0, [ "Line", "Fill" ] )).setShaderProp("mode").setPieMenu();
 	newInput( 4, nodeValue_Slider(   "Thickness",   0                     )).setShaderProp("thickness").setPieMenu();
 	newInput( 6, nodeValue_SliRange( "Opacity",    [0,1]                  )).setShaderProp("alpha").setPieMenu();
 	newInput( 7, nodeValue_EScroll(  "Blend Mode",  0, [ "Max", "Add" ]   )).setShaderProp("render");
-	// input 12
+	// input 13
 	
 	input_display_list = [ 
 		[ "Output",     true ],  0,  9, 10,  8, 
 		[ "Noise",     false ],  2,  1,  3, 
-		[ "Rendering", false ], 11,  5,  4,  6,  7, 
+		[ "Rendering", false ], 11, 12,  5,  4,  6,  7, 
 	];
 }
