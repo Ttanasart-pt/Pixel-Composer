@@ -85,6 +85,7 @@ void main() {
 	vec2  pos = (ntx - position / dimension) * mat2(cos(ang), - sin(ang), sin(ang), cos(ang));
 	
 	float yy = floor(pos.y * nsy);
+	      yy = mod(abs(yy), 289.653) * sign(yy);
 	float xx = (pos.x + random(vec2(1., yy), seed)) * nsx;
     
     if(tile == 1) xx = fract(fract(xx / 2.) + 1.) * 2.;

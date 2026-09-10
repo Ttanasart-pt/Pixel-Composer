@@ -6,6 +6,11 @@
         "date": "2026-09-10T03:31:27.788Z",
         "node": "",
         "commit": "Generator nodes with level property now separate level in and out values."
+      },
+      {
+        "date": "2026-09-10T04:09:41.707Z",
+        "node": "Anisotropic noise",
+        "commit": "**Anisotropic noise**: Fix high `Y Amount` value create black bands."
       }
     ]
   },

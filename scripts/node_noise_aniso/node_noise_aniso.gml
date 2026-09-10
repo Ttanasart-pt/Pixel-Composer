@@ -88,7 +88,7 @@ function Node_Noise_Aniso(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 			shader_set_2( "levelOut",  _lvo    );
 			shader_set_i( "mode",      _mod    );
 			
-			draw_sprite_stretched(s_fx_pixel, 0, 0, 0, _dim[0], _dim[1]);
+			draw_empty();
 		surface_reset_shader();
 		
 		_outSurf = mask_apply_empty(_outSurf, _data[input_mask_index]);
