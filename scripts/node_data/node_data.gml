@@ -3692,7 +3692,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	static postApplyDeserialize = function() /*=>*/ {}
 	
 	static onLoadGroup = function() /*=>*/ {}
-	static loadGroup   = function(ctx = noone) { 
+	static loadGroup   = function(ctx = noone) /*=>*/ { 
 		if(load_igroup != noone) {
 			load_igroup = GetAppendID(load_igroup);
 			

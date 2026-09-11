@@ -207,12 +207,16 @@ sc_content = new scrollPane(dialog_w - ui(4), dialog_h - ui(32), function(_y, _m
 		draw_text_match_ext(_tx, _ty, _name, _dw, search_string);
 		
 		var _spr = _menuItem != noone? _menuItem.spr : _menu.spr;
+		if(is_callable(spr)) spr = spr();
+		
 		if(_spr != noone) {
 			var spr = is_array(_spr)? _spr[0] : _spr;
 			var ind = is_array(_spr)? _spr[1] : 0;
-			var _ss = hght / max(sprite_get_width(spr), sprite_get_height(spr)) * .7;
 			
-			draw_sprite_ext(spr, ind, ui(16), _ty, _ss, _ss, 0, COLORS._main_icon_light);
+			if(sprite_exists(spr)) {
+				var _ss = hght / max(sprite_get_width(spr), sprite_get_height(spr)) * .7;
+				draw_sprite_ext(spr, ind, ui(16), _ty, _ss, _ss, 0, COLORS._main_icon_light);
+			}
 		}
 		
 		if(_hasKey) {

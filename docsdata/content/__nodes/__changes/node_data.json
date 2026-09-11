@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.9.210",
+    "changes": [
+      {
+        "date": "2026-09-11T01:01:20.106Z",
+        "node": "",
+        "commit": "**Command Palette**: Fix crash again?."
+      }
+    ]
+  },
+  {
     "version": "1.21.9.207",
     "changes": [
       {

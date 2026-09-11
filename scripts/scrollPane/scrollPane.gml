@@ -67,6 +67,8 @@ function scrollPane(_w, _h, ondraw) : widget() constructor {
 		surface_h = _h;
 	}
 	
+	////- Get Set
+	
 	static setToolRect = function(_tools) { 
 		tool_w = ui(24 + 2) * _tools - ui(2) + ui(8);
 		tool_h = ui(24 + 6);
@@ -77,6 +79,8 @@ function scrollPane(_w, _h, ondraw) : widget() constructor {
 	static setScroll   = function(_s) /*=>*/ { scroll_y_to  = _s;    return self; }
 	static setUseDepth = function(  ) /*=>*/ { use_depth    = true;  return self; }
 	static scrollReset = function() /*=>*/ { scroll_y_to = clamp(scroll_y_to, -content_h, 0); return self; }
+	
+	////- Draw
 	
 	static drawOffset = function(_x, _y, _mx = mouse_mx, _my = mouse_my) { return draw(_x, _y, _mx - _x, _my - _y); }
 	
@@ -263,6 +267,8 @@ function scrollPane(_w, _h, ondraw) : widget() constructor {
 		if(is_scrolling) cc = scroll_color_bar_active;
 		draw_sprite_stretched_ext(THEME.ui_scrollbar, 0, bx0, by0, ww, hh, cc, scroll_color_bar_alpha);
 	}
+	
+	////- Action
 	
 	static free = function() {
 		surface_free(surface);
