@@ -499,6 +499,7 @@
 		json_save_struct( PREFERENCES_DIR + "keys.json",            PREFERENCES,           true );
 		json_save_struct( PREFERENCES_DIR + "menu_items.json",      PREFERENCES_MENUITEMS, true );
 		json_save_struct( PREFERENCES_DIR + "default_project.json", PROJECT_ATTRIBUTES,    true );
+		json_save_struct( DIRECTORY + "commands.json",              RECENT_COMMANDS,       true );
 		json_save_struct( DIRECTORY + "Nodes/fav.json",             NODE_FAV,              true );
 		json_save_struct( DIRECTORY + "Nodes/recent.json",          global.RECENT_NODES,   true );
 		
@@ -567,6 +568,8 @@
 				ADD_NODE_PAGE    = PREFERENCES.add_node_page;
 				ADD_NODE_SUBPAGE = PREFERENCES.add_node_subpage;
 			}
+			
+			RECENT_COMMANDS = json_load_struct(DIRECTORY + "commands.json", []);
 			
 		} catch(e) {
 			var _dir = $"{DIRECTORY}Preferences";

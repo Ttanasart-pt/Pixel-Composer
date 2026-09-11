@@ -21,13 +21,14 @@ event_inherited();
 	text_pad = ui(8);
 	item_pad = ui(4);
 	
-	dialog_w  = ui(480);
-	dialog_h  = ui(32) + line_get_height(f_p2, item_pad);
-	
 	setFocus(self.id);
 	
 	data = array_clone(RECENT_COMMANDS, 1);
 	keys = variable_struct_get_names(FUNCTIONS);
+	
+	dialog_w = ui(480);
+	var hght = line_get_height(f_p2, item_pad);
+	dialog_h = min(ui(32) + max(1, array_length(data)) * hght, ui(400))
 	
 	hk_editing = noone;
 	edit_block = 0;
@@ -45,7 +46,13 @@ event_inherited();
 	keyboard_trigger = false;
 	
 	function searchMenu() {
-		if(search_string == "") { data = array_clone(RECENT_COMMANDS, 1); return; }
+		var hght = line_get_height(f_p2, item_pad);
+		
+		if(search_string == "") { 
+			data = array_clone(RECENT_COMMANDS, 1); 
+			dialog_h = min(ui(32) + max(1, array_length(data)) * hght, ui(400))
+			return; 
+		}
 		
 		data = [];
 		var pr_list      = ds_priority_create();
@@ -96,11 +103,8 @@ event_inherited();
 			array_push(data, ds_priority_delete_max(pr_list));
 		ds_priority_destroy(pr_list);
 		
-		var hght = line_get_height(f_p2, item_pad);
-		var _hh  = min(ui(32) + max(1, array_length(data)) * hght , ui(400))
-		
+		var _hh  = min(ui(32) + max(1, array_length(data)) * hght, ui(400))
 		dialog_h = _hh;
-		sc_content.resize(dialog_w - ui(4), dialog_h - ui(32));
 	} 
 	
 	function resetPosition() {
@@ -207,7 +211,7 @@ sc_content = new scrollPane(dialog_w - ui(4), dialog_h - ui(32), function(_y, _m
 		draw_text_match_ext(_tx, _ty, _name, _dw, search_string);
 		
 		var _spr = _menuItem != noone? _menuItem.spr : _menu.spr;
-		if(is_callable(spr)) spr = spr();
+		if(is_callable(_spr)) _spr = _spr();
 		
 		if(_spr != noone) {
 			var spr = is_array(_spr)? _spr[0] : _spr;

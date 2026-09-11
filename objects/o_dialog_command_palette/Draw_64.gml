@@ -14,7 +14,8 @@ tb_search.sprite_index = 0;
 draw_sprite_ui(THEME.search, 0, _dialog_x + ui(20), _dialog_y + ui(16), 1, 1, 0, COLORS._main_icon, 1);
 
 sc_content.setFocusHover(sFOCUS, sHOVER);
-sc_content.draw(_dialog_x, _dialog_y + ui(32));
+sc_content.verify(dialog_w - ui(4), dialog_h - ui(32) - 1);
+sc_content.draw(_dialog_x + ui(2), _dialog_y + ui(32));
 
 draw_set_color(CDEF.main_dkgrey);
 draw_line(_dialog_x, _dialog_y + ui(32), _dialog_x + dialog_w - 1, _dialog_y + ui(32));
