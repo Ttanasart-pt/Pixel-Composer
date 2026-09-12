@@ -64,7 +64,8 @@ for nodePath in tqdm(nodeList, desc="Generating node content"):
     content = nodeWriter.writeNode(nodeMeta, contentPath, changeData)
 
     if not content:
-        print(f"Cannot write content for {nodeBase}.")
+        if nodeBase != "BaseNode":
+            print(f"Cannot write content for {nodeBase}.")
         continue
 
     nodeContent[nodeBase]  = content
