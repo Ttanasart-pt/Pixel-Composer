@@ -200,7 +200,8 @@ def writeNode(metadata, contentPath, changeData = None):
     nodeData = nodeParser.getNodeData(nodeBase)
 
     if not nodeData:
-        print(f"Node data for {nodeBase} not found.")
+        if nodeBase != "BaseNode":
+            print(f"Node data for {nodeBase} not found.")
         return None
     
     basicData     = generateBasicData(nodeData, metadata)

@@ -109,7 +109,8 @@ for baseNode in tqdm(nodeLists, desc="Reading node files"):
 # %% 
 def inheritancesIterate(baseNode):
     if baseNode not in nodeData:
-        print(f"Node data for {baseNode} not found.")
+        if baseNode != "BaseNode":
+            print(f"Node data for {baseNode} not found.")
         return None
     
     inheritances = [nodeData[baseNode]]
@@ -137,7 +138,8 @@ for baseNode in tqdm(nodeLists, desc="Iterating inheritances"):
 # %%
 def getNodeData(baseNode):
     if baseNode not in nodeData:
-        print(f"Node data for {baseNode} not found.")
+        if baseNode != "BaseNode":
+            print(f"Node data for {baseNode} not found.")
         return None
     
     return nodeData[baseNode]
