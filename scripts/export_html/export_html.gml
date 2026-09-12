@@ -75,7 +75,7 @@ function __EXPORT_HTML(project = PROJECT, _path = "", _fName = "", _pName = "", 
 		var _nw    = _node.w;
 		var _nh    = _node.h;
 		
-		var _type = string_replace(string_lower(instanceof(_node)), "node_", "");
+		var _type = string_lower(instanceof(_node));
     	var _url  = $"\"https://docs.pixel-composer.com/nodes/_index/{_type}.html\"";
 		
 		var _draw = true;

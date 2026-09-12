@@ -5255,7 +5255,7 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
     	if(array_empty(nodes_selecting)) return;
     	
     	var _node = nodes_selecting[0];
-    	var _type = string_replace(string_lower(instanceof(_node)), "node_", "");
+    	var _type = string_lower(instanceof(_node));
     	var _url  = $"https://docs.pixel-composer.com/nodes/_index/{_type}.html";
     	
     	var dia = dialogCall(_p_dialog_modal)
@@ -5263,7 +5263,7 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
     		.setButtons([
 				[ __txt("Open"),   function() /*=>*/ {
 			    	var _node = nodes_selecting[0];
-			    	var _type = string_replace(string_lower(instanceof(_node)), "node_", "");
+			    	var _type = string_lower(instanceof(_node));
 			    	var _url  = $"https://docs.pixel-composer.com/nodes/_index/{_type}.html";
 			    	URL_open(_url);
 			    } ],
