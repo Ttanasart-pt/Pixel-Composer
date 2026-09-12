@@ -32,7 +32,7 @@ function number_to_hex(val) {
 	return ss;
 }
 
-function color_get_hex(color, alpha = true) {
+function colorToHex(color, alpha = true) {
 	var arr = is_array(color) && array_length(color) == 4;
 	var r   = arr? round(color[0] * 256) : color_get_red(color);
 	var g   = arr? round(color[1] * 256) : color_get_green(color);

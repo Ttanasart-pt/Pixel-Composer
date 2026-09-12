@@ -1,4 +1,4 @@
-function closeProject(project) {
+function closeProject(project = PROJECT) {
 	CALL("close");
 	
 	project.active = false;

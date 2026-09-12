@@ -57,7 +57,7 @@ function Node_Image_Grid(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	
 	static getDimension = function() /*=>*/ {return PROJ_SURF};
 	
-	static update = function(frame = CURRENT_FRAME) {
+	static update = function(frame = CURRENT_FRAME) { 
 		#region data
 			var _axis = getInputData( 0);
 			var _col  = getInputData( 1);

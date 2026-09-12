@@ -575,6 +575,13 @@
 		array_copy(_arr, 0, arr, 0, len - _amo);
 		return _arr;
 	}
+	
+	// #macro array_delete array_delete_log
+	// #macro __array_delete array_delete
+	// function array_delete_log(arr, ind, amo) {
+	// 	printCallStack();
+	// 	__array_delete(arr, ind, amo);
+	// }
 #endregion
 
 #region binary opr

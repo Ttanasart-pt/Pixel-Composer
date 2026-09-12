@@ -2129,6 +2129,7 @@
     {"id":{"name":"dynaSurf","path":"scripts/dynaSurf/dynaSurf.yy",},},
     {"id":{"name":"easer","path":"scripts/easer/easer.yy",},},
     {"id":{"name":"event_recorder","path":"scripts/event_recorder/event_recorder.yy",},},
+    {"id":{"name":"export_html","path":"scripts/export_html/export_html.yy",},},
     {"id":{"name":"export_json","path":"scripts/export_json/export_json.yy",},},
     {"id":{"name":"export_portable","path":"scripts/export_portable/export_portable.yy",},},
     {"id":{"name":"fft_functions","path":"scripts/fft_functions/fft_functions.yy",},},

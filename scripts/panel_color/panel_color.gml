@@ -148,7 +148,7 @@ function Panel_Color() : PanelContent() constructor {
 			hex_tb.setFont(f_p2);
 			
 			hex_tb.align = fa_center;
-			hex_tb.draw(hex_x, hex_y, hex_w, hex_h, color_get_hex(CURRENT_COLOR, show_alpha), [ mx, my ]);
+			hex_tb.draw(hex_x, hex_y, hex_w, hex_h, colorToHex(CURRENT_COLOR, show_alpha), [ mx, my ]);
 			
 			_y1 = hex_y - sp;
 		}

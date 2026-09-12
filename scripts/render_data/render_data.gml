@@ -304,6 +304,7 @@ enum RENDER_TYPE {
 						var render_pt = get_timer();
 						
 						// print($" >>> Rendering: {rendering.name}");
+						// show_debug_message($" >>> Rendering: {rendering.name}");
 						
 						RENDER_CONTEXT = rendering;
 						rendering.doUpdate(); 

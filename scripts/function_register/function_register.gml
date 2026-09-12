@@ -21,7 +21,6 @@
 		FUNCTIONS       = {};
 		CMD_FUNCTIONS   = {};
 		MENU_ITEMS      = {};
-		RECENT_COMMANDS = [];
 		
 		__fnInit_Global();
 		__fnInit_Panels();

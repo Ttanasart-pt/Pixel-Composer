@@ -221,7 +221,7 @@ DIALOG_WINDOW_START
 				path = filename_ext_verify(path, ".hex");
 				var file = file_text_open_write(path);
 				for(var i = 0; i < array_length(palette); i++)
-					file_text_write_string(file,  $"{color_get_hex(palette[i])}\n");
+					file_text_write_string(file,  $"{colorToHex(palette[i])}\n");
 				file_text_close(file);
 			}
 		}

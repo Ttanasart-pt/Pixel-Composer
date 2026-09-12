@@ -38,6 +38,8 @@ function SAVE_ALL() {
 
 function SAVE(project = PROJECT) {
 	if(DEMO) return false;
+	print("Saving", project)
+	
 	if(RUN_IDE) PREF_SAVE();
 	
 	if(!is(project, Project)) project = PROJECT;
@@ -207,7 +209,8 @@ function SAVE_AUTO(_project = PROJECT) {
 
 function SAVE_COLLECTIONS(_list, _path, save_surface = true, metadata = noone, context = PANEL_GRAPH.getCurrentContext()) {
 	var _content = {};
-	_content.version = SAVE_VERSION;
+	_content.version    = SAVE_VERSION;
+	_content.versionStr = VERSION_STRING;
 	
 	var _nodes = [];
 	var cx     = 0;
@@ -280,7 +283,8 @@ function SAVE_COLLECTION(_node, _path, save_surface = true, metadata = noone, co
 	}
 	
 	var _content = {};
-	_content.version = SAVE_VERSION;
+	_content.version    = SAVE_VERSION;
+	_content.versionStr = VERSION_STRING;
 	
 	var _nodes = [];
 	SAVE_NODE(_nodes, _node, _node.x, _node.y, true, context);
@@ -294,7 +298,8 @@ function SAVE_COLLECTION(_node, _path, save_surface = true, metadata = noone, co
 		var _name  = filename_name_only(_path);
 		var _mpath = $"{_dir}/{_name}.meta";
 		
-		_meta.version = SAVE_VERSION;
+		_meta.version    = SAVE_VERSION;
+		_meta.versionStr = VERSION_STRING;
 		json_save_struct(_mpath, _meta, true);
 	}
 	
@@ -320,7 +325,8 @@ function SAVE_PXZ_COLLECTION(_node, _path, _prev_surface = noone, metadata = noo
 	}
 	
 	var _content = {};
-	_content.version = SAVE_VERSION;
+	_content.version    = SAVE_VERSION;
+	_content.versionStr = VERSION_STRING;
 	
 	var _nodes = [];
 	SAVE_NODE(_nodes, _node, _node.x, _node.y, true, context);
@@ -335,7 +341,8 @@ function SAVE_PXZ_COLLECTION(_node, _path, _prev_surface = noone, metadata = noo
 		var _name  = filename_name_only(_path);
 		_path_meta = $"{TEMPDIR}{_name}.meta";
 		
-		_meta.version = SAVE_VERSION;
+		_meta.version    = SAVE_VERSION;
+		_meta.versionStr = VERSION_STRING;
 		json_save_struct(_path_meta, _meta, true);
 	}
 	

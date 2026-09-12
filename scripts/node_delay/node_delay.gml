@@ -70,12 +70,12 @@ function Node_Delay(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 		var _surfA = surf_indexes[_ind];
 		_surfA[_time] = surface_verify(_surfA[_time], _sw, _sh);
 		
-		surface_set_shader(_surfA[_time], sh_sample, true, BLEND.over);
+		surface_set_shader(_surfA[_time], noone, true, BLEND.over);
 			draw_surface_safe(_surf);
 		surface_reset_target();
 		
 		_output = surface_verify(_output, _sw, _sh);
-		surface_set_shader(_output, sh_sample, true, BLEND.over);
+		surface_set_shader(_output, noone, true, BLEND.over);
 		if(0 <= _frtm && _frtm < _totl)
 			draw_surface_safe(_surfA[_frtm]);
 		surface_reset_target();

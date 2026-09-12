@@ -497,7 +497,21 @@
 #endregion ==================================== GET ====================================
 
 #region =================================== CREATE ===================================
-
+	
+	// #macro surface_create surface_create_log
+	// #macro __surface_create surface_create
+	// function surface_create_log(w, h, format = surface_rgba8unorm) {
+	// 	show_debug_message($"surface_create: {w},{h}");
+	// 	return __surface_create(w, h, format);
+	// }
+	
+	// #macro surface_resize surface_resize_log
+	// #macro __surface_resize surface_resize
+	// function surface_resize_log(s, w, h) {
+	// 	show_debug_message($"surface_resize: {w},{h}");
+	// 	return __surface_resize(s, w, h);
+	// }
+	
 	function surface_create_empty(w, h, format = surface_rgba8unorm) {
 		INLINE
 	

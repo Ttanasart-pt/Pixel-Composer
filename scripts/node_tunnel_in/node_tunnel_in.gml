@@ -57,6 +57,17 @@ function Node_Tunnel_In(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	__key   = noone;
 	__hov   = undefined;
 	
+	////- Tunnel
+	
+	static getTunnelOut_context = function() {
+		var _outs = project.tunnels_out[$ __key];
+		if(!is_array(_outs)) return undefined;
+		
+		for (var i = 0, n = array_length(_outs); i < n; i++) {
+			if(_outs[i].group == group) return _outs[i];
+		}
+	}
+	
 	////- Update
 	
 	insp1button = button(function() /*=>*/ { dialogPanelCall(new Panel_Tunnels()); }).setTooltip(__txt("Tunnel Panel"))
@@ -95,14 +106,14 @@ function Node_Tunnel_In(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 			inputs[1].updateColor();
 		}
 		
+		__key   = name;
 		__jfrom = _frm;
 		
 		value_validation[VALIDATION.error] = error_notification != noone;
 	}
 	
 	static getNextNodes = function() {
-		var _key  = inputs[0].getValue();
-		var nodes = project.tunnels_out[$ _key];
+		var nodes = project.tunnels_out[$ __key];
 		if(!array_valid(nodes)) return [];
 		
 		if(scope == 1) return array_filter(nodes, function(n,i) /*=>*/ {return is(n, Node) && n.group == group});
@@ -150,26 +161,20 @@ function Node_Tunnel_In(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		var hover = isHovering || (tun && tun.tunnel_hover == self);
 		if(!hover) return;
 		
-		var _key  = inputs[0].getValue();
-		var _outs = project.tunnels_out[$ _key];
-		if(!is_array(_outs)) return;
-		
-		draw_set_color(inputs[1].color_display);
-		draw_set_alpha(0.5);
-		
-		for (var i = 0, n = array_length(_outs); i < n; i++) {
-			var _n = _outs[i];
-			if(_n.group != group) continue;
+		var _tunFrom = getTunnelOut_context();
+		if(_tunFrom) {
+			draw_set_color(inputs[1].color_display);
+			draw_set_alpha(0.5);
 			
-			preview_connecting    = true;
-			_n.preview_connecting = true;
+			preview_connecting          = true;
+			_tunFrom.preview_connecting = true;
 			
-			var tox = _x +  _n.x      * _s;
-			var toy = _y + (_n.y + 8) * _s;
+			var tox = _x +  _tunFrom.x      * _s;
+			var toy = _y + (_tunFrom.y + 8) * _s;
 			draw_line_dotted(xx, yy, tox, toy, 2 * _s, 0, 3);
+			
+			draw_set_alpha(1);	
 		}
-		
-		draw_set_alpha(1);
 	}
 	
 	static checkJunctions = function(_x, _y, _mx, _my, _s, _fast = false) {
@@ -238,7 +243,7 @@ function Node_Tunnel_In(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		
 		var aa = label_alpha * _color_get_alpha(label_color);
 		var ss = _s * .2 * label_scale;
-		var tt = string(inputs[0].getValue());
+		var tt = string(__key);
 		
 		switch(label_ori) {
 			case 0 : draw_set_text(f_sdf, fa_center, fa_bottom, label_color, aa);

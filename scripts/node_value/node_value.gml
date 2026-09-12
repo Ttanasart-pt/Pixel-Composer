@@ -2694,7 +2694,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 				draw_clear(_raw);
 				
 				if(colorBrightness(_raw) > .8) _tc = COLORS._main_icon_dark;
-				_txt = $"#{color_get_hex(_raw)}";
+				_txt = $"#{colorToHex(_raw)}";
 				break;
 			
 			case VALUE_TYPE.gradient:	

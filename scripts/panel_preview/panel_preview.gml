@@ -651,7 +651,7 @@ function Panel_Preview() : PanelContent() constructor {
 	     
         static new_preview_window  = function() /*=>*/ { create_preview_window(getNodePreview()); } 
         static copy_color          = function() /*=>*/ { clipboard_set_text(sample_color); }
-        static copy_color_hex      = function() /*=>*/ { clipboard_set_text(color_get_hex(sample_color)); }
+        static copy_color_hex      = function() /*=>*/ { clipboard_set_text(colorToHex(sample_color)); }
         
         static set_reset_view_off  = function() /*=>*/ { resetViewOnDoubleClick = 0; } 
         static set_reset_view_on   = function() /*=>*/ { resetViewOnDoubleClick = 1; } 
@@ -3662,7 +3662,7 @@ function Panel_Preview() : PanelContent() constructor {
 	            } else {
 	            	switch(PROJECT.previewSetting.color_format) {
 	            		case 0 : 
-			                var hx = color_get_hex(_cc);
+			                var hx = colorToHex(_cc);
 			                draw_text(tx, cy + ch / 2, hx);
 			            
 			                tx += string_width(hx) + ui(8);

@@ -29,6 +29,7 @@ function MetaDataManager() constructor {
 	tags        = [];
 	tagMap      = undefined;
 	version     = SAVE_VERSION;
+	versionStr  = VERSION_STRING;
 	hidden      = false;
 	deprecated  = false;
 	

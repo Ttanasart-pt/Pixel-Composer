@@ -86,7 +86,7 @@ function __PaletteColor(_color = c_black) constructor {
 			fileNameCall(menu_add_target == ""? DIRECTORY + "Palettes/" : menu_add_target, "palette", function(txt) /*=>*/ {
 				var file = file_text_open_write(txt + ".hex");
 				for(var i = 0; i < array_length(palette); i++)
-					file_text_write_string(file,  $"{color_get_hex(palette[i])}\n");
+					file_text_write_string(file,  $"{colorToHex(palette[i])}\n");
 				file_text_close(file);
 				
 				__refreshPalette();

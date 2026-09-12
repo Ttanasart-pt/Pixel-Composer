@@ -85,7 +85,7 @@ function palette_string_hex(palette, alpha = true) { //palette generate
 	
 	for (var i = 0, n = array_length(palette); i < n; i++) {
 		var _c = palette[i];
-		_str += $"{color_get_hex(_c, alpha)}\n";
+		_str += $"{colorToHex(_c, alpha)}\n";
 	}
 	
 	return _str;

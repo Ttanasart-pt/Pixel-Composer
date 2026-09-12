@@ -1026,7 +1026,7 @@ function colorSelector(_onModify = noone) constructor {
 			
 			////////////////////////////////////////////////////////////////////////////////////////////////////////////
 			
-			tb_hex.draw(sel_x - ui(128), cont_y + cont_h + ui(24), ui(108), TEXTBOX_HEIGHT, color_get_hex(current_color),  mouse_ui);
+			tb_hex.draw(sel_x - ui(128), cont_y + cont_h + ui(24), ui(108), TEXTBOX_HEIGHT, colorToHex(current_color),  mouse_ui);
 		#endregion
 		
 		var cx = cont_x + ui(16);

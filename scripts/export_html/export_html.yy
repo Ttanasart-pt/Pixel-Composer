@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"export_html",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"export_html",
+  "parent":{
+    "name":"project",
+    "path":"folders/functions/project.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

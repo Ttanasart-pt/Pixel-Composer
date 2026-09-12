@@ -765,17 +765,17 @@ function Panel_Palette_Mixer(_selector = noone) : PanelContent() constructor {
 		
 		if(shade_mode > 0) {
 			_cc = surface_getpixel(connect_blend_surf, mx - px, my - py);
-			_txt = $"Sampled #{color_get_hex(_cc)}";
+			_txt = $"Sampled #{colorToHex(_cc)}";
 			
 		} else if(node_hovering) {
 			_cc  = node_hovering.color;
-			_txt = $"Node #{color_get_hex(_cc)}";
+			_txt = $"Node #{colorToHex(_cc)}";
 			
 		} else if(blnd_hovering >= 0) {
 			blnd_hovering = min(blnd_hovering, array_length(palette_data.blends) - 1);
 			
 			_cc  = palette_data.blends[blnd_hovering].color;
-			_txt = $"Blend point #{color_get_hex(_cc)}";
+			_txt = $"Blend point #{colorToHex(_cc)}";
 			
 		} else if(conn_hovering >= 0) {
 			conn_hovering = min(conn_hovering, array_length(palette_data.connections) - 1);
@@ -784,7 +784,7 @@ function Panel_Palette_Mixer(_selector = noone) : PanelContent() constructor {
 			var _fr  = _palettes[conn[0]];
 			var _to  = _palettes[conn[1]];
 			_cc  = merge_color(_fr.color, _to.color, _con_rat);
-			_txt = $"Connection #{color_get_hex(_fr.color)} -  #{color_get_hex(_to.color)} [{round(_con_rat * 100)}%]";
+			_txt = $"Connection #{colorToHex(_fr.color)} -  #{colorToHex(_to.color)} [{round(_con_rat * 100)}%]";
 			
 		}
 		
