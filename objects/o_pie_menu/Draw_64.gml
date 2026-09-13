@@ -113,7 +113,7 @@ var mdis = point_distance( x, y, mouse_mx, mouse_my);
 		var label = _menuItem.name;
 		
 		if(is(_menuItem, MenuItem)) {
-			var _spr  = _menuItem.spr;
+			var _spr  = _menuItem.getSpr();
 			var _surf = _menuItem.surface;
 			
 			draw_set_font(font);

@@ -51,11 +51,30 @@ function __EXPORT_HTML(project = PROJECT, _path = "", _fName = "", _pName = "", 
 	
 	for( var i = 0, n = array_length(project.nodes); i < n; i++ ) {
 		var _node = project.nodes[i];
+		if(!is(_node, Node_Frame)) continue;
+		
+		var _iname = _node.node_id;
+		var _nname = _node.getDisplayName();
+		var _color = _node.getColor();
+		var _colhx = "#" + colorToHex(_color, false);
+		
+		var _nx    = _node.x - minx;
+		var _ny    = _node.y - miny;
+		var _nw    = _node.w;
+		var _nh    = _node.h;
+		
+		_project_html += $"drawFrame(\"{_nname}\", {_nx}, {_ny}, {_nw}, {_nh}, \"{_colhx}\");\n";
+	}
+	
+	for( var i = 0, n = array_length(project.nodes); i < n; i++ ) {
+		var _node = project.nodes[i];
 		
 		var _iname = _node.node_id;
 		var _nname = _node.getDisplayName();
 		var _color = _node.getColor();
 		var _colhx = "#" + colorToHex(_color);
+		
+		if(is(_node, Node_Frame)) continue;
 		
 		if(is(_node, Node_Collection_Inline)) {
 			var _poly = "[";
@@ -70,18 +89,18 @@ function __EXPORT_HTML(project = PROJECT, _path = "", _fName = "", _pName = "", 
 			continue;
 		}
 		
-		var _nx    = _node.x - minx;
-		var _ny    = _node.y - miny;
-		var _nw    = _node.w;
-		var _nh    = _node.h;
+		var _nx = _node.x - minx;
+		var _ny = _node.y - miny;
+		var _nw = _node.w;
+		var _nh = _node.h;
 		
 		var _type = string_lower(instanceof(_node));
     	var _url  = $"\"https://docs.pixel-composer.com/nodes/_index/{_type}.html\"";
 		
 		var _draw = true;
 		     if(is(_node, Node_Pin))             _draw = false;
-		else if(is(_node, Node_Tunnel_In))       _draw = false;
-		else if(is(_node, Node_Tunnel_Out))      _draw = false;
+		else if(is(_node, Node_Tunnel_In))     { _draw = false; _ny += 8; }
+		else if(is(_node, Node_Tunnel_Out))    { _draw = false; _ny += 8; }
 		else if(is(_node, Node_Feedback_Inline)) _draw = false;
 		
 		if(_draw) {
@@ -135,6 +154,12 @@ function __EXPORT_HTML(project = PROJECT, _path = "", _fName = "", _pName = "", 
 			var tx = _inp.rx - minx;
 			var ty = _inp.ry - miny;
 			
+			     if(is(_val.node, Node_Tunnel_In))  fx += 8;
+			else if(is(_val.node, Node_Tunnel_Out)) fy += 8;
+			
+			     if(is(_node, Node_Tunnel_In))  ty += 8;
+			else if(is(_node, Node_Tunnel_Out)) ty += 8;
+		
 			_project_html += $"connect({fx}, {fy}, {tx}, {ty});\n";
 		}
 		
@@ -142,7 +167,7 @@ function __EXPORT_HTML(project = PROJECT, _path = "", _fName = "", _pName = "", 
 			var _tunFrom = _node.getTunnelOut_context();
 			if(_tunFrom) {
 				var fx = _tunFrom.x - minx; 
-				var fy = _tunFrom.y - miny;
+				var fy = _tunFrom.y - miny + 8;
 				
 				_project_html += $"connectDash({fx}, {fy}, {_nx}, {_ny});\n";
 			}

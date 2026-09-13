@@ -12,15 +12,16 @@ function Node_Atlas(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	
 	////- =Expands
 	newInput( 2, nodeValue_EScroll( "Method",     0, [ "Radial", "Scan", "Linear" ]));
-	newInput( 3, nodeValue_Int(     "Resolution", 32 ));
-	newInput( 9, nodeValue_Rot(     "Direction",  0  ));
-	// 10
+	newInput( 3, nodeValue_Int(     "Resolution", 32    ));
+	newInput( 9, nodeValue_Rot(     "Direction",  0     ));
+	newInput(10, nodeValue_Bool(    "Both Side",  false ));
+	// 11
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
 	input_display_list = [ 1, 4, 
 		[ "Surface", false ],  0,  5,  6,  7,  8, 
-		[ "Expands", false ],  2,  3,  9, 
+		[ "Expands", false ],  2,  3,  9, 10, 
 	];
 	
 	////- Node
@@ -36,9 +37,11 @@ function Node_Atlas(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 			var _meth = _data[ 2];
 			var _reso = _data[ 3];
 			var _dirr = _data[ 9];
+			var _both = _data[10];
 			
 			inputs[ 3].setVisible(_meth != 2);
 			inputs[ 9].setVisible(_meth == 2);
+			inputs[10].setVisible(_meth == 2);
 			
 			if(!is_surface(_surf)) return _outSurf;
 		#endregion
@@ -98,10 +101,11 @@ function Node_Atlas(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 				surface_set_shader(_outSurf, sh_atlas_linear);
 					shader_set_f( "dimension", _dim  );
 					shader_set_f( "direction", _dirr );
+					shader_set_i( "both",      _both );
 					
 					draw_surface_safe(_surf);
 				surface_reset_shader();
-				
+				break;
 				
 		}
 		

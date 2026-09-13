@@ -23,8 +23,8 @@ function Node_Strand_Render(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	newInput(10, nodeValue_Float( "Scatter Range",  2     ));
 	
 	////- =Color
-	newInput(4, nodeValue_Gradient( "Random color",      gra_white )).addShift(11);
-	newInput(5, nodeValue_Gradient( "Color over length", gra_white )).setHotkeyAuto("C").addShift(12);
+	newInput( 4, nodeValue_Gradient( "Random color",      gra_white )).addShift(11);
+	newInput( 5, nodeValue_Gradient( "Color over length", gra_white )).setHotkeyAuto("C").addShift(12);
 	// 13
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));

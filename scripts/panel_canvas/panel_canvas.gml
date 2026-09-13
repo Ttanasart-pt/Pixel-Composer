@@ -65,8 +65,10 @@ function Panel_Canvas() : PanelContent() constructor {
 	
 	#region tool
 		tool_current   = undefined;
-		tool_color     = ca_white;
+		tool_color     = ca_white;    tool_color_set = function(c) /*=>*/ { tool_color = c; }
 		tool_color_sub = ca_black;
+		
+		tool_color_selecting = false;
 	#endregion
 	
 	#region global settings
@@ -156,7 +158,7 @@ function Panel_Canvas() : PanelContent() constructor {
 		
 		select_invt_editor = new __Simple_Editor( "", button(function() /*=>*/ {return invertSelection()}).setTooltip("Invert Selection")
 			.setBaseSprite(THEME.button_hide_fill).setIcon(THEME.canvas_selection_invert, 0, COLORS._main_icon_light, .75), function() /*=>*/ {return 0}, function() /*=>*/ {} );
-	
+		
 		select_inter_editor = new __Simple_Editor( "", new buttonGroup(array_create(2, THEME.canvas_interpolate), function(b) /*=>*/ {
 			select_cleanEdge = b;
 		}).iconPad(ui(6)), function() /*=>*/ {return select_cleanEdge}, function(b) /*=>*/ { select_cleanEdge = b; } );
@@ -556,7 +558,7 @@ function Panel_Canvas() : PanelContent() constructor {
 		#region preview
 			preview_surface = surface_verify(preview_surface, surf_w, surf_h);
 			
-			if(tool_current) {
+			if(tool_current && !tool_color_selecting) {
 				if(tool_current.preview_override) {
 					surface_set_shader(preview_surface, noone, true, BLEND.over);
 						draw_surface_safe(tool_current.preview_override, 0, 0);
@@ -823,7 +825,7 @@ function Panel_Canvas() : PanelContent() constructor {
 		#region tool
 			drawing_surface = surface_verify(drawing_surface, surf_w, surf_h);
 			
-			if(tool_current) {
+			if(tool_current && !tool_color_selecting) {
 				if(tool_current.isSelector) {
 					var bolc = select_bool_fixed? COLORS._main_accent : COLORS._main_icon_light;
 					
@@ -848,6 +850,24 @@ function Panel_Canvas() : PanelContent() constructor {
 				brush_surface = tool_current.drawBrush(brush_surface);
 				tool_current.drawing(drawing_surface);
 				
+			}
+		#endregion
+		
+		#region color selector
+			if(tool_color_selecting) {
+				if(mpx > 0 && mpx <= surf_w && mpy > 0 && mpy <= surf_h) {
+					CURSOR_SPRITE = THEME.color_picker_dropper;
+					
+					if(mouse_lclick(pFOCUS)) tool_color     = surface_get_pixel_ext(content_surface, mpx, mpy);
+					if(mouse_rclick(pFOCUS)) tool_color_sub = surface_get_pixel_ext(content_surface, mpx, mpy);
+				}
+				
+				if(mouse_lrelease(pFOCUS)) tool_color_selecting = false;
+				if(mouse_rrelease(pFOCUS)) tool_color_selecting = false;
+				if(key_mod_release(ALT))   tool_color_selecting = false;
+				
+			} else if(hover_content && key_mod_press(ALT)) {
+				tool_color_selecting = true;
 			}
 		#endregion
 		
