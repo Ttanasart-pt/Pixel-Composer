@@ -30,7 +30,10 @@ def getImages():
             images[keyFul] = pth
 
             if keyFul.startswith("images"):
-                print("found image", keyFul)
+                keyImg = keyFul[len("images/"):]
+                images[keyImg] = pth
+
+                print("found image", keyImg)
 
 
 template = fileUtil.readFile("docsdata/templates/page.html")
