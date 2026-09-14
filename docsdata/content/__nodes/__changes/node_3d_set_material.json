@@ -6,6 +6,11 @@
         "date": "2026-09-14T08:46:07.130Z",
         "node": "",
         "commit": "**Set Material**: Now support setting material in scene object."
+      },
+      {
+        "date": "2026-09-14T08:51:58.751Z",
+        "node": "Set Material",
+        "commit": "**Set Material**: Add randomize selection."
       }
     ]
   },
