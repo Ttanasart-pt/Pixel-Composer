@@ -23,13 +23,13 @@ def getImages():
             key = file[:-4].lower()
             pth = os.path.join(root.replace("docs/", ""), file).replace("\\", "/")
 
-            dirPnt = root.replace("docs/src/", "").replace("\\", "/")
+            dirPnt = root.replace("\\", "/").replace("docs/src/", "")
             keyFul = os.path.join(dirPnt, key).replace("\\", "/")
 
             images[key] = pth
             images[keyFul] = pth
 
-            print("found image", keyFul)
+            print("found image", root, dirPnt)
 
 
 template = fileUtil.readFile("docsdata/templates/page.html")
