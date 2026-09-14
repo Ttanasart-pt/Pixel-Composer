@@ -31,7 +31,7 @@ The most common causes for startup crash is a preference error. Try deleting the
 and restart the software.
 [/banner]
 
-<img src="src/images/errors/startup.png" class="deco" alt="Startup Crash">
+<img-deco errors/startup>
 
 Startup crashes are the most severe type of issue. This happens when a critical failure occurs before the crash reporter is initialized. 
 This type of crash will create a "Microsoft Visual C++ Runtime Library: Runtime Error!" dialog.
@@ -41,14 +41,14 @@ Sometimes a log file `log_temp.txt` will be created in the same location as the 
 
 ### Runtime Crashes
 
-<img src="src/images/errors/runtime.png" alt="Runtime Crash">
+<img errors/runtime>
 
 Runtime crashes are a more common crash cause by irreversible error caused while running the program. This type of crash will display crash report dialog with crash log which you
 can copy and send to the developer for further investigation.
 
 ### Error
 
-<img src="src/images/errors/error.png" class="deco" alt="Error">
+<img-deco errors/error>
 
 General error are errors occured in the code that can be bypass without crashing. This type of error will create error popup in the program and the notification. Sometime error can cause 
 GUI glitch which make the software unusable. If you encounter this type of error, you can find the log file at `%APPDATA%/Local/PixelComposer/log/log.txt`.
@@ -56,7 +56,7 @@ GUI glitch which make the software unusable. If you encounter this type of error
 
 ### Warning
 
-<img src="src/images/errors/warning.png" alt="Warning">
+<img errors/warning>
 
 Warning are the least severe type of error that doesn't interrupt the program operation, however it may cause some node to not function properly.
 
