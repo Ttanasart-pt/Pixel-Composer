@@ -140,14 +140,14 @@ function Node_Tunnel_In(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	}
 	
 	static preDraw = function(_x, _y, _mx, _my, _s) {
-		var xx =  x      * _s + _x;
-		var yy = (y + 8) * _s + _y;
+		var xx =  x    * _s + _x;
+		var yy = (y+8) * _s + _y;
 		
-		inputs[0].x = xx;
-		inputs[0].y = yy;
+		inputs[0].x = xx; inputs[0].rx = x;
+		inputs[0].y = yy; inputs[0].ry = y+8;
 		
-		inputs[1].x = xx;
-		inputs[1].y = yy;
+		inputs[1].x = xx; inputs[1].yx = x;
+		inputs[1].y = yy; inputs[1].yy = y+8;
 	}
 	
 	static drawBadge = function(_x, _y, _s) {}

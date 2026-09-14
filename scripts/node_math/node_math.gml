@@ -24,8 +24,11 @@
 		snap,     // 16
 		fract,    // 17
 		
-		map,
-		log,
+		map,      // 18
+		log,      // 19
+		
+		maxx,     // 20
+		minn,     // 21
 		
 		length,
 	}
@@ -34,16 +37,19 @@
 									"+", "-", "*", "/", "^", 
 	                        		"sin", "cos", "tan", "modulo", "round", 
 	                        		"ceiling", "floor", "lerp", "abs", "fract", 
-	                        		"clamp", "snap", "map", "log" ];
+	                        		"clamp", "snap", "map", "log", "max", "min"];
 	
 	global.node_math_keys_map = [	MATH_OPERATOR.add,     MATH_OPERATOR.subtract, MATH_OPERATOR.multiply, MATH_OPERATOR.divide, MATH_OPERATOR.power, MATH_OPERATOR.root, 
 									MATH_OPERATOR.add,     MATH_OPERATOR.subtract, MATH_OPERATOR.multiply, MATH_OPERATOR.divide, MATH_OPERATOR.power, 
 	                        		MATH_OPERATOR.sin,     MATH_OPERATOR.cos,      MATH_OPERATOR.tan,      MATH_OPERATOR.modulo, MATH_OPERATOR.round, 
 	                        		MATH_OPERATOR.ceiling, MATH_OPERATOR.floor,    MATH_OPERATOR.lerp,     MATH_OPERATOR.abs,    MATH_OPERATOR.fract, 
-	                        		MATH_OPERATOR.clamp,   MATH_OPERATOR.snap,     MATH_OPERATOR.map,      MATH_OPERATOR.log, ];
+	                        		MATH_OPERATOR.clamp,   MATH_OPERATOR.snap,     MATH_OPERATOR.map,      MATH_OPERATOR.log,    MATH_OPERATOR.maxx,  MATH_OPERATOR.minn, 
+                        		];
 	
 	global.node_math_names    = [  /* 0 -  9*/ "Add", "Subtract", "Multiply", "Divide", "Power", "Root", "Sin", "Cos", "Tan", "Modulo", 
-								   /*10 - 20*/ "Floor", "Ceil", "Round", "Lerp", "Abs", "Clamp", "Snap", "Fract", "Map", "Log" ];
+								   /*10 - 19*/ "Floor", "Ceil", "Round", "Lerp", "Abs", "Clamp", "Snap", "Fract", "Map", "Log", 
+								   /*20 - 29*/ "Max", "Min" 
+							    ];
 	
 	global.node_math_scroll   = array_create_ext(array_length(global.node_math_names), function(i) /*=>*/ {return new scrollItem(global.node_math_names[i], s_node_math_operators, i)});
 	
@@ -139,6 +145,9 @@ function Node_Math(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 			
 			case MATH_OPERATOR.map :		return lerp(t[0], t[1], (a - f[0]) / (f[1] - f[0]));
 			case MATH_OPERATOR.log :	    return logn(b, a);
+			
+			case MATH_OPERATOR.maxx :	    return max(a, b);
+			case MATH_OPERATOR.minn :	    return min(a, b);
 		}
 		return 0;
 	}
@@ -240,6 +249,8 @@ function Node_Math(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 			case MATH_OPERATOR.power :
 			case MATH_OPERATOR.root :	
 			case MATH_OPERATOR.modulo :	
+			case MATH_OPERATOR.maxx :	
+			case MATH_OPERATOR.minn :	
 				inputs[2].setVisible(true, true);
 				break;
 				

@@ -4,6 +4,8 @@
 function __3dGroup() : __3dInstance() constructor {
 	objects = [];
 	
+	////- Getters
+	
 	static getCenter = function() {
 		var _v = new __vec3();
 		var _i = 0;
@@ -21,7 +23,6 @@ function __3dGroup() : __3dInstance() constructor {
 		
 		return _v;
 	}
-	
 	static getBBOX   = function() {
 		if(array_empty(objects)) return new __bbox3D(new __vec3(-0.5), new __vec3(0.5));
 		var _m0 = noone;
@@ -53,7 +54,11 @@ function __3dGroup() : __3dInstance() constructor {
 		return new __bbox3D(_m0, _m1); 
 	}
 	
+	////- Group
+	
 	static addObject = function(_obj) { array_push(objects, _obj); }
+	
+	////- Submit
 	
 	static submit       = function(_sc = {}, _sh = noone)    /*=>*/ { __3D_GROUP_PRESUB objects[i].submit(_sc, _sh);       __3D_GROUP_POSSUB }
 	static submitSel    = function(_sc = {}, _sh = noone)    /*=>*/ { __3D_GROUP_PRESUB objects[i].submitSel(_sc, _sh);    __3D_GROUP_POSSUB }
@@ -77,8 +82,9 @@ function __3dGroup() : __3dInstance() constructor {
 function __3dTransformed(_object = noone) : __3dInstance() constructor {
 	object = _object;
 	
-	static getCenter = function() { return object.getCenter().add(transform.position); }
+	////- Getters
 	
+	static getCenter = function() { return object.getCenter().add(transform.position); }
 	static getBBOX   = function() {
 		var _b = object.getBBOX().clone();
 		
@@ -90,6 +96,12 @@ function __3dTransformed(_object = noone) : __3dInstance() constructor {
 		
 		return _b;
 	}
+	
+	////- Material
+	
+	static getMaterials = function() /*=>*/ {return object.getMaterials()};
+	
+	////- Submit
 	
 	static submit       = function(_sc = {}, _sh = noone) /*=>*/ { transform.submitMatrix(); object.submit(_sc, _sh);       transform.clearMatrix(); }
 	static submitSel    = function(_sc = {}, _sh = noone) /*=>*/ { transform.submitMatrix(); object.submitSel(_sc, _sh);    transform.clearMatrix(); }

@@ -16,6 +16,8 @@ function Node_3D_Scene(_x, _y, _group = noone) : Node_3D(_x, _y, _group) constru
 		return inputs[index];
 	} setDynamicInput(1, true, VALUE_TYPE.d3Mesh);
 	
+	////- Node
+	
 	static preGetInputs  = function() {
 		var _spr = inputs[0].getValue();
 		

@@ -23,13 +23,13 @@
 		icon   = _icon;
 		color  = _color;
 		
-		life_max = _life;
-		life     = _life;
+		life_max  = _life;
+		life      = _life;
 		
-		onClick  = noone;
-		param    = undefined;
-		tooltip  = "";
-		icon_end = noone;
+		onClick   = noone;
+		param     = undefined;
+		tooltip   = "";
+		icon_end  = noone;
 		
 		progress  = noone;
 		reference = noone;

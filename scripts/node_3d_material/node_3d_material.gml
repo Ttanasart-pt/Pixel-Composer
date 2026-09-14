@@ -4,7 +4,7 @@ function Node_3D_Material(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	
 	////- =Texture
 	newInput( 0, nodeValue_Surface( "Texture"              )).setVisible(true, true);
-	newInput( 8, nodeValue_EScroll( "Interpolation", 0, [ "Pixel", "Bilinear", "CleanEdge" ] ));
+	newInput( 8, nodeValue_EScroll( "Interpolation",  0, [ "Pixel", "Bilinear", "CleanEdge" ] ));
 	newInput( 9, nodeValue_Vec2(    "Scale",         [1,1] ));
 	newInput(10, nodeValue_Vec2(    "Shift",         [0,0] ));
 	

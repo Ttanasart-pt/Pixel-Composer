@@ -25,10 +25,10 @@ function Node_MK_Rain(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	newInput(12, nodeValue_SliRange( "Track Extension", [0,0], { range: [ 0, 10, 0.01 ] }));
 	
 	////- =Render
-	newInput( 5, nodeValue_Gradient( "Color",      gra_white    )).addShift(25);
-	newInput( 6, nodeValue_SliRange( "Alpha",      [.5,1]       ));
-	newInput(17, nodeValue_Bool(     "Fade Alpha", false        ));
-	newInput(26, nodeValue_Toggle(   "Tile",       0, ["X","Y"] ));
+	newInput( 5, nodeValue_Gradient( "Color",      gra_white       )).addShift(25);
+	newInput( 6, nodeValue_SliRange( "Alpha",      [.5,1]          ));
+	newInput(17, nodeValue_Bool(     "Fade Alpha", false           ));
+	newInput(26, nodeValue_Toggle(   "Tile",       0b01, ["X","Y"] ));
 	
 	////- =Ground
 	newInput(18, nodeValue_Bool(   "Ground",        false   ));
@@ -150,8 +150,8 @@ function Node_MK_Rain(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		var _clife, _scaL, _aaL;
 		var _drpX, _drpY;
 		
-		var tileX = bool(_tile & 0b10);
-		var tileY = bool(_tile & 0b01);
+		var tileX = bool(_tile & 0b01);
+		var tileY = bool(_tile & 0b10);
 		
 		draw_set_circle_precision(32);
 		surface_set_target(_outSurf);
@@ -269,12 +269,38 @@ function Node_MK_Rain(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 							   	draw_line_color( _x0+_sw, _y0, _x1+_sw, _y1, _lcc, c_black );
 						   	}
 						   	
+						   	if(tileY) {
+							   	draw_line_color( _x0, _y0-_sh, _x1, _y1-_sh, _lcc, c_black );
+							   	draw_line_color( _x0, _y0+_sh, _x1, _y1+_sh, _lcc, c_black );
+						   	}
+						   	
+							if(tileX && tileY) {
+							   	draw_line_color( _x0-_sw, _y0-_sh, _x1-_sw, _y1-_sh, _lcc, c_black );
+							   	draw_line_color( _x0+_sw, _y0-_sh, _x1+_sw, _y1-_sh, _lcc, c_black );
+							   	
+							   	draw_line_color( _x0-_sw, _y0+_sh, _x1-_sw, _y1+_sh, _lcc, c_black );
+							   	draw_line_color( _x0+_sw, _y0+_sh, _x1+_sw, _y1+_sh, _lcc, c_black );
+							}
+								
 						} else if( _afad && _drpW >  1) {
 							draw_line_width_color( _x0, _y0, _x1, _y1, _drpW, _lcc, c_black ); 
 							
 							if(tileX) {
 								draw_line_width_color( _x0-_sw, _y0, _x1-_sw, _y1, _drpW, _lcc, c_black ); 
 								draw_line_width_color( _x0+_sw, _y0, _x1+_sw, _y1, _drpW, _lcc, c_black ); 
+							}
+							
+							if(tileY) {
+								draw_line_width_color( _x0, _y0-_sh, _x1, _y1-_sh, _drpW, _lcc, c_black ); 
+								draw_line_width_color( _x0, _y0+_sh, _x1, _y1+_sh, _drpW, _lcc, c_black ); 
+							}
+							
+							if(tileX && tileY) {
+								draw_line_width_color( _x0-_sw, _y0-_sh, _x1-_sw, _y1-_sh, _drpW, _lcc, c_black ); 
+								draw_line_width_color( _x0+_sw, _y0-_sh, _x1+_sw, _y1-_sh, _drpW, _lcc, c_black ); 
+								
+								draw_line_width_color( _x0-_sw, _y0+_sh, _x1-_sw, _y1+_sh, _drpW, _lcc, c_black ); 
+								draw_line_width_color( _x0+_sw, _y0+_sh, _x1+_sw, _y1+_sh, _drpW, _lcc, c_black ); 
 							}
 							
 						} else if(!_afad && _drpW == 1) {
@@ -285,6 +311,19 @@ function Node_MK_Rain(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 								draw_line( _x0+_sw, _y0, _x1+_sw, _y1 );
 							}
 							
+							if(tileY) {
+								draw_line( _x0, _y0-_sh, _x1, _y1-_sh );
+								draw_line( _x0, _y0+_sh, _x1, _y1+_sh );
+							}
+							
+							if(tileX && tileY) {
+								draw_line( _x0-_sw, _y0-_sh, _x1-_sw, _y1-_sh );
+								draw_line( _x0+_sw, _y0-_sh, _x1+_sw, _y1-_sh );
+								
+								draw_line( _x0-_sw, _y0+_sh, _x1-_sw, _y1+_sh );
+								draw_line( _x0+_sw, _y0+_sh, _x1+_sw, _y1+_sh );
+							}
+							
 						} else if(!_afad && _drpW >  1) {
 							draw_line_width( _x0, _y0, _x1, _y1, _drpW ); 
 							
@@ -293,6 +332,18 @@ function Node_MK_Rain(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 								draw_line_width( _x0+_sw, _y0, _x1+_sw, _y1, _drpW ); 
 							}
 							
+							if(tileY) {
+								draw_line_width( _x0, _y0-_sh, _x1, _y1-_sh, _drpW ); 
+								draw_line_width( _x0, _y0+_sh, _x1, _y1+_sh, _drpW ); 
+							}
+							
+							if(tileX && tileY) {
+								draw_line_width( _x0-_sw, _y0-_sh, _x1-_sw, _y1-_sh, _drpW ); 
+								draw_line_width( _x0+_sw, _y0-_sh, _x1+_sw, _y1-_sh, _drpW ); 
+								
+								draw_line_width( _x0-_sw, _y0+_sh, _x1-_sw, _y1+_sh, _drpW ); 
+								draw_line_width( _x0+_sw, _y0+_sh, _x1+_sw, _y1+_sh, _drpW ); 
+							}
 						}
 							
 						break;
@@ -301,22 +352,52 @@ function Node_MK_Rain(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 						_x0 = round(_x0);
 						_y0 = round(_y0);
 						
-						draw_circle(_x0, _y0, _drpW * _scaL, false); 
+						draw_circle(_x0, _y0, _drpW * _scaL, false);
 						
 						if(tileX) {
 							draw_circle(_x0-_sw, _y0, _drpW * _scaL, false); 
 							draw_circle(_x0+_sw, _y0, _drpW * _scaL, false); 
+						}
+						
+						if(tileY) {
+							draw_circle(_x0, _y0-_sh, _drpW * _scaL, false); 
+							draw_circle(_x0, _y0+_sh, _drpW * _scaL, false); 
+						}
+						
+						if(tileX && tileY) {
+							draw_circle(_x0-_sw, _y0-_sh, _drpW * _scaL, false); 
+							draw_circle(_x0+_sw, _y0-_sh, _drpW * _scaL, false); 
+							
+							draw_circle(_x0-_sw, _y0+_sh, _drpW * _scaL, false); 
+							draw_circle(_x0+_sw, _y0+_sh, _drpW * _scaL, false); 
 						}
 						break;
 						
 					case 2 : 
 						var xx = _x0 - _tw * _scaL / 2;
 						var yy = _y0 - _th * _scaL / 2;
-						draw_surface_ext(_text, xx, yy, _scaL, _scaL, 0, draw_get_color(), draw_get_alpha()); 
+						var cc = draw_get_color(); 
+						var aa = draw_get_alpha();
+						
+						draw_surface_ext(_text, xx, yy, _scaL, _scaL, 0, cc, aa); 
 						
 						if(tileX) {
-							draw_surface_ext(_text, xx-_sw, yy, _scaL, _scaL, 0, draw_get_color(), draw_get_alpha()); 
-							draw_surface_ext(_text, xx+_sw, yy, _scaL, _scaL, 0, draw_get_color(), draw_get_alpha()); 
+							draw_surface_ext(_text, xx-_sw, yy, _scaL, _scaL, 0, cc, aa); 
+							draw_surface_ext(_text, xx+_sw, yy, _scaL, _scaL, 0, cc, aa); 
+						}
+						
+						if(tileY) {
+							draw_surface_ext(_text, xx, yy-_sh, _scaL, _scaL, 0, cc, aa); 
+							draw_surface_ext(_text, xx, yy+_sh, _scaL, _scaL, 0, cc, aa); 
+						}
+						
+						if(tileX && tileY) {
+							draw_surface_ext(_text, xx-_sw, yy-_sh, _scaL, _scaL, 0, cc, aa); 
+							draw_surface_ext(_text, xx+_sw, yy-_sh, _scaL, _scaL, 0, cc, aa);
+							
+							draw_surface_ext(_text, xx-_sw, yy+_sh, _scaL, _scaL, 0, cc, aa); 
+							draw_surface_ext(_text, xx+_sw, yy+_sh, _scaL, _scaL, 0, cc, aa);
+							
 						}
 						break;
 				}

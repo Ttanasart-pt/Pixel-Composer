@@ -4,20 +4,20 @@ function Node_3D_Repeat(_x, _y, _group = noone) : Node_3D(_x, _y, _group) constr
 	newInput(21, nodeValueSeed());
 	
 	////- =Objects
-	newInput( 0, nodeValue_D3Mesh(      "Objects" )).setArrayDepth(1);
-	newInput( 3, nodeValue_Vec3(        "Starting Position", [0,0,0]    ));
-	newInput( 4, nodeValue_Quaternion(  "Starting Rotation" ));
-	newInput( 5, nodeValue_Vec3(        "Starting Scale",    [1,1,1]    ));
+	newInput( 0, nodeValue_D3Mesh( "Objects" )).setArrayDepth(1);
+	newInput( 3, nodeValue_Vec3(   "Starting Position", [0,0,0]    ));
+	newInput( 4, nodeValue_Quat(   "Starting Rotation" ));
+	newInput( 5, nodeValue_Vec3(   "Starting Scale",    [1,1,1]    ));
 	
 	////- =Repeat
 	newInput( 1, nodeValue_EButton( "Object Type",  0, [ "Single", "Array" ] )).rejectArray();
 	newInput(13, nodeValue_EScroll( "Pattern",      0, __enum_array_gen([ "Linear", "Grid", "Circular"], s_node_repeat_axis) )).rejectArray();
-	newInput( 2, nodeValue_Int(         "Amount",       2       ));
-	newInput(14, nodeValue_IVec3(       "Grid",         [2,2,1] ));
-	newInput(17, nodeValue_Float(       "Radius",       1       ));
-	newInput(19, nodeValue_Slider(      "Look At Center",0      ));
+	newInput( 2, nodeValue_Int(     "Amount",       2       ));
+	newInput(14, nodeValue_IVec3(   "Grid",         [2,2,1] ));
+	newInput(17, nodeValue_Float(   "Radius",       1       ));
+	newInput(19, nodeValue_Slider(  "Look At Center",0      ));
 	newInput(18, nodeValue_Path(    "Shift Path"            )).setExtractNode("Node_Path_3D");
-	newInput(20, nodeValue_Slider(      "Follow Path",  0       ));
+	newInput(20, nodeValue_Slider(  "Follow Path",  0       ));
 	
 	////- =Transform
 	newInput( 9, nodeValue_Vec3( "Positions", [] )).setArrayDepth(1);
@@ -25,13 +25,15 @@ function Node_3D_Repeat(_x, _y, _group = noone) : Node_3D(_x, _y, _group) constr
 	newInput(11, nodeValue_Vec3( "Scales",    [] )).setArrayDepth(1);
 	
 	////- =Per Copy
-	newInput( 6, nodeValue_Vec3(       "Shift Position",   [1,0,0]   ));
-	newInput(15, nodeValue_Vec3(       "Shift Position Y", [0,1,0]   ));
-	newInput(16, nodeValue_Vec3(       "Shift Position Z", [0,0,1]   ));
-	newInput( 7, nodeValue_Quaternion( "Shift Rotation" ));
-	newInput( 8, nodeValue_Vec3(       "Shift Scale",      [0,0,0]   ));
-	newInput(25, nodeValue_Bool(       "Scale Uniform",    true      ));
+	newInput( 6, nodeValue_Vec3( "Shift Position",   [1,0,0]   ));
+	newInput(15, nodeValue_Vec3( "Shift Position Y", [0,1,0]   ));
+	newInput(16, nodeValue_Vec3( "Shift Position Z", [0,0,1]   ));
+	newInput( 7, nodeValue_Quat( "Shift Rotation" ));
+	newInput( 8, nodeValue_Vec3( "Shift Scale",      [0,0,0]   ));
+	newInput(25, nodeValue_Bool( "Scale Uniform",    true      ));
 	/* UNUSED */ newInput(12, nodeValue_Bool( "Use Instance", true   ))
+	
+	////- =Material
 	
 	////- =Scatter
 	newInput(22, nodeValue_Vec3_Range( "Position Scatter", array_create(6,0) ));

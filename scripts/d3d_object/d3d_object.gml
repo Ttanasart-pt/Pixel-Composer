@@ -203,6 +203,10 @@ function __3dObject() : __3dInstance() constructor {
 		return _res;
 	}
 	
+	////- Material
+	
+	static getMaterials = function() /*=>*/ {return materials};
+	
 	////- Submit
 	
 	static preSubmitVertex  = function(_sc = noone) /*=>*/ {}
@@ -373,7 +377,7 @@ function __3dObject() : __3dInstance() constructor {
 		_obj.object_counts  = object_counts;
 		_obj.transform      = transform.clone();
 		_obj.size           = size.clone();
-		_obj.materials      = materials;
+		_obj.materials      = array_map(materials, function(m,i) /*=>*/ {return m.clone()});
 		_obj.material_index = material_index;
 		_obj.texture_flip   = texture_flip;
 		
