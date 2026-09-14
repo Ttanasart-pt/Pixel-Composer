@@ -29,7 +29,8 @@ def getImages():
             images[key] = pth
             images[keyFul] = pth
 
-            print("found image", keyFul)
+            if dirPnt != "nodeIcons/":
+                print("found image", keyFul)
 
 
 template = fileUtil.readFile("docsdata/templates/page.html")
