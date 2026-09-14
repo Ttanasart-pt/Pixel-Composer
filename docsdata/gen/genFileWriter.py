@@ -21,7 +21,16 @@ def getImages():
                 continue
 
             key = file[:-4].lower()
-            images[key] = os.path.join(root.replace("docs/", ""), file).replace("\\", "/")
+            pth = os.path.join(root.replace("docs/", ""), file).replace("\\", "/")
+
+            dirPnt = root.replace("docs/src/", "").replace("\\", "/")
+            keyFul = os.path.join(dirPnt, key).replace("\\", "/")
+
+            images[key] = pth
+            images[keyFul] = pth
+
+            print("found image", keyFul)
+
 
 template = fileUtil.readFile("docsdata/templates/page.html")
 
