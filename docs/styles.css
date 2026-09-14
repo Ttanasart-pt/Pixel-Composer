@@ -902,9 +902,12 @@ p.version-banner {
 }
 
 p img {
-    display: inline;
-    margin: 0px 4px;
-    vertical-align: middle;
+    /* display: inline;
+    margin: 0px 4px; */
+    /* vertical-align: middle; */
+
+    display: block;
+    margin: auto;
 }
 
 span.bold {

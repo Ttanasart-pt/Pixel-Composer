@@ -23,13 +23,13 @@ In any case, if you found a problem with the software, please make a report to M
 
 ### Startup Crashes
 
-[banner]
-The most common causes for startup crash is a preference error. Try deleting the software directory at:
+<!-- [banner] -->
+The most common causes for startup crash is a preference error. Try backing up and deleting the software directory at:
 - Windows: `C:\Users\[Your username]\Appdata\Local\PixelComposer`
 - macOS: `~/Library/Application Support/com.Makhamdev.PixelComposer`
 - Linux: `~/PixelComposer`
 and restart the software.
-[/banner]
+<!-- [/banner] -->
 
 <img-deco errors/startup>
 
