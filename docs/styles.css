@@ -761,7 +761,7 @@ div.breadcrumb {
     }
 }
 
-span.inline-code {
+span.inline-code, code {
     display: inline;
     padding: 2px 4px;
 
@@ -776,11 +776,11 @@ span.inline-code {
     border-radius: 4px;
 }
 
-p span.inline-code {
+p span.inline-code, p code {
     font-size: 0.9rem;
 }
 
-h3 span.inline-code {
+h3 span.inline-code, h3 code {
     font-size: 1.25rem;
 }
 
