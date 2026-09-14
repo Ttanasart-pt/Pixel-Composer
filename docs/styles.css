@@ -1,4 +1,5 @@
 :root {
+    --main_blblack:	#10101a;
     --main_dkblack:	#191925;
     --main_mdblack:	#1e1e2c;
     --main_black:	#272736;
@@ -769,9 +770,9 @@ span.inline-code, code {
     font-optical-sizing: auto;
     font-weight: 600;
     font-style: normal;
-    color: var(--main_ltgrey);
+    color: var(--main_white);
 
-    background-color: var(--main_dkblack);
+    background-color: var(--main_blblack);
     border: 1px solid var(--main_dkgrey);
     border-radius: 4px;
 }
