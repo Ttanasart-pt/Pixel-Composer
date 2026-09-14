@@ -29,7 +29,7 @@ def getImages():
             images[key] = pth
             images[keyFul] = pth
 
-            if not dirPnt.startswith("nodeIcons/"):
+            if not keyFul.startswith("nodeIcons"):
                 print("found image", keyFul)
 
 
