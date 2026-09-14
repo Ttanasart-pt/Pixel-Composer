@@ -10,6 +10,8 @@ event_inherited();
 	pages = [ "News", "Getting Started", "Welcome Files" ];
 	if(STEAM_ENABLED) array_push(pages, "Workshop");
 	
+	PREFERENCES.splash_page = min(PREFERENCES.splash_page, array_length(pages) - 1);
+	
 	thumbnail_retriever = 0;
 	show_autosaves		= false;
 	

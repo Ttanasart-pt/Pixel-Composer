@@ -230,7 +230,7 @@ DIALOG_DRAW_BG
 	var by = y0 - ui(36);
 	var bb = THEME.button_hide_fill;
 	
-	switch(pages[PREFERENCES.splash_page]) {
+	switch(array_safe_get(pages, PREFERENCES.splash_page)) {
 		case "Getting Started" :
 		case "Welcome Files" :
 			sp_sample.setFocusHover(sFOCUS, sHOVER);

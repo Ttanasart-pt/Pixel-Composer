@@ -19,13 +19,6 @@ var _cnt = panel.getContent();
 	var cnw =  dialog_w -  padding * 2;
 	var cnh =  dialog_h - (padding * 2 + title_height);
 	
-	// if(title_height) {
-	// 	cnx += 3;
-	// 	cny += 3;
-	// 	cnw -= 6;
-	// 	cnh -= 6;
-	// }
-	
 	panel.x = cnx;
 	panel.y = cny;
 	
