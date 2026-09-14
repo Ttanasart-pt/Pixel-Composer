@@ -82,16 +82,16 @@ function canvas_s_tool_node() : canvas_s_tool() constructor {
 	function openInspector() {
 		if(!is(nodeObject, Node)) return;
 		
+		var cnWin = canvas.window;
+		
 		inspector = dialogPanelCall(new Panel_Inspector().setInspecting(nodeObject, true));
 		inspector.destroy_on_click_out = false;
+		if(is_winwin(cnWin)) inspector.extractWindow();
 		
-		if(MULTI_WINDOWS) {
-			var inWin = inspector.window;
-			var cnWin = canvas.window;
+		var inWin = inspector.window;
 			
-			if(is_winwin(inWin) && is_winwin(cnWin))
-				winwin_set_owner(inWin, cnWin);
-		}
+		if(is_winwin(inWin) && is_winwin(cnWin))
+			winwin_set_owner(inWin, cnWin);
 	}
 	
 	function drawing(_drawingSurface) {

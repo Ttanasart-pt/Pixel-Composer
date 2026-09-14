@@ -862,11 +862,9 @@ function Panel_Canvas() : PanelContent() constructor {
 					if(mouse_rclick(pFOCUS)) tool_color_sub = surface_get_pixel_ext(content_surface, mpx, mpy);
 				}
 				
-				if(mouse_lrelease(pFOCUS)) tool_color_selecting = false;
-				if(mouse_rrelease(pFOCUS)) tool_color_selecting = false;
-				if(key_mod_release(ALT))   tool_color_selecting = false;
+				if(key_mod_release(ALT)) tool_color_selecting = false;
 				
-			} else if(hover_content && key_mod_press(ALT)) {
+			} else if(hover_content && key_mod_press(ALT) && !mouse_lclick(pFOCUS) && !mouse_rclick(pFOCUS)) {
 				tool_color_selecting = true;
 			}
 		#endregion

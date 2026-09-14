@@ -105,19 +105,23 @@
 			dialog_x = dialog_drag_sx + mouse_rx - dialog_drag_mx;
 			dialog_y = dialog_drag_sy + mouse_ry - dialog_drag_my;
 			
+			if(MULTI_WINDOWS && !is_winwin(window) && !point_in_rectangle(mouse_rx, mouse_ry, WIN_X, WIN_Y, WIN_X + WIN_W, WIN_Y + WIN_H)) 
+				extractWindow();
+			
 			var dx = dialog_x - diax;
 			var dy = dialog_y - diay;
-			
 			if(onDrag) onDrag(dx, dy);
 			
 			if(mouse_lrelease()) dialog_dragging = false;
 		}
 		
-		var mx = MULTI_WINDOWS? mouse_rx : mouse_mx;
-		var my = MULTI_WINDOWS? mouse_ry : mouse_my;
+		var win  = is_winwin(window);
 		
-		var diax = MULTI_WINDOWS? WIN_X + dialog_x : dialog_x;
-		var diay = MULTI_WINDOWS? WIN_Y + dialog_y : dialog_y;
+		var mx   = win? mouse_rx : mouse_mx;
+		var my   = win? mouse_ry : mouse_my;
+		
+		var diax = win? WIN_X + dialog_x : dialog_x;
+		var diay = win? WIN_Y + dialog_y : dialog_y;
 		
 		var _x0 = diax;
 		var _y0 = diay;
@@ -197,11 +201,13 @@
 		}
 		
 		if(sHOVER) {
-			var mx = MULTI_WINDOWS? mouse_rx : mouse_mx;
-			var my = MULTI_WINDOWS? mouse_ry : mouse_my;
+			var win  = is_winwin(window);
+		
+			var mx   = win? mouse_rx : mouse_mx;
+			var my   = win? mouse_ry : mouse_my;
 			
-			var diax = MULTI_WINDOWS? WIN_X + dialog_x : dialog_x;
-			var diay = MULTI_WINDOWS? WIN_Y + dialog_y : dialog_y;
+			var diax = win? WIN_X + dialog_x : dialog_x;
+			var diay = win? WIN_Y + dialog_y : dialog_y;
 			
 			var _x0 = diax;
 			var _y0 = diay;
@@ -337,23 +343,25 @@
 		dialog_x = round(clamp(dialog_x, ui(8), WIN_SW - dialog_w - ui(8)));
 		dialog_y = round(clamp(dialog_y, ui(8), WIN_SH - dialog_h - ui(8)));
 		if(onResetPosition != undefined) onResetPosition();
-		
-		if(MULTI_WINDOWS) {
-			if(is_winwin(window)) {
-				winwin_set_rect(window, WIN_X + dialog_x, WIN_Y + dialog_y, dialog_w, dialog_h);
-				
-			} else {
-				var wx = WIN_X + dialog_x;
-				var wy = WIN_Y + dialog_y;
-				window = winwin_create(wx, wy, dialog_w, dialog_h, windowConfig);
-				winwin_set_shadow(window, false);
-				winwin_enable_per_pixel_alpha(window);
-				winwin_order_front(window);
-				
-				array_push(WINWIN_ALL, window);
-				WINWIN_MAP[$ window] = self;
-			}
+	}
+	
+	function extractWindow() {
+		if(is_winwin(window)) {
+			winwin_set_rect(window, WIN_X + dialog_x, WIN_Y + dialog_y, dialog_w, dialog_h);
+			
+		} else {
+			var wx = WIN_X + dialog_x;
+			var wy = WIN_Y + dialog_y;
+			window = winwin_create(wx, wy, dialog_w, dialog_h, windowConfig);
+			winwin_set_shadow(window, false);
+			winwin_enable_per_pixel_alpha(window);
+			winwin_order_front(window);
+			
+			array_push(WINWIN_ALL, window);
+			WINWIN_MAP[$ window] = self;
 		}
+		
+		panel_toRefresh = true;
 	}
 	
 	function isTop() {
