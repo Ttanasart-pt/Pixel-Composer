@@ -15,10 +15,8 @@ event_inherited();
 	thumbnail_retriever = 0;
 	show_autosaves		= false;
 	
-	recent_width = PREFERENCES.splash_expand_recent? ui(576) : ui(288);
-	
-	clip_surf = noone;
-	
+	recent_width    = PREFERENCES.splash_expand_recent? ui(576) : ui(288);
+	clip_surf       = noone;
 	welcome_editing = false;
 #endregion
 

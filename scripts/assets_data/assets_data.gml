@@ -2,13 +2,13 @@
 	global.ASSET_MAP   = ds_map_create();
 	global.ASSET_CACHE = ds_map_create();
 	
-	function __initAssets() {
+	function __initAssets(_force = false) {
 		ds_map_clear(global.ASSET_MAP);
 		
 		var root = DIRECTORY + "Assets";
 		directory_verify(root);
 		
-		if(check_version($"{root}/version"))
+		if(_force || check_version($"{root}/version"))
 			zip_unzip($"{working_directory}pack/assets.zip", root);
 		
 		if(array_empty(PREFERENCES.path_assets)) {

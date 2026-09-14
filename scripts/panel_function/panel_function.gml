@@ -45,15 +45,17 @@
 
 	////- Global
 	
-function __initPanel() {
+function __initPanel(_force = false) {
 	var root = $"{DIRECTORY}layouts";
 	directory_verify(root);
 	
-	if(check_version($"{root}/version"))
+	if(_force || check_version($"{root}/version"))
 		zip_unzip($"{working_directory}pack/layouts.zip", root);
 	
-	setPanel();
-	checkPanelValid();
+	try {
+		setPanel();
+		checkPanelValid();
+	} catch(e) { if(!_force) __initPanel(true); }
 }
 
 function panelObjectInit(_w = WIN_SW, _h = WIN_SH) {

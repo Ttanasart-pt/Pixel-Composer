@@ -1,11 +1,10 @@
-function __initCollection() {
-	globalvar COLLECTIONS;
-	COLLECTIONS = -1;
+function __initCollection(_force = false) {
+	globalvar COLLECTIONS; COLLECTIONS = -1;
 	
 	var root = DIRECTORY + "Collections"; 
 	directory_verify(root);
 	
-	if(check_version($"{root}/version")) {
+	if(_force || check_version($"{root}/version")) {
 		COLLECTIONS = new DirectoryObject(DIRECTORY + "Collections");
 		COLLECTIONS.free();
 		

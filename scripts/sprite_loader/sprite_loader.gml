@@ -27,17 +27,20 @@ function sprite_drawer_white(_spr, _col = c_white) : sprite_drawer(_spr) constru
 	}
 }
 
-function __initTheme(_retry = true) {
+function __initTheme(_force = false) {
 	var root = DIRECTORY + "Themes";
 	var t    = get_timer();
 	
 	directory_verify(root);
-	if(check_version($"{root}/version")) 
+	if(_force || check_version($"{root}/version")) 
 		zip_unzip($"{working_directory}pack/themes.zip", root);	
 	
-	loadColor(PREFERENCES.theme);			printDebug($"  - Load color   | complete in {(get_timer()-t)/1000}ms");    t = get_timer();
-	loadGraphic(PREFERENCES.theme);			printDebug($"  - Load graphic | complete in {(get_timer()-t)/1000}ms");    t = get_timer();
-	loadNodeIcons();
+	try {
+		loadColor(PREFERENCES.theme);			printDebug($"  - Load color   | complete in {(get_timer()-t)/1000}ms");    t = get_timer();
+		loadGraphic(PREFERENCES.theme);			printDebug($"  - Load graphic | complete in {(get_timer()-t)/1000}ms");    t = get_timer();
+		loadNodeIcons(_force);
+		
+	} catch(e) { if(!_force) __initTheme(true); }
 }
 
 function _sprite_path(rel, theme) {
@@ -287,12 +290,12 @@ function __generate_texturegroup() {
 	__test_update_theme();
 }
 
-function loadNodeIcons() {
+function loadNodeIcons(_force = false) {
 	var root = DIRECTORY + "NodeIcons";
 	var t    = get_timer();
 	
 	directory_verify(root);
-	if(check_version($"{root}/version")) {
+	if(_force || check_version($"{root}/version")) {
 		zip_unzip($"{working_directory}pack/node_icons.zip", root);	
 		printDebug($"  - Unzip node icons  | complete in {(get_timer()-t)/1000}ms");    t = get_timer();
 	}

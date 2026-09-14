@@ -34,14 +34,14 @@ function loadSampleFolder(list, path) {
 		loadSampleFolder(list, _dir[i]);
 }
 
-function LOAD_SAMPLE() {
+function LOAD_SAMPLE(_force = false) {
 	SAMPLE_PROJECTS = [];
 	GETTING_STARTED = [];
 	
 	var targ = $"{DIRECTORY}Welcome files";
 	directory_verify(targ);
 	
-	if(check_version($"{targ}/version")) {
+	if(_force || check_version($"{targ}/version")) {
 		var _path = $"{DIRECTORY}Welcome files/Getting started";
 		if(directory_exists(_path)) directory_destroy(_path);
 		
