@@ -29,7 +29,7 @@ def getImages():
             images[key] = pth
             images[keyFul] = pth
 
-            print("found image", root, dirPnt)
+            print("found image", root, dirPnt, keyFul)
 
 
 template = fileUtil.readFile("docsdata/templates/page.html")
