@@ -29,7 +29,7 @@ def getImages():
             images[key] = pth
             images[keyFul] = pth
 
-            if not keyFul.startswith("nodeIcons"):
+            if keyFul.startswith("images"):
                 print("found image", keyFul)
 
 
