@@ -6,6 +6,11 @@
         "date": "2026-09-14T04:50:59.098Z",
         "node": "MK Rain",
         "commit": "**MK Rain**: Fix rain did not cover the whole surface."
+      },
+      {
+        "date": "2026-09-14T06:53:25.327Z",
+        "node": "MK Rain] Tiling is now togglable. - [MK Rain",
+        "commit": "**MK Rain] Tiling is now togglable. - [MK Rain**: Fix tiling not work on snow, surface type."
       }
     ]
   },
