@@ -123,6 +123,7 @@ function Node_MK_Rain(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		var _th  = surface_get_height_safe(_text);
 		
 		var _surfDiag = sqrt(_sw * _sw + _sh * _sh) / 2;
+		var _surfDiag = max(_sw, _sh);
 		var _rx  = _sw / 2;
 		var _ry  = _sh / 2;
 		

@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.10.001",
+    "changes": [
+      {
+        "date": "2026-09-14T04:50:59.098Z",
+        "node": "MK Rain",
+        "commit": "**MK Rain**: Fix rain did not cover the whole surface."
+      }
+    ]
+  },
+  {
     "version": "1.21.9.206",
     "changes": [
       {
