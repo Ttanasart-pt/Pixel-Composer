@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.10.002",
+    "changes": [
+      {
+        "date": "2026-09-15T06:27:24.176Z",
+        "node": "Draw Ribbon",
+        "commit": "**Draw Ribbon**: Add shift property."
+      }
+    ]
+  },
+  {
     "version": "1.21.9.208",
     "changes": [
       {

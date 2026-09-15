@@ -10,6 +10,7 @@ function Node_Ribbon(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	////- =Path
 	newInput( 2, nodeValue_Path(     "Path"          ));
 	newInput(17, nodeValue_SliRange( "Range", [0,1]  ));
+	newInput(21, nodeValue_SliRange( "Shift",  0     ));
 	newInput(11, nodeValue_Bool(     "Loop",   false ));
 	newInput( 3, nodeValue_Int(      "Sample", 64    ));
 	newInput(10, nodeValue_Bool(     "Invert", false ));
@@ -28,13 +29,13 @@ function Node_Ribbon(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	newInput(16, nodeValue_Rotation( "Texture Rotation",   0        ));
 	newInput(14, nodeValue_Vec2(     "Texture Scale",     [1,1]     ));
 	newInput( 9, nodeValue_Bool(     "Shade Side",        false     ));
-	// 21
+	// 22
 	
 	newOutput( 0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone ));
 	
 	input_display_list = [  0, 
 		[ "Output", false ],  1, 
-		[ "Path",   false ],  2, 17, 11,  3, 10, 
+		[ "Path",   false ],  2, 17, 22, 11,  3, 10, 
 		[ "Ribbon", false ],  4,  8, 20,  5, 15, 
 		[ "Render", false ], [6, true], 18, [7, true], 19, -1, 12, 13, 16, 14,  9, 
 	];
@@ -68,6 +69,8 @@ function Node_Ribbon(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 			
 			var _path    = _data[ 2];
 			var _rang    = _data[17];
+			var _shft    = _data[21];
+			
 			var _loop    = _data[11];
 			var _samp    = _data[ 3]; _samp = max(2, _samp);
 			var _invp    = _data[10];
@@ -129,9 +132,9 @@ function Node_Ribbon(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 			
 			for( var i = 0; i <= _samp; i++ ) {
 				prg = _invp? 1 - i * t : i * t;
-				prg = lerp(_rang[0], _rang[1], prg);
+				prg = lerp(_rang[0], _rang[1], prg) + _shft;
 				
-				_path.getPointRatio(_loop? prg : clamp(prg, 0, .999), 0, __p );
+				_path.getPointRatio(_loop? pfract(prg) : clamp(prg, 0, .999), 0, __p );
 				_path.getPointRatio(prg - _st, 0, __p0);
 				_path.getPointRatio(prg + _st, 0, __p1);
 				
