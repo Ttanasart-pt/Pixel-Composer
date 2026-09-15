@@ -3,7 +3,7 @@ function Node_Array_Cumulative(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	setDimension(96, 48);
 	setDrawIcon();
 	
-	newInput( 0, nodeValue("Array in", self, CONNECT_TYPE.input, VALUE_TYPE.float, [])).setVisible(true, true);
+	newInput( 0, nodeValue("Array In", self, CONNECT_TYPE.input, VALUE_TYPE.float, [])).setVisible(true, true);
 	
 	////- =Cumulation
 	newInput( 1, nodeValue_Float( "Start", 0 ));

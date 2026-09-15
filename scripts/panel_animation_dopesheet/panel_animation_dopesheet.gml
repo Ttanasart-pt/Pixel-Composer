@@ -120,6 +120,8 @@
         registerFunction(an, "Create Region",        "",  n, panel_animation_region_create        ).setMenu("animation_region_create"   )
         registerFunction(an, "Remove All Regions",   "",  n, panel_animation_region_clear         ).setMenu("animation_region_clear"   )
         
+        registerFunction(an, "View Settings...",     "",  n, function() /*=>*/ {return dialogPanelCall(new Panel_Animation_View_Setting())}).setMenu("animation_view_settings", THEME.icon_visible_setting)
+        
         registerFunction(an, "Toggle Hidden",      "S", s,  panel_animation_show_hidden    )
         	.setMenu("animation_toggle_hidden", THEME.timeline_hide_24).setSpriteInd(function() /*=>*/ {return PANEL_ANIMATION.show_hidden} )
         	.setColorFn(function() /*=>*/ {return PANEL_ANIMATION.show_hidden? COLORS._main_icon : COLORS._main_accent} )
@@ -285,6 +287,8 @@ function Panel_Animation_Dopesheet() {
         
         tooltip_action      = "";
         tooltip_action_time = 0;
+        
+        keyframe_draw_scale = 1;
     #endregion
     
     #region ---- Analyze ----     
@@ -2292,7 +2296,7 @@ function Panel_Animation_Dopesheet() {
             			break;
             	}
             	
-            } else draw_sprite_ui_uniform(THEME.timeline_keyframe, ind, t, prop_y, 1, cc, aa);
+            } else draw_sprite_ui_uniform(THEME.timeline_keyframe, ind, t, prop_y, keyframe_draw_scale, cc, aa);
             
             if(_select) {
             	if(_keyframe_selecting_f == noone) _keyframe_selecting_f = keyframe;

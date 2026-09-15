@@ -242,6 +242,9 @@ function Panel_Animation() : PanelContent() constructor {
     #endregion
     
     #region ++++ Menu ++++
+    	sidebar_y     = 0;
+    	sidebar_y_to  = 0;
+    	
     	global.menuItems_animation_summary = [
     		"animation_toggle_view_type",
     		-1,
@@ -261,6 +264,7 @@ function Panel_Animation() : PanelContent() constructor {
 			"animation_toggle_NodeLabel",
 			"animation_toggle_KeyframeOverride",
 			"animation_toggle_OnionSkin",
+			"animation_view_settings",
 		];
 		
     	global.menuItems_animation_sidebar_context = [
@@ -961,9 +965,10 @@ function Panel_Animation() : PanelContent() constructor {
         if(by < bs) return;
         
         var scis = gpu_get_scissor();
+        var sidh = ui(16);
         gpu_set_scissor(bx, 0, bs + padding, max_y);
         hov = hov && point_in_rectangle(mx, my, bx, 0, w, max_y);
-        by  = padding;
+        by  = padding - sidebar_y;
         
         if(mouse_rpress(hov && foc)) menuCallGen("animation_sidebar_context");
         
@@ -974,15 +979,21 @@ function Panel_Animation() : PanelContent() constructor {
 				draw_set_color(CDEF.main_mdblack);
 				draw_line_width(bx, by + ui(3), bx + bs, by + ui(3), 2);
 				
-				by += ui(8);
+				by   += ui(8);
+				sidh += ui(8);
 				continue;
 			} 
 			
 			_menu.draw(bx, by, bs, bs, m, hov, foc, "", ui(6));
-			by += bs + ui(2);
+			by   += bs + ui(2);
+			sidh += bs + ui(2);
 		}
 		
 		gpu_set_scissor(scis);
+		
+		if(hov && MOUSE_WHEEL != 0) 
+			sidebar_y_to = clamp(sidebar_y - MOUSE_WHEEL * ui(32), 0, max(0, sidh - max_y));
+		sidebar_y = lerp_float(sidebar_y, sidebar_y_to, 5);
     }
     
     function drawAnimationControl() {
