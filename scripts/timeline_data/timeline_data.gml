@@ -149,7 +149,7 @@ function timelineItemNode(_node) : timelineItem() constructor {
 		////- =Name
 		
 		var txx     = bx + ui(2);
-		var ntype   = PANEL_ANIMATION.node_name_type;
+		var ntype   = PROJECT.animationDisplay.node_name_type;
 			
 		if(hover && point_in_rectangle(_msx, _msy, txx, _y, _x + _w, _y + h - 1)) {
 			if(focus && DOUBLE_CLICK)

@@ -343,6 +343,14 @@
 				
 				connect_on_create   : false, 
 			}
+			
+			PREFERENCES.project_animationDisplay = {
+				show_nodes          : true,
+				node_name_type      : 0, 
+				view_context        : 0, 
+				
+				keyframe_draw_scale : 1, 
+			}
 		#endregion
 		
 		#region VIDEO

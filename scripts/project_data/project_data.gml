@@ -96,6 +96,8 @@ function Project() constructor {
 	graphBGIndexData = undefined;
 	graphBG          = undefined;
 	
+	animationDisplay = variable_clone(PREFERENCES.project_animationDisplay);
+	
 	onion_skin = {
 		enabled : false,
 		range   : [ -1, 1 ],
@@ -798,6 +800,8 @@ function Project() constructor {
 		_map.graph_display_parameter = graphDisplay;
 		if(graphBGIndexData != undefined) _map.graphBGIndexData = graphBGIndexData;
 		
+		_map.animationDisplay = variable_clone(animationDisplay);
+		
 		_map.attributes      = variable_clone(attributes);
 		_map.data            = variable_clone(data);
 		
@@ -903,6 +907,8 @@ function Project() constructor {
 			if(has(_map, "graphConnection"))         struct_override(graphConnection, _map.graphConnection);
 			if(has(_map, "graph_display_parameter")) struct_override(graphDisplay,    _map.graph_display_parameter);
 			if(has(_map, "graphBGIndexData"))        graphBGIndexData = _map.graphBGIndexData;
+			
+			if(has(_map, "animationDisplay"))        struct_override(animationDisplay, _map.animationDisplay);
 		}
 		
 		is_nightly	= _map[$ "is_nightly"]  ?? is_nightly;

@@ -207,9 +207,6 @@ function Panel_Animation() : PanelContent() constructor {
         timeline_contents   = [];
         timeline_keys       = [];
         
-        view_context        = 0;
-        node_name_type      = 0;
-        
         do_resetView        = true;
         resetView_region    = false;
     
@@ -543,10 +540,9 @@ function Panel_Animation() : PanelContent() constructor {
                 if(_node.instanceBase != undefined)                     continue;
                 if(!show_hidden && _node.attributes.timeline_hide)      continue;
                 
-                if(view_context == 1 && !_node.isChildOf(_ctx))         continue;
-                if(view_context == 2 && _node.group != _ctx)            continue;
-                
-                if(view_context == 3 && _selAny && !_node.is_selecting) continue;
+                if(PROJECT.animationDisplay.view_context == 1 && !_node.isChildOf(_ctx))         continue;
+                if(PROJECT.animationDisplay.view_context == 2 && _node.group != _ctx)            continue;
+                if(PROJECT.animationDisplay.view_context == 3 && _selAny && !_node.is_selecting) continue;
                 
                 var _anim = [];
                 var _prop = [];
@@ -594,7 +590,7 @@ function Panel_Animation() : PanelContent() constructor {
                 _context_folder[m] = _content;
                 
                 if(item_dragging == noone || item_dragging.item != _cont)
-                    getTimelineContentFolder(_cont, _context_folder, _depth + 1, _show && _cont.show || !show_nodes);
+                    getTimelineContentFolder(_cont, _context_folder, _depth + 1, _show && _cont.show || !PROJECT.animationDisplay.show_nodes);
                     
             }
             
@@ -827,7 +823,7 @@ function Panel_Animation() : PanelContent() constructor {
         	var ks  = key.dopesheet_s? THEME.timeline_keyframe : THEME.timeline_key_empty;
         	var ka  = .55 + key.dopesheet_s * .25;
         	
-        	draw_sprite_ui_uniform(ks, 0, key.dopesheet_x, ky, 1, key.color, ka);
+        	draw_sprite_ui_uniform(ks, 0, key.dopesheet_x, ky, PROJECT.animationDisplay.keyframe_draw_scale, key.color, ka);
         }
         	
         BLEND_MULTIPLY
@@ -1191,9 +1187,9 @@ function Panel_Animation() : PanelContent() constructor {
     
     function newFolder() { PROJECT.timelines.addItem(new timelineItemGroup()); }
     
-    function toggleNodeNameType(_d=1) { node_name_type = (node_name_type + _d + 3) % 3; }
-    function toggleNodeLabel()        { show_nodes     = !show_nodes;                   }
-    function toggleViewContext()      { view_context   = (view_context + 1) % 4;        }
+    function toggleNodeNameType(_d=1) { PROJECT.animationDisplay.node_name_type = (PROJECT.animationDisplay.node_name_type + _d + 3) % 3; }
+    function toggleNodeLabel()        { PROJECT.animationDisplay.show_nodes     = !PROJECT.animationDisplay.show_nodes;                   }
+    function toggleViewContext()      { PROJECT.animationDisplay.view_context   = (PROJECT.animationDisplay.view_context + 1) % 4;        }
     function toggleKeyframeOverride() { PREFERENCES.panel_animation_key_override = !PREFERENCES.panel_animation_key_override; }
     function toggleOnionSkin()        { PROJECT.onion_skin.enabled = !PROJECT.onion_skin.enabled; }
 }

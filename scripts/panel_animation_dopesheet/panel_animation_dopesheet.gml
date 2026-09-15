@@ -17,7 +17,7 @@
     function panel_animation_duplicate()               { CALL("animation_duplicate");               PANEL_ANIMATION.doDuplicate();                                                                       }
     function panel_animation_copy()                    { CALL("animation_copy");                    PANEL_ANIMATION.doCopy();                                                                            }
     function panel_animation_paste()                   { CALL("animation_paste");     if(PANEL_ANIMATION.animator_focusing != noone) PANEL_ANIMATION.doPaste(PANEL_ANIMATION.animator_focusing.prop);          }
-    function panel_animation_show_nodes()              { CALL("animation_toggle_nodes");            PANEL_ANIMATION.show_nodes  = !PANEL_ANIMATION.show_nodes;                                           }
+    function panel_animation_show_nodes()              { CALL("animation_toggle_nodes");            PROJECT.animationDisplay.show_nodes  = !PROJECT.animationDisplay.show_nodes;                                           }
     function panel_animation_collapseToggle()          { CALL("animation_collapse_toggle");         PANEL_ANIMATION.collapseToggle();                                                                    }
     function panel_animation_show_hidden()             { CALL("animation_toggle_hidden");           PANEL_ANIMATION.show_hidden = !PANEL_ANIMATION.show_hidden;                                          }
     function panel_animation_quantize()                { CALL("animation_quantize");                PANEL_ANIMATION.doQuantize();                                                                        }
@@ -127,7 +127,7 @@
         	.setColorFn(function() /*=>*/ {return PANEL_ANIMATION.show_hidden? COLORS._main_icon : COLORS._main_accent} )
         
         registerFunction(an, "Node Name Display", "", n, panel_animation_toggle_NodeNameType    )
-        	.setMenu("animation_toggle_NodeNameType",     THEME.node_name_type    ).setSpriteInd(function() /*=>*/ {return PANEL_ANIMATION.node_name_type} )
+        	.setMenu("animation_toggle_NodeNameType",     THEME.node_name_type    ).setSpriteInd(function() /*=>*/ {return PROJECT.animationDisplay.node_name_type} )
         	.setTooltip(new tooltipSelector("Name Display", [
 	            __txt("panel_animation_name_full", "Full name"),
 	            __txt("panel_animation_name_type", "Node type"),
@@ -135,10 +135,10 @@
 	        ])).setScroll()
 	        
         registerFunction(an, "Show Node Name",    "", n, panel_animation_toggle_NodeLabel       )
-        	.setMenu("animation_toggle_NodeLabel",        THEME.visible           ).setSpriteInd(function() /*=>*/ {return PANEL_ANIMATION.show_nodes}     )
+        	.setMenu("animation_toggle_NodeLabel",        THEME.visible           ).setSpriteInd(function() /*=>*/ {return PROJECT.animationDisplay.show_nodes}     )
         	
         registerFunction(an, "Toggle View Context", "", n, panel_animation_toggle_ViewContext   )
-        	.setMenu("animation_toggle_ViewContext",      THEME.animation_context_global ).setSpriteInd(function() /*=>*/ {return PANEL_ANIMATION.view_context}  )
+        	.setMenu("animation_toggle_ViewContext",      THEME.animation_context_global ).setSpriteInd(function() /*=>*/ {return PROJECT.animationDisplay.view_context}  )
         	.setTooltip(new tooltipSelector("View Context", [
 	            __txt("All"),
 	            __txt("Current and Children"),
@@ -280,15 +280,11 @@ function Panel_Animation_Dopesheet() {
     #endregion
     
     #region ---- Display ---- 
-        show_nodes = true;
-        
         tooltip_loop_prop   = noone;
         tooltip_loop_type   = new tooltipSelector(__txt("panel_animation_looping_mode", "Looping mode"), global.junctionEndName);
         
         tooltip_action      = "";
         tooltip_action_time = 0;
-        
-        keyframe_draw_scale = 1;
     #endregion
     
     #region ---- Analyze ----     
@@ -1983,7 +1979,7 @@ function Panel_Animation_Dopesheet() {
                 draw_set_alpha(1);
 	        } // cache status
 	        
-	        if(show_nodes && (!_cont.show || !_cont.item.show)) continue;
+	        if(PROJECT.animationDisplay.show_nodes && (!_cont.show || !_cont.item.show)) continue;
             
             for( var j = 0, m = array_length(_cont.props); j < m; j++ ) {
                 var prop  = _cont.props[j];
@@ -2173,7 +2169,7 @@ function Panel_Animation_Dopesheet() {
             var _select  = array_exists(keyframe_selecting, keyframe);
             var t = keyframe.dopesheet_x;
             
-            if(show_nodes) {
+            if(PROJECT.animationDisplay.show_nodes) {
             	for( var j = 0, n = array_length(_cont.contexts); j < n; j++ ) {
 	                var _cxt = _cont.contexts[j];
 	                if(!_cxt.show) continue;
@@ -2296,7 +2292,7 @@ function Panel_Animation_Dopesheet() {
             			break;
             	}
             	
-            } else draw_sprite_ui_uniform(THEME.timeline_keyframe, ind, t, prop_y, keyframe_draw_scale, cc, aa);
+            } else draw_sprite_ui_uniform(THEME.timeline_keyframe, ind, t, prop_y, PROJECT.animationDisplay.keyframe_draw_scale, cc, aa);
             
             if(_select) {
             	if(_keyframe_selecting_f == noone) _keyframe_selecting_f = keyframe;
@@ -2389,7 +2385,7 @@ function Panel_Animation_Dopesheet() {
 	        var _title_x = _gx + ui(4);
 	        draw_set_text(f_p4, fa_left, fa_center, cc);
 	        
-        	if(!show_nodes) {
+        	if(!PROJECT.animationDisplay.show_nodes) {
 	            var _txt = animator.prop.node.getDisplayName();
 	            
 	            draw_set_alpha(aa * 0.5);
@@ -2640,7 +2636,7 @@ function Panel_Animation_Dopesheet() {
             	
 	            for( var i = 0, n = array_length(timeline_contents); i < n; i++ ) {
 	                var _cont = timeline_contents[i];
-	                if(!_cont.show && show_nodes) continue;
+	                if(!_cont.show && PROJECT.animationDisplay.show_nodes) continue;
 	                
 	                var _y = _cont.y - oy;
 	                var _h = _cont.h;
@@ -2701,7 +2697,7 @@ function Panel_Animation_Dopesheet() {
             
             for( var i = 0, n = array_length(timeline_contents); i < n; i++ ) {
                 var _cont = timeline_contents[i];
-                if(!_cont.show && show_nodes) continue;
+                if(!_cont.show && PROJECT.animationDisplay.show_nodes) continue;
                 
                 var _y = _cont.y;
                 var _h = _cont.h;
@@ -2728,9 +2724,9 @@ function Panel_Animation_Dopesheet() {
 					// if(_sel) draw_sprite_stretched_ext(THEME.box_r2, 1, _x, _y, _w, lh, COLORS._main_accent, 1);
                 }
 				
-                if(show_nodes) drawDopesheet_Label_Item(_cont, 0, _cont.y - oy, msx, msy);
+                if(PROJECT.animationDisplay.show_nodes) drawDopesheet_Label_Item(_cont, 0, _cont.y - oy, msx, msy);
                 
-                if(_cont.type == "node" && (_cont.item.show || !show_nodes)) {
+                if(_cont.type == "node" && (_cont.item.show || !PROJECT.animationDisplay.show_nodes)) {
                 	var prop = _cont.item;
                     var tx   = tool_width;
         			var ty   = -infinity;
@@ -3016,10 +3012,10 @@ function Panel_Animation_Dopesheet() {
                 _cont.y   = key_y;
                 _cont.h   = 0;
                 
-                if(!_cont.show && show_nodes) continue;
+                if(!_cont.show && PROJECT.animationDisplay.show_nodes) continue;
                 if(item_dragging != noone && item_dragging.item == _item) continue;
                 
-                var _expand = _cont.type == "node" && (_item.show || !show_nodes); 
+                var _expand = _cont.type == "node" && (_item.show || !PROJECT.animationDisplay.show_nodes); 
                 
                 var _ks = key_y;
                 if(_item.color_dsp > -1) {
@@ -3036,8 +3032,8 @@ function Panel_Animation_Dopesheet() {
                     c1 = COLORS.panel_animation_dope_key_bg_hover;
                 }
                 
-                key_y   += _item.h * show_nodes + _expand * ui(10);
-                _cont.h += _item.h * show_nodes;
+                key_y   += _item.h * PROJECT.animationDisplay.show_nodes + _expand * ui(10);
+                _cont.h += _item.h * PROJECT.animationDisplay.show_nodes;
                 _ks      = key_y - ui(10);
                 
                 if(_expand) 
@@ -3181,9 +3177,9 @@ function Panel_Animation_Dopesheet() {
 	                	var _eh = _ey1 - _ey0;
 	                	var _es = ui(4);
 	                	
-	                	var _hovF = show_nodes && mouse_on_timeline && point_in_rectangle(msx, msy, _ex0 - _es, _ey0, _ex0 + _es, _ey1);
-	                	var _hovL = show_nodes && mouse_on_timeline && point_in_rectangle(msx, msy, _ex1 - _es, _ey0, _ex1 + _es, _ey1);
-	                	var _hovC = show_nodes && mouse_on_timeline && point_in_rectangle(msx, msy, _ex0, _ey0, _ex1, _ey1);
+	                	var _hovF = PROJECT.animationDisplay.show_nodes && mouse_on_timeline && point_in_rectangle(msx, msy, _ex0 - _es, _ey0, _ex0 + _es, _ey1);
+	                	var _hovL = PROJECT.animationDisplay.show_nodes && mouse_on_timeline && point_in_rectangle(msx, msy, _ex1 - _es, _ey0, _ex1 + _es, _ey1);
+	                	var _hovC = PROJECT.animationDisplay.show_nodes && mouse_on_timeline && point_in_rectangle(msx, msy, _ex0, _ey0, _ex1, _ey1);
 	                	
 	                	var _hov = 0;
 	                	if(_hovC) _hov = 1;
@@ -3542,7 +3538,7 @@ function Panel_Animation_Dopesheet() {
             var _phover = pHOVER && msy > topbar_height;
             for( var i = 0, n = array_length(timeline_contents); i < n; i++ ) {
                 var _cont = timeline_contents[i];
-                if(!_cont.show && show_nodes) continue;
+                if(!_cont.show && PROJECT.animationDisplay.show_nodes) continue;
                 
                 var _hov  = _cont.item.drawDopesheetOver(timeline_shift, _cont.y, timeline_scale, msx, msy, _phover, pFOCUS);
                 if(is_undefined(_hov)) continue;
