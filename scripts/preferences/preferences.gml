@@ -348,7 +348,11 @@
 				show_nodes          : true,
 				node_name_type      : 0, 
 				view_context        : 0, 
+				stat_line           : true, 
 				
+				active_region       : true,
+				
+				ease_draw_scale     : 2,  
 				keyframe_draw_scale : 1, 
 			}
 		#endregion

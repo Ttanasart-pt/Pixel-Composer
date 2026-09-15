@@ -214,7 +214,6 @@ function __EXPORT_SHOWCASE(project = PROJECT) {
 	
 	var _oname = filename_name_only(project.path); 
 	if(string_pos("_", _oname)) _oname = string_split(_oname, "_")[0];
-	_oname = string_replace_all(_oname, " ", "-");
 	
 	var path = get_save_filename_compat("Directory", _oname); 
 	key_release();
@@ -222,7 +221,8 @@ function __EXPORT_SHOWCASE(project = PROJECT) {
 	
 	directory_verify(path);
 	
-	var _fName = filename_name_only(path);
+	var _rName = filename_name_only(path);
+	var _fName = string_replace_all(_rName, " ", "-");
 	if(string_pos("_", _fName)) _fName = string_split(_fName, "_")[0];
 	
 	var _pName = $"{_fName}_{SAVE_VERSION}.pxc";
@@ -258,6 +258,7 @@ function __EXPORT_SHOWCASE(project = PROJECT) {
 	
 	closeProject();
 	print("Export folder complete.");
+	print($"{_rName} #PixelComposer\n\nhttps://pixel-composer.com/projects/{_fName}");
 	
 	// ProcessExecuteAsync("python \"D:/Project/MakhamDev/LTS-PixelComposer/PROMOTIONAL MATERIALS/site/gen.py\"");
 	// print("Push to Github complete");

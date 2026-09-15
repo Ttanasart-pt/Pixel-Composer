@@ -1713,77 +1713,83 @@ function Panel_Animation_Dopesheet() {
             draw_set_alpha(1);
         }
         
-        if(is(animator.prop, __NodeValue_Active)) { // Draw active region
-	        var _ox = timeline_shift, _nx;
-        	var _y1 = timeline_shift + GLOBAL_TOTAL_FRAMES * timeline_scale;
-        	var _ov, _nv;
-        	
-        	draw_set_color_alpha(COLORS._main_value_positive, .4);
-        	
-        	for( var k = 0, n = array_length(key_list); k < n; k++ ) {
-	            var key = key_list[k];
-	            _nx = key.dopesheet_x;
-	            _nv = key.value;
-	            
-	            if(k && _ov)          draw_line_width(_ox, _cy, _nx, _cy, ui(4));
-	            if(k == n - 1 && _nv) draw_line_width(_nx, _cy, _y1, _cy, ui(4));
-	            
-	            _ox = _nx;
-	            _ov = _nv;
-        	}
-        	
-        	draw_set_alpha(1);
-        	
-        } else if(animator.prop.type == VALUE_TYPE.boolean) { // Draw boolean true region
-        	var _ox = timeline_shift, _nx;
-        	var _y1 = timeline_shift + GLOBAL_TOTAL_FRAMES * timeline_scale;
-        	var _ov, _nv;
-        	
-        	draw_set_color_alpha(COLORS._main_value_positive, .2);
-        	
-        	for( var k = 0, n = array_length(key_list); k < n; k++ ) {
-	            var key = key_list[k];
-	            _nx = key.dopesheet_x;
-	            _nv = key.value;
-	            
-	            if(k == 0 && _nv || k && _ov) draw_line_width(_ox, _cy, _nx, _cy, ui(6));
-	            if(k == n - 1 && _nv)         draw_line_width(_nx, _cy, _y1, _cy, ui(6));
-	            
-	            _ox = _nx;
-	            _ov = _nv;
-        	}
-        	
-        	draw_set_alpha(1);
-        } else {
-        	var _ox = timeline_shift, _nx;
-        	var _ok;
-        	
-        	draw_set_color_alpha(CDEF.blue, .2);
-        	
-        	for( var k = 0, n = array_length(key_list); k < n; k++ ) {
-	            var key = key_list[k];
-	            _nx = key.dopesheet_x;
-	            
-	            if(!animator.hovering && k && _ok.freeze) draw_line_width(_ox, _cy, _nx, _cy, ui(12));
-	            
-	            _ok = key;
-	            _ox = _nx;
-        	}
-        	
-        	draw_set_alpha(1);
+        if(PROJECT.animationDisplay.stat_line) {
+	        if(is(animator.prop, __NodeValue_Active)) { // Draw active region
+		        var _ox = timeline_shift, _nx;
+	        	var _y1 = timeline_shift + GLOBAL_TOTAL_FRAMES * timeline_scale;
+	        	var _ov, _nv;
+	        	
+	        	draw_set_color_alpha(COLORS._main_value_positive, .4);
+	        	
+	        	for( var k = 0, n = array_length(key_list); k < n; k++ ) {
+		            var key = key_list[k];
+		            _nx = key.dopesheet_x;
+		            _nv = key.value;
+		            
+		            if(k && _ov)          draw_line_width(_ox, _cy, _nx, _cy, ui(4));
+		            if(k == n - 1 && _nv) draw_line_width(_nx, _cy, _y1, _cy, ui(4));
+		            
+		            _ox = _nx;
+		            _ov = _nv;
+	        	}
+	        	
+	        	draw_set_alpha(1);
+	        	
+	        } else if(animator.prop.type == VALUE_TYPE.boolean) { // Draw boolean true region
+	        	var _ox = timeline_shift, _nx;
+	        	var _y1 = timeline_shift + GLOBAL_TOTAL_FRAMES * timeline_scale;
+	        	var _ov, _nv;
+	        	
+	        	draw_set_color_alpha(COLORS._main_value_positive, .2);
+	        	
+	        	for( var k = 0, n = array_length(key_list); k < n; k++ ) {
+		            var key = key_list[k];
+		            _nx = key.dopesheet_x;
+		            _nv = key.value;
+		            
+		            if(k == 0 && _nv || k && _ov) draw_line_width(_ox, _cy, _nx, _cy, ui(6));
+		            if(k == n - 1 && _nv)         draw_line_width(_nx, _cy, _y1, _cy, ui(6));
+		            
+		            _ox = _nx;
+		            _ov = _nv;
+	        	}
+	        	
+	        	draw_set_alpha(1);
+	        	
+	        } else {
+	        	var _ox = timeline_shift, _nx;
+	        	var _ok;
+	        	
+	        	draw_set_color_alpha(CDEF.blue, .2);
+	        	
+	        	for( var k = 0, n = array_length(key_list); k < n; k++ ) {
+		            var key = key_list[k];
+		            _nx = key.dopesheet_x;
+		            
+		            if(!animator.hovering && k && _ok.freeze) draw_line_width(_ox, _cy, _nx, _cy, ui(12));
+		            
+		            _ok = key;
+		            _ox = _nx;
+	        	}
+	        	
+	        	draw_set_alpha(1);
+	        }
         }
+        
+        var escl = timeline_scale * PROJECT.animationDisplay.ease_draw_scale;
+        var ekss = PROJECT.animationDisplay.keyframe_draw_scale;
         
         for( var k = 0, n = array_length(key_list); k < n; k++ ) { // Draw easing
             var key = key_list[k];
             var t   = key.dopesheet_x;
         	
             if(key.ease_in_type == CURVE_TYPE.bezier) {
-                var _tx = t - key.ease_in[0] * timeline_scale * 2;
+                var _tx = t - key.ease_in[0] * escl;
                 draw_set_color(COLORS.panel_animation_keyframe_ease_line);
                 draw_line_width(_tx, _cy, t, _cy, 2);
                 
                 if(key.ease_in[0] > 1) {
-                	var _ttx = t - timeline_scale * 2;
+                	var _ttx = t - escl;
                 	draw_set_color_alpha(CDEF.red, .75);
                 	draw_line_width(_tx, _cy, _ttx, _cy, 2);
                 	draw_set_alpha(1);
@@ -1791,7 +1797,7 @@ function Panel_Animation_Dopesheet() {
                 
                 if(pHOVER && point_in_circle(msx, msy, _tx, prop_dope_y, rr)) {
                     key_hover = key;
-                    draw_sprite_ui_uniform(THEME.timeline_key_ease, 0, _tx, prop_dope_y, 1, COLORS.panel_animation_keyease_selected);
+                    draw_sprite_ui_uniform(THEME.timeline_key_ease, 0, _tx, prop_dope_y, ekss, COLORS.panel_animation_keyease_selected);
                     if(mouse_lpress(pFOCUS) && !key_mod_press(SHIFT)) {
                         keyframe_dragging  = animator.values[k];
                         keyframe_drag_type = KEYFRAME_DRAG_TYPE.ease_in;
@@ -1799,16 +1805,16 @@ function Panel_Animation_Dopesheet() {
                     }
                     
                 } else 
-                    draw_sprite_ui_uniform(THEME.timeline_key_ease, 0, _tx, prop_dope_y, 1, COLORS.panel_animation_keyease_unselected);
+                    draw_sprite_ui_uniform(THEME.timeline_key_ease, 0, _tx, prop_dope_y, ekss, COLORS.panel_animation_keyease_unselected);
             } 
             
             if(key.ease_out_type == CURVE_TYPE.bezier) {
-                var _tx = t + key.ease_out[0] * timeline_scale * 2;
+                var _tx = t + key.ease_out[0] * escl;
             	draw_set_color(COLORS.panel_animation_keyframe_ease_line);
                 draw_line_width(t, _cy, _tx, _cy, 2);
                                     
                 if(key.ease_out[0] > 1) {
-                	var _ttx = t + timeline_scale * 2;
+                	var _ttx = t + escl;
                 	draw_set_color_alpha(CDEF.red, .75);
                 	draw_line_width(_tx, _cy, _ttx, _cy, 2);
                 	draw_set_alpha(1);
@@ -1816,7 +1822,7 @@ function Panel_Animation_Dopesheet() {
                     
                 if(pHOVER && point_in_circle(msx, msy, _tx, prop_dope_y, rr)) {
                     key_hover = key;
-                    draw_sprite_ui_uniform(THEME.timeline_key_ease, 1, _tx, prop_dope_y, 1, COLORS.panel_animation_keyease_selected);
+                    draw_sprite_ui_uniform(THEME.timeline_key_ease, 1, _tx, prop_dope_y, ekss, COLORS.panel_animation_keyease_selected);
                     if(mouse_lpress(pFOCUS) && !key_mod_press(SHIFT)) {
                         keyframe_dragging  = animator.values[k];
                         keyframe_drag_type = KEYFRAME_DRAG_TYPE.ease_out;
@@ -1824,7 +1830,7 @@ function Panel_Animation_Dopesheet() {
                     }
                     
                 } else
-                    draw_sprite_ui_uniform(THEME.timeline_key_ease, 1, _tx, prop_dope_y, 1, COLORS.panel_animation_keyease_unselected);
+                    draw_sprite_ui_uniform(THEME.timeline_key_ease, 1, _tx, prop_dope_y, ekss, COLORS.panel_animation_keyease_unselected);
             }
         }
         
@@ -3155,7 +3161,7 @@ function Panel_Animation_Dopesheet() {
                 	if(_hovering) keyframe_boxable = false;
                 	timeline_snap_points[i] = _node.timeline_content_snap;
                 	
-                } else {
+                } else if(PROJECT.animationDisplay.active_region) {
 	                var _rs = _node.animation_range_start;
 	        		var _re = _node.animation_range_end;
 	                	
