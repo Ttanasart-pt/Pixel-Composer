@@ -585,9 +585,9 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		node.triggerRender();
 	}
 	
-	static setUnitSimple = function(r = true) { 
+	static setUnitSimple = function(r = true, _unitRef = undefined) { 
 		var _mode = r? VALUE_UNIT.reference : VALUE_UNIT.constant;
-		var _ref  = function(i) /*=>*/ {return node.getDimension(i)};
+		var _ref  = _unitRef ?? function(i) /*=>*/ {return node.getDimension(i)};
 		
 		unitUse = true;
 		display_data.onSurfaceSize = _ref;

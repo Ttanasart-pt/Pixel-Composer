@@ -6,6 +6,11 @@
         "date": "2026-09-15T07:50:19.776Z",
         "node": "PB Draw",
         "commit": "**PB Draw**: Fix error when loading files made before 1.20."
+      },
+      {
+        "date": "2026-09-15T08:07:39.763Z",
+        "node": "Wrap",
+        "commit": "**Wrap**: Area now relative to original surface, not output surface."
       }
     ]
   },

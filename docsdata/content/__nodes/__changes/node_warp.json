@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.10.002",
+    "changes": [
+      {
+        "date": "2026-09-15T08:07:39.764Z",
+        "node": "",
+        "commit": "**Wrap**: Area now relative to original surface, not output surface."
+      }
+    ]
+  },
+  {
     "version": "1.21.9.207",
     "changes": [
       {

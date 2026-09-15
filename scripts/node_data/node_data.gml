@@ -3503,7 +3503,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			renamed       = load_map[$ "renamed"]       ?? false;
 			renamedManual = load_map[$ "renamedManual"] ?? false;
 			
-			preview_channel = load_map[$ "prevCh"] ?? 0;
+			preview_channel = load_map[$ "prevCh"] ?? preview_channel;
 			
 			if(has(load_map, "name")) setDisplayName(load_map.name);
 			internalName = load_map[$ "iname"] ?? internalName;

@@ -375,7 +375,23 @@ function Node_PB_Draw(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	////- Serialize
 	
 	static postDeserialize = function() {
-		if(LOADING_VERSION <= 1_19_03_1)
+		if(LOADING_VERSION <= 1_19_03_1) {
+			// for( var i = 0, n = array_length(load_map.inputs); i < n; i++ )
+			// 	print(i, load_map.inputs[i]);
+			
+			var _filColor = load_map.inputs[ 8];
+			var _strThick = load_map.inputs[11];
+			var _strColor = load_map.inputs[12];
+			
 			array_resize(load_map.inputs, input_fix_len);
+			
+			repeat(data_length) array_push(load_map.inputs, noone)
+			load_map.inputs[input_fix_len + 1] = { raw_value : _filColor.raw_value, is_modified : 1  };
+			
+			repeat(data_length) array_push(load_map.inputs, noone)
+			load_map.inputs[input_fix_len + data_length + 0] = { raw_value : { d:1 }, is_modified : 1  };
+			load_map.inputs[input_fix_len + data_length + 1] = { raw_value : _strColor.raw_value, is_modified : 1  };
+			load_map.inputs[input_fix_len + data_length + 9] = { raw_value : _strThick.raw_value, is_modified : 1  };
+		}
 	}
 }
