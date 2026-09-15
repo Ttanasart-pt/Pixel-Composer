@@ -5,6 +5,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		active = true;
 		from   = noone;
 		name   = _name;
+		dname  = _name;
 		node   = _node;
 		tags   = VALUE_TAG.none; static setTags = function(t) /*=>*/ { tags = t; return self; }
 		

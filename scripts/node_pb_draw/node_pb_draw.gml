@@ -85,6 +85,7 @@ function Node_PB_Draw(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		newInput(index + 23, nodeValue_Float(    "Slope",     1      ));
 		newInput(index + 24, nodeValue_EButton(  "Axis",      0, [ "X", "Y" ] ));
 		newInput(index + 25, nodeValue_Float(    "Seed",      seed_random()   ));
+		// 26
 		
 		refreshDynamicDisplay();
 		postCreateNewInput(index);
@@ -160,7 +161,7 @@ function Node_PB_Draw(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 			draw_sprite_ext(s_node_pb_effect_types, _typ, _x0 + ui(8), _yy, 1, 1, 0, _col, 1);
 			
 			draw_set_text(f_p2, fa_left, fa_center, tc);
-			draw_text_add(_x0 + ui(28), _yy, typeList[_typ]);
+			draw_text_add(_x0 + ui(28), _yy, array_safe_get_fast(typeList, _typ));
 			
 			var bs = ui(24);
 			var bx = _x1 - bs;
@@ -371,5 +372,10 @@ function Node_PB_Draw(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		return [ _pbbox, _outSurf ];
 	}
 	
+	////- Serialize
 	
+	static postDeserialize = function() {
+		if(LOADING_VERSION <= 1_19_03_1)
+			array_resize(load_map.inputs, input_fix_len);
+	}
 }

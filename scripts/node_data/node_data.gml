@@ -3580,8 +3580,10 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	}
 	
 	static inputBalance = function() { // Cross-version compatibility for dynamic input nodes
-		if(!has(load_map, "data_length")) 
+		if(!has(load_map, "data_length")) {
+			array_resize(load_map.inputs, input_fix_len)
 			return;
+		}
 		
 		var _input_fix_len  = load_map.input_fix_len;
 		var _data_length    = load_map.data_length;
@@ -3591,7 +3593,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			_dynamic_inputs = ceil(_dynamic_inputs);
 		}
 		
-		if(_data_length != data_length) {
+		if(data_length != _data_length) {
 			var _pad_dyna = data_length - _data_length;
 			for( var i = _dynamic_inputs; i >= 1; i-- ) {
 				var _ind = _input_fix_len + i * _data_length;
@@ -3607,6 +3609,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			var _pad_fix = input_fix_len - _input_fix_len;
 			repeat(_pad_fix) array_insert(load_map.inputs, _input_fix_len, noone);
 		}
+		
 	}
 	
 	static inputGenerate = function() { // Generate inputs for dynamic input nodes

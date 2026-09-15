@@ -8,12 +8,12 @@ function Node_Ribbon(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	newInput(1, nodeValue_Dimension());
 	
 	////- =Path
-	newInput( 2, nodeValue_Path(     "Path"          ));
-	newInput(17, nodeValue_SliRange( "Range", [0,1]  ));
-	newInput(21, nodeValue_SliRange( "Shift",  0     ));
-	newInput(11, nodeValue_Bool(     "Loop",   false ));
-	newInput( 3, nodeValue_Int(      "Sample", 64    ));
-	newInput(10, nodeValue_Bool(     "Invert", false ));
+	newInput( 2, nodeValue_Path(     "Path"                  ));
+	newInput(17, nodeValue_SliRange( "Range", [0,1]          ));
+	newInput(21, nodeValue_Slider(   "Shift",  0, [-1,1,.01] ));
+	newInput(11, nodeValue_Bool(     "Loop",   false         ));
+	newInput( 3, nodeValue_Int(      "Sample", 64            ));
+	newInput(10, nodeValue_Bool(     "Invert", false         ));
 	
 	////- =Ribbon
 	newInput( 4, nodeValue_Float(    "Size",       8 )).setHotkey("S").setCurvable(8, CURVE_DEF_01);
@@ -35,7 +35,7 @@ function Node_Ribbon(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	
 	input_display_list = [  0, 
 		[ "Output", false ],  1, 
-		[ "Path",   false ],  2, 17, 22, 11,  3, 10, 
+		[ "Path",   false ],  2, 17, 21, 11,  3, 10, 
 		[ "Ribbon", false ],  4,  8, 20,  5, 15, 
 		[ "Render", false ], [6, true], 18, [7, true], 19, -1, 12, 13, 16, 14,  9, 
 	];
