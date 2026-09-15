@@ -37,7 +37,7 @@ function Node_Crop(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	attribute_surface_depth();
 	
 	#region ---- tools ----
-		tool_drag = new NodeTool("Draw crop area", THEME.crop_tool, "Node_Crop");
+		tool_drag = new NodeTool("Draw Crop Area", THEME.crop_tool, "Node_Crop");
 		
 		tool_fitw = new NodeTool("Fit Width",      THEME.crop_fit_width)
 						.setToolFn(function() /*=>*/ {

@@ -214,6 +214,7 @@ function __EXPORT_SHOWCASE(project = PROJECT) {
 	
 	var _oname = filename_name_only(project.path); 
 	if(string_pos("_", _oname)) _oname = string_split(_oname, "_")[0];
+	_oname = string_replace_all(_oname, " ", "-");
 	
 	var path = get_save_filename_compat("Directory", _oname); 
 	key_release();
@@ -256,9 +257,10 @@ function __EXPORT_SHOWCASE(project = PROJECT) {
 	__EXPORT_HTML(project, filename_combine(path, _projName), _fName, $"./{_pName}", fileSizeStr);
 	
 	closeProject();
-	print("Export folder complete");
+	print("Export folder complete.");
 	
-	ProcessExecuteAsync("python \"D:/Project/MakhamDev/LTS-PixelComposer/PROMOTIONAL MATERIALS/site/gen.py\"");
+	// ProcessExecuteAsync("python \"D:/Project/MakhamDev/LTS-PixelComposer/PROMOTIONAL MATERIALS/site/gen.py\"");
+	// print("Push to Github complete");
 	
 	return true;
 }

@@ -576,7 +576,7 @@ function Node_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 				var sa;
 				
 				if(key_mod_press(SHIFT)) sa = value_snap(dragging_sa - da, 15);
-				else					sa = dragging_sa - da;
+				else					 sa = dragging_sa - da;
 				
 				if(inputs[5].setValue(sa)) UNDO_HOLDING = true;
 				

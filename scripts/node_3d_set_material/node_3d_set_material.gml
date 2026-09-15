@@ -57,10 +57,21 @@ function Node_3D_Set_Material(_x, _y, _group = noone) : Node_3D_Modifier(_x, _y,
 				var _gmat = _gobj.getMaterials();
 				
 				if(!array_empty(_gmat)) {
+					var _rmat = undefined;
+					
 					switch(_over) {
-						case -1 : _gmat[0] = array_get_random(_mat);           break;
-						case  0 : _gmat[0] = i < inMatLen? _mat[i] : _gmat[0]; break;
-						case  1 : _gmat[0] = _mat[i % inMatLen];               break;
+						case -1 : _rmat = array_get_random(_mat);           break;
+						case  0 : _rmat = i < inMatLen? _mat[i] : _gmat[0]; break;
+						case  1 : _rmat = _mat[i % inMatLen];               break;
+					}
+					
+					if(is_array(_rmat)) {
+						for( var j = 0, m = min(array_length(_gmat), array_length(_rmat)); j < m; j++ ) 
+							_gmat[j] = _rmat[j];
+							
+					} else {
+						for( var j = 0, m = array_length(_gmat); j < m; j++ ) 
+							_gmat[j] = _rmat;
 					}
 				}
 			}

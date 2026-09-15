@@ -65,6 +65,16 @@ function Node_Gradient(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	
 	attribute_surface_depth();
 	
+	#region tools
+		tool_line = new NodeTool("Draw Line", THEME.line_tool, "Node_Gradient");
+		tool_area = new NodeTool("Draw Area", THEME.area_tool, "Node_Gradient");
+		tools = [];
+		
+		dragging = false;
+		drag_mx  = 0;
+		drag_my  = 0;
+	#endregion
+	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _params) { 
 		PROCESSOR_OVERLAY_CHECK
 		
@@ -73,15 +83,137 @@ function Node_Gradient(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 		var  rot = getInputSingle(3);
 		var  pos = getInputSingle(6);
 		
-		drawOverlayInput(inputs[ 6].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my));
-		drawOverlayInput(inputs[16].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, current_data[0]));
-		
 		var _px = _x + pos[0] * _s;
 		var _py = _y + pos[1] * _s;
-		drawOverlayInput(inputs[ 9].drawOverlay(w_hoverable, active, _px, _py, _s, _mx, _my, typ == 0? rot : 0, dim[0] / 2, 1));
+		var _pa = typ == 0? rot : 0;
+		var _ps = dim[0] / 2;
 		
-		if(typ != 1) drawOverlayInput(inputs[ 3].drawOverlay(w_hoverable, active, _px, _py, _s, _mx, _my));
-		else         drawOverlayInput(inputs[17].drawOverlay(w_hoverable, active, _px, _py, _s, _mx, _my, 0, [ dim[0] / 2, dim[1] / 2 ]));
+		switch(PANEL_PREVIEW.tool_current) {
+			case tool_line :
+				w_hovering = true;
+				
+				draw_set_color_alpha(COLORS._main_icon, .5);
+				draw_line(_mx, 0, _mx, 9999);
+				draw_line(0, _my, 9999, _my);
+				draw_set_alpha(1);
+				
+				if(dragging) {
+					var _dpx = (drag_mx - _x) / _s;
+					var _dpy = (drag_my - _y) / _s;
+					
+					var _mpx = (_mx - _x) / _s;
+					var _mpy = (_my - _y) / _s;
+					
+					var _ang = point_direction( _dpx, _dpy, _mpx, _mpy );
+					var _dis = point_distance(  _dpx, _dpy, _mpx, _mpy );
+					var _sca = _dis / _ps;
+					if(typ == 0) _sca /= 2;
+					
+					if(key_mod_press(SHIFT)) _ang = value_snap(_ang, 15);
+					
+					var _cx = (_dpx + _mpx) / 2;
+					var _cy = (_dpy + _mpy) / 2;
+					
+					var _edt = false;
+					if(inputs[3].setValue(_ang))      _edt = true;
+					if(inputs[9].setValue(_sca))      _edt = true;
+					
+					if(typ == 0 && inputs[6].setValue([_cx,_cy]))   _edt = true;
+					if(typ == 2 && inputs[6].setValue([_dpx,_dpy])) _edt = true;
+					
+					if(_edt) UNDO_HOLDING = true;
+					
+					draw_set_color(COLORS._main_accent);
+					draw_line_width(drag_mx, drag_my, _mx, _my, ui(2));
+					draw_anchor(1, drag_mx, drag_my);
+					draw_anchor(0, _mx, _my);
+					
+					if(mouse_lrelease()) {
+						dragging     = false;
+						UNDO_HOLDING = false;
+					}
+					
+				} else {
+					if(hover && mouse_lpress(active)) {
+						dragging = true;
+						drag_mx  = _mx;
+						drag_my  = _my;
+					}
+				}
+				break;
+			
+			case tool_area :
+				w_hovering = true;
+				
+				draw_set_color_alpha(COLORS._main_icon, .5);
+				draw_line(_mx, 0, _mx, 9999);
+				draw_line(0, _my, 9999, _my);
+				draw_set_alpha(1);
+				
+				if(dragging) {
+					var _dpx = (drag_mx - _x) / _s;
+					var _dpy = (drag_my - _y) / _s;
+					
+					var _mpx = (_mx - _x) / _s;
+					var _mpy = (_my - _y) / _s;
+					
+					if(key_mod_press(SHIFT)) {
+						var _dx = (_mpx - _dpx);
+						var _dy = (_mpy - _dpy);
+						var _dd = max(abs(_dx), abs(_dy));
+						
+						_dx = sign(_dx) * _dd;
+						_dy = sign(_dy) * _dd;
+						
+						_mpx = _dpx + _dx;
+						_mpy = _dpy + _dy;
+					}
+					
+					if(key_mod_press(ALT)) {
+						_dpx -= _mpx - _dpx;
+						_dpy -= _mpy - _dpy;
+							
+					}
+					
+					var _dx = (_mpx - _dpx) / dim[0];
+					var _dy = (_mpy - _dpy) / dim[1];
+					
+					var _cx = (_dpx + _mpx) / 2;
+					var _cy = (_dpy + _mpy) / 2;
+					
+					var _edt = false;
+					if(inputs[ 6].setValue([_cx,_cy]))   _edt = true;
+					if(inputs[17].setValue([_dx,_dy]))   _edt = true;
+					
+					if(_edt) UNDO_HOLDING = true;
+					
+					draw_set_color(COLORS._main_accent);
+					draw_rectangle(_x+_mpx*_s, _y+_mpy*_s, _x+_dpx*_s, _y+_dpy*_s, true);
+					
+					if(mouse_lrelease()) {
+						dragging     = false;
+						UNDO_HOLDING = false;
+					}
+					
+				} else {
+					if(hover && mouse_lpress(active)) {
+						dragging = true;
+						drag_mx  = _mx;
+						drag_my  = _my;
+					}
+				}
+				break;
+				
+			default :
+				drawOverlayInput(inputs[ 6].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my));
+				drawOverlayInput(inputs[16].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, current_data[0]));
+				drawOverlayInput(inputs[ 9].drawOverlay(w_hoverable, active, _px, _py, _s, _mx, _my, _pa, _ps, 1));
+				
+				if(typ != 1) drawOverlayInput(inputs[ 3].drawOverlay(w_hoverable, active, _px, _py, _s, _mx, _my));
+				else         drawOverlayInput(inputs[17].drawOverlay(w_hoverable, active, _px, _py, _s, _mx, _my, 0, [ dim[0] / 2, dim[1] / 2 ]));
+				break;
+			
+		}
 		
 		return w_hovering;
 	}
@@ -112,6 +244,18 @@ function Node_Gradient(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 			inputs[14].setVisible(_typ);
 			inputs[17].setVisible(_typ == 1 || _typ == 3);
 		#endregion
+		
+		switch(_typ) {
+			case 0 : 
+			case 2 : 
+				tools = [ tool_line ];
+				break;
+				
+			case 1 : 
+			case 3 : 
+				tools = [ tool_area ];
+				break;
+		}
 		
 		var _sw = toNumber(_dim[0]);
 		var _sh = toNumber(_dim[1]);

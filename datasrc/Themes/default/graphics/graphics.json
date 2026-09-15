@@ -621,6 +621,7 @@
     "crop_fit_height":                    { "path": "./tool/s_crop_fit_height.png",                         "s": 2, "x":  9, "y":  9 },
     "crop_fit_width":                     { "path": "./tool/s_crop_fit_width.png",                          "s": 2, "x":  9, "y":  9 },
     "crop_tool":                          { "path": "./tool/s_crop_tool.png",                               "s": 2, "x":  9, "y":  9 },
+    "line_tool":                          { "path": "./tool/s_line_tool.png",                               "s": 2, "x":  9, "y":  9 },
     "mesh_tool_delete":                   { "path": "./tool/s_mesh_delete.png",                             "s": 2, "x":  9, "y":  9 },
     "mesh_tool_edit":                     { "path": "./tool/s_mesh_edit.png",                               "s": 2, "x":  9, "y":  9 },
     "path_tools_add":                     { "path": "./tool/s_path_tools_add.png",                          "s": 2, "x":  9, "y":  9 },
