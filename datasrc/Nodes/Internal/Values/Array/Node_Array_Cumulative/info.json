@@ -1,0 +1,7 @@
+{
+    "name":          "Array Cumulative",
+    "spr":           "s_node_array_cumulative",
+    "baseNode":      "Node_Array_Cumulative",
+    "pxc_version":    121100,
+    "alias":          ["accumulate"],
+}
