@@ -2314,7 +2314,7 @@ function Panel_Animation_Dopesheet() {
             }
             	
             if(keyframe_boxing) {
-                var box_x0 = min(keyframe_box_sx, msx);
+                var box_x0 = min(keyframe_box_sx, msx); 
                 var box_x1 = max(keyframe_box_sx, msx);
                 var box_y0 = min(keyframe_box_sy, msy);
                 var box_y1 = max(keyframe_box_sy, msy);
