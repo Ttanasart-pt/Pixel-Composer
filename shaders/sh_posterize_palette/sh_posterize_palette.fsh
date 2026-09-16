@@ -131,6 +131,10 @@ uniform float hBias;
 		return length(lab1 - lab2);
 	}
 	
+	float colorDifferentHSV(in vec4 c1, in vec4 c2) {
+		return length(rgb2hsl(c1.rgb) - rgb2hsl(c2.rgb));
+	}
+
 	float colorDifferentRGB(in vec4 c1, in vec4 c2) {
 		return length(c1.rgb - c2.rgb);
 	}
@@ -163,6 +167,7 @@ void main() {
 		float dif  = 0.;
 		     if(space == 0) dif = colorDifferentRGB(pcol, col);
 		else if(space == 1) dif = colorDifferentLAB(pcol, col);
+		else if(space == 2) dif = colorDifferentHSV(pcol, col);
 		
 		if(chsv.s > .05) dif *= mix(1., hdf, hBias);
 		

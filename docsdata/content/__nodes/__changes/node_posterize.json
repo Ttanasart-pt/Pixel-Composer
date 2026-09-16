@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.10.101",
+    "changes": [
+      {
+        "date": "2026-09-16T03:53:23.079Z",
+        "node": "Posterize",
+        "commit": "**Posterize**: Add HSV color space."
+      }
+    ]
+  },
+  {
     "version": "1.21.8.009",
     "changes": [
       {

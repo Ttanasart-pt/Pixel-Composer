@@ -22,7 +22,7 @@ function Node_Posterize(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	newInput( 9, nodeValue_Bool(    "Use Global Range", true ));
 	newInput( 3, nodeValue_ISlider( "Steps",    4, [2,16,.1] )).setPieMenu();
 	newInput( 4, nodeValue_Slider(  "Gamma",    1, [0,2,.01] )).setMappable(7).setPieMenu();
-	newInput( 8, nodeValue_EButton( "Space",    0, [ "RGB", "LAB" ] ));
+	newInput( 8, nodeValue_EButton( "Space",    0, [ "RGB", "LAB", "HSV" ] ));
 	
 	////- =Bias
 	newInput(11, nodeValue_Surface( "Reference"   ));
@@ -130,9 +130,9 @@ function Node_Posterize(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 					shader_set(sh_get_max_downsampled);
 					surface_set_target_ext(0, temp_surface[(_ind) * 2 + 0]);
 					surface_set_target_ext(1, temp_surface[(_ind) * 2 + 1]);
-						shader_set_f("dimension", _sww, _shh);
-						shader_set_surface("surfaceMax", temp_surface[(!_ind) * 2 + 0]);
-						shader_set_surface("surfaceMin", temp_surface[(!_ind) * 2 + 1]);
+						shader_set_f( "dimension",  _sww, _shh);
+						shader_set_s( "surfaceMax", temp_surface[(!_ind) * 2 + 0]);
+						shader_set_s( "surfaceMin", temp_surface[(!_ind) * 2 + 1]);
 						
 						draw_sprite_stretched(s_fx_pixel, 0, 0, 0, _sww, _shh);
 					surface_reset_target();
@@ -173,11 +173,11 @@ function Node_Posterize(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			}
 			
 			surface_set_shader(_outSurf, sh_posterize);
-				shader_set_f("cMax",      _max);
-				shader_set_f("cMin",      _min);
-				shader_set_f("colors",    _data[3]);
-				shader_set_f_map("gamma", _data[4], _data[7], inputs[4]);
-				shader_set_i("alpha",     _alp);
+				shader_set_f( "cMax",   _max );
+				shader_set_f( "cMin",   _min );
+				shader_set_f( "colors", _data[3]);
+				shader_set_m( "gamma",  _data[4], _data[7], inputs[4]);
+				shader_set_i( "alpha",  _alp );
 			
 				draw_surface_safe(_surf);
 			surface_reset_shader();

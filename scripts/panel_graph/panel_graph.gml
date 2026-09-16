@@ -4052,8 +4052,14 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
     				else nodes_selecting = [ _pinNode ];
     			}
     			
-    			if(mouse_rpress(_focus))
-    				menuCall("", [ menuItem(__txt("Unpin"), function(n) /*=>*/ {return project.nodePinRemove(n)}).setParam(_pinNode) ]);
+    			if(mouse_rpress(_focus)) 
+    				menuCall("", [ 
+    					menuItem(__txt("Unpin"), function(n) /*=>*/ {return project.nodePinRemove(n)}).setParam(_pinNode),
+    					menuItem(__txt("Replace with Selecting"), function(i) /*=>*/ {
+	    					if(array_length(nodes_selecting) != 1) return;
+	    					project.pinnedNode[i] = nodes_selecting[0].node_id;
+						}).setParam(i)
+					]);
     		}
     		
     		pny += pnh;
