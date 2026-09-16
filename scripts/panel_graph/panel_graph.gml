@@ -97,6 +97,10 @@
     function panel_graph_viewSource()              { CALL("graph_viewSource");          PANEL_GRAPH.viewSource();                               }
     function panel_graph_swapConnection()          { CALL("graph_swapConnection");      PANEL_GRAPH.swapConnection();                           }
     function panel_graph_transferConnection()      { CALL("graph_transferConnection");  PANEL_GRAPH.transferConnection();                       }
+    
+    function panel_graph_nodePinToggle()           { CALL("graph_nodePinToggle");       PANEL_GRAPH.nodePinToggle(); }
+    function panel_graph_nodePinAdd()              { CALL("graph_nodePinAdd");          PANEL_GRAPH.nodePinAdd();    }
+    function panel_graph_nodePinRemove()           { CALL("graph_nodePinRemove");       PANEL_GRAPH.nodePinRemove(); }
 				                    
 	function panel_graph_topbar_toggle()           { PANEL_GRAPH.topbar_toggle();       }
 	function panel_graph_topbar_show()             { PANEL_GRAPH.topbar_show();         }
@@ -275,6 +279,10 @@
         registerFunction(g, "View Source",        vk_f12, c, panel_graph_viewSource          ).setMenu("graph_view_source")
         registerFunction(g, "Swap Connections",      "S", a, panel_graph_swapConnection      ).setMenu("graph_swap_connection")
         registerFunction(g, "Transfer Connections",  "T", a, panel_graph_transferConnection  ).setMenu("graph_transfer_connection")
+        
+        registerFunction(g, "Pin Toggle",            "",  n, panel_graph_nodePinToggle       ).setMenuAlt("Toggle Node Pin", "graph_pin_toggle")
+        registerFunction(g, "Pin Add",               "",  n, panel_graph_nodePinAdd          ).setMenuAlt("Pin Node",        "graph_pin_add")
+        registerFunction(g, "Pin Remove",            "",  n, panel_graph_nodePinRemove       ).setMenuAlt("Unpin Node",      "graph_pin_remove")
 		
 		registerFunction(g, "Export Hovering Node",   "",  n, panel_graph_send_to_export ).setMenu("graph_export_hover")
         registerFunction(g, "Export As Image...",     "",  n, function() /*=>*/ { PANEL_GRAPH.subDialogCall(new Panel_Graph_Export_Image(PANEL_GRAPH)) })
@@ -502,6 +510,12 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
         
         tooltip_action      = "";
         tooltip_action_time = 0;
+        
+        pin_width    = ui(128);
+        pin_drawn    = false;
+        pin_drag     = 0;
+        pin_drag_my  = 0;
+		pin_dragging = undefined;
     #endregion
     
     #region // ---- position ----
@@ -1136,6 +1150,7 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
 	    	"graph_preview_window", 
 	    	"graph_inspect",
 	    	"graph_export_hover",
+	    	"graph_pin_add",
 	    	-1, 
 	    	"graph_node_display", 
 	    	"graph_toggle_render", 
@@ -3834,10 +3849,17 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
     }
     
     static drawInfo = function() {
-        
-        var ovy = ui(2);
+    	var _pinn = project.pinnedNode;
+    	
+    	var mrg = THEME_VALUE.panel_toolbar_merge;
+    	var pad = THEME_VALUE.panel_toolbar_padding;
+    	
+    	var ovx = w - pad;
+    	if(pin_drawn) ovx -= pin_width + (mrg? pad + ui(6 + 4) : ui(4));
+    	
+        var ovy = ui(4);
         if(project.graphDisplay.show_view_control == 2) ovy += ui(36);
-        if(project.graphDisplay.show_topbar)            ovy += topbar_height + THEME_VALUE.panel_toolbar_padding;
+        if(project.graphDisplay.show_topbar)            ovy += topbar_height + pad;
         
         if(PROJECT.previewSetting.status_display == 1) {
 	    	draw_set_text(f_p2, fa_right, fa_top, COLORS._main_text_sub);
@@ -3845,7 +3867,7 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
 	        var _zms  = $"x{graph_s_to}";
 	        var _zmw  = string_width(_zms) + ui(16);
 	        var _zmh  = string_height(_zms);
-	        var _zmx  = w - THEME_VALUE.panel_toolbar_padding;
+	        var _zmx  = ovx;
 	        var _zmc  = _zmsl? COLORS._main_text : COLORS._main_text_sub;
 	        if(tb_zoom_level.hovering) mouse_on_graph = false;
 	        
@@ -3871,7 +3893,7 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
 	        var _zms  = $"x{graph_s_to}";
 	        var _zmw  = string_width(_zms) + ui(8);
 	        var _zmh  = string_height(_zms);
-	        var _zmx  = w - THEME_VALUE.panel_toolbar_padding;
+	        var _zmx  = ovx;
 	        var _zmy  = ovy;
 	        
 	        if(WIDGET_CURRENT == tb_zoom_level) {
@@ -3930,8 +3952,136 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
         		
         	}
         }
-        
-        
+    }
+    
+    static drawPin = function() {
+    	pin_drawn = false;
+    	
+    	var _pinn = project.pinnedNode;
+    	if(array_empty(_pinn)) return 0;
+    	
+    	var mrg = THEME_VALUE.panel_toolbar_merge;
+    	var pad = THEME_VALUE.panel_toolbar_padding;
+    	
+    	var pnw = pin_width;
+    	var pnh = line_get_height(f_p4, 4);
+    	
+    	var pnx = w - pnw - (mrg? pad + ui(6) : pad);
+    	var pny = topbar_height + pad + ui(4);
+    	
+    	var _focus = pFOCUS;
+    	var _hover = pHOVER;
+    	
+    	var toth = 0;
+    	for( var i = 0, n = array_length(_pinn); i < n; i++ ) {
+    		var _pinNodeId = _pinn[i];
+    		var _pinNode   = project.getNodeFromID(_pinNodeId);
+    		if(!is(_pinNode, Node) || !_pinNode.active) continue;
+    		toth += pnh; 
+    	}
+    	
+    	if(toth == 0) return 0;
+    	
+    	pin_drawn = true;
+    	draw_sprite_stretched_ext(THEME.box_r2_clr, 0, pnx, pny, pnw, toth);
+    	
+    	var scis = gpu_get_scissor();
+    	var hovI = my > pny + toth - pnh / 2? array_length(_pinn) : 0;
+    	var hovY = my > pny + toth - pnh / 2? pny + toth : pny;
+    	
+    	for( var i = 0, n = array_length(_pinn); i < n; i++ ) {
+    		var _pinNodeId = _pinn[i];
+    		var _pinNode   = project.getNodeFromID(_pinNodeId);
+    		if(!is(_pinNode, Node) || !_pinNode.active) continue;
+    		
+    		var _name = _pinNode.getDisplayName()
+    		
+    		var _sel  = _pinNode.is_selecting;
+    		var _hov  = _hover && point_in_rectangle(mx, my, pnx, pny, pnx + pnw, pny + pnh - 1);
+    		
+    		if(_hov) {
+    			mouse_on_graph = false;
+    			
+    			var bs = pnh;
+    			var bx = pnx + pnw - bs;
+    			var by = pny;
+    			
+    			var bhov = mx > bx;
+    			
+    			draw_sprite_ui(THEME.hamburger_s, 0, bx+bs/2, by+bs/2, .75, .75, 0, COLORS._main_icon_light, .5 + bhov * .5);
+    			
+    			if(bhov) {
+    				_hov = false;
+    				draw_sprite_stretched_add(THEME.box_r2, 0, bx, by, bs, bs, COLORS._main_icon, .1);
+    				
+    				if(mouse_lpress(_focus)) {
+    					pin_drag     = 1;
+    					pin_drag_my  = my;
+    					pin_dragging = _pinNodeId;
+    				}
+    				
+    			} else {
+    				draw_sprite_stretched_add(THEME.box_r2, 0, pnx, pny, pnw, pnh, COLORS._main_icon, .1);
+    			}
+    			
+    			if(pin_drag == 2) {
+    				if(my < pny + pnh / 2) {
+    					hovI = i;
+    					hovY = pny;
+    					
+    				} else {
+    					hovI = i + 1;
+    					hovY = pny + pnh;
+    					
+    				}
+    			}
+    		}
+     		
+    		gpu_set_scissor(pnx, pny, pnw, pnh);
+    		draw_set_text(f_p4, fa_left, fa_center, COLORS._main_text);
+    		draw_text_add(pnx + ui(6), pny + pnh / 2, _name);
+    		gpu_set_scissor(scis);
+    		
+    		if(_sel) draw_sprite_stretched_ext(THEME.box_r2, 1, pnx, pny, pnw, pnh, COLORS._main_accent, 1);
+    		
+    		if(_hov) {
+    			if(mouse_lpress(_focus)) {
+    				PANEL_PREVIEW.setNodePreview(_pinNode);
+    				if(key_mod_press(SHIFT)) 
+    					 array_toggle(nodes_selecting, _pinNode);
+    				else nodes_selecting = [ _pinNode ];
+    			}
+    			
+    			if(mouse_rpress(_focus))
+    				menuCall("", [ menuItem(__txt("Unpin"), function(n) /*=>*/ {return project.nodePinRemove(n)}).setParam(_pinNode) ]);
+    		}
+    		
+    		pny += pnh;
+    	}
+    	
+    	gpu_set_scissor(scis);
+    	
+		if(pin_drag == 2) {
+    		draw_set_color(COLORS._main_accent);
+    		draw_line_round(pnx + ui(8), hovY, pnx + pnw - ui(8), hovY, ui(2));
+		}
+    				
+    	if(pin_drag == 1) {
+    		if(abs(pin_drag_my - my) > ui(4)) {
+    			pin_drag = 2;
+    			array_remove(_pinn, pin_dragging);
+    		}
+    		
+    		if(mouse_lrelease()) pin_drag = 0;
+    	}
+    	
+    	if(pin_drag == 2) {
+    		if(mouse_lrelease()) {
+    			array_insert(_pinn, hovI, pin_dragging);
+    			pin_drag = 0;
+    		}
+    		
+    	}
     }
     
     static draw_debug_content = function() {
@@ -4054,6 +4204,7 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
         drawToolBar();
         drawTopbar();
         drawMinimap();
+        drawPin();
         
         drawViewController();
         
@@ -5288,7 +5439,6 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
     }
     
     function swapConnection() { 
-    	
     	if(array_length(nodes_selecting) == 1) {
     		var _n = nodes_selecting[0];
     		
@@ -5365,6 +5515,10 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
 		RenderAll();
     }
     
+    function nodePinToggle() { if(array_empty(nodes_selecting) && node_hover) project.nodePinToggle(node_hover); else array_foreach(nodes_selecting, function(n,_) /*=>*/ {return project.nodePinToggle(n)}); }
+    function nodePinAdd()    { if(array_empty(nodes_selecting) && node_hover) project.nodePinAdd(node_hover);    else array_foreach(nodes_selecting, function(n,_) /*=>*/ {return project.nodePinAdd(n)});    }
+    function nodePinRemove() { if(array_empty(nodes_selecting) && node_hover) project.nodePinRemove(node_hover); else array_foreach(nodes_selecting, function(n,_) /*=>*/ {return project.nodePinRemove(n)}); }
+	
     ////- Pie Menu
     
     function nodeQuickPie(_context = true) {

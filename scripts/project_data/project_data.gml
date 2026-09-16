@@ -75,6 +75,7 @@ function Project() constructor {
 	nodeMap	    = ds_map_create();
 	nodeNameMap = ds_map_create();
 	nodeTopoID  = "";
+	pinnedNode  = [];
 	
 	pathInputs  = [];
 	
@@ -521,6 +522,10 @@ function Project() constructor {
 			allNodes[i].purgeData();
 	}
 	
+	static nodePinToggle = function(_n) /*=>*/ { array_toggle(      pinnedNode, _n.node_id ); return self; }
+	static nodePinAdd    = function(_n) /*=>*/ { array_push_unique( pinnedNode, _n.node_id ); return self; }
+	static nodePinRemove = function(_n) /*=>*/ { array_remove(      pinnedNode, _n.node_id ); return self; }
+	
 	////- Render
 	
 	static preRender = function() {
@@ -792,6 +797,8 @@ function Project() constructor {
 		var _insp_node = PANEL_INSPECTOR? PANEL_INSPECTOR.getInspecting() : noone;
 		_map.inspectingNode = _insp_node? _insp_node.node_id : noone;
 		
+		_map.pinnedNode      = array_clone(pinnedNode);
+		
 		_map.previewGrid     = variable_clone(previewGrid);
 		_map.previewRuler    = array_clone(previewRuler);
 		
@@ -985,6 +992,8 @@ function Project() constructor {
 			var _node = nodeMap[? inspectingNode];
 			if(_node) PANEL_INSPECTOR.setInspecting(_node);
 		}
+		
+		pinnedNode      = struct_try_get(_map, "pinnedNode", []);
 		
 		for( var i = 0, n = array_length(customPanels); i < n; i++ ) {
 			var _p = customPanels[i];
