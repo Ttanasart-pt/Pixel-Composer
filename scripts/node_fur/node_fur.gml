@@ -38,7 +38,7 @@ function Node_Fur(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) const
 	
 	////- =Render
 	newInput(18, nodeValue_Color(    "BG Color",  ca_black  ));
-	newInput(10, nodeValue_Color(    "Color",     ca_white  ));
+	newInput(10, nodeValue_Gradient( "Color",     gra_white ));
 	newInput(11, nodeValue_Surface(  "Texture"              ));
 	newInput(12, nodeValue_Slider(   "Shadow",    1         ));
 	newInput(19, nodeValue_Slider(   "Edge",      0         ));
@@ -153,8 +153,9 @@ function Node_Fur(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) const
 			shader_set_f( "thickness",      _thk   );
 			shader_set_cr("thickC",         _thkC  );
 			
+			shader_set_g( _col );
 			shader_set_c( "bgcolor",        _bgcol );
-			shader_set_c( "color",          _col   );
+			
 			shader_set_i( "usecolorSample", is_surface(_csamp) );
 			shader_set_s( "colorSample",    _csamp );
 			shader_set_f( "shadow",         _sha   );

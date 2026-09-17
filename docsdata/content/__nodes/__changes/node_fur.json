@@ -6,6 +6,11 @@
         "date": "2026-09-17T00:15:17.367Z",
         "node": "Fur",
         "commit": "**Fur**: Add randomness, overlap fur control."
+      },
+      {
+        "date": "2026-09-17T00:19:13.968Z",
+        "node": "Fur",
+        "commit": "**Fur**: Color is now gradient for setting random color per fur."
       }
     ]
   },

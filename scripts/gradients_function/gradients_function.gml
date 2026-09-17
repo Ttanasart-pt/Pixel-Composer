@@ -362,6 +362,7 @@ function loadGradient(path) {
 	
 	////- Shader
 
+#macro shader_set_g shader_set_gradient
 function shader_set_gradient(gradient, surface = noone, range = [0,0,1,1], junc = noone, _shift = undefined) {
 	var use_map = junc != noone && junc.attributes.mapped && is_surface(surface);
 	
