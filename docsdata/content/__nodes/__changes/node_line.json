@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.10.101",
+    "changes": [
+      {
+        "date": "2026-09-17T02:47:59.242Z",
+        "node": "Path Weight Adjust] Add override mode. - [Path Weight Adjust",
+        "commit": "**Path Weight Adjust] Add override mode. - [Path Weight Adjust**: Add Direction type."
+      }
+    ]
+  },
+  {
     "version": "1.21.9.206",
     "changes": [
       {

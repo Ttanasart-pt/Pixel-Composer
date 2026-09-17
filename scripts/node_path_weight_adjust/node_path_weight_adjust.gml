@@ -3,30 +3,35 @@ function Node_Path_Weight_Adjust(_x, _y, _group = noone) : Node(_x, _y, _group) 
 	setDimension(96, 48);
 	setDrawIcon();
 	
-	newInput( 0, nodeValue_Path("Path"));
+	newInput( 0, nodeValue_Path( "Path" ));
 	
 	////- =Adjustment
-	newInput( 1, nodeValue_EScroll( "Mode",  0, [ "Additive", "Multiplicative" ] ));
-	newInput( 4, nodeValue_EScroll( "Type",  0, [ "Constant", "Curve" ]          ));
+	newInput( 4, nodeValue_EScroll( "Adjust Type",  0, [ "Constant", "Curve", "Direction" ] ));
+	newInput( 1, nodeValue_EScroll( "Apply Mode",   0, [ "Additive", "Multiplicative", "Override" ] ));
+	
 	newInput( 2, nodeValue_Float(   "Value", 0            ));
 	newInput( 3, nodeValue_Curve(   "Curve", CURVE_DEF_11 ));
-	newInput( 5, nodeValue_Vec2(    "Curve Range", [0,1]  ));
-	// 6
+	newInput( 6, nodeValue_Rotation( "Direction Shift", 0 ));
+	newInput( 5, nodeValue_Vec2(    "Value Range", [0,1]  ));
+	// 7
 	
 	newOutput(0, nodeValue_Output("Path", VALUE_TYPE.pathnode, self));
 	
 	input_display_list = [ 0, 
-	    [ "Adjustment", false ],  1,  4,  2,  3,  5, 
+	    [ "Adjustment", false ],  4,  1,  2,  3,  6,  5, 
     ];
     
     ////- Node
 	
 	curr_path  = noone;
-	curr_mode  = 0;
 	curr_type  = 0;
-	curr_value = 0;
-	curr_curve = noone;
-	curr_curve_range = [ 0, 1 ];
+	curr_mode  = 0;
+	
+	curr_value  = 0;
+	curr_dirr   = 0;
+	curr_curve  = noone;
+	curr_val_st = 0;
+	curr_val_ed = 1;
 	
 	temp_p = new __vec2P();
 	
@@ -50,11 +55,28 @@ function Node_Path_Weight_Adjust(_x, _y, _group = noone) : Node(_x, _y, _group) 
 		out.y  = temp_p.y;
 		
 		var _v = curr_value;
-		if(curr_type) _v = lerp(curr_curve_range[0], curr_curve_range[1], curr_curve.get(_rat));
+		
+		switch(curr_type) {
+			case 0 : _v = curr_value; break;
+			case 1 : _v = lerp(curr_val_st, curr_val_ed, curr_curve.get(_rat)); break;
+			case 2 : 
+				temp_p = curr_path.getPointRatio(clamp(_rat - .001, 0, .999), ind, temp_p);
+				var x0 = temp_p.x;
+				var y0 = temp_p.y;
+				
+				temp_p = curr_path.getPointRatio(clamp(_rat + .001, 0, .999), ind, temp_p);
+				var x1 = temp_p.x;
+				var y1 = temp_p.y;
+				
+				var _dir = angle_difference(point_direction(x0, y0, x1, y1), curr_dirr);
+				_v = lerp(curr_val_st, curr_val_ed, abs(_dir) / 180);
+				break;
+		}
 		
 		switch(curr_mode) {
 		    case 0 : out.weight = max(0, temp_p.weight + _v); break;
-		    case 1 : out.weight = temp_p.weight * _v; break;
+		    case 1 : out.weight = temp_p.weight * _v;         break;
+		    case 2 : out.weight = _v;                         break;
 		}
 		
 		return out;
@@ -63,24 +85,24 @@ function Node_Path_Weight_Adjust(_x, _y, _group = noone) : Node(_x, _y, _group) 
 	static getPointDistance = function(_dist, ind = 0, out = undefined) { return getPointRatio(_dist / getLength(), ind, out); }
 	
 	static update = function() {
-		var _path  = getInputData(0);
-	    var _mode  = getInputData(1);
-	    var _value = getInputData(2);
-	    var _curve = getInputData(3);
-	    var _type  = getInputData(4);
-	    var _curve_range = getInputData(5);
-	    
-		inputs[2].setVisible(_type == 0);
-		inputs[3].setVisible(_type == 1);
-		inputs[5].setVisible(_type == 1);
+		curr_path  = getInputData( 0);
+	    curr_type  = getInputData( 4);
+		curr_mode  = getInputData( 1);
 		
-		curr_path  = _path;
-		curr_mode  = _mode;
-	    curr_value = _value;
+		inputs[ 2].setVisible(curr_type == 0);
+		inputs[ 3].setVisible(curr_type == 1);
+		inputs[ 6].setVisible(curr_type == 2);
+		inputs[ 5].setVisible(curr_type != 0);
+		
+	    curr_value = getInputData( 2);
+	    curr_dirr  = getInputData( 6);
 	    
-	    curr_curve       = new curveMap(_curve, TOTAL_FRAMES);
-	    curr_type        = _type;
-	    curr_curve_range = _curve_range;
+	    var _curve = getInputData( 3);
+	    var _curvr = getInputData( 5);
+	    
+	    curr_curve  = new curveMap(_curve, TOTAL_FRAMES);
+	    curr_val_st = _curvr[0];
+	    curr_val_ed = _curvr[1];
 		
 		outputs[0].setValue(self);
 	}
