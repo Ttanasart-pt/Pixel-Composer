@@ -16,6 +16,11 @@
         "date": "2026-09-17T00:40:32.360Z",
         "node": "Fur",
         "commit": "**Fur**: Add oversample setting."
+      },
+      {
+        "date": "2026-09-17T01:46:03.905Z",
+        "node": "",
+        "commit": "Fix crash when trying to connect meta junction from an instanced node, group."
       }
     ]
   },

@@ -801,26 +801,6 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	
 	static onInputResize  = function() /*=>*/ { refreshDynamicInput(); triggerRender(); }
 	
-	static getOutput = function(_y = 0, junc = noone) {
-		var _targ = noone;
-		var _dy   = infinity;
-		
-		for( var i = 0; i < array_length(outputs); i++ ) {
-			var _outp = outputs[i];
-			
-			if(!is(_outp, NodeValue)) continue;
-			if(!_outp.isVisible())    continue;
-			if(junc != noone && !junc.isConnectable(_outp, true)) continue;
-			
-			var _ddy = abs(_outp.y - _y);
-			if(_ddy < _dy) {
-				_targ = _outp;
-				_dy   = _ddy;
-			}
-		}
-		return _targ;
-	}
-	
 	static getInput = function(_y = 0, _junc = noone, _shft = input_fix_len, _over = false) {
 		var _targ = noone;
 		var _dy   = infinity;
@@ -845,6 +825,51 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		}
 		
 		return _targ;
+	}
+	
+	static getInputIndex = function(_ind = 0, _tag = VALUE_TAG.none) {
+		switch(_tag) {
+			case VALUE_TAG.updateInTrigger  : return updatedInTrigger;
+			case VALUE_TAG.updateOutTrigger : return updatedOutTrigger;
+			case VALUE_TAG.matadata         : return array_safe_get_fast(junc_meta, _ind, noone);
+		}
+		
+		return array_safe_get_fast(inputs, _ind, noone);
+	}
+	
+	static getOutput = function(_y = 0, junc = noone) {
+		var _targ = noone;
+		var _dy   = infinity;
+		
+		for( var i = 0; i < array_length(outputs); i++ ) {
+			var _outp = outputs[i];
+			
+			if(!is(_outp, NodeValue)) continue;
+			if(!_outp.isVisible())    continue;
+			if(junc != noone && !junc.isConnectable(_outp, true)) continue;
+			
+			var _ddy = abs(_outp.y - _y);
+			if(_ddy < _dy) {
+				_targ = _outp;
+				_dy   = _ddy;
+			}
+		}
+		return _targ;
+	}
+	
+	static getOutputIndex = function(_ind = 0, _tag = VALUE_TAG.none) {
+		switch(_tag) {
+			case VALUE_TAG.updateInTrigger  : return updatedInTrigger;
+			case VALUE_TAG.updateOutTrigger : return updatedOutTrigger;
+			case VALUE_TAG.matadata         : return array_safe_get_fast(junc_meta, _ind, noone);
+		}
+		
+		if(_ind >= 1000) { // connect bypass
+			var _inp = array_safe_get_fast(inputs, _ind - 1000, noone);
+			return _inp == noone? noone : _inp.getBypassJunc();
+		}
+		
+		return array_safe_get_fast(outputs, _ind, noone);
 	}
 	
 	static deleteDynamicInput = function(index) {

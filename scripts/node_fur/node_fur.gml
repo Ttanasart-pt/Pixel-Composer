@@ -42,11 +42,11 @@ function Node_Fur(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) const
 	newInput(19, nodeValue_Slider(   "Edge",      0         ));
 	newInput(12, nodeValue_Slider(   "Shadow",    1         ));
 	newInput(25, nodeValue_Color(    "Color",     ca_black  )).setInternalName("shadow_color");
+	newInput(27, nodeValue_EScroll(  "Blend Mode",0, [ "Normal", "Additive" ]  ));
 	
 		////- =/Background
 	newInput(26, nodeValue_Bool(     "Draw BG",   true      ));
 	newInput(18, nodeValue_Color(    "BG Color",  ca_black  ));
-	
 	// 27
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
@@ -61,7 +61,7 @@ function Node_Fur(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) const
 			
 		[ "Transform",       false ], 15, 16, 17, 
 		[ "Shape",           false ],  9, 20, 
-		[ "Render",          false ], 10, 11, 19, 12, 
+		[ "Render",          false ], 10, 11, 19, 12, 27, 
 			[ "/Background", false ], 26, 18,  
 	];
 	
@@ -110,12 +110,11 @@ function Node_Fur(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) const
 			var _col   = _data[10];
 			var _csamp = _data[11];
 			var _edge  = _data[19];
+			var _sha   = _data[12];
+			var _blnd  = _data[27];
 			
 			var _bgdrw = _data[26];
 			var _bgcol = _data[18];
-			
-			var _sha    = _data[12];
-			var _shaCol = _data[25];
 			
 			inputs[23].setVisible(_dist == 0);
 			
@@ -167,6 +166,8 @@ function Node_Fur(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) const
 			shader_set_f( "thickness",      _thk   );
 			shader_set_cr("thickC",         _thkC  );
 			
+			shader_set_i( "blendMode",      _blnd  );
+			
 			shader_set_g( _col );
 			shader_set_i( "usecolorSample", is_surface(_csamp) );
 			shader_set_s( "colorSample",    _csamp );
@@ -176,7 +177,6 @@ function Node_Fur(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) const
 			shader_set_c( "bgcolor",        _bgcol );
 			
 			shader_set_f( "shadow",         _sha   );
-			shader_set_c( "shadowColor",    _shaCol);
 			
 			draw_empty();
 		surface_reset_shader();

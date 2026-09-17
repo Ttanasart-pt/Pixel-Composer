@@ -168,12 +168,12 @@ function Node_Group(_x, _y, _group = noone) : Node_Collection(_x, _y, _group) co
 					case VALUE_TAG.updateOutTrigger : _cin.setFrom(_con_nod.updatedOutTrigger);   break;
 					case VALUE_TAG.matadata         : _cin.setFrom(_con_nod.junc_meta[_con_ind]); break;
 					default : 
-						if(_con_ind >= 0) {
+						if(_con_ind >= 0 && _con_ind < array_length(_con_nod.outputs)) {
 							var _set = _cin.setFrom(_con_nod.outputs[_con_ind], false, true);
 							// if(!_set) print($"Connection failed {_con_nod}");
 						} 
 						
-						if(_con_ind >= 1000) { //connect bypass
+						if(_con_ind >= 1000) { // Connect bypass
 							var _inp = array_safe_get_fast(_con_nod.inputs, _con_ind - 1000, noone);
 							if(_inp != noone) {
 								var _set = _cin.setFrom(_inp.getBypassJunc(), false, true);

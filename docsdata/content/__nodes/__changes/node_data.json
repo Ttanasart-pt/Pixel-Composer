@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.10.101",
+    "changes": [
+      {
+        "date": "2026-09-17T01:46:03.905Z",
+        "node": "",
+        "commit": "Fix crash when trying to connect meta junction from an instanced node, group."
+      }
+    ]
+  },
+  {
     "version": "1.21.10.002",
     "changes": [
       {
