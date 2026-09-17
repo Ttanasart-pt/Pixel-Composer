@@ -2351,6 +2351,7 @@
     {"name":"node_path_offset","order":18,"path":"scripts/node_path_offset/node_path_offset.yy",},
     {"name":"node_path_plot","order":21,"path":"scripts/node_path_plot/node_path_plot.yy",},
     {"name":"node_path_profile","order":18,"path":"scripts/node_path_profile/node_path_profile.yy",},
+    {"name":"node_path_redistribute","order":28,"path":"scripts/node_path_redistribute/node_path_redistribute.yy",},
     {"name":"node_path_remap","order":26,"path":"scripts/node_path_remap/node_path_remap.yy",},
     {"name":"node_path_repeat","order":8,"path":"scripts/node_path_repeat/node_path_repeat.yy",},
     {"name":"node_path_reverse","order":14,"path":"scripts/node_path_reverse/node_path_reverse.yy",},
