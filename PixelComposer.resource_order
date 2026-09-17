@@ -1013,6 +1013,7 @@
     {"name":"note_path_offset","order":19,"path":"notes/note_path_offset/note_path_offset.yy",},
     {"name":"note_path_plot","order":22,"path":"notes/note_path_plot/note_path_plot.yy",},
     {"name":"note_path_profile","order":19,"path":"notes/note_path_profile/note_path_profile.yy",},
+    {"name":"note_path_redistribute","order":29,"path":"notes/note_path_redistribute/note_path_redistribute.yy",},
     {"name":"note_path_remap","order":27,"path":"notes/note_path_remap/note_path_remap.yy",},
     {"name":"note_path_repeat","order":9,"path":"notes/note_path_repeat/note_path_repeat.yy",},
     {"name":"note_path_reverse","order":15,"path":"notes/note_path_reverse/note_path_reverse.yy",},

@@ -16,17 +16,20 @@ function Node_Path_Spiral(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	newInput( 3, nodeValue_Slider(   "Spiral",  .75, [-2,2,.01] ));
 	newInput( 4, nodeValue_Rotation( "Phase",    0     ));
 	
+	newInput(12, nodeValue_EButton(  "Direction",    0, [ "Path Normal", "Fixed" ] ));
+	newInput(13, nodeValue_Range(    "Angle",       [90,90], true )).setCurvable(14);
+	
 	////- =Weight
 	newInput( 9, nodeValue_Bool(    "Use Weight",  false ));
 	newInput(10, nodeValue_EScroll( "Weight Mode",  0, [ "Replace", "Additive", "Multiplicative" ] ));
 	newInput(11, nodeValue_Range(   "Range",       [0,1] ));
-	// 12
+	// 15
 	
 	newOutput(0, nodeValue_Output("Path", VALUE_TYPE.pathnode, noone));
 	
 	input_display_list = [ 
 		[ "Path",    true    ],  0,  6,  7,  8, 
-		[ "Spiral", false    ],  1,  2,  5,  3,  4, 
+		[ "Spiral", false    ],  1,  2,  5,  3,  4, 12, 13, 14, 
 		[ "Weight",  true, 9 ], 10, 11, 
 	];
 	
@@ -43,6 +46,10 @@ function Node_Path_Spiral(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 		spiral    = .75;
 		phase     = 0;
 		
+		dirType  = 0;
+		dirRange = [0,0];
+		dirCurve = undefined;
+
 		wei    = false;
 		weiMod = 0;
 		weiRng = [0,1];
@@ -147,7 +154,41 @@ function Node_Path_Spiral(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 				
 			}
 			
-			var dir = point_direction(p0.x, p0.y, p1.x, p1.y);
+			var dir;
+			
+			switch(dirType) {
+				case 0 :
+					if(loop) {
+						p0 = _path.getPointRatio( pfract(_rat - .01), ind, p0 );
+						p  = _path.getPointRatio( pfract(_rat      ), ind, p  );
+						p1 = _path.getPointRatio( pfract(_rat + .01), ind, p1 );
+						
+					} else {
+						_rat = clamp(_rat, 0., 0.99);
+						p0 = _path.getPointRatio( clamp(_rat - .01, 0, .99), ind, p0 );
+						p  = _path.getPointRatio( clamp(_rat      , 0, .99), ind, p  );
+						p1 = _path.getPointRatio( clamp(_rat + .01, 0, .99), ind, p1 );
+						
+					}
+					
+					dir = point_direction(p0.x, p0.y, p1.x, p1.y);
+					break;
+					
+				case 1 : 
+					if(loop) {
+						p = _path.getPointRatio( pfract(_rat), ind, p );
+						
+					} else {
+						_rat = clamp(_rat, 0., 0.99);
+						p = _path.getPointRatio( clamp(_rat, 0, .99), ind, p );
+						
+					}
+					
+					var t = dirCurve? dirCurve.get(_rat) : _rat;
+					dir = lerp(dirRange[0], dirRange[1], t);
+					break;
+			}
+			
 			var prg = (_pha + _rat * _fre) * pi * 2;
 			
 			var px = p.x;
@@ -191,6 +232,13 @@ function Node_Path_Spiral(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	}
 	
 	static processData = function(_outData, _data, _array_index = 0) { 
+		#region data
+			var _dirType  = _data[12];
+			var _dirRange = _data[13];
+			var _dirCurve = inputs[13].attributes.curved? new curveMap(_data[14]) : undefined;
+			
+			inputs[13].setVisible(_dirType == 1);
+		#endregion
 		
 		if(!is(_outData, _spiralPath)) 
 			_outData = new _spiralPath(self);
@@ -207,6 +255,10 @@ function Node_Path_Spiral(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 		
 		_outData.spiral    = _data[3];
 		_outData.phase     = _data[4];
+		
+		_outData.dirType  = _dirType;
+		_outData.dirRange = _dirRange;
+		_outData.dirCurve = _dirCurve;
 		
 		_outData.wei    = _data[ 9];
 		_outData.weiMod = _data[10];

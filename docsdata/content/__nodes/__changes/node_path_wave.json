@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.10.101",
+    "changes": [
+      {
+        "date": "2026-09-17T07:20:34.953Z",
+        "node": "",
+        "commit": "**Path Spiral**: Add uniform direction similar to wave path."
+      }
+    ]
+  },
+  {
     "version": "1.21.9.207",
     "changes": [
       {

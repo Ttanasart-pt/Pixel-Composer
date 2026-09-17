@@ -6,6 +6,11 @@
         "date": "2026-09-17T04:31:44.222Z",
         "node": "",
         "commit": "**Path Spiral**: Add more weight control.."
+      },
+      {
+        "date": "2026-09-17T07:20:34.946Z",
+        "node": "Path Spiral",
+        "commit": "**Path Spiral**: Add uniform direction similar to wave path."
       }
     ]
   },

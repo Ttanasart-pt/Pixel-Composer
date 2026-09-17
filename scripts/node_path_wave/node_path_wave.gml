@@ -175,6 +175,8 @@ function Node_Path_Wave(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			var _wigs = wigs;
 			var _wigf = wigf;
 			
+			var dir;
+			
 			switch(dirType) {
 				case 0 :
 					if(loop) {

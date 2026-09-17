@@ -1204,6 +1204,7 @@
     {"id":{"name":"note_path_offset","path":"notes/note_path_offset/note_path_offset.yy",},},
     {"id":{"name":"note_path_plot","path":"notes/note_path_plot/note_path_plot.yy",},},
     {"id":{"name":"note_path_profile","path":"notes/note_path_profile/note_path_profile.yy",},},
+    {"id":{"name":"note_path_redistribute","path":"notes/note_path_redistribute/note_path_redistribute.yy",},},
     {"id":{"name":"note_path_remap","path":"notes/note_path_remap/note_path_remap.yy",},},
     {"id":{"name":"note_path_repeat","path":"notes/note_path_repeat/note_path_repeat.yy",},},
     {"id":{"name":"note_path_reverse","path":"notes/note_path_reverse/note_path_reverse.yy",},},
