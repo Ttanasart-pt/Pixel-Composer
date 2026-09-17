@@ -171,7 +171,7 @@ function vectorBox(_size, _onModify, _unit = noone) : widget() constructor {
 			h = _h;
 			
 			var _exh = _h - ui(2);
-			var _hov = hover && point_in_rectangle(_m[0], _m[1], _x, _y, _x + _w, _y + _exh);
+			var _hov = ihover && point_in_rectangle(_m[0], _m[1], _x, _y, _x + _w, _y + _exh);
 			draw_sprite_stretched_ext(THEME.button_def, _hov? 1 : 0, _x, _y, _w, _exh, boxColor, 1);
 			
 			draw_sprite_ui_uniform(THEME.arrow, array_expanding * 3, _x + ui(12), _y + _exh / 2, .75, COLORS._main_icon);
@@ -193,7 +193,7 @@ function vectorBox(_size, _onModify, _unit = noone) : widget() constructor {
 				onModify(_data, setValueForceUpdate);
 			}
 			
-			if(_hov && mouse_lpress(active)) array_expanding = !array_expanding;
+			if(_hov && mouse_lpress(iactive)) array_expanding = !array_expanding;
 			
 			if(!array_expanding) return h;
 			

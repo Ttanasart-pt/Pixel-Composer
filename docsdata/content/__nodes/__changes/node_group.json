@@ -6,6 +6,11 @@
         "date": "2026-09-17T01:46:03.906Z",
         "node": "",
         "commit": "Fix crash when trying to connect meta junction from an instanced node, group."
+      },
+      {
+        "date": "2026-09-17T02:29:34.059Z",
+        "node": "VectorBox",
+        "commit": "**VectorBox**: Deactivated point array display is now collapsable."
       }
     ]
   },

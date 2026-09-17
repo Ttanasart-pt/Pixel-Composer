@@ -133,7 +133,8 @@ function Node_Group(_x, _y, _group = noone) : Node_Collection(_x, _y, _group) co
 		
 		for( var i = array_length(outputs) - 1; i >= _iamo; i--) {
 			var _bas_inp = outputs[i];
-			_bas_inp.destroy(false, false);
+			if(is(_bas_inp, NodeValue))
+				_bas_inp.destroy(false, false);
 		}
 		
 		// connect
@@ -149,7 +150,7 @@ function Node_Group(_x, _y, _group = noone) : Node_Collection(_x, _y, _group) co
 				var _inp = _ins_nod.inputs[j];
 				var _cin = _cur_nod.inputs[j];
 				
-				_cin._from = _inp;
+				_cin._from     = _inp;
 				_cin.animator  = _inp.animator;
 				_cin.animators = _inp.animators;
 				
@@ -160,27 +161,14 @@ function Node_Group(_x, _y, _group = noone) : Node_Collection(_x, _y, _group) co
 				}
 				
 				var _con_nod = _insMap[$ _inp.value_from.node.node_id];
+				if(!is(_con_nod, Node)) continue;
+				
 				var _con_ind = _inp.value_from.index;
 				var _con_tag = _inp.value_from.tags;
+				var _con_out = _con_nod.getOutputIndex(_con_ind, _con_tag);
+				if(!is(_con_out, NodeValue)) continue;
 				
-				switch(_con_tag) {
-					case VALUE_TAG.updateInTrigger  : _cin.setFrom(_con_nod.updatedInTrigger);    break;
-					case VALUE_TAG.updateOutTrigger : _cin.setFrom(_con_nod.updatedOutTrigger);   break;
-					case VALUE_TAG.matadata         : _cin.setFrom(_con_nod.junc_meta[_con_ind]); break;
-					default : 
-						if(_con_ind >= 0 && _con_ind < array_length(_con_nod.outputs)) {
-							var _set = _cin.setFrom(_con_nod.outputs[_con_ind], false, true);
-							// if(!_set) print($"Connection failed {_con_nod}");
-						} 
-						
-						if(_con_ind >= 1000) { // Connect bypass
-							var _inp = array_safe_get_fast(_con_nod.inputs, _con_ind - 1000, noone);
-							if(_inp != noone) {
-								var _set = _cin.setFrom(_inp.getBypassJunc(), false, true);
-								// if(!_set) print($"Connection failed {_con_nod}");
-							}
-						}
-				}
+				_cin.setFrom(_con_out);
 			}
 		}
 		
