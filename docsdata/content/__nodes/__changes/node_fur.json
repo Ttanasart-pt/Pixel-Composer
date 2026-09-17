@@ -11,6 +11,11 @@
         "date": "2026-09-17T00:19:13.968Z",
         "node": "Fur",
         "commit": "**Fur**: Color is now gradient for setting random color per fur."
+      },
+      {
+        "date": "2026-09-17T00:40:32.360Z",
+        "node": "Fur",
+        "commit": "**Fur**: Add oversample setting."
       }
     ]
   },

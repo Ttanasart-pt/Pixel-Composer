@@ -37,12 +37,17 @@ function Node_Fur(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) const
 	newInput( 9, nodeValue_Slider(   "Thickness", .7    )).setCurvable(20, CURVE_DEF_01, "Curve");
 	
 	////- =Render
-	newInput(18, nodeValue_Color(    "BG Color",  ca_black  ));
 	newInput(10, nodeValue_Gradient( "Color",     gra_white ));
 	newInput(11, nodeValue_Surface(  "Texture"              ));
-	newInput(12, nodeValue_Slider(   "Shadow",    1         ));
 	newInput(19, nodeValue_Slider(   "Edge",      0         ));
-	// 25
+	newInput(12, nodeValue_Slider(   "Shadow",    1         ));
+	newInput(25, nodeValue_Color(    "Color",     ca_black  )).setInternalName("shadow_color");
+	
+		////- =/Background
+	newInput(26, nodeValue_Bool(     "Draw BG",   true      ));
+	newInput(18, nodeValue_Color(    "BG Color",  ca_black  ));
+	
+	// 27
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
@@ -54,9 +59,10 @@ function Node_Fur(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) const
 			[ "/Shape",         false ],  7, 21, 
 			[ "/Direction",     false ],  8, 14, 13, 
 			
-		[ "Transform", false ], 15, 16, 17, 
-		[ "Shape",     false ],  9, 20, 
-		[ "Render",    false ], 18, 10, 11, 12, 19, 
+		[ "Transform",       false ], 15, 16, 17, 
+		[ "Shape",           false ],  9, 20, 
+		[ "Render",          false ], 10, 11, 19, 12, 
+			[ "/Background", false ], 26, 18,  
 	];
 	
 	////- Nodes
@@ -64,6 +70,7 @@ function Node_Fur(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) const
 	temp_surface = [ noone ];
 	
 	attribute_surface_depth();
+	attribute_oversample();
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _params) {
 		var pos = getInputSingle(15);
@@ -100,11 +107,15 @@ function Node_Fur(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) const
 			var _thk   = _data[ 9];
 			var _thkC  = _data[20];
 			
-			var _bgcol = _data[18];
 			var _col   = _data[10];
 			var _csamp = _data[11];
-			var _sha   = _data[12];
 			var _edge  = _data[19];
+			
+			var _bgdrw = _data[26];
+			var _bgcol = _data[18];
+			
+			var _sha    = _data[12];
+			var _shaCol = _data[25];
 			
 			inputs[23].setVisible(_dist == 0);
 			
@@ -125,6 +136,9 @@ function Node_Fur(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) const
 		}
 		
 		surface_set_shader(_outSurf, sh_fur);
+			shader_set_i( "sampleMode", getAttribute("oversample"));
+			
+			
 			shader_set_uv(_data[1], _data[2]);
 			shader_set_i( "usemask", is_surface(_mask) );
 			shader_set_s( "mask",    _mask );
@@ -154,12 +168,15 @@ function Node_Fur(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) const
 			shader_set_cr("thickC",         _thkC  );
 			
 			shader_set_g( _col );
-			shader_set_c( "bgcolor",        _bgcol );
-			
 			shader_set_i( "usecolorSample", is_surface(_csamp) );
 			shader_set_s( "colorSample",    _csamp );
-			shader_set_f( "shadow",         _sha   );
 			shader_set_f( "edgeBlend",      _edge  );
+			
+			shader_set_i( "bgDraw",         _bgdrw );
+			shader_set_c( "bgcolor",        _bgcol );
+			
+			shader_set_f( "shadow",         _sha   );
+			shader_set_c( "shadowColor",    _shaCol);
 			
 			draw_empty();
 		surface_reset_shader();

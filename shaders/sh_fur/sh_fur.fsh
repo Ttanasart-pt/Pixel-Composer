@@ -307,6 +307,65 @@
 	
 #endregion -- gradient --
 
+#pragma use(sampler_simple)
+#region -- sampler_simple -- [1788846732.6884737]
+    uniform int  sampleMode;
+    
+    uniform sampler2D uvMap;
+    uniform int   useUvMap;
+    uniform float uvMapMix;
+
+    vec2 getUV(vec2 tx) {
+        if(useUvMap == 1) {
+            vec2 map = texture2D(uvMap, tx).xy;
+            map.y    = 1.0 - map.y;
+            tx       = mix(tx, map, uvMapMix);
+        }
+        return tx;
+    }
+
+    vec2 getUVA(in vec2 uv, out float alpha) {
+        if(useUvMap == 0) {
+            alpha = 1.0;
+            return uv;
+        }
+
+        vec4 samUV = texture2D( uvMap, uv );
+        vec2 vuv = vec2(samUV.x, 1. - samUV.y);
+        alpha    = samUV.a;
+
+        vec2 vtx = mix(uv, vuv, uvMapMix);
+        return vtx;
+    }
+    
+    vec4 sampleTexture( sampler2D texture, vec2 pos, float mapBlend) {
+        if(useUvMap == 1) {
+            vec2 map = texture2D(uvMap, pos).xy;
+            map.y    = 1.0 - map.y;
+            pos      = mix(pos, map, mapBlend * uvMapMix);
+        }
+
+        if(pos.x >= 0. && pos.y >= 0. && pos.x <= 1. && pos.y <= 1.)
+            return texture2D(texture, pos);
+        
+			 if(sampleMode <= 1) return vec4(0.);
+		else if(sampleMode == 2) return vec4(0.,0.,0., 1.);
+		else if(sampleMode == 3) return texture2D(texture, clamp(pos, 0., 1.));
+		else if(sampleMode == 4) return texture2D(texture, fract(pos));
+        // 5
+		else if(sampleMode == 6) { vec2 sp = vec2(fract(pos.x), pos.y); return (sp.y < 0. || sp.y > 1.) ? vec4(0.) : texture2D(texture, sp); } 
+		else if(sampleMode == 7) { vec2 sp = vec2(fract(pos.x), pos.y); return (sp.y < 0. || sp.y > 1.) ? vec4(0.,0.,0.,1.) : texture2D(texture, sp); } 
+		else if(sampleMode == 8) return texture2D(texture, vec2(fract(pos.x), clamp(pos.y, 0., 1.)));
+		// 9
+		else if(sampleMode == 10) { vec2 sp = vec2(pos.x, fract(pos.y)); return (sp.x < 0. || sp.x > 1.) ? vec4(0.) : texture2D(texture, sp); } 
+		else if(sampleMode == 11) { vec2 sp = vec2(pos.x, fract(pos.y)); return (sp.x < 0. || sp.x > 1.) ? vec4(0.,0.,0.,1.) : texture2D(texture, sp); } 
+		else if(sampleMode == 12) return texture2D(texture, vec2(clamp(pos.x, 0., 1.), fract(pos.y)));
+		
+        return vec4(0.);
+    }
+    vec4 sampleTexture( sampler2D texture, vec2 pos) { return sampleTexture(texture, pos, 0.); }
+#endregion -- sampler_simple --
+
 varying vec2 v_vTexcoord;
 varying vec4 v_vColour;
 
@@ -342,8 +401,11 @@ uniform int   thickC_amount;
 
 uniform float edgeBlend;
 uniform float shadow;
+uniform vec4  shadowColor;
 
+uniform int       bgDraw;
 uniform vec4      bgcolor;
+
 uniform int       usecolorSample;
 uniform sampler2D colorSample;
 
@@ -374,6 +436,8 @@ void main() {
 	vec2  furRootID = floor(vtx * denTx);
 	vec2  furRoot   = furRootID * denDx;
 	vec3  furCol    = bgcolor.rgb;
+	float furAlp    = float(bgDraw);
+	
     float prog;
 	
 	int maxSpan = int(ceil(max(furLengthRange.x, furLengthRange.y)));
@@ -393,16 +457,16 @@ void main() {
         frootLoop = fract(froot);
         
         if(usemask == 1) {
-            vec4 msk = texture2D(mask, froot);
+            vec4 msk = sampleTexture(mask, froot);
             if(msk.r * msk.a < 0.5) continue;
         }
 
-		float furSize    = usefurLengthMap == 1? texture2D(furLengthMap, froot).r : 1.;
+		float furSize    = usefurLengthMap == 1? sampleTexture(furLengthMap, froot).r : 1.;
         float furLength  = mix(furLengthRange.x, furLengthRange.y, random(frootLoop, seed + 645.485)) / density;
               furLength *= furSize;
         
         float furAngle   = radians(furAngle + furAngleRange * (random(frootLoop, seed + 9874.54) * 2. - 1.));
-        if(usefurAngleMap == 1) furAngle += texture2D(furAngleMap, froot).r * PI * 2.;
+        if(usefurAngleMap == 1) furAngle += sampleTexture(furAngleMap, froot).r * PI * 2.;
 
         vec2  furTip    = froot + vec2(cos(furAngle), -sin(furAngle)) * furLength;
         float furDist   = distToLine(vtx, froot, furTip, prog);
@@ -418,18 +482,19 @@ void main() {
         if(furDist < dist) {
             vec3 fColor = gradientEval(random(froot, seed + 151.84)).rgb;
             if(usecolorSample == 1)
-                fColor *= texture2D(colorSample, froot).rgb;
+                fColor *= sampleTexture(colorSample, froot).rgb;
                 
             if( edgeBlend > 0. ) {
                 float blend = smoothstep(thk, thk * (1. - edgeBlend), furDist);
                 fColor = mix(bgcolor.rgb, fColor, blend);
             }
 
-            dist = furDist;
+            dist    = furDist;
+            furAlp  = 1.;
             furCol  = mix(fColor, mix(bgcolor.rgb, fColor, prog), shadow);
         }
     }
 
-	gl_FragColor = vec4(furCol, 1.) * v_vColour;
+	gl_FragColor = vec4(furCol, furAlp) * v_vColour;
 	gl_FragColor.a *= uva;
 }
