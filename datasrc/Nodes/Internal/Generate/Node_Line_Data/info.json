@@ -1,0 +1,6 @@
+{
+    "name":          "Draw Line Data",
+    "spr":           "s_node_line_data",
+    "baseNode":      "Node_Line_Data",
+    "pxc_version":    121100,
+}

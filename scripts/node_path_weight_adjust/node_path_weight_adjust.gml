@@ -3,7 +3,9 @@ function Node_Path_Weight_Adjust(_x, _y, _group = noone) : Node(_x, _y, _group) 
 	setDimension(96, 48);
 	setDrawIcon();
 	
-	newInput( 0, nodeValue_Path( "Path" ));
+	////- =Path
+	newInput( 0, nodeValue_Path( "Path"        ));
+	newInput( 7, nodeValue_Bool( "Loop", false ));
 	
 	////- =Adjustment
 	newInput( 4, nodeValue_EScroll( "Adjust Type",  0, [ "Constant", "Curve", "Direction" ] ));
@@ -13,17 +15,20 @@ function Node_Path_Weight_Adjust(_x, _y, _group = noone) : Node(_x, _y, _group) 
 	newInput( 3, nodeValue_Curve(   "Curve", CURVE_DEF_11 ));
 	newInput( 6, nodeValue_Rotation( "Direction Shift", 0 ));
 	newInput( 5, nodeValue_Vec2(    "Value Range", [0,1]  ));
-	// 7
+	// 8
 	
 	newOutput(0, nodeValue_Output("Path", VALUE_TYPE.pathnode, self));
 	
-	input_display_list = [ 0, 
-	    [ "Adjustment", false ],  4,  1,  2,  3,  6,  5, 
+	input_display_list = [ 
+		[ "Path",       false ],  0,  7, 
+	    [ "Adjustment", false ],  4,  1, -1,  2,  3,  6,  5, 
     ];
     
     ////- Node
 	
 	curr_path  = noone;
+	curr_loop  = false;
+	
 	curr_type  = 0;
 	curr_mode  = 0;
 	
@@ -60,11 +65,13 @@ function Node_Path_Weight_Adjust(_x, _y, _group = noone) : Node(_x, _y, _group) 
 			case 0 : _v = curr_value; break;
 			case 1 : _v = lerp(curr_val_st, curr_val_ed, curr_curve.get(_rat)); break;
 			case 2 : 
-				temp_p = curr_path.getPointRatio(clamp(_rat - .001, 0, .999), ind, temp_p);
+				if(curr_loop) temp_p = curr_path.getPointRatio(pfract(_rat - .001), ind, temp_p);
+				else          temp_p = curr_path.getPointRatio(clamp(_rat - .001, 0, .999), ind, temp_p);
 				var x0 = temp_p.x;
 				var y0 = temp_p.y;
 				
-				temp_p = curr_path.getPointRatio(clamp(_rat + .001, 0, .999), ind, temp_p);
+				if(curr_loop) temp_p = curr_path.getPointRatio(pfract(_rat + .001), ind, temp_p);
+				else          temp_p = curr_path.getPointRatio(clamp(_rat + .001, 0, .999), ind, temp_p);
 				var x1 = temp_p.x;
 				var y1 = temp_p.y;
 				
@@ -86,6 +93,8 @@ function Node_Path_Weight_Adjust(_x, _y, _group = noone) : Node(_x, _y, _group) 
 	
 	static update = function() {
 		curr_path  = getInputData( 0);
+		curr_loop  = getInputData( 7);
+		
 	    curr_type  = getInputData( 4);
 		curr_mode  = getInputData( 1);
 		

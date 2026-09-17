@@ -133,8 +133,9 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		[ "Render",         true     ], 34, 
 	];
 	
-	newOutput(0, nodeValue_Output( "Surface Out", VALUE_TYPE.surface, noone));
-	newOutput(1, nodeValue_Output( "Width Pass", VALUE_TYPE.surface, noone));
+	newOutput( 0, nodeValue_Output( "Surface Out", VALUE_TYPE.surface, noone ));
+	newOutput( 1, nodeValue_Output( "Width Pass",  VALUE_TYPE.surface, noone ));
+	newOutput( 2, nodeValue_Output( "Line Data",   VALUE_TYPE.struct,  []    )).setVisible(false, false);
 	
 	////- Nodes
 	
@@ -754,7 +755,7 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 				}
 			}
 		#endregion
-			
+		
 		////- Draw
 		
 		var _colorPass = surface_verify(_outData[0], _surfDim[0], _surfDim[1], attrDepth());
@@ -1172,7 +1173,7 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 			
 		}
 		
-		return [ _colorPass, _widthPass ];
+		return [ _colorPass, _widthPass, lines ];
 	}
 	
 	static drawCaps = function(_flip, _side, _typ, _cpc, _cpx, _cpy, _cpr, _a0, _a1, _uvp = [0,0], _uvs = [1,1], w = false, _texId = -1) {

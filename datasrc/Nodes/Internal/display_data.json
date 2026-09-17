@@ -910,6 +910,7 @@
             { "label": "/Shape" },
             "Node_Line",
             "Node_Line_2Points",
+            "Node_Line_Data",
             "Node_Shape",
             "Node_Shape_Fast",
             "Node_Shape_Polygon",

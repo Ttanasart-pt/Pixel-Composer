@@ -15,13 +15,19 @@ function Node_Path_Spiral(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	
 	newInput( 3, nodeValue_Slider(   "Spiral",  .75, [-2,2,.01] ));
 	newInput( 4, nodeValue_Rotation( "Phase",    0     ));
-	// 9
+	
+	////- =Weight
+	newInput( 9, nodeValue_Bool(    "Use Weight",  false ));
+	newInput(10, nodeValue_EScroll( "Weight Mode",  0, [ "Replace", "Additive", "Multiplicative" ] ));
+	newInput(11, nodeValue_Range(   "Range",       [0,1] ));
+	// 12
 	
 	newOutput(0, nodeValue_Output("Path", VALUE_TYPE.pathnode, noone));
 	
 	input_display_list = [ 
-		[ "Path",    true ],  0,  6,  7,  8, 
-		[ "Spiral", false ],  1,  2,  5,  3,  4, 
+		[ "Path",    true    ],  0,  6,  7,  8, 
+		[ "Spiral", false    ],  1,  2,  5,  3,  4, 
+		[ "Weight",  true, 9 ], 10, 11, 
 	];
 	
 	////- Nodes
@@ -36,6 +42,10 @@ function Node_Path_Spiral(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 		amp_curve = noone;
 		spiral    = .75;
 		phase     = 0;
+		
+		wei    = false;
+		weiMod = 0;
+		weiRng = [0,1];
 		
 		p  = new __vec2P();
 		p0 = new __vec2P();
@@ -154,7 +164,17 @@ function Node_Path_Spiral(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 			
 			out.x = px;
 			out.y = py;
-			out.weight = p.weight * (.5 + cos(prg) * .5);
+			out.weight = p.weight;
+			
+			if(wei) {
+				var weiVal = lerp(weiRng[0], weiRng[1], (.5 + cos(prg) * .5));
+				
+				switch(weiMod) {
+					case 0 : out.weight  = weiVal; break;
+					case 1 : out.weight += weiVal; break;
+					case 2 : out.weight *= weiVal; break;
+				}
+			}
 			
 			cached_pos[$ _cKey] = new __vec2P(out.x, out.y, out.weight);
 			
@@ -187,6 +207,10 @@ function Node_Path_Spiral(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 		
 		_outData.spiral    = _data[3];
 		_outData.phase     = _data[4];
+		
+		_outData.wei    = _data[ 9];
+		_outData.weiMod = _data[10];
+		_outData.weiRng = _data[11];
 		
 		return _outData;
 	}
