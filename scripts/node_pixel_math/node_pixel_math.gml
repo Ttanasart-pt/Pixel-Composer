@@ -38,18 +38,19 @@ function Node_Pixel_Math(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	array_append(_scroll, ["Less than", "Less than equal", "Greater than", "Greater than equal"]);
 	
 	newInput( 7, nodeValue_EScroll( "Operator",     0, _scroll )).setPieMenu();
-	newInput(10, nodeValue_EButton( "Operand Type", 0, [ "Vec4", "Surface" ]));
-	newInput( 8, nodeValue_Vec4(    "Operand",     [0,0,0,0]   ));
+	newInput(10, nodeValue_EButton( "Operand Type", 0, [ "Vec4", "Surface", "Color" ]));
+	newInput( 8, nodeValue_Vec4(    "Value",       [0,0,0,0]   ));
+	newInput(13, nodeValue_Color(   "Color",        ca_black   ));
 	newInput( 9, nodeValue_Vec2(    "Range",       [0,0]       ));
 	newInput(12, nodeValue_Slider(  "Mix",         .5          ));
 	newInput(11, nodeValue_Surface( "Operand Surface"          ));
-	// 13
+	// 14
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
 	input_display_list = [ 1, 4, 
 		[ "Surfaces",  false ],  0,  2,  3,  5,  6, 
-		[ "Operation", false ],  7, 10,  8,  9, 12, 11, 
+		[ "Operation", false ],  7, 10,  8, 13,  9, 12, 11, 
 	];
 	
 	////- Node
@@ -57,20 +58,25 @@ function Node_Pixel_Math(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	attribute_surface_depth();
 	
 	static processData = function(_outSurf, _data, _array_index) {
-		var type   = _data[7];
-		var op4    = _data[8];
-		var op2    = _data[9];
-		var opType = _data[10];
-		var opS    = _data[11];
-		var mixAmo = _data[12];
+		#region data
+			var type   = _data[ 7];
+			var opType = _data[10];
+			var val    = _data[ 8];
+			var col    = _data[13];
+			var range  = _data[ 9];
+			var mixAmo = _data[12];
+			var surf   = _data[11];
+		#endregion
 		
 		var _oprand = type < array_length(global.node_math_names)? global.node_math_names[type] : _scroll[type];
 		if(!renamedManual) setDisplayName(_oprand, false, false);
 		
 		inputs[ 8].setVisible(false);
 		inputs[ 9].setVisible(false);
-		inputs[11].setVisible(opType, opType);
 		inputs[12].setVisible(type == MATH_OPERATOR.lerp);
+		
+		inputs[13].setVisible(opType == 2);
+		inputs[11].setVisible(opType == 1, opType == 1);
 		
 		if(opType == 0) {
 			switch(type) {
@@ -94,13 +100,15 @@ function Node_Pixel_Math(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 			}
 		}
 		
+		if(opType == 2) val = colorToArray(col);
+		
 		surface_set_shader(_outSurf, sh_pixel_math, true, BLEND.over);
-			shader_set_i("operator", type);
+			shader_set_i( "operator", type );
 			
-			shader_set_i("operandType", opType );
-			shader_set_f("mixAmount",   mixAmo );
-			shader_set_surface("operandSurf", opS );
-			shader_set_4("operand",  _oprand == "Clamp"? [ op2[0], op2[1], 0, 0]  : op4 );
+			shader_set_i( "operandType", opType );
+			shader_set_f( "mixAmount",   mixAmo );
+			shader_set_s( "operandSurf", surf   );
+			shader_set_4( "operand",     _oprand == "Clamp"? [ range[0], range[1], 0, 0]  : val );
 			
 			draw_surface_safe(_data[0]);
 		surface_reset_shader();

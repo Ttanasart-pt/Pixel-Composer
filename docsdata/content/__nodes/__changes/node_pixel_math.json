@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.10.101",
+    "changes": [
+      {
+        "date": "2026-09-17T08:33:14.226Z",
+        "node": "Pixel Math",
+        "commit": "**Pixel Math**: Add color Operand type."
+      }
+    ]
+  },
+  {
     "version": "1.21.7.110",
     "changes": [
       {
