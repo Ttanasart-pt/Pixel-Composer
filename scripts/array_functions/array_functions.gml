@@ -182,6 +182,14 @@
 		return arr[irandom(array_length(arr) - 1)];
 	}
 	
+	function array_safe_get_random_index(arr, def = 0) {
+		if(is(arr, ArrayObject)) return arr.getIndexRandom();
+		
+		if(!is_array(arr))       return def;
+		if(array_empty(arr))     return def;
+		return irandom(array_length(arr) - 1);
+	}
+	
 	function array_get_decimal(arr, index, color = false) {
 		INLINE
 		

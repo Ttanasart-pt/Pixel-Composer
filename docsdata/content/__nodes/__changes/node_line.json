@@ -16,6 +16,11 @@
         "date": "2026-09-17T05:25:26.731Z",
         "node": "Draw Line",
         "commit": "**Draw Line**: Add segment pos-processing options."
+      },
+      {
+        "date": "2026-09-17T06:11:48.945Z",
+        "node": "Repeat",
+        "commit": "**Repeat**: Add animation settings."
       }
     ]
   },

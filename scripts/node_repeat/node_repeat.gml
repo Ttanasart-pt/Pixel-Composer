@@ -44,6 +44,8 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	newInput( 1, nodeValue_Dimension());
 	newInput(16, nodeValue_EButton(     "Array Select",        0 )).setChoices([ "Order", "Random", "Spread" ])
 		.setTooltip("Whether to select image from an array in order, at random, or spread each image to its own output.");
+	newInput(55, nodeValue_Range(   "Animated",    [0,0], { linked : true } ));
+	newInput(56, nodeValue_EScroll( "Animated End", 0, [ "Loop", "Ping Pong", "Hide", "Stop" ] ));
 	
 	////- =Pattern
 	newInput( 3, nodeValue_EScroll(  "Pattern", 0, __enum_array_gen([ "Linear", "Grid", "Circular"], s_node_repeat_axis) ));
@@ -105,7 +107,7 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	newInput(24, nodeValue_Vec2(     "Animator scale",     [0,0]        ));
 	newInput(25, nodeValue_Curve(    "Animator falloff",   CURVE_DEF_10 ));
 	newInput(27, nodeValue_Color(    "Animator blend",     ca_white     ));
-	// 55
+	// 57
 	
 	newOutput( 0, nodeValue_Output( "Surface Out", VALUE_TYPE.surface, noone ));
 	newOutput( 1, nodeValue_Output( "Atlas Data",  VALUE_TYPE.atlas,   []    )).setVisible(false).rejectArrayProcess();
@@ -212,7 +214,7 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	});
 	
 	input_display_list = [ 17, 
-		[ "Surfaces",      true ],  0, 35, 36, 37,  1, 16, 
+		[ "Surfaces",      true ],  0, 35, 36, 37,  1, 16, 55, 56, 
 		[ "Pattern",      false ],  3,  9, 32,
 			[ "/Amount",  false ],  2, 18,
 			[ "/Pattern", false ], 22, 45,  7,  8, 49, 50, 
@@ -408,6 +410,7 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	
 	static processData = function(_outData, _data, _array_index) {	
 		#region data
+			var _sed  = _data[17];
 			var _iSrf = _data[ 0];
 			
 			var _dimt = _data[35];
@@ -459,8 +462,9 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 			var _cran         = _data[23];
 			var _cshf         = _data[53];
 			
-			var _arr    = _data[16];
-			var _sed    = _data[17];
+			var _arr       = _data[16];
+			var arrAnim    = _data[55];
+			var arrAnimEnd = _data[56];
 			
 			var _invers = _data[43];
 			var _sortY  = _data[46];
@@ -469,6 +473,8 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 			var _bld_md = _data[34];
 			
 			var _ani_wr = _data[28];
+			
+			update_on_frame = (_arr != 2) && (arrAnim[0] != 0 || arrAnim[1] != 0);
 			
 			inputs[3].getEditWidget().setSideButton(_pat == 1? b_gridFill : noone);
 			
@@ -685,10 +691,31 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 			var _sh  = _sdim[1];
 			
 			if(_use_array) {
+				var _surfI = 0;
+				
 				switch(_arr) {
-					case 0: _surface = array_safe_get_fast(_iSrf, safe_mod(i, _arr_length)); break;
-					case 1: _surface = array_safe_get_random(_iSrf);                         break;
+					case 0: _surfI = safe_mod(i, _arr_length);           break;
+					case 1: _surfI = array_safe_get_random_index(_iSrf); break;
 				}
+				
+				if(arrAnim[0] != 0 || arrAnim[1] != 0) {
+					var _arrAnim_spd = random_range(arrAnim[0], arrAnim[1]);
+					var _animInd     = _surfI + CURRENT_FRAME * _arrAnim_spd;
+					
+					switch(arrAnimEnd) {
+						case 0 : _surfI = safe_mod(_animInd, _arr_length); break;
+							
+						case 1 :
+							var pp = safe_mod(_animInd, _arr_length * 2 - 1);
+							_surfI = pp < _arr_length? pp : _arr_length * 2 - pp;
+							break;
+							
+						case 2 : _surfI = _animInd; break;
+						case 3 : _surfI = clamp(_animInd, 0, _arr_length - 1); break;
+					}
+				}
+				
+				_surface = array_safe_get(_iSrf, _surfI);
 				
 				var _dim = surface_size_map[$ _surface] ?? _sdim;
 				_sw = _dim[0];

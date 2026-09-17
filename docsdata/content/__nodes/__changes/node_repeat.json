@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.10.101",
+    "changes": [
+      {
+        "date": "2026-09-17T06:11:48.952Z",
+        "node": "",
+        "commit": "**Repeat**: Add animation settings."
+      }
+    ]
+  },
+  {
     "version": "1.21.8.003",
     "changes": [
       {

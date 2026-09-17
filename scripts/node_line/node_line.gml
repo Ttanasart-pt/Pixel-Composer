@@ -80,8 +80,8 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	newInput(57, nodeValue_Bool(    "Trim Curve",  false         )).setInternalName("wig_trim_curve");
 	
 	////- =Segment Process
-	newInput(67, nodeValue_Bool(    "Separate Segments", false ));
-	newInput(68, nodeValue_Float(   "Extension",    2            ));
+	newInput(67, nodeValue_Bool(    "Separate Segments", false   ));
+	newInput(68, nodeValue_Range(   "Extension",    [1,1], true  ));
 	newInput(69, nodeValue_RotRand( "Random Angle", ROTRAN_DEF_0 ));
 	
 	////- =Line Caps
@@ -787,7 +787,7 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 						var dis = point_distance( cx, cy, p1.x, p1.y);
 						
 						dir += rotation_random_eval(_ranAng);
-						dis *= _extn;
+						dis *= random_range(_extn[0], _extn[1]);
 						
 						p0.x = cx - lengthdir_x(dis, dir);
 						p0.y = cy - lengthdir_y(dis, dir);
