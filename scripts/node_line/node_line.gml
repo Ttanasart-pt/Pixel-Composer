@@ -47,7 +47,7 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	newInput(35, nodeValue_Bool(     "Force Loop",     false ));
 	newInput(19, nodeValue_Bool(     "Fix Length",     false )).setTooltip("Fix length of each segment instead of segment count.");
 	newInput( 2, nodeValue_ISlider(  "Segment",        8, [1,32,.1] )).setPieMenu();
-	newInput(20, nodeValue_Float(    "Segment Length", 8            ));
+	newInput(20, nodeValue_Float(    "Segment Length", 8        ));
 	
 	////- =Width
 	newInput(17, nodeValue_Bool(  "1px Mode",             false      )).setPieMenu().setTooltip("Render pixel perfect 1px line.");
@@ -79,6 +79,11 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	newInput(56, nodeValue_Bool(    "Trim Range",  false         )).setInternalName("wig_trim_range");
 	newInput(57, nodeValue_Bool(    "Trim Curve",  false         )).setInternalName("wig_trim_curve");
 	
+	////- =Segment Process
+	newInput(67, nodeValue_Bool(    "Separate Segments", false ));
+	newInput(68, nodeValue_Float(   "Extension",    2            ));
+	newInput(69, nodeValue_RotRand( "Random Angle", ROTRAN_DEF_0 ));
+	
 	////- =Line Caps
 	newInput(13, nodeValue_EButton( "Start Cap",     0, __enum_array_gen([ "None", "Round", "Tri", "Square" ], s_node_line_cap)));
 	newInput(43, nodeValue_EButton( "End Cap",       0, __enum_array_gen([ "None", "Round", "Tri", "Square" ], s_node_line_cap)));
@@ -109,7 +114,7 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	
 	////- =Render
 	newInput(34, nodeValue_EScroll( "SSAA", 0, [ "None", "2x", "4x", "8x" ] ));
-	// 67
+	// 70
 	
 	input_display_list = [ 39, 
 		[ "Output",         true     ],  0, 30, 31, 16, 58, 
@@ -122,6 +127,7 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		[ "Line Settings", false     ],  8, 25,  9, 26, 
 		[ "Dash",           true, 46 ], 44, 45, 
 		[ "Wiggle",         true, 47 ],  5,  4, 53, 51, 54, 52, 55, 56, 57, 
+		[ "Segment Process",true     ], 67, 68, 69, 
 		
 		[ "Line Cap",      false     ], 13, 43, 
 			[ "/Textured", false     ], 40, 41, 42, 60, 61, 
@@ -246,6 +252,10 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 			var _wigP     = _data[55];
 			var _wigTrmR  = _data[56];
 			var _wigTrmC  = _data[57];
+			
+			var _segSep   = _data[67];
+			var _extn     = _data[68];
+			var _ranAng   = _data[69];
 			
 			var _color    = _data[10], _color_shf  = _data[64];
 			var _colb     = _data[24], _colb_shf   = _data[65];
@@ -753,6 +763,45 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 					lines     = _dashed;
 					line_data = _dashedData;
 				}
+			}
+		#endregion
+		
+		#region segment post-process
+			if(_segSep) {
+				var _segLines     = [];
+				var _segLine_data = [];
+				
+				for( var i = 0, n = array_length(lines); i < n; i++ ) {
+					var _line = lines[i];
+					var _ldat = line_data[i];
+					var _sega = array_length(_line);
+					
+					for( var j = 0; j < _sega - 1; j++ ) {
+						var p0 = _line[j + 0];
+						var p1 = _line[j + 1].clone();
+						
+						var cx = (p0.x + p1.x) / 2;
+						var cy = (p0.y + p1.y) / 2;
+						
+						var dir = point_direction(cx, cy, p1.x, p1.y);
+						var dis = point_distance( cx, cy, p1.x, p1.y);
+						
+						dir += rotation_random_eval(_ranAng);
+						dis *= _extn;
+						
+						p0.x = cx - lengthdir_x(dis, dir);
+						p0.y = cy - lengthdir_y(dis, dir);
+						
+						p1.x = cx + lengthdir_x(dis, dir);
+						p1.y = cy + lengthdir_y(dis, dir);
+					
+						array_push(_segLines, [p0,p1]);
+						array_push(_segLine_data, { length: 1 });
+					}
+				}
+				
+				lines     = _segLines;
+				line_data = _segLine_data;
 			}
 		#endregion
 		

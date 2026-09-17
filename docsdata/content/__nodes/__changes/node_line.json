@@ -11,6 +11,11 @@
         "date": "2026-09-17T04:31:44.222Z",
         "node": "Path Spiral",
         "commit": "**Path Spiral**: Add more weight control.."
+      },
+      {
+        "date": "2026-09-17T05:25:26.731Z",
+        "node": "Draw Line",
+        "commit": "**Draw Line**: Add segment pos-processing options."
       }
     ]
   },
