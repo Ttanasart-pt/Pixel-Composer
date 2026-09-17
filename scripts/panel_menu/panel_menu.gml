@@ -65,7 +65,7 @@
             registerFunction("", "Import Project .zip",  "", n, __IMPORT_ZIP    ).setMenuAlt( "Compressed Archive (zip)", "import_zip"  )
             registerFunction("", "Export Project .zip",  "", n, __EXPORT_ZIP    ).setMenuAlt( "Compressed Archive (zip)", "export_zip"  )
             registerFunction("", "Export Project .json", "", n, __EXPORT_JSON   ).setMenuAlt( "JSON Struct (json)",       "export_json" )
-            registerFunction("", "Export Showcase Package","", n, __EXPORT_SHOWCASE ).setMenuAlt( "Folder", "export_folder" )
+            if(TESTING) registerFunction("", "Export Showcase Package","", n, __EXPORT_SHOWCASE ).setMenuAlt( "Folder", "export_folder" )
             
             registerFunction("", "Import",          "",     n, function(_dat) /*=>*/ {return submenuCall(_dat, [ MENU_ITEMS.import_zip ])} ).setMenu("import_menu",, true);
             registerFunction("", "Export",          "",     n, function(_dat) /*=>*/ {return submenuCall(_dat, [ 

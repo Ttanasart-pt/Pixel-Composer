@@ -173,6 +173,10 @@ uniform vec2  scale;
 uniform int       usemask;
 uniform sampler2D mask;
 
+uniform int   distribution;
+uniform float randomness;
+uniform float overlap;
+
 uniform float density;
 uniform int   furDens;
 
@@ -199,7 +203,7 @@ uniform sampler2D colorSample;
 
 #define PI 3.1415926535897932384626433832795
 
-float random ( vec2 st, float seed ) { return fract(sin(dot(st.xy, vec2(12.9898, 78.233) + mod(seed, 100000.) / 10.)) * 43758.5453123); }
+float random( vec2 st, float seed ) { return fract(sin(dot(st.xy, vec2(12.9898, 78.233) + mod(seed, 100000.) / 10.)) * 43758.5453123); }
 
 float distToLine(vec2 p, vec2 a, vec2 b, out float prog) {
     vec2 pa = p - a;
@@ -218,19 +222,29 @@ void main() {
           vtx = getUVA(fract(vtx), uva);
 
     vec2  denTx   = vec2(density);
-	vec2  furRoot = floor(vtx * denTx) / denTx;
+    vec2  denDx   = 1. / denTx;
     float dist    = 99999.;
-	vec3  fur     = bgcolor.rgb;
+    
+	vec2  furRootID = floor(vtx * denTx);
+	vec2  furRoot   = furRootID * denDx;
+	vec3  furCol    = bgcolor.rgb;
     float prog;
 	
 	int maxSpan = int(ceil(max(furLengthRange.x, furLengthRange.y)));
 
     for(int i = -maxSpan; i <= maxSpan; i++)
     for(int j = -maxSpan; j <= maxSpan; j++) {
-        vec2  froot  = furRoot + vec2(float(i), float(j)) / denTx;
+        vec2  froot  = furRoot + vec2(float(i), float(j)) * denDx;
         vec2  frootLoop = fract(froot);
-        froot.x += (random(frootLoop, seed + 456.789) * 2. - 1.) / denTx.x;
-        froot.y += random(frootLoop, seed + 123.456) / denTx.y;
+        
+        if(distribution == 0) {
+	        froot.x += (random(frootLoop, seed + 456.789) * 2. - 1.) * denDx.x * randomness;
+	        froot.y += (random(frootLoop, seed + 123.456)          ) * denDx.y * randomness;
+	        
+        }
+        
+    	froot.x  += mod(froot.y * denTx.y, 2.) * .5 * denDx.x * overlap;
+        frootLoop = fract(froot);
         
         if(usemask == 1) {
             vec4 msk = texture2D(mask, froot);
@@ -264,10 +278,10 @@ void main() {
             }
 
             dist = furDist;
-            fur  = mix(fColor, mix(bgcolor.rgb, fColor, prog), shadow);
+            furCol  = mix(fColor, mix(bgcolor.rgb, fColor, prog), shadow);
         }
     }
 
-	gl_FragColor = vec4(fur, 1.) * v_vColour;
+	gl_FragColor = vec4(furCol, 1.) * v_vColour;
 	gl_FragColor.a *= uva;
 }

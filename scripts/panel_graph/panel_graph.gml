@@ -281,7 +281,7 @@
         registerFunction(g, "Transfer Connections",  "T", a, panel_graph_transferConnection  ).setMenu("graph_transfer_connection")
         
         registerFunction(g, "Pin Toggle",            "",  n, panel_graph_nodePinToggle       ).setMenuAlt("Toggle Node Pin", "graph_pin_toggle")
-        registerFunction(g, "Pin Add",               "",  n, panel_graph_nodePinAdd          ).setMenuAlt("Pin Node",        "graph_pin_add")
+        registerFunction(g, "Pin Add",               "",  n, panel_graph_nodePinAdd          ).setMenuAlt("Pin Node",        "graph_pin_add", [THEME.pin, 1])
         registerFunction(g, "Pin Remove",            "",  n, panel_graph_nodePinRemove       ).setMenuAlt("Unpin Node",      "graph_pin_remove")
 		
 		registerFunction(g, "Export Hovering Node",   "",  n, panel_graph_send_to_export ).setMenu("graph_export_hover")
@@ -4042,7 +4042,7 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
     		draw_text_add(pnx + ui(6), pny + pnh / 2, _name);
     		gpu_set_scissor(scis);
     		
-    		if(_sel) draw_sprite_stretched_ext(THEME.box_r2, 1, pnx, pny, pnw, pnh, COLORS._main_accent, 1);
+    		// if(_sel) draw_sprite_stretched_ext(THEME.box_r2, 1, pnx, pny, pnw, pnh, COLORS._main_accent, 1);
     		
     		if(_hov) {
     			if(mouse_lpress(_focus)) {

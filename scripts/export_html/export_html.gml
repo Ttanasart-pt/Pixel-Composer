@@ -208,7 +208,6 @@ function __EXPORT_HTML(project = PROJECT, _path = "", _fName = "", _pName = "", 
 	file_text_write_all(_path, _project_template);
 }
 
-
 function __EXPORT_SHOWCASE(project = PROJECT) {
 	if(DEMO) return false;
 	
