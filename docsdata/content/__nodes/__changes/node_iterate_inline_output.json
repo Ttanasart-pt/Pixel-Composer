@@ -1,0 +1,12 @@
+[
+  {
+    "version": "1.21.10.102",
+    "changes": [
+      {
+        "date": "2026-09-18T00:15:40.674Z",
+        "node": "",
+        "commit": "**Loop**: Static group now won't update every frame."
+      }
+    ]
+  }
+]

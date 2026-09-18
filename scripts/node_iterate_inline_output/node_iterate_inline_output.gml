@@ -20,6 +20,7 @@ function Node_Iterate_Inline_Output(_x, _y, _group = noone) : Node(_x, _y, _grou
 	static getNextNodes = function(checkLoop = false) {
 		if(loop.bypassNextNode()) return loop.getNextNodes();
 		
+		loop.setRenderStatus(true);
 		logNodeDebug($"Loop complete");
 		return getNextNodesRaw();
 	}

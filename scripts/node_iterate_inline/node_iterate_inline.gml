@@ -24,6 +24,26 @@ function Node_Iterate_Inline(_x, _y, _group = noone) : Node_Collection_Inline(_x
 	
 	////- Rendering
 	
+	static isActiveDynamic = function(frame = CURRENT_FRAME) {
+		if(update_on_frame) return true;
+		if(!rendered)       return true;
+		if(instanceBase)    return true;
+		
+		force_requeue = false;
+		__temp_frame  = frame;
+		if(array_any(inputs, function(inp,i) /*=>*/ {return inp.isActiveDynamic(__temp_frame)}))
+			return true;
+		
+		var _active = false;
+        if(animation_range_start != infinity && animation_range_start != animation_range_end)
+        	_active |= frame >= animation_range_start && frame <= animation_range_end;
+        
+        for( var i = 0, n = array_length(nodes); i < n; i++ ) 
+        	_active |= nodes[i].isActiveDynamic(frame);
+        
+        return _active;
+	}
+	
 	static connectJunctions = function(jFrom, jTo) {
 		var nfrom = jFrom.node;
 		var nto   = jTo.node;
