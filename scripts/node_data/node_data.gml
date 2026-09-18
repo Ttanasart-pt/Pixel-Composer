@@ -1573,7 +1573,9 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		for( var i = 0, n = array_length(outputs); i < n; i++ ) {
 			var _outp = outputs[i];
 			
-			array_foreach(_outp.getJunctionTo(), function(_t) /*=>*/ {
+			array_foreach(_outp.getJunctionTo(), function(_t,_) /*=>*/ {
+				if(!_t.node.active || !_t.node.renderActive) return false;
+				
 				if(has(_t, "from") && is(_t.from, Node_Group_Input)) {
 					profile_log(3, $"Propagate passive dynamic to group io {_t.from}");
 					_t.from.passiveDynamic = true;
@@ -1583,6 +1585,8 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 				profile_log(3, $"Propagate passive dynamic to {_t.node}");
 				_t.node.passiveDynamic = true;
 				_t.node.rendered       = false;
+				
+				return true;
 			});
 		}
 	}

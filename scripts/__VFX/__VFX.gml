@@ -351,6 +351,9 @@ function __part(_node) : __particleObject() constructor {
 		var lifeRat  = clamp(1 - life / life_total, 0, 1);
 		var spdCurve = speedT == noone? 1 : speedT.getFast(lifeRat);
 		
+		var px = x;
+		var py = y;
+		
 		frame = _frame;
 		random_set_seed(seed + life);
 		
@@ -422,9 +425,9 @@ function __part(_node) : __particleObject() constructor {
 		
 		if(prevx != undefined) {
 			phyDirr  = point_direction(prevx, prevy, x, y);
-			spVec[0] = point_distance(prevx, prevy, x, y);
+			spVec[0] = point_distance(prevx, prevy, drawx, drawy);
 			if(spVec[0] > 1)
-				spVec[1] = point_direction(prevx, prevy, x, y);
+				spVec[1] = point_direction(prevx, prevy, drawx, drawy);
 		}
 		
 		if(drawx != undefined) {
@@ -433,8 +436,8 @@ function __part(_node) : __particleObject() constructor {
 			life_incr++;
 		}
 		
-		prevx = x;
-		prevy = y;
+		prevx = px;
+		prevy = py;
 		
 		drawx   = x;
 		drawy   = y;
