@@ -85,8 +85,9 @@ function dialogPanelCall(_panel, _x = noone, _y = noone, params = undefined) {
 		dia.anchor = params[$ "anchor"] ?? _panel.anchor;
 	dia.resetPosition();
 	
-	if(params != undefined && (params[$ "focus"] ?? true))
+	if(params == undefined || (params[$ "focus"] ?? true))
 		setFocus(dia.id);
+		
 	return dia;
 }
 

@@ -1,0 +1,12 @@
+[
+  {
+    "version": "1.21.10.102",
+    "changes": [
+      {
+        "date": "2026-09-19T00:12:53.987Z",
+        "node": "",
+        "commit": "**Checkbox**: Add preference option to hide checkbox label."
+      }
+    ]
+  }
+]

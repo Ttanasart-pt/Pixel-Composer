@@ -723,6 +723,14 @@ function Panel_Preference() : PanelContent() constructor {
     		
     	}
     	
+    	ds_list_add(pref_appr, __txt("Checkbox")); // Checkbox
+    	
+    		ds_list_add(pref_appr, new __Panel_Linear_Setting_Item_Preference(
+    			__txt("pref_widget_checkbox_label", "Checkbox Label"),
+    			"checkbox_label",
+    			new checkBox(function() /*=>*/ {return prefToggle("checkbox_label")})
+    		));
+    	
     	ds_list_add(pref_appr, __txt("Curve Box")); // Curvebox
     	
     		ds_list_add(pref_appr, new __Panel_Linear_Setting_Item_Preference(

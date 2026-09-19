@@ -879,9 +879,9 @@ function Panel_Menu() : PanelContent() constructor {
             
             if(profile) {
                 if(hori) {
-                    var _sts = h - uPad * 2;
+                    var _sts = max(ceil(h * .75), h - uPad * 2);
                     var _stx = x1 - _sts;
-                    var _sty = uPad;
+                    var _sty = (h - _sts) / 2;
                     
                 } else {
                     var _sts = ui(24);
@@ -899,17 +899,25 @@ function Panel_Menu() : PanelContent() constructor {
                 var _hv = pHOVER && point_in_rectangle(mx, my, _stx, _sty, _stx + _sts, _sty + _sts);
                 
                 if(STEAM_AVATAR > 0 && sprite_exists(STEAM_AVATAR)) {
-                    draw_sprite_stretched(STEAM_AVATAR, 0, _stx, _sty, _sts, _sts);
+                    var _spr = STEAM_AVATAR;
+                    var _sw  = sprite_get_width(_spr);
+                    var _sh  = sprite_get_height(_spr);
+                    var _ss  = _sts / max(_sw, _sh);
+                    
+                    draw_sprite_ext(STEAM_AVATAR, 0, _stx + _sts/2 - _sw*_ss/2, _sty + _sts/2 - _sw*_ss/2, _ss, _ss);
                     
                 } else {
                     draw_sprite_stretched_ext(THEME.box_r2, 0, _stx, _sty, _sts, _sts, COLORS._main_icon_dark);
-                    draw_sprite_ui(THEME.steam_creator, 0, _stx + _sts / 2, _sty + _sts / 2, 1, 1, 0, COLORS._main_icon, .5);
+                    
+                    var _spr = THEME.steam_creator;
+                    var _ss  = _sts / sprite_get_width(_spr) * .7;
+                    draw_sprite_ext(_spr, 0, _stx + _sts/2, _sty + _sts/2, _ss, _ss, 0, COLORS._main_icon, .5);
                 }
                 
                 draw_sprite_stretched_add(THEME.box_r2, 1, _stx, _sty, _sts, _sts, c_white, .35 + _hv * .25);
+                	
                 if(_hv) {
                 	_draggable = false;
-                	
                     if(ACCOUNT_ID == undefined) {
                         setTOOLTIP(__txt("Online Accounts"));
                         

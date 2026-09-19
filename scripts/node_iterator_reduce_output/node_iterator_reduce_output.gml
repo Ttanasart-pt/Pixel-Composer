@@ -17,6 +17,7 @@ function Node_Iterator_Reduce_Output(_x, _y, _group = noone) : Node(_x, _y, _gro
 	static getNextNodes = function() {
 		if(loop.bypassNextNode()) return loop.getNextNodes();
 		
+		loop.setRenderStatus(true);
 		logNodeDebug($"Loop complete");
 		return getNextNodesRaw();
 	}

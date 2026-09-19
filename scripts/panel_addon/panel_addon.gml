@@ -31,7 +31,7 @@ function Panel_Addon() : PanelContent() constructor {
 	
 	#region content
 		sc_addon = new scrollPane(w - padding * 2, h - (padding * 2 + ui(40)), function(_y, _m) {
-			draw_clear_alpha(COLORS.panel_bg_clear, 0);
+			draw_clear_alpha(COLORS.panel_bg_clear_inner, 0);
 			
 			var _focus = sc_addon.active;
 			var _hover = sc_addon.hover;
@@ -73,7 +73,7 @@ function Panel_Addon() : PanelContent() constructor {
 				
 				var hover = _hover && point_in_rectangle(_m[0], _m[1], 0, by, ww, by + hh);
 				
-				if(_addon.open) draw_sprite_stretched_ext(THEME.box_r2_clr, 1, 0, by, ww, hh, COLORS._main_icon_light, 1);
+				if(_addon.open) draw_sprite_stretched_ext(THEME.box_r2_clr, 0, 0, by, ww, hh, COLORS._main_icon, 1);
 				
 				var cc = hover? COLORS.section_hover : COLORS.section_bg;
 				if(hover) sc_addon.hover_content = true;
@@ -126,7 +126,8 @@ function Panel_Addon() : PanelContent() constructor {
 					var b  = buttonInstant_Pad(bsp, _bx, _by, bs, bs, _m, _hover, _focus, bt, THEME.folder, 0, bc, 1, ui(4));
 					if(b) hover = false;
 					if(b == 2) shellOpenExplorer(DIRECTORY + "Addons/" + _addon.name);
-				}
+					
+				} else buttonInstant_Pad(bsp, _bx, _by, bs, bs, _m, false, false, "", THEME.folder, 0, bc, .5, ui(4))
 				
 				_bx -= bs + ui(4);
 				var _addObj = _addon.activatedInstance;
@@ -138,7 +139,8 @@ function Panel_Addon() : PanelContent() constructor {
 							 dialogPanelCall(new _addObj.panelMain(_addObj));
 						else dialogPanelCall(new addonPanel(_addObj, _addObj.panelMain));
 					}
-				}
+				} else 
+					buttonInstant_Pad(bsp, _bx, _by, bs, bs, _m, false, false, "", THEME.addon_setting, 0, bc, .5, ui(4));
 				
 				if(hover && _m[0] < _bx && mouse_lpress(_focus))
 					_addon.open = !_addon.open;
