@@ -106,14 +106,16 @@ if(!LOADING && PROJECT.active && !PROJECT.safeMode) { //node step
 #endregion
 
 #region window
-	if(_modified != PROJECT.modified) {
-		_modified = PROJECT.modified;
-		
-		var cap = "";
-		if(PROJECT.safeMode) cap += "[SAFE MODE] ";
-		if(PROJECT.readonly) cap += "[READ ONLY] ";
-		cap += filename_name_only(PROJECT.path) + (PROJECT.modified? "*" : "") + " - Pixel Composer";
-		
+	var _name = filename_name_only(PROJECT.path);
+	var _proj = _name == ""? "Untitled" : _name;
+	
+	var cap = "";
+	if(PROJECT.safeMode) cap += "[SAFE MODE] ";
+	if(PROJECT.readonly) cap += "[READ ONLY] ";
+	cap += _proj + (PROJECT.modified? "*" : "") + " - Pixel Composer";
+	
+	if(cap != _caption) {
+		_caption = cap;
 		window_set_caption(cap);
 	}
 #endregion
