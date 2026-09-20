@@ -2836,6 +2836,7 @@
     {"name":"panel_data","order":5,"path":"scripts/panel_data/panel_data.yy",},
     {"name":"panel_default_editor","order":10,"path":"scripts/panel_default_editor/panel_default_editor.yy",},
     {"name":"panel_dev_project_manager","order":6,"path":"scripts/panel_dev_project_manager/panel_dev_project_manager.yy",},
+    {"name":"panel_dialog_manager","order":25,"path":"scripts/panel_dialog_manager/panel_dialog_manager.yy",},
     {"name":"panel_display_additional","order":15,"path":"scripts/panel_display_additional/panel_display_additional.yy",},
     {"name":"panel_file_explorer","order":16,"path":"scripts/panel_file_explorer/panel_file_explorer.yy",},
     {"name":"panel_function","order":6,"path":"scripts/panel_function/panel_function.yy",},

@@ -355,6 +355,7 @@ function Panel_Menu() : PanelContent() constructor {
             ])}),
             
             -1, 
+            MENU_ITEMS.dialog_manager_panel,
             MENU_ITEMS.steam_workshop_panel,
         ]];
         

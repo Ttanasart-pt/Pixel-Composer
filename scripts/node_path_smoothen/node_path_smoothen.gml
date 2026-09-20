@@ -5,6 +5,7 @@ function Node_Path_Smoothen(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	
 	////- =Path
 	newInput( 0, nodeValue_Path(  "Path" ));
+	newInput( 6, nodeValue_Bool(  "Loop",        false ));
 	newInput( 1, nodeValue_Range( "Range",       [0,1] ));
 	newInput( 2, nodeValue_Bool(  "Clamp Curve", false ));
 	
@@ -12,12 +13,12 @@ function Node_Path_Smoothen(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	newInput( 3, nodeValue_Slider( "Span",  .02, [0,.1,.001] ));
 	newInput( 4, nodeValue_Slider( "Blend",   1 ));
 	newInput( 5, nodeValue_Int(    "Step",    1 ));
-	// 6
+	// 7
 	
 	newOutput(0, nodeValue_Output("Path", VALUE_TYPE.pathnode, noone));
 	
 	input_display_list = [ 
-		[ "Path",      true ],  0,  1,  2, 
+		[ "Path",      true ],  0,  6,  1,  2, 
 		[ "Smoothen", false ],  3,  4,  5, 
 	];
 	
@@ -27,6 +28,7 @@ function Node_Path_Smoothen(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 		range = [0,1];
 		range_clamp = false;
 		
+		loop  = false;
 		span  = 0; 
 		blend = 0;
 		sstep = 1;
@@ -142,7 +144,7 @@ function Node_Path_Smoothen(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 		_outData.range      = _data[ 1];
 		_outData.range_clamp= _data[ 2];
 		
-		_outData.loop       = _data[ 0];
+		_outData.loop       = _data[ 6];
 		
 		_outData.span  = _data[ 3];
 		_outData.blend = _data[ 4];

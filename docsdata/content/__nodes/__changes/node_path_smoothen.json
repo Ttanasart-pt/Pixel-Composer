@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.10.103",
+    "changes": [
+      {
+        "date": "2026-09-20T06:37:10.708Z",
+        "node": "Smoothen Path",
+        "commit": "**Smoothen Path**: Add loop option."
+      }
+    ]
+  },
+  {
     "version": "1.21.8.005",
     "changes": [
       {
