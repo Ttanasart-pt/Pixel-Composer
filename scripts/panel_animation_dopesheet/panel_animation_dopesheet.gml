@@ -3858,7 +3858,7 @@ function Panel_Animation_Dopesheet() {
 					if(mouse_lpress(pFOCUS)) marker_dragging = _mkHover;
 					if(mouse_rpress(pFOCUS)) {
 						menuCall("", [
-							menuItem(__txt("Edit Marker..."), function(m) /*=>*/ 
+							menuItem(__txt("Edit Marker") + "...", function(m) /*=>*/ 
 								{return dialogPanelCall(new Panel_Animation_Marker_Settings(m), mouse_mx + ui(8), mouse_my + ui(8), 
 									{ anchor: ANCHOR.left | ANCHOR.bottom })}).setParam(_mkHover),
 							menuItem(__txt("Remove Marker"),  function(m) /*=>*/ {return array_remove(PROJECT.timelineMarkers, m)}).setParam(_mkHover),

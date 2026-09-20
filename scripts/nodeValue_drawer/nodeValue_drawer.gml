@@ -449,7 +449,7 @@ function drawWidget(xx, yy, ww, _m, _jun, global_var = true, _hover = false, _fo
 							if(b == 3) {
 								mbRight = false;
 								menuCall("", [ 
-									new MenuItem(__txt("Edit Default..."), function(j) /*=>*/ {return dialogPanelCall(new Panel_Default_Editor(j.node))}).setParam(jun), 
+									new MenuItem(__txt("Edit Default") + "...", function(j) /*=>*/ {return dialogPanelCall(new Panel_Default_Editor(j.node))}).setParam(jun), 
 									new MenuItem(__txt("Reset Default"), function(j) /*=>*/ {return j.clearDefault()}).setParam(jun), 
 								]);
 							}

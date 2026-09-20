@@ -83,7 +83,8 @@ function Node_GMRoom(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			
 			var misalign = (room_resizing_area[0] % maxTileSize[0] != 0) || (room_resizing_area[1] % maxTileSize[1] != 0) ||
 						   (room_resizing_area[2] % maxTileSize[0] != 0) || (room_resizing_area[3] % maxTileSize[1] != 0);
-			var _tooltip = misalign? __txt("Warning: room size not divisible by tile size. May cause tile shifting.") : __txt("Apply");
+			var _tooltip = misalign? __txt("Warning") + ":" + __txt("gml_room_tile_misalign_msg", "room size not divisible by tile size. May cause tile shifting.") : 
+				__txt("Apply");
 			
 			_bx += _wdh;
 			if(buttonInstant(THEME.button_right, _bx, _wdy, _wdh, _wdh, _m, _hover, _focus, _tooltip, THEME.toolbar_check, 0, 

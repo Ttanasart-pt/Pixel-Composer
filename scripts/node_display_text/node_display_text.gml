@@ -134,7 +134,7 @@ function Node_Display_Text(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 							
 							var _reac = button_reactive(string_to_var(_data));
 							if(_reac > 0) {
-								draw_sprite_stretched_points(THEME.box_r5, 4, _tx0, _ty0, _tx1, _ty1, COLORS._main_accent, _reac);
+								draw_sprite_stretched_points(THEME.box_r5, 0, _tx0, _ty0, _tx1, _ty1, COLORS._main_accent, _reac);
 								
 								draw_set_color(merge_color(0, COLORS.panel_bg_clear_inner, 0.5));
 								draw_set_alpha(_reac);

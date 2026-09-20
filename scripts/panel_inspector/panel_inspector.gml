@@ -540,7 +540,7 @@ function Panel_Inspector() : PanelContent() constructor {
             		array_push(arr, menuItem(_glInp.name, function(d) /*=>*/ {return __dialog_junction.setExpression(d.name)})).setParam({ name : _glInp.name });
             	}
             	
-            	array_push(arr, -1, menuItem(__txt("New Globalvar..."), function() /*=>*/ {
+            	array_push(arr, -1, menuItem(__txt("New Globalvar") + "...", function() /*=>*/ {
             		var tb = textboxCall("globalvar", function(txt) /*=>*/ {
             			if(txt == "") return;
             			
@@ -847,7 +847,7 @@ function Panel_Inspector() : PanelContent() constructor {
 						__chainItemConnect = _chainItem;
 						
 						var _menu = [
-							menuItem(__txt("Add Node..."), function(_insp) /*=>*/ {
+							menuItem(__txt("Add Node") + "...", function(_insp) /*=>*/ {
 								var dx  = mouse_mx + 8;
 								var dy  = mouse_my + 8;
 								var dia = instance_create_depth(dx, dy, 0, o_dialog_add_node, { context: _insp.group });

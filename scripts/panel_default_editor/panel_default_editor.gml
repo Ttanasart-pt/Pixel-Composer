@@ -125,7 +125,7 @@ function Panel_Default_Editor(_node) : PanelContent() constructor {
 			draw_sprite_ui(THEME.path_open, 0, bx + bs/2, by + ah/2, .75, .75, 0, cc);
 			
 			if(hov) {
-				setTOOLTIP(__txt("Open Default File..."));
+				setTOOLTIP(__txt("Open Default File") + "...");
 				if(mouse_lpress(pFOCUS)) shellOpenExplorer(defPath);
 			}
 		} else {

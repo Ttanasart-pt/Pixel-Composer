@@ -227,7 +227,7 @@ function menuCall(menu_id = "", menu = [], _x = 0, _y = 0, align = fa_left, _pie
 		
 		if(key_mod_press(ALT)) {
 			if(array_empty(_piemenus))
-				return menuCall("", [ menuItem(__txt("Create pie menu..."), function(m) /*=>*/ {return menuItemEdit(m,true)}).setParam(pie_id) ], _x, _y, fa_left); 
+				return menuCall("", [ menuItem(__txt("Create pie menu") + "...", function(m) /*=>*/ {return menuItemEdit(m,true)}).setParam(pie_id) ], _x, _y, fa_left); 
 			return pieMenuCall(pie_id, _piemenus, _x, _y);
 			
 		} else if(!array_empty(_piemenus)) {
@@ -248,7 +248,7 @@ function menuCall(menu_id = "", menu = [], _x = 0, _y = 0, align = fa_left, _pie
 	}
 	
 	if(_pie && menu_id != "") 
-		array_push(menu, -1, menuItem(__txt("Create pie menu..."), function(m) /*=>*/ {return menuItemEdit(m,true)}).setParam(pie_id));
+		array_push(menu, -1, menuItem(__txt("Create pie menu") + "...", function(m) /*=>*/ {return menuItemEdit(m,true)}).setParam(pie_id));
 	
 	var dia  = dialogCall(o_dialog_menubox, _x, _y);
 	if(dia) {

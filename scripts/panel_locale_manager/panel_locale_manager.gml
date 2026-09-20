@@ -32,6 +32,10 @@ function Panel_Locale_Manager() : PanelContent() constructor {
 		text_total    = array_length(base_text_key);
 		node_total    = 0;
 		
+		keys_config   = struct_get_names(base_config); array_sort(keys_config, true);
+		keys_text     = struct_get_names(base_text);   array_sort(keys_text,   true);
+		keys_node     = struct_get_names(base_node);   array_sort(keys_node,   true);
+		
 		for( var i = 0, n = array_length(base_node_key); i < n; i++ ) {
 			var _node = base_node[$ base_node_key[i]];
 			
@@ -51,6 +55,14 @@ function Panel_Locale_Manager() : PanelContent() constructor {
 			words: 0, 
 			nodes: 0, 
 			notes: 0, 
+			
+			words_total: 0, 
+			nodes_total: 0, 
+			notes_total: 0, 
+			
+			words_current: 0, 
+			nodes_current: 0, 
+			notes_current: 0, 
 		};
 		
 		current_fonts = [];
@@ -133,6 +145,14 @@ function Panel_Locale_Manager() : PanelContent() constructor {
 			current_progress.words = _text_translated / text_total;
 			current_progress.nodes = _node_translated / node_total;
 			current_progress.notes = array_length(data_notes) / array_length(base_notes);
+			
+			current_progress.words_total = text_total;
+			current_progress.nodes_total = node_total;
+			current_progress.notes_total = array_length(base_notes);
+			
+			current_progress.words_current = _text_translated;
+			current_progress.nodes_current = _node_translated;
+			current_progress.notes_current = array_length(data_notes);
 			
 		} setLocal(PREFERENCES.local);
 		
@@ -219,7 +239,9 @@ function Panel_Locale_Manager() : PanelContent() constructor {
 						if(_base_key == "" || has(data_text, _base_key))
 							_text_translated++;
 					}
-					current_progress.words = _text_translated / text_total;
+					current_progress.words         = _text_translated / text_total;
+					current_progress.words_total   = text_total;
+					current_progress.words_current = _text_translated;
 					break;
 				
 				case "nodes" :
@@ -243,19 +265,24 @@ function Panel_Locale_Manager() : PanelContent() constructor {
 						_node_translated += array_length(_data.outputs);
 					}
 					
-					current_progress.nodes = _node_translated / node_total;
+					current_progress.nodes         = _node_translated / node_total;
+					current_progress.nodes_total   = node_total;
+					current_progress.nodes_current = _node_translated;
 					break;
 				
 			}
 		}
 	#endregion
 	
-	static drawStruct = function(_base, _curr, _x, _y, _w, _h, _m, _hov, _foc) {
+	////- Draw
+	
+	static drawStruct = function(_keys = undefined, _base, _curr, _x, _y, _w, _h, _m, _hov, _foc) {
 		var hh = 0;
 		var hg = ui(20);
 		var cx = _x + _w / 3;
 		
-		var _keys = struct_get_names(_base);
+		_keys = _keys ?? struct_get_names(_base);
+		
 		for( var i = 0, n = array_length(_keys); i < n; i++ ) {
 			var _key = _keys[i];
 			if(_key == "") continue;
@@ -273,7 +300,7 @@ function Panel_Locale_Manager() : PanelContent() constructor {
 			
 			if(_valC != undefined) {
 				if(is_struct(_valC)) {
-					var _sh = drawStruct(_valB, _valC, _x + ui(32), _y + hg, _w - ui(32), _h, _m, _hov, _foc);
+					var _sh = drawStruct(undefined, _valB, _valC, _x + ui(32), _y + hg, _w - ui(32), _h, _m, _hov, _foc);
 					_hh += _sh + ui(4);
 					
 				} else if(_draw) {
@@ -302,15 +329,15 @@ function Panel_Locale_Manager() : PanelContent() constructor {
 		var hg = ui(20);
 		
 		switch(pages[page]) {
-			case "config" : file_current = data_config; file_base = base_config; break;
-			case "words"  : file_current = data_text;   file_base = base_text;   break;
-			case "nodes"  : file_current = data_node;   file_base = base_node;   break;
+			case "config" : file_keys = keys_config; file_base = base_config; file_current = data_config; break;
+			case "words"  : file_keys = keys_text;   file_base = base_text;   file_current = data_text;   break;
+			case "nodes"  : file_keys = keys_node;   file_base = base_node;   file_current = data_node;   break;
 		}
 		
 		BLEND_ADD
 		switch(pages[page]) {
 			case "config" : case "words" : case "nodes" :
-				_h  = drawStruct(file_base, file_current, 0, _y, ww, hh, _m, hov, foc);
+				_h  = drawStruct(file_keys, file_base, file_current, 0, _y, ww, hh, _m, hov, foc);
 				break;
 				
 			case "notes" : 
@@ -350,9 +377,8 @@ function Panel_Locale_Manager() : PanelContent() constructor {
 				draw_sprite_stretched_ext(THEME.box_r2, 0, lw - ui(2), 0, ui(4), hh, CDEF.main_dkblack, .25);
 				
 				var yy = _y;
-				if(fonts_data != undefined) {
-					_h = drawStruct(fonts_data, fonts_data, lw + ui(8), yy, ww - lw - ui(8), hh, _m, hov, foc);
-				}
+				if(fonts_data != undefined)
+					_h = drawStruct(undefined, fonts_data, fonts_data, lw + ui(8), yy, ww - lw - ui(8), hh, _m, hov, foc);
 				break;
 		}
 		BLEND_NORMAL
@@ -415,7 +441,12 @@ function Panel_Locale_Manager() : PanelContent() constructor {
 				case "words"  : 
 				case "nodes"  : 
 				case "notes"  : 
-					var _prg = current_progress[$ _page] ?? 0;
+					var _prg = current_progress[$ _page              ] ?? 0;
+					var _tot = current_progress[$ _page + "_total"   ] ?? 0;
+					var _cur = current_progress[$ _page + "_current" ] ?? 0;
+					
+					var _mis = _tot - _cur;
+					
 					var _pw = fw - ui(16);
 					var _ph = ui(8);
 					
@@ -428,11 +459,14 @@ function Panel_Locale_Manager() : PanelContent() constructor {
 					draw_set_text(f_p3, fa_right, fa_bottom, _prg >= 1? COLORS._main_value_positive : COLORS._main_text_sub);
 					draw_text(fx + fw - ui(8), fy + ui(24), $"{_prg * 100}%");
 					
+					var per_hov = pHOVER && point_in_rectangle(mx, my, fx + fw/2, fy, fx + fw, fy + ui(24));
+					if(per_hov) setTOOLTIP($"{_cur}/{_tot}");
+					
 					var bw = fw / (2 + (_page == "words"));
 					var bx = fx;
 					var by = fy + ui(48);
 					
-					var bt = __txt("Export Missing Text");
+					var bt = __txtas("export_missing_text", "Export {0} Missing Text", _mis);
 					if(buttonInstant_Pad(THEME.button_hide_fill, bx, by, bw, bh, m, pHOVER, pFOCUS, bt, THEME.dFile_save) == 2) 
 						exportMissing(_page, false);
 					
@@ -444,7 +478,7 @@ function Panel_Locale_Manager() : PanelContent() constructor {
 					}
 					
 					bx += bw + 1;
-					var bt = __txt("Import Missing Text");
+					var bt = __txtas("export_missing_text", "Import {0} Missing Text", _mis);
 					if(buttonInstant_Pad(THEME.button_hide_fill, bx, by, bw, bh, m, pHOVER, pFOCUS, bt, THEME.dFile_load) == 2) 
 						importMissing(_page);
 					break;

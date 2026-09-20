@@ -89,6 +89,13 @@ function __txta(txt) {
 	return _txt;
 }
 
+function __txtas(txt, def = txt) {
+	var _txt = __txt(txt, def);
+	for(var i = 2; i < argument_count; i++)
+		_txt = string_replace_all(_txt, "{" + string(i-1) + "}", string(argument[i]));
+	return _txt;
+}
+
 function __txt_node_name(node, def = "") {
 	INLINE
 	

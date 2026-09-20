@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.22.10.2",
+    "changes": [
+      {
+        "date": "2026-09-20T09:03:56.083Z",
+        "node": "",
+        "commit": "Update base locale data."
+      }
+    ]
+  },
+  {
     "version": "1.21.9.206",
     "changes": [
       {

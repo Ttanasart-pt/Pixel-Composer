@@ -2440,7 +2440,7 @@ function Panel_Preference() : PanelContent() constructor {
     		var bw = ui(128);
     		
     		draw_set_text(f_p3, fa_left, fa_center, COLORS._main_text);
-    		var _lt = __txt("Startup error causes preference value to be resetted. Preference is now read-only. Backup the current Preference files and restart.");
+    		var _lt = __txt("startup_error_msg", "Startup error causes preference value to be resetted. Preference is now read-only. Backup the current Preference files and restart.");
     		var _tw = pw - bw - ui(8);
     		var _th = string_height_ext(_lt, -1, _tw);
     		

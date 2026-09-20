@@ -595,7 +595,7 @@ function nodeValueUnit(__nodeValue) constructor {
 		if(upd) _nodeValue.node.triggerRender();
 	}
 	
-	tooltip       = new tooltipSelector("Unit", ["Pixel", "Fraction"]).setSubtitle(__txt("Shift: change without conversion"));
+	tooltip       = new tooltipSelector("Unit", ["Pixel", "Fraction"]).setSubtitle(__txt("Shift") + ": " + __txt("Change without conversion"));
 	triggerButton = button(function() /*=>*/ { 
 		if(key_mod_press(SHIFT)) {
 			mode = !mode;

@@ -3146,7 +3146,7 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
             
             if(is(cnt, Node_Collection) && cnt.show_instance) {
             	draw_set_text(f_p2b, fa_left, fa_center, COLORS._main_text_accent);
-            	tt = __txt("[base]");
+            	tt = "[" + __txt("node_instance_base_marker", "base") + "]";
             	tw = string_width(tt);
             	
             	draw_text_add(xx, tbh, tt);

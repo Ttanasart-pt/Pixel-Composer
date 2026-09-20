@@ -123,7 +123,7 @@ function setMenu(menu) {
 	}
 	
 	name_width += ui(16 + 4) + hght;
-	if(array_empty(menus)) menus = [ menuItem(__txt("Create pie menu..."), function() /*=>*/ {return menuItemEdit(menu_id,true)}) ];
+	if(array_empty(menus)) menus = [ menuItem(__txt("Create pie menu") + "...", function() /*=>*/ {return menuItemEdit(menu_id,true)}) ];
 	
 	refreshAngles();
 	return self;
