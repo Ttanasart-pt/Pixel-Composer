@@ -519,6 +519,8 @@ function Panel_Animation() : PanelContent() constructor {
         var _prpHv  = PANEL_INSPECTOR.prop_hover;
         var _prpAny = _prpHv == noone;
         
+        var _vCtx = PROJECT.animationDisplay.view_context;
+        
         for( var i = 0, n = array_length(folder.contents); i < n; i++ ) {
             var _cont = folder.contents[i];
             if(!_cont.active) continue;
@@ -536,13 +538,19 @@ function Panel_Animation() : PanelContent() constructor {
             
             if(is(_cont, timelineItemNode)) {
                 var _node = _cont.node;
-                if(!is_struct(_node))                                   continue;
-                if(_node.instanceBase != undefined)                     continue;
-                if(!show_hidden && _node.attributes.timeline_hide)      continue;
+                if(!is_struct(_node))                              continue;
+                if(_node.instanceBase != undefined)                continue;
+                if(!show_hidden && _node.attributes.timeline_hide) continue;
                 
-                if(PROJECT.animationDisplay.view_context == 1 && !_node.isChildOf(_ctx))         continue;
-                if(PROJECT.animationDisplay.view_context == 2 && _node.group != _ctx)            continue;
-                if(PROJECT.animationDisplay.view_context == 3 && _selAny && !_node.is_selecting) continue;
+                     if(_vCtx == 1 && !_node.isChildOf(_ctx)) continue;
+                else if(_vCtx == 2 && _node.group != _ctx)    continue;
+                else if(_vCtx == 3) {
+                	var disp = true;
+                	if(_selAny && !_node.is_selecting && PANEL_INSPECTOR.inspecting != _node) 
+                		disp = false;
+                		
+                	if(!disp) continue;
+                }
                 
                 var _anim = [];
                 var _prop = [];

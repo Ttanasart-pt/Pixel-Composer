@@ -107,8 +107,8 @@
         
         registerFunction(an, "New Folder",                "", n, panel_animation_dopesheet_folder        ).setMenu("animation_new_folder",        THEME.folder     )
         registerFunction(an, "New Folder From Selection", "", n, panel_animation_dopesheet_folder_select ).setMenu("animation_new_folder_select", THEME.folder_sel )
-        registerFunction(an, "Dopesheet Expand",          "", n, panel_animation_dopesheet_expand        ).setMenu("animation_dopesheet_expand"   )
-        registerFunction(an, "Dopesheet Collapse",        "", n, panel_animation_dopesheet_collapse      ).setMenu("animation_dopesheet_collapse" )
+        registerFunction(an, "Expand All",                "", n, panel_animation_dopesheet_expand        ).setMenu("animation_dopesheet_expand"   )
+        registerFunction(an, "Collapse All",              "", n, panel_animation_dopesheet_collapse      ).setMenu("animation_dopesheet_collapse" )
         
         registerFunction(an, "Move Keys",            "G", n, panel_animation_keys_move            ).setMenu("animation_keys_move"       )
         registerFunction(an, "Scale Keys",           "S", n, panel_animation_keys_scale           ).setMenu("animation_keys_scale"      )
@@ -520,6 +520,9 @@ function Panel_Animation_Dopesheet() {
 	    global.menuItems_animation_name_empty = [
 	        "animation_new_folder",
 	        "animation_new_folder_select",
+	        -1,
+	        "animation_dopesheet_expand", 
+			"animation_dopesheet_collapse", 
 	    ];
 	    
 	    global.menuItems_animation_name_item = [
@@ -527,6 +530,9 @@ function Panel_Animation_Dopesheet() {
 	        -1,
 	        "animation_new_folder",
 	        "animation_new_folder_select",
+	        -1,
+	        "animation_dopesheet_expand", 
+			"animation_dopesheet_collapse", 
 	    ];
 	    
 	    global.menuItems_animation_name_group = [
@@ -536,6 +542,9 @@ function Panel_Animation_Dopesheet() {
 	        -1,
 	        "animation_new_folder",
 	        "animation_new_folder_select",
+	        -1,
+	        "animation_dopesheet_expand", 
+			"animation_dopesheet_collapse", 
 	    ];
 	    
 	    global.menuItems_animation_name_prop_axis = [

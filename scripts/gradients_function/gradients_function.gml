@@ -8,7 +8,9 @@
 		
 		oklab  = 3,
 		srgb   = 4,
-		// 6
+		
+		cmyk   = 6, 
+		// 7
 	}
 	
 	global.gradient_sort_list = ds_priority_create();
@@ -163,6 +165,8 @@ function gradientObject(color = ca_black) constructor {
 				case GRADIENT_INTER.hueInv : return merge_color_hsva (_pkey.value, _key.value, rat,  true);
 				
 				case GRADIENT_INTER.oklab  : return merge_color_oklab(_pkey.value, _key.value, rat);
+				case GRADIENT_INTER.cmyk   : return merge_color_cmyk(_pkey.value, _key.value, rat);
+				
 				case GRADIENT_INTER.none   : return _pkey.value;
 			}
 		}

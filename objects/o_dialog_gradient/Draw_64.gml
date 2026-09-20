@@ -205,6 +205,7 @@ DIALOG_WINDOW_START
 		case GRADIENT_INTER.hueInv : tt = 3; break;
 		
 		case GRADIENT_INTER.oklab :  tt = 4; break;
+		case GRADIENT_INTER.cmyk  :  tt = 5; break;
 	}
 	
 	bx -= sw;

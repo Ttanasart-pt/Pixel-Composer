@@ -652,14 +652,17 @@ function Panel_Menu() : PanelContent() constructor {
             var ny00 = ny0 - nh / 2;
             
             if(RENDERING != undefined) {
-                var nw = hori? ui(104) : w - ui(16);
+            	draw_set_font(font);
+            	
+            	var txt = __txt("Rendering") + "...";
+                var nw  = hori? nh + string_width(txt) + ui(8) : w - ui(16);
                 
-                if(!MAC) draw_sprite_stretched_ext(THEME.panel_menu_widget, 1, nx0, ny00, nw, nh);
+                if(!MAC) draw_sprite_stretched_add(THEME.panel_menu_widget, 1, nx0, ny00, nw, nh, COLORS._main_value_positive, .5);
                 
                 draw_sprite_ui(THEME.loading_s, 0, nx0 + nh/2, ny0, .65, .65, current_time / 2, COLORS._main_icon, .8);
                 
                 draw_set_text(font, fa_left, fa_center, COLORS._main_value_positive);
-                draw_text_add(nx0 + nh, ny0, __txt("Rendering") + "...");
+                draw_text_add(nx0 + nh, ny0, txt);
                 
             } else {
                 var warning_amo = ds_list_size(WARNING);
@@ -769,6 +772,8 @@ function Panel_Menu() : PanelContent() constructor {
             var bspr = THEME.button_hide_fill;
             
             if(_action) {
+            	var bs = min(1, bh / 36);
+            	
                 for( var i = 0, n = array_length(action_buttons); i < n; i++ ) {
                     var action = action_buttons[i];
                     if(MAC && action == WINDOW_ACTION.Fullscreen) continue;
@@ -780,7 +785,7 @@ function Panel_Menu() : PanelContent() constructor {
                         case WINDOW_ACTION.Exit:
                         	var bp = THEME.window_exit_icon;
                         	var bc = COLORS._main_accent;
-                            var b  = buttonInstant(bspr, bx, by, bw, bh, m, pHOVER, true, "", bp, 0, bc);
+                            var b  = buttonInstant(bspr, bx, by, bw, bh, m, pHOVER, true, "", bp, 0, bc, 1, bs);
                             if(b) _draggable = false;
                             if(b == 2) {
                             	if(panel.dialog) instance_destroy(panel.dialog);
@@ -794,7 +799,7 @@ function Panel_Menu() : PanelContent() constructor {
                             
                             var bp = THEME.window_maximize_icon;
                             var bc = [ COLORS._main_icon, CDEF.lime ];
-                            var b  = buttonInstant(bspr, bx, by, bw, bh, m, pHOVER, true, "", bp, win_max, bc);
+                            var b  = buttonInstant(bspr, bx, by, bw, bh, m, pHOVER, true, "", bp, win_max, bc, 1, bs);
                             if(b) _draggable = false;
                             if(b == 2) {
                             	switch(OS) {
@@ -825,7 +830,7 @@ function Panel_Menu() : PanelContent() constructor {
                         case WINDOW_ACTION.Minimize:
                         	var bp = THEME.window_minimize_icon;
                             var bc = [ COLORS._main_icon, CDEF.yellow ];
-                            var b  = buttonInstant(bspr, bx, by, bw, bh, m, pHOVER, true, "", bp, 0, bc);
+                            var b  = buttonInstant(bspr, bx, by, bw, bh, m, pHOVER, true, "", bp, 0, bc, 1, bs);
                             if(b) _draggable = false;
                             if(b == 2) winMan_Minimize();
                             break;
@@ -834,7 +839,7 @@ function Panel_Menu() : PanelContent() constructor {
                             var win_full = window_is_fullscreen;
                             var bp = THEME.window_fullscreen_icon;
                             var bc = [ COLORS._main_icon, CDEF.cyan ];
-                            var b  = buttonInstant(bspr, bx, by, bw, bh, m, pHOVER, true, "", bp, win_full, bc);
+                            var b  = buttonInstant(bspr, bx, by, bw, bh, m, pHOVER, true, "", bp, win_full, bc, 1, bs);
                             if(b) _draggable = false;
                             if(b == 2) {
                                 if(OS == os_windows)

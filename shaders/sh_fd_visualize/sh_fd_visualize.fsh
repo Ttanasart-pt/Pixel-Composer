@@ -130,7 +130,7 @@
 #endregion -- curve --
 
 #pragma use(gradient)
-#region -- gradient -- [1787822570.23723]
+#region -- gradient -- [1789802993.4377005]
 	#ifdef _YY_HLSL11_ 
         #define GRADIENT_LIMIT 128
     #else 
@@ -227,6 +227,29 @@
 		return hsv2rgb(h);
 	}
 
+	vec4 rgb2cmyk(vec3 c) {
+		float k = 1.0 - max(max(c.r, c.g), c.b);
+		float cmyk_c = (1.0 - c.r - k) / (1.0 - k);
+		float cmyk_m = (1.0 - c.g - k) / (1.0 - k);
+		float cmyk_y = (1.0 - c.b - k) / (1.0 - k);
+		return vec4(cmyk_c, cmyk_m, cmyk_y, k);
+	}
+
+	vec3 cmyk2rgb(vec4 c) {
+		float k = c.w;
+		float r = (1.0 - c.x) * (1.0 - k);
+		float g = (1.0 - c.y) * (1.0 - k);
+		float b = (1.0 - c.z) * (1.0 - k);
+		return vec3(r, g, b);
+	}
+
+	vec3 cmykMix(vec3 c0, vec3 c1, float t) {
+		vec4 cmyk0 = rgb2cmyk(c0);
+		vec4 cmyk1 = rgb2cmyk(c1);
+		vec4 cmyk = mix(cmyk0, cmyk1, t);
+		return cmyk2rgb(cmyk);
+	}
+
 	vec4 gradientEval(in float prog) {
 		if(gradient_use_map == 1) {
 			vec2 samplePos = mix(gradient_map_range.xy, gradient_map_range.zw, prog);
@@ -263,6 +286,9 @@
 					
 					else if(gradient_blend == 4)
 						return vec4(rgbMix(c0, c1, t), a);
+
+					else if(gradient_blend == 6)
+						return vec4(cmykMix(c0, c1, t), a);
 				}
 				break;
 			}

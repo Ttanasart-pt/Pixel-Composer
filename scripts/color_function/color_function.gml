@@ -267,6 +267,48 @@
 	} 
 #endregion
 
+#region cmyk
+	function make_color_cmyk(c, a = 1) {
+		INLINE
+		var k = c[3];
+		var r = (1. - c[0]) * (1. - k);
+		var g = (1. - c[1]) * (1. - k);
+		var b = (1. - c[2]) * (1. - k);
+		return make_color_rgba(r * 255, g * 255, b * 255, a * 255);
+	}
+
+	function color_cmyk(col) {
+		INLINE
+		var r  = _color_get_red(col);
+		var g  = _color_get_green(col);
+		var b  = _color_get_blue(col);
+		var k  = 1. - max(max(r, g), b);
+		var cc = (1. - r - k) / (1. - k);
+		var mm = (1. - g - k) / (1. - k);
+		var yy = (1. - b - k) / (1. - k);
+		return [cc, mm, yy, k];
+	}
+
+	function merge_color_cmyk(c0, c1, t) {
+		INLINE
+
+		var cmyk0 = color_cmyk(c0);
+		var cmyk1 = color_cmyk(c1);
+
+		var cmyk = [
+			lerp(cmyk0[0], cmyk1[0], t),
+			lerp(cmyk0[1], cmyk1[1], t),
+			lerp(cmyk0[2], cmyk1[2], t),
+			lerp(cmyk0[3], cmyk1[3], t),
+		];
+		
+		var a = __clamp255_mf0 lerp(color_get_alpha(c0), color_get_alpha(c1), t) __clamp255_mf1;
+		
+		return make_color_cmyk(cmyk, a);
+	}
+
+#endregion
+
 #region grey
 	function make_color_grey(g)      { INLINE return int64(round(g*255) + (round(g*255) << 8) + (round(g*255) << 16) + (255 << 24)); }
 	function _color_get_light(color) { INLINE return 0.299 * _color_get_red(color) + 0.587 * _color_get_green(color) + 0.114 * _color_get_blue(color); }

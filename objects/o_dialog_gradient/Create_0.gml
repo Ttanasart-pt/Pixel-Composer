@@ -65,11 +65,12 @@ GRADIENTS_FOLDER.forEach(function(f) /*=>*/ { if(f.content == undefined) f.conte
 		.setIcon(THEME.accept, 0, COLORS._main_icon_dark);
 	
 	sb_blending = new scrollBox([
-		__txt("gradient_editor_blend_hard",  "Solid"),
-		__txt("gradient_editor_blend_RGB",   "RGB"),  
-		__txt("gradient_editor_blend_HSV",   "HSV"),  
-		__txt("gradient_editor_blend_HSV",   "HSV Inverted"),  
-		__txt("gradient_editor_blend_OKLAB", "OKLAB"),
+		__txt("gradient_editor_blend_hard",    "Solid"),
+		__txt("gradient_editor_blend_RGB",     "RGB"),  
+		__txt("gradient_editor_blend_HSV",     "HSV"),  
+		__txt("gradient_editor_blend_HSV_inv", "HSV Inverted"),  
+		__txt("gradient_editor_blend_OKLAB",   "OKLAB"),
+		__txt("gradient_editor_blend_CMYK",    "CMYK"),
 		
 	], function(i) /*=>*/ {
 		switch(i) {
@@ -78,6 +79,7 @@ GRADIENTS_FOLDER.forEach(function(f) /*=>*/ { if(f.content == undefined) f.conte
 			case 2 :  gradient.type = GRADIENT_INTER.hue;    break;
 			case 3 :  gradient.type = GRADIENT_INTER.hueInv; break;
 			case 4 :  gradient.type = GRADIENT_INTER.oklab;  break;
+			case 5 :  gradient.type = GRADIENT_INTER.cmyk;   break;
 		}
 		onModify(gradient);
 		

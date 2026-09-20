@@ -213,6 +213,7 @@ function __EXPORT_SHOWCASE(project = PROJECT) {
 	
 	var _oname = filename_name_only(project.path); 
 	if(string_pos("_", _oname)) _oname = string_split(_oname, "_")[0];
+	_oname = string_replace_all(_oname, "-", " ");
 	
 	var path = get_save_filename_compat("Directory", _oname); 
 	key_release();

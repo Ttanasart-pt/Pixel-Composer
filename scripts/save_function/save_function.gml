@@ -98,7 +98,6 @@ function SAVE_AT(project = PROJECT, path = "", _param = new save_param()) {
 		}
 	}
 	
-	if(file_exists_empty(path)) file_delete(path);
 	var _ext = filename_ext_raw(path);
 	
 	var _map = project.serialize(_param.save_addon, _param.readonly);
@@ -169,6 +168,8 @@ function SAVE_AT(project = PROJECT, path = "", _param = new save_param()) {
 		buffer_poke(_buf, 4, buffer_u32, _headerSize);
 		
 		buffer_copy(_raw, 0, buffer_get_size(_raw), _buf, _headerSize);
+		
+		// if(file_exists_empty(path)) file_delete(path);
 	    buffer_save(_buf, path);
 		
 		buffer_delete(_raw);
