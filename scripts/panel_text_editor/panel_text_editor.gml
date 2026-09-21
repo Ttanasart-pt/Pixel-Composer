@@ -66,7 +66,7 @@ function Panel_Text_Editor(_textArea, _inputFunc, _context) : PanelContent() con
 		var _text    = inputFunc();
 		var _prevBox = editor.boxColor;
 		
-		editor.setMaxHeight(th);
+		editor.setFixHeight(th);
 		editor.register();
 		editor.setFocusHover(pFOCUS, pHOVER);
 		editor.shift_new_line = shift_new_line;

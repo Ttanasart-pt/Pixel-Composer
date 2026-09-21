@@ -30,7 +30,8 @@ function textArea(_input, _onModify) : textInput(_input, _onModify) constructor 
 	
 	min_lines  = 0;
 	line_width = 1000;
-	max_height = -1;
+	
+	fix_height = -1;
 	
 	cursor			= 0;
 	cursor_tx		= 0;
@@ -67,7 +68,12 @@ function textArea(_input, _onModify) : textInput(_input, _onModify) constructor 
 	text_scroll_my   = 0;
 	text_scroll_vert = 0;
 	
-	mouse_lhold      = false;
+	resizable   = true;
+	resizing    = false;
+	resize_sy   = 0;
+	resize_my   = 0;
+	
+	mouse_lhold = false;
 	
 	border_heightlight_color = COLORS._main_accent;
 	
@@ -94,7 +100,8 @@ function textArea(_input, _onModify) : textInput(_input, _onModify) constructor 
 	////- Get Set
 	
 	static setVAlign    = function(_v) /*=>*/ { padding_v  = _v; return self; }
-	static setMaxHeight = function(_h) /*=>*/ { max_height = _h; return self; }
+	static setFixHeight = function(_h) /*=>*/ { fix_height = _h; return self; }
+	static setResizable = function(_h) /*=>*/ { resizable  = _h; return self; }
 	
 	static isCodeFormat = function() { INLINE return format == TEXT_AREA_FORMAT.codeLUA || format == TEXT_AREA_FORMAT.codeHLSL; }
 	
@@ -796,7 +803,7 @@ function textArea(_input, _onModify) : textInput(_input, _onModify) constructor 
 		var _l = max(min_lines, array_length(_input_text_line));
 		
 		_h = max(_h, padding_v * 2 + line_get_height() * _l);
-		if(max_height) _h = min(_h, max_height);
+		if(fix_height) _h = fix_height;
 		
 		return _h; 
 	}
@@ -811,7 +818,7 @@ function textArea(_input, _onModify) : textInput(_input, _onModify) constructor 
 	}
 	
 	static draw = function(_x, _y, _w, _h, _text, _m) {
-		_h = max_height == -1? _h : min(_h, max_height);
+		_h = fix_height? fix_height : _h;
 		
 		////- Dimension
 		
@@ -857,10 +864,11 @@ function textArea(_input, _onModify) : textInput(_input, _onModify) constructor 
 		var line_count = max(min_lines, array_length(_input_text_line));
 		
 		hh = max(_h, padding_v * 2 + c_h * line_count);
-		if(max_height) hh = min(hh, max_height);
+		
+		if(fix_height) hh = fix_height;
 		
 		var _hw = _w;
-		if(max_height && text_y_max) {
+		if(fix_height && text_y_max) {
 			_hw        -= 16;
 			line_width -= 16;
 		}
@@ -913,6 +921,42 @@ function textArea(_input, _onModify) : textInput(_input, _onModify) constructor 
 		surface_reset_shader();
 		SURFACE_POSTDRAW
 		gpu_set_scissor(_scis);
+		
+		////- Resizing
+		
+		if(resizable) {
+			var rss = ui(32);
+			var rsx = _x + _hw - ui(4);
+			var rsy = _y +  hh - ui(4);
+			
+			var hov = hover && point_in_rectangle(_m[0], _m[1], rsx - rss, rsy - rss, rsx, rsy);
+			
+			if(resizing) {
+				draw_sprite_ui_uniform(THEME.node_resize, 0, rsx, rsy, .75, COLORS._main_icon_light);
+				
+				var _adh = resize_sy + (_m[1] - resize_my);
+				fix_height = max(round(_adh), ui(32));
+				
+				if(mouse_lrelease()) {
+					resizing = false;
+				}
+				
+			} else {
+				if(hov) {
+					draw_sprite_ui_uniform(THEME.node_resize, 0, rsx, rsy, .75, COLORS._main_icon);
+					
+					if(DOUBLE_CLICK) fix_height = -1;
+					else if(mouse_lpress(active)) {
+						resizing  = true;
+						resize_my = _m[1];
+						resize_sy = hh;
+					}
+					
+				} else if(hoverRect)
+					draw_sprite_ui_uniform(THEME.node_resize, 0, rsx, rsy, .75, COLORS._main_icon, .5);
+				
+			}
+		}
 		
 		////- Selecting
 		
@@ -1089,7 +1133,7 @@ function textArea(_input, _onModify) : textInput(_input, _onModify) constructor 
 		
 		////- Text height
 		
-		if(max_height) { 
+		if(fix_height) { 
 			var total_h = text_y_max;
 			text_y_max  = max(0, total_h - hh + 16);
 			text_y      = lerp_float(text_y, text_y_to, 5);

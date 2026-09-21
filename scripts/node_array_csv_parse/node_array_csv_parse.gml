@@ -25,7 +25,7 @@ function Node_Array_CSV_Parse(_x, _y, _group = noone) : Node(_x, _y, _group) con
 		[ "Output", false ],  5,  4,
 	];
 	
-	inputs[0].getEditWidget().max_height = ui(240);
+	inputs[0].getEditWidget().fix_height = ui(240);
 	inputs[3].getEditWidget().mode       = 1;
 	
 	////- Node

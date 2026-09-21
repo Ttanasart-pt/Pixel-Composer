@@ -281,7 +281,7 @@ Libraries in the global scope will be add to project automatically.";
     	pw = x1 - px;
     	ph = h - (py + padding);
     	
-		editor.setMaxHeight(ph);
+		editor.setFixHeight(ph);
 		editor.register();
 		editor.setFocusHover(pFOCUS, pHOVER);
 		editor.boxColor = merge_color(CDEF.main_white, CDEF.main_ltgrey, .5);
