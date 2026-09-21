@@ -11,6 +11,11 @@
         "date": "2026-09-21T06:54:28.801Z",
         "node": "",
         "commit": "Add toolbar panel."
+      },
+      {
+        "date": "2026-09-21T07:51:13.425Z",
+        "node": "",
+        "commit": "**Loop**: Fix crash when connecting value to loop amount."
       }
     ]
   },

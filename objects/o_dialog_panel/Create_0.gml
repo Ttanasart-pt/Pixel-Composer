@@ -49,6 +49,8 @@ function setContent(_content) {
 			_cnt = panel.getContentRecurs();
 	}
 	
+	if(is(_content, Panel_Toolbar)) auto_hide = true;
+	
 	if(!is(_cnt, PanelContent)) {
 		instance_destroy();
 		return;
@@ -79,6 +81,8 @@ function setContent(_content) {
 }
 
 #region draw
+	auto_hide = false;
+	
 	function onDrag(dx, dy) {  if(!is_winwin(window)) panel.move(dx, dy); }
 	
 	function dragStart() {

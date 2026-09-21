@@ -208,11 +208,24 @@ function __NodeValue_Vec2(_name, _node, _value, _data = {}) : NodeValue(_name, _
 	}
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _typ = 0, _sca = [ 1, 1 ], _rot = 0) {
-		if(attributes[$ "mapped"])        return false;
-		if(expUse || value_from != noone) return false;
-		if(!is_real(_rot))                return false;
-		
 		if(!is_array(_sca)) _sca = [ _sca, _sca ];
+		
+		if(attributes[$ "mapped"]) return false;
+		if(!is_real(_rot))         return false;
+		
+		if(expUse || value_from != noone) {
+			var _currVal = getValue();
+			if(array_get_depth(_currVal) == 1) {
+				var cx = _x + _currVal[0] * _sca[0] * _s;
+				var cy = _y + _currVal[1] * _sca[1] * _s;
+				
+				draw_set_color(COLORS._main_icon);
+				draw_circle(cx, cy, ui(6), false);
+			}
+			return false;
+		}
+			
+		
 		var _hovering = preview_hotkey_active;
 		
 		if(preview_hotkey_active) {

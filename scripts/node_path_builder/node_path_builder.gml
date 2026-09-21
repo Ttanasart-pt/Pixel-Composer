@@ -263,6 +263,7 @@ function Node_Path_Builder(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		path_loop   = getInputData(1);
 		path_amount = 0;
 		
+		outputs[0].setValue(noone);
 		if(!is_array(_anc)) return;
 		
 		var _d = array_get_depth(_anc);

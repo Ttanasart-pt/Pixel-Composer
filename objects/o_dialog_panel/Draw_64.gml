@@ -5,7 +5,14 @@ panel.preDraw();
 var _cnt = panel.getContent();
 
 #region dialog	
-	DIALOG_DRAW_BG
+	// DIALOG_DRAW_BG
+	DIALOG_WINDOW_START
+	
+	if(!auto_hide || sFOCUS) {
+		var dpd = THEME_VALUE.dialog_padding;
+		if(!is_winwin(window)) draw_sprite_stretched( THEME.dialog_shadow, 0, _dialog_x-dpd, _dialog_y-dpd, dialog_w+dpd*2, dialog_h+dpd*2 );
+		draw_sprite_stretched( THEME.dialog, 0, _dialog_x, _dialog_y, dialog_w, dialog_h );
+	}
 	
 	var p = ui(8);
 	var m_in = point_in_rectangle(mouse_mx, mouse_my, _dialog_x + p, _dialog_y + p, _dialog_x + dialog_w - p, _dialog_y + dialog_h - p);
@@ -53,7 +60,7 @@ var _cnt = panel.getContent();
 	var foc = sFOCUS;
 	var x1 = _dialog_x + dialog_w - ui(6);
 	
-	if(title_height) {
+	if((!auto_hide || sFOCUS) && title_height) {
 		var dh = title_height;
 		draw_sprite_stretched_ext( THEME.dialog, 3, _dialog_x, _dialog_y, _dialog_w, dh, COLORS._main_icon_light, 1);
 		
@@ -122,7 +129,9 @@ var _cnt = panel.getContent();
 	}
 #endregion
 
-DIALOG_DRAW_FOCUS_UNEND
+if(!auto_hide || sFOCUS) {
+	DIALOG_DRAW_FOCUS_UNEND
+}
 
 if(sFOCUS && !m_in && m_ot) {
 	draw_sprite_stretched_ext(THEME.dialog, 1, _dialog_x, _dialog_y, dialog_w, dialog_h, c_white, .4);

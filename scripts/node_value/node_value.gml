@@ -3660,23 +3660,23 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		
 		switch(PROJECT.graphConnection.type) { 
 			case 0 : 
-				if(down)	draw_line_width_color(jx, jy, frx, fry, th, c0, c1);
-				else    	draw_line_connect(frx, fry, jx, jy, ss, th, c0, c1, drawParam);
+				if(down) draw_line_width_color(jx, jy, frx, fry, th, c0, c1);
+				else     draw_line_connect(frx, fry, jx, jy, ss, th, c0, c1, drawParam);
 				break;
 				
 			case 1 : 
-				if(down)	draw_line_curve_corner(frx, fry, jx, jy, ss, th, c0, c1); 
-				else		draw_line_curve_color(jx, jy, frx, fry, cx, cy, ss, th, c0, c1, ty); 
+				if(down) draw_line_curve_corner(frx, fry, jx, jy, ss, th, c0, c1); 
+				else     draw_line_curve_color(jx, jy, frx, fry, cx, cy, ss, th, c0, c1, ty); 
 				break;
 				
 			case 2 : 
-				if(down)	draw_line_elbow_corner(frx, fry, jx, jy, ss, th, c0, c1, drawParam); 
-				else		draw_line_elbow_color(frx, fry, jx, jy, cx, cy, ss, th, c0, c1, drawParam); 
+				if(down) draw_line_elbow_corner(frx, fry, jx, jy, ss, th, c0, c1, drawParam); 
+				else     draw_line_elbow_color(frx, fry, jx, jy, cx, cy, ss, th, c0, c1, drawParam); 
 				break;
 				
 			case 3 : 
-				if(down)	draw_line_elbow_diag_corner(frx, fry, jx, jy, ss, th, c0, c1, drawParam); 
-				else		draw_line_elbow_diag_color(frx, fry, jx, jy, cx, cy, ss, th, c0, c1, drawParam); 
+				if(down) draw_line_elbow_diag_corner(frx, fry, jx, jy, ss, th, c0, c1, drawParam); 
+				else     draw_line_elbow_diag_color(frx, fry, jx, jy, cx, cy, ss, th, c0, c1, drawParam); 
 				break;
 		} 
 	}

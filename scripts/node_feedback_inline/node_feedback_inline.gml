@@ -15,18 +15,23 @@ function Node_Feedback_Inline(_x, _y, _group = noone) : Node(_x, _y, _group) con
 	
 	newInput( 0, nodeValue_Bool( "Active", true ));
 	
+	input_node  = noone;
+	output_node = noone;
+
+	if(NODE_NEW_MANUAL) {
+		input_node  = nodeBuild("Node_Feedback_Inline_Input",  x - 128, y, _group);
+		output_node = nodeBuild("Node_Feedback_Inline_Output", x + 128, y, _group);
+		output_node.inputs[0].setFrom(input_node.outputs[0]);
+		
+		input_node.loop  = self;
+		output_node.loop = self;
+	}
+	
 	attributes.junc_in  = [0,0];
 	attributes.junc_out = [0,0];
 	
 	attributes.node_in  = "";
 	attributes.node_out = "";
-	
-	input_node  = nodeBuild("Node_Feedback_Inline_Input",  x - 128, y, _group);
-	output_node = nodeBuild("Node_Feedback_Inline_Output", x + 128, y, _group);
-	output_node.inputs[0].setFrom(input_node.outputs[0]);
-	
-	input_node.loop  = self;
-	output_node.loop = self;
 		
 	attributes.node_in  = input_node.node_id;
 	attributes.node_out = output_node.node_id;

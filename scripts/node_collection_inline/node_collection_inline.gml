@@ -459,13 +459,13 @@ function Node_Collection_Inline(_x, _y, _group = noone) : Node(_x, _y, _group) c
 		
 		for( var i = 0, n = array_length(inputs); i < n; i++ ) {
 			var jun = inputs[i];
-			if(!jun.isVisible()) continue;
 			
 		    jun.rx = jx;
 		    jun.ry = jy;
 		    jun.x  = _x + jx * _s;
 		    jun.y  = _y + jy * _s;
 			
+			if(!jun.isVisible()) continue;
 			if(jun.isHovering(_s, _dx, _dy, _mx, _my)) hover = jun;
 			jy += junction_draw_hei_y;
 		}
@@ -480,13 +480,13 @@ function Node_Collection_Inline(_x, _y, _group = noone) : Node(_x, _y, _group) c
 		gpu_set_tex_filter(true);
 		for( var i = 0, n = array_length(inputs); i < n; i++ ) {
 			var jun = inputs[i];
-			if(!jun.isVisible()) continue;
 			
 		    jun.rx = jx;
 		    jun.ry = jy;
 		    jun.x  = _x + jx * _s;
 		    jun.y  = _y + jy * _s;
 			
+			if(!jun.isVisible()) continue;
 			jun.drawJunction(_s, _mx, _my);
 			jy += junction_draw_hei_y;
 		}

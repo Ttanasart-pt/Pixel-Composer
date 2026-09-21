@@ -5,8 +5,8 @@ function Panel_Toolbar() : PanelContent() constructor {
 	w = ui(480);
 	h = ui(24);
 	
-	min_w = ui(40);
-	min_h = ui(24);
+	min_w = ui(4);
+	min_h = ui(4);
 	
 	padding	= ui(4);
 	
@@ -54,7 +54,7 @@ function Panel_Toolbar() : PanelContent() constructor {
 			var _spr  = _menu.getSpr();
 			if(!sprite_exists(_spr)) _spr = THEME.pxc_hub;
 			
-			var b = buttonInstant_Pad(THEME.button_hide_fill, bx, by, bs, bs, _m, hover, focus, _name, _spr, 0, _cc, 1, ui(6));
+			var b = buttonInstant_Pad(THEME.button_hide_fill, bx, by, bs, bs, _m, hover, focus, _name, _spr, 0, _cc, 1, ui(8));
 			if(b == 2) {
 				global.FUNCTION_CALL_EVENT.type = "button";
 				var _res = _menu.toggleFunction();

@@ -16,15 +16,20 @@ function Node_Iterate_Inline(_x, _y, _group = noone) : Node_Collection_Inline(_x
 	attributes.junc_in  = [0,0];
 	attributes.junc_out = [0,0];
 	
-	input_node  = nodeBuild("Node_Iterate_Inline_Input",  x - 128, y, _group);
-	output_node = nodeBuild("Node_Iterate_Inline_Output", x + 128, y, _group);
-	output_node.inputs[0].setFrom(input_node.outputs[0]);
+	input_node  = noone;
+	output_node = noone;
+
+	if(NODE_NEW_MANUAL) {
+		input_node  = nodeBuild("Node_Iterate_Inline_Input",  x - 128, y, _group);
+		output_node = nodeBuild("Node_Iterate_Inline_Output", x + 128, y, _group);
+		output_node.inputs[0].setFrom(input_node.outputs[0]);
+			
+		input_node.loop  = self;
+		output_node.loop = self;
 		
-	input_node.loop  = self;
-	output_node.loop = self;
-	
-	addNode(input_node);
-	addNode(output_node);
+		addNode(input_node);
+		addNode(output_node);
+	}
 	
 	iteration_count = 0;
 	iterated        = 0;
@@ -147,7 +152,7 @@ function Node_Iterate_Inline(_x, _y, _group = noone) : Node_Collection_Inline(_x
 		
 		var jun  = inputs[0];
 		var _hov = jun.drawConnections(params, _draw); 
-		return _hov? [_hov, undefined] : undefined;
+		return _hov;
 	}
 	
 	////- Serialize
