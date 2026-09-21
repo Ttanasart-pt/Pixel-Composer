@@ -169,7 +169,7 @@ function Panel_Inspector() : PanelContent() constructor {
         content_w = 0;
         content_h = 0;
         
-        view_mode_tooltip = new tooltipSelector("View Settings...", [ "Compact", "Spacious" ])
+        view_mode_tooltip = new tooltipSelector(__txt("View Settings") + "...", [ "Compact", "Spacious" ])
         
     	drawWidgetInit();
     #endregion
@@ -210,7 +210,7 @@ function Panel_Inspector() : PanelContent() constructor {
         filter_text      = "";
         filtering        = false;
         
-        tb_prop_filter = textBox_Text(function(txt) /*=>*/ { filter_text = txt; }).setEmpty(false).setAutoUpdate()
+        tb_prop_filter   = textBox_Text(function(txt) /*=>*/ { filter_text = txt; }).setEmpty(false).setAutoUpdate()
                              .setFont(f_p2).setAlign(fa_center);
     	
         prop_page   = "Node";
@@ -224,11 +224,11 @@ function Panel_Inspector() : PanelContent() constructor {
         prop_page_panel_a = [ "Panel", "Properties", "Settings", THEME.message_16 ];
         prop_page_panel_p = [ "Panel", "Properties", "Settings", "Log" ];
         prop_page_panel_b = new buttonGroup(prop_page_panel_a, function(val) /*=>*/ { prop_page = prop_page_panel_p[val]; })
-   						.setButton([ THEME.button_hide_left, THEME.button_hide_middle, THEME.button_hide_right ]).iconPad(ui(8))
-   						.setFont(f_p2, COLORS._main_text_sub)
+   							.setButton([ THEME.button_hide_left, THEME.button_hide_middle, THEME.button_hide_right ]).iconPad(ui(8))
+   							.setFont(f_p2, COLORS._main_text_sub)
         
-        proj_prop_page   = 0;
-        proj_prop_page_b = new buttonGroup([ "PXC", "GM" ], function(val) /*=>*/ { proj_prop_page = val; })
+        proj_prop_page    = 0;
+        proj_prop_page_b  = new buttonGroup([ "PXC", "GM" ], function(val) /*=>*/ { proj_prop_page = val; })
         					.setButton([ THEME.button_hide_left, THEME.button_hide_middle, THEME.button_hide_right ])
         					.setFont(f_p2, COLORS._main_text_sub)
         
@@ -268,6 +268,8 @@ function Panel_Inspector() : PanelContent() constructor {
             [ __txt("Group Properties"),     false, "group prop" ], 
             [ __txt("Favorited Properties"), false, "favorites"  ], 
         ];
+        
+        project_show_advance = false;
         
         meta_steam_avatar = new checkBox(function() /*=>*/ { STEAM_UGC_ITEM_AVATAR = !STEAM_UGC_ITEM_AVATAR; });
         
@@ -2391,10 +2393,25 @@ function Panel_Inspector() : PanelContent() constructor {
                     var _lh, wh;
                     
                     for( var j = 0, mlen = array_length(_edt); j < mlen; j++ ) {
-                        var title = array_safe_get(_edt[j], 0, noone);
-                        var param = array_safe_get(_edt[j], 1, noone);
-                        var editW = array_safe_get(_edt[j], 2, noone);
-                        var drpFn = array_safe_get(_edt[j], 3, noone);
+                    	var _edit = _edt[j];
+                    	if(_edit == -1) {
+                    		var hov  = _hover && point_in_rectangle(_m[0], _m[1], 0, yy, con_w, yy + ui(12));
+                    		
+                    		draw_set_text(f_p4, fa_center, fa_center, hov? COLORS._main_text : COLORS._main_text_sub);
+                    		draw_text_add(con_w / 2, yy + ui(6), project_show_advance? __txt("Show Less...") : __txt("Show More..."));
+                    		if(hov && mouse_lpress(_focus)) project_show_advance = !project_show_advance;
+                    		
+                    		yy += ui(6 + 14);
+                    		hh += ui(6 + 14);
+                    		
+                    		if(!project_show_advance) break;
+                    		continue;
+                    	}
+                    	
+                        var title = array_safe_get(_edit, 0, noone);
+                        var param = array_safe_get(_edit, 1, noone);
+                        var editW = array_safe_get(_edit, 2, noone);
+                        var drpFn = array_safe_get(_edit, 3, noone);
                         
                         if(param == "slideshow_render_only" && !PROJECT.useSlideShow) continue;
                         
@@ -2432,7 +2449,9 @@ function Panel_Inspector() : PanelContent() constructor {
                         var widh = spac? _lh + padd + wh + ui(4) : max(wh, _lh);
                         var drop = jun != noone && drpFn != noone;
                         
-                        if(_hover && point_in_rectangle(_m[0], _m[1], widx, widy, widx + widw, widy + widh)) {
+                        var hov  = _hover && point_in_rectangle(_m[0], _m[1], widx, widy, widx + widw, widy + widh);
+                        
+                        if(hov) {
                         	if(drop) {
                             	draw_sprite_stretched_ext(THEME.ui_panel, 1, widx, widy, widw, widh, COLORS._main_value_positive, 1);
                             	attribute_hovering  = drpFn;

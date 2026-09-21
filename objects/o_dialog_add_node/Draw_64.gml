@@ -213,6 +213,7 @@ if(DIALOG_SHOW_FOCUS) {
 	var dpd = THEME_VALUE.dialog_padding;
 	var cc  = node_replace == noone? COLORS._main_accent : COLORS.dialog_add_node_replace_mode;
 	draw_sprite_stretched_ext(THEME.dialog, 1, _dialog_x, _dialog_y, dialog_w, dialog_h, cc, 1);
+	drawResize();
 }
 
 #region tooltip

@@ -3235,14 +3235,14 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		return subt == noone || t.selecting == subt;
 	}
 	
-	static getUsingToolName = function() { 
+	static getUsingToolName   = function() { 
 		var _tool  = PANEL_PREVIEW.tool_current;
 		return _tool == noone? "" : _tool.getName(_tool.selecting);
 	}
 	
-	static getToolNode     = undefined;
-	static getToolSettings = function() /*=>*/ {return tool_settings};
-	static showTool        = function() /*=>*/ {return tools != -1 || toolShow};
+	static getToolNode        = undefined;
+	static getToolSettings    = function() /*=>*/ {return tool_settings};
+	static showTool           = function() /*=>*/ {return tools != -1 || toolShow};
 	static drawPreviewToolbar = noone;
 	
 	static selectAll   = undefined;

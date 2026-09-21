@@ -384,6 +384,8 @@ function Project() constructor {
 					
 				}).setIcon(s_attr_shader, function() /*=>*/ {return bool(attributes.shader)}, COLORS._main_icon_light)).setUpdateHover(false) ], 
 				
+				-1, 
+				
 				[ "Export Directory", "export_dir", textBox_Text(function(str) /*=>*/ { attributes.export_dir = str; return true; })
 					.setSideButton( button(function() /*=>*/ { 
 						var _fpath = get_open_directory_compat(attributes.export_dir); key_release();

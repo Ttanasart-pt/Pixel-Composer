@@ -139,6 +139,17 @@ function draw_anchor_line(_index, _x, _y, _r, _a, _type = 0) {
 	shader_reset();
 }
 
+function draw_anchor_rotator(_index, _x, _y, _r, _a, _type = 0) {
+	shader_set(sh_node_widget_rotator);
+		shader_set_c( "color", COLORS._main_accent );
+		shader_set_i( "type",  _type               );
+		shader_set_f( "index", _index              );
+		shader_set_f( "angle", degtorad(_a + 90)   );
+		
+		draw_sprite_stretched(s_fx_pixel, 0, _x - _r, _y - _r, _r * 2, _r * 2);
+	shader_reset();
+}
+
 function draw_empty(_w = 0, _h = 0) {
 	var _s = surface_get_target();
 	if(_s == -1) return;

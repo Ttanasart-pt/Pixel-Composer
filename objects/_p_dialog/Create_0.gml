@@ -8,7 +8,7 @@
 	var _dialog_x = window? 0 : dialog_x;       \ 
 	var _dialog_y = window? 0 : dialog_y;       \
 	if(!is_winwin(window)) draw_sprite_stretched( THEME.dialog_shadow, 0, _dialog_x-dpd, _dialog_y-dpd, dialog_w+dpd*2, dialog_h+dpd*2 ); \
-	draw_sprite_stretched( THEME.dialog, 0, _dialog_x, _dialog_y, dialog_w, dialog_h );     
+	draw_sprite_stretched( THEME.dialog, 0, _dialog_x, _dialog_y, dialog_w, dialog_h );                                                   
 
 #macro DIALOG_DRAW_FOCUS                                                                                                  \
 	var foc = FOCUS == self.id || (FOCUS && FOCUS[$ "preFocus"] == self.id);                                              \
@@ -16,6 +16,7 @@
 	if(foc || (instance_exists(o_dialog_menubox) && o_dialog_menubox.getContextPanel() == self))                          \
 		 draw_sprite_stretched_ext( THEME.dialog, 1, _dialog_x, _dialog_y, dialog_w, dialog_h, cc, 1 );                   \
 	else draw_sprite_stretched_ext( THEME.dialog, 1, _dialog_x, _dialog_y, dialog_w, dialog_h, COLORS.panel_frame, 1 );   \
+	drawResize()                                                                                                          \
 	if(is_winwin(window)) winwin_end();
 
 #macro DIALOG_DRAW_FOCUS_UNEND                                                                                            \
@@ -23,7 +24,8 @@
 	var cc  = PREFERENCES.panel_outline_accent? COLORS._main_accent : COLORS.panel_select_border                          \
 	if(foc || (instance_exists(o_dialog_menubox) && o_dialog_menubox.getContextPanel() == self))                          \
 		 draw_sprite_stretched_ext( THEME.dialog, 1, _dialog_x, _dialog_y, dialog_w, dialog_h, cc, 1 );                   \
-	else draw_sprite_stretched_ext( THEME.dialog, 1, _dialog_x, _dialog_y, dialog_w, dialog_h, COLORS.panel_frame, 1 );
+	else draw_sprite_stretched_ext( THEME.dialog, 1, _dialog_x, _dialog_y, dialog_w, dialog_h, COLORS.panel_frame, 1 );   \
+	drawResize()
 
 #macro DIALOG_WINDOW_START                      \
 	if(is_winwin(window)) winwin_start(window); \
@@ -156,6 +158,8 @@
 	dialog_h_max    = WIN_H;
 	onResize        = undefined;
 	
+	corner_drawing  = undefined;
+	
 	function doResize() {
 		if(!active || !dialog_resizable) return;
 		
@@ -198,7 +202,8 @@
 			}
 			
 			if(mouse_lrelease()) dialog_resizing = 0;
-		}
+		} else 
+			corner_drawing = undefined;
 		
 		if(sHOVER) {
 			var win  = is_winwin(window);
@@ -228,8 +233,11 @@
 				switch(_sel_mask) {
 					case 0b0001 : case 0b0100 : CURSOR = cr_size_we;   break;
 					case 0b0010 : case 0b1000 : CURSOR = cr_size_ns;   break;
-					case 0b0011 : case 0b1100 : CURSOR = cr_size_nwse; break;
-					case 0b1001 : case 0b0110 : CURSOR = cr_size_nesw; break;
+					
+					case 0b0011 : CURSOR = cr_size_nwse; corner_drawing = 1; break;
+					case 0b1100 : CURSOR = cr_size_nwse; corner_drawing = 2; break;
+					case 0b1001 : CURSOR = cr_size_nesw; corner_drawing = 3; break;
+					case 0b0110 : CURSOR = cr_size_nesw; corner_drawing = 4; break;
 				}
 				
 				if(mouse_lpress(sFOCUS)) {
@@ -245,7 +253,23 @@
 		}
 		
 	}
-
+	
+	function drawResize() {
+		var _dialog_x = window? 0 : dialog_x;
+		var _dialog_y = window? 0 : dialog_y;
+		
+		var cr = THEME.dialog_resize_corner;
+		var cx = sprite_get_width(cr);
+		var cy = sprite_get_height(cr);
+		
+		switch(corner_drawing) {
+			case 1 : draw_sprite_ext(cr, 0, _dialog_x + dialog_w - cx, _dialog_y + dialog_h - cy, 1, 1,   0); break;
+			case 2 : draw_sprite_ext(cr, 0, _dialog_x + cx,            _dialog_y + cy,            1, 1, 180); break;
+			case 3 : draw_sprite_ext(cr, 0, _dialog_x + dialog_w - cx, _dialog_y + cy,            1, 1,  90); break;
+			case 4 : draw_sprite_ext(cr, 0, _dialog_x + cx,            _dialog_y + dialog_h - cy, 1, 1, 270); break;
+		}
+	}
+	
  ////- Focus
 		
 	function point_in(mx, my) {

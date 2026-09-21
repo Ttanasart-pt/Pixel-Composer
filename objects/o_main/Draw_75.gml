@@ -94,7 +94,13 @@ if(USE_TEXTUREGROUP && texturegroup_get_status("UI") == texturegroup_status_load
 		var ox = sprite_get_xoffset(CURSOR_SPRITE);
 		var oy = sprite_get_yoffset(CURSOR_SPRITE);
 		
-		draw_sprite_ui(CURSOR_SPRITE, 0, mouse_x + ox + ui(4), mouse_y + oy + ui(4));
+		var mx = mouse_x + ox + ui(4); 
+		var my = mouse_y + oy + ui(4);
+		
+		mx = clamp(mx,  ui(8), WIN_W - ui(8));
+		my = clamp(my,  ui(8), WIN_H - ui(8));
+		
+		draw_sprite_ui(CURSOR_SPRITE, 0, mx, my);
 		CURSOR_SPRITE = noone;
 	}
 	

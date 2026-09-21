@@ -85,21 +85,26 @@ function preview_overlay_puppet(hover, active, _x, _y, _s, _mx, _my) {
 			
 			var rx = _ax + lengthdir_x(64, dir + 45);
 			var ry = _ay + lengthdir_y(64, dir + 45);
+			var ri = drag_type == 6;
 			
 			if(point_in_circle(_mx, _my, rx, ry, _r)) {
 				draw_set_color(COLORS._main_accent);
 				draw_circle_prec(_ax, _ay, 64, true);
 				
+				ri   = 1;
 				_hov = 6;
-				draw_sprite_colored(THEME.anchor_rotate, 1, rx, ry,, dir - 45);
+				
 				if(mouse_lpress(active)) {
 					drag_type = 6;
 					drag_sx   = _ax;
 					drag_sy   = _ay;
 				}
-			} else 
-				draw_sprite_colored(THEME.anchor_rotate, drag_type == 6, rx, ry,, dir - 45);
+			}
+			
+			var _r = ui(PREVIEW_OVERLAY_RAD);
+			draw_anchor_rotator(ri, rx, ry, _r * 2, dir + 45, 0);
 			break;
+			
 		case PUPPET_FORCE_MODE.puppet :
 			draw_line_width2(_ax, _ay, _ax1, _ay1, 6, ui(1));
 			
