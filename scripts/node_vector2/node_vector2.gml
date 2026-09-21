@@ -102,8 +102,8 @@ function Node_Vector2(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		}
 		
 		if(gz_style == 0) {
-			_hov = hover && point_in_circle(_mx, _my, _ax, _ay, ui(8));
-			draw_anchor(_hov, _ax, _ay, ui(8));
+			_hov = hover && point_in_circle(_mx, _my, _ax, _ay, ui(8) * gz_scale);
+			draw_anchor(_hov, _ax, _ay, ui(8) * gz_scale);
 			
 		} else {
 			
