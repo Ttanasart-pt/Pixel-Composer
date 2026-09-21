@@ -6,6 +6,11 @@
         "date": "2026-09-21T07:51:13.426Z",
         "node": "",
         "commit": "**Loop**: Fix crash when connecting value to loop amount."
+      },
+      {
+        "date": "2026-09-21T08:36:19.729Z",
+        "node": "Path Builder",
+        "commit": "**Path Builder**: Fix point tool not working."
       }
     ]
   },

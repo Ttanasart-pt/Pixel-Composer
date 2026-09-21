@@ -187,8 +187,8 @@ function Node_Path_Builder(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		if(inputs[0].value_from != noone) return w_hovering;
 		
 		var _points = inputs[0].getValue();
-		var _d = array_get_depth(_points);
-		if(_d != 2) return;
+		// var _d = array_get_depth(_points);
+		// if(_d != 2) return;
 		
 		var msx = (_mx - _x) / _s;
 		var msy = (_my - _y) / _s;
@@ -211,12 +211,14 @@ function Node_Path_Builder(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		if(t == tool_addP) {
 			if(mouse_lpress(active)) {
 				array_push(_points, [msx, msy]);
+				inputs[0].setValue(_points);
 				triggerRender();
 			}
 			
 		} else if(t == tool_subP) {
 			if(hv != undefined && mouse_lpress(active)) {
 				array_delete(_points, hv, 1);
+				inputs[0].setValue(_points);
 				triggerRender();
 			}
 			
