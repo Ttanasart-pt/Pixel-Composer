@@ -1,4 +1,4 @@
-function __EXPORT_HTML(project = PROJECT, _path = "", _fName = "", _pName = "", _fSize) {
+function __EXPORT_HTML(project = PROJECT, _path = "", _fName = "", _pName = "", _tPath = "", _fSize) {
 	var _project_temp_path = "D:/Project/MakhamDev/LTS-PixelComposer/PROMOTIONAL MATERIALS/site/__projectview_template.html";
 	if(!file_exists_empty(_project_temp_path)) return undefined;
 	
@@ -188,6 +188,8 @@ function __EXPORT_HTML(project = PROJECT, _path = "", _fName = "", _pName = "", 
 	if(array_length(_v) > 2)
 		_vstr += "." + _v[2];
 	
+	_project_template = string_replace_all( _project_template, "{{thumbnail_path}}", _tPath  );
+	
 	_project_template = string_replace_all( _project_template, "{{project_title}}",  _fName  );
 	_project_template = string_replace_all( _project_template, "{{project_author}}", _aut    );
 	_project_template = string_replace_all( _project_template, "{{project_desc}}",   _desc   );
@@ -211,6 +213,8 @@ function __EXPORT_HTML(project = PROJECT, _path = "", _fName = "", _pName = "", 
 function __EXPORT_SHOWCASE(project = PROJECT) {
 	if(DEMO) return false;
 	
+	////- =Path
+	
 	var _oname = filename_name_only(project.path); 
 	if(string_pos("_", _oname)) _oname = string_split(_oname, "_")[0];
 	_oname = string_replace_all(_oname, "-", " ");
@@ -225,18 +229,32 @@ function __EXPORT_SHOWCASE(project = PROJECT) {
 	var _fName = string_replace_all(_rName, " ", "-");
 	if(string_pos("_", _fName)) _fName = string_split(_fName, "_")[0];
 	
-	var _pName = $"{_fName}_{SAVE_VERSION}.pxc";
-	var _tName = $"thumbnail.png";
-	var _mName = $"metadata.json";
+	////- =Porject
 	
+	var _pName = $"{_fName}_{SAVE_VERSION}.pxc";
 	var _path  = filename_combine(path, _pName);
 	SAVE_AT(project, _path);
 	
-	var _thumbSurf = PANEL_PREVIEW.getNodePreviewSurface();
-	if(is_surface(_thumbSurf))
-		surface_save_safe(_thumbSurf, filename_combine(path, _tName));
+	////- =Thumbnail
 	
+	var _anim      = false;
+	var _tPath     = "./thumbnail.png"
+	var _thumbSurf = PANEL_PREVIEW.getNodePreviewSurface();
+	if(is_surface(_thumbSurf)) surface_save_safe(_thumbSurf, filename_combine(path, "thumbnail.png"));
+	
+	var _outpNode  = project.outputNode;
+	if(is(_outpNode, Node) && _outpNode.animated) {
+		_outpNode.renderGif(filename_combine(path, "thumbnail.gif"));
+		_tPath = "./thumbnail.gif"
+		_anim  = true;
+	}
+	
+	////- =Metadata
+	
+	var _mName = $"metadata.json";
 	json_save_struct(filename_combine(path, _mName), project.meta, true);
+	
+	////- =Html
 	
     var fsize   = file_size(_path);
     var unit    = "b"
@@ -254,9 +272,9 @@ function __EXPORT_SHOWCASE(project = PROJECT) {
     var fileSizeStr = $"{string_format(fsize / divider, 0, 2)} {unit}";
     
 	var _projName = $"index.html";
-	__EXPORT_HTML(project, filename_combine(path, _projName), _fName, $"./{_pName}", fileSizeStr);
+	__EXPORT_HTML(project, filename_combine(path, _projName), _fName, $"./{_pName}", _tPath, fileSizeStr);
 	
-	closeProject();
+	if(!_anim) closeProject();
 	print("Export folder complete.");
 	print($"{_rName} #PixelComposer\n\nhttps://pixel-composer.com/projects/{_fName}");
 	

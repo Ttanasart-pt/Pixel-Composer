@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.22.10.201",
+    "changes": [
+      {
+        "date": "2026-09-21T05:30:43.033Z",
+        "node": "",
+        "commit": "update some showcase projects to show animated preview"
+      }
+    ]
+  },
+  {
     "version": "1.21.7.110",
     "changes": [
       {
