@@ -16,8 +16,14 @@ function Node_Iterate_Inline(_x, _y, _group = noone) : Node_Collection_Inline(_x
 	attributes.junc_in  = [0,0];
 	attributes.junc_out = [0,0];
 	
-	input_node  = noone;
-	output_node = noone;
+	input_node  = nodeBuild("Node_Iterate_Inline_Input",  x - 128, y, _group);
+	output_node = nodeBuild("Node_Iterate_Inline_Output", x + 128, y, _group);
+		
+	input_node.loop  = self;
+	output_node.loop = self;
+	
+	addNode(input_node);
+	addNode(output_node);
 	
 	iteration_count = 0;
 	iterated        = 0;
@@ -48,23 +54,18 @@ function Node_Iterate_Inline(_x, _y, _group = noone) : Node_Collection_Inline(_x
 		var nfrom = jFrom.node;
 		var nto   = jTo.node;
 		
-		var input  = nodeBuild("Node_Iterate_Inline_Input",  nfrom.x - 32 - 96,  nfrom.y);
-		var output = nodeBuild("Node_Iterate_Inline_Output", nto.x + nto.w + 32, nto.y);
+		input_node.x  = nfrom.x - 32 - 96;
+		output_node.x = nto.x + nto.w + 32;
 		
-		input.inputs[0].setFrom(jFrom.value_from);
-		jFrom.setFrom(input.outputs[0]);
-		output.inputs[0].setFrom(jTo);
+		input_node.y  = nfrom.y;
+		output_node.y = nto.y;
 		
-		addNode(input);
-		addNode(output);
+		input_node.inputs[0].setFrom(jFrom.value_from);
+		jFrom.setFrom(input_node.outputs[0]);
+		output_node.inputs[0].setFrom(jTo);
+		
 		addNode(nfrom);
 		if(nfrom != nto) addNode(nto);
-		
-		input_node  = input;
-		output_node = output;
-		
-		input_node.loop  = self;
-		output_node.loop = self;
 		
 		return self;
 	}

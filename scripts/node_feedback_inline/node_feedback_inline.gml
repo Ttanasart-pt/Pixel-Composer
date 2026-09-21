@@ -21,30 +21,30 @@ function Node_Feedback_Inline(_x, _y, _group = noone) : Node(_x, _y, _group) con
 	attributes.node_in  = "";
 	attributes.node_out = "";
 	
-	input_node  = noone;
-	output_node = noone;
+	input_node  = nodeBuild("Node_Feedback_Inline_Input",  x - 128, y, _group);
+	output_node = nodeBuild("Node_Feedback_Inline_Output", x + 128, y, _group);
+	
+	input_node.loop  = self;
+	output_node.loop = self;
+		
+	attributes.node_in  = input_node.node_id;
+	attributes.node_out = output_node.node_id;
 	
 	////- Rendering
-	
+		
 	static connectJunctions = function(jFrom, jTo) {
 		var nfrom = jFrom.node;
 		var nto   = jTo.node;
 		
-		var input  = nodeBuild("Node_Feedback_Inline_Input",  nfrom.x - 32 - 96,  nfrom.y);
-		var output = nodeBuild("Node_Feedback_Inline_Output", nto.x + nto.w + 32, nto.y);
+		input_node.x  = nfrom.x - 32 - 96;
+		output_node.x = nto.x + nto.w + 32;
 		
-		input.inputs[0].setFrom(jFrom.value_from);
-		jFrom.setFrom(input.outputs[0]);
-		output.inputs[0].setFrom(jTo);
+		input_node.y  = nfrom.y;
+		output_node.y = nto.y;
 		
-		input_node  = input;
-		output_node = output;
-		
-		input_node.loop  = self;
-		output_node.loop = self;
-		
-		attributes.node_in  = input_node.node_id;
-		attributes.node_out = output_node.node_id;
+		input_node.inputs[0].setFrom(jFrom.value_from);
+		jFrom.setFrom(input_node.outputs[0]);
+		output_node.inputs[0].setFrom(jTo);
 		return self;
 	}
 	

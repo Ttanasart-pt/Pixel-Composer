@@ -1733,6 +1733,8 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
 	                
 	                for( var i = 0, n = array_length(nodes_selecting); i < n; i++ ) {
 	                    var _node = nodes_selecting[i];
+	                    if(!is(_node, Node)) continue;
+	                    
 	                    var _nx   = _node.x + dx;
 	                    var _ny   = _node.y + dy;
 	                    
