@@ -74,8 +74,8 @@
             ])} ).setMenu("export_menu",, true);
         }
         
-        registerFunction("", "Undo",                "Z",    c,   UNDO     ).setMenu("undo" )
-        registerFunction("", "Redo",                "Z",    c|s, REDO     ).setMenu("redo" )
+        registerFunction("", "Undo",                "Z",    c,   UNDO     ).setMenu("undo", THEME.undo )
+        registerFunction("", "Redo",                "Z",    c|s, REDO     ).setMenu("redo", THEME.redo )
         
         registerFunction("", "Full Panel",          vk_f9,  n,   set_focus_fullscreen     ).setMenu("full_panel"      )
         registerFunction("", "Reset Layout",        vk_f10, c,   refreshPanel             ).setMenu("reset_layout"    )
@@ -355,6 +355,7 @@ function Panel_Menu() : PanelContent() constructor {
             ])}),
             
             -1, 
+            MENU_ITEMS.toolbar_panel,
             MENU_ITEMS.dialog_manager_panel,
             MENU_ITEMS.steam_workshop_panel,
         ]];

@@ -6,6 +6,11 @@
         "date": "2026-09-21T03:21:25.714Z",
         "node": "",
         "commit": "**Loop, Feedback**: Fix crash when create the node directly from add node dialog."
+      },
+      {
+        "date": "2026-09-21T06:54:28.801Z",
+        "node": "",
+        "commit": "Add toolbar panel."
       }
     ]
   },

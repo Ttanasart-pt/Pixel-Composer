@@ -3097,7 +3097,7 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
         ttw += ui(10);
         
         if(!mrg) {
-        	draw_sprite_stretched(THEME.toolbar, 0, tx, ty, context_area_w.value, tth);
+        	draw_sprite_stretched_ext(THEME.toolbar, 0, tx, ty, context_area_w.value, tth, c_white, 1);
         	if(pHOVER && point_in_rectangle(mx, my, tx, ty, tx + context_area_w.value, ty + tth))
 	            mouse_on_graph = false;
         }
@@ -3206,9 +3206,9 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
         var scs = gpu_get_scissor();
         
         if(mrg) {
-        	draw_sprite_stretched(THEME.toolbar, 0, tx, ty, tw, th);
+        	draw_sprite_stretched_ext(THEME.toolbar, 0, tx, ty, tw, th, c_white, 1);
         	var cont_x = drawContext();
-        
+        	
 	        if(pHOVER && point_in_rectangle(mx, my, tx, ty, tx + tw, ty + th))
 	            mouse_on_graph = false;
 	        
@@ -3217,7 +3217,7 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
         } else {
         	var cont_x = drawContext();
         	
-        	draw_sprite_stretched(THEME.toolbar, 0, tx + tw - toolbar_area_w.value, ty, toolbar_area_w.value, th);
+        	draw_sprite_stretched_ext(THEME.toolbar, 0, tx + tw - toolbar_area_w.value, ty, toolbar_area_w.value, th, c_white, 1);
 	        if(pHOVER && point_in_rectangle(mx, my, tx + tw - toolbar_area_w.value, ty, tx + tw, ty + th))
 	            mouse_on_graph = false;
 	        
@@ -3295,7 +3295,7 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
         var _lh = topbar_height / 2 - ui(8);
         
         if(mrg) {
-	    	draw_sprite_stretched(THEME.toolbar, 1, tx, ty, tw, th);
+	    	draw_sprite_stretched_ext(THEME.toolbar, 1, tx, ty, tw, th, c_white, 1);
 			if(pHOVER && point_in_rectangle(mx, my, tx, ty, tx + tw, ty + th))
 				mouse_on_graph = false;
 				
@@ -3307,7 +3307,7 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
     	
     	if(hasGlobal) {
     		if(!mrg) {
-				draw_sprite_stretched(THEME.toolbar, 1, tx + tw - topbar_sett_w.value, ty, topbar_sett_w.value, th);
+				draw_sprite_stretched_ext(THEME.toolbar, 1, tx + tw - topbar_sett_w.value, ty, topbar_sett_w.value, th, c_white, 1);
 				if(pHOVER && point_in_rectangle(mx, my, tx + tw - topbar_sett_w.value, ty, tx + tw, ty + th))
 					mouse_on_graph = false;
 	        }
@@ -3375,7 +3375,7 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
 		var _cc   = [COLORS._main_icon, c_white];
 		
 		if(!mrg) {
-			draw_sprite_stretched(THEME.toolbar, 1, tx, ty, topbar_node_w.value, th);
+			draw_sprite_stretched_ext(THEME.toolbar, 1, tx, ty, topbar_node_w.value, th, c_white, 1);
 			if(pHOVER && point_in_rectangle(mx, my, tx, ty, tx + topbar_node_w.value, ty + th))
 				mouse_on_graph = false;
         }

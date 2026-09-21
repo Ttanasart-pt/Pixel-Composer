@@ -23,6 +23,7 @@ function Node_Feedback_Inline(_x, _y, _group = noone) : Node(_x, _y, _group) con
 	
 	input_node  = nodeBuild("Node_Feedback_Inline_Input",  x - 128, y, _group);
 	output_node = nodeBuild("Node_Feedback_Inline_Output", x + 128, y, _group);
+	output_node.inputs[0].setFrom(input_node.outputs[0]);
 	
 	input_node.loop  = self;
 	output_node.loop = self;

@@ -521,4 +521,5 @@ function __fnInit_Panels() {
         registerFunction("", "Node Manager Panel",        "", n, function() /*=>*/ {return dialogPanelCall(new Panel_Nodes_Manager())}     ).setMenuAlt("Node Manager",   "node_manager_panel")
         
         registerFunction("", "Dialog Manager Panel",      "", n, function() /*=>*/ {return dialogPanelCall(new Panel_Dialog_Manager())}    ).setMenuAlt("Dialog Manager", "dialog_manager_panel")
+        registerFunction("", "Toolbar Panel",             "", n, function() /*=>*/ {return dialogPanelCall(new Panel_Toolbar())}           ).setMenuAlt("Toolbar",        "toolbar_panel")
 	}

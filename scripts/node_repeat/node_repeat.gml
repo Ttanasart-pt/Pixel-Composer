@@ -30,22 +30,26 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	
 	newInput(17, nodeValueSeed());
 	
-	////- =Surfaces
-	newInput( 0, nodeValue_Surface(     "Surface In" )).setRequired();
-	newInput(35, nodeValue_EScroll(     "Output Dimension Type", OUTPUT_SCALING.constant, [
+	////- =Output
+	newInput(35, nodeValue_EScroll(  "Output Dimension Type", OUTPUT_SCALING.constant, [
         new scrollItem( "Same as input"),
         new scrollItem( "Constant"),
         new scrollItem( "Relative to input").setTooltip("Set dimension as a multiple of input surface."),
         new scrollItem( "Fit content").setTooltip("Automatically set dimension to fit content."),
     ]));
     
-	newInput(36, nodeValue_Vec2(        "Relative Dimension", [1,1]     ));
-	newInput(37, nodeValue_IPadding(    "Padding",            [0,0,0,0] ));
 	newInput( 1, nodeValue_Dimension());
-	newInput(16, nodeValue_EButton(     "Array Select",        0 )).setChoices([ "Order", "Random", "Spread" ])
+	newInput(36, nodeValue_Vec2(     "Relative Dimension", [1,1]     ));
+	newInput(37, nodeValue_IPadding( "Padding",            [0,0,0,0] ));
+	
+	////- =Surfaces
+	newInput( 0, nodeValue_Surface(  "Surface In" )).setRequired();
+	
+	newInput(16, nodeValue_EButton(  "Array Select",        0 )).setChoices([ "Order", "Random", "Spread" ])
 		.setTooltip("Whether to select image from an array in order, at random, or spread each image to its own output.");
-	newInput(55, nodeValue_Range(   "Animated",    [0,0], { linked : true } ));
-	newInput(56, nodeValue_EScroll( "Animated End", 0, [ "Loop", "Ping Pong", "Hide", "Stop" ] ));
+		
+	newInput(55, nodeValue_Range(    "Animated",    [0,0], { linked : true } ));
+	newInput(56, nodeValue_EScroll(  "Animated End", 0, [ "Loop", "Ping Pong", "Hide", "Stop" ] ));
 	
 	////- =Pattern
 	newInput( 3, nodeValue_EScroll(  "Pattern", 0, __enum_array_gen([ "Linear", "Grid", "Circular"], s_node_repeat_axis) ));
@@ -214,7 +218,8 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	});
 	
 	input_display_list = [ 17, 
-		[ "Surfaces",      true ],  0, 35, 36, 37,  1, 16, 55, 56, 
+		[ "Output",        true ], 35,  1, 36, 37, 
+		[ "Surfaces",      true ],  0, 16, 55, 56, 
 		[ "Pattern",      false ],  3,  9, 32,
 			[ "/Amount",  false ],  2, 18,
 			[ "/Pattern", false ], 22, 45,  7,  8, 49, 50, 
