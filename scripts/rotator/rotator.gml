@@ -87,7 +87,8 @@ function rotator(_onModify, _step = -1) : widget() constructor {
 				var val      = key_mod_press(SHIFT)? value_snap(real_val, 15) : real_val;
 			
 				if(valStep != -1) val = value_snap(real_val, valStep);
-			
+				val = round(val);
+				
 				if(onModify(val))
 					UNDO_HOLDING = true;
 			
@@ -134,7 +135,7 @@ function rotator(_onModify, _step = -1) : widget() constructor {
 		tb_value.setFocusHover(active, hover);
 		tb_value.draw(_tx, _y, _tw, _h, _data, _m);
 		
-		if(!tb_value.hovering && hide == 0) 
+		if(!tb_value.hovering && !tb_value.selecting && hide == 0) 
 			draw_sprite_stretched_ext(THEME.textbox, 0, x, y, w, h, boxColor, .5 + .5 * interactable);	
 		
 		resetFocus();

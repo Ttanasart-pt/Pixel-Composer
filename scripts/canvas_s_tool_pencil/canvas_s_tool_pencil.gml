@@ -99,10 +99,10 @@ function canvas_s_tool_pencil() : canvas_s_tool() constructor {
 				
 				draw_set_color(c_white);
 				
-				if(key_mod_press(SHIFT)) {
+				if(key_mod_press(SHIFT) && draw_last_x != undefined && draw_last_y != undefined) {
 					var lx = mpx;
 					var ly = mpy;
-						
+					
 					if(key_mod_press(KCONTROL)) {
 						var _dx = lx - draw_last_x;
 						var _dy = ly - draw_last_y;
@@ -119,8 +119,7 @@ function canvas_s_tool_pencil() : canvas_s_tool() constructor {
 						}
 					}
 					
-					if(draw_last_x != undefined && draw_last_y != undefined)
-						brush.drawLine(draw_last_x, draw_last_y, lx, ly);
+					brush.drawLine(draw_last_x, draw_last_y, lx, ly);
 					
 				} else 
 					brush.drawPixel(mpx, mpy);

@@ -10,9 +10,9 @@ function Node_Offset(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	__init_mask_modifier(4, 6); // inputs 6, 7
 	
 	////- Offset
-	newInput( 1, nodeValue_Slider(   "X Offset", .5 )).setPieMenu();
-	newInput( 2, nodeValue_Slider(   "Y Offset", .5 )).setPieMenu();
-	newInput( 8, nodeValue_Rotation( "Angle",     0 )).setPieMenu();
+	newInput( 1, nodeValue_Slider(   "X Offset", 0, [-1,1,.01] )).setPieMenu();
+	newInput( 2, nodeValue_Slider(   "Y Offset", 0, [-1,1,.01] )).setPieMenu();
+	newInput( 8, nodeValue_Rotation( "Angle",    0             )).setPieMenu();
 	// 9
 		
 	input_display_list = [ 3, 

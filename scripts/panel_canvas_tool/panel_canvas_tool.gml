@@ -144,11 +144,11 @@ function Panel_Canvas_Tool() : PanelContent() constructor {
 				hovering_subtool = i;
 				setTOOLTIP(tol.hotkey? new tooltipHotkey(tol.tooltip).setHotkey(tol.hotkey) : tol.tooltip);
 				
-				draw_sprite_stretched_add(THEME.button_hide, 1, ttx+p, tty+p, ttw-p2, tth-p2);
+				draw_sprite_stretched_add(THEME.button_hide, 1, ttx+p, tty+p, ttw-p2, tth-p2, COLORS._main_icon, .5);
 				
 				if(!isa) {
 					if(mouse_lclick(pFOCUS))
-						draw_sprite_stretched_add(THEME.button_hide, 3, ttx+p, tty+p, ttw-p2, tth-p2);
+						draw_sprite_stretched_add(THEME.button_hide, 3, ttx+p, tty+p, ttw-p2, tth-p2, COLORS._main_icon, .5);
 					
 					if(mouse_lpress(pFOCUS))
 						canvas.setTool(sel? undefined : tol)
@@ -235,10 +235,10 @@ function Panel_Canvas_Tool() : PanelContent() constructor {
 					var hv = pHOVER && point_in_rectangle(msx, msy, ttx, tty, ttx + ttw, tty + tth);
 					if(hv) {
 						setTOOLTIP(tol.hotkey? new tooltipHotkey(tol.tooltip).setHotkey(tol.hotkey) : tol.tooltip);
-						draw_sprite_stretched_add(THEME.button_hide, 1, ttx+p, tty+p, ttw-p2, tth-p2);
+						draw_sprite_stretched_add(THEME.button_hide, 1, ttx+p, tty+p, ttw-p2, tth-p2, COLORS._main_icon, .5);
 						
 						if(mouse_lclick(pFOCUS))
-							draw_sprite_stretched_add(THEME.button_hide, 3, ttx+p, tty+p, ttw-p2, tth-p2);
+							draw_sprite_stretched_add(THEME.button_hide, 3, ttx+p, tty+p, ttw-p2, tth-p2, COLORS._main_icon, .5);
 						
 						if(mouse_lpress(pFOCUS))
 							canvas.setTool(sel? undefined : tol);
