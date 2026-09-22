@@ -406,7 +406,7 @@ function Node_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 			
 			var tl      = _data[ 1];
 			var tr      = _data[ 2];
-			var bl      = _data[ 3];
+			var bl      = _data[ 3]; 
 			var br      = _data[ 4];
 			
 			var uvPos   = _data[12];
@@ -430,7 +430,7 @@ function Node_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 			shader_set_2( "uvPosition", uvPos );
 			shader_set_2( "uvScale",    uvSca );
 			
-			shader_set_2( "position",   [ x0, y0 ] );
+			shader_set_2( "position",   [ x0, y0 ] ); 
 			shader_set_2( "scale",      [ x1 - x0, y1 - y0 ] );
 		shader_reset();
 		
