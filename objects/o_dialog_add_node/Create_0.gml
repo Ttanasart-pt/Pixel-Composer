@@ -121,7 +121,7 @@ event_inherited();
 			maxLen   = max(maxLen, string_width(name));
 		}
 		
-		category_width = maxLen + ui(32);
+		category_width = maxLen + ui(32 + 32);
 	#endregion
 	
 	function isTop() { return true; }
@@ -191,8 +191,11 @@ event_inherited();
 				if(cat[$ "filter"] != undefined && !array_exists(cat.filter, instanceof(context)))
 					continue;
 				
-				for( var j = 0, m = array_length(cat.list); j < m; j++ )
-					array_push(node_list, cat.list[j]);
+				for( var j = 0, m = array_length(cat.list); j < m; j++ ) {
+					var _node = cat.list[j];
+					if(is(_node, NodeObject) && _node.deprecated) continue;
+					array_push(node_list, _node);
+				}
 			}
 		
 		} else if(ADD_NODE_PAGE == -1) { // New
@@ -258,8 +261,11 @@ event_inherited();
 			
 		} else {
 			var _l = category[ADD_NODE_PAGE].list;
-			for( var i = 0, n = array_length(_l); i < n; i++ ) 
-				array_push(node_list, _l[i]);
+			for( var i = 0, n = array_length(_l); i < n; i++ ) {
+				var _node = _l[i];
+				if(is(_node, NodeObject) && _node.deprecated) continue;
+				array_push(node_list, _node);
+			}
 		}
 		
 		for( var i = 0, n = array_length(node_list); i < n; i++ ) {
@@ -467,7 +473,7 @@ event_inherited();
 	cat_disp_y = undefined;
 	
 	catagory_pane = new scrollPane(category_width, dialog_h - ui(66), function(_y, _m) {
-		draw_clear_alpha(COLORS.panel_bg_clear, 0);
+		draw_clear_alpha(COLORS.panel_bg_clear, 1);
 		
 		var font  = f_p2;
 		var fontS = f_p2b;
@@ -538,8 +544,23 @@ event_inherited();
 			
 			var _is_extra = name == "Extra";
 			
-			var _tx = ui(8);
+			var _tx = ui(4);
 			var _ty = _y + hh + hg / 2;
+			
+			var sprn = $"s_node_cat_{string_lower(name)}";
+			var spr  = asset_get_index(sprn);
+			
+			if(sprite_exists(spr)) {
+				var _ss = (hg - ui(4)) / sprite_get_width(spr);
+				var _cc = i == ADD_NODE_PAGE? COLORS._main_accent : COLORS._main_icon;
+				var _aa = i == ADD_NODE_PAGE? 1 : .75;
+				
+				gpu_set_tex_filter(true);
+				draw_sprite_ext(spr, 0, _tx + hg / 2, _ty, _ss, _ss, 0, _cc, _aa);
+				gpu_set_tex_filter(false);
+			}
+			
+			_tx += hg + ui(4);
 			name = __txt(name);
 			draw_text_add(_tx, _ty, name);
 			
@@ -569,7 +590,7 @@ event_inherited();
 	catagory_pane.scroll_color_bar_alpha = .5;
 	
 	subcatagory_pane = new scrollPane(ui(96), dialog_h - ui(66), function(_y, _m) {
-		draw_clear_alpha(COLORS.panel_bg_clear_inner, 0);
+		draw_clear_alpha(COLORS.panel_bg_clear_inner, 1);
 		
 		var font  = f_p2;
 		var fontS = f_p2b;

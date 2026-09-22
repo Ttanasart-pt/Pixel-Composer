@@ -6,8 +6,10 @@ function Node_MK_WireFrame(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	
 	////- =Path
 	newInput( 1, nodeValue_Path(   "Path"           ));
-	newInput( 2, nodeValue_Int(    "Sample",     16 ));
-	newInput( 7, nodeValue_Slider( "Path Shift", 0  ));
+	newInput(16, nodeValue_Range(  "Range",   [0,1] ));
+	newInput( 7, nodeValue_Slider( "Shift",   0     ));
+	newInput(15, nodeValue_Bool(   "Loop",    true  ));
+	newInput( 2, nodeValue_Int(    "Sample",  16    ));
 	
 	////- =Thickness
 	newInput( 3, nodeValue_Vec2(  "Offset",  [.25,.25]     )).setUnitSimple();
@@ -22,13 +24,13 @@ function Node_MK_WireFrame(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	newInput(10, nodeValue_Color( "Back Color",     ca_white  ));
 	newInput( 8, nodeValue_Float( "Side Thickness", 1         ));
 	newInput( 9, nodeValue_Gradient( "Side Color",  gra_white )).addShift(14);
-	// 15
+	// 17
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
 	input_display_list = [ s_MKFX, 
 		[ "Output",    false ],  0,
-		[ "Path",      false ],  1,  2,  7,  
+		[ "Path",      false ],  1, 16,  7, 15,  2, 
 		[ "Thickness", false ],  3,  4, 11, 12, 13, 
 		[ "Render",    false ],  5,  6, 10,  8, [9, true], 14, 
 	];
@@ -57,8 +59,10 @@ function Node_MK_WireFrame(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 			var _dim  = _data[ 0];
 			
 			var _path = _data[ 1];
-			var _samp = _data[ 2];
+			var _prng = _data[16];
 			var _poff = _data[ 7];
+			var _plop = _data[15];
+			var _samp = _data[ 2];
 			
 			var _offs = _data[ 3];
 			var _wstp = _data[ 4]; _wstp = max(1, _wstp);
@@ -84,7 +88,11 @@ function Node_MK_WireFrame(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 		var _cx     = [ 0, 0 ]
 		
 		for( var i = 0; i < _samp; i++ ) {
-			var _prg = frac(_poff + _stp * i);
+			var _prg = _poff + lerp(_prng[0], _prng[1], _stp * i);
+			
+			if(_plop) _prg = pfract(_prg);
+			else      _prg = clamp(_prg, 0, .999);
+			
 			_p = _path.getPointRatio(_prg, 0, _p);
 			
 			_points[i] = [ _p.x, _p.y ];
@@ -94,7 +102,8 @@ function Node_MK_WireFrame(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 		
 		_cx[0] /= _samp;
 		_cx[1] /= _samp;
-		_points[_samp] = _points[0];
+		
+		if(_plop) { _points[_samp] = _points[0]; _samp++; }
 		
 		var ofx = _offs[0];
 		var ofy = _offs[1];
@@ -106,7 +115,7 @@ function Node_MK_WireFrame(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 			DRAW_CLEAR
 			
 			var op, np, ss;
-			for( var i = 0; i <= _samp; i++ ) {
+			for( var i = 0; i < _samp; i++ ) {
 				ss = _prfMap.get(0);
 				np = [
 					_cx[0] + (_points[i][0] - _cx[0]) * ss,
@@ -144,7 +153,7 @@ function Node_MK_WireFrame(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 				var oc = _Tgrd.evalFast(pfract(_t0 + _TgrdS));
 				var nc = _Tgrd.evalFast(pfract(_t1 + _TgrdS));
 				
-				for( var i = 0; i <= _samp; i += _wstp ) {
+				for( var i = 0; i < _samp; i += _wstp ) {
 					var pp = _points[i];
 					
 					var x00 = _cx[0] + (pp[0] - _cx[0]) * os + _ofx0;
@@ -157,7 +166,7 @@ function Node_MK_WireFrame(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 			}
 			
 			var op, np;
-			for( var i = 0; i <= _samp; i++ ) {
+			for( var i = 0; i < _samp; i++ ) {
 				ss = _prfMap.get(1);
 				np = [
 					_cx[0] + (_points[i][0] - _cx[0]) * ss,
