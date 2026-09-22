@@ -384,20 +384,19 @@ function Node_Rigid_Fracture(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 		meshes = [];
 		var _baseSurf = getInputData(0);
 		var _fracSurf = getInputData(1);
-		if(!is_surface(_baseSurf) || !is_surface(_fracSurf)) return;
+		
+		if(!is_surface(_baseSurf)) return;
+		if(!is_surface(_fracSurf)) return;
 		
 		var _sw = surface_get_width(_baseSurf);
 		var _sh = surface_get_height(_baseSurf);
+		
 		temp_surface[2] = surface_verify(temp_surface[2], _sw, _sh);
-		surface_set_target(temp_surface[2]);
-			DRAW_CLEAR
-			BLEND_OVERRIDE
+		surface_set_shader(temp_surface[2]);
 			draw_surface_stretched(_fracSurf, 0, 0, _sw, _sh);
-			BLEND_NORMAL
-		surface_reset_target();
+		surface_reset_shader();
 		
 		var _atlases = separateShape(temp_surface[2]);
-		
 		for( var i = 0, n = array_length(_atlases); i < n; i++ ) {
 			var _atlas = _atlases[i];
 			var _mask  = _atlas.getSurface();
@@ -419,15 +418,15 @@ function Node_Rigid_Fracture(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 		objects = [];
 		if(array_empty(meshes)) return;
 		
-		var _baseSurf = getInputData(0);
+		var _baseSurf = getInputData( 0);
 		if(!is_surface(_baseSurf)) return;
 		
-		var _dens     = getInputData(4);
-		var _cnt_frc  = getInputData(5);
-		var _air_res  = getInputData(6);
-		var _rot_frc  = getInputData(7);
-		var _bouncy   = getInputData(8);
-		var _sPos     = getInputData(9);
+		var _dens     = getInputData( 4);
+		var _cnt_frc  = getInputData( 5);
+		var _air_res  = getInputData( 6);
+		var _rot_frc  = getInputData( 7);
+		var _bouncy   = getInputData( 8);
+		var _sPos     = getInputData( 9);
 		var _gravSca  = getInputData(15);
 		var _activate = getInputData(14);
 		
@@ -576,8 +575,12 @@ function Node_Rigid_Fracture(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 		worldScale = struct_try_get(inline_context, "worldScale", 100);
 		if(worldIndex == undefined) return;
 		
-		var _baseSurf = getInputData(0);
-		if(!is_surface(_baseSurf)) return;
+		var _surf = getInputData(0);
+		if(!is_surface(_surf)) {
+			objects = [];
+			outputs[0].setValue([]);
+			return;
+		}
 		
 		if(IS_FIRST_FRAME) {
 			fracture();
