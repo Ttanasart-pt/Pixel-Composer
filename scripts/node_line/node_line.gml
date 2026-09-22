@@ -870,7 +870,8 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 					var prog = p0.prog;
 					var prgc = p0.progCrop;
 					var _dir = j? point_direction(_ox, _oy, _nx, _ny) : 
-					              point_direction(_nx, _ny, points[j+1].x + _padx, points[j+1].y + _pady);
+					              (_loop? point_direction(points[m-1].x + _padx, points[m-1].y + _pady, _nx, _ny) : 
+					                      point_direction(_nx, _ny, points[j+1].x + _padx, points[j+1].y + _pady) );
 					
 					     if(j ==   0) { _stx = _nx; _sty = _ny;              }
 					else if(j ==   1) { _sta = _dir;                         }

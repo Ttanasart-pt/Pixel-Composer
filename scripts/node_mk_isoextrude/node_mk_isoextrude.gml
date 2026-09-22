@@ -1,5 +1,5 @@
 function Node_MK_Isoextrude(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
-	name = "MK Isoextrude";
+	name = "MK IsoExtrude";
 	
 	////- =Surface
 	newInput(19, nodeValue_Dimension());
