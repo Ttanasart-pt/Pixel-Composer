@@ -14,6 +14,8 @@
 		
 		function clone() { return new __LinePoint(x, y, prog, progCrop, weight); }
 		function toString() { return $"[{prog}/{progCrop}]({x},{y},{weight})"; }
+		
+		function equalTo(p) { return x == p.x && y == p.y; }
 	}
 	
 #endregion
@@ -44,7 +46,7 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	newInput(28, nodeValue_Vector(   "Segment"               )).setArrayDepth(2);
 	newInput(32, nodeValue_Vec2(     "Start Point",   [0,.5] )).setUnitSimple();
 	newInput(33, nodeValue_Vec2(     "End Point",     [1,.5] )).setUnitSimple();
-	newInput(35, nodeValue_Bool(     "Force Loop",     false ));
+	newInput(35, nodeValue_Bool(     "Loop",           false ));
 	newInput(19, nodeValue_Bool(     "Fix Length",     false )).setTooltip("Fix length of each segment instead of segment count.");
 	newInput( 2, nodeValue_ISlider(  "Segment",        8, [1,32,.1] )).setPieMenu();
 	newInput(20, nodeValue_Float(    "Segment Length", 8        ));
@@ -573,7 +575,12 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 						} // wiggle
 						
 						if(array_empty(points)) continue;
-						if(_loop)   array_push(points, points[0]);
+						if(_loop) {
+							if(array_length(points) > 2 && !points[0].equalTo(array_last(points)))
+								array_push(points, points[0]);
+							
+						}
+						
 						if(_ratInv) array_reverse_ext(points);
 						
 						lines[lamo]     = points;
@@ -821,6 +828,71 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		
 		var _texId = _useTex? surface_get_texture(_tex) : -1;
 		
+		for( var i = 0, n = array_length(lines); i < n; i++ ) {
+			if(array_length(lines[i]) < 2) continue;
+			var points = lines[i];
+			
+			for( var j = 0, m = array_length(points); j < m; j++ ) {
+				var p = points[j];
+				p.x = p.x - .5 * _1px + _padx;
+				p.y = p.y - .5 * _1px + _pady;
+			}
+		}
+		
+		var lineDirs = array_create(array_length(lines));
+		for( var i = 0, n = array_length(lines); i < n; i++ ) {
+			if(array_length(lines[i]) < 2) continue;
+			var points = lines[i];
+			var _dirs = [];
+			var _dir;
+			
+			for( var j = 0, m = array_length(points); j < m; j++ ) {
+				var p0   = points[j];
+				var _nx  = p0.x;
+				var _ny  = p0.y;
+					
+				_dir = 0;
+				if(j) _dir = point_direction(_ox, _oy, _nx, _ny);
+					
+				_dirs[j] = _dir;
+				_ox = _nx;
+				_oy = _ny;
+			}
+				
+			var _ddir = array_clone(_dirs);
+			var _dlen = array_length(_dirs)
+			
+			if(_loop) {
+				_dirs[0] = _ddir[1];
+				_dirs[_dlen-2] = _ddir[_dlen-1];
+				
+				for( var j = 1, m = _dlen - 1; j < m; j++ ) {
+					var d0 = _ddir[j];
+					var d1 = _ddir[j+1];
+					_dirs[j] = lerp_angle_direct(d0, d1, .5);
+				}
+				
+				_dirs[0] = lerp_angle_direct(_dirs[_dlen-1], _dirs[0], .5);
+				_dirs[_dlen-1] = _dirs[0];
+				
+			} else {
+				_dirs[0] = _ddir[1];
+				_dirs[_dlen-2] = _ddir[_dlen-1];
+				
+				for( var j = 1, m = _dlen - 1; j < m; j++ ) {
+					var d0 = _ddir[j];
+					var d1 = _ddir[j+1];
+					_dirs[j] = lerp_angle_direct(d0, d1, .5);
+				}
+				
+			}
+			
+			// print(_ddir)
+			// print(_dirs)
+			
+			lineDirs[i] = _dirs;
+		}	
+		
 		surface_set_target(_cPassAA);
 			DRAW_CLEAR
 			
@@ -862,16 +934,16 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 				var _stx = 0, _sty = 0, _sta = 0;
 				var _edx = 0, _edy = 0, _eda = 0;
 				
+				var _dirs = lineDirs[i];
+				
 				for( var j = 0, m = array_length(points); j < m; j++ ) {
 					var p0   = points[j];
-					var _nx  = p0.x - 0.5 * _1px + _padx;
-					var _ny  = p0.y - 0.5 * _1px + _pady;
+					var _nx  = p0.x;
+					var _ny  = p0.y;
 					
 					var prog = p0.prog;
 					var prgc = p0.progCrop;
-					var _dir = j? point_direction(_ox, _oy, _nx, _ny) : 
-					              (_loop? point_direction(points[m-1].x + _padx, points[m-1].y + _pady, _nx, _ny) : 
-					                      point_direction(_nx, _ny, points[j+1].x + _padx, points[j+1].y + _pady) );
+					var _dir = _dirs[j];
 					
 					     if(j ==   0) { _stx = _nx; _sty = _ny;              }
 					else if(j ==   1) { _sta = _dir;                         }
@@ -939,20 +1011,6 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 						draw_line_color(_ox * _aa, _oy * _aa, _nx * _aa, _ny * _aa, _oc, _nc);
 						
 					} else { 
-						var _nd0 = _dir;
-						var _nd1 = _nd0;
-						
-						if(j < m - 1) {
-							var p2 = points[j + 1];
-							var _nnx = p2.x + _padx;
-							var _nny = p2.y + _pady;
-							
-							_nd1 = point_direction(_nx, _ny, _nnx, _nny);
-							_nd  = _nd0 + angle_difference(_nd1, _nd0) / 2;
-							
-						} else 
-							_nd = _nd0;
-						
 						if(_useTex) {
 							var _len = m - 1;
 							
@@ -1149,15 +1207,16 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 					var dat = array_safe_get_fast(_pathData, i, noone);
 					
 					var _col_base = dat == noone? gradientEval(_colb, pfract(random(1) + _colb_shf)) : dat.color;
-					
+					var _dirs = lineDirs[i];
+				
 					for( var j = 0, m = array_length(points); j < m; j++ ) {
 						var p0   = points[j];
-						var _nx  = p0.x - 0.5 * _1px + _padx;
-						var _ny  = p0.y - 0.5 * _1px + _pady;
+						var _nx  = p0.x - 0.5 * _1px;
+						var _ny  = p0.y - 0.5 * _1px;
 						
 						var prog = p0.prog;
 						var prgc = p0.progCrop;
-						var _dir = j? point_direction(_ox, _oy, _nx, _ny) : 0;
+						var _nd  = _dirs[j];
 						
 						var widProg = value_snap_real(_widap? prog : prgc, 0.01);
 						_ww = lerp_invert(p0.weight, wmin, wmax);
@@ -1171,27 +1230,8 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 						
 						if(_wg2wid) _nw = _nw * lerp(_wgRange[0], _wgRange[1], _wgCurve? _wgCurve.get(_ww) : _ww);
 						
-						if(j) {
-							var _nd0 = _dir;
-							var _nd1 = _nd0;
-							
-							if(j < m - 1) {
-								var p2 = points[j + 1];
-								var _nnx = p2.x + _padx;
-								var _nny = p2.y + _pady;
+						if(j) draw_line_width2_angle_width(_ox, _oy, _nx, _ny, _ow, _nw, _od + 90, _nd + 90, c_white, c_white);
 						
-								_nd1 = point_direction(_nx, _ny, _nnx, _nny);
-								_nd  = _nd0 + angle_difference(_nd1, _nd0) / 2;
-							} else 
-								_nd = _nd0;
-							
-							draw_line_width2_angle_width(_ox, _oy, _nx, _ny, _ow, _nw, _od + 90, _nd + 90, c_white, c_white);
-							
-						} else {
-							var p1   = points[j + 1];
-							_nd = point_direction(_nx, _ny, p1.x + _padx, p1.y + _pady);
-						}
-					
 						_ox = _nx;
 						_oy = _ny;
 						_od = _nd;
