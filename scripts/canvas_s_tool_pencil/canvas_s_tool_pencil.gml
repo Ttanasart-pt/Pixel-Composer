@@ -119,7 +119,8 @@ function canvas_s_tool_pencil() : canvas_s_tool() constructor {
 						}
 					}
 					
-					brush.drawLine(draw_last_x, draw_last_y, lx, ly);
+					if(draw_last_x != undefined && draw_last_y != undefined)
+						brush.drawLine(draw_last_x, draw_last_y, lx, ly);
 					
 				} else 
 					brush.drawPixel(mpx, mpy);
