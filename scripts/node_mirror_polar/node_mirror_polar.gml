@@ -50,18 +50,28 @@ function Node_Mirror_Polar(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _params) { 
 		PROCESSOR_OVERLAY_CHECK
 		
-		var _pos   = current_data[1];
-		var _ang   = current_data[2];
+		var _pos   = current_data[ 1];
+		var _ang   = current_data[ 2];
+		var _spk   = current_data[ 4];
+		
 		var _posx = _pos[0] * _s + _x;
 		var _posy = _pos[1] * _s + _y;
 		
+		draw_set_color(COLORS._main_icon);
+		for( var i = 0; i < _spk; i++ ) {
+			var _pa = _ang + i / _spk * 360;
+			
+			var dx0 = _posx + lengthdir_x(1000, _pa);
+			var dy0 = _posy + lengthdir_y(1000, _pa);
+			
+			draw_line_dashed(_posx, _posy, dx0, dy0);
+		}
+		
 		var dx0 = _posx + lengthdir_x(1000, _ang);
-		var dx1 = _posx + lengthdir_x(1000, _ang + 180);
 		var dy0 = _posy + lengthdir_y(1000, _ang);
-		var dy1 = _posy + lengthdir_y(1000, _ang + 180);
 		
 		draw_set_color(COLORS._main_accent);
-		draw_line(dx0, dy0, dx1, dy1);
+		draw_line(_posx, _posy, dx0, dy0);
 		
 		drawOverlayInput(inputs[1].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my));
 		drawOverlayInput(inputs[2].drawOverlay(w_hoverable, active, _posx, _posy, _s, _mx, _my));

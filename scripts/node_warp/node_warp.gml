@@ -417,6 +417,8 @@ function Node_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 			inputs[7].setVisible(_dimTyp == 1);
 			inputs[8].setVisible(true);
 			inputs[9].setVisible(_dimTyp == 2);
+			
+			if(!is_surface(_surfF)) return _outSurf;
 		#endregion
 		
 		var x0 = _area[0] - _area[2];
