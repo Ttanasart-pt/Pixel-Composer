@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"Panel_Canvas_BG_Setting",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"Panel_Canvas_BG_Setting",
+  "parent":{
+    "name":"canvas",
+    "path":"folders/panels/nodes/canvas.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

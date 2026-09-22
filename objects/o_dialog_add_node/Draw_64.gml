@@ -75,7 +75,7 @@ DIALOG_DRAW_BG
 			var _subw = ui(128);
 			subcatagory_pane.setFocusHover(sFOCUS, sHOVER);
 			subcatagory_pane.verify(_subw, _content_h);
-			subcatagory_pane.draw(_content_x, _content_y);
+			subcatagory_pane.draw(_content_x + 1, _content_y);
 			
 			_content_w -= _subw;
 			_content_x += _subw;

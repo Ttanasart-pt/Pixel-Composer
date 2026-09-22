@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.22.10.202",
+    "changes": [
+      {
+        "date": "2026-09-22T04:10:12.839Z",
+        "node": "Canvas",
+        "commit": "**Canvas**: Add background."
+      }
+    ]
+  },
+  {
     "version": "1.21.9.204",
     "changes": [
       {

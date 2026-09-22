@@ -141,6 +141,7 @@
     "icon_font":                          { "path": "./icon/s_icon_font.png",                               "s": 1, "x":  8, "y":  8 },
     "icon_gizmo":                         { "path": "./icon/s_icon_gizmo.png",                              "s": 2, "x": 12, "y": 12 },
     "icon_grid_setting":                  { "path": "./icon/s_icon_grid_setting.png",                       "s": 2, "x": 12, "y": 12 },
+    "icon_bg_setting":                    { "path": "./icon/s_icon_bg_setting.png",                         "s": 2, "x": 12, "y": 12 },
     "icon_visible_setting":               { "path": "./icon/s_icon_visible_setting.png",                    "s": 1, "x": 12, "y": 12 },
     "icon_minimap":                       { "path": "./icon/s_icon_minimap.png",                            "s": 2, "x": 12, "y": 12 },
     "icon_preview_export":                { "path": "./icon/s_icon_preview_export.png",                     "s": 1, "x": 12, "y": 12 },

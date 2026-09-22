@@ -28,7 +28,7 @@ function Panel_Canvas() : PanelContent() constructor {
 	 node = undefined;
 	_node = undefined;
 	
-	#region hotkey
+	#region Hotkey
 		var ctx = context_str;
 		var n = MOD_KEY.none;
     	var c = MOD_KEY.ctrl;
@@ -44,11 +44,12 @@ function Panel_Canvas() : PanelContent() constructor {
 		registerFunction(ctx, "Rotate CCW",      "R", s, function() /*=>*/ {return rotateCW()}  );
 	#endregion
 	
-	#region preview
+	#region Preview
 		node_dimension  = [1,1];
 		
 		content_surface = undefined;
 		preview_surface = undefined;
+		tool_surface    = undefined;
 		
 		preview_x = 0;
 		preview_y = 0;
@@ -61,9 +62,12 @@ function Panel_Canvas() : PanelContent() constructor {
 		view_drag_my  = 0;
 		
 		hover_content = false;
+		
+		bg_show  = true;
+		bg_alpha = 1;
 	#endregion
 	
-	#region tool
+	#region Tool
 		tool_current   = undefined;
 		tool_color     = ca_white;    tool_color_set = function(c) /*=>*/ { tool_color = c; }
 		tool_color_sub = ca_black;
@@ -71,7 +75,7 @@ function Panel_Canvas() : PanelContent() constructor {
 		tool_color_selecting = false;
 	#endregion
 	
-	#region global settings
+	#region Global Settings
 		resize_editor = new __Simple_Editor( "", button(function() /*=>*/ { setTool(new canvas_s_tool_resize(self)); }).setTooltip("Resize...")
 			.setBaseSprite(THEME.button_hide_fill).setIcon(THEME.resize, 0, COLORS._main_icon_light, .75), function() /*=>*/ {return 0}, function() /*=>*/ {} );
 		
@@ -95,7 +99,7 @@ function Panel_Canvas() : PanelContent() constructor {
 		];
 	#endregion
 	
-	#region draw settings
+	#region Draw Settings
 		drawing_surface       = undefined;
 		brush_surface         = undefined;
 		brush_outline_surface = undefined;
@@ -128,7 +132,7 @@ function Panel_Canvas() : PanelContent() constructor {
 		];
 	#endregion
 	
-	#region view settings
+	#region View Settings
 		tile        = [0,0];
 		tile_edit   = new checkBoxGroup( THEME.canvas_tile, function(v,i) /*=>*/ { tile[i] = v; }).setTooltips( [ "Tile Vertical", "Tile Horizontal" ] );
 		tile_editor = new __Simple_Editor( "", tile_edit, function() /*=>*/ {return tile}, function(b) /*=>*/ { tile = b; } );
@@ -138,16 +142,23 @@ function Panel_Canvas() : PanelContent() constructor {
 		grid_size   = 8;
 		grid_color  = cola(c_white, .2);
 		grid_editor = new __Simple_Editor( "", button(function() /*=>*/ {return dialogPanelCall(
-				new Panel_Canvas_Grid_Setting(self), mouse_mx - ui(8), mouse_my + ui(8), { anchor: ANCHOR.right | ANCHOR.top }
-			)}).setTooltip("Grid Settings...").setBaseSprite(THEME.button_hide_fill).setIcon(THEME.icon_grid_setting, 1, COLORS._main_icon_light, .75), function() /*=>*/ {return 0}, function() /*=>*/ {} );
+			new Panel_Canvas_Grid_Setting(self), mouse_mx - ui(8), mouse_my + ui(8), { anchor: ANCHOR.right | ANCHOR.top }
+		)}).setTooltip("Grid Settings...").setBaseSprite(THEME.button_hide_fill)
+			.setIcon(THEME.icon_grid_setting, 1, COLORS._main_icon_light, .75), function() /*=>*/ {return 0}, function() /*=>*/ {} );
+		
+		bg_editor = new __Simple_Editor( "", button(function() /*=>*/ {return dialogPanelCall(
+			new Panel_Canvas_BG_Setting(self), mouse_mx - ui(8), mouse_my + ui(8), { anchor: ANCHOR.right | ANCHOR.top }
+		)}).setTooltip("Background Settings...").setBaseSprite(THEME.button_hide_fill)
+			.setIcon(THEME.icon_bg_setting, 1, COLORS._main_icon_light, .75), function() /*=>*/ {return 0}, function() /*=>*/ {} );
 		
 		view_settings = [
 			tile_editor,
 			grid_editor, 
+			bg_editor, 
 		];
 	#endregion
 	
-	#region selection settings
+	#region Selection Settings
 		select_bool       = 0;
 		select_bool_fixed = 0;
 		select_cleanEdge  = 0;
@@ -224,7 +235,7 @@ function Panel_Canvas() : PanelContent() constructor {
 	function getSurface() {
 		content_surface = surface_verify(content_surface, node.attributes.dimension[0], node.attributes.dimension[1]);
 		surface_set_shader(content_surface, noone, true, BLEND.over);
-			draw_surface_safe(node.outputs[0].getValue(), 0, 0);
+			draw_surface_safe(node.outputs[1].getValue(), 0, 0);
 		surface_reset_shader();
 	}
 	
@@ -385,23 +396,25 @@ function Panel_Canvas() : PanelContent() constructor {
 	
 	////- Draw
 	
+	static refreshContent = function() {
+		node.triggerRender();
+		node.update();
+		getSurface();	
+	}
+	
 	static applyToNode = function(_surf, _free = false) {
 		recordAction(ACTION_TYPE.custom, function(data, _undo) /*=>*/ { 
 			var _px = node.pixel_data;
 			node.pixel_data = data.pixel_data;
 			data.pixel_data = _px;
-			node.triggerRender();
-			node.update();
-			getSurface();
+			refreshContent();
 			
 		}, { pixel_data : node.pixel_data }).setName("Edit canvas");
 		
 		var buff = buffer_create(1, buffer_grow, 1);
 		buffer_get_surface(buff, _surf, 0);
 		node.pixel_data = buff;
-		node.triggerRender();
-		node.update();
-		getSurface();
+		refreshContent();
 		
 		if(_free) surface_free(_surf);
 	}
@@ -556,11 +569,12 @@ function Panel_Canvas() : PanelContent() constructor {
 		#endregion
 		
 		#region preview
+			tool_surface    = surface_verify(tool_surface,    surf_w, surf_h);
 			preview_surface = surface_verify(preview_surface, surf_w, surf_h);
 			
 			if(tool_current && !tool_color_selecting) {
 				if(tool_current.preview_override) {
-					surface_set_shader(preview_surface, noone, true, BLEND.over);
+					surface_set_shader(tool_surface, noone, true, BLEND.over);
 						draw_surface_safe(tool_current.preview_override, 0, 0);
 					surface_reset_shader();
 					
@@ -568,7 +582,7 @@ function Panel_Canvas() : PanelContent() constructor {
 					var lay = tool_current && tool_current.overrideLayer? 0 : draw_layer;
 					var col = tool_current && tool_current.overrideColor? ca_white : tool_color;
 					
-					surface_set_shader(preview_surface, sh_canvas_surface_blend, true, BLEND.over);
+					surface_set_shader(tool_surface, sh_canvas_surface_blend, true, BLEND.over);
 						shader_set_2( "dimension",  node_dimension     );
 						shader_set_s( "bg",         content_surface    );
 						shader_set_i( "layer",      lay                );
@@ -590,7 +604,7 @@ function Panel_Canvas() : PanelContent() constructor {
 				}
 				
 			} else {
-				surface_set_shader(preview_surface, sh_canvas_surface_blend_selection, true, BLEND.over);
+				surface_set_shader(tool_surface, sh_canvas_surface_blend_selection, true, BLEND.over);
 					shader_set_i( "selecting",  selecting          );
 					shader_set_s( "selectSurf", selection_cont     );
 					
@@ -598,6 +612,15 @@ function Panel_Canvas() : PanelContent() constructor {
 				surface_reset_shader();
 			}
 			
+			surface_set_shader(preview_surface, sh_canvas_apply_background, true, BLEND.over);
+				shader_set_i( "bgUse",     bg_show && node.useBG   );
+				shader_set_s( "bgSurface", node.temp_surface[0]    );
+				shader_set_f( "bgAlpha",   bg_alpha * node.bgAlpha );
+				shader_set_s( "fgSurface", tool_surface            );
+				
+				draw_empty();
+			surface_reset_shader();
+		
 			if(tile[0] && tile[1]) draw_surface_tiled_ext_safe( preview_surface, preview_x, preview_y, preview_s, preview_s, 0, c_white, 1);
 			else if(tile[0])       draw_surface_tiled_hori(     preview_surface, preview_x, preview_y, preview_s, preview_s, 0, c_white, 1);
 			else if(tile[1])       draw_surface_tiled_vert(     preview_surface, preview_x, preview_y, preview_s, preview_s, 0, c_white, 1);

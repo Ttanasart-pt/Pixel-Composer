@@ -11,6 +11,8 @@ function buttonClass(_onClick, _icon = noone) : widget() constructor {
 	icon_blend       = c_white;
 	icon_blend_hover = undefined;
 	
+	minWidth = ui(16);
+	
 	text	= "";
 	tooltip = "";
 	tooltipIndexFn = undefined;

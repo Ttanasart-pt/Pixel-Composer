@@ -83,9 +83,9 @@ function Panel_Canvas_Tool_Settings() : PanelContent() constructor {
 		}
 		
 		var wdw = ui(32);
-		     if(is(_edtw, buttonClass)) wdw = wdh;
-		else if(is(_edtw, checkBox))    wdw = wdh;
-		else if(is(_edtw, buttonGroup)) {
+		       if(is(_edtw, buttonClass)) wdw = wdh;
+		  else if(is(_edtw, checkBox))    wdw = wdh;
+		  else if(is(_edtw, buttonGroup)) {
 			_edtw.collapsable = false;
 			wdw = wdh * _edtw.size;
 			
@@ -137,7 +137,7 @@ function Panel_Canvas_Tool_Settings() : PanelContent() constructor {
 			if(is_array(_set)) {
 				var sw = drawSettings(_set, sx, sy, halign);
 				sx  += sw * sgn;
-				sww += sw;	
+				sww += sw;
 				continue;
 			}
 			

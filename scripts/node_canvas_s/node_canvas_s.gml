@@ -55,14 +55,23 @@ function Node_Canvas_S(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 	preview_select_boxable = false;
 	
 	////- =Surface
-	newInput( 0, nodeValue_Vec2("Dimension", DEF_SURF)).setAnimable(false);
-	// newInput( 0, nodeValue_Dimension()).setAnimable(false);
+	newInput( 0, nodeValue_Vec2( "Dimension", DEF_SURF )).setAnimable(false);
 	
-	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
+	////- =BG
+	newInput( 1, nodeValue_Bool(   "Use BG",         true ));
+	newInput( 2, nodeValue_Int(    "Resource Index", 0    ));
+	newInput( 3, nodeValue_Vec2(   "Shift",         [0,0] ));
+	newInput( 4, nodeValue_Vec2(   "Scale",         [1,1] ));
+	newInput( 5, nodeValue_Slider( "Alpha",          1    ));
+	// 6
+	
+	newOutput( 0, nodeValue_Output("Surface Out",  VALUE_TYPE.surface, noone));
+	newOutput( 1, nodeValue_Output("Draw Surface", VALUE_TYPE.surface, noone));
 	
 	input_display_list = [ 
-		[ "Output",    false ], 0, 
-		[ "Resources", false ], 
+		[ "Output",     false    ],  0, 
+		[ "Background", false, 1 ],  2,  3,  4,  5,  
+		[ "Resources",  false    ], 
 	]
 	
 	input_display_dynamic = [ 0 ];
@@ -80,11 +89,16 @@ function Node_Canvas_S(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 	
 	////- Node
 	
-	attributes.dimension  = [0,0];
+	temp_surface = [ noone, noone ];
+	
+	attributes.dimension = [0,0];
 	
 	pixel_data  = undefined;
 	editorPanel = undefined;
 	resources   = [];
+	
+	useBG       = false;
+	bgAlpha     = 1;
 	
 	static refreshNodes = function() /*=>*/ {};
 	static getNodeList  = function() /*=>*/ {return []};
@@ -92,16 +106,25 @@ function Node_Canvas_S(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 	static update = function(frame = CURRENT_FRAME) {
 		#region data
 			var _dim = getInputData( 0);
+			
+			var bg_show  = getInputData( 1);
+			var bg_index = getInputData( 2);
+			var bg_shift = getInputData( 3);
+			var bg_scale = getInputData( 4);
+			    bgAlpha  = getInputData( 5);
+			
 			resources = [];
 		#endregion
 		
 		var amo = getInputAmount();
 		for( var i = 0; i < amo; i++ ) {
 			var _ind = input_fix_len + i;
+			inputs[_ind].setName($"Resource {i}");
 			resources[i] = getInputData(_ind);
 		}
 		
 		var _outSurf = outputs[0].getValue();
+		var _drwSurf = outputs[1].getValue();
 		
 		if(!buffer_exists(pixel_data))
 			pixel_data = buffer_create(_dim[0] * _dim[1] * 4, buffer_grow, 1); 
@@ -127,9 +150,41 @@ function Node_Canvas_S(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 		}
 		
 		_outSurf = surface_verify(_outSurf, _dim[0], _dim[1]);
-		buffer_set_surface(pixel_data, _outSurf, 0);
+		_drwSurf = surface_verify(_drwSurf, _dim[0], _dim[1]);
+		
+		for( var i = 0, n = array_length(temp_surface); i < n; i++ ) 
+			temp_surface[i] = surface_verify(temp_surface[i], _dim[0], _dim[1]);
+		buffer_set_surface(pixel_data, _drwSurf, 0);
+		
+		useBG = false;
+		
+		if(bg_show) {
+			var bgSurf = array_safe_get(resources, bg_index, noone);
+			useBG  = is_just_surface(bgSurf);
+			
+			if(useBG) {
+				var bgx = bg_shift[0];
+				var bgy = bg_shift[1];
+				var bsx = bg_scale[0];
+				var bsy = bg_scale[1];
+				
+				surface_set_shader(temp_surface[0], sh_sample, true, BLEND.over);
+					draw_surface_ext(bgSurf, bgx, bgy, bsx, bsy, 0, c_white, 1);
+				surface_reset_shader();
+			}
+		}
+		
+		surface_set_shader(_outSurf, sh_canvas_apply_background, true, BLEND.over);
+			shader_set_i( "bgUse",     useBG           );
+			shader_set_f( "bgAlpha",   bgAlpha         );
+			shader_set_s( "bgSurface", temp_surface[0] );
+			shader_set_s( "fgSurface", _drwSurf        );
+			
+			draw_empty();
+		surface_reset_shader();
 		
 		outputs[0].setValue(_outSurf);
+		outputs[1].setValue(_drwSurf);
 	}
 	
 	function onDoubleClick(panel) {
