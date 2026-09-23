@@ -92,8 +92,8 @@ function Node_Bloom(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 		var _sh = surface_get_height_safe(_surf);
 		
 		temp_surface[0] = surface_verify(temp_surface[0], _sw, _sh);	
-		var _outSurf    = surface_verify(_outData[0], _sw, _sh);
-		var _maskSurf   = surface_verify(_outData[1], _sw, _sh);
+		var _outSurf    = surface_verify(_outData[0], _sw, _sh, attrDepth());
+		var _maskSurf   = surface_verify(_outData[1], _sw, _sh, attrDepth());
 		
 		surface_set_shader(temp_surface[0], sh_bloom_pass);
 			draw_clear_alpha(c_black, 1);
