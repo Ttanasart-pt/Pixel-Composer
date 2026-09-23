@@ -2,6 +2,7 @@ import os
 import subprocess
 import re
 import hashlib
+import argparse
 
 yycTemplate = """{{
   "$GMExtension":"",
@@ -134,7 +135,7 @@ def compile_with_msvc(src_file, out_dll):
 
 ## DEVICE
 
-mac_ip = "192.168.0.100"
+mac_ip = "192.168.0.99"
 
 ##
 
@@ -412,8 +413,15 @@ def buildExtension(srcArr, extDir):
         f.write(yyString)
 
 if __name__ == "__main__":
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--force", action="store_true")
+
     scriptDir = "D:\\Project\\MakhamDev\\LTS-PixelComposer\\PixelComposer\\scripts"
     extDir = "D:\\Project\\MakhamDev\\LTS-PixelComposer\\PixelComposer\\extensions\\inlineC"
+
+    args = parser.parse_args()
+    global FORCE
+    FORCE = args.force
 
     srcArr = scanFolder(scriptDir)
     buildExtension(srcArr, extDir)

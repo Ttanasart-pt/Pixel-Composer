@@ -544,11 +544,12 @@ event_inherited();
 			
 			var _is_extra = name == "Extra";
 			
-			var _tx = ui(4);
+			var _tx = ui(6);
 			var _ty = _y + hh + hg / 2;
 			
-			var sprn = $"s_node_cat_{string_lower(name)}";
-			var spr  = asset_get_index(sprn);
+			var spr = cat && cat[$ "filter"] != undefined && is(context, Node)? context.icon : undefined;
+			if(!sprite_exists(spr))
+				spr = asset_get_index($"s_node_cat_{string_lower(name)}");
 			
 			if(sprite_exists(spr)) {
 				var _ss = (hg - ui(4)) / sprite_get_width(spr);
@@ -560,7 +561,7 @@ event_inherited();
 				gpu_set_tex_filter(false);
 			}
 			
-			_tx += hg + ui(4);
+			_tx += hg + ui(2);
 			name = __txt(name);
 			draw_text_add(_tx, _ty, name);
 			
