@@ -141,30 +141,32 @@ function Node_Level(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	}
 	
 	static processData = function(_outSurf, _data, _array_index) {	
-		var _wi = _data[1];
-		var _ri = _data[2];
-		var _gi = _data[3];
-		var _bi = _data[4];
-		var _ai = _data[5];
-		
-		var _wo = _data[12];
-		var _ro = _data[13];
-		var _go = _data[14];
-		var _bo = _data[15];
-		var _ao = _data[16];
-		
-		surface_set_shader(_outSurf, sh_level, true, BLEND.over);
-			shader_set_2("lwi", _wi);
-			shader_set_2("lri", _ri);
-			shader_set_2("lgi", _gi);
-			shader_set_2("lbi", _bi);
-			shader_set_2("lai", _ai);
+		#region data
+			var _wi = _data[ 1];
+			var _ri = _data[ 2];
+			var _gi = _data[ 3];
+			var _bi = _data[ 4];
+			var _ai = _data[ 5];
 			
-			shader_set_2("lwo", _wo);
-			shader_set_2("lro", _ro);
-			shader_set_2("lgo", _go);
-			shader_set_2("lbo", _bo);
-			shader_set_2("lao", _ao);
+			var _wo = _data[12];
+			var _ro = _data[13];
+			var _go = _data[14];
+			var _bo = _data[15];
+			var _ao = _data[16];
+		#endregion
+			
+		surface_set_shader(_outSurf, sh_level, true, BLEND.over);
+			shader_set_2( "lwi", _wi );
+			shader_set_2( "lri", _ri );
+			shader_set_2( "lgi", _gi );
+			shader_set_2( "lbi", _bi );
+			shader_set_2( "lai", _ai );
+			
+			shader_set_2( "lwo", _wo );
+			shader_set_2( "lro", _ro );
+			shader_set_2( "lgo", _go );
+			shader_set_2( "lbo", _bo );
+			shader_set_2( "lao", _ao );
 			
 			draw_surface_safe(_data[0]);
 		surface_reset_shader();

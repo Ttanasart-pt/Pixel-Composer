@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.10.203",
+    "changes": [
+      {
+        "date": "2026-09-23T07:19:26.288Z",
+        "node": "",
+        "commit": "**Curve**: Add Dynamic range control."
+      }
+    ]
+  },
+  {
     "version": "1.21.9.206",
     "changes": [
       {

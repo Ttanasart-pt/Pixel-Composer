@@ -11,6 +11,11 @@
         "date": "2026-09-23T04:55:09.046Z",
         "node": "Preview Panel",
         "commit": "**Preview Panel**: Improve area editor when area size become small."
+      },
+      {
+        "date": "2026-09-23T07:19:26.287Z",
+        "node": "",
+        "commit": "**Curve**: Add Dynamic range control."
       }
     ]
   },

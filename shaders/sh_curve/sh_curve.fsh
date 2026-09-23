@@ -133,6 +133,9 @@
 varying vec2 v_vTexcoord;
 varying vec4 v_vColour;
 
+uniform vec2  bIn;
+uniform vec2  bOut;
+
 uniform float w_curve[CURVE_MAX];
 uniform int   w_amount;
 
@@ -157,7 +160,10 @@ void main() {
 	col.a = curveEval(a_curve, a_amount, col.a);
 	
 	float w = (col.r + col.g + col.b) / 3.;
+	w = (w - bIn.x) / (bIn.y - bIn.x);
+	
 	float wtarget = curveEval(w_curve, w_amount, w);
+	wtarget = mix(bOut.x, bOut.y, wtarget);
 	
 	if(w == 0.) col.rgb = vec3(wtarget);
 	else col.rgb *= wtarget / w;
