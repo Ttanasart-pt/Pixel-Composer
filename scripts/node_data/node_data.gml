@@ -2209,7 +2209,8 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		if(_panel && _panel.node_hovering == self) ba = .1;
 		draw_sprite_stretched_ext(bg_spr, 3, xx, yy, w * _s, nh, nodeC, ba);
 		
-		var cc = renderActive? COLORS._main_text : COLORS._main_text_sub;
+		var cc = renderActive? COLORS._main_text : COLORS._main_text_sub; cc = c_white;
+		
 		if(PREFERENCES.node_show_render_status && !rendered)
 			cc = isRenderable()? COLORS._main_value_positive : COLORS._main_value_negative;
 		if(!reqpass)
@@ -2874,10 +2875,10 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			
 			if(node_draw_icon != undefined) {
 				if(node_draw_icon == -1)
-					draw_sprite_bbox_uniform(getMetaSpr(), 0, draw_bbox);
+					draw_sprite_bbox_uniform(getMetaSpr(), 0, draw_bbox, c_white, 1, true);
 				
 				if(node_draw_icon != -1)
-					draw_sprite_bbox_uniform(node_draw_icon, node_draw_icon_index, draw_bbox);
+					draw_sprite_bbox_uniform(node_draw_icon, node_draw_icon_index, draw_bbox, c_white, 1, true);
 			}
 			
 			if(onDrawNode) {

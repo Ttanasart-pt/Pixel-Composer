@@ -6,6 +6,11 @@
         "date": "2026-09-23T00:57:02.647Z",
         "node": "FFT] Add Blackman Preprocess function. - [FFT",
         "commit": "**FFT] Add Blackman Preprocess function. - [FFT**: Improve performance."
+      },
+      {
+        "date": "2026-09-23T03:47:07.539Z",
+        "node": "Color Button",
+        "commit": "**Color Button**: Fix crash when toggling button inside dialog box."
       }
     ]
   },

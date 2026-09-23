@@ -3924,7 +3924,6 @@
     {"name":"s_node_feedback_input","order":10,"path":"sprites/s_node_feedback_input/s_node_feedback_input.yy",},
     {"name":"s_node_feedback_output","order":9,"path":"sprites/s_node_feedback_output/s_node_feedback_output.yy",},
     {"name":"s_node_feedback","order":3,"path":"sprites/s_node_feedback/s_node_feedback.yy",},
-    {"name":"s_node_fft","order":4,"path":"sprites/s_node_fft/s_node_fft.yy",},
     {"name":"s_node_filter_array","order":28,"path":"sprites/s_node_filter_array/s_node_filter_array.yy",},
     {"name":"s_node_find_pixel","order":10,"path":"sprites/s_node_find_pixel/s_node_find_pixel.yy",},
     {"name":"s_node_flip_add_collider","order":1,"path":"sprites/s_node_flip_add_collider/s_node_flip_add_collider.yy",},

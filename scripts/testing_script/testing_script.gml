@@ -110,6 +110,7 @@ function __test_load_collections(dir = COLLECTIONS) {
 	ds_stack_destroy(st);
 	
 	print("---------- COLLECTION TESTING ENDED ----------");
+	noti_status("Update complete");
 }
 
 function __test_load_all_nodes() {
@@ -193,6 +194,7 @@ function __test_update_collections_meta(dir = COLLECTIONS) {
 	ds_stack_destroy(st);
 	
 	print("---------- COLLECTION UPDATING ENDED ----------");
+	noti_status("Update complete");
 }
 
 function __test_zip_collection(dir = COLLECTIONS) {

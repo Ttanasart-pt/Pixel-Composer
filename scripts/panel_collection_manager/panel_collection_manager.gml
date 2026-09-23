@@ -2,6 +2,8 @@ function Panel_Collection_Manager() : PanelContent() constructor {
 	w = ui(540);
 	h = ui(480);
 	
+	padding = ui(4);
+	
 	title     = "Collection Manager";
 	auto_pin  = true;
 	content_w = w - ui(200);

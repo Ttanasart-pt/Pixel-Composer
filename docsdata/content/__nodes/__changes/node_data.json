@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.10.203",
+    "changes": [
+      {
+        "date": "2026-09-23T03:47:07.540Z",
+        "node": "",
+        "commit": "**Color Button**: Fix crash when toggling button inside dialog box."
+      }
+    ]
+  },
+  {
     "version": "1.22.10.201",
     "changes": [
       {

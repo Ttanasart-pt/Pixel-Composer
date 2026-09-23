@@ -4605,7 +4605,6 @@
     {"id":{"name":"s_node_feedback_input","path":"sprites/s_node_feedback_input/s_node_feedback_input.yy",},},
     {"id":{"name":"s_node_feedback_output","path":"sprites/s_node_feedback_output/s_node_feedback_output.yy",},},
     {"id":{"name":"s_node_feedback","path":"sprites/s_node_feedback/s_node_feedback.yy",},},
-    {"id":{"name":"s_node_fft","path":"sprites/s_node_fft/s_node_fft.yy",},},
     {"id":{"name":"s_node_filter_array","path":"sprites/s_node_filter_array/s_node_filter_array.yy",},},
     {"id":{"name":"s_node_find_pixel","path":"sprites/s_node_find_pixel/s_node_find_pixel.yy",},},
     {"id":{"name":"s_node_flip_add_collider","path":"sprites/s_node_flip_add_collider/s_node_flip_add_collider.yy",},},

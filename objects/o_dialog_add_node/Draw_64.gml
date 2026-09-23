@@ -43,9 +43,13 @@ DIALOG_DRAW_BG
 				var _spr = _rec.getSpr();
 				
 				var _hov = hv && point_in_rectangle(mouse_mx, mouse_my, _rcx, _rcy, _rcx + _rcs, _rcy + _rcs);
-				var _cc  = _hov? COLORS._main_icon_light : COLORS._main_icon;
-				var _ss  = (_rcs - ui(4)) / 64;
-				draw_sprite_ext(_spr, 0, _rcx + _rcs / 2, _rcy + _rcs / 2, _ss, _ss, 0, _cc);
+				
+				if(sprite_exists(_spr)) {
+					var _cc  = _hov? COLORS._main_icon_light : COLORS._main_icon;
+					var _ss  = (_rcs - ui(4)) / sprite_get_height(_spr);
+					
+					draw_sprite_ext(_spr, 0, _rcx + _rcs / 2, _rcy + _rcs / 2, _ss, _ss, 0, _cc);
+				}
 				
 				if(_hov) {
 					setTOOLTIP(_nam);
@@ -65,7 +69,6 @@ DIALOG_DRAW_BG
 			draw_set_alpha(.3);
 			draw_line(_content_x + 1, _content_y + ui(2), _content_x + _content_w - 2, _content_y + ui(2))
 			draw_set_alpha(1);
-			
 			
 			_content_y += ui(4);
 			_content_h -= ui(4);

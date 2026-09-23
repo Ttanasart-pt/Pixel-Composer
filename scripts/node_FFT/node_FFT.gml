@@ -29,6 +29,8 @@ function Node_FFT(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) const
 		
 		var  N  = array_length(_dat);
 		
+		if(N <= 1) return [];
+		
 		if(__use_ext) {
 			var _args   = buffer_create(1, buffer_grow, 1);
 			var bData   = buffer_create(1, buffer_grow, 1);    buffer_to_start(bData);
@@ -168,13 +170,6 @@ cfunction double cfunc_FFT(FFTArgs* args) {
     double iLen = 1. / static_cast<double>(length);
 
     switch(windowFn) {
-        case 0: // no window
-            for (uint32_t i = 0; i < length; i++) {
-                complexData[i].re = data[i];
-                complexData[i].im = 0.;
-            }
-            break;
-
         case 1 : // Hann
             for (uint32_t i = 0; i < length; i++) {
                 double window = .5 * (1 - cos(TAU * i * iLen));
@@ -190,6 +185,14 @@ cfunction double cfunc_FFT(FFTArgs* args) {
                 complexData[i].im = 0.;
             }
             break;
+
+        default : // no window
+            for (uint32_t i = 0; i < length; i++) {
+                complexData[i].re = data[i];
+                complexData[i].im = 0.;
+            }
+            break;
+
     }
 
     double logLen = log2(static_cast<double>(length));

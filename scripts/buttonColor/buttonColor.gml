@@ -44,9 +44,11 @@ function buttonColor(_onModify, dialog = noone) : widget() constructor {
 		if(parentDialog == noone) return;
 		
 		if(is(parentDialog, PanelContent)) {
-			if(parentDialog.panel) parentDialog.panel.addChildren(dialog);
+			var _dia = parentDialog.panel? parentDialog.panel.dialog : noone;
+			if(_dia && instance_exists(_dia)) 
+				_dia.addChildren(dialog);
 			
-		} else
+		} else if(instance_exists(parentDialog))
 			parentDialog.addChildren(dialog);
 	}
 	

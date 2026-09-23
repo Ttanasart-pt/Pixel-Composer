@@ -89,6 +89,7 @@ if __name__ == "__main__":
     updateThemeMeta("default Mac")
     updateThemeMeta("default Mac Retina")
     updateThemeMeta("True Dark")
+    updateThemeMeta("Comical")
 
     packFolder("Actions", "actions")
     packFolder("Addons", "addons")
