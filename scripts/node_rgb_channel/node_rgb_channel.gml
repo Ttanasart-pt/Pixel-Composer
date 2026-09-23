@@ -1,15 +1,26 @@
 function Node_RGB_Channel(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "RGBA Extract";
 	
-	newInput(0, nodeValue_Surface(     "Surface In")).setRequired();
-	newInput(1, nodeValue_EScroll( "Output Type", 0, [ "Channel value", "Greyscale" ]));
-	newInput(2, nodeValue_Bool(        "Keep Alpha", false));
-	newInput(3, nodeValue_Bool(        "Output Array", false));
+	////- =Surface
+	newInput( 0, nodeValue_Surface( "Surface In")).setRequired();
 	
-	newOutput(0, nodeValue_Output("Red", VALUE_TYPE.surface, noone));
-	newOutput(1, nodeValue_Output("Green", VALUE_TYPE.surface, noone));
-	newOutput(2, nodeValue_Output("Blue", VALUE_TYPE.surface, noone));
-	newOutput(3, nodeValue_Output("Alpha", VALUE_TYPE.surface, noone));
+	////- =Output
+	newInput( 1, nodeValue_EScroll( "Output Type",  0, [ "Channel value", "Greyscale" ]));
+	newInput( 2, nodeValue_Bool(    "Keep Alpha",   false ));
+	newInput( 3, nodeValue_Bool(    "Output Array", false ));
+	// 4 
+	
+	newOutput(0, nodeValue_Output( "Red",   VALUE_TYPE.surface, noone ));
+	newOutput(1, nodeValue_Output( "Green", VALUE_TYPE.surface, noone ));
+	newOutput(2, nodeValue_Output( "Blue",  VALUE_TYPE.surface, noone ));
+	newOutput(3, nodeValue_Output( "Alpha", VALUE_TYPE.surface, noone ));
+	
+	input_display_list = [
+		[ "Surface", false ], 0,
+		[ "Output",  false ], 1, 2, 3, 
+	]
+	
+	////- Node
 	
 	attribute_surface_depth();
 	
@@ -25,10 +36,14 @@ function Node_RGB_Channel(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	}
 	
 	static processData = function(_outData, _data, output_index) {
-		var _surf = _data[0];
-		var _grey = _data[1];
-		var _alp  = _data[2];
-		var _arr  = _data[3];
+		#region data
+			var _surf = _data[ 0];
+			
+			var _grey = _data[ 1];
+			var _alp  = _data[ 2];
+			var _arr  = _data[ 3];
+			
+		#endregion
 		
 		outputs[0].name = _arr? "RGBA" : "Red";
 		outputs[0].setArrayDepth(_arr);

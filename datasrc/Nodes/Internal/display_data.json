@@ -759,6 +759,7 @@
             { "label": "/Conversion" },
             "Node_BW",
             "Node_Greyscale",
+            "Node_Channel_Swizzle",
             "Node_RGB_Channel",
             "Node_HSV_Channel",
             "Node_Alpha_Grey",

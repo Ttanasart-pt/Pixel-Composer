@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"node_channel_swizzle",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"node_channel_swizzle",
+  "parent":{
+    "name":"conversion",
+    "path":"folders/nodes/data/filter/conversion.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

@@ -1,0 +1,6 @@
+{
+    "name":          "Channel Swizzle",
+    "spr":           "s_node_channel_swizzle",
+    "baseNode":      "Node_Channel_Swizzle",
+    "pxc_version":    121102,
+}

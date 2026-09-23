@@ -1,0 +1,11 @@
+{
+  "$GMNotes":"v1",
+  "%Name":"note_channel_swizzle",
+  "name":"note_channel_swizzle",
+  "parent":{
+    "name":"conversion",
+    "path":"folders/nodes/data/filter/conversion.yy",
+  },
+  "resourceType":"GMNotes",
+  "resourceVersion":"1.1",
+}

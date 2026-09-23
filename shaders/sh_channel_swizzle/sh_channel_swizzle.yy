@@ -1,0 +1,12 @@
+{
+  "$GMShader":"",
+  "%Name":"sh_channel_swizzle",
+  "name":"sh_channel_swizzle",
+  "parent":{
+    "name":"conversion",
+    "path":"folders/nodes/data/filter/conversion.yy",
+  },
+  "resourceType":"GMShader",
+  "resourceVersion":"2.0",
+  "type":1,
+}
