@@ -307,6 +307,9 @@ function preview_overlay_area_span(hover, active, _x, _y, _s, _mx, _my, _flag) {
 	var __ah = array_safe_get_fast(_val, 3);
 	var __at = array_safe_get_fast(_val, 4);
 	
+	var drawPos  = _flag & 0b0001;
+	var drawSize = _flag & 0b0010;
+		
 	var _ax = __ax * _s + _x;
 	var _ay = __ay * _s + _y;
 	var _aw = __aw * _s;
@@ -315,24 +318,41 @@ function preview_overlay_area_span(hover, active, _x, _y, _s, _mx, _my, _flag) {
 	var __x0 = __ax - __aw, __x1 = __ax + __aw;
 	var __y0 = __ay - __ah, __y1 = __ay + __ah;
 	
-	var x0 = _ax - _aw, x1 = _ax + _aw;
-	var y0 = _ay - _ah, y1 = _ay + _ah;
-	var xs = x1 + 16 * sign(_aw);
-	var ys = y1 + 16 * sign(_ah);
-			
+	var rx0 = _ax - _aw;
+	var rx1 = _ax + _aw;
+	var ry0 = _ay - _ah;
+	var ry1 = _ay + _ah;
+	
+	var dw = max(ui(16), abs(_aw));
+	var dh = max(ui(16), abs(_ah));
+	var drawProxy = dw != abs(_aw) || dh != abs(_ah);
+	
+	var x0 = _ax - dw;
+	var x1 = _ax + dw;
+	var y0 = _ay - dh;
+	var y1 = _ay + dh;
+	
+	var xs = x1 + ui(16) * sign(dw);
+	var ys = y1 + ui(16) * sign(dh);
+	
 	var _hov = -1;
 	var _r   = ui(PREVIEW_OVERLAY_RAD);
-			
-	var drawPos  = _flag & 0b0001;
-	var drawSize = _flag & 0b0010;
-		
+	
 	if(drawSize) {
 		draw_set_color(COLORS._main_accent);
 		switch(__at) {
-			case AREA_SHAPE.rectangle :	draw_rectangle(    x0, y0, x1, y1, true ); break;
+			case AREA_SHAPE.rectangle :	
+				if(drawProxy) {
+					draw_rectangle( rx0, ry0, rx1, ry1, true ); 
+					draw_rectangle_dashed( x0, y0, x1, y1, true ); 
+					
+				} else 
+					draw_rectangle( x0, y0, x1, y1, true ); 
+				break;
+				
 			case AREA_SHAPE.elipse :	
 				draw_rectangle_dashed( x0, y0, x1, y1 ); 
-				draw_ellipse_prec(     x0, y0, x1, y1, true ); 
+				draw_ellipse_prec( rx0, ry0, rx1, ry1, true ); 
 				break;
 		}
 		

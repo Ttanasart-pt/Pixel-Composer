@@ -2209,7 +2209,8 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		if(_panel && _panel.node_hovering == self) ba = .1;
 		draw_sprite_stretched_ext(bg_spr, 3, xx, yy, w * _s, nh, nodeC, ba);
 		
-		var cc = renderActive? COLORS._main_text : COLORS._main_text_sub; cc = c_white;
+		
+		var cc = renderActive? COLORS._main_text : COLORS._main_text_sub; //cc = c_white;
 		
 		if(PREFERENCES.node_show_render_status && !rendered)
 			cc = isRenderable()? COLORS._main_value_positive : COLORS._main_value_negative;
@@ -2257,7 +2258,10 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		draw_set_text(f_sdf, fa_left, fa_center, cc, aa);
 			BLEND_ALPHA_MULP
 			
-			draw_set_color(c_black); draw_text_transformed(_tx+1, ty+1, _name, _ts, _ts, 0);
+			if(THEME_VALUE.node_name_shadow) {
+				draw_set_color(c_black); draw_text_transformed(_tx+1, ty+1, _name, _ts, _ts, 0);
+			}
+			
 			draw_set_color(cc);      draw_text_transformed(_tx,   ty,   _name, _ts, _ts, 0);
 			if(active_index != -1 && !active_value) draw_line_width(_tx, ty, _tx + string_width(_name) * _ts, ty, ui(1));
 			
@@ -2902,6 +2906,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			BLEND_NORMAL
 		}
 		
+		if(THEME_VALUE.node_border) draw_sprite_stretched_ext(bg_spr, 1, xx, yy, w * _s, hh * _s, COLORS.node_border, 1);
 		if(bg_spr_add > 0) draw_sprite_stretched_add(bg_spr, 1, xx, yy, w * _s, hh * _s, getColor(), bg_spr_add);
 		
 		active_drawing = active_draw_index > -1;

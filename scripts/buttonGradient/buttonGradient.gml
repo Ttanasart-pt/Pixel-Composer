@@ -51,7 +51,7 @@ function buttonGradient(_onModify, dialog = noone) : widget() constructor {
 			interactable = other.interactable;
 			drop_target  = other;
 			
-			if(pdia) pdia.addChildren(self);
+			if(instance_exists(pdia)) pdia.addChildren(self);
 		}
 	}
 	

@@ -80,6 +80,8 @@ function ThemeColor() constructor {
 
     node_base_bg                        = CDEF.main_dkgrey;
     node_name_bg                        = CDEF.main_dark;
+    node_border                         = CDEF.main_dark;
+    
     node_composite_bg                   = CDEF.main_dkgrey;
     node_composite_bg_blend             = CDEF.main_white;
     node_composite_separator            = CDEF.main_black;
@@ -225,6 +227,9 @@ function ThemeValue() constructor {
 	dialog_addnode_offset         = 8;
 
     inline_node_radius            = 6;
+    
+    node_border                   = false;
+    node_name_shadow              = true;
     
     panel_separation_type         = "frame";
     panel_padding                 = 2;
