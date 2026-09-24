@@ -7,8 +7,8 @@
         "main_dark":	"202020",
         "main_grey":	"202020",
         "main_ltgrey":	"404040",
-        "main_mdwhite":	"404040",
-        "main_white":	"969696",
+        "main_mdwhite":	"969696",
+        "main_white":	"cccccc",
         "main_bg":      "040404",
         
         "blue":			"27aae1",
@@ -54,8 +54,8 @@
         "lua_highlight_string": "blue",
         "lua_highlight_comment": "main_ltgrey",
         
-        "collection_folder_empty": "main_white",
-        "collection_folder_nonempty": "white",
+        "collection_folder_empty": "main_mdwhite",
+        "collection_folder_nonempty": "main_white",
         "collection_tree_line": "main_dkgrey",
         "collection_path_current_bg": "main_grey",
         
@@ -116,11 +116,11 @@
         "scrollbar_bg": "main_dkblack",
         "scrollbar_hover": "main_white",
         "scrollbar_active": "main_white",
-        "scrollbar_idle": "main_mdwhite",
+        "scrollbar_idle": "main_ltgrey",
 
         "section_hover": "_main_accent",
-        "section_selected": "main_mdwhite",
-        "section_bg": "main_mdwhite",
+        "section_selected": "main_ltgrey",
+        "section_bg": "main_ltgrey",
 
         "panel_animation_frame_divider": "main_black",
         "panel_animation_keyframe_ease_line": "main_ltgrey",
@@ -154,7 +154,7 @@
         "panel_bg_clear_inner": "main_mdblack",
         "panel_bg_clear": "main_black",
         "panel_select_border": "main_white",
-        "panel_frame": "main_mdwhite",
+        "panel_frame": "main_ltgrey",
         "panel_frame_inner": "main_grey",
         "panel_prop_bg": "main_ltgrey",
         "panel_tab": "white",
@@ -179,7 +179,7 @@
         "panel_preview_bg_3d": "main_dkblack",
         
         "panel_preview_grid": "main_grey",
-        "panel_preview_surface_outline": "main_white",
+        "panel_preview_surface_outline": "main_mdwhite",
         "panel_preview_split_line": "main_grey",
         "panel_preview_tool_button": "main_white",
         "panel_preview_tool_separator": "main_dkgrey",

@@ -628,9 +628,9 @@ function Panel_Collection() : PanelContent() constructor {
 		
 		for( var i = 0, n = array_length(root.subDir); i < n; i++ ) {
 			var hg = root.subDir[i].draw(self, _x, _y, _m, ww, hov, foc, root, _params);
-			
 			_hh += hg;
 			_y  += hg;
+			
 		}
 		
 		return _hh + ui(28);

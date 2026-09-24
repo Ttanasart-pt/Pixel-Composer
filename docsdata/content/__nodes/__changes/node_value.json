@@ -6,6 +6,11 @@
         "date": "2026-09-24T05:09:31.726Z",
         "node": "",
         "commit": "**Group**: Fix animated input not update on frame."
+      },
+      {
+        "date": "2026-09-24T06:03:43.373Z",
+        "node": "",
+        "commit": "**Pin**: Fix consecutive pins cause incorrect surface to vec2 conversion."
       }
     ]
   },

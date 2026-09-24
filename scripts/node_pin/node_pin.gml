@@ -58,6 +58,10 @@ function Node_Pin(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		label_ori   = inputs[1].getValue();
 		label_scale = inputs[2].getValue();
 		label_color = inputs[3].getValue();
+	}
+	
+	static update = function() {
+		var _fr = inputs[0].value_from;
 		
 		if(inputs[0].value_from != noone) {
 			inputs[0].setType(inputs[0].value_from.type);
@@ -66,10 +70,6 @@ function Node_Pin(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 			inputs[0].color_display  = inputs[0].value_from.color_display;
 			outputs[0].color_display = inputs[0].color_display;
 		}
-	}
-	
-	static update = function() {
-		var _fr = inputs[0].value_from;
 		
 		if(_fr != noone) {
 			inputs[0].draw_bg        = _fr.draw_bg;

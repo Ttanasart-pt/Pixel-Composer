@@ -2313,14 +2313,10 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		if(!editable || connect_type == CONNECT_TYPE.output) return;
 		
 		switch(type) {
-			case VALUE_TYPE.text :
-				setValue(str); 
-				break;
-				
-			case VALUE_TYPE.gradient :
-				var _grad = new gradientObject().deserialize(str);
-				setValueRaw(_grad);
-				break;
+			case VALUE_TYPE.text     : setValue(str); break;
+			case VALUE_TYPE.surface  : setValue(str); break;
+			
+			case VALUE_TYPE.gradient : var _grad = new gradientObject().deserialize(str); setValueRaw(_grad); break;
 				
 			default : 
 				try { 

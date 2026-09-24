@@ -1410,6 +1410,7 @@
     {"name":"o_dialog_scrollbox","order":12,"path":"objects/o_dialog_scrollbox/o_dialog_scrollbox.yy",},
     {"name":"o_dialog_splash","order":6,"path":"objects/o_dialog_splash/o_dialog_splash.yy",},
     {"name":"o_dialog_steam_project_update","order":4,"path":"objects/o_dialog_steam_project_update/o_dialog_steam_project_update.yy",},
+    {"name":"o_dialog_textarea","order":4,"path":"objects/o_dialog_textarea/o_dialog_textarea.yy",},
     {"name":"o_dialog_textbox_autocomplete","order":5,"path":"objects/o_dialog_textbox_autocomplete/o_dialog_textbox_autocomplete.yy",},
     {"name":"o_dialog_textbox_function_guide","order":6,"path":"objects/o_dialog_textbox_function_guide/o_dialog_textbox_function_guide.yy",},
     {"name":"o_dialog_textbox","order":3,"path":"objects/o_dialog_textbox/o_dialog_textbox.yy",},

@@ -63,6 +63,7 @@ function __NodeValue_Dimension(_node, value, _name = "Dimension") : __NodeValue_
 			node.triggerRender();
 			
 		}).setIcon(THEME.node_use_project, attributes.use_project_dimension, COLORS._main_icon).iconPad().setTooltip(unitTooltip);
+		
 		editWidget.setSideButton(editProjDim); 
 		editWidget.setSuffix(attributes.use_project_dimension? "x" : "");
 	}

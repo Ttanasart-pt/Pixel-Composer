@@ -270,6 +270,12 @@
 		}
 	}
 	
+	function setDimension(dw, dh) {
+		dialog_w = dw;
+		dialog_h = dh;
+		return self;
+	}
+	
  ////- Focus
 		
 	function point_in(mx, my) {

@@ -312,3 +312,7 @@ function fileNameCall(path, fname, onModify, _x = mouse_mx + 8, _y = mouse_my + 
 function textboxCall(initText, onModify, _x = mouse_mx + 8, _y = mouse_my + 8) {
 	return dialogCall(o_dialog_textbox, _x, _y).setModify(onModify).activate(initText);
 }
+
+function textareaCall(initText, onModify, _x = mouse_mx + 8, _y = mouse_my + 8) {
+	return dialogCall(o_dialog_textarea, _x, _y).setModify(onModify).activate(initText);
+}

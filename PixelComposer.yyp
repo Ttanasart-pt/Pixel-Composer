@@ -1727,6 +1727,7 @@
     {"id":{"name":"o_dialog_scrollbox","path":"objects/o_dialog_scrollbox/o_dialog_scrollbox.yy",},},
     {"id":{"name":"o_dialog_splash","path":"objects/o_dialog_splash/o_dialog_splash.yy",},},
     {"id":{"name":"o_dialog_steam_project_update","path":"objects/o_dialog_steam_project_update/o_dialog_steam_project_update.yy",},},
+    {"id":{"name":"o_dialog_textarea","path":"objects/o_dialog_textarea/o_dialog_textarea.yy",},},
     {"id":{"name":"o_dialog_textbox_autocomplete","path":"objects/o_dialog_textbox_autocomplete/o_dialog_textbox_autocomplete.yy",},},
     {"id":{"name":"o_dialog_textbox_function_guide","path":"objects/o_dialog_textbox_function_guide/o_dialog_textbox_function_guide.yy",},},
     {"id":{"name":"o_dialog_textbox","path":"objects/o_dialog_textbox/o_dialog_textbox.yy",},},

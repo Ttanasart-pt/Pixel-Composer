@@ -2842,8 +2842,7 @@ function Panel_Inspector() : PanelContent() constructor {
     static editValueAsString = function(_junc) {
     	if(!is(prop_selecting, NodeValue)) return;
     	
-    	var _val = prop_selecting.showValue();
-    	textboxCall(_val, function(t) /*=>*/ { prop_selecting.setString(t); })
+    	textareaCall(prop_selecting.showValue(), function(t) /*=>*/ {return prop_selecting.setString(t)});
     }
 }
 
