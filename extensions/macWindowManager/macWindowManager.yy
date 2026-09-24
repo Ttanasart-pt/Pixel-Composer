@@ -21,7 +21,11 @@
   "exportToGame":true,
   "extensionVersion":"0.0.1",
   "files":[
-    {"$GMExtensionFile":"v1","%Name":"","constants":[],"copyToTargets":-1,"filename":"libmacWindowManager.dylib","final":"","functions":[
+    {"$GMExtensionFile":"v1","%Name":"","ConfigValues":{
+        "Itch":{
+          "copyToTargets":"2",
+        },
+      },"constants":[],"copyToTargets":-1,"filename":"libmacWindowManager.dylib","final":"","functions":[
         {"$GMExtensionFunction":"","%Name":"mac_enable_zoom_button","argCount":0,"args":[1,],"documentation":"","externalName":"enableZoomButton","help":"","hidden":false,"kind":1,"name":"mac_enable_zoom_button","resourceType":"GMExtensionFunction","resourceVersion":"2.0","returnType":2,},
         {"$GMExtensionFunction":"","%Name":"mac_set_taskbar_offset","argCount":0,"args":[1,2,],"documentation":"","externalName":"setTitleHeight","help":"","hidden":false,"kind":1,"name":"mac_set_taskbar_offset","resourceType":"GMExtensionFunction","resourceVersion":"2.0","returnType":2,},
         {"$GMExtensionFunction":"","%Name":"mac_screen_mouse_x","argCount":0,"args":[],"documentation":"","externalName":"screen_mouse_x","help":"","hidden":false,"kind":1,"name":"mac_screen_mouse_x","resourceType":"GMExtensionFunction","resourceVersion":"2.0","returnType":2,},

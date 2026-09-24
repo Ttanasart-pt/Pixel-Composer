@@ -243,7 +243,7 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 			var _dashShf  = _data[45];
 			
 			var _wigUse   = _data[47];
-			var _sed      = _data[ 5];
+			var _wigSed   = _data[ 5];
 			var _wigA     = _data[ 4];
 			var _wigAC    = getInputData(53), curve_wigA = inputs[ 4].attributes.curved? new curveMap(_wigAC)  : undefined;
 			
@@ -352,8 +352,6 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 				_capE = false; 
 			}
 			
-			random_set_seed(_sed);
-			
 			var p = new __vec2P();
 			var _pathData = [];
 			var minx = 999999, miny = 999999, maxx = -999999, maxy = -999999;
@@ -420,7 +418,7 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 							
 							var wgAmp = _wigAl * (curve_wigA? curve_wigA.get(pgr) : 1);
 							var wgFre = _wigF * (curve_wigF? curve_wigF.get(pgr) : 1);
-							var wgLen = randomFractal(_sed, pgc + (_wigP + _wigPl) * pi * 2 / wgFre, wgFre, _wigI) * wgAmp;
+							var wgLen = randomFractal(_seed + _wigSed, pgc + (_wigP + _wigPl) * pi * 2 / wgFre, wgFre, _wigI) * wgAmp;
 							_nx += lengthdir_x(wgLen, _d + 90); 
 							_ny += lengthdir_y(wgLen, _d + 90);
 						}
@@ -566,7 +564,7 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 								var wgAmp = _wigAl * (curve_wigA? curve_wigA.get(pgc) : 1);
 								var wgFre = _wigF  * (curve_wigF? curve_wigF.get(pgc) : 1);
 								var wgPhs = pgr + (_wigP + _wigPl * bool(j)) * pi * 2 / wgFre;
-								var wgDis = randomFractal(_seed + _sed, wgPhs, wgFre, _wigI) * wgAmp;
+								var wgDis = randomFractal(_seed + _wigSed, wgPhs, wgFre, _wigI) * wgAmp;
 								var wgDir = _p.dirr + 90; 
 								
 								_p.x += lengthdir_x(wgDis, wgDir);
@@ -899,7 +897,7 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 			for( var i = 0, n = array_length(lines); i < n; i++ ) {
 				if(array_length(lines[i]) < 2) continue;
 				var points = lines[i];
-				random_set_seed(_sed + i);
+				random_set_seed(_seed + i);
 				
 				var _ldata = line_data[i];
 				var _len   = _ldata.length;
@@ -1202,7 +1200,7 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 					
 					draw_primitive_begin(pr_trianglelist);
 					
-					random_set_seed(_sed + i);
+					random_set_seed(_seed + i);
 					var pxs = [];
 					var dat = array_safe_get_fast(_pathData, i, noone);
 					

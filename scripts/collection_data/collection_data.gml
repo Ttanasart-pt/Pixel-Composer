@@ -5,13 +5,12 @@ function __initCollection(_force = false) {
 	directory_verify(root);
 	
 	if(_force || check_version($"{root}/version")) {
-		COLLECTIONS = new DirectoryObject(DIRECTORY + "Collections");
-		COLLECTIONS.free();
+		refreshCollections()
+		clearDefaultCollection();
 		
 		zip_unzip($"{working_directory}pack/collections.zip", root);
 	}
 	
-	COLLECTIONS = new DirectoryObject(DIRECTORY + "Collections");
 	refreshCollections();
 }
 
@@ -138,7 +137,7 @@ function saveCollection(_node, _path, save_surface = true, metadata = noone) {
 function clearDefaultCollection() {
 	var st = ds_stack_create();
 	ds_stack_push(st, COLLECTIONS);
-		
+	
 	while(!ds_stack_empty(st)) {
 		var _st = ds_stack_pop(st);
 		for( var i = 0; i < array_length(_st.content); i++ ) {
@@ -162,5 +161,4 @@ function clearDefaultCollection() {
 	}
 	
 	ds_stack_destroy(st);
-	file_delete_safe(DIRECTORY + "Collections/version");
 }

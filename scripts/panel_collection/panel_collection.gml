@@ -401,6 +401,8 @@ function Panel_Collection() : PanelContent() constructor {
 			grid_width = round(contentPane.surface_w - grid_space * col) / col;
 			hh += grid_space;
 			
+			var scis = gpu_get_scissor();
+			
 			for(var i = 0; i < row; i++) {
 				name_height = 0;
 				
@@ -511,12 +513,15 @@ function Panel_Collection() : PanelContent() constructor {
 						var _ty = yy + grid_size + ui(2);
 						var _tw = grid_width + grid_space;
 						
+						var _txtH   = string_height_ext(_node.name, -1, _tw);
+						name_height = max(name_height, _txtH + ui(4));
+						
+						gpu_set_scissor(_nx, yy, grid_width, grid_size + ui(4) + name_height + ui(4));
 						BLEND_ALPHA_MULP
 						draw_text_ext(_tx, _ty, _node.name, -1, _tw);
 						BLEND_NORMAL
+						gpu_set_scissor(scis);
 						
-						var _txtH   = string_height_ext(_node.name, -1, _tw);
-						name_height = max(name_height, _txtH + ui(4));
 					}
 				}
 				
@@ -524,6 +529,8 @@ function Panel_Collection() : PanelContent() constructor {
 				hh += hght;
 				yy += hght;
 			}
+			
+			gpu_set_scissor(scis);
 			
 			var hov = pHOVER && point_in_rectangle(_m[0], _m[1], 0, 0, contentPane.surface_w, contentPane.surface_h);
 			if(hov && key_mod_press(KCONTROL)) grid_size_to = clamp(grid_size_to + ui(4) * MOUSE_WHEEL, ui(32), ui(160));

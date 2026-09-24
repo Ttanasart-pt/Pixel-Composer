@@ -107,10 +107,12 @@ function Node_PB_Draw(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		var bx = _x;
 		var by = _y;
 		
+		var bb = THEME.button_hide_fill;
+		
 		for( var i = 0, n = array_length(typeList); i < n; i++ ) {
 			var _txt = $"New {typeList[i]}";
 			
-			if(buttonInstant(THEME.button_hide_fill, bx, by, bs, bs, _m, _hover, _focus, _txt, s_node_pb_effect_types, i, COLORS._main_icon, 1, .75) == 2) {
+			if(buttonInstant_Pad(bb, bx, by, bs, bs, _m, _hover, _focus, _txt, s_node_pb_effect_types, i, COLORS._main_icon_light, 1, ui(8)) == 2) {
 				var _inTyp = createNewInput(); 
 			    _inTyp.setValue(i);
 				triggerRender();

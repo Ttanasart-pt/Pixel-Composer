@@ -1,1 +1,15 @@
-{"aut_id":1046603354,"alias":"","isDefault":true,"author":"MakhamDev","contact":"","version":121092,"tags":[],"description":"Pixel Builder Chest.\nBased on Shade's 16x16 Assorted RPG Icons.","preview_frames":1,"file_id":0}
+{
+  "file_id":0.0,
+  "aut_id":1046603354.0,
+  "author":"MakhamDev",
+  "description":"Pixel Builder Chest.\nBased on Shade's 16x16 Assorted RPG Icons.",
+  "versionStr":"1.21.10.204",
+  "isDefault":true,
+  "version":121092.0,
+  "tags":[
+  ],
+  "alias":"",
+  "contact":"",
+  "deprecated":false,
+  "preview_frames":1.0
+}
