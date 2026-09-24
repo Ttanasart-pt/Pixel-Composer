@@ -566,7 +566,7 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 								var wgAmp = _wigAl * (curve_wigA? curve_wigA.get(pgc) : 1);
 								var wgFre = _wigF  * (curve_wigF? curve_wigF.get(pgc) : 1);
 								var wgPhs = pgr + (_wigP + _wigPl * bool(j)) * pi * 2 / wgFre;
-								var wgDis = randomFractal(_seed, wgPhs, wgFre, _wigI) * wgAmp;
+								var wgDis = randomFractal(_seed + _sed, wgPhs, wgFre, _wigI) * wgAmp;
 								var wgDir = _p.dirr + 90; 
 								
 								_p.x += lengthdir_x(wgDis, wgDir);
