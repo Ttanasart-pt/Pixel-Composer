@@ -616,7 +616,7 @@ function Panel_Collection() : PanelContent() constructor {
 		var isCur = context == root;
 		
 		draw_set_text(f_p3, fa_center, fa_top, isCur? COLORS._main_text_accent : COLORS._main_text_inner, .25 + isCur * .75);
-		draw_text(_ww / 2, _y, __txt("uncategorized"));
+		draw_text_add(_ww / 2, _y, __txt("uncategorized"));
 		draw_set_alpha(1);
 		_y += ui(24);
 		

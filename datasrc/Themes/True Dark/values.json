@@ -8,7 +8,7 @@
         "main_grey":	"202020",
         "main_ltgrey":	"404040",
         "main_mdwhite":	"404040",
-        "main_white":	"888888",
+        "main_white":	"969696",
         "main_bg":      "040404",
         
         "blue":			"27aae1",
@@ -54,8 +54,8 @@
         "lua_highlight_string": "blue",
         "lua_highlight_comment": "main_ltgrey",
         
-        "collection_folder_empty": "main_ltgrey",
-        "collection_folder_nonempty": "main_white",
+        "collection_folder_empty": "main_white",
+        "collection_folder_nonempty": "white",
         "collection_tree_line": "main_dkgrey",
         "collection_path_current_bg": "main_grey",
         

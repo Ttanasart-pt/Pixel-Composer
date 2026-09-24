@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.10.204",
+    "changes": [
+      {
+        "date": "2026-09-24T04:24:36.001Z",
+        "node": "",
+        "commit": "--fix incorrect mouse culling when using scroll tools."
+      }
+    ]
+  },
+  {
     "version": "1.21.9.101",
     "changes": [
       {

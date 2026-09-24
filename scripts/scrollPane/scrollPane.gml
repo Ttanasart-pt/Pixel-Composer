@@ -76,9 +76,9 @@ function scrollPane(_w, _h, ondraw) : widget() constructor {
 	}
 		
 	static setScrollUnclamp = function(  ) /*=>*/ { scroll_clamp = false; return self; }
-	static setScroll   = function(_s) /*=>*/ { scroll_y_to  = _s;    return self; }
-	static setUseDepth = function(  ) /*=>*/ { use_depth    = true;  return self; }
-	static scrollReset = function() /*=>*/ { scroll_y_to = clamp(scroll_y_to, -content_h, 0); return self; }
+	static setScroll        = function(_s) /*=>*/ { scroll_y_to  = _s;    return self; }
+	static setUseDepth      = function(  ) /*=>*/ { use_depth    = true;  return self; }
+	static scrollReset      = function(  ) /*=>*/ { scroll_y_to = clamp(scroll_y_to, -content_h, 0); return self; }
 	
 	////- Draw
 	
@@ -91,12 +91,21 @@ function scrollPane(_w, _h, ondraw) : widget() constructor {
 		var mx = _mx;
 		var my = _my;
 		
+		var mmx = x + mx;
+		var mmy = y + my;
+		
 		whover  = hover;
 		wactive = active;
 		
-		hover   = hover &&  point_in_rectangle( mx, my, 0, 0, surface_w, surface_h);
-		hover   = hover && !point_in_rectangle( mx, my, surface_w - tool_w, 0, surface_w, tool_h);
+		hover   = hover &&  point_in_rectangle( mmx, mmy, x, y, x + surface_w, y + surface_h);
 		hover   = hover && pen_scrolling != 2;
+		
+		if(tool_w) {
+			var tolx = x + w + ui(8) - tool_w;
+			var toly = y - ui(8);
+			
+			hover = hover && !point_in_rectangle( mmx, mmy, tolx, toly, tolx + tool_w, toly + tool_h);
+		}
 		
 		if(use_depth) surface_depth_disable(false);
 		
@@ -134,7 +143,7 @@ function scrollPane(_w, _h, ondraw) : widget() constructor {
 		draw_surface_safe(surface, x, y);
 		// draw_set_color(c_blue); draw_rectangle(x, y, x+surface_w, y+surface_h, true);
 		
-		if(tool_w) draw_sprite_stretched(THEME.ui_panel_tool, 0, x + w + ui(8) - tool_w, y - ui(8), tool_w, tool_h);
+		if(tool_w) draw_sprite_stretched(THEME.ui_panel_tool, 0, tolx, toly, tool_w, tool_h);
 		
 		if(hover && !scroll_lock) {
 			if(!key_mod_press(SHIFT) && !key_mod_press(KCONTROL) && MOUSE_WHEEL != 0)
