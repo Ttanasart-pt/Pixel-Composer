@@ -276,7 +276,7 @@ function __EXPORT_SHOWCASE(project = PROJECT) {
 	
 	if(!_anim) closeProject();
 	print("Export folder complete.");
-	print($"{_rName} #PixelComposer\n\nhttps://pixel-composer.com/projects/{_fName}");
+	print($"{_rName} #PixelComposer\n\nhttps://pixel-composer.com/projects/{string_replace_all(_fName, "-", "%20")}");
 	
 	// ProcessExecuteAsync("python \"D:/Project/MakhamDev/LTS-PixelComposer/PROMOTIONAL MATERIALS/site/gen.py\"");
 	// print("Push to Github complete");

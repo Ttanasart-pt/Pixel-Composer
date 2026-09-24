@@ -6,6 +6,11 @@
         "date": "2026-09-24T04:24:36.001Z",
         "node": "",
         "commit": "--fix incorrect mouse culling when using scroll tools."
+      },
+      {
+        "date": "2026-09-24T05:09:31.718Z",
+        "node": "Group",
+        "commit": "**Group**: Fix animated input not update on frame."
       }
     ]
   },

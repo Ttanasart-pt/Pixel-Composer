@@ -365,7 +365,7 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		if(!rendered)       return true;
 		
 		for( var i = custom_input_index, n = array_length(inputs); i < n; i++ ) 
-			if(inputs[i].isActiveDynamic(frame) || !inputs[i].from.rendered) return true;
+			if(inputs[i].isActiveDynamic(true)) return true;
 		
 		return false;
 	}

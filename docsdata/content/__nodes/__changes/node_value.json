@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.10.204",
+    "changes": [
+      {
+        "date": "2026-09-24T05:09:31.726Z",
+        "node": "",
+        "commit": "**Group**: Fix animated input not update on frame."
+      }
+    ]
+  },
+  {
     "version": "1.22.10.201",
     "changes": [
       {

@@ -1716,7 +1716,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		return controlNode.rendered;
 	}
 	
-	static isActiveDynamic = function() {
+	static isActiveDynamic = function(useAnim = false) {
 		INLINE
 		if(value_from != noone) return false;
 		if(useInstance())       return getInstance().isActiveDynamic();
@@ -1732,7 +1732,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 			}
 		}
 		
-		return false; // is_anim
+		return useAnim && is_anim;
 	}
 	
 	force_dynamic = true;
