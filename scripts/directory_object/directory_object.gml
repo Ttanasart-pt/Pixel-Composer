@@ -176,8 +176,9 @@ function FileObject(_path) constructor {
 function DirectoryObject(_path) constructor {
 	name = filename_name_only(_path);
 	path = _path;
+	
 	icon = THEME.folder_content;
-	icon_blend = undefined
+	icon_blend  = undefined;
 	
 	subDir    = [];
 	content   = [];
@@ -186,10 +187,16 @@ function DirectoryObject(_path) constructor {
 	scanned   = false;
 	scanType  = [];
 	
+	if(path != "") {
+		var _icon_path = filename_combine(path, "__icon.png");
+		if(file_exists(_icon_path)) icon = sprite_add_center(_icon_path);
+	}
+	
 	static getName = function() /*=>*/ {return name};
 	
 	static scanDir = function(_node = false) {
 		if(path == "") return;
+		
 		subDir = [];
 		
 		var _file = directory_listdir(path);
@@ -251,7 +258,7 @@ function DirectoryObject(_path) constructor {
 	}
 	
 	static draw = function(parent, _x, _y, _m, _w, _hover, _focus, _homedir, _params = {}) {
-		var font = struct_try_get(_params, "font", f_p2);
+		var font = _params[$ "font"] ?? f_p2;
 		var hg   = line_get_height(font, 5);
 		var hh   = 0;
 		var empt = array_empty(subDir);
@@ -300,10 +307,16 @@ function DirectoryObject(_path) constructor {
 		gpu_set_texfilter(true);
 		var _spr_ind = empt? parent.context == self : open;
 		var _spr_bld = empt? COLORS.collection_folder_empty : COLORS.collection_folder_nonempty;
-		if(icon_blend != undefined) _spr_bld = icon_blend;
+		var _spr_aa  = empt? .9: 1;
 		
-		var _spr_sca = (hg - ui(5)) / ui(24);
-		draw_sprite_ui_uniform(icon, _spr_ind, _x + ui(16), _y + hg / 2 - 1, _spr_sca, _spr_bld);
+		if(icon_blend != undefined) _spr_bld = icon_blend;
+		if(parent.context == self)  {
+			_spr_bld = COLORS._main_accent;
+			_spr_aa  = 1;
+		}
+		
+		var _spr_sca = (hg - ui(5)) / sprite_get_height(icon);
+		draw_sprite_ext(icon, _spr_ind, _x + ui(16), _y + hg / 2 - 1, _spr_sca, _spr_sca, 0, _spr_bld, _spr_aa);
 		gpu_set_texfilter(false);
 		
 		draw_set_text(font, fa_left, fa_center, path == parent.context.path? COLORS._main_text_accent : COLORS._main_text_inner);

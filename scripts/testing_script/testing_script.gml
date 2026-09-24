@@ -1,4 +1,8 @@
-function __test_update_collections(dir = COLLECTIONS) {
+global.DEV_COLL_PATH = "D:/Project/MakhamDev/LTS-PixelComposer/PixelComposer/datasrc/Collections";
+
+function __test_update_collections(_path = global.DEV_COLL_PATH) {
+	var dir = new DirectoryObject(_path).scan([".json", ".pxcc", ".pxz"]);
+	
 	var st = ds_stack_create();
 	ds_stack_push(st, dir);
 	
@@ -26,6 +30,7 @@ function __test_update_collections(dir = COLLECTIONS) {
 	ds_stack_destroy(st);
 	
 	print("---------- COLLECTION UPDATING ENDED ----------");
+	noti_status("Update complete");
 }
 
 function __test_update_sample_projects() {
@@ -45,9 +50,12 @@ function __test_update_sample_projects() {
 	}
 	
 	print("---------- PROJECT UPDATING ENDED ----------");
+	noti_status("Update complete");
 }
 
-function __test_load_collections(dir = COLLECTIONS) {
+function __test_load_collections(_path = global.DEV_COLL_PATH) {
+	var dir = new DirectoryObject(_path).scan([".json", ".pxcc", ".pxz"]);
+	
 	var st = ds_stack_create();
 	ds_stack_push(st, dir);
 	
@@ -165,7 +173,9 @@ function __test_load_all_nodes() {
 	noti_status("Node test completed.");
 }
 
-function __test_update_collections_meta(dir = COLLECTIONS) {
+function __test_update_collections_meta(_path = global.DEV_COLL_PATH) {
+	var dir = new DirectoryObject(_path).scan([".json", ".pxcc", ".pxz"]);
+	
 	var st = ds_stack_create();
 	ds_stack_push(st, dir);
 	
@@ -197,14 +207,16 @@ function __test_update_collections_meta(dir = COLLECTIONS) {
 	noti_status("Update complete");
 }
 
-function __test_zip_collection(dir = COLLECTIONS) {
-	var _dirr = dir.path + "/";
+function __test_zip_collection(_path = global.DEV_COLL_PATH) {
+	var _dir  = new DirectoryObject(_path).scan([".json", ".pxcc", ".pxz"]);
+	var _dirr = _path + "/";
+	
 	var _targ = "D:/Project/MakhamDev/LTS-PixelComposer/PixelComposer/datafiles/pack/collections.zip"
 	var _zip  = zip_create();
 	var _t    = get_timer();
 	
 	var st = ds_stack_create();
-	ds_stack_push(st, dir);
+	ds_stack_push(st, _dir);
 	
 	while(!ds_stack_empty(st)) {
 		var _st = ds_stack_pop(st);

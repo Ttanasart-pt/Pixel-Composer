@@ -113,6 +113,22 @@ DIALOG_WINDOW_START
 		}
 	}
 	
+	if(buttonInstant(bb, bx, by, bs, bs, mouse_ui, sHOVER, sFOCUS, "Update Thumbnail", THEME.image_20, 0, COLORS._main_icon) == 2) {
+		var preview_surface = PANEL_PREVIEW.getNodePreviewSurface();
+		
+		if(!is_surface(preview_surface))
+			noti_warning("Please send any node to preview panel to use as a thumbnail.")
+		else {
+			var _fpath = filename_combine(data_path, meta.name);
+			var _ipath = string_replace(_fpath, filename_ext(_fpath), ".png");
+			surface_save_safe(preview_surface, _ipath);
+			
+			if(PANEL_COLLECTION) PANEL_COLLECTION.refreshContext();
+		}
+		
+	}
+	bx -= bs + ui(4);
+	
 	if(!meta_expand) {
 		bx -= bs + ui(4);
 		var txt = __txt("new_collection_meta_edit", "Edit Metadata");

@@ -61,6 +61,8 @@ function functionObject(_context, _name, _key, _mod, _action, _param = noone) co
 	menu    = noone;
 	spr     = noone;
 	
+	dev     = false;
+	
 	FUNCTIONS[$ fnName]     = self;
 	CMD_FUNCTIONS[$ fnName] = { action: _action, args: [] };
 	
@@ -106,8 +108,10 @@ function functionObject(_context, _name, _key, _mod, _action, _param = noone) co
 	
 	static setTContext    = function(_p) /*=>*/ { tooltipContext = _p; hotkey.tooltipContext = _p;   return self; }
 	static setCommandName = function(_p) /*=>*/ { comName = _p;                                      return self; }
-	static setSpr = function(_spr)       /*=>*/ { spr = _spr; if(menu) menu.spr = _spr;              return self; }
-	static setArg = function(_args = []) /*=>*/ { CMD_FUNCTIONS[$ fnName] = { action, args: _args }; return self; }
+	
+	static setSpr = function(_spr    ) /*=>*/ { spr = _spr; if(menu) menu.spr = _spr;              return self; }
+	static setArg = function(_args=[]) /*=>*/ { CMD_FUNCTIONS[$ fnName] = { action, args: _args }; return self; }
+	static setDev = function(        ) /*=>*/ { dev = true; if(menu) menu.color = CDEF.red;        return self; }
 	
 	static setMenuAlt = function(_name, _id, _spr = noone, shelf = false) { 
 		menu = menuItem(__txt(_name), method(self, action), _spr, [ context, name ], noone, params);

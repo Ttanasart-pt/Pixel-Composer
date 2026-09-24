@@ -220,6 +220,7 @@ function scrollPane(_w, _h, ondraw) : widget() constructor {
 			
 			bar_x	= scr_x;
 			bar_y	= scr_y + scr_prog_s;
+			
 		} else {
 			scr_w	= scr_s;
 			scr_h	= bar_spr_w;
@@ -258,9 +259,20 @@ function scrollPane(_w, _h, ondraw) : widget() constructor {
 		if(whover && point_in_rectangle(mx, my, scr_x - 2, scr_y - 2, scr_x + scr_w + 2, scr_y + scr_h + 2)) {
 			cc = scroll_color_bar_hover;
 			
+			var _rat = is_vert? (my - scr_y - hh / 2) / (scr_h - hh) : (mx - scr_x - ww / 2) / (scr_w - ww);
+			    _rat = clamp(_rat, 0, 1);
+			
 			if(mouse_lpress(wactive)) {
-				is_scrolling = true;
-				scroll_ms = is_vert? my : mx;
+				if(key_mod_press(SHIFT)) {
+					var _rat = is_vert? (my - scr_y - hh / 2) / (scr_h - hh) : (mx - scr_x - ww / 2) / (scr_w - ww);
+					    _rat = clamp(_rat, 0, 1);
+			
+					scroll_y_to = _rat * -content_h;
+					
+				} else {
+					is_scrolling = true;
+					scroll_ms = is_vert? my : mx;
+				}
 			}
 		}
 		

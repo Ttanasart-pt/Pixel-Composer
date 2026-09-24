@@ -15,18 +15,25 @@ DIALOG_DRAW_BG
 	var tw = dialog_w - ui(28);
 	var th = ui(28);
 	
-	var _content_y = ty + th + pd;
+	content_x = _dialog_x;
+	content_y = ty + th + pd;
 	
-	var _content_w = dialog_w - category_width - ui(20) - pd; 
-	var _content_h = dialog_h - ui(14) - th - pd - pd; 
+	content_w = dialog_w - category_width - ui(20) - pd; 
+	content_h = dialog_h - ui(14) - th - pd - pd; 
 	
 	if(search_string == "") {
 		catagory_pane.setFocusHover(sFOCUS, sHOVER);
-		catagory_pane.verify(category_width, _content_h);
-		catagory_pane.draw(_dialog_x + ui(12), _content_y);
+		catagory_pane.verify(category_width, content_h);
+		catagory_pane.draw(_dialog_x + ui(12), content_y);
 		
-		var _content_x = _dialog_x + category_width + ui(20);
-		draw_sprite_stretched(THEME.ui_panel_bg, 1, _content_x, _content_y, _content_w, _content_h);
+		content_x = _dialog_x + category_width + ui(20);
+		draw_sprite_stretched(THEME.ui_panel_bg, 1, content_x, content_y, content_w, content_h);
+		
+		var _content_x = content_x;
+		var _content_y = content_y;
+		
+		var _content_w = content_w;
+		var _content_h = content_h;
 		
 		if(array_length(recent_nodes)) {
 			var _scis = gpu_get_scissor();
@@ -62,6 +69,7 @@ DIALOG_DRAW_BG
 			
 			_content_y += _rcs + ui(4);
 			_content_h -= _rcs + ui(4);
+			
 			gpu_set_scissor(_scis);
 			gpu_set_tex_filter(false);
 			
@@ -76,6 +84,10 @@ DIALOG_DRAW_BG
 		
 		if(PREFERENCES.dialog_add_node_grouping == 2 && !array_empty(subgroups)) {
 			var _subw = ui(128);
+			
+			subcatagory_x = -1;
+			subcatagory_y = content_y - _content_y;
+			
 			subcatagory_pane.setFocusHover(sFOCUS, sHOVER);
 			subcatagory_pane.verify(_subw, _content_h);
 			subcatagory_pane.draw(_content_x + 1, _content_y);
@@ -91,11 +103,11 @@ DIALOG_DRAW_BG
 		node_selecting = 0;
 		
 	} else {
-		draw_sprite_stretched(THEME.ui_panel_bg, 1, tx, _content_y, dialog_w - ui(28), _content_h - ui(2));
+		draw_sprite_stretched(THEME.ui_panel_bg, 1, tx, content_y, dialog_w - ui(28), content_h - ui(2));
 		
 		search_pane.setFocusHover(sFOCUS, sHOVER);
-		search_pane.verify(dialog_w - ui(36), _content_h - ui(2));
-		search_pane.draw(_dialog_x + ui(16), _content_y);
+		search_pane.verify(dialog_w - ui(36), content_h - ui(2));
+		search_pane.draw(_dialog_x + ui(16), content_y);
 	}
 	
 	#region buttons

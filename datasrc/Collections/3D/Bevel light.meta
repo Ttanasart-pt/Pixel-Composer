@@ -1,1 +1,15 @@
-{"alias":"","contact":"","file_id":0,"author":"MakhamDev","description":"","isDefault":true,"preview_frames":1,"aut_id":0,"tags":[],"version":120000}
+{
+  "aut_id":0.0,
+  "author":"MakhamDev",
+  "description":"",
+  "versionStr":"1.21.10.204",
+  "isDefault":true,
+  "version":121092.0,
+  "tags":[
+  ],
+  "alias":"",
+  "contact":"",
+  "deprecated":false,
+  "preview_frames":1.0,
+  "file_id":0.0
+}

@@ -22,7 +22,7 @@
 		registerFunction(o, "Toggle Search",             "F", c, panel_collection_search_toggle     ).setMenu("collection_search_toggle")
 		
 		registerFunction(o, "Load Collection",            "", n, panel_collection_load              ).setMenu("collection_load")
-		registerFunction(o, "Replace with Selecting",     "", n, panel_collection_replace           ).setMenu("collection_replace")
+		registerFunction(o, "Replace with Selecting",     "", n, panel_collection_replace           ).setMenu("collection_replace").setActiveFn(function() /*=>*/ {return is(PANEL_INSPECTOR.getInspecting(), Node)})
 		registerFunction(o, "Edit Collection...",         "", n, panel_collection_edit_default      ).setMenu("collection_edit_collection",   THEME.group_s)
 		registerFunction(o, "Edit Metadata...",           "", n, panel_collection_edit_meta         ).setMenu("collection_edit_meta")
 		registerFunction(o, "Update Thumbnail",           "", n, panel_collection_update_thumbnail  ).setMenu("collection_update_thumbnail")
@@ -32,7 +32,7 @@
 		registerFunction(o, "Update Content to Workshop", "", n, panel_collection_steam_file_update ).setMenu("collection_update_steam",    	THEME.workshop_update)
 		registerFunction(o, "Unsubscribe",		          "", n, panel_collection_steam_unsubscribe ).setMenu("collection_unsubscribe")
 		
-		registerFunction(o, "Toggle Default",    "", n, panel_collection_toggle_default ).setMenu("collection_toggle_default")
+		registerFunction(o, "Toggle Default",             "", n, panel_collection_toggle_default    ).setMenu("collection_toggle_default").setDev();
 	}
 #endregion
 
@@ -59,7 +59,7 @@ function Panel_Collection() : PanelContent() constructor {
 	#region pages
 		roots    = [ ["Collections", COLLECTIONS], ["Assets", global.ASSETS], ["Projects", STEAM_PROJECTS], ["Nodes", ALL_NODES] ];
 		pageStr  = array_create_ext(array_length(roots), function(i) /*=>*/ {return roots[i][0]});
-		sc_pages = new scrollBox(pageStr, function(i) /*=>*/ { setPage(i); }).setType(1).setAlign(fa_left);
+		sc_pages = new scrollBox(pageStr, function(i) /*=>*/ {return setPage(i)}).setType(1).setAlign(fa_left);
 		
 		page     = 0;
 		root     = roots[page][1];
@@ -181,7 +181,15 @@ function Panel_Collection() : PanelContent() constructor {
 		function replace() { 
 			if(_menu_node == noone) return;
 			saveCollection(PANEL_INSPECTOR.getInspecting(), _menu_node.path, false, _menu_node.meta);
-			if(RUN_IDE) __test_zip_collection(COLLECTIONS);
+			if(RUN_IDE) __test_zip_collection();
+		}
+		
+		function replaceDev() { 
+			if(_menu_node == noone) return;
+			
+			var _path = string_replace(_menu_node.path, DIRECTORY + "Collections", global.DEV_COLL_PATH);
+			saveCollection(PANEL_INSPECTOR.getInspecting(), _path, false, _menu_node.meta);
+			if(RUN_IDE) __test_zip_collection();
 		}
 		
 		function edit_meta() { 
@@ -330,10 +338,12 @@ function Panel_Collection() : PanelContent() constructor {
 				MENU_ITEMS.collection_edit_collection,
 				MENU_ITEMS.collection_edit_meta,
 				MENU_ITEMS.collection_replace,
-				MENU_ITEMS.collection_update_thumbnail,
 			]);
 			
-			if(TESTING) array_push(contentMenu, MENU_ITEMS.collection_toggle_default);
+			if(TESTING) array_append(contentMenu, [
+				menuItem(__txt("Replace to Dev"), function() /*=>*/ {return replaceDev()}).setColor(CDEF.red),
+				MENU_ITEMS.collection_toggle_default,
+			]);
 			
 			array_append(contentMenu, [
 				-1,
@@ -590,10 +600,11 @@ function Panel_Collection() : PanelContent() constructor {
 	
 	folderPane = new scrollPane(0, 0, function(_y, _m) {
 		draw_clear_alpha(COLORS.panel_bg_clear, 1);
-		var hh = ui(8);
-		_y += ui(8);
-		
+		var _hh = 0;
 		var _ww = folderPane.surface_w;
+		
+		_hh += ui(8);
+		_y  += ui(8);
 		
 		folderPane.hover_content = true;
 		if(pHOVER && folderPane.hover && point_in_rectangle(_m[0], _m[1], 0, _y - ui(2), _ww, _y + ui(24))) {
@@ -602,8 +613,9 @@ function Panel_Collection() : PanelContent() constructor {
 				setContext(root);
 		}
 		
-		draw_set_alpha(0.25 + (context == root) * 0.5);
-		draw_set_text(f_p3, fa_center, fa_top, context == root? COLORS._main_text_accent : COLORS._main_text_inner);
+		var isCur = context == root;
+		
+		draw_set_text(f_p3, fa_center, fa_top, isCur? COLORS._main_text_accent : COLORS._main_text_inner, .25 + isCur * .75);
 		draw_text(_ww / 2, _y, __txt("uncategorized"));
 		draw_set_alpha(1);
 		_y += ui(24);
@@ -616,11 +628,12 @@ function Panel_Collection() : PanelContent() constructor {
 		
 		for( var i = 0, n = array_length(root.subDir); i < n; i++ ) {
 			var hg = root.subDir[i].draw(self, _x, _y, _m, ww, hov, foc, root, _params);
-			hh += hg;
-			_y += hg;
+			
+			_hh += hg;
+			_y  += hg;
 		}
 		
-		return hh + ui(28);
+		return _hh + ui(28);
 	});
 	
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1046,7 +1059,7 @@ function Panel_Collection() : PanelContent() constructor {
 			
 			var txt = __txt("Create default Zip");
 			if(buttonInstant_Pad(bb, bx, by, bs, bs, m, hov, foc, txt, THEME.gear, 0, COLORS._main_icon, .8) == 2)
-				__test_zip_collection(COLLECTIONS);
+				__test_zip_collection();
 			bx -= bs + ui(2); if(bx < rootx) return;
 		}
 	}

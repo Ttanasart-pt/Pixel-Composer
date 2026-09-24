@@ -472,6 +472,12 @@ event_inherited();
 #region content
 	cat_disp_y = undefined;
 	
+	content_x  = 0;
+	content_y  = 0;
+	
+	content_w  = 1;
+	content_h  = 1;
+	
 	catagory_pane = new scrollPane(category_width, dialog_h - ui(66), function(_y, _m) {
 		draw_clear_alpha(COLORS.panel_bg_clear, 1);
 		
@@ -552,7 +558,7 @@ event_inherited();
 				spr = asset_get_index($"s_node_cat_{string_lower(name)}");
 			
 			if(sprite_exists(spr)) {
-				var _ss = (hg - ui(4)) / sprite_get_width(spr);
+				var _ss = (hg - ui(6)) / sprite_get_width(spr);
 				var _cc = i == ADD_NODE_PAGE? COLORS._main_accent : COLORS._main_icon;
 				var _aa = i == ADD_NODE_PAGE? 1 : .75;
 				
@@ -590,8 +596,12 @@ event_inherited();
 	catagory_pane.scroll_color_bg        = undefined;
 	catagory_pane.scroll_color_bar_alpha = .5;
 	
+	subcatagory_x = 0;
+	subcatagory_y = 0;
+	
 	subcatagory_pane = new scrollPane(ui(96), dialog_h - ui(66), function(_y, _m) {
-		draw_clear_alpha(COLORS.panel_bg_clear_inner, 1);
+		draw_clear_alpha(COLORS.panel_bg_clear_inner, 0);
+		draw_sprite_stretched(THEME.ui_panel_bg, 1, subcatagory_x, subcatagory_y, content_w, content_h);
 		
 		var font  = f_p2;
 		var fontS = f_p2b;

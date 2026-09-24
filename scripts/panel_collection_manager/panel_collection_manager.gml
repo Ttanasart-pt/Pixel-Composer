@@ -27,7 +27,9 @@ function Panel_Collection_Manager() : PanelContent() constructor {
 		    var st = tp[0];
 		    var dp = tp[1];
 		    
+		    var _path = st.path;
 		    var _list = st.subDir;
+		    
 		    for( var i = 0, n = array_length(_list); i < n; i++ ) 
 		        ds_stack_push(stack, [_list[n - 1 - i], dp + 1]);
 		        
@@ -40,7 +42,7 @@ function Panel_Collection_Manager() : PanelContent() constructor {
     		if(_a && point_in_circle(_m[0], _m[1], bx, by, bs / 2)) {
     			setTOOLTIP("Load Folder");
     			draw_sprite_ui(THEME.folder, 0, bx, by, .5, .5, 0, c_white);
-    			if(mouse_lclick()) __test_load_collections(st);
+    			if(mouse_lclick()) __test_load_collections(_path);
     			
     		} else draw_sprite_ui(THEME.folder, 0, bx, by, .5, .5, 0, COLORS._main_icon);
 		    bx -= bs;
@@ -48,7 +50,7 @@ function Panel_Collection_Manager() : PanelContent() constructor {
     		if(_a && point_in_circle(_m[0], _m[1], bx, by, bs / 2)) {
     			setTOOLTIP("Update Folder");
     			draw_sprite_ui(THEME.refresh_icon, 0, bx, by, .5, .5, 0, c_white);
-    			if(mouse_lclick()) __test_update_collections(st);
+    			if(mouse_lclick()) __test_update_collections(_path);
     			
     		} else draw_sprite_ui(THEME.refresh_icon, 0, bx, by, .5, .5, 0, COLORS._main_icon);
 		    bx -= bs;
@@ -107,19 +109,19 @@ function Panel_Collection_Manager() : PanelContent() constructor {
 		
 		draw_set_text(f_p2, fa_center, fa_center, COLORS._main_text);
 		
-		if(buttonInstant(bs, bx, by, bw, bh, _m, _h, _f) == 2) __test_load_collections(COLLECTIONS);
+		if(buttonInstant(bs, bx, by, bw, bh, _m, _h, _f) == 2) __test_load_collections();
 		draw_text_add(bx + bw / 2, by + bh / 2, "Load All");
 		
 		by += bh + ui(4);
-		if(buttonInstant(bs, bx, by, bw, bh, _m, _h, _f) == 2) __test_update_collections(COLLECTIONS);
+		if(buttonInstant(bs, bx, by, bw, bh, _m, _h, _f) == 2) __test_update_collections();
 		draw_text_add(bx + bw / 2, by + bh / 2, "Update All");
 		
 		by += bh + ui(4);
-		if(buttonInstant(bs, bx, by, bw, bh, _m, _h, _f) == 2) __test_update_collections_meta(COLLECTIONS);
+		if(buttonInstant(bs, bx, by, bw, bh, _m, _h, _f) == 2) __test_update_collections_meta();
 		draw_text_add(bx + bw / 2, by + bh / 2, "Update Metadata");
 		
 		by += bh + ui(4 + 8);
-		if(buttonInstant(bs, bx, by, bw, bh, _m, _h, _f) == 2) __test_zip_collection(COLLECTIONS);
+		if(buttonInstant(bs, bx, by, bw, bh, _m, _h, _f) == 2) __test_zip_collection();
 		draw_text_add(bx + bw / 2, by + bh / 2, "Zip Collection");
 		
 	}
