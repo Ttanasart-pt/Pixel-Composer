@@ -47,7 +47,7 @@ function __3dObject() : __3dInstance() constructor {
 	WVB    = noone;
 	name   = UUID_generate();
 	
-	color  = c_white;
+	color  = ca_white;
 	
 	edges  = [];
 	EB     = [];

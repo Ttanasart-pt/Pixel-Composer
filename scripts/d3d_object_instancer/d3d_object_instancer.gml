@@ -260,20 +260,34 @@ function __3dObjectInstancer() : __3dObject() constructor {
 		gpu_set_tex_repeat(true);
 		var vbcount = array_length(VB);
 		
-		var uInstanceID = shader_get_uniform(sh, "InstanceID" );
-		var umat_flip   = shader_get_uniform(sh, "mat_flip"   );
+		var uInstanceID      = shader_get_uniform(sh, "InstanceID"       );
+		var umat_flip        = shader_get_uniform(sh, "mat_flip"         );
 		
-		var uuse_normal      = shader_get_uniform(sh, "use_normal"      );
-		var unormal_strength = shader_get_uniform(sh, "normal_strength" );
-		var umat_diffuse     = shader_get_uniform(sh, "mat_diffuse"     );
-		var umat_specular    = shader_get_uniform(sh, "mat_specular"    );
-		var umat_shine       = shader_get_uniform(sh, "mat_shine"       );
-		var umat_metalic     = shader_get_uniform(sh, "mat_metalic"     );
-		var umat_reflective  = shader_get_uniform(sh, "mat_reflective"  );
-		var umat_texScale    = shader_get_uniform(sh, "mat_texScale"    );
-		var umat_texShift    = shader_get_uniform(sh, "mat_texShift"    );
+		var uuse_normal      = shader_get_uniform(sh, "use_normal"       );
+		var unormal_strength = shader_get_uniform(sh, "normal_strength"  );
 		
-		var tnormal_map      = shader_get_sampler_index(sh, "normal_map");
+		var umat_diffuse     = shader_get_uniform(sh, "mat_diffuse"      );
+		var umat_specular    = shader_get_uniform(sh, "mat_specular"     );
+		var umat_shine       = shader_get_uniform(sh, "mat_shine"        );
+		var umat_metalic     = shader_get_uniform(sh, "mat_metalic"      );
+		var umat_reflective  = shader_get_uniform(sh, "mat_reflective"   );
+		
+		var umat_texDim      = shader_get_uniform(sh, "mat_texDimension" );
+		var umat_texScale    = shader_get_uniform(sh, "mat_texScale"     );
+		var umat_texShift    = shader_get_uniform(sh, "mat_texShift"     );
+		var umat_texIntp     = shader_get_uniform(sh, "mat_texInterpolate");
+		
+		var tnormal_map      = shader_get_sampler_index(sh, "normal_map" );
+		
+		var mat_pbr_metalic           = shader_get_uniform(sh, "mat_pbr_metalic"              );
+		var mat_pbr_roughness         = shader_get_uniform(sh, "mat_pbr_roughness"            );
+		
+		var mat_pbr_metalic_use_map   = shader_get_uniform(sh, "mat_pbr_metalic_use_map"      );
+		var mat_pbr_roughness_use_map = shader_get_uniform(sh, "mat_pbr_roughness_use_map"    );
+		
+		var mat_pbr_properties_map    = shader_get_sampler_index(sh, "mat_pbr_properties_map" );
+		
+		shader_set_c("obj_color", color );
 		
 		for( var b = 0; b < batch_count; b++ ) {
 			submitCbuffer(b);
@@ -286,25 +300,38 @@ function __3dObjectInstancer() : __3dObject() constructor {
 				
 				var i = 0;
 				repeat(vbcount) {
-					var _mat = materials[i];
-					var _tex = _mat.texture;
+					var _m = materials[i];
+					if(_m == noone) { i++; continue; }
 					
-					shader_set_uniform_i(uuse_normal, _mat.use_normal);
+					var _tex = _m.texture;
+					var _mat = _m.material;
 					
-					texture_set_stage(tnormal_map,          _mat.normal_map);
-					shader_set_uniform_f(unormal_strength,  _mat.normal_strength );
+					shader_set_uniform_i( uuse_normal,       _m.use_normal     );
 					
-					shader_set_uniform_f(umat_diffuse,      _mat.mat_diffuse     );
-					shader_set_uniform_f(umat_specular,     _mat.mat_specular    );
-					shader_set_uniform_f(umat_shine,        _mat.mat_shine       );
-					shader_set_uniform_i(umat_metalic,      _mat.mat_metalic     );
-					shader_set_uniform_f(umat_reflective,   _mat.mat_reflective  );
+					texture_set_stage(    tnormal_map,       _m.normal_map     );
+					shader_set_uniform_f( unormal_strength,  _mat.normalStr    );
 					
-					shader_set_uniform_f_array(umat_texScale, _mat.mat_texScale    ); 
-					shader_set_uniform_f_array(umat_texShift, _mat.mat_texShift    ); 
-					gpu_set_tex_filter(_mat.tex_filter); 
+					shader_set_uniform_f( umat_diffuse,      _mat.diffuse      );
+					shader_set_uniform_f( umat_specular,     _mat.specular     );
+					shader_set_uniform_f( umat_shine,        _mat.shine        );
+					shader_set_uniform_i( umat_metalic,      _mat.metalic      );
+					shader_set_uniform_f( umat_reflective,   _mat.reflective   );
 					
+					shader_set_uniform_f_array( umat_texDim,   _m.textureDim   ); 
+					shader_set_uniform_f_array( umat_texScale, _mat.texScale   ); 
+					shader_set_uniform_f_array( umat_texShift, _mat.texShift   ); 
+					shader_set_uniform_i(       umat_texIntp,  _mat.texFilter  ); 
+					
+					shader_set_uniform_f_array( mat_pbr_metalic,     _mat.pbr_metalic        );
+					shader_set_uniform_f_array( mat_pbr_roughness,   _mat.pbr_roughness      );
+					
+					shader_set_uniform_i( mat_pbr_metalic_use_map,   _mat.pbr_metalic_map    );
+					shader_set_uniform_i( mat_pbr_roughness_use_map, _mat.pbr_roughness_map  );
+					texture_set_stage(    mat_pbr_properties_map,    _m.pbr_map              );
+				
+					gpu_set_tex_filter(_mat.texFilter); 
 					vertex_submit(VB[i], render_type, _tex);
+					
 					i++;
 				}
 				

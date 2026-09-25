@@ -1,5 +1,4 @@
 #pragma use(d3d_default_fragment)
-
 #region -- d3d_default_fragment -- [1783641786.1861165]
 #ifdef _YY_HLSL11_
 	#extension GL_OES_standard_derivatives : enable
@@ -691,4 +690,3 @@ void main() {
 	gl_FragData[3] = vec4(shadow, uv_coord, 1.);
 }
 #endregion -- d3d_default_fragment --
-#pragma use(d3d_default_fragment)

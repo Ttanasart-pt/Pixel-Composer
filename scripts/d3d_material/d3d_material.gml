@@ -26,7 +26,7 @@ function __d3dMaterial(s = noone) constructor {
 	static submitGeometry = function() {
 		shader_set_i("use_normal", is_surface(normal));
 		
-		shader_set_surface("normal_map", normal    );
+		shader_set_s("normal_map",       normal    );
 		shader_set_f("normal_strength",  normalStr );
 		shader_set_f("mat_texScale",     texScale  );
 		shader_set_f("mat_texShift",     texShift  );

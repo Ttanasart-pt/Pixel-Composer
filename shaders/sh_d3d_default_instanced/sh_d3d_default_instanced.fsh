@@ -502,14 +502,14 @@ void main() {
 		uv_coord           = fract(uv_coord * mat_texScale + mat_texShift);
 		mat_baseColor      = mat_texInterpolate == 2? texture2Dclean( gm_BaseTexture, uv_coord ) : texture2D( gm_BaseTexture, uv_coord );
 		mat_baseColor     *= v_vColour;
-
+		
 		if(mat_baseColor.a <= alphaThreshold) discard;
 		
 		vec4 final_color   = mat_baseColor;
 		float shadow       = 0.;
 		if(show_wireframe == 1 && wireframe_shade == 1) final_color = wireframeCalc(final_color);
 	#endregion 
-
+	
 	#region ++++ PBR ++++
 		float mMetalic  = mat_pbr_metalic[0];
 		if(mat_pbr_metalic_use_map == 1)

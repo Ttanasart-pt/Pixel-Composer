@@ -150,8 +150,9 @@ function Node_3D_Instancer(_x, _y, _group = noone) : Node_3D(_x, _y, _group) con
 			object.objectTransform.applyMatrix();
 			
 			var _flat_vb = d3d_flattern(_obj);
-			object.VB = _flat_vb.VB;
+			object.VB        = _flat_vb.VB;
 			object.materials = _flat_vb.materials;
+			object.color     = ca_white;
 		#endregion
 		
 		#region data 

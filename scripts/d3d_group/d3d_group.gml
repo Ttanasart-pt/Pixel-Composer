@@ -154,43 +154,19 @@ function __3dTransformed(_object = noone) : __3dInstance() constructor {
 		for( var i = 0, n = array_length(_obj.VB); i < n; i++ ) {
 			var _m = array_safe_get_fast(_obj.materials, _obj.material_index == undefined? i : _obj.material_index[i], noone);
 			var _uMat = is(_m, __d3dMaterial);
-			var _mdat;
+			var _mdat = noone;
 			
 			if(_uMat) {
 				_mdat = {
-					texture:         _m.getTexture(),  
-					use_normal:      is_surface(_m.normal),
-					normal_map:      surface_get_texture_safe(_m.normal),
-					normal_strength: _m.normalStr,
+					material:   _m, 
+					texture:    _m.getTexture(),  
+					textureDim: surface_get_dimension(_m.getSurface()),  
 					
-					mat_diffuse:    _m.diffuse,
-					mat_specular:   _m.specular,
-					mat_shine:      _m.shine,
-					mat_metalic:    _m.metalic,
-					mat_reflective: _m.reflective,
-		
-					mat_texScale:   _m.texScale,
-					mat_texShift:   _m.texShift,
-					tex_filter:     _m.texFilter, 
+					use_normal: is_surface(_m.normal),
+					normal_map: surface_get_texture_safe(_m.normal),
+					pbr_map:    surface_get_texture_safe(_m.pbr_properties_map),
 				};
 				
-			} else {
-				_mdat = {
-					texture:         -1, 
-					use_normal:       0, 
-					normal_map:      -1,
-					normal_strength:  0,
-					
-					mat_diffuse:    1,
-					mat_specular:   0,
-					mat_shine:      1,
-					mat_metalic:    0,
-					mat_reflective: 0,
-					
-					mat_texScale:   [1,1], 
-					mat_texShift:   [0,0], 
-					tex_filter:     false, 
-				};
 			}
 			
 			_mat[i] = _mdat;
