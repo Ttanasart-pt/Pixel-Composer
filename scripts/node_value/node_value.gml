@@ -3456,10 +3456,11 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	}
 	
 	static destroy = function() {
-		if(error_notification != noone) {
-			noti_remove(error_notification);
-			error_notification = noone;
-		}	
+		if(error_notification != noone) ds_list_remove(ERRORS, error_notification);
+	}
+	
+	static restore   = function() {
+		if(error_notification != noone) ds_list_add(ERRORS, error_notification);
 	}
 	
 	static cleanUp = function() {

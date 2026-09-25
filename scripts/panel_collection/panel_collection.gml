@@ -516,7 +516,7 @@ function Panel_Collection() : PanelContent() constructor {
 						var _txtH   = string_height_ext(_node.name, -1, _tw);
 						name_height = max(name_height, _txtH + ui(4));
 						
-						gpu_set_scissor(_nx, yy, grid_width, grid_size + ui(4) + name_height + ui(4));
+						gpu_set_scissor(_nx - grid_space / 2, yy, grid_width + grid_space, grid_size + ui(4) + name_height + ui(4));
 						BLEND_ALPHA_MULP
 						draw_text_ext(_tx, _ty, _node.name, -1, _tw);
 						BLEND_NORMAL

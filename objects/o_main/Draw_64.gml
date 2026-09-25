@@ -48,6 +48,8 @@ draw_clear(COLORS.bg);
 	var surf = surface_get_target();
 	try {
 		PANEL_MAIN.draw();
+		if(THEME_VALUE.panel_separation_type == "line")
+			PANEL_MAIN.drawLine();
 		PANEL_MAIN.drawFrame();
 		
 		if(THEME_VALUE.panel_separation_type == "line") 

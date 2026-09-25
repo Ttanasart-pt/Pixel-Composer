@@ -783,19 +783,6 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 		if(self == PANEL_MAIN && PANEL_DRAGGING != noone && key_mod_press(KCONTROL))
 			checkHover();
 		
-		if(THEME_VALUE.panel_separation_type == "line") {
-			draw_set_color(COLORS.panel_frame);
-			
-			if(split == "h") {
-				var _x = childs[0].x + childs[0].w;
-				draw_line(_x, y, _x, y + h);
-				
-			} else {
-				var _y = childs[0].y + childs[0].h;
-				draw_line(x, _y, x + w, _y);
-				
-			}
-		}
 	}
 	
 	function drawTabH() {
@@ -1250,6 +1237,27 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 		
 		// draw_set_color(c_red); draw_rectangle(tx, ty, tx+tw, ty+th, true);
 		
+	}
+	
+	function drawLine() {
+		if(array_empty(childs)) return;
+		
+		draw_set_color(COLORS.panel_frame);
+		
+		if(split == "h") {
+			var _x = childs[0].x < childs[1].x? childs[0].x + childs[0].w : childs[1].x + childs[1].w;
+			draw_line(_x, y, _x, y + h);
+			
+		} else {
+			var _y = childs[0].y < childs[1].y? childs[0].y + childs[0].h : childs[1].y + childs[1].h;
+			draw_line(x, _y, x + w, _y);
+			
+		}
+		
+		for(var i = 0, n = array_length(childs); i < n; i++) {
+			var _panel = array_safe_get(childs, i, 0);
+			if(_panel != 0) _panel.drawLine();
+		}
 	}
 	
 	function drawFrame(_dialog = false) {

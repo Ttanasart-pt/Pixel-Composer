@@ -639,6 +639,26 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		array_foreach(getNodeList(), function(node) { node.disable(); });
 	}
 	
+	static onDestroy = function() {
+		for( var i = 0, n = array_length(nodes); i < n; i++ ) {
+			var node = nodes[i];
+		
+			for( var j = 0, m = array_length(node.inputs);  j < m; j++ ) node.inputs[j].destroy();
+			for( var j = 0, m = array_length(node.outputs); j < m; j++ ) node.outputs[j].destroy();
+			
+		}
+	}
+	
+	static onRestore = function() {
+		for( var i = 0, n = array_length(nodes); i < n; i++ ) {
+			var node = nodes[i];
+				
+			for( var j = 0, m = array_length(node.inputs);  j < m; j++ )  node.inputs[j].restore();
+			for( var j = 0, m = array_length(node.outputs); j < m; j++ ) node.outputs[j].restore();
+		
+		}
+	}
+	
 	static ononDoubleClick = noone;
 	function onDoubleClick(panel) {
 		if(PREFERENCES.panel_graph_group_require_shift && !key_mod_press(SHIFT)) return false;

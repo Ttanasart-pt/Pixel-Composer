@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.10.205",
+    "changes": [
+      {
+        "date": "2026-09-25T00:06:25.095Z",
+        "node": "",
+        "commit": "Fix deleting group not remove error notification inside."
+      }
+    ]
+  },
+  {
     "version": "1.21.10.204",
     "changes": [
       {

@@ -669,6 +669,7 @@ function Panel_Menu() : PanelContent() constructor {
             } else {
                 var warning_amo = ds_list_size(WARNING);
                 var error_amo   = ds_list_size(ERRORS);
+                
                 draw_set_text(font, fa_left, fa_center);
                 
                 var wr_w = ui(20) + ui(8) + string_width(string(warning_amo));

@@ -37,13 +37,13 @@ gml_pragma("UnityBuild", "true");
 	globalvar RUN_IDE; RUN_IDE  = GM_build_type == "run";
 	globalvar DEBUG; DEBUG    = false;
 	
-	globalvar LATEST_VERSION; LATEST_VERSION = 1_21_00_0;
-	globalvar VERSION; VERSION        = 1_21_10_2;
-	globalvar SAVE_VERSION; SAVE_VERSION   = 1_21_09_2;
-	globalvar VERSION_STRING; VERSION_STRING = "1.21.10.204"; // Display on menu panel, workshop thumbnail  ALSO for automated build name. // 4 level!!
+	globalvar LATEST_VERSION; LATEST_VERSION = 1_21_00_0;     // All node with higher number will have a 'New' tag 
+	globalvar VERSION; VERSION        = 1_21_10_2;     // Only use in theme loading
+	globalvar SAVE_VERSION; SAVE_VERSION   = 1_21_09_2;     // Store in project file for migration check.
+	globalvar VERSION_STRING; VERSION_STRING = "1.21.10.205"; // Display on menu panel, workshop thumbnail  ALSO for automated build name. // 4 level!!
 	globalvar RELEASE_STRING; RELEASE_STRING = "1.22.0";      // Use for searching release note from github ALSO for automated build folder. // 3 level
-	globalvar BUILD_NUMBER; BUILD_NUMBER   = 1_21_10_2.04;
-	globalvar PREF_VERSION; PREF_VERSION   = 1_17_1;
+	globalvar BUILD_NUMBER; BUILD_NUMBER   = 1_21_10_2.05;  // Use for unzipping init files "check_version"
+	globalvar PREF_VERSION; PREF_VERSION   = 1_17_1;        // Don't change
 	
 	globalvar NEW_VERSION; NEW_VERSION    = false;
 	globalvar VERSION_MAJOR; VERSION_MAJOR  = floor(VERSION / 1000) * 1000;

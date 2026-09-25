@@ -140,6 +140,6 @@
 	
 	function noti_remove(noti) {
 		ds_list_remove(STATUSES, noti);
-		ds_list_remove(ERRORS, noti);
+		ds_list_remove(ERRORS,   noti);
 	}
 #endregion
