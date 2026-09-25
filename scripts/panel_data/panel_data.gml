@@ -163,7 +163,10 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 		content_index = tabIndex;
 		
 		var prec = array_safe_get_fast(content, content_index);
-		if(prec) prec.onFocusBegin();
+		if(prec) {
+			setFocus(prec);
+			prec.onFocusBegin();
+		}
 	}
 	
 	function replacePanel(panel) {
@@ -875,7 +878,7 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 						
 				} else if(hover && _hov) {
 					if(mouse_lpress(focus)) {
-						setTab(i);
+						setTab(i, true);
 						
 						tab_holding    = cont;
 						tab_hold_state = 0;
@@ -886,7 +889,7 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 					
 					if(DRAGGING) setTOOLTIP(__txt("Right Click to switch tab"));
 					if(mouse_rpress(focus)) {
-						if(DRAGGING) setTab(i);
+						if(DRAGGING) setTab(i, true);
 						else {
 							var menu = array_clone(border_rb_menu);
 							if(instanceof(cont) == "Panel_Menu")
@@ -1067,7 +1070,7 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 						
 				} else if(_hov) {
 					if(mouse_lpress(focus)) {
-						setTab(i);
+						setTab(i, true);
 						
 						tab_holding    = cont;
 						tab_hold_state = 0;
@@ -1078,7 +1081,7 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 					
 					if(DRAGGING) setTOOLTIP(__txt("Right Click to switch tab"));
 					if(mouse_rpress(focus)) {
-						if(DRAGGING) setTab(i);
+						if(DRAGGING) setTab(i, true);
 						else {
 							var menu = array_clone(border_rb_menu);
 							if(instanceof(cont) == "Panel_Menu")

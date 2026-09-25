@@ -3623,7 +3623,7 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
         slider_width = slider_width == 0? _sl_w : lerp_float(slider_width, _sl_w, 10);
         var _sl_x = w / 2 - slider_width / 2;
         var _sl_y = h - _sl_h - pd - mrg * (toolbar_height + pd);
-        if(toolL < _ss_x + slider_width + pd) _sl_y -= toolbar_height;
+        if(toolL < _ss_x + slider_width + pd) _sl_y -= toolbar_height; 
         
         var _ss_y = _sl_y + _sl_h - ui(16);
         
