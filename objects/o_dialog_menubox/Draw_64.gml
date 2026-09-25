@@ -87,8 +87,8 @@ DIALOG_WINDOW_START
 		if(_menuItem == -1) {
 			draw_set_color(COLORS.panel_separator);
 			if(THEME_VALUE.panel_separation_type == "frame") {
-				var bx = xx + ui(16);
-				var bw = ww - ui(32);
+				var bx = xx + ui( 8);
+				var bw = ww - ui(16);
 				draw_line_width(bx, yy + ui(3), bx + bw, yy + ui(3), ui(1));
 				
 			} else

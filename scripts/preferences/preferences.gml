@@ -118,6 +118,8 @@
 		#endregion
 		
 		#region PANEL
+			PREFERENCES.panel_lock = false;
+			
 			PREFERENCES.panel_reset_view_on_display_refresh = true;
 			PREFERENCES.panel_layout_file                 = "__default";
 			

@@ -735,52 +735,50 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 			_min_h = childs[0].min_h + childs[1].min_h;
 		}
 		
-		var _resizable = (is(HOVER, PanelContent) && HOVER.panel.dialog == dialog) || (dialog && instance_exists(HOVER) && HOVER == dialog.id);
-		    _resizable = _resizable && contentResizable();
-		
 		for(var i = 0, n = array_length(childs); i < n; i++) {
 			var _panel = array_safe_get(childs, i, 0);
 			if(is(_panel, Panel)) _panel.draw();
 		}
 		
-		var p = ui(6 - 1);
-		for(var i = 0, n = array_length(childs); i < n; i++) {
-			var _panel = array_safe_get(childs, i, 0);
-			if(!is(_panel, Panel)) continue;
+		if(!PREFERENCES.panel_lock) {
+			var _resizable = (is(HOVER, PanelContent) && HOVER.panel.dialog == dialog) || (dialog && instance_exists(HOVER) && HOVER == dialog.id);
+			    _resizable = _resizable && contentResizable();
 			
-			var px = _panel.x;
-			var py = _panel.y;
-			var pw = _panel.w;
-			var ph = _panel.h;
-			
-			switch(_panel.anchor) {
-				case ANCHOR.left :
-					// draw_set_color(_resizable? c_lime : c_red); draw_rectangle(px + pw - p, py, px + pw + p, py + ph, true);
+			var p = ui(6 - 1);
+			for(var i = 0, n = array_length(childs); i < n; i++) {
+				var _panel = array_safe_get(childs, i, 0);
+				if(!is(_panel, Panel)) continue;
 				
-					if(!_resizable || !point_in_rectangle(mouse_mx, mouse_my, px + pw - p, py, px + pw + p, py + ph))
-						break;
-					
-					CURSOR = cr_size_we;
-					if(mouse_lpress()) {
-						dragging  = 1;
-						drag_sval = pw;
-						drag_sm   = mouse_mx;
-					}
-					break;
-					
-				case ANCHOR.top :
-					// draw_set_color(_resizable? c_lime : c_red); draw_rectangle(px, py + ph - p, px + pw, py + ph + p, true);
+				var px = _panel.x;
+				var py = _panel.y;
+				var pw = _panel.w;
+				var ph = _panel.h;
 				
-					if(!_resizable || !point_in_rectangle(mouse_mx, mouse_my, px, py + ph - p, px + pw, py + ph + p))
+				switch(_panel.anchor) {
+					case ANCHOR.left :
+						if(!_resizable || !point_in_rectangle(mouse_mx, mouse_my, px + pw - p, py, px + pw + p, py + ph))
+							break;
+						
+						CURSOR = cr_size_we;
+						if(mouse_lpress()) {
+							dragging  = 1;
+							drag_sval = pw;
+							drag_sm   = mouse_mx;
+						}
 						break;
-							
-					CURSOR = cr_size_ns;
-					if(mouse_lpress()) {
-						dragging  = 2;
-						drag_sval = ph;
-						drag_sm   = mouse_my;
-					}
-					break;
+						
+					case ANCHOR.top :
+						if(!_resizable || !point_in_rectangle(mouse_mx, mouse_my, px, py + ph - p, px + pw, py + ph + p))
+							break;
+								
+						CURSOR = cr_size_ns;
+						if(mouse_lpress()) {
+							dragging  = 2;
+							drag_sval = ph;
+							drag_sm   = mouse_my;
+						}
+						break;
+				}
 			}
 		}
 		
@@ -1272,17 +1270,17 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 		var _mx = mouse_mxs;
 		var _my = mouse_mys;
 		
+		var _tx = tx + padding;
+		var _ty = ty + padding;
+		var _tw = tw - padding * 2;
+		var _th = th - padding * 2;
+		
 		var con    = getContent();
 		var dFrame = !MAC || !is(con, Panel_Menu);
 		
 		var p = ui(6);
 		var m_in = point_in_rectangle(_mx, _my, tx + p, ty + p, tx + tw - p, ty + th - p);
 		var m_ot = point_in_rectangle(_mx, _my, tx, ty, tx + tw, ty + th);
-		
-		var _tx = tx + padding;
-		var _ty = ty + padding;
-		var _tw = tw - padding * 2;
-		var _th = th - padding * 2;
 		
 		if(THEME_VALUE.panel_separation_type == "frame" && !_dialog)
 			if(dFrame) draw_sprite_stretched_ext(THEME.ui_panel, 1, _tx, _ty, _tw, _th, COLORS.panel_frame);
@@ -1292,21 +1290,23 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 			if(dFrame) draw_sprite_stretched_ext(THEME.ui_panel, 1, _tx, _ty, _tw, _th, _color, 1);
 		}
 		
-		if(focusing && parent != noone && !m_in && m_ot && contentResizable()) {
-			if(dFrame) draw_sprite_stretched_ext(THEME.ui_panel, 1, _tx, _ty, _tw, _th, c_white, .4);
-			
-			if(DOUBLE_CLICK) {
-				extract();
-				PANEL_DRAG_MOUSE = 0;
+		if(!PREFERENCES.panel_lock) {
+			if(focusing && parent != noone && !m_in && m_ot && contentResizable()) {
+				if(dFrame) draw_sprite_stretched_ext(THEME.ui_panel, 1, _tx, _ty, _tw, _th, c_white, .4);
 				
-			} else if(mouse_rpress()) {
-				var menu = array_clone(border_rb_menu);
-				if(instanceof(getContent()) == "Panel_Menu")
-					array_remove(menu, border_rb_close);
+				if(DOUBLE_CLICK) {
+					extract();
+					PANEL_DRAG_MOUSE = 0;
 					
-				menuCall("panel_border_menu", menu);
-			}
-		} 
+				} else if(mouse_rpress()) {
+					var menu = array_clone(border_rb_menu);
+					if(instanceof(getContent()) == "Panel_Menu")
+						array_remove(menu, border_rb_close);
+						
+					menuCall("panel_border_menu", menu);
+				}
+			} 
+		}
 		
 		if(draw_droppable) {
 			if(dFrame) draw_sprite_stretched_ext(THEME.ui_panel, 1, _tx, _ty, _tw, _th, COLORS._main_value_positive, 1);	

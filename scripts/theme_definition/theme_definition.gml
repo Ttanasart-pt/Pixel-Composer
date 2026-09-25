@@ -74,6 +74,7 @@ function ThemeColor() constructor {
     dialog_lua_ref_bg_args              = CDEF.main_ltgrey;
     dialog_lua_ref_bg_hover             = merge_color(CDEF.main_white, CDEF.main_ltgrey, 0.5);
     dialog_lua_ref_bg                   = CDEF.main_white;
+    dialog_separator                    = CDEF.main_dkblack;
     
     add_node_blend_action               = CDEF.lime;
     add_node_blend_generic              = CDEF.yellow;
@@ -164,7 +165,7 @@ function ThemeColor() constructor {
     panel_tab_text                      = CDEF.main_dkblack;
     panel_tab_icon                      = CDEF.main_dkblack;
     panel_separator                     = CDEF.main_dkblack;
-
+    
     panel_graph_bg                      = CDEF.main_dkblack;
     panel_graph_minimap_outline         = CDEF.main_dkgrey;
     panel_graph_node_dimension          = CDEF.main_grey;

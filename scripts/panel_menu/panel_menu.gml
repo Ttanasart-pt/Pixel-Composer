@@ -78,6 +78,9 @@
         registerFunction("", "Redo",                "Z",    c|s, REDO     ).setMenu("redo", THEME.redo )
         
         registerFunction("", "Full Panel",          vk_f9,  n,   set_focus_fullscreen     ).setMenu("full_panel"      )
+        registerFunction("", "Lock Panel",          "",     n,   function() /*=>*/ { PREFERENCES.panel_lock = !PREFERENCES.panel_lock; PREF_SAVE(); } )
+        	.setMenu("lock_panel").setToggle(function() /*=>*/ {return PREFERENCES.panel_lock})
+        	
         registerFunction("", "Reset Layout",        vk_f10, c,   refreshPanel             ).setMenu("reset_layout"    )
         
         registerFunction("", "Fullscreen",          vk_f11, n,   global_fullscreen        ).setMenu("fullscreen"      )
@@ -261,6 +264,7 @@ function Panel_Menu() : PanelContent() constructor {
         ]; menu_rendering = [ __txt("Rendering"), "main_rendering" ];
         
         menu_panels  = [ __txt("Panels"), [
+            MENU_ITEMS.lock_panel,
             MENU_ITEMS.full_panel,
             MENU_ITEMS.reset_layout,
             menuItemShelf(__txt("Workspace"), function(_dat) /*=>*/ { 
@@ -360,7 +364,7 @@ function Panel_Menu() : PanelContent() constructor {
             MENU_ITEMS.toolbar_panel,
             MENU_ITEMS.dialog_manager_panel,
             MENU_ITEMS.steam_workshop_panel,
-        ]];
+        ], noone, "panel" ];
         
         menu_help = [ __txt("Help"), [
             menuItem(__txt("Pixel Composer Discord") + "...", function() /*=>*/ {return url_open("https://discord.gg/aHGbYjQh63")},    THEME.discord    ),
@@ -567,17 +571,35 @@ function Panel_Menu() : PanelContent() constructor {
             var _curRow = 0, currY;
             var _rowH   = (h - _padd * 2) / row;
             var _ww     = 0;
-        
+        	
+        	var pd  = ui(8);
+        	var icw = ui(16);
+        	
             for(var i = 0; i < len; i++) {
                 var _menu  = _menus[i];
                 var _name  = _menu[0];
                 var _cont  = _menu[1];
                 var _colr  = array_safe_get_fast(_menu, 2, noone);
+                var _tagg  = array_safe_get_fast(_menu, 3, "");
+                
+                var _icon  = noone;
+                var _iconI = 0;
+                
                 var _mname = is_string(_cont)? _cont : $"menu_{_name}";
                 
+                switch(_tagg) {
+                	case "panel": 
+                		if(PREFERENCES.panel_lock) {
+                			_icon  = THEME.lock;
+							_iconI = 0;
+                		}
+                		break;
+                }
+                
                 draw_set_text(font, fa_center, fa_center, COLORS._main_text);
-                var ww = string_width(_name) + ui(16);
-                var hh = line_get_height() + ui(8);
+                var ww = string_width(_name) + pd * 2;
+                var hh = line_get_height()   + pd;
+                
                 if(hori) {
                     xc = xx + ww / 2;
                     x0 = xx;
@@ -598,6 +620,13 @@ function Panel_Menu() : PanelContent() constructor {
                     y1 = yy + hh;
                 }
                 
+                if(_icon != noone) {
+                	ww += icw;
+                	xc += icw;
+                	
+                	if(hori) x1 += icw;
+                }
+                
                 if(_colr != noone) {
                 	var cc = colorMultiply(COLORS.dialog_menubox_highlight, _colr);
                 	draw_sprite_stretched_ext(THEME.box_r5, 0, x0, y0, x1 - x0, y1 - y0, cc, .5);
@@ -616,7 +645,9 @@ function Panel_Menu() : PanelContent() constructor {
                         menuCall(_mname, _mcont, _mnx, _mny, fa_left, false);
                     }
                 }
-            
+            	
+            	if(_icon != noone) draw_sprite_ui_uniform(_icon, _iconI, x0 + ui(6) + icw / 2, yc, .75, COLORS._main_icon);
+            	
                 draw_set_text(font, fa_center, fa_center, COLORS._main_text);
                 draw_text_add(xc, yc, _name);
             
