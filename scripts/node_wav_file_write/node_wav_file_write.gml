@@ -4,27 +4,27 @@ function Node_WAV_File_Write(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	setDimension(, 72);
 	setDrawIcon();
 	
-	newInput(0, nodeValue_FPath("Path"))
-		.setDisplay(VALUE_DISPLAY.path_save, { filter: "audio file|*.wav" })
-		.rejectArray()
-		.setVisible(true);
+	////- =Path
+	newInput( 0, nodeValue_FPath( "Path" )).setDisplay(VALUE_DISPLAY.path_save, { filter: "audio file|*.wav" }).rejectArray().setVisible(true);
+	newInput( 6, nodeValue_Text(  "Extension", "wav" )).rejectArray();
 	
-	newInput(1, nodeValue_Float("Audio Data", [[]]))
-		.setArrayDepth(1)
-		.setVisible(true, true);
+	////- =Data
+	newInput( 1, nodeValue_Float(   "Audio Data", [[]]  )).setArrayDepth(1).setVisible(true, true);
+	newInput( 4, nodeValue_Bool(    "Remap Data", false ))
+	newInput( 5, nodeValue_Vec2(    "Data Range", [0,1] ));
 	
-	newInput(2, nodeValue_Int("Sample", 44100));
+	////- =Format
+	newInput( 2, nodeValue_Int(     "Sample",     44100 ));
+	newInput( 3, nodeValue_EScroll( "Bit Depth",  0, [ "8 bit positive", "16 bit integer" ]));
+	// 7
 	
-	newInput(3, nodeValue_EScroll("Bit Depth",  0, [ "8 bit positive", "16 bit integer" ]));
-		
-	newInput(4, nodeValue_Bool("Remap Data", false))
-	
-	newInput(5, nodeValue_Vec2("Data Range", [ 0, 1 ]));
-	
-	input_display_list = [ 
-		[ "Data",	false], 1, 0, 4, 5, 
-		[ "Format",	false], 2, 3, 
+	input_display_list = [
+		[ "Path",   false ],  0,  6, 
+		[ "Data",	false ],  1,  4,  5, 
+		[ "Format",	false ],  2,  3, 
 	]
+	
+	////- Node
 	
 	insp1button = button(function() /*=>*/ { export(); }).setTooltip(__txt("Export"))
 		.setIcon(THEME.sequence_control, 1, COLORS._main_value_positive).iconPad(ui(6)).setBaseSprite(THEME.button_hide_fill);
@@ -36,13 +36,15 @@ function Node_WAV_File_Write(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	}
 	
 	static export = function() {
-		var path = getInputData(0);
-		var data = getInputData(1);
-		var samp = getInputData(2);
-		var bitd = getInputData(3) + 1;
+		var path = getInputData( 0);
+		var ext  = getInputData( 6);
 		
-		var remp = getInputData(4);
-		var rern = getInputData(5);
+		var data = getInputData( 1);
+		var samp = getInputData( 2);
+		var bitd = getInputData( 3) + 1;
+		
+		var remp = getInputData( 4);
+		var rern = getInputData( 5);
 		
 		if(!is_array(data)) return;
 		
@@ -64,7 +66,7 @@ function Node_WAV_File_Write(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 			_siz = len;
 		}
 		
-		if(filename_ext(path) != ".wav") path += ".wav";
+		path = filename_ext_verify(path, "." + ext);
 		
 		var buff = buffer_create(1, buffer_grow, 1);
 		var _pkg = _chn * _siz * bitd + 12 + 24 + 8;

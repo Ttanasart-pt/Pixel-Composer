@@ -10,28 +10,37 @@ function Node_create_CSV_File_Write(_x, _y, _group = noone) {
 }
 
 function Node_CSV_File_Write(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
-	name = "CSV File Out";
+	name  = "CSV File Out";
 	color = COLORS.node_blend_input;
-	
 	w = 128;
 	
-	newInput(0, nodeValue_FPath("Path"))
-		.setDisplay(VALUE_DISPLAY.path_save, { filter: "csv file|*.csv" })
-		.rejectArray();
+	////- =Path
+	newInput( 0, nodeValue_FPath( "Path" )).setDisplay(VALUE_DISPLAY.path_save, { filter: "csv file|*.csv" }).rejectArray();
+	newInput( 2, nodeValue_Text(  "Extension", "csv" )).rejectArray();
 	
-	newInput(1, nodeValue("Content", self, CONNECT_TYPE.input, VALUE_TYPE.any, ""))
-		.setVisible(true, true);
+	////- =Content
+	newInput( 1, nodeValue("Content", self, CONNECT_TYPE.input, VALUE_TYPE.any, "")).setVisible(true, true);
+	// 3
+	
+	inputs_display_list = [ 
+		[ "Path",    false ],  0,  2, 
+		[ "Content", false ],  1, 
+	]
+	
+	////- Node
 	
 	insp1button = button(function() /*=>*/ {return writeFile()}).setTooltip(__txt("Export"))
 		.setIcon(THEME.sequence_control, 1, COLORS._main_value_positive).iconPad(ui(6)).setBaseSprite(THEME.button_hide_fill);
 	
 	static writeFile = function() {
-		var path = getInputData(0);
-		if(path == "") return;
-		if(filename_ext(path) != ".csv")
-			path += ".csv";
+		var path = getInputData( 0);
+		var ext  = getInputData( 2);
 		
-		var _val = getInputData(1);
+		var _val = getInputData( 1);
+		
+		if(path == "") return;
+		path = filename_ext_verify(path, "." + ext);
+		
 		var str = "";
 		
 		if(is_array(_val)) {
@@ -56,10 +65,10 @@ function Node_CSV_File_Write(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
 		var bbox = draw_bbox;
 		
-		var str = filename_name(getInputData(0));
-		if(filename_ext(str) != ".csv")
-			str += ".csv";
-			
+		var str = getInputData(0);
+		var ext = getInputData(2);
+		str = filename_name(filename_ext_verify(str, "." + ext));
+		
 		draw_set_text(f_sdf, fa_center, fa_center, COLORS._main_text);
 		var ss	= string_scale(str, bbox.w, bbox.h);
 		draw_text_transformed(bbox.xc, bbox.yc, str, ss, ss, 0);

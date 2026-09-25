@@ -598,15 +598,13 @@ function Panel_Menu() : PanelContent() constructor {
                 
                 if(_colr != noone) {
                 	var cc = colorMultiply(COLORS.dialog_menubox_highlight, _colr);
-                	// draw_sprite_stretched_ext(THEME.box_r2_clr, 0, x0, y0, x1 - x0, y1 - y0, _colr);
                 	draw_sprite_stretched_ext(THEME.box_r5, 0, x0, y0, x1 - x0, y1 - y0, cc, .5);
                 }
                 
                 if((pHOVER || instance_exists(o_dialog_menubox)) && point_in_rectangle(mx, my, x0, y0, x1, y1)) {
                     _draggable = false;
-                    // draw_sprite_stretched(THEME.box_r2_clr, 0, x0, y0, x1 - x0, y1 - y0);
-                    var aa = .5;
-                    draw_sprite_stretched_ext(THEME.box_r5, 0, x0, y0, x1 - x0, y1 - y0, COLORS.dialog_menubox_highlight, aa);
+                    var aa = .2;
+                    draw_sprite_stretched_add(THEME.box_r5, 0, x0, y0, x1 - x0, y1 - y0, COLORS.dialog_menubox_highlight, aa);
                     
                     if((mouse_lpress(pFOCUS)) || (instance_exists(o_dialog_menubox) && o_dialog_menubox.menu_id != _mname)) {
                         var _mnx   = hori? x + x0 : x + x1;
@@ -989,8 +987,8 @@ function Panel_Menu() : PanelContent() constructor {
                     if(pHOVER && point_in_rectangle(mx, my, _x0, _y0, _x1, _y1)) {
                         _draggable = false;
                         // draw_sprite_stretched_ext(THEME.button_hide_fill, 1, _x0, _y0, _x1 - _x0, _y1 - _y0, sc, 1);
-                        var aa = .5;
-                        draw_sprite_stretched_ext(THEME.box_r5, 0, _x0, _y0, _x1 - _x0, _y1 - _y0, COLORS.dialog_menubox_highlight, aa);
+                        var aa = .2;
+                        draw_sprite_stretched_add(THEME.box_r5, 0, _x0, _y0, _x1 - _x0, _y1 - _y0, COLORS.dialog_menubox_highlight, aa);
                         
                         if(NEW_VERSION) setTOOLTIP(__txt("New Version Available"));
                         
@@ -1024,8 +1022,8 @@ function Panel_Menu() : PanelContent() constructor {
                 if(pHOVER && point_in_rectangle(mx, my, _xx1, y1 - ui(16), _xx1 + ww, y1 + ui(16))) {
                     _draggable = false;
                     // draw_sprite_stretched_ext(THEME.button_hide_fill, 1, _xx1, y1 - ui(12), ww, ui(24), sc, 1);
-                    var aa = .5;
-                    draw_sprite_stretched_ext(THEME.box_r5, 0, _xx1, y1 - ui(12), ww, ui(24), COLORS.dialog_menubox_highlight, aa);
+                    var aa = .2;
+                    draw_sprite_stretched_add(THEME.box_r5, 0, _xx1, y1 - ui(12), ww, ui(24), COLORS.dialog_menubox_highlight, aa);
                     
                     if(NEW_VERSION) setTOOLTIP(__txt("New Version Available"));
                     
@@ -1105,7 +1103,7 @@ function Panel_Menu() : PanelContent() constructor {
             	_b = 1;
             	_draggable = false;
             	
-            	draw_sprite_stretched_ext(THEME.box_r5, 0, tbx0, tby0, tw, th, COLORS.dialog_menubox_highlight, .5);
+            	draw_sprite_stretched_add(THEME.box_r5, 0, tbx0, tby0, tw, th, COLORS.dialog_menubox_highlight, .2);
             	if(mouse_lpress(pFOCUS)) {
 	                _hov = true;
 	                var amo = min(10, ds_list_size(RECENT_FILES));

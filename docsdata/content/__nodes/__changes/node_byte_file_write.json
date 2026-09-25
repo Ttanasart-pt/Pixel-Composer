@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.21.10.205",
+    "changes": [
+      {
+        "date": "2026-09-25T01:15:50.440Z",
+        "node": "txt, json, csv, xml File Out",
+        "commit": "**txt, json, csv, xml File Out**: Add custom extension setting."
+      }
+    ]
+  },
+  {
     "version": "1.21.8.007",
     "changes": [
       {
