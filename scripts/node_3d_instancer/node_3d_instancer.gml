@@ -193,7 +193,6 @@ function Node_3D_Instancer(_x, _y, _group = noone) : Node_3D(_x, _y, _group) con
 		#endregion
 		
 		#region constant buffer
-			
 			var _posl = array_length(_poss);
 			var _rotl = array_length(_rots);
 			var _scal = array_length(_scas);
@@ -322,7 +321,6 @@ function Node_3D_Instancer(_x, _y, _group = noone) : Node_3D(_x, _y, _group) con
 					buffer_write(_buffer, buffer_f32, _ny); // norm Y
 					buffer_write(_buffer, buffer_f32, _nz); // norm Z
 					buffer_write(_buffer, buffer_f32, 0);
-					
 					
 					span[0] = min(span[0], _px - _Sposx); span[1] = max(span[1], _px - _Sposx);
 					span[2] = min(span[2], _py - _Sposy); span[3] = max(span[3], _py - _Sposy);

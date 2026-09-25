@@ -759,7 +759,7 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 				
 					if(!_resizable || !point_in_rectangle(mouse_mx, mouse_my, px + pw - p, py, px + pw + p, py + ph))
 						break;
-							
+					
 					CURSOR = cr_size_we;
 					if(mouse_lpress()) {
 						dragging  = 1;
@@ -767,6 +767,7 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 						drag_sm   = mouse_mx;
 					}
 					break;
+					
 				case ANCHOR.top :
 					// draw_set_color(_resizable? c_lime : c_red); draw_rectangle(px, py + ph - p, px + pw, py + ph + p, true);
 				
@@ -857,10 +858,10 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 					draw_sprite_stretched_ext(THEME.ui_panel_tab, 1, _tbx, _tby, _tbw, _tbh, COLORS.panel_tab);
 					foc = focus || (instance_exists(o_dialog_menubox) && o_dialog_menubox.getContextPanel() == self);
 					
-					if(foc) {
-						var cc = PREFERENCES.panel_outline_accent? COLORS._main_accent : COLORS.panel_select_border;
-						draw_sprite_stretched_ext(THEME.ui_panel_tab, 2, _tbx, _tby, _tbw, _tbh, cc);
-					}
+					// if(foc) {
+					// 	var cc = PREFERENCES.panel_outline_accent? COLORS._main_accent : COLORS.panel_select_border;
+					// 	draw_sprite_stretched_ext(THEME.ui_panel_tab, 2, _tbx, _tby, _tbw, _tbh, cc);
+					// }
 					
 				} else {
 					var cc = COLORS.panel_tab_inactive;
@@ -904,16 +905,15 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 						rem = i;
 				}
 				
-				var cc =  foc? COLORS.panel_tab_icon : COLORS._main_text_sub;
 				var tc = _top? tab_size / 2 - ui(1) : tab_size / 2 + ui(2);
-				draw_sprite_ui(THEME.tab_exit, 0, _tbx + _tbw - ui(12), _tbc, 1, 1, 0, cc, aa);
+				draw_sprite_ui(THEME.tab_exit, 0, _tbx + _tbw - ui(12), _tbc, 1, 1, 0, COLORS._main_icon_light, aa);
 				
 				if(icn != noone) {
-					draw_sprite_ui(icn, 0, _tbx + ui(8 + 8), _tbc, 1, 1, 0, cc); 
+					draw_sprite_ui(icn, 0, _tbx + ui(8 + 8), _tbc, 1, 1, 0, COLORS._main_text_sub); 
 					_tbx += ui(20);
 				}
 				
-				draw_set_text(f_p3, fa_left, fa_center, foc? COLORS.panel_tab_text : COLORS._main_text_sub);
+				draw_set_text(f_p3, fa_left, fa_center, COLORS._main_text_sub);
 				draw_text_add(_tbx + ui(8), tc, txt);
 				
 				tbx += _tbw + ppad;
@@ -939,15 +939,14 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 				var _tbc = _tby + _tbh / 2;
 				var  tc  = _top? tab_size / 2 - ui(1) : tab_size / 2 + ui(2);
 				
-				draw_sprite_stretched_ext(THEME.ui_panel_tab, 2, _tbx, _tby, _tbw, _tbh, PREFERENCES.panel_outline_accent? COLORS._main_accent : COLORS.panel_select_border, 1);
-				draw_sprite_ui(THEME.tab_exit, 0, _tbx + _tbw - ui(12), _tbc, 1, 1, 0, COLORS.panel_tab_icon);
+				draw_sprite_stretched_ext(THEME.ui_panel_tab, 1, _tbx, _tby, _tbw, _tbh, COLORS.panel_tab, 1);
 				
 				if(icn != noone) {
-					draw_sprite_ui(icn, 0, _tbx + ui(8 + 8), _tbc, 1, 1, 0, COLORS.panel_tab_icon);
+					draw_sprite_ui(icn, 0, _tbx + ui(8 + 8), _tbc, 1, 1, 0, COLORS._main_text);
 					_tbx += ui(20);
 				}
 				
-				draw_set_text(f_p3, fa_left, fa_center, COLORS.panel_tab_text);
+				draw_set_text(f_p3, fa_left, fa_center, COLORS._main_text);
 				draw_text_add(_tbx + ui(8), tc, txt);
 				
 				if(tab_hold_state == 0) {
@@ -1050,10 +1049,10 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 					draw_sprite_stretched_ext(THEME.ui_panel_tab_v, 1, _tbx, _tby, _tbw, _tbh, COLORS.panel_tab);
 					foc = focus || (instance_exists(o_dialog_menubox) && o_dialog_menubox.getContextPanel() == self);
 					
-					if(foc) {
-						cc = PREFERENCES.panel_outline_accent? COLORS._main_accent : COLORS.panel_select_border;
-						draw_sprite_stretched_ext(THEME.ui_panel_tab_v, 2, _tbx, _tby, _tbw, _tbh, cc);
-					}
+					// if(foc) {
+					// 	cc = PREFERENCES.panel_outline_accent? COLORS._main_accent : COLORS.panel_select_border;
+					// 	draw_sprite_stretched_ext(THEME.ui_panel_tab_v, 2, _tbx, _tby, _tbw, _tbh, cc);
+					// }
 					
 				} else {
 					var cc = COLORS.panel_tab_inactive;
@@ -1096,16 +1095,15 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 						rem = i;
 				}
 				
-				var cc =  foc?  COLORS.panel_tab_icon : COLORS._main_text_sub;
 				var tc = _left? tab_size / 2 : tab_size / 2 + ui(2);
-				draw_sprite_ui(THEME.tab_exit, 0, _tbc, _tby + _tbh - ui(12), 1, 1, 0, cc, aa);
+				draw_sprite_ui(THEME.tab_exit, 0, _tbc, _tby + _tbh - ui(12), 1, 1, 0, COLORS._main_icon_light, aa);
 				
 				if(icn != noone) {
-					draw_sprite_ui(icn, 0, _tbc, _tby + ui(8 + 8), 1, 1, 0, cc);
+					draw_sprite_ui(icn, 0, _tbc, _tby + ui(8 + 8), 1, 1, 0, COLORS._main_text_sub);
 					_tby += ui(20);
 				}
 				
-				draw_set_text(f_p3, _left? fa_right : fa_left, fa_center, foc? COLORS.panel_tab_text : COLORS._main_text_sub);
+				draw_set_text(f_p3, _left? fa_right : fa_left, fa_center, COLORS._main_text_sub);
 				draw_text_transform_add(tc, _tby + ui(8), txt, 1, _left? 90 : -90);
 				
 				tbx += _tbh + ppad;
@@ -1133,15 +1131,14 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 				var cc = PREFERENCES.panel_outline_accent? COLORS._main_accent : COLORS.panel_select_border;
 				var tc = _left? tab_size / 2 : tab_size / 2 + ui(2);
 				
-				draw_sprite_stretched_ext(THEME.ui_panel_tab_v, 2, _tbx, _tby, _tbw, _tbh, cc, 1);
-				draw_sprite_ui(THEME.tab_exit, 0, _tbc, _tby + _tbh - ui(12), 1, 1, 0, COLORS.panel_tab_icon);
+				draw_sprite_stretched_ext(THEME.ui_panel_tab_v, 1, _tbx, _tby, _tbw, _tbh, COLORS.panel_tab, 1);
 				
 				if(icn != noone) {
-					draw_sprite_ui(icn, 0, _tbc, _tby + ui(8 + 8), 1, 1, 0, COLORS._main_text_sub);
+					draw_sprite_ui(icn, 0, _tbc, _tby + ui(8 + 8), 1, 1, 0, COLORS._main_text);
 					_tby += ui(20);
 				}
 				
-				draw_set_text(f_p3, _left? fa_right : fa_left, fa_center, COLORS.panel_tab_text);
+				draw_set_text(f_p3, _left? fa_right : fa_left, fa_center, COLORS._main_text);
 				draw_text_transform_add(tc, _tby + ui(8), txt, 1, _left? 90 : -90);
 				
 				if(tab_hold_state == 0) {

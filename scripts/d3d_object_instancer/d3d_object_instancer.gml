@@ -246,15 +246,11 @@ function __3dObjectInstancer() : __3dObject() constructor {
 	static submitVertex_OpenGL = function(_sc = noone, _sh = noone) {
 		
 		_sc.reApply(glsl_shader_default);
-		
-		if(_sh == sh_d3d_geometry)
-			shader_set(glsl_shader_geometry);
-		else 
-			shader_set(glsl_shader_default);
-			
+		var sh = _sh == sh_d3d_geometry? glsl_shader_geometry : glsl_shader_default;
+		shader_set(sh);
 		preSubmitVertex(_sc);
 		
-		shader_set_uniform_matrix_array(shader_get_uniform(shader_current(), "objectTransform"), objectTransform.matTran);
+		shader_set_uniform_matrix_array(shader_get_uniform(sh, "objectTransform"), objectTransform.matTran);
 		shader_set_3("cameraPosition", _sc.camera.position.toArray());
 		
 		transform.submitMatrix();
@@ -264,7 +260,6 @@ function __3dObjectInstancer() : __3dObject() constructor {
 		gpu_set_tex_repeat(true);
 		var vbcount = array_length(VB);
 		
-		var sh = shader_current();
 		var uInstanceID = shader_get_uniform(sh, "InstanceID" );
 		var umat_flip   = shader_get_uniform(sh, "mat_flip"   );
 		

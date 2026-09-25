@@ -193,12 +193,12 @@
         registerFunction(g, "Rename",                vk_f2,     n, panel_graph_rename        ).setMenu("graph_rename")
         
         if(MAC) {
-        	registerFunction(g, "Delete (break)", vk_backspace, s|c, panel_graph_delete_break  ).setMenu("graph_delete_break", THEME.cross)
-	        registerFunction(g, "Delete (merge)", vk_backspace, c,   panel_graph_delete_merge  ).setMenu("graph_delete_merge", THEME.cross)
+        	registerFunction("GraphNode", "Delete (break)", vk_backspace, s|c, panel_graph_delete_break  ).setMenu("graph_delete_break", THEME.cross)
+	        registerFunction("GraphNode", "Delete (merge)", vk_backspace, c,   panel_graph_delete_merge  ).setMenu("graph_delete_merge", THEME.cross)
 	        
         } else {
-	        registerFunction(g, "Delete (break)", vk_delete, s, panel_graph_delete_break  ).setMenu("graph_delete_break",    THEME.cross)
-	        registerFunction(g, "Delete (merge)", vk_delete, n, panel_graph_delete_merge  ).setMenu("graph_delete_merge",    THEME.cross)
+	        registerFunction("GraphNode", "Delete (break)", vk_delete, s, panel_graph_delete_break  ).setMenu("graph_delete_break",    THEME.cross)
+	        registerFunction("GraphNode", "Delete (merge)", vk_delete, n, panel_graph_delete_merge  ).setMenu("graph_delete_merge",    THEME.cross)
         }
     
         registerFunction(g, "Duplicate",             "D", c, panel_graph_duplicate           ).setMenu("graph_duplicate",       THEME.duplicate)
@@ -1464,7 +1464,7 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
 		var area_x = _targ.slide_anchor? _targ.x - area_w : _targ.x;
 		var area_y = _targ.slide_anchor? _targ.y - area_h : _targ.y;
         
-        var _gs = min((w - ui(16)) / (area_w * 2), (h - ui(16)) / (area_h * 2));
+        var _gs = min((w - ui(16)) / (area_w * 2), (h - toolbar_height * 2 - ui(16)) / (area_h * 2));
         
         if(skip) {
             graph_x = w / 2 / _gs - area_x;
@@ -1559,6 +1559,8 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
     ////- Step
     
     function stepBegin() { //
+    	if(pFOCUS) ds_stack_push(FOCUS_STACK, "GraphNode");
+    
     	if(node_focus_context != undefined) {
     		setFocusString(node_focus_context);
     		if(mouse_lpress()) node_focus_context = undefined;
@@ -5094,7 +5096,9 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
             if(_node && _node.manual_deletable) 
                 _node.destroy(__temp_merge);
         }
-        nodes_selecting = [];
+        
+        nodes_selecting    = [];
+        node_focus_context = undefined;
     } 
     
     node_prop_clipboard = noone;

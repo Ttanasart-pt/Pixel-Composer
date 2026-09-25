@@ -2343,7 +2343,7 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 				return out;
 			}
 			
-			if(loop) _dis = safe_mod(_dis, lengthTotal, true);
+			if(loop && lengthTotal) _dis = safe_mod(_dis, lengthTotal, true);
 			
 			var ansize = array_length(anchors);
 			if(ansize == 0) return out;

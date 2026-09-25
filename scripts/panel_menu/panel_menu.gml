@@ -126,6 +126,8 @@
 function Panel_Menu() : PanelContent() constructor {
     title     = __txt("Menu");
     auto_pin  = true;
+    
+    resizable = !MAC;
 	min_h     = ui(8);
     
     noti_flash        = 0;

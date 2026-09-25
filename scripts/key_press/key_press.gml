@@ -201,7 +201,6 @@ function key_press(_key, _mod = MOD_KEY.none, _hold = false) {
 	switch(_key) {
 		case KEY_GROUP.numeric : 
 			_keyPress = _keyPress || (keyboard_key >= ord("0")   && keyboard_key <= ord("9")); 
-			_keyPress = _keyPress ||  keyboard_key == ord("."); 
 			_keyPress = _keyPress || (keyboard_key >= vk_numpad0 && keyboard_key <= vk_numpad9); 
 			_keyPress = _keyPress ||  keyboard_key == vk_decimal; 
 			

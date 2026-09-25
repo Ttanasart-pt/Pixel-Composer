@@ -289,6 +289,7 @@ function Node_Display_Text(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 							var tc = COLORS._main_accent;
 							
 							if(PANEL_GRAPH.node_hovering == self && point_in_rectangle(_mx, _my, _tx0, _ty0, _tx1, _ty1)) {
+								CURSOR = cr_handpoint;
 								tc = COLORS._main_text;
 								if(mouse_lpress()) URL_open(_data);
 							}
