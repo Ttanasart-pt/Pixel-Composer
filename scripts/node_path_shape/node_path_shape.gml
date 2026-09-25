@@ -42,7 +42,7 @@ function Node_Path_Shape(_x, _y, _group = noone) : Node(_x, _y, _group) construc
     ////- =Transform
 	newInput( 0, nodeValue_Vec2(     "Position",  [.5,.5] )).setUnitSimple().setHotkey("G").setPieMenu();
 	newInput( 2, nodeValue_Rotation( "Rotation",    0     ))                .setHotkey("R");
-	newInput( 1, nodeValue_Vec2(     "Half Size", [.5,.5] )).setUnitSimple().setHotkey("S").setPieMenu();
+	newInput( 1, nodeValue_Vec2(     "Half Size", [.5,.5] )).setUnitSimple().setHotkey("S").setPieMenu().hideLabel();
 	
     ////- =Shape
 	newInput( 3, nodeValue_EString(  "Shape", "Rectangle", { 
@@ -229,7 +229,7 @@ function Node_Path_Shape(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	    
 	    drawOverlayInput(inputs[ 0].drawOverlay(w_hoverable, active,  _x,  _y, _s, _mx, _my));
 	    drawOverlayInput(inputs[ 2].drawOverlay(w_hoverable, active, _px, _py, _s, _mx, _my));
-	    drawOverlayInput(inputs[ 1].drawOverlay(w_hoverable, active, _px, _py, _s, _mx, _my, 0, [1,1], _rot));
+	    drawOverlayInput(inputs[ 1].drawOverlay(w_hoverable, active, _px, _py, _s, _mx, _my, 1, [1,1], _rot));
 	    
 	    return w_hovering;
 	}

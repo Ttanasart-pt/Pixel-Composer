@@ -19,8 +19,13 @@ def main():
             print("Error: VERSION_STRING not found in globals.gml")
             sys.exit(1)
 
-    display_name = f"Pixel Composer {version_string}"
-    version = version_string
+    version_split = version_string.split(".")
+    while len(version_split) < 4:
+        version_split.append("0")
+
+    version_string = ".".join(version_split)
+    display_name   = f"Pixel Composer {version_string}"
+    version        = version_string
     
     for target in os_targets:
         config_file = f"{CONFIG_DIR}{target}/options_{target}.yy"

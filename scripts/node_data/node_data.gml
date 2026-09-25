@@ -3904,7 +3904,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			jun.value_to = [];
 		}
 		
-		for( var i = 0, n = array_length( inputs); i < n; i++ )  inputs[i].destroy();
+		for( var i = 0, n = array_length(inputs);  i < n; i++ ) inputs[i].destroy();
 		for( var i = 0, n = array_length(outputs); i < n; i++ ) outputs[i].destroy();
 		
 		if(onDestroy != undefined) onDestroy();
@@ -3922,7 +3922,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		GraphRefresh();
 		array_push(group == noone? project.nodes : group.getNodeList(), self);
 		
-		for( var i = 0, n = array_length( inputs); i < n; i++ )  inputs[i].restore();
+		for( var i = 0, n = array_length(inputs);  i < n; i++ ) inputs[i].restore();
 		for( var i = 0, n = array_length(outputs); i < n; i++ ) outputs[i].restore();
 		
 		if(onRestore != undefined) onRestore();

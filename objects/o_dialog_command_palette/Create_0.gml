@@ -127,15 +127,18 @@ event_inherited();
 #endregion
 
 sc_content = new scrollPane(0, 0, function(_y, _m) {
-	draw_clear_alpha(COLORS.panel_bg_clear, 1);
+	draw_clear_alpha(COLORS.panel_bg_clear, 0);
 	
 	var hght = line_get_height(f_p3, item_pad);
 	var _dw  = sc_content.surface_w;
+	var _dh  = sc_content.surface_h;
 	var _h   = array_length(data) * hght;
 	var _ly  = _y;
 	
-	draw_set_color(CDEF.main_mdblack);
-	draw_rectangle(0, 0, ui(32), dialog_h, false);
+	draw_set_color(COLORS.panel_bg_clear);
+	draw_rectangle(ui(32), 0, _dw, dialog_h, false);
+	draw_sprite_stretched_ext(THEME.command_palette_header, 0, 0, -ui(16), ui(16 + 32), _dh, CDEF.main_mdblack);
+	// draw_sprite_stretched_ext(THEME.command_palette_header, 0, 0, 0, ui(32), _dh, c_white);
 
 	var mouse_move = _prex != mouse_mx || _prey != mouse_my;
 	if(mouse_move) keyboard_trigger = false;
@@ -235,7 +238,7 @@ sc_content = new scrollPane(0, 0, function(_y, _m) {
 		
 		if(_hasKey) {
 			var _key = _menu.hotkey;
-			var _hx  = _dw - ui(6);
+			var _hx  = _dw - ui(8);
 			var _hy  = _ty + ui(1);
 			
 			draw_set_text(f_hotkey, fa_right, fa_center, COLORS._main_accent);

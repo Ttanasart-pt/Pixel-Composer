@@ -313,7 +313,7 @@ function Node_Path_L_System(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 			_temp_s = "";
 			
 			string_foreach(cache_data.result, function(_ch, _) {
-				if(!struct_has(cache_data.rules, _ch)) {
+				if(!has(cache_data.rules, _ch)) {
 					_temp_s += _ch;
 					return;
 				}
@@ -322,7 +322,7 @@ function Node_Path_L_System(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 				_chr = array_safe_get_fast(_chr, irandom(array_length(_chr) - 1));
 				
 				_temp_s += _chr;
-			})
+			});
 			
 			cache_data.result = _temp_s;
 			if(string_length(cache_data.result) > attributes.rule_length_limit) {
@@ -375,7 +375,7 @@ function Node_Path_L_System(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 			var _rule = _data[i + 1];
 			if(_name == "") continue;
 			
-			if(!struct_has(_rules, _name))
+			if(!has(_rules, _name))
 				_rules[$ _name] = [ _rule ];
 			else
 				array_push(_rules[$ _name], _rule);

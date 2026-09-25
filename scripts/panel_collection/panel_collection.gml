@@ -1033,27 +1033,18 @@ function Panel_Collection() : PanelContent() constructor {
 		}
 		
 		if(pageS != "Nodes") {
-			var txt = __txt("panel_collection_open_file", "Open in file explorer");
+			var txt = __txt("panel_collection_open_file", "Open in File Explorer");
 			if(buttonInstant_Pad(bb, bx, by, bs, bs, m, hov, foc, txt, THEME.dPath_open, 0, COLORS._main_icon) == 2)
 				shellOpenExplorer(context.path);
 			bx -= bs + ui(2); if(bx < rootx) return;
 			
 			var txt = __txt("Refresh");
-			if(buttonInstant_Pad(bb, bx, by, bs, bs, m, hov, foc, txt, THEME.refresh_icon, 0, COLORS._main_icon) == 2)
+			if(buttonInstant_Pad(bb, bx, by, bs, bs, m, hov, foc, txt, THEME.refresh_20, 0, COLORS._main_icon) == 2)
 				refreshContext();
 			bx -= bs + ui(2); if(bx < rootx) return;
 		}
 		
-		var txt = __txt("Animated Preview");
-		var spr = THEME.sequence_control;
-		var ind = PREFERENCES.collection_animated;
-		if(buttonInstant_Pad(bb, bx, by, bs, bs, m, hov, foc, txt, spr, ind, COLORS._main_icon, 1, ui(6)) == 2) {
-			PREFERENCES.collection_animated = !PREFERENCES.collection_animated;
-			PREF_SAVE();
-		}
-		bx -= bs + ui(2); if(bx < rootx) return;
-		
-		var txt = __txt("Settings");
+		var txt = __txt("Settings") + "...";
 		if(buttonInstant_Pad(bb, bx, by, bs, bs, m, hov, foc, txt, THEME.gear, 0, COLORS._main_icon) == 2)
 			dialogPanelCall(new Panel_Collections_Setting(), x + bx, y + by - 8, { anchor: ANCHOR.bottom | ANCHOR.left }); 
 		bx -= bs + ui(2); if(bx < rootx) return;

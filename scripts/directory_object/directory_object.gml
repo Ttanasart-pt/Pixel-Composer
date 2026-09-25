@@ -178,6 +178,7 @@ function DirectoryObject(_path) constructor {
 	path = _path;
 	
 	icon = THEME.folder_content;
+	icon_custom = false;
 	icon_blend  = undefined;
 	
 	subDir    = [];
@@ -186,11 +187,6 @@ function DirectoryObject(_path) constructor {
 	triggered = false;
 	scanned   = false;
 	scanType  = [];
-	
-	if(path != "") {
-		var _icon_path = filename_combine(path, "__icon.png");
-		if(file_exists(_icon_path)) icon = sprite_add_center(_icon_path);
-	}
 	
 	static getName = function() /*=>*/ {return name};
 	
@@ -313,6 +309,12 @@ function DirectoryObject(_path) constructor {
 		if(parent.context == self)  {
 			_spr_bld = COLORS._main_accent;
 			_spr_aa  = 1;
+		}
+		
+		if(icon_custom == false && path != "") {
+			icon_custom = true;
+			var _icon_path = filename_combine(path, "__icon.png");
+			if(file_exists(_icon_path)) icon = sprite_add_center(_icon_path);
 		}
 		
 		var _spr_sca = (hg - ui(5)) / sprite_get_height(icon);

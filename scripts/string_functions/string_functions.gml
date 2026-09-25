@@ -510,3 +510,13 @@ function string_count_start(str, char) {
 	
 	return string_length(str);
 }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+#macro string_foreach string_foreach_empty
+#macro __string_foreach string_foreach
+
+function string_foreach_empty(str, fn, pos = undefined, length = undefined) {
+	if(str == "") return;
+	__string_foreach(str, fn, pos, length);
+}

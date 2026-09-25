@@ -3602,14 +3602,16 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
         var ind = project.slideShow_index;
         var cur = project.slideShow_current;
         
+        var pd  = THEME_VALUE.panel_toolbar_padding;
+        var mrg = THEME_VALUE.panel_toolbar_merge;
+        
+        var toolL = w - pd - toolbar_area_w.value;
+        
         var _sl_w = (amo - 1) * ui(16) + ui(16 * 2);
         var _sl_h = ui(32);
         
         var _sl_x = w / 2 - _sl_w / 2;
         var _ss_x = _sl_x;
-        
-        var _sl_y = h - toolbar_height - ui(8) - _sl_h;
-        var _ss_y = _sl_y + _sl_h - ui(16);
         
         if(cur != noone && cur.slide_title != "") {
             draw_set_text(f_p2, fa_center, fa_top, COLORS._main_icon_light);
@@ -3619,12 +3621,14 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
         }
         
         slider_width = slider_width == 0? _sl_w : lerp_float(slider_width, _sl_w, 10);
-        _sl_x = w / 2 - slider_width / 2;
-        _sl_y = h - toolbar_height - ui(8) - _sl_h;
+        var _sl_x = w / 2 - slider_width / 2;
+        var _sl_y = h - _sl_h - pd - mrg * (toolbar_height + pd);
+        if(toolL < _ss_x + slider_width + pd) _sl_y -= toolbar_height;
+        
+        var _ss_y = _sl_y + _sl_h - ui(16);
         
         var _dpd = 12;
-        draw_sprite_stretched( THEME.dialog_shadow, 0, _sl_x - 8, _sl_y - 8, slider_width + 16, _sl_h + 16 );
-        draw_sprite_stretched( THEME.ui_panel_bg, 3, _sl_x, _sl_y, slider_width, _sl_h );
+        draw_sprite_stretched_ext( THEME.panel_slideshow, 0, _sl_x, _sl_y, slider_width, _sl_h );
         
         if(cur != noone) draw_text_add(round(w / 2), round(_sl_y + ui(8)), cur.slide_title);
         
@@ -3658,10 +3662,15 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
         if(point_in_rectangle(mx, my, _sl_x, _sl_y, _sl_x + slider_width, _sl_y + _sl_h)) { 
             mouse_on_graph = false;
             
+            if(pHOVER) draw_sprite_stretched_add( THEME.panel_slideshow, 1, _sl_x, _sl_y, slider_width, _sl_h, c_white, .3 );
+        		
             if(pHOVER && !_hv) {
         		setTOOLTIP(new tooltipHotkey("Next Section", "Graph", "Slideshow Next"));
-                draw_sprite_stretched_add(THEME.ui_panel_bg, 4, _sl_x, _sl_y, slider_width, _sl_h, COLORS._main_icon, 0.05);
-                draw_sprite_stretched_add(THEME.ui_panel, 1, _sl_x, _sl_y, slider_width, _sl_h, c_white, 0.1);
+                
+                if(mouse_lclick(pFOCUS)) {
+                	draw_sprite_stretched_add( THEME.panel_slideshow, 0, _sl_x, _sl_y, slider_width, _sl_h, c_white, .2 );
+                	draw_sprite_stretched_add( THEME.panel_slideshow, 1, _sl_x, _sl_y, slider_width, _sl_h, c_white, .3 );
+                }
                 
                 if(mouse_lpress(pFOCUS)) {
                 	PREFERENCES.tutorial_mode = false;
@@ -3670,7 +3679,6 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
             }
         }
         
-        draw_sprite_stretched_add( THEME.ui_panel, 1, _sl_x, _sl_y, slider_width, _sl_h, COLORS._main_icon, .3 );
         if(PREFERENCES.tutorial_mode) {
         	var pg = (500 - current_time % 500) / 500;
         	var pd = pg * 10;

@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.22.0",
+    "changes": [
+      {
+        "date": "2026-09-25T08:34:00.683Z",
+        "node": "",
+        "commit": "**Inspector Panel**: Fix output vector not show its value."
+      }
+    ]
+  },
+  {
     "version": "1.21.10.205",
     "changes": [
       {
