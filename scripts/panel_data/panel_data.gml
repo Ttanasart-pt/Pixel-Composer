@@ -1186,7 +1186,7 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 		
 		if(dialog) con.window = dialog.window;
 		
-		var p = ui(6);
+		var p = PREFERENCES.panel_lock? 0 : ui(6);
 		var m_in = point_in_rectangle(_mx, _my, tx + p, ty + p, tx + tw - p, ty + th - p);
 		var m_ot = point_in_rectangle(_mx, _my, tx, ty, tx + tw, ty + th);
 		mouse_active = m_in;
@@ -1218,6 +1218,7 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 						draw_set_text(f_p1, fa_center, fa_center, COLORS._main_text_sub);
 						draw_text(tw / 2, th / 2, "Panel too small for content");
 					}
+					
 				} else {
 					draw_set_text(f_p1, fa_center, fa_center, COLORS._main_text_sub);
 					draw_text(tw / 2, th / 2, "No content");

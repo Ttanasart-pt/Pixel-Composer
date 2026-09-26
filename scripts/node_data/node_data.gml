@@ -2266,7 +2266,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			draw_set_color(cc);
 			draw_text_transformed(_tx, ty, _name, _ts, _ts, 0);
 			
-			if(active_index != -1 && !active_value) draw_line_width(_tx, ty, _tx + string_width(_name) * _ts, ty, ui(1));
+			if(active_index != -1 && !active_value) draw_line_width(_tx, ty, _tx + string_width(_name) * _ts, ty, max(1, _s * 1));
 			
 			BLEND_NORMAL
 		draw_set_alpha(1);

@@ -137,8 +137,7 @@ sc_content = new scrollPane(0, 0, function(_y, _m) {
 	
 	draw_set_color(COLORS.panel_bg_clear);
 	draw_rectangle(ui(32), 0, _dw, dialog_h, false);
-	draw_sprite_stretched_ext(THEME.command_palette_header, 0, 0, -ui(16), ui(16 + 32), _dh, CDEF.main_mdblack);
-	// draw_sprite_stretched_ext(THEME.command_palette_header, 0, 0, 0, ui(32), _dh, c_white);
+	draw_sprite_stretched_ext(THEME.command_palette_header, 0, 0, -ui(16), ui(32), _dh + ui(16), CDEF.main_mdblack);
 
 	var mouse_move = _prex != mouse_mx || _prey != mouse_my;
 	if(mouse_move) keyboard_trigger = false;

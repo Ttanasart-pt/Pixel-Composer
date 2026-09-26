@@ -340,6 +340,7 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 		var undoing  = false;
 		
 		var str = KEYBOARD_PRESSED_STRING;
+		
 		if(is_winwin(WINWIN_CURRENT)) {
 			str = winwin_keyboard_get_string(WINWIN_CURRENT);
 			winwin_keyboard_set_string(WINWIN_CURRENT, "");

@@ -6,6 +6,11 @@
         "date": "2026-09-25T08:34:00.675Z",
         "node": "Inspector Panel",
         "commit": "**Inspector Panel**: Fix output vector not show its value."
+      },
+      {
+        "date": "2026-09-26T01:43:51.890Z",
+        "node": "Mac",
+        "commit": "**Mac**: Fix arrow key write invisible character to textbox."
       }
     ]
   },

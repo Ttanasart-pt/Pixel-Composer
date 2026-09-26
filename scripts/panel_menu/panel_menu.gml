@@ -129,8 +129,6 @@
 function Panel_Menu() : PanelContent() constructor {
     title     = __txt("Menu");
     auto_pin  = true;
-    
-    resizable = !MAC;
 	min_h     = ui(8);
     
     noti_flash        = 0;
@@ -646,11 +644,11 @@ function Panel_Menu() : PanelContent() constructor {
                     }
                 }
             	
-            	if(_icon != noone) draw_sprite_ui_uniform(_icon, _iconI, x0 + ui(6) + icw / 2, yc, .75, COLORS._main_icon);
+            	if(_icon != noone) draw_sprite_ui_uniform(_icon, _iconI, x0 + ui(6) + icw / 2, yc, .75, COLORS._main_icon, .85);
             	
                 draw_set_text(font, fa_center, fa_center, COLORS._main_text);
                 draw_text_add(xc, yc, _name);
-            
+            	
                 if(hori) {
                     xx  += ww + ui(4);
                     _mx  = max(_mx, xx);

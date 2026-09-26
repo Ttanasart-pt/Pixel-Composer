@@ -15,6 +15,18 @@ if(os_is_paused()) OS_PAUSED = true;
 
 #region Keybord captures
 	if(PREFERENCES.keyboard_capture_raw) {
+		if(MAC) {
+			switch(keyboard_lastkey) {
+				case 37 : 
+				case 38 : 
+				case 39 : 
+				case 40 : 
+					keyboard_lastchar = "";
+					keyboard_string   = "";
+					break;
+			}
+		}
+		
 		if(keyboard_string != "") {
 			KEYBOARD_PRESSED_STRING = keyboard_string;
 			KEYBOARD_STRING += keyboard_string;

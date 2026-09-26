@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.22.0",
+    "changes": [
+      {
+        "date": "2026-09-26T01:43:51.891Z",
+        "node": "",
+        "commit": "**Mac**: Fix arrow key write invisible character to textbox."
+      }
+    ]
+  },
+  {
     "version": "1.22.10.201",
     "changes": [
       {
