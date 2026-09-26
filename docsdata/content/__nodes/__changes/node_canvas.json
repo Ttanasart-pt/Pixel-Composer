@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.22.0",
+    "changes": [
+      {
+        "date": "2026-09-26T06:05:23.084Z",
+        "node": "Linux",
+        "commit": "**Linux**: Fix freeze when importing non .png image."
+      }
+    ]
+  },
+  {
     "version": "1.21.9.206",
     "changes": [
       {

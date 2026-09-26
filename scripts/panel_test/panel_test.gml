@@ -177,9 +177,13 @@ function Panel_Test() : PanelContent() constructor {
 	function setTestDir(dir) {
 		test_dir   = dir;
 		test_files = [];
-		
 		scanDir(test_dir);
+		
+		PREFERENCES.test_dir = dir;
+		PREF_SAVE();
 	}
+	
+	setTestDir(PREFERENCES.test_dir);
 	
 	function scanDir(dir) {
 		if(!directory_exists(dir)) return;
@@ -421,8 +425,6 @@ function Panel_Test() : PanelContent() constructor {
 			draw_text_add(bx + bw / 2, by + bh / 2, "Start test");
 		}
 	}
-	
-	setTestDir("D:/Project/MakhamDev/LTS-PixelComposer/TEST/Others");
 	
 	////- Actions
 	

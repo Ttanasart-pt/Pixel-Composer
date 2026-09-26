@@ -9,6 +9,8 @@ function Node_PB_Dimension(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	newOutput( 2, nodeValue_Output( "Height",    VALUE_TYPE.float,  1    )).setVisible(false)
 	
 	static update = function() {
+		if(!is(group, Node_Pixel_Builder)) return;
+		
 	    outputs[0].setValue(group.dimension);
 	    outputs[1].setValue(group.dimension[0]);
 	    outputs[2].setValue(group.dimension[1]);

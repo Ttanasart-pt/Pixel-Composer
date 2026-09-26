@@ -25,6 +25,8 @@ function Node_PB_Box_Point(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	}
 	
 	static processData = function(_outSurf, _data, _array_index) {
+		if(!is(group, Node_Pixel_Builder)) return _outSurf;
+		
 		var _dim   = group.dimension;
 		var _pbbox = _data[0];
 		var _anchr = _data[1];

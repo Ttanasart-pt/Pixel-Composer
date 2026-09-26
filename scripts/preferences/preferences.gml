@@ -252,6 +252,8 @@
 			PREFERENCES.dialog_path               = "";
 			PREFERENCES.process_maker_export_path = "";
 			
+			PREFERENCES.test_dir            = "D:/Project/MakhamDev/LTS-PixelComposer/TEST/Others";
+			
 			PREFERENCES.path_assets         = [];
 			PREFERENCES.path_fonts          = [];
 			PREFERENCES.path_welcome        = [];

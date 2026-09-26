@@ -11,6 +11,8 @@ function sprite_add_os(path, imagenumb = 1, removeback = false, smooth = false, 
 function sprite_add_map(path, imagenumb = 1, removeback = false, smooth = false, xorig = 0, yorig = 0) {
 	if(!file_exists_empty(path)) return noone;
 	var _path = sprite_path_check_format(filename_os(path));
+	if(_path == undefined) return 0;
+	
 	var _extx = string_lower(filename_ext(_path));
 	var _sprs = undefined;
 	
@@ -67,14 +69,57 @@ function sprite_get_splices(path) {
 }
 
 function sprite_path_check_format(_path, noti = true) {
-	static path_convert = filepath_resolve(PREFERENCES.ImageMagick_path) + "convert.exe";
-	static path_magick  = filepath_resolve(PREFERENCES.ImageMagick_path) + "magick.exe";
-	
 	var _extx = string_lower(filename_ext(_path));
 	var _fmod = file_get_modify_s(_path);
 	var _hash = md5_string_unicode($"{_path}{_fmod}");
 	var _prox = $"{TEMPDIR}{_hash}.png";
+	
 	if(file_exists_empty(_prox)) return _prox;
+	
+	var converter = "";
+	var magick    = "";
+	
+	// initial lib check
+	switch(OS) {
+		case os_windows :
+			converter = directory_search_file(filepath_resolve(PREFERENCES.ImageMagick_path), "convert.exe", -1);
+			magick    = directory_search_file(filepath_resolve(PREFERENCES.ImageMagick_path), "magick.exe",  -1);
+			
+			var _w = function(s,p) /*=>*/ {return $"No {s} detected at {p}, please make sure the installation is complete and {s} path is set correctly in the preference."};
+			
+			if(!file_exists_empty(converter)) {
+				noti_warning(_w("ImageMagick", magick), noone, self);
+				return undefined;
+			}
+			break;
+			
+		case os_linux : 
+			converter = directory_search_file(string_lower(filepath_resolve(PREFERENCES.ImageMagick_path)), "imagemagick.appimage", -1);
+			magick    = directory_search_file(string_lower(filepath_resolve(PREFERENCES.ImageMagick_path)), "imagemagick.appimage", -1);
+			
+			var _w = function(s,p) /*=>*/ {return $"No {s} detected at {p}, please make sure the installation is complete and {s} path is set correctly in the preference."};
+			
+			if(!file_exists_empty(converter)) {
+				noti_warning(_w("ImageMagick", magick), noone, self);
+				return undefined;
+			}
+			
+			shell_execute("", $"chmod +x {converter}");
+			shell_execute("", $"chmod +x {magick}");
+			break;
+		
+		case os_macosx : 
+			converter = "/opt/homebrew/bin/convert";
+			magick    = "/opt/homebrew/bin/magick";
+			
+			var _w = function(str,cmd) /*=>*/ {return $"No {str} installed, please install {str} with homebrew 'brew install {cmd}'."};
+			
+			if(!file_exists_empty(converter)) {
+				noti_warning(_w("ImageMagick", "imagemagick"), noone, self);
+				return undefined;
+			}
+			break;
+	}
 	
 	switch(_extx) {
 		case ".png":
@@ -84,14 +129,14 @@ function sprite_path_check_format(_path, noti = true) {
 			if(noti) noti_warning($"{_data.depth} bits image is not supported. Proxy will be used.");
 			
 			var shell_cmd = $"convert \"{_path}\" -depth 8 \"{_prox}\"";
-			shell_execute(path_magick, shell_cmd, self);
+			shell_execute(magick, shell_cmd, self);
 			return _prox;
 			
 		case ".bmp": 
 		case ".tga": 
-		case ".webp": 
+		case ".webp":
 			if(noti) noti_warning($"Used proxy for {_extx} file.");
-			shell_execute(path_convert, $"\"{_path}\" \"{_prox}\"");
+			shell_execute(converter, $"\"{_path}\" \"{_prox}\"");
 			return _prox;
 	}
 	

@@ -35,6 +35,8 @@ function Node_PB_Output(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	hover_alpha    = 0;
 	
 	static update = function() {
+		if(!is(group, Node_Pixel_Builder)) return;
+		
 	    data  = inputs[0].getValue();
 	    layr  = inputs[1].getValue();
 	    blend = inputs[2].getValue();

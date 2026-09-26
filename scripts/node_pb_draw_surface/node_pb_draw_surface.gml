@@ -33,6 +33,8 @@ function Node_PB_Draw_Surface(_x, _y, _group = noone) : Node_Processor(_x, _y, _
 	}
 	
 	static processData = function(_outSurf, _data, _array_index) {
+		if(!is(group, Node_Pixel_Builder)) return;
+		
 	    var _dim   = group.dimension;
 		var _pbase = _data[0];
 		var _pbbox = _data[1];

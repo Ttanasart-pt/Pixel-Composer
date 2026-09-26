@@ -215,7 +215,10 @@ function Node_Canvas_S(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 	static loadImagePath = function(path) {
 		if(!file_exists_empty(path)) return noone;
 		
-		var _spr = sprite_add(sprite_path_check_format(path), 0, 0, 0, 0, 0);
+		var _pth = sprite_path_check_format(path);
+		if(_pth == undefined) return noone;
+		
+		var _spr = sprite_add(_pth, 0, 0, 0, 0, 0);
 		if(_spr == -1) return noone;
 		
 		var _sw = sprite_get_width(_spr);

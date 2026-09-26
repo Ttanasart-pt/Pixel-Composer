@@ -117,13 +117,18 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 	
 	#region context menu
 		context_menu = [
-			menuItem("Copy Text",  function() /*=>*/ { clipboard_set_text(_current_text); }, THEME.copy),
-			menuItem("Paste Text", function() /*=>*/ { 
+			menuItem(__txt("Copy Text"),  function() /*=>*/ { 
+				clipboard_set_text(_current_text);
+			}, THEME.copy),
+				
+			menuItem(__txt("Paste Text"), function() /*=>*/ { 
 				var _text = clipboard_get_text();
 				if(input == TEXTBOX_INPUT.number) _text = toNumber(_text);
 				modifyValue(_text);
+				
 			}, THEME.paste),
-			menuItem("Text Box settings...", function() /*=>*/ {return prefOpenKey("Text Area")}),
+			
+			menuItem(__txt("Text Box Settings..."), function() /*=>*/ {return prefOpenKey("Text Area")}),
 		];
 		
 		context_menu_selecting = [
