@@ -24,6 +24,11 @@ function canvas_s_tool_pencil() : canvas_s_tool() constructor {
 			.setTooltip(__txt("Pixel Perfect")),
 	]
 	
+	overlay_content = [
+		[ "Shift", "Line Mode"      ],
+		[ "Ctrl",  "Line Mode Snap" ],
+	];
+	
 	////- Functions
 	
 	function drawBrush(_brushSurface) { return brush.drawBrush(_brushSurface); }

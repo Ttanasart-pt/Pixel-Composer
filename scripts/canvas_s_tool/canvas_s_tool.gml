@@ -23,6 +23,7 @@ function canvas_s_tool() constructor {
 	erase  = false;
 	
 	content_surface = undefined;
+	overlay_content = [];
 	
 	////- Settings
 	

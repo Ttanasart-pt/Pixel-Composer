@@ -1054,6 +1054,35 @@ function Panel_Canvas() : PanelContent() constructor {
 			rx -= ui(2);
 			
 		#endregion
+		
+		#region tool
+			if(tool_current) {
+				var _over = tool_current.overlay_content;
+				
+				var ox = ui(8);
+				var oy = h - ui(8);
+				
+				var lh = line_get_height(f_p3, 2);
+				
+				var nw = ui(32);
+				draw_set_font(f_p3);
+				for( var i = 0, n = array_length(_over); i < n; i++ )
+					nw = max(nw, string_width(_over[i][0]) + ui(8));
+				
+				for( var i = array_length(_over) - 1; i >= 0; i-- ) {
+					var ov = _over[i];
+					
+					draw_set_text(f_p3, fa_left, fa_bottom, COLORS._main_text);
+					draw_text_add(ox, oy, ov[0]);
+					
+					draw_set_text(f_p3, fa_left, fa_bottom, COLORS._main_text_sub);
+					draw_text_add(ox + nw, oy, ov[1]);
+					
+					oy -= lh;
+				}
+			}
+			
+		#endregion
 	}
 	
 	////- Action

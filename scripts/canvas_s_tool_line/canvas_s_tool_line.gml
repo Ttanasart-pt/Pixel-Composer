@@ -14,6 +14,11 @@ function canvas_s_tool_line() : canvas_s_tool() constructor {
 		brush.settings, 
 	]
 	
+	overlay_content = [
+		[ "Shift", "Snap"      ],
+		[ "Ctrl",  "Both Side" ],
+	];
+	
 	////- Functions
 	
 	function drawBrush(_brushSurface) { return brush.drawBrush(_brushSurface); }

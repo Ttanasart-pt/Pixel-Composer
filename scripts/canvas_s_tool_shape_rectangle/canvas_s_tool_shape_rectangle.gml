@@ -16,6 +16,11 @@ function canvas_s_tool_shape_rectangle(_fill = false) : canvas_s_tool() construc
 		brush.settings,
 	]
 	
+	overlay_content = [
+		[ "Shift", "Square Aspect" ],
+		[ "Ctrl",  "From Middle"   ],
+	];
+	
 	////- Functions
 	
 	function drawBrush(_brushSurface) { return brush.drawBrush(_brushSurface); }

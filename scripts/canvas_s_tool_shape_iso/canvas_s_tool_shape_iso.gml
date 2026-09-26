@@ -35,6 +35,10 @@ function canvas_s_tool_shape_iso(_type) : canvas_s_tool() constructor {
 			.setTooltips( [ "2:1", "1:1" ] ).setCollapse(false), function() /*=>*/ {return iso_angle}, function(b) /*=>*/ { iso_angle = round(b); } ),
 	]
 	
+	overlay_content = [
+		[ "Shift", "Square Aspect" ],
+	];
+	
 	////- Functions
 	
 	function drawBrush(_brushSurface) { 

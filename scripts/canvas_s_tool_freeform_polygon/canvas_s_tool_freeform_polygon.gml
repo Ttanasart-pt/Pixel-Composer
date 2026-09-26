@@ -19,7 +19,13 @@ function canvas_s_tool_freeform_polygon() : canvas_s_tool() constructor {
 	
 	settings = [
 		
-	]
+	];
+	
+	overlay_content = [
+		[ "Left Click",   "Create/Add Point" ],
+		[ "Double Click", "Create Shape"     ],
+		[ "Right Click",  "Cancel"           ],
+	];
 	
 	////- Functions
 	
