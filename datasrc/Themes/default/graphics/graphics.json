@@ -168,6 +168,7 @@
     "loading_s":                          { "path": "./icon/s_loading_s.png",                               "s": 1, "x": 12, "y": 12 },
     "loading":                            { "path": "./icon/s_loading.png",                                 "s": 1, "x": 32, "y": 32 },
     "lock_12":                            { "path": "./icon/s_lock_12.png",                                 "s": 2, "x":  6, "y":  6 },
+    "lock_16":                            { "path": "./icon/s_lock_16.png",                                 "s": 2, "x":  8, "y":  8 },
     "lock":                               { "path": "./icon/s_lock.png",                                    "s": 2, "x": 12, "y": 12 },
     "loop_24":                            { "path": "./icon/s_loop_24.png",                                 "s": 1, "x": 12, "y": 12 },
     "loop":                               { "path": "./icon/s_loop_16.png",                                 "s": 1, "x":  8, "y":  8 },

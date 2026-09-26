@@ -134,6 +134,9 @@
 			PREFERENCES.panel_preview_toolbar_horizontal  = false;
 		
 			PREFERENCES.panel_menu_show_profile           = true;
+			PREFERENCES.panel_menu_show_addon             = true;
+			PREFERENCES.panel_menu_show_command           = true;
+			
 			PREFERENCES.panel_menu_resource_monitor       = false;
 			PREFERENCES.panel_menu_right_control          = os_type != os_macosx;
 			

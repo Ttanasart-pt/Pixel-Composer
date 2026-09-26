@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.22.0",
+    "changes": [
+      {
+        "date": "2026-09-26T02:23:29.934Z",
+        "node": "Menu Panel] Add Command Palette button. - [Menu Panel",
+        "commit": "**Menu Panel] Add Command Palette button. - [Menu Panel**: Add context menu for controlling buttons visibility."
+      }
+    ]
+  },
+  {
     "version": "1.21.9.203",
     "changes": [
       {

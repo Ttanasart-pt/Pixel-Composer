@@ -455,6 +455,14 @@ function Panel_Menu() : PanelContent() constructor {
         }
     #endregion
     
+    #region Context menus
+    	context_visible = [
+    		menuItem(__txt("Addon"),           function() /*=>*/ { PREFERENCES.panel_menu_show_addon   = !PREFERENCES.panel_menu_show_addon;   }).setToggle(function() /*=>*/ {return PREFERENCES.panel_menu_show_addon}   ),
+    		menuItem(__txt("Command Palette"), function() /*=>*/ { PREFERENCES.panel_menu_show_command = !PREFERENCES.panel_menu_show_command; }).setToggle(function() /*=>*/ {return PREFERENCES.panel_menu_show_command} ),
+    		menuItem(__txt("Profile"),         function() /*=>*/ { PREFERENCES.panel_menu_show_profile = !PREFERENCES.panel_menu_show_profile; }).setToggle(function() /*=>*/ {return PREFERENCES.panel_menu_show_profile} ),
+		]
+    #endregion
+    
     function onFocusBegin() { PANEL_MENU = self; }
     
     function drawContent(panel) {
@@ -588,7 +596,7 @@ function Panel_Menu() : PanelContent() constructor {
                 switch(_tagg) {
                 	case "panel": 
                 		if(PREFERENCES.panel_lock) {
-                			_icon  = THEME.lock;
+                			_icon  = THEME.lock_16;
 							_iconI = 0;
                 		}
                 		break;
@@ -644,7 +652,7 @@ function Panel_Menu() : PanelContent() constructor {
                     }
                 }
             	
-            	if(_icon != noone) draw_sprite_ui_uniform(_icon, _iconI, x0 + ui(6) + icw / 2, yc, .75, COLORS._main_icon, .85);
+            	if(_icon != noone) draw_sprite_ui_uniform(_icon, _iconI, x0 + ui(6) + icw / 2, yc, 1, COLORS._main_icon, .85);
             	
                 draw_set_text(font, fa_center, fa_center, COLORS._main_text);
                 draw_text_add(xc, yc, _name);
@@ -755,9 +763,9 @@ function Panel_Menu() : PanelContent() constructor {
         #endregion
         
         #region addons 
-            var wh = nh;
-            
-            if(instance_exists(addon)) {
+            if(PREFERENCES.panel_menu_show_addon && instance_exists(addon)) {
+            	var wh = nh;
+            	
                 draw_set_text(font, fa_left, fa_center, COLORS._main_text);
                 var name = string(instance_number(addon)) + " ";
                 var tw   = string_width(name) + ui(34);
@@ -766,7 +774,7 @@ function Panel_Menu() : PanelContent() constructor {
                 
                 if(!hori) {
                     nx0 = ui(8);
-                    tx  = w / 2 - tw / 2;   
+                    tx  = w / 2 - tw / 2;
                     ww  = w - ui(16);
                 }
                 
@@ -786,7 +794,38 @@ function Panel_Menu() : PanelContent() constructor {
                 if(hori) nx0 += ww + ui(6);
                 else     ny0 += hh + ui(6);
             }
-            
+        #endregion
+        
+        #region command palette
+        	if(PREFERENCES.panel_menu_show_command) {
+	        	var wh = nh;
+	        	
+	            draw_set_text(font, fa_left, fa_center, COLORS._main_text);
+	            var tw   = ui(32);
+	            var tx   = nx0;
+	            var ww   = tw;
+	            
+	            if(!hori) {
+	                nx0 = ui(8);
+	                tx  = w / 2 - tw / 2;
+	                ww  = w - ui(16);
+	            }
+	            
+	            draw_sprite_stretched(THEME.panel_menu_widget, 0, nx0, ny0 - wh / 2, ww, wh);
+	            
+	            if(pHOVER && point_in_rectangle(mx, my, nx0, ny0 - wh / 2, nx0 + ww, ny0 + wh / 2)) {
+	                _draggable = false;
+	                setTOOLTIP(new tooltipHotkey(__txt("Command Palette"), "", "Command Palette"));
+	                draw_sprite_stretched_add(THEME.panel_menu_widget, 1, nx0, ny0 - wh / 2, ww, wh, c_white, .3);
+	                
+	                if(mouse_lpress(pFOCUS)) dialogCall(o_dialog_command_palette);
+	            }
+	            
+	            draw_sprite_ui_uniform(THEME.search, 0, tx + tw / 2, ny0, 1, COLORS._main_icon);
+	                
+	            if(hori) nx0 += ww + ui(6);
+	            else     ny0 += hh + ui(6);
+        	}
         #endregion
         
         #region actions
@@ -1277,7 +1316,10 @@ function Panel_Menu() : PanelContent() constructor {
             }
         #endregion
         
-        #region drag
+        #region mouse event
+        	if(pHOVER && mouse_rclick(pFOCUS)) 
+        		menuCall("", context_visible);
+        
             if(_draggable) {
             	switch(OS) {
             		case os_windows :
