@@ -101,7 +101,7 @@ function Node_Mirror_Polar(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	
 	static processData = function(_outSurf, _data, _array_index) {
 		#region data
-			var _suf  = _data[ 0];
+			var _surf = _data[ 0];
 			var _outt = _data[ 7];
 			var _relS = _data[ 8];
 			var _conS = _data[ 9];
@@ -120,12 +120,14 @@ function Node_Mirror_Polar(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 			
 			inputs[8].setVisible(_outt == 1);
 			inputs[9].setVisible(_outt == 2);
+			
+			if(!is_surface(_surf)) return _outSurf;
 		#endregion
 			
 		var _dim = surface_get_dimension(_outSurf);
 		
 		surface_set_shader(_outSurf, sh_mirror_polar);
-			shader_set_interpolation(_suf);
+			shader_set_interpolation(_surf);
 			
 			shader_set_f( "dimension", _dim );
 			
@@ -141,7 +143,7 @@ function Node_Mirror_Polar(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 			shader_set_m( "spokes",    _spk, _data[11], inputs[4], _data[12] );
 			shader_set_i( "reflecc",   _ref );
 			
-			draw_surface_stretched_safe(_suf, 0, 0, _dim[0], _dim[1]);
+			draw_surface_stretched_safe(_surf, 0, 0, _dim[0], _dim[1]);
 		surface_reset_shader();
 		
 		return _outSurf;

@@ -47,18 +47,20 @@ function Node_Atlas(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 		#endregion
 		
 		var _dim = surface_get_dimension(_surf);
+		
 		temp_surface[0] = surface_verify(temp_surface[0], _dim[0], _dim[1]);
 		temp_surface[1] = surface_verify(temp_surface[1], _dim[0], _dim[1]);
 		
 		switch(_meth) {
 			case 0 :
 				var _bg  = 0;
-				var _itr = ceil(max(_dim[0], _dim[1]) / 16);
-			
+				var _stp = OS == os_windows? 32 : 8;
+				var _itr = ceil(max(_dim[0], _dim[1]) / _stp);
+				
 				surface_set_shader(temp_surface[!_bg]);
 					draw_surface_safe(_surf);
 				surface_reset_shader();
-			
+				
 				repeat(_itr) {
 					surface_set_shader(temp_surface[_bg], sh_atlas);
 						shader_set_f( "dimension",   _dim  );
@@ -66,7 +68,7 @@ function Node_Atlas(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 						
 						draw_surface_safe(temp_surface[!_bg]);
 					surface_reset_shader();
-				
+					
 					_bg = !_bg;
 				}
 				

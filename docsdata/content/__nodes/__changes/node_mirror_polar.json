@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.22.0",
+    "changes": [
+      {
+        "date": "2026-09-26T07:16:22.516Z",
+        "node": "",
+        "commit": "**atlas**: reduce iteration for linux machine"
+      }
+    ]
+  },
+  {
     "version": "1.22.10.202",
     "changes": [
       {

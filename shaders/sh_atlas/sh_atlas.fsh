@@ -5,7 +5,12 @@ uniform vec2  dimension;
 uniform float resolution;
 
 #define TAU 6.283185307179586
-#define distance_sample 32.
+
+#ifdef _YY_HLSL11_ 
+    #define distance_sample 32.
+#else 
+    #define distance_sample 4.
+#endif
 
 void main() {
 	vec2 tx  = 1. / dimension;

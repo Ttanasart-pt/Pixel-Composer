@@ -3471,6 +3471,8 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		if(express_edit) express_edit.free();
 		
 		if(bypass_junc) { bypass_junc.cleanUp(); delete bypass_junc; }
+		
+		if(error_notification != noone) ds_list_remove(ERRORS, error_notification);
 	}
 		
 	static toString  = function() /*=>*/ {return (connect_type == CONNECT_TYPE.input? "Input" : "Output") + $" junction {index} of [{name}]: {node}"};

@@ -73,6 +73,10 @@ function Panel_Test() : PanelContent() constructor {
 				draw_sprite_stretched_ext(THEME.box_r2_clr, 0, 0, yy, ww, wh, c_white, 1);
 				if(mouse_lpress(pFOCUS))
 					LOAD_AT(_f[0]);
+					
+				if(mouse_rpress(pFOCUS))
+					menuCall("", [ menuItem(__txt("Load in Save mode"), function(p) /*=>*/ {return LOAD_AT(p, new __loadParams(false, true))}).setParam(_f[0]) ]);
+				
 			}
 			
 			if(testing && i == test_index) {

@@ -1,7 +1,7 @@
-function __loadParams(readonly = false, override = false, apply_layout = false) constructor {
-	self.readonly = readonly;
-	self.override = override;
-	
+function __loadParams(readonly = false, safe_mode = false, override = false, apply_layout = false) constructor {
+	self.readonly     = readonly;
+	self.safe_mode    = safe_mode;
+	self.override     = override;
 	self.apply_layout = apply_layout;
 }
 
@@ -158,6 +158,7 @@ function LOAD_AT(path, params = new __loadParams()) {
 	printIf(log, $" > Load struct : {(get_timer() - t1) / 1000} ms");
 	if(content == undefined) { LOADING = false; return; }
 	
+	PROJECT.safeMode = params.safe_mode;
 	PROJECT.readonly = params.readonly;
 	SET_PATH(PROJECT, path);
 	
