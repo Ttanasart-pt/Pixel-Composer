@@ -117,27 +117,91 @@ function draw_ellipse_prec(x0, y0, x1, y1, border, precision = 32) {
 	draw_ellipse(x0, y0, x1, y1, border);
 }
 
-// function draw_ellipse_border(x0, y0, x1, y1, w = 1) {
-// 	var step = 32;
-// 	var angle_step = 360 / step;
+function draw_ellipse_ext(x0, y0, x1, y1, fill = false, width = 1, prec = 32) {
+	var cx = (x0 + x1) / 2;
+    var cy = (y0 + y1) / 2;
+    var ww = abs(x1 - x0) / 2;
+    var hh = abs(y1 - y0) / 2;
 	
-// 	var px, py, _px, _py;
-// 	var cx = (x0 + x1) / 2;
-// 	var cy = (y0 + y1) / 2;
+	var astep = 360 / prec;
 	
-// 	var ww = abs(x0 - x1) / 2;
-// 	var hh = abs(y0 - y1) / 2;
+	if(fill) {
+		draw_primitive_begin(pr_trianglelist);
+		for(var i = 0; i < prec; i++) {
+	        var an = i * astep;
+	        var ox = cx + lengthdir_x(ww, an - astep);
+	        var oy = cy + lengthdir_y(hh, an - astep);
+	        
+	        var nx = cx + lengthdir_x(ww, an);
+	        var ny = cy + lengthdir_y(hh, an);
+	        
+            draw_vertex(cx, cy);
+            draw_vertex(ox, oy);
+            draw_vertex(nx, ny);
+		}
+    	draw_primitive_end();
+	}
+	
+	if(width == 0) return;
+	
+	if(width == 1) {
+		draw_primitive_begin(pr_linelist);
+		for(var i = 0; i < prec; i++) {
+	        var an = i * astep;
+	        var ox = cx + lengthdir_x(ww, an - astep);
+	        var oy = cy + lengthdir_y(hh, an - astep);
+	        
+	        var nx = cx + lengthdir_x(ww, an);
+	        var ny = cy + lengthdir_y(hh, an);
+	        
+            draw_vertex(ox, oy);
+            draw_vertex(nx, ny);
+		}
+    	draw_primitive_end();
+		
+	} else {
+		var th = width / 2;
+	
+	    var ox, oy, nx, ny;
+	    var oxi, oyi, nxi, nyi;
+	    var oxo, oyo, nxo, nyo;
+	
+	    draw_primitive_begin(pr_trianglelist);
+	    for(var i = 0; i <= prec; i++) {
+	        var a0 = i * astep;
+	        var a1 = i * astep + astep;
+	        
+		    ox = cx + lengthdir_x(ww, a0);
+		    oy = cy + lengthdir_y(hh, a0);
+			
+	        nx = cx + lengthdir_x(ww, a1);
+	        ny = cy + lengthdir_y(hh, a1);
+			
+			var d0 = point_direction(cx, cy, ox, oy);
+			var d1 = point_direction(cx, cy, nx, ny);
+			
+	        oxi = ox - lengthdir_x(th, d0);
+	        oyi = oy - lengthdir_y(th, d0);
+	        oxo = ox + lengthdir_x(th, d0);
+	        oyo = oy + lengthdir_y(th, d0);
+			
+	        nxi = nx - lengthdir_x(th, d1);
+	        nyi = ny - lengthdir_y(th, d1);
+	        nxo = nx + lengthdir_x(th, d1);
+	        nyo = ny + lengthdir_y(th, d1);
+			
+            draw_vertex(oxi, oyi);
+            draw_vertex(oxo, oyo);
+            draw_vertex(nxi, nyi);
 
-// 	for(var i = 0; i <= step; i++){
-// 		var px = cx + lengthdir_x(ww, i * angle_step);
-// 		var py = cy + lengthdir_y(hh, i * angle_step);
-	
-// 		if(i) draw_line_round(_px, _py, px, py, w);
-	
-// 		_px = px;
-// 		_py = py;
-// 	}
-// }
+            draw_vertex(oxo, oyo);
+            draw_vertex(nxi, nyi);
+            draw_vertex(nxo, nyo);
+	    }
+	    draw_primitive_end();
+			
+	}
+}
 
 function draw_ellipse_border(x0, y0, x1, y1, w = 1) {
 	draw_ellipse(x0, y0, x1, y1, true);
@@ -147,21 +211,21 @@ function draw_ellipse_border(x0, y0, x1, y1, w = 1) {
     var cy = (y0 + y1) / 2;
     var ww = abs(x1 - x0) / 2;
     var hh = abs(y1 - y0) / 2;
-
-    var steps      = max(16, round(w / 2 + max(ww, hh) / 4));
-    var angle_step = 360 / steps;
+	
+    var steps = max(16, round(w / 2 + max(ww, hh) / 4));
+    var angle = 360 / steps;
     var th = w / 2;
-
+	
     var ox, oy, nx, ny;
     var oxi, oyi, nxi, nyi;
     var oxo, oyo, nxo, nyo;
-
+	
     ox = cx + lengthdir_x(ww, 0);
     oy = cy + lengthdir_y(hh, 0);
-
+	
     draw_primitive_begin(pr_trianglelist);
     for(var i = 1; i <= steps + 1; i++) {
-        var a = i * angle_step;
+        var a = i * angle;
         nx = cx + lengthdir_x(ww, a);
         ny = cy + lengthdir_y(hh, a);
 

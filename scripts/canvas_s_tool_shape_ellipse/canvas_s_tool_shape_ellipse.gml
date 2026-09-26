@@ -67,6 +67,8 @@ function canvas_s_tool_shape_ellipse(_fill = false) : canvas_s_tool() constructo
 			var cw = abs(x0 - x1) / 2;
 			var ch = abs(y0 - y1) / 2;
 			
+			draw_set_circle_precision(64);
+			
 			surface_set_target(_drawingSurface);
 				DRAW_CLEAR
 				BLEND_MAX
@@ -86,37 +88,23 @@ function canvas_s_tool_shape_ellipse(_fill = false) : canvas_s_tool() constructo
 					}
 					
 				} else {
-					if(fill) draw_ellipse( x0, y0, x1, y1, false);
-					draw_ellipse_border(   x0, y0, x1, y1, brush.size);
+					draw_ellipse_ext(x0, y0, x1, y1, fill, brush.size, _prec);
 					
 					if(canvas.tile[0]) {
-						if(fill) draw_ellipse( x0 - dim[0], y0, x1 - dim[0], y1, false);
-						draw_ellipse_border(   x0 - dim[0], y0, x1 - dim[0], y1, brush.size);
-					
-						if(fill) draw_ellipse( x0 + dim[0], y0, x1 + dim[0], y1, false);
-						draw_ellipse_border(   x0 + dim[0], y0, x1 + dim[0], y1, brush.size);
+						draw_ellipse_ext(x0 - dim[0], y0, x1 - dim[0], y1, fill, brush.size, _prec);
+						draw_ellipse_ext(x0 + dim[0], y0, x1 + dim[0], y1, fill, brush.size, _prec);
 					}
 					
 					if(canvas.tile[1]) {
-						if(fill) draw_ellipse( x0, y0 - dim[1], x1, y1 - dim[1], false);
-						draw_ellipse_border(   x0, y0 - dim[1], x1, y1 - dim[1], brush.size);
-					
-						if(fill) draw_ellipse( x0, y0 + dim[1], x1, y1 + dim[1], false);
-						draw_ellipse_border(   x0, y0 + dim[1], x1, y1 + dim[1], brush.size);
+						draw_ellipse_ext(x0, y0 - dim[1], x1, y1 - dim[1], fill, brush.size, _prec);
+						draw_ellipse_ext(x0, y0 + dim[1], x1, y1 + dim[1], fill, brush.size, _prec);
 					}
 					
 					if(canvas.tile[0] && canvas.tile[1]) {
-						if(fill) draw_ellipse( x0 - dim[0], y0 - dim[1], x1 - dim[0], y1 - dim[1], false);
-						draw_ellipse_border(   x0 - dim[0], y0 - dim[1], x1 - dim[0], y1 - dim[1], brush.size);
-					
-						if(fill) draw_ellipse( x0 + dim[0], y0 - dim[1], x1 + dim[0], y1 - dim[1], false);
-						draw_ellipse_border(   x0 + dim[0], y0 - dim[1], x1 + dim[0], y1 - dim[1], brush.size);
-					
-						if(fill) draw_ellipse( x0 - dim[0], y0 + dim[1], x1 - dim[0], y1 + dim[1], false);
-						draw_ellipse_border(   x0 - dim[0], y0 + dim[1], x1 - dim[0], y1 + dim[1], brush.size);
-					
-						if(fill) draw_ellipse( x0 + dim[0], y0 + dim[1], x1 + dim[0], y1 + dim[1], false);
-						draw_ellipse_border(   x0 + dim[0], y0 + dim[1], x1 + dim[0], y1 + dim[1], brush.size);
+						draw_ellipse_ext(x0 - dim[0], y0 - dim[1], x1 - dim[0], y1 - dim[1], fill, brush.size, _prec);
+						draw_ellipse_ext(x0 + dim[0], y0 - dim[1], x1 + dim[0], y1 - dim[1], fill, brush.size, _prec);
+						draw_ellipse_ext(x0 - dim[0], y0 + dim[1], x1 - dim[0], y1 + dim[1], fill, brush.size, _prec);
+						draw_ellipse_ext(x0 + dim[0], y0 + dim[1], x1 + dim[0], y1 + dim[1], fill, brush.size, _prec);
 					
 					}
 					
