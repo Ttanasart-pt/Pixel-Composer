@@ -457,9 +457,9 @@ function Panel_Menu() : PanelContent() constructor {
     
     #region Context menus
     	context_visible = [
-    		menuItem(__txt("Addon"),           function() /*=>*/ { PREFERENCES.panel_menu_show_addon   = !PREFERENCES.panel_menu_show_addon;   }).setToggle(function() /*=>*/ {return PREFERENCES.panel_menu_show_addon}   ),
-    		menuItem(__txt("Command Palette"), function() /*=>*/ { PREFERENCES.panel_menu_show_command = !PREFERENCES.panel_menu_show_command; }).setToggle(function() /*=>*/ {return PREFERENCES.panel_menu_show_command} ),
-    		menuItem(__txt("Profile"),         function() /*=>*/ { PREFERENCES.panel_menu_show_profile = !PREFERENCES.panel_menu_show_profile; }).setToggle(function() /*=>*/ {return PREFERENCES.panel_menu_show_profile} ),
+    		menuItem(__txt("Addon"),           function() /*=>*/ { PREFERENCES.panel_menu_show_addon   = !PREFERENCES.panel_menu_show_addon;   PREF_SAVE(); }).setToggle(function() /*=>*/ {return PREFERENCES.panel_menu_show_addon}   ),
+    		menuItem(__txt("Command Palette"), function() /*=>*/ { PREFERENCES.panel_menu_show_command = !PREFERENCES.panel_menu_show_command; PREF_SAVE(); }).setToggle(function() /*=>*/ {return PREFERENCES.panel_menu_show_command} ),
+    		menuItem(__txt("Profile"),         function() /*=>*/ { PREFERENCES.panel_menu_show_profile = !PREFERENCES.panel_menu_show_profile; PREF_SAVE(); }).setToggle(function() /*=>*/ {return PREFERENCES.panel_menu_show_profile} ),
 		]
     #endregion
     
@@ -626,11 +626,10 @@ function Panel_Menu() : PanelContent() constructor {
                     y1 = yy + hh;
                 }
                 
-                if(_icon != noone) {
+                if(_icon != noone && hori) {
                 	ww += icw;
                 	xc += icw;
-                	
-                	if(hori) x1 += icw;
+                	x1 += icw;
                 }
                 
                 if(_colr != noone) {

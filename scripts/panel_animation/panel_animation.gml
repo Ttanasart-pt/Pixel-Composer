@@ -1155,7 +1155,7 @@ function Panel_Animation() : PanelContent() constructor {
         __temp_color = c;
         array_foreach(keyframe_selecting, function(k,i) /*=>*/ {return k.setColor(__temp_color)});
     }
-        
+    
     function toggleDopesheet() {
     	 if(panel.parent) {
     		var pd = panel.padding * 2;
@@ -1163,7 +1163,7 @@ function Panel_Animation() : PanelContent() constructor {
     		panel.parent.resplit_v(undefined, hh);
     	}
     }
-    
+	
 	function resetView() {
 		var _firstFrame = 0;
 		var _range      = GLOBAL_TOTAL_FRAMES - _firstFrame;
