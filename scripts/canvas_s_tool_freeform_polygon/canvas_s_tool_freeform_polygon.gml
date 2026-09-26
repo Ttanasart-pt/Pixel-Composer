@@ -43,10 +43,15 @@ function canvas_s_tool_freeform_polygon() : canvas_s_tool() constructor {
 		if(freeform_drawing) {
 			if(mouse_rpress(focus)) {
 				freeform_drawing = false;
+				freeform_shape   = [];
+				
+				surface_clear(_drawingSurface);
 				return false;
 			}
 			
-			if(DOUBLE_CLICK) {
+			var _accept = DOUBLE_CLICK || key_press(vk_enter);
+			
+			if(_accept) {
 				var temp_surface = surface_create(_dim[0], _dim[1]);
 				
 				switch(freeform_algo) {
@@ -122,7 +127,7 @@ function canvas_s_tool_freeform_polygon() : canvas_s_tool() constructor {
 				
 				var ox, oy, nx, ny;
 				for( var i = 0, n = array_length(freeform_shape); i < n; i++ ) {
-					var p = freeform_shape[i    ];
+					var p = freeform_shape[i];
 					nx = p.x;
 					ny = p.y;
 					
