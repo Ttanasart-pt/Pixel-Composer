@@ -904,6 +904,13 @@ function Panel_Preference() : PanelContent() constructor {
 	    		"panel_tab_expands",
 	    		false 
     		],
+    		[
+    			"pref", 
+				__txt("pref_theme_menu_bg", "Draw Menu BG"),
+	    		new checkBox(function() /*=>*/ {return prefToggle("panel_menu_draw_bg")}),
+	    		"panel_menu_draw_bg",
+	    		true 
+    		],
     		
     		-1, 
     		

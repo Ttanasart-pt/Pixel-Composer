@@ -471,13 +471,14 @@ function Panel_Menu() : PanelContent() constructor {
         var _action    = OS != os_macosx;
         var _draggable = pHOVER && pFOCUS;
         
-        if(MAC) draw_clear(COLORS.bg);
-        else    draw_clear_alpha(COLORS.panel_bg_clear, 1);
-        var hori = w > h;
-        var font = f_p3;
-        var m    = [mx, my];
+        if(PREFERENCES.panel_menu_draw_bg) 
+             draw_clear_alpha(COLORS.panel_bg_clear, 1);
+        else draw_clear(COLORS.bg);
         
-        var _padd   = MAC? 2 : ui(THEME_VALUE.panel_menu_padding);
+        var hori  = w > h;
+        var font  = f_p3;
+        var m     = [mx, my];
+        var _padd = MAC? 2 : ui(THEME_VALUE.panel_menu_padding);
         
         var profile = PREFERENCES.panel_menu_show_profile && os_is_network_connected() && OS != os_macosx;
         

@@ -1174,7 +1174,10 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 		if(w <= ui(16) || th < ui(16)) return;
 		
 		var con    = getContent();
-		var dFrame = !MAC || !is(con, Panel_Menu);
+		var dFrame = true;
+		
+		if(is(con, Panel_Menu) && !PREFERENCES.panel_menu_draw_bg)
+			dFrame = false;
 		
 		if(FULL_SCREEN_CONTENT != noone && con == FULL_SCREEN_CONTENT && self != FULL_SCREEN_PARENT) return;
 		
@@ -1277,7 +1280,10 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 		var _th = th - padding * 2;
 		
 		var con    = getContent();
-		var dFrame = !MAC || !is(con, Panel_Menu);
+		var dFrame = true;
+		
+		if(is(con, Panel_Menu) && !PREFERENCES.panel_menu_draw_bg)
+			dFrame = false;
 		
 		var p = ui(6);
 		var m_in = point_in_rectangle(_mx, _my, tx + p, ty + p, tx + tw - p, ty + th - p);

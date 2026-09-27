@@ -6,6 +6,16 @@
         "date": "2026-09-25T11:08:07.777Z",
         "node": "",
         "commit": "**Graph Panel**: Delete node now works with node chord activated."
+      },
+      {
+        "date": "2026-09-26T23:39:05.151Z",
+        "node": "Path",
+        "commit": "**Path**: \"Edit Control point\" tool now won't trigger segment editing."
+      },
+      {
+        "date": "2026-09-27T00:03:43.234Z",
+        "node": "Path",
+        "commit": "**Path**: Fix error when using draw tool when a path already existed."
       }
     ]
   },

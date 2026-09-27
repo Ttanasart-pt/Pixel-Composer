@@ -133,6 +133,7 @@
 			PREFERENCES.panel_preview_show_tiles          = false;
 			PREFERENCES.panel_preview_toolbar_horizontal  = false;
 		
+			PREFERENCES.panel_menu_draw_bg                = !MAC;
 			PREFERENCES.panel_menu_show_profile           = true;
 			PREFERENCES.panel_menu_show_addon             = true;
 			PREFERENCES.panel_menu_show_command           = true;

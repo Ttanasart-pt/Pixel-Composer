@@ -425,6 +425,15 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	 path_preview_surface = noone;
 	
 	#region ---- tool ----
+		tool_transform    = new NodeTool( "Transform",           THEME.path_tools_transform   );
+		tool_anchor_edit  = new NodeTool( "Anchor add / remove", THEME.path_tools_add         );
+		tool_control_edit = new NodeTool( "Edit Control point",  THEME.path_tools_anchor      )
+		tool_shape        = new NodeTool( [ "Line", "Curve", "Arc" ],    [ THEME.path_tools_line, THEME.path_tools_line_curve, THEME.path_tools_arc, ] );
+		tool_rectangle    = new NodeTool( "Rectangle",           THEME.path_tools_rectangle   );
+		tool_circle       = new NodeTool( ["Circle", "Circle Midpoint"], [ THEME.path_tools_circle, THEME.path_tools_circle_mid_point, ] );
+		
+		tool_weight_edit  = new NodeTool( "Weight edit",         THEME.path_tools_weight_edit );
+		
 		tool_pathDrawer = new NodeTool( "Draw path", THEME.path_tools_draw )	
 			.addSetting("Smoothness", VALUE_TYPE.float,   function(val) /*=>*/ { tool_pathDrawer.attribute.thres = val; }, "thres", 4)
 			.addSetting("Replace",    VALUE_TYPE.boolean, function(   ) /*=>*/ { tool_pathDrawer.attribute.create = !tool_pathDrawer.attribute.create; }, "create", true);
@@ -433,21 +442,25 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 				.addSetting("Sides", VALUE_TYPE.float, function(val) /*=>*/ { tool_polygon.attribute.polygon_sides = max(3, round(val)); }, "polygon_sides", 3)
 				.addSetting("Angle", VALUE_TYPE.float, function(val) /*=>*/ { tool_polygon.attribute.angle = val; }, "angle", 0)
 		
+		tool_sel_move   = new NodeTool( "Move Selection",      THEME.tools_2d_move   ).setVisible(false).setToolObject( new path_tool_move(self)   );
+		tool_sel_rotate = new NodeTool( "Rotate Selection",    THEME.tools_2d_rotate ).setVisible(false).setToolObject( new path_tool_rotate(self) );
+		tool_sel_scale  = new NodeTool( "Scale Selection",     THEME.tools_2d_scale  ).setVisible(false).setToolObject( new path_tool_scale(self)  );
+		
 		tools = [
-			new NodeTool( "Transform",           THEME.path_tools_transform   ),
-			new NodeTool( "Anchor add / remove", THEME.path_tools_add         ),
-			new NodeTool( "Edit Control point",  THEME.path_tools_anchor      ),
+			tool_transform,
+			tool_anchor_edit,
+			tool_control_edit,
 			tool_pathDrawer, 
-			new NodeTool( [ "Line", "Curve", "Arc" ],    [ THEME.path_tools_line, THEME.path_tools_line_curve, THEME.path_tools_arc, ] ),
-			new NodeTool( "Rectangle",                     THEME.path_tools_rectangle   ),
-			new NodeTool( ["Circle", "Circle Midpoint"], [ THEME.path_tools_circle, THEME.path_tools_circle_mid_point, ] ),
+			tool_shape,
+			tool_rectangle,
+			tool_circle,
 			tool_polygon,
 			
-			new NodeTool( "Weight edit",         THEME.path_tools_weight_edit ),
+			tool_weight_edit,
 			-1, 
-			new NodeTool( "Move Selection",      THEME.tools_2d_move   ).setVisible(false).setToolObject( new path_tool_move(self)   ),
-			new NodeTool( "Rotate Selection",    THEME.tools_2d_rotate ).setVisible(false).setToolObject( new path_tool_rotate(self) ),
-			new NodeTool( "Scale Selection",     THEME.tools_2d_scale  ).setVisible(false).setToolObject( new path_tool_scale(self)  ),
+			tool_sel_move,
+			tool_sel_rotate,
+			tool_sel_scale,
 		];
 		
 		tool_settings = [
@@ -603,13 +616,16 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		var snap_dist = attributes.snap_distance;
 		var ansize = array_length(inputs) - input_fix_len;
 		var edited = false;
-		var _tooln = getUsingToolName();
 		var panel  = _params[$ "panel"] ?? noone;
+		
+		var _currTool = PANEL_PREVIEW.tool_current;
+		var _toolObj  = _currTool? _currTool.getToolObject() : noone;
+		var _tooln    = getUsingToolName();
 		
 		var pos = outputs[0].getValue();
 		var p/*:_ANCHOR*/;
 		
-		if(_tooln == "") {
+		if(_currTool == noone) {
 			draw_set_color(COLORS._main_accent);
 			draw_circle(_x + pos[0] * _s, _y + pos[1] * _s, 4, false);
 		}
@@ -1225,6 +1241,8 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		if(!array_empty(_pth.anchors)) {
 			draw_set_color(_tooln == "Transform"? COLORS._main_icon : COLORS._main_accent);
 			
+			var line_hovable = _tooln == "" || _tooln == "Anchor add / remove";
+			
 			var draw_w = _tooln == "Weight edit";
 			var _ox = 0, _oy = 0, _ow = 0;
 			var _nx = 0, _ny = 0, _nw = 0;
@@ -1268,7 +1286,7 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 					}
 					
 					if(i || j) {
-						if(hover) {
+						if(line_hovable && hover) {
 							var _p = point_to_line(_mx, _my, _ox, _oy, _nx, _ny);
 							var _d = point_distance(_mx, _my, _p[0], _p[1]);
 							
@@ -1322,7 +1340,7 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 			}
 			
 			if(_showAnchor)
-			for(var i = 0; i < array_length(_pth.anchors); i++) { // draw anchor
+			for(var i = 0, n = array_length(inputs) - input_fix_len; i < n; i++) { // draw anchor
 				var _a   = _pth.anchors[i];
 				var xx   = _x + _a[0] * _s;
 				var yy   = _y + _a[1] * _s;
@@ -2098,7 +2116,7 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 						}
 					}
 					
-				} else if(line_hover != -1) {
+				} else if(_tooln != "Edit Control point" && line_hover != -1) {
 					hovering = true;
 					
 					if(mouse_lpress(active)) {
@@ -2114,16 +2132,11 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		
 		if(edited) UNDO_HOLDING = true;
 		var _show_selecting = isNotUsingTool();
-		
-		if(isUsingTool()) {
-			var _currTool = PANEL_PREVIEW.tool_current;
-			var _tool     = _currTool.getToolObject();
 			
-			if(_tool != noone) {
-				_tool.drawOverlay(hover, active, _x, _y, _s, _mx, _my);
-				if(mouse_lclick()) anchor_freeze = 1;
-				_show_selecting = true;
-			}
+		if(_toolObj != noone) {
+			_toolObj.drawOverlay(hover, active, _x, _y, _s, _mx, _my);
+			if(mouse_lclick()) anchor_freeze = 1;
+			_show_selecting = true;
 		}
 		
 		if(_show_selecting) {
