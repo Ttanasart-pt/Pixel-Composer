@@ -7,11 +7,17 @@ function Node_Crack_Pattern(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	newInput( 0, nodeValue_Dimension());
 	
 	////- =Origin
-	newInput( 1, nodeValue_EButton(  "Pattern",        1, [ "Anisotropic", "Circular" ]));
 	newInput( 3, nodeValue_Int(      "Amount",         5      ));
+	
+	newInput( 1, nodeValue_EButton(  "Pattern",        1, [ "Anisotropic", "Circular", "Path Scatter" ]));
 	newInput( 5, nodeValue_Vec2(     "Origin",       [.5,.5]  )).setUnitSimple();
 	newInput(16, nodeValue_Rotation( "Pattern Angle",  0      ));
 	newInput(21, nodeValue_RotRange( "Angle Range",   [0,360] ));
+	newInput(26, nodeValue_Slider(   "Ratio",          1      ));
+	newInput(27, nodeValue_Path(     "Path"                   ));
+	newInput(29, nodeValue_Bool(     "Loop",           false  ));
+	newInput(28, nodeValue_EButton(  "Distribution",   0, [ "Random", "Uniform" ]));
+	
 	newInput(24, nodeValue_Bool(     "Both Side",     false   ));
 	
 	////- =Pattern
@@ -28,10 +34,10 @@ function Node_Crack_Pattern(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	newInput(12, nodeValue_RotRange( "Branch Angle",  [15,45] ));
 	
 		////- =/Connect
-	newInput(22, nodeValue_Slider(   "Radial",        0   )).setCurvable(23, CURVE_DEF_10);
+	newInput(22, nodeValue_Slider(   "Radial",         0      )).setCurvable(23, CURVE_DEF_10);
 	
 	////- =Trim
-	newInput(18, nodeValue_Slider(   "Trim",          0   ));
+	newInput(18, nodeValue_Slider(   "Trim",           0      ));
 	
 	////- =Thickness
 	newInput(10, nodeValue_Range(    "Thickness",    [4,4], true    )).setCurvable(14, CURVE_DEF_10);
@@ -41,13 +47,13 @@ function Node_Crack_Pattern(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	newInput( 9, nodeValue_Gradient( "Color",        gra_white      )).addShift(25);
 	newInput(13, nodeValue_Color(    "Branch Blend", cola(c_ltgray) ));
 	newInput(19, nodeValue_Surface(  "Texture"                      ));
-	// 26
+	// 30
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
 	input_display_list = [ 2, 
 		[ "Output",         true ],  0, 
-		[ "Origin",        false ],  1,  3,  5, 16, 21, 24, 
+		[ "Origin",        false ],  3,  1,  5, 16, 21, 26, 27, 29, 28, 24, 
 		[ "Pattern",       false ],  4, 11,  6, 15, 
 		[ "Crack",         false ],  7, 17,
 			[ "/Branch",   false ],  8, 12, 
@@ -75,7 +81,12 @@ function Node_Crack_Pattern(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _params) { 
 		var _patt = getInputSingle( 1);
-		if(_patt == 1) drawOverlayInput(inputs[5].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my));
+		
+		
+		switch(_patt) {
+			case 1 : drawOverlayInput(inputs[ 5].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my)); break;
+			case 2 : drawOverlayInput(inputs[27].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my)); break;
+		}
 	}
 	
 	function drawCrack(_seed, _x, _y, _dir, _ang, _len, _crks, _thk, _segs, _crkChn, _clr, _depth = 0, _range = [0,1]) {
@@ -189,11 +200,17 @@ function Node_Crack_Pattern(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 			
 			var _dim   = _data[ 0];
 			
-			var _patt  = _data[ 1];
 			var _amou  = _data[ 3];
+			
+			var _patt  = _data[ 1];
 			var _orig  = _data[ 5];
 			var _phas  = _data[16];
 			var _arng  = _data[21];
+			var _rato  = _data[26];
+			var _path  = _data[27];
+			var _loop  = _data[29];
+			var _dist  = _data[28];
+			
 			var _both  = _data[24];
 			
 			var _segs  = _data[ 4];
@@ -219,8 +236,14 @@ function Node_Crack_Pattern(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 			var _surf  = _data[19];
 			
 			inputs[ 5].setVisible(_patt == 1);
-			inputs[21].setVisible(_patt == 1);
-			inputs[24].setVisible(_patt == 0);
+			inputs[16].setVisible(_patt != 2);
+			inputs[21].setVisible(_patt == 1 || _patt == 2);
+			inputs[26].setVisible(_patt == 1);
+			inputs[27].setVisible(_patt == 2, _patt == 2);
+			inputs[29].setVisible(_patt == 2);
+			inputs[28].setVisible(_patt == 2);
+			
+			inputs[24].setVisible(_patt == 0 || _patt == 2);
 			
 			texture = is_just_surface(_surf)? surface_get_texture(_surf) : -1;
 			widthCurve     = _widC;
@@ -240,66 +263,99 @@ function Node_Crack_Pattern(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 				case 2 : BLEND_MAX;    break;
 			}
 			
-			if(_patt == 0) {
-				var ww = _dim[0];
-				var hh = _dim[1];
-				var cx = ww / 2;
-				var cy = hh / 2;
-				var s0;
-				
-				for( var i = 0; i < _amou; i++ ) {
-					var ox   = 0;
-					var oy   = _dim[1] * i / (_amou - 1);
+			switch(_patt) {
+				case 0 : 
+					var ww = _dim[0];
+					var hh = _dim[1];
+					var cx = ww / 2;
+					var cy = hh / 2;
+					var s0;
 					
-					var _phs = _phas + _both * (i % 2 * 180);
-					var rayD = (_phs + 180 - 45) + 90 * i / (_amou - 1);
+					for( var i = 0; i < _amou; i++ ) {
+						var ox   = 0;
+						var oy   = _dim[1] * i / (_amou - 1);
+						
+						var _phs = _phas + _both * (i % 2 * 180);
+						var rayD = (_phs + 180 - 45) + 90 * i / (_amou - 1);
+						
+						var cx0  = cx + lengthdir_x(9999, rayD);
+						var cy0  = cy + lengthdir_y(9999, rayD);
+						
+						                s0 = segment_intersect(cx, cy, cx0, cy0,  0,  0, ww, 0);
+						if(s0 == false) s0 = segment_intersect(cx, cy, cx0, cy0,  0,  0, 0, hh);
+						if(s0 == false) s0 = segment_intersect(cx, cy, cx0, cy0, ww, hh, ww, 0);
+						if(s0 == false) s0 = segment_intersect(cx, cy, cx0, cy0, ww, hh, 0, hh);
+						
+						if(s0 == false) continue;
+						
+						var ox = s0[0];
+						var oy = s0[1];
+						
+						var ang  = _phs;
+						
+						var len  = random_range(_lens[0], _lens[1]);
+						var thk  = random_range(_thck[0], _thck[1]);
+						var clr  = _colr.eval(pfract(random(1) + _colrS));
+						
+						var dir  = choose(-1,1); 
+						
+						_seed += pi * 100;
+						drawCrack(_seed, ox, oy, dir, ang, len, _crck, thk, _segs, _chan, clr);
+					}
+					break;
 					
-					var cx0  = cx + lengthdir_x(9999, rayD);
-					var cy0  = cy + lengthdir_y(9999, rayD);
+				case 1 : 
+					for( var i = 0; i < _amou; i++ ) {
+						var ox   = _orig[0];
+						var oy   = _orig[1];
+						var ang  = _phas + lerp(_arng[0], _arng[1], i / _amou);
+						
+						var len  = random_range(_lens[0], _lens[1]);
+						var thk  = random_range(_thck[0], _thck[1]);
+						var clr  = _colr.eval(pfract(random(1) + _colrS));
+						
+						var dir  = choose(-1,1);
+						var ratY = 1 - abs(lengthdir_y(1, ang)) * (1 - _rato);
+						
+						_seed += pi * 100;
+						drawCrack(_seed, ox, oy, dir, ang, len * ratY, _crck, thk, _segs, _chan, clr);
+					}
+					break;
 					
-					                s0 = segment_intersect(cx, cy, cx0, cy0,  0,  0, ww, 0);
-					if(s0 == false) s0 = segment_intersect(cx, cy, cx0, cy0,  0,  0, 0, hh);
-					if(s0 == false) s0 = segment_intersect(cx, cy, cx0, cy0, ww, hh, ww, 0);
-					if(s0 == false) s0 = segment_intersect(cx, cy, cx0, cy0, ww, hh, 0, hh);
+				case 2 :
+					if(!is_path(_path)) break;
 					
-					if(s0 == false) continue;
+					var __p = new __vec2P();
+					var _p0 = new __vec2P();
+					var _p1 = new __vec2P();
 					
-					var ox = s0[0];
-					var oy = s0[1];
-					
-					var ang  = _phs;
-					
-					var len  = random_range(_lens[0], _lens[1]);
-					var thk  = random_range(_thck[0], _thck[1]);
-					var clr  = _colr.eval(pfract(random(1) + _colrS));
-					
-					var dir  = choose(-1,1); 
-					
-					_seed += pi * 100;
-					drawCrack(_seed, ox, oy, dir, ang, len, _crck, thk, _segs, _chan, clr);
-				}
-					
-			} else if(_patt == 1) {
-				for( var i = 0; i < _amou; i++ ) {
-					var ox   = _orig[0];
-					var oy   = _orig[1];
-					var ang  = _phas + lerp(_arng[0], _arng[1], i / _amou);
-					
-					var len  = random_range(_lens[0], _lens[1]);
-					var thk  = random_range(_thck[0], _thck[1]);
-					var clr  = _colr.eval(pfract(random(1) + _colrS));
-					
-					var dir  = choose(-1,1); 
-					
-					_seed += pi * 100;
-					drawCrack(_seed, ox, oy, dir, ang, len, _crck, thk, _segs, _chan, clr);
-				}
-				
+					for( var i = 0; i < _amou; i++ ) {
+						var _pos = _dist? i / (_amou - !_loop) : random(1);
+						
+						__p = _path.getPointRatio(_pos, 0, __p);
+						_p0 = _path.getPointRatio(clamp(_pos-.01, 0, 1), 0, _p0);
+						_p1 = _path.getPointRatio(clamp(_pos+.01, 0, 1), 0, _p1);
+						
+						var ox   = __p.x;
+						var oy   = __p.y;
+						var ang  = point_direction(_p0.x, _p0.y, _p1.x, _p1.y);
+						    ang += random_range(_arng[0], _arng[1]) * (_both && random(1) < .5? -1 : 1);
+						
+						var len  = random_range(_lens[0], _lens[1]);
+						var thk  = random_range(_thck[0], _thck[1]);
+						var clr  = _colr.eval(pfract(random(1) + _colrS));
+						
+						var dir  = choose(-1,1);
+						
+						_seed += pi * 100;
+						drawCrack(_seed, ox, oy, dir, ang, len, _crck, thk, _segs, _chan, clr);
+					}
+					break;
 			}
 			
 			for( var i = 0, n = array_length(interConnect); i < n; i++ ) {
 				var _intArr = interConnect[i];
-				var _chan   = _intc * (_intC? _intC.get(i/max(1,n-1)) : 1);
+				var _chan   = _intc * (_intC? _intC.get(i / max(1, n - 1)) : 1);
 				
 				for( var j = 1, m = array_length(_intArr); j < m; j++ ) {
 					var op = _intArr[(j-1+m)%m];
