@@ -37,21 +37,15 @@ function Panel_Nodes() : PanelContent() constructor {
 	w           = ui(320);
 	h           = ui(480);
 	
-	#region data
+	#region Data
 		NodeTreeSort(PROJECT);
-		
-		search_string = "";
-		tb_search     = textBox_Text(function(str) /*=>*/ { search_string = string(str); })
-						.setFont(f_p3).setAlign(fa_left).setAutoupdate()
-						.setBoxColor(COLORS._main_icon_light);
-						
 		draw_overlay_surface   = undefined;
 		draw_overlay_surface_x = undefined;
 		draw_overlay_surface_y = undefined;
 		draw_overlay_surface_s = undefined;
 	#endregion
 	
-	#region nodes
+	#region Nodes
 		 node_hovering  = noone;
 		_node_hovering  = noone;
 		 item_hovering  = noone;
@@ -60,7 +54,7 @@ function Panel_Nodes() : PanelContent() constructor {
 		node_label_color_width = max(ui(6), sprite_get_width(THEME.box_r2));
 	#endregion
 	
-	#region sidebar
+	#region Sidebar
 		side_show       = true;
 		side_scroll     = 0;
 		side_scroll_to  = 0;
@@ -72,41 +66,75 @@ function Panel_Nodes() : PanelContent() constructor {
 		item_height     = ui(20);
 	#endregion
 	
-    global.menuItems_node_context_menu = [
-    	"nodes_add", 
-    	"nodes_delete_select", 
-    	-1, 
-    	"nodes_toggle_invert",
-    	"nodes_toggle_preview",
-    	"nodes_toggle_sidebar", 
-	];
+	#region Search
+		search_string = "";
+		tb_search     = textBox_Text(function(str) /*=>*/ {return doSearch(string(str))} )
+						.setFont(f_p3).setAlign(fa_left).setSearch().setBoxColor(COLORS._main_icon_light);
+		
+		search_results = [];
+						
+		function doSearch(txt) {
+			search_string  = txt;
+			search_results = [];
+			
+			if(txt == "") return;
+			
+			var search_lower = string_lower(txt);
+			var pr = ds_priority_create();
+			
+			for( var i = 0, n = array_length(PROJECT.allNodes); i < n; i++ ) {
+				var _nd = PROJECT.allNodes[i];
+				
+				var match = string_partial_match(string_lower(_nd.getDisplayName()), search_lower);
+				if(match == -9999) continue;
+				
+				ds_priority_add(pr, _nd, match);
+			}
+			
+			repeat(ds_priority_size(pr))
+				array_push(search_results, ds_priority_delete_max(pr));
+			
+			ds_priority_destroy(pr);
+		}
+	#endregion
 	
-    global.menuItems_node_select_menu = [
-    	"nodes_add", 
-    	"nodes_delete_hovering",
-    	"nodes_delete_select", 
-    	-1,
-    	"nodes_toggle_invert",
-    	"nodes_toggle_preview",
-    	"nodes_toggle_sidebar", 
-	];
-	
-    global.menuItems_node_side_context_menu = [
-    	"nodes_add", 
-    	-1, 
-    	"nodes_toggle_sidebar", 
-    	"nodes_edit_sidebar", 
-	];
-	
-	global.menuItems_node_side_menu = [	
-		"nodes_add", 
-		"graph_auto_organize_all",
-		-1,
-		"graph_add_Node_Shape",
-    	"graph_add_Node_Text",
-    	"graph_add_Node_Path",
-    	"graph_add_Node_Line", 
-	];
+	#region ++++++++++ Menus ++++++++++
+	    global.menuItems_node_context_menu = [
+	    	"nodes_add", 
+	    	"nodes_delete_select", 
+	    	-1, 
+	    	"nodes_toggle_invert",
+	    	"nodes_toggle_preview",
+	    	"nodes_toggle_sidebar", 
+		];
+		
+	    global.menuItems_node_select_menu = [
+	    	"nodes_add", 
+	    	"nodes_delete_hovering",
+	    	"nodes_delete_select", 
+	    	-1,
+	    	"nodes_toggle_invert",
+	    	"nodes_toggle_preview",
+	    	"nodes_toggle_sidebar", 
+		];
+		
+	    global.menuItems_node_side_context_menu = [
+	    	"nodes_add", 
+	    	-1, 
+	    	"nodes_toggle_sidebar", 
+	    	"nodes_edit_sidebar", 
+		];
+		
+		global.menuItems_node_side_menu = [	
+			"nodes_add", 
+			"graph_auto_organize_all",
+			-1,
+			"graph_add_Node_Shape",
+	    	"graph_add_Node_Text",
+	    	"graph_add_Node_Path",
+	    	"graph_add_Node_Line", 
+		];
+	#endregion
 	
 	////- View
 	
@@ -304,7 +332,7 @@ function Panel_Nodes() : PanelContent() constructor {
 		return _h;
 	}
 	
-	sc_nodes = new scrollPane(w - padding * 2, h - padding * 2 + ui(40), function(_y, _m) /*=>*/ {
+	sc_nodes = new scrollPane(0, 0, function(_y, _m) /*=>*/ {
 		draw_clear_alpha(COLORS.panel_bg_clear_inner, 1);
 		
 		var _tree = PROJECT.nodeTree;
@@ -332,6 +360,81 @@ function Panel_Nodes() : PanelContent() constructor {
 			PANEL_GRAPH.nodes_selecting = [];
 			
 			if(key_mod_press(KCONTROL))   item_height = clamp(item_height + MOUSE_WHEEL * ui(4), ui(16), ui(128));
+			if(key_mod_double(SHIFT)) PREFERENCES.nodes_panel_show_preview = !PREFERENCES.nodes_panel_show_preview;
+		}
+		
+		return _h + ui(16);
+	});
+	
+	sc_search = new scrollPane(0, 0, function(_y, _m) /*=>*/ {
+		draw_clear_alpha(COLORS.panel_bg_clear_inner, 1);
+		var hover = sc_search.hover;
+		var focus = sc_search.active;
+		
+		var ww = sc_search.surface_w;
+		var _h = 0;
+
+		var hg = item_height;
+				
+		_node_hovering = node_hovering;
+		 node_hovering = noone;
+		
+		for( var i = 0, n = array_length(search_results); i < n; i++ ) {
+			var node = search_results[i];
+			
+			var name  = node.getDisplayName();
+			var colr  = node.getColor();
+			
+			var _rx = 0;
+			var _ry = _y;
+			var _rw = ww;
+			var _rh = hg;
+			
+			var hov = hover && point_in_rectangle(_m[0], _m[1], _rx, _ry, _rx + _rw, _ry + _rh);
+			var sel = array_exists(PANEL_GRAPH.nodes_selecting, node);
+			
+			draw_sprite_stretched_ext(THEME.box_r5_clr, 0, _rx, _ry, _rw, _rh, COLORS.section_bg, 1);
+			
+			if(hov) {
+				node_hovering = node;
+				sc_search.hover_content = true;
+				draw_sprite_stretched_add(THEME.box_r5_clr, 0, _rx, _ry, _rw, _rh, COLORS.section_hover, .4);
+				
+				if(DOUBLE_CLICK) PANEL_PREVIEW.setNodePreview(node);
+				if(mouse_lpress(focus)) PANEL_GRAPH.nodes_selecting = [node];
+			}
+					
+			var _draw = false;
+			var dx = _rx + ui(4) + hg / 2;
+			var dy = _ry + hg / 2;
+			
+			var tx = _rx + hg + ui(8);
+			var sz = hg - ui(6);
+		
+			if(PREFERENCES.nodes_panel_show_preview) {
+				var _prev = node.getGraphPreviewSurface();
+				if(is_surface(_prev)) {
+					var _sw = surface_get_width(_prev);
+					var _sh = surface_get_height(_prev);
+					var _ss = sz / max(_sw, _sh);
+					
+					draw_surface_ext(_prev, dx - _sw * _ss / 2, dy - _sh * _ss / 2, _ss, _ss, 0, c_white, 1);
+					_draw = true;
+				}
+			}
+				
+			var tc  = sel? COLORS._main_text_accent : COLORS._main_text;
+			draw_set_text(f_p4, fa_left, fa_center, tc);
+			draw_text_add(tx, _y + hg / 2, name);
+			
+			draw_sprite_stretched_add(THEME.box_r5, 1, _rx, _ry, _rw, _rh, c_white, .1);
+			
+			_y += hg + ui(2);
+			_h += hg + ui(2);
+		}
+		
+		if(hover) {
+			if(key_mod_press(KCONTROL)) item_height = clamp(item_height + MOUSE_WHEEL * ui(4), ui(16), ui(128));
 			if(key_mod_double(SHIFT)) PREFERENCES.nodes_panel_show_preview = !PREFERENCES.nodes_panel_show_preview;
 		}
 		
@@ -391,11 +494,28 @@ function Panel_Nodes() : PanelContent() constructor {
 			}
 		}
 		
+		var th = ui(28);
+		
+		tb_search.setFocusHover(pFOCUS, pHOVER);
+		tb_search.drawParam(new widgetParam(px - ui(8), py - ui(8), pw + ui(16), th, search_string, undefined, [mx,my])
+			.setFont(f_p3));
+		
+		py += th + ui(4);
+		ph += th + ui(4);
+		
 		draw_sprite_stretched(THEME.ui_panel_bg, 1, px - ui(8), py - ui(8), pw + ui(16), ph + ui(16));
 		
-		sc_nodes.verify(pw, ph);
-		sc_nodes.setFocusHover(pFOCUS, pHOVER);
-		sc_nodes.drawOffset(px, py, mx, my);
+		if(search_string == "") {
+			sc_nodes.verify(pw, ph);
+			sc_nodes.setFocusHover(pFOCUS, pHOVER);
+			sc_nodes.drawOffset(px, py, mx, my);
+			
+		} else {
+			sc_search.verify(pw, ph);
+			sc_search.setFocusHover(pFOCUS, pHOVER);
+			sc_search.drawOffset(px, py, mx, my);
+			
+		}
 		
 		if(draw_overlay_surface) {
 			var surf = draw_overlay_surface;

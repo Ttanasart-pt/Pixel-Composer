@@ -1084,6 +1084,16 @@ function Panel_Inspector() : PanelContent() constructor {
                 hh += _hh;
                 continue;
                 
+            } else if(jun == -2) {                           // SPACER
+            	var _hh = ui(6);
+                var _yy = yy + _hh / 2 - ui(3);
+                
+                draw_set_color(COLORS.panel_inspector_key_separator);
+                draw_line(ui(8), _yy, con_w - ui(8), _yy);
+                
+                hh += _hh;
+                continue;
+                
             } else if(is(jun, Inspector_Label)) {            // TEXT
             	if((filtering && filter_text != "") || FILTER_ANIMATION) continue;
                 if(!jun.visible) continue;
@@ -1376,7 +1386,7 @@ function Panel_Inspector() : PanelContent() constructor {
 	                        if(is(j_jun, Inspector_Spacer) && !j_jun.coll) break;
 	                        
 	                        if(is_real(j_jun)) {
-	                        	if(j_jun < 0) {
+	                        	if(j_jun == -1) {
 	                        		if(_section_st-- <= 0)
 	                        			break;
                         			

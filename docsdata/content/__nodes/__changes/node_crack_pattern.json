@@ -11,6 +11,11 @@
         "date": "2026-09-30T01:46:50.396Z",
         "node": "Crack Pattern",
         "commit": "**Crack Pattern**: Add Path Scatter pattern."
+      },
+      {
+        "date": "2026-09-30T03:04:24.807Z",
+        "node": "Nodes Panel",
+        "commit": "**Nodes Panel**: Add search."
       }
     ]
   },

@@ -21,10 +21,10 @@ function Node_Crack_Pattern(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	newInput(24, nodeValue_Bool(     "Both Side",     false   ));
 	
 	////- =Pattern
-	newInput( 4, nodeValue_Range(    "Segments",    [ 3, 6] ));
-	newInput(11, nodeValue_Range(    "Scale",       [.5, 1] ));
-	newInput( 6, nodeValue_Range(    "Length",      [ 8,10] ));
-	newInput(15, nodeValue_Float(    "Length Scale",  1.1   ));
+	newInput( 4, nodeValue_Range(    "Segments",     [ 3, 6]  ));
+	newInput(11, nodeValue_Range(    "Scale",        [.5, 1]  ));
+	newInput( 6, nodeValue_Range(    "Length",       [ 8,10]  ));
+	newInput(15, nodeValue_Float(    "Length Scale",   1.1    ));
 	
 	////- =Crack
 	newInput( 7, nodeValue_Range(    "Amplitude",     [4,8]   )).setCurvable(17, CURVE_DEF_10);
@@ -34,30 +34,32 @@ function Node_Crack_Pattern(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	newInput(12, nodeValue_RotRange( "Branch Angle",  [15,45] ));
 	
 		////- =/Connect
-	newInput(22, nodeValue_Slider(   "Radial",         0      )).setCurvable(23, CURVE_DEF_10);
+	newInput(22, nodeValue_Slider(   "Radial",    0        )).setCurvable(23, CURVE_DEF_10);
+	newInput(30, nodeValue_Slider(   "Thickness", 1        )).setInternalName("connect_thickness");
+	newInput(31, nodeValue_Color(    "Blending",  ca_white )).setInternalName("connect_blend");
 	
 	////- =Trim
 	newInput(18, nodeValue_Slider(   "Trim",           0      ));
 	
 	////- =Thickness
-	newInput(10, nodeValue_Range(    "Thickness",    [4,4], true    )).setCurvable(14, CURVE_DEF_10);
+	newInput(10, nodeValue_Range(    "Thickness",    [4,4], true )).setCurvable(14, CURVE_DEF_10);
 	
 	////- =Rendering
-	newInput(20, nodeValue_EButton(  "Blend Mode",    0, [ "Nornal", "Addtive", "Maximum" ]));
+	newInput(20, nodeValue_EButton(  "Blend Mode",    0, [ "Nornal", "Addtive", "Maximum" ] ));
 	newInput( 9, nodeValue_Gradient( "Color",        gra_white      )).addShift(25);
 	newInput(13, nodeValue_Color(    "Branch Blend", cola(c_ltgray) ));
 	newInput(19, nodeValue_Surface(  "Texture"                      ));
-	// 30
+	// 32
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
 	input_display_list = [ 2, 
 		[ "Output",         true ],  0, 
-		[ "Origin",        false ],  3,  1,  5, 16, 21, 26, 27, 29, 28, 24, 
+		[ "Origin",        false ],  3, -2,  1,  5, 16, 21, 26, 27, 29, 28, -2, 24, 
 		[ "Pattern",       false ],  4, 11,  6, 15, 
 		[ "Crack",         false ],  7, 17,
 			[ "/Branch",   false ],  8, 12, 
-			[ "/Connect",  false ], 22, 23, 
+			[ "/Connect",  false ], 22, 23, 30, 31, 
 			
 		[ "Trim",           true ], 18, 
 		[ "Thickness",     false ], 10, 14,  
@@ -222,8 +224,11 @@ function Node_Crack_Pattern(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 			var _widCr = _data[17], _widC = inputs[ 7].attributes.curved? new curveMap(_widCr) : undefined;
 			var _chan  = _data[ 8];
 			crkAngle   = _data[12];
+			
 			var _intc  = _data[22];
 			var _intCr = _data[23], _intC = inputs[22].attributes.curved? new curveMap(_intCr) : undefined;
+			var _cthk  = _data[30];
+			var _cbld  = _data[31];
 			
 			globalTrim = 1 - _data[18];
 			
@@ -358,20 +363,20 @@ function Node_Crack_Pattern(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 				var _chan   = _intc * (_intC? _intC.get(i / max(1, n - 1)) : 1);
 				
 				for( var j = 1, m = array_length(_intArr); j < m; j++ ) {
-					var op = _intArr[(j-1+m)%m];
-					var np = _intArr[(j  +m)%m];
+					var op = _intArr[(j-1 + m) % m];
+					var np = _intArr[(j   + m) % m];
 					
 					if(random(1) >= _chan) continue;
 					
 					var ox = op[0];
 					var oy = op[1];
-					var ot = op[2];
-					var oc = op[3];
+					var ot = op[2] * _cthk;
+					var oc = colorMultiply(op[3], _cbld);
 					
 					var nx = np[0];
 					var ny = np[1];
-					var nt = np[2];
-					var nc = np[3];
+					var nt = np[2] * _cthk;
+					var nc = colorMultiply(np[3], _cbld);
 					
 					var dir = point_direction(ox, oy, nx, ny);
 					
