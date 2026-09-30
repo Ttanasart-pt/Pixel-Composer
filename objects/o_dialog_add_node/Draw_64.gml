@@ -116,10 +116,17 @@ DIALOG_DRAW_BG
 		var bs = ui(28);
 		var sp = ui(2);
 		
-		var bx = _dialog_x + dialog_w - ui(44);
+		var bx = _dialog_x + dialog_w - ui(14);
 		var by = ty;
 		var mm = mouse_ui;
 		
+		bx -= bs + sp;
+		var bi = PREFERENCES.dialog_add_node_icon;
+		var b  = buttonInstant_Pad(bb, bx, by, bs, bs, mm, sHOVER, sFOCUS, __txt("Show Icon"), THEME.image_20, bi, bc, 1, ui(8));
+		if(b == 2) PREFERENCES.dialog_add_node_icon = !PREFERENCES.dialog_add_node_icon;
+		tw -= bs + sp;
+		
+		bx -= bs + sp;
 		view_tooltip.index  = PREFERENCES.dialog_add_node_view;
 		var bi = PREFERENCES.dialog_add_node_view;
 		var b  = buttonInstant_Pad(bb, bx, by, bs, bs, mm, sHOVER, sFOCUS, view_tooltip, THEME.view_mode, bi, bc, 1, ui(6));

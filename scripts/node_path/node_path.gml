@@ -1286,7 +1286,7 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 					}
 					
 					if(i || j) {
-						if(line_hovable && hover) {
+						if(hover) {
 							var _p = point_to_line(_mx, _my, _ox, _oy, _nx, _ny);
 							var _d = point_distance(_mx, _my, _p[0], _p[1]);
 							
@@ -1297,7 +1297,7 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 								
 							} 
 							
-							if(_d < ui(8)) _line_hover = i;
+							if(line_hovable && _d < ui(8)) _line_hover = i;
 						}
 						
 						if(draw_w) {
@@ -1339,14 +1339,20 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 					break;
 			}
 			
+			var _anAmo = min(array_length(_pth.anchors), array_length(inputs) - input_fix_len);
+			
 			if(_showAnchor)
-			for(var i = 0, n = array_length(inputs) - input_fix_len; i < n; i++) { // draw anchor
+			for(var i = 0, n = _anAmo; i < n; i++) { // Draw Anchor
 				var _a   = _pth.anchors[i];
 				var xx   = _x + _a[0] * _s;
 				var yy   = _y + _a[1] * _s;
 				var cont = false;
-				var _ax0 = 0, _ay0 = 0;
-				var _ax1 = 0, _ay1 = 0;
+				
+				var _ax0 = 0;
+				var _ay0 = 0;
+				var _ax1 = 0;
+				var _ay1 = 0;
+				
 				var _inp = inputs[input_fix_len + i];
 				
 				if(array_length(_a) < 6) continue;

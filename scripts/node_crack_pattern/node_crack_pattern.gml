@@ -21,13 +21,17 @@ function Node_Crack_Pattern(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	newInput(15, nodeValue_Float(    "Length Scale",  1.1   ));
 	
 	////- =Crack
-	newInput( 7, nodeValue_Range(    "Width",   [ 4, 8] )).setCurvable(17, CURVE_DEF_10);
-	newInput( 8, nodeValue_Slider(   "Branch",  .25    ));
-	newInput(12, nodeValue_RotRange( "Angle",   [15,45] ));
-	newInput(22, nodeValue_Slider(   "Radial",   0   )).setCurvable(23, CURVE_DEF_10);
+	newInput( 7, nodeValue_Range(    "Amplitude",     [4,8]   )).setCurvable(17, CURVE_DEF_10);
+	
+		////- =/Branch
+	newInput( 8, nodeValue_Slider(   "Branch Chance", .25     ));
+	newInput(12, nodeValue_RotRange( "Branch Angle",  [15,45] ));
+	
+		////- =/Connect
+	newInput(22, nodeValue_Slider(   "Radial",        0   )).setCurvable(23, CURVE_DEF_10);
 	
 	////- =Trim
-	newInput(18, nodeValue_Slider(   "Trim",      0     ));
+	newInput(18, nodeValue_Slider(   "Trim",          0   ));
 	
 	////- =Thickness
 	newInput(10, nodeValue_Range(    "Thickness",    [4,4], true    )).setCurvable(14, CURVE_DEF_10);
@@ -42,13 +46,16 @@ function Node_Crack_Pattern(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
 	input_display_list = [ 2, 
-		[ "Output",     true ],  0, 
-		[ "Origin",    false ],  1,  3,  5, 16, 21, 24, 
-		[ "Pattern",   false ],  4, 11,  6, 15, 
-		[ "Crack",     false ],  7, 17,  8, 12, 22, 23, 
-		[ "Trim",       true ], 18, 
-		[ "Thickness", false ], 10, 14,  
-		[ "Rendering", false ], 20, [9, true], 25, -1, 13, 19, 
+		[ "Output",         true ],  0, 
+		[ "Origin",        false ],  1,  3,  5, 16, 21, 24, 
+		[ "Pattern",       false ],  4, 11,  6, 15, 
+		[ "Crack",         false ],  7, 17,
+			[ "/Branch",   false ],  8, 12, 
+			[ "/Connect",  false ], 22, 23, 
+			
+		[ "Trim",           true ], 18, 
+		[ "Thickness",     false ], 10, 14,  
+		[ "Rendering",     false ], 20, [9, true], 25, -1, 13, 19, 
 	];
 	
 	////- Nodes

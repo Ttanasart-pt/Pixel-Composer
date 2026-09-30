@@ -121,7 +121,7 @@ event_inherited();
 			maxLen   = max(maxLen, string_width(name));
 		}
 		
-		category_width = maxLen + ui(32 + 32);
+		category_width = maxLen + ui(32) + PREFERENCES.dialog_add_node_icon * ui(32);
 	#endregion
 	
 	function isTop() { return true; }
@@ -541,9 +541,8 @@ event_inherited();
 					break;
 			}
 			
-			if(i == ADD_NODE_PAGE) {
+			if(i == ADD_NODE_PAGE)
 				cat_disp_y = _y + hh;
-			}
 			
 			if(i == ADD_NODE_PAGE) draw_set_text(fontS, fa_left, fa_center, COLORS._main_text_accent);
 			else                   draw_set_text(font,  fa_left, fa_center, cc);
@@ -553,21 +552,24 @@ event_inherited();
 			var _tx = ui(6);
 			var _ty = _y + hh + hg / 2;
 			
-			var spr = cat && cat[$ "filter"] != undefined && is(context, Node)? context.icon : undefined;
-			if(!sprite_exists(spr))
-				spr = asset_get_index($"s_node_cat_{string_lower(name)}");
-			
-			if(sprite_exists(spr)) {
-				var _ss = (hg - ui(6)) / sprite_get_width(spr);
-				var _cc = i == ADD_NODE_PAGE? COLORS._main_accent : COLORS._main_icon;
-				var _aa = i == ADD_NODE_PAGE? 1 : .75;
+			if(PREFERENCES.dialog_add_node_icon) {
+				var spr = cat && cat[$ "filter"] != undefined && is(context, Node)? context.icon : undefined;
+				if(!sprite_exists(spr))
+					spr = asset_get_index($"s_node_cat_{string_lower(name)}");
 				
-				gpu_set_tex_filter(true);
-				draw_sprite_ext(spr, 0, _tx + hg / 2, _ty, _ss, _ss, 0, _cc, _aa);
-				gpu_set_tex_filter(false);
+				if(sprite_exists(spr)) {
+					var _ss = (hg - ui(6)) / sprite_get_width(spr);
+					var _cc = i == ADD_NODE_PAGE? COLORS._main_accent : COLORS._main_icon;
+					var _aa = i == ADD_NODE_PAGE? 1 : .75;
+					
+					gpu_set_tex_filter(true);
+					draw_sprite_ext(spr, 0, _tx + hg / 2, _ty, _ss, _ss, 0, _cc, _aa);
+					gpu_set_tex_filter(false);
+				}
+				
+				_tx += hg + ui(2);
 			}
 			
-			_tx += hg + ui(2);
 			name = __txt(name);
 			draw_text_add(_tx, _ty, name);
 			

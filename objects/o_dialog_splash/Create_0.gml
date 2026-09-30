@@ -64,6 +64,8 @@ event_inherited();
 		var lbh  = line_get_height(f_p0b) + line_get_height(f_p2);
 		var xx, yy;
 		
+		var _scis = gpu_get_scissor();
+		
 		for( var i = 0; i < amo; i++ ) {
 			var _rec = RECENT_FILES[| i];
 			var _dat = RECENT_FILE_DATA[| i];
@@ -98,8 +100,13 @@ event_inherited();
 				var fdw = ww - ui(8);
 				var fdh = ui(64);
 				
+				gpu_set_scissor(fdx, fdy, fdw, fdh);
+				draw_sprite_stretched_ext(s_fx_pixel, 0, fdx, fdx, fdw, fdh, COLORS.panel_bg_clear, 1);
+				draw_sprite_tiled_ext(s_transparent, 0, 0, 0, 2, 2, COLORS.panel_preview_transparent, 1);
+					
 				draw_surface_part_ext(thmb, 0, sy, sw, (hg - ui(8)) / ss, fdx, fdy, ss, ss, COLORS._main_icon_light, 0.9);
 				draw_sprite_stretched_ext(THEME.fade_up, 0, fdx, yy + 1 - ui(4) + hg - fdh, fdw, fdh, COLORS._main_icon_dark, 1);
+				gpu_set_scissor(_scis);
 			}
 		
 			if(_hov) {
@@ -113,10 +120,10 @@ event_inherited();
 					
 				} else if(mouse_rpress(focus)) {
 					menuCall("splash_recent", [
-						menuItem(__txt("Load File"), function(_rec) /*=>*/ { LOAD_PATH(_rec); instance_destroy(); }).setParam(_rec),
-						menuItem(__txt("Load in Safe Mode"), function(_rec) /*=>*/ { LOAD_PATH(_rec, false, true); instance_destroy(); }).setParam(_rec),
+						menuItem(__txt("Load File"),         function(_rec) /*=>*/ { LOAD_PATH(_rec);            instance_destroy(); }).setParam(_rec),
+						menuItem(__txt("Load in Safe Mode"), function(_rec) /*=>*/ { LOAD_PATH(_rec,false,true); instance_destroy(); }).setParam(_rec),
 						-1, 
-						menuItem(__txt("Open in Explorer"), function(_rec) /*=>*/ {return shellOpenExplorer(filename_dir(_rec))}).setParam(_rec),
+						menuItem(__txt("Open in Explorer"),  function(_rec) /*=>*/ {return shellOpenExplorer(filename_dir(_rec))}).setParam(_rec),
 					]);
 				}
 			}
@@ -128,7 +135,6 @@ event_inherited();
 			ly += line_get_height() + ui(2);
 			draw_set_text(f_p2, fa_left, fa_top, COLORS._main_text_sub);
 			
-			var _scis = gpu_get_scissor();
 			gpu_set_scissor(xx + ui(12), ly, ww - ui(24), ui(999));
 			draw_text_add(xx + ui(12), ly, _rec);
 			gpu_set_scissor(_scis);
@@ -341,6 +347,10 @@ event_inherited();
 					var oy = sprite_get_yoffset(spr) * ss;
 					
 					gpu_set_scissor(gridX + ui(2), gridY + ui(2), gridW - ui(4), gridH - ui(4));
+					
+					draw_sprite_stretched_ext(s_fx_pixel, 0, gridX, gridY, gridW, gridH, COLORS.panel_bg_clear, 1);
+					draw_sprite_tiled_ext(s_transparent, 0, 0, 0, 2, 2, COLORS.panel_preview_transparent, 1);
+					
 					gpu_set_tex_filter(page == "Getting started");
 					draw_sprite_uniform(spr, 0, _sx + ox, _sy + oy, ss);
 					gpu_set_tex_filter(false);

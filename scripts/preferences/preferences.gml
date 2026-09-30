@@ -97,6 +97,7 @@
 			
 			PREFERENCES.dialog_add_node_view        = 1;
 			PREFERENCES.dialog_add_node_grouping    = 2;
+			PREFERENCES.dialog_add_node_icon        = true;
 			
 			PREFERENCES.dialog_add_node_width       = 600;
 			PREFERENCES.dialog_add_node_height      = 400;

@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.22.0.001",
+    "changes": [
+      {
+        "date": "2026-09-30T00:55:40.304Z",
+        "node": "",
+        "commit": "**Add Node Dialog**: Add option to disable category icon."
+      }
+    ]
+  },
+  {
     "version": "1.22.0",
     "changes": [
       {

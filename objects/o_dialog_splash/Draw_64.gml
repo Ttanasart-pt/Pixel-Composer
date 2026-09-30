@@ -18,6 +18,9 @@ DIALOG_DRAW_BG
 	var bx  = _dialog_x + ui(56 + 48);
 	var by  = _dialog_y + ui(56 + 4);
 	var txt = VERSION_STRING;
+	if(NIGHTLY) txt += " nightly";
+	else if(VERSION_MINOR_INT > 0) txt += " beta"; 
+	
 	var ww  = string_width(txt) + ui(8);
 	var hh  = line_get_height(, 4);
 	if(buttonInstant(bhf, bx - ui(4), by - ui(2), ww, hh, m, hov, foc) == 2)

@@ -1,5 +1,5 @@
 function Panel_Migration_Error(_project) : PanelContent() constructor {
-	title = "Migration Error";
+	title = "Migration Assistance";
 	w = ui(600);
 	h = ui(200);
 	auto_pin = true;
