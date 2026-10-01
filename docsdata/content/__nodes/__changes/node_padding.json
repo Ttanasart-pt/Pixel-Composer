@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.22.0.101",
+    "changes": [
+      {
+        "date": "2026-10-01T04:26:47.160Z",
+        "node": "Padding",
+        "commit": "**Padding**: Scale to size mode now round pixel position to avoid jittering."
+      }
+    ]
+  },
+  {
     "version": "1.21.7.110",
     "changes": [
       {

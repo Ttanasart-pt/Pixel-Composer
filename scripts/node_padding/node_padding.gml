@@ -121,7 +121,7 @@ function Node_Padding(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 				case fa_bottom:  sy =  dim[1] - hh;		 break;
 			}
 			
-			draw_surface_safe(surf, sx, sy);
+			draw_surface_safe(surf, round(sx), round(sy));
 			BLEND_NORMAL
 			surface_reset_target();
 			
