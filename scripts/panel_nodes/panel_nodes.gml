@@ -403,14 +403,14 @@ function Panel_Nodes() : PanelContent() constructor {
 				if(DOUBLE_CLICK) PANEL_PREVIEW.setNodePreview(node);
 				if(mouse_lpress(focus)) PANEL_GRAPH.nodes_selecting = [node];
 			}
-					
+			
 			var _draw = false;
 			var dx = _rx + ui(4) + hg / 2;
 			var dy = _ry + hg / 2;
 			
 			var tx = _rx + hg + ui(8);
 			var sz = hg - ui(6);
-		
+			
 			if(PREFERENCES.nodes_panel_show_preview) {
 				var _prev = node.getGraphPreviewSurface();
 				if(is_surface(_prev)) {
@@ -494,7 +494,7 @@ function Panel_Nodes() : PanelContent() constructor {
 			}
 		}
 		
-		var th = ui(28);
+		var th = ui(24);
 		
 		tb_search.setFocusHover(pFOCUS, pHOVER);
 		tb_search.drawParam(new widgetParam(px - ui(8), py - ui(8), pw + ui(16), th, search_string, undefined, [mx,my])

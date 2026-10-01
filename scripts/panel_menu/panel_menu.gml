@@ -47,6 +47,8 @@
                 .setArg([ ARG("path", ""), ARG("context", function() /*=>*/ {return PANEL_GRAPH.getCurrentContext()}, true) ])
             
             registerFunction("", "Recent Files",    "R",    c|s, function(_dat) /*=>*/ { 
+            		if(ds_list_empty(RECENT_FILES)) return undefined;
+            	
                     var amo = min(10, ds_list_size(RECENT_FILES));
                     var arr = array_create(amo);
                     var tip = array_create(amo);
@@ -59,7 +61,10 @@
                         tip[i] = [ _thm, VALUE_TYPE.surface ];
                     }
                     
-                    return submenuCall(_dat, arr, "recent_files").setTooltip(tip);
+                    var _smenu = submenuCall(_dat, arr, "recent_files");
+                    if(_smenu) _smenu.setTooltip(tip);
+                    return _smenu;
+                    
                 }).setMenu("recent_files",, true);
                 
             registerFunction("", "Import Project .zip",  "", n, __IMPORT_ZIP    ).setMenuAlt( "Compressed Archive (zip)", "import_zip"  )

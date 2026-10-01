@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.22.0.02",
+    "changes": [
+      {
+        "date": "2026-10-01T00:02:13.418Z",
+        "node": "",
+        "commit": "Fix crash when opening recent files with no files."
+      }
+    ]
+  },
+  {
     "version": "1.22.0.001",
     "changes": [
       {
