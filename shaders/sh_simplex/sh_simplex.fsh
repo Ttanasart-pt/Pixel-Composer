@@ -62,6 +62,8 @@ uniform float itrScaling;
 uniform float itrAmplitude;
 uniform int   tiled;
 
+uniform int  itrBlendMode;
+
 uniform vec2 levelIn, levelOut; float applyLevel(float v) { return mix(levelOut.x, levelOut.y, (v - levelIn.x) / (levelIn.y - levelIn.x)); }
 uniform int  colored;
 uniform vec2 colorRanR;
@@ -79,6 +81,14 @@ vec3 mod289(vec3 x) { return x - floor(x * (1.0 / 289.0)) * 289.0; }
 vec4 mod289(vec4 x) { return x - floor(x * (1.0 / 289.0)) * 289.0; }
 vec4 permute(vec4 x) { return mod289(((x * 34.0) + 10.0) * x); }
 vec4 taylorInvSqrt(vec4 r) { return 1.79284291400159 - 0.85373472095314 * r; }
+
+float blend(in float a, in float b) {
+	     if(itrBlendMode == 0) return a + b;
+	else if(itrBlendMode == 1) return max(a, b);
+	else if(itrBlendMode == 2) return min(a, b);
+	else if(itrBlendMode == 3) return a * b;
+	return a;
+}
 
 vec3 hsv2rgb(vec3 c) {
     vec4 K = vec4(1.0, 2.0 / 3.0, 1.0 / 3.0, 3.0);
@@ -186,10 +196,14 @@ float simplex(in vec2 st) {
 	float amp   = pow(inAmp, float(itr) - 1.)  / (pow(inAmp, float(itr)) - 1.);
     float n     = 0.;
     
+	     if(itrBlendMode == 2) n = 1.;
+	else if(itrBlendMode == 3) n = 1.;
+	
 	for(float i = 0.; i < itrMax; i++) {
 		if(i >= itr) break;
 		
-		n += iq_noise(p) * amp;
+		float val = iq_noise(p) * amp;
+		n  = blend(n, val);
 		p *= itrScaling;
 		
 		amp *= itrAmplitude;

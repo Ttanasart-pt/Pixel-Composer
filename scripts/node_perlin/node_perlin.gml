@@ -27,7 +27,7 @@ function Node_Perlin(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	newInput( 2, nodeValue_Vec2(     "Scale",     [4,4], {linked : true} )).setHotkey("S").setMappable(10).setPieMenu();
 	
 	////- =Iteration
-	newInput(20, nodeValue_EScroll( "Blend Method", 0, [ "Add", "Max" ] ));
+	newInput(20, nodeValue_EScroll( "Blend Method", 0, [ "Add", "Max", "Min", "Multiply" ] ));
 	newInput(14, nodeValue_Float(   "Scaling",      2 )).setMappable(18);
 	newInput(15, nodeValue_Slider(  "Amplitude",   .5 )).setMappable(19);
 	
@@ -113,28 +113,28 @@ function Node_Perlin(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		surface_set_shader(_outSurf, sh_perlin_tiled);
 			shader_set_uv(_data[16], _data[17]);
 			
-			shader_set_2("dimension",  _dim );
+			shader_set_2( "dimension",  _dim );
 			
-			shader_set_f("seed",       _sed );
-			shader_set_f("phase",      _phs );
-			shader_set_i("iteration",  _ite );
-			shader_set_i("tile",       _til );
+			shader_set_f( "seed",       _sed );
+			shader_set_f( "phase",      _phs );
+			shader_set_i( "iteration",  _ite );
+			shader_set_i( "tile",       _til );
 			
-			shader_set_2("position",   _pos );
-			shader_set_f("rotation",   _rot );
-			shader_set_f_map("scale",  _sca, _data[10], inputs[2] );
+			shader_set_2( "position",   _pos );
+			shader_set_f( "rotation",   _rot );
+			shader_set_m( "scale",      _sca, _data[10], inputs[2] );
 			
-			shader_set_f_map("itrScaling",   _adv_scale,  _data[18], inputs[14] );
-			shader_set_f_map("itrAmplitude", _adv_amplit, _data[19], inputs[15] );
-			shader_set_i("itrBlendMode", _itr_blend );
+			shader_set_m( "itrScaling",   _adv_scale,  _data[18], inputs[14] );
+			shader_set_m( "itrAmplitude", _adv_amplit, _data[19], inputs[15] );
+			shader_set_i( "itrBlendMode", _itr_blend );
 		
-			shader_set_2("levelIn",    _lvl );
-			shader_set_2("levelOut",   _lvo );
+			shader_set_2( "levelIn",    _lvl );
+			shader_set_2( "levelOut",   _lvo );
 			
-			shader_set_i("colored",    _col );
-			shader_set_2("colorRanR",  _clr );
-			shader_set_2("colorRanG",  _clg );
-			shader_set_2("colorRanB",  _clb );
+			shader_set_i( "colored",    _col );
+			shader_set_2( "colorRanR",  _clr );
+			shader_set_2( "colorRanG",  _clg );
+			shader_set_2( "colorRanB",  _clb );
 			
 			draw_empty();
 		surface_reset_shader();

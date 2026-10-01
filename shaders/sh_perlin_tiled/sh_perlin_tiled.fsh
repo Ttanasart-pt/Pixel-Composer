@@ -75,6 +75,14 @@ vec3 hsv2rgb(vec3 c) {
 float random  (in vec2 st) { return smoothstep(0., 1., abs(fract(sin(dot(st.xy + vec2(21.456, 46.856), vec2(12.989, 78.233))) * (43758.545 + mod(seed, 100000.))) * 2. - 1.)); }
 vec2  random2 (in vec2 st) { float a = fract(random(st) + phase / 360.) * 6.28319; return vec2(cos(a), sin(a)); }
 
+float blend(in float a, in float b) {
+	     if(itrBlendMode == 0) return a + b;
+	else if(itrBlendMode == 1) return max(a, b);
+	else if(itrBlendMode == 2) return min(a, b);
+	else if(itrBlendMode == 3) return a * b;
+	return a;
+}
+
 float noise (in vec2 st, in vec2 scale) {
     vec2 cellMin = floor(st);
     vec2 cellMax = floor(st) + vec2(1., 1.);
@@ -116,9 +124,12 @@ float perlin(in vec2 st) {
 	vec2  pos   = st;
 	vec2  sc    = sca;
 	
+	     if(itrBlendMode == 2) n = 1.;
+	else if(itrBlendMode == 3) n = 1.;
+	
 	for(int i = 0; i < iteration; i++) {
-		     if(itrBlendMode == 0) n += noise(pos, sc) * amp;
-		else if(itrBlendMode == 1) n  = max(n, noise(pos, sc) * amp);
+		float val = noise(pos, sc) * amp;
+		n = blend(n, val);
 		
 		ampt += amp;
 		

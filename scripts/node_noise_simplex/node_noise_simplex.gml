@@ -24,8 +24,9 @@ function Node_Noise_Simplex(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	newInput( 2, nodeValue_Vec2(     "Scale",    [.25,.25] )).setHotkey("S").setUnitSimple().setMappable(8).setPieMenu();
 	
 	////- =Iteration
-	newInput(11, nodeValue_Float(  "Scaling",    2));
-	newInput(12, nodeValue_Slider( "Amplitude", .5));
+	newInput(20, nodeValue_EScroll( "Blend Method", 0, [ "Add", "Max", "Min", "Multiply" ] ));
+	newInput(11, nodeValue_Float(  "Scaling",    2 ));
+	newInput(12, nodeValue_Slider( "Amplitude", .5 ));
 	
 	////- =Render
 	newInput(18, nodeValue_SliRange( "Level In",      [0,1] ));
@@ -34,13 +35,13 @@ function Node_Noise_Simplex(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	newInput( 5, nodeValue_SliRange( "Color R Range", [0,1] ));
 	newInput( 6, nodeValue_SliRange( "Color G Range", [0,1] ));
 	newInput( 7, nodeValue_SliRange( "Color B Range", [0,1] ));
-	// 20
+	// 21
 	
 	input_display_list = [
 		[ "Output",     true ],  0, 15, 16, 13, 
 		[ "Noise",     false ], 14,  3,  9, 17, 
 		[ "Transform", false ],  1, 10,  2,  8, 
-		[ "Iteration",  true ], 11, 12, 
+		[ "Iteration",  true ], 20, 11, 12, 
 		[ "Render",    false ], 18, 19,  4,  5,  6,  7, 
 	];
 	
@@ -78,6 +79,7 @@ function Node_Noise_Simplex(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 			var _lvl  = _data[18];
 			var _lvo  = _data[19];
 			
+			var _itr_blend  = _data[20];
 			var _adv_scale  = _data[11];
 			var _adv_amplit = _data[12];
 			
@@ -95,24 +97,26 @@ function Node_Noise_Simplex(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 		surface_set_shader(_outSurf, sh_simplex);
 			shader_set_uv(_data[15], _data[16]);
 			
-			shader_set_f("seed",      _sed);
-			shader_set_f("dimension", _dim);
-			shader_set_2("position",  _pos);
-			shader_set_f("rotation",  degtorad(_ang));
-			shader_set_f_map("scale",     _data[2], _data[8], inputs[2]);
-			shader_set_f_map("iteration", _data[3], _data[9], inputs[3]);
+			shader_set_f( "seed",      _sed );
+			shader_set_f( "dimension", _dim );
+			shader_set_2( "position",  _pos );
+			shader_set_f( "rotation",  degtorad(_ang) );
+			shader_set_m( "scale",     _data[2], _data[8], inputs[2] );
+			shader_set_m( "iteration", _data[3], _data[9], inputs[3] );
 			
-			shader_set_f("itrAmplitude", _adv_amplit);
-			shader_set_f("itrScaling",   _adv_scale);
-			shader_set_i("tiled",        _tile);
+			shader_set_f( "itrScaling",   _adv_scale );
+			shader_set_f( "itrAmplitude", _adv_amplit );
+			shader_set_i( "itrBlendMode", _itr_blend  );
+			
+			shader_set_i( "tiled",        _tile );
 		
-			shader_set_2("levelIn",   _lvl);
-			shader_set_2("levelOut",  _lvo);
+			shader_set_2( "levelIn",   _lvl );
+			shader_set_2( "levelOut",  _lvo );
 			
-			shader_set_i("colored",   _col);
-			shader_set_2("colorRanR", _clr);
-			shader_set_2("colorRanG", _clg);
-			shader_set_2("colorRanB", _clb);
+			shader_set_i( "colored",   _col );
+			shader_set_2( "colorRanR", _clr );
+			shader_set_2( "colorRanG", _clg );
+			shader_set_2( "colorRanB", _clb );
 			
 			draw_empty();
 		surface_reset_shader();

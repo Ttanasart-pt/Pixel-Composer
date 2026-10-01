@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.22.0.101",
+    "changes": [
+      {
+        "date": "2026-10-01T03:55:49.369Z",
+        "node": "Perlin, Simplex Noise] Add Min, Multiply iteration blend modes.[Perlin, Simplex Noise",
+        "commit": "**Perlin, Simplex Noise] Add Min, Multiply iteration blend modes.[Perlin, Simplex Noise**: Add Min, Multiply iteration blend modes."
+      }
+    ]
+  },
+  {
     "version": "1.21.9.209",
     "changes": [
       {
