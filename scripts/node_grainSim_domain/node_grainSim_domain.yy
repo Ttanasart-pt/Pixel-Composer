@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"node_grainSim_domain",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"node_grainSim_domain",
+  "parent":{
+    "name":"domain",
+    "path":"folders/nodes/data/simulation/grainSim/domain.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

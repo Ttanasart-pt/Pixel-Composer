@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"node_grainSim_destroy",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"node_grainSim_destroy",
+  "parent":{
+    "name":"grain",
+    "path":"folders/nodes/data/simulation/grainSim/grain.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

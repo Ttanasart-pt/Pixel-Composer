@@ -392,6 +392,32 @@
         "color": "node_blend_verlet"
     }, //VerletSim
     {
+        "name": "GrainSim", "nodes": [
+            { "label": "Domain" },
+            { "label": "/Domain" },
+            "Node_GrainSim_Domain",
+            "Node_GrainSim_Update",
+            { "label": "/Render" },
+            "Node_GrainSim_Render",
+            
+            { "label": "Grain" },
+            { "label": "/Spawner" },
+            "Node_GrainSim_Spawn",
+            "Node_GrainSim_Wake",
+            { "label": "/Destroy" },
+            "Node_GrainSim_Destroy",
+            { "label": "/Affector" },
+            "Node_GrainSim_Force",
+            "Node_GrainSim_Force_Field",
+            "Node_GrainSim_Explode",
+            { "label": "/Solid" },
+            "Node_GrainSim_Solid",
+            
+        ],
+        "context": ["Node_GrainSim_Inline"],
+        "color": "node_blend_grain"
+    }, // GrainSim
+    {
         "name": "MK Tree", "nodes": [
             { "label": "Builder" },
             { "label": "/Branch" },
@@ -1016,6 +1042,7 @@
             "Node_Smoke_Group_Inline",
             "Node_Strand_Group_Inline",
             "Node_VerletSim_Inline",
+            "Node_GrainSim_Inline",
             { "label": "/Diffusion" },
             "Node_Diffuse",
             "Node_RD",

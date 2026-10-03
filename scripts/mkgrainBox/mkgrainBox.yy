@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"mkgrainBox",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"mkgrainBox",
+  "parent":{
+    "name":"object",
+    "path":"folders/widgets/object.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

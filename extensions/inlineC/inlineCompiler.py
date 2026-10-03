@@ -119,7 +119,8 @@ def compile_with_msvc(src_file, out_dll):
         '/LD',
         src_file,
         f'/Fe:{out_dll}',
-        "/EHsc" # Enable C++ exceptions
+        "/EHsc", # Enable C++ exceptions
+        "/std:c++17" # Enable std::clamp and other C++17 features
     ]
     # Use the captured environment
     result = subprocess.run(cmd, env={**os.environ, **msvc_env}, shell=True)
@@ -265,13 +266,16 @@ def buildInlineC(fileName, code):
 
             otype, fnSignature = header.strip().split(" ", 1)
             fname, fparams = fnSignature.split("(", 1)
-            fparams = fparams.rsplit(")", 1)[0]
+            fparams = fparams.rsplit(")")[0].strip()
 
+            # print(f"Parsing function: |{fname.strip()}| with return type |{otype.strip()}| parameters |{fparams}|")
             inputs = []
-            if(fparams.strip() != ""):
+            if(fparams != ""):
                 paramList = fparams.split(",")
                 for param in paramList:
                     ptype, pname = param.rsplit(" ", 1)
+
+                    # print(f"Parsing parameter: |{ptype}|{pname}|")
                     inputs.append((ptype.strip(), pname.strip()))
 
             functions.append({

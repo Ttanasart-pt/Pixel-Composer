@@ -3665,7 +3665,8 @@ function Panel_Preview() : PanelContent() constructor {
 			                var hx = colorToHex(_cc);
 			                draw_text(tx, cy + ch / 2, hx);
 			            
-			                tx += string_width(hx) + ui(8);
+			                 tx += string_width(hx) + ui(8);
+			                _tw += string_width(hx) + ui(8);
 			                draw_set_color(COLORS._main_text_sub);
 			                
 			                var _txt = $"({color_get_alpha(_cc)})";

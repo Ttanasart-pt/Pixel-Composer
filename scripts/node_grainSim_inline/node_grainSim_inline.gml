@@ -1,0 +1,21 @@
+function Node_GrainSim_Inline(_x, _y, _group = noone) : Node_Collection_Inline(_x, _y, _group) constructor {
+	name  = "GrainSim";
+	color = COLORS.node_blend_grain;
+	icon  = THEME.grain_sim;
+	
+	is_simulation   = true;
+	update_on_frame = true;
+	
+	if(NODE_NEW_MANUAL) {
+		var _domain = nodeBuild("Node_GrainSim_Domain", x,     y, self);
+		var _spawn  = nodeBuild("Node_GrainSim_Spawn",  x+128, y, self);
+		var _render = nodeBuild("Node_GrainSim_Render", x+288, y, self);
+		
+		_spawn.inputs[0].setFrom(_domain.outputs[0]);
+		_render.inputs[0].setFrom(_spawn.outputs[0]);
+		
+		addNode(_domain);
+		addNode(_spawn);
+		addNode(_render);
+	}
+}

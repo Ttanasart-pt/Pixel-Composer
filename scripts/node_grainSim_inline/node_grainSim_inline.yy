@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"node_grainSim_inline",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"node_grainSim_inline",
+  "parent":{
+    "name":"group",
+    "path":"folders/nodes/data/simulation/grainSim/group.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

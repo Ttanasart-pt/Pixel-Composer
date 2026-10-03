@@ -1,0 +1,12 @@
+{
+  "$GMShader":"",
+  "%Name":"sh_grainsim_explode",
+  "name":"sh_grainsim_explode",
+  "parent":{
+    "name":"grain",
+    "path":"folders/nodes/data/simulation/grainSim/grain.yy",
+  },
+  "resourceType":"GMShader",
+  "resourceVersion":"2.0",
+  "type":1,
+}

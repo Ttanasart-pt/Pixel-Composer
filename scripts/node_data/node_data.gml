@@ -2224,7 +2224,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		if(_panel && _panel.is_searching && _panel.search_string != "" && search_match == -9999)
 			aa *= .15;
 		if(FILTER_ANIMATION && !isAnimated()) 
-			aa = .25;
+			aa  = .25;
 		
 		var ic = icon;
 		if(instanceBase) 

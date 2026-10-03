@@ -120,6 +120,7 @@
     "gradient_keys_blend":                { "path": "./icon/s_gradient_keys_blend.png",                     "s": 2, "x": 12, "y": 12 },
     "gradient_keys_distribute":           { "path": "./icon/s_gradient_keys_distribute.png",                "s": 2, "x": 12, "y": 12 },
     "gradient_keys_reverse":              { "path": "./icon/s_gradient_keys_reverse.png",                   "s": 2, "x": 12, "y": 12 },
+    "grain_sim":                          { "path": "./icon/s_icon_grain.png",                              "s": 1, "x":  8, "y":  8 },
     "group_s":                            { "path": "./icon/s_group_16.png",                                "s": 1, "x":  8, "y":  8 },
     "group":                              { "path": "./icon/s_group_24.png",                                "s": 1, "x": 12, "y": 12 },
     "group_linked_s":                     { "path": "./icon/s_group_linked_s.png",                          "s": 2, "x":  8, "y":  8 },
@@ -416,6 +417,7 @@
     "node_junction_surface_uv":           { "path": "./node/s_node_junction_surface_uv.png",                "s": 2, "x": 12, "y": 12 },
     "node_junction_surface_map":          { "path": "./node/s_node_junction_surface_map.png",               "s": 2, "x": 12, "y": 12 },
     "node_junction_verlet":               { "path": "./node/s_node_junction_verlet.png",                    "s": 2, "x": 12, "y": 12 },
+    "node_junction_grain":                { "path": "./node/s_node_junction_grain.png",                     "s": 2, "x": 12, "y": 12 },
 
     "node_junctions_single":              { "path": "./node/s_node_junctions_single.png",                   "s": 38, "x": 12, "y": 12 },
     "node_junctions_bg":                  { "path": "./node/s_node_junctions_bg.png",                       "s": 38, "x": 12, "y": 12 },

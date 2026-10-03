@@ -1,0 +1,12 @@
+{
+  "$GMShader":"",
+  "%Name":"sh_grainsim_render_threshold",
+  "name":"sh_grainsim_render_threshold",
+  "parent":{
+    "name":"grainsim_render",
+    "path":"folders/nodes/data/simulation/grainSim/domain/grainsim_render.yy",
+  },
+  "resourceType":"GMShader",
+  "resourceVersion":"2.0",
+  "type":1,
+}
