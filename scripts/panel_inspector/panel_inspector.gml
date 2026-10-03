@@ -539,7 +539,9 @@ function Panel_Inspector() : PanelContent() constructor {
             		var _glInp = PROJECT.globalNode.inputs[i];
             		if(!typeCompatible(_glInp.type, __dialog_junction.type)) continue;
             		
-            		array_push(arr, menuItem(_glInp.name, function(d) /*=>*/ {return __dialog_junction.setExpression(d.name)})).setParam({ name : _glInp.name });
+            		array_push(arr, 
+            			menuItem(_glInp.name, function(d) /*=>*/ {return __dialog_junction.setExpression(d)}).setParam(_glInp.name)
+        			);
             	}
             	
             	array_push(arr, -1, menuItem(__txt("New Globalvar") + "...", function() /*=>*/ {
