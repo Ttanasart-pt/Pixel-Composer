@@ -19,6 +19,7 @@
 #include <vector>
 #include <cmath>
 #include <algorithm>
+#include <limits>
 
 	////- Util
 
@@ -206,8 +207,8 @@ struct GrainSimDomain {
 	double lambda_0 = E * nu / ((1.0 + nu) * (1.0 - 2.0 * nu));
 
 	std::vector<Particle> particles;
-	std::vector<std::vector<Vec3>> grid;
-    std::vector<std::vector<bool>> solid;
+	std::vector<Vec3> grid;
+    std::vector<bool> solid;
 
     Vec2 normalize(Vec2 v) { 
         double xx = v.x * dx;
@@ -226,6 +227,8 @@ struct GrainSimDomain {
 
         return Vec2(xx, yy);
     }
+
+    int grid_index(int i, int j) const { return i * n + j; }
 };
 
 std::vector<GrainSimDomain> domains;
@@ -274,7 +277,7 @@ void advance(double domain_id) {
 	
     for (int i = 0; i <= n; i++)
     for (int j = 0; j <= n; j++)
-        grid[i][j] = Vec3(0, 0, 0);
+        grid[domain.grid_index(i, j)] = Vec3(0, 0, 0);
 	
     // --- P2G: Particle to Grid ---
     for (auto &p : particles) {
@@ -317,9 +320,9 @@ void advance(double domain_id) {
             int gx = base_x + i;
             int gy = base_y + j;
             if(gx < 0 || gx > n || gy < 0 || gy > n) continue;
-            if(solid[gx][gy]) continue; // Skip solid cells
+            if(solid[domain.grid_index(gx, gy)]) continue; // Skip solid cells
 
-            grid[gx][gy] += weight * (mv + Vec3(affine * dpos, 0.0));
+            grid[domain.grid_index(gx, gy)] += weight * (mv + Vec3(affine * dpos, 0.0));
         }
     }
 
@@ -328,7 +331,7 @@ void advance(double domain_id) {
     
     for (int i = 0; i <= n; i++)
     for (int j = 0; j <= n; j++) {
-        auto &g = grid[i][j];
+        auto &g = grid[domain.grid_index(i, j)];
 		
         if (g.z > 0) g /= g.z;
         g += dt * Vec3(0, gravity, 0);  // Gravity
@@ -337,42 +340,39 @@ void advance(double domain_id) {
     // --- Collision ---
     for (int i = 0; i <= n; i++)
     for (int j = 0; j <= n; j++) {
-        if(solid[i][j]) grid[i][j] = Vec3(0, 0, 0);
+        if(solid[domain.grid_index(i, j)]) grid[domain.grid_index(i, j)] = Vec3(0, 0, 0);
     }
 
     // --- No wall Boundary ---
     if(wl) {
         for(int i = 0; i < b; i++)
         for(int j = 0; j <= n; j++)
-            grid[i][j].x = std::max(0., grid[i][j].x);
+            grid[domain.grid_index(i, j)].x = std::max(0., grid[domain.grid_index(i, j)].x);
     }
 
     if(wr) {
         for(int i = n-b+1; i <= n; i++)
         for(int j = 0; j <= n; j++)
-            grid[i][j].x = std::min(0., grid[i][j].x);
+            grid[domain.grid_index(i, j)].x = std::min(0., grid[domain.grid_index(i, j)].x);
     }
 
     if(wt) {
         for(int j = n-b+1; j <= n; j++)
         for(int i = 0; i <= n; i++)
-            grid[i][j].y = std::min(0., grid[i][j].y);
+            grid[domain.grid_index(i, j)].y = std::min(0., grid[domain.grid_index(i, j)].y);
     }
 
     if(wb) {
         for(int j = 0; j < b; j++)
         for(int i = 0; i <= n; i++)
-            grid[i][j].y = std::max(0., grid[i][j].y);
+            grid[domain.grid_index(i, j)].y = std::max(0., grid[domain.grid_index(i, j)].y);
     }
     
-    double gra_min = granular > 0.? 1. - 2.5e-2 / (.3 + granular * .7) : 1.;
-    double gra_max = granular > 0.? 1. + 7.5e-3 / (.3 + granular * .7) : 1.;
+    double gra_min = granular > 0.? 1. - 2.5e-2 / (.3 + granular * .7) : std::numeric_limits<double>::min();
+    double gra_max = granular > 0.? 1. + 7.5e-3 / (.3 + granular * .7) : std::numeric_limits<double>::max();
     
     // --- G2P: Grid to Particle & Plasticity Update ---
     for (auto &p : particles) {
-        int base_x = (int)(p.x.x * inv_dx - 0.5);
-        int base_y = (int)(p.x.y * inv_dx - 0.5);
-        
         if(!p.active) {
         	p.v.y  += dt * gravity;
         	p.x    += dt * p.v;
@@ -381,6 +381,9 @@ void advance(double domain_id) {
         	p.force = Vec2(0., 0.);
         	continue;
         }
+        
+        int base_x = (int)(p.x.x * inv_dx - 0.5);
+        int base_y = (int)(p.x.y * inv_dx - 0.5);
         
         Vec2 fx = p.x * inv_dx - Vec2(base_x, base_y);
 
@@ -400,7 +403,7 @@ void advance(double domain_id) {
             int gx = base_x + i;
             int gy = base_y + j;
             if(gx < 0 || gx > n || gy < 0 || gy > n) continue;
-            Vec2 grid_v(grid[gx][gy].x, grid[gx][gy].y);
+            Vec2 grid_v(grid[domain.grid_index(gx, gy)].x, grid[domain.grid_index(gx, gy)].y);
             
             double weight = w[i].x * w[j].y;
             p.v += weight * grid_v;
@@ -419,11 +422,9 @@ void advance(double domain_id) {
         Mat2 svd_u, sig, svd_v;
         svd(F, svd_u, sig, svd_v);
 
-        if (granular > 0.) {
-            sig.m[0][0] = std::clamp(sig.m[0][0], gra_min, gra_max);
-            sig.m[1][1] = std::clamp(sig.m[1][1], gra_min, gra_max);
-        }
-
+        sig.m[0][0] = std::clamp(sig.m[0][0], gra_min, gra_max);
+        sig.m[1][1] = std::clamp(sig.m[1][1], gra_min, gra_max);
+        
         double oldJ = F.det();
         F = svd_u * sig * svd_v.transpose();
         p.Jp = std::clamp(p.Jp * oldJ / F.det(), 0.6, 20.0);
@@ -441,8 +442,8 @@ cfunction double grainSim_init(double size) {
     domain.n = isize;
     domain.dx = 1.0 / domain.n;
     domain.inv_dx = 1.0 / domain.dx;
-    domain.grid.resize(  domain.n + 1, std::vector<Vec3>(domain.n + 1, Vec3(0,0,0) ));
-    domain.solid.resize( domain.n + 1, std::vector<bool>(domain.n + 1, false       ));
+    domain.grid.resize(  (domain.n + 1) * (domain.n + 1), Vec3(0,0,0) );
+    domain.solid.resize( (domain.n + 1) * (domain.n + 1), false       );
     domains.push_back(domain);
 
 	return domains.size() - 1;
@@ -455,7 +456,7 @@ cfunction double grainSim_refresh(double domain_id) {
 	
     for (int i = 0; i <= n; i++)
     for (int j = 0; j <= n; j++)
-        solid[i][j] = false;
+        solid[domain.grid_index(i, j)] = false;
         
    return 0;
 }
@@ -613,7 +614,7 @@ cfunction double grainSim_render_grid_velocity(double domain_id, double scale, v
 
     for (int y = 0; y < n; y++)
     for (int x = 0; x < n; x++) {
-        Vec3   gr  = grid[x][n-y-1];
+        Vec3   gr  = grid[domain.grid_index(x, n-y-1)];
         double vel = sqrt(gr.x * gr.x + gr.y * gr.y) * scale;
 
         outputBufferVec[y * n + x] = grey_to_color(vel);
@@ -633,7 +634,7 @@ cfunction double grainSim_render_grid_density(double domain_id, double scale, vo
 
     for (int y = 0; y < n; y++)
     for (int x = 0; x < n; x++) {
-        double den = grid[x][n-y-1].z * scale;
+        double den = grid[domain.grid_index(x, n-y-1)].z * scale;
 
         outputBufferVec[y * n + x] = grey_to_color(den);
     }
@@ -940,7 +941,7 @@ cfunction double grainSim_Solid_Rectangle(double domain_id, double x, double y, 
         int _y = n - j;
         
         if (_x >= x - width && _x <= x + width && _y >= y - height && _y <= y + height)
-            domain.solid[i][j] = true;
+            domain.solid[domain.grid_index(i, j)] = true;
     }
 
     return 0;
@@ -959,14 +960,14 @@ cfunction double grainSim_Solid_Circle(double domain_id, double x, double y, dou
         int _y = n - j;
         
         if ((_x - x) * (_x - x) / r2x + (_y - y) * (_y - y) / r2y <= 1.0)
-            domain.solid[i][j] = true;
+            domain.solid[domain.grid_index(i, j)] = true;
     }
 
     return 0;
 }
 cfunction double grainSim_Solid_Buffer(double domain_id, void* buffer) {
     DOMAIN_CHECK(domain_id)
-
+	
 	int n = domain.n;
 
     uint8_t* solid_buffer = static_cast<uint8_t*>(buffer);
@@ -976,7 +977,7 @@ cfunction double grainSim_Solid_Buffer(double domain_id, void* buffer) {
         int _x = i;
         int _y = n - j - 1;
         
-        domain.solid[i][j] = solid_buffer[_y * n + _x] != 0;
+        domain.solid[domain.grid_index(i, j)] = solid_buffer[_y * n + _x] != 0;
     }
     
     return 0;

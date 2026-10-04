@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.22.0.2",
+    "changes": [
+      {
+        "date": "2026-10-04T00:00:26.087Z",
+        "node": "GlobalVar",
+        "commit": "**GlobalVar**: Remove \"Duplicate globalvar name\" popup when trying to rename globalvar with the same name."
+      }
+    ]
+  },
+  {
     "version": "1.21.6.001",
     "changes": [
       {

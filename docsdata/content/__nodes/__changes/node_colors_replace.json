@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.22.0.201",
+    "changes": [
+      {
+        "date": "2026-10-04T06:36:47.943Z",
+        "node": "Replace Colors] Color pair can now be add, remove, modify independently.  - [Replace Colors",
+        "commit": "**Replace Colors] Color pair can now be add, remove, modify independently.  - [Replace Colors**: Add matching controls (threshold, alpha)."
+      }
+    ]
+  },
+  {
     "version": "1.21.7.110",
     "changes": [
       {

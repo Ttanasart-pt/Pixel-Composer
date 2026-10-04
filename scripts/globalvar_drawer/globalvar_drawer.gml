@@ -1,3 +1,5 @@
+globalvar GLOBALVAR_HOVER; GLOBALVAR_HOVER = undefined;
+
 function GlobalVarDrawer() constructor {
 	ID = UUID_generate();
 	editing = false;
@@ -170,6 +172,8 @@ function GlobalVarDrawer() constructor {
             var lb_w    = widg[5];
 			
 			if(labHov) {
+				// GLOBALVAR_HOVER = _inp;
+				
 				if(DOUBLE_CLICK) {
 	            	renaming = _inp;
 					tb_rename.activate(_inp.name);
@@ -187,7 +191,7 @@ function GlobalVarDrawer() constructor {
             	var wdx = lb_x - pdx / 2;
             	var wdy = yy;
             	
-            	var wdw = clamp(ww * .4, lb_w, ui(200)) - pdx; 
+            	var wdw = clamp(ww * .4, lb_w - ui(8), ui(200)) - pdx; 
             	var wdh = line_get_height(_font, 4 + viewMode * 2);
             	
             	tb_rename.setFocusHover(focus, hover);
