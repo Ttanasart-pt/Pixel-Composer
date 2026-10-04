@@ -4341,18 +4341,26 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
     }
     
     function selectDragNode(_node, _add = false) {
-    	if(is_array(_node) && array_length(_node) == 0) return;
+    	if(array_empty(_node)) return;
     	
     	nodes_selecting = is_array(_node)? _node : [ _node ];
     	node_dragging   = array_safe_get_fast(nodes_selecting, 0, noone);
     	
-    	node_dragging.x = mouse_graph_x - node_dragging.w / 2;
-		node_dragging.y = mouse_graph_y - node_dragging.h / 2;
+    	var tx = mouse_graph_x - node_dragging.w / 2;
+		var ty = mouse_graph_y - node_dragging.h / 2;
     	
+    	var dx = tx - node_dragging.x;
+    	var dy = ty - node_dragging.y;
+    	
+    	for( var i = 0, n = array_length(nodes_selecting); i < n; i++ ) {
+			nodes_selecting[i].x += dx;
+			nodes_selecting[i].y += dy;
+    	}
+    		
         node_drag_mx = mouse_graph_x;
         node_drag_my = mouse_graph_y;
-        node_drag_sx = node_dragging.x;
-        node_drag_sy = node_dragging.y;
+        node_drag_sx = tx;
+        node_drag_sy = ty;
         node_drag_ox = -1;
         node_drag_oy = -1;
         
