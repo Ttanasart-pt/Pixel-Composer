@@ -55,6 +55,8 @@ function buttonGroup(_data, _onModify) : widget() constructor {
 			sb_small.register(parent);
 	}
 	
+	////- Draw
+	
 	static drawParam = function(params) {
 		setParam(params);
 		sb_small.setParam(params);
@@ -64,7 +66,6 @@ function buttonGroup(_data, _onModify) : widget() constructor {
 			
 		return draw(params.x, params.y, params.w, params.h, params.data, params.m, params.rx, params.ry);
 	}
-	
 	static draw = function(_x, _y, _w, _h, _selecting, _m = mouse_ui, _rx = 0, _ry = 0) {
 		x = _x;
 		y = _y;
@@ -162,7 +163,7 @@ function buttonGroup(_data, _onModify) : widget() constructor {
 				bx += bww;
 			}
 			
-			if(draw_sel != noone)
+			if(draw_sel != noone) 
 				draw_sprite_stretched_ext(draw_sel[0], 3, draw_sel[1], _y, ww, _h, COLORS._main_accent, 1);	
 			
 			if(hover && point_in_rectangle(_m[0], _m[1], _x, _y, _x + w, _y + _h)) {
@@ -186,6 +187,8 @@ function buttonGroup(_data, _onModify) : widget() constructor {
 		
 		return h;
 	}
+	
+	////- Action
 	
 	static clone = function() { return new buttonGroup(data, onModify); }
 }

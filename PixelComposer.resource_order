@@ -1793,6 +1793,7 @@
     {"name":"font_data","order":10,"path":"scripts/font_data/font_data.yy",},
     {"name":"font_functions","order":12,"path":"scripts/font_functions/font_functions.yy",},
     {"name":"fontScrollBox","order":15,"path":"scripts/fontScrollBox/fontScrollBox.yy",},
+    {"name":"Freetype","order":1,"path":"scripts/Freetype/Freetype.yy",},
     {"name":"FriebaseREST_Firestore_urlUpdateMask","order":20,"path":"scripts/FriebaseREST_Firestore_urlUpdateMask/FriebaseREST_Firestore_urlUpdateMask.yy",},
     {"name":"function_register","order":2,"path":"scripts/function_register/function_register.yy",},
     {"name":"fx_controller","order":1,"path":"scripts/fx_controller/fx_controller.yy",},

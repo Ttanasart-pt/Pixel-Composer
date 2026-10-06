@@ -28,30 +28,30 @@ function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	
 	////- =Font
 	newInput( 1, nodeValue_Font(  "Font", array_safe_get(FONT_INTERNAL, 0, "") )).setVisible(true, false);
-	newInput( 2, nodeValue_Int(   "Size",             16       ));
-	newInput(15, nodeValue_Bool(  "Scale to Fit",     false    ));
+	newInput( 2, nodeValue_Int(   "Size",             16            ));
+	newInput(15, nodeValue_Bool(  "Scale to Fit",     false         ));
 	
 		////- =/Font Settings
-	newInput(35, nodeValue_Font(  "Fallback Font"              )).setVisible(true, false);
-	newInput( 4, nodeValue_Vec2(  "Character Range", [32,128]  ));
-	newInput( 3, nodeValue_Bool(  "Anti-aliasing ",   false    ));
-	newInput(37, nodeValue_Bool(  "Use SDF",          false    ));
+	newInput(35, nodeValue_Font(  "Fallback Font"                   )).setVisible(true, false);
+	newInput( 4, nodeValue_Vec2(  "Character Range", [32,128]       ));
+	newInput( 3, nodeValue_Bool(  "Anti-aliasing ",   false         ));
+	newInput(37, nodeValue_Bool(  "Use SDF",          false         ));
 	
 		////- =/Letter Settings
-	newInput(11, nodeValue_Float( "Letter Spacing",   0        ));
-	newInput(12, nodeValue_Float( "Line Height",      0        ));
-	newInput(36, nodeValue_Bool(  "Monospaced",       false    ));
+	newInput(11, nodeValue_Float( "Letter Spacing",   0             ));
+	newInput(12, nodeValue_Float( "Line Height",      0             ));
+	newInput(36, nodeValue_Bool(  "Monospaced",       false         ));
 	
 	////- =Alignment
-	newInput(27, nodeValue_Int(      "Max Line Width",    0    ));
-	newInput(40, nodeValue_Bool(     "Split Word",        true ));
+	newInput(27, nodeValue_Int(      "Max Line Width",    0         ));
+	newInput(40, nodeValue_Bool(     "Split Word",        true      ));
 	newInput( 7, nodeValue_EButton(  "H Align",           0, array_create(3, THEME.inspector_text_halign) ));
 	newInput( 8, nodeValue_EButton(  "V Align",           0, array_create(3, THEME.inspector_text_valign) ));
 	
 	////- =Path
-	newInput(13, nodeValue_Path(     "Path"                    ));
-	newInput(14, nodeValue_Float(    "Path Shift",        0    ));
-	newInput(30, nodeValue_Bool(     "Rotate Along Path", true ));
+	newInput(13, nodeValue_Path(     "Path"                         ));
+	newInput(14, nodeValue_Float(    "Path Shift",        0         ));
+	newInput(30, nodeValue_Bool(     "Rotate Along Path", true      ));
 	
 	////- =Rendering
 	newInput(28, nodeValue_Bool(     "Round Position",   true       ));
@@ -73,10 +73,10 @@ function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	newInput(21, nodeValue_Rotation( "Wave Phase",     0            ));
 	
 	////- =Trim
-	newInput(23, nodeValue_Bool(     "Trim",               false ));
+	newInput(23, nodeValue_Bool(     "Trim",               false    ));
 	newInput(25, nodeValue_EButton(  "Trim Type",          0, [ "Character", "Word", "Line" ] ));
-	newInput(24, nodeValue_SliRange( "Range",             [0,1]  ));
-	newInput(26, nodeValue_Bool(     "Use Full Text Size", false ));
+	newInput(24, nodeValue_SliRange( "Range",             [0,1]     ));
+	newInput(26, nodeValue_Bool(     "Use Full Text Size", false    ));
 	// 41
 		
 	input_display_list = [ 
@@ -864,6 +864,7 @@ function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 				}
 			}
 		#endregion
+		
 		surface_reset_shader();
 		
 		if(is_surface(_bgSrf)) {
