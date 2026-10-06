@@ -1483,6 +1483,7 @@
     {"id":{"name":"note_text_file_read","path":"notes/note_text_file_read/note_text_file_read.yy",},},
     {"id":{"name":"note_text_file_write","path":"notes/note_text_file_write/note_text_file_write.yy",},},
     {"id":{"name":"note_text","path":"notes/note_text/note_text.yy",},},
+    {"id":{"name":"note_text_freetype","path":"notes/note_text_freetype/note_text_freetype.yy",},},
     {"id":{"name":"note_texture_remap","path":"notes/note_texture_remap/note_texture_remap.yy",},},
     {"id":{"name":"note_threshold_switch","path":"notes/note_threshold_switch/note_threshold_switch.yy",},},
     {"id":{"name":"note_threshold","path":"notes/note_threshold/note_threshold.yy",},},

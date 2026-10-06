@@ -37,7 +37,7 @@ function Node_Text_FreeType(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 		[ "Font",           false ],  1,  3, 
 			[ "/Settings",   true ],  7, 
 			[ "/Lettering", false ], 12, 
-			
+		
 		[ "Alignment",      false ],  8,  9, 
 		[ "Rendering",      false ], 10, 
 		[ "Variables",      false ],  
@@ -143,15 +143,15 @@ function Node_Text_FreeType(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 		}
 		
 		freeType_GetTextBBox(buffer_get_address(bbox_buffer));
-		var tw = buffer_peek(bbox_buffer, 0, buffer_u16);
-		var th = buffer_peek(bbox_buffer, 2, buffer_u16);
+		var tw = buffer_peek(bbox_buffer, 0, buffer_u16) + 2;
+		var th = buffer_peek(bbox_buffer, 2, buffer_u16) + 2;
 		
 		temp_surface[0] = surface_verify(temp_surface[0], tw, th);
 		output_buffer   = buffer_verify(output_buffer, tw * th * 4, buffer_grow, 1);
 		buffer_clear(output_buffer);
 		
 		freeType_setCanvas(buffer_get_address(output_buffer), tw, th);
-		freeType_Render(0, th);
+		freeType_Render(1, th - 1);
 		freeType_fontEnd();
 		
 		buffer_set_surface(output_buffer, temp_surface[0], 0);

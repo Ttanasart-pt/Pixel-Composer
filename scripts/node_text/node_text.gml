@@ -287,6 +287,9 @@ function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	attributes.debug_texture = false;
 	array_push(attributeEditors, Node_Attribute("Debug", function() /*=>*/ {return attributes.debug_texture}, function() /*=>*/ {return new checkBox(function() /*=>*/ {return toggleAttribute("debug_texture")})}));
 	
+	attributes.use_freetype = false;
+	array_push(attributeEditors, Node_Attribute("Use FreeType", function() /*=>*/ {return attributes.use_freetype}, function() /*=>*/ {return new checkBox(function() /*=>*/ {return toggleAttribute("use_freetype", true)})}));
+	
 	static getFontData = function(f, _path, _size, _aa, _sdf) {
 		var _cKey = $"{_path}|{_size}|{_aa}|{_sdf}";
 		if(has(NODE_FONT_CACHE_UV, _cKey)) return NODE_FONT_CACHE_UV[$ _cKey];
@@ -425,8 +428,9 @@ function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		#endregion
 		
 		#region font
-			__f     = font;
+			__use_freetype = attributes.use_freetype;
 			__fData = undefined;
+			__f     = font;
 			
 			if(is_string(_font))   { 
 			 	font    = generateFont(font, _font, _size, _aa, _sdfU); 
@@ -453,6 +457,8 @@ function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 			} // fallback
 			
 			draw_set_font(__f);
+			
+			if(__use_freetype) freetype_set_font(_font, _size, _aa, _trck);
 			
 			__mono  = _mono;
 			__monoW = string_width("W");
@@ -654,15 +660,17 @@ function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 			__wave_shape =  _waveH;
 		#endregion
 		
-		surface_set_shader(_outSurf, sh_node_text_render, true, BLEND.alphamulp);
+		surface_set_shader(_outSurf, __use_freetype? sh_text_freetype_render : sh_node_text_render, true, BLEND.alphamulp);
 			shader_set_interpolation(_outSurf);
 			
 			shader_set_i("debug",      attributes.debug_texture);
 			shader_set_i("useTexture", is_surface(_tex));
 			shader_set_s("texture",    _tex);
 			
-			var _texId = font_get_texture(__f);
-			if(_texId) shader_set_2("textureSize", [1. / texture_get_texel_width(_texId), 1. / texture_get_texel_height(_texId)]);
+			if(!__use_freetype) {
+				var _texId = font_get_texture(__f);
+				if(_texId) shader_set_2("textureSize", [1. / texture_get_texel_width(_texId), 1. / texture_get_texel_height(_texId)]);
+			}
 			
 		if(_ubg) {
 			draw_clear(_bgc);
@@ -689,6 +697,8 @@ function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		__dwDataI  = 0;
 		
 		#region draw
+			if(__use_freetype) freetype_draw_start();
+			
 			if(_use_path) {
 				var _pthl = _path.getLength(0);
 				
@@ -746,6 +756,7 @@ function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 						
 						var _clt  = __colLt[clti];
 						var _c    = colorMultiply(__col, _clt);
+						var chw   = string_width(_chr)
 						draw_set_color(_c);
 						
 						if(__fData) {
@@ -759,7 +770,9 @@ function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 							shader_set_uniform_f_array(uniform_texelData, _guv);
 						}
 						
-						draw_text_transformed(_tx, _ty, _chr, 1, 1, _nor);
+						if(__use_freetype) chw = freetype_draw_char(_tx, _ty, _chr);
+						else               draw_text_transformed(_tx, _ty, _chr, 1, 1, _nor);
+						
 						__dwData[__dwDataI++] = [_tx, _ty, _chr, 1, 1, _nor];
 						
 						if(__outAtlas) array_push(__atlas, { 
@@ -775,7 +788,7 @@ function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 							valign: va, 
 						});
 						
-						__temp_tx += (__mono? __monoW : string_width(_chr)) + __temp_trck;
+						__temp_tx += (__mono? __monoW : chw) + __temp_trck;
 					});
 					
 					ty -= string_height(_str_line) + _line;
@@ -792,6 +805,12 @@ function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 					draw_set_text(__f, fa_left, fa_top, _col);
 					draw_font_data[_array_index] = [__f, fa_left, fa_top, _col];
 					
+					if(__use_freetype) {
+						freeType_setText(_str_line);
+						freeType_GetTextBBox(buffer_get_address(__FREETYPE_BBOX));
+						lh = buffer_peek(__FREETYPE_BBOX, 2, buffer_u16);
+					}
+					
 					tx = _padd[PADDING.left];
 					
 					switch(_hali) {
@@ -801,7 +820,11 @@ function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 					}
 					
 					if(!_drawLetters) {
-						draw_text_transformed(tx, ty, _str_line, _ss, _ss, 0);
+						if(__use_freetype) {
+							freeType_setText(_str_line);
+							freetype_draw_char(tx, ty + lh, _str_line);
+							
+						} else draw_text_transformed(tx, ty, _str_line, _ss, _ss, 0);
 						
 					} else {
 						__temp_tx = tx;
@@ -840,7 +863,8 @@ function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 								shader_set_uniform_f_array(uniform_texelData, _guv);
 							}
 							
-							draw_text_transformed(_tx, _ty, _chr, __temp_ss, __temp_ss, 0);
+							if(__use_freetype) chw = freetype_draw_char(_tx, _ty + lh, _chr);
+							else               draw_text_transformed(_tx, _ty, _chr, __temp_ss, __temp_ss, 0);
 							__dwData[__dwDataI++] = [_tx, _ty, _chr, __temp_ss, __temp_ss, 0];
 							
 							if(__outAtlas) array_push(__atlas, { 
@@ -863,6 +887,8 @@ function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 					ty += (string_height(_str_line) + _line) * _ss;
 				}
 			}
+			
+			if(__use_freetype) freetype_draw_end();
 		#endregion
 		
 		surface_reset_shader();

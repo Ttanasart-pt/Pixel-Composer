@@ -74,6 +74,11 @@ cfunction double freeType_setText(void* _text)      { text = (char*)_text;  retu
 cfunction double freeType_setFontAA(double aa)      { font_aa = (aa != 0.); return 0.; }
 cfunction double freeType_setFontSpacing(double sp) { letter_spacing = sp;  return 0.; }
 
+cfunction double freeType_getLineHeight() {
+    if (!face) return 0.;
+    return face->size->metrics.height / 64.0;
+}
+
     ////- Variables
 const int MAX_AXIS = 16;
 FT_Fixed* var_mm     = nullptr;   // current values, 16.16

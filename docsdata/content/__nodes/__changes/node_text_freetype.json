@@ -1,0 +1,12 @@
+[
+  {
+    "version": "1.22.0.202",
+    "changes": [
+      {
+        "date": "2026-10-06T03:15:55.893Z",
+        "node": "",
+        "commit": "**Draw Text**: add option to use freetype for rendering."
+      }
+    ]
+  }
+]
