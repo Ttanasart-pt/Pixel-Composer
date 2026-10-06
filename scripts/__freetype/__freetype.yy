@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"__freetype",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"__freetype",
+  "parent":{
+    "name":"freetype",
+    "path":"folders/functions/draw/freetype.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

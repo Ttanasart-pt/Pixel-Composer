@@ -1,0 +1,12 @@
+{
+  "$GMShader":"",
+  "%Name":"sh_text_freetype_render",
+  "name":"sh_text_freetype_render",
+  "parent":{
+    "name":"drawer",
+    "path":"folders/nodes/data/generator/drawer.yy",
+  },
+  "resourceType":"GMShader",
+  "resourceVersion":"2.0",
+  "type":1,
+}

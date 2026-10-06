@@ -38,7 +38,7 @@ function SAVE_ALL() {
 
 function SAVE(project = PROJECT) {
 	if(DEMO) return false;
-	print("Saving", project)
+	// print("Saving", project)
 	
 	if(RUN_IDE) PREF_SAVE();
 	

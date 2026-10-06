@@ -4,6 +4,8 @@ import re
 import hashlib
 import argparse
 
+FORCE = False
+
 yycTemplate = """{{
   "$GMExtension":"",
   "%Name": "inlineC",
@@ -110,20 +112,33 @@ def get_msvc_env(vcvars_path):
     return env
 
 vcvars_path = "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Auxiliary\\Build\\vcvars64.bat"
-msvc_env = None
+msvc_env    = None
+vcpkg_root  = "D:\\lib\\vcpkg\\installed\\x64-windows"
 
 def compile_with_msvc(src_file, out_dll):
     msvcPath = "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.44.35207\\bin\\Hostx64\\x64\\cl.exe"
+
     cmd = [
         msvcPath,
         '/LD',
         src_file,
-        f'/Fe:{out_dll}',
+        
         "/EHsc", # Enable C++ exceptions
-        "/std:c++17" # Enable std::clamp and other C++17 features
+        "/std:c++17", # Enable std::clamp and other C++17 features
+                
+        f'/I{vcpkg_root}\\include',
+        f'/I{vcpkg_root}\\include\\freetype',
+
+        f'/Fe:{out_dll}',
+
+        '/link',
+        f'/LIBPATH:{vcpkg_root}\\lib',
+        'freetype.lib',
+
     ]
+
     # Use the captured environment
-    result = subprocess.run(cmd, env={**os.environ, **msvc_env}, shell=True)
+    result = subprocess.run(cmd, env={**os.environ, **msvc_env}, shell=False)
 
     base = os.path.splitext(out_dll)[0]
     for ext in ['.lib', '.exp']:
@@ -178,6 +193,8 @@ def compileFile(srcPath, outDir, _):
     print(f"Compiling {outName}...")
 
     ## Windows
+    print(f"\n===== Compiling for Windows =====\n")
+
     global msvc_env
     if msvc_env is None:
         msvc_env = get_msvc_env(vcvars_path)
@@ -188,41 +205,74 @@ def compileFile(srcPath, outDir, _):
     if os.path.isfile(outPathL):
         os.remove(outPathL)
 
-    compile_with_msvc(srcPath, outPathW)
+    winSucc = compile_with_msvc(srcPath, outPathW)
 
     if os.path.isfile(objPath):
         os.remove(objPath)
 
-    ## Linux (WSL)
-    srcMntPath  = re.sub(r'^[A-Za-z]:', lambda m: '/mnt/' + m.group(0)[0].lower(), os.path.abspath(srcPath).replace("\\", "/"))
-    outMntPathL = re.sub(r'^[A-Za-z]:', lambda m: '/mnt/' + m.group(0)[0].lower(), os.path.abspath(outPathL).replace("\\", "/"))
-    flags = ["-static-libgcc", "-static-libstdc++"]
-    wsl_cmd = [ "wsl", "g++", "-fPIC", "-shared", srcMntPath, "-o", outMntPathL]
-    wsl_cmd.extend(flags)
-    executeCmd(wsl_cmd)
+    if not winSucc:
+        raise Exception(f"Compilation failed for Windows")
 
-    ## MacOS ssh
-
-    scp_cmd = ["scp", srcPath, f"makhamdev@{mac_ip}:/tmp/{outName}.cpp"]
-    executeCmd(scp_cmd)
-
-    ssh_cmd = ["ssh", f"makhamdev@{mac_ip}", f"clang++ -dynamiclib -std=c++17 -target arm64-apple-macos -o /tmp/{outName}.dylib /tmp/{outName}.cpp"]
-    executeCmd(ssh_cmd)
-
-    scp_cmd = ["scp", f"makhamdev@{mac_ip}:/tmp/{outName}.dylib", outPathM]
-    executeCmd(scp_cmd)
-
-    ## Final checks
-    
     if(not os.path.isfile(outPathW)):
         raise Exception(f"Compilation failed: output file {outPathW} not found")
+
+    ## Linux (WSL)
+    print(f"\n===== Compiling for Linux (WSL) =====\n")
+
+    srcMntPath  = re.sub(r'^[A-Za-z]:', lambda m: '/mnt/' + m.group(0)[0].lower(), os.path.abspath(srcPath).replace("\\", "/"))
+    outMntPathL = re.sub(r'^[A-Za-z]:', lambda m: '/mnt/' + m.group(0)[0].lower(), os.path.abspath(outPathL).replace("\\", "/"))
     
+    wsl_cmd = [
+        "wsl", "g++", "-fPIC", "-shared",
+        srcMntPath,
+        "-o", outMntPathL,
+        
+        # 1. Explicitly add both FreeType include directories
+        "-I/usr/include/freetype2",
+        "-I/usr/include",
+        
+        # 2. Link against FreeType library
+        "-lfreetype",
+        
+        # 3. Static flags
+        "-static-libgcc", 
+        "-static-libstdc++",
+    ]
+
+    try:
+        executeCmd(wsl_cmd)
+    except Exception as e:
+        print("Failed to compile on Linux (WSL): " + str(e))
+
     if(not os.path.isfile(outPathL)):
-        raise Exception(f"Compilation failed: output file {outPathL} not found")
+        print(f"Compilation failed: output file {outPathL} not found")
+
+    ## MacOS ssh (don't raise exception if fail)
+    print(f"\n===== Compiling for MacOS via SSH =====\n")
+
+    try:
+        scp_cmd = ["scp", srcPath, f"makhamdev@{mac_ip}:/tmp/{outName}.cpp"]
+        executeCmd(scp_cmd)
+
+        compile_cmd = (
+            f"clang++ -dynamiclib -std=c++17 -target arm64-apple-macos "
+            f"-I/opt/homebrew/include/freetype2 "
+            f"-L/opt/homebrew/lib "
+            f"-lfreetype "
+            f"-o /tmp/{outName}.dylib /tmp/{outName}.cpp"
+        )
+        
+        ssh_cmd = ["ssh", f"makhamdev@{mac_ip}", compile_cmd]
+        executeCmd(ssh_cmd)
+
+        scp_cmd = ["scp", f"makhamdev@{mac_ip}:/tmp/{outName}.dylib", outPathM]
+        executeCmd(scp_cmd)
+    except Exception as e:
+        print("Failed to compile on MacOS: " + str(e))
 
     if(not os.path.isfile(outPathM)):
-        raise Exception(f"Compilation failed: output file {outPathM} not found")
-
+        print(f"Compilation failed: output file {outPathM} not found")
+    
     return {
         "windows": outPathW,
         "linux": outPathL,
@@ -249,9 +299,10 @@ def buildInlineC(fileName, code):
 '''
     full_code += code
     
-    lines  = code.splitlines()
+    lines     = code.splitlines()
     functions = []
-    includes = []
+    includes  = []
+    libraries = []
     includes_re = re.compile(r'#include\s*<([^>]+)>')
 
     for line in lines:
@@ -260,6 +311,11 @@ def buildInlineC(fileName, code):
         match = includes_re.match(line)
         if match:
             includes.append(match.group(1).strip())
+
+        if line.startswith("//lib"):
+            lib_name = line[len("//lib"):].strip()
+            if lib_name:
+                libraries.append(lib_name)
 
         if line.startswith("cfunction "):
             header = line[len("cfunction "):].strip()
@@ -296,6 +352,7 @@ def buildInlineC(fileName, code):
         "code": full_code,
         "includes": includes,
         "functions": functions,
+        "libraries": libraries,
     }
 
 def scanInline(src, fpath):
@@ -367,6 +424,7 @@ def buildExtension(srcArr, extDir):
         code      = src["code"]
         includes  = src["includes"]
         functions = src["functions"]
+        libraries = src["libraries"] if "libraries" in src else []
 
         if ftype == "header":
             scrPath = os.path.join(srcDir, filename)
@@ -401,6 +459,16 @@ def buildExtension(srcArr, extDir):
                 oType=oType
             ) + "\n"
 
+        for lib in libraries:
+            print(f"Adding library: {lib}")
+            files.append(yycfileTemplate.format(
+                dllName=lib,
+                dllNameW=lib,
+                dllNameL=lib,
+                dllNameM=lib,
+                functions=""
+            ))
+
         files.append(yycfileTemplate.format(
             dllName=dllName,
             dllNameW=os.path.basename(dllPathW),
@@ -424,8 +492,8 @@ if __name__ == "__main__":
     extDir = "D:\\Project\\MakhamDev\\LTS-PixelComposer\\PixelComposer\\extensions\\inlineC"
 
     args = parser.parse_args()
-    global FORCE
-    FORCE = args.force
+    if args.force:
+        FORCE = True
 
     srcArr = scanFolder(scriptDir)
     buildExtension(srcArr, extDir)

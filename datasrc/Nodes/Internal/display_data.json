@@ -939,6 +939,7 @@
             "Node_Canvas",
             "Node_Tile_Drawer",
             "Node_Text",
+            "Node_Text_FreeType",
             "Node_Simple_Pattern",
             { "label": "/Shape" },
             "Node_Line",

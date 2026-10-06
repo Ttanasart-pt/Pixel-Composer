@@ -52,10 +52,11 @@ function Node_Image_Animated(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	newInput( 5, nodeValue_Trigger( "Set animation length to match" ));
 	b_match_len = button(function() /*=>*/ { if(array_empty(spr)) return; TOTAL_FRAMES = array_length(spr); }).setText("Match Length");
 	
-	newInput( 4, nodeValue_EScroll( "Loop Modes",        0, ["Loop", "Ping pong", "Hold last frame", "Hide"]       )).rejectArray();
 	newInput( 2, nodeValue_Bool(    "Stretch Frame",     false, "Stretch animation speed to match project length." )).rejectArray();
-	newInput( 9, nodeValue_Int(     "Start Frame",       1    ));
 	newInput( 3, nodeValue_Float(   "Animation Speed",   1    )).rejectArray();
+	
+	newInput( 4, nodeValue_EScroll( "Loop Modes",        0, ["Loop", "Ping pong", "Hold last frame", "Hide"]       )).rejectArray();
+	newInput( 9, nodeValue_Int(     "Start Frame",       1    ));
 	newInput(10, nodeValue_Bool(    "Draw Before Start", true ));
 		
 	////- =Custom Order
@@ -68,8 +69,8 @@ function Node_Image_Animated(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	
 	input_display_list = [ 11, 
 		[ "Image",     false ],  0,  1,  8, 
-		[ "Animation", false ], b_match_len,  4,  2,  9,  3, 10, 
-		[ "Custom Frame Order", false, 6 ],  7, 
+		[ "Animation", false ], b_match_len,  2,  3, -2,  4,  9, 10, 
+		[ "Custom Frame Order", false, 6 ],   7, 
 	];
 	
 	attribute_surface_depth();
@@ -163,9 +164,10 @@ function Node_Image_Animated(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 			var _siz   = getInputData( 8); 
 			
 			var _stret = getInputData( 2);
+			var _rawsp = getInputData( 3);
+			
 			var _loop  = getInputData( 4);
 			var _start = getInputData( 9);
-			var _rawsp = getInputData( 3);
 			var _drawb = getInputData(10);
 			
 			var _cusor = getInputData( 6);
