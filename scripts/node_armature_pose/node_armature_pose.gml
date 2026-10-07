@@ -1,5 +1,7 @@
 #region global & tool
 	FN_NODE_TOOL_INVOKE {
+		hotkeyCustom("Node_Armature_Pose", "Transform Mode",   "T");
+		
 		hotkeyCustom("Node_Armature_Pose", "Move Selection",   "G");
 		hotkeyCustom("Node_Armature_Pose", "Rotate Selection", "R");
 		hotkeyCustom("Node_Armature_Pose", "Scale Selection",  "S");
@@ -439,13 +441,16 @@ function Node_Armature_Pose(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	preview_select_surface = false;
 	setDimension(96, 96);
 	
-	newInput(0, nodeValue_Armature());
-	// 1
+	////- =Armature
+	newInput( 0, nodeValue_Armature());
+	newInput( 1, nodeValue_Vec2(     "Position", [0,0] )).setUnitSimple().setHotkey("G");
+	newInput( 2, nodeValue_Rotation( "Rotation",  0    )).setHotkey("R");
+	// 3
 	
 	newOutput(0, nodeValue_Output("Armature", VALUE_TYPE.armature, noone));
 	
 	input_display_list = [ 
-		[ "Armature", false ], 0, 
+		[ "Armature", false ], 0,  1,  2, 
 		[ "Pose",     false ], 
 	];
 	
@@ -494,7 +499,9 @@ function Node_Armature_Pose(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		bonePose  = _b.clone().connect();
 		bone_array = bonePose.toArray();
 		
-		var _inputs = [ inputs[0] ];
+		var _inputs = [];
+		for( var i = 0; i < input_fix_len; i++) _inputs[i] = inputs[i];
+		
 		var _input_display_list = array_clone(input_display_list_raw, 1);
 		
 		for( var i = 0, n = array_length(bone_array); i < n; i++ ) {
@@ -520,7 +527,11 @@ function Node_Armature_Pose(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	
 	////- Tools
 	
+	tool_transform = new NodeTool( "Transform Mode", THEME.tools_2d_move );
+	
 	tools = [
+		tool_transform,
+		-1,
 		new NodeTool( "Move Selection",   THEME.bone_trans_move   ).setVisible(false).setToolObject(new armature_pose_tool_move(self)),
 		new NodeTool( "Rotate Selection", THEME.bone_trans_rotate ).setVisible(false).setToolObject(new armature_pose_tool_rotate(self)),
 		new NodeTool( "Scale Selection",  THEME.bone_trans_scale  ).setVisible(false).setToolObject(new armature_pose_tool_scale(self)),
@@ -542,6 +553,32 @@ function Node_Armature_Pose(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _params) { 
 		var _b = inputs[0].getValue();
 		if(!is(_b, __Bone) || !is(bonePose, __Bone)) return false;
+		
+		if(isUsingTool(tool_transform)) {
+			var bh = bonePose.getHead(false);
+			var bx = _x + bh.x * _s;
+			var by = _y + bh.y * _s;
+			
+			var _p = inputs[ 1].getValue();
+			var px = bx + _p[0] * _s;
+			var py = by + _p[1] * _s;
+			
+			drawOverlayInput(inputs[ 1].drawOverlay(hover, active, bx, by, _s, _mx, _my, 1));
+			drawOverlayInput(inputs[ 2].drawOverlay(hover, active, px, py, _s, _mx, _my));
+			
+			var dname = attributes.display_name;
+			var dcont = attributes.display_control;
+			
+			attributes.display_name    = false;
+			attributes.display_control = false;
+			
+			bonePose.draw(attributes, false, _x, _y, _s, _mx, _my);
+			
+			attributes.display_name    = dname;
+			attributes.display_control = dcont;
+			
+			return false;
+		}
 		
 		var _hov  = noone;
 		var _bhov = anchor_selecting;
@@ -905,7 +942,11 @@ function Node_Armature_Pose(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		setBone();
 		if(!is(bonePose, __Bone)) return;
 		
-		var _b = getInputData(0);
+		#region data
+			var _b   = getInputData( 0);
+			var _pos = getInputData( 1);
+			var _rot = getInputData( 2);
+		#endregion
 		
 		bonePose.resetPose().setPosition();
 		bonePose.constrains = _b.constrains;
@@ -936,6 +977,10 @@ function Node_Armature_Pose(_x, _y, _group = noone) : Node(_x, _y, _group) const
 			bPose.pose_scale    = bRaw.pose_scale    * _trn[TRANSFORM.sca_x];
 			
 		}
+		
+		bonePose.pose_posit[0] += _pos[0];
+		bonePose.pose_posit[1] += _pos[1];
+		bonePose.pose_rotate   += _rot;
 		
 		bonePose.setPose();
 		bone_bbox   = bonePose.bbox();

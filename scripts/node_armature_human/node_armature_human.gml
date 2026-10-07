@@ -522,6 +522,7 @@ function Node_Armature_Human(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 			
 		#endregion
 		
+		_bone.setIDFromName();
 		_bone.resetPose().setPosition();
 		bone_bbox = _bone.bbox();
 		

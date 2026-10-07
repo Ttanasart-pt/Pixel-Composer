@@ -167,16 +167,20 @@ function __Bone(_parent = noone, _distance = 0, _direction = 0, _angle = 0, _len
 		
 		if(control) {
 			var cc = draw_get_color();
-			draw_set_color(c_white);
-			if(!parent_anchor && parent != noone) {
-				// var _p  = parent.getTail();
-				var _p  = parent.getHead();
-				var _px = _x + _p.x * _s;
-				var _py = _y + _p.y * _s;
-				draw_line_dashed(_px, _py, p0x, p0y, 1);
-			}
+			draw_set_color_alpha(c_white);
 			
-			draw_sprite_ui(THEME.preview_bone_IK, 0, p0x, p0y,,,, cc, draw_get_alpha());
+			if(attributes.display_control) {
+				if(!parent_anchor && parent != noone) {
+					var _p  = parent.getHead();
+					var _px = _x + _p.x * _s;
+					var _py = _y + _p.y * _s;
+					draw_set_alpha(.3);
+					draw_line_dashed(_px, _py, p0x, p0y, 1);
+					draw_set_alpha(1);
+				}
+				
+				draw_sprite_ui(THEME.preview_bone_IK, 0, p0x, p0y,,,, cc, draw_get_alpha());
+			}
 			
 			if((edit & BONE_EDIT.body) && point_in_circle(_mx, _my, p0x, p0y, 24))
 				hover = [ self, 2, bone_head_pose ];
@@ -193,7 +197,9 @@ function __Bone(_parent = noone, _distance = 0, _direction = 0, _angle = 0, _len
 				var _p  = parent.getTail();
 				var _px = _x + _p.x * _s;
 				var _py = _y + _p.y * _s;
+				draw_set_alpha(.3);
 				draw_line_dashed(_px, _py, p0x, p0y, 2, 8);
+				draw_set_alpha(1);
 			}
 			
 			if(attributes.display_bone == 0) {
@@ -495,7 +501,7 @@ function __Bone(_parent = noone, _distance = 0, _direction = 0, _angle = 0, _len
 		
 	}
 	static   setPoseTransform = function() {
-		if(is_main) { array_foreach(childs, function(c,i) /*=>*/ {return c.setPoseTransform()}); return; }
+		// if(is_main) { array_foreach(childs, (c,i) => c.setPoseTransform()); return; }
 		
 		__setPoseTransform();
 		array_foreach(childs, function(c,i) /*=>*/ {return c.setPoseTransform()});
@@ -892,4 +898,12 @@ function __Bone(_parent = noone, _distance = 0, _direction = 0, _angle = 0, _len
 		
 	}
 	
+	static setIDFromName = function() {
+		ID = md5_string_unicode(name);
+		for( var i = 0, n = array_length(childs); i < n; i++ ) 
+			childs[i].setIDFromName();
+		
+		if(is(IKTarget, __Bone))	
+			IKTargetID = IKTarget.ID;
+	}
 }

@@ -6,6 +6,11 @@
         "date": "2026-10-07T05:50:52.464Z",
         "node": "",
         "commit": "**Armature**: IK now connect from target parent instead of target bone he's origin point."
+      },
+      {
+        "date": "2026-10-07T08:01:48.075Z",
+        "node": "",
+        "commit": "Introduced"
       }
     ]
   },

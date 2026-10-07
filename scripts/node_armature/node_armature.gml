@@ -21,15 +21,17 @@
 	}
 	
 	function __node_bone_attributes() {
-		attributes.display_name = true;
-		attributes.display_bone = 0;
+		attributes.display_name    = true;
+		attributes.display_bone    = 0;
+		attributes.display_control = true;
 		
 		attributes.hovering = true;
 		attributes.focusing = true;
 		
 		array_push(attributeEditors,  "Display" );
-		array_push(attributeEditors, Node_Attribute("Display name", function() /*=>*/ {return attributes.display_name}, function() /*=>*/ {return new checkBox(function() /*=>*/ {return toggleAttribute("display_name")})}));
-		array_push(attributeEditors, Node_Attribute("Display bone", function() /*=>*/ {return attributes.display_bone}, function() /*=>*/ {return new scrollBox(__txts(["Octahedral", "Stick"]), function(i) /*=>*/ {return setAttribute("display_bone", i)})}));
+		array_push(attributeEditors, Node_Attribute("Display Name",    function() /*=>*/ {return attributes.display_name},    function() /*=>*/ {return new checkBox(function() /*=>*/ {return toggleAttribute("display_name")})}));
+		array_push(attributeEditors, Node_Attribute("Display Bone",    function() /*=>*/ {return attributes.display_bone},    function() /*=>*/ {return new scrollBox(__txts(["Octahedral", "Stick"]), function(i) /*=>*/ {return setAttribute("display_bone", i)})}));
+		array_push(attributeEditors, Node_Attribute("Display Control", function() /*=>*/ {return attributes.display_control}, function() /*=>*/ {return new checkBox(function() /*=>*/ {return toggleAttribute("display_control")})}));
 	}
 	
 	function armature_tool_move(_node) : ToolObject() constructor {
