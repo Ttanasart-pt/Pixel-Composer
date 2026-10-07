@@ -24,7 +24,7 @@ function Node_Armature_Skin(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		
 		var _inpR = newInput(index+0, nodeValue_Range(    "Radius", [1,1]     ));
 		var _inpC = newInput(index+1, nodeValue_Gradient( "Color",  gra_white ));
-		var _inpT = newInput(index+2, nodeValue_Surface(  "Texture"           )).setVisible(false, false);
+		var _inpT = newInput(index+2, nodeValue_Surface(  "Texture"           )).setVisible(true, false);
 		
 		postCreateNewInput(index);
 		return [_inpR, _inpC, _inpT];
