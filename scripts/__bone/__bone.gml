@@ -20,8 +20,8 @@ function __Bone(_parent = noone, _distance = 0, _direction = 0, _angle = 0, _len
 	
 	distance  = _distance;  pose_distance    = _distance;
 	direction = _direction; pose_direction   = _direction;
-	angle     = _angle;     pose_angle       = _angle;
 	length    = _length;    pose_length      = _length;
+	angle     = _angle;     pose_angle       = _angle;
 	
 	pose_posit  = [0,0]; pose_local_posit  = [0,0]; pose_apply_posit  = [0,0];
 	pose_rotate = 0;     pose_local_rotate = 0;     pose_apply_rotate = 0;
@@ -168,8 +168,9 @@ function __Bone(_parent = noone, _distance = 0, _direction = 0, _angle = 0, _len
 		if(control) {
 			var cc = draw_get_color();
 			draw_set_color(c_white);
-			if(!parent_anchor && parent.parent != noone) {
-				var _p  = parent.getTail();
+			if(!parent_anchor && parent != noone) {
+				// var _p  = parent.getTail();
+				var _p  = parent.getHead();
 				var _px = _x + _p.x * _s;
 				var _py = _y + _p.y * _s;
 				draw_line_dashed(_px, _py, p0x, p0y, 1);

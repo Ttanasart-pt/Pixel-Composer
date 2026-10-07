@@ -8,7 +8,7 @@ function Node_GrainSim_Spawn(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	manual_ungroupable = false;
 	update_on_frame    = true;
 	
-	newInput( 6, nodeValue_Bool(    "Active",      true  ));
+	newInput( 6, nodeValue_Bool( "Active", true ));
 	
 	////- =Domain
 	newInput( 0, nodeValue_Struct( "Domain" )).setCustomData(global.GRAINSIM_JUNC).setVisible(true, true);

@@ -1,0 +1,11 @@
+{
+  "$GMNotes":"v1",
+  "%Name":"note_grainSim_inline",
+  "name":"note_grainSim_inline",
+  "parent":{
+    "name":"group",
+    "path":"folders/nodes/data/simulation/grainSim/group.yy",
+  },
+  "resourceType":"GMNotes",
+  "resourceVersion":"1.1",
+}

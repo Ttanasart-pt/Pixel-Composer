@@ -1,0 +1,11 @@
+{
+  "$GMNotes":"v1",
+  "%Name":"note_grainSim_solid",
+  "name":"note_grainSim_solid",
+  "parent":{
+    "name":"grain",
+    "path":"folders/nodes/data/simulation/grainSim/grain.yy",
+  },
+  "resourceType":"GMNotes",
+  "resourceVersion":"1.1",
+}

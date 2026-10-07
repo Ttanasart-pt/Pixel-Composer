@@ -5,8 +5,8 @@
   "isDnD":false,
   "name":"node_armature_skin",
   "parent":{
-    "name":"armature",
-    "path":"folders/nodes/data/armature.yy",
+    "name":"render",
+    "path":"folders/nodes/data/armature/render.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

@@ -5,8 +5,8 @@
   "isDnD":false,
   "name":"node_armature_from_path",
   "parent":{
-    "name":"armature",
-    "path":"folders/nodes/data/armature.yy",
+    "name":"create",
+    "path":"folders/nodes/data/armature/create.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

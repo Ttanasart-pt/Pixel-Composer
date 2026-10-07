@@ -1148,7 +1148,6 @@ function Node_Armature(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 							if(_bone == anc.parent) {
 								_reach = true;
 								bne    = anc;
-								anc    = anc.parent;
 								break;
 							}
 						}
@@ -1165,9 +1164,9 @@ function Node_Armature(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 								var _len = point_distance(p0.x, p0.y, p1.x, p1.y);
 								var _ang = point_direction(p0.x, p0.y, p1.x, p1.y);
 								
-								recordAction(ACTION_TYPE.struct_modify, bones)
-									.setName("Adjust bone IK")
-									.setRef(self);
+								recordAction(ACTION_TYPE.struct_modify, bones).setName("Adjust bone IK").setRef(self);
+								
+								print(anc);
 								
 								var IKbone = new __Bone(anc, _len, _ang, ik_dragging.angle + 90, 0, self);
 								anc.addChild(IKbone);

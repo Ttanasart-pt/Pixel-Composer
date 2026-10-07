@@ -13,7 +13,7 @@ function Node_GrainSim_Solid(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	////- =Domain
 	newInput( 0, nodeValue_Struct( "Domain" )).setCustomData(global.GRAINSIM_JUNC).setVisible(true, true);
 	
-	////- =Destroy
+	////- =Solid
 	newInput( 1, nodeValue_EScroll( "Shape",      0, [ "Rectangle", "Circle", "Surface" ] ));
 	newInput( 2, nodeValue_Vec2(    "Center",   [.5,.5] )).setUnitSimple();
 	newInput( 3, nodeValue_Vec2(    "Size",     [.5,.5] )).setUnitSimple();
@@ -23,8 +23,8 @@ function Node_GrainSim_Solid(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	newOutput( 0, nodeValue_Output("Domain", VALUE_TYPE.struct, {} )).setCustomData(global.GRAINSIM_JUNC);
 	
 	input_display_list = [ 5, 
-		[ "Domain",  false ],  0, 
-		[ "Destroy", false ],  1,  2,  3,  4,  
+		[ "Domain", false ],  0, 
+		[ "Solid",  false ],  1,  2,  3,  4,  
 	];
 	
 	////- Node

@@ -3,8 +3,8 @@
   "%Name":"sh_armature_skin_render",
   "name":"sh_armature_skin_render",
   "parent":{
-    "name":"armature",
-    "path":"folders/nodes/data/armature.yy",
+    "name":"render",
+    "path":"folders/nodes/data/armature/render.yy",
   },
   "resourceType":"GMShader",
   "resourceVersion":"2.0",

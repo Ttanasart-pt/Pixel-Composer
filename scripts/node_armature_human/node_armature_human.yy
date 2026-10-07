@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"node_armature_human",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"node_armature_human",
+  "parent":{
+    "name":"create",
+    "path":"folders/nodes/data/armature/create.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

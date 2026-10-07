@@ -3,8 +3,8 @@
   "%Name":"note_armature_pose_stagger",
   "name":"note_armature_pose_stagger",
   "parent":{
-    "name":"armature",
-    "path":"folders/nodes/data/armature.yy",
+    "name":"pose",
+    "path":"folders/nodes/data/armature/pose.yy",
   },
   "resourceType":"GMNotes",
   "resourceVersion":"1.1",

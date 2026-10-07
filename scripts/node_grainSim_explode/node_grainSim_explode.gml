@@ -14,7 +14,7 @@ function Node_GrainSim_Explode(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	newInput( 0, nodeValue_Struct(  "Domain"  )).setCustomData(global.GRAINSIM_JUNC).setVisible(true, true);
 	newInput( 5, nodeValue_Trigger( "Trigger" ));
 	
-	////- =Area
+	////- =Explosion
 	newInput( 2, nodeValue_Vec2(  "Center",   [.5,.5] )).setUnitSimple();
 	newInput( 3, nodeValue_Vec2(  "Size",     [.5,.5] )).setUnitSimple();
 	newInput( 4, nodeValue_Float( "Strength",  100    ));
@@ -23,8 +23,8 @@ function Node_GrainSim_Explode(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	newOutput( 0, nodeValue_Output("Domain", VALUE_TYPE.struct, {} )).setCustomData(global.GRAINSIM_JUNC);
 	
 	input_display_list = [ 1, 
-		[ "Domain", false ],  0,  5, 
-		[ "Area",   false ],  2,  3,  4, 
+		[ "Domain",    false ],  0,  5, 
+		[ "Explosion", false ],  2,  3,  4, 
 	];
 	
 	////- Node

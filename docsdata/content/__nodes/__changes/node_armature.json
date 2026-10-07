@@ -1,5 +1,20 @@
 [
   {
+    "version": "1.22.0.203",
+    "changes": [
+      {
+        "date": "2026-10-07T05:50:52.458Z",
+        "node": "Armature",
+        "commit": "**Armature**: IK now connect from target parent instead of target bone he's origin point."
+      },
+      {
+        "date": "2026-10-07T05:50:52.460Z",
+        "node": "",
+        "commit": "**Armature**: IK now connect from target parent instead of target bone he's origin point."
+      }
+    ]
+  },
+  {
     "version": "1.21.9.206",
     "changes": [
       {

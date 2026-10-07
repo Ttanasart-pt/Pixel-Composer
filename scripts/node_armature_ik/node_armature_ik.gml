@@ -100,6 +100,7 @@ function Node_Armature_IK(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		var IKbone = new __Bone(_orig.parent, _len, _ang, 0, 0, self);
 		_orig.parent.addChild(IKbone);
 		
+		IKbone.control    = true;
 		IKbone.IKlength   = _blen;
 		IKbone.IKTarget   = _targ;
 		IKbone.IKTargetID = _targ.ID;

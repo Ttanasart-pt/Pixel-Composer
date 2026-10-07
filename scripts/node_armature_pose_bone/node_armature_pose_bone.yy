@@ -5,8 +5,8 @@
   "isDnD":false,
   "name":"node_armature_pose_bone",
   "parent":{
-    "name":"armature",
-    "path":"folders/nodes/data/armature.yy",
+    "name":"pose",
+    "path":"folders/nodes/data/armature/pose.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

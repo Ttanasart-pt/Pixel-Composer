@@ -3,8 +3,8 @@
   "%Name":"note_armature_mirror",
   "name":"note_armature_mirror",
   "parent":{
-    "name":"armature",
-    "path":"folders/nodes/data/armature.yy",
+    "name":"modify",
+    "path":"folders/nodes/data/armature/modify.yy",
   },
   "resourceType":"GMNotes",
   "resourceVersion":"1.1",

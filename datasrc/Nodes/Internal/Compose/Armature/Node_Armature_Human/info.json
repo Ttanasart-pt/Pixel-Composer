@@ -1,0 +1,7 @@
+{
+    "name":          "Armature Humanoid",
+    "spr":           "s_node_armature_human",
+    "baseNode":      "Node_Armature_Human",
+    "pxc_version":    122000,
+    "deprecated":     false,
+}

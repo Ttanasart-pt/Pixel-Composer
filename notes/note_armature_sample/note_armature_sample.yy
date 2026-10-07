@@ -3,8 +3,8 @@
   "%Name":"note_armature_sample",
   "name":"note_armature_sample",
   "parent":{
-    "name":"armature",
-    "path":"folders/nodes/data/armature.yy",
+    "name":"render",
+    "path":"folders/nodes/data/armature/render.yy",
   },
   "resourceType":"GMNotes",
   "resourceVersion":"1.1",

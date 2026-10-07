@@ -406,7 +406,7 @@ function NodeObject(_name, _node, _tooltip = "") constructor {
 		_createFn = asset_get_index(_createFn);
 		if(_createFn != -1) setBuild(_createFn);
 		
-		if(has(_data, "deprecated"))
+		if(_data[$ "deprecated"] == true)
 			isDeprecated();
 		
 		if(has(_data, "alias"))

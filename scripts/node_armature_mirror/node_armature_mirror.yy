@@ -5,8 +5,8 @@
   "isDnD":false,
   "name":"node_armature_mirror",
   "parent":{
-    "name":"armature",
-    "path":"folders/nodes/data/armature.yy",
+    "name":"modify",
+    "path":"folders/nodes/data/armature/modify.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

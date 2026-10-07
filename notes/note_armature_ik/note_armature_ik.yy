@@ -3,8 +3,8 @@
   "%Name":"note_armature_ik",
   "name":"note_armature_ik",
   "parent":{
-    "name":"armature",
-    "path":"folders/nodes/data/armature.yy",
+    "name":"create",
+    "path":"folders/nodes/data/armature/create.yy",
   },
   "resourceType":"GMNotes",
   "resourceVersion":"1.1",

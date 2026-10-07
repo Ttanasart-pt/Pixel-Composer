@@ -13,7 +13,7 @@ function Node_GrainSim_Wake(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	////- =Domain
 	newInput( 0, nodeValue_Struct( "Domain" )).setCustomData(global.GRAINSIM_JUNC).setVisible(true, true);
 	
-	////- =Destroy
+	////- =Wake
 	newInput( 1, nodeValue_EScroll( "Shape",      0, [ "Rectangle", "Circle", "Surface" ] ));
 	newInput( 2, nodeValue_Vec2(    "Center",   [.5,.5] )).setUnitSimple();
 	newInput( 3, nodeValue_Vec2(    "Size",     [.5,.5] )).setUnitSimple();
@@ -24,7 +24,7 @@ function Node_GrainSim_Wake(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	
 	input_display_list = [ 5, 
 		[ "Domain",  false ],  0, 
-		[ "Destroy", false ],  1,  2,  3,  4, 
+		[ "Wake",    false ],  1,  2,  3,  4, 
 	];
 	
 	////- Node

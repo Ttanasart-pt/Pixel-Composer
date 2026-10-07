@@ -17,11 +17,11 @@ function Node_Armature_From_Path(_x, _y, _group = noone) : Node(_x, _y, _group) 
 		[ "Path", false ], 0, 1,  
 	];
 	
+	////- Preview
+	
 	__node_bone_attributes();
 	
 	bone_bbox = [0, 0, 1, 1, 1, 1];
-	
-	////- Preview
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _params) { 
 		var hovering = false;

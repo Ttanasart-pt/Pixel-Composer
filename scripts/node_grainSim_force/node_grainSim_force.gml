@@ -8,7 +8,7 @@ function Node_GrainSim_Force(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	manual_ungroupable = false;
 	update_on_frame    = true;
 	
-	newInput( 5, nodeValue_Bool(    "Active",        true  ));
+	newInput( 5, nodeValue_Bool( "Active", true ));
 	
 	////- =Domain
 	newInput( 0, nodeValue_Struct( "Domain" )).setCustomData(global.GRAINSIM_JUNC).setVisible(true, true);
@@ -20,16 +20,17 @@ function Node_GrainSim_Force(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	newInput( 7, nodeValue_Surface( "Surface"           ));
 	
 	////- =Force
-	newInput( 4, nodeValue_Vec2(    "Force",      [ 4,.0] )).setUnitSimple(false);
-	newInput( 6, nodeValue_Float(   "Center Velocity", 0  ));
-	// 7
+	newInput( 4, nodeValue_Vec2(    "Force",    [4,.0] )).setUnitSimple(false);
+	newInput( 8, nodeValue_Float(   "Strength",     1  ));
+	newInput( 6, nodeValue_Float(   "Positional Velocity", 0  ));
+	// 9
 	
 	newOutput( 0, nodeValue_Output("Domain", VALUE_TYPE.struct, {} )).setCustomData(global.GRAINSIM_JUNC);
 	
 	input_display_list = [ 5, 
 		[ "Domain", false ],  0, 
 		[ "Spawn",  false ],  1,  2,  3,  7, 
-		[ "Force",  false ],  4,  6, 
+		[ "Force",  false ],  4,  8,  6, 
 	];
 	
 	////- Node
@@ -83,6 +84,7 @@ function Node_GrainSim_Force(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 			var _surf   = inputs[ 7].getValue();
 			
 			var _force  = inputs[ 4].getValue();
+			var _strn   = inputs[ 8].getValue();
 			var _velo   = inputs[ 6].getValue();
 			
 			inputs[ 2].setVisible(_shape != 2);
@@ -109,8 +111,8 @@ function Node_GrainSim_Force(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 			fy += (cy - prev_y) * _velo;
 		}
 		
-		fx =  fx * 10000;
-		fy = -fy * 10000;
+		fx =  fx * _strn * 10000;
+		fy = -fy * _strn * 10000;
 		
 		grainSim_setForceParam(fx, fy);
 		
