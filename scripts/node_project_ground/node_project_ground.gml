@@ -29,7 +29,7 @@ function Node_Project_Ground(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 	input_display_list = [ 
 		[ "Ground",    false ],  0, 
 		[ "Rendering", false ],  1, 
-		[ "Objects",   false ],  2, 
+		[ "Objects",   false ],  2, -2, 
 	];
 	
 	input_display_dynamic = [ 0, 1, 2, ];
@@ -40,7 +40,7 @@ function Node_Project_Ground(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 	
 	attribute_interpolation(true, true);
 	
-	temp_surface = [noone, noone];
+	temp_surface = [noone, noone, noone];
 	temp_buff    = buffer_create(1, buffer_grow, 1);
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _params) { 
@@ -70,6 +70,14 @@ function Node_Project_Ground(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 		temp_surface[0] = surface_verify(temp_surface[0], _dim[0], _dim[1]);
 		temp_surface[1] = surface_verify(temp_surface[1], _dim[0], 1, surface_r16float);
 		
+		surface_set_shader(_outSurf, sh_sample, true, BLEND.normal);
+			shader_set_interpolation(_ground);
+			if(_drawGr == 2) {
+				shader_set_interpolation_surface(_ground);
+				draw_surface(_ground, 0, 0);
+			}
+		surface_reset_shader();
+		
 		var po = [0,0];
 		var objectTrans = [];
 		
@@ -80,20 +88,26 @@ function Node_Project_Ground(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 			var _offs = _data[_ind+2];
 			if(!is_surface(_surf)) continue;
 			
-			var _sdim = surface_get_dimension(_surf);
+			var bbox = surface_get_bbox(_surf);
+			var minx = bbox[0];
+			var miny = bbox[1];
+			var conw = bbox[2];
+			var conh = bbox[3];
 			
-			var px = _posi[0] - _sdim[0] / 2;
-			var py = _posi[1] - _sdim[1] / 2;
+			temp_surface[2] = surface_verify(temp_surface[2], conw, conh);
+			surface_set_shader(temp_surface[2]);
+				draw_surface(_surf, -minx, -miny);
+			surface_reset_shader();
 			
-			var dx = px;
-			var dy = py;
+			var px = _posi[0] - conw / 2;
+			var py = _posi[1] - conh / 2;
 			
 			surface_set_shader(temp_surface[0], sh_project_ground_filter);
 				shader_set_i( "filter", 0 );
 				draw_surface(_ground, 0, 0);
 				
 				shader_set_i( "filter", 1 );
-				draw_surface(_surf, dx, dy);
+				draw_surface(temp_surface[2], px, py);
 			surface_reset_shader();
 			
 			surface_set_shader(temp_surface[1], sh_project_ground_drop);
@@ -109,21 +123,32 @@ function Node_Project_Ground(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 			
 			var _gapDist = [];
 			var _minDist = infinity;
-			var j = 0;
 			
-			repeat(_dim[0]) {
+			var soli = false;
+			var xmin = 0;
+			var xmax = 0;
+			
+			for( var j = 0; j < _dim[0]; j++ ) {
 				var dd = buffer_read(temp_buff, buffer_f16);
+				
+				if(!soli) xmin = j;
+				_gapDist[j] = dd;
+				
 				if(dd < 0) continue;
 				
 				_minDist = min(_minDist, dd);
-				_gapDist[j++] = dd;
+				soli = true;
+				xmax = j;
 			}
 			
+			_gapDist = array_copy_trim(_gapDist, -1);
 			var _rot = 0;
 			
 			if(_minDist < infinity) {
 				if(_rotate) {
 					var dat  = heightRegress(_gapDist);
+					// print("_gapDist", _gapDist) print("dat", dat)
+					
 					_minDist = dat.offset;
 					_rot     = -dat.angle;
 				}
@@ -131,41 +156,33 @@ function Node_Project_Ground(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 				py += _minDist;
 			}
 			
-			py -= _offs;
-			
-			array_push(objectTrans, [
-				_surf,
-				[px,py],
-				_rot,
-			]);
-		}
-		
-		surface_set_shader(_outSurf, sh_sample, true, BLEND.normal);
-			shader_set_interpolation(_ground);
-			if(_drawGr == 2) {
-				shader_set_interpolation_surface(_ground);
-				draw_surface(_ground, 0, 0);
-			}
-			
-			for( var i = 0, n = array_length(objectTrans); i < n; i++ ) {
-				var _obj = objectTrans[i];
+			surface_set_shader(_outSurf, sh_sample, false, BLEND.normal);
+				var dx = px;
+				var dy = py;
 				
-				var _surf = _obj[0];
-				var _posi = _obj[1];
-				var _rot  = _obj[2];
+				var ax = conw/2;
+				var ay = conh + _offs;
 				
-				var _sdim = surface_get_dimension(_surf);
-				var dx = _posi[0];
-				var dy = _posi[1] + _sdim[1];
+				dx += ax;
+				dy += ay;
 				
-				po  = point_rotate_origin(0, -_sdim[1], _rot, po);
+				po  = point_rotate(-ax, -ay, 0, 0, _rot, po);
+				
 				dx += po[0];
 				dy += po[1];
 				
-				shader_set_interpolation_surface(_surf);
-				draw_surface_ext(_surf, dx, dy, 1, 1, _rot, c_white, 1);
-			}
+				shader_set_interpolation_surface(temp_surface[2]);
+				draw_surface_ext(temp_surface[2], dx, dy, 1, 1, _rot, c_white, 1);
+			surface_reset_shader();
 			
+			// surface_set_target(_outSurf);
+			// 	draw_point_color(px + conw/2 - 1, py + conh - 1, c_red);
+			// surface_reset_target();
+			
+		}
+		
+		surface_set_shader(_outSurf, sh_sample, false, BLEND.normal);
+			shader_set_interpolation(_ground);
 			if(_drawGr == 1) {
 				shader_set_interpolation_surface(_ground);
 				draw_surface(_ground, 0, 0);
@@ -188,9 +205,10 @@ function Node_Project_Ground(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 	        while (h >= 2) {
 	            var a = hull[h - 2], b = hull[h - 1];
 	            var cross = (b - a) * (heights[i] - heights[a]) - (heights[b] - heights[a]) * (i - a);
-	            if (cross >= 0) h--;
+	            if (cross <= 0) h--;
 	            else break;
 	        }
+	        
 	        hull[h++] = i;
 	    }
 	
@@ -199,7 +217,7 @@ function Node_Project_Ground(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 	
 	    var x0 = hull[k], x1 = hull[k + 1];
 	    var slope  = (heights[x1] - heights[x0]) / (x1 - x0);
-	    var offset = heights[x0] - slope * x0;
+	    var offset = heights[x0] + slope * (meanX - x0);
 	
 	    return { offset: offset, angle: darctan(slope) };
 	}

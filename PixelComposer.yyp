@@ -2203,6 +2203,7 @@
     {"id":{"name":"node_anim_curve","path":"scripts/node_anim_curve/node_anim_curve.yy",},},
     {"id":{"name":"node_anim_loop","path":"scripts/node_anim_loop/node_anim_loop.yy",},},
     {"id":{"name":"node_anim_priority","path":"scripts/node_anim_priority/node_anim_priority.yy",},},
+    {"id":{"name":"node_anim_speed","path":"scripts/node_anim_speed/node_anim_speed.yy",},},
     {"id":{"name":"node_animation_control","path":"scripts/node_animation_control/node_animation_control.yy",},},
     {"id":{"name":"node_application_in","path":"scripts/node_application_in/node_application_in.yy",},},
     {"id":{"name":"node_application_out","path":"scripts/node_application_out/node_application_out.yy",},},

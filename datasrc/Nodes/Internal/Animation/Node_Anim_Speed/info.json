@@ -1,0 +1,6 @@
+{
+    "name":          "Animation Speed",
+    "spr":           "s_node_anim_speed",
+    "baseNode":      "Node_Anim_Speed",
+    "pxc_version":    122000,
+}

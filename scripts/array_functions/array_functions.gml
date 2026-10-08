@@ -578,9 +578,27 @@
 	function array_copy_trim_end(arr, _amo) {
 		var len = array_length(arr);
 		if(_amo >= len) return [];
-
+		
 		var _arr = array_create(len - _amo);
 		array_copy(_arr, 0, arr, 0, len - _amo);
+		return _arr;
+	}
+	
+	function array_copy_trim(arr, val) {
+		var len = array_length(arr);
+		var indS = 0;
+		var indE = len - 1;
+	
+		for(indS = 0; indS < len; indS++) {
+			if(arr[indS] != val) break;
+		}
+	
+		for(indE = len - 1; indE >= 0; indE--) {
+			if(arr[indE] != val) break;
+		}
+		
+		var _arr = array_create(indE - indS + 1);
+		array_copy(_arr, 0, arr, indS, indE - indS + 1);
 		return _arr;
 	}
 	
