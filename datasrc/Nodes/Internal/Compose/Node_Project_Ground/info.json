@@ -1,0 +1,6 @@
+{
+    "name":          "Drop to Ground",
+    "spr":           "s_node_project_ground",
+    "baseNode":      "Node_Project_Ground",
+    "pxc_version":    122000,
+}

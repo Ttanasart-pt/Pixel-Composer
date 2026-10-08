@@ -72,7 +72,7 @@ vec3 hsv2rgb(vec3 c) {
     return c.z * mix(K.xxx, clamp(p - K.xxx, 0.0, 1.0), c.y);
 }
 
-float random (in vec2 st, float seed) { return fract(sin(dot(st.xy + vec2(21.456, 46.856), vec2(12.989, 78.233))) * mod(758.54 + seed, 100000.) / 10.); }
+float random (in vec2 st, float seed) { return fract(sin(dot(st.xy + vec2(21.45, 46.86), vec2(12.98, 78.23))) * mod(58.54 + seed, 10000.) / 10.); }
 float randomFloat (in vec2 st, float seed) {
 	float sedSt = floor(seed);
 	float sedFr = fract(seed);
@@ -91,7 +91,7 @@ float smooth(in float n, in float itr) {
 	return mix(n, _n1, _fr);
 }
 
-vec2 random2 (in vec2 st, float seed) { return vec2(randomFloat(st, seed), randomFloat(st, seed + 1.864354564)); }
+vec2 random2 (in vec2 st, float seed) { return vec2(randomFloat(st, seed), randomFloat(st, seed + 1.86)); }
 
 float noise (in vec2 st, in vec2 scale) {
     vec2 cellMin = floor(st);
@@ -173,7 +173,7 @@ float _perlin(in vec2 st) {
 		} else 
 			n += _n * amp;
 		
-		pos += random2(vec2(float(i)), 0.574186) * sc;
+		pos += random2(vec2(float(i)), 0.57) * sc;
 		
 		if(type == 1) {
 			sc  *= 2.;
@@ -245,16 +245,16 @@ void main() {
 		gl_FragColor = vec4(vec3(perlin(uv)), 1.0);
 		
 	} else if(colored == 1) {
-		float randR = colorRanR[0] + perlin(uv                        ) * (colorRanR[1] - colorRanR[0]);
-		float randG = colorRanG[0] + perlin(uv + vec2(1.7227, 4.55529)) * (colorRanG[1] - colorRanG[0]);
-		float randB = colorRanB[0] + perlin(uv + vec2(6.9950, 6.82063)) * (colorRanB[1] - colorRanB[0]);
+		float randR = colorRanR[0] + perlin(uv                   ) * (colorRanR[1] - colorRanR[0]);
+		float randG = colorRanG[0] + perlin(uv + vec2(1.22, 4.55)) * (colorRanG[1] - colorRanG[0]);
+		float randB = colorRanB[0] + perlin(uv + vec2(6.95, 6.20)) * (colorRanB[1] - colorRanB[0]);
 		
 		gl_FragColor = vec4(randR, randG, randB, 1.0);
 		
 	} else if(colored == 2) {
-		float randH = colorRanR[0] + perlin(uv                        ) * (colorRanR[1] - colorRanR[0]);
-		float randS = colorRanG[0] + perlin(uv + vec2(1.7227, 4.55529)) * (colorRanG[1] - colorRanG[0]);
-		float randV = colorRanB[0] + perlin(uv + vec2(6.9950, 6.82063)) * (colorRanB[1] - colorRanB[0]);
+		float randH = colorRanR[0] + perlin(uv                   ) * (colorRanR[1] - colorRanR[0]);
+		float randS = colorRanG[0] + perlin(uv + vec2(1.72, 4.55)) * (colorRanG[1] - colorRanG[0]);
+		float randV = colorRanB[0] + perlin(uv + vec2(6.99, 6.20)) * (colorRanB[1] - colorRanB[0]);
 		
 		gl_FragColor = vec4(hsv2rgb(vec3(randH, randS, randV)), 1.0) * v_vColour;
 	}

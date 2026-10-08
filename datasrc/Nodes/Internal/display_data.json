@@ -1112,6 +1112,7 @@
             "Node_UV_Blend", 
             "Node_Compose_Texture", 
             "Node_Weld", 
+            "Node_Project_Ground", 
             { "label": "/Align" },
             "Node_Stack",
             "Node_Image_Grid",

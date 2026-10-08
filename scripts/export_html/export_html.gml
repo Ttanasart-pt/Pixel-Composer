@@ -226,6 +226,7 @@ function __EXPORT_SHOWCASE(project = PROJECT) {
 	directory_verify(path);
 	
 	var _rName = filename_name_only(path);
+	var _oName = string_replace_all(_rName, " ", "%20");
 	var _fName = string_replace_all(_rName, " ", "-");
 	if(string_pos("_", _fName)) _fName = string_split(_fName, "_")[0];
 	
@@ -276,7 +277,7 @@ function __EXPORT_SHOWCASE(project = PROJECT) {
 	
 	if(!_anim) closeProject();
 	print("Export folder complete.");
-	print($"{_rName} #PixelComposer\n\nhttps://pixel-composer.com/projects/{string_replace_all(_fName, "-", "%20")}");
+	print($"{_rName} #PixelComposer\n\nhttps://pixel-composer.com/projects/{_oName}");
 	
 	// ProcessExecuteAsync("python \"D:/Project/MakhamDev/LTS-PixelComposer/PROMOTIONAL MATERIALS/site/gen.py\"");
 	// print("Push to Github complete");

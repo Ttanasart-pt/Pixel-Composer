@@ -1,0 +1,12 @@
+{
+  "$GMShader":"",
+  "%Name":"sh_project_ground_drop",
+  "name":"sh_project_ground_drop",
+  "parent":{
+    "name":"project_ground",
+    "path":"folders/nodes/data/compose/project_ground.yy",
+  },
+  "resourceType":"GMShader",
+  "resourceVersion":"2.0",
+  "type":1,
+}
