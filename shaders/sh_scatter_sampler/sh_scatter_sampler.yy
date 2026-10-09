@@ -3,8 +3,8 @@
   "%Name":"sh_scatter_sampler",
   "name":"sh_scatter_sampler",
   "parent":{
-    "name":"generator",
-    "path":"folders/nodes/data/generator.yy",
+    "name":"populate",
+    "path":"folders/nodes/data/generator/populate.yy",
   },
   "resourceType":"GMShader",
   "resourceVersion":"2.0",

@@ -3,8 +3,8 @@
   "%Name":"note_repeat",
   "name":"note_repeat",
   "parent":{
-    "name":"generator",
-    "path":"folders/nodes/data/generator.yy",
+    "name":"populate",
+    "path":"folders/nodes/data/generator/populate.yy",
   },
   "resourceType":"GMNotes",
   "resourceVersion":"1.1",

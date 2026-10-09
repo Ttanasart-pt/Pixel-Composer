@@ -5,8 +5,8 @@
   "isDnD":false,
   "name":"node_repeat",
   "parent":{
-    "name":"generator",
-    "path":"folders/nodes/data/generator.yy",
+    "name":"populate",
+    "path":"folders/nodes/data/generator/populate.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

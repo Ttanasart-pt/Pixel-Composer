@@ -1,9 +1,9 @@
 {
   "$GMScript":"v1",
-  "%Name":"node_scatter",
+  "%Name":"node_repeat_path",
   "isCompatibility":false,
   "isDnD":false,
-  "name":"node_scatter",
+  "name":"node_repeat_path",
   "parent":{
     "name":"populate",
     "path":"folders/nodes/data/generator/populate.yy",

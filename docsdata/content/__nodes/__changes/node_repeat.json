@@ -1,5 +1,20 @@
 [
   {
+    "version": "1.22.0.206",
+    "changes": [
+      {
+        "date": "2026-10-09T23:56:56.735Z",
+        "node": "",
+        "commit": "**Text**: Node now draw output text instead of node raw input."
+      },
+      {
+        "date": "2026-10-09T23:56:56.735Z",
+        "node": "",
+        "commit": "**Text**: Node now draw output text instead of node raw input."
+      }
+    ]
+  },
+  {
     "version": "1.22.10.201",
     "changes": [
       {

@@ -3,8 +3,8 @@
   "%Name":"sh_pixel_sample",
   "name":"sh_pixel_sample",
   "parent":{
-    "name":"generator",
-    "path":"folders/nodes/data/generator.yy",
+    "name":"populate",
+    "path":"folders/nodes/data/generator/populate.yy",
   },
   "resourceType":"GMShader",
   "resourceVersion":"2.0",

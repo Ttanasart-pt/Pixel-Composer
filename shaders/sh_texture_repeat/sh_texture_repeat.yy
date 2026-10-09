@@ -3,8 +3,8 @@
   "%Name":"sh_texture_repeat",
   "name":"sh_texture_repeat",
   "parent":{
-    "name":"generator",
-    "path":"folders/nodes/data/generator.yy",
+    "name":"populate",
+    "path":"folders/nodes/data/generator/populate.yy",
   },
   "resourceType":"GMShader",
   "resourceVersion":"2.0",

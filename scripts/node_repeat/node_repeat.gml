@@ -32,10 +32,10 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	
 	////- =Output
 	newInput(35, nodeValue_EScroll(  "Output Dimension Type", OUTPUT_SCALING.constant, [
-        new scrollItem( "Same as input"),
-        new scrollItem( "Constant"),
-        new scrollItem( "Relative to input").setTooltip("Set dimension as a multiple of input surface."),
-        new scrollItem( "Fit content").setTooltip("Automatically set dimension to fit content."),
+        new scrollItem( "Same as Input"     ),
+        new scrollItem( "Constant"          ),
+        new scrollItem( "Relative to Input" ).setTooltip("Set dimension as a multiple of input surface."),
+        new scrollItem( "Fit Content"       ).setTooltip("Automatically set dimension to fit content."),
     ]));
     
 	newInput( 1, nodeValue_Dimension());
