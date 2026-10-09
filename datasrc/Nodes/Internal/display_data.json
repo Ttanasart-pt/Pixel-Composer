@@ -1416,6 +1416,7 @@
             { "label": "Surface" },
             "Node_Surface_data",
             "Node_Surface_Is_Empty",
+            "Node_Surface_Get_BBOX",
             "Node_Track_Pixel",
             "Node_IsoSurf",
             "Node_Surface_From_Buffer",
