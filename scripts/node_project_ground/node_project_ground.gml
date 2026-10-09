@@ -33,7 +33,6 @@ function Node_Project_Ground(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 	];
 	
 	input_display_dynamic = [ 0, 1, 2, ];
-	
 	setDynamicInput(3);
 	
 	////- Nodes

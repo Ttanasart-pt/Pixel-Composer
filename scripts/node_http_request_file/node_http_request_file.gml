@@ -15,7 +15,7 @@ function Node_HTTP_Request_File(_x, _y, _group = noone) : Node(_x, _y, _group) c
 	downloading     = false;
 	
 	insp1button = button(function() /*=>*/ {return request()}).setTooltip(__txt("Download"))
-		.setIcon(THEME.sequence_control, 1, COLORS._main_value_positive).iconPad(ui(6)).setBaseSprite(THEME.button_hide_fill);
+		.setIcon(THEME.http_request_icon, 0, COLORS._main_value_positive).iconPad(ui(6)).setBaseSprite(THEME.button_hide_fill);
 	
 	static request = function() {
 		if(project.online) return false;

@@ -128,6 +128,7 @@
     "hamburger":                          { "path": "./icon/s_hamburger.png",                               "s": 1, "x": 12, "y": 12 },
     "heart":                              { "path": "./icon/s_heart.png",                                   "s": 1, "x":  8, "y":  8 },
     "home":                               { "path": "./icon/s_home.png",                                    "s": 1, "x": 12, "y": 12 },
+    "http_request_icon":                  { "path": "./icon/s_http_request.png",                            "s": 1, "x": 12, "y": 12 },
     "icon_3d_anchor":                     { "path": "./icon/s_3d_anchor.png",                               "s": 2, "x": 12, "y": 12 },
     "icon_active_split":                  { "path": "./icon/s_circle_12.png",                               "s": 1, "x":  6, "y":  6 },
     "icon_canvas":                        { "path": "./icon/s_icon_canvas.png",                             "s": 1, "x":  8, "y":  8 },

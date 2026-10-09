@@ -14,7 +14,7 @@ function Node_Anim_Speed(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	
 	input_display_list = [ 
 		[ "Surface",   false ],  0,
-		[ "Animation", false ],  1,
+		[ "Animation", false ],  1,  2, 
 	];
 	
 	////- Nodes

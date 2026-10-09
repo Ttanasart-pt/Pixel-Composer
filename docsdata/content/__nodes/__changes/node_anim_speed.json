@@ -1,0 +1,12 @@
+[
+  {
+    "version": "1.22.0.205",
+    "changes": [
+      {
+        "date": "2026-10-09T00:46:14.293Z",
+        "node": "HTTP] Add PUT, PATCH, DELETE, and custom request method. - [HTTP",
+        "commit": "**HTTP] Add PUT, PATCH, DELETE, and custom request method. - [HTTP**: Add request header input."
+      }
+    ]
+  }
+]
