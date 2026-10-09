@@ -16,6 +16,29 @@ function Path(_node) constructor {
 		return (hv ?? false) || node.w_hovering;
 	}
 	
+	static drawUI = function(_x, _y, _s) {
+		static res = 32;
+		var ox, oy, nx, ny;
+		
+		var _amo = getLineCount();
+		var _ind = 0;
+		
+		draw_set_color(COLORS._main_icon);
+		for( var j = 0; j < _amo; j++ )
+		for( var i = 0; i <  res; i++ ) {
+			var _r = i / res;
+			getPointRatio(_r, j, __temp_p);
+			
+			nx = _x + __temp_p.x * _s;
+			ny = _y + __temp_p.y * _s;
+			
+			if(i) draw_line(ox, oy, nx, ny);
+			
+			ox = nx;
+			oy = ny;
+		}
+	}
+	
 	static getLoop          = function() /*=>*/ {return loop};
 	
 	static getBoundary      = function() /*=>*/ {return boundary};

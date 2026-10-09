@@ -94,6 +94,7 @@ function Node_Particle(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 	newInput(45, nodeValue_Bool(    "Follow Path",   false        ));
 	newInput(46, nodeValue_Path(    "Path"                        ));
 	newInput(82, nodeValue_Bool(    "Path Loop",     true         ));
+	newInput(84, nodeValue_EButton( "Path Index",    0, ["Random", "Ordered"] ));
 	newInput(66, nodeValue_Range2(  "Path Range",    [0,0,1,1]    ));
 	newInput(80, nodeValue_Range(   "Range Shift",   [0,0]        ));
 	newInput(81, nodeValue_Curve(   "Path Speed",    CURVE_DEF_01 ));
@@ -135,7 +136,7 @@ function Node_Particle(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 	newInput(25, nodeValue_Int(      "Boundary Data", []   )).setArrayDepth(1).setVisible(false, true);
 	newInput(31, nodeValue_Surface(  "Atlas",         []   )).setArrayDepth(1);
 	newInput(48, nodeValue_Trigger(  "Reset Seed"          ))
-	// 84
+	// 85
 	
 	newOutput( 0, nodeValue_Output( "Surface Out", VALUE_TYPE.surface,  noone ));
 	newOutput( 1, nodeValue_Output( "Data",        VALUE_TYPE.particle, []    ));
@@ -203,7 +204,7 @@ function Node_Particle(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 		
 		__inspc(ui(6), true, false, ui(3)), 
 		
-		[ "Follow Path",  true, 45 ], 46, 82, 66, 80, 81, 83, 47, 
+		[ "Follow Path",  true, 45 ], 46, 82, 84, 66, 80, 81, 83, 47, 
 		[ "Physics",      true, 57 ], 54,  7, 
 			[ "/Gravity", false    ], 19, 33, 
 			[ "/Turning", false    ], 34, 35, 36, 
@@ -390,6 +391,7 @@ function Node_Particle(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 			
 			var _path       	= inputs_data[46];
 			var _pathLoop       = inputs_data[82];
+			var _pathInd        = inputs_data[84];
 			var _pathRange      = inputs_data[66];
 			var _pathRangeShf   = inputs_data[80];
 			var _pathDiv        = inputs_data[83];
@@ -419,6 +421,8 @@ function Node_Particle(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 		var _posDist = undefined;
 		var _amo = irandom_range(_spawn_amount[0], _spawn_amount[1]);
 		if(_spawn_period <= 0) _spawn_period = _amo;
+		
+		var _path_amo = is_path(_path)? _path.getLineCount() : 1;
 		
 		if(_distrib == 2) {
 			dist_map_cache = get_points_from_dist(_dist_map, _amo, seed, 8, dist_map_cache);
@@ -562,7 +566,15 @@ function Node_Particle(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 					random_range(_pathRange[2], _pathRange[3]) + _path_range_shift 
 				];
 				
+				var _path_index = 0;
+				
+				switch(_pathInd) {
+					case 0 : _path_index = irandom(_path_amo - 1);           break;
+					case 1 : _path_index = safe_mod(spawn_index, _path_amo); break;
+				}
+				
 				part.setPath( _path, _path_range, curve_path_spd, _pathDiv, curve_path_div, _pathLoop );
+				part.pathIndex = _path_index;
 			#endregion
 			
 			#region Physics
