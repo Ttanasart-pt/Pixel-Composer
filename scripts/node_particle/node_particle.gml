@@ -574,7 +574,7 @@ function Node_Particle(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 				}
 				
 				part.setPath( _path, _path_range, curve_path_spd, _pathDiv, curve_path_div, _pathLoop );
-				part.pathIndex = _path_index;
+				part.pathIndex = _path_index; 
 			#endregion
 			
 			#region Physics

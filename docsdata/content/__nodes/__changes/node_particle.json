@@ -6,6 +6,11 @@
         "date": "2026-10-09T02:46:01.198Z",
         "node": "any",
         "commit": "Introduced"
+      },
+      {
+        "date": "2026-10-09T02:46:14.526Z",
+        "node": "Particle",
+        "commit": "**Particle**: Add follow path index selection type."
       }
     ]
   },
