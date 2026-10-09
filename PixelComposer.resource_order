@@ -4043,7 +4043,6 @@
     {"name":"s_node_honeycomb_noise","order":78,"path":"sprites/s_node_honeycomb_noise/s_node_honeycomb_noise.yy",},
     {"name":"s_node_hough_transform","order":97,"path":"sprites/s_node_hough_transform/s_node_hough_transform.yy",},
     {"name":"s_node_hsv_channel","order":40,"path":"sprites/s_node_hsv_channel/s_node_hsv_channel.yy",},
-    {"name":"s_node_http_request_file","order":44,"path":"sprites/s_node_http_request_file/s_node_http_request_file.yy",},
     {"name":"s_node_http_request","order":43,"path":"sprites/s_node_http_request/s_node_http_request.yy",},
     {"name":"s_node_icon","order":45,"path":"sprites/s_node_icon/s_node_icon.yy",},
     {"name":"s_node_image_animated","order":2,"path":"sprites/s_node_image_animated/s_node_image_animated.yy",},

@@ -2,9 +2,17 @@ function Node_HTTP_Request_File(_x, _y, _group = noone) : Node(_x, _y, _group) c
 	name = "HTTP Download";
 	
 	newInput( 0, nodeValue_Text(    "Address" ));
+	
+	////- =File
 	newInput( 1, nodeValue_EScroll( "Format", 0, [ "Image" ] ));
 	
 	newOutput(0, nodeValue_Output("Result", VALUE_TYPE.surface, noone));
+	
+	input_display_list = [  0,
+		[ "File", false ],  1, 
+	]
+	
+	////- Node
 	
 	attributes.temp_path = TEMPDIR + UUID_generate();
 	spr = noone;
@@ -36,7 +44,7 @@ function Node_HTTP_Request_File(_x, _y, _group = noone) : Node(_x, _y, _group) c
 				attributes.temp_path = pth;
 				if(_form == 0 && file_exists_empty(pth) && file_is_graphic(pth)) {
 				    if(sprite_exists(spr)) sprite_delete(spr);
-				    spr = sprite_add(pth, 0, false, false, 0, 0);
+				    spr = sprite_add_map(pth);
 				}
 				
 				downloading = false;
