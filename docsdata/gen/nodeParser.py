@@ -76,6 +76,16 @@ def readNodeFile(baseNode):
     inputs  = juncParser.parseInputs(inputs)
     inputs  = [i for i in inputs if i["name"] != ""]
 
+    # Remove empty Separators
+    i = 0
+    while i < len(inputs) - 1:
+        if inputs[i]["type"] == "separator" and inputs[i + 1]["type"] == "separator":
+            inputs.pop(i)
+        else:
+            i += 1
+    if inputs and inputs[-1]["type"] == "separator":
+        inputs.pop()
+
     outputs = re.findall(r"^\s*newOutput.*$", script, re.MULTILINE)
     outputs = juncParser.parseOutputs(outputs)
 

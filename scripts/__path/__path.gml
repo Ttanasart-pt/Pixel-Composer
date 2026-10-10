@@ -52,8 +52,8 @@ function Path(_node) constructor {
 	static getPointRatio    = function(_rat, _ind = 0, out = undefined) { return getPointDistance(frac(_rat) * lengthTotal, _ind, out); }
 	
 	static getPointTangent  = function(_rat, _ind = 0) {
-		var _r0 = loop? pfract(_rat - .001) : clamp(_rat - .001, .001, 0.999); 
-		var _r2 = loop? pfract(_rat + .001) : clamp(_rat + .001, .001, 0.999); 
+		var _r0 = loop? pfract(_rat - .01) : clamp(_rat - .01, .0, 0.999); 
+		var _r2 = loop? pfract(_rat + .01) : clamp(_rat + .01, .0, 0.999); 
 		
 		getPointRatio(_r0, _ind, __temp_p);
 		var _p0x = __temp_p.x;

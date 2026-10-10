@@ -1,0 +1,12 @@
+{
+  "$GMShader":"",
+  "%Name":"sh_sample_transform",
+  "name":"sh_sample_transform",
+  "parent":{
+    "name":"main",
+    "path":"folders/shader/main.yy",
+  },
+  "resourceType":"GMShader",
+  "resourceVersion":"2.0",
+  "type":1,
+}

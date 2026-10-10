@@ -194,7 +194,6 @@ function Node_Stack(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 				surface_reset_shader();
 				
 				ppind = !ppind;
-					
 			}
 			
 			surface_set_shader(_outSurf, noone, true, BLEND.over);
