@@ -1346,8 +1346,19 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		inputs_data	= array_verify_min(inputs_data, array_length(inputs));
 		__frame     = frame;
 		
+		__dimUpdate = false;
+		if(dimension_index >= 0 && dimension_index < array_length(inputs))  {
+			var _dimInput = inputs[dimension_index];
+			__dimUpdate   = _dimInput.isDynamic();
+		}
+		
 		array_foreach(inputs, function(_inp, i) /*=>*/ {
-			if(!is(_inp, NodeValue) || !_inp.isDynamic()) return true;
+			if(!is(_inp, NodeValue)) return true;
+			
+			var _update  = _inp.isDynamic();
+			if(_inp.unit.mode == VALUE_UNIT.reference) 
+				_update |= __dimUpdate;
+			if(!_update) return true;
 			
 			var val = _inp.getValue(__frame);
 			if(_inp.bypass_use) _inp.getBypassJunc().setValue(val);
