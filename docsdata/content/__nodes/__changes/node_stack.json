@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.22.0.206",
+    "changes": [
+      {
+        "date": "2026-10-10T01:31:56.372Z",
+        "node": "",
+        "commit": "**Stack**: Add Reverse Depth option."
+      }
+    ]
+  },
+  {
     "version": "1.21.8.003",
     "changes": [
       {

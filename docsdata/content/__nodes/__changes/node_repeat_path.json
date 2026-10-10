@@ -6,6 +6,11 @@
         "date": "2026-10-10T01:17:34.401Z",
         "node": "",
         "commit": "**Color Data**: Add hex output."
+      },
+      {
+        "date": "2026-10-10T01:31:56.365Z",
+        "node": "Stack",
+        "commit": "**Stack**: Add Reverse Depth option."
       }
     ]
   }

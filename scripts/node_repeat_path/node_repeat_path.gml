@@ -69,8 +69,8 @@ function Node_Repeat_Path(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 			var _scaC = _data[15], _scaCurve = inputs[12].attributes.curved? new curveMap(_scaC) : undefined;
 			var _scar = _data[13];
 			
-			inputs[ 4].setVIsible(_atyp == 1);
-			inputs[ 5].setVIsible(_atyp == 2);
+			inputs[ 4].setVisible(_atyp == 1);
+			inputs[ 5].setVisible(_atyp == 2);
 			
 			if(!is_surface(_surf)) return _outSurf;
 			if(!is_path(_path))    return _outSurf;
@@ -84,7 +84,9 @@ function Node_Repeat_Path(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 		
 		var pthLen = _path.getLength();
 		var pthInd = 0;
-		var __p = new __vec2P();
+		
+		var __p  = new __vec2P();
+		var __p2 = [0,0];
 		
 		surface_set_shader(_outSurf);
 			while(!done) {
@@ -92,27 +94,34 @@ function Node_Repeat_Path(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 				var _sw = surface_get_width(__s);
 				var _sh = surface_get_height(__s);
 				
-				var pthRat = (drwDis + _sw / 2) / pthLen;
-				__p = _path.getPointRatio(pthRat, pthInd, __p);
+				var pthRat;
+				switch(_atyp) {
+					case 0 : 
+					case 2 : pthRat = (drwDis + _sw / 2) / pthLen; break;
+					case 1 : pthRat = drwAmo / _amou; break;
+				}
+				
+				var __p    = _path.getPointRatio(pthRat, pthInd, __p);
+				var _tang  = _path.getPointTangent(pthRat, pthInd);
 				
 				var _px = __p.x;
 				var _py = __p.y;
 				
+				var dpp = point_rotate_origin(-_sw/2, _sh/2, _tang, __p2);
+				_px += __p2[0];
+				_py += __p2[1];
+				
+				draw_surface_ext(_surf, _px, _py, 1, 1, _tang, c_white, 1);
+				
 				drwAmo++;
 				switch(_atyp) {
-					case 0 : 
-						drwDis += _sw; 
-						done = drwDis > pthLen; 
-						break;
-						
-					case 1 : 
-						done = drwAmo > _amou; 
-						break;
-						
-					case 2 : 
-						drwDis += _dist; 
-						done = drwDis > pthLen; 
-						break;
+					case 0 : drwDis += _sw; 
+						     done = drwDis > pthLen; break;
+						     
+					case 1 : done = drwAmo > _amou;  break;
+					
+					case 2 : drwDis += _dist; 
+						     done = drwDis > pthLen; break;
 				}
 			}
 		surface_reset_shader();
