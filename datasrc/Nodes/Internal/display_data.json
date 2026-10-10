@@ -1350,6 +1350,7 @@
             { "label": "/Modifier" },
             "Node_Path_Transform",
             "Node_Path_Map_Area",
+            "Node_Path_Get_Index",
             "Node_Path_Shift",
             "Node_Path_Trim",
             "Node_Path_Wave",

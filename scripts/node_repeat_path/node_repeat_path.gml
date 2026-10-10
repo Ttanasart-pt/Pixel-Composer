@@ -1,5 +1,5 @@
 function Node_Repeat_Path(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
-	name = "Draw Along Path";
+	name = "Chain";
 	
 	newInput(17, nodeValueSeed());
 	
@@ -9,6 +9,8 @@ function Node_Repeat_Path(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	////- =Surface
 	newInput( 0, nodeValue_Surface( "Surface In"     )).setRequired().setArrayDepth(1);
 	newInput(22, nodeValue_EScroll( "Array Selection", 0, [ "Random", "Ordered" ] ));
+	
+	////- =Deform
 	newInput( 9, nodeValue_Slider(  "Deform",      1 ));
 	newInput(16, nodeValue_Int(     "Subdivision", 8 ));
 	
@@ -22,6 +24,7 @@ function Node_Repeat_Path(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	newInput( 3, nodeValue_EScroll( "Amount Type",   0, [ "Auto", "Fixed Amount", "Fixed Distance" ] ));
 	newInput( 4, nodeValue_Float(   "Amount",        4 ));
 	newInput( 5, nodeValue_Float(   "Distance",     16 ));
+	newInput(24, nodeValue_Slider(  "Scale to Fit",  0 ));
 	newInput(18, nodeValue_EScroll( "Path Overflow", 0, [ "Hide", "Scale", "Trim" ] ));
 	newInput(19, nodeValue_Float(   "Gap",           0 ));
 	
@@ -32,22 +35,24 @@ function Node_Repeat_Path(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	////- =Scale
 	newInput(12, nodeValue_Vec2(     "Scale",           [1,1]     )).setCurvable(15, CURVE_DEF_11);
 	newInput(13, nodeValue_Range2(   "Random Scale",    [0,0,0,0] ));
+	newInput(25, nodeValue_Bool(     "Uniform Scale",   true      ));
 	
 	////- =Rendering
 	newInput(23, nodeValue_EScroll(  "Blend Mode",      0, [ "Normal", "Additive", "Maximum" ] ));
 	newInput(20, nodeValue_Gradient( "Color over Path", gra_white ));
 	newInput(21, nodeValue_Gradient( "Color Random",    gra_white ));
-	// 24
+	// 26
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
 	input_display_list = [ 17, 
 		[ "Output",    false ],  2,
-		[ "Surface",   false ],  0, 22,  9, 16, 
+		[ "Surface",   false ],  0, 22, 
+		[ "Deform",    false ],  9, 16, 
 		[ "Path",      false ],  1,  6,  7,  8,   
-		[ "Repeat",    false ],  3,  4,  5, 18, 19, 
+		[ "Repeat",    false ],  3,  4,  5, 24, 18, 19, 
 		[ "Rotation",  false ], 10, 14, 11, 
-		[ "Scale",     false ], 12, 15, 13, 
+		[ "Scale",     false ], 12, 15, 13, 25, 
 		[ "Rendering", false ], 23, 20, 21, 
 	];
 	
@@ -56,7 +61,7 @@ function Node_Repeat_Path(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	attribute_interpolation(true, true);
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _params) { 
-		
+		drawOverlayInput(inputs[ 1].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _params));
 	}
 	
 	static processData = function(_outSurf, _data, _array_index = 0) { 
@@ -78,8 +83,9 @@ function Node_Repeat_Path(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 			var _atyp = _data[ 3];
 			var _amou = _data[ 4];
 			var _dist = _data[ 5]; _dist = max(1, _dist);
+			var _sfit = _data[24]; 
 			var _over = _data[18]; 
-			var _gap  = _data[19]; _gap = max(0, _gap);
+			var _gap  = _data[19]; 
 			
 			var _rot  = _data[10];
 			var _rotC = _data[14], _rotCurve = inputs[10].attributes.curved? new curveMap(_rotC) : undefined;
@@ -88,6 +94,7 @@ function Node_Repeat_Path(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 			var _sca  = _data[12];
 			var _scaC = _data[15], _scaCurve = inputs[12].attributes.curved? new curveMap(_scaC) : undefined;
 			var _scar = _data[13];
+			var _suni = _data[25];
 			
 			var _blnd = _data[23];
 			var _gpth = _data[20]; _gpth.cache();
@@ -95,6 +102,7 @@ function Node_Repeat_Path(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 			
 			inputs[ 4].setVisible(_atyp == 1);
 			inputs[ 5].setVisible(_atyp == 2);
+			inputs[24].setVisible(_atyp != 0);
 			inputs[18].setVisible(_atyp == 0);
 			inputs[19].setVisible(_atyp == 0);
 			
@@ -154,6 +162,7 @@ function Node_Repeat_Path(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 				
 				var scax = _sca[0] + random_range(_scar[0], _scar[1]);
 				var scay = _sca[1] + random_range(_scar[2], _scar[3]);
+				if(_suni) scay = scax;
 				
 				var scac = _scaCurve? _scaCurve.get(drwDis / pthLen) : 1;
 				scax *= scac;
@@ -175,15 +184,22 @@ function Node_Repeat_Path(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 						else if(_over == 1) _sw = clamp(_sw, 1, pthDrwLen - drwDis);
 						break;
 						
-					case 1 : pthRat  = drwAmo / _amou;   break;
-					case 2 : pthRat  = drwDis / pthLen;  break;
+					case 1 : 
+						pthRat  = drwAmo / _amou;   
+						_sw     = lerp(_sw, pthDrwLen / _amou, _sfit);
+						break;
+						
+					case 2 : 
+						pthRat  = drwDis / pthLen;  
+						_sw     = lerp(_sw, _dist, _sfit);
+						break;
 				}
 				
 				pthRat += _prng0;
 				
 				if(done) break;
 				
-				var cc = _gpth.evalFast(pthRat);
+				var cc = _gpth.evalFast(clamp(pthRat, 0, 1));
 				    cc = colorMultiply(cc, _gran.evalFast(random(1)));
 				
 				var aa = _color_get_a(cc);
@@ -253,7 +269,7 @@ function Node_Repeat_Path(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 				
 				drwAmo++;
 				switch(_atyp) {
-					case 0 : drwDis += _sw + _gap; 
+					case 0 : drwDis += max(1, _sw + _gap); 
 						     done = drwDis >= pthDrwLen; break;
 						     
 					case 1 : done = drwAmo >= _amou;  break;

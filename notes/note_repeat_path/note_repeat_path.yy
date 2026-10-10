@@ -1,0 +1,11 @@
+{
+  "$GMNotes":"v1",
+  "%Name":"note_repeat_path",
+  "name":"note_repeat_path",
+  "parent":{
+    "name":"populate",
+    "path":"folders/nodes/data/generator/populate.yy",
+  },
+  "resourceType":"GMNotes",
+  "resourceVersion":"1.1",
+}

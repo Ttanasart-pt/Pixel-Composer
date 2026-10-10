@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"node_path_get_index",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"node_path_get_index",
+  "parent":{
+    "name":"modifier",
+    "path":"folders/nodes/data/value/path/modifier.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}
