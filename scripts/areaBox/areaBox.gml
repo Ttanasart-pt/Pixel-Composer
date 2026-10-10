@@ -118,6 +118,13 @@ function areaBox(_onModify, _unit = noone) : widget() constructor {
 		}
 	#endregion
 		
+	#region scaling
+		scaleDrag    = false;
+		scaleDrag_mx = 0;
+		scaleDrag_my = 0;
+		scaleDrag_ss = 0;
+	#endregion
+	
 	#region menu
 		context_menu = [];
 		array_push(context_menu, menuItem(__txt("Link Axis"), function() /*=>*/ {return function() /*=>*/ { linked = !linked }}).setToggle(function() /*=>*/ {return linked}));
@@ -350,6 +357,19 @@ function areaBox(_onModify, _unit = noone) : widget() constructor {
 			var tb_x1 = _x + tb_w;
 			var tb_y1 = _y + _h;
 			
+			var ps = _h / 2;
+			var px = tb_x1;
+			var py = tb_y1 + _h / 2;
+			
+			var tbHover = hover;
+			if(hover && w > ui(80)) {
+				var pHover = hover && point_in_rectangle(_m[0], _m[1], px-ps, py-ps, px+ps, py+ps);
+				if(pHover) tbHover = false;
+			}
+			
+			tb[2].setFocusHover(active, tbHover);
+			tb[3].setFocusHover(active, tbHover);
+			
 			tb[0].label = "x";
 			tb[1].label = "y";
 						  
@@ -362,7 +382,43 @@ function areaBox(_onModify, _unit = noone) : widget() constructor {
 			tb[2].draw(tb_x0, tb_y1, tb_w, tb_h, array_safe_get_fast(_data, 2), _m);
 			tb[3].draw(tb_x1, tb_y1, tb_w, tb_h, array_safe_get_fast(_data, 3), _m);
 		
-		
+			if(scaleDrag) {
+				hover = false;
+				
+				var _dt = (_m[0] - scaleDrag_mx) / w;
+				var _sc = power(2, _dt);
+				
+				var _vx = scaleDrag_ss[2] * _sc;
+				var _vy = scaleDrag_ss[3] * _sc;
+				
+				if(key_mod_press(KCONTROL)) {
+					_vx = round(_vx);
+					_vy = round(_vy);
+				}
+				
+				var u0 = onModify(_vx, 2); 
+				var u1 = onModify(_vy, 3); 
+				if(u0 || u1) UNDO_HOLDING = true;
+				
+				if(mouse_lrelease()) {
+					UNDO_HOLDING = false;
+					scaleDrag    = false;
+				}
+			}
+			
+			if(scaleDrag) {
+				draw_sprite_ui(THEME.window_pan_icon, 0, px, py, 1, 1, 0, COLORS._main_accent, 1);
+				
+			} else if(hover && w > ui(80)) {
+				draw_sprite_ui(THEME.window_pan_icon, 0, px, py, 1, 1, 0, pHover? COLORS._main_icon_light : COLORS._main_icon, 1);
+				if(pHover && mouse_lpress(active)) {
+					scaleDrag = true;
+					scaleDrag_mx = _m[0];
+					scaleDrag_my = _m[1];
+					scaleDrag_ss = array_clone(_data);
+				}
+			}
+			
 		} else if(mode == AREA_MODE.padding) { 
 			var tb_lx = _x;
 			var tb_ly = _y;

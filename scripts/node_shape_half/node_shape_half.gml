@@ -13,8 +13,8 @@ function Node_Shape_Half(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	newInput( 4, nodeValue_Vec2( "Center",    [.5,.5] )).setHotkey("G").setUnitSimple().hideLabel();
 	newInput( 5, nodeValue_Vec2( "Half Size", [.5,.5] )).setHotkey("S").setUnitSimple().hideLabel();
 	newInput( 6, nodeValue_Rot(  "Rotation",    0     )).setHotkey("R").setPieMenu().hideLabel();
-	newInput( 9, nodeValue_Vec2( "Point 1",    [0,.5] )).setUnitSimple().hideLabel();
-	newInput(10, nodeValue_Vec2( "Point 2",    [1,.5] )).setUnitSimple().hideLabel();
+	newInput( 9, nodeValue_Vec2( "Point 1",    [0,.5] )).setHotkey("Q").setUnitSimple().hideLabel();
+	newInput(10, nodeValue_Vec2( "Point 2",    [1,.5] )).setHotkey("W").setUnitSimple().hideLabel();
 	
 	////- =Render
 	newInput( 2, nodeValue_Surface( "BG"                 ));

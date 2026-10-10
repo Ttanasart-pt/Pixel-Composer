@@ -14,29 +14,35 @@ function Node_VerletSim_Mesh_Bridge(_x, _y, _group = noone) : Node(_x, _y, _grou
 	////- =Verlet
 	newInput( 2, nodeValue_Slider( "Tension",     .5    ));
 	newInput( 3, nodeValue_Slider( "Drag",         0    ));
-	newInput( 7, nodeValue_Slider( "Stiffness",    0    ));
+	/* UNUSED */ newInput( 7, nodeValue_Slider( "Stiffness",    0    ));
 	
 	////- =Paths
 	newInput( 4, nodeValue_Bool(   "Loop",        false ));
 	newInput( 5, nodeValue_Slider( "Shift",       0     ));
-	newInput( 6, nodeValue_Bool(   "Pin First",   false ));
-	// input 7
+	/* UNUSED */ newInput( 6, nodeValue_Bool(   "Pin First",   false ));
+	// 8
 	
 	newOutput( 0, nodeValue_Output("Mesh", VALUE_TYPE.mesh, noone)).setCustomData(global.VERLET_MESH_JUNC);
 	
 	input_display_list = [ 
-		[ "Mesh",   false ],  0,  1,
-		[ "Verlet", false ],  2,  3,  
-		[ "Path",   false ],  4,  5,  6, 
+		[ "Mesh",      false ],  0,  1,
+		[ "Verlet",    false ],  2,  3,  
+		[ "Path",      false ],  4,  5, 
+		[ "Path Data", false ], 
 	];
 	
 	function createNewInput(index = array_length(inputs)) {
-		newInput(index, nodeValue_Path( "Path" )).setVisible(true, true);
-		array_push(input_display_list, index);
-		postCreateNewInput(index);
+		newInput(index + 0, nodeValue_Path( "Path"       )).setVisible(true, true);
+		newInput(index + 1, nodeValue_Bool( "Pin", false ));
 		
+		postCreateNewInput(index);
+		refreshDynamicDisplay();
 		return inputs[index];
-	} setDynamicInput(1);
+	} 
+	
+	input_display_dynamic = [ 0, 1, __inspc(ui(4),1,1,ui(4)) ];
+	
+	setDynamicInput(2);
 	
 	////- Nodes
 	
@@ -53,7 +59,7 @@ function Node_VerletSim_Mesh_Bridge(_x, _y, _group = noone) : Node(_x, _y, _grou
 		
 		drawOverlayInput(inputs[0].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my));
 		
-		for( var i = input_fix_len, n = array_length(inputs); i < n; i++ ) 
+		for( var i = input_fix_len, n = array_length(inputs); i < n; i += data_length ) 
 			drawOverlayInput(inputs[i].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my));	
 		
 		return w_hovering;
@@ -72,19 +78,21 @@ function Node_VerletSim_Mesh_Bridge(_x, _y, _group = noone) : Node(_x, _y, _grou
 			
 			var _loop = getInputData( 4);
 			var _pshf = getInputData( 5);
-			var _pinf = getInputData( 6);
+			// var _pinf = getInputData( 6);
 		#endregion
 		
 		var _pathData = [];
 		var _lamo = 0;
-		for( var i = input_fix_len, n = array_length(inputs); i < n; i++ ) {
-			var _path = getInputData(i);
+		for( var i = input_fix_len, n = array_length(inputs); i < n; i += data_length ) {
+			var _path = getInputData(i+0);
+			var _ppin = getInputData(i+1);
+			
 			if(!is_path(_path)) continue;
 			
 			var _la = _path.getLineCount();
 			_lamo += _la;
 			for( var j = 0; j < _la; j++ )
-				array_push(_pathData, [_path, j]);
+				array_push(_pathData, [_path, j, _ppin]);
 		}
 		
 		if(_lamo <= 1) return;
@@ -134,6 +142,7 @@ function Node_VerletSim_Mesh_Bridge(_x, _y, _group = noone) : Node(_x, _y, _grou
 			
 			var _point0 = _pPoint[p+0];
 			var _point1 = _pPoint[p+1];
+			
 			var _pv = p / (_lamo - 1);
 			
 			for( var i = 0; i <= _pSamp; i++ ) {
@@ -150,7 +159,9 @@ function Node_VerletSim_Mesh_Bridge(_x, _y, _group = noone) : Node(_x, _y, _grou
 					var _ind     = _st + j*(_pSamp+1) + i;
 					points[_ind] = new __verlet_vec2(_x0, _y0, _u, _v, _ind).setDrag(_drag);
 					
-					if(_pinf && j == 0) points[_ind].pin = true;
+					if(j ==  0 && _pathData[  0][2]) points[_ind].pin = true;
+					if(j == gh && _pathData[p+1][2]) points[_ind].pin = true;
+					
 				}
 			}
 			
