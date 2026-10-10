@@ -1027,6 +1027,7 @@
             { "label": "Populate" },
             { "label": "/Repeat" },
             "Node_Repeat",
+            "Node_Repeat_Path",
             "Node_Repeat_Texture",
             { "label": "/Scatter" },
             "Node_Scatter",

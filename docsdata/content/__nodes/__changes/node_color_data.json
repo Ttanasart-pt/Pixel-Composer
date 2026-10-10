@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.22.0.206",
+    "changes": [
+      {
+        "date": "2026-10-10T01:17:34.401Z",
+        "node": "Color Data",
+        "commit": "**Color Data**: Add hex output."
+      }
+    ]
+  },
+  {
     "version": "1.21.4.008",
     "changes": [
       {

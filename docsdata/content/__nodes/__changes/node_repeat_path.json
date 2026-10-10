@@ -1,0 +1,12 @@
+[
+  {
+    "version": "1.22.0.206",
+    "changes": [
+      {
+        "date": "2026-10-10T01:17:34.401Z",
+        "node": "",
+        "commit": "**Color Data**: Add hex output."
+      }
+    ]
+  }
+]
