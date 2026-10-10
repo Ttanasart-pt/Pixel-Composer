@@ -110,8 +110,19 @@ function Node_Processor(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		process_running  = array_verify(process_running,  _len);
 		
 		var raw, amo, val;
+		__dimUpdate = false;
+		
+		if(dimension_index >= 0 && dimension_index < array_length(inputs))  {
+			var _dimInput  = inputs[dimension_index];
+			__dimUpdate = _dimInput.isDynamic();
+		}
+		
 		array_foreach(inputs, function(_in, i) /*=>*/ {
-			if(_in.isDynamic()) {
+			var _update  = _in.isDynamic();
+			if(_in.unit.mode == VALUE_UNIT.reference) 
+				_update |= __dimUpdate;
+			
+			if(_update) {
 				raw = _in.getValue(__frame);
 				amo = _in.arrayLength(raw);
 				val = raw;

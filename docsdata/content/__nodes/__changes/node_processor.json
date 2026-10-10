@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.22.0.206",
+    "changes": [
+      {
+        "date": "2026-10-10T05:21:14.136Z",
+        "node": "",
+        "commit": "Fix fractional unit value not update when dimension is animated."
+      }
+    ]
+  },
+  {
     "version": "1.21.9.204",
     "changes": [
       {

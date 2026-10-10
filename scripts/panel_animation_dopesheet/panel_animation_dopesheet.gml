@@ -886,6 +886,7 @@ function Panel_Animation_Dopesheet() {
     	}
     	
     	transform_start_x /= n;
+    	
     	array_unique_ext(transform_anim);
     	KEYBOARD_RESET
     }
