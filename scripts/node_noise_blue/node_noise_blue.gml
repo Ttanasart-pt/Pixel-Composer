@@ -43,7 +43,7 @@ function Node_Noise_Blue(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		_patchPix  = _patchSize * _patchSize;
 		
 		processItr = _patchAmo;
-		outSurf    = surface_verify(outSurf, _patchSize, _patchSize);
+		outSurf    = surface_verify(outSurf, _dim[0], _dim[1]);
 		processing = true;
 		
 		for( var i = 0, n = array_length(temp_surface); i < n; i++ ) {
@@ -209,7 +209,11 @@ function Node_Noise_Blue(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	}
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
-		if(processing) draw_sprite_ui(THEME.loading, 0, xx + w * _s / 2, yy + h * _s / 2, _s, _s, current_time / 2, COLORS._main_icon, 1);
+		if(processing) draw_sprite_ui(THEME.loading, 0, xx + w * _s/2, yy + h * _s/2, _s, _s, current_time/2, COLORS._main_icon, 1);
 	}
 	
 }
+
+/*[cpp] blueNoise
+
+*/

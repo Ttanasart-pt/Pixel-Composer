@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.22.0.301",
+    "changes": [
+      {
+        "date": "2026-10-11T04:42:12.663Z",
+        "node": "Blue Noise",
+        "commit": "**Blue Noise**: Fix output use patch dimension instead of node dimension."
+      }
+    ]
+  },
+  {
     "version": "1.21.1.007",
     "changes": [
       {
