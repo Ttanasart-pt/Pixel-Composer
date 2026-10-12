@@ -47,6 +47,7 @@ function Node_Armature_Path(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		
 		var dis = _rat * length_total;
 		var ind = array_search_min_bin(length_accu, dis);
+		if(ind >= array_length(lengths)) return out;
 		
 		var mdist = ind > 0? length_accu[ind] : 0;
 		var cdist = dis - mdist;
