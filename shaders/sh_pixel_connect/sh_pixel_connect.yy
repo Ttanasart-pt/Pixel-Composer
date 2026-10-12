@@ -1,0 +1,12 @@
+{
+  "$GMShader":"",
+  "%Name":"sh_pixel_connect",
+  "name":"sh_pixel_connect",
+  "parent":{
+    "name":"compose",
+    "path":"folders/nodes/data/compose.yy",
+  },
+  "resourceType":"GMShader",
+  "resourceVersion":"2.0",
+  "type":1,
+}

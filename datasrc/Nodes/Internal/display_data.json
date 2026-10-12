@@ -753,6 +753,7 @@
             "Node_Pixel_Cloud",
             "Node_Pixel_Sort",
             "Node_Shuffle",
+            "Node_Pixel_Connect",
             { "label": "/Light" },
             "Node_2D_light",
             "Node_Shadow_Cast",

@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"__node_process_template_mask",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"__node_process_template_mask",
+  "parent":{
+    "name":"data",
+    "path":"folders/nodes/data.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

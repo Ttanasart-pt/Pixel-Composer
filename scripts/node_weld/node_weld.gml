@@ -52,16 +52,16 @@ function Node_Weld(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		var _dim = surface_get_dimension(_surf1);
 		
 		surface_set_shader(_outSurf, sh_weld);
-			shader_set_s("surface1",   _surf1 );
-			shader_set_s("surface2",   _surf2 );
-			shader_set_2("dimension",  _dim   );
+			shader_set_s( "surface1",   _surf1 );
+			shader_set_s( "surface2",   _surf2 );
+			shader_set_2( "dimension",  _dim   );
 			
-			shader_set_f_map("radius", _rad, _data[9], inputs[8] );
-			shader_set_f("factor",     _fac   );
+			shader_set_m( "radius",     _rad, _data[9], inputs[8] );
+			shader_set_f( "factor",     _fac   );
 			
-			shader_set_i("blendType",  _cTyp  );
-			shader_set_i("blendMode",  _blend );
-			shader_set_c("blendColor", _bclr  );
+			shader_set_i( "blendType",  _cTyp  );
+			shader_set_i( "blendMode",  _blend );
+			shader_set_c( "blendColor", _bclr  );
 			
 			draw_empty();
 		surface_reset_shader();
