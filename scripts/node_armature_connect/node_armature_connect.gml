@@ -125,6 +125,7 @@ function Node_Armature_Connect(_x, _y, _group = noone) : Node(_x, _y, _group) co
 		var _b = new __Bone(parBone, _oriDis, _oriDir, _bneDir, _bneDis, self);
 		parBone.addChild(_b);
 		
+		_b.ID            = $"{node_id}_con";
 		_b.name          = _nam;
 		_b.parent_anchor = _con;
 		

@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.22.0.301",
+    "changes": [
+      {
+        "date": "2026-10-12T04:26:55.836Z",
+        "node": "",
+        "commit": "**Armatures**: Armature builders now use static bone ID."
+      }
+    ]
+  },
+  {
     "version": "1.22.0.203",
     "changes": [
       {

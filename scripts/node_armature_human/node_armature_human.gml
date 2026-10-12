@@ -202,6 +202,7 @@ function Node_Armature_Human(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 		#endregion
 		
 		var _bone = new __Bone();
+		_bone.ID        = $"{node_id}_main";
 		_bone.name      = "main";
 		_bone.is_main   = true;
 		_bone.direction = point_direction( 0, 0, _pos[0], _pos[1] );
@@ -225,6 +226,7 @@ function Node_Armature_Human(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 						self
 					);
 					
+					_tors_part.ID = $"{node_id}_torso_{i}";
 					_tors_part.parent_anchor = false;
 					_tors_part.name = $"torso_main";
 					
@@ -238,6 +240,7 @@ function Node_Armature_Human(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 						self
 					);
 					
+					_tors_part.ID = $"{node_id}_torso_{i}";
 					_tors_part.name = $"torso_{i}";
 				}
 				
@@ -260,6 +263,7 @@ function Node_Armature_Human(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 				self
 			);
 			
+			_head.ID = $"{node_id}_head_{i}";
 			_head.parent_anchor = false;
 			_head.name = $"head";
 			
@@ -281,6 +285,7 @@ function Node_Armature_Human(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 					self
 				);
 				
+				_legs_part.ID = $"{node_id}_legs_r_{i}";
 				if(i == 0) _legs_part.name = $"legs_r_main";
 				else       _legs_part.name = $"legs_r_{i}";
 				
@@ -317,6 +322,7 @@ function Node_Armature_Human(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 				IKbone.IKTarget   = _targ;
 				IKbone.IKTargetID = _targ.ID;
 				
+				IKbone.ID = $"{node_id}_legs_r_ik";
 				IKbone.name = "legs_r_ik";
 				IKbone.parent_anchor = false;
 			}
@@ -335,6 +341,7 @@ function Node_Armature_Human(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 					self
 				);
 				
+				_legs_part.ID = $"{node_id}_legs_l_{i}";
 				if(i == 0) _legs_part.name = $"legs_l_main";
 				else       _legs_part.name = $"legs_l_{i}";
 				
@@ -371,6 +378,7 @@ function Node_Armature_Human(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 				IKbone.IKTarget   = _targ;
 				IKbone.IKTargetID = _targ.ID;
 				
+				IKbone.ID = $"{node_id}_legs_l_ik";
 				IKbone.name = "legs_l_ik";
 				IKbone.parent_anchor = false;
 			}
@@ -396,6 +404,7 @@ function Node_Armature_Human(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 						self
 					);
 					
+					_arms_part.ID = $"{node_id}_arms_r_{i}";
 					_arms_part.parent_anchor = false;
 					_arms_part.name = $"arms_r_main";
 					
@@ -409,6 +418,7 @@ function Node_Armature_Human(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 						self
 					);
 					
+					_arms_part.ID = $"{node_id}_arms_r_{i}";
 					_arms_part.name = $"arms_r_{i}";
 				}
 				
@@ -445,6 +455,7 @@ function Node_Armature_Human(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 				IKbone.IKTarget   = _targ;
 				IKbone.IKTargetID = _targ.ID;
 				
+				IKbone.ID = $"{node_id}_arms_ik";
 				IKbone.name = "arms_r_ik";
 				IKbone.parent_anchor = false;
 			}
@@ -467,6 +478,7 @@ function Node_Armature_Human(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 						self
 					);
 					
+					_arms_part.ID = $"{node_id}_arms_l_{i}";
 					_arms_part.parent_anchor = false;
 					_arms_part.name = $"arms_l_main";
 					
@@ -480,6 +492,7 @@ function Node_Armature_Human(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 						self
 					);
 					
+					_arms_part.ID = $"{node_id}_arms_l_{i}";
 					_arms_part.name = $"arms_l_{i}";
 				}
 				
@@ -516,6 +529,7 @@ function Node_Armature_Human(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 				IKbone.IKTarget   = _targ;
 				IKbone.IKTargetID = _targ.ID;
 				
+				IKbone.ID = $"{node_id}_arms_l_ik";
 				IKbone.name = "arms_l_ik";
 				IKbone.parent_anchor = false;
 			}

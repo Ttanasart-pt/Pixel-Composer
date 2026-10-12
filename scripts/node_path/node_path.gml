@@ -651,8 +651,8 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 				for( var i = input_fix_len; i < array_length(inputs); i++ ) {
 					_dat = transform_data[i-input_fix_len];
 					p    = array_clone(_dat);
-					p.x += dx;
-					p.y += dy;
+					p[@_ANCHOR.x] += dx;
+					p[@_ANCHOR.y] += dy;
 					
 					if(inputs[i].setValue(p))
 						edited = true;
@@ -925,8 +925,8 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 				draw_set_color(COLORS._main_accent);
 				for( var i = 0, n = array_length(drag_points); i < n; i++ ) {
 					var _p/*:_ANCHOR*/ = drag_points[i];
-					nx = _x + _p.x * _s;
-					ny = _y + _p.y * _s;
+					nx = _x + _p[_ANCHOR.x] * _s;
+					ny = _y + _p[_ANCHOR.y] * _s;
 					
 					if(i) draw_line(ox, oy, nx, ny);
 					
@@ -990,12 +990,12 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 							var _p0/*:_ANCHOR*/ = drag_points[points[i - 1]];
 							var _p1/*:_ANCHOR*/ = drag_points[points[i + 1]];
 							
-							var d0  = point_direction(_p0.x, _p0.y,  _p.x,  _p.y);
-							var d1  = point_direction( _p.x,  _p.y, _p1.x, _p1.y);
+							var d0  = point_direction(_p0[_ANCHOR.x], _p0[_ANCHOR.y],  _p[_ANCHOR.x],  _p[_ANCHOR.y]);
+							var d1  = point_direction( _p[_ANCHOR.x],  _p[_ANCHOR.y], _p1[_ANCHOR.x], _p1[_ANCHOR.y]);
 							
 							var dd  = d0 + angle_difference(d1, d0) / 2;
-							var ds0 = point_distance(_p0.x, _p0.y,  _p.x,  _p.y);
-							var ds1 = point_distance( _p.x,  _p.y, _p1.x, _p1.y);
+							var ds0 = point_distance(_p0[_ANCHOR.x], _p0[_ANCHOR.y],  _p[_ANCHOR.x],  _p[_ANCHOR.y]);
+							var ds1 = point_distance( _p[_ANCHOR.x],  _p[_ANCHOR.y], _p1[_ANCHOR.x], _p1[_ANCHOR.y]);
 							
 							dxx = lengthdir_x(ds0 / 3, dd + 180);
 							dxy = lengthdir_y(ds0 / 3, dd + 180);
@@ -1003,9 +1003,9 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 							dyy = lengthdir_y(ds1 / 3, dd);
 						}
 						
-						anc = [ _p.x, _p.y, dxx, dxy, dyx, dyy ];
+						anc = [ _p[_ANCHOR.x], _p[_ANCHOR.y], dxx, dxy, dyx, dyy ];
 						if(input_fix_len + i >= array_length(inputs))
-							createNewInput(, _p.x, _p.y, dxx, dxy, dyx, dyy);
+							createNewInput(, _p[_ANCHOR.x], _p[_ANCHOR.y], dxx, dxy, dyx, dyy);
 						else 
 							inputs[input_fix_len + i].setValue(anc);
 					}
@@ -1055,10 +1055,10 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 			var a0/*:_ANCHOR*/ = line_edit_data[line_editing    ];
 			var a1/*:_ANCHOR*/ = line_edit_data[line_editing + 1];
 			
-			var n0 = [ a0.x, a0.y, a0.c1x, a0.c1y, a0.c2x, a0.c2y, a0.ind ];
-			var n1 = [ a1.x, a1.y, a1.c1x, a1.c1y, a1.c2x, a1.c2y, a1.ind ];
+			var n0 = [ a0[_ANCHOR.x], a0[_ANCHOR.y], a0[_ANCHOR.c1x], a0[_ANCHOR.c1y], a0[_ANCHOR.c2x], a0[_ANCHOR.c2y], a0[_ANCHOR.ind] ];
+			var n1 = [ a1[_ANCHOR.x], a1[_ANCHOR.y], a1[_ANCHOR.c1x], a1[_ANCHOR.c1y], a1[_ANCHOR.c2x], a1[_ANCHOR.c2y], a1[_ANCHOR.ind] ];
 			
-			if(a0.c2x == 0 && a0.c2y == 0 && a1.c1x == 0 && a1.c1y == 0) {
+			if(a0[_ANCHOR.c2x] == 0 && a0[_ANCHOR.c2y] == 0 && a1[_ANCHOR.c1x] == 0 && a1[_ANCHOR.c1y] == 0) {
 				n0[0] = a0[0] + dx;
 				n0[1] = a0[1] + dy;
 				
@@ -2032,27 +2032,27 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 						CURSOR_SPRITE = THEME.cursor_path_anchor;
 						
 						if(mouse_lpress(active)) {
-							if(_a.c1x != 0 || _a.c1y != 0 || _a.c2x != 0 || _a.c2y != 0) {
-								_a.c1x = 0;
-								_a.c1y = 0;
-								_a.c2x = 0;
-								_a.c2y = 0;
-								_a.ind = 0;
+							if(_a[_ANCHOR.c1x] != 0 || _a[_ANCHOR.c1y] != 0 || _a[_ANCHOR.c2x] != 0 || _a[_ANCHOR.c2y] != 0) {
+								_a[@_ANCHOR.c1x] = 0;
+								_a[@_ANCHOR.c1y] = 0;
+								_a[@_ANCHOR.c2x] = 0;
+								_a[@_ANCHOR.c2y] = 0;
+								_a[@_ANCHOR.ind] = 0;
 								inputs[input_fix_len + anchor_hover].setValue(_a);
 								
 							} else {
-								_a.c1x = -8;
-								_a.c1y = 0;
-								_a.c2x = 8;
-								_a.c2y = 0;	
-								_a.ind = 0;
+								_a[@_ANCHOR.c1x] = -8;
+								_a[@_ANCHOR.c1y] = 0;
+								_a[@_ANCHOR.c2x] = 8;
+								_a[@_ANCHOR.c2y] = 0;	
+								_a[@_ANCHOR.ind] = 0;
 								
 								drag_point    = anchor_hover;
 								drag_type     = 1;
 								drag_point_mx = _mx;
 								drag_point_my = _my;
-								drag_point_sx = _a.x;
-								drag_point_sy = _a.y;
+								drag_point_sx = _a[_ANCHOR.x];
+								drag_point_sy = _a[_ANCHOR.y];
 							}
 							
 							drag_point_data = array_verify(drag_point_data, array_length(inputs));
@@ -2094,26 +2094,26 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 						
 						if(mouse_lpress(active)) {
 							if(_mode != 0) {
-								_a.ind = _mode;
+								_a[@_ANCHOR.ind] = _mode;
 								inputs[input_fix_len + anchor_hover].setValue(_a);
 							}
 								
 							drag_point    = anchor_hover;
 							drag_type     = hover_type;
-							drag_point_sx = _a.x;
-							drag_point_sy = _a.y;
+							drag_point_sx = _a[_ANCHOR.x];
+							drag_point_sy = _a[_ANCHOR.y];
 							drag_point_mx = _mx;
 							drag_point_my = _my;
 							drag_point_px = PANEL_PREVIEW.snapX(drag_point_sx);
 							drag_point_py = PANEL_PREVIEW.snapY(drag_point_sy);
 							
 							if(hover_type == 1) {
-								drag_point_sx = _a.x + _a.c1x;
-								drag_point_sy = _a.y + _a.c1y;	
+								drag_point_sx = _a[_ANCHOR.x] + _a[_ANCHOR.c1x];
+								drag_point_sy = _a[_ANCHOR.y] + _a[_ANCHOR.c1y];	
 								
 							} else if(hover_type == -1) {
-								drag_point_sx = _a.x + _a.c2x;
-								drag_point_sy = _a.y + _a.c2y;
+								drag_point_sx = _a[_ANCHOR.x] + _a[_ANCHOR.c2x];
+								drag_point_sy = _a[_ANCHOR.y] + _a[_ANCHOR.c2y];
 							} 
 							
 							drag_point_data = array_verify(drag_point_data, array_length(inputs));

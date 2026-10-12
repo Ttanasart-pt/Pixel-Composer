@@ -132,7 +132,7 @@ function Node_Armature_Bone(_x, _y, _group = noone) : Node(_x, _y, _group) const
 			}
 			
 		} else {
-			bone    = new __Bone();
+			bone       = new __Bone();
 			bone.is_main = true;
 			
 			inputs[0].setVisible(true);
@@ -147,7 +147,8 @@ function Node_Armature_Bone(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		var _bneDis = _typ == 0? _dis : point_distance(  _ori[0], _ori[1], _tai[0], _tai[1] );
 		var _bneDir = _typ == 0? _dir : point_direction( _ori[0], _ori[1], _tai[0], _tai[1] );
 		
-		var _b = new __Bone(parBone, _oriDis, _oriDir, _bneDir, _bneDis, self);
+		var _b    = new __Bone(parBone, _oriDis, _oriDir, _bneDir, _bneDis, self);
+		    _b.ID = node_id;
 		parBone.addChild(_b);
 		
 		_b.name          = _nam;

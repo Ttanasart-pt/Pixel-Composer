@@ -46,6 +46,7 @@ function Node_Armature_From_Path(_x, _y, _group = noone) : Node(_x, _y, _group) 
 		if(!is_path(_path)) return;
 		
 		var bone = new __Bone();
+		bone.ID  = $"{node_id}_main";
 		bone.is_main = true;
 		
 		var ox, oy, nx, ny;
@@ -64,6 +65,7 @@ function Node_Armature_From_Path(_x, _y, _group = noone) : Node(_x, _y, _group) 
 				var _dis = point_distance(ox, oy, nx, ny);
 				var _b   = new __Bone(par, _dis, _dir, _dir, _dis, self);
 				
+				_b.ID   = $"{node_id}_{i}";
 				_b.name = $"Bone {i}";
 				par.addChild(_b);
 				par = _b;

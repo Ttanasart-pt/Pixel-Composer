@@ -458,6 +458,7 @@ function Node_Armature_Pose(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		var inAmo = array_length(inputs);
 		var _name = bone != noone? bone.name : "bone";
 		
+		// print("createNewInput", index, bone == noone? bone : bone.ID);
 		newInput(index, nodeValue_Transform(_name));
 		inputs[index].attributes.bone_id = bone != noone? bone.ID : noone;
 		

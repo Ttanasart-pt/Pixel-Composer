@@ -6,6 +6,11 @@
         "date": "2026-10-12T04:08:00.663Z",
         "node": "",
         "commit": "**Armature to Path**: Fix error on flatten mode."
+      },
+      {
+        "date": "2026-10-12T04:26:55.837Z",
+        "node": "",
+        "commit": "**Armatures**: Armature builders now use static bone ID."
       }
     ]
   },

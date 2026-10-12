@@ -3,18 +3,19 @@ function Node_Armature_IK(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	setDimension(96, 96);
 	draw_padding = 8;
 	
-	newInput(0, nodeValue_Armature());
+	newInput( 0, nodeValue_Armature());
 	
 	////- =IK
-	newInput(3, nodeValue_Text( "Name", "IK handle" )).setDisplay(VALUE_DISPLAY.text_box);
+	newInput( 3, nodeValue_Text( "Name", "IK handle" )).setDisplay(VALUE_DISPLAY.text_box);
 	
-	newInput(1, nodeValue_Bone( "Origin", function() /*=>*/ {return toggleBoneTarget(1)} ));
-	newInput(2, nodeValue_Bone( "Target", function() /*=>*/ {return toggleBoneTarget(2)} ));
+	newInput( 1, nodeValue_Bone( "Origin", function() /*=>*/ {return toggleBoneTarget(1)} ));
+	newInput( 2, nodeValue_Bone( "Target", function() /*=>*/ {return toggleBoneTarget(2)} ));
+	// 4
 	
 	newOutput(0, nodeValue_Output("Armature", VALUE_TYPE.armature, noone));
 	
 	input_display_list = [ 0, 
-		["IK", false], 3, 1, 2, 
+		[ "IK", false ],  3,  1,  2, 
 	];
 	
 	__node_bone_attributes();
@@ -73,6 +74,7 @@ function Node_Armature_IK(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		
 		bone = _b.clone();
 		bone.resetPose().setPosition();
+		outputs[0].setValue(bone);
 		
 		var _orig = bone.findBoneByName(_b_origin);
 		var _targ = bone.findBoneByName(_b_target);
@@ -98,6 +100,7 @@ function Node_Armature_IK(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		var _ang = point_direction( p0.x, p0.y, p1.x, p1.y );
 		
 		var IKbone = new __Bone(_orig.parent, _len, _ang, 0, 0, self);
+		IKbone.ID  = node_id;
 		_orig.parent.addChild(IKbone);
 		
 		IKbone.control    = true;
@@ -111,8 +114,6 @@ function Node_Armature_IK(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		bone.resetPose().setPosition();
 		bone_bbox = bone.bbox();
 		bone_array = bone.toArray();
-		
-		outputs[0].setValue(bone);
 	}
 	
 	////- Draw
