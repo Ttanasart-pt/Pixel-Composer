@@ -1915,6 +1915,21 @@
     "resourceVersion":"2.0",
     "returnType":2
 },
+{
+    "$GMExtensionFunction":"",
+    "%Name":"blue_noise_stop_generate",
+    "argCount":1,
+    "args":[2],
+    "documentation":"",
+    "externalName":"blue_noise_stop_generate",
+    "help":"",
+    "hidden":false,
+    "kind":1,
+    "name":"blue_noise_stop_generate",
+    "resourceType":"GMExtensionFunction",
+    "resourceVersion":"2.0",
+    "returnType":2
+},
  ],
   "init":"RegisterCallbacks",
   "kind":1,

@@ -20,17 +20,18 @@ function Node_Noise_Blue(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
 	input_display_list = [  1, 
-		[ "Output", false ],  0,  2, 
-		[ "Noise",  false ],  6,  3,  4,  5,
-		[ "Performance", false ], 7, 
+		[ "Output",      false ],  0,  2, 
+		[ "Noise",       false ],  6,  3,  4,  5,
 	];
 	
 	////- Node
 	
 	attributes.workers = 4;
 	array_push(attributeEditors, Node_Attribute( "Threads", function() /*=>*/ {return attributes.workers}, function() /*=>*/ {return textBox_Number(function(v) /*=>*/ {return setAttribute("workers", v, 1)})} ));
-	
 	attribute_surface_depth();
+	
+	insp1button = button(function() /*=>*/ {return blue_noise_stop_generate(generator)}).setTooltip(__txt("Stop Generation"))
+		.setIcon(THEME.cross, 0, COLORS._main_value_negative).iconPad(ui(6)).setBaseSprite(THEME.button_hide_fill);
 	
 	temp_surface = [ noone, noone, noone, noone ];
 	_outBuff     = 0;
@@ -49,155 +50,6 @@ function Node_Noise_Blue(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	curr_rad = 0;
 	curr_sig = 0;
 	curr_pat = 0;
-	
-	static generateNoiseInit = function() {
-		_patchSize = min(_pat, _dim[0], _dim[1]);
-		_patchDim  = [_patchSize, _patchSize];
-		_patchCol  = ceil(_dim[0] / _patchSize); 
-		_patchRow  = ceil(_dim[1] / _patchSize); 
-		_patchAmo  = _patchCol * _patchRow;
-		_patchInd  = 0;
-		_patchPix  = _patchSize * _patchSize;
-		
-		processItr = _patchAmo;
-		outSurf    = surface_verify(outSurf, _dim[0], _dim[1]);
-		processing = true;
-		
-		for( var i = 0, n = array_length(temp_surface); i < n; i++ ) {
-			temp_surface[i] = surface_verify(temp_surface[i], _patchSize, _patchSize);
-			surface_clear(temp_surface[i]);
-		}
-		
-		shader_set(sh_noise_blue_initial);
-			shader_set_2( "dimension", _patchDim );
-			shader_set_f( "threshold", _thr );
-		shader_reset();
-		
-		shader_set(sh_noise_blue_energy);
-			shader_set_2( "dimension", _patchDim );
-			shader_set_i( "radius",    _rad );
-			shader_set_f( "sigma",     _sig );
-		shader_reset();
-	}
-	
-	static generateNoiseItr = function() {
-		var _noise  = temp_surface[1];
-		var _energy = temp_surface[0];
-		var _order  = temp_surface[2];
-		var _output = temp_surface[3];
-		
-		surface_clear(_order);
-		random_set_seed(_sed);
-		
-		////- =Initial Binary
-		
-		surface_set_shader(_noise, sh_noise_blue_initial);
-			shader_set_f( "seed",      _sed );
-			draw_empty();
-		surface_reset_shader();
-		
-		surface_set_shader(_energy, sh_noise_blue_energy);
-			shader_set_i( "inverted", false );
-		surface_reset_shader();
-		
-		repeat(_itr) {
-			surface_set_target(_energy);
-			shader_set(sh_noise_blue_energy);
-				draw_surface(_noise, 0, 0);
-			shader_reset();
-			surface_reset_target();
-			
-			var vc = surface_get_min_max(_energy);
-			surface_set_target(_noise);
-				draw_point_color(vc[4], vc[5], c_black);
-				draw_point_color(vc[2], vc[3], c_white);
-			surface_reset_target();
-		}
-		
-		surface_set_target(_output);
-			draw_surface(_noise, 0, 0);
-		surface_reset_target();
-		
-		////- =Order white
-		
-		var _wht = surface_get_white(_noise);
-		
-		var _ord = _wht;
-		repeat(_wht) {
-			surface_set_target(_energy);
-			shader_set(sh_noise_blue_energy);
-				draw_surface(_output, 0, 0);
-			shader_reset();
-			surface_reset_target();
-			
-			var vc = surface_get_min_max(_energy);
-			surface_set_target(_output);
-				draw_point_color(vc[4], vc[5], c_black);
-			surface_reset_target();
-			
-			surface_set_target(_order);
-				draw_point_color(vc[4], vc[5], make_color_grey(_ord / _patchPix));
-			surface_reset_target();
-			_ord--;
-		}
-		
-		////- =Order black
-		
-		var _ord = _wht + 1;
-		repeat(_patchPix / 2 - _wht) {
-			surface_set_target(_energy);
-			shader_set(sh_noise_blue_energy);
-				draw_surface(_noise, 0, 0);
-			shader_reset();
-			surface_reset_target();
-			
-			var vc = surface_get_min_max(_energy, irandom(_patchPix));
-			surface_set_target(_noise);
-				draw_point_color(vc[2], vc[3], c_white);
-			surface_reset_target();
-			
-			surface_set_target(_order);
-				draw_point_color(vc[2], vc[3], make_color_grey(_ord / _patchPix));
-			surface_reset_target();
-			_ord++;
-		}
-		
-		////- =Fil gaps
-		
-		surface_set_shader(_energy, sh_noise_blue_energy);
-			shader_set_i( "inverted",  true );
-		surface_reset_shader();
-		
-		repeat(_patchPix / 2) {
-			surface_set_target(_energy);
-			shader_set(sh_noise_blue_energy);
-				draw_surface(_noise, 0, 0);
-			shader_reset();
-			surface_reset_target();
-			
-			var vc = surface_get_min_max(_energy);
-			surface_set_target(_noise);
-				draw_point_color(vc[2], vc[3], c_white);
-			surface_reset_target();
-			
-			surface_set_target(_order);
-				draw_point_color(vc[2], vc[3], make_color_grey(_ord / _patchPix));
-			surface_reset_target();
-			
-			_ord++;
-		}
-		
-		////- =Draw patch
-		
-		var px =      (_patchInd % _patchCol) * _patchSize;
-		var py = floor(_patchInd / _patchCol) * _patchSize;
-		surface_set_target(outSurf);
-			draw_surface(_order, px, py);
-		surface_reset_target();
-		
-		_patchInd++;
-		_sed++;
-	}
 	
 	static step = function() {
 		if(processing) PANEL_GRAPH.refreshDraw();
@@ -261,9 +113,13 @@ function Node_Noise_Blue(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		
 		blue_noise_set_workers(g, attributes.workers);
 		processing = true;
+		insp1button.active     = true;
+		insp1button.icon_blend = COLORS._main_value_negative;
 		
 		asyncCall(blue_noise_generate(g, buffer_get_address(_outBuff)), function(_param, _res) /*=>*/ {
 			processing = false;
+			insp1button.active     = false;
+			insp1button.icon_blend = COLORS._main_icon;
 			
 			var _outSurf = outputs[0].getValue();
 			buffer_set_surface(_outBuff, temp_surface[0], 0);
@@ -277,8 +133,6 @@ function Node_Noise_Blue(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 			triggerRender(false);
 		});
 		
-		// print(white, blue_noise_get_minx(g), blue_noise_get_miny(g), "|", blue_noise_get_maxx(g), blue_noise_get_maxy(g));
-		// generateNoiseInit();
 	}
 	
 	////- Draw
@@ -389,6 +243,8 @@ struct BlueNoise_Generator {
         
         for(int y = start_y; y < end_y; y++)
         for(int x = start_x; x < end_x; x++) {
+            if(stop_generate) return;
+            
             int ind = y * patchSize + x;
             if(noise[ind] == 0 && energy[ind] < block.min_val) {
                 block.min_val = energy[ind];
@@ -405,8 +261,10 @@ struct BlueNoise_Generator {
 
     void energy_calculate_block_all(const std::vector<float>& noise) {
         for(int by = 0; by < blocks_per_row; by++)
-        for(int bx = 0; bx < blocks_per_row; bx++)
+        for(int bx = 0; bx < blocks_per_row; bx++) {
+            if(stop_generate) return;
             energy_calculate_block(noise, bx, by);
+        }
     }
 
     void energy_calculate_block_ranges(const std::vector<float>& noise, int x, int y) {
@@ -416,8 +274,10 @@ struct BlueNoise_Generator {
         int max_by = std::min(blocks_per_row - 1, (y + radius) / BLOCK_SIZE);
 
         for(int by = min_by; by <= max_by; by++)
-        for(int bx = min_bx; bx <= max_bx; bx++)
+        for(int bx = min_bx; bx <= max_bx; bx++) {
+            if(stop_generate) return;
             energy_calculate_block(noise, bx, by);
+        }
     }
 
     void energy_calculate_range(const std::vector<float>& noise) {
@@ -426,6 +286,8 @@ struct BlueNoise_Generator {
         min_x = min_y = max_x = max_y = 0;
 
         for(const auto& block : blocks) {
+            if(stop_generate) return;
+
             if(block.min_val < min_val) {
                 min_val = block.min_val;
                 min_x = block.min_x;
@@ -447,6 +309,8 @@ struct BlueNoise_Generator {
 
         for(int y = 0; y < patchSize; y++)
         for(int x = 0; x < patchSize; x++) {
+            if(stop_generate) return;
+
             int idx = y * patchSize + x;
             double e = 0.;
             int windex = 0;
@@ -476,6 +340,8 @@ struct BlueNoise_Generator {
         int windex = 0;
         for(int dy = -radius; dy <= radius; dy++)
         for(int dx = -radius; dx <= radius; dx++) {
+            if(stop_generate) return;
+
             int nx = (x + dx) & (patchSize - 1);
             int ny = (y + dy) & (patchSize - 1);
             
@@ -647,6 +513,14 @@ struct BlueNoise_Generator {
         return 0;
     }
 
+    void generate_stop() {
+        if(!generating) return;
+        
+        stop_generate = true;
+        while(generating) std::this_thread::sleep_for(std::chrono::milliseconds(1));
+
+        asyncCall(generator_id, 70, "blue_noise_generate_stop", 200.0, "Blue Noise Stopped");
+    }
 };
 
 #define GEN_INDEX int i = static_cast<int>(x); if(i < 0 || i >= static_cast<int>(generators.size())) return -1; BlueNoise_Generator& generator = generators[i];
@@ -666,13 +540,13 @@ cfunction double blue_noise_set_sigma(double x, double sigma) {             GEN_
 cfunction double blue_noise_set_workers(double x, double workers) {         GEN_INDEX generator.set_workers(workers);     return 0; }
 cfunction double blue_noise_set_size(double x, double size, double patch) { GEN_INDEX generator.set_size(size, patch);    return 0; }
 
-cfunction double blue_noise_get_minx(double x) {                            GEN_INDEX return generator.get_minx();                  }
-cfunction double blue_noise_get_miny(double x) {                            GEN_INDEX return generator.get_miny();                  }
-cfunction double blue_noise_get_maxx(double x) {                            GEN_INDEX return generator.get_maxx();                  }
-cfunction double blue_noise_get_maxy(double x) {                            GEN_INDEX return generator.get_maxy();                  }
-cfunction double blue_noise_get_total_weight(double x) {                    GEN_INDEX return generator.get_total_weight();          }
+cfunction double blue_noise_get_minx(double x) {                GEN_INDEX return generator.get_minx();                  }
+cfunction double blue_noise_get_miny(double x) {                GEN_INDEX return generator.get_miny();                  }
+cfunction double blue_noise_get_maxx(double x) {                GEN_INDEX return generator.get_maxx();                  }
+cfunction double blue_noise_get_maxy(double x) {                GEN_INDEX return generator.get_maxy();                  }
+cfunction double blue_noise_get_total_weight(double x) {        GEN_INDEX return generator.get_total_weight();          }
 
-cfunction double blue_noise_generate(double x, void* output) {              GEN_INDEX generator.generate(output, x);      return x; }
-
+cfunction double blue_noise_generate(double x, void* output) {  GEN_INDEX generator.generate(output, x);  return x; }
+cfunction double blue_noise_stop_generate(double x) {           GEN_INDEX generator.generate_stop();      return 0; }
 
 */

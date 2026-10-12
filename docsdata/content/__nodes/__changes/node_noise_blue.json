@@ -11,6 +11,11 @@
         "date": "2026-10-12T02:13:58.088Z",
         "node": "Blue Noise",
         "commit": "**Blue Noise**: Improve performance."
+      },
+      {
+        "date": "2026-10-12T02:34:49.832Z",
+        "node": "Blue Noise",
+        "commit": "**Blue Noise**: Add button to stop generation prematurely."
       }
     ]
   },
