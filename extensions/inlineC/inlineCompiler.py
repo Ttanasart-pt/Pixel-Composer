@@ -77,7 +77,7 @@ yycfileTemplate = """{{
   "filename":"{dllName}",
   "final":"",
   "functions":[{functions} ],
-  "init":"",
+  "init":"{initFn}",
   "kind":1,
   "name":"",
   "order":[],
@@ -93,7 +93,21 @@ yycfileTemplate = """{{
   "usesRunnerInterface":false
 }},"""
 
-yycfunctionTemplate = """{{"$GMExtensionFunction":"","%Name":"{func_name}","argCount":{iCount},"args":{iArray},"documentation":"","externalName":"{func_name}","help":"","hidden":false,"kind":1,"name":"{func_name}","resourceType":"GMExtensionFunction","resourceVersion":"2.0","returnType":{oType}}},"""
+yycfunctionTemplate = """{{
+    "$GMExtensionFunction":"",
+    "%Name":"{func_name}",
+    "argCount":{iCount},
+    "args":{iArray},
+    "documentation":"",
+    "externalName":"{func_name}",
+    "help":"",
+    "hidden":false,
+    "kind":1,
+    "name":"{func_name}",
+    "resourceType":"GMExtensionFunction",
+    "resourceVersion":"2.0",
+    "returnType":{oType}
+}},"""
 
 ## MSVC
 
@@ -134,6 +148,7 @@ def compile_with_msvc(src_file, out_dll):
         '/link',
         f'/LIBPATH:{vcpkg_root}\\lib',
         'freetype.lib',
+        'vcomp.lib', 
 
     ]
 
@@ -231,8 +246,9 @@ def compileFile(srcPath, outDir, _):
         "-I/usr/include/freetype2",
         "-I/usr/include",
         
-        # 2. Link against FreeType library
+        # 2. Link against libraries
         "-lfreetype",
+        "-fopenmp", 
         
         # 3. Static flags
         "-static-libgcc", 
@@ -256,8 +272,8 @@ def compileFile(srcPath, outDir, _):
 
         compile_cmd = (
             f"clang++ -dynamiclib -std=c++17 -target arm64-apple-macos "
-            f"-I/opt/homebrew/include/freetype2 "
             f"-L/opt/homebrew/lib "
+            f"-I/opt/homebrew/include/freetype2 "
             f"-lfreetype "
             f"-o /tmp/{outName}.dylib /tmp/{outName}.cpp"
         )
@@ -303,6 +319,7 @@ def buildInlineC(fileName, code):
     functions = []
     includes  = []
     libraries = []
+    initFn    = ""
     includes_re = re.compile(r'#include\s*<([^>]+)>')
 
     for line in lines:
@@ -316,6 +333,9 @@ def buildInlineC(fileName, code):
             lib_name = line[len("//lib"):].strip()
             if lib_name:
                 libraries.append(lib_name)
+
+        if line.startswith("//init"):
+            initFn = line[len("//init"):].strip()
 
         if line.startswith("cfunction "):
             header = line[len("cfunction "):].strip()
@@ -353,6 +373,7 @@ def buildInlineC(fileName, code):
         "includes": includes,
         "functions": functions,
         "libraries": libraries,
+        "initFn": initFn,
     }
 
 def scanInline(src, fpath):
@@ -372,6 +393,7 @@ def scanInline(src, fpath):
                 line = lines[i].strip()
                 if line == "*/":
                     break
+
                 inline_code += line + "\n"
                 i += 1
             
@@ -425,6 +447,7 @@ def buildExtension(srcArr, extDir):
         includes  = src["includes"]
         functions = src["functions"]
         libraries = src["libraries"] if "libraries" in src else []
+        initFn    = src["initFn"] if "initFn" in src else ""
 
         if ftype == "header":
             scrPath = os.path.join(srcDir, filename)
@@ -466,7 +489,8 @@ def buildExtension(srcArr, extDir):
                 dllNameW=lib,
                 dllNameL=lib,
                 dllNameM=lib,
-                functions=""
+                functions="",
+                initFn="",
             ))
 
         files.append(yycfileTemplate.format(
@@ -474,7 +498,8 @@ def buildExtension(srcArr, extDir):
             dllNameW=os.path.basename(dllPathW),
             dllNameL=os.path.basename(dllPathL),
             dllNameM=os.path.basename(dllPathM),
-            functions=fnEntry
+            functions=fnEntry,
+            initFn=initFn,
         ))
             
     yyString = yycTemplate.format(

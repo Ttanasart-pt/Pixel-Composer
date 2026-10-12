@@ -6,6 +6,11 @@
         "date": "2026-10-11T04:42:12.663Z",
         "node": "Blue Noise",
         "commit": "**Blue Noise**: Fix output use patch dimension instead of node dimension."
+      },
+      {
+        "date": "2026-10-12T02:13:58.088Z",
+        "node": "Blue Noise",
+        "commit": "**Blue Noise**: Improve performance."
       }
     ]
   },

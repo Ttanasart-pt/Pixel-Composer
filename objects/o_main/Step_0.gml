@@ -153,3 +153,5 @@ if(!LOADING && PROJECT.active && !PROJECT.safeMode) { //node step
 		}
 	}
 #endregion
+
+// if(key_press(ord("T"))) print(TriggerAsyncEvent(101));
