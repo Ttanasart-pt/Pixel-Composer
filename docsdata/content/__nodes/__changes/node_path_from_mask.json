@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.22.0.301",
+    "changes": [
+      {
+        "date": "2026-10-12T03:34:34.655Z",
+        "node": "",
+        "commit": "**Mac**: Fix error causes by unsupported 8-bit single channel surface. (Surface Extrude, Markov, Path from Mask, RM to Voxel, RM to Mesh)"
+      }
+    ]
+  },
+  {
     "version": "1.21.7.109",
     "changes": [
       {

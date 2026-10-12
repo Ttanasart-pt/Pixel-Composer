@@ -48,8 +48,8 @@ function Node_FLIP_Solid(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		var ww = domain.cellX;
 		var hh = domain.cellY;
 		
-		temp_surface[0] = surface_verify(temp_surface[0], ww, hh, surface_r8unorm);
-		temp_surface[1] = surface_verify(temp_surface[1], ww, hh, surface_r8unorm);
+		temp_surface[0] = surface_verify(temp_surface[0], ww, hh, surface_r32float);
+		temp_surface[1] = surface_verify(temp_surface[1], ww, hh, surface_r32float);
 		
 		surface_set_shader(temp_surface[0], sh_flip_solid_surface_cvt);
 			shader_set_f( "threshold", _thrs   );

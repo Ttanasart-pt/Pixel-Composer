@@ -1,5 +1,6 @@
 function Node_Noise_Blue(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name = "Blue Noise";
+	manual_render_time = true;
 	
 	newInput( 1, nodeValueSeed()).setPieMenu();
 	
@@ -18,6 +19,8 @@ function Node_Noise_Blue(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	// 8
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
+	
+	array_foreach(inputs, function(inp,_) /*=>*/ {return inp.setAnimable(false)});
 	
 	input_display_list = [  1, 
 		[ "Output",      false ],  0,  2, 
@@ -41,6 +44,7 @@ function Node_Noise_Blue(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	outSurf      = noone;
 	
 	generator    = blue_noise_generator_init();
+	generation_time = 0;
 	
 	curr_sed = 0;
 	curr_dx  = 0;
@@ -77,7 +81,11 @@ function Node_Noise_Blue(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 			if(_rad    != curr_rad) _update = true;
 			if(_sig    != curr_sig) _update = true;
 			if(_pat    != curr_pat) _update = true;
-			if(!_update) return;
+			
+			if(!_update) {
+				render_time = generation_time;
+				return;
+			}
 			
 			curr_sed = _sed;
 			curr_dx  = _dim[0];
@@ -127,7 +135,8 @@ function Node_Noise_Blue(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 				draw_surface(temp_surface[0], 0, 0);
 			surface_reset_shader();
 			
-			render_time = get_timer() - render_timer;
+			generation_time = get_timer() - render_timer;
+			render_time     = generation_time;
 			PANEL_GRAPH.refreshDraw();
 			
 			triggerRender(false);

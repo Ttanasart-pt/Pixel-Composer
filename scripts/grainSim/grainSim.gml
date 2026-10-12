@@ -766,12 +766,12 @@ cfunction double grainSim_Particle_Delete_Buffer(double domain_id, void* inputBu
     DOMAIN_CHECK(domain_id)
 
     int n = domain.n;
-    uint8_t* inputBufferVal = static_cast<uint8_t*>(inputBuffer);
+    float* inputBufferVal = static_cast<float*>(inputBuffer);
 
     for (auto it = domain.particles.begin(); it != domain.particles.end(); ) {
         Vec2 pN = domain.denormalize(it->x);
         int ind = static_cast<int>(pN.x) * n + static_cast<int>(pN.y);
-        if (inputBufferVal[ind] == 0)
+        if (inputBufferVal[ind] == 0.)
             it++;
         else
             it = domain.particles.erase(it);
@@ -815,13 +815,13 @@ cfunction double grainSim_Particle_Wake_Buffer(double domain_id, void* inputBuff
     DOMAIN_CHECK(domain_id)
 
     int n = domain.n;
-    uint8_t* inputBufferVal = static_cast<uint8_t*>(inputBuffer);
+    float* inputBufferVal = static_cast<float*>(inputBuffer);
 
     for (auto& p : domain.particles) {
         Vec2 pN = domain.denormalize(p.x);
         int ind = (static_cast<int>(pN.y)) * n + static_cast<int>(pN.x);
         
-        double f = inputBufferVal[ind] / 255.;
+        double f = inputBufferVal[ind];
         if (f > 0) p.sleep = false;
     }
 
@@ -882,13 +882,13 @@ cfunction double grainSim_Force_Apply_Buffer(double domain_id, void* inputBuffer
     DOMAIN_CHECK(domain_id)
 
     int n = domain.n;
-    uint8_t* inputBufferVal = static_cast<uint8_t*>(inputBuffer);
+    float* inputBufferVal = static_cast<float*>(inputBuffer);
 
     for (auto& p : domain.particles) {
         Vec2 pN = domain.denormalize(p.x);
         int ind = (static_cast<int>(pN.y)) * n + static_cast<int>(pN.x);
         
-        double f = inputBufferVal[ind] / 255.;
+        double f = inputBufferVal[ind];
         if (f > 0) {
         	p.sleep = false;
             p.force.x += forceParam.fx * f;
@@ -970,7 +970,7 @@ cfunction double grainSim_Solid_Buffer(double domain_id, void* buffer) {
 	
 	int n = domain.n;
 
-    uint8_t* solid_buffer = static_cast<uint8_t*>(buffer);
+    float* solid_buffer = static_cast<float*>(buffer);
 
     for(int i = 0; i < n; i++)
     for(int j = 0; j < n; j++) {

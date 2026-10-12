@@ -45,7 +45,7 @@ function Node_RM_Project_Mesh(_x, _y, _group = noone) : Node(_x, _y, _group) con
 		var _res = max(_dim[0], _dim[1]);
 		var s = ceil(sqrt(_res * _res * _res));
 		
-		temp_surface[0] = surface_verify(temp_surface[0], s, s, surface_r8unorm);
+		temp_surface[0] = surface_verify(temp_surface[0], s, s, surface_r16float);
 		voxeldata = buffer_create(_res * _res * _res, buffer_grow, 1);
 		buffer_to_start(voxeldata);
 		

@@ -47,8 +47,8 @@ function Node_RM_to_Voxel(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		#endregion
 		
 		var s = ceil(sqrt(_res * _res * _res));
-		temp_surface[0] = surface_verify(temp_surface[0], s, s, surface_r8unorm);
-		voxeldata = buffer_create(_res * _res * _res, buffer_grow, 1);
+		temp_surface[0] = surface_verify(temp_surface[0], s, s, surface_r16float);
+		voxeldata = buffer_create(_res * _res * _res * 2, buffer_grow, 1);
 		
 		surface_set_shader(temp_surface[0], sh_rm_to_voxel_cross);
 			shader_set_3( "middle",     _mid  );

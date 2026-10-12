@@ -27,7 +27,7 @@ function __3dRmVoxel() : __3dObject() constructor {
 		for( var i = 0; i < voxelRes; i++ ) 
 		for( var j = 0; j < voxelRes; j++ ) 
 		for( var k = 0; k < voxelRes; k++ ) {
-			var d = buffer_read(voxelData, buffer_u8);
+			var d = buffer_read(voxelData, buffer_f16);
 			if(!d) continue;
 			
 			cx = -(k - voxelRes / 2) * voxelSize - voxelCube;
@@ -303,7 +303,7 @@ function __3dRmCubeMarch() : __3dObject() constructor {
 		for( var i = 0; i < rs; i++ ) 
 		for( var j = 0; j < rs; j++ ) 
 		for( var k = 0; k < rs; k++ )
-			dataArray[ind++] = bool(buffer_read(voxelData, buffer_u8));
+			dataArray[ind++] = bool(buffer_read(voxelData, buffer_f16));
 
 		vertex_begin(VB[0], VF);
 		for( var i = 0; i < rs-1; i++ ) 

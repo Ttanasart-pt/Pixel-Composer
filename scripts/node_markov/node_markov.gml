@@ -68,35 +68,36 @@ function Node_Markov(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		var _sdim = surface_get_dimension(_surf);
 		var _mdim = surface_get_dimension(_smat);
 		
-		temp_surface[0] = surface_verify(temp_surface[0], _sdim[0], _sdim[1], surface_r8unorm);
+		temp_surface[0] = surface_verify(temp_surface[0], _sdim[0], _sdim[1], surface_r16float);
 		surface_set_shader(temp_surface[0], sh_markov_match);
-			shader_set_2("dimension",      _sdim );
-			shader_set_2("matchDimension", _mdim );
+			shader_set_2( "dimension",      _sdim );
+			shader_set_2( "matchDimension", _mdim );
 			
-			shader_set_f_map("matchChance",_schc, _data[11], inputs[4] );
-			shader_set_s("matchSurface",   _smat );
-			shader_set_f("seed",           _seed + CURRENT_FRAME );
-			shader_set_f("threshold",      _mthr );
-			shader_set_i("transforms",     _mtrn );
-			shader_set_i("boundary",       _boun );
+			shader_set_m( "matchChance",    _schc, _data[11], inputs[4] );
+			shader_set_s( "matchSurface",   _smat );
+			shader_set_f( "seed",           _seed + CURRENT_FRAME );
+			shader_set_f( "threshold",      _mthr );
+			shader_set_i( "transforms",     _mtrn );
+			shader_set_i( "boundary",       _boun );
 			
-			shader_set_i("tiling",         _tile );
-			shader_set_2("tileOffset",     _toff );
-			shader_set_2("tileSize",       _tsiz );
+			shader_set_i( "tiling",         _tile );
+			shader_set_2( "tileOffset",     _toff );
+			shader_set_2( "tileSize",       _tsiz );
 			
 			shader_set_palette(_matg, "matchGroup", "matchGroupCount", 256 );
 			
 			draw_surface(_surf, 0, 0);
 		surface_reset_shader();
 		
-		var _ssize = surface_get_byte_size(_surf);
-		buff_match = buffer_verify(buff_match, _ssize);
+		var _pxsize = _sdim[0] * _sdim[1];
+		
+		buff_match = buffer_verify(buff_match, _pxsize * 2);
+		buff_data  = array_verify( buff_data,  _pxsize);
 		buffer_get_surface(buff_match, temp_surface[0], 0);
-		buffer_to_start(buff_match);
-		buff_data = array_verify(buff_data, _ssize);
 		
 		var i = 0;
-		repeat(_ssize) buff_data[i++] = buffer_read(buff_match, buffer_u8);
+		buffer_to_start(buff_match);
+		repeat(_pxsize) buff_data[i++] = buffer_read(buff_match, buffer_f16);
 		
 		var _repArr = is_array(_srep)? _srep : [_srep];
 		var _repAmo = array_length(_repArr);
@@ -111,11 +112,11 @@ function Node_Markov(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 			DRAW_CLEAR
 			draw_surface_safe(_surf, 0, 0);
 			
-			var b  = _revr? _ssize - 1 : 0;
+			var b  = _revr? _pxsize - 1 : 0;
 			var db = _revr? -1 : 1;
 			var sw = _sdim[0];
 			
-			repeat(_ssize) {
+			repeat(_pxsize) {
 				var _matRes = buff_data[b];
 				var _x = b % sw;
 				var _y = b div sw;

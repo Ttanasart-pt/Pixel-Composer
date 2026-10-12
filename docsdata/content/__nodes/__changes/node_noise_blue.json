@@ -16,6 +16,11 @@
         "date": "2026-10-12T02:34:49.832Z",
         "node": "Blue Noise",
         "commit": "**Blue Noise**: Add button to stop generation prematurely."
+      },
+      {
+        "date": "2026-10-12T03:34:34.655Z",
+        "node": "",
+        "commit": "**Mac**: Fix error causes by unsupported 8-bit single channel surface. (Surface Extrude, Markov, Path from Mask, RM to Voxel, RM to Mesh)"
       }
     ]
   },

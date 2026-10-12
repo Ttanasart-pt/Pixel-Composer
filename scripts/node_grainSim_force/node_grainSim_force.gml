@@ -124,7 +124,7 @@ function Node_GrainSim_Force(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 				if(!is_surface(_surf)) break;
 				
 				var _size = _domain.size;
-				temp_surface[0] = surface_verify(temp_surface[0], _size, _size, surface_r8unorm);
+				temp_surface[0] = surface_verify(temp_surface[0], _size, _size, surface_r32float);
 				surface_set_target(temp_surface[0]);
 					DRAW_CLEAR
 					BLEND_OVERRIDE

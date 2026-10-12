@@ -110,8 +110,8 @@ function tiler_brush_autoterrain() constructor {
         eraseMode         = _erase;
         
         var _dim          = surface_get_dimension(surface);
-        draw_surface_mask = surface_verify(draw_surface_mask, _dim[0], _dim[1], surface_r8unorm);
-        mask_surface      = surface_verify(mask_surface,      _dim[0], _dim[1], surface_r8unorm);
+        draw_surface_mask = surface_verify(draw_surface_mask, _dim[0], _dim[1], surface_r32float);
+        mask_surface      = surface_verify(mask_surface,      _dim[0], _dim[1], surface_r32float);
         update_surface    = surface_verify(update_surface,    _dim[0], _dim[1], surface_rgba16float);
         
         surface_clear(draw_surface_mask);

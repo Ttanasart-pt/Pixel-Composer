@@ -9,7 +9,6 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		modifiable  = true;
 		
 		ungroupable			= true;
-		auto_render_time	= false;
 		combine_render_time = true;
 	
 		isPure    = false;

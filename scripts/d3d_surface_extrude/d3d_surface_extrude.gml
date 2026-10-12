@@ -36,12 +36,12 @@ function __3dSurfaceExtrude(_surface = noone, _height = noone, _smooth = false) 
 		var cb_buff = noone;
 		
 		#region Buffer
-			var _fsurface = surface_create(ww, hh, surface_r8unorm);
+			var _fsurface = surface_create(ww, hh, surface_r16float);
 			surface_set_shader(_fsurface, sh_d3d_surface_ex_alpha);
 				draw_surface_stretched(surface, 0, 0, ww, hh);
 			surface_reset_shader();
 			
-			c_buff = buffer_create(hh * ww, buffer_fast, 1);
+			c_buff = buffer_create(hh * ww * 2, buffer_fixed, 1);
 			buffer_get_surface(c_buff, _fsurface, 0);
 			surface_free(_fsurface);
 			
@@ -113,7 +113,7 @@ function __3dSurfaceExtrude(_surface = noone, _height = noone, _smooth = false) 
 			i = n % ww;
 			j = floor(n / ww);
 			
-			var _solid = buffer_peek(c_buff, n, buffer_u8);
+			var _solid = buffer_peek(c_buff, n * 2, buffer_f16);
 			if(_solid == 0) continue;
 			
 			var i0 = sw + i * tw;
@@ -229,7 +229,7 @@ function __3dSurfaceExtrude(_surface = noone, _height = noone, _smooth = false) 
 			
 			if(back) {
 				if((useH && dep * 2 > buffer_peek(h_buff, (i + max(0, j - 1) * ww) * 2, buffer_f16))
-					|| (j == 0 || buffer_peek(c_buff, (j - 1) * ww + (i), buffer_u8) == 0)) { //y side 
+					|| (j == 0 || buffer_peek(c_buff, 2 * ((j - 1) * ww + (i)), buffer_f16) == 0)) { //y side 
 						
 					__vertex_buffer_add_pntc(_bS, i0, j0,  dep, 0, 1, 0, tx0, ty1,,, 255, 0, 0);
 					__vertex_buffer_add_pntc(_bS, i0, j0,    0, 0, 1, 0, tx0, ty0,,, 0, 255, 0);
@@ -241,7 +241,7 @@ function __3dSurfaceExtrude(_surface = noone, _height = noone, _smooth = false) 
 				}
 				
 				if((useH && abs(depb) * 2 > buffer_peek(hb_buff, (i + max(0, j - 1) * ww) * 2, buffer_f16))
-					|| (j == 0 || buffer_peek(c_buff, (j - 1) * ww + (i), buffer_u8) == 0)) { //y side 
+					|| (j == 0 || buffer_peek(c_buff, 2 * ((j - 1) * ww + (i)), buffer_f16) == 0)) { //y side 
 						
 					__vertex_buffer_add_pntc(_bS, i0, j0,    0, 0, 1, 0, tx0, ty0,,, 255, 0, 0);
 					__vertex_buffer_add_pntc(_bS, i0, j0, depb, 0, 1, 0, tx0, ty1,,, 0, 255, 0);
@@ -253,7 +253,7 @@ function __3dSurfaceExtrude(_surface = noone, _height = noone, _smooth = false) 
 				}
 					
 				if((useH && dep * 2 > buffer_peek(h_buff, (i + min(j + 1, hh - 1) * ww) * 2, buffer_f16))
-					|| (j == hh - 1 || buffer_peek(c_buff, (j + 1) * ww + (i), buffer_u8) == 0)) { //y side 
+					|| (j == hh - 1 || buffer_peek(c_buff, 2 * ((j + 1) * ww + (i)), buffer_f16) == 0)) { //y side 
 						
 					__vertex_buffer_add_pntc(_bS, i0, j1,  dep, 0, -1, 0, tx0, ty1,,, 255, 0, 0);
 					__vertex_buffer_add_pntc(_bS, i1, j1,  dep, 0, -1, 0, tx1, ty1,,, 0, 255, 0);
@@ -265,7 +265,7 @@ function __3dSurfaceExtrude(_surface = noone, _height = noone, _smooth = false) 
 				}
 					
 				if((useH && abs(depb) * 2 > buffer_peek(hb_buff, (i + min(j + 1, hh - 1) * ww) * 2, buffer_f16))
-					|| (j == hh - 1 || buffer_peek(c_buff, (j + 1) * ww + (i), buffer_u8) == 0)) { //y side 
+					|| (j == hh - 1 || buffer_peek(c_buff, 2 * ((j + 1) * ww + (i)), buffer_f16) == 0)) { //y side 
 					
 					__vertex_buffer_add_pntc(_bS, i0, j1,    0, 0, -1, 0, tx0, ty0,,, 255, 0, 0);
 					__vertex_buffer_add_pntc(_bS, i1, j1,    0, 0, -1, 0, tx1, ty0,,, 0, 255, 0);
@@ -277,7 +277,7 @@ function __3dSurfaceExtrude(_surface = noone, _height = noone, _smooth = false) 
 				}
 				
 				if((useH && dep * 2 > buffer_peek(h_buff, (max(0, i - 1) + j * ww) * 2, buffer_f16))
-					|| (i == 0 || buffer_peek(c_buff, (j) * ww + (i - 1), buffer_u8) == 0)) { //x side 
+					|| (i == 0 || buffer_peek(c_buff, 2 * ((j) * ww + (i - 1)), buffer_f16) == 0)) { //x side 
 						
 					__vertex_buffer_add_pntc(_bS, i0, j0,  dep, -1, 0, 0, tx0, ty1,,, 255, 0, 0);
 					__vertex_buffer_add_pntc(_bS, i0, j1,  dep, -1, 0, 0, tx1, ty1,,, 0, 255, 0);
@@ -289,7 +289,7 @@ function __3dSurfaceExtrude(_surface = noone, _height = noone, _smooth = false) 
 				}
 				
 				if((useH && abs(depb) * 2 > buffer_peek(hb_buff, (max(0, i - 1) + j * ww) * 2, buffer_f16))
-					|| (i == 0 || buffer_peek(c_buff, (j) * ww + (i - 1), buffer_u8) == 0)) { //x side 
+					|| (i == 0 || buffer_peek(c_buff, 2 * ((j) * ww + (i - 1)), buffer_f16) == 0)) { //x side 
 					
 					__vertex_buffer_add_pntc(_bS, i0, j0,    0, -1, 0, 0, tx0, ty0,,, 255, 0, 0);
 					__vertex_buffer_add_pntc(_bS, i0, j1,    0, -1, 0, 0, tx1, ty0,,, 0, 255, 0);
@@ -301,7 +301,7 @@ function __3dSurfaceExtrude(_surface = noone, _height = noone, _smooth = false) 
 				}
 				
 				if((useH && dep * 2 > buffer_peek(h_buff, (min(i + 1, ww - 1 ) + j * ww) * 2, buffer_f16))
-					|| (i == ww - 1 || buffer_peek(c_buff, (j) * ww + (i + 1), buffer_u8) == 0)) { //x side
+					|| (i == ww - 1 || buffer_peek(c_buff, 2 * ((j) * ww + (i + 1)), buffer_f16) == 0)) { //x side
 					
 					__vertex_buffer_add_pntc(_bS, i1, j0,  dep, 1, 0, 0, tx0, ty1,,, 255, 0, 0);
 					__vertex_buffer_add_pntc(_bS, i1, j0,    0, 1, 0, 0, tx0, ty0,,, 0, 255, 0);
@@ -313,7 +313,7 @@ function __3dSurfaceExtrude(_surface = noone, _height = noone, _smooth = false) 
 				}
 					
 				if((useH && abs(depb) * 2 > buffer_peek(hb_buff, (min(i + 1, ww - 1 ) + j * ww) * 2, buffer_f16))
-					|| (i == ww - 1 || buffer_peek(c_buff, (j) * ww + (i + 1), buffer_u8) == 0)) { //x side
+					|| (i == ww - 1 || buffer_peek(c_buff, 2 * ((j) * ww + (i + 1)), buffer_f16) == 0)) { //x side
 					
 					__vertex_buffer_add_pntc(_bS, i1, j0,    0, 1, 0, 0, tx0, ty0,,, 255, 0, 0);
 					__vertex_buffer_add_pntc(_bS, i1, j0, depb, 1, 0, 0, tx0, ty1,,, 0, 255, 0);
@@ -327,7 +327,7 @@ function __3dSurfaceExtrude(_surface = noone, _height = noone, _smooth = false) 
 			} else {
 				
 				if((useH && dep * 2 > buffer_peek(h_buff, (i + max(0, j - 1) * ww) * 2, buffer_f16))
-					|| (j == 0 || buffer_peek(c_buff, (j - 1) * ww + (i), buffer_u8) == 0)) { //y side 
+					|| (j == 0 || buffer_peek(c_buff, 2 * ((j - 1) * ww + (i)), buffer_f16) == 0)) { //y side 
 						
 					__vertex_buffer_add_pntc(_bS, i0, j0,  dep, 0, 1, 0, tx0, ty1,,, 255, 0, 0);
 					__vertex_buffer_add_pntc(_bS, i0, j0, depb, 0, 1, 0, tx0, ty0,,, 0, 255, 0);
@@ -339,7 +339,7 @@ function __3dSurfaceExtrude(_surface = noone, _height = noone, _smooth = false) 
 				}
 				
 				if((useH && dep * 2 > buffer_peek(h_buff, (i + min(j + 1, hh - 1) * ww) * 2, buffer_f16))
-					|| (j == hh - 1 || buffer_peek(c_buff, (j + 1) * ww + (i), buffer_u8) == 0)) { //y side 
+					|| (j == hh - 1 || buffer_peek(c_buff, 2 * ((j + 1) * ww + (i)), buffer_f16) == 0)) { //y side 
 					
 					__vertex_buffer_add_pntc(_bS, i0, j1,  dep, 0, -1, 0, tx0, ty1,,, 255, 0, 0);
 					__vertex_buffer_add_pntc(_bS, i1, j1,  dep, 0, -1, 0, tx1, ty1,,, 0, 255, 0);
@@ -351,7 +351,7 @@ function __3dSurfaceExtrude(_surface = noone, _height = noone, _smooth = false) 
 				}
 				
 				if((useH && dep * 2 > buffer_peek(h_buff, (max(0, i - 1) + j * ww) * 2, buffer_f16))
-					|| (i == 0 || buffer_peek(c_buff, (j) * ww + (i - 1), buffer_u8) == 0)) { //x side 
+					|| (i == 0 || buffer_peek(c_buff, 2 * ((j) * ww + (i - 1)), buffer_f16) == 0)) { //x side 
 						
 					__vertex_buffer_add_pntc(_bS, i0, j0,  dep, -1, 0, 0, tx0, ty1,,, 255, 0, 0);
 					__vertex_buffer_add_pntc(_bS, i0, j1,  dep, -1, 0, 0, tx1, ty1,,, 0, 255, 0);
@@ -363,7 +363,7 @@ function __3dSurfaceExtrude(_surface = noone, _height = noone, _smooth = false) 
 				}
 				
 				if((useH && dep * 2 > buffer_peek(h_buff, (min(i + 1, ww - 1) + j * ww) * 2, buffer_f16))
-					|| (i == ww - 1 || buffer_peek(c_buff, (j) * ww + (i + 1), buffer_u8) == 0)) { //x side
+					|| (i == ww - 1 || buffer_peek(c_buff, 2 * ((j) * ww + (i + 1)), buffer_f16) == 0)) { //x side
 					
 					__vertex_buffer_add_pntc(_bS, i1, j0,  dep, 1, 0, 0, tx0, ty1,,, 255, 0, 0);
 					__vertex_buffer_add_pntc(_bS, i1, j0, depb, 1, 0, 0, tx0, ty0,,, 0, 255, 0);

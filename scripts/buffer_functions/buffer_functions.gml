@@ -145,15 +145,27 @@ function buffer_deserialize(buffer, compress = true) {
 	
 	////- Strings
 	
-function buffer_to_string(buffer) {
+function buffer_to_text(buffer, format = buffer_u8, fsize = 1) {
 	if(!buffer_exists(buffer)) return "";
 
 	buffer_seek(buffer, buffer_seek_start, 0);
-	var len = buffer_get_size(buffer);
+	var len = buffer_get_size(buffer) / fsize;
+    var ss  = "";
+    
+    repeat(len) ss += string(buffer_read(buffer, format)) + " ";
+    
+    return ss;
+}
+
+function buffer_to_string(buffer, format = buffer_u8, fsize = 1) {
+	if(!buffer_exists(buffer)) return "";
+
+	buffer_seek(buffer, buffer_seek_start, 0);
+	var len = buffer_get_size(buffer) / fsize;
     var ss  = "";
     
     repeat(len) {
-		var _r = buffer_read(buffer, buffer_u8);
+		var _r = buffer_read(buffer, format);
 		ss += chr(_r);
 	}
     

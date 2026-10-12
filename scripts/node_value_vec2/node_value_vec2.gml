@@ -90,10 +90,11 @@ function __NodeValue_Vec2(_name, _node, _value, _data = {}) : NodeValue(_name, _
 	static isAnimable = function() {
 		if(type == VALUE_TYPE.PCXnode)				 return false;
 		if(display_type == VALUE_DISPLAY.text_array) return false;
+		if(!animable) return animable;
 		
 		if(show_val_curr != undefined)
 			return array_get_depth(show_val_curr) == 1;
-		return true;
+		return animable;
 	}
 	
 	////- ANIMATOR

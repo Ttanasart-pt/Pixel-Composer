@@ -114,7 +114,7 @@ function Node_Path_From_Mask(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 		#endregion
 		
 		var _dim = surface_get_dimension(_surf);
-		temp_surface[0] = surface_verify(temp_surface[0], _dim[0], _dim[1], surface_r8unorm);
+		temp_surface[0] = surface_verify(temp_surface[0], _dim[0], _dim[1], surface_r32float);
 		
 		surface_set_shader(temp_surface[0], sh_image_trace);
 			shader_set_f("dimension", _dim);
@@ -122,7 +122,7 @@ function Node_Path_From_Mask(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 		surface_reset_shader();
 		
 		var _amo  = attributes.maximum_points;
-		var _sbuf = buffer_create(_dim[0] * _dim[1], buffer_grow, 1);
+		var _sbuf = buffer_create(_dim[0] * _dim[1] * 4, buffer_grow, 1);
 		buffer_get_surface(_sbuf, temp_surface[0], 0);
 		
 		var _obuf = buffer_create(_amo * 2 * 4, buffer_fixed, 4);
@@ -280,7 +280,7 @@ uint16_t lx, ly;
 cfunction double path_from_mask(void* args) {
 	pathFromMaskArgs* pArgs = (pathFromMaskArgs*)args;
 
-	uint8_t* mask   = (uint8_t*)pArgs->pixelArrayBuffer;
+	float*   mask   = (float*)pArgs->pixelArrayBuffer;
 	uint16_t width  = pArgs->surfaceWidth;
 	uint16_t height = pArgs->surfaceHeight;
 

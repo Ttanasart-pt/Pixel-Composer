@@ -400,10 +400,12 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		
 		rendered         = false;
 		update_on_frame  = false;
+		
 		render_timer     = 0;
 		render_time		 = 0;
+		manual_render_time = false;
+		
 		render_cached    = false;
-		auto_render_time = true;
 		updated			 = false;
 		passiveDynamic   = false;
 		force_requeue    = false;
@@ -1436,7 +1438,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 				cacheCurrentFrame(outputs[cache_index].getValue());
 		}
 		
-		render_time = get_timer() - render_timer;
+		if(!manual_render_time) render_time = get_timer() - render_timer;
 	}
 	
 	static doUpdateFull = function(frame = CURRENT_FRAME) {
@@ -1491,7 +1493,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		
 		updatedOutTrigger.setValue(true);
 		
-		if(!is(self, Node_Collection)) render_time = get_timer() - render_timer;
+		if(!manual_render_time && !is(self, Node_Collection)) render_time = get_timer() - render_timer;
 		
 		LOG_BLOCK_END
 	}
