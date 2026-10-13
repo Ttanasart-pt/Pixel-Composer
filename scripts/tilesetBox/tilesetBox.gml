@@ -13,6 +13,8 @@ function tilesetBox(_junction) : widget() constructor {
     
 	static trigger = function() { }
 	
+	////- =Draw
+	
 	static fetchHeight = function(params) { return TEXTBOX_HEIGHT; }
 	static drawParam   = function(params) {
 		setParam(params);
@@ -26,19 +28,25 @@ function tilesetBox(_junction) : widget() constructor {
 		h = TEXTBOX_HEIGHT;
         
         if(_tileset == noone) {
-            b_newTileset.setFocusHover(active, hover);
-            var param = new widgetParam(x, y, w, h, noone, undefined, _m, rx, ry).setFont(font);
-            b_newTileset.drawParam(param);
+        	if(interactable) {
+	            b_newTileset.setFocusHover(active, hover);
+	            var param = new widgetParam(x, y, w, h, noone, undefined, _m, rx, ry).setFont(font);
+	            b_newTileset.drawParam(param);
+	            
+        	} else {
+        		draw_sprite_stretched_ext(THEME.ui_panel_bg, 1, x, y, w, h, COLORS._main_icon_light);
+        		draw_set_text(f_p3, fa_center, fa_center, COLORS._main_text_sub);
+        		draw_text_add(x+w/2, y+h/2, __txt("No data"));
+        		
+        	}
             
         } else {
 			var ic = s_node_tile_tileset;
 			var ss = undefined;
         	
-        	switch(instanceof(_tileset)) {
-        		case "Node_Tile_Tileset" : 
-        			ic = s_node_tile_tileset; 
-        			ss = _tileset.tileSize;
-        			break;
+        	if(is(_tileset, Node_Tile_Tileset)) {
+    			ic = s_node_tile_tileset; 
+    			ss = _tileset.tileSize;
         	}
         	
         	var iw = ui(24);

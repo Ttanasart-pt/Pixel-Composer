@@ -168,5 +168,5 @@ void main() {
 	if(px.x < 0. || px.x >= 1.) return;
 	if(px.y < 0. || px.y >= 1.) return;
 	
-    gl_FragColor = v_vColour * texture2Dintp( gm_BaseTexture, px );
+    gl_FragColor = texture2Dintp( gm_BaseTexture, px );
 }

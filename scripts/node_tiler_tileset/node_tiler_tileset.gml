@@ -69,7 +69,7 @@ function Node_Tile_Tileset(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	    tile_selector_fx   = false;
 	    
 	    tile_selector_s_min = .5;
-	    tile_selector_s_max =  8;
+	    tile_selector_s_max = 32;
 	    
 	    tile_dragging = false;
 	    tile_drag_sx  = 0;
@@ -98,7 +98,25 @@ function Node_Tile_Tileset(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	    grid_draw = true;
 	    brush     = new tiler_brush(self);
 	    
+	    tile_selector_zoom_fit = function() {
+	    	if(!is_surface(texture)) return;
+	    	
+	    	var ww = tile_selector.w;
+	    	var hh = tile_selector.fixHeight > 0? tile_selector.fixHeight - ui(24 + 4 + 48 + 8) : tile_selector_h;
+	    	
+    	    var _ss = min((ww - ui(8)) / textureSize[0], (hh - ui(8)) / textureSize[1]);
+    	        _ss = clamp(_ss, tile_selector_s_min, tile_selector_s_max);
+    	    
+    	    tile_selector_s    = _ss;
+    	    tile_selector_s_to = _ss;
+    	    
+    	    tile_selector_x = ww / 2 - textureSize[0] * _ss / 2;
+            tile_selector_y = hh / 2 - textureSize[1] * _ss / 2;
+	    }
+	    
 	    tile_selector = new Inspector_Custom_Renderer(function(_x, _y, _w, _m, _hover, _focus, _panel = noone) { 
+	    	tile_selector.w = _w;
+	    	
 	    	var _tileSet = texture;
 	    	var _tileDim = textureSize;
 	    	var _tileSiz = tileSize;
@@ -112,8 +130,11 @@ function Node_Tile_Tileset(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 				var bx = _x;
 				var by = _yy;
 				var bs = ui(24);
+				var bc = COLORS._main_icon_light;
 				
-				if(buttonInstant(THEME.button_hide_fill, bx, by, bs, bs, _m, _hover, _focus, "Clear selection", THEME.canvas_tools_selection_rectangle, 0, COLORS._main_icon_light) == 2) {
+				var bt = __txt("Clear Selection");
+				var bp = THEME.canvas_tools_selection_rectangle;
+				if(buttonInstant(THEME.button_hide_fill, bx, by, bs, bs, _m, _hover, _focus, bt, bp, 0, bc) == 2) {
 					brush.brush_indices = [[]];
 					brush_varient_base  = undefined;
 					brush.brush_width   = 0;
@@ -123,19 +144,10 @@ function Node_Tile_Tileset(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 				var _lx = bx + bs + ui(8);
 				
 				bx = _x + _w - bs;
-				if(buttonInstant(THEME.button_hide_fill, bx, by, bs, bs, _m, _hover, _focus, "Zoom to fit", THEME.path_tools_transform, 0, COLORS._main_icon_light) == 2) {
-				    if(is_surface(_tileSet)) {
-						var _sw   = _w   - _pd * 2;
-			    	    var _sh   = _tsh - _pd * 2;
-			    	    
-			    	    var _ss = min(_sw / (_tileDim[0] + 16), _sh / (_tileDim[1] + 16));
-			    	    tile_selector_s    = _ss;
-			    	    tile_selector_s_to = _ss;
-			    	    
-			    	    tile_selector_x =   _w / 2 - _tileDim[0] * _ss / 2;
-		                tile_selector_y = _tsh / 2 - _tileDim[1] * _ss / 2;
-				    }
-				}
+				var bt = __txt("Zoom to Fit");
+				var bp = THEME.path_tools_transform;
+				if(buttonInstant(THEME.button_hide_fill, bx, by, bs, bs, _m, _hover, _focus, bt, bp, 0, bc) == 2)
+				    tile_selector_zoom_fit();
 				
 				var _rx = bx - ui(8);
 				var _zw  = ui(128);
@@ -145,7 +157,7 @@ function Node_Tile_Tileset(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 				    _zw  = _zx1 - _zx0;
 				var _zy  = by + bs / 2 - _zh / 2;
 				
-				if(_zw) { //zoom
+				if(_zw) { // Zoom
 					var z0 = tile_selector_s_min;
 					var z1 = tile_selector_s_max;
 					
@@ -199,8 +211,8 @@ function Node_Tile_Tileset(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		    	var _sh = _tsh - _pd * 2;
 		    	
 		    	draw_sprite_stretched_ext(THEME.ui_panel_bg, 1, _x, _yy, _w, _tsh, COLORS.node_composite_bg_blend, 1);
-		    	tile_selector_surface  = surface_verify(tile_selector_surface,  _sw, _sh);
-		    	tile_selector_mask     = surface_verify(tile_selector_mask,     _sw, _sh);
+		    	tile_selector_surface     = surface_verify(tile_selector_surface,     _sw, _sh);
+		    	tile_selector_mask        = surface_verify(tile_selector_mask,        _sw, _sh);
 		    	autoterrain_selector_mask = surface_verify(autoterrain_selector_mask, _sw, _sh);
 		    	
 		    	if(!is_surface(_tileSet)) return _h;
@@ -221,14 +233,14 @@ function Node_Tile_Tileset(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		    	var _tileHov_y = tile_selector_y + _mty * _tileSiz[1] * tile_selector_s;
 		    	
 		    	var _hov = _hover && point_in_rectangle(_m[0], _m[1], _x, _yy, _x + _w, _yy + _tsh);
-		    	var _bg0 = colorMultiply(COLORS.panel_bg_clear, COLORS.node_composite_bg_blend);
-		    	var _bg1 = colorMultiply(COLORS.panel_preview_transparent, COLORS.node_composite_bg_blend);
+		    	var _bg0 = COLORS.panel_bg_clear;
+		    	var _bg1 = COLORS.panel_preview_transparent;
 		    	
 		    	surface_set_target(tile_selector_surface); 
 				draw_clear(_bg0);
 				var _tileSx = tile_selector_s * _tileSiz[0] / 16;
 				var _tileSy = tile_selector_s * _tileSiz[1] / 16;
-				draw_sprite_tiled_ext(s_transparent, 0, tile_selector_x, tile_selector_y, _tileSx, _tileSy, _bg1, 1);
+				draw_sprite_tiled_ext(s_transparent, 0, tile_selector_x, tile_selector_y, _tileSx*2, _tileSy*2, _bg1, 1);
 				
 				draw_surface_ext(_tileSet, tile_selector_x, tile_selector_y, tile_selector_s, tile_selector_s, 0, c_white, 1);
 				
@@ -583,7 +595,7 @@ function Node_Tile_Tileset(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 				_h += ui(8) + _th;
 				
 				draw_sprite_stretched_ext(THEME.ui_panel_bg, 1, _x, _ty, _w, _th, COLORS.node_composite_bg_blend, 1);
-				var _is = min(_sw, _sh) / ui(32);
+				var _is = (min(_sw, _sh) - ui(4)) / ui(32);
 				
 				////////////////////////////////////////////////////////////////////////////////////////////////////////////
 				
@@ -591,7 +603,7 @@ function Node_Tile_Tileset(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 				var _aa   = .75 + .25 * _shov;
 				var _cc   = _shov? COLORS._main_value_negative : COLORS._main_icon;
 				draw_sprite_stretched_ext(THEME.ui_panel, 1, _sx, _sy, _sw, _sh, COLORS._main_icon, _aa);
-				draw_sprite_uniform(THEME.cross, 0, _sx + _sw / 2, _sy + _sh / 2, _is, _cc, _aa);
+				draw_sprite_uniform(THEME.cross, 0, _sx + _sw / 2, _sy + _sh / 2, _is * .75, _cc, _aa);
 				_sx += _sw + ui(8);
 				
 				if(_shov) {
@@ -1638,7 +1650,7 @@ function Node_Tile_Tileset(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 			var _brush_tiles = brush.brush_width * brush.brush_height;
 			
 			if(_brush_tiles < 1) draw_sprite_ui(THEME.add_16, 0, bx + bs / 2, by + bs / 2, 1, 1, 0, COLORS._main_icon);
-			else if(buttonInstant(THEME.button_hide_fill, bx, by, bs, bs, _m, _hover, _focus, "New animated tiles", THEME.add_16, 0, COLORS._main_value_positive) == 2) {
+			else if(buttonInstant(THEME.button_hide_fill, bx, by, bs, bs, _m, _hover, _focus, "New ATilesnimated Tiles", THEME.add_16, 0, COLORS._main_value_positive) == 2) {
 				var _indx  = array_create(brush.brush_width * brush.brush_height);
 				
 				for( var i = 0, n = brush.brush_height; i < n; i++ ) 
@@ -1882,11 +1894,12 @@ function Node_Tile_Tileset(_x, _y, _group = noone) : Node(_x, _y, _group) constr
     	animated_viewer.setName("Animated Tile");
     #endregion
     
-	input_display_list = [ 1, 0, 
-		[ "Tileset",      false, noone, tile_selector.b_toggle        ], tile_selector, 
+	input_display_list = [ 
+		[ "Texture",      false ],  0, 
+		[ "Tileset",      false, noone, tile_selector.b_toggle        ], 1, tile_selector, 
 		[ "Autoterrains",  true, noone, autoterrain_selector.b_toggle ], autoterrain_selector, 
 		[ "Palette",       true, noone, palette_viewer.b_toggle       ], palette_viewer,
-		[ "Animated tiles",true, noone, animated_viewer.b_toggle      ], animated_viewer,
+		[ "Animated Tiles",true, noone, animated_viewer.b_toggle      ], animated_viewer,
 		[ "Rules",         true, noone, rules.b_toggle                ], rules,
 	];
 	
@@ -1903,10 +1916,16 @@ function Node_Tile_Tileset(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		shader_set_i("animatedTilesLength", aTilesLength );
 	}
 	
+	__texture = undefined;
 	static update = function(frame = CURRENT_FRAME) {
     	texture     = inputs[0].getValue();
 		tileSize    = inputs[1].getValue();
 		textureSize = surface_get_dimension(texture);
+		
+		if(texture != __texture) {
+			__texture = texture;
+			tile_selector_zoom_fit();
+		}
 		
 		if(gmTile != noone) {
 			inputs[0].setVisible(false, false);

@@ -87,5 +87,5 @@ void main() {
     if(prop > probability) return;
     
     int repIndex = int(random(origin, seed + 100.) * float(replacementCount)) * int(size.x * size.y);
-    gl_FragColor = vec4(replacements[repIndex + repShf] + 1., 0., 0., 1.) * v_vColour;
+    gl_FragColor = vec4(replacements[repIndex + repShf] + 1., 0., 0., 1.);
 }

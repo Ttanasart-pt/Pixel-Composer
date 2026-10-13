@@ -17,6 +17,6 @@ void main() {
     
     for(int i = 0; i < colorAmount; i++) {
         if(base == colorFrom[i])
-            gl_FragColor = vec4(colorTo[i], 0., 0., 1.) * v_vColour;
+            gl_FragColor = vec4(colorTo[i], 0., 0., 1.);
     }
 }

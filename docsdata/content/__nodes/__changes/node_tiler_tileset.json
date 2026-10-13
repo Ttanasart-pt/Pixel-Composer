@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.22.0.302",
+    "changes": [
+      {
+        "date": "2026-10-13T01:58:09.400Z",
+        "node": "",
+        "commit": "**Tile Drawer**: Fix draw tool draw incorrect tile."
+      }
+    ]
+  },
+  {
     "version": "1.21.9.206",
     "changes": [
       {

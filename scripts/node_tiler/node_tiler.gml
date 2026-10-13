@@ -17,6 +17,8 @@ function Node_Tile_Drawer(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
     // bypass_grid = true;
     
     newInput( 3, nodeValueSeed());
+    
+    ////- =Tilemap
     newInput( 1, nodeValue_IVec2( "Map size", [ 16, 16 ] ));
     newInput( 0, nodeValue_Tileset()).setVisible(true, true);
     
@@ -32,12 +34,18 @@ function Node_Tile_Drawer(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	newOutput( 3, nodeValue_Output( "Tile Data", VALUE_TYPE.struct,  {}    ));
 	outputs[3].getEditWidget().shorted = true;
 	
-	input_display_list = [ 3, 1, 0 ];
-	input_display_list_tileset      = ["Tileset",      false, noone, noone];
-	input_display_list_autoterrains = ["Autoterrains",  true, noone, noone];
-	input_display_list_palette      = ["Palette",       true, noone, noone];
-	input_display_list_animated     = ["Animated tiles",true,     2, noone];
-	input_display_list_rule         = ["Rules",         true, noone, noone];
+	label_dimension = new Inspector_Label("Output Dimension: [1,1]");
+	input_display_list_raw = [  3, 
+		[ "Tilemap", false ],  1,  0, label_dimension
+	];
+	
+	input_display_list = input_display_list_raw;
+	
+	input_display_list_tileset      = [ "Tileset",      false, noone, noone ];
+	input_display_list_autoterrains = [ "Autoterrains",  true, noone, noone ];
+	input_display_list_palette      = [ "Palette",       true, noone, noone ];
+	input_display_list_animated     = [ "Animated Tiles",true,     2, noone ];
+	input_display_list_rule         = [ "Rules",         true, noone, noone ];
 	
 	output_display_list = [ 2, 1, 0, 3 ];
 	
@@ -311,25 +319,39 @@ function Node_Tile_Drawer(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 		inputs[1].setValue([ gmTileLayer.tiles.SerialiseWidth, gmTileLayer.tiles.SerialiseHeight ]);
     }
     
+    __tileset = undefined;
 	static processData = function(_outData, _data, _array_index) {
 	    tileset = _data[0];
 	    _outData[2] = tileset;
 	    
-	    if(tileset == noone) { input_display_list = [ 3, 1, 0 ]; return _outData; }
-		 
-	    input_display_list_tileset[3]      = tileset.tile_selector.b_toggle;
-		input_display_list_autoterrains[3] = tileset.autoterrain_selector.b_toggle;
-		input_display_list_palette[3]      = tileset.palette_viewer.b_toggle;
-		input_display_list_animated[3]     = tileset.animated_viewer.b_toggle;
-		input_display_list_rule[3]         = tileset.rules.b_toggle;
-	    
-		input_display_list = [ 3, 1, 0, 
-			input_display_list_tileset,      tileset.tile_selector, 
-			input_display_list_autoterrains, tileset.autoterrain_selector, 
-			input_display_list_palette,      tileset.palette_viewer,
-			input_display_list_animated,     4, 5, tileset.animated_viewer,
-			input_display_list_rule,         tileset.rules,
-		]
+	    #region input_display_list
+	    	if(__tileset != tileset) {
+	    		__tileset = tileset;
+	    		if(tileset == noone) {
+	    			input_display_list = input_display_list_raw; 
+	    			
+	    		} else {
+				    input_display_list_tileset[3]      = tileset.tile_selector.b_toggle;
+					input_display_list_autoterrains[3] = tileset.autoterrain_selector.b_toggle;
+					input_display_list_palette[3]      = tileset.palette_viewer.b_toggle;
+					input_display_list_animated[3]     = tileset.animated_viewer.b_toggle;
+					input_display_list_rule[3]         = tileset.rules.b_toggle;
+				    
+				    input_display_list = array_clone(input_display_list_raw, 1); 
+				    array_append(input_display_list, [
+						input_display_list_tileset,      tileset.tile_selector, 
+						input_display_list_autoterrains, tileset.autoterrain_selector, 
+						input_display_list_palette,      tileset.palette_viewer,
+						input_display_list_animated,     4, 5, tileset.animated_viewer,
+						input_display_list_rule,         tileset.rules,
+					]);
+	    			
+	    		}
+	    	}
+		    
+		    if(tileset == noone) 
+		    	return _outData;
+		#endregion
 		
 		var _tileSet    = tileset.texture;
 		var _tileSiz    = tileset.tileSize;
@@ -359,6 +381,7 @@ function Node_Tile_Drawer(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	    if(!is_surface(_tileSet)) return _outData;
 	    
 	    var _outDim   = [ _tileSiz[0] * _mapSize[0], _tileSiz[1] * _mapSize[1] ];
+	    label_dimension.text = $"Output Dimension: [{_outDim[0]},{_outDim[1]}]";
 	    
 	    var _tileOut = surface_verify(_outData[0], _outDim[0],  _outDim[1]);
 	    var _tileMap = surface_verify(_outData[1], _mapSize[0], _mapSize[1], surface_rgba16float);

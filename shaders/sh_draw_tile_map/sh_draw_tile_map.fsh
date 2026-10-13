@@ -66,5 +66,5 @@ void main() {
     if(mRot   == 3) tileTx = vec2(1. - tileTx.y, tileTx.x);
     
     vec2  samTx = texTx + tileTx * tileSize;
-    gl_FragColor = texture2D( tileTexture, samTx / tileTextureDim ) * v_vColour;
+    gl_FragColor = texture2D( tileTexture, samTx / tileTextureDim );
 }

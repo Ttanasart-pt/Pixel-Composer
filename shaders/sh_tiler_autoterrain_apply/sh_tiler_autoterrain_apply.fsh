@@ -380,6 +380,6 @@ void main() {
     }
     
     float res = float(indexes[index]);
-    gl_FragColor = vec4(res + 1., 0., 0., 1.) * v_vColour;
+    gl_FragColor = vec4(res + 1., 0., 0., 1.);
     
 }
