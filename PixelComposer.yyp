@@ -2457,6 +2457,7 @@
     {"id":{"name":"node_gradient_cos","path":"scripts/node_gradient_cos/node_gradient_cos.yy",},},
     {"id":{"name":"node_gradient_cube","path":"scripts/node_gradient_cube/node_gradient_cube.yy",},},
     {"id":{"name":"node_gradient_extract","path":"scripts/node_gradient_extract/node_gradient_extract.yy",},},
+    {"id":{"name":"node_gradient_from_surface","path":"scripts/node_gradient_from_surface/node_gradient_from_surface.yy",},},
     {"id":{"name":"node_gradient_grid","path":"scripts/node_gradient_grid/node_gradient_grid.yy",},},
     {"id":{"name":"node_gradient_out","path":"scripts/node_gradient_out/node_gradient_out.yy",},},
     {"id":{"name":"node_gradient_palette","path":"scripts/node_gradient_palette/node_gradient_palette.yy",},},

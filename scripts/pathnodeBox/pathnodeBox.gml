@@ -38,23 +38,32 @@ function pathnodeBox(_junction) : widget() constructor {
 		h = TEXTBOX_HEIGHT;
 		
         if(_path == noone) {
-        	var exts = junction.extract_node;
-        	var ext  = is_array(exts)? exts[0] : exts;
-			var bPar = new widgetParam(x, y, w, h, noone, undefined, _m, rx, ry).setFont(font);
-			
-			if(is_array(exts)) {
-				var bs = h;
-				b_newPathMenu.setFocusHover(active, hover);
-	            b_newPathMenu.drawParam(new widgetParam(x + w - bs, y, bs, bs, noone, undefined, _m, rx, ry));
-				bPar.w -= bs + ui(4);
-			}
-			
-			if(is_string(ext)) {
-				var nod = ALL_NODES[$ ext];
-				b_newPath.text = $"New {nod.name}";
-	            b_newPath.setFocusHover(active, hover);
-	            b_newPath.drawParam(bPar);
-			}
+        	if(interactable) {
+	        	var exts = junction.extract_node;
+	        	var ext  = is_array(exts)? exts[0] : exts;
+				var bPar = new widgetParam(x, y, w, h, noone, undefined, _m, rx, ry).setFont(font);
+				
+				if(is_array(exts)) {
+					var bs = h;
+					b_newPathMenu.setFocusHover(active, hover);
+		            b_newPathMenu.drawParam(new widgetParam(x + w - bs, y, bs, bs, noone, undefined, _m, rx, ry));
+					bPar.w -= bs + ui(4);
+				}
+				
+				if(is_string(ext)) {
+					var nod = ALL_NODES[$ ext];
+					b_newPath.text = $"New {nod.name}";
+		            b_newPath.setFocusHover(active, hover);
+		            b_newPath.drawParam(bPar);
+				}
+				
+        	} else {
+        		draw_sprite_stretched_ext(THEME.ui_panel_bg, 1, x, y, w, h, COLORS._main_icon_light);
+        		draw_set_text(f_p3, fa_center, fa_center, COLORS._main_text_sub);
+        		draw_text_add(x+w/2, y+h/2, __txt("No data"));
+        		
+        	}
+        	
             return h;
         } 
         

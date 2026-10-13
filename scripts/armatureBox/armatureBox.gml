@@ -1,15 +1,15 @@
 function armatureBox(_junction) : widget() constructor {
 	self.junction = _junction;
 	
-    b_newTileset = button(function() /*=>*/ { 
+    b_new = button(function() /*=>*/ { 
     	var b = nodeBuild("Node_Armature", junction.node.x - 160, junction.ry - 32);
     	junction.setFrom(b.outputs[0]);
 	});
 	
-	b_newTileset.text       = __txt("New armature");
-	b_newTileset.icon       = THEME.add_16;
-	b_newTileset.icon_size  = .75;
-	b_newTileset.icon_blend = COLORS._main_value_positive;
+	b_new.text       = __txt("New armature");
+	b_new.icon       = THEME.add_16;
+	b_new.icon_size  = .75;
+	b_new.icon_blend = COLORS._main_value_positive;
     
 	static trigger = function() { }
 	
@@ -26,9 +26,17 @@ function armatureBox(_junction) : widget() constructor {
 		h = TEXTBOX_HEIGHT;
         
         if(_armature == noone) {
-            b_newTileset.setFocusHover(active, hover);
-            var param = new widgetParam(x, y, w, h, noone, undefined, _m, rx, ry).setFont(font);
-            b_newTileset.drawParam(param);
+        	if(interactable) {
+	            b_new.setFocusHover(active, hover);
+	            var param = new widgetParam(x, y, w, h, noone, undefined, _m, rx, ry).setFont(font);
+	            b_new.drawParam(param);
+            
+        	} else {
+        		draw_sprite_stretched_ext(THEME.ui_panel_bg, 1, x, y, w, h, COLORS._main_icon_light);
+        		draw_set_text(f_p3, fa_center, fa_center, COLORS._main_text_sub);
+        		draw_text_add(x+w/2, y+h/2, __txt("No data"));
+        		
+        	}
             
         } else {
 			var ic = THEME.bone;

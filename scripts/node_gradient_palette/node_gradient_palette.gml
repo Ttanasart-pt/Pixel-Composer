@@ -2,12 +2,19 @@ function Node_Gradient_Palette(_x, _y, _group = noone) : Node_Processor(_x, _y, 
 	name = "Palette to Gradient";
 	setDimension(96);
 	
-	newInput(0, nodeValue_Palette( "Palette" )).setVisible(true, true);
-	newInput(1, nodeValue_Bool(    "Custom positions", false ));
-	newInput(2, nodeValue_Float(   "Positions",        [],  "Array of number indicating color position (0 - 1)." )).setArrayDepth(1).setVisible(true, true);
-	newInput(3, nodeValue_EButton( "Interpolation",    1,  ["None","RGB","HSV","OKLAB","sRGB"] ));
+	newInput( 0, nodeValue_Palette( "Palette" )).setVisible(true, true);
+	newInput( 1, nodeValue_Bool(    "Custom Positions", false ));
+	newInput( 2, nodeValue_Float(   "Positions",        [],  "Array of number indicating color position (0 - 1)." )).setArrayDepth(1).setVisible(true, true);
+	newInput( 3, nodeValue_EButton( "Interpolation",    1,  ["None","RGB","HSV","OKLAB","sRGB"] ));
+	// 4
 	
 	newOutput(0, nodeValue_Output("Gradient", VALUE_TYPE.gradient, new gradientObject(ca_white) ))
+	
+	input_display_list = [
+		0, 1, 2, 3, 
+	]
+	
+	////- Node
 	
 	_pal = -1;
 	

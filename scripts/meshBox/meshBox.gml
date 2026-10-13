@@ -1,5 +1,5 @@
 function meshBox(_junction) : widget() constructor {
-	self.junction = _junction;
+	junction = _junction;
 	
 	static trigger = function() { }
 	

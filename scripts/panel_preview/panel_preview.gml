@@ -2223,7 +2223,7 @@ function Panel_Preview() : PanelContent() constructor {
                     break;
             } 
     		
-            if(preview_junction != noone) {
+            if(preview_junction != noone && preview_junction.node.draw_preview_junction) {
             	preview_junction.drawPreviewOverlay(canvas_x, canvas_y, canvas_s, self);
             	preview_junction.node.previewing = 1;
             }

@@ -602,7 +602,7 @@ function Node_Tile_Tileset(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 				var _shov = _hover && point_in_rectangle(_m[0], _m[1], _sx, _sy, _sx + _sw, _sy + _sh);
 				var _aa   = .75 + .25 * _shov;
 				var _cc   = _shov? COLORS._main_value_negative : COLORS._main_icon;
-				draw_sprite_stretched_ext(THEME.ui_panel, 1, _sx, _sy, _sw, _sh, COLORS._main_icon, _aa);
+				draw_sprite_stretched_ext(THEME.box_r2, 1, _sx, _sy, _sw, _sh, COLORS._main_icon, _aa);
 				draw_sprite_uniform(THEME.cross, 0, _sx + _sw / 2, _sy + _sh / 2, _is * .75, _cc, _aa);
 				_sx += _sw + ui(8);
 				
@@ -636,7 +636,7 @@ function Node_Tile_Tileset(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 				var _shov = _hover && point_in_rectangle(_m[0], _m[1], _sx, _sy, _sx + _sw, _sy + _sh);
 				var _aa   = .75 + .25 * _shov;
 				var _cc   = _fpx? COLORS._main_accent : COLORS._main_icon;
-				draw_sprite_stretched_ext(THEME.ui_panel, 1, _sx, _sy, _sw, _sh, COLORS._main_icon, _aa);
+				draw_sprite_stretched_ext(THEME.box_r2, 1, _sx, _sy, _sw, _sh, COLORS._main_icon, _aa);
 				draw_sprite_ui(THEME.flip_h, 0, _sx + _sw / 2, _sy + _sh / 2, _fpx? -_is : _is, _is, 0, _cc, _aa);
 				_sx += _sw + ui(8);
 				
@@ -675,7 +675,7 @@ function Node_Tile_Tileset(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		    	selecting_surface_tile[0] = surface_verify(selecting_surface_tile[0], bbw, bbh);
 		    	selecting_surface_tile[1] = surface_verify(selecting_surface_tile[1], bbh, bbw);
 		    	
-		    	var __s = ui(28) / _sel_sh / max(bw, bh);
+		    	var __s = (min(_sw, _sh) - ui(4)) / _sel_sh / max(bw, bh);
 		    	var setBrush = undefined;
 		    	
 				for( var v = 0; v < p; v++ ) {
@@ -725,9 +725,18 @@ function Node_Tile_Tileset(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		    		var _ssw  = surface_get_width(selt)  * __s;
 		    		var _ssh  = surface_get_height(selt) * __s;
 		    		draw_surface_ext(selt, _sx+_sw/2 - _ssw/2, _sy+_sh/2 - _ssh/2, __s, __s, 0, c_white, _aa);
+		    		BLEND_MULTIPLY
+		    			draw_sprite_stretched_ext(THEME.box_r2, 0, _sx, _sy, _sw, _sh, c_white, 1);	
+		    		BLEND_NORMAL
 		    		
-		    		var cc = bv == _var? COLORS._main_accent : COLORS._main_icon;
-		    		draw_sprite_stretched_ext(THEME.ui_panel, 1, _sx, _sy, _sw, _sh, cc, 1);
+		    		if(bv == _var) {
+			    		draw_sprite_stretched_ext(THEME.box_r2, 2, _sx+1, _sy+1, _sw-2, _sh-2, COLORS.panel_bg_clear_inner);
+			    		draw_sprite_stretched_ext(THEME.box_r2, 2, _sx, _sy, _sw, _sh, COLORS._main_accent);
+			    		
+		    		} else {
+			    		draw_sprite_stretched_ext(THEME.box_r2, 2, _sx, _sy, _sw, _sh, COLORS.panel_bg_clear_inner);
+			    		draw_sprite_stretched_ext(THEME.box_r2, 1, _sx, _sy, _sw, _sh, COLORS._main_icon);
+		    		}
 		    		
 		    		if(_shov && mouse_lpress(_focus)) {
 		    			if(brush_varient_base == undefined)

@@ -34,6 +34,7 @@ function surfaceBox(_onModify, _def_path = "") : widget() constructor {
 		y = _y;
 		w = _w;
 		h = _h;
+		
 		open_rx = _rx;
 		open_ry = _ry;
 		display_data = _display_data;
@@ -131,13 +132,13 @@ function surfaceBox(_onModify, _def_path = "") : widget() constructor {
 			
 				var _txt = $"[{max(1, _arrLen)}] {sfw}x{sfh}";
 				
-				draw_set_text(_f_p4, fa_right, fa_bottom, COLORS._main_text_inner);
+				draw_set_text(f_p4, fa_right, fa_bottom, COLORS._main_text_inner);
 				var _tw = string_width(_txt) + ui(6);
 				var _th = 14;
 				var _nx = sx1 - _tw;
 				var _ny = sy1 - _th;
 				
-				draw_sprite_stretched_ext(THEME.ui_panel, 0, _nx, _ny, _tw, _th, COLORS.panel_bg_clear_inner, 0.85);
+				draw_sprite_stretched_ext(THEME.box_r2, 0, _nx, _ny, _tw, _th, COLORS.panel_bg_clear_inner, 0.85);
 				draw_text_add(sx1 - ui(3), sy1 + ui(1), _txt);
 			}
 			

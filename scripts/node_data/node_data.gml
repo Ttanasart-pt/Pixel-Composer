@@ -349,7 +349,9 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		
 		show_input_name_force  = false;
 		show_output_name_force = false;
-
+		
+		draw_preview_junction  = true;
+		
 		inspecting	     = false;
 		previewing	     = 0;
 		

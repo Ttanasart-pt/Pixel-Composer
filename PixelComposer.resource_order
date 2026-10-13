@@ -2142,6 +2142,7 @@
     {"name":"node_gradient_cos","order":3,"path":"scripts/node_gradient_cos/node_gradient_cos.yy",},
     {"name":"node_gradient_cube","order":12,"path":"scripts/node_gradient_cube/node_gradient_cube.yy",},
     {"name":"node_gradient_extract","order":8,"path":"scripts/node_gradient_extract/node_gradient_extract.yy",},
+    {"name":"node_gradient_from_surface","order":15,"path":"scripts/node_gradient_from_surface/node_gradient_from_surface.yy",},
     {"name":"node_gradient_grid","order":9,"path":"scripts/node_gradient_grid/node_gradient_grid.yy",},
     {"name":"node_gradient_palette","order":4,"path":"scripts/node_gradient_palette/node_gradient_palette.yy",},
     {"name":"node_gradient_path","order":14,"path":"scripts/node_gradient_path/node_gradient_path.yy",},
