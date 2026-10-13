@@ -128,11 +128,23 @@ function paddingBox(_onModify, _unit = noone) : widget() constructor {
 		var tb_bx = _x + tb_w;
 		var tb_by = _y + _h;
 		
-		for(var i = 0; i < 4; i++) tb[i].setFocusHover(active, hover);
+		var tbHover = hover;
+		
+		tb[2].setFocusHover(active, tbHover);
 		tb[2].draw(tb_lx, tb_ly, tb_w-1, tb_h-1, array_safe_get_fast(_data, 2), _m);
+		tbHover &= !tb[2].isHovering();
+		
+		tb[0].setFocusHover(active, tbHover);
 		tb[0].draw(tb_rx, tb_ry, tb_w,   tb_h-1, array_safe_get_fast(_data, 0), _m);
+		tbHover &= !tb[0].isHovering();
+		
+		tb[1].setFocusHover(active, tbHover);
 		tb[1].draw(tb_tx, tb_ty, tb_w-1, tb_h,   array_safe_get_fast(_data, 1), _m);
+		tbHover &= !tb[1].isHovering();
+		
+		tb[3].setFocusHover(active, tbHover);
 		tb[3].draw(tb_bx, tb_by, tb_w,   tb_h,   array_safe_get_fast(_data, 3), _m);
+		tbHover &= !tb[3].isHovering();
 			
 		resetFocus();
 		

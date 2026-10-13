@@ -164,7 +164,8 @@ function matrixGrid(_type, _onModify, _unit = noone) : widget() constructor {
 		var ww = _w / size[0];
 		if(hide == 0) draw_sprite_stretched_ext(THEME.textbox, 0, _x, _y, _w, gridh, boxColor, 0.5 + 0.5 * interactable);	
 		
-		var _raw = is(_data, Matrix)? _data.raw : _data;
+		var _raw    = is(_data, Matrix)? _data.raw : _data;
+		var tbHover = hover;
 		
 		for(var i = 0; i < size[1]; i++)
 		for(var j = 0; j < size[0]; j++) {
@@ -173,7 +174,7 @@ function matrixGrid(_type, _onModify, _unit = noone) : widget() constructor {
 			if(!is(_tb, widget)) continue;
 			
 			_tb.setFont(font);
-			_tb.setFocusHover(active, hover);
+			_tb.setFocusHover(active, tbHover);
 			_tb.hide = true;
 			
 			var bx  = _x + ww * j;
@@ -181,6 +182,7 @@ function matrixGrid(_type, _onModify, _unit = noone) : widget() constructor {
 			var _dat = array_safe_get_fast(_raw, ind);
 			
 			_tb.draw(bx, by, ww, _h, _dat, _m);
+			tbHover &= !_tb.isHovering();
 		}
 		
 		resetFocus();

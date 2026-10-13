@@ -78,96 +78,61 @@ function transformBox(_onModify) : widget() constructor {
 		
 		hovering = point_in_rectangle(_m[0], _m[1], _x, _y, _x + _w, _y + _h);
 		
-		rot.setFocusHover(active, hover);
-		for(var i = 0; i < array_length(_data); i++) {
-			tb[i].setFocusHover(active, hover);
-			tb[i].hide = true;
-		}
+		var tbHover = hover;
+		for(var i = 0; i < array_length(_data); i++) tb[i].hide = true;
 		
-		if(true) { // new
-		 	h = _h;
-		 	
-		 	var _spc = ui(4);
-		 	var _tbw = (w - _spc / 2) / array_length(_data);
-		 	var _tbh = _h;
-		 	var _tbx = _x;
-		 	
-		 	if(hide == 0) {
-			 	draw_sprite_stretched_ext(THEME.textbox, 3, _tbx, _y, _tbw * 2, _tbh, boxColor, 1);
+	 	h = _h;
+	 	
+	 	var _spc = ui(4);
+	 	var _tbw = (w - _spc * 2) / array_length(_data);
+	 	var _tbh = _h;
+	 	var _tbx = _x;
+	 	
+	 	if(hide == 0) {
+		 	draw_sprite_stretched_ext(THEME.textbox, 3, _tbx, _y, _tbw * 2, _tbh, boxColor, 1);
+			draw_sprite_stretched_ext(THEME.textbox, 0, _tbx, _y, _tbw * 2, _tbh, boxColor, 0.5 + 0.5 * interactable);	
+	 	}
+	 	
+	 	tb[TRANSFORM.pos_x].setFocusHover(active, tbHover);
+	 	tb[TRANSFORM.pos_x].draw(_tbx,        _y, _tbw, _tbh, _data[TRANSFORM.pos_x], _m);
+		tbHover &= !tb[TRANSFORM.pos_x].isHovering();
+	 	
+	 	tb[TRANSFORM.pos_y].setFocusHover(active, tbHover);
+		tb[TRANSFORM.pos_y].draw(_tbx + _tbw, _y, _tbw, _tbh, _data[TRANSFORM.pos_y], _m);
+		tbHover &= !tb[TRANSFORM.pos_y].isHovering();
+	 	
+	 	_tbx += _tbw * 2 + _spc;
+	 	
+	 	rot.setFocusHover(active, tbHover);
+	 	rot.draw(_tbx, _y, _tbw, _tbh, _data[TRANSFORM.rot], _m);
+	 	tbHover &= !rot.isHovering();
+	 	
+	 	_tbx += _tbw + _spc;
+	 	
+	 	if(array_length(_data) == 4) {
+	 		if(hide == 0) {
+			 	draw_sprite_stretched_ext(THEME.textbox, 3, _tbx, _y, _tbw, _tbh, boxColor, 1);
+				draw_sprite_stretched_ext(THEME.textbox, 0, _tbx, _y, _tbw, _tbh, boxColor, 0.5 + 0.5 * interactable);	
+	 		}
+			
+			tb[TRANSFORM.sca_x].setFocusHover(active, tbHover);
+			tb[TRANSFORM.sca_x].draw(_tbx, _y, _tbw, _tbh, _data[TRANSFORM.sca_x], _m);
+			tbHover &= !tb[TRANSFORM.sca_x].isHovering();
+	 		
+	 	} else if(array_length(_data) == 5) {
+	 		if(hide == 0) {
+		 		draw_sprite_stretched_ext(THEME.textbox, 3, _tbx, _y, _tbw * 2, _tbh, boxColor, 1);
 				draw_sprite_stretched_ext(THEME.textbox, 0, _tbx, _y, _tbw * 2, _tbh, boxColor, 0.5 + 0.5 * interactable);	
-		 	}
-		 	
-		 	tb[TRANSFORM.pos_x].draw(_tbx,        _y, _tbw, _tbh, _data[TRANSFORM.pos_x], _m);
-			tb[TRANSFORM.pos_y].draw(_tbx + _tbw, _y, _tbw, _tbh, _data[TRANSFORM.pos_y], _m);
-		 	
-		 	_tbx += _tbw * 2 + _spc;
-		 	
-		 	rot.draw(_tbx, _y, _tbw, _tbh, _data[TRANSFORM.rot], _m);
-		 	
-		 	_tbx += _tbw + _spc;
-		 	
-		 	if(array_length(_data) == 4) {
-		 		if(hide == 0) {
-				 	draw_sprite_stretched_ext(THEME.textbox, 3, _tbx, _y, _tbw, _tbh, boxColor, 1);
-					draw_sprite_stretched_ext(THEME.textbox, 0, _tbx, _y, _tbw, _tbh, boxColor, 0.5 + 0.5 * interactable);	
-		 		}
-				
-				tb[TRANSFORM.sca_x].draw(_tbx, _y, _tbw, _tbh, _data[TRANSFORM.sca_x], _m);
-		 		
-		 	} else if(array_length(_data) == 5) {
-		 		if(hide == 0) {
-			 		draw_sprite_stretched_ext(THEME.textbox, 3, _tbx, _y, _tbw * 2, _tbh, boxColor, 1);
-					draw_sprite_stretched_ext(THEME.textbox, 0, _tbx, _y, _tbw * 2, _tbh, boxColor, 0.5 + 0.5 * interactable);	
-		 		}
-				
-				tb[TRANSFORM.sca_x].draw(_tbx,        _y, _tbw, _tbh, _data[TRANSFORM.sca_x], _m);
-				tb[TRANSFORM.sca_y].draw(_tbx + _tbw, _y, _tbw, _tbh, _data[TRANSFORM.sca_y], _m);
-		 	}
+	 		}
 			
-		} else {
-			h = _h * 3 + ui(4) * 2;
+			tb[TRANSFORM.sca_x].setFocusHover(active, tbHover);
+			tb[TRANSFORM.sca_x].draw(_tbx,        _y, _tbw, _tbh, _data[TRANSFORM.sca_x], _m);
+			tbHover &= !tb[TRANSFORM.sca_x].isHovering();
 			
-			var _lab = _w > ui(160);
-			
-			draw_set_text(font, fa_left, fa_center, CDEF.main_dkgrey);
-			
-			var lbw = _lab? string_width(__txt("Position")) + ui(8) : 0;
-			var tbw = (_w - lbw) / 2;
-			var tbh = _h;
-			var tbx = _x + lbw;
-			
-			if(_lab) draw_text_add(_x, _y + tbh / 2, __txt("Position"));
-			
-			if(hide == 0) {
-				draw_sprite_stretched_ext(THEME.textbox, 3, tbx, _y, _w - lbw, tbh, boxColor, 1);
-				draw_sprite_stretched_ext(THEME.textbox, 0, tbx, _y, _w - lbw, tbh, boxColor, 0.5 + 0.5 * interactable);	
-			}
-			
-			tb[TRANSFORM.pos_x].draw(tbx,		_y, tbw, tbh, _data[TRANSFORM.pos_x], _m);
-			tb[TRANSFORM.pos_y].draw(tbx + tbw, _y, tbw, tbh, _data[TRANSFORM.pos_y], _m);
-			
-			_y += tbh + ui(4);
-			
-			draw_set_text(font, fa_left, fa_center, CDEF.main_dkgrey);
-			if(_lab) draw_text_add(_x, _y + tbh / 2, __txt("Rotation"));
-			rot.draw(tbx, _y, _w - lbw, tbh, _data[TRANSFORM.rot], _m);
-			
-			_y += tbh + ui(4);
-			
-			draw_set_text(font, fa_left, fa_center, CDEF.main_dkgrey);
-			if(_lab) draw_text_add(_x, _y + tbh / 2, __txt("Scale"));
-			
-			if(hide == 0) {
-				draw_sprite_stretched_ext(THEME.textbox, 3, tbx, _y, _w - lbw, tbh, boxColor, 1);
-				draw_sprite_stretched_ext(THEME.textbox, 0, tbx, _y, _w - lbw, tbh, boxColor, 0.5 + 0.5 * interactable);
-			}
-			
-			tbw = array_length(_data) > 4? (_w - lbw) / 2 : _w - lbw;
-			
-			tb[TRANSFORM.sca_x].draw(tbx, _y, tbw, tbh, _data[TRANSFORM.sca_x], _m);
-			if(array_length(_data) > 4)
-				tb[TRANSFORM.sca_y].draw(tbx + tbw, _y, tbw, tbh, _data[TRANSFORM.sca_y], _m);
-		}
+			tb[TRANSFORM.sca_y].setFocusHover(active, tbHover);
+			tb[TRANSFORM.sca_y].draw(_tbx + _tbw, _y, _tbw, _tbh, _data[TRANSFORM.sca_y], _m);
+			tbHover &= !tb[TRANSFORM.sca_y].isHovering();
+	 	}
 		
 		resetFocus();
 		

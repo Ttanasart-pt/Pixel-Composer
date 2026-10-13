@@ -208,6 +208,7 @@ function vectorBox(_size, _onModify, _unit = noone) : widget() constructor {
 			array_hovering = noone;
 			if(mouse_lpress(active)) toFocus = -1;
 			
+			var tbHover = hover;
 			for( var i = 0; i < _len; i++ ) {
 				var _vect = _data[i];
 				var _sz   = min(size, array_length(_vect));
@@ -229,12 +230,13 @@ function vectorBox(_size, _onModify, _unit = noone) : widget() constructor {
 					var by = _yy;
 					
 					if(array_focusing == i) {
-						tb[j].setFocusHover(active, hover);
+						tb[j].setFocusHover(active, tbHover);
 						tb[j].labelColor = sep_axis? COLORS.axis[i] : COLORS._main_text_sub;
 						tb[j].hide       = true;
 						tb[j].setLabel(axis[j]);
 						
 						tb[j].draw(bx, by, ww - 1, _h, _vect[j], _m);
+						tbHover &= !tb[j].isHovering();
 						
 					} else {
 						draw_set_text(font, fa_center, fa_center, COLORS._main_text);
@@ -374,6 +376,7 @@ function vectorBox(_size, _onModify, _unit = noone) : widget() constructor {
 			}
 			
 			tb[i].draw(bx, by, ww - 1, _h, _data[i], _m);
+			tbHover &= !tb[i].isHovering();
 		}
 		
 		// scale drag

@@ -116,13 +116,16 @@ function buttonGroup(_data, _onModify) : widget() constructor {
 		if(display_button) {
 			var bx = _x;
 			var draw_sel = noone;
+			var _hover   = hover;
 			
 			for(var i = 0; i < amo; i++) {
 				var _d = data[i];
 				var _t = array_safe_get(tooltips, i, "");
 				
-				buttons[i].setFocusHover(active, hover);
+				buttons[i].setFocusHover(active, _hover);
 				buttons[i].tooltip = _t;
+				
+				_hover &= !buttons[i].isHovering();
 				
 				if(is(_d, scrollItem)) _d = _d.spr;
 				

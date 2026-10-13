@@ -49,10 +49,10 @@ function toggleGroup(_data, _onClick) : widget() constructor {
 		
 		var amo = array_length(data);
 		var ww  = _w / amo;
+		var tbHover = hover;
 		
 		for(var i = 0; i < amo; i++) {
 			var b = buttons[i];
-			b.setFocusHover(active, hover);
 			if(channelType) b.blend = COLORS.channel[i];
 			
 			var bx  = _x + ww * i;
@@ -60,7 +60,9 @@ function toggleGroup(_data, _onClick) : widget() constructor {
 			var tog = _data & (1 << i);
 			
 			b.toggled = tog;
+			b.setFocusHover(active, tbHover);
 			b.draw(bx, _y, ww, _h, _m, spr);
+			tbHover &= !b.isHovering();
 			
 			if(b.clicked) {
 				value ^= (1 << i);

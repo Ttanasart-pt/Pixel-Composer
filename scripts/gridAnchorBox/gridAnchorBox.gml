@@ -46,16 +46,20 @@ function gridAnchorBox(_onModify, _unit) : widget() constructor {
 		var w2 = _w / 2;
 		var lh = _h;
 		
-		for( var i = 0; i < widgetLen; i++ )
-			widgets[i].setFocusHover(active, hover);
-		
 		if(hide == 0) {
 			draw_sprite_stretched_ext(THEME.textbox, 3, _x, by, _w, lh, boxColor,  1);
 			draw_sprite_stretched_ext(THEME.textbox, 0, _x, by, _w, lh, boxColor, .5 + .5 * interactable);	
 		}
 		
+		var tbHover = hover;
+		
+		tbx.setFocusHover(active, tbHover);
 		tbx.draw(_x,      by, w2, _h, _cx, _m);
+		tbHover &= !tbx.isHovering();
+		
+		tby.setFocusHover(active, tbHover);
 		tby.draw(_x + w2, by, w2, _h, _cy, _m);
+		tbHover &= !tby.isHovering();
 		
 		resetFocus();
 		return h;

@@ -246,6 +246,7 @@ function vectorRangeBox(_size, _type, _onModify, _unit = noone) : widget() const
 					if(i == 0) tb[ind].label = axis[j];
 					tb[ind].setFocusHover(active, tbHover);
 					tb[ind].draw(bx, by, ww, _h, array_safe_get_fast(_data, ind), _m);
+					tbHover &= !tb[ind].isHovering();
 					
 					if(i == 0) continue;
 					if(rangeDrag == 1 + j) {
@@ -290,6 +291,7 @@ function vectorRangeBox(_size, _type, _onModify, _unit = noone) : widget() const
 				tb[ind].label = "";
 				tb[ind].setFocusHover(active, tbHover);
 				tb[ind].draw(bx, by, ww, _h, array_safe_get_fast(_data, ind), _m);
+				tbHover &= !tb[ind].isHovering();
 				
 				if(i == 0) continue;
 				if(rangeDrag) {

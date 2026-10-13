@@ -342,13 +342,11 @@ function areaBox(_onModify, _unit = noone) : widget() constructor {
 		
 		if(hide == 0) draw_sprite_stretched_ext(THEME.textbox, 0, x, y, w, h, boxColor, 0.5 + 0.5 * interactable);	
 		
-		for(var i = 0; i < 4; i++)
-			tb[i].setFocusHover(active, hover);
-		
 		current_data = _data;
 		
 		var tb_w = _w / 2;
 		var tb_h = _h;
+		var tbHover = hover;
 			
 		if(mode == AREA_MODE.area) { 
 			var tb_x0 = _x;
@@ -361,14 +359,10 @@ function areaBox(_onModify, _unit = noone) : widget() constructor {
 			var px = tb_x1;
 			var py = tb_y1 + _h / 2;
 			
-			var tbHover = hover;
 			if(hover && w > ui(80)) {
 				var pHover = hover && point_in_rectangle(_m[0], _m[1], px-ps, py-ps, px+ps, py+ps);
 				if(pHover) tbHover = false;
 			}
-			
-			tb[2].setFocusHover(active, tbHover);
-			tb[3].setFocusHover(active, tbHover);
 			
 			tb[0].label = "x";
 			tb[1].label = "y";
@@ -376,11 +370,21 @@ function areaBox(_onModify, _unit = noone) : widget() constructor {
 			tb[2].label = "w";
 			tb[3].label = "h";
 			
+			tb[0].setFocusHover(active, tbHover);
 			tb[0].draw(tb_x0, tb_y0, tb_w, tb_h, array_safe_get_fast(_data, 0), _m);
-			tb[1].draw(tb_x1, tb_y0, tb_w, tb_h, array_safe_get_fast(_data, 1), _m);
+			tbHover &= !tb[0].isHovering();
 		
+			tb[1].setFocusHover(active, tbHover);
+			tb[1].draw(tb_x1, tb_y0, tb_w, tb_h, array_safe_get_fast(_data, 1), _m);
+			tbHover &= !tb[1].isHovering();
+			
+			tb[2].setFocusHover(active, tbHover);
 			tb[2].draw(tb_x0, tb_y1, tb_w, tb_h, array_safe_get_fast(_data, 2), _m);
+			tbHover &= !tb[2].isHovering();
+			
+			tb[3].setFocusHover(active, tbHover);
 			tb[3].draw(tb_x1, tb_y1, tb_w, tb_h, array_safe_get_fast(_data, 3), _m);
+			tbHover &= !tb[3].isHovering();
 		
 			if(scaleDrag) {
 				hover = false;
@@ -438,12 +442,21 @@ function areaBox(_onModify, _unit = noone) : widget() constructor {
 			tb[1].label = "t";
 			tb[3].label = "b";
 			
+			tb[2].setFocusHover(active, tbHover);
 			tb[2].draw(tb_lx, tb_ly, tb_w, tb_h, array_safe_get_fast(_data, 2), _m);
-			tb[0].draw(tb_rx, tb_ry, tb_w, tb_h, array_safe_get_fast(_data, 0), _m);
+			tbHover &= !tb[2].isHovering();
 			
+			tb[0].setFocusHover(active, tbHover);
+			tb[0].draw(tb_rx, tb_ry, tb_w, tb_h, array_safe_get_fast(_data, 0), _m);
+			tbHover &= !tb[0].isHovering();
+			
+			tb[1].setFocusHover(active, tbHover);
 			tb[1].draw(tb_tx, tb_ty, tb_w, tb_h, array_safe_get_fast(_data, 1), _m);
+			tbHover &= !tb[1].isHovering();
+			
+			tb[3].setFocusHover(active, tbHover);
 			tb[3].draw(tb_bx, tb_by, tb_w, tb_h, array_safe_get_fast(_data, 3), _m);
-		
+			tbHover &= !tb[3].isHovering();
 		
 		} else if(mode == AREA_MODE.two_point) { 
 			var tb_x0 = _x;
@@ -458,11 +471,21 @@ function areaBox(_onModify, _unit = noone) : widget() constructor {
 			tb[2].label = "x1";
 			tb[3].label = "y1";
 			
+			tb[0].setFocusHover(active, tbHover);
 			tb[0].draw(tb_x0, tb_y0, tb_w, tb_h, array_safe_get_fast(_data, 0), _m);
+			tbHover &= !tb[0].isHovering();
+			
+			tb[1].setFocusHover(active, tbHover);
 			tb[1].draw(tb_x1, tb_y0, tb_w, tb_h, array_safe_get_fast(_data, 1), _m);
-		
+			tbHover &= !tb[1].isHovering();
+			
+			tb[2].setFocusHover(active, tbHover);
 			tb[2].draw(tb_x0, tb_y1, tb_w, tb_h, array_safe_get_fast(_data, 2), _m);
+			tbHover &= !tb[2].isHovering();
+			
+			tb[3].setFocusHover(active, tbHover);
 			tb[3].draw(tb_x1, tb_y1, tb_w, tb_h, array_safe_get_fast(_data, 3), _m);
+			tbHover &= !tb[3].isHovering();
 		
 		}
 		

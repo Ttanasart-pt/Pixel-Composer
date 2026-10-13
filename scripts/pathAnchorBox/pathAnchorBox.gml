@@ -64,12 +64,12 @@ function pathAnchorBox(_onModify) : widget() constructor {
 		w = _w;
 		h = animated? _h : _h * 2 + 6;
 		
-		for( var i = 0, n = array_length(tb); i < n; i++ ) 
-			tb[i].setFocusHover(active, hover);
-		
 		var _tx, _ty, _tw, _th, _w2;
 		var _bw = min(_h, ui(28));
 		var _li = 6;
+		
+		var tbHover = hover;
+		
 		
 		if(animated) {
 			draw_sprite_stretched(THEME.textbox, 3, _x, _y, _w, _h);
@@ -92,8 +92,13 @@ function pathAnchorBox(_onModify) : widget() constructor {
 			_tw = _w / 2;
 			_th = _h;
 			
+			tb[0].setFocusHover(active, tbHover);
 			tb[0].draw(_tx,       _ty, _tw, _th, _data[0], _m);
+			tbHover &= !tb[0].isHovering();
+			
+			tb[1].setFocusHover(active, tbHover);
 			tb[1].draw(_tx + _tw, _ty, _tw, _th, _data[1], _m);
+			tbHover &= !tb[1].isHovering();
 			
 			return h;
 		}
@@ -123,8 +128,13 @@ function pathAnchorBox(_onModify) : widget() constructor {
 			tb[0].setLabel("x");
 			tb[1].setLabel("y");
 			
+			tb[0].setFocusHover(active, tbHover);
 			tb[0].draw(_tx,       _ty, _tw, _th, _data[0], _m);
+			tbHover &= !tb[0].isHovering();
+			
+			tb[1].setFocusHover(active, tbHover);
 			tb[1].draw(_tx + _tw, _ty, _tw, _th, _data[1], _m);
+			tbHover &= !tb[1].isHovering();
 			
 			_ty = _y + _th + 6;
 			_w2 = _w / 2 - _bw / 2 - 4;
@@ -134,8 +144,13 @@ function pathAnchorBox(_onModify) : widget() constructor {
 			// tb[2].setLabel("dx0");
 			// tb[3].setLabel("dy0");
 			
+			tb[2].setFocusHover(active, tbHover);
 			tb[2].draw(_tx + _tw * 0, _ty, _tw, _th, dx0, _m);
+			tbHover &= !tb[2].isHovering();
+			
+			tb[3].setFocusHover(active, tbHover);
 			tb[3].draw(_tx + _tw * 1, _ty, _tw, _th, dy0, _m);
+			tbHover &= !tb[3].isHovering();
 			
 			_tx = _x + _w - _w2;
 			
@@ -144,8 +159,13 @@ function pathAnchorBox(_onModify) : widget() constructor {
 			// tb[4].setLabel("dx1");
 			// tb[5].setLabel("dy1");
 			
+			tb[4].setFocusHover(active, tbHover);
 			tb[4].draw(_tx + _tw * 0, _ty, _tw, _th, dx1, _m);
+			tbHover &= !tb[4].isHovering();
+			
+			tb[5].setFocusHover(active, tbHover);
 			tb[5].draw(_tx + _tw * 1, _ty, _tw, _th, dy1, _m);
+			tbHover &= !tb[5].isHovering();
 			
 		} else {
 			_li = 9;
@@ -159,9 +179,17 @@ function pathAnchorBox(_onModify) : widget() constructor {
 			tb[1].setLabel("y");
 			tb[2].setLabel("z");
 			
+			tb[0].setFocusHover(active, tbHover);
 			tb[0].draw(_tx + _tw * 0, _ty, _tw, _th, _data[0], _m);
+			tbHover &= !tb[0].isHovering();
+			
+			tb[1].setFocusHover(active, tbHover);
 			tb[1].draw(_tx + _tw * 1, _ty, _tw, _th, _data[1], _m);
+			tbHover &= !tb[1].isHovering();
+			
+			tb[2].setFocusHover(active, tbHover);
 			tb[2].draw(_tx + _tw * 2, _ty, _tw, _th, _data[2], _m);
+			tbHover &= !tb[2].isHovering();
 			
 			_ty = _y + _th + 6;
 			_w2 = _w / 2 - _bw / 2 - 4;
@@ -172,9 +200,17 @@ function pathAnchorBox(_onModify) : widget() constructor {
 			// tb[4].setLabel("dy0");
 			// tb[5].setLabel("dz0");
 			
+			tb[3].setFocusHover(active, tbHover);
 			tb[3].draw(_tx + _tw * 0, _ty, _tw, _th, _data[3], _m);
+			tbHover &= !tb[3].isHovering();
+			
+			tb[4].setFocusHover(active, tbHover);
 			tb[4].draw(_tx + _tw * 1, _ty, _tw, _th, _data[4], _m);
+			tbHover &= !tb[4].isHovering();
+			
+			tb[5].setFocusHover(active, tbHover);
 			tb[5].draw(_tx + _tw * 2, _ty, _tw, _th, _data[5], _m);
+			tbHover &= !tb[5].isHovering();
 								
 			_tx = _x + _w - _w2;
 			
@@ -183,9 +219,17 @@ function pathAnchorBox(_onModify) : widget() constructor {
 			// tb[7].setLabel("dy1");
 			// tb[8].setLabel("dz1");
 			
+			tb[6].setFocusHover(active, tbHover);
 			tb[6].draw(_tx + _tw * 0, _ty, _tw, _th, _data[6], _m);
+			tbHover &= !tb[6].isHovering();
+			
+			tb[7].setFocusHover(active, tbHover);
 			tb[7].draw(_tx + _tw * 1, _ty, _tw, _th, _data[7], _m);
+			tbHover &= !tb[7].isHovering();
+			
+			tb[8].setFocusHover(active, tbHover);
 			tb[8].draw(_tx + _tw * 2, _ty, _tw, _th, _data[8], _m);
+			tbHover &= !tb[8].isHovering();
 		}
 		
 		var _linked = array_safe_get(_data, _li);

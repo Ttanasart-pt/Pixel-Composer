@@ -195,6 +195,7 @@ function rangeBox(_onModify) : widget() constructor {
 				
 				var bx  = _x + disp_w * i;
 				tb[i].draw(bx, _y, disp_w - 1, _h, _data[i], _m);
+				tbHover &= !tb[i].isHovering();
 			}
 			
 			if(rangeDrag) {

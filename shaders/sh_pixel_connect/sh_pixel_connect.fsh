@@ -89,6 +89,8 @@ void main() {
 	vec4  minSolCol0;
 	vec4  minSolCol1;
 	
+	float pxDist = length(tx);
+	
 	for(float a = 0.; a < angRes; a++) {
 		float angle = PI * a / angRes;
 		vec2  dd    = vec2(cos(angle), sin(angle)) * tx;
@@ -102,9 +104,9 @@ void main() {
 		int  solHas = 0;
 		
 		for(float d = 1.; d < maxDist; d++) {
-			vec2 sx0 = v_vTexcoord + dd * d;
-			
+			vec2 sx0  = v_vTexcoord + dd * d;
 			vec4 col0 = sampleTexture(gm_BaseTexture, sx0);
+			
 			if(col0.a > 0.) {
 				solHas++;
 				solPos0 = sx0;
@@ -116,9 +118,11 @@ void main() {
 		if(solHas == 0) continue;
 		
 		for(float d = 1.; d < maxDist * 2.; d++) {
-			vec2 sx0 = solPos0 - dd * d;
+			if(d >= dimension.x - 1.) break;
 			
+			vec2 sx0  = solPos0 - dd * d;
 			vec4 col0 = sampleTexture(gm_BaseTexture, sx0);
+			
 			if(col0.a > 0.) {
 				solHas++;
 				solPos1 = sx0;

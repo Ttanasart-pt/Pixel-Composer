@@ -69,10 +69,12 @@ function controlPointBox(_onModify) : widget() constructor {
 		var lh = _h;
 		h = _h + ui(4) + lh;
 		
-		for( var i = 0; i < widgetLen; i++ )
-			widgets[i].setFocusHover(active, hover);
+		var tbHover = hover;
 		
+		scMode.setFocusHover(active, tbHover);
 		scMode.draw(_x, yy, w2 - ui(2), _h, sMode[_mode], _m, _rx, _ry);
+		tbHover &= !scMode.isHovering();
+		
 		yy += _h + ui(4);
 		
 		if(hide == 0) {
@@ -80,8 +82,13 @@ function controlPointBox(_onModify) : widget() constructor {
 			draw_sprite_stretched_ext(THEME.textbox, 0, _x, yy, _w, lh, boxColor, .5 + .5 * interactable);	
 		}
 		
+		tbCx.setFocusHover(active, tbHover);
 		tbCx.draw(_x,      yy, ww, _h, _cx, _m);
+		tbHover &= !tbCx.isHovering();
+		
+		tbCy.setFocusHover(active, tbHover);
 		tbCy.draw(_x + ww, yy, ww, _h, _cy, _m);
+		tbHover &= !tbCy.isHovering();
 		
 		switch(_mode) {
 			case PUPPET_FORCE_MODE.move   : 
@@ -89,13 +96,21 @@ function controlPointBox(_onModify) : widget() constructor {
 				tbFx.label = "fx";
 				tbFy.label = "fy";
 				
+				tbFx.setFocusHover(active, tbHover);
 				tbFx.draw(_x + ww * 2, yy, ww, _h, _fx, _m);
+				tbHover &= !tbFx.isHovering();
+				
+				tbFy.setFocusHover(active, tbHover);
 				tbFy.draw(_x + ww * 3, yy, ww, _h, _fy, _m);
+				tbHover &= !tbFy.isHovering();
+				
 				yy += _h;
 				
 				if(_mode == PUPPET_FORCE_MODE.move) {
 					sW.label = __txt("radius");
+					sW.setFocusHover(active, tbHover);
 					sW.draw(_x + w2, _y, w2, _h, _wid, _m);
+					tbHover &= !sW.isHovering();
 					
 					yy += _h;
 				}
@@ -105,11 +120,20 @@ function controlPointBox(_onModify) : widget() constructor {
 				tbFx.label = __txt("strength");
 				tbW.label  = __txt("width");
 				
+				tbFx.setFocusHover(active, tbHover);
 				tbFx.draw(_x + ww * 2, yy, ww, _h, _fx,  _m);
+				tbHover &= !tbFx.isHovering();
+				
+				tbW.setFocusHover(active, tbHover);
 				tbW.draw( _x + ww * 3, yy, ww, _h, _wid, _m);
+				tbHover &= !tbW.isHovering();
+				
 				yy += _h;
 				
+				rot.setFocusHover(active, tbHover);
 				rot.draw(_x + w2, _y, w2, _h, _fy, _m);
+				tbHover &= !rot.isHovering();
+				
 				yy += _h;
 				break;
 		}

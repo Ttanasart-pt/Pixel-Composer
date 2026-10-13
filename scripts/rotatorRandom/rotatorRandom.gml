@@ -164,6 +164,7 @@ function rotatorRandom(_onModify) : widget() constructor {
 		
 		var bxHover = hover && point_in_rectangle(_m[0], _m[1], x, y, x + w, y + h);
 		var tbHover = bxHover;
+		hovering    = bxHover;
 		
 		var ps = _h / 2;
 		var px = _tx + _tw;
@@ -195,10 +196,12 @@ function rotatorRandom(_onModify) : widget() constructor {
 				}
 				
 				tb_min_0.setFocusHover(active, tbHover);
-				tb_max_0.setFocusHover(active, tbHover);
-		
 				tb_min_0.draw(_tx,        _ty, _tw, _h, array_safe_get_fast(_data, 1), _m);
+				tbHover &= !tb_min_0.isHovering();
+				
+				tb_max_0.setFocusHover(active, tbHover);
 				tb_max_0.draw(_tx + _tw,  _ty, _tw, _h, array_safe_get_fast(_data, 2), _m);
+				tbHover &= !tb_max_0.isHovering();
 				
 				if(rangeDrag) {
 					draw_sprite_ui(THEME.window_pan_icon, 0, px, py, 1, 1, 0, COLORS._main_accent, 1);
@@ -281,11 +284,13 @@ function rotatorRandom(_onModify) : widget() constructor {
 				break;
 			
 			case ROTATOR_RANDOM_TYPE.span : 
-				tb_min_0.setFocusHover(active, hover);
-				tb_max_0.setFocusHover(active, hover);
-				
+				tb_min_0.setFocusHover(active, tbHover);
 				tb_min_0.draw(_tx,        _ty, _tw, _h, array_safe_get_fast(_data, 1), _m);
+				tbHover &= !tb_min_0.isHovering();
+				
+				tb_max_0.setFocusHover(active, tbHover);
 				tb_max_0.draw(_tx + _tw,  _ty, _tw, _h, array_safe_get_fast(_data, 2), _m);
+				tbHover &= !tb_max_0.isHovering();
 				
 				if(_drawRot) {
 					var _a0 = _data[1] - _data[2];
@@ -381,9 +386,12 @@ function rotatorRandom(_onModify) : widget() constructor {
 				}
 				
 				tb_min_0.setFocusHover(active, tbHover);
-				tb_max_0.setFocusHover(active, tbHover);
 				tb_min_0.draw(_tx,        _ty,      _tw, _h, array_safe_get_fast(_data, 1), _m);
+				tbHover &= !tb_min_0.isHovering();
+				
+				tb_max_0.setFocusHover(active, tbHover);
 				tb_max_0.draw(_tx + _tw,  _ty,      _tw, _h, array_safe_get_fast(_data, 2), _m);
+				tbHover &= !tb_max_0.isHovering();
 				
 				if(rangeDrag == 1) {
 					draw_sprite_ui(THEME.window_pan_icon, 0, px, py, 1, 1, 0, COLORS._main_accent, 1);
@@ -405,9 +413,12 @@ function rotatorRandom(_onModify) : widget() constructor {
 				}
 				
 				tb_min_1.setFocusHover(active, tbHover);
-				tb_max_1.setFocusHover(active, tbHover);
 				tb_min_1.draw(_tx,        _ty + _h, _tw, _h, array_safe_get_fast(_data, 3), _m);
+				tbHover &= !tb_min_1.isHovering();
+				
+				tb_max_1.setFocusHover(active, tbHover);
 				tb_max_1.draw(_tx + _tw,  _ty + _h, _tw, _h, array_safe_get_fast(_data, 4), _m);
+				tbHover &= !tb_max_1.isHovering();
 				
 				if(rangeDrag == 2) {
 					draw_sprite_ui(THEME.window_pan_icon, 0, px, py, 1, 1, 0, COLORS._main_accent, 1);
@@ -527,13 +538,17 @@ function rotatorRandom(_onModify) : widget() constructor {
 				var _kc0 = _kc;
 				var _kc1 = _kc;
 				
-				tb_min_0.setFocusHover(active, hover);
-				tb_max_0.setFocusHover(active, hover);
-				tb_min_1.setFocusHover(active, hover);
-				
+				tb_min_0.setFocusHover(active, tbHover);
 				tb_min_0.draw(_tx,        _ty,      _tw, _h, array_safe_get_fast(_data, 1), _m);
+				tbHover &= !tb_min_0.isHovering();
+				
+				tb_max_0.setFocusHover(active, tbHover);
 				tb_max_0.draw(_tx,        _ty + _h, _tw, _h, array_safe_get_fast(_data, 2), _m);
+				tbHover &= !tb_max_0.isHovering();
+				
+				tb_min_1.setFocusHover(active, tbHover);
 				tb_min_1.draw(_tx + _tw,  _ty,	    _tw,  h, array_safe_get_fast(_data, 3), _m);
+				tbHover &= !tb_min_1.isHovering();
 				
 				if(_drawRot) {
 					var _a0 = _data[1] - _data[3];

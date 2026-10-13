@@ -131,6 +131,7 @@ function quarternionBox(_junc, _onModify) : widget() constructor {
 		disp_w = disp_w == noone? ww : lerp_float(disp_w, ww, 3);
 		
 		var _dispDat = _data;
+		var tbHover  = hover;
 		
 		if(hide == 0) draw_sprite_stretched_ext(THEME.textbox, 0, x, y, w, h, boxColor, 0.5 + 0.5 * interactable);	
 		
@@ -138,8 +139,10 @@ function quarternionBox(_junc, _onModify) : widget() constructor {
 			var _a = array_safe_get(_dispDat, i, 0);
 			
 			tb[i].hide = true;
-			tb[i].setFocusHover(clickable && active, hover);
+			
+			tb[i].setFocusHover(clickable && active, tbHover);
 			tb[i].draw(bx, _y, disp_w, _h, _a, _m);
+			tbHover &= !tb[i].isHovering();
 			
 			bx += disp_w;
 		}
