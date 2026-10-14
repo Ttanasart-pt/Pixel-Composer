@@ -3886,7 +3886,8 @@ function Panel_Preview() : PanelContent() constructor {
         trw += ui(2);
         tbx -= ui(2);
         
-        var actMax = max(0, toolbar_left - tbx + pd * 2);
+        var actMax = max(0, toolbar_left - tbx + pd * 2 + (!mrg * bs));
+        
         if(hov) preview_action_y_to += MOUSE_WHEEL * (bs + ui(2));
         preview_action_y_to = clamp(preview_action_y_to, 0, actMax);
         preview_action_y    = lerp_float(preview_action_y, preview_action_y_to, 5);

@@ -1,0 +1,12 @@
+[
+  {
+    "version": "1.22.0.303",
+    "changes": [
+      {
+        "date": "2026-10-14T00:27:04.130Z",
+        "node": "any",
+        "commit": "Introduced"
+      }
+    ]
+  }
+]

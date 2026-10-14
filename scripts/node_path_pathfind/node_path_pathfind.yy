@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"node_path_pathfind",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"node_path_pathfind",
+  "parent":{
+    "name":"creator",
+    "path":"folders/nodes/data/value/path/creator.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

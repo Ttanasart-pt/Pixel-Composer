@@ -1,0 +1,12 @@
+{
+  "$GMShader":"",
+  "%Name":"sh_path_pathfile_draw",
+  "name":"sh_path_pathfile_draw",
+  "parent":{
+    "name":"pathfind",
+    "path":"folders/nodes/data/value/path/creator/pathfind.yy",
+  },
+  "resourceType":"GMShader",
+  "resourceVersion":"2.0",
+  "type":1,
+}

@@ -1343,6 +1343,7 @@
             "Node_Path_Builder",
             "Node_Path_L_System",
             "Node_Path_From_Mask",
+            "Node_Path_Pathfind",
             "Node_Path_Plot",
             "Node_Path_Projectile",
             "Node_Path_3D",

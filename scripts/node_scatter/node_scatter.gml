@@ -79,7 +79,7 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	newInput(37, nodeValue_Bool(   "Exact",           false     ));
 	
 	////- =Rotation
-	newInput(48, nodeValue_Rotation( "Rotation",           0           ));
+	newInput(48, nodeValue_Rotation( "Rotation",           0           )).setMappableConst(59);
 	newInput( 7, nodeValue_Bool(     "Point at Center",    false, "Rotate each copy to face the spawn center."));
 	newInput( 4, nodeValue_RotRand(  "Random Angle",      ROTRAN_DEF_0 ));
 	newInput(52, nodeValue_RotRand(  "Offset Angle",      ROTRAN_DEF_0 )).setMappableConst(53);
@@ -106,7 +106,7 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	newInput(18, nodeValue_EScroll( "Blend Mode", 0, [ "Normal", "Add", "Max" ] ));
 	newInput(23, nodeValue_Bool(    "Sort Y",     false ));
 	newInput(56, nodeValue_Toggle(  "Tile",       0, [ "X", "Y" ] ))
-	// 59
+	// 60
 	
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	 
@@ -127,7 +127,7 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 			[ "/Amount",  false ], 31,  2, 30, 44, 46, 
 			[ "/Path",     true ], 19, 38, 20, 45, 21, 22, 
 		[ "Position",     false ], 40, 33, 50, 51, 36, 49,  39, 37, 
-		[ "Rotation",     false ], 48,  7,  4, 52, 53, 32, 
+		[ "Rotation",     false ], 48, 59,  7,  4, 52, 53, 32, 
 		[ "Scale",        false ],  3, 43, 54, 57, 55,  8, 34, 
 		[ "Color",        false ], [11, true], 28, 58, -1, 12, 16, 
 			[ "/Sampler",  true ], 41, 47, 42, 
@@ -151,6 +151,7 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		
 		posShiftSamp = new Surface_Sampler_Grey();
 		posOffSamp   = new Surface_Sampler_Grey();
+		rotSamp      = new Surface_Sampler_Grey();
 		rotOffSamp   = new Surface_Sampler_Grey();
 		scalSamp     = new Surface_Sampler_Grey();
 		scaOffSamp   = new Surface_Sampler_Grey();
@@ -521,6 +522,7 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 			var shfRad     = _data[39];
 			
 			var _rotation  = _data[48];
+			var rotMap     = _data[59]; rotSamp.setSurface(rotMap);
 			var _pint      = _data[ 7];
 			var _rota      = _data[ 4];
 			var rotOff     = _data[52];
@@ -936,6 +938,9 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 					var dirr = point_direction(p0.x, p0.y, p1.x, p1.y);
 					_r += dirr;
 				}
+				
+				var v = rotSamp.active? rotSamp.getPixelNorm(_x, _y) : 1;
+				_r *= v;
 				
 				var v = rotOffSamp.active? rotOffSamp.getPixelNorm(_x, _y) : 1;
 				_r   += rotation_random_eval(rotOff, _csed++, i) * v;

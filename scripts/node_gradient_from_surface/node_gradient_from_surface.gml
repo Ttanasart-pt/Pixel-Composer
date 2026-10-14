@@ -12,24 +12,25 @@ function Node_Gradient_from_Surface(_x, _y, _group = noone) : Node_Processor(_x,
 	newInput( 3, nodeValue_Vec2(    "Point 2", [1,.5] )).setUnitSimple();
 	newInput( 4, nodeValue_Path(    "Path"            ));
 	newInput( 5, nodeValue_Int(     "Resolution", 8   ));
+	newInput( 7, nodeValue_Bool(    "Remove Repeat", false ));
 	
 	////- Gradient
 	newInput( 6, nodeValue_EButton( "Interpolation", 1,  ["None","RGB","HSV","OKLAB","sRGB"] ));
-	// 7
+	// 8
 	
 	newOutput(0, nodeValue_Output("Gradient Out", VALUE_TYPE.gradient, new gradientObject()));
 	
 	input_display_list = [ 
 		[ "Surface",  false ],  0,
-		[ "Sampling", false ],  1,  2,  3,  4,  5, 
+		[ "Sampling", false ],  1,  2,  3,  4,  5,  7, 
 		[ "Gradient", false ],  6,
 	];
 	
 	////- Nodes
 	
-	static getDimension           = function() { return surface_get_dimension(inputs[0].getValue()); }
-	static getPreviewValues       = function() { return inputs[0].getValue(); }
-	static getGraphPreviewSurface = function() { return inputs[0].getValue(); }
+	static getDimension           = function() /*=>*/ {return surface_get_dimension(getInputData(0))}; 
+	static getPreviewValues       = function() /*=>*/ {return getInputData(0)}; 
+	static getGraphPreviewSurface = function() /*=>*/ {return getInputData(0)}; 
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _params) { 
 		var _type = getInputSingle( 1);
@@ -67,6 +68,7 @@ function Node_Gradient_from_Surface(_x, _y, _group = noone) : Node_Processor(_x,
 			var _pnt2 = _data[ 3];
 			var _path = _data[ 4];
 			var _reso = _data[ 5]; _reso = max(1, _reso);
+			var _remv = _data[ 7];
 			
 			var _intp = _data[ 6];
 			
@@ -81,6 +83,7 @@ function Node_Gradient_from_Surface(_x, _y, _group = noone) : Node_Processor(_x,
 		
 		var sw = surface_get_width(_surf);
 		var sh = surface_get_height(_surf);
+		var oc, nc;
 		
 		switch(_type) {
 			case 0 :
@@ -91,9 +94,11 @@ function Node_Gradient_from_Surface(_x, _y, _group = noone) : Node_Processor(_x,
 					
 					sx = clamp(sx, 0, sw - 1);
 					sy = clamp(sy, 0, sh - 1);
+					nc = surface_getpixel_ext(_surf, sx, sy);
 					
-					var cc = surface_getpixel_ext(_surf, sx, sy);
-					keys[i] = new gradientKey(t, cc);
+					if(i && _remv && nc == oc) continue;
+					array_push(keys, new gradientKey(t, nc));
+					oc = nc;
 				}
 				break;
 			
@@ -111,9 +116,11 @@ function Node_Gradient_from_Surface(_x, _y, _group = noone) : Node_Processor(_x,
 					
 					sx = clamp(sx, 0, sw - 1);
 					sy = clamp(sy, 0, sh - 1);
+					nc = surface_getpixel_ext(_surf, sx, sy);
 					
-					var cc = surface_getpixel_ext(_surf, sx, sy);
-					keys[i] = new gradientKey(t, cc);
+					if(i && _remv && nc == oc) continue;
+					array_push(keys, new gradientKey(t, nc));
+					oc = nc;
 				}
 				break;
 				

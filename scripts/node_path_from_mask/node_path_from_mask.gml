@@ -3,7 +3,7 @@ function Node_Path_From_Mask(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	
 	newInput( 0, nodeValue_Surface( "Mask" ));
 	
-	////- Smooth
+	////- =Smooth
 	newInput( 2, nodeValue_Bool(  "Smooth",     false ));
 	newInput( 1, nodeValue_Float( "Smoothness", 2     ));
 		
@@ -13,9 +13,7 @@ function Node_Path_From_Mask(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 		[ "Smooth", false, 2 ], 1, 
 	];
 	
-	////- Nodes
-	
-	temp_surface = [ noone ];
+	////- Path
 	
 	anchors     = [];
 	lengthTotal = 0;
@@ -79,6 +77,10 @@ function Node_Path_From_Mask(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	}
 	
 	static getPointRatio = function(_rat, _ind = 0, out = undefined) { return getPointDistance(frac(_rat) * lengthTotal, _ind, out); }
+	
+	////- Nodes
+	
+	temp_surface = [ noone ];
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _params) { 
 		draw_set_color(COLORS._main_accent);
@@ -183,6 +185,8 @@ function Node_Path_From_Mask(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 		buffer_delete(_obuf);
 		
 	}
+	
+	////- Preview
 	
 	static getGraphPreviewSurface = function() /*=>*/ {return getInputData(0)};
 	static getPreviewValues       = function() /*=>*/ {return getInputData(0)};
