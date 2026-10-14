@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.22.0.4",
+    "changes": [
+      {
+        "date": "2026-10-14T00:49:02.677Z",
+        "node": "Smooth Path",
+        "commit": "**Smooth Path**: Fix path always loop."
+      }
+    ]
+  },
+  {
     "version": "1.21.9.206",
     "changes": [
       {

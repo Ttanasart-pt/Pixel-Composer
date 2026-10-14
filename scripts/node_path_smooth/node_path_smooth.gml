@@ -138,7 +138,7 @@ function Node_Path_Smooth(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	static getLength		= function() /*=>*/ {return lengthTotal};
 	static getAccuLength	= function() /*=>*/ {return lengthAccs};
 	
-	static getPointRatio    = function(_rat,  _ind = 0, out = undefined) { return getPointDistance(frac(_rat) * lengthTotal, _ind, out); }
+	static getPointRatio    = function(_rat,  _ind = 0, out = undefined) { return getPointDistance(_rat * lengthTotal, _ind, out); }
 	static getPointDistance = function(_dist, _ind = 0, out = undefined) {
 		if(out == undefined) out = new __vec2P(); else { out.x = 0; out.y = 0; }
 		if(array_empty(lengths)) return out;
