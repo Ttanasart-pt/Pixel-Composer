@@ -53,6 +53,7 @@ function NodeObject(_name, _node, _tooltip = "") constructor {
 	
 	pxc_version  = 0;
 	new_node     = false;
+	beta_node    = false;
 	deprecated   = false;
 	
 	show_in_recent = true;
@@ -104,6 +105,7 @@ function NodeObject(_name, _node, _tooltip = "") constructor {
 		
 		pxc_version = version;
 		new_node    = version >= LATEST_VERSION;
+		beta_node   = version >= VERSION;
 		
 		return self;
 	}
@@ -165,6 +167,10 @@ function NodeObject(_name, _node, _tooltip = "") constructor {
 		return THEME.loading;
 	}
 	
+	static isVisible     = function() /*=>*/ {return !deprecated && !beta_node};
+	
+	////- Build
+	
 	static build = function(_x = 0, _y = 0, _group = PANEL_GRAPH.getCurrentContext(), _param = {}, _skip_context = false) {
 		if(!is_supported_os)
 			noti_warning($"{name} node not supported on the current operating system.");
@@ -191,6 +197,8 @@ function NodeObject(_name, _node, _tooltip = "") constructor {
 		
 		return _node;
 	}
+	
+	////- Draw
 	
 	static drawGrid = function(_x, _y, _mx, _my, grid_width, grid_size, _param = {}) {
 		var spr_x = _x + grid_width / 2;

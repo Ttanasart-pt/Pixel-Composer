@@ -1,1 +1,6 @@
-{"spr":"s_node_pixel_connect","name":"Pixel Connect","baseNode":"Node_Pixel_Connect","pxc_version":122000}
+{
+    "name":          "Pixel Connect",
+    "spr":           "s_node_pixel_connect",
+    "baseNode":      "Node_Pixel_Connect",
+    "pxc_version":    122010,
+}

@@ -2,5 +2,5 @@
     "name":          "Path Select Index",
     "spr":           "s_node_path_get_index",
     "baseNode":      "Node_Path_Get_Index",
-    "pxc_version":    122000,
+    "pxc_version":    122010,
 }

@@ -2,6 +2,6 @@
     "name":          "Chain",
     "spr":           "s_node_repeat_path",
     "baseNode":      "Node_Repeat_Path",
-    "pxc_version":    122000,
+    "pxc_version":    122010,
     "alias":          ["repeat path"],
 }

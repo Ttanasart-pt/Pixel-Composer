@@ -193,7 +193,7 @@ event_inherited();
 				
 				for( var j = 0, m = array_length(cat.list); j < m; j++ ) {
 					var _node = cat.list[j];
-					if(is(_node, NodeObject) && _node.deprecated) continue;
+					if(is(_node, NodeObject) && !_node.isVisible()) continue;
 					array_push(node_list, _node);
 				}
 			}
@@ -263,7 +263,7 @@ event_inherited();
 			var _l = category[ADD_NODE_PAGE].list;
 			for( var i = 0, n = array_length(_l); i < n; i++ ) {
 				var _node = _l[i];
-				if(is(_node, NodeObject) && _node.deprecated) continue;
+				if(is(_node, NodeObject) && !_node.isVisible()) continue;
 				array_push(node_list, _node);
 			}
 		}
@@ -1290,7 +1290,7 @@ event_inherited();
 					
 					// Fav
 					if(is(_node, NodeObject)) {
-						if(_node.deprecated) continue; // ???
+						if(!_node.isVisible()) continue;
 						
 						if(_match[0] > -9000 && PREFERENCES.dialog_add_node_search_fav && struct_exists(NODE_FAV_MAP, _node.nodeName)) 
 							_match[0] += 10000;
