@@ -144,7 +144,7 @@ function Node_Colors_Replace(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 				ww -= bs + ui(4);
 				
 				if(buttonInstant_Pad(bb, bx, by, bs, bs, _m, _hover, _focus, "", THEME.color_picker_dropper, 0, c_white, 1, ui(8)) == 2) {
-					colorSelectorCall(undefined, function(c) /*=>*/ {return setColor(c)}).dropperActive();
+					colorSelectorCall(undefined, function(c) /*=>*/ {return setColorTo(c)}).dropperActive();
 					palette_select = [ i, i ];
 				}
 				
@@ -154,7 +154,7 @@ function Node_Colors_Replace(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 				if(buttonInstant_Pad(bb, bx, by, bs, bs, _m, _hover, _focus, "", THEME.color_wheel, 0, c_white, 1, ui(8)) == 2) {
 					var pick = instance_create(mouse_mx, mouse_my, o_dialog_color_quick_pick);
 					array_insert(pick.palette, 0, to);
-					pick.onModify = function(c) /*=>*/ {return setColor(c)};
+					pick.onModify = function(c) /*=>*/ {return setColorTo(c)};
 					palette_select = [ i, i ];
 				}
 				

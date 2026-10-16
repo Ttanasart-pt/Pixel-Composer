@@ -44,8 +44,11 @@ function Node_Path_Get_Index(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 	static processData = function(_outData, _data, _array_index = 0) { 
 		#region data
 			var _path = _data[ 0];
+			
 			var _indx = _data[ 1];
 			var _over = _data[ 2];
+			
+			if(!is_path(_path)) return _outData;
 		#endregion
 		
 		if(!is(_outData, _indexedPath)) 

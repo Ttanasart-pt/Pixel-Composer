@@ -4523,7 +4523,6 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
 	    	
 	    	_nd = nodes_selecting[0];
 	    	_jj = _nd.outputs[0];
-	    	var _ty = _base;
     	}
     	
     	if(!is(_jj, NodeValue)) return;
@@ -4538,11 +4537,15 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
 			
     	} 
     	
+    	if(_ty == "") return;
+    	
         if(array_length(nodes_selecting) <= 1) {
 	        var _nodex = _nd.x + 160;
 	        var _nodey = _nd.y;
 	        var _blend = nodeBuild(_ty, _nodex, _nodey, getCurrentContext());
-	            _blend.skipDefault();
+	        if(!is(_blend, Node)) return;
+            
+            _blend.skipDefault();
             
             switch(_ty) {
             	case "Node_Blend" : _blend.inputs[0].setFrom(_jj); break;

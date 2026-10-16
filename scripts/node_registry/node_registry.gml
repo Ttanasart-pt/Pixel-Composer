@@ -53,7 +53,7 @@ function NodeObject(_name, _node, _tooltip = "") constructor {
 	
 	pxc_version  = 0;
 	new_node     = false;
-	beta_node    = false;
+	future_node    = false;
 	deprecated   = false;
 	
 	show_in_recent = true;
@@ -105,7 +105,7 @@ function NodeObject(_name, _node, _tooltip = "") constructor {
 		
 		pxc_version = version;
 		new_node    = version >= LATEST_VERSION;
-		beta_node   = version >= VERSION;
+		future_node = version >  VERSION;
 		
 		return self;
 	}
@@ -167,7 +167,7 @@ function NodeObject(_name, _node, _tooltip = "") constructor {
 		return THEME.loading;
 	}
 	
-	static isVisible     = function() /*=>*/ {return !deprecated && !beta_node};
+	static isVisible     = function() /*=>*/ {return !deprecated && !future_node};
 	
 	////- Build
 	

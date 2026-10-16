@@ -3495,7 +3495,6 @@
     {"name":"sh_path_map_render","order":4,"path":"shaders/sh_path_map_render/sh_path_map_render.yy",},
     {"name":"sh_path_morph","order":7,"path":"shaders/sh_path_morph/sh_path_morph.yy",},
     {"name":"sh_path_pathfile_draw","order":1,"path":"shaders/sh_path_pathfile_draw/sh_path_pathfile_draw.yy",},
-    {"name":"sh_path_pathfind_mask","order":0,"path":"shaders/sh_path_pathfind_mask/sh_path_pathfind_mask.yy",},
     {"name":"sh_path_revolve_combine","order":1,"path":"shaders/sh_path_revolve_combine/sh_path_revolve_combine.yy",},
     {"name":"sh_path_revolve_map","order":2,"path":"shaders/sh_path_revolve_map/sh_path_revolve_map.yy",},
     {"name":"sh_path_sdf","order":10,"path":"shaders/sh_path_sdf/sh_path_sdf.yy",},
