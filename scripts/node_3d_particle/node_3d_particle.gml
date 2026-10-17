@@ -17,76 +17,78 @@ function Node_3D_Particle(_x, _y, _group = noone) : Node_3D(_x, _y, _group) cons
 	newInput( 1, nodeValueSeed());
 	
 	////- =Object
-	newInput( 0, nodeValue_D3Mesh("Mesh" ));
+	newInput( 0, nodeValue_D3Mesh( "Mesh" ));
 	
 	////- =Spawn
-	newInput( 2, nodeValue_Bool(    "Spawn",             true       ));
-	newInput( 3, nodeValue_EScroll( "Spawn Type",        0,         )).setChoices([ "Stream", "Burst", "Trigger" ]);
-	newInput( 4, nodeValue_Trigger( "Spawn Trigger",                ));
-	newInput( 5, nodeValue_Int(     "Spawn Delay",       4          )).setTooltip("Frames delay between each particle spawn.");
-	newInput( 6, nodeValue_Int(     "Burst Duration",    1          ));
-	newInput( 7, nodeValue_Range(   "Spawn Amount",     [2,2], true )).setTooltip("Amount of particle spawn in that frame.");
-	newInput(12, nodeValue_Range(   "Lifespan",         [20,30]     ));
+	newInput( 2, nodeValue_Bool(    "Spawn",                  true         ));
+	newInput( 3, nodeValue_EScroll( "Spawn Type",             0,           )).setChoices([ "Stream", "Burst", "Trigger" ]);
+	newInput( 4, nodeValue_Trigger( "Spawn Trigger",                       ));
+	newInput( 5, nodeValue_Int(     "Spawn Delay",            4            )).setTooltip("Frames delay between each particle spawn.");
+	newInput( 6, nodeValue_Int(     "Burst Duration",         1            ));
+	newInput( 7, nodeValue_Range(   "Spawn Amount",          [2,2], true   )).setTooltip("Amount of particle spawn in that frame.");
 	
-	////- =Spawn Source
-	newInput( 8, nodeValue_EScroll( "Spawn Source",      0,         )).setChoices([ "Shape", "Path", "Mesh Vertices", "Direct Data" ]);
-	newInput(30, nodeValue_EScroll( "Spawn Shape",       0,         )).setChoices(__enum_array_gen([ "Box", "Sphere", "Circle" ], s_node_particle_3d_spawn_shape));
-	newInput( 9, nodeValue_Vec3(    "Spawn Origin",     [0,0,0]     ));
-	newInput(27, nodeValue_Vec3(    "Spawn Span",       [1,1,1]     ));
-	newInput(57, nodeValue_Quat(    "Spawn Rotation"                ));
-	newInput(10, nodeValue_Path(    "Spawn Path"                    )).setExtractNode("Node_Path_3D");
-	newInput(29, nodeValue_D3Mesh(  "Spawn Mesh"                    ));
-	newInput(11, nodeValue_Vector(  "Spawn Data"                    )).setArrayDepth(1);
+		////- =/Lifespan
+	newInput(12, nodeValue_Range(   "Lifespan",              [20,30]       ));
+	
+		////- =/Source
+	newInput( 8, nodeValue_EScroll( "Spawn Source",           0,           )).setChoices([ "Shape", "Path", "Mesh Vertices", "Direct Data" ]);
+	newInput(30, nodeValue_EScroll( "Spawn Shape",            0,           )).setChoices(__enum_array_gen([ "Box", "Sphere", "Circle" ], s_node_particle_3d_spawn_shape));
+	newInput( 9, nodeValue_Vec3(    "Spawn Origin",          [0,0,0]       ));
+	newInput(27, nodeValue_Vec3(    "Spawn Span",            [1,1,1]       ));
+	newInput(57, nodeValue_Quat(    "Spawn Rotation"                       ));
+	newInput(10, nodeValue_Path(    "Spawn Path"                           )).setExtractNode("Node_Path_3D");
+	newInput(29, nodeValue_D3Mesh(  "Spawn Mesh"                           ));
+	newInput(11, nodeValue_Vector(  "Spawn Data"                           )).setArrayDepth(1);
 	
 	////- =Movement
-	newInput(13, nodeValue_Range3(  "Velocity",             [0,0,0,0,0,0] )).setCurvable(15, CURVE_DEF_11, "Over Lifespan"); 
-	newInput(14, nodeValue_Range3(  "Acceleration",         [0,0,0,0,0,0] )); 
-	newInput(16, nodeValue_Range(   "Follow Spawn Shape",   [0,0], true   ));
+	newInput(13, nodeValue_Range3(  "Velocity",              RANGE3_0      )).setCurvable(15, CURVE_DEF_11, "Over Lifespan"); 
+	newInput(14, nodeValue_Range3(  "Acceleration",          RANGE3_0      ));
+	newInput(16, nodeValue_Range(   "Follow Spawn Shape",    [0,0], true   ));
 	
 	////- =Rotation
-	newInput(17, nodeValue_Range3(  "Rotation",             [0,0,0,0,0,0] ));
-	newInput(18, nodeValue_Range3(  "Rotational Speed",     [0,0,0,0,0,0] )).setCurvable(19, CURVE_DEF_11, "Over Lifespan"); 
-	newInput(20, nodeValue_Float(   "Snap Rotation",        0             ));
-	newInput(54, nodeValue_Bool(    "Follow Velocity",      false         ));
+	newInput(17, nodeValue_Range3(  "Rotation",              RANGE3_0      ));
+	newInput(18, nodeValue_Range3(  "Rotational Speed",      RANGE3_0      )).setCurvable(19, CURVE_DEF_11, "Over Lifespan"); 
+	newInput(20, nodeValue_Float(   "Snap Rotation",         0             ));
+	newInput(54, nodeValue_Bool(    "Follow Velocity",       false         ));
 	
 	////- =Scale
-	newInput(21, nodeValue_Range3(  "Scale",                [1,1,1,1,1,1] ));
-	newInput(22, nodeValue_Range(   "Size",                 [1,1], true   )).setCurvable(23, CURVE_DEF_11, "Over Lifespan"); 
+	newInput(21, nodeValue_Range3(  "Scale",                 RANGE3_1      ));
+	newInput(22, nodeValue_Range(   "Size",                  [1,1], true   )).setCurvable(23, CURVE_DEF_11, "Over Lifespan"); 
 	
 	////- =Color
-	newInput(24, nodeValue_Gradient( "Color Over Lifetime",  gra_white  ));
-	newInput(25, nodeValue_Gradient( "Random Blend",         gra_white  ));
-	newInput(26, nodeValue_Palette(  "Color by Index",       [ca_white]                    )).setOptions("Select by:", "array_select", [ "Index Loop", "Index Ping-pong", "Random" ], THEME.array_select_type).iconPad();
-	newInput(55, nodeValue_Range(    "Alpha",                [1,1], true                   )).setCurvable(53, CURVE_DEF_11, "Over Lifespan"); 
+	newInput(24, nodeValue_Gradient( "Color Over Lifetime",  gra_white     ));
+	newInput(25, nodeValue_Gradient( "Random Blend",         gra_white     ));
+	newInput(26, nodeValue_Palette(  "Color by Index",       [ca_white]    )).setOptions("Select by:", "array_select", [ "Index Loop", "Index Ping-pong", "Random" ], THEME.array_select_type).iconPad();
+	newInput(55, nodeValue_Range(    "Alpha",                [1,1], true   )).setCurvable(53, CURVE_DEF_11, "Over Lifespan"); 
 	
 	////- =Render
-	newInput(28, nodeValue_EScroll( "Blend Mode",     0, [ "Normal", "Alpha", "Additive", "Maximum" ]));
-	newInput(32, nodeValue_Bool(    "Billboard",      false ));
-	newInput(31, nodeValue_Bool(    "Loop",           true  ));
-	newInput(58, nodeValue_Int(     "Pre-Render",     -1    ));
-	newInput(33, nodeValue_Bool(    "Transparent",    false ));
+	newInput(28, nodeValue_EScroll( "Blend Mode",             0            )).setChoices([ "Normal", "Alpha", "Additive", "Maximum" ]);
+	newInput(32, nodeValue_Bool(    "Billboard",              false        ));
+	newInput(31, nodeValue_Bool(    "Loop",                   true         ));
+	newInput(58, nodeValue_Int(     "Pre-Render",             -1           ));
+	newInput(33, nodeValue_Bool(    "Transparent",            false        ));
 	
 	////- =Path
-	newInput(34, nodeValue_Bool(    "Follow Path",            false                       ));
-	newInput(35, nodeValue_Path(    "Path"                                                )).setExtractNode("Node_Path_3D");
-	newInput(56, nodeValue_Range2(  "Path Range",             [0,0,1,1]                   ));
-	newInput(36, nodeValue_Curve(   "Path Deviation",         CURVE_DEF_11                ));
+	newInput(34, nodeValue_Bool(    "Follow Path",            false        ));
+	newInput(35, nodeValue_Path(    "Path"                                 )).setExtractNode("Node_Path_3D");
+	newInput(56, nodeValue_Range2(  "Path Range",             [0,0,1,1]    ));
+	newInput(36, nodeValue_Curve(   "Path Deviation",         CURVE_DEF_11 ));
 	
 	////- =Physics
-	newInput(37, nodeValue_Bool(     "Use Physics",            false                         ));
-	newInput(38, nodeValue_Range(    "Gravity",                [0,0], { linked : true }      ));
-	newInput(39, nodeValue_Rotation( "Gravity Direction",      -90                           ));
+	newInput(37, nodeValue_Bool(     "Use Physics",           false        ));
+	newInput(38, nodeValue_Range(    "Gravity",               [0,0], true  ));
+	newInput(39, nodeValue_Rotation( "Gravity Direction",     -90          ));
 	
-	newInput(40, nodeValue_Range(    "Turning",                [0,0], { linked : true }      ));
-	newInput(41, nodeValue_Bool(     "Turn Both Directions",   false                         )).setTooltip("Apply randomized 1, -1 multiplier to the turning speed.");
-	newInput(42, nodeValue_Float(    "Turn Scale with Speed",  false                         ));
+	newInput(40, nodeValue_Range(    "Turning",               [0,0], true  ));
+	newInput(41, nodeValue_Bool(     "Turn Both Directions",  false        )).setTooltip("Apply randomized 1, -1 multiplier to the turning speed.");
+	newInput(42, nodeValue_Float(    "Turn Scale with Speed", false        ));
 	
 	////- =Ground
-	newInput(43, nodeValue_Bool(    "Collide Ground",      false                         ));
-	newInput(44, nodeValue_EButton( "Ground Offset Type",  1, [ "Relative", "Absolute" ] ));
-	newInput(45, nodeValue_Range(   "Ground Offset",       [0,0], { linked : true }      ));
-	newInput(46, nodeValue_Slider(  "Bounce Amount",       .5                            ));
-	newInput(47, nodeValue_Slider(  "Bounce Friction",     .1                            )).setTooltip("Apply horizontal friction once particle stop bouncing.");
+	newInput(43, nodeValue_Bool(    "Collide Ground",         false        ));
+	newInput(44, nodeValue_EButton( "Ground Offset Type",     1            )).setChoices([ "Relative", "Absolute" ]);
+	newInput(45, nodeValue_Range(   "Ground Offset",          [0,0], true  ));
+	newInput(46, nodeValue_Slider(  "Bounce Amount",          .5           ));
+	newInput(47, nodeValue_Slider(  "Bounce Friction",        .1           )).setTooltip("Apply horizontal friction once particle stop bouncing.");
 		
 	////- =Wiggles
 	newInput(48, nodeValue_Bool(    "Use Wiggles",        false ));
@@ -94,18 +96,20 @@ function Node_3D_Particle(_x, _y, _group = noone) : Node_3D(_x, _y, _group) cons
 	newInput(50, nodeValue_Vec2(    "Position Wiggle",    [0,0], { label: [ "Amplitude", "Period" ], linkable: false, per_line: true } ));
 	newInput(51, nodeValue_Vec2(    "Rotation Wiggle",    [0,0], { label: [ "Amplitude", "Period" ], linkable: false, per_line: true } ));
 	newInput(52, nodeValue_Vec2(    "Scale Wiggle",       [0,0], { label: [ "Amplitude", "Period" ], linkable: false, per_line: true } ));
-	
 	// 59
 	
 	input_display_list = [ 1, 
-		[ "Object",       true ],  0, 
-		[ "Spawn",        true ],  2,  3,  4,  5,  6,  7, __inspc(ui(6), true), 12,  
-		[ "Spawn Source", true ],  8,  30, 9, 27, 57, 10, 29, 11, 
-		[ "Movement",     true ], 13, 15, 14, 16, 
-		[ "Rotation",     true ], 17, 18, 19, 54, 
-		[ "Scale",        true ], 21, 22, 23, 
-		[ "Color",        true ], 24, 25, 26, 55, 53, 
-		[ "Render",       true ], 28, 32, 31, 58, 33, 
+		[ "Object",         true ],  0, 
+		[ "Spawn",         false ],  2,  3,  4,  5,  6,  7, 
+			[ "/Lifespan", false ], 12, 
+			[ "/Source",   false ],  8,  30, 9, 27, 57, 10, 29, 11, 
+			
+		[ "Movement",       true ], 13, 15, 14, 16, 
+		[ "Rotation",       true ], 17, 18, 19, 54, 
+		[ "Scale",          true ], 21, 22, 23, 
+		[ "Color",          true ], 24, 25, 26, 55, 53, 
+		[ "Render",         true ], 28, 32, 31, 58, 33, 
+		
 		__inspc(ui(6), true, false, ui(3)), 
 		
 		["Follow path", true, 34], 35, 56, 36, 
@@ -295,8 +299,8 @@ function Node_3D_Particle(_x, _y, _group = noone) : Node_3D(_x, _y, _group) cons
 				system.objectTransform = _obj.transform;
 				system.objectTransform.applyMatrix();
 				
-				var _flat_vb = d3d_flattern(_obj);
-				system.VB = _flat_vb.VB;
+				var _flat_vb     = d3d_flattern(_obj);
+				system.VB        = _flat_vb.VB;
 				system.materials = _flat_vb.materials;
 				
 				buffer_clear(buffer_transform[0]);

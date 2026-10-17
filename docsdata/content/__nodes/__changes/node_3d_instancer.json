@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.22.1",
+    "changes": [
+      {
+        "date": "2026-10-17T02:57:01.363Z",
+        "node": "3D Particle/ Instancer",
+        "commit": "**3D Particle/ Instancer**: Fix node not working."
+      }
+    ]
+  },
+  {
     "version": "1.22.0",
     "changes": [
       {

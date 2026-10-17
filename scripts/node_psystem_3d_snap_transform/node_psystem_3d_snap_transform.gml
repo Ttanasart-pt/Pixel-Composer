@@ -15,20 +15,20 @@ function Node_pSystem_3D_Snap_Transform(_x, _y, _group = noone) : Node_3D(_x, _y
 	
 	////- =Position
 	newInput(16, nodeValue_Bool(       "Snap Position",  false ));
-	newInput( 8, nodeValue_Vec3_Range( "Position Snap",  [0,0,0,0,0,0], true )).setCurvable( 9, CURVE_DEF_11, "Over Lifespan"); 
-	newInput(10, nodeValue_Vec3_Range( "Position Shift", [0,0,0,0,0,0], true )); 
+	newInput( 8, nodeValue_Vec3_Range( "Position Snap",  RANGE3_0, true )).setCurvable( 9, CURVE_DEF_11, "Over Lifespan"); 
+	newInput(10, nodeValue_Vec3_Range( "Position Shift", RANGE3_0, true )); 
 	newInput(14, nodeValue_Bool(       "Override Position" ));
 	
 	////- =Angle
 	newInput(17, nodeValue_Bool(        "Snap Angle",  false ));
-	newInput( 3, nodeValue_Vec3_Range(  "Angle Snap",  [0,0,0,0,0,0], true )).setCurvable( 4, CURVE_DEF_11, "Over Lifespan"); 
-	newInput( 5, nodeValue_Vec3_Range(  "Angle Shift", [0,0,0,0,0,0], true )).setCurvable( 6, CURVE_DEF_11, "Over Lifespan"); 
+	newInput( 3, nodeValue_Vec3_Range(  "Angle Snap",  RANGE3_0, true )).setCurvable( 4, CURVE_DEF_11, "Over Lifespan"); 
+	newInput( 5, nodeValue_Vec3_Range(  "Angle Shift", RANGE3_0, true )).setCurvable( 6, CURVE_DEF_11, "Over Lifespan"); 
 	newInput( 7, nodeValue_Bool(        "Override Angle" ));
 	
 	////- =Scale
 	newInput(18, nodeValue_Bool(       "Snap Scale",  false ));
-	newInput(11, nodeValue_Vec3_Range( "Scale Snap",  [0,0,0,0,0,0], true )).setCurvable(12, CURVE_DEF_11, "Over Lifespan"); 
-	newInput(13, nodeValue_Vec3_Range( "Scale Shift", [0,0,0,0,0,0], true )); 
+	newInput(11, nodeValue_Vec3_Range( "Scale Snap",  RANGE3_0, true )).setCurvable(12, CURVE_DEF_11, "Over Lifespan"); 
+	newInput(13, nodeValue_Vec3_Range( "Scale Shift", RANGE3_0, true )); 
 	newInput(15, nodeValue_Bool(       "Override Scale" ));
 	// 20
 	

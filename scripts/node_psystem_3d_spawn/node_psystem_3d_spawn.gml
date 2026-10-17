@@ -43,14 +43,14 @@ function Node_pSystem_3D_Spawn(_x, _y, _group = noone) : Node_3D(_x, _y, _group)
 	
 	////- =Transform
 	newInput(15, nodeValue_Range(      "Inherit Velocity",   [0,0], true   ));
-	newInput(16, nodeValue_Vec3_Range( "Velocity",           [0,0,0,0,0,0] ));
+	newInput(16, nodeValue_Vec3_Range( "Velocity",           RANGE3_0 ));
 	newInput(24, nodeValue_Range(      "Follow Spawn Shape", [0,0], true   ));
 	
 	////- =Rotation
-	newInput(17, nodeValue_Vec3_Range( "Rotation", [0,0,0,0,0,0] ));
+	newInput(17, nodeValue_Vec3_Range( "Rotation", RANGE3_0 ));
 	
 	////- =Scale
-	newInput(18, nodeValue_Vec3_Range( "Scale", [1,1,1,1,1,1] ));
+	newInput(18, nodeValue_Vec3_Range( "Scale", RANGE3_1 ));
 	newInput(25, nodeValue_Range(      "Size",  [1,1],   true ));
 	
 	////- =Render

@@ -181,26 +181,28 @@ function __3dObjectInstancer() : __3dObject() constructor {
 			submitCbuffer(b);
 			
 			for( var i = 0, n = array_length(VB); i < n; i++ ) {
-				var _mat = materials[i];
-				var _tex = _mat.texture;
+				var _m = materials[i];
+				if(!is(_m, __d3d_material_pack)) continue;
+				
+				var _mat = _m.material;
 				
 				d3d11_cbuffer_begin();
 				var _buffer = buffer_create(1, buffer_grow, 1); buffer_to_start(_buffer);
 				var _cbSize = 0;
 				
 				if(_sh == sh_d3d_geometry) {
-					_cbSize += cbuffer_write_fs( _buffer, _mat.mat_texScale   );
-					_cbSize += cbuffer_write_fs( _buffer, _mat.mat_texShift   );
-					_cbSize += cbuffer_write_i(  _buffer, texture_flip        );
+					_cbSize += cbuffer_write_fs( _buffer, _mat.texScale   );
+					_cbSize += cbuffer_write_fs( _buffer, _mat.texShift   );
+					_cbSize += cbuffer_write_i(  _buffer, texture_flip    );
 					
 				} else {
-					_cbSize += cbuffer_write_f(  _buffer, _mat.mat_diffuse    );
-					_cbSize += cbuffer_write_f(  _buffer, _mat.mat_specular   );
-					_cbSize += cbuffer_write_f(  _buffer, _mat.mat_shine      );
-					_cbSize += cbuffer_write_i(  _buffer, _mat.mat_metalic    );
-					_cbSize += cbuffer_write_f(  _buffer, _mat.mat_reflective );
-					_cbSize += cbuffer_write_fs( _buffer, _mat.mat_texScale   );
-					_cbSize += cbuffer_write_fs( _buffer, _mat.mat_texShift   );
+					_cbSize += cbuffer_write_f(  _buffer, _mat.diffuse    );
+					_cbSize += cbuffer_write_f(  _buffer, _mat.specular   );
+					_cbSize += cbuffer_write_f(  _buffer, _mat.shine      );
+					_cbSize += cbuffer_write_i(  _buffer, _mat.metalic    );
+					_cbSize += cbuffer_write_f(  _buffer, _mat.reflective );
+					_cbSize += cbuffer_write_fs( _buffer, _mat.texScale   );
+					_cbSize += cbuffer_write_fs( _buffer, _mat.texShift   );
 					_cbSize += cbuffer_write_i(  _buffer, texture_flip    );
 				}
 				
@@ -213,7 +215,7 @@ function __3dObjectInstancer() : __3dObject() constructor {
 				buffer_delete(_buffer);
 				
 				d3d11_shader_set_cbuffer_ps(11, cbuff);
-				gpu_set_tex_filter(_mat.tex_filter);
+				gpu_set_tex_filter(_mat.texFilter);
 				
 				switch(blend_mode) {
 					case BLEND.normal:  BLEND_NORMAL; break;
@@ -222,7 +224,7 @@ function __3dObjectInstancer() : __3dObject() constructor {
 					case BLEND.maximum: BLEND_MAX;    break;
 				}
 				
-				vertex_submit_instanced(VB[i], render_type, _tex, batch_amount[b]);
+				vertex_submit_instanced(VB[i], render_type, _m.texture, batch_amount[b]);
 				
 				BLEND_NORMAL
 			}
@@ -301,7 +303,7 @@ function __3dObjectInstancer() : __3dObject() constructor {
 				var i = 0;
 				repeat(vbcount) {
 					var _m = materials[i];
-					if(_m == noone) { i++; continue; }
+					if(!is(_m, __d3d_material_pack)) { i++; continue; }
 					
 					var _tex = _m.texture;
 					var _mat = _m.material;

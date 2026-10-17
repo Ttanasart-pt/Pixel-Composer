@@ -1,3 +1,6 @@
+#macro RANGE3_0 [ 0,0,0, /**/ 0,0,0 ]
+#macro RANGE3_1 [ 1,1,1, /**/ 1,1,1 ]
+
 #macro nodeValue_Range3 nodeValue_Vec3_Range
 function nodeValue_Vec3_Range(_name, _value, _data = {}) { return new __NodeValue_Vec3_Range(_name, self, _value, _data); }
 

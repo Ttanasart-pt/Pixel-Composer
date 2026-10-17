@@ -38,10 +38,10 @@ function Node_3D_Instancer(_x, _y, _group = noone) : Node_3D(_x, _y, _group) con
 	newInput(15, nodeValue_Vec3(    "Shift Scale",      [0,0,0]   ));
 	
 	////- =Scatter
-	newInput( 6, nodeValue_Range3(  "Position Scatter", array_create(6,0) ));
-	newInput( 7, nodeValue_Range3(  "Rotation Scatter", array_create(6,0) ));
-	newInput( 8, nodeValue_Range3(  "Scale Scatter",    array_create(6,0) ));
-	newInput(10, nodeValue_Bool(    "Scale Uniform",    true              ));
+	newInput( 6, nodeValue_Range3(  "Position Scatter", RANGE3_0  ));
+	newInput( 7, nodeValue_Range3(  "Rotation Scatter", RANGE3_0  ));
+	newInput( 8, nodeValue_Range3(  "Scale Scatter",    RANGE3_0  ));
+	newInput(10, nodeValue_Bool(    "Scale Uniform",    true      ));
 	
 	////- =Render
 	newInput(12, nodeValue_Palette( "Colors Per Index", [ca_white] )).setOptions("Select by:", "array_select", [ "Index Loop", "Index Ping-pong", "Random" ], THEME.array_select_type).iconPad();

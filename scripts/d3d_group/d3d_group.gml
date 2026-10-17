@@ -119,6 +119,15 @@ function __3dTransformed(_object = noone) : __3dInstance() constructor {
 }
 
 #region actions
+	function __d3d_material_pack(_mat) constructor {
+		material   = _mat;
+		texture    = _mat.getTexture();
+		textureDim = surface_get_dimension(_mat.getSurface());
+		
+		use_normal = is_surface(_mat.normal);
+		normal_map = surface_get_texture_safe(_mat.normal);
+		pbr_map    = surface_get_texture_safe(_mat.pbr_properties_map);
+	}
 	
 	function __d3d_flattern(_objs, _obj, _transMat, _vf = global.VF_POS_NORM_TEX_COL) {
 		if(!is(_obj, __3dInstance)) return;
@@ -152,24 +161,9 @@ function __3dTransformed(_object = noone) : __3dInstance() constructor {
 		
 		var _mat = [];
 		for( var i = 0, n = array_length(_obj.VB); i < n; i++ ) {
-			var _m = array_safe_get_fast(_obj.materials, _obj.material_index == undefined? i : _obj.material_index[i], noone);
-			var _uMat = is(_m, __d3dMaterial);
-			var _mdat = noone;
-			
-			if(_uMat) {
-				_mdat = {
-					material:   _m, 
-					texture:    _m.getTexture(),  
-					textureDim: surface_get_dimension(_m.getSurface()),  
-					
-					use_normal: is_surface(_m.normal),
-					normal_map: surface_get_texture_safe(_m.normal),
-					pbr_map:    surface_get_texture_safe(_m.pbr_properties_map),
-				};
-				
-			}
-			
-			_mat[i] = _mdat;
+			var _i = _obj.material_index == undefined? i : _obj.material_index[i];
+			var _m  = array_safe_get_fast(_obj.materials, _i, noone);
+			_mat[i] = is(_m, __d3dMaterial)? new __d3d_material_pack(_m) : noone;
 		}
 		
 		array_append( _objs.materials, _mat );
@@ -179,11 +173,7 @@ function __3dTransformed(_object = noone) : __3dInstance() constructor {
 	function d3d_flattern(_obj, _vf = global.VF_POS_NORM_TEX_COL) {
 		if(!is(_obj, __3dInstance)) return _obj;
 		
-		var _objs = { 
-			VB : [], 
-			materials : [],
-		};
-		
+		var _objs = { VB : [], materials : [] };
 		__d3d_flattern(_objs, _obj, matrix_build_identity(), _vf);
 		
 		return _objs;
