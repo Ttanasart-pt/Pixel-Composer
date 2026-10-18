@@ -94,18 +94,21 @@ static void freeVar() {
 cfunction double freeType_Font_getVariableData() {
     freeVar();
     if(!face) return 0.;
-
+	
     var_mm     = nullptr;
     var_coords = (FT_Fixed*)malloc(sizeof(FT_Fixed) * MAX_AXIS);
 
-    if (FT_Get_MM_Var(face, &mm_var)) 
+    if (FT_Get_MM_Var(face, &mm_var)) {
         mm_var = nullptr; 
-
+        return 0.;
+    }
+    
     if (FT_Get_Var_Design_Coordinates(face, mm_var->num_axis, var_coords)) {
         free(var_coords);
         var_coords = nullptr;
+        return 0.;
     }
-
+	
     return mm_var->num_axis;
 }
 

@@ -124,14 +124,15 @@ function Node_Text_FreeType(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 		#endregion
 			
 		if(!file_exists_empty(_font) || _text == "") return _outSurf;
-			
+		
 		freeType_setFont(_font, _size);
+		
 		freeType_setFontAA(_aa);
 		freeType_setFontSpacing(_lspac);
 		freeType_setText(_text);
-		
 		freeType_fontStart();
 		freeType_Font_getVariableData();
+		
 		updateFont(_font);
 		
 		for( var i = 0; i < font_var_count; i++ ) {
