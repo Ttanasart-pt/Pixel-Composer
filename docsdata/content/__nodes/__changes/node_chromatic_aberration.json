@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.22.1.101",
+    "changes": [
+      {
+        "date": "2026-10-18T00:00:58.075Z",
+        "node": "Chromatic Aberration",
+        "commit": "**Chromatic Aberration**: Fix freeze when setting Resolution to less than 1 in continuous mode."
+      }
+    ]
+  },
+  {
     "version": "1.21.7.110",
     "changes": [
       {

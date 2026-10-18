@@ -1,5 +1,11 @@
 Create multiple copies of a 3D model using instancing.
 
+## Properties
+
+[proptable]
+
+[/proptable]
+
 ## Instancing vs. Repeat
 
 This node is similiar to <node Node_3D_Repeat>. The main different is this node use instancing to create a clone while <node Node_3D_Repeat> 

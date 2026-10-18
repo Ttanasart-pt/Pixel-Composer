@@ -57,7 +57,7 @@ function Node_Chromatic_Aberration(_x, _y, _group = noone) : Node_Processor(_x, 
 			var _grad = _data[21], _gradShf = _data[22];
 			
 			var _iter = _data[20];
-			var _reso = _data[14];
+			var _reso = _data[14]; _reso = max(1, _reso);
 			
 			inputs[21].setVisible(_type == 2);
 			
@@ -79,18 +79,18 @@ function Node_Chromatic_Aberration(_x, _y, _group = noone) : Node_Processor(_x, 
 			shader_set_interpolation(_surf);
 			shader_set_uv(_data[8], _data[9]);
 			
-			shader_set_dim("dimension",     _surf    );
-			shader_set_2( "center",         _cent    );
-			shader_set_f( "gradient_shift", _gradShf );
+			shader_set_dim( "dimension",      _surf    );
+			shader_set_2(   "center",         _cent    );
+			shader_set_f(   "gradient_shift", _gradShf );
 			shader_set_gradient(_grad);
 			
-			shader_set_f_map("strength",  _data[ 2], _data[ 4], inputs[ 2], _data[19] );
-			shader_set_f_map("intensity", _data[ 6], _data[ 7], inputs[ 6] );
-			shader_set_f_map("chromaShf", _data[15], _data[16], inputs[15] );
-			shader_set_f_map("chromaSca", _data[17], _data[18], inputs[17] );
+			shader_set_m( "strength",   _data[ 2], _data[ 4], inputs[ 2], _data[19] );
+			shader_set_m( "intensity",  _data[ 6], _data[ 7], inputs[ 6]            );
+			shader_set_m( "chromaShf",  _data[15], _data[16], inputs[15]            );
+			shader_set_m( "chromaSca",  _data[17], _data[18], inputs[17]            );
 			
-			shader_set_f("resolution",    _reso );
-			shader_set_i("iteration",     _iter );
+			shader_set_f( "resolution", _reso );
+			shader_set_i( "iteration",  _iter );
 			
 			draw_surface_safe(_surf);
 		surface_reset_shader();
