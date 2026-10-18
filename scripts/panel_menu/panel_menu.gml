@@ -36,9 +36,9 @@
             registerFunction("", "Save At",         "",     n,   SAVE_AT   ).setMenu("save_at",        THEME.save)
                 .setArg([ ARG("project", function() /*=>*/ {return PROJECT}, true), ARG("path", ""), ARG("log", "save at ") ])
             
-            registerFunction("", "Save All",        "S",    c|a, SAVE_ALL  ).setMenu("save_all",       THEME.icon_save_all)
-            registerFunction("", "Open",            "O",    c,   LOAD      ).setMenu("open",           THEME.noti_icon_file_load)
-            registerFunction("", "Open Safe",       "",     n,   LOAD_SAFE ).setMenu("open_safe",      THEME.noti_icon_file_load)
+            registerFunction("", "Save All",         "S",   c|a, SAVE_ALL  ).setMenu("save_all",       THEME.icon_save_all)
+            registerFunction("", "Open",             "O",   c,   LOAD      ).setMenu("open",           THEME.noti_icon_file_load)
+            registerFunction("", "Open in Safe Mode", "",   n,   LOAD_SAFE ).setMenu("open_safe",      THEME.noti_icon_file_load)
             
             registerFunction("", "Open At",         "",     n,   LOAD_AT   ).setMenu("open_at",        THEME.noti_icon_file_load)
                 .setArg([ ARG("path", ""), ARG("readonly", false), ARG("override", false) ])

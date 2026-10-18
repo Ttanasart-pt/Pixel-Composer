@@ -16,7 +16,7 @@ function Node_Quarternion_From_Euler(_x, _y, _group = noone) : Node_Processor(_x
 			var _eul = _data[0];
 		#endregion
 		
-		var _quar = quarternionFromEuler(_eul[0], _eul[1], _eul[2]);
+		var _quar = quarternionFromEulerArray(_eul);
 		
 		return _quar; 
 	}

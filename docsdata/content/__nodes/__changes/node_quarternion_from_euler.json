@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.22.1.101",
+    "changes": [
+      {
+        "date": "2026-10-18T01:10:06.965Z",
+        "node": "",
+        "commit": "**Checker**: Fix incorrect scaling when using non-square dimension."
+      }
+    ]
+  },
+  {
     "version": "1.21.0.2.004",
     "changes": [
       {

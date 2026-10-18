@@ -777,11 +777,11 @@ function quarternionArraySlerp(_q0, _q1, _s) {
 	];
 };
 
-function quarternionFromEulerArray(_e) {
-	return array_length(_e) >= 3? quarternionFromEuler(_e[0], _e[1], _e[2]) : [0,0,0,1];
+function quarternionFromEulerArray(_e, _out = [0,0,0,1]) {
+	return array_safe_length(_e) >= 3? quarternionFromEuler(_e[0], _e[1], _e[2], _out) : [0,0,0,1];
 }
 
-function quarternionFromEuler(_x, _y, _z) {
+function quarternionFromEuler(_x, _y, _z, _out = [0,0,0,1]) {
 	INLINE
 
 	_x = -_x * 0.5;
@@ -807,12 +807,12 @@ function quarternionFromEuler(_x, _y, _z) {
 	_q1Sin = dsin(_y);
 	_q1Cos = dcos(_y);
 
-	var X = _qX * _q1Cos - _qZ * _q1Sin;
-	var Y = _qW * _q1Sin + _qY * _q1Cos;
-	var Z = _qZ * _q1Cos + _qX * _q1Sin;
-	var W = _qW * _q1Cos - _qY * _q1Sin;
+	_out[0] = _qX * _q1Cos - _qZ * _q1Sin;
+	_out[1] = _qW * _q1Sin + _qY * _q1Cos;
+	_out[2] = _qZ * _q1Cos + _qX * _q1Sin;
+	_out[3] = _qW * _q1Cos - _qY * _q1Sin;
 
-	return [ X, Y, Z, W ];
+	return _out;
 }
 
 function quarternionToEuler(X, Y, Z, W) {

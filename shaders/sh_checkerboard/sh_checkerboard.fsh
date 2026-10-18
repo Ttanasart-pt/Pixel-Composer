@@ -52,14 +52,14 @@ uniform sampler2D angleSurf;
 uniform vec4 col1;
 uniform vec4 col2;
 
-float check(vec2 c, float amo, float ang) {
+float check(vec2 c, vec2 amo, float ang) {
 	float _x = c.x * cos(ang) - c.y * sin(ang);
 	float _y = c.x * sin(ang) + c.y * cos(ang);
-	float _a = 1. / amo;
+	vec2  _a = 1. / amo;
 	
-	vec2  px = vec2(floor(_x / _a) + 0.5, floor(_y / _a) + 0.5) * _a;
-	float dd = 1. - (max(abs(px.x - _x), abs(px.y - _y)) / _a + 0.5);
-	float mm = mod(floor(_x / _a) + floor(_y / _a), 2.);
+	vec2  px = vec2(floor(_x / _a.x) + 0.5, floor(_y / _a.y) + 0.5) * _a;
+	float dd = 1. - (max(abs(px.x - _x) / _a.x, abs(px.y - _y) / _a.y) + 0.5);
+	float mm = mod(floor(_x / _a.x) + floor(_y / _a.y), 2.);
 	
 	return mm < .5? 0.5 + dd : 0.5 - dd;
 }
@@ -71,7 +71,7 @@ void main() {
 			vec4 _vMap = texture2D( amountSurf, v_vTexcoord );
 			amo = mix(amount.x, amount.y, (_vMap.r + _vMap.g + _vMap.b) / 3.);
 		}
-		amo = dimension.x / amo;
+		vec2 amo2 = dimension / amo;
 		
 		float ang = angle.x;
 		if(angleUseSurf == 1) {
@@ -83,20 +83,19 @@ void main() {
 	
 	float uva = 1.; 
 	vec2  vtx = getUVA(v_vTexcoord, uva);
-	vec2  a   = dimension / dimension.y;
-	vec2  c   = (vtx - position) * a * vec2(1., aspect);
+	vec2  c   = (vtx - position) * vec2(1., aspect);
 	float ch;
 	
 	if(diagonal == 0 || blend != 0) {
 		if(diagonal == 1) {
-			ang += PI / 4.;
-			amo *= sqrt(2.);
+			ang  += PI / 4.;
+			amo2 *= sqrt(2.);
 		}
 		
-		ch = check(c, amo, ang);
+		ch = check(c, amo2, ang);
 		
 	} else {
-		vec2 pa = floor(dimension / amo);
+		vec2 pa = floor(dimension / amo2);
 		vec2 px = floor(dimension * c);
 		     px = mod(px, pa);
 		

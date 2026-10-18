@@ -77,7 +77,9 @@ function Node_Checker(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 			var _dim = _data[ 0];
 			
 			var _dia = _data[ 9];
+			var _siz = _data[ 1];
 			var _asp = _data[13];
+			var _ang = _data[ 2];
 			var _pos = _data[ 3];
 			
 			var _bld = _data[ 8];
@@ -96,8 +98,8 @@ function Node_Checker(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 			
 			shader_set_i( "diagonal",   _dia );
 			shader_set_f( "position",   _pos[0] / _dim[0], _pos[1] / _dim[1]);
-			shader_set_m( "amount",     _data[1], _data[6], inputs[1]);
-			shader_set_m( "angle",      _data[2], _data[7], inputs[2]);
+			shader_set_m( "amount",     _siz, _data[6], inputs[1]);
+			shader_set_m( "angle",      _ang, _data[7], inputs[2]);
 			shader_set_f( "aspect",     _asp );
 			
 			shader_set_i( "blend",      _bld );

@@ -1777,7 +1777,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		var typeFrom = nodeFrom == undefined? VALUE_TYPE.any : nodeFrom.type;
 		
 		if(applyUnit && display_type == VALUE_DISPLAY.d3quarternion && attributes.angle_display == QUARTERNION_DISPLAY.euler)
-			return quarternionFromEuler(_value[0], _value[1], _value[2]);
+			return quarternionFromEulerArray(_value);
 		
 		if(type == VALUE_TYPE.gradient && typeFrom == VALUE_TYPE.color) { // color compatibility [ color, palette, gradient ]
 			if(is(_value, gradientObject)) return _value;

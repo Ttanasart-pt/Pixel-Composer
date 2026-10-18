@@ -4233,9 +4233,15 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
         
         if(dropper_active) CURSOR_SPRITE = THEME.node_dropper;
         
+        var mrg = THEME_VALUE.panel_toolbar_merge;
+    	var pad = THEME_VALUE.panel_toolbar_padding;
+	    	
         if(LIVE_UPDATE) {
             draw_set_text(f_p0b, fa_right, fa_bottom, COLORS._main_value_negative);
-            draw_text(w - 8, h - toolbar_height, "Live Update");
+			var tx = w - ui(8);
+			var ty = h - pad - toolbar_height;
+			
+            draw_text(tx, ty, "Live Update");
         }
         
         drawSlideShow();
@@ -4243,8 +4249,16 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
         drawTooltipHints();
         
         if(project.safeMode) {
-			draw_set_text(f_sdf, fa_right, fa_bottom, COLORS._main_text_sub);
-			draw_text_transform_add(w - ui(8), h - toolbar_height, __txt("safe_mode", "SAFE MODE"), .5);
+			var tx = w - ui(8);
+			var ty = h - pad - toolbar_height - ui(6);
+			
+			draw_set_text(f_p2, fa_right, fa_bottom, COLORS._main_text_sub);
+			draw_text_transform_add(tx, ty, __txt("safe_mode_desc", "Rendering disabled"));
+			ty -= ui(16);
+			
+			draw_set_text(f_h5, fa_right, fa_bottom, COLORS._main_text_sub);
+			draw_text_transform_add(tx, ty, __txt("safe_mode", "SAFE MODE"));
+			
 		}
 		
         if(pHOVER) { // File Drop
