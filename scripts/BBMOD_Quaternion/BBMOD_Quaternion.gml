@@ -777,6 +777,10 @@ function quarternionArraySlerp(_q0, _q1, _s) {
 	];
 };
 
+function quarternionFromEulerArray(_e) {
+	return array_length(_e) >= 3? quarternionFromEuler(_e[0], _e[1], _e[2]) : [0,0,0,1];
+}
+
 function quarternionFromEuler(_x, _y, _z) {
 	INLINE
 

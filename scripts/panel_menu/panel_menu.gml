@@ -171,7 +171,9 @@ function Panel_Menu() : PanelContent() constructor {
             global.menuItems_main_file = array_append([
                 "new_file",
                 "open",
-                    
+                "open_safe",
+                -1,
+                
                 "save",
                 "save_as",
                 "save_all",

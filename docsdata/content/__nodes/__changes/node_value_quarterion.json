@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.22.1.101",
+    "changes": [
+      {
+        "date": "2026-10-18T00:28:14.837Z",
+        "node": "Quaternoin",
+        "commit": "**Quaternoin**: Fix crash when inputting a non-quaternion vector."
+      }
+    ]
+  },
+  {
     "version": "1.21.6.001",
     "changes": [
       {
