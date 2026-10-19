@@ -610,6 +610,8 @@
             
             { "label": "External" },
             { "label": "/Device" },
+            "Node_Mouse_Input",
+            "Node_Keyboard_Input",
             "Node_Spout_Send",
             // "Node_Spout_Receive",
             "Node_MIDI_In",

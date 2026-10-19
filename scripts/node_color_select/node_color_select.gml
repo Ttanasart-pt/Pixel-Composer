@@ -1,35 +1,35 @@
 function Node_Color_Select(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
-	name = "Select Color";
+	name = "Select HSV";
 	
 	newActiveInput(5);
 	newInput(6, nodeValue_Toggle("Channel", 0b1111, { data: array_create(4, THEME.inspector_channel) }));
 	
 	////- =Surfaces
-	newInput(0, nodeValue_Surface("Surface In")).setRequired();
-	newInput(1, nodeValue_Surface("Mask"));
-	newInput(2, nodeValue_Slider("Mix", 1));
+	newInput(0, nodeValue_Surface( "Surface In" )).setRequired();
+	newInput(1, nodeValue_Surface( "Mask"       ));
+	newInput(2, nodeValue_Slider(  "Mix", 1     ));
 	__init_mask_modifier(1, 3); // inputs 3, 4
 	
 	////- =Hue
-	newInput(20, nodeValue_Slider("H Shift",     0, [-1,1,0.01] ));
-	newInput( 7, nodeValue_Slider("H Min",       0 ));
-	newInput( 8, nodeValue_Slider("H Min Range", 0 ));
-	newInput( 9, nodeValue_Slider("H Max",       1 ));
-	newInput(10, nodeValue_Slider("H Max Range", 0 ));
+	newInput(20, nodeValue_Slider( "H Shift",     0, [-1,1,0.01] ));
+	newInput( 7, nodeValue_Slider( "H Min",       0 ));
+	newInput( 8, nodeValue_Slider( "H Min Range", 0 ));
+	newInput( 9, nodeValue_Slider( "H Max",       1 ));
+	newInput(10, nodeValue_Slider( "H Max Range", 0 ));
 	
 	////- =Saturation
-	newInput(21, nodeValue_Slider("S Shift",     0, [-1,1,0.01] ));
-	newInput(12, nodeValue_Slider("S Min",       0 ));
-	newInput(13, nodeValue_Slider("S Min Range", 0 ));
-	newInput(14, nodeValue_Slider("S Max",       1 ));
-	newInput(15, nodeValue_Slider("S Max Range", 0 ));
+	newInput(21, nodeValue_Slider( "S Shift",     0, [-1,1,0.01] ));
+	newInput(12, nodeValue_Slider( "S Min",       0 ));
+	newInput(13, nodeValue_Slider( "S Min Range", 0 ));
+	newInput(14, nodeValue_Slider( "S Max",       1 ));
+	newInput(15, nodeValue_Slider( "S Max Range", 0 ));
 	
 	////- =Value
-	newInput(22, nodeValue_Slider("V Shift",     0, [-1,1,0.01] ));
-	newInput(16, nodeValue_Slider("V Min",       0 ));
-	newInput(17, nodeValue_Slider("V Min Range", 0 ));
-	newInput(18, nodeValue_Slider("V Max",       1 ));
-	newInput(19, nodeValue_Slider("V Max Range", 0 ));
+	newInput(22, nodeValue_Slider( "V Shift",     0, [-1,1,0.01] ));
+	newInput(16, nodeValue_Slider( "V Min",       0 ));
+	newInput(17, nodeValue_Slider( "V Min Range", 0 ));
+	newInput(18, nodeValue_Slider( "V Max",       1 ));
+	newInput(19, nodeValue_Slider( "V Max Range", 0 ));
 	
 	////- =Output
 	newInput(11, nodeValue_Bool("Use Input Alpha", 0 ));

@@ -3,8 +3,8 @@ if(winMan_isMinimized()) exit;
 winManStep();
 
 if(!LOADING && PROJECT.active && !PROJECT.safeMode) { //node step
-	PROJECT.step();
 	LIVE_UPDATE = false;
+	PROJECT.step();
 	
 	try {
 		if(PANEL_MAIN != 0) PANEL_MAIN.step();
@@ -13,7 +13,7 @@ if(!LOADING && PROJECT.active && !PROJECT.safeMode) { //node step
 	}
 	
 	PROJECT.postStep();
-	IS_SAVING = false;
+	IS_SAVING   = false;
 }
 
 #region hotkey

@@ -9,12 +9,13 @@ function Node_MIDI_In(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 	rtmidi_ignore_messages(true, true, true);
 	
 	var inps = rtmidi_probe_ins();
-	if(inps == 0) noti_warning($"No MIDI device detected.", noone, self);
-	var _miniNames = [];
-	for( var i = 0; i < inps; i++ ) 
-		_miniNames[i] = rtmidi_name_in(i);
+	midiNames = [];
 	
-	newInput( 0, nodeValue_EScroll( "Input",  0, { data: _miniNames, update_hover: false } )).rejectArray();
+	if(inps == 0)
+		 noti_warning($"No MIDI device detected.", noone, self);
+	else midiNames = array_create_ext(inps, function(i) /*=>*/ {return rtmidi_name_in(i)});
+	
+	newInput( 0, nodeValue_EScroll( "Input",  0, { data: midiNames, update_hover: false } )).rejectArray();
 	
 	newOutput( 0, nodeValue_Output( "Raw Message",    VALUE_TYPE.float,  [] ));
 	newOutput( 1, nodeValue_Output( "Pressing Notes", VALUE_TYPE.float,  [] ));

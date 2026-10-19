@@ -1,3 +1,23 @@
+#region Global
+	function Node_create_Color_replace(_x, _y, _group = noone, _param = {}) {
+		var node = new Node_Color_replace(_x, _y, _group);
+		node.skipDefault();
+		
+		var quer = _param[$ "query"]; var query = (is_struct(quer) && quer[$ "type"] == "alias"? quer[$ "value"] : "") ?? "";
+		
+		print(query)
+		switch(query) {
+			case "select colors" : 
+				node.inputs[4].setValue(true);
+				node.inputs[2].setValue([ca_white]);
+				break;
+		}
+		
+		return node;
+	}
+	
+#endregion
+
 function Node_Color_replace(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Replace Palette";
 	
@@ -71,7 +91,6 @@ function Node_Color_replace(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 			var hrd  = _data[ 6];
 			
 			inputs[14].setVisible(mde == 1 || mde == 2);
-			inputs[15].setVisible(mde == 2);
 			inputs[16].setVisible(mde == 2);
 			inputs[17].setVisible(mde == 2);
 		#endregion
@@ -96,18 +115,18 @@ function Node_Color_replace(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 			shader_set_i( "colorTo_ind",   _shfInd    );
 			shader_set_i( "colorTo_amo",   _amoTo     );
 			
-			shader_set_i( "mode",          mde  );
-			shader_set_i( "alphacmp",      alp  );
-			shader_set_i( "hardReplace",   hrd  );
-			shader_set_f( "treshold",      tr   );
+			shader_set_i( "mode",          mde        );
+			shader_set_i( "alphacmp",      alp        );
+			shader_set_i( "hardReplace",   hrd        );
+			shader_set_f( "treshold",      tr         );
 			
-			shader_set_f( "seed",          sed  );
-			shader_set_f( "hueRan",        hRan );
-			shader_set_f( "satRan",        sRan );
-			shader_set_f( "valRan",        vRan );
+			shader_set_f( "seed",          sed        );
+			shader_set_f( "hueRan",        hRan       );
+			shader_set_f( "satRan",        sRan       );
+			shader_set_f( "valRan",        vRan       );
 			
-			shader_set_i( "replaceOthers", repo );
-			shader_set_c( "replaceColor",  oclr );
+			shader_set_i( "replaceOthers", repo       );
+			shader_set_c( "replaceColor",  oclr       );
 			
 			shader_set_i( "useMask",  is_surface(msk) );
 			shader_set_s( "mask",     msk             );
