@@ -74,8 +74,18 @@ function Node_Atlas_Draw(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 			var _a = atl[i];
 			if(!is(_a, Atlas)) continue;
 			
+			var _surf = _a.getSurface();
+			var _dx   = _a.x + pad[2];
+			var _dy   = _a.y + pad[1];
+			var _rot  = _a.rotation;
+			var _sx   = _a.sx;
+			var _sy   = _a.sy;
+			
+			var _bln = _a.blend;
+			var _alp = _a.alpha;
+			
 			surface_set_shader(temp_surface[bg], sh_sample, true, BLEND.over);
-				try { draw_surface_blend_ext(temp_surface[!bg], _a, pad[2], pad[1]); }
+				try { draw_surface_blend_ext(temp_surface[!bg], _surf, _dx, _dy, _sx, _sy, _rot, _bln, _alp); }
 				catch(e) { noti_warning(e, noone, self); }
 			surface_reset_shader();
 			

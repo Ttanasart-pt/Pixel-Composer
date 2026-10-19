@@ -64,12 +64,12 @@ function Node_Atlas_Set(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	
 	static processData = function(_outData, _data, _array_index = 0) {
 		var atl = _data[0];
-		if(!is(atl, Atlas)) return _outData;
 		
+		if(!is(atl, Atlas)) return _outData;
 		var natl = [];
 		
 		var _newAtl = atl.clone();
-		var _surf   = atl.surface.get();
+		var _surf   = atl.getSurface();
 		var _dim    = surface_get_dimension(_surf);
 		
 		if(_data[1]) _newAtl.setSurface(_data[2]);

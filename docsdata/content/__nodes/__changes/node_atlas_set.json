@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.22.1.201",
+    "changes": [
+      {
+        "date": "2026-10-19T08:53:28.055Z",
+        "node": "",
+        "commit": "**Draw Atlas**: Fix node not apply atlas transformation data."
+      }
+    ]
+  },
+  {
     "version": "1.21.4.008",
     "changes": [
       {

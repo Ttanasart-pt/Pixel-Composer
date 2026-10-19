@@ -13,7 +13,8 @@ function Atlas(_surface, _x = 0, _y = 0, _rot = 0, _sx = 1, _sy = 1, _blend = c_
 	
 	oriSurf = noone;
 	
-	static getSurface = function() /*=>*/ {return surface};
+	static getSurface = function( ) /*=>*/ {return surface};
+	static setSurface = function(s) /*=>*/ { surface = s; return self; };
 	
 	onSet = undefined;
 	static set = function(_surface, _x = 0, _y = 0, _rot = 0, _sx = 1, _sy = 1, _blend = c_white, _alpha = 1, setDim = true) {
