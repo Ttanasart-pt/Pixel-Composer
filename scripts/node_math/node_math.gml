@@ -96,19 +96,21 @@ function Node_Math(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	newInput( 3, nodeValue_EButton( "Angle",      1, [ "Radians", "Degree" ] ));
 	newInput( 4, nodeValue_Bool( "To Integer",    false ));
 	newInput( 8, nodeValue_Bool( "Output Vector", false ));
-	// 9
+	newInput( 9, nodeValue_Bool( "Clamp Output",  false ));
+	// 10
 		
 	newOutput(0, nodeValue_Output("Result", VALUE_TYPE.float, 0));
 	
 	input_display_list = [ 0, 
 		[ "Values",   false ],  1,  2,  5,  6,  7, 
-		[ "Settings", false ],  3,  4,  8, 
+		[ "Settings", false ],  3,  4,  8,  9, 
 	];
 	
 	////- Nodes
 	
-	use_mod = 0;
-	use_deg = false;
+	use_mod   = 0;
+	use_deg   = false;
+	use_clamp = false;
 	
 	static onValueUpdate = function(index = noone) {
 		if(index != 0) return;
@@ -143,7 +145,11 @@ function Node_Math(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 			case MATH_OPERATOR.snap :		return value_snap(a, b);
 			case MATH_OPERATOR.fract :		return frac(a);
 			
-			case MATH_OPERATOR.map :		return lerp(t[0], t[1], (a - f[0]) / (f[1] - f[0]));
+			case MATH_OPERATOR.map :
+				var v = lerp(t[0], t[1], (a - f[0]) / (f[1] - f[0]));
+				if(use_clamp) v = clamp(v, t[0], t[1]);
+				return v;
+			
 			case MATH_OPERATOR.log :	    return logn(b, a);
 			
 			case MATH_OPERATOR.maxx :	    return max(a, b);
@@ -192,7 +198,9 @@ function Node_Math(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		var f   = inputs[6].getValue();
 		var t   = inputs[7].getValue();
 		
-		var vc = inputs[8].getValue();
+		var vc    = inputs[8].getValue();
+		use_clamp = inputs[9].getValue();
+		
 		var ty = vc? VALUE_DISPLAY.vector : VALUE_DISPLAY._default
 		if(outputs[0].display_type != ty) outputs[0].setDisplay(ty);
 		
@@ -201,14 +209,15 @@ function Node_Math(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		if(__mode == use_mod) return;
 		__mode = use_mod;
 	
-		inputs[1].name = "a";
-		inputs[2].name = "b";
+		inputs[ 1].name = "a";
+		inputs[ 2].name = "b";
 		
-		inputs[2].setVisible(false, false);
-		inputs[3].setVisible(false, false);
-		inputs[5].setVisible(false, false);
-		inputs[6].setVisible(false, false);
-		inputs[7].setVisible(false, false);
+		inputs[ 2].setVisible(false, false);
+		inputs[ 3].setVisible(false, false);
+		inputs[ 5].setVisible(false, false);
+		inputs[ 6].setVisible(false, false);
+		inputs[ 7].setVisible(false, false);
+		inputs[ 9].setVisible(false, false);
 		
 		switch(use_mod) {
 			case MATH_OPERATOR.sin :
@@ -220,6 +229,7 @@ function Node_Math(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 			case MATH_OPERATOR.map :
 				inputs[6].setVisible(true, true);
 				inputs[7].setVisible(true, true);
+				inputs[9].setVisible(true);
 				break;
 		}
 		
