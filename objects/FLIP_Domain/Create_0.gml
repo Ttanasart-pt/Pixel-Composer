@@ -91,21 +91,24 @@ function update() {
 	FLIP_setWallCollisions(  domain, wallCollide, wallElasticity);
 }
 
-function step() {
+function step(_itr = 1) {
 	if(project_length != GLOBAL_TOTAL_FRAMES) return;
 	
-	FLIP_resetDensity(domain);
+	FLIP_setTimeStep(domain, dt);
 	
-	if(skip_incompressible) { 
-		FLIP_setTimeStep(domain, dt);
-		repeat(iteration) {
-			FLIP_simulate_integrateParticles(domain);
-			FLIP_simulate_pushParticlesApart(domain);
-			FLIP_simulate_handleParticleCollisions(domain);
-		}
+	repeat(_itr) {
+		FLIP_resetDensity(domain);
 		
-	} else
-		FLIP_simulate(domain, dt);
+		if(skip_incompressible) { 
+			repeat(iteration) {
+				FLIP_simulate_integrateParticles(domain);
+				FLIP_simulate_pushParticlesApart(domain);
+				FLIP_simulate_handleParticleCollisions(domain);
+			}
+			
+		} else
+			FLIP_simulate(domain, dt);
+	}
 	
 	FLIP_setParticleBuffer(domain, aPosBuff, aLifeBuff);
 	FLIP_setParticleVelocityBuffer(domain, aVelBuff);

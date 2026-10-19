@@ -341,7 +341,6 @@ cfunction double FLIP_setTimeStep(double dindex, double _dt) {
 	if (dindex < 0 || dindex >= domains.size()) return -1;
 
 	Domain& domain = domains[dindex];
-
 	domain.dt = _dt;
 	return 0;
 }
@@ -365,9 +364,8 @@ cfunction double FLIP_resetDensity(double dindex) {
 	double* s = domain.s;
 
 	for (int i = 1; i < domain.fNumX1; i++)
-		for (int j = 1; j < domain.fNumY1; j++) {
-			s[i * n + j] = 1.0;
-		}
+	for (int j = 1; j < domain.fNumY1; j++)
+		s[i * n + j] = 1.0;
 
 	return 0;
 }
@@ -397,12 +395,12 @@ void integrateParticles(Domain domain) {
 	double* particlePos  = domain.particlePos;
 	double* particleLife = domain.particleLife;
 
-	double dt = domain.dt;
-
+	double _itr = 1 / domain.globalIteration;
+	double  dt  = domain.dt * _itr;
+	
 	double gx = dt * domain.gravity * cos(domain.gravityDirection * M_PI / 180);
 	double gy = dt * domain.gravity * sin(domain.gravityDirection * M_PI / 180);
 
-	double _itr = 1 / domain.globalIteration;
 
 	for (int i = 0; i < domain.numParticles; i++) {
 		if(isnan(particleVel[2 * i + 1])) 
@@ -414,7 +412,7 @@ void integrateParticles(Domain domain) {
 		particleVel[2 * i]     += gx;
 		particleVel[2 * i + 1] -= gy;
 
-		particlePos[2 * i]     += particleVel[2 * i] * dt;
+		particlePos[2 * i]     += particleVel[2 * i]     * dt;
 		particlePos[2 * i + 1] += particleVel[2 * i + 1] * dt;
 
 		particleLife[i] += _itr;
@@ -651,9 +649,9 @@ static inline void resolveSolidGridCollision(const Domain& domain, double& px, d
 
 				double m = dl;
 				nx = -1.0; ny = 0.0;
-				if (dr < m) { m = dr; nx = 1.0; ny = 0.0; }
+				if (dr < m) { m = dr; nx = 1.0; ny =  0.0; }
 				if (db < m) { m = db; nx = 0.0; ny = -1.0; }
-				if (dt < m) { m = dt; nx = 0.0; ny = 1.0; }
+				if (dt < m) { m = dt; nx = 0.0; ny =  1.0; }
 				pen = r + m;
 			}
 
@@ -1195,6 +1193,7 @@ cfunction double FLIP_simulate(double dindex, double _dt) {
 		pushParticlesApart(domain);
 		handleParticleCollisions(domain);
 		transferVelocities(domain, true);
+		
 		updateParticleDensity(domain);
 		solveIncompressibility(domain);
 		transferVelocities(domain, false);

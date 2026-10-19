@@ -37,7 +37,7 @@ function Node_FLIP_Render(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	input_display_list = [ 5, 
 		[ "Domain",    false ],  0, 13, 
 		[ "Rendering", false ],  6,  3, 10, 14,  4,  9, 
-		[ "Effect",    false ], 11, [12, true], 15, -1,  2, 
+		[ "Effect",    false ], [11, true], 15, -1, 12,  2, 
 			[ "/Post Processing", false ],  8,  7,  1, 
 	];
 	
@@ -110,9 +110,8 @@ function Node_FLIP_Render(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		
 		if(!PROJECT.animator.is_playing && recoverCache()) return;
 		
-		if(_step > 0 && IS_PLAYING) {
-			repeat(_step) domain.step();
-		}
+		if(_step > 0 && IS_PLAYING)
+			domain.step(_step);
 		
 		var _outSurf = outputs[0].getValue();
 		var _psize   = domain.particleSize;

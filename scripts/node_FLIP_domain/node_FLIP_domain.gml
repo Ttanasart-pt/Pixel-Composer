@@ -15,6 +15,11 @@ function Node_FLIP_Domain(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	newInput( 9, nodeValue_Toggle( "Wall",             0b1111, [ "T", "B", "L", "R" ] ));
 	newInput(12, nodeValue_Slider( "Wall Elasticity",  0., [ 0, 2, 0.01 ] ));
 	
+	////- =Quality
+	newInput( 5, nodeValue_Int(    "Global Quality",        8  ));
+	newInput(14, nodeValue_Int(    "Pressure Solver Step",  2  ));
+	newInput(15, nodeValue_Int(    "Particle Solver Step",  2  ));
+	
 	////- =Solver
 	newInput( 3, nodeValue_Slider( "FLIP Ratio",    .8  ));
 	newInput( 8, nodeValue_Float(  "Time Step",     .05 ));
@@ -27,14 +32,14 @@ function Node_FLIP_Domain(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	newInput(11, nodeValue_Slider(   "Friction",           0. ));
 	
 	/*UNUSED*/ newInput( 4, nodeValue_Float(  "Resolve accelerator", 1.5 ));
-	/*UNUSED*/ newInput( 5, nodeValue_Int(    "Iteration",           8   ));
-	// 14
+	// 16
 	
 	newOutput(0, nodeValue_Output("Domain", VALUE_TYPE.fdomain, noone));
 	
 	input_display_list = [
 		[ "Domain",  false ],  0,  1,  2,  9, 12, 
-		[ "Solver",   true ],  3,  8, 
+		[ "Quality", false ],  5, 14, 15, 
+		[ "Solver",   true ],  3,  8,  
 		[ "Physics", false ],  6,  7, 13, 10, 11, 
 	];
 	
@@ -42,18 +47,12 @@ function Node_FLIP_Domain(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	
 	#region attributes
 		attributes.max_particles       = 10000;
-		attributes.iteration           = 8;
-		attributes.iteration_pressure  = 2;
-		attributes.iteration_particle  = 2;
 		attributes.overrelax           = 1.5;
 		attributes.skip_incompressible = false;
-
+		
 		array_push(attributeEditors, "FLIP Solver");
-		array_push(attributeEditors, Node_Attribute("Maximum particles",   function() /*=>*/ {return attributes.max_particles},       function() /*=>*/ {return textBox_Number(function(v) /*=>*/ {return setAttribute("max_particles", v)})}            ));
-		array_push(attributeEditors, Node_Attribute("Global iteration",    function() /*=>*/ {return attributes.iteration},           function() /*=>*/ {return textBox_Number(function(v) /*=>*/ {return setAttribute("iteration", v, true)})}          ));
-		array_push(attributeEditors, Node_Attribute("Pressure iteration",  function() /*=>*/ {return attributes.iteration_pressure},  function() /*=>*/ {return textBox_Number(function(v) /*=>*/ {return setAttribute("iteration_pressure", v, true)})} ));
-		array_push(attributeEditors, Node_Attribute("Particle iteration",  function() /*=>*/ {return attributes.iteration_particle},  function() /*=>*/ {return textBox_Number(function(v) /*=>*/ {return setAttribute("iteration_particle", v, true)})} ));
-		array_push(attributeEditors, Node_Attribute("Overrelaxation",      function() /*=>*/ {return attributes.overrelax},           function() /*=>*/ {return textBox_Number(function(v) /*=>*/ {return setAttribute("overrelax", v, true)})}          ));
+		array_push(attributeEditors, Node_Attribute("Maximum particles",   function() /*=>*/ {return attributes.max_particles},       function() /*=>*/ {return textBox_Number(function(v) /*=>*/ {return setAttribute("max_particles", v)})}           ));
+		array_push(attributeEditors, Node_Attribute("Overrelaxation",      function() /*=>*/ {return attributes.overrelax},           function() /*=>*/ {return textBox_Number(function(v) /*=>*/ {return setAttribute("overrelax", v, true)})}         ));
 		array_push(attributeEditors, Node_Attribute("Skip incompressible", function() /*=>*/ {return attributes.skip_incompressible}, function() /*=>*/ {return new checkBox(function() /*=>*/ {return toggleAttribute("skip_incompressible", true)})}  ));
 	#endregion
 	
@@ -65,13 +64,17 @@ function Node_FLIP_Domain(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 			var _dim  = getInputData( 0);
 			var _siz  = getInputData( 1); _siz = max(_siz, 1);
 			var _den  = getInputData( 2);
+			var _col  = getInputData( 9);
 			
-			var _flp  = getInputData( 3);
+			var _itr  = getInputData( 5);
+			var _itrP = getInputData(14);
+			var _itrR = getInputData(15);
 			 
+			var _flp  = getInputData( 3);
+			var _dt   = getInputData( 8);
+			
 			var _dmp  = getInputData( 6);
 			var _grv  = getInputData( 7);
-			var _dt   = getInputData( 8);
-			var _col  = getInputData( 9);
 			
 			var _vis  = getInputData(10);
 			var _fric = getInputData(11);
@@ -81,10 +84,6 @@ function Node_FLIP_Domain(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 			inputs[12].setVisible(_col);
 			
 			var _ovr  = attributes.overrelax;
-			
-			var _itr  = attributes.iteration;
-			var _itrP = attributes.iteration_pressure;
-			var _itrR = attributes.iteration_particle;
 		#endregion
 		
 		var width  = _dim[0] + _siz * 2;

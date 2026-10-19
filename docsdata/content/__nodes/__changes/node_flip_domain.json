@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.22.1.201",
+    "changes": [
+      {
+        "date": "2026-10-19T01:07:21.686Z",
+        "node": "FLIP",
+        "commit": "**FLIP**: Mode simulation quality setting to node property."
+      }
+    ]
+  },
+  {
     "version": "1.21.6.010",
     "changes": [
       {
