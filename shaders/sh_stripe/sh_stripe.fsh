@@ -295,14 +295,17 @@ void main() {
 	
 	// gl_FragColor = vec4(_s, 0., 0., 1.); return;
 	
-	if(coloring == 0) {
+	if(blend == 2) {
+		gl_FragColor = gradientEval(pfract(_s + gradient_shift));
+		
+	} else if(coloring == 0) {
 		if(blend == 0) gl_FragColor = _s >= rat? color0 : color1;
 		
 		else if(blend == 1) { 
 			_s = sin(_s * 2. * PI) * 0.5 + 0.5;
 			gl_FragColor = mix(color0, color1, _s);
 			
-		} else if(blend == 2) { 
+		} else if(blend == 3) { 
 			float px = 3. / max(dimension.x, dimension.y);
 			_s = smoothstep(-px, px, sin(_s * 2. * PI));
 			
@@ -312,7 +315,7 @@ void main() {
 	} else if(coloring == 1) {
 		int ind = int(mod(_s > rat? slot : slot + 1., float(paletteAmount)));
 		
-		if(blend == 0 || blend == 2)
+		if(blend == 0 || blend == 3)
 			gl_FragColor = palette[ind];
 		
 		else if(blend == 1) { 

@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.22.1.201",
+    "changes": [
+      {
+        "date": "2026-10-19T07:05:18.343Z",
+        "node": "Strip",
+        "commit": "**Strip**: Add Gradient rendering type."
+      }
+    ]
+  },
+  {
     "version": "1.21.7.104",
     "changes": [
       {

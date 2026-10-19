@@ -29,7 +29,7 @@ function Node_Stripe(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	newInput(17, nodeValue_Slider(   "Progress",     .5     ))                                               .setPieMenu();
 	
 	////- =Render
-	newInput( 3, nodeValue_EButton(  "Type",      0, [ "Solid", "Smooth", "AA" ] ));
+	newInput( 3, nodeValue_EButton(  "Type",      0, [ "Solid", "Smooth", "Gradient", "AA" ] ));
 	newInput( 6, nodeValue_EButton(  "Coloring",  0, [ "Alternate", "Palette", "Random" ] ));
 	newInput( 7, nodeValue_Gradient( "Colors",    gra_white )).setMappable(15).addShift(25);
 	newInput( 8, nodeValue_Color(    "Color 1",   ca_white  ));
@@ -111,10 +111,11 @@ function Node_Stripe(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 			inputs[24].setVisible( _tile);
 			inputs[ 2].setVisible(!_tile);
 			
-			inputs[ 8].setVisible(_col == 0);
-			inputs[ 9].setVisible(_col == 0);
-			inputs[18].setVisible(_col == 1);
-			inputs[ 7].setVisible(_col == 2);
+			inputs[ 6].setVisible(_bnd != 2);
+			inputs[ 8].setVisible(_col == 0 && _bnd != 2);
+			inputs[ 9].setVisible(_col == 0 && _bnd != 2);
+			inputs[18].setVisible(_col == 1 && _bnd != 2);
+			inputs[ 7].setVisible(_col == 2 || _bnd == 2);
 		#endregion
 		
 		_outSurf = surface_verify(_outSurf, _dim[0], _dim[1], attrDepth());
@@ -127,12 +128,12 @@ function Node_Stripe(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 			shader_set_i( "blend",     _bnd );
 			shader_set_f( "progress",  _prg );
 			
-			shader_set_i(     "tiled",        _tile );
-			shader_set_f(     "tiledAmo",     _tamo );
-			shader_set_f_map( "amount",       _amo, _data[11], inputs[ 1] );
-			shader_set_f_map( "ratio",        _rat, _data[14], inputs[10] );
-			shader_set_f_map( "angle",        _ang, _data[12], inputs[ 2] );
-			shader_set_f_map( "randomAmount", _ran, _data[13], inputs[ 5] );
+			shader_set_i( "tiled",        _tile );
+			shader_set_f( "tiledAmo",     _tamo );
+			shader_set_m( "amount",       _amo, _data[11], inputs[ 1] );
+			shader_set_m( "ratio",        _rat, _data[14], inputs[10] );
+			shader_set_m( "angle",        _ang, _data[12], inputs[ 2] );
+			shader_set_m( "randomAmount", _ran, _data[13], inputs[ 5] );
 			
 			shader_set_i( "coloring", _col  );
 			shader_set_c( "color0",   _clr0 );
