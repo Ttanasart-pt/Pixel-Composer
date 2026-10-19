@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.22.1.201",
+    "changes": [
+      {
+        "date": "2026-10-19T03:13:32.542Z",
+        "node": "Add Node Dialog",
+        "commit": "**Add Node Dialog**: Remove overlap menu when spawn dialog box near the edge of the screen."
+      }
+    ]
+  },
+  {
     "version": "1.21.9.206",
     "changes": [
       {

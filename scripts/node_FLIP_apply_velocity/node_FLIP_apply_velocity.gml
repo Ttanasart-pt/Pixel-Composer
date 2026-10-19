@@ -61,24 +61,36 @@ function Node_FLIP_Apply_Velocity(_x, _y, _group = noone) : Node(_x, _y, _group)
 	}
 	
 	static update = function(frame = CURRENT_FRAME) {
-		var domain = getInputData(0);
-		var _shp   = getInputData(4);
-		
-		inputs[2].setVisible(_shp == 0);
-		inputs[5].setVisible(_shp == 1);
+		#region data
+			var domain = getInputData(0);
+			var _shp   = getInputData(4);
+			
+			var _posit = getInputData(1);
+			var _rad   = getInputData(2);
+			var _velo  = getInputData(3);
+			var _shp   = getInputData(4);
+			var _siz   = getInputData(5);
+			
+			inputs[2].setVisible(_shp == 0);
+			inputs[5].setVisible(_shp == 1);
+		#endregion
 		
 		if(!instance_exists(domain)) return;
-		
 		outputs[0].setValue(domain);
 		
-		var _posit = getInputData(1);
-		var _rad   = getInputData(2);
-		var _velo  = getInputData(3);
-		var _shp   = getInputData(4);
-		var _siz   = getInputData(5);
+		var px = _posit[0];
+		var py = _posit[1];
 		
-		     if(_shp == 0) FLIP_applyVelocity_circle(domain.domain, _posit[0], _posit[1], _rad, _velo[0], _velo[1]);
-		else if(_shp == 1) FLIP_applyVelocity_rectangle(domain.domain, _posit[0] - _siz[0], _posit[1] - _siz[1], _siz[0] * 2, _siz[1] * 2, _velo[0], _velo[1]);
+		var vx = _velo[0];
+		var vy = _velo[1];
+		
+		var sx = _siz[0];
+		var sy = _siz[1];
+		
+		switch(_shp) {
+			case 0: FLIP_applyVelocity_circle(    domain.domain, px, py, _rad, vx, vy);                     break;
+			case 1: FLIP_applyVelocity_rectangle( domain.domain, px - sx, py - sy, sx * 2, sy * 2, vx, vy); break;
+		}
 	}
 	
 	static getPreviewValues = function() { var domain = getInputData(0); return instance_exists(domain)? domain.domain_preview : noone; }

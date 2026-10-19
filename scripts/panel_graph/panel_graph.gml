@@ -2336,7 +2336,9 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
 	                    	var ax = dia.dialog_x - ui(THEME_VALUE.dialog_addnode_offset);
 	        				var ay = dia.dialog_y;
 	        				
-		                    menuCallGen("graph_empty", ax, ay, fa_right, false );
+		                    var menu = menuCallGen("graph_empty", ax, ay, fa_right, false );
+		                    if(menu && ax - menu.dialog_w < 0) instance_destroy(menu);
+		                    
 		                    setFocus(dia);
 	                    }
 	                    
@@ -2361,7 +2363,9 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
 		                        	function(j) /*=>*/ { j.removeFrom(); }, THEME.cross).setParam(__junction_hovering));
 		                    }
 		                    
-		                    menuCall("graph_connection_select", menu, ax, ay, fa_right, false );
+		                    var menu = menuCall("graph_connection_select", menu, ax, ay, fa_right, false );
+		                    if(menu && ax - menu.dialog_w < 0) instance_destroy(menu);
+		                    
 		                    setFocus(dia);
 	                    }
 	                }
@@ -3048,11 +3052,12 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
 	        		array_push(menu, _item);
 	        	}
 	        	
-	        	if(array_length(menu)) {
+	        	if(instance_exists(o_dialog_add_node) && array_length(menu)) {
 	        		var ax = o_dialog_add_node.dialog_x - ui(THEME_VALUE.dialog_addnode_offset);
 	        		var ay = o_dialog_add_node.dialog_y;
 	        		
-		        	menuCall("graph_connection_releated", menu, ax, ay, fa_right );
+		        	var _menu = menuCall("graph_connection_releated", menu, ax, ay, fa_right );
+		        	if(_menu && ax - _menu.dialog_w < 0) instance_destroy(_menu);
 	        	}
 	        	
 	            setFocus(dia);

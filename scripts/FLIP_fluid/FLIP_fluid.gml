@@ -70,6 +70,7 @@ struct Domain {
 	double* p;
 	double* s;
 	double* solidMap; // ?? kinda confuse with the s array.
+	bool*   isSolid;
 
 	double* cellType;
 	double* particlePos;
@@ -95,14 +96,15 @@ struct Domain {
 	double numParticles;
 
 	double dt = 0.5;
-	double globalIteration = 4;
-
-	double gravity = 50;
-	double gravityDirection = 270;
-	double flipRatio = 0.5;
+	
+	double globalIteration       = 4;
 	double numPressureIterations = 4;
 	double numParticleIterations = 8;
-	double overRelaxation = 1.8;
+
+	double gravity          = 50;
+	double gravityDirection = 270;
+	double flipRatio        = 0.5;
+	double overRelaxation   = 1.8;
 
 	vector<Obstacle> obstacles;
 };
@@ -113,6 +115,8 @@ double clamp(double x, double min, double max) { return x < min ? min : x > max 
 
 static inline int getIndex (int x, int y, int n) { return x * n + y; }
 
+//////////////////////////////////////////////////////////////////// SOLID MASK ////////////////////////////////////////////////////////////////////
+
 // Grid cell openness used by solver: 1 = open/fluid cell, 0 = solid cell.
 static inline double getCellOpen(const Domain& domain, int idx) {
 	return (domain.s[idx] != 0 && domain.solidMap[idx] <= 0.5) ? 1.0 : 0.0;
@@ -121,6 +125,14 @@ static inline double getCellOpen(const Domain& domain, int idx) {
 static inline bool isSolidCell(const Domain& domain, int x, int y) {
 	if (x < 0 || y < 0 || x >= domain.fNumX || y >= domain.fNumY) return true;
 	return getCellOpen(domain, getIndex(x, y, (int)domain.fNumY)) == 0.0;
+}
+
+static void calculateSolidMask(const Domain& domain) {
+	for (int x = 0; x < domain.fNumX; ++x)
+	for (int y = 0; y < domain.fNumY; ++y) {
+		int idx = getIndex(x, y, (int)domain.fNumY);
+		domain.isSolid[idx] = isSolidCell(domain, x, y);
+	}
 }
 
 ////////////////////////////////////////////////////////////////////// DOMAINS //////////////////////////////////////////////////////////////////////
@@ -170,6 +182,7 @@ cfunction double FLIP_resetDomain(double dindex) {
 	memset( domain.p,                 0, sizeof(double) * domain.fNumCells        );
 	memset( domain.s,                 0, sizeof(double) * domain.fNumCells        );
 	memset( domain.solidMap,          0, sizeof(double) * domain.fNumCells        );
+	memset( domain.isSolid,           0, sizeof(bool)   * domain.fNumCells        );
 
 	memset( domain.cellType,          0, sizeof(double) * domain.fNumCells        );
 	memset( domain.particlePos,       0, sizeof(double) * domain.maxParticles * 2 );
@@ -216,6 +229,7 @@ cfunction double FLIP_updateDomain(double dindex, double _width, double _height,
 	domain.p        = new double[iNumCells];
 	domain.s        = new double[iNumCells];
 	domain.solidMap = new double[iNumCells];
+	domain.isSolid  = new bool[iNumCells];
 
 	domain.cellType            = new double[(size_t)domain.fNumCells];
 	domain.particlePos		   = new double[(size_t)domain.maxParticles * 2];
@@ -390,7 +404,9 @@ void setBoundary(Domain domain, double* a) {
 	a[x * y - 1]       = 0.5 * (a[(x - 1) * y - 1] + a[x * y - 2]);
 }
 
-void integrateParticles(Domain domain) {
+void integrateParticles(double dindex) {
+	Domain& domain = domains[dindex];
+	
 	double* particleVel  = domain.particleVel;
 	double* particlePos  = domain.particlePos;
 	double* particleLife = domain.particleLife;
@@ -400,8 +416,7 @@ void integrateParticles(Domain domain) {
 	
 	double gx = dt * domain.gravity * cos(domain.gravityDirection * M_PI / 180);
 	double gy = dt * domain.gravity * sin(domain.gravityDirection * M_PI / 180);
-
-
+	
 	for (int i = 0; i < domain.numParticles; i++) {
 		if(isnan(particleVel[2 * i + 1])) 
 			particleVel[2 * i + 1] = 0;
@@ -420,14 +435,13 @@ void integrateParticles(Domain domain) {
 }
 cfunction double FLIP_simulate_integrateParticles(double dindex) {
 	if (dindex < 0 || dindex >= domains.size()) return -1;
-
-	Domain& domain = domains[dindex];
-
-	integrateParticles(domain);
+	integrateParticles(dindex);
 	return 0;
 }
 
-void pushParticlesApart(Domain domain) {
+void pushParticlesApart(double dindex) {
+	Domain& domain = domains[dindex];
+	
 	int pNumCells = (int)domain.pNumCells;
 	
 	double* numCellParticles  = domain.numCellParticles;
@@ -508,6 +522,7 @@ void pushParticlesApart(Domain domain) {
 	double minDist     = 2.0 * domain.particleRadius;
 	double minDist2    = minDist * minDist;
 	double minDistHalf = minDist * 0.5;
+	double minDistDoub = minDist * 2.;
 	double viscosity   = domain.viscosity;
 	double invvisc     = clamp(viscosity + 1., 0., 1.);
 
@@ -541,7 +556,7 @@ void pushParticlesApart(Domain domain) {
 
 				for (int j = first; j < last; j++) {
 					int _id = cellParticleIds[j];
-					if (_id == i) continue;
+					if (_id <= i) continue;
 
 					int _id2 = _id * 2;
 
@@ -555,8 +570,7 @@ void pushParticlesApart(Domain domain) {
 					double d2 = dx * dx + dy * dy;
 
 					if(d2 == 0) continue;
-					if (d2 > minDist2 * 2) continue;
-
+					if (d2 > minDistDoub) continue;
 					if (d2 > minDist2) { // viscosity calculation: attract nearby particle from r/2 to r
 						if(viscosity == 0) continue;
 
@@ -588,17 +602,18 @@ void pushParticlesApart(Domain domain) {
 }
 cfunction double FLIP_simulate_pushParticlesApart(double dindex) {
 	if (dindex < 0 || dindex >= domains.size()) return -1;
-
-	Domain& domain = domains[dindex];
-
-	pushParticlesApart(domain);
+	pushParticlesApart(dindex);
 	return 0;
 }
 
 static inline void resolveSolidGridCollision(const Domain& domain, double& px, double& py, double& vx, double& vy, double r) {
-	double h = 1.0 / domain.fInvSpacing;
 	double invH = domain.fInvSpacing;
-	double rr = r * r;
+	double h    = domain.h;
+	double rr   = r * r;
+
+	bool *isSolid = domain.isSolid;
+	int fNumX = (int)domain.fNumX;
+	int fNumY = (int)domain.fNumY;
 
 	// A few iterations are enough to resolve corner/edge stacking against voxelized solids.
 	for (int iter = 0; iter < 3; ++iter) {
@@ -606,22 +621,23 @@ static inline void resolveSolidGridCollision(const Domain& domain, double& px, d
 		int maxI = (int)floor((px + r) * invH);
 		int minJ = (int)floor((py - r) * invH);
 		int maxJ = (int)floor((py + r) * invH);
-
+		
 		minI = (int)clamp(minI, 0, domain.fNumX1);
 		maxI = (int)clamp(maxI, 0, domain.fNumX1);
 		minJ = (int)clamp(minJ, 0, domain.fNumY1);
 		maxJ = (int)clamp(maxJ, 0, domain.fNumY1);
 
 		bool moved = false;
-
+		
 		for (int i = minI; i <= maxI; ++i)
 		for (int j = minJ; j <= maxJ; ++j) {
-			if (!isSolidCell(domain, i, j)) continue;
+			if (i < 0 || i >= fNumX || j < 0 || j >= fNumY) continue;
+			if (!isSolid[getIndex(i, j, fNumY)]) continue;
 
-			double left = i * h;
-			double right = (i + 1) * h;
-			double bottom = j * h;
-			double top = (j + 1) * h;
+			double left   =  i      * h;
+			double right  = (i + 1) * h;
+			double bottom =  j      * h;
+			double top    = (j + 1) * h;
 
 			double cx = clamp(px, left, right);
 			double cy = clamp(py, bottom, top);
@@ -640,6 +656,7 @@ static inline void resolveSolidGridCollision(const Domain& domain, double& px, d
 				nx = dx / d;
 				ny = dy / d;
 				pen = r - d;
+				
 			} else {
 				// Center exactly inside/on boundary: eject along the smallest axis penetration.
 				double dl = abs(px - left);
@@ -672,8 +689,10 @@ static inline void resolveSolidGridCollision(const Domain& domain, double& px, d
 	}
 }
 
-void handleParticleCollisions(Domain domain) {
-	double h = 1.0 / domain.fInvSpacing;
+void handleParticleCollisions(double dindex) {
+	Domain& domain = domains[dindex];
+	
+	double h = domain.h;
 	double r = domain.particleRadius;
 
 	double dt = domain.dt;
@@ -833,15 +852,13 @@ void handleParticleCollisions(Domain domain) {
 }
 cfunction double FLIP_simulate_handleParticleCollisions(double dindex) {
 	if (dindex < 0 || dindex >= domains.size()) return -1;
-
-	Domain& domain = domains[dindex];
-
-	handleParticleCollisions(domain);
-
+	handleParticleCollisions(dindex);
 	return 0;
 }
 
-void updateParticleDensity(Domain domain) {
+void updateParticleDensity(double dindex) {
+	Domain& domain = domains[dindex];
+	
 	double* particlePos = domain.particlePos;
 	double* d           = domain.particleDensity;
 	double* cellType    = domain.cellType;
@@ -915,14 +932,13 @@ void updateParticleDensity(Domain domain) {
 }
 cfunction double FLIP_simulate_updateParticleDensity(double dindex) {
 	if (dindex < 0 || dindex >= domains.size()) return -1;
-
-	Domain& domain = domains[dindex];
-
-	updateParticleDensity(domain);
+	updateParticleDensity(dindex);
 	return 0;
 }
 
-void transferVelocities(Domain domain, bool toGrid) {
+void transferVelocities(double dindex, bool toGrid) {
+	Domain& domain = domains[dindex];
+	
 	double* u	  = domain.u;
 	double* v	  = domain.v;
 	double* du	  = domain.du;
@@ -993,117 +1009,162 @@ void transferVelocities(Domain domain, bool toGrid) {
 	double _fNxH = fNumX1 * h;
 	double _fNyH = fNumY1 * h;
 	double invFlipRatio = 1.0 - flipRatio;
+	
+	for (int i = 0; i < numParticles; i++) {
+		int i2 = i * 2;
 
-	for (int _com = 0; _com < 2; _com++) {
-		double dx = _com == 0 ? 0 : h2;
-		double dy = _com == 0 ? h2 : 0;
+		double _x = particlePos[i2];
+		double _y = particlePos[i2 + 1];
 
-		double* f     = _com == 0 ? u     : v;
-		double* prevF = _com == 0 ? prevU : prevV;
-		double* d     = _com == 0 ? du    : dv;
+		if(_x == 0 && _y == 0) continue;
+		
+		if (cnTop) { if(_y < h)		continue; } else _y = max(_y, h);	
+		if (cnBot) { if(_y > _fNyH)	continue; } else _y = min(_y, _fNyH);
+		if (cnLef) { if(_x < h)		continue; } else _x = max(_x, h);	
+		if (cnRig) { if(_x > _fNxH)	continue; } else _x = min(_x, _fNxH);
 
-		for (int i = 0; i < numParticles; i++) {
-			int i2 = i * 2;
+		double ux0 = clamp(floor(_x * h1), 0, fNumX1);
+		double utx = (_x - ux0 * h) * h1;
+		double ux1 = clamp(ux0 + 1, 0, fNumX1);
 
-			double _x = particlePos[i2];
-			double _y = particlePos[i2 + 1];
+		double uy0 = clamp(floor((_y - h2) * h1), 0, fNumY1);
+		double uty = ((_y - h2) - uy0 * h) * h1;
+		double uy1 = clamp(uy0 + 1, 0, fNumY1);
 
-			if(_x == 0 && _y == 0) continue;
-			
-			if (cnTop) { if(_y < h)		continue; } else _y = max(_y, h);	
-			if (cnBot) { if(_y > _fNyH)	continue; } else _y = min(_y, _fNyH);
-			if (cnLef) { if(_x < h)		continue; } else _x = max(_x, h);	
-			if (cnRig) { if(_x > _fNxH)	continue; } else _x = min(_x, _fNxH);
+		double usx = 1.0 - utx;
+		double usy = 1.0 - uty;
 
-			double x0 = clamp(floor((_x - dx) * h1), 0, fNumX1);
-			double tx = ((_x - dx) - x0 * h) * h1;
-			double x1 = clamp(x0 + 1, 0, fNumX1);
+		double ud0 = usx * usy;
+		double ud1 = utx * usy;
+		double ud2 = utx * uty;
+		double ud3 = usx * uty;
 
-			double y0 = clamp(floor((_y - dy) * h1), 0, fNumY1);
-			double ty = ((_y - dy) - y0 * h) * h1;
-			double y1 = clamp(y0 + 1, 0, fNumY1);
+		int unr0 = ux0 * n + uy0;
+		int unr1 = ux1 * n + uy0;
+		int unr2 = ux1 * n + uy1;
+		int unr3 = ux0 * n + uy1;
 
-			double sx = 1.0 - tx;
-			double sy = 1.0 - ty;
+		double vx0 = clamp(floor((_x - h2) * h1), 0, fNumX1);
+		double vtx = ((_x - h2) - vx0 * h) * h1;
+		double vx1 = clamp(vx0 + 1, 0, fNumX1);
 
-			double d0 = sx * sy;
-			double d1 = tx * sy;
-			double d2 = tx * ty;
-			double d3 = sx * ty;
+		double vy0 = clamp(floor(_y * h1), 0, fNumY1);
+		double vty = (_y - vy0 * h) * h1;
+		double vy1 = clamp(vy0 + 1, 0, fNumY1);
 
-			int nr0 = x0 * n + y0;
-			int nr1 = x1 * n + y0;
-			int nr2 = x1 * n + y1;
-			int nr3 = x0 * n + y1;
+		double vsx = 1.0 - vtx;
+		double vsy = 1.0 - vty;
 
-			if (toGrid) {
-				double pv = particleVel[i2 + _com];
-				f[nr0] += pv * d0; d[nr0] += d0;
-				f[nr1] += pv * d1; d[nr1] += d1;
-				f[nr2] += pv * d2; d[nr2] += d2;
-				f[nr3] += pv * d3; d[nr3] += d3;
-			} else {
-				int offset = _com == 0 ? n : 1;
-				double valid0 = cellType[nr0] != air || cellType[nr0 - offset] != air ? 1.0 : 0;
-				double valid1 = cellType[nr1] != air || cellType[nr1 - offset] != air ? 1.0 : 0;
-				double valid2 = cellType[nr2] != air || cellType[nr2 - offset] != air ? 1.0 : 0;
-				double valid3 = cellType[nr3] != air || cellType[nr3 - offset] != air ? 1.0 : 0;
+		double vd0 = vsx * vsy;
+		double vd1 = vtx * vsy;
+		double vd2 = vtx * vty;
+		double vd3 = vsx * vty;
 
-				double _v = particleVel[i2 + _com];
-				double _d = valid0 * d0 + valid1 * d1 + valid2 * d2 + valid3 * d3;
-
-				if (_d > 0) {
-					double picV = (valid0 * d0 * f[nr0] +
-						           valid1 * d1 * f[nr1] +
-						           valid2 * d2 * f[nr2] +
-						           valid3 * d3 * f[nr3]) / _d;
-
-					double corr = (valid0 * d0 * (f[nr0] - prevF[nr0]) +
-						           valid1 * d1 * (f[nr1] - prevF[nr1]) +
-						           valid2 * d2 * (f[nr2] - prevF[nr2]) +
-						           valid3 * d3 * (f[nr3] - prevF[nr3])) / _d;
-
-					double flipV = _v + corr;
-					double vel   = (invFlipRatio * picV + flipRatio * flipV) * friction;
-					vel = clamp(vel, -1000, 1000);
-
-					particleVel[i2 + _com] = isnan(vel)? 0 : vel;
-				}
-			}
-		}
+		int vnr0 = vx0 * n + vy0;
+		int vnr1 = vx1 * n + vy0;
+		int vnr2 = vx1 * n + vy1;
+		int vnr3 = vx0 * n + vy1;
 
 		if (toGrid) {
-			for (int i = 0; i < fNumCells; i++)
-				if (d[i] > 0) f[i] /= d[i];
+			double upv = particleVel[i2];
+			u[unr0] += upv * ud0; du[unr0] += ud0;
+			u[unr1] += upv * ud1; du[unr1] += ud1;
+			u[unr2] += upv * ud2; du[unr2] += ud2;
+			u[unr3] += upv * ud3; du[unr3] += ud3;
+			
+			double vpv = particleVel[i2 + 1];
+			v[vnr0] += vpv * vd0; dv[vnr0] += vd0;
+			v[vnr1] += vpv * vd1; dv[vnr1] += vd1;
+			v[vnr2] += vpv * vd2; dv[vnr2] += vd2;
+			v[vnr3] += vpv * vd3; dv[vnr3] += vd3;
+			
+		} else {
+			double uval0 = cellType[unr0] != air || cellType[unr0 - n] != air ? 1. : 0.;
+			double uval1 = cellType[unr1] != air || cellType[unr1 - n] != air ? 1. : 0.;
+			double uval2 = cellType[unr2] != air || cellType[unr2 - n] != air ? 1. : 0.;
+			double uval3 = cellType[unr3] != air || cellType[unr3 - n] != air ? 1. : 0.;
+			
+			double _u  = particleVel[i2];
+			double _du = uval0 * ud0 + uval1 * ud1 + uval2 * ud2 + uval3 * ud3;
 
-			for (int i = 0; i < fNumX; i++)
-			for (int j = 0; j < fNumY; j++) {
+			if (_du > 0) {
+				double picV = ( uval0 * ud0 * u[unr0] +
+								uval1 * ud1 * u[unr1] +
+								uval2 * ud2 * u[unr2] +
+								uval3 * ud3 * u[unr3]) / _du;
 
-				int index   = i * n + j;
-				bool _solid = cellType[index] == solid;
+				double corr = ( uval0 * ud0 * (u[unr0] - prevU[unr0]) +
+								uval1 * ud1 * (u[unr1] - prevU[unr1]) +
+								uval2 * ud2 * (u[unr2] - prevU[unr2]) +
+								uval3 * ud3 * (u[unr3] - prevU[unr3])) / _du;
 
-				if (_solid || (i > 0 && cellType[(i - 1) * n + j] == solid))
-					u[index] = prevU[index];
+				double flipV = _u + corr;
+				double vel   = (invFlipRatio * picV + flipRatio * flipV) * friction;
+				vel = clamp(vel, -1000, 1000);
+				
+				particleVel[i2] = isnan(vel)? 0 : vel;
+			}
+			
+			double vval0 = cellType[vnr0] != air || cellType[vnr0 - 1] != air ? 1. : 0.;
+			double vval1 = cellType[vnr1] != air || cellType[vnr1 - 1] != air ? 1. : 0.;
+			double vval2 = cellType[vnr2] != air || cellType[vnr2 - 1] != air ? 1. : 0.;
+			double vval3 = cellType[vnr3] != air || cellType[vnr3 - 1] != air ? 1. : 0.;
+			
+			double _v  = particleVel[i2 + 1];
+			double _dv = vval0 * vd0 + vval1 * vd1 + vval2 * vd2 + vval3 * vd3;
 
-				if (_solid || (j > 0 && cellType[i * n + j - 1] == solid))
-					v[index] = prevV[index];
+			if (_dv > 0) {
+				double picV = ( vval0 * vd0 * v[vnr0] +
+								vval1 * vd1 * v[vnr1] +
+								vval2 * vd2 * v[vnr2] +
+								vval3 * vd3 * v[vnr3]) / _dv;
+
+				double corr = ( vval0 * vd0 * (v[vnr0] - prevV[vnr0]) +
+								vval1 * vd1 * (v[vnr1] - prevV[vnr1]) +
+								vval2 * vd2 * (v[vnr2] - prevV[vnr2]) +
+								vval3 * vd3 * (v[vnr3] - prevV[vnr3])) / _dv;
+
+				double flipV = _v + corr;
+				double vel   = (invFlipRatio * picV + flipRatio * flipV) * friction;
+				vel = clamp(vel, -1000, 1000);
+				
+				particleVel[i2 + 1] = isnan(vel)? 0 : vel;
 			}
 		}
-
-		setBoundary(domain, u);
-		setBoundary(domain, v);
+		
 	}
+
+	if (toGrid) {
+		for (int i = 0; i < fNumCells; i++) {
+			if (du[i] > 0) u[i] /= du[i];
+			if (dv[i] > 0) v[i] /= dv[i];
+		}
+
+		for (int i = 0; i < fNumX; i++)
+		for (int j = 0; j < fNumY; j++) {
+			int index   = i * n + j;
+			bool _solid = cellType[index] == solid;
+
+			if (_solid || (i > 0 && cellType[(i - 1) * n + j] == solid))
+				u[index] = prevU[index];
+
+			if (_solid || (j > 0 && cellType[i * n + j - 1] == solid))
+				v[index] = prevV[index];
+		}
+	}
+	
+	setBoundary(domain, u);
+	setBoundary(domain, v);
 }
 cfunction double FLIP_simulate_transferVelocities(double dindex, double toGrid) {
 	if (dindex < 0 || dindex >= domains.size()) return -1;
-
-	Domain& domain = domains[dindex];
-
-	transferVelocities(domain, toGrid == 1);
+	transferVelocities(dindex, toGrid == 1);
 	return 0;
 }
 
-void solveIncompressibility(Domain domain) {
+void solveIncompressibility(double dindex) {
+	Domain& domain = domains[dindex];
+	
 	double* u = domain.u;
 	double* v = domain.v;
 	double* p = domain.p;
@@ -1128,7 +1189,6 @@ void solveIncompressibility(Domain domain) {
 	double cp = domain.density * domain.h / domain.dt;
 
 	for (int iter = 0; iter < domain.numPressureIterations; iter++) {
-
 		for (int i = 1; i < fNumX - 1; i++)
 		for (int j = 1; j < fNumY - 1; j++) {
 			if (cellType[i * n + j] != fluid)
@@ -1153,8 +1213,7 @@ void solveIncompressibility(Domain domain) {
 
 			if (particleRestDensity > 0) {
 				double compression = particleDensity[i * n + j] - particleRestDensity;
-				if (compression > 0)
-					_div = _div - compression;
+				if (compression > 0) _div = _div - compression;
 			}
 
 			double _p = -_div / _s;
@@ -1175,10 +1234,7 @@ void solveIncompressibility(Domain domain) {
 }
 cfunction double FLIP_simulate_solveIncompressibility(double dindex) {
 	if (dindex < 0 || dindex >= domains.size()) return -1;
-
-	Domain& domain = domains[dindex];
-
-	solveIncompressibility(domain);
+	solveIncompressibility(dindex);
 	return 0;
 }
 
@@ -1188,15 +1244,17 @@ cfunction double FLIP_simulate(double dindex, double _dt) {
 	Domain& domain = domains[dindex];
 	domain.dt = _dt;
 
+	calculateSolidMask(domain);
+
 	for (int i = 0; i < domain.globalIteration; i++) {
-		integrateParticles(domain);
-		pushParticlesApart(domain);
-		handleParticleCollisions(domain);
-		transferVelocities(domain, true);
+		integrateParticles(dindex);
+		pushParticlesApart(dindex);
+		handleParticleCollisions(dindex);
+		transferVelocities(dindex, true);
 		
-		updateParticleDensity(domain);
-		solveIncompressibility(domain);
-		transferVelocities(domain, false);
+		updateParticleDensity(dindex);
+		solveIncompressibility(dindex);
+		transferVelocities(dindex, false);
 	}
 
 	return 0;
@@ -1209,7 +1267,7 @@ cfunction double FLIP_spawnRandomFluid(double dindex, double amount) {
 
 	Domain& domain = domains[dindex];
 
-	double h = 1.0 / domain.fInvSpacing;
+	double h = domain.h;
 	double r = domain.particleRadius;
 
 	double minX = h + r;
@@ -1656,4 +1714,5 @@ cfunction double FLIP_getNumParticles(double dindex) {
 	Domain& domain = domains[dindex];
 	return domain.numParticles;
 }
+
 */
