@@ -31,11 +31,11 @@ function Node_FLIP_Apply_Force(_x, _y, _group = noone) : Node(_x, _y, _group) co
 		new scrollItem( "Rectangle", s_node_shape_rectangle ), 
 	]));
 	
-	newInput( 2, nodeValue_Slider( "Radius",  4, [1,16,.1] ));
-	newInput( 4, nodeValue_Vec2(   "Size",   [4,4]         ));
+	newInput( 2, nodeValue_Slider( "Radius",  4, [1,16,.1] )).hideLabel();
+	newInput( 4, nodeValue_Vec2(   "Size",   [4,4]         )).hideLabel();
 	
 	////- =Obstracle
-	newInput( 1, nodeValue_Vec2(    "Position", [0,0] )).setHotkey("G").setUnitSimple();
+	newInput( 1, nodeValue_Vec2(    "Position", [0,0] )).setHotkey("G").setUnitSimple().hideLabel();
 	newInput( 5, nodeValue_Surface( "Texture"         ));
 	// input 6
 	
@@ -56,17 +56,11 @@ function Node_FLIP_Apply_Force(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _params) { 
 		var _posit = getInputData(1);
-		var _rad   = getInputData(2);
 		var _shp   = getInputData(3);
-		var _siz   = getInputData(4);
 		var _tex   = getInputData(5);
 		
 		var _px = _x + _posit[0] * _s;
 		var _py = _y + _posit[1] * _s;
-		
-		var _r = _rad * _s;
-		var _w = _siz[0] * _s;
-		var _h = _siz[1] * _s;
 		
 		if(is_surface(_tex)) {
 			var _sw = surface_get_width_safe(_tex)  * _s;
@@ -77,10 +71,27 @@ function Node_FLIP_Apply_Force(_x, _y, _group = noone) : Node(_x, _y, _group) co
 		
 		draw_set_circle_precision(32);
 		draw_set_color(COLORS._main_accent);
-		     if(_shp == 0) draw_circle(_px, _py, _r, true);
-		else if(_shp == 1) draw_rectangle(_px - _w, _py - _h, _px + _w, _py + _h, true);
 		
-		drawOverlayInput(inputs[1].drawOverlay(w_hoverable, active,  _x,  _y, _s, _mx, _my));
+		switch(_shp) {
+			case 0 : 
+				var _rad = getInputData(2);
+				var _r = _rad * _s;
+				
+				draw_circle(_px, _py, _r, true);
+				drawOverlayInput(inputs[2].drawOverlay(w_hoverable, active, _px, _py, _s, _mx, _my));
+				break;
+				
+			case 1 :
+				var _siz = getInputData(4);
+				var _w = _siz[0] * _s;
+				var _h = _siz[1] * _s;
+				
+				draw_rectangle(_px - _w, _py - _h, _px + _w, _py + _h, true);
+				drawOverlayInput(inputs[4].drawOverlay(w_hoverable, active, _px, _py, _s, _mx, _my));
+				break;
+		}
+		
+		drawOverlayInput(inputs[1].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, 1));
 		
 		return w_hovering;
 	}

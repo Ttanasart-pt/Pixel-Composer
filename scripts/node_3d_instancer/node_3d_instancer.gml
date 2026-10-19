@@ -7,7 +7,7 @@ function Node_3D_Instancer(_x, _y, _group = noone) : Node_3D(_x, _y, _group) con
 	////- =Object
 	newInput( 0, nodeValue_D3Mesh( "Mesh" ));
 	
-	////- =Objects
+		////- =/Transform
 	newInput(16, nodeValue_Vec3(    "Starting Position", [0,0,0]    ));
 	newInput(17, nodeValue_Quat(    "Starting Rotation"             ));
 	newInput(18, nodeValue_Vec3(    "Starting Scale",    [1,1,1]    ));
@@ -28,7 +28,7 @@ function Node_3D_Instancer(_x, _y, _group = noone) : Node_3D(_x, _y, _group) con
 	newInput( 2, nodeValue_Vec3(    "Positions", [[0,0,0]] )).setArrayDepth(1);
 	newInput( 3, nodeValue_Vec3(    "Rotations", [[0,0,0]] )).setArrayDepth(1);
 	newInput( 4, nodeValue_Vec3(    "Scales",    [[1,1,1]] )).setArrayDepth(1);
-	newInput( 5, nodeValue_Vec3(    "Normal",    [[0,0,0]] )).setArrayDepth(1);
+	newInput( 5, nodeValue_Vec3(    "Normals",   [[0,0,0]] )).setArrayDepth(1);
 	
 	////- =Shift
 	newInput(13, nodeValue_Vec3(    "Shift Position",   [1,0,0]   ));
@@ -52,7 +52,9 @@ function Node_3D_Instancer(_x, _y, _group = noone) : Node_3D(_x, _y, _group) con
 	
 	b_centeralize = button(function() /*=>*/ {return centralize()}).setText("Centralize");
 	input_display_list = [  9, 
-		[ "Object",        false ],  0, 16, 17, 18, b_centeralize, 
+		[ "Object",        false ],  0, 
+			[ "/Transform",false ], 16, 17, 18, b_centeralize, 
+			
 		[ "Repeat",        false ], 19,  1, 20, 21, 22, 
 		[ "Path",          false ], 23, 27, 24,
 		[ "Transform Data", true ],  2,  3,  4,  5, 

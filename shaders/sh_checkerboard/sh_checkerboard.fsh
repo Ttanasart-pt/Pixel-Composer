@@ -83,7 +83,7 @@ void main() {
 	
 	float uva = 1.; 
 	vec2  vtx = getUVA(v_vTexcoord, uva);
-	vec2  c   = (vtx - position) * vec2(1., aspect);
+	vec2  c   = (vtx - position / dimension) * vec2(1., aspect);
 	float ch;
 	
 	if(diagonal == 0 || blend != 0) {

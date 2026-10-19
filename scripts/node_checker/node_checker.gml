@@ -97,9 +97,9 @@ function Node_Checker(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 			shader_set_2( "dimension",  _dim );
 			
 			shader_set_i( "diagonal",   _dia );
-			shader_set_f( "position",   _pos[0] / _dim[0], _pos[1] / _dim[1]);
-			shader_set_m( "amount",     _siz, _data[6], inputs[1]);
-			shader_set_m( "angle",      _ang, _data[7], inputs[2]);
+			shader_set_2( "position",   _pos );
+			shader_set_m( "amount",     _siz, _data[6], inputs[1] );
+			shader_set_m( "angle",      _ang, _data[7], inputs[2] );
 			shader_set_f( "aspect",     _asp );
 			
 			shader_set_i( "blend",      _bld );

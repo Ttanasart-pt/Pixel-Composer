@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.22.1.201",
+    "changes": [
+      {
+        "date": "2026-10-19T00:30:52.973Z",
+        "node": "",
+        "commit": "**FLIP > Surface Collider / Destroy**: Fix Node not working."
+      }
+    ]
+  },
+  {
     "version": "1.22.1.101",
     "changes": [
       {

@@ -25,6 +25,8 @@ function Node_FLIP_Solid(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	
 	temp_surface = [ noone, noone ];
 	
+	buff_surface = undefined;
+	
 	static getDimension = function() { var d = getInputData(0); return instance_exists(d)? d.getSize() : [ 1, 1 ]; }
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _params) { 
@@ -64,11 +66,10 @@ function Node_FLIP_Solid(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 			draw_surface_stretched(temp_surface[0], 0, 0, ww, hh);
 		surface_reset_shader();
 		
-		var _buff = buffer_create(ww * hh, buffer_fixed, 1);
-		buffer_get_surface(_buff, temp_surface[1], 0);
+		buff_surface = buffer_verify(buff_surface, ww * hh * 4, buffer_fixed, 4);
+		buffer_get_surface(buff_surface, temp_surface[1], 0);
 		
-		FLIP_setSolid_surface(domain.domain, buffer_get_address(_buff));
-		buffer_delete(_buff);
+		FLIP_setSolid_surface(domain.domain, buffer_get_address(buff_surface));
 	}
 	
 	static getPreviewValues = function() /*=>*/ {return temp_surface[1]};

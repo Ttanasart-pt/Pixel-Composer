@@ -813,14 +813,17 @@ void handleParticleCollisions(Domain domain) {
 			_y = minY;
 			particleVel[i2 + 1] *= -wallElasticity;
 		}
+		
 		if (cBot && _y > maxY) {
 			_y = maxY;
 			particleVel[i2 + 1] *= -wallElasticity;
 		}
+		
 		if (cLef && _x < minX) {
 			_x = minX;
 			particleVel[i2] *= -wallElasticity;
 		}
+		
 		if (cRig && _x > maxX) {
 			_x = maxX;
 			particleVel[i2] *= -wallElasticity;
@@ -1301,7 +1304,7 @@ cfunction double FLIP_deleteParticle_surface(double dindex, void* pixelArrayBuff
 	if (dindex < 0 || dindex >= domains.size()) return -1;
 	
 	Domain& domain      = domains[dindex];
-	uint8_t* pixelArray = (uint8_t*)pixelArrayBuffer;
+	float* pixelArray   = (float*)pixelArrayBuffer;
 	double* particlePos = domain.particlePos;
 
 	double cel = domain.spacing;
@@ -1317,7 +1320,7 @@ cfunction double FLIP_deleteParticle_surface(double dindex, void* pixelArrayBuff
 		int cellY = floor(_y / cel);
 
 		int index = cellY * row + cellX;
-		if(pixelArray[index] > 128) {
+		if(pixelArray[index] > .5) {
 			particlePos[i * 2 + 0] = 0;
 			particlePos[i * 2 + 1] = 0;
 		}
@@ -1551,8 +1554,8 @@ cfunction double FLIP_setSolid_rectangle(double dindex, double _x, double _y, do
 cfunction double FLIP_setSolid_surface(double dindex, void* pixelArrayBuffer) {
 	if (dindex < 0 || dindex >= domains.size()) return -1;
 	
-	Domain& domain      = domains[dindex];
-	uint8_t* pixelArray = (uint8_t*)pixelArrayBuffer;
+	Domain& domain     = domains[dindex];
+	float*  pixelArray = (float*)pixelArrayBuffer;
 	
 	double* solidMap = domain.solidMap;
 	int n   = (int)domain.fNumY;
@@ -1566,7 +1569,7 @@ cfunction double FLIP_setSolid_surface(double dindex, void* pixelArrayBuffer) {
 	for(int x = 1; x < dw - 1; x++) {
 		int srcIndex = y * dw + x;
 		int dstIndex = getIndex(x, y, n);
-		if(pixelArray[srcIndex] > 128)
+		if(pixelArray[srcIndex] > .5)
 			solidMap[dstIndex] = 1;
 	}
 	
