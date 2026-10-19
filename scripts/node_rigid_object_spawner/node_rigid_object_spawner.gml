@@ -96,7 +96,7 @@ function Node_Rigid_Object_Spawner(_x, _y, _group = noone) : Node(_x, _y, _group
 		if(_obj == noone || !_spw) return;
 		
 		var _frm = inputs[0].value_from;
-		if(_frm == noone || !struct_has(_frm.node, "spawn")) return;
+		if(_frm == noone || !has(_frm.node, "spawn")) return;
 		
 		_sed = _sed + frame * _amo * 20;
 		

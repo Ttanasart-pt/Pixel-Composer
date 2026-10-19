@@ -11,20 +11,12 @@
   "androidsourcedir":"",
   "author":"",
   "classname":"",
-  "ConfigValues":{
-    "Itch":{
-      "copyToTargets":"194",
-    },
-    "Steam":{
-      "copyToTargets":"194",
-    },
-  },
   "copyToTargets":194,
   "description":"",
   "exportToGame":true,
   "extensionVersion":"0.0.1",
   "files":[
-    {"$GMExtensionFile":"v1","%Name":"","constants":[],"copyToTargets":-1,"filename":"gmlBox2D.dll","final":"","functions":[
+    {"$GMExtensionFile":"v1","%Name":"","constants":[],"copyToTargets":194,"filename":"gmlBox2D.dll","final":"","functions":[
         {"$GMExtensionFunction":"","%Name":"gmlBox2D_test_init","argCount":0,"args":[],"documentation":"","externalName":"test_init","help":"gmlBox2D_test_init()","hidden":false,"kind":1,"name":"gmlBox2D_test_init","resourceType":"GMExtensionFunction","resourceVersion":"2.0","returnType":2,},
         {"$GMExtensionFunction":"","%Name":"gmlBox2D_test_step","argCount":0,"args":[],"documentation":"","externalName":"test_step","help":"gmlBox2D_test_step()","hidden":false,"kind":1,"name":"gmlBox2D_test_step","resourceType":"GMExtensionFunction","resourceVersion":"2.0","returnType":2,},
         {"$GMExtensionFunction":"","%Name":"gmlBox2D_test_destroy","argCount":0,"args":[],"documentation":"","externalName":"test_destroy","help":"gmlBox2D_test_destroy()","hidden":false,"kind":1,"name":"gmlBox2D_test_destroy","resourceType":"GMExtensionFunction","resourceVersion":"2.0","returnType":2,},
@@ -103,21 +95,9 @@
         {"$GMExtensionFunction":"","%Name":"gmlBox2D_Joint_Weld_Create","argCount":0,"args":[1,],"documentation":"","externalName":"Joint_Weld_Create","help":"gmlBox2D_Joint_Weld_Create(data)","hidden":false,"kind":1,"name":"gmlBox2D_Joint_Weld_Create","resourceType":"GMExtensionFunction","resourceVersion":"2.0","returnType":2,},
         {"$GMExtensionFunction":"","%Name":"gmlBox2D_Joint_Motor_Create","argCount":0,"args":[1,],"documentation":"","externalName":"Joint_Motor_Create","help":"gmlBox2D_Joint_Motor_Create(data)","hidden":false,"kind":1,"name":"gmlBox2D_Joint_Motor_Create","resourceType":"GMExtensionFunction","resourceVersion":"2.0","returnType":2,},
       ],"init":"","kind":1,"name":"","origname":"","ProxyFiles":[
-        {"$GMProxyFile":"","%Name":"gmlBox2D.so","ConfigValues":{
-            "Itch":{
-              "TargetMask":"7",
-            },
-          },"name":"gmlBox2D.so","resourceType":"GMProxyFile","resourceVersion":"2.0","TargetMask":0,},
-        {"$GMProxyFile":"","%Name":"gmlBox2D.dylib","ConfigValues":{
-            "Itch":{
-              "TargetMask":"1",
-            },
-          },"name":"gmlBox2D.dylib","resourceType":"GMProxyFile","resourceVersion":"2.0","TargetMask":0,},
-        {"$GMProxyFile":"","%Name":"gmlBox2D.so","ConfigValues":{
-            "Itch":{
-              "TargetMask":"7",
-            },
-          },"name":"gmlBox2D.so","resourceType":"GMProxyFile","resourceVersion":"2.0","TargetMask":0,},
+        {"$GMProxyFile":"","%Name":"gmlBox2D.so","name":"gmlBox2D.so","resourceType":"GMProxyFile","resourceVersion":"2.0","TargetMask":7,},
+        {"$GMProxyFile":"","%Name":"gmlBox2D.dylib","name":"gmlBox2D.dylib","resourceType":"GMProxyFile","resourceVersion":"2.0","TargetMask":1,},
+        {"$GMProxyFile":"","%Name":"gmlBox2D.dll","name":"gmlBox2D.dll","resourceType":"GMProxyFile","resourceVersion":"2.0","TargetMask":6,},
       ],"resourceType":"GMExtensionFile","resourceVersion":"2.0","uncompress":false,"usesRunnerInterface":false,},
   ],
   "gradleinject":null,
