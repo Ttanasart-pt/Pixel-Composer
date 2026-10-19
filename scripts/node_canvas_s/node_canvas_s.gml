@@ -3,49 +3,6 @@
 		hotkeyCustom("Node_Canvas_S", "Pencil", "B");
 		hotkeyCustom("Node_Canvas_S", "Eraser", "E");
 	});
-	
-	globalvar CANVAS_PANEL_LAYOUT; CANVAS_PANEL_LAYOUT = {
-        content: [
-        	{ 
-	            content: "Panel_Canvas_Tool_Settings"
-	        }, 
-	        {
-	        	content: [
-	        		{
-	        			content: "Panel_Canvas_Tool"
-	        		},
-	        		{
-	        			content: [
-	        				{
-					            content: "Panel_Canvas",
-					            main: true, 
-	        				},
-	        				{
-	        					// content: "Panel_Canvas_Color"
-			        			content: [
-			        				{ content: "Panel_Canvas_Palette" },
-			        				{ content: "Panel_Canvas_Color"   }
-		        				],
-					    		split: "v",
-				        		width: -240
-			        		}
-        				],
-				        split: "h",
-				        width: -200
-			        }
-	    		],
-	    		split: "h",
-        		width: 40
-	        }
-        ],
-        split: "v",
-        width: 40,
-        
-        main: "Panel_Canvas",
-        pref_w: 1200,
-        pref_h: 800,
-        
-	}
 #endregion 
 
 function Node_Canvas_S(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {

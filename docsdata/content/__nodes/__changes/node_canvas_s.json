@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.22.1.201",
+    "changes": [
+      {
+        "date": "2026-10-19T04:08:30.502Z",
+        "node": "Canvas Editor",
+        "commit": "**Canvas Editor**: Add bubble indicating that layout has been changed."
+      }
+    ]
+  },
+  {
     "version": "1.22.0",
     "changes": [
       {

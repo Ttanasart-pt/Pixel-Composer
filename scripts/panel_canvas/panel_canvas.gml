@@ -1,3 +1,46 @@
+globalvar CANVAS_PANEL_LAYOUT; CANVAS_PANEL_LAYOUT = {
+    content: [
+    	{ 
+            content: "Panel_Canvas_Tool_Settings"
+        }, 
+        {
+        	content: [
+        		{
+        			content: "Panel_Canvas_Tool"
+        		},
+        		{
+        			content: [
+        				{
+				            content: "Panel_Canvas",
+				            main: true, 
+        				},
+        				{
+        					// content: "Panel_Canvas_Color"
+		        			content: [
+		        				{ content: "Panel_Canvas_Palette" },
+		        				{ content: "Panel_Canvas_Color"   }
+	        				],
+				    		split: "v",
+			        		width: -240
+		        		}
+    				],
+			        split: "h",
+			        width: -200
+		        }
+    		],
+    		split: "h",
+    		width: 40
+        }
+    ],
+    split: "v",
+    width: 40,
+    
+    main: "Panel_Canvas",
+    pref_w: 1200,
+    pref_h: 800,
+    
+}
+
 function NewCanvasPanel(node) {
 	var _layout = CANVAS_PANEL_LAYOUT;
 	var _lpath  = DIRECTORY + "layouts/__canvas.json";
@@ -17,10 +60,11 @@ function NewCanvasPanel(node) {
 }
 
 function Panel_Canvas() : PanelContent() constructor {
-	context_str  = "Canvas";
-	title        = "Canvas";
-	auto_pin     = true;
-	title_height = 0;
+	context_str   = "Canvas";
+	title         = "Canvas";
+	auto_pin      = true;
+	title_height  = 0;
+	layout_edited = false; run_in(2, function() /*=>*/ { layout_edited = false; });
 	
 	w = min(WIN_W, ui(1200));
 	h = min(WIN_H, ui(800));
@@ -1266,6 +1310,8 @@ function Panel_Canvas() : PanelContent() constructor {
 		
 		applyToNode(_rotSurf, true);
 	}
+	
+	static onResize = function() /*=>*/ { layout_edited = true; }
 	
 	static onClose = function() /*=>*/ {
 		if(tool_current) tool_current.destroy();

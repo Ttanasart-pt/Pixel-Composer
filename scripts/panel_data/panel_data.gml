@@ -126,6 +126,7 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 		refresh();
 		
 		if(dialog == undefined) PANEL_MODIFIED = true;
+		else if(instance_exists(dialog)) dialog.onResize();
 	}
 	
 	function findContent(_type) {
@@ -201,6 +202,7 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 		}
 	
 		if(dialog == undefined) PANEL_MODIFIED = true;
+		else if(instance_exists(dialog)) dialog.onResize();
 	}
 	
 	function setTabSize() {
@@ -371,7 +373,9 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 		h = max(h, min_h);
 		
 		refreshSize(false);
+		
 		if(dialog == undefined) PANEL_MODIFIED = true;
+		else if(instance_exists(dialog)) dialog.onResize();
 	}
 	
 	function verify(_w, _h) {
@@ -413,8 +417,8 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 		anchor	= ANCHOR.left;
 		content = [];
 		
-		if(dialog == undefined)  
-			PANEL_MODIFIED = true;
+		if(dialog == undefined) PANEL_MODIFIED = true;
+		else if(instance_exists(dialog)) dialog.onResize();
 		
 		return [ _panelL, _panelR ];
 	}
@@ -450,8 +454,8 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 		anchor	= ANCHOR.top;
 		content = [];
 		
-		if(dialog == undefined) 
-			PANEL_MODIFIED = true;
+		if(dialog == undefined) PANEL_MODIFIED = true;
+		else if(instance_exists(dialog)) dialog.onResize();
 		
 		return [_panelT, _panelB];
 	}
@@ -1331,6 +1335,16 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 	}
 	
 	////- Actions
+	
+	function onResize() {
+		for( var i = 0, n = array_length(content); i < n; i++ )
+			content[i].onResize();
+		
+		for(var i = 0, n = array_length(childs); i < n; i++) {
+			var _panel = array_safe_get(childs, i, 0);
+			if(is(_panel, Panel)) _panel.onResize();
+		}
+	}
 	
 	function onClose() {
 		for( var i = 0, n = array_length(content); i < n; i++ )

@@ -19,6 +19,8 @@ event_inherited();
 	action_button_hovering = false;
 #endregion
 	
+function onResize() { panel.onResize(); }
+	
 function setContent(_content) {
 	var _cnt   = undefined;
 	var _dia_w = 0;

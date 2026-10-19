@@ -40,6 +40,7 @@ var _cnt = panel.getContent();
 		panel.h = cnh;
 		
 		panel.refreshSize(true);
+		panel.onResize();
 		panel_toRefresh = false;
 	}
 	
