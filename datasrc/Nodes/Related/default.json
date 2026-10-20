@@ -7,7 +7,6 @@
             "color":     [ "Node_Solid", "Node_Color_Data", "Node_Color_Mix" ],
             "surface":   [ "Node_Surface_data", "Node_Transform", "Node_Blend", "Node_Composite", "Node_Export" ],
             
-            "path":      [ "Node_Line" ],
             "text":      [ "Node_Text", "Node_To_Number" ],
                                         
             "pathnode":  [ "Node_Line", "Node_Mesh_Create_Path" ],

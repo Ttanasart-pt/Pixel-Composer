@@ -39,7 +39,6 @@ function read_png_header(path, noti = true) {
 
 function image_get_type(path) { 
     var _type = string_lower(filename_ext(path));
-    print("image_get_type", path, _type);
     
     var f = file_bin_open(path, 0);
     if(f < 0) return _type; 

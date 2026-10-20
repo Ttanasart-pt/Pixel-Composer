@@ -2963,7 +2963,7 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
                             _to[i].removeFrom();
                         }
                     }
-                } else if(array_exists(nodes_selecting_jun, value_dragging.node)) {
+                } else if(array_exists(nodes_selecting_jun, value_dragging.node)) { // drag junction from a selecting node.
                     var _jlist = ds_priority_create();
                     
                     for( var i = 0, n = array_length(nodes_selecting_jun); i < n; i++ ) {
@@ -2972,7 +2972,7 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
                         if(_node == value_focus.node) {
                             ds_priority_add(_jlist, value_focus, value_focus.y);
                             
-                        } else {
+                        } else if(value_dragging.tags == VALUE_TAG.none) {
                             for( var j = 0, m = array_length(_node.outputs); j < m; j++ ) {
                                 var _junction = _node.outputs[j];
                                 if(!_junction.visible) continue;
@@ -2981,6 +2981,24 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
                                 ds_priority_add(_jlist, _junction, _junction.y);
                                 break;
                             }
+                            
+                        } else if(value_dragging.tags == VALUE_TAG.matadata) {
+                        	for( var j = 0, m = array_length(_node.junc_meta); j < m; j++ ) {
+                                var _junction = _node.junc_meta[j];
+                                if(!_junction.visible) continue;
+                                if(value_bit(_junction.type) & value_bit(value_dragging.type) == 0) continue;
+                            	
+                                ds_priority_add(_jlist, _junction, _junction.y);
+                                break;
+                            }
+                            
+                        } else if(value_dragging.tags == VALUE_TAG.updateInTrigger) {
+                        	var _junction = _node.updatedInTrigger;
+                            if(_junction.visible) ds_priority_add(_jlist, _junction, _junction.y);
+                            
+                        } else if(value_dragging.tags == VALUE_TAG.updateOutTrigger) {
+                        	var _junction = _node.updatedOutTrigger;
+                            if(_junction.visible) ds_priority_add(_jlist, _junction, _junction.y);
                         }
                     }
                     
