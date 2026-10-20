@@ -17,6 +17,11 @@ function lerp_linear(from, to, speed) {
     return from + sign(to - from) * speed;
 }
 
+function lerp_linear_ui(from, to, speed) {
+    if(abs(from - to) < speed * DELTA_TIME) return to;
+    return from + sign(to - from) * speed * DELTA_TIME;
+}
+
 function lerp_angle_direct(from, to, speed) {
 	return from + angle_difference(to, from) * speed;
 }

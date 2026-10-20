@@ -59,6 +59,7 @@ function Panel_Custom_Editor(_data = undefined) : PanelContent() constructor {
 		selection_boxing = 0;
 		selection_box_x  = 0;
 		selection_box_y  = 0;
+		drawSelectorInit();
 		
 		select_box_x0 = 0; select_box_y0 = 0;
 		select_box_x1 = 0; select_box_y1 = 0;
@@ -1216,6 +1217,7 @@ function Panel_Custom_Editor(_data = undefined) : PanelContent() constructor {
 				selection_boxing = 2;
 		}
 		
+		drawSelectorStep();
 		if(selection_boxing == 2) {
 			var x0 = min(mx, selection_box_x);
 			var y0 = min(my, selection_box_y);
@@ -1240,6 +1242,7 @@ function Panel_Custom_Editor(_data = undefined) : PanelContent() constructor {
 		}
 		
 		if(selection_boxing && mouse_lrelease()) selection_boxing = 0;
+		drawSelectorFade();
 	}
 	
 }

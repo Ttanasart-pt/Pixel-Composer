@@ -363,8 +363,8 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		preview_alpha	 = 1;
 		
 		preview_is_surface = false;
-		__preview_sw   = noone;
-		__preview_sh   = noone;
+		__preview_sw       = noone;
+		__preview_sh       = noone;
 		
 		preview_surface_sample = true;
 		preview_select_surface = true;
@@ -376,8 +376,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		preview_my = 0;
 		
 		graph_preview_alpha	= 1;
-		
-		getPreviewingNode = function() /*=>*/ {return self};
+		getPreviewingNode   = function() /*=>*/ {return self};
 		
 		w_hovering  = false;
 		w_hoverable = false;

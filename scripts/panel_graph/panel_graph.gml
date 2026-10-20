@@ -687,6 +687,8 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
         connect_related    = noone;
         
         node_highlighting  = undefined;
+        
+        drawSelectorInit();
     #endregion
     
     #region // ---- minimap ----
@@ -2631,15 +2633,17 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
 	        	node_highlighting = undefined;
 	        }
 	    #endregion
-	        
+	    
         #region draw selection frame
+        	drawSelectorStep();
+        	
 	        if(nodes_select_drag) {
 	            if(point_distance(nodes_select_mx, nodes_select_my, mx, my) > 16)
 	                nodes_select_drag  = 2;
 	            
 	            if(nodes_select_drag == 2) {
 	            	drawSelector(nodes_select_mx, nodes_select_my, mx, my);
-	                // nodes_selecting = [];
+	            	
 	                var box_selecting = [];
 	                
 	                for( var i = 0, n = array_length(nodes_list); i < n; i++ ) {
@@ -2684,6 +2688,8 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
 	            if(mouse_lrelease())
 	                nodes_select_drag = 0;
 	        }
+	        
+	        drawSelectorFade();
         #endregion
         
         if(nodes_junction_d != noone) {

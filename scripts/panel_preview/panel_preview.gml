@@ -317,6 +317,8 @@ function Panel_Preview() : PanelContent() constructor {
    #endregion
     
     #region ---- selection ----
+    	drawSelectorInit();
+    	
     	selection_selecting = 0;
     	selection_snap_grid = false;
     	selection_mx = 0;
@@ -4142,6 +4144,8 @@ function Panel_Preview() : PanelContent() constructor {
     	var mmx = mx;
     	var mmy = my;
     	
+        drawSelectorStep();
+        
     	if(PROJECT.previewGrid.snap || key_mod_press(KCONTROL)) {
 	    	var _snx = PROJECT.previewGrid.show? PROJECT.previewGrid.size[0] : 1;
 	        var _sny = PROJECT.previewGrid.show? PROJECT.previewGrid.size[1] : 1;
@@ -4213,6 +4217,8 @@ function Panel_Preview() : PanelContent() constructor {
     			selection_selecting = 0;
     		}
         }
+        
+        drawSelectorFade();
         
         if(selection_active) {
         	var sx0 = canvas_x + selection_x0 * canvas_s;

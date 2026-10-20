@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.22.1.202",
+    "changes": [
+      {
+        "date": "2026-10-20T00:58:25.801Z",
+        "node": "",
+        "commit": "--fade selection"
+      }
+    ]
+  },
+  {
     "version": "1.22.0.302",
     "changes": [
       {

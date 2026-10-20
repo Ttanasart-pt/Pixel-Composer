@@ -3,6 +3,7 @@ function Node_Anim_Loop(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	update_on_frame = true;
 	is_simulation   = true;
 	
+	////- =Surface
 	newInput( 0, nodeValue_Surface( "Surface" ));
 	
 	////- =Loop
@@ -19,7 +20,8 @@ function Node_Anim_Loop(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	
 	newOutput(0, nodeValue_Output("Surface", VALUE_TYPE.surface, noone));
 	
-	input_display_list = [ 0, 
+	input_display_list = [ 
+		[ "Surface",  false ],  0,  
 		[ "Loop",     false ],  7,  1,  2,  3,  4, 
 		[ "Overflow", false ],  5,  6, 
 	];

@@ -196,6 +196,7 @@ function Panel_File_Explorer() : PanelContent() constructor {
 	frame_dragging   = false;
 	frame_drag_mx    = false;
 	frame_drag_my    = false;
+	drawSelectorInit();
 	
 	path_dragging    = -1;
 	file_focus       = noone;
@@ -544,7 +545,10 @@ function Panel_File_Explorer() : PanelContent() constructor {
 		
 		var _h = drawDir(rootFile, 0, _y, contentPane.surface_w, _m);
 		
+		drawSelectorStep();
 		if(frame_dragging) drawSelector(frame_drag_mx, frame_drag_my, _m[0], _m[1]);
+		drawSelectorFade();
+		
 		if(context_hovering == noone) context_hovering = rootFile;
 		
 		if(draggable && mouse_lpress(pFOCUS)) {

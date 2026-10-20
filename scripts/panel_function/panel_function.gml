@@ -523,3 +523,61 @@ function __fnInit_Panels() {
         registerFunction("", "Dialog Manager Panel",      "", n, function() /*=>*/ {return dialogPanelCall(new Panel_Dialog_Manager())}    ).setMenuAlt("Dialog Manager", "dialog_manager_panel")
         registerFunction("", "Toolbar Panel",             "", n, function() /*=>*/ {return dialogPanelCall(new Panel_Toolbar())}           ).setMenuAlt("Toolbar",        "toolbar_panel")
 	}
+
+
+	////- Draw Selector
+	
+function drawSelectorInit() {
+    selection_drawing = false;
+    
+    selection_draw_x0 = 0;
+    selection_draw_y0 = 0;
+    selection_draw_x1 = 0;
+    selection_draw_y1 = 0;
+    
+    selection_draw_c  = 0;
+    selection_draw_a  = 0;
+}
+
+function drawSelectorStep() {
+	selection_drawing = false;
+}
+	
+function drawSelector(x0, y0, x1, y1, cc = COLORS._main_accent, aa = 1, _active = true) {
+	var xx0 = min(x0, x1);
+	var yy0 = min(y0, y1);
+	var ww  = abs(x0 - x1);
+	var hh  = abs(y0 - y1);
+	var crn = THEME_VALUE.selection_corner_radius;
+	
+	selection_drawing |= _active;
+    selection_draw_x0 = x0;
+    selection_draw_y0 = y0;
+    selection_draw_x1 = x1;
+    selection_draw_y1 = y1;
+    
+	if(_active) selection_draw_a = aa;
+	selection_draw_c  = cc;
+    
+	if(ww <= THEME_VALUE.selection_minimum || hh <= THEME_VALUE.selection_minimum) {
+		draw_set_color(cc);
+		draw_set_alpha(.05 * aa);
+		draw_roundrect_ext(xx0, yy0, xx0 + ww, yy0 + hh, crn, crn, false);
+		
+		draw_set_alpha(aa);
+		draw_roundrect_ext(xx0, yy0, xx0 + ww, yy0 + hh, crn, crn, true);
+		
+		draw_set_alpha(1);
+		
+	} else 
+		draw_sprite_stretched_ext(THEME.ui_selection, 0, xx0, yy0, ww, hh, cc, aa);
+}
+
+function drawSelectorFade() {
+	if(selection_drawing)     return;
+	if(selection_draw_a <= 0) return;
+	
+	selection_draw_a = lerp_linear_ui(selection_draw_a, 0, 10);
+	drawSelector(selection_draw_x0, selection_draw_y0, selection_draw_x1, selection_draw_y1, selection_draw_c, selection_draw_a, false);
+	
+}
