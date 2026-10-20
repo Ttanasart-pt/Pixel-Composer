@@ -5,13 +5,15 @@
 	});
 #endregion
 
-function Node_Stack(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
+function Node_Stack(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Stack";
 	
 	////- =Stack
-	_axis_enum = [ new scrollItem("Horizontal", s_node_alignment, 0), 
-			       new scrollItem("Vertical",   s_node_alignment, 1), 
-			       new scrollItem("On top",     s_node_alignment, 3), ];
+	_axis_enum = [ 
+		new scrollItem("Horizontal", s_node_alignment, 0), 
+		new scrollItem("Vertical",   s_node_alignment, 1), 
+		new scrollItem("On top",     s_node_alignment, 3), 
+	];
 			       
 	newInput( 0, nodeValue_EScroll(  "Axis",     0, _axis_enum                  ));
 	newInput( 1, nodeValue_EButton(  "Align",    1, [ "Start", "Middle", "End"] ));
@@ -36,7 +38,7 @@ function Node_Stack(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	function createNewInput(index = array_length(inputs)) {
 		var inAmo = array_length(inputs);
 		
-		newInput(index, nodeValue_Surface("Input")).setVisible(true, true);
+		newInput(index, nodeValue_Surface("Input")).setVisible(true, true).setArrayDepth(1);
 		
 		array_push(input_display_list, inAmo);
 		postCreateNewInput(index);
@@ -64,15 +66,15 @@ function Node_Stack(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		return noone;
 	}
 	
-	static update = function(frame = CURRENT_FRAME) {
+	static processData = function(_outData, _data, _array_index = 0) { 
 		#region data
-			var _axis = getInputData( 0);
-			var _alig = getInputData( 1);
-			var _spac = getInputData( 2);
-			var _padd = getInputData( 3);
+			var _axis = _data[ 0];
+			var _alig = _data[ 1];
+			var _spac = _data[ 2];
+			var _padd = _data[ 3];
 			
-			var _blnd = getInputData( 4);
-			var _revr = getInputData( 5);
+			var _blnd = _data[ 4];
+			var _revr = _data[ 5];
 			
 			inputs[1].setVisible(_axis != 2);
 			inputs[2].setVisible(_axis != 2);
@@ -83,7 +85,7 @@ function Node_Stack(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 			var hh = 0;
 			
 			for( var i = input_fix_len, n = array_length(inputs); i < n; i++ ) {
-				var _surf = getInputData(i);
+				var _surf = _data[i];
 				if(!is_array(_surf)) _surf = [ _surf ];
 				
 				for( var j = 0, m = array_length(_surf); j < m; j++ ) {
@@ -113,7 +115,7 @@ function Node_Stack(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 			var oh = hh + _padd[PADDING.top] + _padd[PADDING.bottom]; 
 		#endregion
 		
-		var _outSurf = outputs[0].getValue();
+		var _outSurf = _outData[0];
 		    _outSurf = surface_verify(_outSurf, ow, oh, attrDepth());
 		
 		for( var i = 0, n = array_length(temp_surface); i < n; i++ ) {
@@ -132,7 +134,7 @@ function Node_Stack(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 			var sy = 0;
 			
 			for( var i = input_fix_len, n = array_length(inputs); i < n; i++ ) {
-				var _surf = getInputData(i);
+				var _surf = _data[i];
 					
 				if(is_array(_surf)) {
 					for( var j = 0, m = array_length(_surf); j < m; j++ )
@@ -201,8 +203,10 @@ function Node_Stack(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 			surface_reset_target();
 		#endregion
 		
-		outputs[0].setValue(_outSurf);
-		outputs[1].setValue(atlas);
+		_outData[0] = _outSurf;
+		_outData[1] = atlas;
+		
+		return _outData;
 	}
 }
 

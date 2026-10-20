@@ -6,7 +6,7 @@ function Node_Path_Projectile(_x, _y, _group = noone) : Node(_x, _y, _group) con
 	newInput( 4, nodeValueSeed());
 	
 	////- =Path
-	newInput( 0, nodeValue_Int(   "Amount", 6 ));
+	newInput( 0, nodeValue_Int(   "Amount",   6     ));
 	newInput( 1, nodeValue_Vec2(  "Origin", [.5,.5] )).setUnitSimple();
 	newInput( 3, nodeValue_Range( "Length", [8,16]  ));
 	
@@ -21,7 +21,7 @@ function Node_Path_Projectile(_x, _y, _group = noone) : Node(_x, _y, _group) con
 	
 	newOutput(0, nodeValue_Output("Path", VALUE_TYPE.pathnode, noone));
 	
-	input_display_list = [  4,  0, 
+	input_display_list = [  4, 
 		[ "Path",       false ],  0,  1,  3,  
 		[ "Direction",  false ],  7,  2, 
 		[ "Projectile", false ],  5,  6, 

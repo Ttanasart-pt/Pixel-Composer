@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.22.1.202",
+    "changes": [
+      {
+        "date": "2026-10-20T02:24:49.053Z",
+        "node": "",
+        "commit": "**Stack**: Node now support array with base depth of 1."
+      }
+    ]
+  },
+  {
     "version": "1.22.0.206",
     "changes": [
       {
