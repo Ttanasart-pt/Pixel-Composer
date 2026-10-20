@@ -1,23 +1,22 @@
 function Node_3D_Mesh_Plane_Bend(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, _group) constructor {
 	name     = "3D Bend Plane";
-	
 	object_class = __3dPlaneBend;
 	
-	newInput(in_mesh + 0, nodeValue_D3Material("Material", new __d3dMaterial()))
-		.setVisible(true, true);
+	newInput(in_mesh + 1, nodeValue_EButton( "Normal", 2 , [ "X", "Y", "Z" ] ));
 	
-	newInput(in_mesh + 1, nodeValue_EButton("Normal",  2 , [ "X", "Y", "Z" ]));
-	
-	newInput(in_mesh + 2, nodeValue_Bool("Both side", false ))
-		.rejectArray();
-	
-	newInput(in_mesh + 3, nodeValue_D3Material("Back Material", new __d3dMaterial()))
+	////- =Material
+	newInput(in_mesh + 2, nodeValue_Bool(       "Both side", false )).rejectArray();
+	newInput(in_mesh + 0, nodeValue_D3Material( "Material"         )).setVisible(true, true);
+	newInput(in_mesh + 3, nodeValue_D3Material( "Back Material"    ))
+	/// in_mesh + 4
 	
 	input_display_list = [
 		__d3d_input_list_mesh, in_mesh + 1, 
 		__d3d_input_list_transform,
-		["Material",	false], in_mesh + 2, in_mesh + 0, in_mesh + 3, 
-	]
+		[ "Material", false ], in_mesh + 2, in_mesh + 0, in_mesh + 3, 
+	];
+	
+	////- Node
 	
 	static preGetInputs = function() {
 		var _both = inputs[in_mesh + 2].getValue();

@@ -9,7 +9,9 @@ function Node_Quaternion_Data(_x, _y, _group = noone) : Node_Processor(_x, _y, _
 	
 	newOutput(0, nodeValue_Output("Rotation", VALUE_TYPE.float, [0,0,0,1])).setDisplay(VALUE_DISPLAY.d3quarternion);
 	
-	input_display_list = [ 0, 1 ];
+	input_display_list = [ 
+		[ "Axes", false ], 0, 1,
+	];
 	
 	////- Nodes
 	

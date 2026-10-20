@@ -11,6 +11,8 @@ uniform float angle;
 uniform int   invert;
 uniform int   bothSide;
 
+uniform vec2  pre_position;
+
 void main() {
 	vec2  ps = v_vTexcoord;
 	vec2  px = v_vTexcoord * dimension - position;
@@ -30,12 +32,13 @@ void main() {
 	
 	gl_FragData[1] = vec4(vec3(pangle < PI? 1. : 0.), 1.);
 	
+	vec2 offs = pre_position / dimension;
 	
 	vec4 cc = vec4(0.);
-	if(bothSide == 1) cc += texture2D( gm_BaseTexture, v_vTexcoord );
+	if(bothSide == 1) cc += texture2D( gm_BaseTexture, v_vTexcoord - offs );
 		
 	if(ps.x > 0. && ps.x < 1. && ps.y > 0. && ps.y < 1.)
-		cc += texture2D( gm_BaseTexture, ps );
+		cc += texture2D( gm_BaseTexture, ps - offs );
 		
 	gl_FragData[0] = cc * v_vColour;
 }

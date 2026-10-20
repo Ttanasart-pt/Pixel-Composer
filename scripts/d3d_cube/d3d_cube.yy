@@ -6,7 +6,7 @@
   "name":"d3d_cube",
   "parent":{
     "name":"cube",
-    "path":"folders/nodes/data/3D/d3d_mesh/cube.yy",
+    "path":"folders/nodes/data/3D/d3d_mesh/primitive/cube.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

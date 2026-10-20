@@ -27,35 +27,37 @@ function Node_3D_Mesh_Path_Extrude(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y
 	// input i+15
 	
 	input_display_list = [
-		["Path",		false], 	i+0, i+13,i+10,
-		__d3d_input_list_mesh,		i+6, i+1, i+12, i+7, i+8, i+5, i+11, 
+		[ "Path",     false ],      i+0, i+13,i+10,
+		__d3d_input_list_mesh,      i+6, i+1, i+12, i+7, i+8, i+5, i+11, 
 		__d3d_input_list_transform,
-		["Material",	false], 	i+4, i+2, i+3, i+9, i+14, 
+		[ "Material", false ],      i+4, i+2, i+3, i+9, i+14, 
 	]
 	
 	////- Nodes
 	
 	static processData = function(_output, _data, _array_index = 0, _frame = CURRENT_FRAME) {
-		var _path    = _data[in_mesh +  0];
-		var _pathSca = _data[in_mesh + 13];
-		var _loop    = _data[in_mesh + 10];
-		
-		var _samp    = _data[in_mesh +  6];
-		var _sides   = _data[in_mesh +  1];
-		var _pfrot   = _data[in_mesh + 12];
-		var _rad     = _data[in_mesh +  7];
-		var _radOv   = _data[in_mesh +  8];
-		var _caps    = _data[in_mesh +  5];
-		var _invert  = _data[in_mesh + 11];
-		
-		var _smt     = _data[in_mesh +  4];
-		var _mat_sid = _data[in_mesh +  2];
-		var _mat_cap = _data[in_mesh +  3];
-		var _uvScale = _data[in_mesh +  9];
-		var _useColr = _data[in_mesh + 14];
-		
-		inputs[in_mesh + 3].setVisible(_caps, _caps);
-		if(_path == noone) return noone;
+		#region data
+			var _path    = _data[in_mesh +  0];
+			var _pathSca = _data[in_mesh + 13];
+			var _loop    = _data[in_mesh + 10];
+			
+			var _samp    = _data[in_mesh +  6];
+			var _sides   = _data[in_mesh +  1];
+			var _pfrot   = _data[in_mesh + 12];
+			var _rad     = _data[in_mesh +  7];
+			var _radOv   = _data[in_mesh +  8];
+			var _caps    = _data[in_mesh +  5];
+			var _invert  = _data[in_mesh + 11];
+			
+			var _smt     = _data[in_mesh +  4];
+			var _mat_sid = _data[in_mesh +  2];
+			var _mat_cap = _data[in_mesh +  3];
+			var _uvScale = _data[in_mesh +  9];
+			var _useColr = _data[in_mesh + 14];
+			
+			inputs[in_mesh + 3].setVisible(_caps, _caps);
+			if(_path == noone) return noone;
+		#endregion
 		
 		if(_loop) _caps = false;
 		
@@ -86,8 +88,8 @@ function Node_3D_Mesh_Path_Extrude(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y
 				__points[_pointId + 2] = _p.z * _pathSca;
 				
 				if(i) {
-					var _d = point_distance_3d(__points[_pointId - 3 + 0], __points[_pointId - 3 + 1], __points[_pointId - 3 + 2], 
-					                           __points[_pointId     + 0], __points[_pointId     + 1], __points[_pointId     + 2]);
+					var _d = point_distance_3d(__points[_pointId-3+0], __points[_pointId-3+1], __points[_pointId-3+2], 
+					                           __points[_pointId  +0], __points[_pointId  +1], __points[_pointId  +2] );
 					_distTotal += _d;
 					__uvProg[i] = _distTotal;
 				}

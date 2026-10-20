@@ -6,6 +6,11 @@
         "date": "2026-10-20T04:37:54.560Z",
         "node": "any",
         "commit": "Introduced"
+      },
+      {
+        "date": "2026-10-20T05:54:30.221Z",
+        "node": "",
+        "commit": "**Mirror**: Add pre-transform option."
       }
     ]
   }

@@ -5,8 +5,8 @@
   "isDnD":false,
   "name":"node_3d_mesh_voxel_canvas",
   "parent":{
-    "name":"d3d_mesh",
-    "path":"folders/nodes/data/3D/d3d_mesh.yy",
+    "name":"primitive",
+    "path":"folders/nodes/data/3D/d3d_mesh/primitive.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

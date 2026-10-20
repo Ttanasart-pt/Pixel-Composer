@@ -1,0 +1,12 @@
+[
+  {
+    "version": "1.22.1.202",
+    "changes": [
+      {
+        "date": "2026-10-20T05:54:30.218Z",
+        "node": "",
+        "commit": "**Mirror**: Add pre-transform option."
+      }
+    ]
+  }
+]

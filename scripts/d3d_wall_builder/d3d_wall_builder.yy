@@ -5,8 +5,8 @@
   "isDnD":false,
   "name":"d3d_wall_builder",
   "parent":{
-    "name":"d3d_mesh",
-    "path":"folders/nodes/data/3D/d3d_mesh.yy",
+    "name":"path",
+    "path":"folders/nodes/data/3D/d3d_mesh/path.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

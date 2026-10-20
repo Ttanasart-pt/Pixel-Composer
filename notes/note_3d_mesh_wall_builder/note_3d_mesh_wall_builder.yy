@@ -3,9 +3,9 @@
   "%Name":"note_3d_mesh_wall_builder",
   "name":"note_3d_mesh_wall_builder",
   "parent":{
-    "name":"d3d_mesh",
-    "path":"folders/nodes/data/3D/d3d_mesh.yy",
+    "name":"path",
+    "path":"folders/nodes/data/3D/d3d_mesh/path.yy",
   },
   "resourceType":"GMNotes",
-  "resourceVersion":"1.1",
+  "resourceVersion":"2.0",
 }

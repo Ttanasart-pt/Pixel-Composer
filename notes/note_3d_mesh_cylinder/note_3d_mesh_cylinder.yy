@@ -3,8 +3,8 @@
   "%Name":"note_3d_mesh_cylinder",
   "name":"note_3d_mesh_cylinder",
   "parent":{
-    "name":"d3d_mesh",
-    "path":"folders/nodes/data/3D/d3d_mesh.yy",
+    "name":"primitive",
+    "path":"folders/nodes/data/3D/d3d_mesh/primitive.yy",
   },
   "resourceType":"GMNotes",
   "resourceVersion":"1.1",

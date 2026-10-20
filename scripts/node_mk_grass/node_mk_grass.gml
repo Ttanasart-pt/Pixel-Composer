@@ -258,9 +258,9 @@ function Node_MK_Grass(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 				
 			} else {
 				surface_set_shader(temp_surface[3], sh_mk_grass_grow_cvt);
-					shader_set_f("seed",      _seed);
-					shader_set_f("density",   _dist);
-					shader_set_2("dimension", _dim);
+					shader_set_f( "seed",      _seed );
+					shader_set_f( "density",   _dist );
+					shader_set_2( "dimension", _dim  );
 					
 					draw_surface_safe(temp_surface[2]);
 				surface_reset_shader();
@@ -271,18 +271,13 @@ function Node_MK_Grass(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 				var _sBuf = buffer_from_surface(_gSrf, false);
 				var _sOut = buffer_create(_sw * _sh * (8*7), buffer_fixed, 1);
 				
-				var _args = buffer_create(1, buffer_grow, 1);
-				buffer_write(_args, buffer_u64, buffer_get_address(_sBuf));
-				buffer_write(_args, buffer_u64, buffer_get_address(_sOut));
-				buffer_write(_args, buffer_f64, _sw       );
-				buffer_write(_args, buffer_f64, _sh       );
-				buffer_write(_args, buffer_f64, _seed     );
-				buffer_write(_args, buffer_f64, _size[0]  );
-				buffer_write(_args, buffer_f64, _size[1]  );
-				buffer_write(_args, buffer_f64, _swayx[0] );
-				buffer_write(_args, buffer_f64, _swayx[1] );
+				mk_grass_set_buffer(buffer_get_address(_sBuf), buffer_get_address(_sOut));
+				mk_grass_set_dimension(_sw, _sh);
+				mk_grass_set_seed(_seed);
+				mk_grass_set_size(_size[0], _size[1]);
+				mk_grass_set_sway(_swayx[0], _swayx[1]);
 				
-				var _amo  = mk_grass_get_data(buffer_get_address(_args));
+				var _amo  = mk_grass_get_data();
 				buffer_delete(_sBuf);
 				buffer_to_start(_sOut);
 				
@@ -399,19 +394,6 @@ struct pixel {
 	uint8_t a;
 };
 
-struct mk_grass_parameter {
-	void* pixelArrayBuffer;
-	void* outputBuffer;
-	double width;
-	double height;
-
-	double seed;
-	double size_min;
-	double size_max;
-	double sway_min;
-	double sway_max;
-};
-
 struct mk_grass_pixel{
 	double x;
 	double y;
@@ -424,26 +406,50 @@ struct mk_grass_pixel{
 	double b;
 };
 
+pixel* pixelArray;
+mk_grass_pixel* outputArray;
+
+size_t width;
+size_t height;
+
+double seed;
+double size_min;
+double size_max;
+double sway_min;
+double sway_max;
+
 double random_range(double min, double max) {
 	return min + (static_cast<double>(rand()) / RAND_MAX) * (max - min);
 }
 
-cfunction double mk_grass_get_data(void* args) {
-	mk_grass_parameter* params = (mk_grass_parameter*)args;
+cfunction double mk_grass_set_buffer(void* pixelArrayBuffer, void* outputBuffer) {
+	pixelArray  = (pixel*)pixelArrayBuffer;
+	outputArray = (mk_grass_pixel*)outputBuffer;
+	return 0.;
+}
 
-	pixel* pixelArray = (pixel*)params->pixelArrayBuffer;
-	mk_grass_pixel* outputArray = (mk_grass_pixel*)params->outputBuffer;
+cfunction double mk_grass_set_dimension(double _width, double _height) {
+	width  = (size_t)_width;
+	height = (size_t)_height;
+	return 0.;
+}
 
-	size_t widthInt  = (size_t)params->width;
-	size_t heightInt = (size_t)params->height;
-	size_t size      = widthInt * heightInt;
+cfunction double mk_grass_set_seed(double _seed) { seed = _seed; return 0.; }
+cfunction double mk_grass_set_size(double _min, double _max) { 
+	size_min = _min;
+	size_max = _max;
+	return 0.; 
+}
 
-	double seed     = params->seed;
-	double size_min = params->size_min;
-	double size_max = params->size_max;
-	double sway_min = params->sway_min;
-	double sway_max = params->sway_max;
+cfunction double mk_grass_set_sway(double _min, double _max) { 
+	sway_min = _min;
+	sway_max = _max;
+	return 0.; 
+}
 
+cfunction double mk_grass_get_data() {
+	size_t size = width * height;
+	
     int amount = 0;
 
 	for (size_t i = 0; i < size; ++i) {
@@ -451,11 +457,11 @@ cfunction double mk_grass_get_data(void* args) {
 
 		double g = (double)pixelArray[i].g / 255.0;
 
-		uint16_t x = (uint16_t)(i % widthInt);
-		uint16_t y = (uint16_t)(i / widthInt);
+		uint16_t x = (uint16_t)(i % width);
+		uint16_t y = (uint16_t)(i / width);
 
 		srand((uint32_t)(seed + i * 100));
-
+		
 		outputArray[amount].x  = x;
 		outputArray[amount].y  = y;
 		outputArray[amount].gx = random_range(sway_min, sway_max) * g;
@@ -464,7 +470,7 @@ cfunction double mk_grass_get_data(void* args) {
 		outputArray[amount].r = (double)pixelArray[i].r / 255.0;
 		outputArray[amount].g = (double)pixelArray[i].g / 255.0;
 		outputArray[amount].b = (double)pixelArray[i].b / 255.0;
-
+		
 	    amount++;
     }
 	

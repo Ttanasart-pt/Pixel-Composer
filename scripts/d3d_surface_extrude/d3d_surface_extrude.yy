@@ -6,7 +6,7 @@
   "name":"d3d_surface_extrude",
   "parent":{
     "name":"mesh_extrudes",
-    "path":"folders/nodes/data/3D/d3d_mesh/mesh_extrudes.yy",
+    "path":"folders/nodes/data/3D/d3d_mesh/other/mesh_extrudes.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

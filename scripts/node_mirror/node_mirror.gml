@@ -23,14 +23,18 @@ function Node_Mirror(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	newInput( 2, nodeValue_Rotation( "Angle",     0      )).setHotkey("R").hideLabel().setPieMenu();
 	newInput( 5, nodeValue_Bool(     "Flip",      false  )).setPieMenu();
 	newInput( 4, nodeValue_Bool(     "Both Side", false  )).setPieMenu();
-	// 11
+	
+	////- =Pre-Transform
+	newInput(11, nodeValue_Vec2(     "Position", [0,0]   )).setUnitSimple();
+	// 12
 	
 	newOutput( 0, nodeValue_Output( "Surface Out", VALUE_TYPE.surface, noone ));
 	newOutput( 1, nodeValue_Output( "Mirror Mask", VALUE_TYPE.surface, noone )).setCustomData(global.SURFACE_MASK_JUNC);
 	
 	input_display_list = [  3, 10, 
-		[ "Surfaces", false ],  0,  6,  7,  8,  9,  
-		[ "Mirror",   false ],  1,  2,  5,  4, 
+		[ "Surfaces",      false ],  0,  6,  7,  8,  9,  
+		[ "Mirror",        false ],  1,  2,  5,  4, 
+		[ "Pre-Transform", false ], 11, 
 	];
 	
 	////- Node
@@ -76,6 +80,8 @@ function Node_Mirror(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 			var _inv  = _data[ 5];
 			var _bth  = _data[ 4];
 			
+			var _ppos = _data[11];
+			
 			if(!is_surface(_surf)) return _outData;
 		#endregion
 		
@@ -89,6 +95,8 @@ function Node_Mirror(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 			shader_set_f( "angle",     _ang );
 			shader_set_i( "bothSide",  _bth );
 			shader_set_i( "invert",    _inv );
+			
+			shader_set_2( "pre_position", _ppos );
 			
 			draw_surface_safe(_surf);
 		surface_reset_shader();

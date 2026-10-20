@@ -6,7 +6,7 @@
   "name":"d3d_cylinder",
   "parent":{
     "name":"cylinder",
-    "path":"folders/nodes/data/3D/d3d_mesh/cylinder.yy",
+    "path":"folders/nodes/data/3D/d3d_mesh/primitive/cylinder.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",
