@@ -1235,6 +1235,7 @@
             "Node_Point_3D_Camera",
             "Node_Surface_To_Points",
             { "label": "/Quarternion" },
+            "Node_Quaternion_Data",
             "Node_Quarternion_Lookat", 
             "Node_Quarternion_From_Euler", 
             "Node_Quarternion_To_Euler", 

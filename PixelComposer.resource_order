@@ -2532,6 +2532,7 @@
     {"name":"node_quarternion_lookat","order":4,"path":"scripts/node_quarternion_lookat/node_quarternion_lookat.yy",},
     {"name":"node_quarternion_to_euler","order":2,"path":"scripts/node_quarternion_to_euler/node_quarternion_to_euler.yy",},
     {"name":"node_quasicrystal","order":27,"path":"scripts/node_quasicrystal/node_quasicrystal.yy",},
+    {"name":"node_quaternion_data","order":6,"path":"scripts/node_quaternion_data/node_quaternion_data.yy",},
     {"name":"node_random_shape","order":7,"path":"scripts/node_random_shape/node_random_shape.yy",},
     {"name":"node_random_tile","order":24,"path":"scripts/node_random_tile/node_random_tile.yy",},
     {"name":"node_random","order":12,"path":"scripts/node_random/node_random.yy",},

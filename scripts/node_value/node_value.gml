@@ -1424,7 +1424,8 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 						editWidget = new quarternionBox(self, function(val, i) /*=>*/ { setValueInspector(val, i); node.triggerRender(); });
 						
 						_ext = "Node_Vector4";
-						attributes.angle_display = QUARTERNION_DISPLAY.euler;
+						if(!has(attributes, "angle_display"))
+							attributes.angle_display = QUARTERNION_DISPLAY.euler;
 						break;
 						
 					case VALUE_DISPLAY.path_anchor :
@@ -3108,6 +3109,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 			if(has(_map, "attri"))  struct_append(attributes, _map.attri);
 			if(has(_map, "linked")) display_data.linked = _map.linked;
 			if(has(_map, "ranged")) display_data.ranged = _map.ranged;
+			
 		#endregion
 			
 		if(has(_map, "global_name")) {

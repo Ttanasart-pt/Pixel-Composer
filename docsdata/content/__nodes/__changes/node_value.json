@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.22.1.202",
+    "changes": [
+      {
+        "date": "2026-10-20T03:07:51.263Z",
+        "node": "Quaternion",
+        "commit": "**Quaternion**: Fix unit reset to Euler on load."
+      }
+    ]
+  },
+  {
     "version": "1.22.1.101",
     "changes": [
       {

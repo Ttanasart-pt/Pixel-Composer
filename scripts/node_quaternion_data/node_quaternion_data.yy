@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"node_quaternion_data",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"node_quaternion_data",
+  "parent":{
+    "name":"quaternion",
+    "path":"folders/nodes/data/value/quaternion.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}
