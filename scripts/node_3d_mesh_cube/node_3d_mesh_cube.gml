@@ -5,18 +5,18 @@ function Node_3D_Mesh_Cube(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, _group
 	var i = in_mesh;
 	
 	////- =Mesh
-	newInput(i+9, nodeValue_IVec3(       "Subdivision", [1,1,1]               ));
-	newInput(i+7, nodeValue_Slider(      "Taper",        0, [-1,1,0.01]       ));
+	newInput(i+9, nodeValue_IVec3(   "Subdivision", [1,1,1]               ));
+	newInput(i+7, nodeValue_Slider(  "Taper",        0, [-1,1,0.01]       ));
 	newInput(i+8, nodeValue_EButton( "Taper Axis",   0, [ "X", "Y", "Z" ] ));
 	
 	////- =Materials
 	newInput(i+0, nodeValue_EButton( "Material Mode", 0, [ "Uniform", "Per Face", "Top and Side" ] ));
-	newInput(i+1, nodeValue_D3Material(  "Material"        )).setVisible(true, true);
-	newInput(i+2, nodeValue_D3Material(  "Material Bottom" )).setVisible(true, true);
-	newInput(i+3, nodeValue_D3Material(  "Material Left"   )).setVisible(true, true);
-	newInput(i+4, nodeValue_D3Material(  "Material Right"  )).setVisible(true, true);
-	newInput(i+5, nodeValue_D3Material(  "Material Back"   )).setVisible(true, true);
-	newInput(i+6, nodeValue_D3Material(  "Material Front"  )).setVisible(true, true);
+	newInput(i+1, nodeValue_3DMat(   "Material"        )).setVisible(true, true);
+	newInput(i+2, nodeValue_3DMat(   "Material Bottom" )).setVisible(true, true);
+	newInput(i+3, nodeValue_3DMat(   "Material Left"   )).setVisible(true, true);
+	newInput(i+4, nodeValue_3DMat(   "Material Right"  )).setVisible(true, true);
+	newInput(i+5, nodeValue_3DMat(   "Material Back"   )).setVisible(true, true);
+	newInput(i+6, nodeValue_3DMat(   "Material Front"  )).setVisible(true, true);
 	
 	input_display_list = [
 		__d3d_input_list_mesh,      i+9, i+7, i+8, 
@@ -27,19 +27,21 @@ function Node_3D_Mesh_Cube(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, _group
 	////- Node
 	
 	static processData = function(_output, _data, _array_index = 0, _frame = CURRENT_FRAME) { 
-		var i = in_mesh;
-		
-		var _mat_side = _data[i+0];
-		var _mat_1    = _data[i+1];
-		var _mat_2    = _data[i+2];
-		var _mat_3    = _data[i+3];
-		var _mat_4    = _data[i+4];
-		var _mat_5    = _data[i+5];
-		var _mat_6    = _data[i+6];
-		
-		var _tap_amo  = _data[i+7];
-		var _tap_axs  = _data[i+8];
-		var _subd     = _data[i+9];
+		#region data
+			var i = in_mesh;
+			
+			var _mat_side = _data[i+0];
+			var _mat_1    = _data[i+1];
+			var _mat_2    = _data[i+2];
+			var _mat_3    = _data[i+3];
+			var _mat_4    = _data[i+4];
+			var _mat_5    = _data[i+5];
+			var _mat_6    = _data[i+6];
+			
+			var _tap_amo  = _data[i+7];
+			var _tap_axs  = _data[i+8];
+			var _subd     = _data[i+9];
+		#endregion	
 		
 		_subd[0] = max(1, _subd[0]);
 		_subd[1] = max(1, _subd[1]);

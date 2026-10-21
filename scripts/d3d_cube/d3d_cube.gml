@@ -260,13 +260,13 @@ function __3dCube(_sep = false) : __3dObject() constructor {
 	    			var pp10 = lerp_d3(p10, p11, ly0, __p[6]);
 	    			var pp11 = lerp_d3(p10, p11, ly1, __p[7]);
 	    			
-					_f0[_i++] = __vertexA(pp11).setNormal(0, 0,  1).setUV(lx1, ly1);
-					_f0[_i++] = __vertexA(pp00).setNormal(0, 0,  1).setUV(lx0, ly0);
-					_f0[_i++] = __vertexA(pp01).setNormal(0, 0,  1).setUV(lx0, ly1);
+					_f0[_i++] = __vertexA(pp11).setNormal(0, 0,  1).setUV(1 - lx1, ly1);
+					_f0[_i++] = __vertexA(pp00).setNormal(0, 0,  1).setUV(1 - lx0, ly0);
+					_f0[_i++] = __vertexA(pp01).setNormal(0, 0,  1).setUV(1 - lx0, ly1);
 					
-					_f0[_i++] = __vertexA(pp11).setNormal(0, 0,  1).setUV(lx1, ly1);
-					_f0[_i++] = __vertexA(pp10).setNormal(0, 0,  1).setUV(lx1, ly0);
-					_f0[_i++] = __vertexA(pp00).setNormal(0, 0,  1).setUV(lx0, ly0);
+					_f0[_i++] = __vertexA(pp11).setNormal(0, 0,  1).setUV(1 - lx1, ly1);
+					_f0[_i++] = __vertexA(pp10).setNormal(0, 0,  1).setUV(1 - lx1, ly0);
+					_f0[_i++] = __vertexA(pp00).setNormal(0, 0,  1).setUV(1 - lx0, ly0);
 				}
 			}
 		#endregion

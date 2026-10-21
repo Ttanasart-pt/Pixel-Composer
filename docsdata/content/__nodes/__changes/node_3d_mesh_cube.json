@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.22.1.203",
+    "changes": [
+      {
+        "date": "2026-10-21T03:15:16.769Z",
+        "node": "3D Cube",
+        "commit": "**3D Cube**: Fix top side has incorrect uv."
+      }
+    ]
+  },
+  {
     "version": "1.22.1.202",
     "changes": [
       {

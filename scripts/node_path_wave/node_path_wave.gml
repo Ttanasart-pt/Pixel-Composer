@@ -25,7 +25,8 @@ function Node_Path_Wave(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	newInput(23, nodeValue_Range(   "Angle",       [0,0], true )).setCurvable(24);
 	newInput(25, nodeValue_Vec3(    "Normal",      [0,0,1]     ));
 	
-	newInput( 4, nodeValue_EButton( "Mode",    0, [ "Zigzag", "Sine", "Square" ]  ));
+		////- =/Shape
+	newInput( 4, nodeValue_EButton( "Shape",   0, [ "Zigzag", "Sine", "Square" ]  ));
 	newInput(10, nodeValue_EButton( "Post Fn", 0, [ "None", "Absolute", "Clamp" ] ));
 	
 	////- =Iterative
@@ -49,7 +50,8 @@ function Node_Path_Wave(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	
 	input_display_list = [ 5, 
 		[ "Path",       true     ],  0, 11, 12, 18,  
-		[ "Wave",      false     ],  1,  [2, true],  9, 17, -1,  3, 22, 23, 24, 25,  4, 10, 
+		[ "Wave",      false     ],  1,  [2, true],  9, 17, -1,  3, 22, 23, 24, 25,  
+			[ "/Shape",false     ],  4, 10, 
 		[ "Iterative", false     ], 13, 14, 15, 16, 
 		[ "Wiggle",     true,  6 ],  7,  8, 
 		[ "Weight",     true, 19 ], 20, 21, 
