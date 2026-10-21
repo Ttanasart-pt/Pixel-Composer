@@ -6,6 +6,11 @@
         "date": "2026-10-21T04:41:16.545Z",
         "node": "",
         "commit": "**Path**: Fix error when mixing 2D and 3D path operators."
+      },
+      {
+        "date": "2026-10-21T08:07:53.955Z",
+        "node": "Path",
+        "commit": "**Path**: Fix error when deleting segment while dragging it."
       }
     ]
   },

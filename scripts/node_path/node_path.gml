@@ -1046,42 +1046,48 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 			}
 		
 		} else if(line_editing != undefined) {
-			var dx = (_mx - line_edit_mx) / _s;
-			var dy = (_my - line_edit_my) / _s;
-			
-			var i0 = inputs[input_fix_len + line_editing    ];
-			var i1 = inputs[input_fix_len + line_editing + 1];
-			
-			var a0/*:_ANCHOR*/ = line_edit_data[line_editing    ];
-			var a1/*:_ANCHOR*/ = line_edit_data[line_editing + 1];
-			
-			var n0 = [ a0[_ANCHOR.x], a0[_ANCHOR.y], a0[_ANCHOR.c1x], a0[_ANCHOR.c1y], a0[_ANCHOR.c2x], a0[_ANCHOR.c2y], a0[_ANCHOR.ind] ];
-			var n1 = [ a1[_ANCHOR.x], a1[_ANCHOR.y], a1[_ANCHOR.c1x], a1[_ANCHOR.c1y], a1[_ANCHOR.c2x], a1[_ANCHOR.c2y], a1[_ANCHOR.ind] ];
-			
-			if(a0[_ANCHOR.c2x] == 0 && a0[_ANCHOR.c2y] == 0 && a1[_ANCHOR.c1x] == 0 && a1[_ANCHOR.c1y] == 0) {
-				n0[0] = a0[0] + dx;
-				n0[1] = a0[1] + dy;
-				
-				n1[0] = a1[0] + dx;
-				n1[1] = a1[1] + dy;
-				
-			} else {
-				n0[4] = a0[4] + dx;
-				n0[5] = a0[5] + dy;
-				
-				n1[2] = a1[2] + dx;
-				n1[3] = a1[3] + dy;
-				
-			}
-			
-			var e0 = i0.setValue(n0);
-			var e1 = i1.setValue(n1);
-			
-			if(e0 || e1) UNDO_HOLDING = true;
-			
-			if(mouse_lrelease()) {
+			if(input_fix_len + line_editing + 1 >= array_length(inputs)) {
 				line_editing = undefined;
 				UNDO_HOLDING = false;
+				
+			} else {
+				var dx = (_mx - line_edit_mx) / _s;
+				var dy = (_my - line_edit_my) / _s;
+				
+				var i0 = inputs[input_fix_len + line_editing    ];
+				var i1 = inputs[input_fix_len + line_editing + 1];
+				
+				var a0/*:_ANCHOR*/ = line_edit_data[line_editing    ];
+				var a1/*:_ANCHOR*/ = line_edit_data[line_editing + 1];
+				
+				var n0 = [ a0[_ANCHOR.x], a0[_ANCHOR.y], a0[_ANCHOR.c1x], a0[_ANCHOR.c1y], a0[_ANCHOR.c2x], a0[_ANCHOR.c2y], a0[_ANCHOR.ind] ];
+				var n1 = [ a1[_ANCHOR.x], a1[_ANCHOR.y], a1[_ANCHOR.c1x], a1[_ANCHOR.c1y], a1[_ANCHOR.c2x], a1[_ANCHOR.c2y], a1[_ANCHOR.ind] ];
+				
+				if(a0[_ANCHOR.c2x] == 0 && a0[_ANCHOR.c2y] == 0 && a1[_ANCHOR.c1x] == 0 && a1[_ANCHOR.c1y] == 0) {
+					n0[0] = a0[0] + dx;
+					n0[1] = a0[1] + dy;
+					
+					n1[0] = a1[0] + dx;
+					n1[1] = a1[1] + dy;
+					
+				} else {
+					n0[4] = a0[4] + dx;
+					n0[5] = a0[5] + dy;
+					
+					n1[2] = a1[2] + dx;
+					n1[3] = a1[3] + dy;
+					
+				}
+				
+				var e0 = i0.setValue(n0);
+				var e1 = i1.setValue(n1);
+				
+				if(e0 || e1) UNDO_HOLDING = true;
+				
+				if(mouse_lrelease()) {
+					line_editing = undefined;
+					UNDO_HOLDING = false;
+				}
 			}
 		}
 		

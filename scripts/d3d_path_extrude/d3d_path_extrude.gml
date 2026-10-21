@@ -15,7 +15,7 @@ function __3dPathExtrude(_radius = 0.5, _sides = 8, _smooth = false) : __3dObjec
 	uvProg  = [];
 	uvScale = [ 1, 1 ];
 	colors  = [];
-	radiusOverPath = [];
+	radii   = [];
 	
 	vertex_side = [];
 	vertex_caps = [];
@@ -31,6 +31,7 @@ function __3dPathExtrude(_radius = 0.5, _sides = 8, _smooth = false) : __3dObjec
 		var _points = points[_index];
 		var _uvProg = uvProg[_index];
 		var _colors = colors[_index];
+		var _radius = radii[_index];
 		
 		var o = new __vec3();
 		var n = new __vec3();
@@ -80,7 +81,7 @@ function __3dPathExtrude(_radius = 0.5, _sides = 8, _smooth = false) : __3dObjec
 			u._normalize();
 			w = v.cross(u);
 			
-			var _rr = radius * radiusOverPath[0];
+			var _rr = radius * _radius[0];
 			var _cc = array_first(_colors);
 			
 			for(var j = 0; j <= sides; j++) {
@@ -148,7 +149,7 @@ function __3dPathExtrude(_radius = 0.5, _sides = 8, _smooth = false) : __3dObjec
 			u._normalize();
 			w = v.cross(u);
 			
-			var _rr  = radius * radiusOverPath[i];
+			var _rr  = radius * _radius[i];
 			var __v0 = 1. - _uvProg[i-1];
 			var __v1 = 1. - _uvProg[i  ];
 			
