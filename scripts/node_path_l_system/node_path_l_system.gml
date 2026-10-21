@@ -265,7 +265,7 @@ function Node_Path_L_System(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 		static getBoundary     = function() /*=>*/ {return boundary};
 		
 		static getPointRatio = function(_rat, _ind = 0, out = undefined) {
-			if(out == undefined) out = path_3d? new __vec3() : new __vec2P(); 
+			if(out == undefined) out = path_3d? new __vec3P() : new __vec2P(); 
 			else { out.x = 0; out.y = 0; if(path_3d) out.z = 0; }
 			
 			if(_ind >= array_length(lines)) return out;

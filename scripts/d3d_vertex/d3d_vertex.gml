@@ -63,3 +63,28 @@ function __vertex(_x = 0, _y = _x, _z = _x, color = c_white, alpha = 1) construc
 		return _v;
 	}
 }
+
+function vertex_face_normal(v0, v1, v2) {
+	var ax = v1.x - v0.x;
+	var ay = v1.y - v0.y;
+	var az = v1.z - v0.z;
+
+	var bx = v2.x - v0.x;
+	var by = v2.y - v0.y;
+	var bz = v2.z - v0.z;
+
+	var nx = ay * bz - az * by;
+	var ny = az * bx - ax * bz;
+	var nz = ax * by - ay * bx;
+
+	var length = sqrt(nx*nx + ny*ny + nz*nz);
+	if (length != 0) {
+		nx /= length;
+		ny /= length;
+		nz /= length;
+	}
+
+	v0.nx = nx; v0.ny = ny; v0.nz = nz;
+	v1.nx = nx; v1.ny = ny; v1.nz = nz;
+	v2.nx = nx; v2.ny = ny; v2.nz = nz;
+}

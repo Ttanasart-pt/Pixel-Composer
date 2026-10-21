@@ -868,6 +868,7 @@
             "Node_3D_Mesh_Extrude_Mesh",
             "Node_3D_Mesh_Path_Extrude",
             "Node_3D_Mesh_Path_Revolve",
+            "Node_3D_Mesh_Path_Map",
             { "label": "/Importer" },
             "Node_3D_Mesh_Obj",
             "Node_3D_Mesh_Json",

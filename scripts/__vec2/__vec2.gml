@@ -1,4 +1,6 @@
 function __vec2(_x = 0, _y = _x) constructor {
+	z = 0;
+	
 	static set = function(_x = 0, _y = _x) {
 		if(is(_x, __vec2)) {
 			x = _x.x;
@@ -22,6 +24,8 @@ function __vec2(_x = 0, _y = _x) constructor {
 		y = _y;
 		return self;
 	} set(_x, _y);
+	
+	static setZ = function(_z = 0) { z = _z; return self; }
 	
 	ref = noone;
 	static setRef = function(ref = noone) {
@@ -201,10 +205,7 @@ function __vec2(_x = 0, _y = _x) constructor {
 
 	static equal = function(to) { INLINE return x == to.x && y == to.y; }
 	
-	static clone = function() {
-		INLINE
-		return new __vec2(x, y);
-	}
+	static clone = function() { INLINE return new __vec2(x, y).setZ(z); }
 	
 	static toString = function() { return $"[__vec2] ({x}, {y})"; }
 	
@@ -218,7 +219,7 @@ function __vec2(_x = 0, _y = _x) constructor {
 function __vec2P(_x = 0, _y = _x, _w = 1) : __vec2(_x, _y) constructor {
 	weight = _w;
 	
-	static clone    = function() /*=>*/ {return new __vec2P(x, y, weight)};
+	static clone    = function() /*=>*/ {return new __vec2P(x, y, weight).setZ(z)};
 	static toString = function() /*=>*/ {return $"[__vec2P] ({x}, {y} | {weight})"};
 }
 

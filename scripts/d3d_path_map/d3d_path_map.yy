@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"d3d_path_map",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"d3d_path_map",
+  "parent":{
+    "name":"path",
+    "path":"folders/nodes/data/3D/d3d_mesh/path.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

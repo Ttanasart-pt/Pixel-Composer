@@ -12,43 +12,44 @@ function Node_Path_Wave(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	newInput(5, nodeValueSeed());
 	
 	////- =Path
-	newInput( 0, nodeValue_Path(  "Path"               ));
-	newInput(11, nodeValue_Range( "Range",       [0,1] ));
-	newInput(12, nodeValue_Bool(  "Clamp Curve", false ));
-	newInput(18, nodeValue_Bool(  "Loop",        false ));
+	newInput( 0, nodeValue_Path(    "Path"               ));
+	newInput(11, nodeValue_Range(   "Range",       [0,1] ));
+	newInput(12, nodeValue_Bool(    "Clamp Curve", false ));
+	newInput(18, nodeValue_Bool(    "Loop",        false ));
 	
 	////- =Wave
-	newInput( 1, nodeValue_Range(    "Frequency",   [4,4], true ));
-	newInput( 2, nodeValue_Range(    "Amplitude",   [4,4], true )).setCurvable(9).addShift(17);
-	newInput( 3, nodeValue_Range(    "Phase",       [0,0], true ));
-	newInput(22, nodeValue_EButton(  "Direction",    0, [ "Path Normal", "Fixed" ] ));
-	newInput(23, nodeValue_Range(    "Angle",       [0,0], true )).setCurvable(24);
+	newInput( 1, nodeValue_Range(   "Frequency",   [4,4], true ));
+	newInput( 2, nodeValue_Range(   "Amplitude",   [4,4], true )).setCurvable(9).addShift(17);
+	newInput( 3, nodeValue_Range(   "Phase",       [0,0], true ));
+	newInput(22, nodeValue_EButton( "Direction",    0, [ "Path Normal", "Fixed", "3D Normal" ] ));
+	newInput(23, nodeValue_Range(   "Angle",       [0,0], true )).setCurvable(24);
+	newInput(25, nodeValue_Vec3(    "Normal",      [0,0,1]     ));
 	
 	newInput( 4, nodeValue_EButton( "Mode",    0, [ "Zigzag", "Sine", "Square" ]  ));
 	newInput(10, nodeValue_EButton( "Post Fn", 0, [ "None", "Absolute", "Clamp" ] ));
 	
 	////- =Iterative
-	newInput(13, nodeValue_Int(    "Iteration",   1  ));
-	newInput(14, nodeValue_Float(  "Freqency",    2  )).setInternalName("itr_frequency");
-	newInput(15, nodeValue_Slider( "Amplitude",  .7  )).setInternalName("itr_ampltude");
-	newInput(16, nodeValue_Float(  "Shift",       0  )).setInternalName("itr_shift");
+	newInput(13, nodeValue_Int(     "Iteration",   1  ));
+	newInput(14, nodeValue_Float(   "Freqency",    2  )).setInternalName("itr_frequency");
+	newInput(15, nodeValue_Slider(  "Amplitude",  .7  )).setInternalName("itr_ampltude");
+	newInput(16, nodeValue_Float(   "Shift",       0  )).setInternalName("itr_shift");
 	
 	////- =Wiggle
-	newInput( 6, nodeValue_Bool(  "Wiggle",           false  ));
-	newInput( 7, nodeValue_Range( "Wiggle Amplitude", [-2,2] ));
-	newInput( 8, nodeValue_Float( "Wiggle Frequency",  8     ));
+	newInput( 6, nodeValue_Bool(    "Wiggle",           false  ));
+	newInput( 7, nodeValue_Range(   "Wiggle Amplitude", [-2,2] ));
+	newInput( 8, nodeValue_Float(   "Wiggle Frequency",  8     ));
 	
 	////- =Weight
 	newInput(19, nodeValue_Bool(    "Use Weight",  false ));
 	newInput(20, nodeValue_EScroll( "Weight Mode",  0, [ "Replace", "Additive", "Multiplicative" ] ));
 	newInput(21, nodeValue_Range(   "Range",       [0,1] ));
-	// 24
+	// 26
 	
 	newOutput(0, nodeValue_Output("Path", VALUE_TYPE.pathnode, noone));
 	
 	input_display_list = [ 5, 
 		[ "Path",       true     ],  0, 11, 12, 18,  
-		[ "Wave",      false     ],  1,  [2, true],  9, 17, -1,  3, 22, 23, 24,  4, 10, 
+		[ "Wave",      false     ],  1,  [2, true],  9, 17, -1,  3, 22, 23, 24, 25,  4, 10, 
 		[ "Iterative", false     ], 13, 14, 15, 16, 
 		[ "Wiggle",     true,  6 ],  7,  8, 
 		[ "Weight",     true, 19 ], 20, 21, 
@@ -68,6 +69,7 @@ function Node_Path_Wave(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		mode = 0;
 		post = 0;
 		
+		normal   = [0,0,0];
 		dirType  = 0;
 		dirRange = [0,0];
 		dirCurve = undefined;
@@ -150,7 +152,9 @@ function Node_Path_Wave(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 				var _p = cached_pos[$ _cKey];
 				out.x = _p.x;
 				out.y = _p.y;
+				out.z = _p.z;
 				out.weight = _p.weight;
+				
 				return out;
 			}
 			
@@ -161,6 +165,7 @@ function Node_Path_Wave(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 				p = _path.getPointRatio(_rat, ind, p);
 				out.x = p.x;
 				out.y = p.y;
+				out.z = p.z;
 				out.weight = p.weight;
 				
 				cached_pos[$ _cKey] = new __vec2P(out.x, out.y, out.weight);
@@ -175,7 +180,7 @@ function Node_Path_Wave(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			var _wigs = wigs;
 			var _wigf = wigf;
 			
-			var dir;
+			var dir = 0;
 			
 			switch(dirType) {
 				case 0 :
@@ -201,12 +206,23 @@ function Node_Path_Wave(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 						
 					} else {
 						_rat = clamp(_rat, 0., 0.99);
-						p = _path.getPointRatio( clamp(_rat, 0, .99), ind, p );
+						p = _path.getPointRatio( _rat, ind, p );
 						
 					}
 					
 					var t = dirCurve? dirCurve.get(_rat) : _rat;
 					dir = lerp(dirRange[0], dirRange[1], t);
+					break;
+					
+				case 2 : 
+					if(loop) {
+						p = _path.getPointRatio( pfract(_rat), ind, p );
+						
+					} else {
+						_rat = clamp(_rat, 0., 0.99);
+						p = _path.getPointRatio( _rat, ind, p );
+						
+					}
 					break;
 			}
 			
@@ -249,8 +265,16 @@ function Node_Path_Wave(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 				_prg *= amp_curve.get(frac(frac(_crat + ampS) + 1));
 			}
 			
-			out.x = p.x + lengthdir_x(_amp * _prg, dir);
-			out.y = p.y + lengthdir_y(_amp * _prg, dir);
+			if(dirType == 2) {
+				out.x = p.x + normal[0] * _amp * _prg;
+				out.y = p.y + normal[1] * _amp * _prg;
+				out.z = p.z + normal[2] * _amp * _prg;
+				
+			} else {
+				out.x = p.x + lengthdir_x(_amp * _prg, dir);
+				out.y = p.y + lengthdir_y(_amp * _prg, dir);
+			}
+			
 			out.weight = p.weight;
 			
 			if(wei) {
@@ -263,7 +287,7 @@ function Node_Path_Wave(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 				}
 			}
 			
-			cached_pos[$ _cKey] = new __vec2P(out.x, out.y, out.weight);
+			cached_pos[$ _cKey] = out.clone();
 			
 			return out;
 		}
@@ -283,6 +307,7 @@ function Node_Path_Wave(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			var _dirCurve = inputs[23].attributes.curved? new curveMap(_data[24]) : undefined;
 			
 			inputs[23].setVisible(_dirType == 1);
+			inputs[25].setVisible(_dirType == 2);
 		#endregion
 		
 		if(!is(_outData, _wavePath)) 
@@ -303,6 +328,7 @@ function Node_Path_Wave(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		_outData.dirType  = _dirType;
 		_outData.dirRange = _dirRange;
 		_outData.dirCurve = _dirCurve;
+		_outData.normal   = _data[25];
 		
 		_outData.mode = _data[ 4];
 		_outData.post = _data[10];
