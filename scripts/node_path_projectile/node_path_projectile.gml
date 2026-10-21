@@ -48,7 +48,7 @@ function Node_Path_Projectile(_x, _y, _group = noone) : Node(_x, _y, _group) con
 		static getAccuLength	= function(i) /*=>*/ {return [0,lengths[i]]};
 		
 		static getPointRatio    = function(_rat, _ind = 0, out = undefined) { 
-		    out ??= new __vec2P();
+		    out ??= new PathPoint();
 		    
 		    var len = lengths[_ind];
 		    var dir = direct[_ind];

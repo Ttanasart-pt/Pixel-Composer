@@ -137,7 +137,7 @@ function Node_Flood_Fill(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 				case 1 : 
 					draw_set_color(#FF0000);
 					if(is_path(_path)) {
-						var __p   = new __vec2P();
+						var __p   = new PathPoint();
 						var _reso = 32;
 						
 						var ox, oy, nx, ny;

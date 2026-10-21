@@ -93,9 +93,9 @@ function Node_Path_Wave(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		weiMod = 0;
 		weiRng = [0,1];
 		
-		p  = new __vec2P();
-		p0 = new __vec2P();
-		p1 = new __vec2P();
+		p  = new PathPoint();
+		p0 = new PathPoint();
+		p1 = new PathPoint();
 		
 		cached_pos = {};
 		curr_path  = noone;
@@ -146,32 +146,19 @@ function Node_Path_Wave(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		}
 		
 		static getPointRatio = function(_rat, ind = 0, out = undefined) {
-			if(out == undefined) out = new __vec2P(); else { out.x = 0; out.y = 0; }
+			if(out == undefined) out = new PathPoint(); else out.reset();
 			
 			if(!is_path(curr_path)) return out;
 			var _cKey = $"{string_format(_rat, 0, 6)},{ind}";
-			if(has(cached_pos, _cKey)) {
-				var _p = cached_pos[$ _cKey];
-				out.x = _p.x;
-				out.y = _p.y;
-				out.z = _p.z;
-				out.weight = _p.weight;
-				
-				return out;
-			}
+			if(has(cached_pos, _cKey))
+				return out.apply(cached_pos[$ _cKey]);
 			
 			var _path = curr_path;
 			var _fre  = fre; 
 			
 			if(_rat < range[0] || _rat > range[1]) {
 				p = _path.getPointRatio(_rat, ind, p);
-				out.x = p.x;
-				out.y = p.y;
-				out.z = p.z;
-				out.weight = p.weight;
-				
-				cached_pos[$ _cKey] = new __vec2P(out.x, out.y, out.weight);
-				return out;
+				return out.apply(p);
 			}
 			
 			var _amp  = amp;
@@ -277,20 +264,19 @@ function Node_Path_Wave(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 				out.y = p.y + lengthdir_y(_amp * _prg, dir);
 			}
 			
-			out.weight = p.weight;
+			out.w = p.w;
 			
 			if(wei) {
 				var weiVal = lerp(weiRng[0], weiRng[1], _prg);
 				
 				switch(weiMod) {
-					case 0 : out.weight  = weiVal; break;
-					case 1 : out.weight += weiVal; break;
-					case 2 : out.weight *= weiVal; break;
+					case 0 : out.w  = weiVal; break;
+					case 1 : out.w += weiVal; break;
+					case 2 : out.w *= weiVal; break;
 				}
 			}
 			
 			cached_pos[$ _cKey] = out.clone();
-			
 			return out;
 		}
 		

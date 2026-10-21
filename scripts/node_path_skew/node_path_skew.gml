@@ -47,23 +47,18 @@ function Node_Path_Skew(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		
 		static getPointRatio    = function(_rat,  ind = 0, out = undefined) { return getPointDistance(_rat * getLength(), ind, out); }
 		static getPointDistance = function(_dist, ind = 0, out = undefined) { 
-			if(out == undefined) out = new __vec2P(); else { out.x = 0; out.y = 0; }
+			if(out == undefined) out = new PathPoint(); else out.reset();
 			
 			var _cKey  = _dist;
-			if(struct_has(cached_pos, _cKey)) {
-				var _cachep = cached_pos[$ _cKey];
-				out.x = _cachep.x;
-				out.y = _cachep.y;
-				out.weight = _cachep.weight;
-				return out;
-			}
+			if(has(cached_pos, _cKey))
+				return out.apply(cached_pos[$ _cKey]);
 			
 			curr_path.getPointDistance(_dist, 0, out);
 			
 			     if(axis == 0) out.x += (out.y - center[1]) * strength;
 			else if(axis == 1) out.y += (out.x - center[0]) * strength;
 			
-			cached_pos[$ _cKey] = new __vec2P(out.x, out.y, out.weight);
+			cached_pos[$ _cKey] = out.clone();
 			return out;
 		}
 	}

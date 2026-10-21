@@ -172,7 +172,7 @@ function Node_Path_Revolve(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 		
 		var _pnt = array_create(_pres + 1);
 		var _isb = .9999 / (_pres - 1);
-		var _pp  = new __vec2P();
+		var _pp  = new PathPoint();
 		
 		for( var i = 0; i <= _pres; i++ ) {
 			var _prog = clamp(frac(i * _isb + _sft), 0., 0.9999);

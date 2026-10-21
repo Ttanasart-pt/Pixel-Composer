@@ -253,7 +253,7 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	anim_fall_curves = [];
 	
 	__temp_p   = [0,0];
-	__temp_pth = new __vec2P();
+	__temp_pth = new PathPoint();
 	
 	enum ATLAS_ARRAY {
 		surface,
@@ -606,8 +606,8 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		var _pth_oy = 0;
 		var _pth_an = 0;
 		
-		var __p0 = new __vec2P();
-		var __p1 = new __vec2P();
+		var __p0 = new PathPoint();
+		var __p1 = new PathPoint();
 		
 		var _pathValid = is_path(_path);
 		if(_pathValid) {

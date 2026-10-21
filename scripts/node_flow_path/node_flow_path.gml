@@ -156,7 +156,7 @@ function Node_Flow_Path(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		draw_set_circle_precision(32);
 		
 		var _t = 1 / _psam, _prg;
-		var _p = new __vec2P();
+		var _p = new PathPoint();
 		
 		var ox, oy, ow;
 		var nx, ny, nw;
@@ -173,7 +173,7 @@ function Node_Flow_Path(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 				
 				nx = _p.x;
 				ny = _p.y;
-				nw = _weig? _rad * _p.weight : _rad; 
+				nw = _weig? _rad * _p.w : _rad; 
 				
 				if(i) {
 					

@@ -377,7 +377,7 @@ function Node_MK_Cable(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 				case 2 : 
 					if(!is_path(_pth)) { surface_reset_target(); return _outSurf; }
 					var ox, oy, nx, ny;
-					var _p = new __vec2P();
+					var _p = new PathPoint();
 					
 					for( var i = 0; i < _ptha; i++ ) {
 						_p = _pth.getPointRatio(i / (_ptha - 1), 0, _p);
@@ -404,7 +404,7 @@ function Node_MK_Cable(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 					var nx, ny, nt, nc;
 					
 					var _points = array_create(_segs + 1);
-					var _p      = new __vec2P();
+					var _p      = new PathPoint();
 					var _isg    = 1 / _segs;
 					var len     = _pth.getLength();
 					

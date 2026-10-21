@@ -84,7 +84,7 @@ function Node_MK_WireFrame(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 		var _prfMap = new curveMap(_prof, _Tsam);
 		var _points = array_create(_samp + 1);
 		var _stp    = .999 / _samp;
-		var _p      = new __vec2P();
+		var _p      = new PathPoint();
 		var _cx     = [ 0, 0 ]
 		
 		for( var i = 0; i < _samp; i++ ) {

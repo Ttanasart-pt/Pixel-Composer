@@ -71,16 +71,11 @@ function Node_Path_Extends(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		
 		static getPointRatio    = function(_rat,  ind = 0, out = undefined) { return getPointDistance(_rat * getLength(), ind, out); }
 		static getPointDistance = function(_dist, ind = 0, out = undefined) { 
-			if(out == undefined) out = new __vec2P(); else { out.x = 0; out.y = 0; }
+			if(out == undefined) out = new PathPoint(); else out.reset();
 			
 			var _cKey  = _dist;
-			if(struct_has(cached_pos, _cKey)) {
-				var _cachep = cached_pos[$ _cKey];
-				out.x = _cachep.x;
-				out.y = _cachep.y;
-				out.weight = _cachep.weight;
-				return out;
-			}
+			if(has(cached_pos, _cKey))
+				return out.apply(cached_pos[$ _cKey]);
 			
 			if(side == 0) {
 				if(_dist < exLength) {
@@ -102,7 +97,7 @@ function Node_Path_Extends(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 				
 			}
 			
-			cached_pos[$ _cKey] = new __vec2P(out.x, out.y, out.weight);
+			cached_pos[$ _cKey] = out.clone();
 			return out;
 		}
 	}

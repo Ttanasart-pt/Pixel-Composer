@@ -34,17 +34,12 @@ function Node_Path_From_Mask(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	static getLineCount     = function() /*=>*/ {return 1};
 	
 	static getPointDistance = function(_dist, _ind = 0, out = undefined) {
-		if(out == undefined) out = new __vec2P(); else { out.x = 0; out.y = 0; }
+		if(out == undefined) out = new PathPoint(); else out.reset();
 		if(array_empty(anchors)) return out;
 		
 		var _cKey = $"{string_format(_dist, 0, 6)},{_ind}";
-		if(ds_map_exists(cached_pos, _cKey)) {
-			var _p = cached_pos[? _cKey];
-			out.x = _p.x;
-			out.y = _p.y;
-			out.weight = _p.weight;
-			return out;
-		}
+		if(ds_map_exists(cached_pos, _cKey))
+			return out.apply(cached_pos[? _cKey]);
 		
 		var _aid = 0;
 		var _dst = _dist;
@@ -70,8 +65,7 @@ function Node_Path_From_Mask(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 		
 		out.x = lerp(_a0[0], _a1[0], _rat);
 		out.y = lerp(_a0[1], _a1[1], _rat);
-		
-		cached_pos[? _cKey] = new __vec2P(out.x, out.y, out.weight);
+		cached_pos[? _cKey] = out.clone();
 		
 		return out;
 	}

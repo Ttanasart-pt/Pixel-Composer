@@ -148,7 +148,7 @@ function Node_Extends(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 			if(is_path(_path)) {
 				var _astep = 1 / _psam;
 				var _prg   = 0;
-				var _p     = new __vec2P();
+				var _p     = new PathPoint();
 				var i = 0;
 				
 				repeat(_psam + 1) {
@@ -163,7 +163,7 @@ function Node_Extends(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 			_extPath = array_create((_spth + 1) * 2);
 			var _astep = 1 / _spth;
 			var _prg   = 0;
-			var _p     = new __vec2P();
+			var _p     = new PathPoint();
 			var i = 0;
 			
 			_p    = _epth.getPointRatio(0.99999, 0, _p);

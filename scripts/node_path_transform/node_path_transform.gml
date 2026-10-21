@@ -33,7 +33,8 @@ function Node_Path_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 		rot  =  0;
 		sca  = [1,1];
 		anc  = [0,0];
-		p    = new __vec2P();
+		pp   = [0,0];
+		p    = new PathPoint();
 		
 		static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _params) { 
 			var hovering = false;
@@ -62,16 +63,16 @@ function Node_Path_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 			b.minx	= anc[0] + (b.minx - anc[0]) * sca[0]; 
 			b.miny	= anc[1] + (b.miny - anc[1]) * sca[1];
 			
-			var _pp = point_rotate(b.minx, b.miny, anc[0], anc[1], rot);
-			b.minx	= _pp[0] + pos[0]; 
-			b.miny	= _pp[1] + pos[1];
+			point_rotate(b.minx, b.miny, anc[0], anc[1], rot, pp);
+			b.minx	= pp[0] + pos[0]; 
+			b.miny	= pp[1] + pos[1];
 			
 			b.maxx	= anc[0] + (b.maxx - anc[0]) * sca[0]; 
 			b.maxy	= anc[1] + (b.maxy - anc[1]) * sca[1];
 			
-			var _pp = point_rotate(b.maxx, b.maxy, anc[0], anc[1], rot);
-			b.maxx	= _pp[0] + pos[0]; 
-			b.maxy	= _pp[1] + pos[1];
+			point_rotate(b.maxx, b.maxy, anc[0], anc[1], rot, pp);
+			b.maxx	= pp[0] + pos[0]; 
+			b.maxy	= pp[1] + pos[1];
 			
 			var _minx = min(b.minx, b.maxx);
 			var _maxx = max(b.minx, b.maxx);
@@ -82,16 +83,11 @@ function Node_Path_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 		}
 		
 		static getPointRatio = function(_rat, ind = 0, out = undefined) {
-			out ??= new __vec2P();
+			out ??= new PathPoint();
 			
 			var _cKey = $"{string_format(_rat, 0, 6)},{ind}";
-			if(struct_has(cached_pos, _cKey)) {
-				var _p = cached_pos[$ _cKey];
-				out.x = _p.x;
-				out.y = _p.y;
-				out.weight = _p.weight;
-				return out;
-			}
+			if(has(cached_pos, _cKey))
+				return out.apply(cached_pos[$ _cKey]);
 			
 			if(is_array(path)) {
 				path = array_safe_get_fast(path, ind);
@@ -106,13 +102,13 @@ function Node_Path_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 			_p.x = anc[0] + (_p.x - anc[0]) * sca[0];
 			_p.y = anc[1] + (_p.y - anc[1]) * sca[1];
 			
-			var _pp = point_rotate(_p.x, _p.y, anc[0], anc[1], rot);
+			point_rotate(_p.x, _p.y, anc[0], anc[1], rot, pp);
 			
-			out.x = _pp[0] + pos[0];
-			out.y = _pp[1] + pos[1];
-			out.weight = _p.weight;
+			out.x = pp[0] + pos[0];
+			out.y = pp[1] + pos[1];
+			out.w = _p.w;
 			
-			cached_pos[$ _cKey] = new __vec2P(out.x, out.y, out.weight);
+			cached_pos[$ _cKey] = out.clone();
 			return out;
 		}
 		

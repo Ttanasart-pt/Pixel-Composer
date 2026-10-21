@@ -159,7 +159,7 @@ function Node_3D_Particle(_x, _y, _group = noone) : Node_3D(_x, _y, _group) cons
 	spawn_index    = 0;
 	max_buffer_id  = 0;
 	
-	__path_temp    = new __vec3P();
+	__path_temp    = new PathPoint();
 	__vec3_temp    = new __vec3();
 	__next_update_frame = 0;
 	

@@ -37,7 +37,7 @@ function Node_pSystem_3D_Follow_Path(_x, _y, _group = noone) : Node_3D(_x, _y, _
 	curve_devi = undefined;
 	curve_stri = undefined;
 	curve_spri = undefined;
-	__p = new __vec3P();
+	__p = new PathPoint();
 	__r = [0,0,0];
 	
 	static reset = function() {

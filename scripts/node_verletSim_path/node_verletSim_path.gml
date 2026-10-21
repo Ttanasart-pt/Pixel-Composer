@@ -37,14 +37,14 @@ function Node_VerletSim_Path(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 		
 		var _points = array_create(_samp + 1);
 		var _edges  = array_create(_samp);
-		var _p = new __vec2P();
+		var _p      = new PathPoint();
 		
 		for( var i = 0; i <= _samp; i++ ) {
 			var _rat = clamp(i / _samp, 0, .999);
 			
 			_p = _path.getPointRatio(_rat, 0, _p);
 			_points[i] = new __verlet_vec2().set2(_p);
-			_p.drag = _drag;
+			_points[i].drag = _drag;
 			
 			if(i) _edges[i-1] = new __verlet_edge(_points[i-1], _points[i], 1 - _tens); 
  		}

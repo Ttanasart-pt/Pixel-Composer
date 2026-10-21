@@ -8,12 +8,12 @@
 	function __LinePoint(_x, _y, _prog, _progCrop, _weight = 1) constructor {
 		x        = _x;
 		y        = _y;
+		w        = _weight;
 		prog     = _prog;
 		progCrop = _progCrop;
-		weight   = _weight;
 		
-		function clone() { return new __LinePoint(x, y, prog, progCrop, weight); }
-		function toString() { return $"[{prog}/{progCrop}]({x},{y},{weight})"; }
+		function clone() { return new __LinePoint(x, y, prog, progCrop, w); }
+		function toString() { return $"[{prog}/{progCrop}]({x},{y},{w})"; }
 		
 		function equalTo(p) { return x == p.x && y == p.y; }
 	}
@@ -352,7 +352,7 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 				_capE = false; 
 			}
 			
-			var p = new __vec2P();
+			var p = new PathPoint();
 			var _pathData = [];
 			var minx = 999999, miny = 999999, maxx = -999999, maxy = -999999;
 			
@@ -479,7 +479,7 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 							
 							_nx = p.x;
 							_ny = p.y;
-							_nw = p[$ "weight"] ?? 1;
+							_nw = p.w;
 							
 							points[j] = new __LinePoint( _nx, _ny, _prog, _prog, _nw );
 							
@@ -512,22 +512,22 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 									if(_rtStr > g0 && _rtStr < g1) {
 										var _midProg = (_rtStr - g0) / (g1 - g0);
 										array_push(pointCrop, new __LinePoint( 
-											lerp(p0.x,      p1.x,      _midProg), 
-											lerp(p0.y,      p1.y,      _midProg), 
-											lerp(g0,        g1,        _midProg), 
-											lerp(g0,        g1,        _midProg), 
-											lerp(p0.weight, p1.weight, _midProg), 
+											lerp(p0.x, p1.x, _midProg), 
+											lerp(p0.y, p1.y, _midProg), 
+											lerp(g0,   g1,   _midProg), 
+											lerp(g0,   g1,   _midProg), 
+											lerp(p0.w, p1.w, _midProg), 
 										));
 									}
 									
 									if(_rtEnd > g0 && _rtEnd < g1) {
 										var _midProg = (_rtEnd - g0) / (g1 - g0);
 										array_push(pointCrop, new __LinePoint( 
-											lerp(p0.x,      p1.x,      _midProg), 
-											lerp(p0.y,      p1.y,      _midProg), 
-											lerp(g0,        g1,        _midProg), 
-											lerp(g0,        g1,        _midProg), 
-											lerp(p0.weight, p1.weight, _midProg), 
+											lerp(p0.x, p1.x, _midProg), 
+											lerp(p0.y, p1.y, _midProg), 
+											lerp(g0,   g1,   _midProg), 
+											lerp(g0,   g1,   _midProg), 
+											lerp(p0.w, p1.w, _midProg), 
 										));
 									}
 									
@@ -718,7 +718,7 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 									lerp(oy,          ny,          _rat), 
 									lerp(op.prog,     np.prog,     _rat), 
 									lerp(op.progCrop, np.progCrop, _rat), 
-									lerp(op.weight,   np.weight,   _rat)
+									lerp(op.w,        np.w,        _rat),
 								);
 								
 								// print(" > ", _rat, rp, dash_draw);
@@ -956,7 +956,7 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 						_nw *= widthMap[? widProg];
 					}
 					
-					var _ww = lerp_invert(p0.weight, wmin, wmax);
+					var _ww = lerp_invert(p0.w, wmin, wmax);
 					if(is_nan(_ww)) _ww = 1;
 					if(_wg2wid) _nw = _nw * lerp(_wgRange[0], _wgRange[1], _wgCurve? _wgCurve.get(_ww) : _ww);
 					
@@ -1217,7 +1217,7 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 						var _nd  = _dirs[j];
 						
 						var widProg = value_snap_real(_widap? prog : prgc, 0.01);
-						_ww = lerp_invert(p0.weight, wmin, wmax);
+						_ww = lerp_invert(p0.w, wmin, wmax);
 						_nw = random_range(_wid[0], _wid[1]);
 						
 						if(_widcUse) {

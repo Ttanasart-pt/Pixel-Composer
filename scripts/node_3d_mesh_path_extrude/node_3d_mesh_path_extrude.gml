@@ -68,7 +68,7 @@ function Node_3D_Mesh_Path_Extrude(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y
 		var _radPath = array_create(_samp);
 		
 		var _stp = 1 / (_samp - 1);
-		var _p   = new __vec3PC();
+		var _p   = new PathPoint();
 		
 		for( var p = 0; p < _pathAmo; p++ ) {
 			var __points  = array_create(_samp * 3);
@@ -94,7 +94,7 @@ function Node_3D_Mesh_Path_Extrude(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y
 					__uvProg[i] = _distTotal;
 				}
 				
-				__colors[i] = _useColr? _p.color : c_white;
+				__colors[i] = _useColr? _p.w : c_white;
 			}
 			
 			for (var i = 0; i < _samp; i++) __uvProg[i]  /= _distTotal;

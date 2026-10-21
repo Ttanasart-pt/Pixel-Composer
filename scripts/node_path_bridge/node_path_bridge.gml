@@ -59,7 +59,7 @@ function Node_Path_Bridge(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		
 		var _amo = array_length(anchors);
 		var ox, oy, nx, ny;
-		var _p = new __vec2P();
+		var _p = new PathPoint();
 		
 		draw_set_color(COLORS._main_icon);
 		for( var i = 0, n = _amo; i < n; i++ ) {
@@ -103,7 +103,7 @@ function Node_Path_Bridge(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	static getPointRatio = function(_rat, ind = 0, out = undefined) { return getPointDistance(clamp(_rat, 0, 1) * getLength(ind), ind, out); }
 	
 	static getPointDistance = function(_dist, ind = 0, out = undefined) {
-		if(out == undefined) out = new __vec2P(); else { out.x = 0; out.y = 0; }
+		if(out == undefined) out = new PathPoint(); else out.reset();
 		
 		var _cKey = $"{string_format(_dist, 0, 6)},{ind}";
 		if(ind < 0 || ind >= array_length(anchors)) return out;
@@ -115,9 +115,9 @@ function Node_Path_Bridge(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 			var _p = _a[0];
 			out.x  = _p[0];
 			out.y  = _p[1];
-			out.weight = _p[2];
+			out.w  = _p[2];
 			
-			cached_pos[$ _cKey] = new __vec2P(out.x, out.y, out.weight);
+			cached_pos[$ _cKey] = out.clone();
 			return out;
 		}
 		
@@ -128,11 +128,11 @@ function Node_Path_Bridge(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		
 		if(_ind >= n) {
 			var _p = _a[_ind];
-			out.x = _p[0];
-			out.y = _p[1];
-			out.weight = _p[2];
+			out.x  = _p[0];
+			out.y  = _p[1];
+			out.w  = _p[2];
 			
-			cached_pos[$ _cKey] = new __vec2P(out.x, out.y, out.weight);
+			cached_pos[$ _cKey] = out.clone();
 			return out;
 		}
 		
@@ -150,16 +150,15 @@ function Node_Path_Bridge(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 			
 			out.x = eval_bezier_x(_rat, p0[0], p0[1], p1[0], p1[1], _c0x, _c0y, _c1x, _c1y);
 			out.y = eval_bezier_y(_rat, p0[0], p0[1], p1[0], p1[1], _c0x, _c0y, _c1x, _c1y);
-			out.weight = lerp(p0[2], p1[2], _rat);
+			out.w = lerp(p0[2], p1[2], _rat);
 			
 		} else {
 			out.x = lerp(p0[0], p1[0], _rat);
 			out.y = lerp(p0[1], p1[1], _rat);
-			out.weight = lerp(p0[2], p1[2], _rat);
+			out.w = lerp(p0[2], p1[2], _rat);
 		}
 		
-		cached_pos[$ _cKey] = new __vec2P(out.x, out.y, out.weight);
-		
+		cached_pos[$ _cKey] = out.clone();
 		return out;
 	}
 		
@@ -198,7 +197,7 @@ function Node_Path_Bridge(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		}
 		
 		var _rat, _a;
-		var _p = new __vec2P();
+		var _p = new PathPoint();
 		
 		anchors    = array_create(_amou);
 		lengths    = array_create(_amou);
@@ -222,7 +221,7 @@ function Node_Path_Bridge(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 			for( var j = 0; j < _lines; j++ ) {
 				var _pathD = _pathData[j];
 				_p    = _pathD[0].getPointRatio(clamp(_rat, 0, 0.999), _pathD[1], _p);
-				_a[j] = [ _p.x, _p.y, _p.weight ];
+				_a[j] = [ _p.x, _p.y, _p.w ];
 			}
 			
 			anchors[i] = _a;

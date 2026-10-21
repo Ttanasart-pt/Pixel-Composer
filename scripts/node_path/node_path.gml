@@ -2349,20 +2349,15 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		}
 		
 		static getPointDistance = function(_dis, _ind = 0, out = undefined) {
-			if(out == undefined) out = new __vec2P(); else { out.x = 0; out.y = 0; }
+			if(out == undefined) out = new PathPoint(); else out.reset();
 			if(array_empty(lengths)) return out;
 			
-			out.weight = 1;
+			out.w = 1;
 			if(_dis < 0) _dis = lengthTotal + _dis % lengthTotal;
 			var _cKey  = _dis;
 			
-			if(struct_has(cached_pos, _cKey)) {
-				var _cachep = cached_pos[$ _cKey];
-				out.x = _cachep.x;
-				out.y = _cachep.y;
-				out.weight = _cachep.weight;
-				return out;
-			}
+			if(struct_has(cached_pos, _cKey))
+				return out.apply(cached_pos[$ _cKey]);
 			
 			if(loop && lengthTotal) _dis = safe_mod(_dis, lengthTotal, true);
 			
@@ -2392,9 +2387,8 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 					out.y = eval_bezier_y(_t, _a0[0], _a0[1], _a1[0], _a1[1], _a0[0] + _a0[4], _a0[1] + _a0[5], _a1[0] + _a1[2], _a1[1] + _a1[3]);
 				}
 				
-				out.weight = _nw;
-				
-				cached_pos[$ _cKey] = new __vec2P(out.x, out.y, _nw);
+				out.w = _nw;
+				cached_pos[$ _cKey] = out.clone();
 				return out;
 			}
 			
@@ -2407,18 +2401,18 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		}
 		
 		static getPointSegment  = function(_rat) {
-			if(array_empty(lengths)) return new __vec2P();
+			if(array_empty(lengths)) return new PathPoint();
 			
 			var ansize = array_length(anchors);
 			
-			if(_rat < 0) return new __vec2P(anchors[0][0], anchors[0][1]);
+			if(_rat < 0) return new PathPoint(anchors[0][0], anchors[0][1]);
 			
 			_rat = safe_mod(_rat, ansize);
 			var _i0 = clamp(floor(_rat), 0, ansize - 1);
 			var _i1 = (_i0 + 1) % ansize;
 			var _t  = frac(_rat);
 			
-			if(_i1 >= ansize && !loop) return new __vec2P(anchors[ansize - 1][0], anchors[ansize - 1][1]);
+			if(_i1 >= ansize && !loop) return new PathPoint(anchors[ansize - 1][0], anchors[ansize - 1][1]);
 			
 			var _a0 = anchors[_i0];
 			var _a1 = anchors[_i1];
@@ -2432,7 +2426,7 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 				py = eval_bezier_y(_t, _a0[0], _a0[1], _a1[0], _a1[1], _a0[0] + _a0[4], _a0[1] + _a0[5], _a1[0] + _a1[2], _a1[1] + _a1[3]);
 			}
 				
-			return new __vec2P(px, py);
+			return new PathPoint(px, py);
 		}
 	}
 	
@@ -2484,6 +2478,7 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 			}
 			
 			outputs[0].setValue(_out);
+			
 		} else {
 			var _out = [0, 0];
 			

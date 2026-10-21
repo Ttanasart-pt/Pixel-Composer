@@ -28,7 +28,7 @@ function Node_Path_Redistribute(_x, _y, _group = noone) : Node_Processor(_x, _y,
 		path  = noone;
 		curve = undefined;
 		
-		__p = new __vec2P();
+		__p = new PathPoint();
 		
 		static getLineCount    = function(   ) /*=>*/ {return path.getLineCount()};
 		static getSegmentCount = function(i=0) /*=>*/ {return path.getSegmentCount(i)};
@@ -47,14 +47,11 @@ function Node_Path_Redistribute(_x, _y, _group = noone) : Node_Processor(_x, _y,
 		}
 		
 		static getPointRatio = function(_rat, ind = 0, out = undefined) {
-			if(out == undefined) out = new __vec2P(); else { out.x = 0; out.y = 0; }
+			if(out == undefined) out = new PathPoint(); else out.reset();
 			
 			_rat = curve.get(_rat);
 			__p  = path.getPointRatio(_rat, ind, __p);
-			
-			out.x = __p.x;
-			out.y = __p.y;
-			out.weight = __p.weight;
+			out.apply(__p);
 			
 			return out;
 		}

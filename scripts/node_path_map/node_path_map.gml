@@ -131,7 +131,7 @@ function Node_Path_Map(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 		
 		var _pnt = array_create(_lines + 1);
 		var _isb = .9999 / (_sub - 1);
-		var _pp  = new __vec2P();
+		var _pp  = new PathPoint();
 		
 		for( var i = 0; i < _lines; i++ ) {
 			var _pathD = _pathData[i];

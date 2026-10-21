@@ -50,7 +50,8 @@ function Node_Armature_From_Path(_x, _y, _group = noone) : Node(_x, _y, _group) 
 		bone.is_main = true;
 		
 		var ox, oy, nx, ny;
-		var _p  = new __vec2P();
+		
+		var _p  = new PathPoint();
 		var par = bone;
 		
 		for( var i = 0; i < _samp; i++ ) {

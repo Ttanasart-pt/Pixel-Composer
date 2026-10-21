@@ -66,30 +66,25 @@ function Node_VerletSim_to_Path(_x, _y, _group = noone) : Node(_x, _y, _group) c
 	
 	static getPointRatio    = function(_rat, ind = 0, out = undefined) { return getPointDistance(clamp(_rat, 0, 0.99) * lengthTotal, ind, out); }
 	static getPointDistance = function(_dist, ind = 0, out = undefined) {
-		if(out == undefined) out = new __vec2P(); else { out.x = 0; out.y = 0; }
+		if(out == undefined) out = new PathPoint(); else out.reset();
 		
 		var _cKey = $"{ind}, {string_format(_dist, 0, 6)}";
-		if(ds_map_exists(cached_pos, _cKey)) {
-			var _p = cached_pos[? _cKey];
-			out.x = _p.x;
-			out.y = _p.y;
-			out.weight = _p.weight;
-			return out;
-		}
+		if(ds_map_exists(cached_pos, _cKey))
+			return out.apply(cached_pos[? _cKey]);
 		
 		for( var i = 0, n = array_length(anchors); i < n; i++ ) {
 			var _e = anchors[i];
-			if(!_e.active) continue;
 			
+			if(!_e.active) continue;
 			if(_dist > lengths[i]) { _dist -= lengths[i]; continue; }
 			
 			var _a0 = _e.p0;
 			var _a1 = _e.p1;
-			var _t = _dist / lengths[i];
+			var _t  = _dist / lengths[i];
 			
 			out.x = lerp(_a0.x, _a1.x, _t);
 			out.y = lerp(_a0.y, _a1.y, _t);
-			cached_pos[? _cKey] = new __vec2P(out.x, out.y, out.weight);
+			cached_pos[? _cKey] = out.clone();
 			return out;
 		}
 		

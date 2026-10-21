@@ -330,9 +330,9 @@ function Node_Crack_Pattern(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 				case 2 :
 					if(!is_path(_path)) break;
 					
-					var __p = new __vec2P();
-					var _p0 = new __vec2P();
-					var _p1 = new __vec2P();
+					var __p = new PathPoint();
+					var _p0 = new PathPoint();
+					var _p1 = new PathPoint();
 					
 					for( var i = 0; i < _amou; i++ ) {
 						var _pos = _dist? i / (_amou - !_loop) : random(1);

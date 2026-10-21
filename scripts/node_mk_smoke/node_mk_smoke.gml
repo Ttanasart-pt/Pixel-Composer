@@ -173,7 +173,7 @@ function Node_MK_Smoke(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 				if(!is_path(_path)) return _outSurf;
 				
 				__pth = _path;
-				__p   = new __vec2P();
+				__p   = new PathPoint();
 				__st  = 1 / max(1, _amo - !_pathL);
 				
 				_spawnPoints = array_create_ext(_amo, function(i) /*=>*/ {

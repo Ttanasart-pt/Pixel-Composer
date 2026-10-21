@@ -62,7 +62,7 @@ function Node_Path_Plot(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	fn1 = 0;
 	fn2 = 0;
 	
-	_a = new __vec2P();
+	_a = new PathPoint();
 	_param = { x:0, y:0, t:0, r:0, O:0 };
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _params) { 
@@ -77,8 +77,7 @@ function Node_Path_Plot(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	static getBoundary		= function() /*=>*/ {return boundary};
 	
 	static getPointRatio = function(_rat, ind = 0, out = undefined) {
-		if(out == undefined) out = curr_d3d? new __vec3P() : new __vec2P(); 
-		else { out.x = 0; out.y = 0; out.z = 0; }
+		if(out == undefined) out = new PathPoint(); else out.reset();
 		
 		_rat = curr_ran[0] + (_rat * (curr_ran[1] - curr_ran[0]));
 		
@@ -93,7 +92,7 @@ function Node_Path_Plot(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 						
 						if(curr_usew) {
 							_param.x = _rat;
-							out.weight = fnw.eval(_param);
+							out.w = fnw.eval(_param);
 						}
 						break;
 						
@@ -105,7 +104,7 @@ function Node_Path_Plot(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 						
 						if(curr_usew) {
 							_param.y = _rat;
-							out.weight = fnw.eval(_param);
+							out.w = fnw.eval(_param);
 						}
 						break;
 						
@@ -123,7 +122,7 @@ function Node_Path_Plot(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 						
 						if(curr_usew) {
 							_param.t = _rat;
-							out.weight = fnw.eval(_param);
+							out.w = fnw.eval(_param);
 						}
 						break;
 				}
@@ -141,7 +140,7 @@ function Node_Path_Plot(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 						
 						if(curr_usew) {
 							_param.r = _rat;
-							out.weight = fnw.eval(_param);
+							out.w = fnw.eval(_param);
 						}
 						break;
 						
@@ -153,7 +152,7 @@ function Node_Path_Plot(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 						
 						if(curr_usew) {
 							_param.O = _rat;
-							out.weight = fnw.eval(_param);
+							out.w = fnw.eval(_param);
 						}
 						break;
 						
@@ -171,7 +170,7 @@ function Node_Path_Plot(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 						
 						if(curr_usew) {
 							_param.t = _rat;
-							out.weight = fnw.eval(_param);
+							out.w = fnw.eval(_param);
 						}
 						break;
 				}
@@ -230,8 +229,6 @@ function Node_Path_Plot(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		fn1 = evaluateFunctionList(_eq1);
 		fn2 = evaluateFunctionList(_eq2);
 		fnw = evaluateFunctionList(curr_wgfn);
-		
-		_a = curr_d3d? new __vec3P() : new __vec2P();
 		
 		updateBoundary();
 		outputs[0].setValue(self);

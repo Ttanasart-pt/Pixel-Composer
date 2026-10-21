@@ -46,8 +46,7 @@ function Node_pSystem_3D_Trail(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	static getBoundary		= function() /*=>*/ {return boundary};
 	
 	static getPointDistance = function(_dist, _ind = 0, out = undefined) {
-		if(out == undefined) out = new __vec3PC(); 
-		else { out.x = 0; out.y = 0; out.z = 0; }
+		if(out == undefined) out = new PathPoint(); else out.reset();
 		
 		var _cKey = $"{_dist}|{_ind}";
 		if(ds_map_exists(cached_pos, _cKey)) {
@@ -84,7 +83,8 @@ function Node_pSystem_3D_Trail(_x, _y, _group = noone) : Node(_x, _y, _group) co
 		out.y  = lerp(_sg[ii+1], _sg[ii+4+1], _r);
 		out.z  = lerp(_sg[ii+2], _sg[ii+4+2], _r);
 		out.color = _sg[ii+3];
-		cached_pos[? _cKey] = new __vec3PC(out.x, out.y, out.z, 1, out.color);
+		
+		cached_pos[? _cKey] = new PathPoint(out.x, out.y, out.z, out.color);
 		
 		return out;
 	}

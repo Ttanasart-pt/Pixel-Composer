@@ -78,7 +78,7 @@ function Node_Path_Map_Area(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 		static getAccuLength   = function(i=0) /*=>*/ { return struct_has(path, "getAccuLength")?   path.getAccuLength(i)   : []; }
 			
 		static getPointRatio = function(_rat, ind = 0, out = undefined) {
-			if(out == undefined) out = new __vec2P(); else { out.x = 0; out.y = 0; }
+			if(out == undefined) out = new PathPoint(); else out.reset();
 			
 			if(is_array(path)) {
 				path = array_safe_get_fast(path, ind);
@@ -93,7 +93,7 @@ function Node_Path_Map_Area(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 			
 			out.x = (areaTo[AREA_INDEX.center_x] - areaTo[AREA_INDEX.half_w]) + (_p.x - areaFrom[0]) / areaFrom[2] * areaTo[AREA_INDEX.half_w] * 2;
 			out.y = (areaTo[AREA_INDEX.center_y] - areaTo[AREA_INDEX.half_h]) + (_p.y - areaFrom[1]) / areaFrom[3] * areaTo[AREA_INDEX.half_h] * 2;
-			out.weight = _p.weight;
+			out.w = _p.w;
 			
 			return out;
 		}

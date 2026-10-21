@@ -65,7 +65,7 @@ function Node_Path_to_Curve(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		
 		// curve format [-cx0, -cy0, x0, y0, +cx0, +cy0, // -cx1, -cy1, x1, y1, +cx1, +cy1]
 		
-		var _p = new __vec2P();
+		var _p = new PathPoint();
 		for( var i = 0; i <= _reso; i++ ) {
 			var _r = i / _reso;
 			var sind = CURVE_PADD + i * 6;

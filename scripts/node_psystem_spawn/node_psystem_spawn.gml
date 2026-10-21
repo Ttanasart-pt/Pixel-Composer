@@ -86,7 +86,7 @@ function Node_pSystem_Spawn(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	stepTrig    = undefined; stepCount    = 0; stepTrigUse    = false;
 	destroyTrig = undefined; destroyCount = 0; destroyTrigUse = false;
 	
-	__p = new __vec2P();
+	__p = new PathPoint();
 	cache_grad = undefined;
 	
 	point_dist_cache  = [];

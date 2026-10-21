@@ -32,7 +32,7 @@ function Node_Path_Reverse(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 		static getBoundary     = function(ind = 0) /*=>*/ {return is_path(curr_path)? curr_path.getBoundary(ind)                  : new BoundingBox(0, 0, 1, 1)};
 			
 		static getPointRatio = function(_rat, ind = 0, out = undefined) {
-			if(out == undefined) out = new __vec2P(); else { out.x = 0; out.y = 0; }
+			if(out == undefined) out = new PathPoint(); else out.reset();
 			if(!is_path(curr_path)) return out;
 			
 			return curr_path.getPointRatio(1 - _rat, ind, out);

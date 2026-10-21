@@ -92,7 +92,7 @@ function Node_pSystem_3D_Spawn(_x, _y, _group = noone) : Node_3D(_x, _y, _group)
 	stepTrig    = undefined; stepCount    = 0;
 	destroyTrig = undefined; destroyCount = 0;
 	
-	__path_temp = new __vec3P();
+	__path_temp = new PathPoint();
 	__vec3_temp = new __vec3();
 	cache_grad = undefined;
 	point_dist_cache = [];

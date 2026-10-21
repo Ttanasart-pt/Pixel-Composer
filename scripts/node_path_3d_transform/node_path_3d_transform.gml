@@ -61,7 +61,7 @@ function Node_Path_3D_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y,
 		var minx =  99999, miny =  99999, minz =  99999;
 		var maxx = -99999, maxy = -99999, maxz = -99999;
 			
-		var _v3  = new __vec3P();
+		var _v3  = new PathPoint();
 		var _res = 16;
 		
 		var _ox = 0, _oy = 0; 
@@ -119,7 +119,7 @@ function Node_Path_3D_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y,
 		qrot = undefined;
 		sca  = [1,1,1];
 		anc  = [0,0,0];
-		p    = new __vec3P();
+		p    = new PathPoint();
 		
 		static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _params) {}
 		
@@ -155,18 +155,12 @@ function Node_Path_3D_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y,
 		}
 		
 		static getPointRatio = function(_rat, ind = 0, out = undefined) {
-			out ??= new __vec3P();
+			out ??= new PathPoint();
 			
 			var _cKey = $"{string_format(_rat, 0, 6)},{ind}";
-			if(has(cached_pos, _cKey)) {
-				var _p = cached_pos[$ _cKey];
-				out.x = _p.x;
-				out.y = _p.y;
-				out.z = _p.z;
-				out.weight = _p.weight;
-				return out;
-			}
-			
+			if(has(cached_pos, _cKey))
+				return out.apply(cached_pos[$ _cKey]);
+				
 			if(is_array(path)) {
 				path = array_safe_get_fast(path, ind);
 				ind  = 0;
@@ -186,9 +180,9 @@ function Node_Path_3D_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y,
 			out.x = anc[0] + (p2.X * sca[0]) + pos[0];
 			out.y = anc[1] + (p2.Y * sca[1]) + pos[1];
 			out.z = anc[2] + (p2.Z * sca[2]) + pos[2];
-			out.weight = _p.weight;
+			out.w = _p.w;
 			
-			cached_pos[$ _cKey] = new __vec3P(out.x, out.y, out.z, out.weight);
+			cached_pos[$ _cKey] = out.clone();
 			return out;
 		}
 		

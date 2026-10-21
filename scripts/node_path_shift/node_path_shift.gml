@@ -28,9 +28,9 @@ function Node_Path_Shift(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	curr_range = [0, 1];
 	curr_shift = noone;
 	
-	p  = new __vec2P();
-	p0 = new __vec2P();
-	p1 = new __vec2P();
+	p  = new PathPoint();
+	p0 = new PathPoint();
+	p1 = new PathPoint();
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _params) { 
 		var hovering = false;
@@ -53,16 +53,11 @@ function Node_Path_Shift(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	static getBoundary     = function(ind = 0) /*=>*/ {return is_path(curr_path)? curr_path.getBoundary(ind)     : new BoundingBox( 0, 0, 1, 1 )};
 	
 	static getPointRatio = function(_rat, ind = 0, out = undefined) {
-		if(out == undefined) out = new __vec2P(); else { out.x = 0; out.y = 0; }
+		if(out == undefined) out = new PathPoint(); else out.reset();
 		
 		var _cKey = $"{string_format(_rat, 0, 6)},{ind}";
-		if(ds_map_exists(cached_pos, _cKey)) {
-			var _p = cached_pos[? _cKey];
-			out.x = _p.x;
-			out.y = _p.y;
-			out.weight = _p.weight;
-			return out;
-		}
+		if(ds_map_exists(cached_pos, _cKey))
+			return out.apply(cached_pos[? _cKey]);
 		
 		if(!is_path(curr_path)) return out;
 		
@@ -70,12 +65,8 @@ function Node_Path_Shift(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		var dir = 0;
 		
 		if(_rat < curr_range[0] || _rat > curr_range[1]) {
-			out.x = p.x;
-			out.y = p.y;
-			out.weight = p.weight;
-			
-			cached_pos[$ _cKey] = new __vec2P(out.x, out.y, out.weight);
-			return out;
+			cached_pos[$ _cKey] = new p.clone();
+			return out.apply(p);
 		}
 		
 		if(has(curr_path, "getPointTangent")) {
@@ -93,10 +84,9 @@ function Node_Path_Shift(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		
 		out.x += p.x + lengthdir_x(curr_shift, dir);
 		out.y += p.y + lengthdir_y(curr_shift, dir);
-		out.weight = p.weight;
+		out.w = p.w;
 		
-		cached_pos[? _cKey] = new __vec2P(out.x, out.y, out.weight);
-		
+		cached_pos[? _cKey] = out.clone();
 		return out;
 	}
 	

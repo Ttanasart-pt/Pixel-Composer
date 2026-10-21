@@ -84,16 +84,11 @@ function Node_Path_Flattern(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		static getPointRatio = function(_rat, ind = 0, out = undefined) { return getPointDistance(_rat * getLength(), ind, out); }
 		
 		static getPointDistance = function(_dist, ind = 0, out = undefined) { 
-			if(out == undefined) out = new __vec2P(); else { out.x = 0; out.y = 0; }
+			if(out == undefined) out = new PathPoint(); else out.reset();
 			
 			var _cKey  = _dist;
-			if(has(cached_pos, _cKey)) {
-				var _cachep = cached_pos[$ _cKey];
-				out.x = _cachep.x;
-				out.y = _cachep.y;
-				out.weight = _cachep.weight;
-				return out;
-			}
+			if(has(cached_pos, _cKey))
+				return out.apply(cached_pos[$ _cKey]);
 			
 			var _dst = _dist;
 			var _rev = reverse;
@@ -115,7 +110,7 @@ function Node_Path_Flattern(_x, _y, _group = noone) : Node(_x, _y, _group) const
 			}
 			
 			if(!_res) array_last(curr_path).getPointDistance(getLength(), 0, out);
-			cached_pos[$ _cKey] = new __vec2P(out.x, out.y, out.weight);
+			cached_pos[$ _cKey] = out.reset();
 			
 			return out;
 		}

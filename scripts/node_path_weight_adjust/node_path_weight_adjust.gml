@@ -38,7 +38,7 @@ function Node_Path_Weight_Adjust(_x, _y, _group = noone) : Node(_x, _y, _group) 
 	curr_val_st = 0;
 	curr_val_ed = 1;
 	
-	temp_p = new __vec2P();
+	temp_p = new PathPoint();
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _params) { 
 		if(has(curr_path, "drawOverlay")) drawOverlayInput(curr_path.drawOverlay(hover, active, _x, _y, _s, _mx, _my, _params));
@@ -52,12 +52,11 @@ function Node_Path_Weight_Adjust(_x, _y, _group = noone) : Node(_x, _y, _group) 
 	static getBoundary     = function(ind = 0) /*=>*/ {return is_path(curr_path)? curr_path.getBoundary(ind)     : new BoundingBox( 0, 0, 1, 1 )};
 	
 	static getPointRatio = function(_rat, ind = 0, out = undefined) {
-		if(out == undefined) out = new __vec2P(); else { out.x = 0; out.y = 0; }
+		if(out == undefined) out = new PathPoint(); else out.reest();
 		if(!is_path(curr_path)) return out;
 		
 		temp_p = curr_path.getPointRatio(_rat, ind, temp_p);
-		out.x  = temp_p.x;
-		out.y  = temp_p.y;
+		out.apply(temp_p);
 		
 		var _v = curr_value;
 		
@@ -81,9 +80,9 @@ function Node_Path_Weight_Adjust(_x, _y, _group = noone) : Node(_x, _y, _group) 
 		}
 		
 		switch(curr_mode) {
-		    case 0 : out.weight = max(0, temp_p.weight + _v); break;
-		    case 1 : out.weight = temp_p.weight * _v;         break;
-		    case 2 : out.weight = _v;                         break;
+		    case 0 : out.w = max(0, temp_p.w + _v); break;
+		    case 1 : out.w = temp_p.w * _v;         break;
+		    case 2 : out.w = _v;                    break;
 		}
 		
 		return out;

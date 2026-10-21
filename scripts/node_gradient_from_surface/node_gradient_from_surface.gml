@@ -105,7 +105,7 @@ function Node_Gradient_from_Surface(_x, _y, _group = noone) : Node_Processor(_x,
 			case 1 :
 				if(!is_path(_path)) break;
 				
-				var __p = new __vec2P();
+				var __p = new PathPoint();
 				
 				for( var i = 0; i < _reso; i++ ) {
 					var t  = i / max(0, _reso);	

@@ -50,7 +50,7 @@ function Node_Path_Join(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	}
 	
 	static getPointDistance = function(_dist, ind = 0, out = undefined) {
-		out ??= new __vec2P();
+		out ??= new PathPoint();
 		if(curr_path_amo == 0) return out;
 		
 		var _ind = 0;

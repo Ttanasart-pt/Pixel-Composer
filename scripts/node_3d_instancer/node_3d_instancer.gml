@@ -187,7 +187,7 @@ function Node_3D_Instancer(_x, _y, _group = noone) : Node_3D(_x, _y, _group) con
 			
 			var _gridP = _grid[0] * _grid[1];
 			var _rt = _amo >= 1? 1 / (_amo - 1) : 0;
-			var __p = new __vec3P();
+			var __p = new PathPoint();
 			var _i  = 0;
 			
 			var _0 = [0,0,0], _1 = [1,1,1];

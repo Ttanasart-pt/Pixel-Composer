@@ -114,7 +114,7 @@ function Node_Path_Shape(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		static getAccuLength	= function() /*=>*/ {return lengthAccs};
 		
 		static getPointRatio    = function(_rat, _ind = 0, out = undefined) { 
-		    out ??= new __vec2P();
+		    out ??= new PathPoint();
 		    
 		    if(_rat < 0) _rat = 1 + frac(_rat);
 		    _rat = loop? frac(_rat) : clamp(_rat, 0, .999);
@@ -148,7 +148,7 @@ function Node_Path_Shape(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		}
 		
 		static getPointDistance = function(_dist, _ind = 0, out = undefined) {
-		    out ??= new __vec2P();
+		    out ??= new PathPoint();
 		    
 		    if(lengthTotal == 0) return out;
 		    if(_dist < 0) _dist = lengthTotal + _dist % lengthTotal;

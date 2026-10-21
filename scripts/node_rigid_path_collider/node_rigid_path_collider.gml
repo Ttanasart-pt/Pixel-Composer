@@ -67,7 +67,7 @@ function Node_Rigid_Path_Collider(_x, _y, _group = noone) : Node(_x, _y, _group)
 		var _ismp = 1 / (_smp - 1);
 		
 		var ox, oy, nx, ny;
-		var _p = new __vec2P();
+		var _p = new PathPoint();
 		
 		paths = array_verify(paths, _smp + 1);
 		

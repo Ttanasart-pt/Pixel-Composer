@@ -119,28 +119,22 @@ function Node_Path_3D_Camera(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _g
 	static getBoundary     = function(i=0) /*=>*/ {return is_path(curr_path)? curr_path.getBoundary(i)     : new BoundingBox( 0, 0, 1, 1 )};
 	
 	static getPointRatio = function(_rat, ind = 0, out = undefined) {
-		if(out == undefined) out = new __vec2P(); else { out.x = 0; out.y = 0; }
+		if(out == undefined) out = new PathPoint(); else out.reset();
 		
 		var _cKey = $"{string_format(_rat, 0, 6)},{ind}";
-		if(ds_map_exists(cached_pos, _cKey)) {
-			var _p = cached_pos[? _cKey];
-			out.x = _p.x;
-			out.y = _p.y;
-			out.weight = _p.weight;
-			return out;
-		}
+		if(ds_map_exists(cached_pos, _cKey))
+			return out.apply(cached_pos[? _cKey]);
 		
 		if(!is_path(curr_path)) return out;
 		
 		var _p = curr_path.getPointRatio(_rat, ind);
-		var _w = _p.weight;
 		var _v = camera.worldPointToViewPoint(_p);
 		
 		out.x = _v.x * curr_scal[0] / 2;
 		out.y = _v.y * curr_scal[1] / 2;
-		out.weight = curr_weig? _v.z : _p.weight;
+		out.w = curr_weig? _v.z : _p.w;
 		
-		cached_pos[? _cKey] = new __vec2P(out.x, out.y, out.weight);
+		cached_pos[? _cKey] = out.clone();
 		
 		return out;
 	}

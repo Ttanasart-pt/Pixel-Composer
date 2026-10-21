@@ -132,7 +132,7 @@ function Node_MK_Tree_Path_Root(_x, _y, _group = noone) : Node(_x, _y, _group) c
 		
 		var pamo = _path.getLineCount();
 		var tres = [];
-		var _p   = new __vec2P();
+		var _p   = new PathPoint();
 		
 		for( var t = 0; t < pamo; t++ ) {
 			var _t = new __MK_Tree();

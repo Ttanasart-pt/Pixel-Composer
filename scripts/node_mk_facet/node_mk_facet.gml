@@ -150,7 +150,7 @@ function Node_MK_Facet(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	temp_surface = [ noone, noone, noone ];
 	__bg_index   = 0;
 	path_points  = [];
-	__p = new __vec2P();
+	__p = new PathPoint();
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _params) { 
 		drawOverlayInput(inputs[ 1].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my));
@@ -244,7 +244,7 @@ function Node_MK_Facet(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 			
 		    __tpath  = _path;
 			__step   = 1 / _reso;
-			path_points = array_verify_ext(path_points, _reso, function() /*=>*/ {return new __vec2P()});
+			path_points = array_verify_ext(path_points, _reso, function() /*=>*/ {return new PathPoint()});
 			
 			array_map_ext(path_points, function(p, i) /*=>*/ {return __tpath.getPointRatio(i * __step, 0, p)});
 			var _triangles = polygon_triangulate(path_points, 0)[0];

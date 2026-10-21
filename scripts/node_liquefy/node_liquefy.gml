@@ -272,24 +272,26 @@ function Node_Liquefy(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		
 		surface_set_shader(temp_surface[0], _shader, true, BLEND.over);
 		shader_set_interpolation(_surf);
-			shader_set_dim("dimension", _surf);
-			shader_set_2("pos1",        _pos1);
-			shader_set_2("pos2",        _pos2);
-			shader_set_f("radius",      _rad);
-			shader_set_f("radius2",     _rad2);
-			shader_set_f("intensity",   _int);
-			shader_set_f("falloff",     _fall);
+			shader_set_dim( "dimension",  _surf );
+			shader_set_2(   "pos1",       _pos1 );
+			shader_set_2(   "pos2",       _pos2 );
+			shader_set_f(   "radius",     _rad  );
+			shader_set_f(   "radius2",    _rad2 );
+			shader_set_f(   "intensity",  _int  );
+			shader_set_f(   "pushIntens", _push );
+			
+			shader_set_f(   "falloff",    _fall );
 			shader_set_curve("falloff", _falC, inputs[_ind + 5]);
-			shader_set_f("pushIntens",  _push);
+			
 			
 			if(_type == LIQUEFY_TYPE.push) {
 				var _usePath = _path != noone;
 				var _pthList = array_create(_pthR * 2);
-				var _p = new __vec2P();
+				var _p = new PathPoint();
 				
 				if(_usePath) {
 					for( var i = 0; i < _pthR; i++ ) {
-						_p = _path.getPointRatio(i / (_pthR - 1) ,0, _p);
+						_p = _path.getPointRatio(i / (_pthR - 1), 0, _p);
 						_pthList[i * 2 + 0] = _p.x;
 						_pthList[i * 2 + 1] = _p.y;
 					}
@@ -298,9 +300,9 @@ function Node_Liquefy(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 						disp_path = _pthList;
 				}
 				
-				shader_set_i("usePath",        _usePath);
-				shader_set_i("pathResolution", _pthR);
-				shader_set_f("pathList",       _pthList);
+				shader_set_i( "usePath",        _usePath );
+				shader_set_i( "pathResolution", _pthR    );
+				shader_set_f( "pathList",       _pthList );
 			}
 			
 			draw_surface_safe(temp_surface[1]);

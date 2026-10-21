@@ -757,7 +757,7 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 			var _ha = _hh / uniAmoY;
 			
 			var sp = [0,0];
-			var pp = new __vec2P();
+			var pp = new PathPoint();
 			var _atl, _csed;
 			var _x, _y, _v;
 			
@@ -880,7 +880,7 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 						pp = path.getPointRatio(_pathProgress, path_line_index, pp);
 						_x = pp.x + random_range_seed(-pathDis, pathDis, _csed++);
 						_y = pp.y + random_range_seed(-pathDis, pathDis, _csed++);
-						_v = [0, 0, pp.weight];
+						_v = [0, 0, pp.w];
 						
 						break;
 						

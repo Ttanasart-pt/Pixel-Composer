@@ -6,6 +6,11 @@
         "date": "2026-10-21T01:54:50.536Z",
         "node": "any",
         "commit": "Introduced"
+      },
+      {
+        "date": "2026-10-21T04:41:16.545Z",
+        "node": "",
+        "commit": "**Path**: Fix error when mixing 2D and 3D path operators."
       }
     ]
   },

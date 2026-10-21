@@ -3109,7 +3109,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 					DRAW_CLEAR
 					
 					var _res = 64;
-					var __p  = new __vec2P();
+					var __p  = new PathPoint();
 					var ox, oy, nx, ny;
 					var lamo = _outv.getLineCount();
 					

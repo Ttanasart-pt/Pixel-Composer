@@ -81,7 +81,8 @@ function Node_Blur_Path(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		var _pntc = clamp(_reso, 2, 128);
 		var _points_x = array_create(_pntc);
 		var _points_y = array_create(_pntc);
-		var _p = new __vec2P();
+		
+		var _p = new PathPoint();
 		
 		var _rst = _rang[0];
 		var _red = _rang[1];

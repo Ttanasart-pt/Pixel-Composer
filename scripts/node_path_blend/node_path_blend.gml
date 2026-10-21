@@ -115,16 +115,11 @@ function Node_Path_Blend(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 		////- Get
 		
 		static getPointRatio = function(_rat, ind = 0, out = undefined) {
-			if(out == undefined) out = new __vec2P(); else { out.x = 0; out.y = 0; }
+			if(out == undefined) out = new PathPoint(); else out.reset();
 			
 			var _cKey = $"{string_format(_rat, 0, 6)},{ind}";
-			if(struct_has(cached_pos, _cKey)) {
-				var _p = cached_pos[$ _cKey];
-				out.x = _p.x;
-				out.y = _p.y;
-				out.weight = _p.weight;
-				return out;
-			}
+			if(has(cached_pos, _cKey))
+				return out.apply(cached_pos[$ _cKey]);
 			
 			if(!is_path1 && !is_path2) return out;
 			if( is_path1 && !is_path2) return curr_path1.getPointRatio(_rat, ind, out);
@@ -137,19 +132,22 @@ function Node_Path_Blend(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 				case 0 :
 					out.x = lerp(_p1.x, _p2.x, blend_lerp);
 					out.y = lerp(_p1.y, _p2.y, blend_lerp);
-					out.weight = lerp(_p1.weight, _p2.weight, blend_lerp);
+					out.z = lerp(_p1.z, _p2.z, blend_lerp);
+					out.w = lerp(_p1.w, _p2.w, blend_lerp);
 					break;
 				
 				case 1 :
 					out.x = _p1.x + _p2.x * blend_lerp;
 					out.y = _p1.y + _p2.y * blend_lerp;
-					out.weight = _p1.weight + _p2.weight * blend_lerp;
+					out.z = _p1.z + _p2.z * blend_lerp;
+					out.w = _p1.w + _p2.w * blend_lerp;
 					break;
 				
 				case 2 :
 					out.x = _p1.x - _p2.x * blend_lerp;
 					out.y = _p1.y - _p2.y * blend_lerp;
-					out.weight = _p1.weight - _p2.weight * blend_lerp;
+					out.z = _p1.z - _p2.z * blend_lerp;
+					out.w = _p1.w - _p2.w * blend_lerp;
 					break;
 					
 				case 3 :
@@ -160,13 +158,12 @@ function Node_Path_Blend(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 					
 					out.x = _p1.x + lengthdir_x(_dis, _dir + 90);
 					out.y = _p1.y + lengthdir_y(_dis, _dir + 90);
-					
-					out.weight = lerp(_p1.weight, _p2.weight, blend_lerp);
+					out.w = lerp(_p1.w, _p2.w, blend_lerp);
 					break;
 					
 			}
 			
-			cached_pos[$ _cKey] = new __vec2P(out.x, out.y, out.weight);
+			cached_pos[$ _cKey] = out.clone();
 			
 			return out;
 		}

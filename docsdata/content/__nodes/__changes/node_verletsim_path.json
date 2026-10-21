@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.22.1.203",
+    "changes": [
+      {
+        "date": "2026-10-21T04:41:16.584Z",
+        "node": "",
+        "commit": "**Path**: Fix error when mixing 2D and 3D path operators."
+      }
+    ]
+  },
+  {
     "version": "1.21.5.003",
     "changes": [
       {

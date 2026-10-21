@@ -133,7 +133,7 @@ function Node_Repeat_Path(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 		
 		var pthDrwLen = pthLen * (_prng1 - _prng0);
 		
-		var __p  = new __vec2P();
+		var __p  = new PathPoint();
 		var __p2 = [0,0];
 		
 		var invReso = 1 / _reso;

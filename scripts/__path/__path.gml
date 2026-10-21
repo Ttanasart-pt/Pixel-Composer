@@ -1,3 +1,16 @@
+function PathPoint(_x=0, _y=0, _z=0, _w=0) constructor {
+	x = _x;
+	y = _y;
+	z = _z;
+	w = _w;
+	
+	static reset = function( ) /*=>*/ { x =   0; y =   0; z =   0; w =   0; return self; }
+	static apply = function(b) /*=>*/ { x = b.x; y = b.y; z = b.z; w = b.w; return self; }
+	static clone = function( ) /*=>*/ {return new PathPoint(x, y, z, w)};
+	
+	static toArray = function(d3d=false) /*=>*/ {return d3d? [x,y,z] : [x,y]};
+}
+
 function Path(_node) constructor {
 	node = _node;
 	
@@ -7,7 +20,7 @@ function Path(_node) constructor {
 	boundary    = new BoundingBox();
 	loop		= false;
 	
-	__temp_p    = new __vec2P();
+	__temp_p    = new PathPoint();
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _params) { 
 		if(!is(node, Node)) return false;
@@ -48,7 +61,7 @@ function Path(_node) constructor {
 	static getLineCount     = function() /*=>*/ {return 1};
 	static getTangentRatio  = function(_rat) /*=>*/ {return 0};
 	
-	static getPointDistance = function(_dis, _ind = 0, out = undefined) { return new __vec2P(0, 0); }
+	static getPointDistance = function(_dis, _ind = 0, out = undefined) { return new PathPoint(); }
 	static getPointRatio    = function(_rat, _ind = 0, out = undefined) { return getPointDistance(frac(_rat) * lengthTotal, _ind, out); }
 	
 	static getPointTangent  = function(_rat, _ind = 0) {
@@ -71,7 +84,7 @@ function Path(_node) constructor {
 function PathSegment() : Path() constructor {
 	segments = [];
 	
-	static getBoundary		= function() { #region
+	static getBoundary		= function() {
 		if(getSegmentCount() == 0) return new BoundingBox( 0, 0, 0, 0 );
 		
 		var minx = segments[0].x, maxx = segments[0].x;
@@ -86,12 +99,12 @@ function PathSegment() : Path() constructor {
 			maxy = max(maxy, s.y);
 		}
 		return new BoundingBox( minx, miny, maxx, maxy ); 
-	} #endregion
+	}
 	
 	static getSegmentCount  = function() { return array_length(segments); }
 	static getLineCount		= function() { return 1; }
 	
-	static setSegment = function(segment) { #region
+	static setSegment = function(segment) {
 		self.segments = segment;
 		lengths		  = [];
 		lengthAccs    = [];
@@ -109,10 +122,10 @@ function PathSegment() : Path() constructor {
 			
 			op = np;
 		}
-	} #endregion
+	}
 	
-	static getPointDistance = function(_dist, _ind = 0, out = undefined) { #region
-		if(out == undefined) out = new __vec2P(); else { out.x = 0; out.y = 0; }
+	static getPointDistance = function(_dist, _ind = 0, out = undefined) {
+		if(out == undefined) out = new PathPoint(); else { out.x = 0; out.y = 0; }
 		
 		for( var i = 0; i < array_length(lengths); i++ ) {
 			if(_dist <= lengths[i]) {
@@ -131,11 +144,11 @@ function PathSegment() : Path() constructor {
 		out.y = segments[i].y;
 		
 		return out;
-	} #endregion
+	}
 	
 	static getPointRatio = function(_rat, _ind = 0, out = undefined) { return getPointDistance(frac(_rat) * lengthTotal, _ind, out); }
 		
-	static getTangentRatio = function(_rat) { #region
+	static getTangentRatio = function(_rat) {
 		_rat = frac(_rat);
 		var l = _rat * lengthTotal;
 		
@@ -149,9 +162,9 @@ function PathSegment() : Path() constructor {
 		}
 		
 		return 0;
-	} #endregion
+	}
 		
-	static draw = function(_x, _y, _s) { #region
+	static draw = function(_x, _y, _s) {
 		var ox, oy, nx, ny;
 		
 		for( var i = 0, n = array_length(segments); i < n; i++ ) {
@@ -163,7 +176,7 @@ function PathSegment() : Path() constructor {
 			ox = nx;
 			oy = ny;
 		}
-	} #endregion
+	}
 }
 
 function PathDrawOverlay(_path, _x, _y, _s) {
@@ -171,7 +184,7 @@ function PathDrawOverlay(_path, _x, _y, _s) {
 	draw_set_color(COLORS._main_icon);
 	
 	var _amo = _path.getLineCount();
-	var _p   = new __vec2P();
+	var _p   = new PathPoint();
 	var _sam = 16;
 	var _stp = 1 / _sam;
 	

@@ -16,17 +16,6 @@
 		ind, amount
 	}
 	
-	function __vec3P(_x = 0, _y = _x, _z = _x, _w = 1) : __vec3(_x, _y, _z) constructor {
-		weight = _w;
-		static clone = function() /*=>*/ {return new __vec3P(x, y, z, weight)};
-	}
-	
-	function __vec3PC(_x = 0, _y = _x, _z = _x, _w = 1, _c = c_white) : __vec3P(_x, _y, _z) constructor {
-		weight = _w;
-		color  = _c;
-		static clone = function() /*=>*/ {return new __vec3PC(x, y, z, weight)};
-	}
-	
 	function d3d_path_tool_position(_node) : ToolObject() constructor {
 		activeKeyboard = false;
 		setNode(_node);
@@ -1642,18 +1631,13 @@ function Node_Path_3D(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 	static getAccuLength	= function() /*=>*/ {return lengthAccs};
 	
 	static getPointDistance = function(_dist, _ind = 0, out = undefined) {
-		if(!is(out, __vec3P)) out = new __vec3P(); else { out.x = 0; out.y = 0; out.z = 0; }
+		if(!is(out, PathPoint)) out = new PathPoint(); else out.reset(); 
 		if(array_empty(lengths)) return out;
 		
 		if(_dist < 0) _dist = lengthTotal + _dist % lengthTotal;
 		var _cKey = _dist;
-		if(ds_map_exists(cached_pos, _cKey)) {
-			var _p = cached_pos[? _cKey];
-			out.x = _p.x;
-			out.y = _p.y;
-			out.z = _p.z;
-			return out;
-		}
+		if(ds_map_exists(cached_pos, _cKey))
+			return out.apply(cached_pos[? _cKey]);
 		
 		var loop = getInputData(1);
 		if(loop) _dist = safe_mod(_dist, lengthTotal, true);
@@ -1686,7 +1670,7 @@ function Node_Path_3D(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 				
 			}
 			
-			cached_pos[? _cKey] = new __vec3P(out.x, out.y, out.z);
+			cached_pos[? _cKey] = out.clone();
 			return out;
 		}
 		
@@ -1700,19 +1684,19 @@ function Node_Path_3D(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 	}
 	
 	static getPointSegment = function(_rat) {
-		if(array_empty(lengths)) return new __vec3P();
+		if(array_empty(lengths)) return new PathPoint();
 		
 		var loop   = getInputData(1);
 		var ansize = array_length(inputs) - input_fix_len;
 		
-		if(_rat < 0) return new __vec3P(anchors[0][0], anchors[0][1], anchors[0][2]);
+		if(_rat < 0) return new PathPoint(anchors[0][0], anchors[0][1], anchors[0][2]);
 		
 		_rat = safe_mod(_rat, ansize);
 		var _i0 = clamp(floor(_rat), 0, ansize - 1);
 		var _i1 = (_i0 + 1) % ansize;
 		var _t  = frac(_rat);
 		
-		if(_i1 >= ansize && !loop) return new __vec3P(anchors[ansize - 1][0], anchors[ansize - 1][1], anchors[ansize - 1][2]);
+		if(_i1 >= ansize && !loop) return new PathPoint(anchors[ansize - 1][0], anchors[ansize - 1][1], anchors[ansize - 1][2]);
 		
 		var _a0 = anchors[_i0];
 		var _a1 = anchors[_i1];
@@ -1730,7 +1714,7 @@ function Node_Path_3D(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 			
 		}
 			
-		return new __vec3P(px, py, pz);
+		return new PathPoint(px, py, pz);
 	}
 	
 	////- Updates
@@ -1780,7 +1764,7 @@ function Node_Path_3D(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 			if(_typ == 0)		_out = getPointRatio(_rat);
 			else if(_typ == 1)	_out = getPointSegment(_rat);
 			
-			outputs[0].setValue(_out.toArray());
+			outputs[0].setValue(_out.toArray(true));
 		}
 	}
 	

@@ -100,7 +100,7 @@ function Node_VerletSim_Mesh_Bridge(_x, _y, _group = noone) : Node(_x, _y, _grou
 		var _pPoint = array_create(_lamo);
 		var _pSamp  = _subd[0];
 		var _pStep  = 1 / _pSamp;
-		var _p = new __vec2P();
+		var _p      = new PathPoint();
 		var _rat;
 		
 		for( var i = 0; i < _lamo; i++ ) {

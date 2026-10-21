@@ -21,7 +21,7 @@ function __NodeValue_Vec2(_name, _node, _value, _data = {}) : NodeValue(_name, _
 	
 	////- GET
 	
-	__temp_path_sampler = new __vec2P();
+	__temp_path_sampler = new PathPoint();
 	
 	static valueProcess = function(value, nodeFrom = undefined, applyUnit = true, arrIndex = 0) {
 		var typeFrom = nodeFrom == undefined? VALUE_TYPE.any : nodeFrom.type;

@@ -75,7 +75,7 @@ function Node_Path_Fill(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		__step   = 1 / _reso;
 		__prng   = _prng;
 		__pshf   = _pshf;
-		path_points = array_verify_ext(path_points, _reso, function() /*=>*/ {return new __vec2P()});
+		path_points = array_verify_ext(path_points, _reso, function() /*=>*/ {return new PathPoint()});
 		
 	    surface_set_target(_outSurf);
 	        if(_invt) { draw_clear(_colr); BLEND_SUBTRACT }

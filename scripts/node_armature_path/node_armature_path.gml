@@ -43,7 +43,7 @@ function Node_Armature_Path(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	static getPointRatio    = function(_rat, _ind = 0, out = undefined) {}
 	
 	static getPointRatioFlat = function(_rat, _ind = 0, out = undefined) {
-		if(out == undefined) out = new __vec2P(); else { out.x = 0; out.y = 0; }
+		if(out == undefined) out = new PathPoint(); else out.reset();
 		
 		var dis = _rat * length_total;
 		var ind = array_search_min_bin(length_accu, dis);
@@ -63,7 +63,7 @@ function Node_Armature_Path(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	}
 	
 	static getPointRatioSegment = function(_rat, _ind = 0, out = undefined) {
-		if(out == undefined) out = new __vec2P(); else { out.x = 0; out.y = 0; }
+		if(out == undefined) out = new PathPoint(); else out.reset();
 		
 		var _p0 = lines[_ind][0];
 		var _p1 = lines[_ind][1];

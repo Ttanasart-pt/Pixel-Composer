@@ -45,9 +45,9 @@ function Node_Ribbon(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	attribute_interpolation(true, true);
 	
 	sizeLenMap = new curveMap(undefined, 128);
-	__p  = new __vec2P();
-	__p0 = new __vec2P();
-	__p1 = new __vec2P();
+	__p  = new PathPoint();
+	__p0 = new PathPoint();
+	__p1 = new PathPoint();
 	
 	temp_surface = array_create(8);
 	
@@ -145,7 +145,7 @@ function Node_Ribbon(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 				nt = t * i;
 				
 				var _cLen = _colLen.eval(pfract(prg + _colLenS));
-				var _cWei = _colWei.eval(pfract(__p.weight + _colWeiS));
+				var _cWei = _colWei.eval(pfract(__p.w + _colWeiS));
 				nc = colorMultiply(_cLen, _cWei);
 				
 				nw  = _size;

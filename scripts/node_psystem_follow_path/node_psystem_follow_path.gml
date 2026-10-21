@@ -37,7 +37,7 @@ function Node_pSystem_Follow_Path(_x, _y, _group = noone) : Node(_x, _y, _group)
 	curve_devi = undefined;
 	curve_stri = undefined;
 	curve_spri = undefined;
-	__p = new __vec2P();
+	__p = new PathPoint();
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _params) {
 		var _parts = getInputData(0);

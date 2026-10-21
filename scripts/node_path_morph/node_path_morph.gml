@@ -52,7 +52,7 @@ function Node_Path_Morph(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 		#endregion
 		
 		var _isb = 1 / (_sub - 1);
-		var _pp  = new __vec2P();
+		var _pp  = new PathPoint();
 		
 		if(_mid) {
 			var _p1 = array_create(_sub * 2);

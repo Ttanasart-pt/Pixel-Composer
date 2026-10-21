@@ -60,7 +60,7 @@ function Node_Gradient_Path(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 		
 		var _pathPoints = array_create(_pres + 1);
 		var _st = 1 / _pres;
-		var __p = new __vec2P();
+		var __p = new PathPoint();
 		
 		for( var i = 0; i <= _pres; i++ ) {
 			var _prog = frac(clamp(i * _st, 0., 0.999) + _pshf);

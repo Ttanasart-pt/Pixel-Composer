@@ -160,7 +160,7 @@ function Node_2D_Extrude(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	    	_points = array_create((_pthr + 1) * 2);
 			var _astep = 1 / _pthr;
 			var _prg   = 0;
-			var _p     = new __vec2P();
+			var _p     = new PathPoint();
 			var i = 0;
 			
 			_p    = _path.getPointRatio(0, 0, _p);

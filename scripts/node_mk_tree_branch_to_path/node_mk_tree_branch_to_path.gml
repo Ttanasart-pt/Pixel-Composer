@@ -87,16 +87,11 @@ function Node_MK_Tree_Branch_To_Path(_x, _y, _group = noone) : Node(_x, _y, _gro
 	
 	static getPointRatio    = function(_rat,  ind = 0, out = undefined) { return getPointDistance(clamp(_rat, 0, 0.99) * lengthTotal[ind], ind, out); }
 	static getPointDistance = function(_dist, ind = 0, out = undefined) {
-		if(out == undefined) out = new __vec2P(); else { out.x = 0; out.y = 0; }
+		if(out == undefined) out = new PathPoint(); else out.reset();
 		
 		var _cKey = $"{ind}, {string_format(_dist, 0, 6)}";
-		if(has(cached_pos, _cKey)) {
-			var _p = cached_pos[$ _cKey];
-			out.x = _p.x;
-			out.y = _p.y;
-			out.weight = _p.weight;
-			return out;
-		}
+		if(has(cached_pos, _cKey))
+			return out.apply(cached_pos[$ _cKey]);
 		
 		var _ancs = anchors[ind];
 		if(array_empty(_ancs)) return out;
@@ -119,8 +114,9 @@ function Node_MK_Tree_Branch_To_Path(_x, _y, _group = noone) : Node(_x, _y, _gro
 			
 			out.x = lerp(ox, nx, _t);
 			out.y = lerp(oy, ny, _t);
-			out.weight = lerp(ot, nt, _t);
-			cached_pos[$ _cKey] = new __vec2P(out.x, out.y, out.weight);
+			out.w = lerp(ot, nt, _t);
+			
+			cached_pos[$ _cKey] = out.clone();
 			return out;
 		}
 		

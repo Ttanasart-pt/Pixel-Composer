@@ -60,7 +60,7 @@ function Node_3D_Mesh_Path_Revolve(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y
 		
 		var _stp    = 1 / (_psam - 1);
 		var _points = array_create(_psam + 1);
-		var _p      = new __vec3P();
+		var _p      = new PathPoint();
 		
 		for( var i = 0; i <= _psam; i++ ) {
 			var _prg = _stp * i;

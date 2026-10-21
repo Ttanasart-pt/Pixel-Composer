@@ -37,13 +37,14 @@ function Node_Mesh_To_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		for( var i = 1; i < array_length(lengths); i += 1 ) {
 			if(l <= lengths[i]) {
 				var rat = l / lengths[i];
-				return segments[i - 1].lerpTo(segments[i], rat);
+				var p   = segments[i - 1].lerpTo(segments[i], rat);
+				return new PathPoint(p.x, p.y);
 			}
 			
 			l -= lengths[i];
 		}
 		
-		return new __vec2P();
+		return new PathPoint();
 	}
 	
 	static update = function() {  

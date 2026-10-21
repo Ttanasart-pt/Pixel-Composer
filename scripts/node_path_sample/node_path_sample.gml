@@ -4,30 +4,31 @@ function Node_Path_Sample(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	setDimension(96, 48);
 	
 	////- =Path
-	newInput( 0, nodeValue_Path(     "Path"          ));
-	newInput( 5, nodeValue_Int(      "Path Index", 0 ));
-	newInput( 3, nodeValue_SliRange( "Range", [0,1]  ));
-	newInput( 4, nodeValue_Slider(   "Shift",  0     ));
+	newInput( 6, nodeValue_EScroll(  "Dimension",  0, [ "2D", "3D" ] ));
+	newInput( 0, nodeValue_Path(     "Path"              ));
+	newInput( 5, nodeValue_Int(      "Path Index", 0     ));
+	newInput( 3, nodeValue_SliRange( "Range",     [0,1]  ));
+	newInput( 4, nodeValue_Slider(   "Shift",      0     ));
 	
 	////- =Sample
 	newInput( 2, nodeValue_EScroll(  "Type",  0, [ "Loop", "Ping pong", "Clamp" ] ));
 	newInput( 1, nodeValue_Float(    "Ratio", 0 ));
-	// 6
+	// 7
 	
 	newOutput( 0, nodeValue_Output( "Position",  VALUE_TYPE.float, [0,0] )).setDisplay(VALUE_DISPLAY.vector);
 	newOutput( 1, nodeValue_Output( "Direction", VALUE_TYPE.float,  0    ));
 	newOutput( 2, nodeValue_Output( "Weight",    VALUE_TYPE.float,  0    ));
 	
 	input_display_list = [
-		[ "Path",   false ],  0,  5,  3,  4, 
+		[ "Path",   false ],  6,  0,  5,  3,  4,  
 		[ "Sample", false ],  2,  1, 
 	];
 	
 	////- Node
 	
-	__temp_p  = new __vec2P();
-	__temp_p0 = new __vec2P();
-	__temp_p1 = new __vec2P();
+	__temp_p  = new PathPoint();
+	__temp_p0 = new PathPoint();
+	__temp_p1 = new PathPoint();
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _params) { 
 		drawOverlayInput(inputs[0].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _params));
@@ -49,6 +50,7 @@ function Node_Path_Sample(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	
 	static processData = function(_output, _data, _array_index = 0, _frame = CURRENT_FRAME) {
 		#region data
+			var _dimm = _data[ 6];
 			var _path = _data[ 0];
 			var _pind = _data[ 5];
 			var _rng  = _data[ 3];
@@ -84,7 +86,7 @@ function Node_Path_Sample(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 		
 		var _px = __temp_p.x;
 		var _py = __temp_p.y;
-		var _pw = __temp_p.weight;
+		var _pw = __temp_p.w;
 		
 		var r0 = clamp(_rat - 0.0001, 0, 1);
 		var r1 = clamp(_rat + 0.0001, 0, 1);
@@ -92,11 +94,19 @@ function Node_Path_Sample(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 		__temp_p0 = _path.getPointRatio(r0, _pind, __temp_p0);
 		__temp_p1 = _path.getPointRatio(r1, _pind, __temp_p1);
 		
-		var arr = __temp_p.toArray();
+		var arr = [0,0];
 		var dir = 0;
 		
-		     if(is(__temp_p, __vec2)) dir = inv? __temp_p1.directionTo(__temp_p0)        : __temp_p0.directionTo(__temp_p1);
-		else if(is(__temp_p, __vec3)) dir = inv? __temp_p1.subtract(__temp_p0).toArray() : __temp_p0.subtract(__temp_p1).toArray();
+	    if(_dimm == 0) {
+	    	arr = [__temp_p.x, __temp_p.y];
+	     	dir = inv? point_direction(__temp_p1.x, __temp_p1.y, __temp_p0.x, __temp_p0.y) : 
+	     	           point_direction(__temp_p0.x, __temp_p0.y, __temp_p1.x, __temp_p1.y)
+	     	
+	    } else if(_dimm == 1) {
+	    	arr = [__temp_p.x, __temp_p.y, __temp_p.z];
+	    	dir = inv? [ __temp_p1.x - __temp_p0.x, __temp_p1.y - __temp_p0.y, __temp_p1.z - __temp_p0.z ] : 
+	    	           [ __temp_p0.x - __temp_p1.x, __temp_p0.y - __temp_p1.y, __temp_p0.z - __temp_p1.z ]
+	    }
 		
 		return [ arr, dir, _pw ];
 		

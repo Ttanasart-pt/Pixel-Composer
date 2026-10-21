@@ -170,7 +170,7 @@ function Node_3D_Repeat(_x, _y, _group = noone) : Node_3D(_x, _y, _group) constr
 			}
 			
 			var _gridP = _grid[0] * _grid[1];
-			var __p = new __vec3P();
+			var __p = new PathPoint();
 			var _rt = _amo >= 1? 1 / (_amo - 1) : 0;
 			
 			span = [infinity, -infinity, infinity, -infinity, infinity, -infinity];

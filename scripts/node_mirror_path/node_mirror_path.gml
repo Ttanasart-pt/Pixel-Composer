@@ -51,7 +51,7 @@ function Node_Mirror_Path(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 		#endregion
 		
 		var _points = array_create(_reso * 2);
-		var __p = new __vec2P();
+		var __p = new PathPoint();
 		
 		var _stp = _loop? 1 / _reso : 1 / (_reso - 1);
 		if(_loop) _reso++;

@@ -216,13 +216,6 @@ function __vec2(_x = 0, _y = _x) constructor {
 	static lessThan = function(p) { return y < p.y? true : (y > p.y? false : x < p.x); }
 }
 
-function __vec2P(_x = 0, _y = _x, _w = 1) : __vec2(_x, _y) constructor {
-	weight = _w;
-	
-	static clone    = function() /*=>*/ {return new __vec2P(x, y, weight).setZ(z)};
-	static toString = function() /*=>*/ {return $"[__vec2P] ({x}, {y} | {weight})"};
-}
-
 function __vec2UV(_x = 0, _y = _x, _u = 0, _v = 0) : __vec2(_x, _y) constructor {
 	u = _u;
 	v = _v;
