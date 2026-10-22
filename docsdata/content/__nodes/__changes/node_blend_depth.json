@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.22.1.204",
+    "changes": [
+      {
+        "date": "2026-10-22T07:57:09.501Z",
+        "node": "Blend Depth",
+        "commit": "**Blend Depth**: Add back/front only outputs."
+      }
+    ]
+  },
+  {
     "version": "1.21.6.008",
     "changes": [
       {

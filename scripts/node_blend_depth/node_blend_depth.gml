@@ -1,6 +1,7 @@
 function Node_Blend_Depth(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Blend Depth";
 	
+	////- =Blend
 	newInput(14, nodeValue_EScroll( "Depth Mode", 0, [ "Less than", "Less than Equal", "Greater than", "Greater than Equal" ] ));
 	
 	////- =Surface 1
@@ -26,12 +27,17 @@ function Node_Blend_Depth(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	newInput(13, nodeValue_Vec2(    "Scale 2",    [1,1]   ));
 	// 15
 	
-	newOutput( 0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone)).setDrawGroup(2);
-	newOutput( 1, nodeValue_Output("Depth Out",   VALUE_TYPE.surface, noone)).setDrawGroup(2);
+	newOutput( 0, nodeValue_Output( "Surface Out", VALUE_TYPE.surface, noone )).setDrawGroup(2);
+	newOutput( 1, nodeValue_Output( "Depth Out",   VALUE_TYPE.surface, noone )).setDrawGroup(2);
+	newOutput( 2, nodeValue_Output( "Back Only",   VALUE_TYPE.surface, noone ));
+	newOutput( 3, nodeValue_Output( "Front Only",  VALUE_TYPE.surface, noone ));
 	
-	input_display_list = [ 14, 
+	input_display_list = [ 
+		[ "Blend", false ], 14, 
+		
 		[ "Surface 1",      false ],  0,  1,  4, 
 			[ "/Transform",  true ],  6,  7,  8,  9, 
+			
 		[ "Surface 2",      false ],  2,  3,  5, 
 			[ "/Transform",  true ], 10, 11, 12, 13, 
 	];

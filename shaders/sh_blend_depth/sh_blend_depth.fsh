@@ -371,8 +371,8 @@ uniform vec2  anchor_2;
 uniform float rotation_2;
 uniform vec2  scale_2;
 
-vec4 blend(vec4 bg, vec4 fg) { 
-	return bg * (1. - fg.a) + fg * fg.a; 
+vec4 blend(vec4 bg, vec4 fg, float alpha) { 
+	return bg * (1. - fg.a) + fg * fg.a * alpha; 
 }
 
 void main() {
@@ -409,9 +409,8 @@ void main() {
 	} else
 		d2 = mix(range_2.x, range_2.y, tx2.y);
 	
-	if(s2.a == 0.) return;
-
-	bool depthPass = false;
+	bool depthPass  = false;
+	bool equalDepth = d1 == d2;
 	
 	     if(depth_mode == 0) depthPass = d1 <  d2;
 	else if(depth_mode == 1) depthPass = d1 <= d2;
@@ -421,6 +420,11 @@ void main() {
 	vec4 bg = !depthPass? s1 : s2;
 	vec4 fg =  depthPass? s1 : s2;
 	
-	gl_FragData[0] = blend(bg, fg) * v_vColour;
-	gl_FragData[1] = vec4(vec3(min(d1, d2)), 1.);
+	if(s2.a > 0.) {
+		gl_FragData[0] = blend(bg, fg, 1.) * v_vColour;
+		gl_FragData[1] = vec4(vec3(min(d1, d2)), 1.);
+	}
+	
+	gl_FragData[2] =  depthPass? s1 : vec4(0.);
+	gl_FragData[3] = !depthPass || s1.a == 0.? s2 : vec4(0.);
 }
