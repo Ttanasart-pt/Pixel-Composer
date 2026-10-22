@@ -1440,6 +1440,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		}
 		
 		if(!manual_render_time) render_time = get_timer() - render_timer;
+		refreshNodeDimension();
 	}
 	
 	static doUpdateFull = function(frame = CURRENT_FRAME) { 
@@ -1495,6 +1496,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		updatedOutTrigger.setValue(true);
 		
 		if(!manual_render_time && !is(self, Node_Collection)) render_time = get_timer() - render_timer;
+		refreshNodeDimension();
 		
 		LOG_BLOCK_END
 	}
@@ -2746,7 +2748,9 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		draw_surface_ext(preview_surface, bbox.xc - _sw * _ss / 2, bbox.yc - _sh * _ss / 2, _ss, _ss, 0, c_white, aa);
 	}
 	
-	static getNodeDimension = function() {
+	node_dimension_text = "";
+	static refreshNodeDimension = function() { node_dimension_text = getNodeDimension(); return node_dimension_text; }
+	static getNodeDimension     = function() { 
 		if(!preview_is_surface) {
 			var otp = array_safe_get_fast(outputs, max(0, preview_channel));
 			if(!is(otp, NodeValue)) return "";
@@ -2765,9 +2769,11 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			return $"[{txt}]";
 		}
 		
-		var pw = surface_get_width_safe(preview_surface);
-		var ph = surface_get_height_safe(preview_surface);
-		var fr = surface_get_format_safe(preview_surface);
+		if(!is_surface(preview_surface)) return "";
+		
+		var pw = surface_get_width(preview_surface);
+		var ph = surface_get_height(preview_surface);
+		var fr = surface_get_format(preview_surface);
 		
 		var txt = $"[{pw} x {ph}";
 		if(preview_amount) txt = $"{preview_amount} x {txt}";
@@ -2810,7 +2816,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		
 		if(project.graphDisplay.show_dimension) {
 			draw_set_color(COLORS.panel_graph_node_dimension);
-			var txt = string(getNodeDimension());
+			var txt = node_dimension_text;
 			
 			if(vv) {
 				draw_set_halign(fa_left);

@@ -48,7 +48,6 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 	mouse_active = true;
 	
 	content_surface = surface_create_valid(w, h);
-	mask_surface    = surface_create_valid(w, h);
 	
 	tab_holding    = noone;
 	tab_hold_state = 0;
@@ -700,18 +699,7 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 	
 	////- Draw
 	
-	function resetMask() {
-		setTabSize();
-		
-		content_surface = surface_verify(content_surface, tw, th);
-		mask_surface    = surface_verify(mask_surface, tw, th);
-		surface_set_target(mask_surface);
-			draw_clear(c_black);
-			gpu_set_blendmode(bm_subtract);
-			draw_sprite_stretched(THEME.ui_panel_bg, 0, padding, padding, tw - padding * 2, th - padding * 2);
-			gpu_set_blendmode(bm_normal);
-		surface_reset_target();
-	} resetMask();
+	function resetMask() { setTabSize(); } resetMask();
 	
 	static preDraw = function() {
 		for( var i = 0, n = array_length(content); i < n; i++ )
@@ -1202,11 +1190,6 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 		var _th = th - padding * 2;
 		if(dFrame) draw_sprite_stretched(THEME.ui_panel_bg, 0, tx + padding, ty + padding, _tw, _th);
 		
-		if(!is_surface(mask_surface)) {
-			mask_surface = surface_create_valid(tw, th);
-			refresh();
-		}
-		
 		content_surface = surface_verify(content_surface, tw, th);
 		var _active = true;
 		if(con && con.pause_when_rendering && GLOBAL_IS_RENDERING) _active = false; 
@@ -1231,9 +1214,12 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 					draw_text(tw / 2, th / 2, "No content");
 				}
 				
-				gpu_set_blendmode(bm_subtract);
-				draw_surface_safe(mask_surface);
-				gpu_set_blendmode(bm_normal);
+				BLEND_OVERRIDE
+				gpu_set_colorwriteenable(0,0,0,1);
+				draw_sprite_stretched_ext(s_fx_pixel, 0, 0, 0, tw, th, 0, 0);
+				draw_sprite_stretched(THEME.ui_panel_bg, 4, padding, padding, tw - padding * 2, th - padding * 2);
+				gpu_set_colorwriteenable(1,1,1,1);
+				BLEND_NORMAL
 			surface_reset_target();
 			
 			draw_surface_safe(content_surface, tx, ty);

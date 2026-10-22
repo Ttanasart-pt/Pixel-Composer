@@ -175,9 +175,6 @@ function Panel_Animation_Dopesheet() {
 	    dopesheet_w            = w - tool_width;
         dopesheet_h            = h - timeline_h - ui(20);
         dopesheet_surface      = noone;
-        dopesheet_mask         = noone;
-        
-        dopesheet_name_mask    = noone;
         dopesheet_name_surface = noone;
         
         mouse_on_timeline      = false;
@@ -988,28 +985,6 @@ function Panel_Animation_Dopesheet() {
     	draw_line_width(fx, fy0, fx, fy1, 1);
     	draw_set_alpha(1);
     }
-    
-    function drawDopesheet_ResetTimelineMask() {
-    	dopesheet_mask         = surface_verify(dopesheet_mask,    dopesheet_w, dopesheet_h);
-        dopesheet_surface      = surface_verify(dopesheet_surface, dopesheet_w, dopesheet_h);
-        
-        dopesheet_name_mask    = surface_verify(dopesheet_name_mask,    tool_width, dopesheet_h);
-        dopesheet_name_surface = surface_verify(dopesheet_name_surface, tool_width, dopesheet_h - topbar_height);
-        
-        BLEND_SUBTRACT
-        
-        surface_set_target(dopesheet_mask);
-            draw_clear(c_black);
-            draw_sprite_stretched(THEME.ui_panel_bg, 0, 0, 0, dopesheet_w, dopesheet_h);
-        surface_reset_target();
-        
-        surface_set_target(dopesheet_name_mask);
-            draw_clear(c_black);
-            draw_sprite_stretched(THEME.ui_panel_bg, 0, 0, 0, tool_width, dopesheet_h);
-        surface_reset_target();
-        
-        BLEND_NORMAL
-    } 
     
     ////- Draw Graph
     
@@ -2622,6 +2597,8 @@ function Panel_Animation_Dopesheet() {
     	var hh = pad + dopesheet_h - topbar_height;
     	var oy = topbar_height;
     	
+    	dopesheet_name_surface = surface_verify(dopesheet_name_surface, tool_width, dopesheet_h - topbar_height);
+    	
         surface_set_target(dopesheet_name_surface);    
         draw_clear_alpha(COLORS.panel_bg_clear_inner, 0);
         var msx = mx - xx;
@@ -2809,9 +2786,13 @@ function Panel_Animation_Dopesheet() {
             }
         #endregion
         
-        BLEND_SUBTRACT
-        draw_surface_safe(dopesheet_name_mask);
-        BLEND_NORMAL
+        BLEND_OVERRIDE
+		gpu_set_colorwriteenable(0,0,0,1);
+		draw_sprite_stretched_ext(s_fx_pixel, 0, 0, 0, tool_width, dopesheet_h - topbar_height, 0, 0);
+		draw_sprite_stretched(THEME.ui_panel_bg, 4, 0, 0, tool_width, dopesheet_h - topbar_height);
+		gpu_set_colorwriteenable(1,1,1,1);
+		BLEND_NORMAL
+		
         surface_reset_target();
         
         if(on_end_dragging_anim != noone && mouse_lrelease()) on_end_dragging_anim = noone;
@@ -2893,7 +2874,6 @@ function Panel_Animation_Dopesheet() {
     ////- Draw
     
     function drawDopesheet() { 
-    	drawDopesheet_ResetTimelineMask();
     	if(item_dragging != noone) pHOVER = false;
     	var pad = ui(6);
     	
@@ -3012,6 +2992,7 @@ function Panel_Animation_Dopesheet() {
         var msy = my - pad;
         var _toSel = undefined;
     	
+    	dopesheet_surface = surface_verify(dopesheet_surface, dopesheet_w, dopesheet_h);
         surface_set_target(dopesheet_surface);    
         draw_clear_alpha(COLORS.panel_bg_clear, 1);
         
@@ -3901,9 +3882,13 @@ function Panel_Animation_Dopesheet() {
         }
         drawSelectorFade();
         
-        BLEND_SUBTRACT
-        draw_surface_safe(dopesheet_mask);
-        BLEND_NORMAL
+        BLEND_OVERRIDE
+		gpu_set_colorwriteenable(0,0,0,1);
+		draw_sprite_stretched_ext(s_fx_pixel, 0, 0, 0, dopesheet_w, dopesheet_h, 0, 0);
+		draw_sprite_stretched(THEME.ui_panel_bg, 4, 0, 0, dopesheet_w, dopesheet_h);
+		gpu_set_colorwriteenable(1,1,1,1);
+		BLEND_NORMAL
+		
         surface_reset_target();
         
     	////- =Draw

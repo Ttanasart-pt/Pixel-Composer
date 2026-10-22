@@ -6,6 +6,11 @@
         "date": "2026-10-22T02:12:52.983Z",
         "node": "",
         "commit": "- Fix path node always generate new preview surface"
+      },
+      {
+        "date": "2026-10-22T06:23:07.735Z",
+        "node": "",
+        "commit": "reduce vram used for UI masking."
       }
     ]
   },

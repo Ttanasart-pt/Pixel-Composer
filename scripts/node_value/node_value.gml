@@ -501,8 +501,8 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	
 	static setRequired = function() /*=>*/ { required = true; return self; }
 	
-	static hasInstance = function() { return connect_type == CONNECT_TYPE.input && node.instanceBase;               } 
-	static useInstance = function() { return hasInstance() && value_from == noone && !attributes.override_instance; } 
+	static hasInstance = function() { return connect_type == CONNECT_TYPE.input && node.instanceBase; } 
+	static useInstance = function() { return connect_type == CONNECT_TYPE.input && node.instanceBase && value_from == noone && !attributes.override_instance; } 
 	static getInstance = function() { return connect_type == CONNECT_TYPE.input? node.instanceBase.getInputIndex(index, tags) : node.instanceBase.getOutputIndex(index, tags); } 
 	
 	////- NAME
@@ -1743,7 +1743,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		if(value_from != __value_from) { __value_from  = value_from; return true; }
 		
 		if(value_from != noone) return true;
-		if(useInstance())       return getInstance().isDynamic();
+		if(node.instanceBase && !attributes.override_instance) return getInstance().isDynamic();
 		
 		if(expUse) {
 			if(!is_struct(expTree)) return false;
