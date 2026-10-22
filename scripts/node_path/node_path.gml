@@ -421,9 +421,6 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	
 	////- Nodes
 	
-	_path_preview_surface = noone;
-	 path_preview_surface = noone;
-	
 	#region ---- tool ----
 		tool_transform    = new NodeTool( "Transform",           THEME.path_tools_transform   );
 		tool_anchor_edit  = new NodeTool( "Anchor add / remove", THEME.path_tools_add         );
@@ -2218,7 +2215,10 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		__iacc      = 0;
 		
 		cached_pos  = {};
-		
+			
+		_path_preview_surface = noone;
+		 path_preview_surface = noone;
+	
 		static getLineCount		= function() /*=>*/ {return 1};
 		static getSegmentCount	= function() /*=>*/ {return array_length(lengths)};
 		static getBoundary		= function() /*=>*/ {return boundary};
@@ -2302,7 +2302,7 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 			
 		}
 		
-		static updateThumbnail  = function(_surf, surf) {
+		static updateThumbnail  = function() {
 			var pad  = min(8, abs(boundary.maxx - boundary.minx) * 0.1, abs(boundary.maxy - boundary.miny) * 0.1);
 			var minx = boundary.minx - pad, maxx = boundary.maxx + pad;
 			var cx   = (minx + maxx) / 2;
@@ -2317,8 +2317,8 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 			
 			var prev_s = 128;
 			
-			_surf = surface_verify(_surf, prev_s, prev_s);
-			surface_set_target(_surf);
+			_path_preview_surface = surface_verify(_path_preview_surface, prev_s, prev_s);
+			surface_set_target(_path_preview_surface);
 				DRAW_CLEAR
 				
 				var ox, oy, nx, ny;
@@ -2344,13 +2344,13 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 				}
 			surface_reset_target();
 			
-			surf = surface_verify(surf, prev_s, prev_s);
-			surface_set_shader(surf, sh_FXAA);
+			path_preview_surface = surface_verify(path_preview_surface, prev_s, prev_s);
+			surface_set_shader(path_preview_surface, sh_FXAA);
 				shader_set_f("dimension",  prev_s, prev_s);
 				shader_set_f("cornerDis",  0.5);
 				shader_set_f("mixAmo",     1);
 				
-				draw_surface_safe(_surf);
+				draw_surface_safe(_path_preview_surface);
 			surface_reset_shader();
 		}
 		
@@ -2469,7 +2469,7 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		_pth.cached_pos  = {};
 		
 		_pth.updateLength();
-		_pth.updateThumbnail(_path_preview_surface, path_preview_surface);
+		// _pth.updateThumbnail();
 		
 		outputs[2].setValue(_a);
 		outputs[1].setValue(_pth);
@@ -2513,11 +2513,6 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 			}
 			
 		}
-	}
-	
-	static onCleanUp = function() {
-		surface_free(_path_preview_surface);
-		surface_free( path_preview_surface);
 	}
 	
 }

@@ -1352,13 +1352,13 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		__dimUpdate = false;
 		if(dimension_index >= 0 && dimension_index < array_length(inputs))  {
 			var _dimInput = inputs[dimension_index];
-			__dimUpdate   = _dimInput.isDynamic();
+			__dimUpdate   = !project.animator.is_playing || _dimInput.isDynamic();
 		}
 		
 		array_foreach(inputs, function(_inp, i) /*=>*/ {
 			if(!is(_inp, NodeValue)) return true;
 			
-			var _update  = _inp.isDynamic();
+			var _update  = !project.animator.is_playing || _inp.isDynamic();
 			if(_inp.unit.mode == VALUE_UNIT.reference) 
 				_update |= __dimUpdate;
 			if(!_update) return true;
@@ -1408,7 +1408,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		doUpdate();
 	}
 	
-	static doUpdateLite = function(frame = CURRENT_FRAME) {
+	static doUpdateLite = function(frame = CURRENT_FRAME) { 
 		if(project.safeMode) return;
 		if(is_3D == NODE_3D.polygon) USE_DEPTH = true;
 		
@@ -1442,7 +1442,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		if(!manual_render_time) render_time = get_timer() - render_timer;
 	}
 	
-	static doUpdateFull = function(frame = CURRENT_FRAME) {
+	static doUpdateFull = function(frame = CURRENT_FRAME) { 
 		if(project.safeMode) return;
 		if(is_3D == NODE_3D.polygon) USE_DEPTH = true;
 		

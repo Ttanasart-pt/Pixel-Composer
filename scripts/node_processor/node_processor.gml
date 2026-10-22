@@ -114,11 +114,11 @@ function Node_Processor(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		__dimUpdate = false;
 		if(dimension_index >= 0 && dimension_index < array_length(inputs))  {
 			var _dimInput = inputs[dimension_index];
-			__dimUpdate   = _dimInput.isDynamic();
+			__dimUpdate   = !project.animator.is_playing || _dimInput.isDynamic();
 		}
 		
 		array_foreach(inputs, function(_in, i) /*=>*/ {
-			var _update  = _in.isDynamic();
+			var _update  = !project.animator.is_playing || _in.isDynamic();
 			if(_in.unit.mode == VALUE_UNIT.reference) 
 				_update |= __dimUpdate;
 			
@@ -200,7 +200,7 @@ function Node_Processor(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		
 		for( var i = 0; i < _len; i++ ) {
 			var _inp = inputs[i];
-			if(_inp.isDynamic()) inputs_data[i] = _inp.getValue(frame);
+			if(!project.animator.is_playing || _inp.isDynamic()) inputs_data[i] = _inp.getValue(frame);
 			if(_inp.bypass_use) _inp.getBypassJunc().setValue(inputs_data[i]);
 		}
 		

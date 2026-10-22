@@ -1720,12 +1720,11 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	static isActiveDynamic = function(useAnim = false) {
 		INLINE
 		if(value_from != noone) return false;
-		if(useInstance())       return getInstance().isActiveDynamic();
+		if(node.instanceBase && !attributes.override_instance) return getInstance().isActiveDynamic();
 		
 		if(expUse) {
 			if(!is_struct(expTree)) return false;
 			var res = expTree.isDynamic();
-			
 			switch(res) {
 				case EXPRESS_TREE_ANIM.none :		return false;
 				case EXPRESS_TREE_ANIM.base_value : force_requeue = true; return false; // is_anim
@@ -1743,9 +1742,8 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		if(force_dynamic)              { force_dynamic = false;      return true; }
 		if(value_from != __value_from) { __value_from  = value_from; return true; }
 		
-		if(useInstance())                                  return getInstance().isDynamic();
-		if(!node.project.animator.is_playing)              return true;
-		if(value_from != noone)                            return true;
+		if(value_from != noone) return true;
+		if(useInstance())       return getInstance().isDynamic();
 		
 		if(expUse) {
 			if(!is_struct(expTree)) return false;

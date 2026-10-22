@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.22.1.204",
+    "changes": [
+      {
+        "date": "2026-10-22T02:12:52.983Z",
+        "node": "",
+        "commit": "- Fix path node always generate new preview surface"
+      }
+    ]
+  },
+  {
     "version": "1.22.1.203",
     "changes": [
       {

@@ -12,10 +12,9 @@
 		prog     = _prog;
 		progCrop = _progCrop;
 		
-		function clone() { return new __LinePoint(x, y, prog, progCrop, w); }
-		function toString() { return $"[{prog}/{progCrop}]({x},{y},{w})"; }
-		
-		function equalTo(p) { return x == p.x && y == p.y; }
+		static clone    = function( ) /*=>*/ {return new __LinePoint(x, y, prog, progCrop, w)};
+		static toString = function( ) /*=>*/ {return $"[{prog}/{progCrop}]({x},{y},{w})"};
+		static equalTo  = function(p) /*=>*/ {return x == p.x && y == p.y};
 	}
 	
 #endregion
@@ -151,6 +150,7 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	line_data    = [];
 	temp_surface = [ noone ];
 	widthMap     = ds_map_create();
+	__p = new PathPoint();
 	
 	attribute_surface_depth();
 	attribute_interpolation(false, true);
@@ -191,11 +191,6 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	
 	static processData = function(_outData, _data, _array_index) {
 		#region data
-			// print("========================================================================")
-			// for( var i = 0, n = array_length(_data); i < n; i++ )
-			// 	print(i, inputs[i].name, _data[i]);
-			// print("========================================================================\n")
-			
 			var _seed     = _data[39];
 			
 			var _bg       = _data[ 1];
@@ -259,10 +254,10 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 			var _extn     = _data[68];
 			var _ranAng   = _data[69];
 			
-			var _color    = _data[10], _color_shf  = _data[64];
-			var _colb     = _data[24], _colb_shf   = _data[65];
+			var _color    = _data[10], _color_shf  = _data[64]; _color.cache();
+			var _colb     = _data[24], _colb_shf   = _data[65]; _colb.cache();
 			var _colP     = _data[15];
-			var _wg2clr   = _data[37], _wg2clr_shf = _data[66];
+			var _wg2clr   = _data[37], _wg2clr_shf = _data[66]; _wg2clr.cache();
 			var _wg2clrR  = _data[38];
 			
 			var _tex      = _data[18];
@@ -352,7 +347,6 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 				_capE = false; 
 			}
 			
-			var p = new PathPoint();
 			var _pathData = [];
 			var minx = 999999, miny = 999999, maxx = -999999, maxy = -999999;
 			
@@ -444,8 +438,8 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 					
 				case 1 :
 					var lineCount = 1; 
-					if(struct_has(_pat, "getLineCount")) lineCount = _pat.getLineCount();
-					if(struct_has(_pat, "getPathData"))  _pathData = _pat.getPathData();
+					if(has(_pat, "getLineCount")) lineCount = _pat.getLineCount();
+					if(has(_pat, "getPathData"))  _pathData = _pat.getPathData();
 					
 					lines = array_verify(lines, lineCount);
 					
@@ -469,17 +463,17 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 						for( var j = 0; j < _pamo; j++ ) {
 							if(dist) {
 								_pl   = min(j * _segL, _pathLength);
-								 p    = _pat.getPointDistance(_pl, i, p);
+								__p   = _pat.getPointDistance(_pl, i, __p);
 								_prog = _pl / _pathLength; 
 								
 							} else {
 								_prog = j / (_pamo - 1);
-								 p    = _pat.getPointRatio(_prog, i, p);
+								__p   = _pat.getPointRatio(_prog, i, __p);
 							}
 							
-							_nx = p.x;
-							_ny = p.y;
-							_nw = p.w;
+							_nx = __p.x;
+							_ny = __p.y;
+							_nw = __p.w;
 							
 							points[j] = new __LinePoint( _nx, _ny, _prog, _prog, _nw );
 							
@@ -926,7 +920,7 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 				
 				draw_primitive_begin_texture(pr_trianglelist, _texId);
 				
-				var _col_base = dat == noone? gradientEval(_colb, pfract(random(1) + _colb_shf)) : dat.color;
+				var _col_base = dat == noone? _colb.evalFast(pfract(random(1) + _colb_shf)) : dat.color;
 				_ow = 1;
 				
 				var _stx = 0, _sty = 0, _sta = 0;
@@ -962,8 +956,8 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 					
 					_np = _colP? prog : prgc;
 					_nc = _col_base;
-					_nc = colorMultiply(_nc, gradientEval(_color,  pfract(min(.999, _np) + _color_shf)));
-					_nc = colorMultiply(_nc, gradientEval(_wg2clr, pfract(min(.999, (_ww - _wg2clrR[0]) / _wg2clrRng) + _wg2clr_shf)));
+					_nc = colorMultiply(_nc, _color.evalFast( pfract(min(.999, _np) + _color_shf)));
+					_nc = colorMultiply(_nc, _wg2clr.evalFast(pfract(min(.999, (_ww - _wg2clrR[0]) / _wg2clrRng) + _wg2clr_shf)));
 					_nd = _dir;
 					
 					if(_cappS == 0) {
@@ -1204,7 +1198,7 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 					var pxs = [];
 					var dat = array_safe_get_fast(_pathData, i, noone);
 					
-					var _col_base = dat == noone? gradientEval(_colb, pfract(random(1) + _colb_shf)) : dat.color;
+					var _col_base = dat == noone? _colb.evalFast(pfract(random(1) + _colb_shf)) : dat.color;
 					var _dirs = lineDirs[i];
 				
 					for( var j = 0, m = array_length(points); j < m; j++ ) {
