@@ -57,9 +57,10 @@
 	    function panel_preview_set_mode_3d()          { CALL("preview_set_mode_3d"); PANEL_PREVIEW.preview_mode = PREV_MODE.D3; }
 	    function panel_preview_toggle_mode(d=1)       { CALL("preview_toggle_mode"); PANEL_PREVIEW.preview_mode = !PANEL_PREVIEW.preview_mode;  }
 	    
-	    function panel_preview_toggle_lock()          { CALL("preview_toggle_lock");               PANEL_PREVIEW.toggle_lock();  }
-	    function panel_preview_toggle_mini()          { CALL("preview_toggle_mini");               PANEL_PREVIEW.toggle_mini();  }
-	    function panel_preview_toggle_gizmo()         { CALL("preview_toggle_gizmo");              PANEL_PREVIEW.toggle_gizmo(); }
+	    function panel_preview_toggle_lock()          { CALL("preview_toggle_lock");               PANEL_PREVIEW.toggle_lock();        }
+	    function panel_preview_toggle_mini()          { CALL("preview_toggle_mini");               PANEL_PREVIEW.toggle_mini();        }
+	    function panel_preview_toggle_gizmo()         { CALL("preview_toggle_gizmo");              PANEL_PREVIEW.toggle_gizmo();       }
+	    function panel_preview_toggle_gizmo_trans()   { CALL("preview_toggle_gizmo_trans");        PANEL_PREVIEW.toggle_gizmo_trans(); }
 	    
 		function panel_preview_view_control_toggle()  { PANEL_PREVIEW.view_control_toggle(); }
 		function panel_preview_view_control_show()    { PANEL_PREVIEW.view_control_show();   }
@@ -192,11 +193,12 @@
 	        	.setMenu("preview_toggle_lock", THEME.lock )
 	        	.setSpriteInd( function() /*=>*/ {return !PANEL_PREVIEW.locked} )
 	        	.setColorFn(   function() /*=>*/ {return PANEL_PREVIEW.locked? COLORS._main_accent : COLORS._main_icon} )
-	        registerFunction(p, "Toggle Minimap",           "", n, panel_preview_toggle_mini               ).setMenu("preview_toggle_mini",   THEME.icon_minimap ).setSpriteInd(function() /*=>*/  {return PANEL_PREVIEW.minimap_show} )
-	        registerFunction(p, "Toggle Gizmo",             "", n, panel_preview_toggle_gizmo              ).setMenu("preview_toggle_gizmo",  THEME.icon_gizmo   ).setSpriteInd(function() /*=>*/  {return PANEL_PREVIEW.gizmo_show}   )
-	        registerFunction(p, "Toggle Left Panel",        "[",n, panel_preview_tool_l_toggle             ).setMenu("preview_toggle_left_tool"  )
-	        registerFunction(p, "Toggle Right Panel",       "]",n, panel_preview_tool_r_toggle             ).setMenu("preview_toggle_right_tool" )
-	        registerFunction(p, "Toggle 2D Overlay",        "", n, panel_preview_overlay_2d_toggle         ).setMenu("preview_toggle_2d_overlay", THEME.splash_thumbnail ).setSpriteInd(function() /*=>*/ {return !PANEL_PREVIEW.render_2d_overlay} )
+	        registerFunction(p, "Toggle Minimap",           "", n, panel_preview_toggle_mini               ).setMenu("preview_toggle_mini",        THEME.icon_minimap     ).setSpriteInd(function() /*=>*/  {return PANEL_PREVIEW.minimap_show}    )
+	        registerFunction(p, "Toggle Gizmo",             "", n, panel_preview_toggle_gizmo              ).setMenu("preview_toggle_gizmo",       THEME.icon_gizmo       ).setSpriteInd(function() /*=>*/  {return PANEL_PREVIEW.gizmo_show}      )
+	        registerFunction(p, "Toggle Gizmo Transform",   "", n, panel_preview_toggle_gizmo_trans        ).setMenu("preview_toggle_gizmo_trans", THEME.icon_gizmo_trans ).setSpriteInd(function() /*=>*/  {return PANEL_PREVIEW.gizmo_transform} )
+	        registerFunction(p, "Toggle Left Panel",        "[",n, panel_preview_tool_l_toggle             ).setMenu("preview_toggle_left_tool"                           )
+	        registerFunction(p, "Toggle Right Panel",       "]",n, panel_preview_tool_r_toggle             ).setMenu("preview_toggle_right_tool"                          )
+	        registerFunction(p, "Toggle 2D Overlay",        "", n, panel_preview_overlay_2d_toggle         ).setMenu("preview_toggle_2d_overlay",  THEME.splash_thumbnail ).setSpriteInd(function() /*=>*/ {return !PANEL_PREVIEW.render_2d_overlay} )
 	        
 	        registerFunction(p, "Popup",            		"", n, function() /*=>*/ { create_preview_window(PANEL_PREVIEW.getNodePreview());         }).setMenu("preview_popup",          THEME.node_goto_thin    )
 	        registerFunction(p, "Grid Settings...",         "", n, function() /*=>*/ { PANEL_PREVIEW.subDialogCall(new Panel_Preview_Grid_Setting())  })
@@ -658,9 +660,10 @@ function Panel_Preview() : PanelContent() constructor {
         static set_reset_view_off  = function() /*=>*/ { resetViewOnDoubleClick = 0; } 
         static set_reset_view_on   = function() /*=>*/ { resetViewOnDoubleClick = 1; } 
         
-        static toggle_lock         = function() /*=>*/ { locked = !locked }
-        static toggle_mini         = function() /*=>*/ { minimap_show = !minimap_show; }
-        static toggle_gizmo        = function() /*=>*/ { gizmo_show   = !gizmo_show; }
+        static toggle_lock         = function() /*=>*/ { locked          = !locked;            }
+        static toggle_mini         = function() /*=>*/ { minimap_show    = !minimap_show;      }
+        static toggle_gizmo        = function() /*=>*/ { gizmo_show      = !gizmo_show;        }
+        static toggle_gizmo_trans  = function() /*=>*/ { gizmo_transform = !gizmo_transform;   }
         
         static d3_view_action_front  = function() /*=>*/ { d3_camLerp = 1; d3_camLerp_x =   0; d3_camLerp_y =   0; d3_camera.projection = 1; }
         static d3_view_action_back   = function() /*=>*/ { d3_camLerp = 1; d3_camLerp_x = 180; d3_camLerp_y =   0; d3_camera.projection = 1; }
@@ -724,6 +727,7 @@ function Panel_Preview() : PanelContent() constructor {
         	"preview_toggle_lock",
         	"preview_focus_content",
         	"preview_toggle_gizmo",
+        	"preview_toggle_gizmo_trans",
         	"preview_toggle_mini",
         	"preview_view_settings",
         	"preview_popup", 

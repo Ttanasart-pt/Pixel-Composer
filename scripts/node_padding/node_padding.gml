@@ -48,16 +48,16 @@ function Node_Padding(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	
 	static processData = function(_outSurf, _data, _array_index) {
 		#region data
-			var surf    = _data[0];
+			var surf    = _data[ 0];
 			
-			var padding	= _data[1];
-			var mode    = _data[5];
-			var dim 	= _data[6];
-			var halign	= _data[7];
-			var valign	= _data[8];
+			var padding	= _data[ 1];
+			var mode    = _data[ 5];
+			var dim 	= _data[ 6];
+			var halign	= _data[ 7];
+			var valign	= _data[ 8];
 			
-			var fill	= _data[2];
-			var fillClr = _data[3];
+			var fill	= _data[ 2];
+			var fillClr = _data[ 3];
 			
 			var cDep    = attrDepth();
 			
@@ -68,6 +68,8 @@ function Node_Padding(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 			inputs[8].setVisible(mode == 1);
 			
 			inputs[3].setVisible(fill == 1);
+			
+			if(!is_surface(surf)) return _outSurf;
 		#endregion
 		
 		var ww	= surface_get_width_safe(surf);
@@ -87,7 +89,7 @@ function Node_Padding(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 						
 					} else if(fill == 1)
 						draw_clear_alpha(fillClr, color_get_alpha(fillClr));
-				
+					
 					draw_surface_safe(surf, padding[2], padding[1]);
 					BLEND_NORMAL
 				surface_reset_target();

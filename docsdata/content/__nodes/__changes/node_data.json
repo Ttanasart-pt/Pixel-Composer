@@ -11,6 +11,11 @@
         "date": "2026-10-22T06:23:07.735Z",
         "node": "",
         "commit": "reduce vram used for UI masking."
+      },
+      {
+        "date": "2026-10-23T00:42:33.385Z",
+        "node": "Preview Panel",
+        "commit": "**Preview Panel**: Add button to toggle gizmo tranform."
       }
     ]
   },
