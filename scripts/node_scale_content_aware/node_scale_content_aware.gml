@@ -28,7 +28,6 @@ function Node_Scale_Content_Aware(_x, _y, _group = noone) : Node_Processor(_x, _
 	
 	temp_surface = array_create(6, noone);
 	generator    = content_aware_init();
-	processing   = 0;
 	
 	surfaceBuffer = undefined;
 	outputBuffer  = undefined;
@@ -183,10 +182,6 @@ function Node_Scale_Content_Aware(_x, _y, _group = noone) : Node_Processor(_x, _
 		return _outSurf;
 	}
 	
-	static step = function() {
-		if(processing) PANEL_GRAPH.refreshDraw();
-	}
-	
 	static processData = function(_outSurf, _data, _array_index = 0) { 
 		#region data
 			var _surf = _data[ 0];
@@ -269,12 +264,6 @@ function Node_Scale_Content_Aware(_x, _y, _group = noone) : Node_Processor(_x, _
 		buffer_delete_safe(outputBuffer);
 		
 		return _outSurf;
-	}
-	
-	////- Draw
-	
-	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
-		if(processing) draw_sprite_ui(THEME.loading, 0, xx + w*_s/2, yy + h*_s/2, _s, _s, current_time/2, COLORS._main_icon, 1);
 	}
 	
 }
