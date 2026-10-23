@@ -58,6 +58,7 @@ function Node_Line_2Points(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	////- Nodes
 	
 	attribute_surface_depth();
+	attribute_interpolation();
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _params) {
 		drawOverlayInput(inputs[ 2].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my));
@@ -131,6 +132,7 @@ function Node_Line_2Points(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		var _subSt = 1 / _segs;
 		
 		surface_set_shader(outSurf, _1px? noone : sh_draw_line_width);
+			shader_set_interpolation(_text);
 			draw_surface_safe(_bgS);
 			
 			if(!_1px) {
@@ -186,7 +188,7 @@ function Node_Line_2Points(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 						var t0 = widthCurve? _thk * widthCurve.get(j0) : _thk;
 						var t1 = widthCurve? _thk * widthCurve.get(j1) : _thk;
 						
-						draw_line_width2_prim(p0x, p0y, p1x, p1y, t0, t1, _cap, c0, c1);
+						draw_line_width2_prim(p0x, p0y, p1x, p1y, t0, t1, _cap, c0, c1, j0, j1, 0, 1);
 					}
 				}
 				draw_primitive_end();

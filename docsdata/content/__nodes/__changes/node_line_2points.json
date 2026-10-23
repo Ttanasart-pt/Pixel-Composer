@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.22.1.204",
+    "changes": [
+      {
+        "date": "2026-10-23T05:28:17.543Z",
+        "node": "Draw Line 2 Points",
+        "commit": "**Draw Line 2 Points**: Fix incorrect uv mapping for multiple segments."
+      }
+    ]
+  },
+  {
     "version": "1.21.9.208",
     "changes": [
       {
