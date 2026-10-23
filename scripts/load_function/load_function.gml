@@ -1,3 +1,19 @@
+#region global
+	globalvar LOADING; LOADING		  = false;
+	globalvar LOADING_VERSION; LOADING_VERSION = 0;
+	
+	globalvar CLONING; CLONING		  = false;
+	globalvar CLONING_GROUP; CLONING_GROUP   = noone;
+	
+	globalvar APPENDING; APPENDING	      = false;
+	globalvar APPEND_MAP; APPEND_MAP      = ds_map_create();
+	globalvar APPEND_LIST; APPEND_LIST     = [];
+	globalvar SERIALIZE_STRIP; SERIALIZE_STRIP = false;
+	
+	globalvar CONNECTION_CONFLICT; CONNECTION_CONFLICT = ds_queue_create();
+	globalvar LOAD_MISSING_GROUP; LOAD_MISSING_GROUP  = {};
+#endregion
+
 function __loadParams(readonly = false, safe_mode = false, override = false, apply_layout = false) constructor {
 	self.readonly     = readonly;
 	self.safe_mode    = safe_mode;

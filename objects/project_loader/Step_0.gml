@@ -45,9 +45,24 @@ switch(load_process) {
     
     case 2 : 
         ds_queue_clear(CONNECTION_CONFLICT);
+        LOAD_MISSING_GROUP = {};
         
         try      { array_foreach(create_list, function(n,i) /*=>*/ {return n.loadGroup()} ); } 
         catch(e) { log_warning("LOAD, group", exception_print(e));    }
+        
+        var _missing_group_ids = struct_get_names(LOAD_MISSING_GROUP);
+        for( var i = 0, n = array_length(_missing_group_ids); i < n; i++ ) {
+        	var _mid = _missing_group_ids[i];
+        	var _cnt = LOAD_MISSING_GROUP[$ _mid];
+        	
+        	var _grp = nodeBuild("Node_Group", 0, 0, noone);
+        	    _grp.resetInternalName();
+        	    
+        	for( var j = 0, m = array_length(_cnt); j < m; j++ ) 
+        		_grp.add(_cnt[j]);
+        		
+        	array_push(PROJECT.nodes, _grp);
+        }
         
         printIf(log, $" > Load group : {(get_timer() - t1) / 1000} ms"); t1 = get_timer();
         load_process = 3;

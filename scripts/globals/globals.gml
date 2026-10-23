@@ -4,19 +4,6 @@ gml_pragma("UnityBuild", "true");
 // }
 
 #region save
-	globalvar LOADING; LOADING		  = false;
-	globalvar LOADING_VERSION; LOADING_VERSION = 0;
-	
-	globalvar CLONING; CLONING		  = false;
-	globalvar CLONING_GROUP; CLONING_GROUP   = noone;
-	
-	globalvar APPENDING; APPENDING	      = false;
-	globalvar APPEND_MAP; APPEND_MAP      = ds_map_create();
-	globalvar APPEND_LIST; APPEND_LIST     = [];
-	globalvar SERIALIZE_STRIP; SERIALIZE_STRIP = false;
-	
-	globalvar CONNECTION_CONFLICT; CONNECTION_CONFLICT = ds_queue_create();
-	
 	globalvar MESSAGE; MESSAGE         = noone;
 	globalvar OS_PAUSED; OS_PAUSED       = false;
 	randomize();

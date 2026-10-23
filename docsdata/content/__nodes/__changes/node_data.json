@@ -21,6 +21,11 @@
         "date": "2026-10-23T03:24:13.416Z",
         "node": "Node",
         "commit": "**Node**: Add setting to only update node on mouse release."
+      },
+      {
+        "date": "2026-10-23T04:29:27.591Z",
+        "node": "Load",
+        "commit": "**Load**: when loading node inside a corrupted group, a new empty group will be created instead of removing the content."
       }
     ]
   },

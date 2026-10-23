@@ -3779,7 +3779,6 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	static loadGroup   = function(ctx = noone) /*=>*/ { 
 		if(load_igroup != noone) {
 			load_igroup = GetAppendID(load_igroup);
-			
 			if(ds_map_exists(project.nodeMap, load_igroup)) {
 				var _grp = project.nodeMap[? load_igroup];
 				if(is(_grp, Node_Collection_Inline))
@@ -3800,9 +3799,17 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			if(ds_map_exists(project.nodeMap, load_group)) {
 				var _grp = project.nodeMap[? load_group];
 				if(has(_grp, "add")) _grp.add(self);
-				else throw($"Group load failed. Node ID {load_group} is not a group.");
+				else {
+					if(!has(LOAD_MISSING_GROUP, load_group)) LOAD_MISSING_GROUP[$ load_group] = [];
+					array_push(LOAD_MISSING_GROUP[$ load_group], self);
+					noti_warning($"Group load failed. Node ID {load_group} is not a group.");
+				}
 				
-			} else throw($"Group load failed. Can't find node ID {load_group}");
+			} else {
+				if(!has(LOAD_MISSING_GROUP, load_group)) LOAD_MISSING_GROUP[$ load_group] = [];
+				array_push(LOAD_MISSING_GROUP[$ load_group], self);
+				noti_warning($"Group load failed. Can't find node ID {load_group}");
+			}
 		}
 		
 		if(ds_map_exists(project.nodeMap, load_inst))
