@@ -645,6 +645,35 @@ function Panel_Preview() : PanelContent() constructor {
     	graph_nav_hover = undefined;
     #endregion
     
+    #region ---- measure ----
+    	measure_mode      = false;
+    	measure_tool_curr = undefined;
+    	
+    	measure_tool_ruler      = { name: __txt("Ruler"),     icon: THEME.measure_ruler     };
+    	measure_tool_angle      = { name: __txt("Angle"),     icon: THEME.measure_angle     };
+    	measure_tool_rectangle  = { name: __txt("Rectangle"), icon: THEME.measure_rectangle };
+    	
+    	measure_tools = [
+    		measure_tool_ruler, 
+    		measure_tool_angle, 
+    		-1,
+    		measure_tool_rectangle,
+    	];
+    	
+    	measure_step = 0;
+    	measure_x0   = 0; measure_y0   = 0;
+    	measure_x1   = 0; measure_y1   = 0;
+    	measure_x2   = 0; measure_y2   = 0;
+    	
+    	measure_drag    = undefined;
+    	measure_drag_sx  = 0; measure_drag_sy  = 0;
+    	measure_drag_sx0 = 0; measure_drag_sy0 = 0;
+    	measure_drag_sx1 = 0; measure_drag_sy1 = 0;
+    	measure_drag_sx2 = 0; measure_drag_sy2 = 0;
+    	
+    	measure_drag_mx  = 0; measure_drag_my  = 0;
+    #endregion
+    
     #region ++++ Toolbars & Actions ++++
     	MENUITEM_CONDITIONS[$ "preview_3d_is_unlock"] = function() /*=>*/ {return !preview_lock};
     	
@@ -1841,6 +1870,148 @@ function Panel_Preview() : PanelContent() constructor {
         if(thov && !key_mod_press_any() && MOUSE_WHEEL != 0)
             tool_ry_to += ui(64) * MOUSE_WHEEL;
         tool_ry_to = clamp(tool_ry_to, -tool_ry_max, 0);
+        
+        gpu_set_scissor(scs);
+    }
+    
+    static drawToolsMeasure = function() {
+    	var pd    = THEME_VALUE.panel_toolbar_padding;
+    	var hori  = PREFERENCES.panel_preview_toolbar_horizontal;
+    	
+        var aa  = d3_active? 0.8 : 1;
+        var txx = pd;
+        var tyy = pd + toolbar_size;
+        
+        var scs = gpu_get_scissor();
+        
+        if(hori) {
+	        var tww = w - pd * 2;
+	        var thh = toolbar_size;
+		
+	        gpu_set_scissor(pd, 0, tww - ui(2), h);
+	            
+        } else {
+        	tyy += pd;
+        	
+        	var tww = toolbar_size;
+	        var thh = h - pd * 2;
+	        
+	        gpu_set_scissor(0, tyy, w, toolbar_content_l.value - ui(2));
+	            
+        }
+	    
+        tool_y_max = 0; 
+        tool_y   = lerp_float(tool_y, tool_y_to, 5);
+        
+        var thov = pHOVER && point_in_rectangle(mx, my, txx, tyy, txx + tww, tyy + thh);
+        if(thov) {
+        	canvas_hover = false;
+        	mouse_on_preview = 0;
+        }
+        
+        if(hori) {
+        	var xx = txx + tool_y;
+        	var yy = tyy + toolbar_size / 2;
+        	
+        } else {
+	        var xx = txx + toolbar_size / 2;
+	        var yy = tyy + tool_y;	
+        }
+        
+        ////- Toolbar Lock
+        
+        var bs = ui(16);
+        if(hori) {
+        	var bx = xx + ui(8);
+	        var by = yy - bs / 2;
+	        
+        } else {
+	        var bx = xx - bs / 2;
+	        var by = yy + ui(8);
+        }
+        
+        var ts  = toolbar_size - ui(4);
+        var ts2 = ts / 2;
+        
+        var bi = PROJECT.previewSetting.tool_always_l;
+        var bc = bi? COLORS._main_accent : COLORS._main_icon;
+        if(buttonInstant_Pad(THEME.button_hide, bx, by, bs, bs, [mx, my], thov, pFOCUS, "", THEME.lock, !bi, bc) == 2)
+        	PROJECT.previewSetting.tool_always_l = !PROJECT.previewSetting.tool_always_l;
+        	
+        if(hori) xx += bs + ui(10) + ts2;
+        else     yy += bs + ui(10) + ts2;
+        tool_y_max  += bs + ui(10) + ts2;
+        
+        ////- Left tools
+        
+        var _draw_sep = true;
+    	var _spFrm    = THEME_VALUE.panel_separation_type == "frame";
+        var pd        = ui(1);
+    	
+        for( var i = 0, n = array_length(measure_tools); i < n; i++ ) {
+            var tool = measure_tools[i];
+            
+            var _x0  = xx - ts2;
+            var _y0  = yy - ts2;
+            var _x1  = xx + ts2;
+            var _y1  = yy + ts2;
+                
+            var _bx = _x0 + pd;
+            var _by = _y0 + pd;
+            var _bs = ts - pd * 2;
+            
+            if(tool == -1) {
+                draw_set_color(COLORS.panel_separator);
+                if(hori) {
+                	var lx = _x0 + ui(4);
+                	if(_spFrm) draw_line_width(lx, tyy + ui(4), lx, tyy + thh - ui(4), ui(1));
+	                else       draw_line(      lx, tyy,         lx, tyy + thh - 1);
+	                
+                } else {
+                	var ly = _y0 + ui(4);
+	                if(_spFrm) draw_line_width(txx + ui(4), ly, txx + tww - ui(4), ly, ui(1));
+	                else       draw_line(      txx,         ly, txx + tww - 1,     ly);
+                }
+                
+                if(hori) xx += ui(8);
+                else     yy += ui(8);
+                tool_y_max  += ui(8);
+                continue;
+            }
+            
+            var _nam = tool.name;
+            var _icn = tool.icon;
+            var _hov = thov && point_in_rectangle(mx, my, _x0, _y0, _x1, _y1);
+            
+            if(_hov) {
+                draw_sprite_stretched(THEME.button_hide_fill, 1, _bx, _by, _bs, _bs);
+                setTOOLTIP(_nam);
+                if(mouse_lpress(pFOCUS)) measure_tool_curr = measure_tool_curr == tool? undefined : tool;
+            }
+            
+            if(measure_tool_curr == tool) {
+                draw_sprite_stretched_ext(THEME.button_hide_fill, 2, _bx, _by, _bs, _bs, COLORS.panel_preview_grid, 1);
+                draw_sprite_stretched_ext(THEME.button_hide_fill, 3, _bx, _by, _bs, _bs, COLORS._main_accent, 1);
+            }
+            
+            draw_sprite_colored(_icn, 0, xx, yy);
+            
+            if(hori) xx += ts + 1;
+            else     yy += ts + 1;
+            tool_y_max  += ts + 1;
+            
+            _draw_sep = false;
+        }
+        
+        var pd = THEME_VALUE.panel_toolbar_padding;
+        var ltool_h = clamp(tool_y_max - ui(8), 0, h - toolbar_size * 2 - pd * 4 - array_display_offset * (array_preview_size + pd));
+        toolbar_content_l.goto(ltool_h);
+        
+        if(hori) tool_y_max = max(0, tool_y_max - w + toolbar_size * 2 + pd * 3);
+        else     tool_y_max = max(0, tool_y_max - h + toolbar_size * 2 + pd * 3);
+        if(thov && !key_mod_press_any() && MOUSE_WHEEL != 0)
+            tool_y_to += ui(64) * MOUSE_WHEEL;
+        tool_y_to = clamp(tool_y_to, -tool_y_max, 0);
         
         gpu_set_scissor(scs);
     }
@@ -3726,19 +3897,28 @@ function Panel_Preview() : PanelContent() constructor {
 			_trw += cw + ui(6);
 			
 			var bs  = ch;
-			var bx  = cx - ui(4) - bs;
+			var bx  = cx - ui(2);
 			var by  = cy;
 			var bb  = THEME.button_hide;
+			
 			var spr = THEME.shader_alpha;
 			var sid = preview_shader_alpha;
 			var cc  = preview_shader_alpha? COLORS._main_icon : COLORS._main_accent;
 			
+			bx -= bs + ui(2);
 			if(buttonInstant_Pad(bb, bx, by, bs, bs, m, pHOVER, pFOCUS, __txt("Apply Alpha"), spr, sid, cc) == 2)
 				preview_shader_alpha = !preview_shader_alpha;
-			_trw += bs + ui(4);
-			_trw += ui(6);
+			_trw += bs + ui(2); 
 			
-			if(_node) _tw = clamp(drawToolSettings(_node) - ui(8), 0, w - _trw - pd * 3);
+			var spr = THEME.preview_measure;
+			var cc  = measure_mode? COLORS._main_accent : COLORS._main_icon;
+			bx -= bs + ui(2);
+			if(buttonInstant_Pad(bb, bx, by, bs, bs, m, pHOVER, pFOCUS, __txt("Measure..."), spr, 0, cc) == 2)
+				measure_mode = !measure_mode;
+			_trw += bs + ui(2); 
+			
+			_trw += ui(8); 
+			if(_node && !measure_mode) _tw = clamp(drawToolSettings(_node) - ui(8), 0, w - _trw - pd * 3);
 		}
         
         topbar_width_l.goto(max(_tw, toolbar_size));
@@ -3892,7 +4072,9 @@ function Panel_Preview() : PanelContent() constructor {
         trw += ui(2);
         tbx -= ui(2);
         
-        var actMax = max(0, toolbar_left - tbx + pd * 2 + (!mrg * bs));
+        var cntW   = trw - ui(2);
+        var shwW   = (w - pd * !mrg) - toolbar_left;
+        var actMax = max(0, cntW - shwW);
         
         if(hov) preview_action_y_to += MOUSE_WHEEL * (bs + ui(2));
         preview_action_y_to = clamp(preview_action_y_to, 0, actMax);
@@ -4434,6 +4616,656 @@ function Panel_Preview() : PanelContent() constructor {
     	
     }
     
+    ////- Measure
+    
+    static measureRuler = function() {
+    	var _hover = pHOVER && mouse_on_preview == 1;
+    	var _focus = pFOCUS;
+    	
+    	switch(measure_step) {
+			case 0 :
+				if(_hover && mouse_lpress(_focus)) {
+					measure_step = 1;
+					
+			    	measure_x0   = canvas_mx;
+			    	measure_y0   = canvas_my;
+			    	
+			    	if(key_mod_press(CTRL)) {
+			    		measure_x0 = round(measure_x0) + .5;
+						measure_y0 = round(measure_y0) + .5;
+			    	}
+			    	
+			    	measure_x1   = measure_x0;
+		    		measure_y1   = measure_y0;
+				}
+				break;
+			
+			case 1 : 
+				measure_x1   = canvas_mx;
+		    	measure_y1   = canvas_my;
+		    	
+		    	var _dirr = point_direction(measure_x0, measure_y0, measure_x1, measure_y1);
+		    	var _diss = point_distance(measure_x0, measure_y0, measure_x1, measure_y1);
+		    	
+		    	if(key_mod_press(SHIFT)) _dirr = value_snap(_dirr, 45);
+		    	
+		    	measure_x1   = measure_x0 + lengthdir_x(_diss, _dirr);
+		    	measure_y1   = measure_y0 + lengthdir_y(_diss, _dirr);
+		    	
+		    	if(key_mod_press(CTRL)) {
+		    		measure_x1 = round(measure_x1) + .5;
+					measure_y1 = round(measure_y1) + .5;
+		    	}
+		    	
+				if(mouse_lrelease()) 
+					measure_step = 2;
+				break;
+		}
+		
+		if(measure_step == 0) return;
+		
+		var _x0 = canvas_x + measure_x0 * canvas_s;
+		var _y0 = canvas_y + measure_y0 * canvas_s;
+		var _x1 = canvas_x + measure_x1 * canvas_s;
+		var _y1 = canvas_y + measure_y1 * canvas_s;
+		
+		var _hoverAnc = undefined;
+		if(_hover) {
+			if(distance_to_line(mx, my, _x0, _y0, _x1, _y1) < ui(6)) _hoverAnc = 2;
+			if(point_in_circle(mx, my, _x0, _y0, ui(8))) _hoverAnc = 0;
+			if(point_in_circle(mx, my, _x1, _y1, ui(8))) _hoverAnc = 1;
+		}
+		
+		draw_set_color(c_black); draw_line_width(_x0, _y0, _x1, _y1, ui(4 + 1 * (_hoverAnc == 2)));
+		draw_set_color(c_white); draw_line_width(_x0, _y0, _x1, _y1, ui(2 + 1 * (_hoverAnc == 2)));
+		
+		draw_anchor(_hoverAnc == 0, _x0, _y0, ui(8));
+		draw_anchor(_hoverAnc == 1, _x1, _y1, ui(8));
+		
+		var _dirr = point_direction(measure_x0, measure_y0, measure_x1, measure_y1);
+    	var _diss = point_distance(measure_x0, measure_y0, measure_x1, measure_y1);
+    	
+    	var cx = (_x0 + _x1) / 2;
+    	var cy = (_y0 + _y1) / 2;
+    	
+    	draw_set_text(f_p4, fa_left, fa_top, COLORS._main_text);
+    	var pd = ui(6);
+    	var lh = line_get_height();
+    	
+    	var _txt0 = $"Length: {_diss} px";
+    	var _txt1 = $"Direction: {_dirr} deg";
+    	
+    	var tbw = max(string_width(_txt0), string_width(_txt1));
+    	var tbh = lh * 2;
+    	
+    	var tbx = cx + ui(8);
+    	var tby = cy + ui(8);
+    	
+    	if(_x1 > _x0 && _y1 > _y0) tby = cy - ui(8) - (tbh + pd*2);
+    	if(_x1 < _x0 && _y1 < _y0) tby = cy - ui(8) - (tbh + pd*2);
+    	
+    	draw_sprite_stretched_ext(THEME.box_r2_clr, 0, tbx, tby, tbw + pd*2, tbh + pd*2, c_white, .75);
+    	draw_text_add(tbx + pd, tby - ui(1) + pd,      _txt0);
+    	draw_text_add(tbx + pd, tby - ui(1) + pd + lh, _txt1);
+    	
+    	draw_set_text(f_p4, fa_center, fa_top, COLORS._main_text);
+    	
+    	var txt = $"{measure_x0}, {measure_y0}";
+    	var tbw = string_width(txt) + pd*2;
+    	var tbh = lh + pd*2;
+    	
+    	var tbx = _x0 - tbw/2;
+    	var tby = _y1 > _y0? _y0 - ui(8) - tbh : _y0 + ui(8);
+    	
+    	draw_sprite_stretched_ext(THEME.box_r2_clr, 0, tbx, tby, tbw, tbh, c_white, .75);
+    	draw_text_add(tbx + tbw/2, tby - ui(1) + pd, txt);
+    	
+    	var txt = $"{measure_x1}, {measure_y1}";
+    	var tbw = string_width(txt) + pd*2;
+    	var tbh = lh + pd*2;
+    	
+    	var tbx = _x1 - tbw/2;
+    	var tby = _y1 > _y0? _y1 + ui(8) : _y1 - ui(8) - tbh;
+    	
+    	draw_sprite_stretched_ext(THEME.box_r2_clr, 0, tbx, tby, tbw, tbh, c_white, .75);
+    	draw_text_add(tbx + tbw/2, tby - ui(1) + pd, txt);
+    	
+		if(measure_step == 2) {
+			if(mouse_lpress(_focus)) {
+				if(_hoverAnc == 0 || _hoverAnc == 1) {
+					measure_drag    = _hoverAnc;
+			    	measure_drag_sx = _hoverAnc == 0? measure_x0 : measure_x1;
+			    	measure_drag_sy = _hoverAnc == 0? measure_y0 : measure_y1;
+			    	measure_drag_mx = mx;
+			    	measure_drag_my = my;
+			    
+				} else if(_hoverAnc == 2) {	
+					measure_drag     = _hoverAnc;
+			    	measure_drag_sx0 = measure_x0;
+			    	measure_drag_sy0 = measure_y0;
+			    	measure_drag_sx1 = measure_x1;
+			    	measure_drag_sy1 = measure_y1;
+			    	measure_drag_mx  = mx;
+			    	measure_drag_my  = my;
+			    	
+				} else {
+					measure_step = 0;
+				}
+			}
+			
+			if(measure_drag == 0 || measure_drag == 1) {
+				var vx = measure_drag_sx + (mx - measure_drag_mx) / canvas_s;
+				var vy = measure_drag_sy + (my - measure_drag_my) / canvas_s;
+				
+				if(measure_drag == 0) {
+					var _dirr = point_direction(measure_x1, measure_y1, vx, vy);
+			    	var _diss = point_distance(measure_x1, measure_y1, vx, vy);
+			    	if(key_mod_press(SHIFT)) _dirr = value_snap(_dirr, 45);
+			    	
+					measure_x0 = measure_x1 + lengthdir_x(_diss, _dirr);
+					measure_y0 = measure_y1 + lengthdir_y(_diss, _dirr);
+					
+			    	if(key_mod_press(CTRL)) {
+			    		measure_x0 = round(measure_x0) + .5;
+						measure_y0 = round(measure_y0) + .5;
+			    	}
+					
+				} else {
+					var _dirr = point_direction(measure_x0, measure_y0, vx, vy);
+			    	var _diss = point_distance(measure_x0, measure_y0, vx, vy);
+			    	if(key_mod_press(SHIFT)) _dirr = value_snap(_dirr, 45);
+			    	
+					measure_x1 = measure_x0 + lengthdir_x(_diss, _dirr);
+					measure_y1 = measure_y0 + lengthdir_y(_diss, _dirr);
+					
+			    	if(key_mod_press(CTRL)) {
+			    		measure_x1 = round(measure_x1) + .5;
+						measure_y1 = round(measure_y1) + .5;
+			    	}
+					
+				}
+				
+				if(mouse_lrelease()) measure_drag = undefined;
+				
+			} else if(measure_drag == 2) {
+				var dx = (mx - measure_drag_mx) / canvas_s;
+				var dy = (my - measure_drag_my) / canvas_s;
+				
+				var _dirr = point_direction(0, 0, dx, dy);
+		    	var _diss = point_distance(0, 0, dx, dy);
+		    	if(key_mod_press(SHIFT)) _dirr = value_snap(_dirr, 45);
+		    	
+				dx = lengthdir_x(_diss, _dirr);
+				dy = lengthdir_y(_diss, _dirr);
+				
+		    	if(key_mod_press(CTRL)) {
+		    		dx = round(dx);
+		    		dy = round(dy);
+		    	}
+		    	
+		    	measure_x0 = measure_drag_sx0 + dx;
+				measure_y0 = measure_drag_sy0 + dy;
+		    	
+		    	measure_x1 = measure_drag_sx1 + dx;
+				measure_y1 = measure_drag_sy1 + dy;
+		    	
+				if(mouse_lrelease()) measure_drag = undefined;
+			}
+		}
+    }
+    
+    static measureAngle = function() {
+    	var _hover = pHOVER && mouse_on_preview == 1;
+    	var _focus = pFOCUS;
+    	
+    	switch(measure_step) {
+			case 0 :
+				if(_hover && mouse_lpress(_focus)) {
+					measure_step = 1;
+					
+			    	measure_x0   = canvas_mx;
+			    	measure_y0   = canvas_my;
+			    	
+			    	if(key_mod_press(CTRL)) {
+			    		measure_x0 = round(measure_x0) + .5;
+						measure_y0 = round(measure_y0) + .5;
+			    	}
+			    	
+			    	measure_x1   = measure_x0;
+		    		measure_y1   = measure_y0;
+				}
+				break;
+			
+			case 1 : 
+				measure_x1   = canvas_mx;
+		    	measure_y1   = canvas_my;
+		    	
+		    	var _dirr = point_direction(measure_x0, measure_y0, measure_x1, measure_y1);
+		    	var _diss = point_distance(measure_x0, measure_y0, measure_x1, measure_y1);
+		    	
+		    	if(key_mod_press(SHIFT)) _dirr = value_snap(_dirr, 45);
+		    	
+		    	measure_x1   = measure_x0 + lengthdir_x(_diss, _dirr);
+		    	measure_y1   = measure_y0 + lengthdir_y(_diss, _dirr);
+		    	
+		    	if(key_mod_press(CTRL)) {
+		    		measure_x1 = round(measure_x1) + .5;
+					measure_y1 = round(measure_y1) + .5;
+		    	}
+		    	
+				if(mouse_lrelease()) 
+					measure_step = 2;
+				break;
+				
+			case 2 :
+				measure_x2   = canvas_mx;
+		    	measure_y2   = canvas_my;
+		    	
+		    	if(key_mod_press(CTRL)) {
+		    		measure_x2 = round(measure_x2) + .5;
+					measure_y2 = round(measure_y2) + .5;
+		    	}
+		    	
+				if(mouse_lpress()) 
+					measure_step = 3;
+				break;
+		}
+		
+		if(measure_step == 0) return;
+		
+		var _x0 = canvas_x + measure_x0 * canvas_s;
+		var _y0 = canvas_y + measure_y0 * canvas_s;
+		var _x1 = canvas_x + measure_x1 * canvas_s;
+		var _y1 = canvas_y + measure_y1 * canvas_s;
+		var _x2 = canvas_x + measure_x2 * canvas_s;
+		var _y2 = canvas_y + measure_y2 * canvas_s;
+		
+		var _d1 = point_direction(measure_x0, measure_y0, measure_x1, measure_y1);
+		var _d2 = point_direction(measure_x0, measure_y0, measure_x2, measure_y2);
+    	
+		var _s1 = point_distance(measure_x0, measure_y0, measure_x1, measure_y1);
+		var _s2 = point_distance(measure_x0, measure_y0, measure_x2, measure_y2);
+    	
+		var _hoverAnc = undefined;
+		if(_hover) {
+			if(point_in_circle(mx, my, _x0, _y0, ui(8))) _hoverAnc = 0;
+			if(point_in_circle(mx, my, _x1, _y1, ui(8))) _hoverAnc = 1;
+			if(point_in_circle(mx, my, _x2, _y2, ui(8))) _hoverAnc = 2;
+		}
+		
+		if(measure_step >= 2) {
+			draw_set_color(COLORS._main_accent); 
+			draw_arc_fast(_x0, _y0, min(_s1, _s2) * canvas_s / 2, _d1, _d2, 2, 32);
+			
+			draw_set_color(c_black);             draw_line_width(_x0, _y0, _x2, _y2, ui(4));
+			draw_set_color(COLORS._main_accent); draw_line_width(_x0, _y0, _x2, _y2, ui(1));
+		}
+		
+		draw_set_color(c_black); draw_line_width(_x0, _y0, _x1, _y1, ui(4));
+		draw_set_color(c_white); draw_line_width(_x0, _y0, _x1, _y1, ui(2));
+		
+		if(measure_step >= 2)
+			draw_anchor(_hoverAnc == 2, _x2, _y2, ui(8));
+		
+		draw_anchor(_hoverAnc == 0, _x0, _y0, ui(8));
+		draw_anchor(_hoverAnc == 1, _x1, _y1, ui(8));
+		
+    	var _a0 = (_d2 - _d1 + 360) % 360;
+    	var _a1 = 360 - _a0;
+    	
+    	var cx = (_x0 + _x1) / 2;
+    	var cy = (_y0 + _y1) / 2;
+    	
+    	if(measure_step < 2) return;
+    	
+    	draw_set_text(f_p4, fa_left, fa_top, COLORS._main_text);
+    	var _txt0 = $"CCW: {_a0} deg";
+    	var _txt1 = $"CW: {_a1} deg";
+    	
+    	var pd = ui(6);
+    	var lh = line_get_height();
+    	var tbw = max(string_width(_txt0), string_width(_txt1));
+    	var tbh = lh * 2;
+    	
+    	var tbx = cx + ui(8);
+    	var tby = cy + ui(8);
+    	
+    	if(_x1 > _x0 && _y1 > _y0) tby = cy - ui(8) - (tbh + pd*2);
+    	if(_x1 < _x0 && _y1 < _y0) tby = cy - ui(8) - (tbh + pd*2);
+    	
+    	draw_sprite_stretched_ext(THEME.box_r2_clr, 0, tbx, tby, tbw + pd*2, tbh + pd*2, c_white, .75);
+    	draw_text_add(tbx + pd, tby - ui(1) + pd,      _txt0);
+    	draw_text_add(tbx + pd, tby - ui(1) + pd + lh, _txt1);
+    	
+    	draw_set_text(f_p4, fa_center, fa_top, COLORS._main_text);
+    	
+    	var txt = $"{measure_x0}, {measure_y0}";
+    	var tbw = string_width(txt) + pd*2;
+    	var tbh = lh + pd*2;
+    	
+    	var tbx = _x0 - tbw/2;
+    	var tby = _y0 + ui(8);
+    	
+    	draw_sprite_stretched_ext(THEME.box_r2_clr, 0, tbx, tby, tbw, tbh, c_white, .75);
+    	draw_text_add(tbx + tbw/2, tby - ui(1) + pd, txt);
+    	
+		if(measure_step == 3) {
+			if(mouse_lpress(_focus)) {
+				if(_hoverAnc != undefined) {
+					measure_drag    = _hoverAnc;
+					
+					if(_hoverAnc == 0) {
+				    	measure_drag_sx = measure_x0;
+				    	measure_drag_sy = measure_y0;
+				    	
+					} else if(_hoverAnc == 1) {
+				    	measure_drag_sx = measure_x1;
+				    	measure_drag_sy = measure_y1;
+				    	
+					} else if(_hoverAnc == 2) {
+				    	measure_drag_sx = measure_x2;
+				    	measure_drag_sy = measure_y2;
+				    	
+					}
+					
+			    	measure_drag_mx = mx;
+			    	measure_drag_my = my;
+			    
+				} else {
+					measure_step = 0;
+				}
+			}
+			
+			if(measure_drag != undefined) {
+				var vx = measure_drag_sx + (mx - measure_drag_mx) / canvas_s;
+				var vy = measure_drag_sy + (my - measure_drag_my) / canvas_s;
+				
+				if(measure_drag == 1) {
+					var _dirr = point_direction(measure_x0, measure_y0, vx, vy);
+			    	var _diss = point_distance(measure_x0, measure_y0, vx, vy);
+			    	if(key_mod_press(SHIFT)) _dirr = value_snap(_dirr, 45);
+			    	
+					measure_x1 = measure_x0 + lengthdir_x(_diss, _dirr);
+					measure_y1 = measure_y0 + lengthdir_y(_diss, _dirr);
+					
+			    	if(key_mod_press(CTRL)) {
+			    		measure_x1 = round(measure_x1) + .5;
+						measure_y1 = round(measure_y1) + .5;
+			    	}
+					
+				} else if(measure_drag == 2) {
+					var _dirr = point_direction(measure_x0, measure_y0, vx, vy);
+			    	var _diss = point_distance(measure_x0, measure_y0, vx, vy);
+			    	if(key_mod_press(SHIFT)) _dirr = value_snap(_dirr, 45);
+			    	
+					measure_x2 = measure_x0 + lengthdir_x(_diss, _dirr);
+					measure_y2 = measure_y0 + lengthdir_y(_diss, _dirr);
+					
+			    	if(key_mod_press(CTRL)) {
+			    		measure_x2 = round(measure_x2) + .5;
+						measure_y2 = round(measure_y2) + .5;
+			    	}
+					
+				} else {
+					measure_x0 = vx;
+					measure_y0 = vy;
+					
+			    	if(key_mod_press(CTRL)) {
+			    		measure_x0 = round(measure_x0) + .5;
+						measure_y0 = round(measure_y0) + .5;
+			    	}
+					
+				}
+				
+				if(mouse_lrelease()) measure_drag = undefined;
+			} 
+		}
+    }
+    
+    static measureRectangle = function() {
+    	var _hover = pHOVER && mouse_on_preview == 1;
+    	var _focus = pFOCUS;
+    	
+    	switch(measure_step) {
+			case 0 :
+				if(_hover && mouse_lpress(_focus)) {
+					measure_step = 1;
+					
+			    	measure_x0   = canvas_mx;
+			    	measure_y0   = canvas_my;
+			    	
+			    	if(key_mod_press(CTRL)) {
+			    		measure_x0 = round(measure_x0) + .5;
+						measure_y0 = round(measure_y0) + .5;
+			    	}
+			    	
+			    	measure_x1   = measure_x0;
+		    		measure_y1   = measure_y0;
+				}
+				break;
+			
+			case 1 : 
+				measure_x1   = canvas_mx;
+		    	measure_y1   = canvas_my;
+		    	
+		    	var _dirr = point_direction(measure_x0, measure_y0, measure_x1, measure_y1);
+		    	var _diss = point_distance(measure_x0, measure_y0, measure_x1, measure_y1);
+		    	
+		    	if(key_mod_press(SHIFT)) _dirr = value_snap(_dirr, 45);
+		    	
+		    	measure_x1   = measure_x0 + lengthdir_x(_diss, _dirr);
+		    	measure_y1   = measure_y0 + lengthdir_y(_diss, _dirr);
+		    	
+		    	if(key_mod_press(CTRL)) {
+		    		measure_x1 = round(measure_x1) + .5;
+					measure_y1 = round(measure_y1) + .5;
+		    	}
+		    	
+				if(mouse_lrelease()) 
+					measure_step = 2;
+				break;
+		}
+		
+		if(measure_step == 0) return;
+		
+		var _x0 = canvas_x + measure_x0 * canvas_s;
+		var _y0 = canvas_y + measure_y0 * canvas_s;
+		var _x1 = canvas_x + measure_x1 * canvas_s;
+		var _y1 = canvas_y + measure_y1 * canvas_s;
+		
+		var _hoverAnc = undefined;
+		if(_hover) {
+			if(distance_to_line(mx, my, _x0, _y0, _x1, _y1) < ui(6)) _hoverAnc = 4;
+			
+			if(point_in_circle(mx, my, _x0, _y0, ui(8))) _hoverAnc = 0;
+			if(point_in_circle(mx, my, _x1, _y0, ui(8))) _hoverAnc = 1;
+			if(point_in_circle(mx, my, _x0, _y1, ui(8))) _hoverAnc = 2;
+			if(point_in_circle(mx, my, _x1, _y1, ui(8))) _hoverAnc = 3;
+		}
+		
+		draw_set_color(c_black); draw_line_width(_x0, _y0, _x1, _y0, ui(4 + 1 * (_hoverAnc == 4)));
+		draw_set_color(c_white); draw_line_width(_x0, _y0, _x1, _y0, ui(2 + 1 * (_hoverAnc == 4)));
+		
+		draw_set_color(c_black); draw_line_width(_x0, _y1, _x1, _y1, ui(4 + 1 * (_hoverAnc == 4)));
+		draw_set_color(c_white); draw_line_width(_x0, _y1, _x1, _y1, ui(2 + 1 * (_hoverAnc == 4)));
+		
+		draw_set_color(c_black); draw_line_width(_x0, _y0, _x0, _y1, ui(4 + 1 * (_hoverAnc == 4)));
+		draw_set_color(c_white); draw_line_width(_x0, _y0, _x0, _y1, ui(2 + 1 * (_hoverAnc == 4)));
+		
+		draw_set_color(c_black); draw_line_width(_x1, _y0, _x1, _y1, ui(4 + 1 * (_hoverAnc == 4)));
+		draw_set_color(c_white); draw_line_width(_x1, _y0, _x1, _y1, ui(2 + 1 * (_hoverAnc == 4)));
+		
+		draw_anchor(_hoverAnc == 0, _x0, _y0, ui(8));
+		draw_anchor(_hoverAnc == 1, _x1, _y0, ui(8));
+		draw_anchor(_hoverAnc == 2, _x0, _y1, ui(8));
+		draw_anchor(_hoverAnc == 3, _x1, _y1, ui(8));
+		
+		var _width  = abs(measure_x1 - measure_x0);
+		var _height = abs(measure_y1 - measure_y0);
+		var _area   = _width * _height;
+		
+    	draw_set_text(f_p4, fa_center, fa_center, COLORS._main_text);
+    	
+    	var pd  = ui(6);
+    	var lh  = line_get_height();
+    	
+    	var txt = $"{_width} px";
+    	var tbw = string_width(txt) + pd*2;
+    	var tbh = lh + pd*2;
+    	
+    	var tbx = (_x0 + _x1) / 2;
+    	var tby = max(_y0, _y1) + ui(8);
+    	
+    	draw_sprite_stretched_ext(THEME.box_r2_clr, 0, tbx - tbw / 2, tby, tbw, tbh, c_white, .75);
+    	draw_text_add(tbx, tby + tbh / 2, txt);
+    	
+    	var txt = $"{_height} px";
+    	var tbw = string_width(txt) + pd*2;
+    	var tbh = lh + pd*2;
+    	
+    	var tbx = max(_x0, _x1) + ui(8);
+    	var tby = (_y0 + _y1) / 2 + ui(8);
+    	
+    	draw_sprite_stretched_ext(THEME.box_r2_clr, 0, tbx, tby - tbh / 2, tbw, tbh, c_white, .75);
+    	draw_text_add(tbx + tbw / 2, tby, txt);
+    	
+    	var txt = $"{_area} px2";
+    	var tbw = string_width(txt) + pd*2;
+    	var tbh = lh + pd*2;
+    	
+    	var tbx = (_x0 + _x1) / 2;
+    	var tby = (_y0 + _y1) / 2;
+    	
+    	draw_sprite_stretched_ext(THEME.box_r2_clr, 0, tbx - tbw / 2, tby - tbh / 2, tbw, tbh, c_white, .75);
+    	draw_text_add(tbx, tby, txt);
+    	
+    	draw_set_text(f_p4, fa_right, fa_bottom, COLORS._main_text);
+    	
+    	var txt = $"{min(measure_x0, measure_x1)}, {min(measure_y0, measure_y1)}";
+    	var tbw = string_width(txt) + pd*2;
+    	var tbh = lh + pd*2;
+    	
+    	var tbx = min(_x0, _x1) - ui(8);
+    	var tby = min(_y0, _y1) - ui(8);
+    	
+    	draw_sprite_stretched_ext(THEME.box_r2_clr, 0, tbx-tbw, tby-tbh, tbw, tbh, c_white, .75);
+    	draw_text_add(tbx - pd, tby - pd, txt);
+    	
+    	draw_set_text(f_p4, fa_left, fa_top, COLORS._main_text);
+    	
+    	var txt = $"{max(measure_x0, measure_x1)}, {max(measure_y0, measure_y1)}";
+    	var tbw = string_width(txt) + pd*2;
+    	var tbh = lh + pd*2;
+    	
+    	var tbx = max(_x0, _x1) + ui(8);
+    	var tby = max(_y0, _y1) + ui(8);
+    	
+    	draw_sprite_stretched_ext(THEME.box_r2_clr, 0, tbx, tby, tbw, tbh, c_white, .75);
+    	draw_text_add(tbx + pd, tby + pd, txt);
+    	
+		if(measure_step == 2) {
+			if(mouse_lpress(_focus)) {
+				if(_hoverAnc == 0) {
+					measure_drag    = _hoverAnc;
+			    	measure_drag_sx = measure_x0;
+			    	measure_drag_sy = measure_y0;
+			    	measure_drag_mx = mx;
+			    	measure_drag_my = my;
+			    	
+				} else if(_hoverAnc == 1) {
+					measure_drag    = _hoverAnc;
+			    	measure_drag_sx = measure_x1;
+			    	measure_drag_sy = measure_y0;
+			    	measure_drag_mx = mx;
+			    	measure_drag_my = my;
+			    	
+				} else if(_hoverAnc == 2) {
+					measure_drag    = _hoverAnc;
+			    	measure_drag_sx = measure_x0;
+			    	measure_drag_sy = measure_y1;
+			    	measure_drag_mx = mx;
+			    	measure_drag_my = my;
+			    	
+				} else if(_hoverAnc == 3) {
+					measure_drag    = _hoverAnc;
+			    	measure_drag_sx = measure_x1;
+			    	measure_drag_sy = measure_y1;
+			    	measure_drag_mx = mx;
+			    	measure_drag_my = my;
+			    	
+				} else measure_step = 0;
+			}
+			
+			if(measure_drag == 0) {
+				measure_x0 = measure_drag_sx + (mx - measure_drag_mx) / canvas_s;
+				measure_y0 = measure_drag_sy + (my - measure_drag_my) / canvas_s;
+				
+		    	if(key_mod_press(CTRL)) {
+		    		measure_x0 = round(measure_x0) + .5;
+					measure_y0 = round(measure_y0) + .5;
+		    	}
+				
+				if(mouse_lrelease()) measure_drag = undefined;
+				
+			} else if(measure_drag == 1) {
+				measure_x1 = measure_drag_sx + (mx - measure_drag_mx) / canvas_s;
+				measure_y0 = measure_drag_sy + (my - measure_drag_my) / canvas_s;
+				
+		    	if(key_mod_press(CTRL)) {
+		    		measure_x1 = round(measure_x1) + .5;
+					measure_y0 = round(measure_y0) + .5;
+		    	}
+				
+				if(mouse_lrelease()) measure_drag = undefined;
+				
+			} else if(measure_drag == 2) {
+				measure_x0 = measure_drag_sx + (mx - measure_drag_mx) / canvas_s;
+				measure_y1 = measure_drag_sy + (my - measure_drag_my) / canvas_s;
+				
+		    	if(key_mod_press(CTRL)) {
+		    		measure_x0 = round(measure_x0) + .5;
+					measure_y1 = round(measure_y1) + .5;
+		    	}
+				
+				if(mouse_lrelease()) measure_drag = undefined;
+				
+			} else if(measure_drag == 3) {
+				measure_x1 = measure_drag_sx + (mx - measure_drag_mx) / canvas_s;
+				measure_y1 = measure_drag_sy + (my - measure_drag_my) / canvas_s;
+				
+		    	if(key_mod_press(CTRL)) {
+		    		measure_x1 = round(measure_x1) + .5;
+					measure_y1 = round(measure_y1) + .5;
+		    	}
+				
+				if(mouse_lrelease()) measure_drag = undefined;
+				
+			} 
+			
+		}
+    }
+    
+    static drawMeasure = function() {
+    	if(measure_tool_curr == undefined) return;
+    	
+    	var _hover = pHOVER && mouse_on_preview == 1;
+    	var _focus = pFOCUS;
+    	
+    	switch(measure_tool_curr) {
+    		case measure_tool_ruler :     measureRuler();     break;
+			case measure_tool_angle :     measureAngle();     break;
+			case measure_tool_rectangle : measureRectangle(); break;
+    	}
+    	
+		BLEND_ADD
+		draw_set_color(COLORS._main_icon);
+		draw_set_alpha(.5);
+		draw_line(mx, 0, mx, h);
+		draw_line(0, my, w, my);
+		draw_set_alpha(1);
+		BLEND_NORMAL
+    }
+    
     static graphNavigator = function() {
     	if(!PROJECT.previewSetting.quick_nav) return;
     	
@@ -4538,7 +5370,7 @@ function Panel_Preview() : PanelContent() constructor {
     	}
 		
 		var pd = THEME_VALUE.panel_toolbar_padding;
-    	mouse_on_preview  = pHOVER && point_in_rectangle(mx, my, 0, pd + toolbar_size, w, h - (toolbar_size + pd)) && _mouse_on_preview;
+    	 mouse_on_preview = pHOVER && point_in_rectangle(mx, my, 0, pd + toolbar_size, w, h - (toolbar_size + pd)) && _mouse_on_preview;
         _mouse_on_preview = true;
         
         if(do_fullView) fullView();
@@ -4623,11 +5455,16 @@ function Panel_Preview() : PanelContent() constructor {
 	    	var mrg  = THEME_VALUE.panel_toolbar_merge;
 	    	var aa   = d3_active? .8 : 1;
 	    	
-    		tool_side_draw_t = hori && (PROJECT.previewSetting.tool_always_l || (toolNode && toolNode.showTool()));
-	        tool_side_draw_b = hori && (PROJECT.previewSetting.tool_always_r || (toolNode && toolNode.rightTools != -1));
+	    	var drawToolLeft  = toolNode && toolNode.showTool();
+	    	var drawToolRight = toolNode && toolNode.rightTools != -1;
+	    	
+	    	if(measure_mode) drawToolLeft = true;
+	    	
+    		tool_side_draw_t = hori && (PROJECT.previewSetting.tool_always_l || drawToolLeft);
+	        tool_side_draw_b = hori && (PROJECT.previewSetting.tool_always_r || drawToolRight);
 	        
-	        tool_side_draw_l = !hori && (PROJECT.previewSetting.tool_always_l || (toolNode && toolNode.showTool()));
-	        tool_side_draw_r = !hori && (PROJECT.previewSetting.tool_always_r || (toolNode && toolNode.rightTools != -1));
+	        tool_side_draw_l = !hori && (PROJECT.previewSetting.tool_always_l || drawToolLeft);
+	        tool_side_draw_r = !hori && (PROJECT.previewSetting.tool_always_r || drawToolRight);
 	        
 	        if(!tool_side_draw_t) topbar_height_t.goto(0);
 	        if(!tool_side_draw_b) topbar_height_b.goto(0);
@@ -4636,8 +5473,10 @@ function Panel_Preview() : PanelContent() constructor {
 	        if(!tool_side_draw_r) toolbar_content_r.goto(0);
         #endregion
         
+        if(measure_mode) drawMeasure();
+        
         if(PANEL_PREVIEW == self) {
-        	if(toolNode) {
+        	if(toolNode && !measure_mode) {
 				drawNodeActions(pFOCUS, toolNode);
 				drawNodeToolOverlay(toolNode);
 				drawNodeHotkey(toolNode);
@@ -4727,10 +5566,13 @@ function Panel_Preview() : PanelContent() constructor {
         		}
         	}
         	
-        	if(toolNode) {
+        	if(measure_mode) {
+        		drawToolsMeasure();
+        		
+        	} else if(toolNode) {
 				drawToolsLeft(toolNode);
 				drawToolsRight(toolNode);
-            } 
+            }
             
             if(!is(toolNode, Node)) { // no node selectied
             	mouse_on_content = true;

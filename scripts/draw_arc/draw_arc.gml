@@ -70,11 +70,10 @@ function draw_arc_fill(_x, _y, _r, _as, _at, _pr = 32) {
 
 function draw_arc_fast(_x, _y, _r, _as, _at, _th = 1, _pr = 8) {
 	var ox, oy, nx, ny;
-	var ast = 360 / _pr;
 	var sgn = sign(_at - _as);
-	var ar  = abs(_at - _as) / 360 * _pr;
+	var ast = abs(_at - _as) / _pr;
 	
-	for( var i = 0; i < ar; i++ ) {
+	for( var i = 0; i <= _pr; i++ ) {
 		var a = _as + ast * i * sgn;
 		
 		nx = _x + lengthdir_x(_r, a);
