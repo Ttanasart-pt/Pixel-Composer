@@ -316,10 +316,10 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 				if(_modi && IS_PATREON) shake_amount = PREFERENCES.textbox_shake / 4;
 				return _modi;
 			}
+			
 		} else {
 			if(is_callable(onModify)) {
 				var _modi = onModifyParam == noone? onModify(_val) : onModify(_val, onModifyParam);
-				
 				if(_modi && IS_PATREON) shake_amount = PREFERENCES.textbox_shake / 4;
 				return _modi;
 			}
@@ -1290,4 +1290,10 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 	static free = function() {
 		surface_free_safe(text_surface);
 	}
+}
+
+	////- Slider
+
+function slider(_min = 0, _max = 1, _step = .01, _onModify = noone, _onRelease = noone) {
+	return textBox_Number( _onModify ).setSlideRange(_min, _max).setSlideStep(_step).setOnRelease(_onRelease);
 }

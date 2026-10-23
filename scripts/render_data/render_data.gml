@@ -7,6 +7,7 @@ enum RENDER_TYPE {
 #region globalvar
 	globalvar UPDATE;
 	
+	globalvar FORCE_UPDATE; FORCE_UPDATE        = false;
 	globalvar UPDATE_RENDER_ORDER; UPDATE_RENDER_ORDER = false;
 	globalvar LIVE_UPDATE; LIVE_UPDATE         = false;
 	globalvar RENDERING; RENDERING           = undefined;
@@ -370,7 +371,7 @@ enum RENDER_TYPE {
 			
 			LOG_END
 			GraphRefresh();
-			
+			FORCE_UPDATE = false;
 		}
 		
 		static renderTo = function(_node) {
@@ -428,6 +429,9 @@ enum RENDER_TYPE {
 	}
 	
 	function Render(_project = PROJECT, _partial = false, _runAction = false) { 
+		if(_project.attributes.update_on_release && mouse_check_button(mb_any))
+			return noone;
+		
 		if(RENDERING == undefined) {
 			WILL_RENDERING = undefined;
 			
@@ -444,6 +448,9 @@ enum RENDER_TYPE {
 	}
 	
 	function RenderSync(_project = PROJECT, _partial = false, _runAction = false) {
+		if(_project.attributes.update_on_release && mouse_check_button(mb_any))
+			return noone;
+		
 		var _renderObj = new RenderObject(_project, _partial, _runAction);
 		    _renderObj.render(infinity);
 		return _renderObj;

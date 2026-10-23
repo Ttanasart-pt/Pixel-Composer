@@ -1299,9 +1299,6 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 										.setSlideRange( _range[0], _range[1] )
 										.setSlideStep(  _rstep );
 						
-						if(has(display_data, "update_stat"))
-							editWidget.update_stat = display_data.update_stat;
-						
 						_ext = "Node_Number";
 						break;
 						
@@ -2265,7 +2262,10 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 			_upd = animator.setValue(_val, _rec, time) || _upd;
 		}
 		
-		if(!_upd) return false; /////////////////////////////////////////////////////////////////////////////////
+		if(mouse_check_button_released(mb_any)) 
+			_upd = true;
+			
+		if(!_upd) return false;
 		
 		edited = true;
 		

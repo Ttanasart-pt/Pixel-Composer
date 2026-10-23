@@ -11,6 +11,11 @@
         "date": "2026-10-22T06:23:07.736Z",
         "node": "",
         "commit": "reduce vram used for UI masking."
+      },
+      {
+        "date": "2026-10-23T03:24:13.425Z",
+        "node": "",
+        "commit": "**Node**: Add setting to only update node on mouse release."
       }
     ]
   },

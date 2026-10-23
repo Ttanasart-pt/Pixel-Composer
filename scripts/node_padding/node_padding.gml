@@ -61,13 +61,13 @@ function Node_Padding(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 			
 			var cDep    = attrDepth();
 			
-			inputs[1].setVisible(mode == 0);
+			inputs[ 1].setVisible(mode == 0);
 			
-			inputs[6].setVisible(mode == 1);
-			inputs[7].setVisible(mode == 1);
-			inputs[8].setVisible(mode == 1);
+			inputs[ 6].setVisible(mode == 1);
+			inputs[ 7].setVisible(mode == 1);
+			inputs[ 8].setVisible(mode == 1);
 			
-			inputs[3].setVisible(fill == 1);
+			inputs[ 3].setVisible(fill == 1);
 			
 			if(!is_surface(surf)) return _outSurf;
 		#endregion
@@ -95,7 +95,7 @@ function Node_Padding(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 				surface_reset_target();
 			}
 			
-			draw_transforms[_array_index] = [ padding[2], padding[1], 1, 1, 0];
+			draw_transforms[_array_index] = [ padding[2], padding[1], 1, 1, 0 ];
 			
 		} else if(mode == 1) { 
 			_outSurf = surface_verify(_outSurf, dim[0], dim[1], cDep);

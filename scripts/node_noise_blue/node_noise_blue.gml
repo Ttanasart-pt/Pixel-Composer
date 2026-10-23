@@ -536,10 +536,7 @@ struct BlueNoise_Generator {
 
 std::vector<BlueNoise_Generator> generators;
 
-cfunction double blue_noise_generator_init() { 
-    generators.emplace_back();
-    return static_cast<double>(generators.size() - 1);
-}
+cfunction double blue_noise_generator_init() { generators.emplace_back(); return static_cast<double>(generators.size() - 1); }
 
 cfunction double blue_noise_set_seed(double x, double seed) {               GEN_INDEX generator.set_seed(seed);           return 0; }
 cfunction double blue_noise_set_radius(double x, double radius) {           GEN_INDEX generator.set_radius(radius);       return 0; }

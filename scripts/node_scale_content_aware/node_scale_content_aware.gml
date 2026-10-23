@@ -1,6 +1,8 @@
 function Node_Scale_Content_Aware(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Content-Aware Scale";
 	
+	newActiveInput(6);
+	
 	////- =Surface
 	newInput( 0, nodeValue_Surface( "Surface In" )).setRequired();
 	
@@ -11,19 +13,25 @@ function Node_Scale_Content_Aware(_x, _y, _group = noone) : Node_Processor(_x, _
 	
 	////- =Algorithm
 	newInput( 4, nodeValue_EButton(   "Seam",         0, [ "Minimum", "Maximum" ] ));
-	// 5
+	newInput( 5, nodeValue_Bool(      "Async",    false ));
+	// 7
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
-	input_display_list = [ 
+	input_display_list = [ 6, 
 		[ "Surface",   false ],  0, 
 		[ "Scale",     false ],  2,  1,  3, 
-		[ "Algorithm", false ],  4, 
+		[ "Algorithm", false ],  4,  
 	];
 	
 	////- Nodes
 	
 	temp_surface = array_create(6, noone);
+	generator    = content_aware_init();
+	processing   = 0;
+	
+	surfaceBuffer = undefined;
+	outputBuffer  = undefined;
 	
 	static scaleX = function(_outSurf, _surf, _scalX, _seam) {
 		var ssw = surface_get_width(_surf);
@@ -175,6 +183,10 @@ function Node_Scale_Content_Aware(_x, _y, _group = noone) : Node_Processor(_x, _
 		return _outSurf;
 	}
 	
+	static step = function() {
+		if(processing) PANEL_GRAPH.refreshDraw();
+	}
+	
 	static processData = function(_outSurf, _data, _array_index = 0) { 
 		#region data
 			var _surf = _data[ 0];
@@ -184,6 +196,7 @@ function Node_Scale_Content_Aware(_x, _y, _group = noone) : Node_Processor(_x, _
 			var _targ = _data[ 3];
 			
 			var _seam = _data[ 4];
+			var _asyn = _data[ 5];
 			
 			inputs[ 1].setVisible(_type == 0);
 			inputs[ 3].setVisible(_type == 1);
@@ -232,55 +245,87 @@ function Node_Scale_Content_Aware(_x, _y, _group = noone) : Node_Processor(_x, _
 			return _outSurf;
 		}
 		
-		var _sbuf = buffer_from_surface(_surf, false);
-		var _obuf = buffer_create(scw * sch * 4, buffer_fixed, 1);
-		var _args = buffer_create(1, buffer_grow, 1);
-		buffer_to_start(_args);
+		surfaceBuffer = buffer_from_surface(_surf, false);
+		outputBuffer  = buffer_create(scw * sch * 4, buffer_fixed, 1);
+		var g = generator;
 		
-		buffer_write(_args, buffer_u64, buffer_get_address(_sbuf));
-		buffer_write(_args, buffer_u64, buffer_get_address(_obuf));
-		
-		buffer_write(_args, buffer_f64, _sw );
-		buffer_write(_args, buffer_f64, _sh );
-		
-		buffer_write(_args, buffer_f64, _sx );
-		buffer_write(_args, buffer_f64, _sy );
-		
-		buffer_write(_args, buffer_f64, _seam );
-		
-		content_aware_scale(buffer_get_address(_args));
+		content_aware_setBuffer(    g, buffer_get_address(surfaceBuffer), buffer_get_address(outputBuffer));
+		content_aware_setDimension( g, _sw, _sh );
+		content_aware_setScale(     g, _sx, _sy );
+		content_aware_setSeamType(  g, _seam    );
+		// content_aware_setAsync(     g, _asyn    );
 		
 		temp_surface[0] = surface_verify(temp_surface[0], scw, sch);
-		buffer_set_surface(_obuf, temp_surface[0], 0);
-		
 		_outSurf = surface_verify(_outSurf, scw, sch);
+		
+		content_aware_scale(g);
+		buffer_set_surface(outputBuffer, temp_surface[0], 0);
 		
 		surface_set_shader(_outSurf, noone, true, BLEND.over);
 			draw_surface(temp_surface[0], 0, 0);
 		surface_reset_shader();
 		
-		buffer_delete(_sbuf);
-		buffer_delete(_obuf);
+		buffer_delete_safe(surfaceBuffer);
+		buffer_delete_safe(outputBuffer);
 		
 		return _outSurf;
 	}
+	
+	////- Draw
+	
+	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
+		if(processing) draw_sprite_ui(THEME.loading, 0, xx + w*_s/2, yy + h*_s/2, _s, _s, current_time/2, COLORS._main_icon, 1);
+	}
+	
 }
 
 #region CPP
 /*[cpp]
+//init RegisterCallbacks
+#include <vector>
 #include <cmath>
 #include <cstdint>
+#include <cstring>
+#include <thread>
 
-struct pixel {
-	uint8_t r;
-	uint8_t g;
-	uint8_t b;
-	uint8_t a;
-};
+typedef void (*CreateAsyncEventFn)(int ds_map_id, int event_type);
+typedef int  (*DSMapCreateFn)(int _num, ...);
+typedef bool (*DSMapAddStringFn)(int _index, const char* _key, const char* _value);
+typedef bool (*DSMapAddDoubleFn)(int _index, const char* _key, double _value);
+
+CreateAsyncEventFn CreateAsyncEvent = nullptr;
+DSMapCreateFn      DSMapCreate      = nullptr;
+DSMapAddStringFn   DSMapAddString   = nullptr;
+DSMapAddDoubleFn   DSMapAddDouble   = nullptr;
+
+cfunction void RegisterCallbacks( char* arg1, char* arg2, char* arg3, char* arg4 ) {
+    CreateAsyncEvent = reinterpret_cast<CreateAsyncEventFn>(arg1);
+    DSMapCreate      = reinterpret_cast<DSMapCreateFn>(arg2);
+    DSMapAddDouble   = reinterpret_cast<DSMapAddDoubleFn>(arg3);
+    DSMapAddString   = reinterpret_cast<DSMapAddStringFn>(arg4);
+}
+
+int asyncCall(int event_id_val, int event_type, char* type, double status, char* message) {
+    int async_map = DSMapCreate(0);
+    if (async_map < 0) return -2;
+
+    bool ok = true;
+    ok &= DSMapAddString( async_map, "type",     type         );
+    ok &= DSMapAddDouble( async_map, "status",   status       );
+    ok &= DSMapAddDouble( async_map, "listener", event_id_val );
+    ok &= DSMapAddString( async_map, "message",  message      );
+    if (!ok) return -3;
+
+    CreateAsyncEvent(async_map, event_type);
+    return 0;
+}
+
+struct pixel { uint8_t r; uint8_t g; uint8_t b; uint8_t a; };
+float grey(pixel p) { return (p.r + p.g + p.b) / 3 * (p.a / 255); }
 
 struct contentAwareArgs {
-	void* pixelArrayBuffer;
-	void* outputBuffer;
+	pixel* pixelArrayBuffer;
+	pixel* outputBuffer;
 
 	double surfaceWidth;
 	double surfaceHeight;
@@ -289,277 +334,347 @@ struct contentAwareArgs {
 	double yscale;
 	
 	double seamType;
-};
 
-float grey(pixel p) {
-	return (p.r + p.g + p.b) / 3 * (p.a / 255);
-}
+	int generator_id;
 
-cfunction double content_aware_scale(void* args) {
-	contentAwareArgs* Args = (contentAwareArgs*)args;
+	bool async      = false;
+	bool running    = false;
+	bool force_stop = false;
 	
-	pixel* pixels = (pixel*)Args->pixelArrayBuffer;
-	pixel* output = (pixel*)Args->outputBuffer;
-	
-	double width  = Args->surfaceWidth;
-	double height = Args->surfaceHeight;
-	
-	double xscale = Args->xscale;
-	double yscale = Args->yscale;
-	
-	double seamType = Args->seamType;
-	
-	int iwidth  = (int)width;  // input dim
-	int iheight = (int)height;
-	
-	int swidth  = iwidth;
-	int sheight = iheight;
-	
-	int fwidth  = (int)ceil(width  * xscale); // final dim
-	int fheight = (int)ceil(height * yscale);
-	
-	bool widthDown   = fwidth < iwidth;
-	int  widthOff    = widthDown? iwidth - fwidth : fwidth - iwidth;
-	int  xwidth      = widthDown? iwidth : fwidth; // max, data dim
-	
-	bool heightDown  = fheight < iheight;
-	int  heightOff   = heightDown? iheight - fheight : fheight - iheight;
-	int  xheight     = heightDown? iheight : fheight;
-	
-	pixel *surface   = new pixel[xwidth * xheight];
-	float *energy    = new float[xwidth * xheight];
-	float *accEnergy = new float[xwidth * xheight];
-	float *prevpx    = new float[xwidth * xheight];
-	float *seam      = new float[xwidth + xheight];
+	pixel *surface;
+	float *energy;
+	float *accEnergy;
+	float *prevpx;
+	float *seam;
 
-	int swap = 0;
+	void setBuffer(void* pb, void* ob)    { pixelArrayBuffer = (pixel*)pb; outputBuffer  = (pixel*)ob; return; }
+	void setDimension(double w, double h) { surfaceWidth     = w;          surfaceHeight = h;          return; }
+	void setScale(double xs, double ys)   { xscale   = xs; yscale = ys; return; }
+	void setSeamType(double st)           { seamType = st;              return; }
 
-	for(int y = 0; y < iheight; y++)
-	for(int x = 0; x < iwidth; x++)
-		surface[y * xwidth + x] = pixels[y * iwidth + x];
-	
-	for(int i = 0; i < widthOff; i++) {
-		// Energy map
-		for (int y = 0; y < sheight; y++)
-		for (int x = 0; x < swidth; x++) {
-			float pxl = x > 0?          grey(surface[y * xwidth + (x - 1)]) : 0;
-			float pxc =                 grey(surface[y * xwidth +  x     ]);
-			float pxr = x < swidth - 1? grey(surface[y * xwidth + (x + 1)]) : 0;
+	void setAsync(double a) { async = a > 0.; return; }
 
-			energy[y * xwidth + x] = fabs(pxl - pxc) + fabs(pxr - pxc);
+	void scale(double id) {
+		generator_id = id;
+
+		if(!async) { scaling_wrap(); return; }
+		if(running) {
+			force_stop = true;
+			while(running) std::this_thread::sleep_for(std::chrono::milliseconds(1));
 		}
 
-		// Search
-		for(int x = 0; x < swidth; x++)
-			accEnergy[x] = energy[x];
-		float lastX = -1;
-		
-		if(seamType == 0) {
-			for(int y = 1; y < sheight; y++)
-			for(int x = 0; x < swidth; x++) {
-				float minEnergy = 9999999;
-				float minPrevX  = x;
-	
-				for(int px = x - 1; px <= x + 1; px++) {
-					if(px < 0 || px >= swidth) continue;
-					if(accEnergy[(y - 1) * xwidth + px] < minEnergy) {
-						minEnergy = accEnergy[(y - 1) * xwidth + px];
-						minPrevX  = px;
-					}
-				}
-	
-				accEnergy[y * xwidth + x] = energy[y * xwidth + x] + minEnergy;
-				prevpx[y * xwidth + x]    = minPrevX;
-			}
-			
-			float minEnergy = 9999999;
-			for(int x = 0; x < swidth; x++) {
-				float an = accEnergy[(sheight - 1) * xwidth + x];
-				if((swap == 0 && an < minEnergy) || (swap == 1 && an <= minEnergy)) {
-					minEnergy = an;
-					lastX     = x;
-				}
-			}
-			
-		} else {
-			for(int y = 1; y < sheight; y++)
-			for(int x = 0; x < swidth; x++) {
-				float maxEnergy = 0;
-				float maxPrevX  = x;
-	
-				for(int px = x - 1; px <= x + 1; px++) {
-					if(px < 0 || px >= swidth) continue;
-					if(accEnergy[(y - 1) * xwidth + px] > maxEnergy) {
-						maxEnergy = accEnergy[(y - 1) * xwidth + px];
-						maxPrevX  = px;
-					}
-				}
-	
-				accEnergy[y * xwidth + x] = energy[y * xwidth + x] + maxEnergy;
-				prevpx[y * xwidth + x]    = maxPrevX;
-			}
-		
-			float maxEnergy = 0;
-			for(int x = 0; x < swidth; x++) {
-				float an = accEnergy[(sheight - 1) * xwidth + x];
-				if((swap == 0 && an > maxEnergy) || (swap == 1 && an >= maxEnergy)) {
-					maxEnergy = an;
-					lastX     = x;
-				}
-			}
-			
-		}
-		
-		swap = swap == 1? 0 : 1;
-		
-		if(lastX < 0) break;
-		for(int y = sheight - 1; y >= 0; y--) {
-			seam[y] = lastX;
-			lastX   = prevpx[y * xwidth + (int)lastX];
-		}
-
-		// Copy data
-		if(widthDown) {
-			for(int y = 0; y < sheight; y++) {
-				int seamX = (int)seam[y];
-				for(int x = 0; x < swidth - 1; x++) {
-					if(x < seamX) surface[y * xwidth + x] = surface[y * xwidth + x    ];
-					else          surface[y * xwidth + x] = surface[y * xwidth + x + 1];
-				}
-			}
-			swidth--;
-			
-		} else {
-			for(int y = 0; y < sheight; y++) {
-				int seamX = (int)seam[y];
-				for(int x = swidth; x >= 0; x--) {
-					if(x <= seamX) surface[y * xwidth + x] = surface[y * xwidth + x    ];
-					else           surface[y * xwidth + x] = surface[y * xwidth + x - 1];
-				}
-			}
-			swidth++;
-		}
-		
+		running    = true;
+		force_stop = false;
+		std::thread(&contentAwareArgs::scaling_wrap, this).detach();
 	}
-	
-	swap = 0;
-	for(int i = 0; i < heightOff; i++) {
-		// Energy map
-		for (int y = 0; y < sheight; y++)
-		for (int x = 0; x < swidth; x++) {
-			float pxl = y > 0?           grey(surface[(y - 1) * xwidth + x]) : 0;
-			float pxc =                  grey(surface[ y      * xwidth + x]);
-			float pxr = y < sheight - 1? grey(surface[(y + 1) * xwidth + x]) : 0;
 
-			energy[y * xwidth + x] = fabs(pxl - pxc) + fabs(pxr - pxc);
-		}
+	void scaling_wrap() {
+		scaling();
+		free();
+		running = false;
+	}
 
-		// Search
-		for(int y = 0; y < sheight; y++)
-			accEnergy[y * xwidth] = energy[y * xwidth];
-		float lastY = -1;
-
-		if(seamType == 0) {
-			for(int x = 1; x < swidth; x++)
-			for(int y = 0; y < sheight; y++) {
-				float minEnergy = 9999999;
-				float minPrevY  = y;
-	
-				for(int py = y - 1; py <= y + 1; py++) {
-					if(py < 0 || py >= sheight) continue;
-					if(accEnergy[py * xwidth + x - 1] < minEnergy) {
-						minEnergy = accEnergy[py * xwidth + x - 1];
-						minPrevY  = py;
-					}
-				}
-	
-				accEnergy[y * xwidth + x] = energy[y * xwidth + x] + minEnergy;
-				prevpx[y * xwidth + x]    = minPrevY;
-			}
+	void scaling() {
+		pixel* pixels = pixelArrayBuffer;
+		pixel* output = outputBuffer;
 		
-			float minEnergy = 9999999;
-			for(int y = 0; y < sheight; y++) {
-				float an = accEnergy[y * xwidth + (swidth - 1)];
-				if((swap == 0 && an < minEnergy) || (swap == 1 && an <= minEnergy)) {
-					minEnergy = an;
-					lastY     = y;
-				}
+		double width  = surfaceWidth;
+		double height = surfaceHeight;
+		
+		int iwidth  = (int)width;  // input dim
+		int iheight = (int)height;
+		
+		int swidth  = iwidth;
+		int sheight = iheight;
+		
+		int fwidth  = (int)ceil(width  * xscale); // final dim
+		int fheight = (int)ceil(height * yscale);
+		
+		bool widthDown   = fwidth < iwidth;
+		int  widthOff    = widthDown? iwidth - fwidth : fwidth - iwidth;
+		int  xwidth      = widthDown? iwidth : fwidth; // max, data dim
+		
+		bool heightDown  = fheight < iheight;
+		int  heightOff   = heightDown? iheight - fheight : fheight - iheight;
+		int  xheight     = heightDown? iheight : fheight;
+		
+		surface   = new pixel[xwidth * xheight];
+		energy    = new float[xwidth * xheight];
+		accEnergy = new float[xwidth * xheight];
+		prevpx    = new float[xwidth * xheight];
+		seam      = new float[xwidth + xheight];
+
+		int swap = 0;
+
+		for(int y = 0; y < iheight; y++)
+		for(int x = 0; x < iwidth; x++)
+			surface[y * xwidth + x] = pixels[y * iwidth + x];
+		
+		for(int i = 0; i < widthOff; i++) {
+			if(force_stop) return;
+
+			// Energy map
+			for (int y = 0; y < sheight; y++)
+			for (int x = 0; x < swidth; x++) {
+				float pxl = x > 0?          grey(surface[y * xwidth + (x - 1)]) : 0;
+				float pxc =                 grey(surface[y * xwidth +  x     ]);
+				float pxr = x < swidth - 1? grey(surface[y * xwidth + (x + 1)]) : 0;
+
+				energy[y * xwidth + x] = fabs(pxl - pxc) + fabs(pxr - pxc);
 			}
+
+			// Search
+			for(int x = 0; x < swidth; x++)
+				accEnergy[x] = energy[x];
+			float lastX = -1;
 			
-		} else {
-			for(int x = 1; x < swidth; x++)
-			for(int y = 0; y < sheight; y++) {
-				float maxEnergy = 0;
-				float maxPrevY  = y;
-	
-				for(int py = y - 1; py <= y + 1; py++) {
-					if(py < 0 || py >= sheight) continue;
-					if(accEnergy[py * xwidth + x - 1] > maxEnergy) {
-						maxEnergy = accEnergy[py * xwidth + x - 1];
-						maxPrevY  = py;
+			if(seamType == 0) {
+				for(int y = 1; y < sheight; y++)
+				for(int x = 0; x < swidth; x++) {
+					if(force_stop) return;
+
+					float minEnergy = 9999999;
+					float minPrevX  = x;
+		
+					for(int px = x - 1; px <= x + 1; px++) {
+						if(px < 0 || px >= swidth) continue;
+						if(accEnergy[(y - 1) * xwidth + px] < minEnergy) {
+							minEnergy = accEnergy[(y - 1) * xwidth + px];
+							minPrevX  = px;
+						}
+					}
+		
+					accEnergy[y * xwidth + x] = energy[y * xwidth + x] + minEnergy;
+					prevpx[y * xwidth + x]    = minPrevX;
+				}
+				
+				float minEnergy = 9999999;
+				for(int x = 0; x < swidth; x++) {
+					float an = accEnergy[(sheight - 1) * xwidth + x];
+					if((swap == 0 && an < minEnergy) || (swap == 1 && an <= minEnergy)) {
+						minEnergy = an;
+						lastX     = x;
 					}
 				}
 				
-				accEnergy[y * xwidth + x] = energy[y * xwidth + x] + maxEnergy;
-				prevpx[y * xwidth + x]    = maxPrevY;
-			}
+			} else {
+				for(int y = 1; y < sheight; y++)
+				for(int x = 0; x < swidth; x++) {
+					if(force_stop) return;
+
+					float maxEnergy = 0;
+					float maxPrevX  = x;
 		
-			float maxEnergy = 0;
-			for(int y = 0; y < sheight; y++) {
-				float an = accEnergy[y * xwidth + (swidth - 1)];
-				if((swap == 0 && an > maxEnergy) || (swap == 1 && an >= maxEnergy)) {
-					maxEnergy = an;
-					lastY     = y;
+					for(int px = x - 1; px <= x + 1; px++) {
+						if(px < 0 || px >= swidth) continue;
+						if(accEnergy[(y - 1) * xwidth + px] > maxEnergy) {
+							maxEnergy = accEnergy[(y - 1) * xwidth + px];
+							maxPrevX  = px;
+						}
+					}
+		
+					accEnergy[y * xwidth + x] = energy[y * xwidth + x] + maxEnergy;
+					prevpx[y * xwidth + x]    = maxPrevX;
 				}
+			
+				float maxEnergy = 0;
+				for(int x = 0; x < swidth; x++) {
+					float an = accEnergy[(sheight - 1) * xwidth + x];
+					if((swap == 0 && an > maxEnergy) || (swap == 1 && an >= maxEnergy)) {
+						maxEnergy = an;
+						lastX     = x;
+					}
+				}
+				
+			}
+			
+			swap = swap == 1? 0 : 1;
+			
+			if(lastX < 0) break;
+			for(int y = sheight - 1; y >= 0; y--) {
+				seam[y] = lastX;
+				lastX   = prevpx[y * xwidth + (int)lastX];
+			}
+
+			// Copy data
+			if(widthDown) {
+				for(int y = 0; y < sheight; y++) {
+					int seamX = (int)seam[y];
+					for(int x = 0; x < swidth - 1; x++) {
+						if(force_stop) return;
+						if(x < seamX) surface[y * xwidth + x] = surface[y * xwidth + x    ];
+						else          surface[y * xwidth + x] = surface[y * xwidth + x + 1];
+					}
+				}
+				swidth--;
+				
+			} else {
+				for(int y = 0; y < sheight; y++) {
+					int seamX = (int)seam[y];
+					for(int x = swidth; x >= 0; x--) {
+						if(force_stop) return;
+						if(x <= seamX) surface[y * xwidth + x] = surface[y * xwidth + x    ];
+						else           surface[y * xwidth + x] = surface[y * xwidth + x - 1];
+					}
+				}
+				swidth++;
 			}
 			
 		}
 		
-		swap = swap == 1? 0 : 1;
+		swap = 0;
+		for(int i = 0; i < heightOff; i++) {
+			if(force_stop) return;
+
+			// Energy map
+			for (int y = 0; y < sheight; y++)
+			for (int x = 0; x < swidth; x++) {
+				float pxl = y > 0?           grey(surface[(y - 1) * xwidth + x]) : 0;
+				float pxc =                  grey(surface[ y      * xwidth + x]);
+				float pxr = y < sheight - 1? grey(surface[(y + 1) * xwidth + x]) : 0;
+
+				energy[y * xwidth + x] = fabs(pxl - pxc) + fabs(pxr - pxc);
+			}
+
+			// Search
+			for(int y = 0; y < sheight; y++)
+				accEnergy[y * xwidth] = energy[y * xwidth];
+			float lastY = -1;
+
+			if(seamType == 0) {
+				for(int x = 1; x < swidth; x++)
+				for(int y = 0; y < sheight; y++) {
+					if(force_stop) return;
+
+					float minEnergy = 9999999;
+					float minPrevY  = y;
 		
-		if(lastY < 0) break;
-		for(int x = swidth - 1; x >= 0; x--) {
-			seam[x] = lastY;
-			lastY   = prevpx[(int)lastY * xwidth + x];
+					for(int py = y - 1; py <= y + 1; py++) {
+						if(py < 0 || py >= sheight) continue;
+						if(accEnergy[py * xwidth + x - 1] < minEnergy) {
+							minEnergy = accEnergy[py * xwidth + x - 1];
+							minPrevY  = py;
+						}
+					}
+		
+					accEnergy[y * xwidth + x] = energy[y * xwidth + x] + minEnergy;
+					prevpx[y * xwidth + x]    = minPrevY;
+				}
+			
+				float minEnergy = 9999999;
+				for(int y = 0; y < sheight; y++) {
+					float an = accEnergy[y * xwidth + (swidth - 1)];
+					if((swap == 0 && an < minEnergy) || (swap == 1 && an <= minEnergy)) {
+						minEnergy = an;
+						lastY     = y;
+					}
+				}
+				
+			} else {
+				for(int x = 1; x < swidth; x++)
+				for(int y = 0; y < sheight; y++) {
+					if(force_stop) return;
+
+					float maxEnergy = 0;
+					float maxPrevY  = y;
+		
+					for(int py = y - 1; py <= y + 1; py++) {
+						if(py < 0 || py >= sheight) continue;
+						if(accEnergy[py * xwidth + x - 1] > maxEnergy) {
+							maxEnergy = accEnergy[py * xwidth + x - 1];
+							maxPrevY  = py;
+						}
+					}
+					
+					accEnergy[y * xwidth + x] = energy[y * xwidth + x] + maxEnergy;
+					prevpx[y * xwidth + x]    = maxPrevY;
+				}
+			
+				float maxEnergy = 0;
+				for(int y = 0; y < sheight; y++) {
+					float an = accEnergy[y * xwidth + (swidth - 1)];
+					if((swap == 0 && an > maxEnergy) || (swap == 1 && an >= maxEnergy)) {
+						maxEnergy = an;
+						lastY     = y;
+					}
+				}
+				
+			}
+			
+			swap = swap == 1? 0 : 1;
+			
+			if(lastY < 0) break;
+			for(int x = swidth - 1; x >= 0; x--) {
+				seam[x] = lastY;
+				lastY   = prevpx[(int)lastY * xwidth + x];
+			}
+			
+			// Copy data
+			if(heightDown) {
+				for(int x = 0; x < swidth; x++) {
+					int seamY = (int)seam[x];
+					for(int y = 0; y < sheight - 1; y++) {
+						if(force_stop) return;
+						if(y < seamY) surface[y * xwidth + x] = surface[ y      * xwidth + x];
+						else          surface[y * xwidth + x] = surface[(y + 1) * xwidth + x];
+					}
+				}
+				sheight--;
+				
+			} else {
+				for(int x = 0; x < swidth; x++) {
+					int seamY = (int)seam[x];
+					for(int y = sheight; y >= 0; y--) {
+						if(force_stop) return;
+						if(y <= seamY) surface[y * xwidth + x] = surface[ y      * xwidth + x];
+						else           surface[y * xwidth + x] = surface[(y - 1) * xwidth + x];
+					}
+				}
+				sheight++;
+				
+			}
+			
 		}
 		
-		// Copy data
-		if(heightDown) {
-			for(int x = 0; x < swidth; x++) {
-				int seamY = (int)seam[x];
-				for(int y = 0; y < sheight - 1; y++) {
-					if(y < seamY) surface[y * xwidth + x] = surface[ y      * xwidth + x];
-					else          surface[y * xwidth + x] = surface[(y + 1) * xwidth + x];
-				}
-			}
-			sheight--;
-			
-		} else {
-			for(int x = 0; x < swidth; x++) {
-				int seamY = (int)seam[x];
-				for(int y = sheight; y >= 0; y--) {
-					if(y <= seamY) surface[y * xwidth + x] = surface[ y      * xwidth + x];
-					else           surface[y * xwidth + x] = surface[(y - 1) * xwidth + x];
-				}
-			}
-			sheight++;
-			
-		}
+		// Copy to output
+		for(int y = 0; y < fheight; y++)
+		for(int x = 0; x < fwidth;  x++)
+			output[y * fwidth + x] = surface[y * xwidth + x];
 		
+		if(async) asyncCall(generator_id, 70, "content_aware_scale_complete", 200.0, "Content-Aware Completed");
+		return;
 	}
-	
-	// Copy to output
-	for(int y = 0; y < fheight; y++)
-	for(int x = 0; x < fwidth;  x++)
-		output[y * fwidth + x] = surface[y * xwidth + x];
-	
-	delete surface;
-	delete energy;
-	delete accEnergy;
-	delete prevpx;
-	delete seam;
-	
-	return 0;
-}
+
+	void free() {
+		delete surface;
+		delete energy;
+		delete accEnergy;
+		delete prevpx;
+		delete seam;
+	}
+
+	void stop() {
+		if(!running) return;
+
+		force_stop = true;
+		while(running) std::this_thread::sleep_for(std::chrono::milliseconds(1));
+
+		asyncCall(generator_id, 70, "content_aware_stop", 200.0, "Content-Aware Stopped");
+	}
+};
+
+#define INDEX int i = static_cast<int>(x); if(i < 0 || i >= static_cast<int>(generators.size())) return -1; contentAwareArgs& generator = generators[i];
+std::vector<contentAwareArgs> generators;
+
+cfunction double content_aware_init() { generators.emplace_back(); return static_cast<double>(generators.size() - 1); }
+
+cfunction double content_aware_setBuffer(double x, void* pb, void* ob) {    INDEX generator.setBuffer(pb, ob);  return 0.; }
+cfunction double content_aware_setDimension(double x, double w, double h) { INDEX generator.setDimension(w, h); return 0.; }
+cfunction double content_aware_setScale(double x, double xs, double ys) {   INDEX generator.setScale(xs, ys);   return 0.; }
+cfunction double content_aware_setSeamType(double x, double st) {           INDEX generator.setSeamType(st);    return 0.; }
+cfunction double content_aware_setAsync(double x, double a) {               INDEX generator.setAsync(a);        return 0.; }
+
+cfunction double content_aware_scale(double x) { INDEX generator.scale(x); return 0; }
+cfunction double content_aware_stop(double x)  { INDEX generator.stop(); return 0.; }
 */
 #endregion

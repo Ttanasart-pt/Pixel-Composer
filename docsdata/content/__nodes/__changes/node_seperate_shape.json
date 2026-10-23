@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.22.1.204",
+    "changes": [
+      {
+        "date": "2026-10-23T03:24:13.424Z",
+        "node": "",
+        "commit": "**Node**: Add setting to only update node on mouse release."
+      }
+    ]
+  },
+  {
     "version": "1.21.9.204",
     "changes": [
       {

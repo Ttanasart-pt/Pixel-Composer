@@ -13,20 +13,20 @@ function Node_Seperate_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 	newInput( 0, nodeValue_Surface( "Shapes Map" )).setRequired();
 	
 	newInput( 5, nodeValue_EButton( "Mode",        0, [ "Greyscale", "Alpha" ] ))
-	newInput( 1, nodeValue_Slider(  "Tolerance",  .2, { range: [ 0, 1, 0.01 ], update_stat: SLIDER_UPDATE.release }));
-	newInput( 4, nodeValue_EButton( "Blank",       0, [ "Include", "Ignore" ] ));
+	newInput( 1, nodeValue_Slider(  "Tolerance",  .2   ));
+	newInput( 4, nodeValue_EButton( "Blank",       0, [ "Include", "Ignore" ]  ));
 	newInput( 8, nodeValue_Int(     "Expansion",   8   ));
 	newInput( 7, nodeValue_Bool(    "Diagonal",   true ));
 	
 	////- =Output
 	newInput( 9, nodeValue_Surface( "Texture"   ));
-	newInput( 2, nodeValue_Bool(  "Override Color", false    ));
-	newInput( 3, nodeValue_Color( "Color",          ca_white ));
-	newInput( 6, nodeValue_Bool(  "Crop",           true     ))
+	newInput( 2, nodeValue_Bool(    "Override Color", false    ));
+	newInput( 3, nodeValue_Color(   "Color",          ca_white ));
+	newInput( 6, nodeValue_Bool(    "Crop",           true     ))
 	// 10
 		
-	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
-	newOutput(1, nodeValue_Output("Atlas", VALUE_TYPE.atlas, []));
+	newOutput(0, nodeValue_Output( "Surface Out", VALUE_TYPE.surface, noone ));
+	newOutput(1, nodeValue_Output( "Atlas",       VALUE_TYPE.atlas,   []    ));
 	
 	input_display_list = [
 		[ "Shape",  false ],  0,  5,  1,  4,  8,  7, 

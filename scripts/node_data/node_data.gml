@@ -219,6 +219,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	#endregion
 	
 	#region ---- Attributes ----
+		attributes.update_on_release = false;
 		attributes.preview_size      = PREFERENCES.node_def_height;
 		attributes.node_param_width  = PREFERENCES.node_param_width;
 		attributes.show_preview      = true;
@@ -294,7 +295,9 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			
 			"Node",
 			attrCacheEdit,
-			Node_Attribute("Auto Update",       function() /*=>*/ {return attributes.update_graph},        function() /*=>*/ {return new checkBox(function() /*=>*/ {return toggleAttribute("update_graph", 2)})}        ),
+			Node_Attribute("Auto Update",                  function() /*=>*/ {return attributes.update_graph},      function() /*=>*/ {return new checkBox(function() /*=>*/ {return toggleAttribute("update_graph",      2)})} ),
+			Node_Attribute("Update Only On Mouse Release", function() /*=>*/ {return attributes.update_on_release}, function() /*=>*/ {return new checkBox(function() /*=>*/ {return toggleAttribute("update_on_release", 2)})} ),
+			
 			Node_Attribute("Render Frame Input",function() /*=>*/ {return attributes.show_render_frame},   function() /*=>*/ {return new checkBox(function() /*=>*/ {return toggleAttribute("show_render_frame", 2)})}   ),
 			Node_Attribute("Update Trigger",    function() /*=>*/ {return attributes.show_update_trigger}, function() /*=>*/ {return new checkBox(function() /*=>*/ {return toggleAttribute("show_update_trigger", 2)})} ),
 			Node_Attribute("Output Metadata",   function() /*=>*/ {return attributes.outp_meta},           function() /*=>*/ {return new checkBox(function() /*=>*/ {return toggleAttribute("outp_meta", 2)})}           ),
@@ -1431,7 +1434,11 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			__frame = frame;
 			array_foreach(input_bypass, function(i,_) /*=>*/ {return i.setValue(i.from_junc.getValue(__frame))});
 			
-			if(attributes.update_graph) {
+			var _upd  = attributes.update_graph;
+			if(attributes.update_on_release && !FORCE_UPDATE)
+			    _upd &= !mouse_check_button(mb_any) || mouse_check_button_released(mb_any);
+			    
+			if(_upd) {
 				try      { update(frame); } 
 				catch(e) { log_warning("RENDER", exception_print(e), self); }
 			}
@@ -1473,7 +1480,12 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			var sBase = surface_get_target();
 			
 			try { 
-				if(attributes.update_graph) update(frame); 
+				var _upd  = attributes.update_graph;
+				if(attributes.update_on_release && !FORCE_UPDATE)
+			    	_upd &= !mouse_check_button(mb_any) || mouse_check_button_released(mb_any);
+			    
+				if(_upd) update(frame); 
+				
 			} catch(exception) {
 				var sCurr = surface_get_target();
 				while(surface_get_target() != sBase)

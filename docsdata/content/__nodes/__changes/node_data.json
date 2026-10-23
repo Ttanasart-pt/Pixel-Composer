@@ -16,6 +16,11 @@
         "date": "2026-10-23T00:42:33.385Z",
         "node": "Preview Panel",
         "commit": "**Preview Panel**: Add button to toggle gizmo tranform."
+      },
+      {
+        "date": "2026-10-23T03:24:13.416Z",
+        "node": "Node",
+        "commit": "**Node**: Add setting to only update node on mouse release."
       }
     ]
   },

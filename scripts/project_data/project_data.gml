@@ -278,6 +278,7 @@ function Project() constructor {
 			"json_asset_dir": "-",
 		};
 			
+		attributes.update_on_release   = false;
 		attributes.autosave            = false;
 		attributes.auto_organize       = false;
 		attributes.render_topo         = false;
@@ -393,8 +394,8 @@ function Project() constructor {
 					}).setIcon(THEME.button_path_icon, 0, COLORS._main_icon)
 					) ],
 				
-				[ "Autosave",    "autosave",     new checkBox(function() /*=>*/ {return toggleAttribute("autosave")})     ],
-				[ "Layers",      "global_layer", new checkBox(function() /*=>*/ {return toggleAttribute("global_layer")}) ],
+				[ "Autosave",             "autosave",              new checkBox(function() /*=>*/ {return toggleAttribute("autosave")})              ],
+				[ "Layers",               "global_layer",          new checkBox(function() /*=>*/ {return toggleAttribute("global_layer")})          ],
 				[ "Render only in Slide", "slideshow_render_only", new checkBox(function() /*=>*/ {return toggleAttribute("slideshow_render_only")}) ],
 				
 			];

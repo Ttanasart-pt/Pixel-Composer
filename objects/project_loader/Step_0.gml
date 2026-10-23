@@ -184,6 +184,8 @@ switch(load_process) {
     run_in(2, function() /*=>*/ { 
     	if(PANEL_PREVIEW)   PANEL_PREVIEW.fullView();
     	if(PANEL_ANIMATION) PANEL_ANIMATION.resetView();
+    	FORCE_UPDATE = true;
+    	
     	GraphRefresh(); 
     	RenderAllReorder();
     });
