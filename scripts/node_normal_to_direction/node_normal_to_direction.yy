@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"node_normal_to_direction",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"node_normal_to_direction",
+  "parent":{
+    "name":"normal",
+    "path":"folders/nodes/data/3D/normal.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

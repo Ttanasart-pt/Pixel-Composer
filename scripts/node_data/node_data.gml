@@ -364,8 +364,9 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		preview_amount   = 0;
 		preview_draw     = true;
 		preview_index	 = 0;
-		preview_channel  = 0; preview_channel_temp = undefined;
 		preview_alpha	 = 1;
+		preview_channel  = 0; 
+		preview_channel_temp = undefined; _preview_channel_temp = undefined;
 		
 		preview_is_surface = false;
 		__preview_sw       = noone;
@@ -2727,6 +2728,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	}
 	
 	static getDrawPreview = function() {
+		_preview_channel_temp = preview_channel_temp;
 		var surf = getGraphPreviewSurface();
 		if(surf == noone) return;
 		
@@ -2747,6 +2749,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		__preview_sh = surface_get_height_safe(preview_surface);
 	}
 	static drawPreview    = function(xx, yy, _s) {
+		if(preview_channel_temp != _preview_channel_temp) getDrawPreview();
 		if(!reqpass || !preview_is_surface) return;
 		
 		var bbox = draw_bbox;

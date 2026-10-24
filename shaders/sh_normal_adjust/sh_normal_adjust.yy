@@ -3,8 +3,8 @@
   "%Name":"sh_normal_adjust",
   "name":"sh_normal_adjust",
   "parent":{
-    "name":"2d_effects",
-    "path":"folders/nodes/data/3D/2d_effects.yy",
+    "name":"normal",
+    "path":"folders/nodes/data/3D/normal.yy",
   },
   "resourceType":"GMShader",
   "resourceVersion":"2.0",

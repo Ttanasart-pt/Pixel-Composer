@@ -79,7 +79,7 @@ function draw_arc_fast(_x, _y, _r, _as, _at, _th = 1, _pr = 8) {
 		nx = _x + lengthdir_x(_r, a);
 		ny = _y + lengthdir_y(_r, a);
 		
-		if(i) draw_line(ox, oy, nx, ny);
+		if(i) draw_line_width(ox, oy, nx, ny, _th);
 		
 		ox = nx;
 		oy = ny;

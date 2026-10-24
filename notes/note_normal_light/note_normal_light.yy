@@ -3,9 +3,9 @@
   "%Name":"note_normal_light",
   "name":"note_normal_light",
   "parent":{
-    "name":"2d_effects",
-    "path":"folders/nodes/data/3D/2d_effects.yy",
+    "name":"normal",
+    "path":"folders/nodes/data/3D/normal.yy",
   },
   "resourceType":"GMNotes",
-  "resourceVersion":"1.1",
+  "resourceVersion":"2.0",
 }

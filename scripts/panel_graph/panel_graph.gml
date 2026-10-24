@@ -5437,7 +5437,7 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
             }
             
             var _hideOut = _terminal || array_any(_node.outputs, function(n,i) /*=>*/ {return !array_empty(n.getJunctionTo())});
-            if(_hideOut) for(var j = 0; j < array_length(_node.outputs); j++) {
+            if(_hideOut) for(var j = 1; j < array_length(_node.outputs); j++) {
                 var _jun = _node.outputs[j];
                 if(!_jun.isVisible()) continue;
                 

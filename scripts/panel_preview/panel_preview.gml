@@ -11,8 +11,8 @@
 	    function panel_preview_preview_window()             { CALL("preview_preview_window");            create_preview_window(PANEL_PREVIEW.getNodePreview());  }
 	    function panel_preview_cycle_channel()              { CALL("preview_cycle_channel");             PANEL_PREVIEW.cyclePreviewChannel();     }
 	    
-	    function panel_preview_pan()                  { CALL("preview_pan");                       PANEL_PREVIEW.canvas_dragging_key = true; }
-	    function panel_preview_zoom()                 { CALL("preview_zoom");                      PANEL_PREVIEW.canvas_zooming_key  = true; }
+	    function panel_preview_pan()                  { CALL("preview_pan");                       PANEL_PREVIEW.view_drag_key(); }
+	    function panel_preview_zoom()                 { CALL("preview_zoom");                      PANEL_PREVIEW.view_zoom_key(); }
 	    
 	    function panel_preview_3d_view_front()        { CALL("preview_3d_front_view");             PANEL_PREVIEW.d3_view_action_front();  }
 	    function panel_preview_3d_view_back()         { CALL("preview_3d_back_view");              PANEL_PREVIEW.d3_view_action_back();   }
@@ -316,6 +316,9 @@ function Panel_Preview() : PanelContent() constructor {
         sample_color        = noone;
         sample_x            = noone;
         sample_y            = noone;
+        
+        static view_drag_key = function() { if(measure_mode) return; canvas_dragging_key = true; }
+        static view_zoom_key = function() { if(measure_mode) return; canvas_zooming_key  = true; }
    #endregion
     
     #region ---- selection ----
@@ -2412,6 +2415,7 @@ function Panel_Preview() : PanelContent() constructor {
             sample_x         = noone;
             sample_y         = noone;
         	var _sampleable  = !is(_node, Node) || _node.preview_surface_sample;
+        	    _sampleable &= !measure_mode;
         
             if(_sampleable && mouse_on_preview && (mouse_rpress() || key_mod_press(KCONTROL))) {
                 var _sx = sample_x;
@@ -4318,6 +4322,8 @@ function Panel_Preview() : PanelContent() constructor {
     } 
     
     static drawSelection = function() {
+    	if(measure_mode) return;
+    	
     	var prevN = getNodePreview();
     	if(is(prevN, Node) && !prevN.preview_select_boxable) { 
     		selection_active = false; 
@@ -4620,7 +4626,7 @@ function Panel_Preview() : PanelContent() constructor {
     
     static measureRuler = function() {
     	var _hover = pHOVER && mouse_on_preview == 1;
-    	var _focus = pFOCUS;
+    	var _focus = pFOCUS && mouse_on_preview == 1;
     	
     	switch(measure_step) {
 			case 0 :
@@ -4630,9 +4636,9 @@ function Panel_Preview() : PanelContent() constructor {
 			    	measure_x0   = canvas_mx;
 			    	measure_y0   = canvas_my;
 			    	
-			    	if(key_mod_press(CTRL)) {
-			    		measure_x0 = round(measure_x0) + .5;
-						measure_y0 = round(measure_y0) + .5;
+			    	if(key_mod_press(KCONTROL)) {
+			    		measure_x0 = round(measure_x0);
+						measure_y0 = round(measure_y0);
 			    	}
 			    	
 			    	measure_x1   = measure_x0;
@@ -4652,9 +4658,9 @@ function Panel_Preview() : PanelContent() constructor {
 		    	measure_x1   = measure_x0 + lengthdir_x(_diss, _dirr);
 		    	measure_y1   = measure_y0 + lengthdir_y(_diss, _dirr);
 		    	
-		    	if(key_mod_press(CTRL)) {
-		    		measure_x1 = round(measure_x1) + .5;
-					measure_y1 = round(measure_y1) + .5;
+		    	if(key_mod_press(KCONTROL)) {
+		    		measure_x1 = round(measure_x1);
+					measure_y1 = round(measure_y1);
 		    	}
 		    	
 				if(mouse_lrelease()) 
@@ -4765,9 +4771,9 @@ function Panel_Preview() : PanelContent() constructor {
 					measure_x0 = measure_x1 + lengthdir_x(_diss, _dirr);
 					measure_y0 = measure_y1 + lengthdir_y(_diss, _dirr);
 					
-			    	if(key_mod_press(CTRL)) {
-			    		measure_x0 = round(measure_x0) + .5;
-						measure_y0 = round(measure_y0) + .5;
+			    	if(key_mod_press(KCONTROL)) {
+			    		measure_x0 = round(measure_x0);
+						measure_y0 = round(measure_y0);
 			    	}
 					
 				} else {
@@ -4778,9 +4784,9 @@ function Panel_Preview() : PanelContent() constructor {
 					measure_x1 = measure_x0 + lengthdir_x(_diss, _dirr);
 					measure_y1 = measure_y0 + lengthdir_y(_diss, _dirr);
 					
-			    	if(key_mod_press(CTRL)) {
-			    		measure_x1 = round(measure_x1) + .5;
-						measure_y1 = round(measure_y1) + .5;
+			    	if(key_mod_press(KCONTROL)) {
+			    		measure_x1 = round(measure_x1);
+						measure_y1 = round(measure_y1);
 			    	}
 					
 				}
@@ -4798,7 +4804,7 @@ function Panel_Preview() : PanelContent() constructor {
 				dx = lengthdir_x(_diss, _dirr);
 				dy = lengthdir_y(_diss, _dirr);
 				
-		    	if(key_mod_press(CTRL)) {
+		    	if(key_mod_press(KCONTROL)) {
 		    		dx = round(dx);
 		    		dy = round(dy);
 		    	}
@@ -4816,7 +4822,7 @@ function Panel_Preview() : PanelContent() constructor {
     
     static measureAngle = function() {
     	var _hover = pHOVER && mouse_on_preview == 1;
-    	var _focus = pFOCUS;
+    	var _focus = pFOCUS && mouse_on_preview == 1;
     	
     	switch(measure_step) {
 			case 0 :
@@ -4826,9 +4832,9 @@ function Panel_Preview() : PanelContent() constructor {
 			    	measure_x0   = canvas_mx;
 			    	measure_y0   = canvas_my;
 			    	
-			    	if(key_mod_press(CTRL)) {
-			    		measure_x0 = round(measure_x0) + .5;
-						measure_y0 = round(measure_y0) + .5;
+			    	if(key_mod_press(KCONTROL)) {
+			    		measure_x0 = round(measure_x0);
+						measure_y0 = round(measure_y0);
 			    	}
 			    	
 			    	measure_x1   = measure_x0;
@@ -4848,9 +4854,9 @@ function Panel_Preview() : PanelContent() constructor {
 		    	measure_x1   = measure_x0 + lengthdir_x(_diss, _dirr);
 		    	measure_y1   = measure_y0 + lengthdir_y(_diss, _dirr);
 		    	
-		    	if(key_mod_press(CTRL)) {
-		    		measure_x1 = round(measure_x1) + .5;
-					measure_y1 = round(measure_y1) + .5;
+		    	if(key_mod_press(KCONTROL)) {
+		    		measure_x1 = round(measure_x1);
+					measure_y1 = round(measure_y1);
 		    	}
 		    	
 				if(mouse_lrelease()) 
@@ -4861,9 +4867,9 @@ function Panel_Preview() : PanelContent() constructor {
 				measure_x2   = canvas_mx;
 		    	measure_y2   = canvas_my;
 		    	
-		    	if(key_mod_press(CTRL)) {
-		    		measure_x2 = round(measure_x2) + .5;
-					measure_y2 = round(measure_y2) + .5;
+		    	if(key_mod_press(KCONTROL)) {
+		    		measure_x2 = round(measure_x2);
+					measure_y2 = round(measure_y2);
 		    	}
 		    	
 				if(mouse_lpress()) 
@@ -4894,11 +4900,12 @@ function Panel_Preview() : PanelContent() constructor {
 		}
 		
 		if(measure_step >= 2) {
-			draw_set_color(COLORS._main_accent); 
-			draw_arc_fast(_x0, _y0, min(_s1, _s2) * canvas_s / 2, _d1, _d2, 2, 32);
+			var _rr = min(ui(32), min(_s1, _s2) * canvas_s / 2);
+			draw_set_color(c_black);             draw_arc_fast(_x0, _y0, _rr, _d1, _d2, ui(4), 32);
+			draw_set_color(COLORS._main_accent); draw_arc_fast(_x0, _y0, _rr, _d1, _d2, ui(1), 32);
 			
-			draw_set_color(c_black);             draw_line_width(_x0, _y0, _x2, _y2, ui(4));
-			draw_set_color(COLORS._main_accent); draw_line_width(_x0, _y0, _x2, _y2, ui(1));
+			draw_set_color(c_black); draw_line_width(_x0, _y0, _x2, _y2, ui(4));
+			draw_set_color(c_white); draw_line_width(_x0, _y0, _x2, _y2, ui(1));
 		}
 		
 		draw_set_color(c_black); draw_line_width(_x0, _y0, _x1, _y1, ui(4));
@@ -4988,9 +4995,9 @@ function Panel_Preview() : PanelContent() constructor {
 					measure_x1 = measure_x0 + lengthdir_x(_diss, _dirr);
 					measure_y1 = measure_y0 + lengthdir_y(_diss, _dirr);
 					
-			    	if(key_mod_press(CTRL)) {
-			    		measure_x1 = round(measure_x1) + .5;
-						measure_y1 = round(measure_y1) + .5;
+			    	if(key_mod_press(KCONTROL)) {
+			    		measure_x1 = round(measure_x1);
+						measure_y1 = round(measure_y1);
 			    	}
 					
 				} else if(measure_drag == 2) {
@@ -5001,18 +5008,18 @@ function Panel_Preview() : PanelContent() constructor {
 					measure_x2 = measure_x0 + lengthdir_x(_diss, _dirr);
 					measure_y2 = measure_y0 + lengthdir_y(_diss, _dirr);
 					
-			    	if(key_mod_press(CTRL)) {
-			    		measure_x2 = round(measure_x2) + .5;
-						measure_y2 = round(measure_y2) + .5;
+			    	if(key_mod_press(KCONTROL)) {
+			    		measure_x2 = round(measure_x2);
+						measure_y2 = round(measure_y2);
 			    	}
 					
 				} else {
 					measure_x0 = vx;
 					measure_y0 = vy;
 					
-			    	if(key_mod_press(CTRL)) {
-			    		measure_x0 = round(measure_x0) + .5;
-						measure_y0 = round(measure_y0) + .5;
+			    	if(key_mod_press(KCONTROL)) {
+			    		measure_x0 = round(measure_x0);
+						measure_y0 = round(measure_y0);
 			    	}
 					
 				}
@@ -5024,7 +5031,7 @@ function Panel_Preview() : PanelContent() constructor {
     
     static measureRectangle = function() {
     	var _hover = pHOVER && mouse_on_preview == 1;
-    	var _focus = pFOCUS;
+    	var _focus = pFOCUS && mouse_on_preview == 1;
     	
     	switch(measure_step) {
 			case 0 :
@@ -5034,9 +5041,9 @@ function Panel_Preview() : PanelContent() constructor {
 			    	measure_x0   = canvas_mx;
 			    	measure_y0   = canvas_my;
 			    	
-			    	if(key_mod_press(CTRL)) {
-			    		measure_x0 = round(measure_x0) + .5;
-						measure_y0 = round(measure_y0) + .5;
+			    	if(key_mod_press(KCONTROL)) {
+			    		measure_x0 = round(measure_x0);
+						measure_y0 = round(measure_y0);
 			    	}
 			    	
 			    	measure_x1   = measure_x0;
@@ -5056,9 +5063,9 @@ function Panel_Preview() : PanelContent() constructor {
 		    	measure_x1   = measure_x0 + lengthdir_x(_diss, _dirr);
 		    	measure_y1   = measure_y0 + lengthdir_y(_diss, _dirr);
 		    	
-		    	if(key_mod_press(CTRL)) {
-		    		measure_x1 = round(measure_x1) + .5;
-					measure_y1 = round(measure_y1) + .5;
+		    	if(key_mod_press(KCONTROL)) {
+		    		measure_x1 = round(measure_x1);
+					measure_y1 = round(measure_y1);
 		    	}
 		    	
 				if(mouse_lrelease()) 
@@ -5200,9 +5207,9 @@ function Panel_Preview() : PanelContent() constructor {
 				measure_x0 = measure_drag_sx + (mx - measure_drag_mx) / canvas_s;
 				measure_y0 = measure_drag_sy + (my - measure_drag_my) / canvas_s;
 				
-		    	if(key_mod_press(CTRL)) {
-		    		measure_x0 = round(measure_x0) + .5;
-					measure_y0 = round(measure_y0) + .5;
+		    	if(key_mod_press(KCONTROL)) {
+		    		measure_x0 = round(measure_x0);
+					measure_y0 = round(measure_y0);
 		    	}
 				
 				if(mouse_lrelease()) measure_drag = undefined;
@@ -5211,9 +5218,9 @@ function Panel_Preview() : PanelContent() constructor {
 				measure_x1 = measure_drag_sx + (mx - measure_drag_mx) / canvas_s;
 				measure_y0 = measure_drag_sy + (my - measure_drag_my) / canvas_s;
 				
-		    	if(key_mod_press(CTRL)) {
-		    		measure_x1 = round(measure_x1) + .5;
-					measure_y0 = round(measure_y0) + .5;
+		    	if(key_mod_press(KCONTROL)) {
+		    		measure_x1 = round(measure_x1);
+					measure_y0 = round(measure_y0);
 		    	}
 				
 				if(mouse_lrelease()) measure_drag = undefined;
@@ -5222,9 +5229,9 @@ function Panel_Preview() : PanelContent() constructor {
 				measure_x0 = measure_drag_sx + (mx - measure_drag_mx) / canvas_s;
 				measure_y1 = measure_drag_sy + (my - measure_drag_my) / canvas_s;
 				
-		    	if(key_mod_press(CTRL)) {
-		    		measure_x0 = round(measure_x0) + .5;
-					measure_y1 = round(measure_y1) + .5;
+		    	if(key_mod_press(KCONTROL)) {
+		    		measure_x0 = round(measure_x0);
+					measure_y1 = round(measure_y1);
 		    	}
 				
 				if(mouse_lrelease()) measure_drag = undefined;
@@ -5233,9 +5240,9 @@ function Panel_Preview() : PanelContent() constructor {
 				measure_x1 = measure_drag_sx + (mx - measure_drag_mx) / canvas_s;
 				measure_y1 = measure_drag_sy + (my - measure_drag_my) / canvas_s;
 				
-		    	if(key_mod_press(CTRL)) {
-		    		measure_x1 = round(measure_x1) + .5;
-					measure_y1 = round(measure_y1) + .5;
+		    	if(key_mod_press(KCONTROL)) {
+		    		measure_x1 = round(measure_x1);
+					measure_y1 = round(measure_y1);
 		    	}
 				
 				if(mouse_lrelease()) measure_drag = undefined;
@@ -5246,22 +5253,28 @@ function Panel_Preview() : PanelContent() constructor {
     }
     
     static drawMeasure = function() {
-    	if(measure_tool_curr == undefined) return;
-    	
-    	var _hover = pHOVER && mouse_on_preview == 1;
-    	var _focus = pFOCUS;
-    	
     	switch(measure_tool_curr) {
     		case measure_tool_ruler :     measureRuler();     break;
 			case measure_tool_angle :     measureAngle();     break;
 			case measure_tool_rectangle : measureRectangle(); break;
     	}
     	
+    	var _mx = canvas_mx;
+		var _my = canvas_my;
+		
+		if(key_mod_press(KCONTROL)) {
+			_mx = round(_mx);
+			_my = round(_my);
+		}
+		
+		_mx = canvas_x + _mx * canvas_s;
+		_my = canvas_y + _my * canvas_s;
+
 		BLEND_ADD
 		draw_set_color(COLORS._main_icon);
 		draw_set_alpha(.5);
-		draw_line(mx, 0, mx, h);
-		draw_line(0, my, w, my);
+		draw_line(_mx, 0, _mx, h);
+		draw_line(0, _my, w, _my);
 		draw_set_alpha(1);
 		BLEND_NORMAL
     }

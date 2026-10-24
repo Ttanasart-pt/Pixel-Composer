@@ -91,7 +91,7 @@ function Panel_Toolbar() : PanelContent() constructor {
 				menuItem(__txt("Set Key"),      function() /*=>*/ {return textboxCall(key, function(txt) /*=>*/ { if(txt == "") return; key = txt; })}),
 			]);
 			
-			if(key_mod_press(CTRL)) icon_size = clamp(icon_size + MOUSE_WHEEL * 4, ui(12), ui(64));
+			if(key_mod_press(KCONTROL)) icon_size = clamp(icon_size + MOUSE_WHEEL * 4, ui(12), ui(64));
 		}
 	}
 	

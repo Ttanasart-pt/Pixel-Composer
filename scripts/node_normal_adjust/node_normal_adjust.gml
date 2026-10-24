@@ -23,6 +23,15 @@ function Node_Normal_Adjust(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	
 	attribute_surface_depth();
 	
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _params) { 
+		var _dim = getDimension();
+		var cx = _x + _dim[0] / 2 * _s;
+		var cy = _y + _dim[1] / 2 * _s;
+		
+		drawOverlayInput(inputs[ 3].drawOverlay(w_hoverable, active, cx, cy, _s, _mx, _my));
+		return w_hovering;
+	}
+	
 	static processData = function(_outData, _data, _array_index = 0) { 
 		#region data
 			var _norm = _data[ 0];
@@ -36,10 +45,12 @@ function Node_Normal_Adjust(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 			if(!is_surface(_norm)) return _outData;
 		#endregion
 		
+		var _ndim = surface_get_dimension(_norm);
+		
 		surface_set_shader(_outData, sh_normal_adjust);
-			shader_set_2( "dimension",  surface_get_dimension(_norm) );
-			shader_set_s( "mask",       _mask                        );
-			shader_set_i( "useMask",    is_surface(_mask)            );
+			shader_set_2( "dimension",   _ndim );
+			shader_set_s( "mask",        _mask );
+			shader_set_i( "useMask",     is_surface(_mask) );
 			
 			shader_set_m( "intensity",   _ints, _data[2], inputs[1] );
 			shader_set_f( "rotation",    _rot  );

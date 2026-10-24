@@ -5,8 +5,8 @@
   "isDnD":false,
   "name":"node_normal_adjust",
   "parent":{
-    "name":"2d_effects",
-    "path":"folders/nodes/data/3D/2d_effects.yy",
+    "name":"normal",
+    "path":"folders/nodes/data/3D/normal.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

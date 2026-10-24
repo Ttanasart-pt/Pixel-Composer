@@ -1,0 +1,12 @@
+{
+  "$GMShader":"",
+  "%Name":"sh_normal_to_direction",
+  "name":"sh_normal_to_direction",
+  "parent":{
+    "name":"normal",
+    "path":"folders/nodes/data/3D/normal.yy",
+  },
+  "resourceType":"GMShader",
+  "resourceVersion":"2.0",
+  "type":1,
+}
