@@ -492,16 +492,14 @@ function draw_tooltip_path(_path) {
 	var thh = th + pd * 2;
 	
 	TOOLTIP_SURFACE = surface_verify(TOOLTIP_SURFACE, tww, thh);
-	surface_set_shader(TOOLTIP_SURFACE);
+	surface_set_shader(TOOLTIP_SURFACE, noone);
 		draw_sprite_stretched(THEME.tooltip, 0, 0, 0, tww, thh);
 		
 		var x0 = pd, x1 = x0 + tw;
 		var y0 = pd, y1 = y0 + th;
 		var st = 0.1;
-			
-		draw_set_color(COLORS.widget_curve_line);
-		draw_set_alpha(0.15);
 		
+		draw_set_color(CDEF.main_dkgrey);
 		for( var i = st; i < 1; i += st ) {
 			var _x0 = x0 + tw * i;
 			var _y0 = y0 + th * (1 - i);
@@ -509,8 +507,6 @@ function draw_tooltip_path(_path) {
 			draw_line(x0, _y0, x1, _y0);
 			draw_line(_x0, y0, _x0, y1);
 		}
-		
-		draw_set_alpha(1);
 		
 		draw_set_color(COLORS._main_accent);
 		var _pamo = _path.getLineCount();

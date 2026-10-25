@@ -34,12 +34,10 @@ function Node_Array(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	];
 	
 	function createNewInput(index = array_length(inputs)) {
-		var inAmo = array_length(inputs);
 		var _typ  = getType();
-		
 		var _inp  = newInput(index, nodeValue("Input", self, CONNECT_TYPE.input, _typ, -1 )).setVisible(true, true);
 		
-		array_push(input_display_list, inAmo);
+		array_push(input_display_list, index);
 		postCreateNewInput(index);
 		return _inp;
 	} setDynamicInput(1);
