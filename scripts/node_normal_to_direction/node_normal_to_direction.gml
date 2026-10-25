@@ -21,7 +21,12 @@ function Node_Normal_to_Direction(_x, _y, _group = noone) : Node_Processor(_x, _
 	////- Nodes
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _params) { 
+		var _dim = getDimension();
+		var cx = _x + _dim[0] / 2 * _s;
+		var cy = _y + _dim[1] / 2 * _s;
 		
+		drawOverlayInput(inputs[ 1].drawOverlay(w_hoverable, active, cx, cy, _s, _mx, _my));
+		return w_hovering;
 	}
 	
 	static processData = function(_outSurf, _data, _array_index = 0) { 

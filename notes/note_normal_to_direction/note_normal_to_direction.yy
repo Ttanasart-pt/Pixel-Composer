@@ -1,0 +1,11 @@
+{
+  "$GMNotes":"v1",
+  "%Name":"note_normal_to_direction",
+  "name":"note_normal_to_direction",
+  "parent":{
+    "name":"normal",
+    "path":"folders/nodes/data/3D/normal.yy",
+  },
+  "resourceType":"GMNotes",
+  "resourceVersion":"1.1",
+}

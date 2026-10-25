@@ -2,8 +2,9 @@ function Node_Array(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name = "Array";
 	setDimension(96, 32);
 	
-	newInput(0, nodeValue_EScroll("Type", 0, { data: [ "Any", "Surface", "Number", "Color", "Text" ], update_hover: false })).rejectArray();
-	newInput(1, nodeValue_Bool("Spread array", false, "Unpack array and push the contents into the output one by one." )).rejectArray();
+	newInput( 0, nodeValue_EScroll( "Type",         0, { data: [ "Any", "Surface", "Number", "Color", "Text" ], update_hover: false })).setAnimable(false).rejectArray();
+	newInput( 1, nodeValue_Bool(    "Spread array", false, "Unpack array and push the contents into the output one by one." )).setAnimable(false).rejectArray();
+	// 2
 	
 	newOutput(0, nodeValue_Output("Array", VALUE_TYPE.any, []));
 	
@@ -36,12 +37,11 @@ function Node_Array(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		var inAmo = array_length(inputs);
 		var _typ  = getType();
 		
-		newInput(index, nodeValue("Input", self, CONNECT_TYPE.input, _typ, -1 )).setVisible(true, true);
+		var _inp  = newInput(index, nodeValue("Input", self, CONNECT_TYPE.input, _typ, -1 )).setVisible(true, true);
 		
 		array_push(input_display_list, inAmo);
 		postCreateNewInput(index);
-		return inputs[index];
-		
+		return _inp;
 	} setDynamicInput(1);
 	
 	////- =Nodes

@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.22.1.206",
+    "changes": [
+      {
+        "date": "2026-10-25T00:34:11.082Z",
+        "node": "",
+        "commit": "**Array**: Fix error when connecting number value."
+      }
+    ]
+  },
+  {
     "version": "1.21.9.205",
     "changes": [
       {

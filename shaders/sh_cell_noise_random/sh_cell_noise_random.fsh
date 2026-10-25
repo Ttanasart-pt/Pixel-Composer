@@ -67,7 +67,7 @@ uniform float middle;
 
 vec2 random2( vec2 p ) { return fract(sin(vec2(dot(p, vec2(127.1, 311.7)), dot(p, vec2(269.5, 183.3)))) * 43758.5453); }
 
-float random (in vec2 st) { return fract(sin(dot(st.xy, vec2(12.9898, 78.233))) * 43758.5453123); }
+float random (in vec2 st) { return fract(sin(dot(st.xy + 1.685, vec2(12.9898, 78.233))) * 43758.5453123); }
 
 vec3 colorNoise(in vec2 st) {
 	float randR = random(st);
