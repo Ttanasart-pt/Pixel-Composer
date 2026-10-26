@@ -446,6 +446,10 @@ a.anchor {
         }
     }
 
+    div.sidebar-icon:has(img) {
+        opacity: 1;
+    }
+
     .search {
         position: fixed;
         width: calc(256px - 16px);
