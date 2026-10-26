@@ -97,10 +97,18 @@ def writeSidebar(sidebar, depth = 0):
             sideContent += "</ul>"
 
     else:
-        print(page)
-        sideContent += f'<div class="sidebar-menu sidebar-file">' \
-                       f'<div class="sidebar-icon"></div>' \
-                       f'<a href="{page}" class="sidebar-file">{title}</a></div>'
+        icoRel = page.replace(".html", ".png")
+        icoPth = "docs" + icoRel
+        
+        if os.path.exists(icoPth):
+            sideContent += f'<div class="sidebar-menu sidebar-file">' \
+                           f'<div class="sidebar-icon"><img src="{icoRel}"></div>' \
+                           f'<a href="{page}" class="sidebar-file">{title}</a></div>'
+
+        else:
+            sideContent += f'<div class="sidebar-menu sidebar-file">' \
+                           f'<div class="sidebar-icon"></div>' \
+                           f'<a href="{page}" class="sidebar-file">{title}</a></div>'
         
     sideContent += "</li>"
     return sideContent
