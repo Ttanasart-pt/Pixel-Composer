@@ -441,6 +441,7 @@ a.anchor {
         }
 
         img {
+            opacity: .75;
             scale: .8;
         }
     }

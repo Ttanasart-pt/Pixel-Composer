@@ -441,7 +441,7 @@ a.anchor {
         }
 
         img {
-            opacity: 0.75;
+            opacity: .75;
             scale: .8;
         }
     }
@@ -1216,4 +1216,6 @@ ul.link-table {
 }
 
 ::-webkit-scrollbar-corner {
-    b
+    background: #00000000;
+}
+
