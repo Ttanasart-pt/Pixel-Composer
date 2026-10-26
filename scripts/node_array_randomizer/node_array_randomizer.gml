@@ -27,6 +27,7 @@ function Node_Array_Randomizer(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	setDrawIcon();
 	
 	newInput( 0, nodeValue("Array in", self, CONNECT_TYPE.input, VALUE_TYPE.any, []) ).setVisible(true, true);
+	// 1
 	
 	newOutput(0, nodeValue_Output("Array Selector", VALUE_TYPE.any, new RandomizedArray() ));
 	
@@ -208,14 +209,14 @@ function Node_Array_Randomizer(_x, _y, _group = noone) : Node(_x, _y, _group) co
 		var ds = _s * .75;
 		var sh = 5 * _s;
 		
-		__draw_sprite_ext(_bgS, draw_junction_index, x + sh, y + sh, ds, ds, 0, _cbg, _aa);
+		__draw_sprite_ext(_bgS, type, x + sh, y + sh, ds, ds, 0, _cbg, _aa);
 		gpu_set_blendmode_ext_sepalpha(bm_src_alpha, bm_inv_src_alpha, bm_one, bm_one);
-		__draw_sprite_ext(_fgS, draw_junction_index, x + sh, y + sh, ds, ds, 0, _cfg, _aa);
+		__draw_sprite_ext(_fgS, type, x + sh, y + sh, ds, ds, 0, _cfg, _aa);
 		gpu_set_blendmode(bm_normal);
 		
-		__draw_sprite_ext(_bgS, draw_junction_index, x - sh, y - sh, ds, ds, 0, _cbg, _aa);
+		__draw_sprite_ext(_bgS, type, x - sh, y - sh, ds, ds, 0, _cbg, _aa);
 		gpu_set_blendmode_ext_sepalpha(bm_src_alpha, bm_inv_src_alpha, bm_one, bm_one);
-		__draw_sprite_ext(_fgS, draw_junction_index, x - sh, y - sh, ds, ds, 0, _cfg, _aa);
+		__draw_sprite_ext(_fgS, type, x - sh, y - sh, ds, ds, 0, _cfg, _aa);
 		gpu_set_blendmode(bm_normal);
 	});
 }

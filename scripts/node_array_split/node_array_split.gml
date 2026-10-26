@@ -2,10 +2,19 @@ function Node_Array_Split(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	name  = "Array Split";
 	setDimension(96, 0);
 	
-	newInput(0, nodeValue_Any( "Array", [])).setVisible(true, true);
-	newInput(1, nodeValue_Int( "Minimum Outputs", 0 ));
+	////- =Array
+	newInput( 0, nodeValue_Any( "Array", [])).setVisible(true, true);
+	
+	////- =Split
+	newInput( 1, nodeValue_Int( "Minimum Outputs", 0 ));
+	// 2
 	
 	newOutput(0, nodeValue_Output("val 0", VALUE_TYPE.any, 0));
+	
+	input_display_list = [ 
+		[ "Array", false ],  0,
+		[ "Split", false ],  1,
+	];
 	
 	////- Nodes
 	
@@ -13,12 +22,17 @@ function Node_Array_Split(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	io_pool = [];
 	
 	static update = function() {
-		var _inp = getInputData(0);
-		var _min = getInputData(1);
-		
-		var type = inputs[0].value_from == noone? VALUE_TYPE.any : inputs[0].value_from.type;
-		inputs[0].setType(type);
-		
+		#region data
+			var _inp = getInputData(0);
+			var _min = getInputData(1);
+			
+			var type = inputs[0].getType();
+			var isig = inputs[0].getTypeSignature();
+			
+			inputs[0].setType(type);
+			inputs[0].setTypeSignature(isig);
+		#endregion
+			
 		var iamo = max(_min, array_safe_length(_inp));
 		var oamo = array_length(outputs);
 		attributes.output_amount = iamo;
@@ -31,6 +45,7 @@ function Node_Array_Split(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 					outputs[i].resetDisplay();
 				}
 				
+				outputs[i].setTypeSignature(array_safe_get_fast(isig, i, VALUE_TYPE.float, isig));
 				outputs[i].setValue(array_safe_get(_inp, i, 0));
 			}
 			return;
@@ -51,6 +66,7 @@ function Node_Array_Split(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 				outputs[i].resetDisplay();
 			}
 			
+			outputs[i].setTypeSignature(array_safe_get_fast(isig, i, VALUE_TYPE.float, isig));
 			outputs[i].setValue(array_safe_get(_inp, i, 0));
 		}
 		

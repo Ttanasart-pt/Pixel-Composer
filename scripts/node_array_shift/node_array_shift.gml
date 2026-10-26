@@ -3,48 +3,75 @@ function Node_Array_Shift(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	setDimension(96, 48);
 	setDrawIcon();
 	
-	newInput(0, nodeValue("Array", self, CONNECT_TYPE.input, VALUE_TYPE.any, 0))
-		.setArrayDepth(99)
-		.setVisible(true, true);
-		
-	newInput(1, nodeValue_Int("Shift", 0));
+	////- =Array
+	newInput( 0, nodeValue_Any(     "Array",    0 )).setArrayDepth(99).setVisible(true, true);
 	
-	newInput(2, nodeValue_EScroll("Overflow", 0, [ "Wrap", "Zero", "Ignore" ]));
+	////- =Shift
+	newInput( 1, nodeValue_Int(     "Shift",    0 ));
+	newInput( 2, nodeValue_EScroll( "Overflow", 0, [ "Wrap", "Zero", "Ignore" ]));
+	// 3
 	
 	newOutput(0, nodeValue_Output("Array", VALUE_TYPE.any, 0));
 	
+	input_display_list = [ 
+		[ "Array", false ],  0,
+		[ "Shift", false ],  1,  2,  
+	];
+	
+	////- Node
+	
 	static processData = function(_outSurf, _data, _array_index) {
-		var type = inputs[0].value_from == noone? VALUE_TYPE.any : inputs[0].value_from.type;
-		inputs[ 0].setType(type);
-		outputs[0].setType(type);
+		#region data
+			var _arr = _data[0];
+			var _shf = _data[1];
+			var _ovf = _data[2];
+			
+			var type = inputs[0].getType();
+			var isig = inputs[0].getTypeSignature();
+			
+			inputs[0].setType(type);
+			inputs[0].setTypeSignature(isig);
+			
+			outputs[0].setType(type);
+			
+			if(!is_array(_arr)) return [];
+		#endregion
 		
-		var _arr = _data[0];
-		var _shf = _data[1];
-		var _ovf = _data[2];
-		if(!is_array(_arr)) return [];
-		
-		var arr = [];
 		var len = array_length(_arr);
 		
-		if(_ovf == 0) {
-			for( var i = 0, n = len; i < n; i++ )
-				arr[i] = array_safe_get(_arr, i - _shf,, ARRAY_OVERFLOW.loop);
-				
-		} else if(_ovf == 1) {
-			for( var i = 0, n = len; i < n; i++ ) {
-				var _i = i - _shf;
-				arr[i] = array_safe_get(_arr, _i, 0);
-			}
-				
-		} else if(_ovf == 2) {
-			for( var i = 0, n = len; i < n; i++ ) {
-				var _i = i - _shf;
-				if(_i < 0 || _i >= len) continue;
-				
-				array_push(arr, array_safe_get(_arr, _i));
-			}
+		var arr = [];
+		var sig = [];
+		
+		switch(_ovf) {
+			case 0 :
+				for( var i = 0, n = len; i < n; i++ ) {
+					var ind = pfract(i - _shf, len);
+					arr[i] = array_safe_get_fast(_arr, ind);
+					sig[i] = array_safe_get_fast(isig, ind, VALUE_TYPE.float, isig);
+				}
+				break;
+					
+			case 1 :
+				for( var i = 0, n = len; i < n; i++ ) {
+					var ind = i - _shf;
+					
+					arr[i] = array_safe_get_fast(_arr, ind, 0);
+					sig[i] = array_safe_get_fast(isig, ind, VALUE_TYPE.float, isig);
+				}
+				break;
+					
+			case 2 :
+				for( var i = 0, n = len; i < n; i++ ) {
+					var ind = i - _shf;
+					if(ind < 0 || ind >= len) continue;
+					
+					array_push(arr, array_safe_get_fast(_arr, ind));
+					array_push(sig, array_safe_get_fast(isig, ind, VALUE_TYPE.float, isig));
+				}
+				break;
 		}
 		
+		outputs[0].setTypeSignature(sig);
 		return arr;
 	}
 	

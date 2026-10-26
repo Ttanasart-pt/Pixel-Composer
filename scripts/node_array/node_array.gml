@@ -42,7 +42,7 @@ function Node_Array(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		return _inp;
 	} setDynamicInput(1);
 	
-	////- =Nodes
+	////- =Node
 	
 	static getType = function() {
 		var _type = getInputData(0);
@@ -100,12 +100,10 @@ function Node_Array(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 			if(inputs[i].value_from == noone) {
 				if(_ctyp != _typ) 
 					inputs[i].setType(_typ);
-				// inputs[i].resetDisplay();
 				
 			} else if (value_bit(inputs[i].value_from.type) & value_bit(_typ) != 0) {
 				if(_ctyp != inputs[i].value_from.type) 
 					inputs[i].setType(inputs[i].value_from.type);
-				// inputs[i].resetDisplay();
 				
 			} else {
 				inputs[i].removeFrom();
@@ -145,6 +143,7 @@ function Node_Array(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		
 		var _set  = typ == VALUE_TYPE.any;
 		var _setT = VALUE_TYPE.any;
+		var _sig  = [];
 		
 		for( var i = input_fix_len, n = array_length(inputs); i < n; i++ ) {
 			var _idat = getInputData(i);
@@ -154,7 +153,10 @@ function Node_Array(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 			if(inputs[i].value_from == noone) continue;
 			
 			var _fromT = inputs[i].value_from.type;
+			var _fromS = inputs[i].getTypeSignature();
+			
 			inputs[i].type = _fromT;
+			array_push(_sig, _fromS);
 			
 			if(_set) {
 				_setT = _fromT;
@@ -164,8 +166,10 @@ function Node_Array(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 				_setT = VALUE_TYPE.any;
 		}
 		
-		if(typ == VALUE_TYPE.any) outputs[0].setType(_setT);
+		if(typ == VALUE_TYPE.any)
+			outputs[0].setType(_setT);
 		
+		outputs[0].setTypeSignature(_sig);
 		outputs[0].setValue(res);
 	}
 	

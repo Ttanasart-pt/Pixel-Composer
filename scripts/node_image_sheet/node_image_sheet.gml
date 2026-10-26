@@ -425,20 +425,19 @@ function Node_Image_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		
 		if(_surfDat == undefined) return;
 		
-		if(_out == 0) {
+		if(_out == 0) { // anim
 			update_on_frame = true;
 			if(array_length(_surfDat[0])) {
 				var ind = safe_mod(CURRENT_FRAME * _spd, array_length(_surfDat[0]));
 				outputs[0].setValue(array_safe_get_fast(_surfDat[0], ind));
 			}
 			
-		} else if(_out == 1) {
+		} else if(_out == 1) { // array
 			update_on_frame = false;
 			outputs[0].setValue(_surfDat[0]);
 		}
 		
 		outputs[1].setValue(_surfDat[1]);
-		
 	}
 
 	static getOutputChannelAmount = function() /*=>*/ {return 2};

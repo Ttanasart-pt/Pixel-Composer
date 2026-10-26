@@ -3,7 +3,7 @@ function Node_Array_Cumulative(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	setDimension(96, 48);
 	setDrawIcon();
 	
-	newInput( 0, nodeValue("Array In", self, CONNECT_TYPE.input, VALUE_TYPE.float, [])).setVisible(true, true);
+	newInput( 0, nodeValue("Array", self, CONNECT_TYPE.input, VALUE_TYPE.float, [])).setVisible(true, true);
 	
 	////- =Cumulation
 	newInput( 1, nodeValue_Float( "Start", 0 ));
@@ -42,6 +42,8 @@ function Node_Array_Cumulative(_x, _y, _group = noone) : Node(_x, _y, _group) co
 			if(inc) _cum[i] = _val;
 		}
 		
+		var isig = inputs[0].getTypeSignature();
+		outputs[0].setTypeSignature(isig);
 		outputs[0].setValue(_cum);
 	}
 }

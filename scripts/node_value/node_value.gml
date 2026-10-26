@@ -12,9 +12,12 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		x = node.x; rx = x; 
 		y = node.y; ry = y;
 		
-		index       = array_length(_connect == CONNECT_TYPE.input? node.inputs : node.outputs);
-		lIndex      = index;
-		type        = _type;
+		index   = array_length(_connect == CONNECT_TYPE.input? node.inputs : node.outputs);
+		lIndex  = index;
+		type    = _type;
+		typeSig = undefined;
+		drawSig = undefined;
+		
 		forward     = true;
 		_initName   = _name;
 		name_custom = false;
@@ -181,7 +184,6 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		drawLineIndex		  = 1;
 		drawLineIndexRaw	  = 1;
 		draw_line_vb		  = noone;
-		draw_junction_index   = type;
 		
 		junction_drawing = [ THEME.node_junctions_single, type ];
 		hover_in_graph   = false;
@@ -198,6 +200,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		color = -1;
 		color_display = 0;
 		
+		draw_array = false;
 		draw_bg = c_black;
 		draw_fg = c_black;
 		
@@ -517,12 +520,35 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		if(type == _type) return false;
 		
 		type = _type;
-		draw_junction_index = type;
 		updateColor();
 		
 		if(bypass_use) getBypassJunc().setType(_type);
-		
 		return true;
+	}
+	
+	static setTypeSignature = function(_sig) /*=>*/ {
+		if(!is_array(_sig) || array_empty(_sig)) {
+			typeSig = undefined;
+			drawSig = undefined;	
+			return true;
+		}
+		
+		typeSig = _sig;
+		drawSig = is_array(_sig)? array_unique(array_spread(_sig)) : undefined;
+		return true;
+	}
+	
+	static getType          = function(_def = VALUE_TYPE.any) /*=>*/ {return value_from == noone? _def : value_from.type};
+	static getDrawSignature = function() /*=>*/ {return value_from? value_from.getDrawSignature() : (drawSig ?? type)};
+	
+	static getShowSignature = function() /*=>*/ {return value_from? value_from.getShowSignature() : (typeSig ?? type)};
+	static getTypeSignature = function() /*=>*/ {
+		var sig = typeSig ?? type;
+		if(value_from) sig = value_from.getTypeSignature();
+		
+		var sh = showValue();
+		if(is_array(sh) && !is_array(sig)) sig = array_create(array_length(sh), sig);
+		return sig;
 	}
 	
 	static setDefault = function() {
@@ -1852,7 +1878,6 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	static getValue = function(_time = NODE_CURRENT_FRAME, applyUnit = true, arrIndex = 0, useCache = false, log = false) { 
 		if(__tempValue != undefined) return __tempValue;
 		
-		draw_junction_index = type;
 		if(type == VALUE_TYPE.trigger) return _getValue(_time, false, 0, false);
 		
 		if(useCache && use_cache) {
@@ -1870,11 +1895,6 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		if(!accept_array && array_get_depth(val) > def_depth) { 
 			noti_warning($"{name} does not accept array data.", noone, node); 
 			return 0; 
-		}
-		
-		if(type == VALUE_TYPE.surface || type == VALUE_TYPE.any) {
-			var _sval = array_valid(val)? array_safe_get_fast(val, 0) : val;
-			if(is(_sval, SurfaceAtlas)) draw_junction_index = VALUE_TYPE.atlas;
 		}
 		
 		if(useCache) {
@@ -2537,14 +2557,13 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	static setColor = function(_color) { color = _color >= 0? color_real(_color) : _color; updateColor(); return self; }
 	
 	static updateColor = function(val = undefined) {
-		INLINE
-		
+		draw_array = is_array(val);
 		if(color == -1) {
-			draw_bg = is_array(val)? value_color_bg_array(draw_junction_index) : value_color_bg(draw_junction_index);
-			draw_fg = value_color(draw_junction_index);
+			draw_bg = draw_array? value_color_bg_array(type) : value_color_bg(type);
+			draw_fg = value_color(type);
 			
 		} else {
-			draw_bg = is_array(val)? merge_color(color, colorMultiply(color, CDEF.main_dkgrey), 0.5) : value_color_bg(draw_junction_index);
+			draw_bg = draw_array? merge_color(color, colorMultiply(color, CDEF.main_dkgrey), 0.5) : value_color_bg(type);
 			draw_fg = color;
 		}
 		
@@ -2738,42 +2757,39 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 			var mirx = connect_type == CONNECT_TYPE.output? -1 : 1;
 			__draw_sprite_ext(custom_icon, _hov, x, y, _s * mirx, _s, 0, c_white, _aa * (1 - is_dummy * .3));
 			
+		} else if(type == VALUE_TYPE.action) {
+			__draw_sprite_ext(THEME.node_junction_inspector, _hov, x, y, _s, _s, 0, c_white, _aa);
+			
 		} else if(is_dummy) {
-			if(ghost_hover == noone) __draw_sprite_ext(THEME.node_junction_add, _hov, x, y, _s, _s, 0, c_white, _aa * (.5 + .5 * _hov));
+			if(ghost_hover == noone) 
+				__draw_sprite_ext(THEME.node_junction_add, _hov, x, y, _s, _s, 0, c_white, _aa * (.5 + .5 * _hov));
 			else {
-				__draw_sprite_ext(THEME.node_junctions_bg,      ghost_hover.draw_junction_index, x, y, _s, _s, 0, ghost_hover.draw_bg, _aa);
-				__draw_sprite_ext(THEME.node_junctions_outline, ghost_hover.draw_junction_index, x, y, _s, _s, 0, ghost_hover.draw_fg, _aa);
+				__draw_sprite_ext(THEME.node_junctions_bg,      ghost_hover.type, x, y, _s, _s, 0, ghost_hover.draw_bg, _aa);
+				__draw_sprite_ext(THEME.node_junctions_outline, ghost_hover.type, x, y, _s, _s, 0, ghost_hover.draw_fg, _aa);
 			}
 			
 			ghost_hover = noone;
 			
-		} else if(type == VALUE_TYPE.action) {
-			__draw_sprite_ext(THEME.node_junction_inspector, _hov, x, y, _s, _s, 0, c_white, _aa);
-			
 		} else {
-			var _cbg = draw_bg;
-			var _cfg = custom_color ?? draw_fg;
+			var _sig = getDrawSignature();
 			
-			if(draw_blend != -1) {
-				_cbg = merge_color(draw_blend_color, _cbg, draw_blend);
-				_cfg = merge_color(draw_blend_color, _cfg, draw_blend);
+			     if(is_undefined(_sig)) drawJunctionType(type, 0, 0, _s, _mx, _my, _aa);
+			else if(is_numeric(_sig))   drawJunctionType(_sig, 0, 0, _s, _mx, _my, _aa);
+			else if(is_array(_sig)) {
+				var _ox = 0;
+				var _oy = 0;
+				
+				var jw = 20 * _s;
+				var n  = array_length(_sig);
+				
+				for( var i = 0; i < n; i++ ) {
+					drawJunctionType(_sig[i] ?? type, _ox, _oy, _s, _mx, _my, _aa);
+					_ox += jw;
+				}
 			}
-			
-			var _bgS = THEME.node_junctions_bg;
-			var _fgS = _hov? THEME.node_junctions_outline_hover : THEME.node_junctions_outline;
-			
-			if(graph_selecting) {
-				var ss = _s * THEME_SCALE;
-				__draw_sprite_ext(THEME.node_junction_selecting, 0, x, y, ss, ss, 0, _cfg, _aa * .8);
-				graph_selecting = false;
-			}
-			
-			__draw_sprite_ext(_bgS, draw_junction_index, x, y, _s, _s, 0, _cbg, _aa);
-			
-			gpu_set_blendmode_ext_sepalpha(bm_src_alpha, bm_inv_src_alpha, bm_one, bm_one);
-			__draw_sprite_ext(_fgS, draw_junction_index, x, y, _s, _s, 0, _cfg, _aa);
-			gpu_set_blendmode(bm_normal);
 		}
+		
+		graph_selecting = false;
 		
 		if(drawValue) {
 			var _val = string(getValue());
@@ -2803,6 +2819,41 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 			}
 		}
 		
+	}
+	
+	static drawJunctionType = function(_type, _ox, _oy, _s, _mx, _my, _aa = 1) { 
+		var _hov = hover_in_graph || (draw_group_object != undefined && draw_group_object[3]);
+		var _ss  = _s / 2 * THEME_SCALE;
+		
+		var _cbg = draw_bg;
+		var _cfg = custom_color ?? draw_fg;
+		
+		if(color == -1) {
+			_cbg = draw_array? value_color_bg_array(_type) : value_color_bg(_type);
+			_cfg = value_color(_type);
+			
+		} else {
+			_cbg = draw_array? merge_color(color, colorMultiply(color, CDEF.main_dkgrey), 0.5) : value_color_bg(_type);
+			_cfg = color;
+		}
+		
+		if(draw_blend != -1) {
+			_cbg = merge_color(draw_blend_color, _cbg, draw_blend);
+			_cfg = merge_color(draw_blend_color, _cfg, draw_blend);
+		}
+		
+		var _bgS = THEME.node_junctions_bg;
+		var _fgS = _hov? THEME.node_junctions_outline_hover : THEME.node_junctions_outline;
+		
+		if(graph_selecting) 
+			__draw_sprite_ext(THEME.node_junction_selecting, 0, x + _ox, y + _oy, _s*2, _s*2, 0, _cfg, _aa * .8);
+		
+		__draw_sprite_ext(_bgS, _type, x + _ox, y + _oy, _ss, _ss, 0, _cbg, _aa);
+		gpu_set_blendmode_ext_sepalpha(bm_src_alpha, bm_inv_src_alpha, bm_one, bm_one);
+		__draw_sprite_ext(_fgS, _type, x + _ox, y + _oy, _ss, _ss, 0, _cfg, _aa);
+		gpu_set_blendmode(bm_normal);
+		
+		return 20 * _s;
 	}
 	
 	static drawNameBG = function(_s) {
@@ -2944,12 +2995,12 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		var _sprs = ss / 2 / THEME_SCALE;
 		
 		if(custom_icon != undefined) {
-			__draw_sprite_ext(custom_icon, draw_junction_index, _mx, _my, _sprs, _sprs, 0, c_white, 1);
+			__draw_sprite_ext(custom_icon, type, _mx, _my, _sprs, _sprs, 0, c_white, 1);
 			return;
 		}
 		
-		__draw_sprite_ext(THEME.node_junctions_bg,      draw_junction_index, _mx, _my, _sprs, _sprs, 0, draw_bg, 1);
-		__draw_sprite_ext(THEME.node_junctions_outline, draw_junction_index, _mx, _my, _sprs, _sprs, 0, draw_fg, 1);
+		__draw_sprite_ext(THEME.node_junctions_bg,      type, _mx, _my, _sprs, _sprs, 0, draw_bg, 1);
+		__draw_sprite_ext(THEME.node_junctions_outline, type, _mx, _my, _sprs, _sprs, 0, draw_fg, 1);
 	}
 	
 	////- EXPRESSION

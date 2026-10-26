@@ -2594,7 +2594,7 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
 	        #endregion
         	
 	        if(value_focus != noone && key_mod_press(SHIFT)) {
-            	setTOOLTIP([ value_focus.getValue(), value_focus.type ]);
+            	setTOOLTIP([ value_focus.getValue(), value_focus.getShowSignature() ]);
             	if(pFOCUS && DOUBLE_CLICK) value_focus.drawValue = !value_focus.drawValue;
             }
             

@@ -32,9 +32,9 @@ function Node_Image(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	newInput( 1, nodeValue_IPadding( "Padding", [0,0,0,0] ));
 	// 2
 		
-	newOutput( 0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone ));
-	newOutput( 1, nodeValue_Output("Path",        VALUE_TYPE.path,    ""    )).setVisible(true, true);
-	newOutput( 2, nodeValue_Output("Dimension",   VALUE_TYPE.integer, [1,1] )).setDisplay(VALUE_DISPLAY.vector);
+	newOutput( 0, nodeValue_Output( "Surface Out", VALUE_TYPE.surface, noone ));
+	newOutput( 1, nodeValue_Output( "Path",        VALUE_TYPE.path,    ""    )).setVisible(true, true);
+	newOutput( 2, nodeValue_Output( "Dimension",   VALUE_TYPE.integer, [1,1] )).setDisplay(VALUE_DISPLAY.vector);
 	
 	b_splice = button(function() /*=>*/ {return autoSplice()}).setText(__txt("Auto Splice"));
 	

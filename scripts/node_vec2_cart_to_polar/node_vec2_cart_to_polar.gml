@@ -39,6 +39,8 @@ function Node_Vector_Cart_To_Polar(_x, _y, _group = noone) : Node_Processor(_x, 
 		var _ang = arctan2(_y, _x);
 		if(!_rad) _ang = radtodeg(_ang);
 		
+		__process_signature = array_create(2, VALUE_TYPE.float);
+		
 		return [ _len, _ang ];
 	}
 	

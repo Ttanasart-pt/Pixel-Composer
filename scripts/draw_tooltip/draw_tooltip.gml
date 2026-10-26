@@ -1,5 +1,6 @@
 #region global
 	globalvar TOOLTIP_SURFACE; TOOLTIP_SURFACE = undefined;
+	globalvar TOOLTIP_BBOX; TOOLTIP_BBOX    = undefined;
 	
 	function setTOOLTIP(_t) {
 		if(_t == "") return;
@@ -14,101 +15,213 @@
 	}
 	
 	function checkTOOLTIP() {
-		if(_MOUSE_BLOCK)                     return;
-		if(TOOLTIP == undefined)             return;
-		if(TOOLTIP_WINDOW != WINWIN_CURRENT) return;
+		if(_MOUSE_BLOCK)                     { TOOLTIP_BBOX = undefined; return; }
+		if(TOOLTIP == undefined)             { TOOLTIP_BBOX = undefined; return; }
+		if(TOOLTIP_WINDOW != WINWIN_CURRENT) { TOOLTIP_BBOX = undefined; return; }
+		
+		var _xx;
+		var _yy;
+		
+		if(is_winwin(TOOLTIP_WINDOW)) {
+			_xx = mouse_rx + ui(16);
+			_yy = mouse_ry + ui(16);
+			
+		} else {
+			_xx = mouse_mx + ui(16);
+			_yy = mouse_my + ui(16);
+			
+		}
+		
+		if(TOOLTIP_BBOX != undefined) {
+			var tw = TOOLTIP_BBOX[2] - TOOLTIP_BBOX[0] + ui(8);
+			var th = TOOLTIP_BBOX[3] - TOOLTIP_BBOX[1] + ui(8);
+			
+			if(is_winwin(TOOLTIP_WINDOW)) {
+				_xx = min(_xx - winwin_get_x(TOOLTIP_WINDOW), winwin_get_width(TOOLTIP_WINDOW)  - tw);
+				_yy = min(_yy - winwin_get_y(TOOLTIP_WINDOW), winwin_get_height(TOOLTIP_WINDOW) - th);
+				
+			} else {
+				_xx = min(_xx, WIN_W - tw);
+				_yy = min(_yy, WIN_H - th);
+				
+			}
+		}
 		
 		if(is_surface(TOOLTIP_SURFACE)) surface_clear(TOOLTIP_SURFACE);
 		
 		if(is_struct(TOOLTIP)) {
-			if(has(TOOLTIP, "drawTooltip"))
+			if(has(TOOLTIP, "drawTooltip")) {
 				TOOLTIP.drawTooltip();
-				
+				drawTOOLTIP(_xx, _yy, true);
+			}
+			
 		} else if(is_string(TOOLTIP)) {
 			draw_tooltip_text(TOOLTIP);
+			drawTOOLTIP(_xx, _yy, true);
 			
 		} else if(is_array(TOOLTIP)) {
 			var raw  = TOOLTIP[0];
 			var type = TOOLTIP[1];
-			var content = raw;
 			
+			var content = raw;
 			if(is(raw, valueKey)) {
 				content = raw.value;
-				
 			} else if(is_method(raw)) content = raw();
 			
-			switch(type) {
-				case VALUE_TYPE.float    :
-				case VALUE_TYPE.integer  : 
-				case VALUE_TYPE.text     :
-				case VALUE_TYPE.particle : 
-				case VALUE_TYPE.path     : draw_tooltip_text(content);                                                          break;
+			if(TOOLTIP_BBOX != undefined) {
+				var _x0 = TOOLTIP_BBOX[0] - ui(4);
+				var _y0 = TOOLTIP_BBOX[1] - ui(4);
+				var _x1 = TOOLTIP_BBOX[2] + ui(4);
+				var _y1 = TOOLTIP_BBOX[3] + ui(4);
 				
-				case VALUE_TYPE.boolean  : draw_tooltip_text(printBool(content));                                               break;
-				case VALUE_TYPE.curve    : draw_tooltip_curve(content);                                                         break;
-				case VALUE_TYPE.color    : draw_tooltip_color(content);                                                         break;
-				case VALUE_TYPE.gradient : draw_tooltip_gradient(content);                                                      break;
-				case VALUE_TYPE.atlas    : 
-				case VALUE_TYPE.surface  : draw_tooltip_surface(content);                                                       break;
-				case VALUE_TYPE.buffer   : draw_tooltip_buffer(content);                                                        break;
-				case VALUE_TYPE.pathnode : draw_tooltip_path(content);                                                          break;
+				draw_sprite_stretched_ext(THEME.box_r5_clr, 0, _x0, _y0, _x1-_x0, _y1-_y0, COLORS.node_base_bg);
+			}
+			
+			TOOLTIP_BBOX = createTOOLTIP_signature(_xx, _yy, type, content);
+		}
+		
+		resetTOOLTIP();
+	}
+	
+	function createTOOLTIP_signature(_x, _y, _type, _content, _axis = 0) {
+		if(is_array(_type) && !array_empty(_type)) {
+			var pd = ui(4);
+			
+			var _x0 =  infinity;
+			var _y0 =  infinity;
+			
+			var _x1 = -infinity;
+			var _y1 = -infinity;
+			
+			_x += pd;
+			_y += pd;
+			
+			var ox = _x;
+			var oy = _y;
+			
+			var ww = is_winwin(TOOLTIP_WINDOW)? winwin_get_width(TOOLTIP_WINDOW)  : WIN_W;
+			var hh = is_winwin(TOOLTIP_WINDOW)? winwin_get_height(TOOLTIP_WINDOW) : WIN_H;
+			
+			var dep = __array_get_depth(_type);
+			var drw = true;
+			
+			if(dep == 1) {
+				var _types  = _type[0];
+				for( var i = 0, n = array_length(_type); i < n; i++ ) {
+					if(_type[i] != _types) { _types = undefined; break; }
+				}
 				
-				case VALUE_TYPE.d3object : draw_tooltip_text($"[{__txt("3D Object")}]");                                        break;
-				case VALUE_TYPE.object   : draw_tooltip_text($"[{__txt("Object")}]");                                           break;
-				case VALUE_TYPE.rigid    : draw_tooltip_text($"[{__txt("Rigidbody Object")} (id: {content})]");                 break;
-				case VALUE_TYPE.sdomain  : draw_tooltip_text($"[{__txt("Domain")} (id: {content})]");                           break;
-				case VALUE_TYPE.d3vertex : draw_tooltip_text($"[{__txt("3D Vertex")} (groups: {array_length(content)})]");      break;
-				
-				case VALUE_TYPE.strands :
-					var txt = __txt("Strands Object");
-					if(is_struct(content))
-						txt += $" (strands: {array_length(content.hairs)})";
-					draw_tooltip_text($"[{txt}]");
-					break;
-				
-				case VALUE_TYPE.mesh :
-					var txt = __txt("Mesh Object");
-					if(is(content, MeshedSurface)) txt += $" (triangles: {array_length(content.tris)})";
-					draw_tooltip_text($"[{txt}]");
-					break;
+				if(_types != undefined) { 
+					var _draws  = is_struct(_content[0]) && _types != VALUE_TYPE.gradient && _types != VALUE_TYPE.pathnode;
+					    _draws |= _types == VALUE_TYPE.color;
 					
-				case VALUE_TYPE.struct   : 
-					if(has(content, "drawTooltip")) content.drawTooltip();
-					else draw_tooltip_text(content);
-					break;
-				
-				case "sprite"  : draw_tooltip_sprite(content);  break;
-				case "project" : draw_tooltip_project(content); break;
-				
-				default :
-					var tt = "";
-					if(is_struct(content)) tt = $"[{instanceof(content)}] {content}";
-					else                   tt = string(content);
-					
-					draw_tooltip_text(tt);
+					if(_draws) {
+						createTOOLTIP(_type[0], _content);
+						var _d = drawTOOLTIP(_x, _y);
+						
+						_x0 = min(_x0, _d[0]);
+						_y0 = min(_y0, _d[1]);
+						_x1 = max(_x1, _d[2]);
+						_y1 = max(_y1, _d[3]);
+						drw = false;
+					}
+				}
 			} 
 			
-		} 
+			if(drw) {
+				for( var i = 0, n = array_length(_type); i < n; i++ ) {
+					var _t = _type[i];
+					var _c = array_safe_get(_content, i);
+					var _d = createTOOLTIP_signature(_x, _y, _t, _c, !_axis)
+					
+					_x0 = min(_x0, _d[0]);
+					_y0 = min(_y0, _d[1]);
+					_x1 = max(_x1, _d[2]);
+					_y1 = max(_y1, _d[3]);
+					
+					if(_axis) _x += _d[2] - _d[0] + pd;
+					else      _y += _d[3] - _d[1] + pd;
+				}
+			}
+			
+			_x0 -= pd; _y0 -= pd;
+			_x1 += pd; _y1 += pd;
+			
+			draw_sprite_stretched_ext(THEME.box_r5, 1, _x0, _y0, _x1-_x0, _y1-_y0, COLORS._main_icon, .5);
+			
+			return [_x0,_y0,_x1,_y1];
+		}
 		
+		createTOOLTIP(_type, _content);
+		return drawTOOLTIP(_x, _y);
+	}
+			
+	function createTOOLTIP(_type, _content) {
+		if(is_surface(TOOLTIP_SURFACE)) surface_clear(TOOLTIP_SURFACE);
+		var txt;
+		var jun = THEME.node_junctions_single;
+		
+		switch(_type) {
+			case VALUE_TYPE.float    :
+			case VALUE_TYPE.integer  : 
+			case VALUE_TYPE.text     : 
+			case VALUE_TYPE.path     : draw_tooltip_text(_content);            break;
+			
+			case VALUE_TYPE.boolean  : draw_tooltip_text(printBool(_content)); break;
+			case VALUE_TYPE.curve    : draw_tooltip_curve(_content);           break;
+			case VALUE_TYPE.color    : draw_tooltip_color(_content);           break;
+			case VALUE_TYPE.gradient : draw_tooltip_gradient(_content);        break;
+			case VALUE_TYPE.atlas    : 
+			case VALUE_TYPE.surface  : draw_tooltip_surface(_content);         break;
+			case VALUE_TYPE.buffer   : draw_tooltip_buffer(_content);          break;
+			case VALUE_TYPE.pathnode : draw_tooltip_path(_content);            break;
+				
+			case VALUE_TYPE.struct   : 
+				if(has(_content, "drawTooltip")) _content.drawTooltip();
+				else draw_tooltip_text(_content);
+				break;
+			
+			case "sprite"  : draw_tooltip_sprite(_content);  break;
+			case "project" : draw_tooltip_project(_content); break;
+			
+			default :
+				if(is_int64(_type)) { // enum type is stored as int64
+					var txt = string_title(value_type_to_string(_type));
+					if(is_array(_content)) txt += $" [{array_length(_content)}]";
+					draw_tooltip_text_sprite(txt, jun, _type); 
+					break; 
+				}
+				
+				var tt = "";
+				if(is_struct(_content)) tt = $"[{instanceof(_content)}] {_content}";
+				else                    tt = string(_content);
+				draw_tooltip_text(tt);
+		} 
+	}
+	
+	function drawTOOLTIP(_x, _y, _clamp = false) {
 		var tw = surface_get_width_safe(TOOLTIP_SURFACE);
 		var th = surface_get_height_safe(TOOLTIP_SURFACE);
 		
-		var mx = 0;
-		var my = 0;
-			
-		if(is_winwin(TOOLTIP_WINDOW)) {
-			mx = min(mouse_rx + ui(16) - winwin_get_x(TOOLTIP_WINDOW), winwin_get_width(TOOLTIP_WINDOW)  - tw);
-			my = min(mouse_ry + ui(16) - winwin_get_y(TOOLTIP_WINDOW), winwin_get_height(TOOLTIP_WINDOW) - th);
-			
-		} else {
-			mx = min(mouse_mx + ui(16), WIN_W - tw);
-			my = min(mouse_my + ui(16), WIN_H - th);
-			
+		var mx = _x;
+		var my = _y;
+		
+		if(_clamp) {
+			if(is_winwin(TOOLTIP_WINDOW)) {
+				mx = min(_x - winwin_get_x(TOOLTIP_WINDOW), winwin_get_width(TOOLTIP_WINDOW)  - tw);
+				my = min(_y - winwin_get_y(TOOLTIP_WINDOW), winwin_get_height(TOOLTIP_WINDOW) - th);
+				
+			} else {
+				mx = min(_x, WIN_W - tw);
+				my = min(_y, WIN_H - th);
+				
+			}
 		}
 		
 		draw_surface_safe(TOOLTIP_SURFACE, mx, my);
-		resetTOOLTIP();
+		return [mx, my, mx+tw, my+th];
 	}
+	
 #endregion
 
 function draw_tooltip_text(txt) {
@@ -120,17 +233,45 @@ function draw_tooltip_text(txt) {
 	
 	var tw = min(max(320, WIN_W * 0.4), string_width(txt));
 	var th = string_height_ext(txt, -1, tw);
-	var pd = ui(8);
 	
-	var tww = tw + pd * 2;
-	var thh = th + pd * 2;
+	var pdx = ui(8);
+	var pdy = ui(4);
+	var tww = tw + pdx * 2;
+	var thh = th + pdy * 2;
 	
 	TOOLTIP_SURFACE = surface_verify(TOOLTIP_SURFACE, tww, thh);
 	surface_set_shader(TOOLTIP_SURFACE);
 		draw_sprite_stretched(THEME.tooltip, 0, 0, 0, tww, thh);
 		var _rect = gpu_get_scissor();
-		gpu_set_scissor(pd, pd, tw, th);
-		draw_text_line(pd, pd, txt, -1, tw);
+		gpu_set_scissor(pdx, pdy, tw, th);
+		draw_text_line(pdx, pdy, txt, -1, tw);
+		gpu_set_scissor(_rect);
+	surface_reset_shader();
+	
+}
+
+function draw_tooltip_text_sprite(txt, spr, ind = 0, bln = c_white) {
+	draw_set_text(f_p2, fa_left, fa_top, COLORS._main_text);
+	
+	var th = string_height(txt);
+	var tw = min(max(320, WIN_W * 0.4), string_width(txt)) + ui(8) + th;
+	
+	var pdx = ui(8);
+	var pdy = ui(4);
+	var tww = tw + pdx * 2;
+	var thh = th + pdy * 2;
+	
+	var ss  = th / max(sprite_get_width(spr), sprite_get_height(spr));
+	var spx = pdx + th / 2;
+	var spy = pdy + th / 2;
+	
+	TOOLTIP_SURFACE = surface_verify(TOOLTIP_SURFACE, tww, thh);
+	surface_set_shader(TOOLTIP_SURFACE);
+		draw_sprite_stretched(THEME.tooltip, 0, 0, 0, tww, thh);
+		var _rect = gpu_get_scissor();
+		gpu_set_scissor(pdx, pdy, tw, th);
+		draw_sprite_ext(spr, ind, spx, spy, ss, ss, 0, bln, 1);
+		draw_text_line(pdx + ui(8) + th, pdy, txt, -1, tw);
 		gpu_set_scissor(_rect);
 	surface_reset_shader();
 	
@@ -140,7 +281,7 @@ function draw_tooltip_color(clr) {
 	if(is_array(clr)) { draw_tooltip_palette(clr); return; }
 	
 	var tw = ui(32);
-	var th = ui(32);
+	var th = line_get_height(f_p2);
 	var pd = ui(4);
 		
 	var tww = tw + pd * 2;
@@ -158,7 +299,7 @@ function draw_tooltip_color(clr) {
 function draw_tooltip_palette(clr) {
 	if(array_empty(clr)) return;
 	
-	var ph = ui(32);
+	var ph = line_get_height(f_p2);
 	if(!is_array(clr[0])) clr = [ clr ];
 	
 	var pal_len = 0;
@@ -187,11 +328,11 @@ function draw_tooltip_palette(clr) {
 }
 
 function draw_tooltip_gradient(clr) {
-	var gh = ui(32);
-	if(!is_array(clr)) clr = [ clr ];
+	var gh = line_get_height(f_p2);
+	if(!is(clr, gradientObject)) return;
 	
 	var tw = ui(160);
-	var th = array_length(clr) * gh;
+	var th = gh;
 	var pd = ui(4);
 	
 	var tww = tw + pd * 2;
@@ -200,12 +341,7 @@ function draw_tooltip_gradient(clr) {
 	TOOLTIP_SURFACE = surface_verify(TOOLTIP_SURFACE, tww, thh);
 	surface_set_shader(TOOLTIP_SURFACE);
 		draw_sprite_stretched(THEME.tooltip, 0, 0, 0, tww, thh);
-		
-		var _y = pd;
-		for( var i = 0, n = array_length(clr); i < n; i++ ) {
-			clr[i].draw(pd, _y, tw, gh);
-			_y += gh;
-		}
+		clr.draw(pd, pd, tw, gh);
 	surface_reset_shader();
 }
 
@@ -233,7 +369,7 @@ function draw_tooltip_surface_array(surf) {
 	var thh = th + pd * 2;
 	
 	TOOLTIP_SURFACE = surface_verify(TOOLTIP_SURFACE, tww, thh);
-	surface_set_shader(TOOLTIP_SURFACE);
+	surface_set_shader(TOOLTIP_SURFACE, sh_sample, true, BLEND.normal);
 		draw_sprite_stretched(THEME.tooltip, 0, 0, 0, tww, thh);
 		
 		for( var ind = 0; ind < amo; ind++ ) {
@@ -273,7 +409,7 @@ function draw_tooltip_surface(surf) {
 	var thh = th + pd * 2;
 	
 	TOOLTIP_SURFACE = surface_verify(TOOLTIP_SURFACE, tww, thh);
-	surface_set_shader(TOOLTIP_SURFACE);
+	surface_set_shader(TOOLTIP_SURFACE, sh_sample, true, BLEND.normal);
 		draw_sprite_stretched(THEME.tooltip, 0, 0, 0, tww, thh);
 		draw_surface_ext_safe(surf, pd, pd, ss, ss);
 	surface_reset_shader();
@@ -374,7 +510,7 @@ function draw_tooltip_atlas(atlas) {
 	var thh = th + pd * 2;
 	
 	TOOLTIP_SURFACE = surface_verify(TOOLTIP_SURFACE, tww, thh);
-	surface_set_shader(TOOLTIP_SURFACE);
+	surface_set_shader(TOOLTIP_SURFACE, sh_sample, true, BLEND.normal);
 		draw_sprite_stretched(THEME.tooltip, 0, 0, 0, tww, thh);
 		
 		var sx = pd;

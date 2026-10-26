@@ -3,24 +3,35 @@ function Node_Array_Find(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	always_pad = true;
 	setDimension(96, 48);
 	
-	newInput(0, nodeValue("Array", self, CONNECT_TYPE.input, VALUE_TYPE.any, 0))
-		.setVisible(true, true);
-	
-	newInput(1, nodeValue("Value", self, CONNECT_TYPE.input, VALUE_TYPE.any, 0))
-		.setVisible(true, true)
-		.rejectArray();
+	newInput( 0, nodeValue_Any( "Array", 0 )).setVisible(true, true);
+	newInput( 1, nodeValue_Any( "Value", 0 )).setVisible(true, true).rejectArray();
+	// 2
 	
 	newOutput(0, nodeValue_Output("Index", VALUE_TYPE.integer, 0));
 	
+	input_display_list = [ 
+		[ "Array", false ],  0, 
+		[ "Find",  false ],  1, 
+	];
+	
+	////- =Node
+	
 	static update = function(frame = CURRENT_FRAME) {
-		var type = inputs[0].value_from == noone? VALUE_TYPE.any : inputs[0].value_from.type;
-		inputs[0].setType(type);
-		inputs[1].setType(type);
+		#region data
+			var _arr  = getInputData(0);
+			var value = getInputData(1);
+			
+			var type = inputs[0].value_from == noone? VALUE_TYPE.any : inputs[0].value_from.type;
+			var isig = inputs[0].getTypeSignature();
+			
+			inputs[0].setType(type);
+			inputs[0].setTypeSignature(isig);
+			
+			inputs[1].setType(type);
+			
+			if(!is_array(_arr)) return;
+		#endregion
 		
-		var _arr = getInputData(0);
-		if(!is_array(_arr)) return;
-		
-		var value = getInputData(1);
 		outputs[0].setValue(array_find(_arr, value));
 	}
 	

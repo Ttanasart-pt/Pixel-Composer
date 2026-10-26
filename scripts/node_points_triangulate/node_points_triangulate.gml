@@ -4,12 +4,15 @@ function Node_Points_Triangulate(_x, _y, _group = noone) : Node(_x, _y, _group) 
 	setDimension(96, 48);
 	
 	newInput( 0, nodeValue_Vec2("Points", [0,0] )).setVisible(true, true).setArrayDepth(1);
+	// 1
 		
 	newOutput(0, nodeValue_Output("Triangles", VALUE_TYPE.float, [0,0] )).setDisplay(VALUE_DISPLAY.vector).setArrayDepth(2);
 	
 	input_display_list = [
 		["Points", false], 0,  
 	];
+	
+	////- Node
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _params) { 
 		var _segs = outputs[0].getValue();
@@ -58,6 +61,7 @@ function Node_Points_Triangulate(_x, _y, _group = noone) : Node(_x, _y, _group) 
 		}
 		
 		outputs[0].setValue(_segOut);
+		outputs[0].setTypeSignature(array_create(array_length(_segOut), VALUE_TYPE.float));
 	}
 	
 }

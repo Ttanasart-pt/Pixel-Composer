@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.22.1.206",
+    "changes": [
+      {
+        "date": "2026-10-26T02:38:09.786Z",
+        "node": "",
+        "commit": "**Graph Panel**: Add support for nested, mixed-type array."
+      }
+    ]
+  },
+  {
     "version": "1.22.1.204",
     "changes": [
       {

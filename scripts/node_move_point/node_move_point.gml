@@ -57,6 +57,8 @@ function Node_Move_Point(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 		_pnt[0] += _pos[0];
 		_pnt[1] += _pos[1];
 		
+		outputs[0].setTypeSignature(array_create(array_length(_pnt), VALUE_TYPE.float));
+		
 		return _pnt;
 	}
 }

@@ -47,8 +47,6 @@ function __NodeValue_Surface(_name, _node, _value = noone, _tooltip = "") : Node
 	/////============== VALUE =============
 	
 	static setBW = function() { 
-		// draw_junction_index = VALUE_TYPE.rigid;
-		// custom_color = #ff6b97;
 		return self; 
 	}
 	

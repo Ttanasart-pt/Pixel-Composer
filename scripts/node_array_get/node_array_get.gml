@@ -3,6 +3,7 @@ function Node_Array_Get(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	always_pad = true;
 	setDimension(96, 48);
 	
+	////- =Array
 	newInput( 0, nodeValue_Any(     "Array",    0 )).setVisible(true, true);
 	
 	////- =Get
@@ -10,11 +11,13 @@ function Node_Array_Get(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	newInput( 1, nodeValue_Int(     "Index",    0                                   ));
 	newInput( 2, nodeValue_EScroll( "Overflow", 0, [ "Clamp", "Loop", "Ping Pong" ] )).rejectArray();
 	newInput( 4, nodeValueSeed());
+	// 5
 	
 	newOutput(0, nodeValue_Output("Value", VALUE_TYPE.any, 0));
 	
-	input_display_list = [ 0, 
-		[ "Get", false ], 3, 1, 2, 4, 
+	input_display_list = [ 
+		[ "Array", false ],  0, 
+		[ "Get",   false ],  3,  1,  2,  4, 
 	]
 	
 	////- Node
@@ -26,7 +29,7 @@ function Node_Array_Get(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		var _len  = array_length(_arr);
 		
 		switch(_ovf) {
-			case 0 :
+			case 0 : 
 				if(_ind < 0) _ind = _len + _ind;
 				_ind = clamp(_ind, 0, _len - 1);
 				break;
@@ -44,45 +47,60 @@ function Node_Array_Get(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 				break;
 		}
 		
-		return array_safe_get_fast(_arr, _ind);
+		return _ind;
 	}
 	
 	static update = function(frame = CURRENT_FRAME) {
 		#region data
-			var type = inputs[0].value_from == noone? VALUE_TYPE.any : inputs[0].value_from.type;
+			var _arr = getInputData( 0);
+			
+			var _typ = getInputData( 3);
+			var _ind = getInputData( 1);
+			var _ovf = getInputData( 2);
+			var _sed = getInputData( 4);
+			
+			var type = inputs[0].getType();
+			var isig = inputs[0].getTypeSignature();
+			
 			inputs[0].setType(type);
-			outputs[0].setType(type);
-			
-			var _arr = getInputData(0);
-			
-			var _typ = getInputData(3);
-			var _ind = getInputData(1);
-			var _ovf = getInputData(2);
-			var _sed = getInputData(4);
+			inputs[0].setTypeSignature(isig);
 			
 			inputs[ 1].setVisible(_typ == 0);
 			inputs[ 2].setVisible(_typ == 0);
 			inputs[ 4].setVisible(_typ == 1);
 			
+			outputs[0].setType(type);
+			
 			if(!is_array_safe(_arr)) return;
 		#endregion
 		
 		var res = 0;
+		var sig = array_clone(isig);
 		
 		if(_typ == 0) {
 			if(is_array(_ind)) {
 				res = array_create(array_length(_ind));
-				for( var i = 0, n = array_length(_ind); i < n; i++ )
-					res[i] = getArray(_arr, _ind[i], _ovf);
+				for( var i = 0, n = array_length(_ind); i < n; i++ ) {
+					var i = getArray(_arr, _ind[i], _ovf);
+					res[i] = array_safe_get_fast(_arr, i);
+					sig[i] = array_safe_get_fast(isig, i);
+				}
 				
-			} else 
-				res = getArray(_arr, _ind, _ovf);
+			} else {
+				var i = getArray(_arr, _ind, _ovf);
+				res = array_safe_get_fast(_arr, i);
+				sig = array_safe_get_fast(isig, i);
+			}
 				
 		} else if(_typ == 1) {
 			random_set_seed(_sed);
-			res = array_safe_get_random(_arr);
+			var i = array_safe_get_random_index(_arr);
+			
+			sig = isig[i];
+			res = _arr[i];
 		}
 		
+		outputs[0].setTypeSignature(sig);
 		outputs[0].setValue(res);
 	}
 	

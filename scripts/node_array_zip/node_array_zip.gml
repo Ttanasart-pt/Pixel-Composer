@@ -16,7 +16,7 @@ function Node_Array_Zip(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		return inputs[index];
 	} setDynamicInput(1);
 	
-	////- Nodes
+	////- Node
 	
 	static update = function(frame = CURRENT_FRAME) {
 		var _spr = getInputData(0);
@@ -24,15 +24,23 @@ function Node_Array_Zip(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		
 		#region type
 			var _outType = undefined;
+			var _useSig  = [];
+			
+			var _inSig   = [];
+			var _outSig  = [];
 			
 			for( var i = input_fix_len; i < array_length(inputs); i += data_length ) {
-				var _inType = inputs[i].value_from == noone? VALUE_TYPE.any : inputs[i].value_from.type;
-				inputs[i].setType(_inType);
+				var _inType = inputs[i].getType();
+				var _sig    = inputs[i].getTypeSignature();
 				
-				if(_outType == undefined)    _outType = _inType;
-				else if(_outType != _inType) _outType = VALUE_TYPE.any;
+				inputs[i].setType(_inType);
+				_inSig[i-input_fix_len] = _sig;
+				
+				     if(_outType == undefined) _outType = _inType;
+				else if(_outType != _inType)   _outType = VALUE_TYPE.any;
 			}
 			
+			_useSig = _outType == VALUE_TYPE.any;
 			outputs[0].setType(_outType ?? VALUE_TYPE.any);
 		#endregion
 		
@@ -53,23 +61,34 @@ function Node_Array_Zip(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		}
 		
 		if(len == 0 || len == infinity) return;
-		var _out = array_create(len);
+		
+		var _outSig = array_create(len);
+		var _out    = array_create(len);
 		
 		if(_spr) {
 			for( var i = 0; i < len; i++ ) {
-				_out[i] = [];
+				_outSig[i] = [];
+				_out[i]    = [];
 				
-				for( var j = 0; j < amo; j++ )
+				for( var j = 0; j < amo; j++ ) {
+					array_push(_outSig[i], _inSig[j]);
 					array_append(_out[i], array_safe_get_fast(val[j], i, 0));
+				}
 			}
 			
 		} else {
 			for( var i = 0; i < len; i++ ) {
-				for( var j = 0; j < amo; j++ )
-					_out[i][j] = array_safe_get_fast(val[j], i, 0);
+				_outSig[i] = [];
+				_out[i]    = [];
+				
+				for( var j = 0; j < amo; j++ ) {
+					_outSig[i][j] = array_safe_get_fast(_inSig[j], i, VALUE_TYPE.float, _inSig[j]);
+					_out[i][j]    = array_safe_get_fast(val[j], i, 0);
+				}
 			}
 		}
 		
 		outputs[0].setValue(_out);
+		outputs[0].setTypeSignature(_outSig);
 	}
 }

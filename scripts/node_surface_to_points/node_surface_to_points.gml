@@ -24,14 +24,14 @@ function Node_Surface_To_Points(_x, _y, _group = noone) : Node_Processor(_x, _y,
 	
 	static getDimension = function() /*=>*/ {return PROJ_SURF};
 	
-	static processData = function(_outSurf, _data, _array_index) {
+	static processData = function(_outData, _data, _array_index) {
 		#region data
 			var _surf = _data[0];
 			var _rmin = _data[1];
 			var _rmax = _data[2];
 			var _maxx = _data[3];
 			
-			if(!is_surface(_surf)) return _outSurf;
+			if(!is_surface(_surf)) return _outData;
 		#endregion
 		
 		var _bsize = surface_get_byte_size(_surf);
@@ -54,7 +54,7 @@ function Node_Surface_To_Points(_x, _y, _group = noone) : Node_Processor(_x, _y,
 		}
 		
 		var _amo = _maxx? min(_maxx, _pixs) : _pixs;
-		_outSurf = array_verify(_outSurf, _amo);
+		_outData = array_verify(_outData, _amo);
 		
 		repeat(_amo) {
 			_x = buffer_read(temp_buffer, btype);
@@ -68,10 +68,12 @@ function Node_Surface_To_Points(_x, _y, _group = noone) : Node_Processor(_x, _y,
 			_x = lerp(_rmin[0], _rmax[0], _x / _r);
 			_y = lerp(_rmin[1], _rmax[1], _y / _r);
 			
-			_outSurf[i++] = [_x, _y];
+			_outData[i++] = [_x, _y];
 		}
 		
-		return _outSurf;
+		__process_signature = array_create(array_length(_outData), VALUE_TYPE.float);
+		
+		return _outData;
 	}
 	
 	static cleanUp = function() {

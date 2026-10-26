@@ -264,6 +264,8 @@ function Node_Point_3D_Camera(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _
 			_points[i] = [ _x, _y, _z ];
 		}
 		
+		__process_signature = array_create(array_length(_points), VALUE_TYPE.float);
+		
 		return _points;
 	}
 	

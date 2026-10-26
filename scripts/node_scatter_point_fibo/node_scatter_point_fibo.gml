@@ -69,6 +69,8 @@ function Node_Scatter_Point_Fibonacci(_x, _y, _group = noone) : Node_Processor(_
 			_outData[i] = [ _x, _y ];
 		}
 		
+		__process_signature = array_create(array_length(_outData), VALUE_TYPE.float);
+		
 		return _outData;
 	}
 	

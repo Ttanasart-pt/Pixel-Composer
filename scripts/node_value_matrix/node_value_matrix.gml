@@ -39,7 +39,6 @@ function __NodeValue_Matrix(_name, _node, _value, _data = {}) : NodeValue(_name,
 		var _val = animator.getValue(time);
 		node.inputs_data[self.index]         = _val; // setInputData(self.index, _val);
 		node.input_value_map[$ internalName] = _val;
-		draw_junction_index = type;
 		
 		if(_update) {
 			node.triggerRender();

@@ -3,17 +3,14 @@ function Node_Array_Composite(_x, _y, _group = noone) : Node(_x, _y, _group) con
 	setDimension(96, 48);
 	setDrawIcon();
 	
-	newInput(0, nodeValue_Float("Array", []))
-		.setArrayDepth(1)
-		.setVisible(true, true);
+	newInput( 0, nodeValue_Float( "Array",   [] )).setArrayDepth(1).setVisible(true, true);
+	newInput( 1, nodeValue_Float( "Compose", [] )).setArrayDepth(1).setVisible(true, true);
+	// 2
 	
-	newInput(1, nodeValue_Float("Compose", []))
-		.setArrayDepth(1)
-		.setVisible(true, true);
-	
-	newOutput(0, nodeValue_Output("Array", VALUE_TYPE.float, 0))
-		.setArrayDepth(1);
+	newOutput( 0, nodeValue_Output("Array", VALUE_TYPE.float, 0)).setArrayDepth(1);
 		
+	////- Node
+	
 	static composite = function(arr, com) {
 		__tmp_com = com;
 		__tmp_len = array_length(com);

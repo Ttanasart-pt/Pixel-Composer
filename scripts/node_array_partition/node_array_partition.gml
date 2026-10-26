@@ -3,27 +3,45 @@ function Node_Array_Partition(_x, _y, _group = noone) : Node(_x, _y, _group) con
 	always_pad = true;
 	setDimension(96, 48);
 	
-	newInput(0, nodeValue(         "Array", self, CONNECT_TYPE.input, VALUE_TYPE.any, 0)).setArrayDepth(1).setVisible(true, true);
-	newInput(1, nodeValue_EScroll( "Type",   0, [ "Fix Length", "Fix Amount" ] ));
-	newInput(2, nodeValue_Int(     "Length", 1 ));
+	////- =Array
+	newInput( 0, nodeValue_Any( "Array" )).setArrayDepth(1).setVisible(true, true);
 	
-	newOutput(0, nodeValue_Output("Array", VALUE_TYPE.any, 0)).setArrayDepth(1);
+	////- =Partition
+	newInput( 1, nodeValue_EScroll( "Type",   0, [ "Fix Length", "Fix Amount" ] ));
+	newInput( 2, nodeValue_Int(     "Length", 1 ));
+	// 3
+	
+	newOutput( 0, nodeValue_Output("Array", VALUE_TYPE.any, 0)).setArrayDepth(1);
+	
+	input_display_list = [
+		[ "Array",     false ],  0, 
+		[ "Partition", false ],  1,  2, 
+	]
 	
 	////- Node
 		
 	static update = function(frame = CURRENT_FRAME) {
-		var _typ = inputs[0].value_from == noone? VALUE_TYPE.any : inputs[0].value_from.type;
-		inputs[0].setType(_typ);
-		outputs[0].setType(_typ);
-		
-		var _arr = getInputData(0);
-		var _typ = getInputData(1);
-		var _siz = getInputData(2); _siz = max(_siz, 1);
-		
-		inputs[2].setName(_typ? "Amount" : "Length");
-		if(!is_array(_arr)) return;
+		#region data
+			var _arr = getInputData( 0);
+			
+			var _typ = getInputData( 1);
+			var _siz = getInputData( 2); _siz = max(_siz, 1);
+			
+			var _typ = inputs[0].value_from == noone? VALUE_TYPE.any : inputs[0].value_from.type;
+			var isig = inputs[0].getTypeSignature();
+			
+			inputs[0].setType(_typ);
+			inputs[0].setTypeSignature(isig);
+			
+			inputs[2].setName(_typ? "Amount" : "Length");
+			
+			outputs[0].setType(_typ);
+			
+			if(!is_array(_arr)) return;
+		#endregion
 		
 		var res = [];
+		var sig = [];
 		var len = array_length(_arr);
 		
 		switch(_typ) {
@@ -31,7 +49,11 @@ function Node_Array_Partition(_x, _y, _group = noone) : Node(_x, _y, _group) con
 				var _amo = ceil(len / _siz);
 				for( var i = 0; i < _amo; i++ ) {
 					res[i] = [];
+					sig[i] = [];
+					
 					array_copy(res[i], 0, _arr, i * _siz, _siz);
+					for( var j = 0; j < _siz; j++ ) 
+						sig[i][j] = is_array(isig)? array_safe_get_fast(isig, i * _siz + j) : isig;
 				}
 				break;
 				
@@ -43,16 +65,22 @@ function Node_Array_Partition(_x, _y, _group = noone) : Node(_x, _y, _group) con
 				
 				for( var i = 0; i < _siz; i++ ) {
 					res[i] = [];
+					sig[i] = [];
+					
 					_fend  = _fsiz + _step;
 					_cstp  = floor(_fend) - _isiz;
 					array_copy(res[i], 0, _arr, _isiz, _cstp);
 					
+					for( var j = 0; j < _cstp; j++ ) 
+						sig[i][j] = is_array(isig)? array_safe_get_fast(isig, _isiz + j) : isig;
+						
 					_fsiz  = _fend;
 					_isiz += _cstp;
 				}
 				break;
 		}
 		
+		outputs[0].setTypeSignature(sig);
 		outputs[0].setValue(res);
 	}
 	

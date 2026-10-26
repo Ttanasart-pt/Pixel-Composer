@@ -38,6 +38,8 @@ function Node_Vector_Polar_To_Cart(_x, _y, _group = noone) : Node_Processor(_x, 
 		var _y = lengthdir_y(_len, _ang);
 		if(_inv) _y = -_y;
 		
+		__process_signature = array_create(2, VALUE_TYPE.float);
+		
 		return [ _x - _ori[0], _y - _ori[1] ];
 	}
 	

@@ -139,9 +139,9 @@
 #macro AGet_mf6 )
 	
 	#macro aGetF array_safe_get_fast
-	function array_safe_get_fast(arr, index=0, def=0) {
+	function array_safe_get_fast(arr, index=0, def=0, adef=undefined) {
 		if(is(arr, ArrayObject)) return arr.getElementByIndex(index);
-		return is_array(arr) && index >= 0 && index < array_length(arr)? arr[index] : def;
+		return is_array(arr)? (index >= 0 && index < array_length(arr)? arr[index] : def) : (adef ?? def);
 	}
 	
 	function array_safe_get(arr, index, def = 0, overflow = ARRAY_OVERFLOW._default) {

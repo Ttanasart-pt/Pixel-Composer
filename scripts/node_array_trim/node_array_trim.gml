@@ -3,30 +3,52 @@ function Node_Array_Trim(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	always_pad = true;
 	setDimension(96, 48);
 	
-	newInput(0, nodeValue(     "Array",      self, CONNECT_TYPE.input, VALUE_TYPE.any, 0)).setArrayDepth(1).setVisible(true, true);
-	newInput(1, nodeValue_Int( "Trim Start", 0 ));
-	newInput(2, nodeValue_Int( "Trim End",   0 ));
+	////- Array
+	newInput( 0, nodeValue_Any( "Array"         )).setArrayDepth(1).setVisible(true, true);
 	
-	newOutput(0, nodeValue_Output("Array", VALUE_TYPE.any, 0))
-		.setArrayDepth(1);
+	////- Trim
+	newInput( 1, nodeValue_Int( "Trim Start", 0 ));
+	newInput( 2, nodeValue_Int( "Trim End",   0 ));
+	// 3
+	
+	newOutput( 0, nodeValue_Output("Array", VALUE_TYPE.any, 0)).setArrayDepth(1);
 		
+	input_display_list = [ 
+		[ "Array", false ],  0,
+		[ "Trim",  false ],  1,  2,  
+	];
+	
+	////- Node
+	
 	static update = function(frame = CURRENT_FRAME) {
-		var _typ = inputs[0].value_from == noone? VALUE_TYPE.any : inputs[0].value_from.type;
-		inputs[0].setType(_typ);
-		outputs[0].setType(_typ);
-		
-		var _arr = getInputData(0);
-		var _tst = getInputData(1);
-		var _ted = getInputData(2);
-		if(!is_array(_arr)) return;
+		#region data
+			var _arr = getInputData(0);
+			var _tst = getInputData(1);
+			var _ted = getInputData(2);
+			
+			var _typ = inputs[0].getType();
+			var isig = inputs[0].getTypeSignature();
+			
+			inputs[0].setType(_typ);
+			inputs[0].setTypeSignature(isig);
+			
+			outputs[0].setType(_typ);
+			
+			if(!is_array(_arr)) return;
+		#endregion
 		
 		_tst = max(0, _tst);
 		_ted = max(0, _ted);
 		
 		var res = [];
-		for( var i = _tst, n = array_length(_arr) - _ted; i < n; i++ ) 
-			array_push(res, _arr[i]);
+		var sig = [];
 		
+		for( var i = _tst, n = array_length(_arr) - _ted; i < n; i++ ) {
+			array_push(res, _arr[i]);
+			array_push(sig, array_safe_get_fast(isig, i, VALUE_TYPE.float, isig));
+		}
+		
+		outputs[0].setTypeSignature(sig);
 		outputs[0].setValue(res);
 	}
 	

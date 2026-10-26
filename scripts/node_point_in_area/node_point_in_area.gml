@@ -6,8 +6,11 @@ function Node_Point_In_Area(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	newInput( 0, nodeValue_Area( "Area",  DEF_AREA ));
 	newInput( 1, nodeValue_Vec2( "Point", [0,0]    )).setVisible(true, true);
 	newInput( 2, nodeValue_Bool( "Include Boundary", true ));
+	// 3
 	
-	newOutput(0, nodeValue_Output("Is in", VALUE_TYPE.boolean, false ));
+	newOutput(0, nodeValue_Output( "Is in", VALUE_TYPE.boolean, false ));
+	
+	////- =Node
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _params) { 
 		PROCESSOR_OVERLAY_CHECK
@@ -19,10 +22,13 @@ function Node_Point_In_Area(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	}
 	
 	static processData = function(_output, _data, _array_index = 0, _frame = CURRENT_FRAME) {
-	    var _area = _data[0];
-	    var _pont = _data[1];
-	    var _bond = _data[2];
-	    
+		#region data
+		    var _area = _data[ 0];
+		    var _pont = _data[ 1];
+		    var _bond = _data[ 2];
+		    
+		#endregion
+		   
 	    var px = _pont[0];
 	    var py = _pont[1];
 	    

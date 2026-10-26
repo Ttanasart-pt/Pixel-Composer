@@ -2463,7 +2463,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		
 		var bc = COLORS._main_icon_dark;
 		var fc = COLORS._main_icon;
-	
+		
 		var _js = 16 * _s;
 		for( var i = 0, n = array_length(inputDisplayGroup); i < n; i++ ) {
 			var _gr  = inputDisplayGroup[i];

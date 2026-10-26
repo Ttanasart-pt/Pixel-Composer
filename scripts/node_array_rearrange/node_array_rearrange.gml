@@ -4,15 +4,21 @@ function Node_Array_Rearrange(_x, _y, _group = noone) : Node(_x, _y, _group) con
 	draw_pad_w = 10;
 	setDimension(96, 48);
 	
-	newInput(0, nodeValue("Array", self, CONNECT_TYPE.input, VALUE_TYPE.any, 0))
-		.setArrayDepth(1)
-		.setVisible(true, true);
+	////- =Array
+	newInput( 0, nodeValue_Any( "Array"      )).setArrayDepth(1).setVisible(true, true);
 	
-	newInput(1, nodeValue_Int("Orders", []))
-		.setArrayDepth(1);
+	////- =Order
+	newInput( 1, nodeValue_Int( "Orders", [] )).setArrayDepth(1);
+	// 2
 	
-	newOutput(0, nodeValue_Output("Array", VALUE_TYPE.any, 0))
-		.setArrayDepth(1);
+	newOutput( 0, nodeValue_Output("Array", VALUE_TYPE.any, 0)).setArrayDepth(1);
+	
+	input_display_list = [ 
+		[ "Array", false ],  0,
+		[ "Order", false ],  1,
+	];
+	
+	////- Node
 	
 	type     = VALUE_TYPE.any;
 	ordering = noone;
@@ -120,22 +126,26 @@ function Node_Array_Rearrange(_x, _y, _group = noone) : Node(_x, _y, _group) con
 	}
 	
 	static update = function(frame = CURRENT_FRAME) {
-		var _typ = inputs[0].value_from == noone? VALUE_TYPE.any : inputs[0].value_from.type;
-		
-		inputs[0].setType(_typ);
-		outputs[0].setType(_typ);
-		
-		if(type != _typ) {
-			if(_typ == VALUE_TYPE.surface) setDimension(128, 128);
-			else                           setDimension(96, 48);
+		#region data
+			var _arr = getInputData(0);
+			var _ord = getInputData(1);
 			
-			type = _typ;
-		}
-		
-		var _arr = getInputData(0);
-		var _ord = getInputData(1);
-		
-		if(!is_array(_arr)) return;
+			var _typ = inputs[0].getType();
+			var isig = inputs[0].getTypeSignature();
+			
+			inputs[0].setType(_typ);
+			inputs[0].setTypeSignature(isig);
+			
+			outputs[0].setType(_typ);
+			
+			if(type != _typ) {
+				if(_typ == VALUE_TYPE.surface) setDimension(128, 128);
+				else                           setDimension(96, 48);
+				type = _typ;
+			}
+			
+			if(!is_array(_arr)) return;
+		#endregion
 		
 		if(!is_array(_ord) || array_length(_ord) != array_length(_arr)) {
 			_ord = array_create_ext(array_length(_arr), function(i) /*=>*/ {return i});
@@ -143,12 +153,16 @@ function Node_Array_Rearrange(_x, _y, _group = noone) : Node(_x, _y, _group) con
 		}
 		
 		var res = [];
+		var sig = [];
 		
 		for( var i = 0; i < array_length(_arr); i++ ) {
 			var _ind = array_safe_get_fast(_ord, i, i);
-			res[i]   = array_safe_get_fast(_arr, _ind);
+			
+			res[i] = array_safe_get_fast(_arr, _ind);
+			sig[i] = array_safe_get_fast(isig, _ind, VALUE_TYPE.float, isig);
 		}
 		
+		outputs[0].setTypeSignature(sig);
 		outputs[0].setValue(res);
 	}
 	

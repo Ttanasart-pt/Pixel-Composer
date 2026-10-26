@@ -15,7 +15,7 @@ function Node_Scatter_Points(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 	dimension_index = -1;
 	
 	////- =Base
-	newInput( 5, nodeValueSeed()).rejectArray();
+	newInput( 5, nodeValueSeed());
 	newInput( 6, nodeValue_Bool( "Fixed Position",      false, "Fix point position, and only select point in the area."));
 	newInput( 7, nodeValue_Vec2( "Reference Dimension", PROJ_SURF ));
 	
@@ -38,7 +38,7 @@ function Node_Scatter_Points(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 	/**/ newInput( 8, nodeValue_Surface( "Reference Value" ));
 	// inputs 14
 	
-	newOutput(0, nodeValue_Output("Points", VALUE_TYPE.float, [ 0, 0 ])).setDisplay(VALUE_DISPLAY.vector);
+	newOutput( 0, nodeValue_Output( "Points", VALUE_TYPE.float, [0,0] )).setDisplay(VALUE_DISPLAY.vector);
 	
 	input_display_list = [ 
 		[ "Base",    false    ],  5,  6,  7, 
@@ -177,6 +177,8 @@ function Node_Scatter_Points(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 			
 			return val;
 		});
+		
+		__process_signature = array_create(array_length(pos), VALUE_TYPE.float);
 		
 		return pos;
 	}

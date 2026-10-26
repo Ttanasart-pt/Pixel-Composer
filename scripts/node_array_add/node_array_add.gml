@@ -3,17 +3,20 @@ function Node_Array_Add(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	setDimension(96, 48);
 	setDrawIcon();
 	
-	newInput(1, nodeValue_Bool( "Spread array", false )).rejectArray();
-	newInput(0, nodeValue( "Array", self, CONNECT_TYPE.input, VALUE_TYPE.any, 0 )).setVisible(true, true);
+	newInput( 0, nodeValue_Any(  "Array" )).setVisible(true, true);
+	newInput( 1, nodeValue_Bool( "Spread array", false )).rejectArray();
+	// 2
 	
 	newOutput(0, nodeValue_Output("Output", VALUE_TYPE.any, 0));
 	
-	input_display_list = [ 1, 0 ];
+	input_display_list = [ 
+		[ "Array", false ],  0,  1,
+	];
 	
 	function createNewInput(index = array_length(inputs)) {
 		var inAmo = array_length(inputs);
 		
-		newInput(index, nodeValue("Value", self, CONNECT_TYPE.input, VALUE_TYPE.any, -1 )).setVisible(true, true);
+		newInput(index, nodeValue_Any( "Value" )).setVisible(true, true);
 		
 		array_push(input_display_list, inAmo);
 		postCreateNewInput(index);
@@ -25,23 +28,41 @@ function Node_Array_Add(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	////- Nodes
 	
 	static update = function(frame = CURRENT_FRAME) {
-		var type = inputs[0].value_from == noone? VALUE_TYPE.any : inputs[0].value_from.type;
-		inputs[0].setType(type);
-		outputs[0].setType(type);
-		
-		var _arr = getInputData(0);
-		var _spd = getInputData(1);
-		if(!is_array(_arr)) return;
+		#region data
+			var _arr = getInputData(0);
+			var _spd = getInputData(1);
+			
+			var type = inputs[0].getType();
+			var isig = inputs[0].getTypeSignature();
+			
+			inputs[0].setType(type);
+			inputs[0].setTypeSignature(isig);
+			
+			outputs[0].setType(type);
+			
+			if(!is_array(_arr)) return;
+		#endregion
 		
 		var _out = array_clone(_arr);
+		var  sig = array_clone(isig);
+		
 		for( var i = input_fix_len, n = array_length(inputs); i < n; i += data_length ) {
 			var _val = getInputData(i);
+			var _sig = inputs[i].getTypeSignature();
+			
 			inputs[i].setType(type);
 			
-			if(_spd) array_append(_out, _val);
-			else     array_push(_out, _val);
+			if(_spd) {
+				array_append(_out, _val);
+				array_append( sig, array_create(array_safe_length(_val), _sig));
+				
+			} else {
+				array_push(_out, _val);
+				array_push( sig, _sig);
+			}
 		}
 		
+		outputs[0].setTypeSignature(sig);
 		outputs[0].setValue(_out);
 	}
 	

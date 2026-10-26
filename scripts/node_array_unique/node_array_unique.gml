@@ -3,21 +3,50 @@ function Node_Array_Unique(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	setDimension(96, 48);
 	setDrawIcon();
 	
-	newInput(0, nodeValue("Array in", self, CONNECT_TYPE.input, VALUE_TYPE.any, []))
-		.setVisible(true, true);
+	////- Array
+	newInput( 0, nodeValue_Any( "Array" )).setVisible(true, true);
+	// 1
 	
-	newOutput(0, nodeValue_Output("Unique Array", VALUE_TYPE.any, []));
+	newOutput( 0, nodeValue_Output("Unique Array", VALUE_TYPE.any, []));
+	
+	input_display_list = [ 
+		[ "Array", false ],  0,
+	];
+	
+	////- Node
 	
 	static update = function(frame = CURRENT_FRAME) {
-		var type = inputs[0].value_from == noone? VALUE_TYPE.any : inputs[0].value_from.type;
-		inputs[0].setType(type);
-		outputs[0].setType(type);
+		#region data
+			var arr = getInputData(0);
+			
+			var type = inputs[0].getType();
+			var isig = inputs[0].getTypeSignature();
+			
+			inputs[0].setType(type);
+			inputs[0].setTypeSignature(isig);
+			
+			outputs[0].setType(type);
+			
+			if(!is_array(arr)) return;
+		#endregion
 		
-		var arr = getInputData(0);
-		if(!is_array(arr)) return;
-		arr = array_unique(arr);
+		var len = array_length(arr);
+		var map = {};
+		var sig = [];
+		var res = [];
 		
-		outputs[0].setValue(arr);
+		for( var i = 0; i < len; i++ ) {
+			var a = arr[i];
+			if(has(map, a)) continue;
+			
+			array_push(res, a);
+			array_push(sig, array_safe_get_fast(isig, i, VALUE_TYPE.float, isig));
+			
+			map[$ a] = 1;
+		}
+		
+		outputs[0].setTypeSignature(sig);
+		outputs[0].setValue(res);
 	}
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {

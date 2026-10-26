@@ -3,14 +3,22 @@ function Node_Array_Sort(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	setDimension(96, 48);
 	setDrawIcon();
 	
-	newInput( 0, nodeValue( "Array in", self, CONNECT_TYPE.input, VALUE_TYPE.any, [] )).setTypeBitmask(
-		1 << VALUE_TYPE.float   | 1 << VALUE_TYPE.integer | 1 << VALUE_TYPE.color
-	).setVisible(true, true);
-	newInput( 1, nodeValue_EButton( "Order",  0, [ "Ascending", "Descending" ] )).rejectArray();
+	////- =Array
+	newInput( 0, nodeValue_Any( "Array" )).setTypeBitmask( 1 << VALUE_TYPE.float   | 
+	                                                       1 << VALUE_TYPE.integer | 
+	                                                       1 << VALUE_TYPE.color ).setVisible(true, true);
+	
+	////- =Sorting
+	newInput( 1, nodeValue_EButton( "Order",  0, [ "Ascending", "Descending" ]  )).rejectArray();
 	// 2
 	
-	newOutput(0, nodeValue_Output("Sorted array", VALUE_TYPE.any,     [] ));
-	newOutput(1, nodeValue_Output("Sorted index", VALUE_TYPE.integer, [] )).setVisible(false);
+	newOutput( 0, nodeValue_Output("Sorted Array", VALUE_TYPE.any,     [] ));
+	newOutput( 1, nodeValue_Output("Sorted Index", VALUE_TYPE.integer, [] )).setVisible(false);
+	
+	input_display_list = [ 
+		[ "Array",   false ],  0,
+		[ "Sorting", false ],  1,
+	];
 	
 	////- Node
 	
@@ -20,19 +28,25 @@ function Node_Array_Sort(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	static sortDes = function(v1, v2) { return v1.val - v2.val; }
 	
 	static update = function(frame = CURRENT_FRAME) {
-		var type = inputs[0].value_from == noone? VALUE_TYPE.any : inputs[0].value_from.type;
-		if(type == VALUE_TYPE.any) return;
-		if(!array_exists(sortable_types, type)) {
-			noti_warning($"Cannot sort {value_type_to_string(type)} data");
-			return;
-		}
-		
-		inputs[0].setType(type);
-		outputs[0].setType(type);
-		
-		var arr = getInputData(0);
-		var asc = getInputData(1);
-		if(!is_array(arr)) return;
+		#region data
+			var arr = getInputData(0);
+			var asc = getInputData(1);
+			
+			var type = inputs[0].getType();
+			var isig = inputs[0].getTypeSignature();
+
+			if(!array_exists(sortable_types, type)) { 
+				noti_warning($"Cannot sort {value_type_to_string(type)} data");
+				return;
+			}
+			
+			inputs[0].setType(type);
+			inputs[0].setTypeSignature(isig);
+			
+			outputs[0].setType(type);
+			
+			if(!is_array(arr)) return;
+		#endregion
 		
 		var len = array_length(arr);
 		
@@ -43,10 +57,17 @@ function Node_Array_Sort(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		var resO = array_verify(outputs[1].getValue(), len);
 		
 		for( var i = 0; i < len; i++ ) {
-			resO[i] = _arr[i].index;
 			resV[i] = _arr[i].val;
+			resO[i] = _arr[i].index;
 		}
 		
+		var sig = array_create(len);
+		for( var i = 0; i < len; i++ ) {
+			var si = resO[i];
+			sig[i] = array_safe_get_fast(isig, si, VALUE_TYPE.float, isig);
+		}
+		
+		outputs[0].setTypeSignature(sig);
 		outputs[0].setValue(resV);
 		outputs[1].setValue(resO);
 	}

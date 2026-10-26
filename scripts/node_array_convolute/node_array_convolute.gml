@@ -3,19 +3,22 @@ function Node_Array_Convolute(_x, _y, _group = noone) : Node(_x, _y, _group) con
 	setDimension(96, 48);
 	setDrawIcon();
 	
-	newInput(0, nodeValue_Float("Array", []))
-		.setArrayDepth(1)
-		.setVisible(true, true);
+	////- =Array
+	newInput( 0, nodeValue_Float(   "Array",    [] )).setArrayDepth(1).setVisible(true, true);
 	
-	newInput(1, nodeValue_Float("Kernel", []))
-		.setArrayDepth(1)
-		.setVisible(true, true);
+	////- =Convolution
+	newInput( 1, nodeValue_Float(   "Kernel",   [] )).setArrayDepth(1).setVisible(true, true);
+	newInput( 2, nodeValue_EScroll( "Boundary", 0, [ "Zero", "Wrap", "Skip" ])).setArrayDepth(1);
+	// 3
 	
-	newInput(2, nodeValue_EScroll("Boundary", 0, [ "Zero", "Wrap", "Skip" ]))
-		.setArrayDepth(1);
+	newOutput(0, nodeValue_Output("Array", VALUE_TYPE.float, 0)).setArrayDepth(1);
 	
-	newOutput(0, nodeValue_Output("Array", VALUE_TYPE.float, 0))
-		.setArrayDepth(1);
+	input_display_list = [ 
+		[ "Array",       false ],  0,
+		[ "Convolution", false ],  1,  2,  
+	];
+	
+	////- Node
 		
 	static convolute = function(arr, ker) {
 		var _bnd = getInputData(2);
@@ -66,11 +69,13 @@ function Node_Array_Convolute(_x, _y, _group = noone) : Node(_x, _y, _group) con
 	}
 		
 	static update = function(frame = CURRENT_FRAME) {
-		var _arr = getInputData(0);
-		var _ker = getInputData(1);
-		
-		if(!is_array(_arr) || !is_array(_ker))     return;
-		if(array_empty(_arr) || array_empty(_ker)) return;
+		#region data
+			var _arr = getInputData(0);
+			var _ker = getInputData(1);
+			
+			if(!is_array(_arr) || !is_array(_ker))     return;
+			if(array_empty(_arr) || array_empty(_ker)) return;
+		#endregion
 		
 		var res;
 		

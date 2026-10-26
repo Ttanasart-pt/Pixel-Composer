@@ -575,7 +575,7 @@
 		return false;
 	}
 #endregion
-	
+
 function nodeValueUnit(__nodeValue) constructor {
 	INLINE
 	

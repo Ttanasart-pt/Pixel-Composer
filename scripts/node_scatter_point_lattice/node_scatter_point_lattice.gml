@@ -80,6 +80,8 @@ function Node_Scatter_Point_Lattice(_x, _y, _group = noone) : Node_Processor(_x,
 			pos[i] = [ _x, _y ];
 		}
 		
+		__process_signature = array_create(array_length(pos), VALUE_TYPE.float);
+		
 		return pos;
 	}
 	

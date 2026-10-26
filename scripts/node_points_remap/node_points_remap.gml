@@ -78,5 +78,6 @@ function Node_Points_Remap(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 			_outData[i][1] = lerp(py, vy, _uvamo);
 		}
 		
+		outputs[0].setTypeSignature(array_create(array_length(_outData), VALUE_TYPE.float));
 	}
 }

@@ -66,17 +66,17 @@ function Node_Particle(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 	newInput(69, nodeValue_RotRand(  "Target Angle",         ROTRAN_DEF_0        )).setCurvable(70, CURVE_DEF_01, "Over Lifespan");
 	
 		////- =/Snap
-	newInput(61, nodeValue_Float(     "Snap Rotation",         0                 ));
+	newInput(61, nodeValue_Float(     "Snap Rotation", 0                 ));
 	
 	////- =Scale
-	newInput(10, nodeValue_Range2(    "Scale",        [1,1,1,1], { linked : true }   ));
-	newInput(17, nodeValue_Range(     "Size",         [1,1],     { linked : true }   )).setCurvable(11, CURVE_DEF_11, "Over Lifespan");
+	newInput(10, nodeValue_Range2(    "Scale",        [1,1,1,1], true    ));
+	newInput(17, nodeValue_Range(     "Size",         [1,1],     true    )).setCurvable(11, CURVE_DEF_11, "Over Lifespan");
 	
 	////- =Color
-	newInput(28, nodeValue_Gradient(  "Color on Spawn",      gra_white                ));
-	newInput(50, nodeValue_Palette(   "Color by Index",      [ca_white]               )).setOptions("Select by:", "array_select", [ "Index Loop", "Index Ping-pong", "Random" ], THEME.array_select_type).iconPad();
-	newInput(12, nodeValue_Gradient(  "Color over Lifetime", gra_white                ));
-	newInput(13, nodeValue_Range(     "Alpha",               [1,1], { linked : true } )).setCurvable(14, CURVE_DEF_11, "Over Lifespan");
+	newInput(28, nodeValue_Gradient(  "Color on Spawn",      gra_white   ));
+	newInput(50, nodeValue_Palette(   "Color by Index",      [ca_white]  )).setOptions("Select by:", "array_select", [ "Index Loop", "Index Ping-pong", "Random" ], THEME.array_select_type).iconPad();
+	newInput(12, nodeValue_Gradient(  "Color over Lifetime", gra_white   ));
+	newInput(13, nodeValue_Range(     "Alpha",               [1,1], true )).setCurvable(14, CURVE_DEF_11, "Over Lifespan");
 		
 		////- =/Sampler
 	newInput(56, nodeValue_Surface(   "Sample Surface" ));
@@ -102,26 +102,26 @@ function Node_Particle(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 	
 	////- =Physics
 	newInput(57, nodeValue_Bool(    "Use Physics",  false                     ));
-	newInput(54, nodeValue_Range(   "Friction",     [0,0], { linked : true }  ));
-	newInput( 7, nodeValue_Range(   "Acceleration", [0,0], { linked : true }  ));
+	newInput(54, nodeValue_Range(   "Friction",     [0,0], true               ));
+	newInput( 7, nodeValue_Range(   "Acceleration", [0,0], true               ));
 	
 		////- =/Gravity
-	newInput(19, nodeValue_Range(   "Gravity",                [0,0], { linked : true }  ));
-	newInput(33, nodeValue_Rot(     "Gravity Direction",      -90                       ));
+	newInput(19, nodeValue_Range(   "Gravity",                [0,0], true     ));
+	newInput(33, nodeValue_Rot(     "Gravity Direction",      -90             ));
 	
 		////- =/Turning
-	newInput(34, nodeValue_Range(   "Turning",                [0,0], { linked : true }  ));
-	newInput(35, nodeValue_Bool(    "Turn Both Directions",   false                     )).setTooltip("Apply randomized 1, -1 multiplier to the turning speed.");
-	newInput(36, nodeValue_Float(   "Turn Scale with Speed",  false                     ));
+	newInput(34, nodeValue_Range(   "Turning",                [0,0], true     ));
+	newInput(35, nodeValue_Bool(    "Turn Both Directions",   false           )).setTooltip("Apply randomized 1, -1 multiplier to the turning speed.");
+	newInput(36, nodeValue_Float(   "Turn Scale with Speed",  false           ));
 	
 	////- =Ground
 	newInput(37, nodeValue_Bool(    "Collide Ground",      false                         ));
 	newInput(63, nodeValue_EButton( "Ground Offset Type",  0, [ "Relative", "Absolute" ] ));
-	newInput(38, nodeValue_Range(   "Ground Offset",       [0,0], { linked : true }      ));
+	newInput(38, nodeValue_Range(   "Ground Offset",       [0,0], true                   ));
 	
 		////- =/Bounce
-	newInput(39, nodeValue_Slider(  "Bounce Amount",       .5                            ));
-	newInput(40, nodeValue_Slider(  "Bounce Friction",     .1                            )).setTooltip("Apply horizontal friction once particle stop bouncing.");
+	newInput(39, nodeValue_Slider(  "Bounce Amount",       .5                 ));
+	newInput(40, nodeValue_Slider(  "Bounce Friction",     .1                 )).setTooltip("Apply horizontal friction once particle stop bouncing.");
 		
 	////- =Wiggles
 	var wParam = { label: [ "Amplitude", "Period" ], linkable: false, per_line: true };

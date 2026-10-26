@@ -14,20 +14,20 @@ function Node_Array_Range(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	
 	newOutput(0, nodeValue_Output("Array", VALUE_TYPE.float, []));
 	
-	input_display_list = [ 4, 
-		[ "Range", false ], 0, 1, 2, 3,
+	input_display_list = [  4, 
+		[ "Range", false ],   0,  1,  2,  3,
 	];
 	
 	////- Node
 	
 	static processData = function(_outData, _data, _array_index) {
 		#region data
-			var typ = _data[4];
+			var typ = _data[ 4];
 			
-			var st  = _data[0];
-			var ed  = _data[1];
-			var stp = _data[2];
-			var inE = _data[3];
+			var st  = _data[ 0];
+			var ed  = _data[ 1];
+			var stp = _data[ 2];
+			var inE = _data[ 3];
 			
 			inputs[1].setVisible(typ == 0);
 		#endregion
@@ -40,7 +40,7 @@ function Node_Array_Range(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 				if(st == ed) return array_create(abs(stp), st);
 				stp = abs(stp) * sign(ed - st);
 				
-				var amo = floor(abs((ed - st + inE) / stp));
+				var amo  = floor(abs((ed - st + inE) / stp));
 				_outData = array_verify(_outData, amo);
 				
 				for( var i = 0; i < amo; i++ )
@@ -54,6 +54,8 @@ function Node_Array_Range(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 				_outData = array_create(abs(stp), st);
 				break;
 		}
+		
+		__process_signature = array_create(array_length(_outData), VALUE_TYPE.float);
 		
 		return _outData;
 	}

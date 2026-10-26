@@ -206,6 +206,7 @@ function Node_Processor(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		
 	}
 	
+	__process_signature  = undefined;
 	static processData   = function(_outSurf, _data, _array_index = 0, _frame = CURRENT_FRAME) { return _outSurf; }
 	
 	static processOutput = function(frame = CURRENT_FRAME) { 
@@ -243,17 +244,23 @@ function Node_Processor(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 			}
 			
 			if(_os == 1) {
+				__process_signature = outputs[0].type;
 				data = processData(_out[0], inputs_data, 0, frame);
 				if(data == undefined) return;
 				
+				outputs[0].setTypeSignature(__process_signature);
 				outputs[0].setValue(data);
 				
 			} else {
+				__process_signature = array_create_ext(_os, function(i) /*=>*/ {return outputs[i].type});
 				data = processData(_out, inputs_data, 0, frame);
 				if(data == undefined) return;
 				
 				var _amo = min(_os, array_length(data));
-				for(var i = 0; i < _amo; i++) outputs[i].setValue(data[i]);
+				for(var i = 0; i < _amo; i++) {
+					outputs[i].setTypeSignature(__process_signature[i]);
+					outputs[i].setValue(data[i]);
+				}
 			}
 			
 			return;
@@ -261,6 +268,7 @@ function Node_Processor(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 			
 		var _inputs  = array_create(_is);
 		var _outputs = array_create(_os);
+		var _signat  = array_create(_os);
 		
 		for( var l = 0; l < process_amount; l++ ) {
 			for(var i = 0; i < _is; i++) 
@@ -291,19 +299,30 @@ function Node_Processor(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 			}
 			
 			if(_os == 1) {
+				__process_signature = outputs[0].type;
 				data = processData(_outa[0], _inputs, l, frame);
+				
+				_signat[0][l]  = __process_signature;
 				_outputs[0][l] = data;
 				
 			} else {
+				__process_signature = array_create_ext(_os, function(i) /*=>*/ {return outputs[i].type});
 				data = processData(_outa, _inputs, l, frame);
 				
 				var i = 0;
-				repeat(_os) { _outputs[i][l] = data[i]; i++; }
+				repeat(_os) { 
+					_signat[i][l]  = __process_signature[i];
+					_outputs[i][l] = data[i]; 
+					i++; 
+					
+				}
 			}
 		}
 		
-		for( var i = 0, n = _os; i < n; i++ )
+		for( var i = 0, n = _os; i < n; i++ ) {
+			outputs[i].setTypeSignature(_signat[i]);
 			outputs[i].setValue(_outputs[i]);
+		}
 		
 	} 
 	
@@ -326,10 +345,15 @@ function Node_Processor(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	
 	static updateSimple = function(frame = CURRENT_FRAME) { 
 		var _outputs = undefined;
+		var os = array_length(outputs);
 		
-		if(array_length(outputs) == 1) {
+		if(os == 1) {
 			_outputs = outputs[0].getValue(frame);
+			
+			__process_signature = outputs[0].type;
 			var _res = processData(_outputs, inputs_data, 0, frame);
+			
+			outputs[0].setTypeSignature(__process_signature);
 			outputs[0].setValue(_res);
 			
 		} else {
@@ -337,16 +361,20 @@ function Node_Processor(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 			if(use_depth) surface_depth_disable(false);
 			
 			_outputs = [];
-			for( var i = 0, n = array_length(outputs); i < n; i++ ) {
+			for( var i = 0, n = os; i < n; i++ ) {
 				var _out = outputs[i];
 				_outputs[i] = _out.getValue(frame);
 				if(_out.type == VALUE_TYPE.surface)
 					_outputs[i] = surface_verify(_outputs[i], _dim[0], _dim[1]);
 			}
 			
+			__process_signature = array_create_ext(os, function(i) /*=>*/ {return outputs[i].type});
 			var _res = processData(_outputs, inputs_data, 0, frame);
-			for( var i = 0, n = array_length(_res); i < n; i++ ) 
+			
+			for( var i = 0, n = array_length(_res); i < n; i++ ) {
+				outputs[i].setTypeSignature(__process_signature[i]);
 				outputs[i].setValue(_res[i]);
+			}
 				
 			if(use_depth) surface_depth_disable(true);
 		}
