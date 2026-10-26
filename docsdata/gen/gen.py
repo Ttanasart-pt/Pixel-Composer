@@ -97,6 +97,7 @@ def writeSidebar(sidebar, depth = 0):
             sideContent += "</ul>"
 
     else:
+        print(page)
         sideContent += f'<div class="sidebar-menu sidebar-file">' \
                        f'<div class="sidebar-icon"></div>' \
                        f'<a href="{page}" class="sidebar-file">{title}</a></div>'
