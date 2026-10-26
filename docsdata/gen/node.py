@@ -1,6 +1,7 @@
 # %%
 import os
 import re
+import shutil
 import fileUtil
 import json5 as json
 from tqdm import tqdm
@@ -192,7 +193,7 @@ for category in nodeCategoryData:
         sprSrc  = "datasrc/NodeIcons/" + nodeMeta["spr"] + ".png"
         sprTarg = targetPath.replace("docsdata/pregen/3_nodes", "docs/nodes").replace(".html", ".png")
         if os.path.exists(sprSrc):
-            fileUtil.copyFile(sprSrc, sprTarg)
+            shutil.copy(sprSrc, sprTarg)
         
         redirPath = fileUtil.pathRemoveOrderAll(targetPath.replace("docsdata/pregen/3_nodes", "/nodes"))
         redir     = f'''<!DOCTYPE html><html><meta http-equiv="refresh" content="0; url={redirPath}"/></html>'''
