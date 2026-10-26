@@ -184,6 +184,7 @@ for category in nodeCategoryData:
         
         targetPath = os.path.join(currentDir, fname + ".html")
         fileUtil.writeFile(targetPath, nodeContent[node])
+        print("write to", targetPath)
         
         nodeMeta = nodeMetadata[node]
         nodeName = fileUtil.pathSanitize(nodeMeta["name"])

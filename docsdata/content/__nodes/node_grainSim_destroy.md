@@ -1,0 +1,1 @@
+Destroy grain in selected area.

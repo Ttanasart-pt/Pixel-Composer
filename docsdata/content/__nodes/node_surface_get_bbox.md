@@ -1,0 +1,1 @@
+Return bounding box (and area) of a content (non-transparent pixel) inside the surface.
