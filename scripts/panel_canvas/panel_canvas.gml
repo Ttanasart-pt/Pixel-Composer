@@ -643,7 +643,7 @@ function Panel_Canvas() : PanelContent() constructor {
 						shader_set_f( "mirror_dx",  mirror_pos_x       );
 						shader_set_f( "mirror_dy",  mirror_pos_y       );
 						
-						draw_surface_safe(drawing_surface, 0, 0);
+						draw_surface_safe(drawing_surface);
 					surface_reset_shader();
 				}
 				
@@ -890,9 +890,9 @@ function Panel_Canvas() : PanelContent() constructor {
 		#endregion
 		
 		#region tool
-			drawing_surface = surface_verify(drawing_surface, surf_w, surf_h);
-			
 			if(tool_current && !tool_color_selecting) {
+				drawing_surface = surface_verify(drawing_surface, surf_w, surf_h);
+				
 				if(tool_current.isSelector) {
 					var bolc = select_bool_fixed? COLORS._main_accent : COLORS._main_icon_light;
 					

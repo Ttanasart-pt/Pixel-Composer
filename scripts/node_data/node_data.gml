@@ -2475,7 +2475,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			var _gy0 = _gr[1] - 1 - _js/2;
 			var _gy1 = _gr[2] - 1 + _js/2;
 			
-			var _gh = _gy1 - _gy0;
+			var _gh  = _gy1 - _gy0;
 			
 			if(_active) _gr[3] = key_mod_press(SHIFT) && point_in_rectangle(_mx, _my, _gx0, _gy0, _gx1, _gy1);
 			

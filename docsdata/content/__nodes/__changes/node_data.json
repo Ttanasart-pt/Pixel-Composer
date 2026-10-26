@@ -6,6 +6,11 @@
         "date": "2026-10-26T02:38:09.780Z",
         "node": "",
         "commit": "**Graph Panel**: Add support for nested, mixed-type array."
+      },
+      {
+        "date": "2026-10-26T03:53:16.294Z",
+        "node": "Canvas",
+        "commit": "**Canvas**: Fix drawing in pixel-perfect mode not show brush directly under cursor."
       }
     ]
   },

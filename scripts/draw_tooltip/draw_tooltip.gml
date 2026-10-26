@@ -488,7 +488,7 @@ function draw_tooltip_project(pObj) {
 }
 
 function draw_tooltip_atlas(atlas) {
-	if(!is_array(atlas)) atlas = [ atlas ];
+	if(!is_array(atlas)) atlas = [atlas];
 	
 	var amo = array_length(atlas);
 	if(amo && is_array(atlas[0])) return;
