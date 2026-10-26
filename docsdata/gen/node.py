@@ -184,12 +184,16 @@ for category in nodeCategoryData:
         
         targetPath = os.path.join(currentDir, fname + ".html")
         fileUtil.writeFile(targetPath, nodeContent[node])
-        print("write to", targetPath)
-        
+
         nodeMeta = nodeMetadata[node]
         nodeName = fileUtil.pathSanitize(nodeMeta["name"])
         nodeBase = nodeMeta["baseNode"]
 
+        sprSrc  = "datasrc/NodeIcons/" + nodeMeta["spr"] + ".png"
+        sprTarg = targetPath.replace("docsdata/pregen/3_nodes", "docs/nodes").replace(".html", ".png")
+        if os.path.exists(sprSrc):
+            fileUtil.copyFile(sprSrc, sprTarg)
+        
         redirPath = fileUtil.pathRemoveOrderAll(targetPath.replace("docsdata/pregen/3_nodes", "/nodes"))
         redir     = f'''<!DOCTYPE html><html><meta http-equiv="refresh" content="0; url={redirPath}"/></html>'''
         
