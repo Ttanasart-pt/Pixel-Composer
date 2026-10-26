@@ -193,9 +193,7 @@ for category in nodeCategoryData:
         if "spr" in nodeMeta:
             sprSrc  = "datasrc/NodeIcons/" + nodeMeta["spr"] + ".png"
             sprTarg = targetPath.replace(".html", ".png")
-            # print("sprSrc", sprSrc)
-            # print("sprTarg", sprTarg)
-            if os.path.exists(sprSrc):
+            if os.path.exists(sprSrc) and not os.path.exists(sprTarg):
                 shutil.copy(sprSrc, sprTarg)
         
         redirPath = fileUtil.pathRemoveOrderAll(targetPath.replace("docsdata/pregen/3_nodes", "/nodes"))
