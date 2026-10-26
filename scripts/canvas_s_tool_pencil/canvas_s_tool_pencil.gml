@@ -40,6 +40,7 @@ function canvas_s_tool_pencil() : canvas_s_tool() constructor {
 		var dim = surface_get_dimension(_drawingSurface);
 		
 		brush.step(canvas, dim);
+		// print(mouse_drawing, mouse_lpress(), mouse_rpress());
 		
 		if(mouse_drawing) {
 			var ppx = pixel_perfect && brush.size == 1;

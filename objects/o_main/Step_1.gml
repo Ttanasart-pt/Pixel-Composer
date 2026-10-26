@@ -138,6 +138,7 @@ if(os_is_paused()) OS_PAUSED = true;
 
 #region Window & Mouse
 	mouse_step();
+	pen_step();
 	
 	if(OS_PAUSED && mouse_press(mb_any)) OS_PAUSED = false;
 	
@@ -158,21 +159,6 @@ if(os_is_paused()) OS_PAUSED = true;
 	_cursor_lock   = CURSOR_LOCK;
 	CURSOR_IS_LOCK = CURSOR_LOCK;
 	CURSOR_LOCK    = false;
-	
-	if(PEN_POOL <= 0) {
-		if(PEN_USE) {
-			MOUSE_EVENT.lrelease = true;
-			PEN_USE = false;
-		}
-		
-	} else PEN_POOL--;
-	
-	PEN_RELEASED      = false;
-	PEN_RIGHT_PRESS   = false;
-	PEN_RIGHT_RELEASE = false;
-	
-	PEN_X_DELTA = 0;
-	PEN_Y_DELTA = 0;
 	
 	if(!IS_CMD) tabletstuff_perform_event(id, ev_other, ev_user10);
 #endregion

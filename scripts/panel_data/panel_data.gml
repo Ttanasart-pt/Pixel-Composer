@@ -593,6 +593,7 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 		if(FULL_SCREEN_CONTENT != noone && con == FULL_SCREEN_CONTENT && self != FULL_SCREEN_PARENT) return;
 		
 		hovering    = HOVER_WINDOW != undefined && HOVER == con;
+		
 		if(hovering && mouse_press(mb_any)) setFocus(con);
 		
 		focusing    = FOCUS_WINDOW != undefined && FOCUS       == con;

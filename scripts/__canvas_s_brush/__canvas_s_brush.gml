@@ -5,9 +5,17 @@ enum CANVAS_BRUSH_SHAPE {
 }
 
 function canvas_s_brush() constructor {
-	size    = 1;
-	tile    = [0,0];
-	tileDim = [1,1];
+	_size = 1;
+	 size = 1;
+	 
+	tile     = [0,0];
+	tileDim  = [1,1];
+	
+	pressureUse   = false;
+	pressureValue = 1;
+	pressureRange = [0,1];
+	pressureCurve = CURVE_DEF_01;
+	pressureCurveMap = new curveMap(pressureCurve);
 	
 	canvas  = undefined;
 	shape   = CANVAS_BRUSH_SHAPE.circle;
@@ -19,17 +27,23 @@ function canvas_s_brush() constructor {
 	surface_h   = 1;
 	
 	shape_array = [ s_node_shape_circle, s_node_shape_rectangle, THEME.panel_preview_icon ];
+	size_editor = textBox_Number(function(s) /*=>*/ { _size = round(s) })
+		.setMinWidth(ui(80))
+		.setSideButton(button(function() /*=>*/ { 
+			dialogPanelCall(new Panel_Canvas_Brush_Pressure(self), mouse_mx, mouse_my, { anchor: ANCHOR.top | ANCHOR.left })
+		}).setIcon(THEME.pen_pressure, 0, function() /*=>*/ {return pressureUse? COLORS._main_accent : COLORS._main_icon})
+		  .setTooltip("Pen Pressure Settings..."), true);
+	
 	settings = [
 		new __Simple_Editor( "", new buttonGroup(shape_array, function(i) /*=>*/ { 
-				shape = i; 
-				if(shape == 2 && canvas) {
-					dialogPanelCall(new Panel_Canvas_Asset_Selector(canvas.node, function(i) /*=>*/ { asset_index = i; }),
-						mouse_mx + ui(8), mouse_my + ui(8), { anchor: ANCHOR.left | ANCHOR.top })
-				}
+			shape = i; 
+			if(shape == 2 && canvas) {
+				dialogPanelCall(new Panel_Canvas_Asset_Selector(canvas.node, function(i) /*=>*/ { asset_index = i; }),
+					mouse_mx + ui(8), mouse_my + ui(8), { anchor: ANCHOR.left | ANCHOR.top })
 			}
-		), function() /*=>*/ {return shape}, function(b) /*=>*/ { shape = b; } ),
+		}), function() /*=>*/ {return shape}, function(b) /*=>*/ { shape = b; } ),
 			
-		new __Simple_Editor( "", textBox_Number(function(s) /*=>*/ { size = round(s); }), function() /*=>*/ {return size}, function(b) /*=>*/ { size = round(b); } ),
+		new __Simple_Editor( "", size_editor, function() /*=>*/ {return _size}, function(b) /*=>*/ { _size = round(b); } ),
 	]
 	
 	////- Draw
@@ -41,7 +55,15 @@ function canvas_s_brush() constructor {
 		
 		setSurface(_canvas.getResource(asset_index));
 		
-		// shape_array[2] = surface_use? surface : THEME.panel_preview_icon;
+		pressureValue = 1;
+		if(pressureUse && PEN_USE) {
+			var currPres = PEN_PRESSURE / 1024;
+			var pressAmo = pressureCurveMap.get(currPres);
+			
+			pressureValue = lerp(pressureRange[0], pressureRange[1], pressAmo);
+		}
+		
+		size = round(_size * pressureValue);
 	}
 	
 	function drawBrush(_brushSurface) { 

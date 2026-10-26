@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"panel_canvas_brush_pressure",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"panel_canvas_brush_pressure",
+  "parent":{
+    "name":"tools",
+    "path":"folders/panels/nodes/canvas/tools.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

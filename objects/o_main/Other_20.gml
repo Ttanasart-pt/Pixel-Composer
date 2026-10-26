@@ -27,8 +27,6 @@ PEN_X = px;
 PEN_Y = py;
 
 PEN_PRESSURE = pp;
-PEN_RELEASED = false;
-PEN_PRESSED  = false;
 
 var contact = bool(f & 0x4);
 var bt1     = bool(f & 0x10); // POINTER_FLAG_FIRSTBUTTON
@@ -39,13 +37,8 @@ if(PREFERENCES.annotation) {
 	VIDEO_RIGHT_CLICK = bt2;
 	
 } else {
-	if( PEN_CONTACT && !contact) PEN_RELEASED      = true;
-	if(!PEN_CONTACT &&  contact) PEN_PRESSED       = true;
-	PEN_CONTACT = contact;
-	
-	if(!PEN_RIGHT_CLICK &&  bt2) PEN_RIGHT_PRESS   = true;
-	if( PEN_RIGHT_CLICK && !bt2) PEN_RIGHT_RELEASE = true;
-	PEN_RIGHT_CLICK = bt2;
+	PEN_CONTACT       = contact;
+	PEN_RIGHT_CLICK   = bt2;
 	
 }
 

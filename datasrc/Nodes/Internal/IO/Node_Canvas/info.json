@@ -5,5 +5,5 @@
     "baseNode":      "Node_Canvas",
     "alias":          ["draw"],
     "io":             ["surface"],
-    "deprecated":     false,
+    "deprecated":     true,
 }
