@@ -439,6 +439,10 @@ a.anchor {
         &:hover {
             opacity: 1;
         }
+
+        img {
+            scale: .8;
+        }
     }
 
     .search {
@@ -486,9 +490,14 @@ a.anchor {
             color: var(--main_white);
         }
 
+        &.active img {
+            opacity: 1;
+        }
+
         &.sidebar-file.active a {
             color: var(--accent);
         }
+        
     }
 }
 

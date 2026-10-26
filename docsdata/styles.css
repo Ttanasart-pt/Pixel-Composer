@@ -439,6 +439,11 @@ a.anchor {
         &:hover {
             opacity: 1;
         }
+
+        img {
+            opacity: 0.75;
+            scale: .8;
+        }
     }
 
     .search {
@@ -486,9 +491,14 @@ a.anchor {
             color: var(--main_white);
         }
 
+        &.active img {
+            opacity: 1;
+        }
+
         &.sidebar-file.active a {
             color: var(--accent);
         }
+        
     }
 }
 
@@ -1206,6 +1216,4 @@ ul.link-table {
 }
 
 ::-webkit-scrollbar-corner {
-    background: #00000000;
-}
-
+    b
