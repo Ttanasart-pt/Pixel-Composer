@@ -228,8 +228,9 @@ GRADIENTS_FOLDER.forEach(function(f) /*=>*/ { if(f.content == undefined) f.conte
 			var by = _y + ui(2);
 			
 			var bt = __txt("Favorite");
-			var bc = g.fav? CDEF.yellow : COLORS._main_icon;
-			var b  = buttonInstant_Pad(noone, bx, by, bs, bs, _m, _hover, _focus, bt, THEME.favorite, g.fav, bc, .85);
+			var fv = g[$ "fav"] ?? false;
+			var bc = fv? CDEF.yellow : COLORS._main_icon;
+			var b  = buttonInstant_Pad(noone, bx, by, bs, bs, _m, _hover, _focus, bt, THEME.favorite, fv, bc, .85);
 			if(b) isHover = false;
 			if(b == 2) fav = g;
 			bx -= bs + 1;
@@ -387,8 +388,9 @@ GRADIENTS_FOLDER.forEach(function(f) /*=>*/ { if(f.content == undefined) f.conte
 			
 			if(p != projectPal && has(p, "fav")) {
 				var bt = __txt("Favorite");
-				var bc = p.fav? CDEF.yellow : COLORS._main_icon;
-				var b  = buttonInstant_Pad(noone, bx, by, bs, bs, _m, _hover, _focus, bt, THEME.favorite, p.fav, bc, .85);
+				var fv = p[$ "fav"] ?? false;
+				var bc = fv? CDEF.yellow : COLORS._main_icon;
+				var b  = buttonInstant_Pad(noone, bx, by, bs, bs, _m, _hover, _focus, bt, THEME.favorite, fv, bc, .85);
 				if(b) isHover = false;
 				if(b == 2) __fav = p;
 			}

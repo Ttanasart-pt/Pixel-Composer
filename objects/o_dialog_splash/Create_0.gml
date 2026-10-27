@@ -60,11 +60,11 @@ event_inherited();
 		var amo  = ds_list_size(RECENT_FILES);
 		var col  = expand? 2 : 1;
 		var dind = 0;
-		var hg   = _thumb? ui(100) : hgt;
 		var lbh  = line_get_height(f_p0b) + line_get_height(f_p2);
 		var xx, yy;
 		
 		var _scis = gpu_get_scissor();
+		var _rowh = 0;
 		
 		for( var i = 0; i < amo; i++ ) {
 			var _rec = RECENT_FILES[| i];
@@ -72,18 +72,24 @@ event_inherited();
 			if(!file_exists_empty(_rec)) continue;
 			if(_search && string_pos(_serStr, string_lower(_rec)) == 0) continue;
 			
+			var thmb = _thumb? _dat.getThumbnail() : noone;
+			var hg   = thmb? ui(100) : hgt;
+			_rowh = max(_rowh, hg);
+			
 			var r = floor(dind / col);
 			var c = dind % col;
 			dind++;
 			
 			xx = c * (ww + ui(8));
-			hh = r * (hg + pad);
 			yy = _y + hh;
+			if(c == col - 1) {
+				hh += _rowh + pad;
+				_rowh = 0;
+			}
 			
 			var _drw = yy > -(hg + pad) && yy < sph;
 			if(!_drw) continue;
 			
-			var thmb = _thumb? _dat.getThumbnail() : noone;
 			var _hov = hover && point_in_rectangle(_m[0], _m[1], xx, yy, xx + ww, yy + hg);
 			
 			draw_sprite_stretched(THEME.ui_panel_bg, 3, xx, yy, ww, hg);
@@ -98,15 +104,16 @@ event_inherited();
 				var fdx = xx + ui(4);
 				var fdy = yy + ui(4);
 				var fdw = ww - ui(8);
-				var fdh = ui(64);
+				var fdh = hg - ui(8);
 				
 				gpu_set_scissor(fdx, fdy, fdw, fdh);
 				draw_sprite_stretched_ext(s_fx_pixel, 0, fdx, fdx, fdw, fdh, COLORS.panel_bg_clear, 1);
 				draw_sprite_tiled_ext(s_transparent, 0, 0, 0, 2, 2, COLORS.panel_preview_transparent, 1);
-					
+				
 				draw_surface_part_ext(thmb, 0, sy, sw, (hg - ui(8)) / ss, fdx, fdy, ss, ss, COLORS._main_icon_light, 0.9);
-				draw_sprite_stretched_ext(THEME.fade_up, 0, fdx, yy + 1 - ui(4) + hg - fdh, fdw, fdh, COLORS._main_icon_dark, 1);
 				gpu_set_scissor(_scis);
+				
+				draw_sprite_stretched_ext(THEME.fade_up, 0, xx + 1, yy + hg*1/3, ww - 2, hg*2/3 - 1, COLORS._main_icon_dark, 1);
 			}
 		
 			if(_hov) {

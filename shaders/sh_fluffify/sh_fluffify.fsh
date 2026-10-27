@@ -1,7 +1,8 @@
 varying vec2 v_vTexcoord;
 varying vec4 v_vColour;
 
-uniform vec2  dimension;
+uniform sampler2D baseSurface;
+uniform vec2      dimension;
 
 uniform int   shape;
 uniform float seed;
@@ -17,6 +18,7 @@ uniform float     sizeMultiply;
 uniform float iteration;
 uniform float maxIteration;
 
+uniform int   draw;
 uniform int   blend;
 uniform float substract;
 uniform int   skipFirst;
@@ -41,7 +43,7 @@ void main() {
 	vec4 base = texture2D(gm_BaseTexture, v_vTexcoord);
 	float bas = (base.r + base.g + base.b) / 3. * base.a;
 	float col = bas;
-	vec3 scol = base.rgb;
+	vec3 scol = draw == 1? base.rgb : vec3(0.);
 	
 	if(skipFirst == 1 && iteration == 1.) col = 0.;
 	
@@ -58,6 +60,8 @@ void main() {
 		     point   += random2(point) * detl;
 		
 		vec4 _sam = texture2D(gm_BaseTexture, point / dimension);
+		if(draw == 0) _sam = clamp(_sam + texture2D(baseSurface, point / dimension), 0., 1.);
+		
 		float sam = (_sam.r + _sam.g + _sam.b) / 3. * _sam.a;
 		float depth = random(point) * detl * str;
 		float dist  = 0.;

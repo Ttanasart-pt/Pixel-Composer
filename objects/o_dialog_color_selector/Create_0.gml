@@ -104,8 +104,9 @@ if(!variable_global_exists("COLOR_SELECTOR_PALETTE_COLLAPSED")) globalvar COLOR_
 				var by = _y + ui(2);
 				
 				var bt = __txt("Favorite");
-				var bc = p.fav? CDEF.yellow : COLORS._main_icon;
-				var b  = buttonInstant_Pad(noone, bx, by, bs, bs, _m, _hov, _foc, bt, THEME.favorite, p.fav, bc, .85);
+				var fv = p[$ "fav"] ?? false;
+				var bc = fv? CDEF.yellow : COLORS._main_icon;
+				var b  = buttonInstant_Pad(noone, bx, by, bs, bs, _m, _hov, _foc, bt, THEME.favorite, fv, bc, .85);
 				if(b) isHover = false; 
 				if(b == 2) __fav = p;
 				bx -= bs + 1;

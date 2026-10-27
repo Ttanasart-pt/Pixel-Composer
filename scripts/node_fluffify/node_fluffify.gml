@@ -20,13 +20,14 @@ function Node_Fluffify(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	
 	////- =Iteration
 	newInput(10, nodeValue_Float(    "Iteration",     10             )).setPieMenu();
-	newInput(11, nodeValue_Slider(   "Size Modify",   1, [0, 2, .01] ));
-	newInput(12, nodeValue_Slider(   "Radius Modify", 1, [0, 2, .01] ));
+	newInput(11, nodeValue_Slider(   "Size Modify",   1, [0,2,.01]   ));
+	newInput(12, nodeValue_Slider(   "Radius Modify", 1, [0,2,.01]   ));
 	newInput(20, nodeValue_Vec2(     "Offset",       [0,0]           ));
 	
 	////- =Rendering
 	newInput(13, nodeValue_EScroll(  "Blend Mode", 0, [ "Maximum", "Override" ] ));
 	newInput(21, nodeValue_Slider(   "Substractive",         0       ));
+	newInput(29, nodeValue_Bool(     "Draw Original",        true    ));
 	newInput(22, nodeValue_Bool(     "Blend Original",       false   ));
 	newInput(14, nodeValue_Bool(     "Fade by Iteration",    false   ));
 	newInput(17, nodeValue_Bool(     "Skip First Iteration", false   ));
@@ -40,7 +41,7 @@ function Node_Fluffify(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	////- =Decorner
 	newInput(24, nodeValue_Bool(     "Use Decorner",   true ));
 	newInput(25, nodeValue_Slider(   "Tolerance",      0    ));
-	//input 28
+	// 30
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
@@ -48,7 +49,7 @@ function Node_Fluffify(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 		[ "Surfaces",   true     ],  0,  1,  2,  3,  4,  
 		[ "Fluff",     false     ], 16, 26,  6,  9, 15,  8, 28, 
 		[ "Iteration", false     ], 10, 11, 12, 20, 
-		[ "Rendering", false     ], 13, 21, 22, 14, 17, 27, 
+		[ "Rendering", false     ], 13, 21, 29, 22, 14, 17, 27, 
 		[ "Coloring",  false     ], 18, 23, 19, 
 		[ "Decorner",   true, 24 ], 25, 
 	];
@@ -87,6 +88,7 @@ function Node_Fluffify(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 			
 			var _blnd = _data[13];
 			var _subs = _data[21];
+			var _draw = _data[29];
 			var _bori = _data[22];
 			var _fItr = _data[14];
 			var _skpf = _data[17];
@@ -128,6 +130,7 @@ function Node_Fluffify(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 			bg = !bg;
 			
 			surface_set_shader(temp_surface[bg], sh_fluffify);
+				shader_set_s( "baseSurface",   _surf                       );
 				shader_set_2( "dimension",     _dim                        );
 				shader_set_f( "seed",          _seed                       );
 				
@@ -141,6 +144,7 @@ function Node_Fluffify(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 				shader_set_m( "size",          _size, _data[15], inputs[9] );
 				shader_set_f( "sizeMultiply",  _mulp * min(_itr, 1)        );
 				
+				shader_set_i( "draw",          _draw                       );
 				shader_set_i( "blend",         _blnd                       );
 				shader_set_f( "substract",     _subs                       );
 				shader_set_i( "fadeIteration", _fItr                       );

@@ -111,8 +111,9 @@ function Panel_Curve_Presets(_curve, _onModify = undefined) : PanelContent() con
 			}
 			
 			var bt = __txt("Favorite");
-			var _c = c.fav? CDEF.yellow : COLORS._main_icon;
-			var b  = buttonInstant_Pad(bb, bx, by, bs, bs, _m, hov, foc, bt, THEME.favorite, c.fav, _c, .85, ui(4));
+			var fv = c[$ "fav"] ?? false;
+			var _c = fv? CDEF.yellow : COLORS._main_icon;
+			var b  = buttonInstant_Pad(bb, bx, by, bs, bs, _m, hov, foc, bt, THEME.favorite, fv, _c, .85, ui(4));
 			if(b) {
 				hv = false; 
 				if(b == 2) fav = c;
