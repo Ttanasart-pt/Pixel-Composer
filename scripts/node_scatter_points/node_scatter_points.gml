@@ -21,9 +21,10 @@ function Node_Scatter_Points(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 	
 	////- =Scatter
 	onSurfaceSize = function() /*=>*/ {return PROJ_SURF}; 
+	newInput( 1, nodeValue_EButton( "Distribution", 0, [ "Area", "Border", "Map", "Path" ]  )).rejectArray();
 	newInput( 0, nodeValue_Area(    "Point area",   DEF_AREA_REF, { onSurfaceSize } )).setHotkey("A").setUnitSimple();
-	newInput( 1, nodeValue_EButton( "Distribution", 0, [ "Area", "Border", "Map" ]  )).rejectArray();
 	newInput( 4, nodeValue_Surface( "Distribution Map" ));
+	newInput(14, nodeValue_Path(    "Path"             ));
 	
 	newInput( 2, nodeValue_EButton( "Scatter",  1, [ "Uniform", "Random", "Poisson", "Golden Spiral" ] )).rejectArray();
 	newInput( 3, nodeValue_Int(     "Amount",   2 ));
@@ -32,17 +33,17 @@ function Node_Scatter_Points(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 	
 	////- =3D
 	newInput( 9, nodeValue_Bool(    "Output 3D",      false ));
-	newInput(10, nodeValue_EButton( "Normal",         0, [ "X", "Y", "Z" ] ));
+	newInput(10, nodeValue_EButton( "Normal",         0, ["X","Y","Z"] ));
 	newInput(11, nodeValue_Float(   "Plane Position", 0 ));
 	
 	/**/ newInput( 8, nodeValue_Surface( "Reference Value" ));
-	// inputs 14
+	// 15
 	
 	newOutput( 0, nodeValue_Output( "Points", VALUE_TYPE.float, [0,0] )).setDisplay(VALUE_DISPLAY.vector);
 	
 	input_display_list = [ 
 		[ "Base",    false    ],  5,  6,  7, 
-		[ "Scatter", false    ],  0,  1,  4,  2,  3, 12, 13, 
+		[ "Scatter", false    ],  1,  0,  4, 14,  2,  3, 12, 13, 
 		[ "3D",       true, 9 ], 10, 11
 	];
 	
@@ -57,24 +58,28 @@ function Node_Scatter_Points(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 	
 	static processData = function(_outData, _data, _array_index) {
 		#region data
-			var _seed	 = _data[5];
-			var _fix	 = _data[6];
-			var _fixRef  = _data[7];
+			var _seed	  = _data[ 5];
+			var _fix	  = _data[ 6];
+			var _fixRef   = _data[ 7];
 			
-			var _area	 = _data[ 0];
-			var _dist	 = _data[ 1];
-			var _distMap = _data[ 4];
-			var _scat	 = _data[ 2];
-			var _amo	 = _data[ 3];
-			var poisDist = _data[12];
-			var _samAtp  = _data[13];
+			var _area	  = _data[ 0];
+			var _dist	  = _data[ 1];
+			var _distMap  = _data[ 4];
+			var _path     = _data[14];
+			
+			var _scat	  = _data[ 2];
+			var _amo	  = _data[ 3];
+			var poisDist  = _data[12];
+			var _samAtp   = _data[13];
 			
 			var _3d       = _data[ 9];
 			__temp_3dNorm = _data[10];
 			__temp_3dPos  = _data[11];
 			
-			inputs[ 2].setVisible(_dist != 2);
+			inputs[ 2].setVisible(_dist <  2);
 			inputs[ 4].setVisible(_dist == 2, _dist == 2);
+			inputs[14].setVisible(_dist == 3, _dist == 3);
+			
 			inputs[13].setVisible(_dist == 2);
 			inputs[ 7].setVisible(_fix);
 			
@@ -92,7 +97,27 @@ function Node_Scatter_Points(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 		var _fixArea = [ _fixRef[0] / 2, _fixRef[1] / 2, 
 	                     _fixRef[0] / 2, _fixRef[1] / 2, 0 ];
 	                 
-		if(_dist != 2) {
+		if(_dist < 2) {
+			point_cache = get_points_from_dist(_distMap, _amo, _seed, _samAtp, point_cache);
+			var p = point_cache;
+			
+			for( var i = 0, n = array_length(p); i < n; i++ ) {
+				var _p = p[i]; 
+				if(array_invalid(_p) || _p[0] == undefined) continue;
+				
+				if(_fix) {
+					_p[0] *= _fixRef[0];
+					_p[1] *= _fixRef[1];
+					
+				} else {
+					_p[0] = _area[0] + _area[2] * (_p[0] * 2 - 1);
+					_p[1] = _area[1] + _area[3] * (_p[1] * 2 - 1);
+				}
+				
+				array_push(pos, _p);
+			}
+			
+		} else if(_dist == 2) {
 			switch(_scat) {
 				case 0 :
 				case 1 :
@@ -145,25 +170,16 @@ function Node_Scatter_Points(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 					break;
 			}
 			
-		} else {
-			point_cache = get_points_from_dist(_distMap, _amo, _seed, _samAtp, point_cache);
-			var p = point_cache;
-			
-			for( var i = 0, n = array_length(p); i < n; i++ ) {
-				var _p = p[i]; 
-				if(array_invalid(_p) || _p[0] == undefined) continue;
-				
-				if(_fix) {
-					_p[0] *= _fixRef[0];
-					_p[1] *= _fixRef[1];
-					
-				} else {
-					_p[0] = _area[0] + _area[2] * (_p[0] * 2 - 1);
-					_p[1] = _area[1] + _area[3] * (_p[1] * 2 - 1);
+		} else if(_dist == 3) {
+			if(is_path(_path)) {
+				var __p = new PathPoint();
+				repeat(_amo) {
+					var _t = random(1);
+					__p = _path.getPointRatio(_t, 0, __p);
+					array_push(pos, [__p.x, __p.y]);
 				}
-				
-				array_push(pos, _p);
 			}
+			
 		}
 		
 		if(_3d) pos = array_map(pos, function(v, i) /*=>*/ {

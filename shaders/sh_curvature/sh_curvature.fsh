@@ -96,18 +96,18 @@ void main() {
     float uva = 1.;
     vec2  uv  = getUVA(v_vTexcoord, uva);
 	
-    vec2 offset = rad * tx;
+    vec2 o = rad * tx;
     
-    float c = sampleG(gm_BaseTexture, uv);
-    float l = sampleG(gm_BaseTexture, uv + vec2(-offset.x, 0.0));
-    float r = sampleG(gm_BaseTexture, uv + vec2( offset.x, 0.0));
-    float t = sampleG(gm_BaseTexture, uv + vec2(0.0,  offset.y));
-    float b = sampleG(gm_BaseTexture, uv + vec2(0.0, -offset.y));
+    float c  = sampleG(gm_BaseTexture, uv);
+    float l  = sampleG(gm_BaseTexture, uv + vec2(-o.x,  0.0));
+    float r  = sampleG(gm_BaseTexture, uv + vec2( o.x,  0.0));
+    float t  = sampleG(gm_BaseTexture, uv + vec2( 0.0,  o.y));
+    float b  = sampleG(gm_BaseTexture, uv + vec2( 0.0, -o.y));
     
-    float tl = sampleG(gm_BaseTexture, uv + vec2(-offset.x,  offset.y));
-    float tr = sampleG(gm_BaseTexture, uv + vec2( offset.x,  offset.y));
-    float bl = sampleG(gm_BaseTexture, uv + vec2(-offset.x, -offset.y));
-    float br = sampleG(gm_BaseTexture, uv + vec2( offset.x, -offset.y));
+    float tl = sampleG(gm_BaseTexture, uv + vec2(-o.x,  o.y));
+    float tr = sampleG(gm_BaseTexture, uv + vec2( o.x,  o.y));
+    float bl = sampleG(gm_BaseTexture, uv + vec2(-o.x, -o.y));
+    float br = sampleG(gm_BaseTexture, uv + vec2( o.x, -o.y));
     
     float dxx = (r - 2.0 * c + l) / (rad * rad);
     float dyy = (t - 2.0 * c + b) / (rad * rad);

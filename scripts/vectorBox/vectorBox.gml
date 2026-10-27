@@ -179,18 +179,21 @@ function vectorBox(_size, _onModify, _unit = noone) : widget() constructor {
 			draw_text_add(_x + ui(24), _y + _exh / 2, __txt("Vector Array") + $" [{array_length(_data)}]")
 			
 			var bs  = min(_h, ui(24));
-			var abw = bs;
-			var abh = _exh;
-			var abx = _x + _w - abw;
-			var aby = _y;
-			var bc  = [COLORS._main_icon, COLORS._main_value_positive];
-			var bt  = __txt("Add Vector");
 			
-			var _b = buttonInstant(noone, abx, aby, abw, abh, _m, ihover, iactive, bt, THEME.add_16, 0, bc, 1, .75);
-			if(_b) _hov = false;
-			if(_b == 2) {
-				array_push(_data, array_clone(array_last(_data)));
-				onModify(_data, setValueForceUpdate);
+			if(interactable) {
+				var abw = bs;
+				var abh = _exh;
+				var abx = _x + _w - abw;
+				var aby = _y;
+				var bc  = [COLORS._main_icon, COLORS._main_value_positive];
+				var bt  = __txt("Add Vector");
+				
+				var _b = buttonInstant(noone, abx, aby, abw, abh, _m, ihover, iactive, bt, THEME.add_16, 0, bc, 1, .75);
+				if(_b) _hov = false;
+				if(_b == 2) {
+					array_push(_data, array_clone(array_last(_data)));
+					onModify(_data, setValueForceUpdate);
+				}
 			}
 			
 			if(_hov && mouse_lpress(iactive)) array_expanding = !array_expanding;

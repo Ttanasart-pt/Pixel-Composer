@@ -1,0 +1,12 @@
+{
+  "$GMShader":"",
+  "%Name":"sh_straight_skeleton",
+  "name":"sh_straight_skeleton",
+  "parent":{
+    "name":"straight_skeleton",
+    "path":"folders/nodes/data/3D/2d_effects/straight_skeleton.yy",
+  },
+  "resourceType":"GMShader",
+  "resourceVersion":"2.0",
+  "type":1,
+}

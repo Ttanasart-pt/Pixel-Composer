@@ -22,8 +22,8 @@ function Node_Process_Template_Mask(_x, _y, _group = noone) : Node_Processor(_x,
 	static processData = function(_outSurf, _data, _array_index = 0) { 
 		#region data
 			var _surf = _data[0];
-			if(!is_surface(_surf)) return _outSurf;
 		
+			if(!is_surface(_surf)) return _outSurf;
 		#endregion
 		
 		__process_mask_modifier(_data);
