@@ -48,7 +48,7 @@ for node in tqdm(nodes, desc="Node usage repo"):
 
             input_list = "";
             for inp in data_inputs:
-                input_list += f"<img src='{_dir}/{inp}' alt='{inp}''>"
+                input_list += f"<img src='{_dir}/{inp}.png' alt='{inp}''>"
             page += f"<td class='inputs'>{input_list}</td>\n"
 
             page += f"<td class='data'><p>{data_project}</p><a href='{data_url}'>{data_url}</a></td>\n"
