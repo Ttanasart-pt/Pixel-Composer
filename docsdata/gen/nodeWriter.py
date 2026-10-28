@@ -89,6 +89,23 @@ def versionToInt(version):
 
     return int(v)
 
+def writeUsage(metadata):
+    baseNode = metadata["baseNode"]
+    useDir = f"node_usage_repo/{baseNode}"
+    if not os.path.exists(useDir):
+        return ""
+
+    exampleCount = len(os.listdir(useDir))
+    if exampleCount == 0:
+        return ""
+
+    useLink = f"/nodes/_nodeUsage/{baseNode}.html"
+    useText = '<br><h2 class="nosidebar">Usage Samples</h2><br>'
+
+    useText += f'<a href="{useLink}">View all {exampleCount} usage examples</a>'
+    return useText
+
+
 def writeChangeTable(metadata, changeData):
     nodeName = metadata["name"]
     hasAnyChange = False
@@ -269,6 +286,7 @@ def writeNode(metadata, contentPath, changeData = None):
 
     # ADD CONTENT
     content += rawContent
+    content += writeUsage(metadata)
 
     if changeData:
         content += writeChangeTable(metadata, changeData)

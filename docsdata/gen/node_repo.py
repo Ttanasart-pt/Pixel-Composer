@@ -29,11 +29,15 @@ for node in tqdm(nodes):
 
         page += "<tr>\n"
         if os.path.exists(_prev):
-            page += f"<td><img src='node_usage_repo/{node}/{example}/preview.png'></td>\n"
+            page += f"<td><img src='/node_usage_repo/{node}/{example}/preview.png'></td>\n"
         if os.path.exists(_data):
             with open(_data, "r", encoding="utf-8") as df:
-                data_content = df.read()
-            page += f"<td><pre>{data_content}</pre></td>\n"
+                data = json.load(df)
+
+            data_project = data["project"]
+            data_url = data["url"]
+
+            page += f"<td><a href='{data_url}'>{data_project}</a></td>\n"
         page += "</tr>\n"
 
     page += "</table>\n"
