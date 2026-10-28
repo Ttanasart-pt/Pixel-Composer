@@ -678,7 +678,7 @@
 			if(PREFERENCES.window_maximize) winMan_Maximize();
 			window_refresh();
 			
-			if(OS == os_linux) CLICK_REFRESH = true;
+			if(OS == os_linux && !IS_CMD) CLICK_REFRESH = true;
 		#endregion
 		
 		if(PREFERENCES.check_update) checkVersion();
