@@ -69,7 +69,7 @@ function Node_Path_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 		static getAccuLength    = function(i=0) /*=>*/ {return array_safe_get_fast(accu_lengths, i)};
 		
 		static getPointRatio    = function(_rat,  ind = 0, out = undefined) {
-			if(out == undefined) out = new PathPoint(); else out.reset();
+			if(!is(out, PathPoint)) out = new PathPoint(); else out.reset();
 			
 			var _path = array_safe_get_fast(paths, ind, 0);
 			if(_path == 0) return out;

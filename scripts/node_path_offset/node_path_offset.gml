@@ -44,7 +44,7 @@ function Node_Path_Offset(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 		static getBoundary     = function(i=0) /*=>*/ {return is_path(curr_path)? curr_path.getBoundary(i)                  : new BoundingBox(0, 0, 1, 1)};
 		
 		static getPointRatio = function(_rat, ind = 0, out = undefined) {
-			if(out == undefined) out = new PathPoint(); else out.reset();
+			if(!is(out, PathPoint)) out = new PathPoint(); else out.reset();
 			if(!is_path(curr_path)) return out;
 			
 			var _o = is_array(offset)? array_safe_get_fast(offset, ind, 0) : offset;

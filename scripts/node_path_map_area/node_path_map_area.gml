@@ -78,7 +78,7 @@ function Node_Path_Map_Area(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 		static getAccuLength   = function(i=0) /*=>*/ { return struct_has(path, "getAccuLength")?   path.getAccuLength(i)   : []; }
 			
 		static getPointRatio = function(_rat, ind = 0, out = undefined) {
-			if(out == undefined) out = new PathPoint(); else out.reset();
+			if(!is(out, PathPoint)) out = new PathPoint(); else out.reset();
 			
 			if(is_array(path)) {
 				path = array_safe_get_fast(path, ind);

@@ -111,7 +111,7 @@ function Node_Path_Bake(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		static getPointRatio = function(_rat, ind = 0, out = undefined) { return getPointDistance(_rat * getLength(ind), ind, out); }
 			
 		static getPointDistance = function(_dist, ind = 0, out = undefined) { 
-			if(out == undefined) out = new PathPoint(); else out.reset();
+			if(!is(out, PathPoint)) out = new PathPoint(); else out.reset();
 			
 			var _ll = getLength(ind);
 			if(_ll <= 0) return out;

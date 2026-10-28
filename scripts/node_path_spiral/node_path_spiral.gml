@@ -107,7 +107,7 @@ function Node_Path_Spiral(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 		}
 			
 		static getPointRatio = function(_rat, ind = 0, out = undefined) {
-			if(out == undefined) out = new PathPoint(); else out.reset();
+			if(!is(out, PathPoint)) out = new PathPoint(); else out.reset();
 			
 			if(!is_path(curr_path)) return out;
 			var _cKey = $"{string_format(_rat, 0, 6)},{ind}";

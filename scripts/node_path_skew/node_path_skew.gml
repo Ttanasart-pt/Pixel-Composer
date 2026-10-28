@@ -47,7 +47,7 @@ function Node_Path_Skew(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		
 		static getPointRatio    = function(_rat,  ind = 0, out = undefined) { return getPointDistance(_rat * getLength(), ind, out); }
 		static getPointDistance = function(_dist, ind = 0, out = undefined) { 
-			if(out == undefined) out = new PathPoint(); else out.reset();
+			if(!is(out, PathPoint)) out = new PathPoint(); else out.reset();
 			
 			var _cKey  = _dist;
 			if(has(cached_pos, _cKey))

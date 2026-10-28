@@ -87,7 +87,7 @@ function Node_MK_Tree_Branch_To_Path(_x, _y, _group = noone) : Node(_x, _y, _gro
 	
 	static getPointRatio    = function(_rat,  ind = 0, out = undefined) { return getPointDistance(clamp(_rat, 0, 0.99) * lengthTotal[ind], ind, out); }
 	static getPointDistance = function(_dist, ind = 0, out = undefined) {
-		if(out == undefined) out = new PathPoint(); else out.reset();
+		if(!is(out, PathPoint)) out = new PathPoint(); else out.reset();
 		
 		var _cKey = $"{ind}, {string_format(_dist, 0, 6)}";
 		if(has(cached_pos, _cKey))

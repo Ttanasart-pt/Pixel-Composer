@@ -46,7 +46,7 @@ function Node_pSystem_3D_Trail(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	static getBoundary		= function() /*=>*/ {return boundary};
 	
 	static getPointDistance = function(_dist, _ind = 0, out = undefined) {
-		if(out == undefined) out = new PathPoint(); else out.reset();
+		if(!is(out, PathPoint)) out = new PathPoint(); else out.reset();
 		
 		var _cKey = $"{_dist}|{_ind}";
 		if(ds_map_exists(cached_pos, _cKey)) {

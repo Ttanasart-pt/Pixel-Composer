@@ -103,7 +103,7 @@ function Node_Path_Bridge(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	static getPointRatio = function(_rat, ind = 0, out = undefined) { return getPointDistance(clamp(_rat, 0, 1) * getLength(ind), ind, out); }
 	
 	static getPointDistance = function(_dist, ind = 0, out = undefined) {
-		if(out == undefined) out = new PathPoint(); else out.reset();
+		if(!is(out, PathPoint)) out = new PathPoint(); else out.reset();
 		
 		var _cKey = $"{string_format(_dist, 0, 6)},{ind}";
 		if(ind < 0 || ind >= array_length(anchors)) return out;

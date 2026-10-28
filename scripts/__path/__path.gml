@@ -125,7 +125,7 @@ function PathSegment() : Path() constructor {
 	}
 	
 	static getPointDistance = function(_dist, _ind = 0, out = undefined) {
-		if(out == undefined) out = new PathPoint(); else { out.x = 0; out.y = 0; }
+		if(!is(out, PathPoint)) out = new PathPoint(); else { out.x = 0; out.y = 0; }
 		
 		for( var i = 0; i < array_length(lengths); i++ ) {
 			if(_dist <= lengths[i]) {

@@ -47,7 +47,7 @@ function Node_Path_Redistribute(_x, _y, _group = noone) : Node_Processor(_x, _y,
 		}
 		
 		static getPointRatio = function(_rat, ind = 0, out = undefined) {
-			if(out == undefined) out = new PathPoint(); else out.reset();
+			if(!is(out, PathPoint)) out = new PathPoint(); else out.reset();
 			
 			_rat = curve.get(_rat);
 			__p  = path.getPointRatio(_rat, ind, __p);

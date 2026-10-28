@@ -83,7 +83,7 @@ function Node_Path_Remap(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 		}
 		
 		static getPointRatio = function(_rat, ind = 0, out = undefined) {
-			if(out == undefined) out = new PathPoint(); else out.reset();
+			if(!is(out, PathPoint)) out = new PathPoint(); else out.reset();
 			
 			var _p = path.getPointRatio(_rat, ind);
 			var _val = uvSampler.getPixel(_p.x, _p.y);

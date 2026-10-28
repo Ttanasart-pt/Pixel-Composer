@@ -77,7 +77,7 @@ function Node_Path_Plot(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	static getBoundary		= function() /*=>*/ {return boundary};
 	
 	static getPointRatio = function(_rat, ind = 0, out = undefined) {
-		if(out == undefined) out = new PathPoint(); else out.reset();
+		if(!is(out, PathPoint)) out = new PathPoint(); else out.reset();
 		
 		_rat = curr_ran[0] + (_rat * (curr_ran[1] - curr_ran[0]));
 		

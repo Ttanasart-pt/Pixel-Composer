@@ -115,7 +115,7 @@ function Node_Path_Blend(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 		////- Get
 		
 		static getPointRatio = function(_rat, ind = 0, out = undefined) {
-			if(out == undefined) out = new PathPoint(); else out.reset();
+			if(!is(out, PathPoint)) out = new PathPoint(); else out.reset();
 			
 			var _cKey = $"{string_format(_rat, 0, 6)},{ind}";
 			if(has(cached_pos, _cKey))
