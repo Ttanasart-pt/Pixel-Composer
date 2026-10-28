@@ -45,3 +45,9 @@ button.copy-sample {
         background-color: var(--main_dkblack);
     }
 }
+
+div.sample-actions {
+    display: flex;
+    flex-direction: row;
+    gap: 8px;
+}

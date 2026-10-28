@@ -100,7 +100,7 @@ def writeUsage(metadata):
         return ""
 
     useLink = f"/nodes/_nodeUsage/{baseNode}.html"
-    useText = f'<a href="{useLink}">View all {exampleCount} usage examples</a>'
+    useText = f'<button class="copy-sample"><a href="{useLink}">View all {exampleCount} usage examples</a></button>'
     return useText
 
 
@@ -273,14 +273,13 @@ def writeNode(metadata, contentPath, changeData = None):
         
     samplePath = f"docsdata/src/images/nodegen/{nodeBaseLower}/{nodeBaseLower}-sample.txt"
 
-    content += '<div class="sample-content">'
+    content += '<div class="sample-actions">'
     if os.path.exists(samplePath):
         with open(samplePath, "r") as f:
             sampleContent = f.read()
         sampleContent = sampleContent.replace('"', '\\"').replace("\n", "")
         content += f'''<script>const sampleContent = "{sampleContent}";</script>'''
         content += f'''<button class="copy-sample" onclick="copyToClipboard(sampleContent)">Copy to Clipboard</button>'''
-    content += "<br>"
     content += writeUsage(metadata)
     content += "</div>"
 
