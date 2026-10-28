@@ -3124,6 +3124,7 @@
     {"id":{"name":"node_twirl","path":"scripts/node_twirl/node_twirl.yy",},},
     {"id":{"name":"node_ui_delay","path":"scripts/node_ui_delay/node_ui_delay.yy",},},
     {"id":{"name":"node_unicode","path":"scripts/node_unicode/node_unicode.yy",},},
+    {"id":{"name":"node_usage_repo","path":"scripts/node_usage_repo/node_usage_repo.yy",},},
     {"id":{"name":"node_uv_area","path":"scripts/node_uv_area/node_uv_area.yy",},},
     {"id":{"name":"node_uv_blend","path":"scripts/node_uv_blend/node_uv_blend.yy",},},
     {"id":{"name":"node_uv_cartesian","path":"scripts/node_uv_cartesian/node_uv_cartesian.yy",},},

@@ -5,13 +5,22 @@ uniform vec2  dimension;
 uniform float radius;
 uniform float amount;
 uniform float factor;
-uniform float offset;
 uniform float resolution;
+
+uniform vec2      offset;
+uniform int       offsetUseSurf;
+uniform sampler2D offsetSurf;
 
 #define s2 1.4142135623731
 #define PI 3.14159265358979323846
 
 void main() {
+	float off = offset.x;
+	if(offsetUseSurf == 1) {
+		vec4 _vMap = texture2D( offsetSurf, v_vTexcoord );
+		off = mix(offset.x, offset.y, (_vMap.r + _vMap.g + _vMap.b) / 3.);
+	}
+	
 	vec2 tx = 1. / dimension;
 	
     float c   = texture2D(gm_BaseTexture, v_vTexcoord).r;

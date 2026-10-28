@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"node_usage_repo",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"node_usage_repo",
+  "parent":{
+    "name":"project",
+    "path":"folders/functions/project.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

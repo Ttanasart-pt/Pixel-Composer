@@ -9,7 +9,7 @@ function tooltipHotkey(_text, context = undefined, name = undefined) constructor
 	
 	static drawTooltip = function() {
 		var keyStr = hotkey? hotkey.getKeyName() : "";
-		if(keyStr == "") { draw_tooltip_text(text); return; }
+		if(keyStr == "") { draw_tooltip_text_pad(text); return; }
 		
 		draw_set_font(f_hotkey);
 		var _w1 = string_width(text);
@@ -46,7 +46,7 @@ function tooltipKey(_text, _keyStr) constructor {
 	keyStr = _keyStr;
 	
 	static drawTooltip = function() {
-		if(keyStr == "") { draw_tooltip_text(text); return; }
+		if(keyStr == "") { draw_tooltip_text_pad(text); return; }
 		
 		draw_set_font(f_hotkey);
 		var _w1 = string_width(text);

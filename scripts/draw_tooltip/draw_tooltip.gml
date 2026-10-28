@@ -56,7 +56,7 @@
 			}
 			
 		} else if(is_string(TOOLTIP)) {
-			draw_tooltip_text(TOOLTIP);
+			draw_tooltip_text_pad(TOOLTIP);
 			drawTOOLTIP(_xx, _yy, true);
 			
 		} else if(is_array(TOOLTIP)) {
@@ -223,6 +223,31 @@
 	}
 	
 #endregion
+
+function draw_tooltip_text_pad(txt) {
+	txt = array_to_string(txt);
+	if(string_length(txt) > 1024)
+		txt = string_copy(txt, 1, 1024) + "...";
+	
+	draw_set_text(f_p2, fa_left, fa_top, COLORS._main_text);
+	
+	var tw = min(max(320, WIN_W * 0.4), string_width(txt));
+	var th = string_height_ext(txt, -1, tw);
+	
+	var pd = ui(8);
+	var tww = tw + pd * 2;
+	var thh = th + pd * 2;
+	
+	TOOLTIP_SURFACE = surface_verify(TOOLTIP_SURFACE, tww, thh);
+	surface_set_shader(TOOLTIP_SURFACE);
+		draw_sprite_stretched(THEME.tooltip, 0, 0, 0, tww, thh);
+		var _rect = gpu_get_scissor();
+		gpu_set_scissor(pd, pd, tw, th);
+		draw_text_line(pd, pd, txt, -1, tw);
+		gpu_set_scissor(_rect);
+	surface_reset_shader();
+	
+}
 
 function draw_tooltip_text(txt) {
 	txt = array_to_string(txt);

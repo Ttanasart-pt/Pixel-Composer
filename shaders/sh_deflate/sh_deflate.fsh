@@ -7,11 +7,20 @@ uniform sampler2D sdf;
 uniform vec2  dimension;
 uniform float radius;
 uniform float amount;
-uniform float offset;
+
+uniform vec2      offset;
+uniform int       offsetUseSurf;
+uniform sampler2D offsetSurf;
 
 #define PI 3.14159265358979323846
 
 void main() {
+	float off = offset.x;
+	if(offsetUseSurf == 1) {
+		vec4 _vMap = texture2D( offsetSurf, v_vTexcoord );
+		off = mix(offset.x, offset.y, (_vMap.r + _vMap.g + _vMap.b) / 3.);
+	}
+	
 	vec2 tx = 1. / dimension;
 	
 	vec4 orig   = v_vColour * texture2D(original, v_vTexcoord);
@@ -20,7 +29,7 @@ void main() {
 	float aa    = orig.a;
 	
 	if(height.r < .9)
-		aa *= step(offset, base.r);
+		aa *= step(off, base.r);
 	
 	gl_FragColor = vec4(orig.rgb, aa);
 }

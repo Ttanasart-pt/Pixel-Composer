@@ -12,17 +12,17 @@ function Node_Deflate(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	
 	////- =Deflate
 	newInput( 7, nodeValue_Float( "Radius",    .25 )).setUnitSimple();
-	newInput( 9, nodeValue_Float( "Intensity", .5  ));
+	newInput( 9, nodeValue_Float( "Intensity", .5  )).setMappable(12);
 	newInput( 8, nodeValue_Float( "Factor",     5  ));
 	newInput(10, nodeValue_Float( "_Factor",    1  ));
 	newInput(11, nodeValue_Float( "Resolution", 4  ));
-	// 12
+	// 13
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
 	input_display_list = [  5,  6, 
 		[ "Surfaces",  true ],  0,  1,  2,  3,  4, 
-		[ "Deflate",  false ],  7,  9,  8, 11, 
+		[ "Deflate",  false ],  7,  9, 12,  8, 11, 
 	];
 	
 	////- Nodes
@@ -58,7 +58,7 @@ function Node_Deflate(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 			shader_set_f( "radius",    _rad );
 			shader_set_f( "amount",    _int );
 			shader_set_f( "factor",    _fac );
-			shader_set_f( "offset",    _off );
+			shader_set_m( "offset",    _off, _data[12], inputs[ 9] );
 			shader_set_f( "resolution",_res );
 			
 			gpu_set_tex_filter(true);
@@ -71,7 +71,7 @@ function Node_Deflate(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 			shader_set_f( "radius",    _rad );
 			shader_set_f( "amount",    _int );
 			shader_set_f( "factor",    _fac );
-			shader_set_f( "offset",    _off );
+			shader_set_m( "offset",    _off, _data[12], inputs[ 9] );
 			
 			shader_set_s( "original",  _surf );
 			shader_set_s( "sdf",       temp_surface[0] );
