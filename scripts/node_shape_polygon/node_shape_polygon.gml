@@ -36,7 +36,7 @@ function Node_Shape_Polygon(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	////- =Shape
 	newInput( 4, nodeValue_EScroll("Shape",  0, { data: shapesArray, horizontal: 1, text_pad: ui(16) }))
 		.setHistory([ shapesArray, { cond: function() /*=>*/ {return LOADING_VERSION < 1_18_09_0}, list: global.node_shape_polygon_keys_1809 }, 
-		                           //{ cond: () => LOADING_VERSION < 1_19_02_0, list: global.node_shape_polygon_keys_1902 },
+		                        // { cond: () => LOADING_VERSION < 1_19_02_0, list: global.node_shape_polygon_keys_1902 },
                     ]);
 	
 	newInput( 8, nodeValue_ISlider(  "Sides",            16, [2, 64, .1]    ));

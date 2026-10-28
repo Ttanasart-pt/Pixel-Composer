@@ -1,0 +1,12 @@
+{
+  "$GMShader":"",
+  "%Name":"sh_corner_detect_multiply",
+  "name":"sh_corner_detect_multiply",
+  "parent":{
+    "name":"corner_detect",
+    "path":"folders/nodes/data/filter/effects/corner_detect.yy",
+  },
+  "resourceType":"GMShader",
+  "resourceVersion":"2.0",
+  "type":1,
+}

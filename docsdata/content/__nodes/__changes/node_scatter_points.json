@@ -6,6 +6,11 @@
         "date": "2026-10-27T05:51:12.981Z",
         "node": "",
         "commit": "**Scatter Points**: Add path type."
+      },
+      {
+        "date": "2026-10-28T00:58:33.078Z",
+        "node": "any",
+        "commit": "Introduced"
       }
     ]
   },

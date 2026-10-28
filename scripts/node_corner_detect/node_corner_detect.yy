@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"node_corner_detect",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"node_corner_detect",
+  "parent":{
+    "name":"effects",
+    "path":"folders/nodes/data/filter/effects.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}
