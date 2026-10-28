@@ -1,0 +1,12 @@
+{
+  "$GMShader":"",
+  "%Name":"sh_deflate_normal",
+  "name":"sh_deflate_normal",
+  "parent":{
+    "name":"deflate",
+    "path":"folders/nodes/data/filter/warps/deflate.yy",
+  },
+  "resourceType":"GMShader",
+  "resourceVersion":"2.0",
+  "type":1,
+}
