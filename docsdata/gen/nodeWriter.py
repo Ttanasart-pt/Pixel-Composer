@@ -266,23 +266,23 @@ def writeNode(metadata, contentPath, changeData = None):
         rawContent = rawContent.replace(f'<attr {tag}/>', f'<span class="inline-code">{tag}</span>')
 
     # PRE CONTENT
-    content += writeUsage(metadata)
-
     nodeBaseLower = nodeBase.lower()
     imagePath = f"src/images/nodegen/{nodeBaseLower}/{nodeBaseLower}-graph.png"
     if os.path.exists(f"docsdata/{imagePath}"):
         content += f'<img class="node-graph-preview" src="/{imagePath}">'
         
     samplePath = f"docsdata/src/images/nodegen/{nodeBaseLower}/{nodeBaseLower}-sample.txt"
+
+    content += '<div class="sample-content">'
     if os.path.exists(samplePath):
         with open(samplePath, "r") as f:
             sampleContent = f.read()
         sampleContent = sampleContent.replace('"', '\\"').replace("\n", "")
         content += f'''<script>const sampleContent = "{sampleContent}";</script>'''
-        content += f'''<button class="copy-sample" onclick="copyToClipboard(sampleContent)">
-        Copy to Clipboard
-</button>'''
+        content += f'''<button class="copy-sample" onclick="copyToClipboard(sampleContent)">Copy to Clipboard</button>'''
     content += "<br>"
+    content += writeUsage(metadata)
+    content += "</div>"
 
     # ADD CONTENT
     content += rawContent
