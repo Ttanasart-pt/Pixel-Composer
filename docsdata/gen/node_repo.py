@@ -44,7 +44,8 @@ for node in tqdm(nodes, desc="Node usage repo"):
             data_project = data["project"]
             data_url = data["url"]
 
-            page += f"<td class='data'><a href='{data_url}'>{data_project}</a></td>\n"
+            page += f"<td class='data'><p>{data_project}</p><br><a href='{data_url}'>{data_url}</a></td>\n"
+
         page += "</tr>\n"
 
     page += "</table>\n"

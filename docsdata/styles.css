@@ -1206,6 +1206,7 @@ table.usage-table {
 
     td.preview {
         width: 120px;
+        padding: 16px;
 
         img {
             
@@ -1214,11 +1215,18 @@ table.usage-table {
 
     td.data {
         width: auto;
+        text-align: center;
 
-        a {
+        p {
             font-weight: 500;
             font-size: 1rem;
             color: var(--main_white);
+        }
+
+        a {
+            font-weight: 500;
+            font-size: .8rem;
+            color: var(--main_grey);
         }
     }
 }
