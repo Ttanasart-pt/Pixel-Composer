@@ -18,7 +18,7 @@ nodes = os.listdir(src_dir)
 for node in tqdm(nodes, desc="Node usage repo"):
     src_node_dir = os.path.join(src_dir, node)
     dst_path = os.path.join(dst_dir, f"{node}.html")
-    page = "<table>\n"
+    page = '<table class="usage-table">\n'
 
     examples = os.listdir(src_node_dir)
     for example in examples:
@@ -29,7 +29,8 @@ for node in tqdm(nodes, desc="Node usage repo"):
 
         page += "<tr>\n"
         if os.path.exists(_prev):
-            page += f"<td><img src='/node_usage_repo/{node}/{example}/preview.png'></td>\n"
+            page += f"<td class='preview'><img src='/node_usage_repo/{node}/{example}/preview.png'></td>\n"
+
         if os.path.exists(_data):
             with open(_data, "r", encoding="utf-8") as df:
                 data = json.load(df)
@@ -37,7 +38,7 @@ for node in tqdm(nodes, desc="Node usage repo"):
             data_project = data["project"]
             data_url = data["url"]
 
-            page += f"<td><a href='{data_url}'>{data_project}</a></td>\n"
+            page += f"<td class='data'><a href='{data_url}'>{data_project}</a></td>\n"
         page += "</tr>\n"
 
     page += "</table>\n"

@@ -1200,6 +1200,23 @@ ul.link-table {
     }
 }
 
+table.usage-table {
+    width: 100%;
+    border-collapse: collapse;
+
+    td.preview {
+        width: 120px;
+
+        img {
+            
+        }
+    }
+
+    td.data {
+        width: auto;
+    }
+}
+
 ::-webkit-scrollbar {
     width: 8px;
     height: 8px;;

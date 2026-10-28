@@ -100,9 +100,7 @@ def writeUsage(metadata):
         return ""
 
     useLink = f"/nodes/_nodeUsage/{baseNode}.html"
-    useText = '<br><h2 class="nosidebar">Usage Samples</h2><br>'
-
-    useText += f'<a href="{useLink}">View all {exampleCount} usage examples</a>'
+    useText = f'<a href="{useLink}">View all {exampleCount} usage examples</a>'
     return useText
 
 
@@ -268,6 +266,8 @@ def writeNode(metadata, contentPath, changeData = None):
         rawContent = rawContent.replace(f'<attr {tag}/>', f'<span class="inline-code">{tag}</span>')
 
     # PRE CONTENT
+    content += writeUsage(metadata)
+
     nodeBaseLower = nodeBase.lower()
     imagePath = f"src/images/nodegen/{nodeBaseLower}/{nodeBaseLower}-graph.png"
     if os.path.exists(f"docsdata/{imagePath}"):
@@ -286,7 +286,6 @@ def writeNode(metadata, contentPath, changeData = None):
 
     # ADD CONTENT
     content += rawContent
-    content += writeUsage(metadata)
 
     if changeData:
         content += writeChangeTable(metadata, changeData)
