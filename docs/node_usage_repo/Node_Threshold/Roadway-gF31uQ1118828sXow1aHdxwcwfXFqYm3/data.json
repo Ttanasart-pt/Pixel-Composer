@@ -1,1 +1,1 @@
-{"url":"https:\/\/pixel-composer.com\/projects\/Roadway","project":"Roadway","inputs":["Surface In"]}
+{"url":"https:\/\/pixel-composer.com\/projects\/Roadway","project":"Roadway","inputs":["Surface In",{"value":true,"name":"Brightness"},{"value":0.70999999999999996,"name":"Threshold"},{"value":0.040000000000000001,"name":"Smoothness"},{"value":true,"name":"Multiply"}]}

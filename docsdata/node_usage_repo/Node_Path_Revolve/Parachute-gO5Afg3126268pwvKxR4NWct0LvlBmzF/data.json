@@ -1,1 +1,1 @@
-{"url":"https:\/\/pixel-composer.com\/projects\/Parachute","project":"Parachute","inputs":["Texture"]}
+{"url":"https:\/\/pixel-composer.com\/projects\/Parachute","project":"Parachute","inputs":["Texture",{"value":[2,-0.93999999999999995],"name":"UV Range"},{"value":[0,-0.024],"name":"UV Position"},{"value":[0,0.5],"name":"Range"},{"value":"Path Invert","name":"Depth Sort"}]}

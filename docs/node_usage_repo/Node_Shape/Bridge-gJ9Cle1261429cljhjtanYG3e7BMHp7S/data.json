@@ -1,1 +1,1 @@
-{"url":"https:\/\/pixel-composer.com\/projects\/Bridge","project":"Bridge","inputs":["BG Surface"]}
+{"url":"https:\/\/pixel-composer.com\/projects\/Bridge","project":"Bridge","inputs":[{"value":"Half","name":"Shape"},{"value":-140.69638061523438,"name":"Shape Rotation"},{"value":[79.103999999999999,32],"name":"Half Point"},"BG Surface",{"value":"Multiply","name":"BG Blend Mode"}]}

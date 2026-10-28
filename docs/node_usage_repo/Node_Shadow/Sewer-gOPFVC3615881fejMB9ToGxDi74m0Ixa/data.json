@@ -1,1 +1,1 @@
-{"url":"https:\/\/pixel-composer.com\/projects\/Sewer","project":"Sewer","inputs":["Surface In","Mask"]}
+{"url":"https:\/\/pixel-composer.com\/projects\/Sewer","project":"Sewer","inputs":["Surface In",{"value":0.41999999999999998,"name":"Strength"},{"value":[1.3160000000000001,1.3160000000000001],"name":"Shift"},"Mask"]}

@@ -1,1 +1,1 @@
-{"url":"https:\/\/pixel-composer.com\/projects\/Rainbow%20Icon","project":"Rainbow Icon","inputs":[]}
+{"url":"https:\/\/pixel-composer.com\/projects\/Rainbow%20Icon","project":"Rainbow Icon","inputs":[{"value":"Override","name":"Apply Mode"},{"value":1,"name":"Value"},{"value":[0,1,0,0,1,0,0,0,0,0,0.33333333333333331,0.33333333333333331,-0.33333333333333331,-0.33333333333333331,1,1,0,0],"name":"Curve"},{"value":"Direction","name":"Adjust Type"},{"value":45,"name":"Direction Shift"},{"value":true,"name":"Loop"}]}

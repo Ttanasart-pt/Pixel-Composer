@@ -1,1 +1,1 @@
-{"url":"https:\/\/pixel-composer.com\/projects\/Chain","project":"Chain","inputs":["Surface In"]}
+{"url":"https:\/\/pixel-composer.com\/projects\/Chain","project":"Chain","inputs":["Surface In",{"value":"Inside","name":"Side"},{"value":0.10000000000000001,"name":"Max Distance"},{"value":true,"name":"Keep Alpha"},{"value":true,"name":"Invert"},{"value":0.28000000000000003,"name":"Threshold"}]}

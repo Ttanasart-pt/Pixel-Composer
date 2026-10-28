@@ -1,1 +1,1 @@
-{"url":"https:\/\/pixel-composer.com\/projects\/Scenic%20Forest","project":"Scenic Forest","inputs":["Surface In"]}
+{"url":"https:\/\/pixel-composer.com\/projects\/Scenic%20Forest","project":"Scenic Forest","inputs":["Surface In",{"value":[128,96],"name":"Dimension"},{"value":[64,38.400000000000006],"name":"Position"},{"value":"Constant","name":"Output Dimension Type"}]}

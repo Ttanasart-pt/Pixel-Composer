@@ -1,1 +1,1 @@
-{"url":"https:\/\/pixel-composer.com\/projects\/Jellyfish","project":"Jellyfish","inputs":["Background","Foreground","Mask"]}
+{"url":"https:\/\/pixel-composer.com\/projects\/Jellyfish","project":"Jellyfish","inputs":["Background","Foreground",{"value":"Replace","name":"Blend mode"},"Mask"]}

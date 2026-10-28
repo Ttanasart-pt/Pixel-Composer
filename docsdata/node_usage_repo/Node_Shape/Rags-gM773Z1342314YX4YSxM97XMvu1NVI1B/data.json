@@ -1,1 +1,1 @@
-{"url":"https:\/\/pixel-composer.com\/projects\/Rags","project":"Rags","inputs":[]}
+{"url":"https:\/\/pixel-composer.com\/projects\/Rags","project":"Rags","inputs":[{"value":[32,32],"name":"Dimension"},{"value":"Cross","name":"Shape"},{"value":[0,0,9.5999999999999996,9.5999999999999996,0,0],"name":"Position"},{"value":0.11,"name":"Corner Radius"},{"value":0.52000000000000002,"name":"Outer radius"},{"value":"Area","name":"Positioning Mode"}]}

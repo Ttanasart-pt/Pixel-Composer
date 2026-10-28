@@ -1,1 +1,1 @@
-{"url":"https:\/\/pixel-composer.com\/projects\/Tower%20Badge","project":"Tower Badge","inputs":[]}
+{"url":"https:\/\/pixel-composer.com\/projects\/Tower%20Badge","project":"Tower Badge","inputs":[{"value":"Star","name":"Shape"},{"value":5,"name":"Sides"},{"value":0.60999999999999999,"name":"Inner radius"},{"value":4281642750,"name":"Shape Color"},{"value":"Center + Scale","name":"Positioning Mode"},{"value":[15,24],"name":"Center"},{"value":[5.6568542494923797,5.6568542494923797],"name":"Half Size"}]}

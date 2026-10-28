@@ -1,1 +1,1 @@
-{"url":"https:\/\/pixel-composer.com\/projects\/Curtain","project":"Curtain","inputs":[]}
+{"url":"https:\/\/pixel-composer.com\/projects\/Curtain","project":"Curtain","inputs":[{"value":[3,3],"name":"Frequency"},{"value":[1.5,1.5],"name":"Amplitude"},{"value":"Sine","name":"Shape"},{"value":true,"name":"Use Weight"},{"value":"Fixed","name":"Direction"},{"value":[90,90],"name":"Angle"}]}

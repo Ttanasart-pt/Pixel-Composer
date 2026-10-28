@@ -1,1 +1,1 @@
-{"url":"https:\/\/pixel-composer.com\/projects\/Tower%20Badge","project":"Tower Badge","inputs":["Front Height"]}
+{"url":"https:\/\/pixel-composer.com\/projects\/Tower%20Badge","project":"Tower Badge","inputs":[{"value":[1,1,16],"name":"Scale"},"Front Height",{"value":true,"name":"Voxel Scale"},{"value":0.050000000000000003,"name":"Voxel Size"}]}

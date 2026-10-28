@@ -1,1 +1,1 @@
-{"url":"https:\/\/pixel-composer.com\/projects\/Scenic%20Forest","project":"Scenic Forest","inputs":["Surface In"]}
+{"url":"https:\/\/pixel-composer.com\/projects\/Scenic%20Forest","project":"Scenic Forest","inputs":["Surface In",{"value":"Flame","name":"Light shape"},{"value":1.2868839271552859,"name":"Intensity"},{"value":[-16.222222222222221,-17.555555555555557],"name":"Start"},{"value":[72.56975036710719,108.3250122369065],"name":"Finish"},{"value":40,"name":"Sweep"}]}

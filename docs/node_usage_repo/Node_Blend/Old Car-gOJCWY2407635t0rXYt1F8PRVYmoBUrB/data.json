@@ -1,1 +1,1 @@
-{"url":"https:\/\/pixel-composer.com\/projects\/Old%20Car","project":"Old Car","inputs":["Background","Foreground"]}
+{"url":"https:\/\/pixel-composer.com\/projects\/Old%20Car","project":"Old Car","inputs":["Background","Foreground",{"value":"Add","name":"Blend mode"},{"value":0.20999999999999999,"name":"Opacity"},{"value":true,"name":"Preserve alpha"},{"value":[30.25,30.204160000000002],"name":"Position"}]}

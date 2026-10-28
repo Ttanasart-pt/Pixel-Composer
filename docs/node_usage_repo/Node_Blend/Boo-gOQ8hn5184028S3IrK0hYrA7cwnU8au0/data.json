@@ -1,1 +1,1 @@
-{"url":"https:\/\/pixel-composer.com\/projects\/Boo","project":"Boo","inputs":["Background","Foreground","Mask"]}
+{"url":"https:\/\/pixel-composer.com\/projects\/Boo","project":"Boo","inputs":["Background","Foreground",{"value":"Add","name":"Blend mode"},{"value":0.20000000000000001,"name":"Opacity"},"Mask"]}

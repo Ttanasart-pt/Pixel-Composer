@@ -1,1 +1,1 @@
-{"url":"https:\/\/pixel-composer.com\/projects\/Camera","project":"Camera","inputs":["BG Surface"]}
+{"url":"https:\/\/pixel-composer.com\/projects\/Camera","project":"Camera","inputs":[{"value":[32,32,13.824,20.224,0,0],"name":"Position"},{"value":0.040000000000000001,"name":"Corner Radius"},{"value":4292660160,"name":"Shape Color"},{"value":"Cut","name":"Corner Shape"},"BG Surface"]}

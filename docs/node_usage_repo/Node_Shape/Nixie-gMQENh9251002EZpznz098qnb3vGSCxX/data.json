@@ -1,1 +1,1 @@
-{"url":"https:\/\/pixel-composer.com\/projects\/Nixie","project":"Nixie","inputs":["BG Surface"]}
+{"url":"https:\/\/pixel-composer.com\/projects\/Nixie","project":"Nixie","inputs":[{"value":"Trapezoid","name":"Shape"},{"value":4280090647,"name":"Shape Color"},{"value":[32,50.944000000000003],"name":"Center"},{"value":[26.623999999999999,5.3760000000000003],"name":"Half Size"},{"value":1,"name":"Top Side"},{"value":0.88,"name":"Botton Side"},"BG Surface"]}

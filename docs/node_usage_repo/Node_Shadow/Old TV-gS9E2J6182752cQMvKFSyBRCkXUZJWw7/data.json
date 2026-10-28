@@ -1,1 +1,1 @@
-{"url":"https:\/\/pixel-composer.com\/projects\/Old%20TV","project":"Old TV","inputs":["Surface In","Mask"]}
+{"url":"https:\/\/pixel-composer.com\/projects\/Old%20TV","project":"Old TV","inputs":["Surface In",{"value":0.33000000000000002,"name":"Strength"},{"value":2,"name":"Grow"},{"value":5,"name":"Blur"},"Mask"]}

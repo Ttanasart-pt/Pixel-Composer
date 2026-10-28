@@ -1,1 +1,1 @@
-{"url":"https:\/\/pixel-composer.com\/projects\/Ice%20Mage","project":"Ice Mage","inputs":["Surface"]}
+{"url":"https:\/\/pixel-composer.com\/projects\/Ice%20Mage","project":"Ice Mage","inputs":["Surface",{"value":true,"name":"Flip"},{"value":[4,2,1],"name":"Shines"},{"value":0.31,"name":"Progress"}]}

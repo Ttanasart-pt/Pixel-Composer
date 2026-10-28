@@ -1,1 +1,1 @@
-{"url":"https:\/\/pixel-composer.com\/projects\/Gas%20Station","project":"Gas Station","inputs":["BG Surface"]}
+{"url":"https:\/\/pixel-composer.com\/projects\/Gas%20Station","project":"Gas Station","inputs":[{"value":[35.328000000000003,38.143999999999998],"name":"Center"},{"value":[3.3369599999999999,6.6649599999999998],"name":"Half Size"},"BG Surface",{"value":"Substract","name":"BG Blend Mode"}]}

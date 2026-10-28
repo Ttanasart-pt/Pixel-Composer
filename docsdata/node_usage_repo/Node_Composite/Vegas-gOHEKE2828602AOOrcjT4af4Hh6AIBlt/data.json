@@ -1,1 +1,1 @@
-{"url":"https:\/\/pixel-composer.com\/projects\/Vegas","project":"Vegas","inputs":["Surface"]}
+{"url":"https:\/\/pixel-composer.com\/projects\/Vegas","project":"Vegas","inputs":[{"value":"Constant","name":"Output Dimension"},{"value":[256,112],"name":"Dimension"},"Surface",{"value":[128,23.295999999999999],"name":"Position"}]}

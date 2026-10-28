@@ -1,1 +1,1 @@
-{"url":"https:\/\/pixel-composer.com\/projects\/Nixie","project":"Nixie","inputs":["Surface In"]}
+{"url":"https:\/\/pixel-composer.com\/projects\/Nixie","project":"Nixie","inputs":["Surface In",{"value":3,"name":"Amount"},{"value":[16.896000000000001,0],"name":"Shift Position"},{"value":[0.5,0.5],"name":"Global Anchor"},{"value":"Maximum","name":"Blend Mode"}]}

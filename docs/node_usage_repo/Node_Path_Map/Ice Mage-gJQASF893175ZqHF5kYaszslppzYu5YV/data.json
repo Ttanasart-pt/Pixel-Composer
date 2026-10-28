@@ -1,1 +1,1 @@
-{"url":"https:\/\/pixel-composer.com\/projects\/Ice%20Mage","project":"Ice Mage","inputs":["Texture"]}
+{"url":"https:\/\/pixel-composer.com\/projects\/Ice%20Mage","project":"Ice Mage","inputs":["Texture",{"value":8,"name":"Line Subdivision"},{"value":true,"name":"Wave"},{"value":1,"name":"Frequency"},{"value":248.27586206896552,"name":"Phase"},{"value":[0,1,0,0,1,0,0,0,0,0,0.46551724137931033,0.053086419753086589,-0.21072796934865901,-0.53333333333333321,1,1,0,0],"name":"Amplitude Curve"},{"value":"Path","name":"Direction"},{"value":"Maximum","name":"Blend Mode"}]}

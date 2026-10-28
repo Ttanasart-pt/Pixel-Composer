@@ -1,1 +1,1 @@
-{"url":"https:\/\/pixel-composer.com\/projects\/Tentacles","project":"Tentacles","inputs":["Texture"]}
+{"url":"https:\/\/pixel-composer.com\/projects\/Tentacles","project":"Tentacles","inputs":[{"value":16,"name":"Segment"},{"value":[10,10],"name":"Width"},{"value":[0,1,0,0,1,0,0,0,0,1,0.33333333333333331,0,-0.33333333333333331,0,1,0.29866666666666708,0,0],"name":"Width Curve"},{"value":"Round","name":"Start Cap"},"Texture",{"value":[7,1],"name":"Texture Scale"},{"value":"Round","name":"End Cap"}]}

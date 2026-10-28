@@ -1,1 +1,1 @@
-{"url":"https:\/\/pixel-composer.com\/projects\/Scenic%20Forest","project":"Scenic Forest","inputs":["Surface In","Mask"]}
+{"url":"https:\/\/pixel-composer.com\/projects\/Scenic%20Forest","project":"Scenic Forest","inputs":["Surface In",{"value":4287188498,"name":"Blend"},{"value":0.60999999999999999,"name":"Blend amount"},"Mask",{"value":"Multiply","name":"Blend mode"}]}

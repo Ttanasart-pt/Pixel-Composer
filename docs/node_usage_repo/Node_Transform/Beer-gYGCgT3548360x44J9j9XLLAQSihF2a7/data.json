@@ -1,1 +1,1 @@
-{"url":"https:\/\/pixel-composer.com\/projects\/Beer","project":"Beer","inputs":["Surface In"]}
+{"url":"https:\/\/pixel-composer.com\/projects\/Beer","project":"Beer","inputs":["Surface In",{"value":[32,0],"name":"Position"},{"value":[0.5,0],"name":"Anchor"},{"value":[1,1],"name":"Scale"}]}

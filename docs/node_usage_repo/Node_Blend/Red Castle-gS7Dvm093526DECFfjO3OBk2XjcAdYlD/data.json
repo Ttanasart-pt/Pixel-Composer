@@ -1,1 +1,1 @@
-{"url":"https:\/\/pixel-composer.com\/projects\/Red%20Castle","project":"Red Castle","inputs":["Background","Foreground"]}
+{"url":"https:\/\/pixel-composer.com\/projects\/Red%20Castle","project":"Red Castle","inputs":["Background","Foreground",{"value":"Subtract","name":"Blend mode"}]}

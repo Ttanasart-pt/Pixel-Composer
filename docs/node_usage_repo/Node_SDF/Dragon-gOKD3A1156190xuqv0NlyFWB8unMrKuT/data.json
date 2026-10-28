@@ -1,1 +1,1 @@
-{"url":"https:\/\/pixel-composer.com\/projects\/Dragon","project":"Dragon","inputs":["Surface In"]}
+{"url":"https:\/\/pixel-composer.com\/projects\/Dragon","project":"Dragon","inputs":["Surface In",{"value":"Inside","name":"Side"},{"value":0.070000000000000007,"name":"Max Distance"},{"value":true,"name":"Keep Alpha"},{"value":true,"name":"Invert"}]}

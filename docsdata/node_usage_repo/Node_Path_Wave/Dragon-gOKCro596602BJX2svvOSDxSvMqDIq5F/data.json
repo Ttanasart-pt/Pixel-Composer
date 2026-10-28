@@ -1,1 +1,1 @@
-{"url":"https:\/\/pixel-composer.com\/projects\/Dragon","project":"Dragon","inputs":[]}
+{"url":"https:\/\/pixel-composer.com\/projects\/Dragon","project":"Dragon","inputs":[{"value":[1.5,1.5],"name":"Frequency"},{"value":[1.8560000000000001,1.8560000000000001],"name":"Amplitude"},{"value":[0,1],"name":"Phase"},{"value":429535,"name":"Seed"},{"value":[0,1,0,0,1,0,0,0,0,0,0.33333333333333331,0,-0.33333333333333331,0,1,1,0,0],"name":"Amplitude Curve"}]}

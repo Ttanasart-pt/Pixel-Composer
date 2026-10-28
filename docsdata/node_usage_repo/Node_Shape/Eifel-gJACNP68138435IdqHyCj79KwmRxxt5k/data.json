@@ -1,1 +1,1 @@
-{"url":"https:\/\/pixel-composer.com\/projects\/Eifel","project":"Eifel","inputs":["BG Surface"]}
+{"url":"https:\/\/pixel-composer.com\/projects\/Eifel","project":"Eifel","inputs":[{"value":"Surface","name":"Background"},{"value":0.040000000000000001,"name":"Corner Radius"},{"value":"Center + Scale","name":"Positioning Mode"},{"value":[32,11.263999999999999],"name":"Center"},{"value":[32,19.712],"name":"Half Size"},{"value":0.10000000000000001,"name":"Shape Scale"},"BG Surface"]}

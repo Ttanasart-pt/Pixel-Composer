@@ -1,1 +1,1 @@
-{"url":"https:\/\/pixel-composer.com\/projects\/Lava%20Floor","project":"Lava Floor","inputs":["Surface In","Mask"]}
+{"url":"https:\/\/pixel-composer.com\/projects\/Lava%20Floor","project":"Lava Floor","inputs":["Surface In",{"value":4281058041,"name":"Blend"},{"value":1,"name":"Blend amount"},"Mask",{"value":"Screen","name":"Blend mode"}]}

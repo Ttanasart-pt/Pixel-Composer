@@ -1,1 +1,1 @@
-{"url":"https:\/\/pixel-composer.com\/projects\/Gas%20Station","project":"Gas Station","inputs":["Background","Foreground"]}
+{"url":"https:\/\/pixel-composer.com\/projects\/Gas%20Station","project":"Gas Station","inputs":["Background","Foreground",{"value":true,"name":"Preserve alpha"}]}

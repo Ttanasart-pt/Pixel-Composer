@@ -1,1 +1,1 @@
-{"url":"https:\/\/pixel-composer.com\/projects\/Hill%20Climb","project":"Hill Climb","inputs":["Surface In","Mask"]}
+{"url":"https:\/\/pixel-composer.com\/projects\/Hill%20Climb","project":"Hill Climb","inputs":["Surface In",{"value":2,"name":"Grow"},{"value":2,"name":"Blur"},"Mask"]}

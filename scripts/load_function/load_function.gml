@@ -19,6 +19,8 @@ function __loadParams(readonly = false, safe_mode = false, override = false, app
 	self.safe_mode    = safe_mode;
 	self.override     = override;
 	self.apply_layout = apply_layout;
+	
+	async = true; static setSync = function() /*=>*/ { async = false; return self; }
 }
 
 function readProjectFileContent(path) {

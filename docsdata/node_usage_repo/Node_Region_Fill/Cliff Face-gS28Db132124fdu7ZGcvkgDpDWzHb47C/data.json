@@ -1,1 +1,1 @@
-{"url":"https:\/\/pixel-composer.com\/projects\/Cliff%20Face","project":"Cliff Face","inputs":["Surface In","Mask","Color Map"]}
+{"url":"https:\/\/pixel-composer.com\/projects\/Cliff%20Face","project":"Cliff Face","inputs":["Surface In","Mask",{"value":"Color map","name":"Fill Type"},"Color Map",{"value":true,"name":"Color Filter"},{"value":2,"name":"Expands"}]}

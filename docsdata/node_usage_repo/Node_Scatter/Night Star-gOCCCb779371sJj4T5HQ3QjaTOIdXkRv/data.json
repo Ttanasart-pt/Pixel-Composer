@@ -1,1 +1,1 @@
-{"url":"https:\/\/pixel-composer.com\/projects\/Night%20Star","project":"Night Star","inputs":["Surface In"]}
+{"url":"https:\/\/pixel-composer.com\/projects\/Night%20Star","project":"Night Star","inputs":["Surface In",{"value":"Poisson","name":"Distribution"},{"value":[0.14999999999999999,0.69999999999999996],"name":"Alpha"},{"value":9,"name":"Distance"}]}

@@ -1,1 +1,1 @@
-{"url":"https:\/\/pixel-composer.com\/projects\/Battery","project":"Battery","inputs":["Surface In","Map"]}
+{"url":"https:\/\/pixel-composer.com\/projects\/Battery","project":"Battery","inputs":["Surface In","Map",{"value":5,"name":"Max Life"}]}

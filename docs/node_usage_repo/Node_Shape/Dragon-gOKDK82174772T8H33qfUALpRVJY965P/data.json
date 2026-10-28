@@ -1,1 +1,1 @@
-{"url":"https:\/\/pixel-composer.com\/projects\/Dragon","project":"Dragon","inputs":["BG Surface"]}
+{"url":"https:\/\/pixel-composer.com\/projects\/Dragon","project":"Dragon","inputs":[{"value":"Ellipse","name":"Shape"},{"value":4294967290,"name":"Shape Color"},{"value":[16.379999999999999,14.32],"name":"Center"},{"value":[1,1],"name":"Half Size"},"BG Surface"]}

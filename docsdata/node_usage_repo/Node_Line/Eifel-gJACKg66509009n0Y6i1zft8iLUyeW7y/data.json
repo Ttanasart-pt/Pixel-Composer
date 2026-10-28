@@ -1,1 +1,1 @@
-{"url":"https:\/\/pixel-composer.com\/projects\/Eifel","project":"Eifel","inputs":["BG Surface"]}
+{"url":"https:\/\/pixel-composer.com\/projects\/Eifel","project":"Eifel","inputs":[{"value":"Surface","name":"Background"},{"value":[8,8],"name":"Width"},{"value":"Two points","name":"Data Type"},{"value":[20.785826771653543,43.703948587308936],"name":"Start Point"},{"value":[42.829133858267717,43.787401574803155],"name":"End Point"},"BG Surface"]}

@@ -1,1 +1,1 @@
-{"url":"https:\/\/pixel-composer.com\/projects\/Flower%20Bloom","project":"Flower Bloom","inputs":["Background","Foreground"]}
+{"url":"https:\/\/pixel-composer.com\/projects\/Flower%20Bloom","project":"Flower Bloom","inputs":["Background","Foreground",{"value":"Multiply","name":"Blend mode"},{"value":0.56000000000000005,"name":"Opacity"},{"value":true,"name":"Preserve alpha"}]}

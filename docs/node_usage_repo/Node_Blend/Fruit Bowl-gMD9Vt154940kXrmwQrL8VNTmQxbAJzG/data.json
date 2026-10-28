@@ -1,1 +1,1 @@
-{"url":"https:\/\/pixel-composer.com\/projects\/Fruit%20Bowl","project":"Fruit Bowl","inputs":["Background","Foreground","Mask"]}
+{"url":"https:\/\/pixel-composer.com\/projects\/Fruit%20Bowl","project":"Fruit Bowl","inputs":["Background","Foreground","Mask",{"value":true,"name":"Invert mask"},{"value":0,"name":"Mask feather"},{"value":[42.301911011162119,31.245782118028817],"name":"Position"}]}

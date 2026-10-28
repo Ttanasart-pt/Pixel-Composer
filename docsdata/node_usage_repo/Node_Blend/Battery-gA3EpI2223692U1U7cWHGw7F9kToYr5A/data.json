@@ -1,1 +1,1 @@
-{"url":"https:\/\/pixel-composer.com\/projects\/Battery","project":"Battery","inputs":["Background","Foreground","Mask"]}
+{"url":"https:\/\/pixel-composer.com\/projects\/Battery","project":"Battery","inputs":["Background","Foreground","Mask",{"value":true,"name":"Preserve alpha"}]}

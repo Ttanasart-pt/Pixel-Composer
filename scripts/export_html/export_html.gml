@@ -276,6 +276,7 @@ function __EXPORT_SHOWCASE(project = PROJECT) {
 	__EXPORT_HTML(project, filename_combine(path, _projName), _fName, $"./{_pName}", _tPath, fileSizeStr);
 	
 	var _url = $"https://pixel-composer.com/projects/{_oName}";
+	Node_Usage_Repo_Create(project, _fName, _url);
 	
 	if(!_anim) closeProject();
 	print("Export folder complete.");
@@ -283,8 +284,6 @@ function __EXPORT_SHOWCASE(project = PROJECT) {
 	
 	// ProcessExecuteAsync("python \"D:/Project/MakhamDev/LTS-PixelComposer/PROMOTIONAL MATERIALS/site/gen.py\"");
 	// print("Push to Github complete");
-	
-	Node_Usage_Repo_Create(project, _fName, _url);
 	
 	return true;
 }

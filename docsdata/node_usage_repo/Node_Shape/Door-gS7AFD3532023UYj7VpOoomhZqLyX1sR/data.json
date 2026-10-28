@@ -1,1 +1,1 @@
-{"url":"https:\/\/pixel-composer.com\/projects\/Door","project":"Door","inputs":["BG Surface"]}
+{"url":"https:\/\/pixel-composer.com\/projects\/Door","project":"Door","inputs":[{"value":4284892218,"name":"Shape Color"},{"value":[22,13],"name":"Center"},{"value":[5,2],"name":"Half Size"},"BG Surface",{"value":[0,0,0.035999999999999997,0],"name":"Custom Corner"},{"value":false,"name":"Uniform Corner"}]}

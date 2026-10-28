@@ -1,1 +1,1 @@
-{"url":"https:\/\/pixel-composer.com\/projects\/Windmill","project":"Windmill","inputs":["Front Height"]}
+{"url":"https:\/\/pixel-composer.com\/projects\/Windmill","project":"Windmill","inputs":[{"value":[1,1,2],"name":"Scale"},{"value":[-0.80000000000000004,0.65000000000000002,0],"name":"Anchor"},"Front Height",{"value":true,"name":"Voxel Scale"}]}

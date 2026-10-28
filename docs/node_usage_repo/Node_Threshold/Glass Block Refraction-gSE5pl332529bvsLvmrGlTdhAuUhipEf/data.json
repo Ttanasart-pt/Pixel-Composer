@@ -1,1 +1,1 @@
-{"url":"https:\/\/pixel-composer.com\/projects\/Glass%20Block%20Refraction","project":"Glass Block Refraction","inputs":["Surface In"]}
+{"url":"https:\/\/pixel-composer.com\/projects\/Glass%20Block%20Refraction","project":"Glass Block Refraction","inputs":["Surface In",{"value":true,"name":"Brightness"},{"value":0.040000000000000001,"name":"Threshold"},{"value":0.050000000000000003,"name":"Smoothness"}]}

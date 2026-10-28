@@ -1,1 +1,1 @@
-{"url":"https:\/\/pixel-composer.com\/projects\/Conveyor%20Belt","project":"Conveyor Belt","inputs":["Surface In","Mask"]}
+{"url":"https:\/\/pixel-composer.com\/projects\/Conveyor%20Belt","project":"Conveyor Belt","inputs":["Surface In",{"value":0.78000000000000003,"name":"Strength"},{"value":2,"name":"Grow"},{"value":1,"name":"Blur"},"Mask"]}

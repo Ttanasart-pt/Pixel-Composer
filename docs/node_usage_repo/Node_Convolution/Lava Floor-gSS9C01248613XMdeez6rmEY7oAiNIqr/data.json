@@ -1,1 +1,1 @@
-{"url":"https:\/\/pixel-composer.com\/projects\/Lava%20Floor","project":"Lava Floor","inputs":["Surface In"]}
+{"url":"https:\/\/pixel-composer.com\/projects\/Lava%20Floor","project":"Lava Floor","inputs":["Surface In",{"value":{"size":[3,3],"isize":9,"raw":[0,-1,0,0,1,0,0,0,0]},"name":"Kernel"},{"value":7,"name":"Channel"}]}

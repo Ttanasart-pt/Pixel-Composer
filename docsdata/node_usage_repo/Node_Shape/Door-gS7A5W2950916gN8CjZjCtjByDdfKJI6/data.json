@@ -1,1 +1,1 @@
-{"url":"https:\/\/pixel-composer.com\/projects\/Door","project":"Door","inputs":["BG Surface"]}
+{"url":"https:\/\/pixel-composer.com\/projects\/Door","project":"Door","inputs":[{"value":[32,23.295999999999999],"name":"Center"},{"value":[10.785920000000001,6.6118399999999999],"name":"Half Size"},{"value":[0,0.059999999999999998],"name":"Level"},"BG Surface",{"value":"Substract","name":"BG Blend Mode"},{"value":[0.029999999999999999,0.029999999999999999,0.029999999999999999,0.029999999999999999],"name":"Custom Corner"},{"value":false,"name":"Uniform Corner"}]}

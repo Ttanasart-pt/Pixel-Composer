@@ -1,1 +1,1 @@
-{"url":"https:\/\/pixel-composer.com\/projects\/Typewriter","project":"Typewriter","inputs":["Surface In","Mask"]}
+{"url":"https:\/\/pixel-composer.com\/projects\/Typewriter","project":"Typewriter","inputs":["Surface In",{"value":2,"name":"Grow"},{"value":1,"name":"Blur"},"Mask"]}

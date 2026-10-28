@@ -1,1 +1,1 @@
-{"url":"https:\/\/pixel-composer.com\/projects\/Chess%20Pieces","project":"Chess Pieces","inputs":["Texture","End Cap Texture"]}
+{"url":"https:\/\/pixel-composer.com\/projects\/Chess%20Pieces","project":"Chess Pieces","inputs":["Texture",{"value":true,"name":"Invert"},"End Cap Texture",{"value":false,"name":"End Cap"}]}

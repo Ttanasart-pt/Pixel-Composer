@@ -1,1 +1,1 @@
-{"url":"https:\/\/pixel-composer.com\/projects\/Night%20Star","project":"Night Star","inputs":["Surface In","Sample Surface","Rotation Map"]}
+{"url":"https:\/\/pixel-composer.com\/projects\/Night%20Star","project":"Night Star","inputs":["Surface In",{"value":[0,-15,-15,0,0,0],"name":"Random Angle"},{"value":[48.875,15.375,28.304761904761904,26.571428571428569,1,0],"name":"Area"},{"value":"Area","name":"Source"},{"value":"Poisson","name":"Distribution"},"Sample Surface",{"value":3,"name":"Distance"},{"value":360,"name":"Rotation"},"Rotation Map"]}

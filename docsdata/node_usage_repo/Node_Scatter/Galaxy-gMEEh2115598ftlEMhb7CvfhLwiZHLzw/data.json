@@ -1,1 +1,1 @@
-{"url":"https:\/\/pixel-composer.com\/projects\/Galaxy","project":"Galaxy","inputs":["Surface In"]}
+{"url":"https:\/\/pixel-composer.com\/projects\/Galaxy","project":"Galaxy","inputs":["Surface In",{"value":[1,2,1,2],"name":"Scale"},{"value":"Poisson","name":"Distribution"},{"value":[0,1],"name":"Alpha"},{"value":10,"name":"Distance"}]}

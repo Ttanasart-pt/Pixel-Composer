@@ -1,1 +1,1 @@
-{"url":"https:\/\/pixel-composer.com\/projects\/Film%20Reel","project":"Film Reel","inputs":["Background","Foreground"]}
+{"url":"https:\/\/pixel-composer.com\/projects\/Film%20Reel","project":"Film Reel","inputs":["Background","Foreground",{"value":"Subtract","name":"Blend mode"}]}

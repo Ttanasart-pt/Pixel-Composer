@@ -1,1 +1,1 @@
-{"url":"https:\/\/pixel-composer.com\/projects\/Top%20Down%20Shooter","project":"Top Down Shooter","inputs":["Surface"]}
+{"url":"https:\/\/pixel-composer.com\/projects\/Top%20Down%20Shooter","project":"Top Down Shooter","inputs":[{"value":[-0,0,0,1],"name":"Rotation"},"Surface",{"value":"Perspective","name":"Projection"},{"value":51.927999999999997,"name":"FOV"}]}

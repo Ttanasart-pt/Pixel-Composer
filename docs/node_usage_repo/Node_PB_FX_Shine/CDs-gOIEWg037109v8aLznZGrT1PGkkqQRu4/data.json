@@ -1,1 +1,1 @@
-{"url":"https:\/\/pixel-composer.com\/projects\/CDs","project":"CDs","inputs":["Surface","Mask","Offset"]}
+{"url":"https:\/\/pixel-composer.com\/projects\/CDs","project":"CDs","inputs":["Surface","Mask",{"value":[4284144127],"name":"Colors"},{"value":[4,1,2,2,1],"name":"Shines"},{"value":0.50586206896551722,"name":"Progress"},{"value":1.776,"name":"Slope"},{"value":0.37,"name":"Intensity"},{"value":16,"name":"Scale"},{"value":"Additive","name":"Blend Mode"},"Offset",{"value":[0,-0.10000000000000001],"name":"Range"}]}

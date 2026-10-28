@@ -1,1 +1,1 @@
-{"url":"https:\/\/pixel-composer.com\/projects\/Black%20Hole","project":"Black Hole","inputs":["UV Map"]}
+{"url":"https:\/\/pixel-composer.com\/projects\/Black%20Hole","project":"Black Hole","inputs":[{"value":"Ellipse","name":"Shape"},{"value":[78.599680000000006,14.88256],"name":"Half Size"},{"value":[0,0.59999999999999998],"name":"Level"},{"value":0.41118421052631576,"name":"Shape Scale"},{"value":[0,1,0,0,1,0,0,0,0,0,0.25833333333333336,0.2224629843750002,-0.30208333333333337,-0.28519195703124989,1,1,0,0],"name":"Curve"},"UV Map"]}

@@ -1,1 +1,1 @@
-{"url":"https:\/\/pixel-composer.com\/projects\/Healing%20FX","project":"Healing FX","inputs":["Texture"]}
+{"url":"https:\/\/pixel-composer.com\/projects\/Healing%20FX","project":"Healing FX","inputs":["Texture",{"value":[4,1],"name":"UV Range"},{"value":[0.5,1],"name":"Range"},{"value":"Additive","name":"Blend Mode"}]}

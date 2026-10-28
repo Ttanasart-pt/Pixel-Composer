@@ -1,1 +1,1 @@
-{"url":"https:\/\/pixel-composer.com\/projects\/Stacked%20Tower","project":"Stacked Tower","inputs":["Surface In"]}
+{"url":"https:\/\/pixel-composer.com\/projects\/Stacked%20Tower","project":"Stacked Tower","inputs":["Surface In",{"value":3,"name":"Amount"},{"value":[0,-12.29312],"name":"Shift Position"},{"value":[32,45.311999999999998],"name":"Start Position"},{"value":[0,1,0,0,1,0,0,0,0,1,0.33333333333333331,0,-0.33333333333333331,0,1,0.82735042735042885,0,0],"name":"Scale Over Copy"}]}

@@ -1,1 +1,1 @@
-{"url":"https:\/\/pixel-composer.com\/projects\/Sewer","project":"Sewer","inputs":["Surface In"]}
+{"url":"https:\/\/pixel-composer.com\/projects\/Sewer","project":"Sewer","inputs":["Surface In",{"value":"Inside","name":"Side"},{"value":0.02,"name":"Max Distance"},{"value":true,"name":"Invert"},{"value":true,"name":"Fill Others"},{"value":16777215,"name":"Fill Color"}]}

@@ -1,1 +1,1 @@
-{"url":"https:\/\/pixel-composer.com\/projects\/Door","project":"Door","inputs":[]}
+{"url":"https:\/\/pixel-composer.com\/projects\/Door","project":"Door","inputs":[{"value":"Quadrilateral","name":"Shape"},{"value":0.20000000000000001,"name":"Corner Radius"},{"value":[13.100160000000001,19.785599999999999],"name":"Half Size"},{"value":[0,0.37],"name":"Level"},{"value":0.83999999999999997,"name":"Shape Scale"},{"value":[0,64],"name":"Point 2"},{"value":[64,64],"name":"Point 3"},{"value":[64,15.279999999999999],"name":"Point 4"}]}

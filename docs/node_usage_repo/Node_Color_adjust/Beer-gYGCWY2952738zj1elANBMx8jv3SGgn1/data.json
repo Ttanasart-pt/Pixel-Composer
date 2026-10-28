@@ -1,1 +1,1 @@
-{"url":"https:\/\/pixel-composer.com\/projects\/Beer","project":"Beer","inputs":["Surface In","Mask"]}
+{"url":"https:\/\/pixel-composer.com\/projects\/Beer","project":"Beer","inputs":["Surface In","Mask",{"value":0.46999999999999997,"name":"Alpha"},{"value":true,"name":"Invert mask"}]}

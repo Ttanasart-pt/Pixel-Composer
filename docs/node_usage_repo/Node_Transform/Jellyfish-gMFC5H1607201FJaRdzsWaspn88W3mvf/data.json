@@ -1,1 +1,1 @@
-{"url":"https:\/\/pixel-composer.com\/projects\/Jellyfish","project":"Jellyfish","inputs":["Surface In"]}
+{"url":"https:\/\/pixel-composer.com\/projects\/Jellyfish","project":"Jellyfish","inputs":["Surface In",{"value":[32,37.375999999999998],"name":"Position"},{"value":[0.5,0.57199999999999995],"name":"Anchor"},{"value":[1,0.99661208455999251],"name":"Scale"},{"value":"Constant","name":"Output Dimension Type"}]}

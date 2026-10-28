@@ -1,1 +1,1 @@
-{"url":"https:\/\/pixel-composer.com\/projects\/Curtain","project":"Curtain","inputs":["Texture"]}
+{"url":"https:\/\/pixel-composer.com\/projects\/Curtain","project":"Curtain","inputs":["Texture",{"value":32,"name":"Path Subdivision"},{"value":4,"name":"Line Subdivision"}]}

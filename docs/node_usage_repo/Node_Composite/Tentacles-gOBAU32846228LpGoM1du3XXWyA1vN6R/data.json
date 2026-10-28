@@ -1,1 +1,1 @@
-{"url":"https:\/\/pixel-composer.com\/projects\/Tentacles","project":"Tentacles","inputs":["Surface","Surface","Surface"]}
+{"url":"https:\/\/pixel-composer.com\/projects\/Tentacles","project":"Tentacles","inputs":["Surface",{"value":[32.651952461799659,31.239388794567063],"name":"Position"},"Surface",{"value":[40.119128466327105,34.673174872665534],"name":"Position"},"Surface",{"value":[26.653650254668936,35.223825693265418],"name":"Position"},{"value":[-1,1],"name":"Scale"}]}

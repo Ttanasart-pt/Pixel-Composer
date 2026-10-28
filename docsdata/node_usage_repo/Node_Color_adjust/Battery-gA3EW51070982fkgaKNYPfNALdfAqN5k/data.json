@@ -1,1 +1,1 @@
-{"url":"https:\/\/pixel-composer.com\/projects\/Battery","project":"Battery","inputs":["Surface In","Mask"]}
+{"url":"https:\/\/pixel-composer.com\/projects\/Battery","project":"Battery","inputs":["Surface In",{"value":4282661860,"name":"Blend"},{"value":1,"name":"Blend amount"},"Mask",{"value":0.67000000000000004,"name":"Exposure"},{"value":"Multiply","name":"Blend mode"},{"value":true,"name":"Invert mask"}]}

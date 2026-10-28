@@ -1,1 +1,1 @@
-{"url":"https:\/\/pixel-composer.com\/projects\/Cliff%20Face","project":"Cliff Face","inputs":["Surface In"]}
+{"url":"https:\/\/pixel-composer.com\/projects\/Cliff%20Face","project":"Cliff Face","inputs":["Surface In",{"value":true,"name":"Brightness"},{"value":0.73999999999999999,"name":"Threshold"},{"value":"BW","name":"Apply to Alpha"}]}

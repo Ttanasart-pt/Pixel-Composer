@@ -1,1 +1,1 @@
-{"url":"https:\/\/pixel-composer.com\/projects\/Bridge","project":"Bridge","inputs":["BG Surface"]}
+{"url":"https:\/\/pixel-composer.com\/projects\/Bridge","project":"Bridge","inputs":[{"value":"Half","name":"Shape"},{"value":[33.692307692307693,43.846153846153847],"name":"Half Point"},"BG Surface",{"value":"Substract","name":"BG Blend Mode"}]}

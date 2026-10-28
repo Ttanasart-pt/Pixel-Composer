@@ -1,1 +1,1 @@
-{"url":"https:\/\/pixel-composer.com\/projects\/Conveyor%20Belt","project":"Conveyor Belt","inputs":["Surface In"]}
+{"url":"https:\/\/pixel-composer.com\/projects\/Conveyor%20Belt","project":"Conveyor Belt","inputs":["Surface In",{"value":5,"name":"Amount"},{"value":[12.76928,0],"name":"Shift Position"},{"value":[0.5,0.5],"name":"Global Anchor"},{"value":[0,-1],"name":"Position"},{"value":"Global","name":"Anchor type"},{"value":0,"name":"Select Index"},{"value":1,"name":"Select Range"},{"value":0.5,"name":"Select Falloff"}]}

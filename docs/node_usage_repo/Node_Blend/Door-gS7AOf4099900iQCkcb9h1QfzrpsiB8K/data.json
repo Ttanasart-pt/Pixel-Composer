@@ -1,1 +1,1 @@
-{"url":"https:\/\/pixel-composer.com\/projects\/Door","project":"Door","inputs":["Background","Foreground"]}
+{"url":"https:\/\/pixel-composer.com\/projects\/Door","project":"Door","inputs":["Background","Foreground",{"value":"Multiply","name":"Blend mode"}]}

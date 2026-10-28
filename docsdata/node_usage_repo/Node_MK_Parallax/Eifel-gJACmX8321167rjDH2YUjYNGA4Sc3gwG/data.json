@@ -1,1 +1,1 @@
-{"url":"https:\/\/pixel-composer.com\/projects\/Eifel","project":"Eifel","inputs":["Surface 0","Surface 1","Surface 2","Surface 3","Surface 4"]}
+{"url":"https:\/\/pixel-composer.com\/projects\/Eifel","project":"Eifel","inputs":["Surface 0","Surface 1",{"value":[-1,0],"name":"Parallax 1"},"Surface 2",{"value":[6.1440000000000001,0],"name":"Position 2"},{"value":[-1,0],"name":"Parallax 2"},"Surface 3",{"value":[-2,0],"name":"Parallax 3"},"Surface 4"]}

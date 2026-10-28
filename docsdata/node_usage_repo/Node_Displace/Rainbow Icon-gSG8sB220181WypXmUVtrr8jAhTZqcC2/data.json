@@ -1,1 +1,1 @@
-{"url":"https:\/\/pixel-composer.com\/projects\/Rainbow%20Icon","project":"Rainbow Icon","inputs":["Surface In","Displace map","Mask"]}
+{"url":"https:\/\/pixel-composer.com\/projects\/Rainbow%20Icon","project":"Rainbow Icon","inputs":["Surface In","Displace map",{"value":-0.80400000000000005,"name":"Strength"},{"value":0,"name":"Mid Value"},{"value":"Gradient","name":"Mode"},"Mask"]}

@@ -1,1 +1,1 @@
-{"url":"https:\/\/pixel-composer.com\/projects\/Abstract%20Hex","project":"Abstract Hex","inputs":["Surface In","Texture"]}
+{"url":"https:\/\/pixel-composer.com\/projects\/Abstract%20Hex","project":"Abstract Hex","inputs":["Surface In",{"value":0.5,"name":"Strength"},{"value":270,"name":"Direction"},{"value":true,"name":"Invert"},{"value":"Distance Normalized","name":"Render Mode"},"Texture"]}

@@ -1,1 +1,1 @@
-{"url":"https:\/\/pixel-composer.com\/projects\/Tower%20Badge","project":"Tower Badge","inputs":["Surface In","Mask"]}
+{"url":"https:\/\/pixel-composer.com\/projects\/Tower%20Badge","project":"Tower Badge","inputs":["Surface In",{"value":4280448759,"name":"Blend"},{"value":1,"name":"Blend amount"},"Mask",{"value":1.05,"name":"Exposure"},{"value":true,"name":"Invert mask"}]}

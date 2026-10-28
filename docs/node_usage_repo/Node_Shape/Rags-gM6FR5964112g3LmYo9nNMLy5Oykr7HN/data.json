@@ -1,1 +1,1 @@
-{"url":"https:\/\/pixel-composer.com\/projects\/Rags","project":"Rags","inputs":[]}
+{"url":"https:\/\/pixel-composer.com\/projects\/Rags","project":"Rags","inputs":[{"value":[32,32],"name":"Dimension"},{"value":"Surface","name":"Background"},{"value":"Star","name":"Shape"},{"value":[15.933333333333332,23.783333333333324,12.833333333333341,6.5999999999999996,0,0],"name":"Position"},{"value":5,"name":"Sides"},{"value":0.68999999999999995,"name":"Inner radius"},{"value":0.62,"name":"Shape Scale"}]}

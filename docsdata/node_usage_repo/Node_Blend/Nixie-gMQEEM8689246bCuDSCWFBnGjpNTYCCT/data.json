@@ -1,1 +1,1 @@
-{"url":"https:\/\/pixel-composer.com\/projects\/Nixie","project":"Nixie","inputs":["Background","Foreground"]}
+{"url":"https:\/\/pixel-composer.com\/projects\/Nixie","project":"Nixie","inputs":["Background","Foreground",{"value":"Add","name":"Blend mode"},{"value":0.93000000000000005,"name":"Opacity"}]}

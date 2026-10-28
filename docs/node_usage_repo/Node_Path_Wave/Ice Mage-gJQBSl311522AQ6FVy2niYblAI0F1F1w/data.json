@@ -1,1 +1,1 @@
-{"url":"https:\/\/pixel-composer.com\/projects\/Ice%20Mage","project":"Ice Mage","inputs":[]}
+{"url":"https:\/\/pixel-composer.com\/projects\/Ice%20Mage","project":"Ice Mage","inputs":[{"value":[1,1],"name":"Frequency"},{"value":[0.5,0.5],"name":"Amplitude"},{"value":[0.29999999999999999,0.29999999999999999],"name":"Phase"},{"value":"Sine","name":"Shape"}]}

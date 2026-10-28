@@ -1,1 +1,1 @@
-{"url":"https:\/\/pixel-composer.com\/projects\/Nixie","project":"Nixie","inputs":[]}
+{"url":"https:\/\/pixel-composer.com\/projects\/Nixie","project":"Nixie","inputs":[{"value":"Ellipse","name":"Shape"},{"value":"Center + Scale","name":"Positioning Mode"},{"value":[32,24.832000000000001],"name":"Center"},{"value":[20.314350330901824,8.416934266526507],"name":"Half Size"},{"value":[0,1,0,0,1,0,0,0,0,0,0.18769716088328073,0.029059829059829845,-0.3351735015772872,-0.48045584045583922,1,1,0,0],"name":"Curve"}]}

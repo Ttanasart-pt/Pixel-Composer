@@ -1,1 +1,1 @@
-{"url":"https:\/\/pixel-composer.com\/projects\/Red%20Sphere%20thing","project":"Red Sphere thing","inputs":["Surface In","Radius Map"]}
+{"url":"https:\/\/pixel-composer.com\/projects\/Red%20Sphere%20thing","project":"Red Sphere thing","inputs":["Surface In",{"value":[0,2],"name":"Radius"},{"value":0.31,"name":"Threshold"},"Radius Map"]}

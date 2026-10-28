@@ -1,1 +1,1 @@
-{"url":"https:\/\/pixel-composer.com\/projects\/Old%20Car","project":"Old Car","inputs":["Surface In","Mask"]}
+{"url":"https:\/\/pixel-composer.com\/projects\/Old%20Car","project":"Old Car","inputs":["Surface In",{"value":0.66000000000000003,"name":"Strength"},{"value":2,"name":"Grow"},{"value":5,"name":"Blur"},"Mask"]}

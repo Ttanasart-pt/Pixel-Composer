@@ -1,1 +1,1 @@
-{"url":"https:\/\/pixel-composer.com\/projects\/Shield","project":"Shield","inputs":["Background","Foreground"]}
+{"url":"https:\/\/pixel-composer.com\/projects\/Shield","project":"Shield","inputs":["Background","Foreground",{"value":"Subtract","name":"Blend mode"},{"value":0.68999999999999995,"name":"Opacity"},{"value":true,"name":"Preserve alpha"}]}

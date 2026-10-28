@@ -1,1 +1,1 @@
-{"url":"https:\/\/pixel-composer.com\/projects\/Glass%20Block%20Refraction","project":"Glass Block Refraction","inputs":["Surface In","Normal Map"]}
+{"url":"https:\/\/pixel-composer.com\/projects\/Glass%20Block%20Refraction","project":"Glass Block Refraction","inputs":["Surface In","Normal Map",{"value":"Sun","name":"Type"},{"value":56.729559748427668,"name":"Range"},{"value":3,"name":"Intensity"}]}

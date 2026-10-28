@@ -1,1 +1,1 @@
-{"url":"https:\/\/pixel-composer.com\/projects\/Spark%20Bolt","project":"Spark Bolt","inputs":["Surface In","Width Map","Texture"]}
+{"url":"https:\/\/pixel-composer.com\/projects\/Spark%20Bolt","project":"Spark Bolt","inputs":["Surface In",{"value":[0,1],"name":"Width"},{"value":4284606462,"name":"Color"},"Width Map",{"value":"Square","name":"Profile"},"Texture"]}

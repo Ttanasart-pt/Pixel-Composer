@@ -1,1 +1,1 @@
-{"url":"https:\/\/pixel-composer.com\/projects\/Fire%20&%20Smoke","project":"Fire & Smoke","inputs":["Surface In","Displace map"]}
+{"url":"https:\/\/pixel-composer.com\/projects\/Fire%20&%20Smoke","project":"Fire & Smoke","inputs":["Surface In","Displace map",{"value":[0,48.896000000000001],"name":"Position"},{"value":0.050000000000000003,"name":"Strength"},{"value":0,"name":"Mid Value"},{"value":"Gradient","name":"Mode"},{"value":[33.16526610644258,29.131652661064432],"name":"Mid Point"},{"value":90,"name":"Angle Offset"}]}

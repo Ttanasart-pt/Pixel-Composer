@@ -1,1 +1,1 @@
-{"url":"https:\/\/pixel-composer.com\/projects\/Aurora","project":"Aurora","inputs":["Background","Foreground","Mask"]}
+{"url":"https:\/\/pixel-composer.com\/projects\/Aurora","project":"Aurora","inputs":["Background","Foreground",{"value":"Add","name":"Blend mode"},{"value":0.68999999999999995,"name":"Opacity"},"Mask",{"value":true,"name":"Preserve alpha"},{"value":[128,269.67014975136027],"name":"Position"}]}

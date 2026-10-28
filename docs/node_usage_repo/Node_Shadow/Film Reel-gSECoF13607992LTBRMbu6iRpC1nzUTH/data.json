@@ -1,1 +1,1 @@
-{"url":"https:\/\/pixel-composer.com\/projects\/Film%20Reel","project":"Film Reel","inputs":["Surface In","Mask"]}
+{"url":"https:\/\/pixel-composer.com\/projects\/Film%20Reel","project":"Film Reel","inputs":["Surface In",{"value":[0,1],"name":"Shift"},{"value":0,"name":"Grow"},{"value":2,"name":"Blur"},"Mask"]}

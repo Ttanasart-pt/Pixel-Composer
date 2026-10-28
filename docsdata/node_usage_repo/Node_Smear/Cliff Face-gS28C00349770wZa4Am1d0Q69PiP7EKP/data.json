@@ -1,1 +1,1 @@
-{"url":"https:\/\/pixel-composer.com\/projects\/Cliff%20Face","project":"Cliff Face","inputs":["Surface In","Texture"]}
+{"url":"https:\/\/pixel-composer.com\/projects\/Cliff%20Face","project":"Cliff Face","inputs":["Surface In",{"value":0.34999999999999998,"name":"Strength"},{"value":270,"name":"Direction"},{"value":true,"name":"Invert"},{"value":"Distance Normalized","name":"Render Mode"},{"value":4289385706,"name":"Blend Side"},"Texture"]}

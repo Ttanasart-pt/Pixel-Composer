@@ -1,1 +1,1 @@
-{"url":"https:\/\/pixel-composer.com\/projects\/Glass%20Block%20Refraction","project":"Glass Block Refraction","inputs":["Surface In","Mask"]}
+{"url":"https:\/\/pixel-composer.com\/projects\/Glass%20Block%20Refraction","project":"Glass Block Refraction","inputs":["Surface In",{"value":4280620056,"name":"Blend"},{"value":1,"name":"Blend amount"},"Mask"]}

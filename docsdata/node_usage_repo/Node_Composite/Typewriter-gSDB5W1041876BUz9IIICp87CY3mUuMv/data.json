@@ -1,1 +1,1 @@
-{"url":"https:\/\/pixel-composer.com\/projects\/Typewriter","project":"Typewriter","inputs":["Surface","Surface","Surface","Surface"]}
+{"url":"https:\/\/pixel-composer.com\/projects\/Typewriter","project":"Typewriter","inputs":["Surface","Surface",{"value":[16.722899159663868,15.79769053454714],"name":"Position"},"Surface",{"value":[47.858823529411765,15.744281045751636],"name":"Position"},"Surface",{"value":[14.280462184873949,10.747607376283844],"name":"Position"},{"value":50,"name":"Order"}]}

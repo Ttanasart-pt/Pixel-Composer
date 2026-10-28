@@ -1,1 +1,1 @@
-{"url":"https:\/\/pixel-composer.com\/projects\/Brick%20Arc","project":"Brick Arc","inputs":[]}
+{"url":"https:\/\/pixel-composer.com\/projects\/Brick%20Arc","project":"Brick Arc","inputs":[{"value":"Triangle","name":"Shape"},{"value":[32,9.1411200000000008],"name":"Center"},{"value":[25.632000000000001,7.3337599999999998],"name":"Half Size"},{"value":[32,-18.431999999999999],"name":"Point 1"},{"value":[0,64],"name":"Point 2"},{"value":[64,64],"name":"Point 3"}]}

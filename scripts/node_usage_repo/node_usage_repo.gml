@@ -18,6 +18,7 @@ function Node_Usage_Repo_Create(_project = PROJECT, pname = "", purl = "") {
 		var _type = instanceof(_node);
 		
 		if(_node.active_index != -1 && !_node.active_value) continue;
+		if(!_node.attributes.show_preview) continue;
 		
 		var _dirr = filename_combine(_dirpath, _type);
 		directory_verify(_dirr);
@@ -34,15 +35,37 @@ function Node_Usage_Repo_Create(_project = PROJECT, pname = "", purl = "") {
 		
 		for( var j = 0, m = array_length(_node.inputs); j < m; j++ ) {
 			var _inp = _node.inputs[j];
-			if(_inp.type != VALUE_TYPE.surface) continue;
 			
 			var _nam = _inp.getName();
 			var _val = _inp.getValue();
-			if(!is_surface(_val)) continue;
 			
-			var _imgp = filename_combine(_dirr, _nam + ".png");
-			surface_save_safe(_val, _imgp);
-			array_push(inputs, _nam);
+			if(_inp.type == VALUE_TYPE.surface) {
+				if(!is_surface(_val)) continue;
+				
+				var _imgp = filename_combine(_dirr, _nam + ".png");
+				surface_save_safe(_val, _imgp);
+				array_push(inputs, _nam);
+				continue;
+			}
+			
+			if(!_inp.is_modified) continue;
+			
+			if(_inp.display_type == VALUE_DISPLAY.enum_button || _inp.display_type == VALUE_DISPLAY.enum_scroll) {
+				var _edit = _inp.getEditWidget();
+				
+				if(is(_edit, widget)) {
+					var _edat = _edit[$ "data"];
+					if(is_array(_edat)) {
+						var _vval = array_safe_get(_edat, _val);
+						
+						     if(is_string(_vval))      _val = _vval;
+						else if(is(_vval, scrollItem)) _val = _vval.name;
+					}
+					
+				}
+			}
+			
+			array_push(inputs, { name : _nam, value : _val });
 		}
 		
 		var _data = {

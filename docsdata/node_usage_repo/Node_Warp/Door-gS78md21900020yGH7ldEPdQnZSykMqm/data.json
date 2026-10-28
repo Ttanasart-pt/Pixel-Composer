@@ -1,1 +1,1 @@
-{"url":"https:\/\/pixel-composer.com\/projects\/Door","project":"Door","inputs":["Surface In"]}
+{"url":"https:\/\/pixel-composer.com\/projects\/Door","project":"Door","inputs":["Surface In",{"value":[19,15],"name":"Top Left"},{"value":[45,15],"name":"Top Right"},{"value":[19,58],"name":"Bottom Left"},{"value":[45,58],"name":"Bottom Right"},{"value":[32,36.5,13,21.5,0,0],"name":"Area"}]}

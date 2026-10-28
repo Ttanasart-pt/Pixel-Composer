@@ -1,1 +1,1 @@
-{"url":"https:\/\/pixel-composer.com\/projects\/Art%20Deco","project":"Art Deco","inputs":["Texture"]}
+{"url":"https:\/\/pixel-composer.com\/projects\/Art%20Deco","project":"Art Deco","inputs":[{"value":[512,512],"name":"Dimension"},{"value":0,"name":"Gap"},"Texture",{"value":"Texture grid","name":"Render Type"},{"value":446412.52000000002,"name":"Seed"},{"value":true,"name":"Truchet"},{"value":700927,"name":"Texture Seed"},{"value":741494,"name":"Shift Seed"},{"value":685432,"name":"Scale Seed"}]}

@@ -1,1 +1,1 @@
-{"url":"https:\/\/pixel-composer.com\/projects\/Cyber%20Streetview","project":"Cyber Streetview","inputs":["Surface In","Texture"]}
+{"url":"https:\/\/pixel-composer.com\/projects\/Cyber%20Streetview","project":"Cyber Streetview","inputs":["Surface In",{"value":0.22,"name":"Strength"},{"value":-90,"name":"Direction"},{"value":true,"name":"Invert"},{"value":"Texture","name":"Render Mode"},"Texture"]}

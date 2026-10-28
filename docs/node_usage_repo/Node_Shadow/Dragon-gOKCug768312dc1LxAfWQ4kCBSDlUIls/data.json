@@ -1,1 +1,1 @@
-{"url":"https:\/\/pixel-composer.com\/projects\/Dragon","project":"Dragon","inputs":["Surface In","Mask"]}
+{"url":"https:\/\/pixel-composer.com\/projects\/Dragon","project":"Dragon","inputs":["Surface In",{"value":1.1499999999999999,"name":"Strength"},{"value":1,"name":"Grow"},{"value":7,"name":"Blur"},"Mask"]}

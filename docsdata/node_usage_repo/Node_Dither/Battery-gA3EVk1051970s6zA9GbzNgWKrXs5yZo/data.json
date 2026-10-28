@@ -1,1 +1,1 @@
-{"url":"https:\/\/pixel-composer.com\/projects\/Battery","project":"Battery","inputs":["Surface In"]}
+{"url":"https:\/\/pixel-composer.com\/projects\/Battery","project":"Battery","inputs":["Surface In",{"value":"4 x 4 Bayer","name":"Pattern"},{"value":4.4800000000000004,"name":"Contrast"},{"value":"Greyscale","name":"Color Type"},{"value":5,"name":"Steps"},{"value":"Linear","name":"Map Mode"}]}

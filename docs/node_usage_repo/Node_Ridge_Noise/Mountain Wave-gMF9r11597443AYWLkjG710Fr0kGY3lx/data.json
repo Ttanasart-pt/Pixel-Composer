@@ -1,1 +1,1 @@
-{"url":"https:\/\/pixel-composer.com\/projects\/Mountain%20Wave","project":"Mountain Wave","inputs":["Heightmap"]}
+{"url":"https:\/\/pixel-composer.com\/projects\/Mountain%20Wave","project":"Mountain Wave","inputs":[{"value":2,"name":"Iteration"},"Heightmap",{"value":64,"name":"Ridge Scale"},{"value":1.704,"name":"Blending"},{"value":3.992,"name":"Cell Scale"},{"value":1.0840000000000001,"name":"Itr. Factor"},{"value":2,"name":"Ridge Contrast"},{"value":true,"name":"Ridge Multiply"},{"value":4.7359999999999998,"name":"Ridge Multiplier"}]}

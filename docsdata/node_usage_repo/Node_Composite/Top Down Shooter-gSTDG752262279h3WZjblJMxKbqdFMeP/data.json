@@ -1,1 +1,1 @@
-{"url":"https:\/\/pixel-composer.com\/projects\/Top%20Down%20Shooter","project":"Top Down Shooter","inputs":["Surface","Surface","Surface","Surface"]}
+{"url":"https:\/\/pixel-composer.com\/projects\/Top%20Down%20Shooter","project":"Top Down Shooter","inputs":[{"value":"Largest surface","name":"Output Dimension"},{"value":[128,128],"name":"Dimension"},"Surface","Surface",{"value":[32,87.208053022457079],"name":"Position"},"Surface",{"value":"Add","name":"Blend"},{"value":0.66000000000000003,"name":"Opacity"},{"value":50,"name":"Order"},"Surface",{"value":75,"name":"Order"}]}

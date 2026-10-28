@@ -1,1 +1,1 @@
-{"url":"https:\/\/pixel-composer.com\/projects\/Cassettes","project":"Cassettes","inputs":["Background","Foreground"]}
+{"url":"https:\/\/pixel-composer.com\/projects\/Cassettes","project":"Cassettes","inputs":["Background","Foreground",{"value":true,"name":"Preserve alpha"}]}

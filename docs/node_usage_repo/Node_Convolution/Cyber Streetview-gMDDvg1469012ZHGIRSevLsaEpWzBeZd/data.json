@@ -1,1 +1,1 @@
-{"url":"https:\/\/pixel-composer.com\/projects\/Cyber%20Streetview","project":"Cyber Streetview","inputs":["Surface In"]}
+{"url":"https:\/\/pixel-composer.com\/projects\/Cyber%20Streetview","project":"Cyber Streetview","inputs":["Surface In",{"value":{"size":[3,3],"isize":9,"raw":[1,0,0,1,0,-1,0,0,-1]},"name":"Kernel"},{"value":7,"name":"Channel"}]}

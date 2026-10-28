@@ -1,1 +1,1 @@
-{"url":"https:\/\/pixel-composer.com\/projects\/Lava%20Bubble","project":"Lava Bubble","inputs":["Surface In"]}
+{"url":"https:\/\/pixel-composer.com\/projects\/Lava%20Bubble","project":"Lava Bubble","inputs":["Surface In",{"value":48,"name":"Density"},{"value":[0,0],"name":"Alpha"},{"value":true,"name":"Ground"},{"value":0,"name":"Ground Start"},{"value":true,"name":"Ripple"},{"value":[20,10],"name":"Rip. Radius"},{"value":0.93000000000000005,"name":"Rip. Alpha"}]}

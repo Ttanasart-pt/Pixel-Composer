@@ -1,1 +1,1 @@
-{"url":"https:\/\/pixel-composer.com\/projects\/Vegas","project":"Vegas","inputs":[]}
+{"url":"https:\/\/pixel-composer.com\/projects\/Vegas","project":"Vegas","inputs":[{"value":["W","E","L","C","O","M","E"],"name":"Text"},{"value":12,"name":"Size"},{"value":4281514480,"name":"Color"},{"value":[24,24],"name":"Fixed Dimension"},{"value":1,"name":"H Align"},{"value":1,"name":"V Align"},{"value":"Fixed","name":"Dimension"},{"value":12,"name":"Letter Spacing"},{"value":[1,1],"name":"Offset"},{"value":true,"name":"Monospaced"}]}

@@ -1,1 +1,1 @@
-{"url":"https:\/\/pixel-composer.com\/projects\/Camera","project":"Camera","inputs":["Top","Front","Right"]}
+{"url":"https:\/\/pixel-composer.com\/projects\/Camera","project":"Camera","inputs":["Top","Front","Right",{"value":[30,45,0],"name":"View Angle"},{"value":[0,0,0.59599999999999997],"name":"Position"},{"value":[4292660160,4284892218,4287129946],"name":"Face Blending"}]}

@@ -1,1 +1,1 @@
-{"url":"https:\/\/pixel-composer.com\/projects\/Chess%20Pieces","project":"Chess Pieces","inputs":["Texture","End Cap Texture"]}
+{"url":"https:\/\/pixel-composer.com\/projects\/Chess%20Pieces","project":"Chess Pieces","inputs":["Texture",{"value":true,"name":"Invert"},{"value":[3,1],"name":"UV Range"},{"value":0.25,"name":"Ratio"},{"value":0,"name":"Revolve Offset"},{"value":"Additive","name":"Blend Mode"},"End Cap Texture",{"value":false,"name":"End Cap"},{"value":"Normal","name":"Depth Sort"}]}

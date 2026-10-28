@@ -1,1 +1,1 @@
-{"url":"https:\/\/pixel-composer.com\/projects\/Top%20Down%20Shooter","project":"Top Down Shooter","inputs":["Background","Foreground","Mask"]}
+{"url":"https:\/\/pixel-composer.com\/projects\/Top%20Down%20Shooter","project":"Top Down Shooter","inputs":["Background","Foreground",{"value":0.68999999999999995,"name":"Opacity"},"Mask"]}

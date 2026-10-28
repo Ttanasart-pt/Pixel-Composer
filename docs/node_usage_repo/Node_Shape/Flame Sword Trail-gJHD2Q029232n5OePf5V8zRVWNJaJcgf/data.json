@@ -1,1 +1,1 @@
-{"url":"https:\/\/pixel-composer.com\/projects\/Flame%20Sword%20Trail","project":"Flame Sword Trail","inputs":["Mask"]}
+{"url":"https:\/\/pixel-composer.com\/projects\/Flame%20Sword%20Trail","project":"Flame Sword Trail","inputs":[{"value":"Trapezoid","name":"Shape"},{"value":"Center + Scale","name":"Positioning Mode"},{"value":[32,35.328000000000003],"name":"Center"},{"value":[32,23.039999999999999],"name":"Half Size"},{"value":0.58999999999999997,"name":"Top Side"},"Mask"]}

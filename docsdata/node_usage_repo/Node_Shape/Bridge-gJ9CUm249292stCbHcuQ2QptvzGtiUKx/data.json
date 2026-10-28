@@ -1,1 +1,1 @@
-{"url":"https:\/\/pixel-composer.com\/projects\/Bridge","project":"Bridge","inputs":["BG Surface"]}
+{"url":"https:\/\/pixel-composer.com\/projects\/Bridge","project":"Bridge","inputs":[{"value":"Center + Scale","name":"Positioning Mode"},{"value":[32,14.848000000000001],"name":"Center"},{"value":[3.8399999999999999,5.6319999999999997],"name":"Half Size"},"BG Surface",{"value":"Substract","name":"BG Blend Mode"}]}
