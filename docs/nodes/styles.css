@@ -22,7 +22,7 @@ p:has(img.node-content) {
 
 button.copy-sample {
     margin: 0;
-    padding: 8px 16px;
+    padding: 6px 12px;
 
     font-family: 'Noto Sans', sans-serif;
     font-weight: 500;
@@ -33,8 +33,8 @@ button.copy-sample {
     border-radius: 5px;
 
     display: block;
-    margin: auto;
-    margin-top: 8px;
+    /* margin: auto;
+    margin-top: 8px; */
 
     &:hover {
         /* background-color: var(--main_dkgrey); */
@@ -50,4 +50,6 @@ div.sample-actions {
     display: flex;
     flex-direction: row;
     gap: 8px;
+    margin-top: 8px;
+    justify-content: center;
 }

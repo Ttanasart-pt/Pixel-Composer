@@ -18,9 +18,15 @@ nodes = os.listdir(src_dir)
 for node in tqdm(nodes, desc="Node usage repo"):
     src_node_dir = os.path.join(src_dir, node)
     dst_path = os.path.join(dst_dir, f"{node}.html")
-    page = '<table class="usage-table">\n'
 
     examples = os.listdir(src_node_dir)
+
+    page = ""
+    page += f"<h2>Usage Examples: {node}</h2><br>"
+    page += f"<p>{len(examples)} example(s) found.</p><br>"
+    page += '<table class="usage-table">\n'
+    page += '<tr><th>Preview</th><th>Project</th></tr>\n'
+
     for example in examples:
         example_path = os.path.join(src_node_dir, example)
 
