@@ -51,5 +51,6 @@ div.sample-actions {
     flex-direction: row;
     gap: 8px;
     margin-top: 8px;
+    margin-bottom: 16px;
     justify-content: center;
 }
