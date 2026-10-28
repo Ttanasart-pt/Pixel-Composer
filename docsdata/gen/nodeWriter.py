@@ -100,7 +100,7 @@ def writeUsage(metadata):
         return ""
 
     useLink = f"/nodes/_nodeUsage/{baseNode}.html"
-    useText = f'<button class="copy-sample"><a href="{useLink}">View all {exampleCount} usage examples</a></button>'
+    useText = f'<button class="copy-sample" onclick="location.href=\'{useLink}\'">View all {exampleCount} examples</button>'
     return useText
 
 
