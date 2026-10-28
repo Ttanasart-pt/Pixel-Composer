@@ -91,15 +91,13 @@ def versionToInt(version):
 
 def writeUsage(metadata):
     baseNode = metadata["baseNode"]
-    useDir = f"node_usage_repo/{baseNode}"
+    useDir = f"docsdata/node_usage_repo/{baseNode}"
     if not os.path.exists(useDir):
         return ""
 
     exampleCount = len(os.listdir(useDir))
     if exampleCount == 0:
         return ""
-
-    print(f"Found {exampleCount} usage examples for node {baseNode}")
 
     useLink = f"/nodes/_nodeUsage/{baseNode}.html"
     useText = '<br><h2 class="nosidebar">Usage Samples</h2><br>'
