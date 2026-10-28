@@ -15,7 +15,7 @@ if not os.path.exists(src_dir):
     exit()
 
 nodes = os.listdir(src_dir)
-for node in tqdm(nodes):
+for node in tqdm(nodes, desc="Node usage repo"):
     src_node_dir = os.path.join(src_dir, node)
     dst_path = os.path.join(dst_dir, f"{node}.html")
     page = "<table>\n"

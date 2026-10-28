@@ -99,6 +99,8 @@ def writeUsage(metadata):
     if exampleCount == 0:
         return ""
 
+    print(f"Found {exampleCount} usage examples for node {baseNode}")
+
     useLink = f"/nodes/_nodeUsage/{baseNode}.html"
     useText = '<br><h2 class="nosidebar">Usage Samples</h2><br>'
 
