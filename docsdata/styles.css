@@ -1213,6 +1213,11 @@ table.usage-table {
         }
     }
 
+    td.inputs {
+        width: 120px;
+        text-align: center;
+    }
+
     td.data {
         width: auto;
         text-align: center;
@@ -1225,8 +1230,12 @@ table.usage-table {
 
         a {
             font-weight: 500;
-            font-size: .8rem;
+            font-size: .9rem;
             color: var(--main_grey);
+
+            &:hover {
+                color: var(--main_white);
+            }
         }
     }
 }

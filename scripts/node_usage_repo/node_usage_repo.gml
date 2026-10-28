@@ -19,9 +19,25 @@ function Node_Usage_Repo_Create(_project = PROJECT, pname = "", purl = "") {
 		surface_save(surface, _imgp);
 		surface_free(surface);
 		
+		var inputs = [];
+		
+		for( var j = 0, m = array_length(_node.inputs); j < m; j++ ) {
+			var _inp = _node.inputs[j];
+			if(_inp.type != VALUE_TYPE.surface) continue;
+			
+			var _nam = _inp.getName();
+			var _val = _inp.getValue();
+			if(!is_surface(_val)) continue;
+			
+			var _imgp = filename_combine(_dirr, _nam + ".png");
+			surface_save(_val, _imgp);
+			array_push(inputs, _nam);
+		}
+		
 		var _data = {
-			project: pname,
-			url: purl,
+			project : pname,
+			url     : purl,
+			inputs  : inputs,
 		}
 		
 		json_save_struct(filename_combine(_dirr, $"data.json"), _data);
