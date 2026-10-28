@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.22.1.207",
+    "changes": [
+      {
+        "date": "2026-10-28T04:33:43.924Z",
+        "node": "Repeat",
+        "commit": "**Repeat**: Fix error in Ping pong animation mode."
+      }
+    ]
+  },
+  {
     "version": "1.22.1.203",
     "changes": [
       {

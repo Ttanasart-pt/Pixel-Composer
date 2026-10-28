@@ -712,7 +712,7 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 							
 						case 1 :
 							var pp = safe_mod(_animInd, _arr_length * 2 - 1);
-							_surfI = pp < _arr_length? pp : _arr_length * 2 - pp;
+							_surfI = pp < _arr_length? pp : _arr_length * 2 - 1 - pp;
 							break;
 							
 						case 2 : _surfI = _animInd; break;
