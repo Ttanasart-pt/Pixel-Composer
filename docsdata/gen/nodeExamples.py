@@ -36,7 +36,7 @@ for node in tqdm(nodes, desc="Node examples"):
 
         page += "<tr>\n"
         if os.path.exists(_prev):
-            page += f"<td class='preview'><img src='{_dir}/preview.png'></td>\n"
+            page += f"<td class='preview'><img src='{_dir}/preview.png' loading='lazy'></td>\n"
 
         if os.path.exists(_data):
             with open(_data, "r", encoding="utf-8") as df:

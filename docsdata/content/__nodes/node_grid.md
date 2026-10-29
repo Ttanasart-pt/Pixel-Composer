@@ -1,5 +1,3 @@
-<img-deco grid/>
-
 ## Properties
 
 [proptable]
