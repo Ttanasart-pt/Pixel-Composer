@@ -1216,6 +1216,28 @@ table.usage-table {
     td.inputs {
         width: 120px;
         text-align: center;
+
+        .input-prev {
+            position: relative;
+            text-align: center;
+
+            img {
+                max-width: 100%;
+                height: auto;
+            }
+
+            .input-label {
+                position: absolute;
+                bottom: 2px;
+                left: 2px;
+
+                
+                background-color: #19192580;
+                color: var(--main_white);
+                padding: 2px 4px;
+                border-radius: 2px;
+            }
+        }
     }
 
     td.data {

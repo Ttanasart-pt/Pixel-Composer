@@ -49,7 +49,10 @@ for node in tqdm(nodes, desc="Node examples"):
             input_list = "";
             for inp in data_inputs:
                 if isinstance(inp, str):
-                    input_list += f"<img src='{_dir}/{inp}.png' alt='{inp}' loading='lazy'>"
+                    input_list += f'''<div class='input-prev'>
+                                            <img src='{_dir}/{inp}.png' alt='{inp}' loading='lazy'>
+                                            <p class='input-label'>{inp}</p>
+                                      </div>'''
                 
             page += f"<td class='inputs'>{input_list}</td>\n"
 
