@@ -11,7 +11,8 @@ function Node_MK_Blast_Inline(_x, _y, _group = noone) : Node_Collection_Inline(_
 	name  = "MK Blast";
 	color = COLORS.node_blend_mkblast;
 	icon  = THEME.mkBlast;
-	is_simulation = true;
+	is_simulation   = true;
+	update_children = true;
 	
 	seed       = 0;
 	gravityDir = -90;

@@ -155,6 +155,8 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	#region ---- Junctions ----
 		inputs           = [];
 		outputs          = [];
+		
+		input_seed       = undefined;
 		input_bypass     = [];
 		inputm           = {};
 		inputMappable    = [];

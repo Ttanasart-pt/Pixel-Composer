@@ -150,6 +150,7 @@
     "icon_preview_export":                { "path": "./icon/s_icon_preview_export.png",                     "s": 1, "x": 12, "y": 12 },
     "icon_preview_mode":                  { "path": "./icon/s_icon_preview_mode.png",                       "s": 3, "x": 12, "y": 12 },
     "icon_random":                        { "path": "./icon/s_random.png",                                  "s": 1, "x": 12, "y": 12 },
+    "icon_random_seed":                   { "path": "./icon/s_random_seed.png",                             "s": 1, "x": 12, "y": 12 },
     "icon_reset_when_preview":            { "path": "./icon/s_icon_reset_when_preview.png",                 "s": 2, "x": 12, "y": 12 },
     "icon_save_all":                      { "path": "./icon/s_icon_save_all.png",                           "s": 1, "x": 12, "y": 12 },
     "icon_splash_show_on_start":          { "path": "./icon/s_icon_spalsh_show_on_start.png",               "s": 2, "x": 12, "y": 12 },

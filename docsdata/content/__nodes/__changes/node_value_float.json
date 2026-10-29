@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.22.1.208",
+    "changes": [
+      {
+        "date": "2026-10-29T03:38:04.504Z",
+        "node": "",
+        "commit": "**Randomizer Panel**: Add button to randomize seed in selected nodes."
+      }
+    ]
+  },
+  {
     "version": "1.21.4.008",
     "changes": [
       {

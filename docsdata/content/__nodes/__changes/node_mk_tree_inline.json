@@ -6,6 +6,11 @@
         "date": "2026-10-29T02:49:30.857Z",
         "node": "MK Tree",
         "commit": "**MK Tree**: Fix setting seed in inline parent does not automatically update nodes inside."
+      },
+      {
+        "date": "2026-10-29T03:38:04.504Z",
+        "node": "",
+        "commit": "**Randomizer Panel**: Add button to randomize seed in selected nodes."
       }
     ]
   },

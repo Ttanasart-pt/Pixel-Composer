@@ -92,11 +92,13 @@ function nodeValueSeedFloat( _name = "Seed" ) { return nodeValueSeed(VALUE_TYPE.
 function nodeValueSeedInt(   _name = "Seed" ) { return nodeValueSeed(VALUE_TYPE.integer, _name); }
 function nodeValueSeed(_type = VALUE_TYPE.float, _name = "Seed") { 
 	var _val  = new NodeValue(_name, self, CONNECT_TYPE.input, _type, seed_random(6), "");
-	var _rFun = function() /*=>*/ { randomize(); setValue(seed_random(6)); };
-	    
+	
+	self.input_seed  = _val;
+	_val.doRandomize = method(_val, function() /*=>*/ { randomize(); setValue(seed_random(6)); });
+	
 	_val.always_modified = true;
 	_val.setDisplay(VALUE_DISPLAY._default, { 
-		side_button : button(method(_val, _rFun)).setTooltip(__txt("Randomize"))
+		side_button : button(_val.doRandomize).setTooltip(__txt("Randomize"))
 			.setIcon(THEME.icon_random, 0, COLORS._main_icon).iconPad() 
 	});
 		

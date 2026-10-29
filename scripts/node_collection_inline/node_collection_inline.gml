@@ -12,6 +12,7 @@ function Node_Collection_Inline(_x, _y, _group = noone) : Node(_x, _y, _group) c
 	group_hovering     = false;
 	group_hover_al     = 0;
 	selectable         = false;
+	update_children    = false;
 	
 	add_point  = false;
 	point_x    = 0;
@@ -40,6 +41,10 @@ function Node_Collection_Inline(_x, _y, _group = noone) : Node(_x, _y, _group) c
 	}));
 	
 	////- Nodes
+	
+	static onTriggerRender = function() {
+		if(update_children) array_foreach(nodes, function(n,_) /*=>*/ { if(is(n, Node)) n.triggerRender(); return false; });
+	}
 	
 	static move = function(_x, _y, _direct = true) {
 		moved = true;

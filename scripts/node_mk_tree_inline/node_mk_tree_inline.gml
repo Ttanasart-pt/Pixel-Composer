@@ -2,7 +2,8 @@ function Node_MK_Tree_Inline(_x, _y, _group = noone) : Node_Collection_Inline(_x
 	name  = "MK Tree";
 	color = COLORS.node_blend_mktree;
 	icon  = THEME.mkTree;
-	is_simulation = true;
+	is_simulation   = true;
+	update_children = true;
 	
 	seed       = 0;
 	gravityDir = -90;
@@ -19,7 +20,6 @@ function Node_MK_Tree_Inline(_x, _y, _group = noone) : Node_Collection_Inline(_x
 	}
 	
 	////- =Inputs
-	
 	newInput( 0, nodeValueSeed( VALUE_TYPE.integer  ));
 	newInput( 1, nodeValue_Rotation( "Gravity", -90 ));
 	newInput( 2, nodeValue_Dimension());
@@ -31,11 +31,6 @@ function Node_MK_Tree_Inline(_x, _y, _group = noone) : Node_Collection_Inline(_x
 	////- Nodes
 	
 	static getDimension = function() /*=>*/ { dimension = dimension ?? inputs[2].getValue(); return dimension; }
-	
-	static onTriggerRender = function() {
-		for( var i = 0, n = array_length(nodes); i < n; i++ ) 
-			if(is(nodes[i], Node)) nodes[i].triggerRender();
-	}
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _params) {
 		var _dim = getDimension();

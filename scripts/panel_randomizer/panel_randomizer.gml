@@ -1,216 +1,216 @@
 #region global
 	globalvar RANDOMIZER_ACTIVE; RANDOMIZER_ACTIVE = false;
+
+	function Project_Randomizer_Value(_val = undefined) constructor {
+		value   = undefined;
+		node    = undefined;
+		node_id = "";
+		inindex = 0;
+		
+		type       = 0;
+		typeWidget = undefined;
+		
+		gradient = gra_black_white;
+		palette  = array_clone(DEF_PALETTE);
+		min_val  = 0;
+		max_val  = 0;
+		
+		editWidgetGradient  = undefined;
+		editWidgetPalette   = undefined;
+		editWmin   = undefined;
+		editWmax   = undefined;
+		
+		static getNode = function() /*=>*/ {
+			if(node != undefined) return node;
+			node = PROJECT.nodeMap[? node_id];
+			return node;
+		}
+		
+		static getValue = function() /*=>*/ {
+			if(value != undefined) return value;
+			
+			var _node = getNode();
+			if(_node == undefined) return undefined;
+			
+			value = array_safe_get_fast(_node.inputs, inindex);
+			if(!is(value, NodeValue)) value = undefined;
+			
+			if(value == undefined) return value;
+			
+			var _wdg = value.getEditWidget();
+			
+			switch(value.type) {
+				case VALUE_TYPE.color : 
+					typeWidget = new scrollBox([ "Gradient", "Palette" ], function(i) /*=>*/ { type = i; });
+					editWidgetGradient  = new buttonGradient(function(g) /*=>*/ { gradient = g; });
+					editWidgetPalette   = new buttonPalette( function(p) /*=>*/ { palette  = p; });
+					break;
+					
+				default :
+					typeWidget = undefined;
+					if(!is_array(min_val)) {
+						editWmin = _wdg.clone();
+						editWmax = _wdg.clone();
+						
+						editWmin.onModify = function(v) /*=>*/ { min_val = v; };
+						editWmax.onModify = function(v) /*=>*/ { max_val = v; };
+						
+					} else {
+						editWmin = _wdg.clone();
+						editWmax = _wdg.clone();
+						
+						editWmin.onModify = function(v,i) /*=>*/ { min_val[i] = v; };
+						editWmax.onModify = function(v,i) /*=>*/ { max_val[i] = v; };
+					}
+					break;
+			}
+			
+			return value;
+		}
+		
+		static getDisplayVal = function() /*=>*/ {
+			if(value == undefined) return 0;
+		
+			switch(value.type) {
+				case VALUE_TYPE.color : 
+					     if(type == 0) return gradient;
+					else if(type == 1) return palette;
+			}
+			
+			return 0;
+		}
+		
+		static getEditWidget = function() /*=>*/ {
+			if(value == undefined) return undefined;
+		
+			switch(value.type) {
+				case VALUE_TYPE.color : 
+					     if(type == 0) return editWidgetGradient;
+					else if(type == 1) return editWidgetPalette;
+					
+				default : return [ editWmax, editWmin ];
+			}
+			
+			return undefined;
+		} 
+		
+		static setInput = function(inp) /*=>*/ {
+			node_id = inp.node.node_id;
+		    inindex = inp.index;
+		    
+		    min_val = inp.getValue();
+		    max_val = inp.getValue();
+			
+			getValue();
+			return self;
+			
+		} if(_val) setInput(_val);
+		
+		static Random = function() /*=>*/ {
+			randomize();
+			
+			var _v = getValue();
+			if(!is(_v, NodeValue)) return;
+			
+			var _val = undefined;
+			
+			switch(_v.type) {
+				case VALUE_TYPE.color : 
+					if(type == 0 && is(gradient, gradientObject)) // gradient
+						_val = gradient.eval(random(1));
+						
+					else if(type == 1 && !array_empty(palette)) // palette
+						_val = array_safe_get(palette, irandom(array_length(palette) - 1));
+					
+					break;
+					
+				default : 
+					if(is_numeric(min_val)) {
+						if(_v.type == VALUE_TYPE.integer)
+							 _val = irandom_range(min_val, max_val);
+						else _val =  random_range(min_val, max_val);
+						
+					} else if(is_array(min_val)) {
+						_val = array_create(array_length(min_val));
+						
+						for( var i = 0, n = array_length(min_val); i < n; i++ )
+							_val[i] = random_range(min_val[i], max_val[i]);
+					}		
+			}
+			
+			if(_val != undefined) _v.setValue(_val);
+		}
+		
+		static serialize = function() {
+			var _m = {};
+			
+			_m.node_id = node_id;
+			_m.inindex = inindex;
+			
+			_m.type    = type;
+			
+			_m.palt    = palette;
+			_m.grad    = gradient? gradient.serialize() : 0;
+			
+			_m.min_val = min_val;
+			_m.max_val = max_val;
+			
+			return _m;
+		}
+		
+		static deserialize = function(_m) {
+			node_id = _m[$ "node_id"] ?? node_id;
+			inindex = _m[$ "inindex"] ?? inindex;
+			
+			type     = _m[$ "type"]   ?? type;
+			
+			palette  = _m[$ "palt"]   ?? palette;
+			gradient = _m[$ "grad"]   ?? gradient;
+			if(gradient != 0) gradient = new gradientObject().deserialize(gradient);
+			
+			min_val = _m[$ "min_val"] ?? min_val;
+			max_val = _m[$ "max_val"] ?? max_val;
+			
+			return self;
+		}
+	}
+	
+	function Project_Randomizer() constructor {
+		seed   = seed_random(6);
+		values = [];
+		
+		static addTrack = function(t) /*=>*/ {return array_push(values, t)};
+		
+		static removeValue = function(v) /*=>*/ {
+			for( var i = array_length(values) - 1; i >= 0; i-- )
+				if(values[i].value == v) array_delete(values, i, 1);
+		}
+		
+		static hasValue = function(v) /*=>*/ {
+			for( var i = 0, n = array_length(values); i < n; i++ )
+				if(values[i].value == v) return true;
+			return false;
+		}
+		
+		static Random = function() /*=>*/ {
+			for( var i = 0, n = array_length(values); i < n; i++ )
+				values[i].Random();
+		}
+		
+		static serialize = function() {
+			var _m = {};
+			_m.values = array_map(values, function(t,i) /*=>*/ {return t.serialize()} );
+			return _m;
+		}
+		
+		static deserialize = function(_m) {
+			values = array_create(array_length(_m.values));
+			for( var i = 0, n = array_length(_m.values); i < n; i++ )
+				values[i] = new Project_Randomizer_Value().deserialize(_m.values[i]);
+			return self;
+		}
+	}
 #endregion
-
-function Project_Randomizer_Value(_val = undefined) constructor {
-	value   = undefined;
-	node    = undefined;
-	node_id = "";
-	inindex = 0;
-	
-	type       = 0;
-	typeWidget = undefined;
-	
-	gradient = gra_black_white;
-	palette  = array_clone(DEF_PALETTE);
-	min_val  = 0;
-	max_val  = 0;
-	
-	editWidgetGradient  = undefined;
-	editWidgetPalette   = undefined;
-	editWmin   = undefined;
-	editWmax   = undefined;
-	
-	static getNode = function() /*=>*/ {
-		if(node != undefined) return node;
-		node = PROJECT.nodeMap[? node_id];
-		return node;
-	}
-	
-	static getValue = function() /*=>*/ {
-		if(value != undefined) return value;
-		
-		var _node = getNode();
-		if(_node == undefined) return undefined;
-		
-		value = array_safe_get_fast(_node.inputs, inindex);
-		if(!is(value, NodeValue)) value = undefined;
-		
-		if(value == undefined) return value;
-		
-		var _wdg = value.getEditWidget();
-		
-		switch(value.type) {
-			case VALUE_TYPE.color : 
-				typeWidget = new scrollBox([ "Gradient", "Palette" ], function(i) /*=>*/ { type = i; });
-				editWidgetGradient  = new buttonGradient(function(g) /*=>*/ { gradient = g; });
-				editWidgetPalette   = new buttonPalette( function(p) /*=>*/ { palette  = p; });
-				break;
-				
-			default :
-				typeWidget = undefined;
-				if(!is_array(min_val)) {
-					editWmin = _wdg.clone();
-					editWmax = _wdg.clone();
-					
-					editWmin.onModify = function(v) /*=>*/ { min_val = v; };
-					editWmax.onModify = function(v) /*=>*/ { max_val = v; };
-					
-				} else {
-					editWmin = _wdg.clone();
-					editWmax = _wdg.clone();
-					
-					editWmin.onModify = function(v,i) /*=>*/ { min_val[i] = v; };
-					editWmax.onModify = function(v,i) /*=>*/ { max_val[i] = v; };
-				}
-				break;
-		}
-		
-		return value;
-	}
-	
-	static getDisplayVal = function() /*=>*/ {
-		if(value == undefined) return 0;
-	
-		switch(value.type) {
-			case VALUE_TYPE.color : 
-				     if(type == 0) return gradient;
-				else if(type == 1) return palette;
-		}
-		
-		return 0;
-	}
-	
-	static getEditWidget = function() /*=>*/ {
-		if(value == undefined) return undefined;
-	
-		switch(value.type) {
-			case VALUE_TYPE.color : 
-				     if(type == 0) return editWidgetGradient;
-				else if(type == 1) return editWidgetPalette;
-				
-			default : return [ editWmax, editWmin ];
-		}
-		
-		return undefined;
-	} 
-	
-	static setInput = function(inp) /*=>*/ {
-		node_id = inp.node.node_id;
-	    inindex = inp.index;
-	    
-	    min_val = inp.getValue();
-	    max_val = inp.getValue();
-		
-		getValue();
-		return self;
-		
-	} if(_val) setInput(_val);
-	
-	static Random = function() /*=>*/ {
-		randomize();
-		
-		var _v = getValue();
-		if(!is(_v, NodeValue)) return;
-		
-		var _val = undefined;
-		
-		switch(_v.type) {
-			case VALUE_TYPE.color : 
-				if(type == 0 && is(gradient, gradientObject)) // gradient
-					_val = gradient.eval(random(1));
-					
-				else if(type == 1 && !array_empty(palette)) // palette
-					_val = array_safe_get(palette, irandom(array_length(palette) - 1));
-				
-				break;
-				
-			default : 
-				if(is_numeric(min_val)) {
-					if(_v.type == VALUE_TYPE.integer)
-						 _val = irandom_range(min_val, max_val);
-					else _val =  random_range(min_val, max_val);
-					
-				} else if(is_array(min_val)) {
-					_val = array_create(array_length(min_val));
-					
-					for( var i = 0, n = array_length(min_val); i < n; i++ )
-						_val[i] = random_range(min_val[i], max_val[i]);
-				}		
-		}
-		
-		if(_val != undefined) _v.setValue(_val);
-	}
-	
-	static serialize = function() {
-		var _m = {};
-		
-		_m.node_id = node_id;
-		_m.inindex = inindex;
-		
-		_m.type    = type;
-		
-		_m.palt    = palette;
-		_m.grad    = gradient? gradient.serialize() : 0;
-		
-		_m.min_val = min_val;
-		_m.max_val = max_val;
-		
-		return _m;
-	}
-	
-	static deserialize = function(_m) {
-		node_id = _m[$ "node_id"] ?? node_id;
-		inindex = _m[$ "inindex"] ?? inindex;
-		
-		type     = _m[$ "type"]   ?? type;
-		
-		palette  = _m[$ "palt"]   ?? palette;
-		gradient = _m[$ "grad"]   ?? gradient;
-		if(gradient != 0) gradient = new gradientObject().deserialize(gradient);
-		
-		min_val = _m[$ "min_val"] ?? min_val;
-		max_val = _m[$ "max_val"] ?? max_val;
-		
-		return self;
-	}
-}
-
-function Project_Randomizer() constructor {
-	seed   = seed_random(6);
-	values = [];
-	
-	static addTrack = function(t) /*=>*/ {return array_push(values, t)};
-	
-	static removeValue = function(v) /*=>*/ {
-		for( var i = array_length(values) - 1; i >= 0; i-- )
-			if(values[i].value == v) array_delete(values, i, 1);
-	}
-	
-	static hasValue = function(v) /*=>*/ {
-		for( var i = 0, n = array_length(values); i < n; i++ )
-			if(values[i].value == v) return true;
-		return false;
-	}
-	
-	static Random = function() /*=>*/ {
-		for( var i = 0, n = array_length(values); i < n; i++ )
-			values[i].Random();
-	}
-	
-	static serialize = function() {
-		var _m = {};
-		_m.values = array_map(values, function(t,i) /*=>*/ {return t.serialize()} );
-		return _m;
-	}
-	
-	static deserialize = function(_m) {
-		values = array_create(array_length(_m.values));
-		for( var i = 0, n = array_length(_m.values); i < n; i++ )
-			values[i] = new Project_Randomizer_Value().deserialize(_m.values[i]);
-		return self;
-	}
-}
 
 function Panel_Randomizer() : PanelContent() constructor {
 	title = "Randomizer";
@@ -363,7 +363,19 @@ function Panel_Randomizer() : PanelContent() constructor {
 	
 	function addValueTrack(v) { PROJECT.randomizer.addTrack(new Project_Randomizer_Value(v)); }
 	
-	static stepBegin   = function() {
+	function randomSeed() {
+		var _nodes = PANEL_GRAPH.nodes_selecting;
+		if(array_empty(_nodes)) return;
+		
+		randomize();
+		array_foreach(_nodes, function(n,_) /*=>*/ {
+			if(is(n.input_seed, NodeValue)) 
+				n.input_seed.setValue(seed_random(6));
+			return true;
+		})
+	}
+	
+	static stepBegin = function() {
 		RANDOMIZER_ACTIVE = randActive;
 		randActive = false;
 	}
@@ -382,11 +394,18 @@ function Panel_Randomizer() : PanelContent() constructor {
 		var bb = THEME.button_hide;
 		var bx = ui(8);
 		var by = ui(8);
-		var bc;
+		var bc = COLORS._main_accent;
 		
 		var bt = __txt("Randomize All");
-		if(buttonInstant_Pad(bb, bx, by, bs, bs, m, hov, foc, bt, THEME.icon_random, 0, COLORS._main_accent) == 2)
+		if(buttonInstant_Pad(bb, bx, by, bs, bs, m, hov, foc, bt, THEME.icon_random, 0, bc) == 2)
 			_rnd.Random();
+		bx += bs + ui(4);
+		
+		var bt = __txt("Randomize Selected nodes seed");
+		var bc = COLORS._main_icon;
+		var ac = !array_empty(PANEL_GRAPH.nodes_selecting);
+		if(buttonInstant_Pad(bb, bx, by, bs, bs, m, ac && hov, foc, bt, THEME.icon_random_seed, 0, bc, .5 + ac*.5) == 2)
+			randomSeed();
 		bx += bs + ui(4);
 		
 		var n = PANEL_INSPECTOR.getInspecting();
