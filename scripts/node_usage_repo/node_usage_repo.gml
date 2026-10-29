@@ -1,5 +1,5 @@
 function Node_Usage_Repo_Create(_project = PROJECT, pname = "", purl = "") {
-	var _dirpath = "D:/Project/MakhamDev/LTS-PixelComposer/PixelComposer/docsdata/node_usage_repo";
+	var _dirpath = "D:/Project/MakhamDev/LTS-PixelComposer/PixelComposer/docsdata/examples";
 	if(!directory_exists(_dirpath)) return;
 
 	if(pname == "") {

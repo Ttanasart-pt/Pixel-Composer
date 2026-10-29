@@ -7,5 +7,6 @@
 	"settings": {
 		"explorer.autoReveal": false,
 		"editor.fontFamily": "Fira Code, 'Fira Code', monospace",
+		"git.ignoreLimitWarning": true,
 	}
 }

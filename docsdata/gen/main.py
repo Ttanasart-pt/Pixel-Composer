@@ -19,7 +19,7 @@ subprocess.run(["python", "docsdata/gen/md.py"])
 
 # Generate node files
 print("> Running nodes.py...")
-subprocess.run(["python", "docsdata/gen/node_repo.py"])
+subprocess.run(["python", "docsdata/gen/nodeExamples.py"])
 subprocess.run(["python", "docsdata/gen/node.py"])
 
 # Generate web contents

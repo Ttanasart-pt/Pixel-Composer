@@ -5,17 +5,17 @@ import fileUtil
 import json5 as json
 from tqdm import tqdm
 
-src_dir = "docsdata/node_usage_repo"
-dst_dir = "docsdata/pregen/3_nodes/_nodeUsage"
+src_dir = "docsdata/examples"
+dst_dir = "docsdata/pregen/3_nodes/_examples"
 
-shutil.copytree(src_dir, "docs/node_usage_repo", dirs_exist_ok=True)
+shutil.copytree(src_dir, "docs/examples", dirs_exist_ok=True)
 fileUtil.verifyFolder(dst_dir)
 
 if not os.path.exists(src_dir):
     exit()
 
 nodes = os.listdir(src_dir)
-for node in tqdm(nodes, desc="Node usage repo"):
+for node in tqdm(nodes, desc="Node examples"):
     src_node_dir = os.path.join(src_dir, node)
     dst_path = os.path.join(dst_dir, f"{node}.html")
 
@@ -32,7 +32,7 @@ for node in tqdm(nodes, desc="Node usage repo"):
 
         _data = os.path.join(example_path, "data.json")
         _prev = os.path.join(example_path, "preview.png")
-        _dir  = f'/node_usage_repo/{node}/{example}'
+        _dir  = f'/examples/{node}/{example}'
 
         page += "<tr>\n"
         if os.path.exists(_prev):
@@ -49,7 +49,7 @@ for node in tqdm(nodes, desc="Node usage repo"):
             input_list = "";
             for inp in data_inputs:
                 if isinstance(inp, str):
-                    input_list += f"<img src='{_dir}/{inp}.png' alt='{inp}''>"
+                    input_list += f"<img src='{_dir}/{inp}.png' alt='{inp}' loading='lazy'>"
                 
             page += f"<td class='inputs'>{input_list}</td>\n"
 
