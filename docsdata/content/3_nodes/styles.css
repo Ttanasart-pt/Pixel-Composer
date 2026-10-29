@@ -1,5 +1,5 @@
 img.node-content {
-    max-width: min(100%, calc(100% - 280px));
+    width: min(100%, calc(100% - 280px));
     
     @media (max-width: 800px) {
         margin: auto;
