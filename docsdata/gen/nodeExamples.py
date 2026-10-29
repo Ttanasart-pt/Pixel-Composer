@@ -27,16 +27,18 @@ for node in tqdm(nodes, desc="Node examples"):
     page += '<table class="usage-table">\n'
     page += '<tr><th>Preview</th><th>Inputs</th><th>Project</th></tr>\n'
 
-    for example in examples:
+    for i, example in enumerate(examples):
         example_path = os.path.join(src_node_dir, example)
 
         _data = os.path.join(example_path, "data.json")
         _prev = os.path.join(example_path, "preview.png")
         _dir  = f'/examples/{node}/{example}'
 
+        _lazy = "loading='lazy'" if i > 8 else ""
+
         page += "<tr>\n"
         if os.path.exists(_prev):
-            page += f"<td class='preview'><img src='{_dir}/preview.png' loading='lazy'></td>\n"
+            page += f"<td class='preview'><img src='{_dir}/preview.png' {_lazy}></td>\n"
 
         if os.path.exists(_data):
             with open(_data, "r", encoding="utf-8") as df:
@@ -50,7 +52,7 @@ for node in tqdm(nodes, desc="Node examples"):
             for inp in data_inputs:
                 if isinstance(inp, str):
                     input_list += f'''<div class='input-prev'>
-                                            <img src='{_dir}/{inp}.png' alt='{inp}' loading='lazy'>
+                                            <img src='{_dir}/{inp}.png' alt='{inp}' {_lazy}>
                                             <p class='input-label'>{inp}</p>
                                       </div>'''
                 
