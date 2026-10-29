@@ -9,6 +9,17 @@ function Mesh() constructor {
 	center    = [ 0, 0 ];
 	bbox      = [ 0, 0, 1, 1 ];
 	
+	////- Builder
+	
+	static build = function(_p, _e, _t) {
+		points    = _p;
+		edges     = _e;
+		triangles = _t;
+		calcCoM();
+		
+		return self;
+	}
+	
 	////- Functions
 	
 	static getRandomPoint = function(seed = undefined) {

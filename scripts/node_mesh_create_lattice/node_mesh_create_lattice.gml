@@ -15,8 +15,8 @@ function Node_Mesh_Create_Lattice(_x, _y, _group = noone) : Node(_x, _y, _group)
 	newOutput(0, nodeValue_Output("Mesh", VALUE_TYPE.mesh, noone ));
 	
 	input_display_list = [
-		["Area", false], 0, 
-		["Mesh", false], 1, 2, 
+		[ "Area", false ], 0, 
+		[ "Mesh", false ], 1, 2, 
 	];
 	
 	////- Node

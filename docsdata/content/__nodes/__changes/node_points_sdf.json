@@ -6,6 +6,11 @@
         "date": "2026-10-29T06:14:19.721Z",
         "node": "",
         "commit": "**Points to SDF**: Add additive blend mode, distance remap curve."
+      },
+      {
+        "date": "2026-10-29T07:24:37.442Z",
+        "node": "",
+        "commit": "Introduced"
       }
     ]
   },

@@ -167,8 +167,8 @@ void main() {
 		for(int i = 0; i < pointAmount; i++) {
 			float dist = distance(px, points[i]) / dst;
 			      dist = curveEval(distMap_curve, distMap_amount, dist);
-			
-			minDist    = min(minDist, dist);
+			      
+			minDist = min(minDist, dist);
 		}
 		
 		distC = minDist;

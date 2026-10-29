@@ -1416,6 +1416,7 @@
             
             { "label": "Mesh" },
             "Node_Mesh_Create_Path",
+            "Node_Mesh_Create_Points",
             "Node_Mesh_Create_Lattice",
             "Node_Mesh_Transform",
             

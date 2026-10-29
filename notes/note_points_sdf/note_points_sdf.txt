@@ -4,6 +4,8 @@ Output SDF surface from an array of vec2 points.
 
 [proptable]
 Render
+Blend Mode|Distance processing mode.\n\t- **Min**: Calculate minimum distance\n\t- **Additive**: Add inverted distance.
 Max Distance|Maximum SDF distance.
 Inverted|Invert color.
 [/proptable]
+

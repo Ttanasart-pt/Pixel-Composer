@@ -8,8 +8,8 @@ function Node_Point_SDF(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	newInput( 1, nodeValue_Vec2( "Points", [] )).setVisible(true, true).setArrayDepth(1);
 	
 	////- =Render
+	newInput( 5, nodeValue_EScroll( "Blend Mode",   0, [ "Min", "Additive" ] ));
 	newInput( 2, nodeValue_Float(   "Max Distance", 16    )).setMappable( 4);
-	newInput( 5, nodeValue_EScroll( "Blend Mode",   0, [ "Max", "Additive" ] ));
 	newInput( 3, nodeValue_Bool(    "Inverted",     false ));
 	newInput( 6, nodeValue_Curve(   "Curve",        CURVE_DEF_01 ));
 	// 7
@@ -18,7 +18,7 @@ function Node_Point_SDF(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	
 	input_display_list = [  0, 
 		[ "Points", false ],  1, 
-		[ "Render", false ],  2,  4,  5,  3,  6, 
+		[ "Render", false ],  5,  2,  4,  3,  6, 
 	];
 	
 	////- Node
@@ -31,8 +31,8 @@ function Node_Point_SDF(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			
 			var _points = _data[ 1];
 			
-			var _maxd   = _data[ 2];
 			var _bln    = _data[ 5];
+			var _maxd   = _data[ 2];
 			var _inv    = _data[ 3];
 			var _curv   = _data[ 6];
 		#endregion
