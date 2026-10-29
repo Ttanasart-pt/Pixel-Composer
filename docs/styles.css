@@ -1230,12 +1230,16 @@ table.usage-table {
                 position: absolute;
                 bottom: 2px;
                 left: 2px;
-
                 
-                background-color: #19192580;
+                font-size: .7rem;
+                font-weight: 700;
+                
+                background-color: #191925aa;
                 color: var(--main_white);
-                padding: 2px 4px;
-                border-radius: 2px;
+
+                padding: 2px 5px;
+                border-radius: 4px;
+                
             }
         }
     }
