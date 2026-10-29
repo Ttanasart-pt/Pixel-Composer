@@ -32,6 +32,11 @@ function Node_MK_Tree_Inline(_x, _y, _group = noone) : Node_Collection_Inline(_x
 	
 	static getDimension = function() /*=>*/ { dimension = dimension ?? inputs[2].getValue(); return dimension; }
 	
+	static onTriggerRender = function() {
+		for( var i = 0, n = array_length(nodes); i < n; i++ ) 
+			if(is(nodes[i], Node)) nodes[i].triggerRender();
+	}
+	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _params) {
 		var _dim = getDimension();
 		var _cx  = _x + _dim[0] / 2 * _s;

@@ -2,9 +2,42 @@
 
 [proptable]
 Pattern
-Gap|Thickness of the gap between grid.
-Shift|Shift every even row by a fix amount to create brick pattern.
+Position|Grid offset.
+Angle|Rotation
+Invert Size|Whether to define the amount of cell (invert on) or the size of each cell (invert off).
+Grid Size|Grid size based on the <junc Invert Size> setting.
+
+Gap|Thickness of the gap between each cell.
+Uniform Gap|Use pixel position to calculate gap instead of grid distance field.
+
+Diagonal|Rotate the grid by 45deg and scale the size by sqrt(2).
+[/proptable]
+
+[proptable]
+Shift
 Shift Axis|The axis to apply shift to.
+Shift|Shift every even row by a fix amount to create brick pattern.
+Random Shift|Shift each row randomly.
+Secondary Shift|Additionaly shift every 2 rows.
+[/proptable]
+
+[proptable]
+Scale
+Random Scale|Apply random scale along the <junc Shift Axis>.
+Secondary Scale|Apply custom scale every 2 rows.
+[/proptable]
+
+[proptable]
+Render
+Render Type|Rendering Modes
+Tile Color|Gradient defining random tile color.
+Gap Color|<junc Gap> color.
+Anti-aliasing|Interpolate color when grid is not pixel-aligned.
+
+Texture Transform
+Truchet|Randomly rotate texture by 90deg to create truchet pattern.
+Flip Horizontal|Chance for applying horizontal flip.
+Flip VerticalChance for applying vertical flip.
 [/proptable]
 
 ## Rendering Modes
