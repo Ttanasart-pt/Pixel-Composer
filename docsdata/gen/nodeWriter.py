@@ -177,7 +177,7 @@ def writeChangeTable(metadata, changeData):
             changeText += changeTextV
             hasAnyChange = True
 
-    changeText += '</table>'
+    changeText += '</table><br>'
     if not hasAnyChange:
         return ""
     return changeText
@@ -205,7 +205,7 @@ def writeLinks(linkContents, metadata, nodeData):
     for link in links:
         fullLink = srchub + link[1]
         linkText += f'''<li><span>{link[0]}: </span><a href="{fullLink}">{link[1]}</a></li>'''
-    linkText += '</ul>'
+    linkText += '</ul><br>'
     return linkText
 
 def writeNode(metadata, contentPath, changeData = None):
