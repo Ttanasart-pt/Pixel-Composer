@@ -102,7 +102,7 @@ def writeSidebar(sidebar, depth = 0):
         
         if os.path.exists(icoPth):
             sideContent += f'<div class="sidebar-menu sidebar-file">' \
-                           f'<div class="sidebar-icon"><img src="{icoRel}"></div>' \
+                           f'<div class="sidebar-icon"><img src="{icoRel}" loading="lazy"></div>' \
                            f'<a href="{page}" class="sidebar-file">{title}</a></div>'
 
         else:
