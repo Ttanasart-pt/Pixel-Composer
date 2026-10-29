@@ -105,26 +105,6 @@ function Node_Scatter_Points(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 	                     _fixRef[0] / 2, _fixRef[1] / 2, 0 ];
 	                 
 		if(_dist < 2) {
-			point_cache = get_points_from_dist(_distMap, _amo, _seed, _samAtp, point_cache);
-			var p = point_cache;
-			
-			for( var i = 0, n = array_length(p); i < n; i++ ) {
-				var _p = p[i]; 
-				if(array_invalid(_p) || _p[0] == undefined) continue;
-				
-				if(_fix) {
-					_p[0] *= _fixRef[0];
-					_p[1] *= _fixRef[1];
-					
-				} else {
-					_p[0] = _area[0] + _area[2] * (_p[0] * 2 - 1);
-					_p[1] = _area[1] + _area[3] * (_p[1] * 2 - 1);
-				}
-				
-				array_push(pos, _p);
-			}
-			
-		} else if(_dist == 2) {
 			switch(_scat) {
 				case 0 :
 				case 1 :
@@ -175,6 +155,26 @@ function Node_Scatter_Points(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 						pos[i] = [_x, _y];
 					}
 					break;
+			}
+			
+		} else if(_dist == 2) {
+			point_cache = get_points_from_dist(_distMap, _amo, _seed, _samAtp, point_cache);
+			var p = point_cache;
+			
+			for( var i = 0, n = array_length(p); i < n; i++ ) {
+				var _p = p[i]; 
+				if(array_invalid(_p) || _p[0] == undefined) continue;
+				
+				if(_fix) {
+					_p[0] *= _fixRef[0];
+					_p[1] *= _fixRef[1];
+					
+				} else {
+					_p[0] = _area[0] + _area[2] * (_p[0] * 2 - 1);
+					_p[1] = _area[1] + _area[3] * (_p[1] * 2 - 1);
+				}
+				
+				array_push(pos, _p);
 			}
 			
 		} else if(_dist == 3) {

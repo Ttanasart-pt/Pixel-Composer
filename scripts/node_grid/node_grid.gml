@@ -156,7 +156,7 @@ function Node_Grid(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 			
 			shader_set_i( "mode",          _mode     );
 			shader_set_f( "seed",          _data[11] );
-			shader_set_gradient(           _data[ 5], _data[20], _data[21], inputs[5]);
+			shader_set_g( _data[ 5], _data[20], _data[21], inputs[5]);
 			shader_set_f("gradient_shift", _data[42] );
 			shader_set_f("gradient_seed",  _data[43] );
 			

@@ -8,15 +8,17 @@ function Node_Point_SDF(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	newInput( 1, nodeValue_Vec2( "Points", [] )).setVisible(true, true).setArrayDepth(1);
 	
 	////- =Render
-	newInput( 2, nodeValue_Float( "Max Distance", 16    )).setMappable( 4);
-	newInput( 3, nodeValue_Bool(  "Inverted",     false ));
-	// inputs 5
+	newInput( 2, nodeValue_Float(   "Max Distance", 16    )).setMappable( 4);
+	newInput( 5, nodeValue_EScroll( "Blend Mode",   0, [ "Max", "Additive" ] ));
+	newInput( 3, nodeValue_Bool(    "Inverted",     false ));
+	newInput( 6, nodeValue_Curve(   "Curve",        CURVE_DEF_01 ));
+	// 7
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
 	input_display_list = [  0, 
 		[ "Points", false ],  1, 
-		[ "Render", false ],  2,  4,  3, 
+		[ "Render", false ],  2,  4,  5,  3,  6, 
 	];
 	
 	////- Node
@@ -28,8 +30,11 @@ function Node_Point_SDF(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			var _dim    = _data[ 0];
 			
 			var _points = _data[ 1];
+			
 			var _maxd   = _data[ 2];
+			var _bln    = _data[ 5];
 			var _inv    = _data[ 3];
+			var _curv   = _data[ 6];
 		#endregion
 		
 		var _amo = array_length(_points);
@@ -43,10 +48,14 @@ function Node_Point_SDF(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		
 		surface_set_shader(_outSurf, sh_point_sdf);
 			shader_set_2( "dimension",   _dim  );
-			shader_set_i( "pointAmount", _amo  );
+			
 			shader_set_f( "points",      _p    );
+			shader_set_i( "pointAmount", _amo  );
+			
 			shader_set_m( "maxDistance", _maxd, _data[ 4], inputs[ 2] ); 
+			shader_set_i( "blendMode",   _bln  );
 			shader_set_i( "inverted",    _inv  );
+			shader_set_cr("distMap",     _curv );
 			
 			draw_empty();
 		surface_reset_shader();

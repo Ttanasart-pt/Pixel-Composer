@@ -271,9 +271,7 @@ function vectorBox(_size, _onModify, _unit = noone) : widget() constructor {
 				
 			} else if(toFocus >= 0) 
 				array_focusing = toFocus;
-			
 			return h;
-			
 		} 
 		
 		if(d < 1 || d > 2) {

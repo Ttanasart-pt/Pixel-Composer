@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.22.1.208",
+    "changes": [
+      {
+        "date": "2026-10-29T06:14:19.722Z",
+        "node": "",
+        "commit": "**Points to SDF**: Add additive blend mode, distance remap curve."
+      }
+    ]
+  },
+  {
     "version": "1.22.1.207",
     "changes": [
       {
