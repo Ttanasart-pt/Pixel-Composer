@@ -101,7 +101,7 @@ def writeUsage(metadata):
 
     useLink = f"/nodes/_nodeUsage/{baseNode}.html"
     exam    = "examples" if exampleCount > 1 else "example"
-    useText = f'<a href="{useLink}"><button class="copy-sample">View all {exampleCount} {exam}</button></a>'
+    useText = f'<a href="{useLink}" class="examples">View all {exampleCount} {exam}</a>'
     return useText
 
 

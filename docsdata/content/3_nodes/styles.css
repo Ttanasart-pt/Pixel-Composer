@@ -20,32 +20,6 @@ p:has(img.node-content) {
 }
 
 
-button.copy-sample {
-    margin: 0;
-    padding: 6px 12px;
-
-    font-family: 'Noto Sans', sans-serif;
-    font-weight: 500;
-    font-size: .8rem;
-    color: var(--main_white);
-    background-color: var(--main_black);
-    border: 1px solid var(--main_dkgrey);
-    border-radius: 5px;
-
-    display: block;
-    /* margin: auto;
-    margin-top: 8px; */
-
-    &:hover {
-        /* background-color: var(--main_dkgrey); */
-        border-color: var(--main_grey);
-    }
-
-    &:active {
-        background-color: var(--main_dkblack);
-    }
-}
-
 div.sample-actions {
     display: flex;
     flex-direction: row;
@@ -53,4 +27,32 @@ div.sample-actions {
     margin-top: 8px;
     margin-bottom: 16px;
     justify-content: center;
+    
+    button, a {
+        margin: 0;
+        padding: 6px 12px;
+
+        font-family: 'Noto Sans', sans-serif;
+        font-weight: 500;
+        font-size: .8rem;
+        color: var(--main_white);
+        background-color: var(--main_black);
+        border: 1px solid var(--main_dkgrey);
+        border-radius: 5px;
+
+        display: block;
+        /* margin: auto;
+        margin-top: 8px; */
+
+        &:hover  { border-color: var(--main_grey); }
+        &:active { background-color: var(--main_dkblack); }
+
+        &.examples {
+            background-color: color-mix(in srgb, var(--main_black) 50%, var(--positive) 10%);
+            border-color:     color-mix(in srgb, var(--main_black) 50%, var(--positive) 30%);
+
+            &:hover  { border-color: color-mix(in srgb, var(--main_black) 50%, var(--positive) 70%); }
+        }
+    }
+
 }
