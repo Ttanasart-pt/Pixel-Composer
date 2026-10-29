@@ -1,13 +1,16 @@
 function Node_3D_Transform(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _group) constructor {
 	name   = "Transform 3D";
 	
-	newInput(in_d3d + 0, nodeValue_D3Mesh("Mesh" ));
+	newInput(in_d3d+0, nodeValue_D3Mesh( "Mesh" ));
+	// in_d3d+1
 	
-	newOutput(0, nodeValue_Output("Mesh", VALUE_TYPE.d3Mesh, noone));
+	newOutput(0, nodeValue_Output( "Mesh", VALUE_TYPE.d3Mesh, noone ));
 	
-	input_display_list = [ in_d3d + 0, 
-		["Transform", false], 0, 1, 2,
+	input_display_list = [ in_d3d+0, 
+		[ "Transform", false ],  0,  1,  2,  3, 
 	];
+	
+	////- Node
 	
 	static processData = function(_output, _data, _array_index = 0, _frame = CURRENT_FRAME) {
 		var _mesh = _data[in_d3d + 0];

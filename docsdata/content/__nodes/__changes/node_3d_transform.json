@@ -1,0 +1,12 @@
+[
+  {
+    "version": "1.22.1.208",
+    "changes": [
+      {
+        "date": "2026-10-29T04:07:09.608Z",
+        "node": "",
+        "commit": "**Transform 3D**: Add transformation anchor."
+      }
+    ]
+  }
+]

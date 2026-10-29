@@ -125,12 +125,12 @@ function Node_3D_Mesh_Export(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 						var _bz = buffer_read(_buffer, buffer_f32);
 						
 						if(_appl) {
-							var _p = _trans.applyPoint([_px, _py, _pz]);
-							_px = _p.x;
-							_py = _p.y;
-							_pz = _p.z;
+							var _p = _trans.applyPoint(_px, _py, _pz);
+							_px = _p[0];
+							_py = _p[1];
+							_pz = _p[2];
 							
-							var _n = _trans.applyNormal([_nx, _ny, _nz]);
+							var _n = _trans.applyNormal(_nx, _ny, _nz);
 							_nx = _n.x;
 							_ny = _n.y;
 							_nz = _n.z;

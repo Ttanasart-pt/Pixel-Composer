@@ -6,7 +6,6 @@ function __transform() constructor {
 	rotation = new BBMOD_Quaternion();
 	scale    = new __vec3(1);
 	
-	matrix  = new BBMOD_Matrix();
 	matTran = noone;
 	matPos  = noone;
 	matRot  = noone;
@@ -33,20 +32,24 @@ function __transform() constructor {
 							  0, 0, 0, 
 							  1, 1, 1);
 		matRot = rotation.ToMatrix();
+		
 		matSca = matrix_build(0, 0, 0, 
 					  		  0, 0, 0, 
 					  		  scale.x,    scale.y,    scale.z);
+					  		  
 		matAnc = matrix_build(-anchor.x, -anchor.y, -anchor.z, 
 							   0, 0, 0, 
 							   1, 1, 1);
 		
-		matrix = new BBMOD_Matrix()
-                       .Mul(new BBMOD_Matrix().FromArray(matAnc)) 
-                       .Mul(new BBMOD_Matrix().FromArray(matSca)) 
-                       .Mul(new BBMOD_Matrix().FromArray(matRot)) 
-		               .Mul(new BBMOD_Matrix().FromArray(matPos))
-								   
-		matTran = matrix.ToArray();
+		matAnp = matrix_build( anchor.x,  anchor.y,  anchor.z, 
+							   0, 0, 0, 
+							   1, 1, 1);
+		
+		matTran = matAnc;
+		matTran = matrix_multiply(matTran, matSca);
+		matTran = matrix_multiply(matTran, matRot);
+		matTran = matrix_multiply(matTran, matPos);
+		matTran = matrix_multiply(matTran, matAnp);
 	}
 	
 	static applyTransform = function(_transform) {
@@ -61,13 +64,19 @@ function __transform() constructor {
 		return t2;
 	}
 	
-	static applyPoint = function(_point) {
-		var _res = matrix.MulVector(new __vec4(_point[0], _point[1], _point[2], 1));
+	static applyPoint = function(px, py, pz) {
+		var _res = [
+			matTran[ 0] * px + matTran[ 4] * py + matTran[ 8] * pz + matTran[12] * 1,
+			matTran[ 1] * px + matTran[ 5] * py + matTran[ 9] * pz + matTran[13] * 1,
+			matTran[ 2] * px + matTran[ 6] * py + matTran[10] * pz + matTran[14] * 1,
+			1
+		];
+		
 		return _res;
 	}
 	
-	static applyNormal = function(_normal) {
-		var _res = rotation.Rotate(new __vec3(_normal[0], _normal[1], _normal[2]));
+	static applyNormal = function(nx, ny, nz) {
+		var _res = rotation.Rotate(new __vec3(nx, ny, nz));
 		return _res;
 	}
 	

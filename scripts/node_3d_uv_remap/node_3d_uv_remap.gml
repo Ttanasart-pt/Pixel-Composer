@@ -3,10 +3,10 @@ function Node_3D_UV_Remap(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _grou
 	gizmo = new __3dGizmoPlane();
 	
 	////- =Transform
-	newInput(in_d3d + 0, nodeValue_D3Mesh("Mesh" ));
-	newInput(in_d3d + 1, nodeValue_Int("Target subobject", -1)).setArrayDepth(1);
+	newInput(in_d3d + 0, nodeValue_D3Mesh( "Mesh" ));
+	newInput(in_d3d + 1, nodeValue_Int( "Target subobject", -1 )).setArrayDepth(1);
+	newInput(in_d3d + 2, nodeValue_Int( "Bake UV",           0 ));
 	
-	newInput(in_d3d + 2, nodeValue_Int("Bake UV", 0));
 	b_bake_uv = button(function() /*=>*/ { toggleAttribute("bakedUV"); triggerRender(); }).setText("Bake UV");
 	
 	newOutput(0, nodeValue_Output("Mesh", VALUE_TYPE.d3Mesh, noone));

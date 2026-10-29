@@ -40,7 +40,6 @@ function Node_Point_3D_Camera(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _
 	newInput(i+14, nodeValue_Vec2( "Range To",    [ 0,1] )).setUnitSimple();
 	newInput(i+11, nodeValue_Vec2( "Depth From",  [ 0,1] )).setUnitSimple(false);
 	newInput(i+12, nodeValue_Vec2( "Depth To",    [ 0,1] )).setUnitSimple();
-	
 	// input i+16
 	
 	in_cam = array_length(inputs);
@@ -52,7 +51,7 @@ function Node_Point_3D_Camera(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _
 	input_display_list = [ i+2, i+10,
 		[ "Transform",   false ], i+4, 0, 1, i+5, i+6, i+7, i+8, i+9, 
 		[ "Camera",      false ], i+1, i+0, i+3, 
-		[ "Remap Range", false, noone, b_remap], i+13, i+14, i+11, i+12,
+		[ "Remap Range", false, noone, b_remap ], i+13, i+14, i+11, i+12,
 	];
 	
 	tool_lookat  = new NodeTool( "Move Target", THEME.tools_3d_transform_object );
