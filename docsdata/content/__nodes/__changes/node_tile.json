@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.22.1.208",
+    "changes": [
+      {
+        "date": "2026-10-29T05:17:47.215Z",
+        "node": "Tile",
+        "commit": "**Tile**: Separate pattern setting into multiple controls."
+      }
+    ]
+  },
+  {
     "version": "1.21.9.208",
     "changes": [
       {

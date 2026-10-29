@@ -23,8 +23,11 @@ function Node_Tile(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	newInput( 7, nodeValue_Slider(   "Shift",      0    ));
 	
 	////- =Pattern
-	newInput(11, nodeValue_EScroll( "Pattern", 0, [ "None", "Flip Grid", "90 Polar Rotation" ] )).setPieMenu();
-	// input 13
+	newInput(11, nodeValue_EScroll(  "Pattern",      0, [ "None", "Flip Grid", "90 Polar Rotation" ] )).setPieMenu();
+	newInput(13, nodeValue_EScroll(  "Flip H",       0, [ "None", "Alternate", "Alternate Inv." ] ));
+	newInput(14, nodeValue_EScroll(  "Flip V",       0, [ "None", "Alternate", "Alternate Inv." ] ));
+	newInput(15, nodeValue_Rotation( "Polar Rotate", 0 ));
+	// 16
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	 
@@ -34,12 +37,13 @@ function Node_Tile(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		[ "Tiling",    false ],  5,
 		[ "Transform", false ],  4,  8, 12, 
 		[ "Shift",     false ],  6,  7,  
-		[ "Pattern",   false ], 11,
+		[ "Pattern",   false ], 13, 14, 15, 
 	];
 	
 	////- Node
 	
 	attribute_surface_depth();
+	attribute_interpolation();
 	
 	static getDimension = function() {
 		var _type = getInputSingle(1);
@@ -59,9 +63,7 @@ function Node_Tile(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _params) { 
 		PROCESSOR_OVERLAY_CHECK
-		
 		drawOverlayInput(inputs[ 4].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my));
-		
 		return w_hovering;
 	}
 	
@@ -82,6 +84,9 @@ function Node_Tile(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 			var _shf  = _data[ 7];
 			
 			var _patt = _data[11];
+			var _flpx = _data[13];
+			var _flpy = _data[14];
+			var _pola = _data[15];
 			
 			inputs[2].setVisible(_type == 0);
 			inputs[3].setVisible(_type == 1);
@@ -99,21 +104,27 @@ function Node_Tile(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		}
 		
 		_outSurf = surface_verify(_outSurf, _sw, _sh, attrDepth());
-		surface_set_shader(_outSurf, sh_tile_ext);
-			shader_set_uv(_data[9], _data[10]);
-			shader_set_2("dimension",     [_sw, _sh] );
-			shader_set_2("surfDimension", _idim      );
+		
+		surface_set_shader(_outSurf, sh_tile_ext );
+			shader_set_uv( _data[9], _data[10] );
+			shader_set_interpolation(_surf);
 			
-			shader_set_2("spacing",   _spc  );
+			shader_set_2( "dimension",     [_sw, _sh] );
+			shader_set_2( "surfDimension", _idim      );
 			
-			shader_set_2("position",  _pos  );
-			shader_set_f("rotation",  degtorad(_rot));
-			shader_set_2("scale",     _sca  );
+			shader_set_2( "spacing",   _spc  );
 			
-			shader_set_i("shiftAxis", _shfA );
-			shader_set_f("shiftAlt",  _shf  );
+			shader_set_2( "position",  _pos  );
+			shader_set_f( "rotation",  degtorad(_rot));
+			shader_set_2( "scale",     _sca  );
 			
-			shader_set_i("pattern",   _patt );
+			shader_set_i( "shiftAxis", _shfA );
+			shader_set_f( "shiftAlt",  _shf  );
+			
+			shader_set_i( "pattern",   _patt );
+			shader_set_i( "flipX",     _flpx );
+			shader_set_i( "flipY",     _flpy );
+			shader_set_f( "polarRot",  _pola );
 			
 			draw_surface_stretched(_surf, 0, 0, _sw, _sh);
 		surface_reset_shader();

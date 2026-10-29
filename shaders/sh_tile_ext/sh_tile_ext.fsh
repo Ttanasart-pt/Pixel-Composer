@@ -75,6 +75,9 @@ uniform int   shiftAxis;
 uniform float shiftAlt;
 
 uniform int   pattern;
+uniform int   flipX;
+uniform int   flipY;
+uniform float polarRot;
 
 void main() {
 	float uva = 1.;
@@ -93,26 +96,24 @@ void main() {
 	vec2 tilePx = tx - floor(tx / repeatSize) * repeatSize;
 	vec2 tileTx = tilePx / surfDimension;
 	
-	if(pattern == 1) {
-		if(mod(tileId.x, 2.) >= 1.) tileTx.x = 1. - tileTx.x;
-		if(mod(tileId.y, 2.) >= 1.) tileTx.y = 1. - tileTx.y;
-		
-	} else if(pattern == 2) {
-		float hPI = PI / 2.;
+	if(flipX > 0 && mod(tileId.x + (float(flipX) - 1.), 2.) >= 1.) tileTx.x = 1. - tileTx.x;
+	if(flipY > 0 && mod(tileId.y + (float(flipY) - 1.), 2.) >= 1.) tileTx.y = 1. - tileTx.y;
+	
+	if(polarRot != 0.) {
 		float ang = 0.;
 		
 		if(mod(tileId.y, 2.) >= 1.)
-			ang = PI + hPI - hPI * tileId.x;
-		else
-			ang = hPI * tileId.x;
+			 ang = 3. - tileId.x;
+		else ang = tileId.x;
 		
+		ang *= radians(polarRot);
 		mat2 rot = mat2(cos(ang), - sin(ang), sin(ang), cos(ang));
 		tileTx = .5 + (tileTx - .5) * rot;
 	}
 	
 	if(tileTx.x < 0. || tileTx.y < 0. || tileTx.x > 1. || tileTx.y > 1.)
 		 gl_FragColor = vec4(0.);
-	else gl_FragColor = texture2D(gm_BaseTexture, tileTx) * v_vColour;
+	else gl_FragColor = sampleTexture(gm_BaseTexture, tileTx) * v_vColour;
 	
 	gl_FragColor.a *= uva;
 }
