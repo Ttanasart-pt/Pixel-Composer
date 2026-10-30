@@ -10,7 +10,10 @@ function sprite_add_os(path, imagenumb = 1, removeback = false, smooth = false, 
 
 function sprite_add_map(path, imagenumb = 1, removeback = false, smooth = false, xorig = 0, yorig = 0) {
 	if(!file_exists_empty(path)) return noone;
+	
+	var __t = get_timer();
 	var _path = sprite_path_check_format(filename_os(path));
+	
 	if(_path == undefined) return 0;
 	
 	var _extx = string_lower(filename_ext(_path));

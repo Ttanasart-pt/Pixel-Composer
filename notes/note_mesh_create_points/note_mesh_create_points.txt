@@ -1,0 +1,7 @@
+Create mesh by triangulating array of points.
+
+## Properties
+
+[proptable]
+Points|Point array.
+[/proptable]

@@ -1215,6 +1215,7 @@
     {"id":{"name":"note_maze_pattern","path":"notes/note_maze_pattern/note_maze_pattern.yy",},},
     {"id":{"name":"note_mesh_create_lattice","path":"notes/note_mesh_create_lattice/note_mesh_create_lattice.yy",},},
     {"id":{"name":"note_mesh_create_path","path":"notes/note_mesh_create_path/note_mesh_create_path.yy",},},
+    {"id":{"name":"note_mesh_create_points","path":"notes/note_mesh_create_points/note_mesh_create_points.yy",},},
     {"id":{"name":"note_mesh_to_path","path":"notes/note_mesh_to_path/note_mesh_to_path.yy",},},
     {"id":{"name":"note_mesh_transform","path":"notes/note_mesh_transform/note_mesh_transform.yy",},},
     {"id":{"name":"note_mesh_warp","path":"notes/note_mesh_warp/note_mesh_warp.yy",},},

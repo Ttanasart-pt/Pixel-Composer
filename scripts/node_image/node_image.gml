@@ -49,7 +49,7 @@ function Node_Image(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	
 	spr       = noone;
 	edit_time = 0;
-	temp_path = "";
+	curr_path = "";
 	
 	attributes.check_splice = true;
 	attributes.file_checker = true;
@@ -76,7 +76,14 @@ function Node_Image(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	}
 	
 	static updatePaths = function(_path) {
-		if(sprite_exists(spr)) sprite_delete(spr);
+		if(sprite_exists(spr)) {
+			if(curr_path == _path && edit_time == file_get_modify_s(_path))
+				return;
+			
+			sprite_delete(spr);
+		}
+		
+		curr_path = _path;
 		spr = createSprite(_path);
 	}
 	

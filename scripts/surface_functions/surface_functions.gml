@@ -1012,7 +1012,6 @@
 
 #endregion ================================= SERIALIZE =================================
 
-#region CPP
 /*[cpp]
 	#include <cstddef>
 	#include <cstdint>
@@ -1249,4 +1248,3 @@
 		return 0;
 	}
 */
-#endregion

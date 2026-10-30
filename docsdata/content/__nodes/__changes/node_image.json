@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.22.1.209",
+    "changes": [
+      {
+        "date": "2026-10-30T02:25:01.624Z",
+        "node": "",
+        "commit": "**Dither**: Scale property will now only scale base surface."
+      }
+    ]
+  },
+  {
     "version": "1.22.1.206",
     "changes": [
       {

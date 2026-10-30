@@ -39,8 +39,8 @@ function Node_Dither(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	newInput( 2, nodeValue_EScroll( "Pattern",  0, [ "2 x 2 Bayer", "4 x 4 Bayer", "8 x 8 Bayer", "White Noise", "Custom", "Matrix" ])).setPieMenu();
 	newInput( 3, nodeValue_Surface( "Dither map"                   )).setVisible(false);
 	newInput(18, nodeValue_Matrix(  "Dither Matrix", new Matrix(2).setArray([0,2,3,1]) ));
-	newInput(16, nodeValue_Vec2(    "Dither Scale", [1,1], true    ));
-	newInput(17, nodeValue_Bool(    "Invert",       false          )).setPieMenu();
+	newInput(16, nodeValue_Vec2(    "Scale", [1,1], true  ));
+	newInput(17, nodeValue_Bool(    "Invert",       false )).setPieMenu();
 	
 	////- =Dither
 	newInput( 6, nodeValue_EButton( "Mode",     0, [ "Color", "Alpha" ] ));
@@ -152,7 +152,7 @@ function Node_Dither(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 					if(is_surface(_map)) {
 						shader_set_i("useMap",		 1);
 						shader_set_f("mapDimension", surface_get_dimension(_map));
-						shader_set_surface("map",	 _map);
+						shader_set_s("map",	 _map);
 					}
 					break;
 					

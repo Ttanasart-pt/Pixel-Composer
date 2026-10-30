@@ -18,9 +18,6 @@ uniform vec2      contrast;
 uniform int       contrastUseSurf;
 uniform sampler2D contrastSurf;
 
-uniform sampler2D conMap;
-uniform int useConMap;
-
 uniform vec2  dimension;
 uniform vec2  scale;
 
@@ -100,12 +97,7 @@ void main() {
 		con = mix(contrast.x, contrast.y, (_vMap.r + _vMap.g + _vMap.b) / 3.);
 	}
 	
-	vec2 pos = v_vTexcoord;
-	if(scale.x != 1. || scale.y != 1.) {
-		vec2 dimScale = scale / dimension;
-		pos = floor(v_vTexcoord / dimScale) * dimScale;
-	}
-	
+	vec2  pos = floor(v_vTexcoord * dimension / scale + .5) * scale / dimension;
 	vec4 _col = texture2D( gm_BaseTexture, pos );
 	
 	bool exactColor = false;
@@ -193,18 +185,9 @@ void main() {
 		float d2 = colorDifferent(_col, col2);
 		
 		float rat = d1 / (d1 + d2);
+		      rat = (rat - .5) * con + .5;
+		vec2  px  = floor(v_vTexcoord * dimension);
 		float ditherVal;
-		
-		if(useConMap == 0) {
-			rat = (rat - 0.5) * con + 0.5;
-			
-		} else {
-			vec4 con_map_data = texture2D( conMap, v_vTexcoord );
-			float _cont = .1 + con * dot(con_map_data.rgb, vec3(0.2126, 0.7152, 0.0722));
-			rat = (rat - 0.5) * _cont + 0.5;
-		}
-		
-		vec2 px = floor(pos * dimension);
 		
 		if(useMap == 0) {
 			if(mapMode == 0) {
