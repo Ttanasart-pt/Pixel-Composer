@@ -286,20 +286,21 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		
 		var _nodes = [];
 		if(isRenderActive()) {
+			var inputNodes = [];
 			
-			var allReady = true;
-			for(var i = custom_input_index; i < array_length(inputs); i++) {
+			for(var i = custom_input_index, n = array_length(inputs); i < n; i++) {
 				var _in = inputs[i].from;
+				array_push(inputNodes, _in);
+				
 				if(!_in.isRenderActive()) continue;
-			
 				if(!_in.isRenderable()) {
 					if(global.FLAG.render == 1) LOG($"Node {_in.internalName} not ready, group skip.");
 					LOG_BLOCK_END
 					return [];
 				}
 			}
-		
-			_nodes = __nodeLeafList(getNodeList());
+			
+			_nodes = __nodeLeafList(inputNodes);
 		}
 		
 		LOG_BLOCK_END
