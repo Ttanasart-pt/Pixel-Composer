@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"node_3d_mesh_convex_hull",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"node_3d_mesh_convex_hull",
+  "parent":{
+    "name":"other",
+    "path":"folders/nodes/data/3D/d3d_mesh/other.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

@@ -48,7 +48,7 @@ event_inherited();
 		
 		var expand = PREFERENCES.splash_expand_recent;
 		var ww  = ui(260);
-		var hh	= ui(8);
+		var hh	= ui(0);
 		var pad = ui(6);
 		var hgt	= ui(14) + line_get_height(f_p0b) + line_get_height(f_p2);
 		_y += pad;
