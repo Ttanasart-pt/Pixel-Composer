@@ -2773,6 +2773,7 @@
     {"id":{"name":"node_path_map","path":"scripts/node_path_map/node_path_map.yy",},},
     {"id":{"name":"node_path_morph","path":"scripts/node_path_morph/node_path_morph.yy",},},
     {"id":{"name":"node_path_offset","path":"scripts/node_path_offset/node_path_offset.yy",},},
+    {"id":{"name":"node_path_orbital","path":"scripts/node_path_orbital/node_path_orbital.yy",},},
     {"id":{"name":"node_path_pathfind","path":"scripts/node_path_pathfind/node_path_pathfind.yy",},},
     {"id":{"name":"node_path_plot","path":"scripts/node_path_plot/node_path_plot.yy",},},
     {"id":{"name":"node_path_profile","path":"scripts/node_path_profile/node_path_profile.yy",},},

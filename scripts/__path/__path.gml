@@ -84,27 +84,28 @@ function Path(_node) constructor {
 function PathSegment() : Path() constructor {
 	segments = [];
 	
-	static getBoundary		= function() {
-		if(getSegmentCount() == 0) return new BoundingBox( 0, 0, 0, 0 );
+	static getBoundary      = function() /*=>*/ {return boundary};
+	static getSegmentCount  = function() /*=>*/ {return array_length(segments)};
+	static getLineCount		= function() /*=>*/ {return 1};
+	
+	static setBoundary = function() {
+		boundary = new BoundingBox( 0, 0, 0, 0 );
+		if(getSegmentCount() == 0) return;
 		
 		var minx = segments[0].x, maxx = segments[0].x;
 		var miny = segments[0].y, maxy = segments[0].y;
 		
 		for( var i = 0, n = array_length(segments); i < n; i++ ) {
 			var s = segments[i];
-			
 			minx = min(minx, s.x);
 			maxx = max(maxx, s.x);
 			miny = min(miny, s.y);
 			maxy = max(maxy, s.y);
 		}
-		return new BoundingBox( minx, miny, maxx, maxy ); 
+		
+		boundary = new BoundingBox( minx, miny, maxx, maxy ); 
 	}
-	
-	static getSegmentCount  = function() { return array_length(segments); }
-	static getLineCount		= function() { return 1; }
-	
-	static setSegment = function(segment) {
+	static setSegment  = function(segment) {
 		self.segments = segment;
 		lengths		  = [];
 		lengthAccs    = [];
@@ -113,7 +114,6 @@ function PathSegment() : Path() constructor {
 		var op, np;
 		for( var i = 0, n = array_length(segment); i < n; i++ ) {
 			np = segment[i];
-			
 			if(i) {
 				lengths[i - 1]    = point_distance(op.x, op.y, np.x, np.y);
 				lengthTotal      += lengths[i - 1];
@@ -163,7 +163,7 @@ function PathSegment() : Path() constructor {
 		
 		return 0;
 	}
-		
+	
 	static draw = function(_x, _y, _s) {
 		var ox, oy, nx, ny;
 		

@@ -17,6 +17,8 @@ function Node_3D_Mesh_Convex_Hull(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y,
 		[ "Material", false ], i+0, 
 	]
 	
+	////- Node
+	
 	static processData = function(_output, _data, _array_index = 0, _frame = CURRENT_FRAME) {
 		var _mat  = _data[in_mesh + 0];
 		var _pnts = _data[in_mesh + 1];

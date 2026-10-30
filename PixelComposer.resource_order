@@ -2414,6 +2414,7 @@
     {"name":"node_path_map","order":2,"path":"scripts/node_path_map/node_path_map.yy",},
     {"name":"node_path_morph","order":5,"path":"scripts/node_path_morph/node_path_morph.yy",},
     {"name":"node_path_offset","order":18,"path":"scripts/node_path_offset/node_path_offset.yy",},
+    {"name":"node_path_orbital","order":28,"path":"scripts/node_path_orbital/node_path_orbital.yy",},
     {"name":"node_path_pathfind","order":13,"path":"scripts/node_path_pathfind/node_path_pathfind.yy",},
     {"name":"node_path_plot","order":24,"path":"scripts/node_path_plot/node_path_plot.yy",},
     {"name":"node_path_profile","order":21,"path":"scripts/node_path_profile/node_path_profile.yy",},

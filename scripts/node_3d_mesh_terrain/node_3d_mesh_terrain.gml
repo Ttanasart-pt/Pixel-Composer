@@ -20,7 +20,9 @@ function Node_3D_Mesh_Terrain(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, _gr
 		__d3d_input_list_transform,
 		["Mesh",		false], i+3, i+1, i+2, i+4, i+6, 
 		["Material",	false], i+5, i+0, 
-	]
+	];
+	
+	////- Node
 	
 	static processData = function(_output, _data, _array_index = 0, _frame = CURRENT_FRAME) {
 		var _mat = _data[in_mesh + 0];
