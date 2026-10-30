@@ -236,7 +236,7 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 			inputs[0].getEditWidget().data_list = _dispArr;
 			
 			if(!LOADING && !APPENDING) {
-				inputs[0].setValue(0);
+				inputs[0].setValue(0, false, CURRENT_FRAME, false);
 				_inDisp = 0;
 			}
 		}
@@ -358,7 +358,6 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 			
 			case "Seed" : 
 				var _rFun = function() /*=>*/ { randomize(); setValue(seed_random(6)); };
-				
 				inParent.setDisplay(VALUE_DISPLAY._default, { 
 					side_button : button(method(inParent, _rFun)).setTooltip(__txt("Randomize"))
 						.setIcon(THEME.icon_random, 0, COLORS._main_icon).iconPad() 

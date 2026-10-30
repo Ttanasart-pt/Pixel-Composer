@@ -292,6 +292,6 @@ function scrollPane(_w, _h, ondraw) : widget() constructor {
 	////- Action
 	
 	static free = function() {
-		surface_free(surface);
+		surface_free_safe(surface);
 	}
 }
