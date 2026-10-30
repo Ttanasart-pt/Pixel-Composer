@@ -4,10 +4,12 @@ function Node_Trigger(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 	reactive_on_hover = true;
 	setDimension(96, 56);
 	
-	newInput(0, nodeValue_Trigger("Trigger" ))
-		.setDisplay(VALUE_DISPLAY.button, { name: "Trigger" });
+	newInput( 0, nodeValue_Trigger( "Trigger" )).setDisplay(VALUE_DISPLAY.button, { name: "Trigger" });
+	// 1
 	
-	newOutput(0, nodeValue_Output("Trigger", VALUE_TYPE.trigger, false ));
+	newOutput( 0, nodeValue_Output( "Trigger", VALUE_TYPE.trigger, false ));
+	
+	////- Node
 	
 	insp1button = button(function() /*=>*/ { inputs[0].setAnim(true); inputs[0].setValue(true); }).setTooltip(__txt("Trigger"))
 		.setIcon(THEME.sequence_control, 1, COLORS._main_value_positive).iconPad(ui(6)).setBaseSprite(THEME.button_hide_fill);

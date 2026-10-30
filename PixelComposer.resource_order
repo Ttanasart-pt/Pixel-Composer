@@ -2720,6 +2720,7 @@
     {"name":"node_transform_iso","order":59,"path":"scripts/node_transform_iso/node_transform_iso.yy",},
     {"name":"node_transform_single","order":2,"path":"scripts/node_transform_single/node_transform_single.yy",},
     {"name":"node_trigger_bool","order":2,"path":"scripts/node_trigger_bool/node_trigger_bool.yy",},
+    {"name":"node_trigger_period","order":4,"path":"scripts/node_trigger_period/node_trigger_period.yy",},
     {"name":"node_tunnel_out","order":2,"path":"scripts/node_tunnel_out/node_tunnel_out.yy",},
     {"name":"node_twirl","order":12,"path":"scripts/node_twirl/node_twirl.yy",},
     {"name":"node_ui_delay","order":4,"path":"scripts/node_ui_delay/node_ui_delay.yy",},

@@ -3124,6 +3124,7 @@
     {"id":{"name":"node_transform","path":"scripts/node_transform/node_transform.yy",},},
     {"id":{"name":"node_trigger_bool","path":"scripts/node_trigger_bool/node_trigger_bool.yy",},},
     {"id":{"name":"node_trigger","path":"scripts/node_trigger/node_trigger.yy",},},
+    {"id":{"name":"node_trigger_period","path":"scripts/node_trigger_period/node_trigger_period.yy",},},
     {"id":{"name":"node_tunnel_in","path":"scripts/node_tunnel_in/node_tunnel_in.yy",},},
     {"id":{"name":"node_tunnel_out","path":"scripts/node_tunnel_out/node_tunnel_out.yy",},},
     {"id":{"name":"node_twirl","path":"scripts/node_twirl/node_twirl.yy",},},

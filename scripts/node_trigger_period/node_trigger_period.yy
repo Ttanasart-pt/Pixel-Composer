@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"node_trigger_period",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"node_trigger_period",
+  "parent":{
+    "name":"trigger",
+    "path":"folders/nodes/data/value/trigger.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

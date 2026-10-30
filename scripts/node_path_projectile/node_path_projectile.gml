@@ -1,7 +1,7 @@
 function Node_Path_Projectile(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name = "Projectile Path";
-	setDrawIcon();
 	setDimension(96, 48);
+	setDrawIcon();
 	
 	newInput( 4, nodeValueSeed());
 	

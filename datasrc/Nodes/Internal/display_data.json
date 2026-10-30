@@ -1408,6 +1408,7 @@
             
             { "label": "Trigger" },
             "Node_Trigger",
+            "Node_Trigger_Period",
             "Node_Trigger_Bool",
             
             { "label": "Struct" },
