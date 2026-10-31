@@ -1,5 +1,4 @@
 #pragma use(sampler_simple)
-
 #region -- sampler_simple -- [1788846732.6884737]
     uniform int  sampleMode;
     
@@ -66,6 +65,7 @@ varying vec4 v_vColour;
 
 uniform vec2  dimension;
 uniform int   gamma;
+uniform int   inverted;
 
 uniform vec2      size;
 uniform int       sizeUseSurf;
@@ -132,7 +132,10 @@ void main() {
 		vec2 pxs  = v_vTexcoord + vec2( i, j ) * tx;
 		vec4 bcol = sampleTexture( gm_BaseTexture, pxs, 1. - amp);
 		
-		if(c.a == bcol.a && colorDifferent(c, bcol) <= tre) {
+		float cDiff = colorDifferent(c, bcol);
+		bool  inclu = inverted == 0? cDiff <= tre : cDiff >= tre;
+		
+		if(c.a == bcol.a && inclu) {
 			if(gamma == 1) bcol.rgb = pow(bcol.rgb, vec3(2.2));
 			
 			col += bcol * amp;

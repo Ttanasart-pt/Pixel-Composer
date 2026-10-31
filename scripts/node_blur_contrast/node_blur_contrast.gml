@@ -21,12 +21,13 @@ function Node_Blur_Contrast(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	////- =Blur
 	newInput( 1, nodeValue_Float(  "Size",        8 )).setMappable(12).setHotkey("S").setValidator(VV_min(0)).setUnitSimple(false).setPieMenu();
 	newInput( 2, nodeValue_Slider( "Threshold",  .2 )).setMappable(13).setTooltip("Brightness different to be blur together.").setPieMenu();
+	newInput(14, nodeValue_Bool(   "Inverted", false));
 	newInput( 9, nodeValue_Bool(   "Gamma Correction", false ));
-	// input 14
+	// 15
 	
 	input_display_list = [ 5, 6, 
 		[ "Surfaces",  true ],  0, 10, 11,  3,  4,  7,  8, 
-		[ "Blur",     false ],  1, 12,  2, 13,  9, 
+		[ "Blur",     false ],  1, 12,  2, 13, 14,  9, 
 	]
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
@@ -51,12 +52,16 @@ function Node_Blur_Contrast(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	}
 	
 	static processData = function(_outSurf, _data, _array_index) {
-		var _surf = _data[0];
-		var _size = _data[1];
-		var _tres = _data[2];
-		var _mask = _data[3];
-		var _mix  = _data[4];
-		var _gam  = _data[9];
+		#region data
+			var _surf = _data[ 0];
+			var _mix  = _data[ 4];
+			
+			var _size = _data[ 1];
+			var _tres = _data[ 2];
+			var _mask = _data[ 3];
+			var _invt = _data[14];
+			var _gam  = _data[ 9];
+		#endregion
 		
 		var ww = surface_get_width_safe(_surf);
 		var hh = surface_get_height_safe(_surf);
@@ -65,10 +70,11 @@ function Node_Blur_Contrast(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 			shader_set_interpolation(_surf);
 			shader_set_uv(_data[10], _data[11]);
 			
-			shader_set_f("dimension", [ ww, hh ]);
-			shader_set_f_map("size",     _size, _data[12], inputs[1] );
-			shader_set_f_map("treshold", _tres, _data[13], inputs[2] );
-			shader_set_i("gamma",        _gam);
+			shader_set_f( "dimension", [ww,hh] );
+			shader_set_m( "size",      _size, _data[12], inputs[1] );
+			shader_set_m( "treshold",  _tres, _data[13], inputs[2] );
+			shader_set_i( "inverted",  _invt );
+			shader_set_i( "gamma",     _gam  );
 			
 			draw_surface_safe(_surf);
 		surface_reset_shader();
