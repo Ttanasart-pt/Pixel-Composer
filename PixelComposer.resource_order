@@ -2261,6 +2261,7 @@
     {"name":"node_linearize","order":100,"path":"scripts/node_linearize/node_linearize.yy",},
     {"name":"node_liquefy","order":30,"path":"scripts/node_liquefy/node_liquefy.yy",},
     {"name":"node_local_analyze","order":52,"path":"scripts/node_local_analyze/node_local_analyze.yy",},
+    {"name":"node_lookat","order":24,"path":"scripts/node_lookat/node_lookat.yy",},
     {"name":"node_lovify","order":1,"path":"scripts/node_lovify/node_lovify.yy",},
     {"name":"node_lua_global","order":2,"path":"scripts/node_lua_global/node_lua_global.yy",},
     {"name":"node_lua_surface","order":4,"path":"scripts/node_lua_surface/node_lua_surface.yy",},

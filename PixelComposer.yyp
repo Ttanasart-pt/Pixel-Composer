@@ -2598,6 +2598,7 @@
     {"id":{"name":"node_liquefy","path":"scripts/node_liquefy/node_liquefy.yy",},},
     {"id":{"name":"node_local_analyze","path":"scripts/node_local_analyze/node_local_analyze.yy",},},
     {"id":{"name":"node_logic","path":"scripts/node_logic/node_logic.yy",},},
+    {"id":{"name":"node_lookat","path":"scripts/node_lookat/node_lookat.yy",},},
     {"id":{"name":"node_lovify","path":"scripts/node_lovify/node_lovify.yy",},},
     {"id":{"name":"node_lua_compute","path":"scripts/node_lua_compute/node_lua_compute.yy",},},
     {"id":{"name":"node_lua_global","path":"scripts/node_lua_global/node_lua_global.yy",},},

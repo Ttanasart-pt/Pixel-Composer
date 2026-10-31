@@ -1,5 +1,5 @@
 function Node_Quarternion_Lookat(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _group) constructor {
-	name = "Lookat";
+	name = "Lookat 3D";
 	setDrawIcon();
 	setDimension(96, 48);
 	
@@ -13,12 +13,13 @@ function Node_Quarternion_Lookat(_x, _y, _group = noone) : Node_3D_Object(_x, _y
 	
 	////- =Unit
 	newInput( 3, nodeValue_EButton("Unit", 0, [ "Quaternion", "Euler" ] ));
+	// 4
 	
 	newOutput(0, nodeValue_Output("Rotation", VALUE_TYPE.float, [0,0,0,1])).setDisplay(VALUE_DISPLAY.vector);
 	
 	input_display_list = [ 
-		[ "Positions", false ], 0, 1, 2, 
-		[ "Unit",      false ], 3, 
+		[ "Positions", false ],  0,  1,  2, 
+		[ "Unit",      false ],  3, 
 	];
 	
 	////- Preview

@@ -1,5 +1,5 @@
 {
-    "name":          "Lookat",
+    "name":          "Lookat 3D",
     "spr":           "s_node_quarternion_lookat",
     "baseNode":      "Node_Quarternion_Lookat",
     "pxc_version":    120040,
