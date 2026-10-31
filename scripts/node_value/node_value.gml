@@ -840,7 +840,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		array_push(node.inputMappable, self);
 		
 		var curveButton = button(function(_key) /*=>*/ { attributes[$ _key] = !attributes[$ _key]; node.triggerRender(); })
-			.setIcon( _icon, function(_key) /*=>*/ {return attributes[$ _key]}, function(_key) /*=>*/ {return attributes[$ _key]? c_white : COLORS._main_icon} ).iconPad()
+			.setIcon( _icon, function(_key) /*=>*/ {return attributes[$ _key]}, function(_key) /*=>*/ {return attributes[$ _key]? c_white : COLORS._main_icon_light} ).iconPad()
 			.setTooltip(_suf == "Curve"? $"Toggle Curve" : $"Toggle {_suf} Curve")
 			.setParam(_key);
 		

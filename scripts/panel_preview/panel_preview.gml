@@ -5508,6 +5508,7 @@ function Panel_Preview() : PanelContent() constructor {
 				        topbar_height_t.goto(thh);
 				        
 			        	if(mrg) draw_sprite_stretched_ext(THEME.tool_side, 2, txx, tyy, tww, thh, c_white, aa);
+			        	if(point_in_rectangle(mx, my, txx, tyy, txx+tww, tyy+thh)) _mouse_on_preview = false;
 		        	} 
 		        	
 		        	if(tool_side_draw_l) {
@@ -5517,6 +5518,7 @@ function Panel_Preview() : PanelContent() constructor {
 				        var thh  = h - toolbar_size * 2 - pd * 4;
 				        
 				        if(mrg) draw_sprite_stretched_ext(THEME.tool_side, 0, txx, tyy, tww, thh, c_white, aa);
+				        if(point_in_rectangle(mx, my, txx, tyy, txx+tww, tyy+thh)) _mouse_on_preview = false;
 		        	}
 			        	
 		        	if(tool_side_draw_b) {
@@ -5527,6 +5529,7 @@ function Panel_Preview() : PanelContent() constructor {
 				        topbar_height_b.goto(thh);
 				        
 			        	if(mrg) draw_sprite_stretched_ext(THEME.tool_side, 3, txx, tyy - thh, tww, thh, c_white, aa);
+			        	if(point_in_rectangle(mx, my, txx, tyy-thh, txx+tww, tyy)) _mouse_on_preview = false;
 			        } 
 			        
 			        if(tool_side_draw_r) {
@@ -5536,6 +5539,7 @@ function Panel_Preview() : PanelContent() constructor {
 				        var thh = h - toolbar_size - pd * 2;
 				        
 			        	if(mrg) draw_sprite_stretched_ext(THEME.tool_side, 1, txx, tyy, tww, thh, c_white, aa);
+			        	if(point_in_rectangle(mx, my, txx, tyy, txx+tww, tyy+thh)) _mouse_on_preview = false;
 			        }
 		        
 	        	}
@@ -5548,8 +5552,10 @@ function Panel_Preview() : PanelContent() constructor {
 			        var thh  = toolbar_size * 2;
 			        
 			        if(tool_side_draw_t) topbar_height_t.goto(thh);
-			        if(topbar_height_t.value > ui(2))
+			        if(topbar_height_t.value > ui(2)) {
 			        	draw_sprite_stretched_ext(THEME.tool_side, 2, txx, tyy, tww, topbar_height_t.value, c_white, aa);
+        				if(point_in_rectangle(mx, my, txx, tyy, txx+tww, tyy+topbar_height_t.value)) _mouse_on_preview = false;
+			        }
         			
         			var txx = pd;
 			        var tyy = h - pd;
@@ -5557,8 +5563,10 @@ function Panel_Preview() : PanelContent() constructor {
 			        var thh = toolbar_size + toolbar_size;
 			        
 			        if(tool_side_draw_b) topbar_height_b.goto(thh);
-			        if(topbar_height_b.value > ui(2))
+			        if(topbar_height_b.value > ui(2)) {
 			        	draw_sprite_stretched_ext(THEME.tool_side, 3, txx, tyy - topbar_height_b.value, tww, topbar_height_b.value, c_white, aa);
+			        	if(point_in_rectangle(mx, my, txx, tyy-topbar_height_b.value, txx+tww, tyy)) _mouse_on_preview = false;
+			        }
 			        
         		} else {
 	        		var txx  = pd;
@@ -5566,16 +5574,20 @@ function Panel_Preview() : PanelContent() constructor {
 			        var tww  = toolbar_size;
 			        var thh  = h - toolbar_size * 2 - pd * 4;
 			        
-			        if(toolbar_content_l.value > ui(2))
+			        if(toolbar_content_l.value > ui(2)) {
 			        	draw_sprite_stretched_ext(THEME.tool_side, 0, txx, tyy, tww, toolbar_content_l.value, c_white, aa);
-			        	
+			        	if(point_in_rectangle(mx, my, txx, tyy, txx+tww, tyy+toolbar_content_l.value)) _mouse_on_preview = false;
+			        }
+			        
 			        var txx = w + 1 - toolbar_size - pd;
 			        var tyy = toolbar_size + pd * 2;
 			        var tww = toolbar_size;
 			        var thh = h - toolbar_size - pd * 2;
 			        
-			        if(toolbar_content_r.value > ui(2))
+			        if(toolbar_content_r.value > ui(2)) {
 			        	draw_sprite_stretched_ext(THEME.tool_side, 0, txx, tyy, tww, toolbar_content_r.value, c_white, aa);
+			        	if(point_in_rectangle(mx, my, txx, tyy, txx+tww, tyy+toolbar_content_r.value)) _mouse_on_preview = false;
+			        }
         		}
         	}
         	

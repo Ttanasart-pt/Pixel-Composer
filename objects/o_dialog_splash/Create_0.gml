@@ -149,7 +149,7 @@ event_inherited();
 			if(_hov) draw_sprite_stretched_ext(THEME.ui_panel, 1, xx, yy, ww, hg, COLORS._main_accent);
 		}
 		
-		return hh + hg * 2;
+		return hh;
 	});
 	sp_recent.always_scroll = false;
 	
