@@ -127,6 +127,7 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	];
 	
 	export_scale_label = new Inspector_Label("");
+	export_speed_label = new Inspector_Label("");
 	export_template    = new Inspector_Custom_Renderer(function(_x, _y, _w, _m, _hover, _focus, _panel = noone) {
 		var font = f_p2;
 		if(_panel) font = _panel.viewMode == INSP_VIEW_MODE.compact? f_p3 : f_p2;
@@ -211,7 +212,7 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		[ "Export",       false     ],  0,  1, 20,  2, export_template, 16, 22, 
 		[ "Format",       false     ],  3,  9, 17, 18,  6,  7, 10, 13, 23, 
 		[ "Post-Process", false     ], 19, export_scale_label, 
-		[ "Animation",    false     ], 26,  8, 27,  5, 11, 14, 21, 
+		[ "Animation",    false     ], 26,  8, 27, export_speed_label,  5, 11, 14, 21, 
 		[ "Custom Range",  true, 15 ], 12, 
 		[ "Regions",       true, 24 ], 25, 
 	];
@@ -1189,6 +1190,8 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 				export_scale_label.text = $"Final Dimension [{sw} x {sh}]* px";
 				
 			}
+			
+			export_speed_label.visible = anim == NODE_EXPORT_FORMAT.animation;
 		#endregion
 		
 		#region visiblity
@@ -1222,6 +1225,11 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 				var _fmt = array_safe_get_fast(format_animation, extn);
 						
 				var fType = getInputData(26);
+				var fRate = getInputData( 8);
+				if(inputs[8].attributes.unit == VALUE_UNIT.reference) 
+					fRate *= project.animator.framerate;
+				
+				var fTime = getInputData(27);
 				
 				inputs[ 9].setChoices(format_animation);
 				inputs[17].setVisible(_fmt == ".gif");
@@ -1253,7 +1261,22 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 					inputs[10].getEditWidget().maxx = 63;
 					
 				}
-					
+				
+				var _ftime = 1;
+				var _frate = 1;
+				
+				if(fType == 0)
+					_ftime = 1000 / fRate;
+				else
+					_ftime = fTime;
+				
+				if(_fmt == ".gif")
+					_ftime = round(_ftime / 10) * 10;
+				_frate = 1000 / _ftime;
+				
+				export_speed_label.text  = $"Export frame time: {_ftime} ms";
+				export_speed_label.text += $"\nExport framerate: {_frate} fps";
+				
 			} else {
 				var _fmt = array_safe_get_fast(format_image, extn);
 			
