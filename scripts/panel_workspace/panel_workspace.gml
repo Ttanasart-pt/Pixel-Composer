@@ -3,9 +3,24 @@
 	
 	#macro CHECK_PANEL_WORKSPACE if(!is_instanceof(FOCUS_CONTENT, Panel_Workspace)) return;
 	
-	function panel_workspace_apply()	{ CHECK_PANEL_WORKSPACE CALL("panel_workspace_apply");		FOCUS_CONTENT.apply_space();   }
-	function panel_workspace_replace()	{ CHECK_PANEL_WORKSPACE CALL("panel_workspace_replace");	FOCUS_CONTENT.replace_space(); }
-	function panel_workspace_delete()	{ CHECK_PANEL_WORKSPACE CALL("panel_workspace_delete");		FOCUS_CONTENT.delete_space();  }
+	function workspace_apply(_l) {
+		if(_l == "") return;
+		PREFERENCES.panel_layout_file = _l;
+		PREF_SAVE();
+		setPanel();
+	}
+	
+	function workspace_replace(_l) { 
+		if(_l == "") return;
+		var cont = panelSerialize();
+		json_save_struct(DIRECTORY + "layouts/" + _l + ".json", cont);
+	}
+	
+	function workspace_delete(_l) { 
+		if(_l == "") return;
+		file_delete(DIRECTORY + "layouts/" + _l + ".json");
+	}
+	
 #endregion
 
 function Panel_Workspace() : PanelContent() constructor {
@@ -24,32 +39,7 @@ function Panel_Workspace() : PanelContent() constructor {
 	scroll_max = 0;
 	scroll_ini = true;
 	
-	layout_selecting = "";
-	
-	registerFunction( "Workspace", "Apply",   "", MOD_KEY.none, panel_workspace_apply   );
-	registerFunction( "Workspace", "Replace", "", MOD_KEY.none, panel_workspace_replace );
-	registerFunction( "Workspace", "Delete",  "", MOD_KEY.none, panel_workspace_delete  );
-	
 	////- Workspace
-	
-	static apply_space = function() {
-		if(layout_selecting == "") return;
-		PREFERENCES.panel_layout_file = layout_selecting;
-		PREF_SAVE();
-		setPanel();
-	}
-	
-	static replace_space = function() { 
-		if(layout_selecting == "") return;
-		var cont = panelSerialize();
-		json_save_struct(DIRECTORY + "layouts/" + layout_selecting + ".json", cont);
-	}
-	
-	static delete_space = function() { 
-		if(layout_selecting == "") return;
-		file_delete(DIRECTORY + "layouts/" + layout_selecting + ".json");
-		refreshContent();
-	}
 	
 	static refreshContent = function() {
 		workspaces = [];
@@ -129,11 +119,10 @@ function Panel_Workspace() : PanelContent() constructor {
 				}
 				
 				if(mouse_rpress(pFOCUS)) {
-					layout_selecting = str;
 					menuCall("workspace_menu", [
-						menuItem( __txt("Select"), function() /*=>*/ {return apply_space()} ),
-						menuItem( __txt("workspace_replace_current", "Replace with current"), function() /*=>*/ {return replace_space()} ),
-						menuItem( __txt("Delete"), function() /*=>*/ {return delete_space()}, THEME.cross),
+						menuItem( __txt("Select"), function(l) /*=>*/ {return workspace_apply(l)} ).setParam(str),
+						menuItem( __txt("workspace_replace_current", "Replace with Current"), function(l) /*=>*/ {return workspace_replace(l)} ).setParam(str),
+						menuItem( __txt("Delete"), function(l) /*=>*/ { workspace_delete(l); refreshContent(); }, THEME.cross).setParam(str),
 					]);
 				}
 			}

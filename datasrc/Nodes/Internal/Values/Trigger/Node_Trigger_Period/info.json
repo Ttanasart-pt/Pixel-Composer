@@ -1,1 +1,7 @@
-{"spr":"s_node_trigger_period","pxc_version":122012,"name":"Trigger Period","baseNode":"Node_Trigger_Period"}
+{
+    "name":          "Trigger Beat",
+    "tooltip":       "Create trigger event every fixed amount of frame.",
+    "spr":           "s_node_trigger_period",
+    "baseNode":      "Node_Trigger_Period",
+    "pxc_version":    122012,
+}

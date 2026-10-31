@@ -1,0 +1,11 @@
+{
+  "$GMNotes":"v1",
+  "%Name":"note_trigger_period",
+  "name":"note_trigger_period",
+  "parent":{
+    "name":"trigger",
+    "path":"folders/nodes/data/value/trigger.yy",
+  },
+  "resourceType":"GMNotes",
+  "resourceVersion":"1.1",
+}

@@ -1,5 +1,5 @@
 function Node_Trigger_Period(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
-	name = "Trigger Period";
+	name = "Trigger Beat";
 	update_on_frame = true;
 	always_pad      = true;
 	

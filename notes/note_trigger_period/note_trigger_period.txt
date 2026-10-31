@@ -1,0 +1,7 @@
+## Properties
+
+[proptable]
+Trigger
+Period|Number of frames between each trigger.
+Shift|Offset triggers time.
+[/proptable]

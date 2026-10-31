@@ -467,9 +467,10 @@ function Panel_Menu() : PanelContent() constructor {
     
     #region Context menus
     	context_visible = [
-    		menuItem(__txt("Addon"),           function() /*=>*/ { PREFERENCES.panel_menu_show_addon   = !PREFERENCES.panel_menu_show_addon;   PREF_SAVE(); }).setToggle(function() /*=>*/ {return PREFERENCES.panel_menu_show_addon}   ),
-    		menuItem(__txt("Command Palette"), function() /*=>*/ { PREFERENCES.panel_menu_show_command = !PREFERENCES.panel_menu_show_command; PREF_SAVE(); }).setToggle(function() /*=>*/ {return PREFERENCES.panel_menu_show_command} ),
-    		menuItem(__txt("Profile"),         function() /*=>*/ { PREFERENCES.panel_menu_show_profile = !PREFERENCES.panel_menu_show_profile; PREF_SAVE(); }).setToggle(function() /*=>*/ {return PREFERENCES.panel_menu_show_profile} ),
+    		menuItem(__txt("Addon"),           function() /*=>*/ { PREFERENCES.panel_menu_show_addon     = !PREFERENCES.panel_menu_show_addon;     PREF_SAVE(); }).setToggle(function() /*=>*/ {return PREFERENCES.panel_menu_show_addon}     ),
+    		menuItem(__txt("Command Palette"), function() /*=>*/ { PREFERENCES.panel_menu_show_command   = !PREFERENCES.panel_menu_show_command;   PREF_SAVE(); }).setToggle(function() /*=>*/ {return PREFERENCES.panel_menu_show_command}   ),
+    		menuItem(__txt("Profile"),         function() /*=>*/ { PREFERENCES.panel_menu_show_profile   = !PREFERENCES.panel_menu_show_profile;   PREF_SAVE(); }).setToggle(function() /*=>*/ {return PREFERENCES.panel_menu_show_profile}   ),
+    		menuItem(__txt("Workspace"),       function() /*=>*/ { PREFERENCES.panel_menu_show_workspace = !PREFERENCES.panel_menu_show_workspace; PREF_SAVE(); }).setToggle(function() /*=>*/ {return PREFERENCES.panel_menu_show_workspace} ),
 		]
     #endregion
     
@@ -974,6 +975,9 @@ function Panel_Menu() : PanelContent() constructor {
                     var _stx = ui(8);
                     var _sty = h - ui(32 + 6);
                     
+                    if(PREFERENCES.panel_menu_show_workspace)
+                    	_sty -= nh + ui(6);
+                    
                     draw_set_color(COLORS.panel_separator);
                     if(_sepFrame)
 	                     draw_line_round(ui(8), _sty, w - ui(8), _sty, ui(1));
@@ -1066,9 +1070,7 @@ function Panel_Menu() : PanelContent() constructor {
                     
                     if(pHOVER && point_in_rectangle(mx, my, _x0, _y0, _x1, _y1)) {
                         _draggable = false;
-                        // draw_sprite_stretched_ext(THEME.button_hide_fill, 1, _x0, _y0, _x1 - _x0, _y1 - _y0, sc, 1);
-                        var aa = .2;
-                        draw_sprite_stretched_add(THEME.box_r5, 0, _x0, _y0, _x1 - _x0, _y1 - _y0, COLORS.dialog_menubox_highlight, aa);
+                        draw_sprite_stretched_add(THEME.box_r5, 0, _x0, _y0, _x1 - _x0, _y1 - _y0, COLORS.dialog_menubox_highlight, .2);
                         
                         if(NEW_VERSION) setTOOLTIP(__txt("New Version Available"));
                         
@@ -1089,7 +1091,7 @@ function Panel_Menu() : PanelContent() constructor {
                     if(NIGHTLY)       draw_sprite_ext(s_nightly,      0, _x0 +ui(16), _ty,       ics, ics, 0, COLORS._main_icon);
                     if(STEAM_ENABLED) draw_sprite_ui(THEME.steam,     0, _tx1+ui(10), _ty,       .75, .75, 0, COLORS._main_icon);
                     
-                    _xx1 = _x0 - ui(8);
+                    _xx1 = _x0 - ui(4);
                 }
                 
             } else {
@@ -1101,9 +1103,7 @@ function Panel_Menu() : PanelContent() constructor {
                 
                 if(pHOVER && point_in_rectangle(mx, my, _xx1, y1 - ui(16), _xx1 + ww, y1 + ui(16))) {
                     _draggable = false;
-                    // draw_sprite_stretched_ext(THEME.button_hide_fill, 1, _xx1, y1 - ui(12), ww, ui(24), sc, 1);
-                    var aa = .2;
-                    draw_sprite_stretched_add(THEME.box_r5, 0, _xx1, y1 - ui(12), ww, ui(24), COLORS.dialog_menubox_highlight, aa);
+                    draw_sprite_stretched_add(THEME.box_r5, 0, _xx1, y1 - ui(12), ww, ui(24), COLORS.dialog_menubox_highlight, .2);
                     
                     if(NEW_VERSION) setTOOLTIP(__txt("New Version Available"));
                     
@@ -1120,6 +1120,72 @@ function Panel_Menu() : PanelContent() constructor {
                 var _xx2 = _xx1 + ww - ui(6);
                 if(NEW_VERSION)   draw_sprite_ui(THEME.circle_16, 0, _xx2, y1 - ui(8), .4, .4, 0, COLORS._main_value_positive);
             }
+        #endregion
+        
+        #region workspace
+        	if(PREFERENCES.panel_menu_show_workspace) {
+	        	var txt = PREFERENCES.panel_layout_file;
+				if(txt == "__default") txt = "Default";
+				if(PANEL_MODIFIED) txt += "*";
+	        	
+	            if(hori) {
+	            	draw_set_font(font);
+	            	var ww = string_width(txt) + ui(14);
+	            	
+	            	var _x0 = _xx1 - ww;
+	                var _x1 = _xx1;
+	                
+	                var _y0 = h / 2 - nh / 2;
+	                var _y1 = h / 2 + nh / 2;
+	                
+	            } else {
+	            	var _x0 = ui(6);
+	                var _x1 = w - ui(6);
+	                
+	                var _y1 = h - ui(38);
+	                var _y0 = _y1 - nh;
+	                
+	            }
+	            
+	            if(pHOVER && point_in_rectangle(mx, my, _x0, _y0, _x1, _y1)) {
+	                _draggable = false;
+	                draw_sprite_stretched_add(THEME.box_r5, 0, _x0, _y0, _x1 - _x0, _y1 - _y0, COLORS.dialog_menubox_highlight, .2);
+	                
+	                if(mouse_lpress(pFOCUS)) {
+	                	var work = [];
+						var f = file_find_first(DIRECTORY + "layouts/*", 0);
+						while(f != "") {
+							if(filename_ext(f) == ".json")
+								array_push(work, filename_name_only(f));
+							f = file_find_next();
+						}
+						
+						array_sort(work, true);
+						
+	                	var _menu = [];
+	                	array_push(_menu, menuItem( __txt("Save as New"), function() /*=>*/ {
+	            			var cont = panelSerialize();
+							json_save_struct($"{name}.json", cont);
+							PREFERENCES.panel_layout_file = filename_name_only(name);
+							PREF_SAVE();
+	            		}, THEME.add ));
+	            		
+	            		array_push(_menu, menuItem( __txt("workspace_replace_current", "Replace with Current"), function() /*=>*/ {return workspace_replace(PREFERENCES.panel_layout_file)} ));
+	            		array_push(_menu, menuItem( __txt("Reset"), function() /*=>*/ {return setPanel()}));
+	            		array_push(_menu, -1);
+	            		
+	                	for( var i = 0, n = array_length(work); i < n; i++ )
+	                		array_push(_menu, menuItem( work[i], function(l) /*=>*/ {return workspace_apply(l)} ).setParam(work[i]) );
+	                	
+	                	menuCall("", _menu);
+	                }
+	            }
+	        
+	            var _ty = (_y0 + _y1) / 2;
+	            var _tx = (_x0 + _x1) / 2;
+	            draw_set_text(font, fa_center, fa_center, COLORS._main_text_sub);
+	            draw_text_add(_tx, _ty, txt);
+        	}
         #endregion
         
         #region title
