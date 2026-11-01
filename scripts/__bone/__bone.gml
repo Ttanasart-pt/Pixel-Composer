@@ -12,7 +12,7 @@ function __Bone(_parent = noone, _distance = 0, _direction = 0, _angle = 0, _len
 	node    = _node;
 	parent  = _parent;
 	is_main = false;
-	tb_name = new textBox(TEXTBOX_INPUT.text, function(n) /*=>*/ { name = n; if(node) node.triggerRender(); }).setFont(f_p2).setHide(true);
+	tb_name = textBox_Text(function(n) /*=>*/ { name = n; if(node) node.triggerRender(); }).setSlide(false).setFont(f_p2).setHide(true);
 	
 	control       = false;
 	childs        = [];

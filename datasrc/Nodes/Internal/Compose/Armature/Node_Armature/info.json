@@ -1,14 +1,9 @@
 {
-  "tooltip":"Create new armature system.",
-  "alias":[
-    "rigging",
-    "bone"
-  ],
-  "spr":"s_node_armature",
-  "pxc_version":1146.0,
-  "baseNode":"Node_Armature",
-  "io":[
-    "surface"
-  ],
-  "name":"Armature Create"
+    "name":          "Armature Create",
+    "tooltip":       "Create new armature system.",
+    "spr":           "s_node_armature",
+    "baseNode":      "Node_Armature",
+    "pxc_version":    1146,
+    "alias":          ["rigging","bone","armature"],
+    "io":             ["surface"],
 }

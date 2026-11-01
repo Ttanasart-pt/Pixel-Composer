@@ -216,7 +216,7 @@ function Node_Armature_Skin(_x, _y, _group = noone) : Node(_x, _y, _group) const
 				draw_vertex_texture_color(v2x, v2y, 0, 1, c1, 1);
 				draw_vertex_texture_color(v3x, v3y, 1, 1, c1, 1);
 				
-				if(!useTex) {
+				// if(!useTex) {
 					var _capRes = 8;
 					for( var j = 0; j < _capRes; j++ ) {
 						var a0 = dir + 90 + (j+0) / _capRes * 180;
@@ -235,7 +235,7 @@ function Node_Armature_Skin(_x, _y, _group = noone) : Node(_x, _y, _group) const
 						draw_vertex_texture_color(x1 + lengthdir_x(th1, a0), y1 + lengthdir_y(th1, a0), 0, 1, c1, 1);
 						draw_vertex_texture_color(x1 + lengthdir_x(th1, a1), y1 + lengthdir_y(th1, a1), 0, 1, c1, 1);
 					}
-				}
+				// }
 				
 				draw_primitive_end();
 			}

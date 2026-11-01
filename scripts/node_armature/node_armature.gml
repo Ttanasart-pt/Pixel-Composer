@@ -446,10 +446,7 @@ function Node_Armature(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 					bone_dragging = bone;
 			}
 			
-			draw_sprite_ui(THEME.bone, bone.getSpriteIndex(), bnx + ui(12), ty + ui(14), 1, 1, 0, bne_c);
-				
-			if(point_in_rectangle(_m[0], _m[1], bnx + ui(24), ty + ui(3), bnx + bnw, ty + _hh - ui(3)))
-				anchor_selecting = [ bone, 2 ];
+			////- =Right Button
 			
 			var bx = bnx + bnw - ui(24);
 			var by = ty + _hh / 2;
@@ -462,47 +459,57 @@ function Node_Armature(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 			} else 
 				draw_sprite_ui_uniform(THEME.icon_delete, 3, bx, by, 1, COLORS._main_icon);
 			
-			draw_set_font(f_p2);
-			var ww = string_width(bone.name);
-			
-			bone.tb_name.setFocusHover(_focus, _hover);
-			bone.tb_name.draw(bnx + ui(24), ty + ui(3), ww + ui(16), _hh - ui(6), bone.name, _m);
-			
 			var _x0 = bx - ui(24);
 			var _y0 = by;
 			var cc  = bone.apply_scale? COLORS._main_icon : COLORS._main_value_negative;
 			if(_hover && point_in_circle(_m[0], _m[1], _x0, _y0, ui(10))) {
 				setTOOLTIP("Apply Scale");
-				draw_sprite_ui(THEME.bone, 3, _x0, _y0,,,, cc, 0.75);
+				draw_sprite_ui(THEME.bone, 3, _x0, _y0, 1, 1, 0, cc, 0.75);
 				
 				if(mouse_lpress(_focus))
 					bone.apply_scale = !bone.apply_scale;
 			} else 
-				draw_sprite_ui(THEME.bone, 3, _x0, _y0,,,, cc, 0.5);
+				draw_sprite_ui(THEME.bone, 3, _x0, _y0, 1, 1, 0, cc, 0.5);
 			
 			_x0 -= ui(20);
 			var cc  = bone.apply_rotation? COLORS._main_icon : COLORS._main_value_negative;
 			if(_hover && point_in_circle(_m[0], _m[1], _x0, _y0, ui(10))) {
 				setTOOLTIP("Apply Rotation");
-				draw_sprite_ui(THEME.bone, 4, _x0, _y0,,,, cc, 0.75);
+				draw_sprite_ui(THEME.bone, 4, _x0, _y0, 1, 1, 0, cc, 0.75);
 				
 				if(mouse_lpress(_focus))
 					bone.apply_rotation = !bone.apply_rotation;
 			} else 
-				draw_sprite_ui(THEME.bone, 4, _x0, _y0,,,, cc, 0.5);
+				draw_sprite_ui(THEME.bone, 4, _x0, _y0, 1, 1, 0, cc, 0.5);
 			
 			_x0 -= ui(20);
 			var cc = has(bone_constrained, bone.ID)? COLORS._main_accent : COLORS._main_icon;
 			if(_hover && point_in_circle(_m[0], _m[1], _x0, _y0, ui(10))) {
 				setTOOLTIP("Add Constrains");
-				draw_sprite_ui(THEME.bone, 5, _x0, _y0,,,, cc, .75);
+				draw_sprite_ui(THEME.bone, 5, _x0, _y0, 1, 1, 0, cc, .75);
 				
 				if(mouse_lpress(_focus)) {
 					bone_constrain_adding = bone;
 					menuCall("bone_constrain_add", bone_constrain_menu, 0, 0, fa_left, false);
 				}
 			} else 
-				draw_sprite_ui(THEME.bone, 5, _x0, _y0,,,, cc, .5);
+				draw_sprite_ui(THEME.bone, 5, _x0, _y0, 1, 1, 0, cc, .5);
+			
+			////- =Data
+			
+			draw_sprite_ui(THEME.bone, bone.getSpriteIndex(), bnx + ui(12), ty + ui(14), 1, 1, 0, bne_c);
+				
+			if(point_in_rectangle(_m[0], _m[1], bnx + ui(24), ty + ui(3), bnx + bnw, ty + _hh - ui(3)))
+				anchor_selecting = [ bone, 2 ];
+			
+			draw_set_font(f_p2);
+			var tbx = bnx + ui(24);
+			var tby =  ty + ui(3);
+			var tbw = _x0 - tbx - ui(16);
+			var tbh = _hh - ui(6);
+			
+			bone.tb_name.setFocusHover(_focus, _hover);
+			bone.tb_name.draw(tbx, tby, tbw, tbh, bone.name, _m);
 			
 			ty += _hh;
 		}
@@ -1179,7 +1186,7 @@ function Node_Armature(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 								IKbone.IKlength   = _blen;
 								IKbone.IKTargetID = ik_dragging.ID;
 								
-								IKbone.name = "IK handle";
+								IKbone.name = $"IK handle {anc.name}-{ik_dragging.name}";
 								IKbone.parent_anchor = false;
 								
 								bones.setPosition();

@@ -6,6 +6,11 @@
         "date": "2026-11-01T09:06:47.801Z",
         "node": "Simplex",
         "commit": "**Simplex**: Fix level not applying to non-tile mode."
+      },
+      {
+        "date": "2026-11-01T23:51:20.750Z",
+        "node": "",
+        "commit": "**Armature Create**: Adding new IK now use more detailed name."
       }
     ]
   },

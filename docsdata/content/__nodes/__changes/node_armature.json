@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.22.2.001",
+    "changes": [
+      {
+        "date": "2026-11-01T23:51:20.749Z",
+        "node": "Armature Create",
+        "commit": "**Armature Create**: Adding new IK now use more detailed name."
+      }
+    ]
+  },
+  {
     "version": "1.22.0.203",
     "changes": [
       {
