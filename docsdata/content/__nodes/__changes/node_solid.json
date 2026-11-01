@@ -6,6 +6,11 @@
         "date": "2026-11-01T06:59:55.376Z",
         "node": "Solid",
         "commit": "**Solid**: Add multiply alpha option."
+      },
+      {
+        "date": "2026-11-01T08:35:22.051Z",
+        "node": "Armature Skin",
+        "commit": "**Armature Skin**: Add per bone draw toggle."
       }
     ]
   },

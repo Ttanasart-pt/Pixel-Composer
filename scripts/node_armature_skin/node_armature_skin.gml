@@ -22,14 +22,16 @@ function Node_Armature_Skin(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	function createNewInput(index = array_length(inputs)) {
 		var inAmo = array_length(inputs);
 		
-		var _inpR = newInput(index+0, nodeValue_Range(    "Radius", [1,1]     ));
-		var _inpC = newInput(index+1, nodeValue_Gradient( "Color",  gra_white ));
-		var _inpT = newInput(index+2, nodeValue_Surface(  "Texture"           )).setVisible(true, false);
+		var _iAct = newInput(index+3, nodeValue_Bool(     "Draw",    true     ));
+		
+		var _iRad = newInput(index+0, nodeValue_Range(    "Radius", [1,1]     ));
+		var _iCol = newInput(index+1, nodeValue_Gradient( "Color",  gra_white ));
+		var _iTex = newInput(index+2, nodeValue_Surface(  "Texture"           )).setVisible(true, false);
 		
 		postCreateNewInput(index);
-		return [_inpR, _inpC, _inpT];
+		return _iRad;
 	} 
-	setDynamicInput(3, false);
+	setDynamicInput(4, false);
 	
 	////- Bone
 	
@@ -52,27 +54,22 @@ function Node_Armature_Skin(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		var _inputs = [];
 		array_copy(_inputs, 0, inputs, 0, input_fix_len);
 		var _input_display_list = array_clone(input_display_list_raw, 1);
-		var _inp;
 		
 		for( var i = 0, n = array_length(bone_array); i < n; i++ ) {
 			var bone = bone_array[i];
 			if(bone.is_main || bone.control) continue;
 			
-			if(has(boneMap, bone.ID))
-				_inp = boneMap[$ bone.ID];
-			else {
-				_inp = createNewInput();
-				_inp[2].setName(bone.name + " " + _inp[2].name);
-			}
+			var _inp = has(boneMap, bone.ID)? inputs[boneMap[$ bone.ID]] : createNewInput();
+			var _ind = _inp.index;
+			boneMap[$ bone.ID] = _ind;
 			
-			boneMap[$ bone.ID] = _inp;
+			array_push(_input_display_list, [ bone.name, false, _ind+3 ]);
+			array_append(_input_display_list, [ _ind+0, _ind+1, _ind+2 ]);
 			
-			array_push(_input_display_list, [ bone.name, false ]);
-			for( var j = 0, m = array_length(_inp); j < m; j++ ) {
-				_inp[j].attributes.bone_id = bone.ID;
-				
-				array_push(_input_display_list, array_length(_inputs));
-				array_push(_inputs, _inp[j]);
+			for( var j = 0; j < data_length; j++ ) {
+				var ind = _ind + j;
+				inputs[ind].attributes.bone_id = bone.ID;
+				array_push(_inputs, inputs[ind]);
 			}
 			
 		}
@@ -105,18 +102,26 @@ function Node_Armature_Skin(_x, _y, _group = noone) : Node(_x, _y, _group) const
 			var by  = _y + bhd.y * _s;
 			
 			if(has(boneMap, _bne.ID)) {
-				var _inps  = boneMap[$ _bne.ID];
-				var _inHov = array_any(_inps, function(inp,i) /*=>*/ {return (PANEL_INSPECTOR.prop_hover == inp || PANEL_ANIMATION.value_hovering == inp)});
+				var _indx  = boneMap[$ _bne.ID];
+				var _inHov = false;
+				
+				for( var j = 0; j < data_length; j++ ) {
+					var inp = inputs[_indx + j];
+					_inHov |= PANEL_INSPECTOR.prop_hover == inp || PANEL_ANIMATION.value_hovering == inp;
+				}
 				if(_inHov) _bhov = [ _bne, 2 ];
 				
 				var _par = _bne.parent;
 				var _bsc = _par.is_main? 1 : (_par[$ "__drawThickness"] ?? 1);
 				
-				var _rad = _inps[0].getValue();
-				var _rs  = _rad[0] * _bsc * _t * _s;
+				var _drw = inputs[_indx + 3].getValue();
+				var _rad = inputs[_indx + 0].getValue();
 				
-				draw_set_color(COLORS._main_accent);
-				draw_circle(bx, by, _rs, true);
+				if(_drw) {
+					var _rs  = _rad[0] * _bsc * _t * _s;
+					draw_set_color(COLORS._main_accent);
+					draw_circle(bx, by, _rs, true);
+				}
 			}
 			
 			_bne.drawBone(attributes, false, _x, _y, _s, _mx, _my, _bhov, noone, c_white, 1);
@@ -138,10 +143,8 @@ function Node_Armature_Skin(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		setBone();
 		_bone.setPose();
 		
-		for( var i = 0, n = array_length(bone_array); i < n; i++ ) {
-			var _bone = bone_array[i];
-			_bone.__drawThickness = 1;
-		}
+		for( var i = 0, n = array_length(bone_array); i < n; i++ )
+			bone_array[i].__drawThickness = 1;
 		
 		_outSurf = surface_verify(_outSurf, _dim[0], _dim[1]);
 		surface_set_shader(_outSurf, sh_armature_skin_render);
@@ -152,12 +155,16 @@ function Node_Armature_Skin(_x, _y, _group = noone) : Node(_x, _y, _group) const
 				if(_bone.is_main || _bone.control) continue;
 				if(!has(boneMap, _bone.ID)) continue;
 				
-				var _par = _bone.parent;
-				
+				var _par  = _bone.parent;
 				var binps = boneMap[$ _bone.ID];
-				var bthk = getInputData(binps[ 0].index);
-				var bcol = getInputData(binps[ 1].index);
-				var btex = getInputData(binps[ 2].index);
+				
+				var bdrw = getInputData(binps + 3);
+				
+				var bthk = getInputData(binps + 0);
+				var bcol = getInputData(binps + 1);
+				var btex = getInputData(binps + 2);
+				
+				if(!bdrw) continue;
 				
 				var useTex = is_surface(btex);
 				
@@ -236,9 +243,7 @@ function Node_Armature_Skin(_x, _y, _group = noone) : Node(_x, _y, _group) const
 			var inp = inputs[i];
 			var idx = inp.attributes[$ "bone_id"] ?? 0;
 			
-			if(!has(boneMap, idx)) 
-				boneMap[$ idx] = [];
-			array_push(boneMap[$ idx], inp);
+			if(inp.name == "Radius") boneMap[$ idx] = i;
 		}
 		
 		setBone();
