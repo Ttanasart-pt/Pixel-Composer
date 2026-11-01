@@ -84,6 +84,8 @@ function Node_MK_Tree_Grow(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 				continue; 
 			}
 			
+			if(!is(_tr, __MK_Tree_Element)) continue;
+			
 			var _tfalB = random_range(_falB[0], _falB[1]);
 			
 			var _segs = _tr.segments;

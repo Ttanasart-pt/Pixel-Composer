@@ -16,6 +16,23 @@ function UUID_generate(length = 32) {
 	return _id;
 }
 
+function UUID_generate_static(length = 32) {
+	static str =   "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+	static month = "JFRAMJYASOND" 
+	
+	var _id = "";
+	_id += string_char_at(str, current_year % string_length(str) + 1);	//1
+	_id += string_char_at(month, current_month);						//1
+	_id += string_char_at(str, current_day);							//1
+	_id += string_char_at(str, current_hour);							//1
+	_id += string_char_at(str, current_minute);							//1
+	_id += string_char_at(str, current_second);							//1
+	_id += string_lead_zero(current_time, 6);							//6
+	
+	repeat(length - string_length(_id)) _id += string_char_at(str, irandom_range(1, string_length(str)));
+	return _id;
+}
+
 function irandom_seed(val, seed)            { random_set_seed(floor(seed)); return irandom(val);            }
 function irandom_range_seed(from, to, seed) { random_set_seed(floor(seed)); return irandom_range(from, to); }
 

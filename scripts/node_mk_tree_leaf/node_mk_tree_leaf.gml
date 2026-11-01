@@ -1,4 +1,5 @@
 function __MK_Tree_Leaf(_root, _pos, _shp, _x, _y, _dir, _sx, _sy, _span) : __MK_Tree_Element(_root) constructor {
+	branch_ID    = _root? _root.ID : undefined;
 	rootPosition = _pos;
 	shape        = _shp;
 	whorlIndex   = 0;
@@ -270,6 +271,8 @@ function __MK_Tree_Leaf(_root, _pos, _shp, _x, _y, _dir, _sx, _sy, _span) : __MK
 	////- Action
 	
 	static copy = function(_l) {
+		branch_ID  = _l.branch_ID;
+		
 		gravity    = _l.gravity;
 		surface    = _l.surface;
 		surf_w     = _l.surf_w;
@@ -310,8 +313,8 @@ function Node_MK_Tree_Leaf(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	newInput(0, nodeValue_Struct( "Branches", noone)).setVisible(true, true).setCustomData(global.MKTREE_JUNC);
 	
 	////- =Spawning
-	newInput( 1, nodeValue_SliRange( "Position", [.5,1] ));
-	newInput(55, nodeValue_Slider(   "Chance",    1     ));
+	newInput( 1, nodeValue_SliRange( "Position", [0,1] ));
+	newInput(55, nodeValue_Slider(   "Chance",    1    ));
 	
 		////- =/Scatter
 	newInput( 2, nodeValue_Range(    "Amount",   [8,16] ));
@@ -376,13 +379,13 @@ function Node_MK_Tree_Leaf(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	
 	////- =Color
 	
-		////- =/per Branch
-	newInput( 4, nodeValue_Gradient( "Random Branch",   gra_white )).setMappableConst(12);
-	newInput(20, nodeValue_Gradient( "Along Branch",    gra_white ));
-	
 		////- =/per Leaf
 	newInput( 6, nodeValue_Gradient( "Random Leaf",     gra_white )).setMappableConst(13);
 	newInput(34, nodeValue_Gradient( "Along Leaf",      gra_white ));
+	
+		////- =/per Branch
+	newInput( 4, nodeValue_Gradient( "Random Branch",   gra_white )).setMappableConst(12);
+	newInput(20, nodeValue_Gradient( "Along Branch",    gra_white ));
 	
 		////- =/Group
 	newInput(42, nodeValue_Gradient( "Random Whorled",  gra_white ));
@@ -414,8 +417,8 @@ function Node_MK_Tree_Leaf(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		[ "Shape",           false ],  8,  3, 18, 43,  9, 59, 21, 39, 29, 38, 31, 37, 44, 40, 45, 46, 48, 49, 50, 41, 30, 
 		
 		[ "Color",           false ], 
-			[ "/per Branch", false ],  4, 12, 20, 
 			[ "/per Leaf",   false ],  6, 13, 34, 
+			[ "/per Branch", false ],  4, 12, 20, 
 			[ "/Group",      false ], 42, 47, 
 			[ "/Edge",       false ], 14, 11, 25, 23, 24, 26, 
 			

@@ -1015,30 +1015,39 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
             ] },
     	];
     	
-    	if(TESTING) array_insert(global.menuItems_graph_toolbars_general, 0, new MenuItem("Export Doc", function() /*=>*/ {
-    		var _n = array_safe_get_fast(nodes_selecting, 0, noone);
-    		if(_n == noone) return;
-    		
-    		var nodeBase = string_lower(instanceof(_n));
-    		var dir = $"D:/Project/MakhamDev/LTS-PixelComposer/PixelComposer/docsdata/src/images/nodegen/{nodeBase}";
-    		directory_verify(dir);
-    		
-    		var surface  = graph_export_image(nodes_list, nodes_list, new graph_export_settings());
-    		surface_save(surface, $"{dir}/{nodeBase}-graph.png");
-    		surface_free(surface);
-    		
-    		LOADING_VERSION = SAVE_VERSION;
-	    	SERIALIZE_STRIP = true;
+    	if(TESTING) {
+    		array_insert(global.menuItems_graph_toolbars_general, 0, new MenuItem("Export Doc", function() /*=>*/ {
+	    		var _n = array_safe_get_fast(nodes_selecting, 0, noone);
+	    		if(_n == noone) return;
+	    		
+	    		var nodeBase = string_lower(instanceof(_n));
+	    		var dir = $"D:/Project/MakhamDev/LTS-PixelComposer/PixelComposer/docsdata/src/images/nodegen/{nodeBase}";
+	    		directory_verify(dir);
+	    		
+	    		var surface  = graph_export_image(nodes_list, nodes_list, new graph_export_settings());
+	    		surface_save(surface, $"{dir}/{nodeBase}-graph.png");
+	    		surface_free(surface);
+	    		
+	    		LOADING_VERSION = SAVE_VERSION;
+		    	SERIALIZE_STRIP = true;
+		    	
+		        var _map = { version: SAVE_VERSION, nodes: [] };
+		        for( var i = 0, n = array_length(nodes_list); i < n; i++ )
+		            SAVE_NODE(_map.nodes, nodes_list[i], 0, 0, false, getCurrentContext());
+		        
+		        SERIALIZE_STRIP = false;
+		        json_save_struct($"{dir}/{nodeBase}-sample.txt", _map);
+	    		
+	    	}, THEME.icon_preview_export_doc)
+	    		.setColorGet(function() /*=>*/ {return array_safe_get_fast(nodes_selecting, 0, noone) == noone? COLORS._main_icon : COLORS._main_accent}));
 	    	
-	        var _map = { version: SAVE_VERSION, nodes: [] };
-	        for( var i = 0, n = array_length(nodes_list); i < n; i++ )
-	            SAVE_NODE(_map.nodes, nodes_list[i], 0, 0, false, getCurrentContext());
-	        
-	        SERIALIZE_STRIP = false;
-	        json_save_struct($"{dir}/{nodeBase}-sample.txt", _map);
-    		
-    	}, THEME.icon_preview_export)
-    		.setColorGet(function() /*=>*/ {return array_safe_get_fast(nodes_selecting, 0, noone) == noone? COLORS._main_icon : COLORS._main_accent}));
+	    	array_insert(global.menuItems_graph_toolbars_general, 0, new MenuItem("Export Node Example", function() /*=>*/ {
+	    		var _node = array_safe_get_fast(nodes_selecting, 0, noone);
+	    		if(_node) Node_Usage_Repo_Create_Node(_node);
+	    	}, THEME.icon_preview_export_node)
+	    		.setColorGet(function() /*=>*/ {return array_safe_get_fast(nodes_selecting, 0, noone) == noone? COLORS._main_icon : COLORS._main_accent}));
+	    	
+    	}
     	
         function topbar_toggle() { project.graphDisplay.show_topbar = !project.graphDisplay.show_topbar; }
 		function topbar_show()   { project.graphDisplay.show_topbar =  true; }

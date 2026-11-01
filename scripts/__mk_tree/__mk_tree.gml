@@ -27,6 +27,7 @@
 #endregion
 
 function __MK_Tree_Element(_root = undefined) constructor {
+	ID     = UUID_generate_static();
 	root   = _root;
 	parent = root;
 	rootPosition = 0;
@@ -581,8 +582,8 @@ function __MK_Tree(_root = undefined, _x = 0, _y = 0, _seed = 0) : __MK_Tree_Ele
 			else         drawBranch();
 		}
 		
-		array_foreach(leaves,   function(l) /*=>*/ { if(is(l, __MK_Tree_Element)) l.draw(); });
-		array_foreach(children, function(c) /*=>*/ { if(is(c, __MK_Tree)) c.draw(); });
+		array_foreach(leaves,   function(l,_) /*=>*/ { if(is(l, __MK_Tree_Element)) l.draw(); return true; });
+		array_foreach(children, function(c,_) /*=>*/ { if(is(c, __MK_Tree))         c.draw(); return true; });
 		
 	}
 	

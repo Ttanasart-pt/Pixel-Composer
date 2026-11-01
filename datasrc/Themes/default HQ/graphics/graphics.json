@@ -148,6 +148,8 @@
     "icon_visible_setting":               { "path": "./icon/s_icon_visible_setting.png",                    "s": 1, "x": 12, "y": 12 },
     "icon_minimap":                       { "path": "./icon/s_icon_minimap.png",                            "s": 2, "x": 12, "y": 12 },
     "icon_preview_export":                { "path": "./icon/s_icon_preview_export.png",                     "s": 1, "x": 12, "y": 12 },
+    "icon_preview_export_node":           { "path": "./icon/s_icon_preview_export_node.png",                "s": 1, "x": 12, "y": 12 },
+    "icon_preview_export_doc":            { "path": "./icon/s_icon_preview_export_doc.png",                 "s": 1, "x": 12, "y": 12 },
     "icon_preview_mode":                  { "path": "./icon/s_icon_preview_mode.png",                       "s": 3, "x": 12, "y": 12 },
     "icon_random":                        { "path": "./icon/s_random.png",                                  "s": 1, "x": 12, "y": 12 },
     "icon_random_seed":                   { "path": "./icon/s_random_seed.png",                             "s": 1, "x": 12, "y": 12 },
