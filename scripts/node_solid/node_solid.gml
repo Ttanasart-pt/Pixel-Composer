@@ -14,15 +14,16 @@ function Node_Solid(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	newInput( 4, nodeValue_Bool(    "Use mask dimension", true ));
 	
 	////- =Solid
-	newInput( 1, nodeValue_Color( "Color", ca_white )).setHotkeyAuto("C").setPieMenu();
-	newInput( 2, nodeValue_Bool(  "Empty", false    ));
-	// input 5
+	newInput( 1, nodeValue_Color( "Color",          ca_white )).setHotkeyAuto("C").setPieMenu();
+	newInput( 2, nodeValue_Bool(  "Empty",          false    ));
+	newInput( 6, nodeValue_Bool(  "Multiply Alpha", false    ));
+	// 7
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
 	input_display_list = [
-		[ "Surfaces", false ], 0, 5, 3, 4,
-		[ "Solid",    false ], 1, 2,
+		[ "Surfaces", false ],  0,  5,  3,  4,
+		[ "Solid",    false ],  1,  2,  6, 
 	];
 	
 	////- Node
@@ -31,13 +32,14 @@ function Node_Solid(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	
 	static processData = function(_outSurf, _data, _array_index) {
 		#region 
-			var _dim = _data[0];
-			var _fg  = _data[5];
-			var _msk = _data[3];
-			var _msd = _data[4];
+			var _dim = _data[ 0];
+			var _fg  = _data[ 5];
+			var _msk = _data[ 3];
+			var _msd = _data[ 4];
 			
-			var _col = _data[1];
-			var _emp = _data[2];
+			var _col = _data[ 1];
+			var _emp = _data[ 2];
+			var _mul = _data[ 6];
 			
 			var _maskUse = is_surface(_msk);
 		#endregion
@@ -60,8 +62,11 @@ function Node_Solid(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 		surface_set_shader(_outSurf, sh_solid);
 			shader_set_i( "useMask",   _maskUse );
 			shader_set_i( "maskAlpha", inputs[3].attributes.mask_alpha_only );
-			shader_set_i( "useFg",     is_surface(_fg));
+			
+			shader_set_i( "mulpAlpha", _mul );
 			shader_set_c( "color",     _col );
+			
+			shader_set_i( "useFg",     is_surface(_fg));
 			shader_set_s( "fg",        _fg  );
 			
 			if(_maskUse) 

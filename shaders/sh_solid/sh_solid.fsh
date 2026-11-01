@@ -3,6 +3,7 @@ varying vec4 v_vColour;
 
 uniform int  useMask;
 uniform int  maskAlpha;
+uniform int  mulpAlpha;
 uniform vec4 color;
 
 uniform int  useFg;
@@ -23,5 +24,6 @@ void main() {
 		res.a *= msk;
 	}
 	
+	if(mulpAlpha == 1) res.rgb *= res.a;
 	gl_FragColor = res * v_vColour;
 }
