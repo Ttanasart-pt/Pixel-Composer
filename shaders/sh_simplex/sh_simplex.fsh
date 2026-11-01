@@ -219,7 +219,7 @@ float simplexTiled(vec2 pos, float ang, vec2 sca, vec2 ntx) { // That's... not h
 	vec2  st00 = (ptx + vec2(0., 0.)) * rot * sca;
 	float s00  = simplex(st00);
 	
-	if(tiled == 0) return s00;
+	if(tiled == 0) return applyLevel(s00);
 	
 	vec2  st01 = (ptx + vec2(0., 1.)) * rot * sca;
 	float s01  = simplex(st01);
@@ -231,9 +231,8 @@ float simplexTiled(vec2 pos, float ang, vec2 sca, vec2 ntx) { // That's... not h
 	float s11  = simplex(st11);
 	
 	float res  = mix(mix(s00, s10, 1. - ntx.x), mix(s01, s11, 1. - ntx.x), 1. - ntx.y);
-	      res  = applyLevel(res);
-	
-	return res;
+	      
+	return applyLevel(res);
 }
 
 void main() {

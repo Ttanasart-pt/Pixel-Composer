@@ -22,16 +22,19 @@ function Node_Armature_Skin(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	function createNewInput(index = array_length(inputs)) {
 		var inAmo = array_length(inputs);
 		
-		var _iAct = newInput(index+3, nodeValue_Bool(     "Draw",    true     ));
+		newInput(index+3, nodeValue_Bool(     "Draw",    true     ));
 		
-		var _iRad = newInput(index+0, nodeValue_Range(    "Radius", [1,1]     ));
-		var _iCol = newInput(index+1, nodeValue_Gradient( "Color",  gra_white ));
-		var _iTex = newInput(index+2, nodeValue_Surface(  "Texture"           )).setVisible(true, false);
+		var inp = newInput(index+0, nodeValue_Range(    "Radius", [1,1]     ));
+		newInput(index+4, nodeValue_Bool(     "Inherit Scale",     true     ));
+		
+		newInput(index+1, nodeValue_Gradient( "Color",  gra_white ));
+		newInput(index+2, nodeValue_Surface(  "Texture"           )).setVisible(true, false);
 		
 		postCreateNewInput(index);
-		return _iRad;
+		return inp;
 	} 
-	setDynamicInput(4, false);
+	
+	setDynamicInput( 5, false );
 	
 	////- Bone
 	
@@ -64,7 +67,7 @@ function Node_Armature_Skin(_x, _y, _group = noone) : Node(_x, _y, _group) const
 			boneMap[$ bone.ID] = _ind;
 			
 			array_push(_input_display_list, [ bone.name, false, _ind+3 ]);
-			array_append(_input_display_list, [ _ind+0, _ind+1, _ind+2 ]);
+			array_append(_input_display_list, [ _ind+0, _ind+4, _ind+1, _ind+2 ]);
 			
 			for( var j = 0; j < data_length; j++ ) {
 				var ind = _ind + j;
@@ -111,11 +114,14 @@ function Node_Armature_Skin(_x, _y, _group = noone) : Node(_x, _y, _group) const
 				}
 				if(_inHov) _bhov = [ _bne, 2 ];
 				
-				var _par = _bne.parent;
-				var _bsc = _par.is_main? 1 : (_par[$ "__drawThickness"] ?? 1);
 				
 				var _drw = inputs[_indx + 3].getValue();
+				
 				var _rad = inputs[_indx + 0].getValue();
+				var _inh = inputs[_indx + 4].getValue();
+				
+				var _par = _bne.parent;
+				var _bsc = _par.is_main || !_inh? 1 : (_par[$ "__drawThickness"] ?? 1);
 				
 				if(_drw) {
 					var _rs  = _rad[0] * _bsc * _t * _s;
@@ -155,14 +161,16 @@ function Node_Armature_Skin(_x, _y, _group = noone) : Node(_x, _y, _group) const
 				if(_bone.is_main || _bone.control) continue;
 				if(!has(boneMap, _bone.ID)) continue;
 				
-				var _par  = _bone.parent;
-				var binps = boneMap[$ _bone.ID];
+				var _par   = _bone.parent;
+				var binps  = boneMap[$ _bone.ID];
 				
-				var bdrw = getInputData(binps + 3);
+				var bdrw   = getInputData(binps + 3);
 				
-				var bthk = getInputData(binps + 0);
-				var bcol = getInputData(binps + 1);
-				var btex = getInputData(binps + 2);
+				var bthk   = getInputData(binps + 0);
+				var thkInh = getInputData(binps + 4);
+				
+				var bcol   = getInputData(binps + 1);
+				var btex   = getInputData(binps + 2);
 				
 				if(!bdrw) continue;
 				
@@ -177,7 +185,7 @@ function Node_Armature_Skin(_x, _y, _group = noone) : Node(_x, _y, _group) const
 				var dis = point_distance( x0, y0, x1, y1);
 				var dir = point_direction(x0, y0, x1, y1);
 				
-				var _parSca = _par.is_main? 1 : _par.__drawThickness;
+				var _parSca = _par.is_main || !thkInh? 1 : _par.__drawThickness;
 				_bone.__drawThickness = _parSca * bthk[1];
 				
 				shader_set_gradient(bcol);
