@@ -37,7 +37,7 @@ function Panel_Linear_Setting() : PanelContent() constructor {
 	bg_y_to = -1;
 	bg_a    =  0;
 	
-	resizable     = false;
+	resizable     = true;
 	hk_editing    = noone;
 	selecting_key = noone;
 	properties    = [];
