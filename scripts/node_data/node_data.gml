@@ -2800,6 +2800,12 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			return;
 		}
 		
+		var otp = array_safe_get_fast(outputs, max(0, preview_channel));
+		if(otp.type != VALUE_TYPE.surface) {
+			node_dimension_text = "";
+			return;
+		}
+		
 		var pw = surface_get_width(preview_surface);
 		var ph = surface_get_height(preview_surface);
 		var fr = surface_get_format(preview_surface);
