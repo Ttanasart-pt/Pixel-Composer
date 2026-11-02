@@ -1190,13 +1190,15 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		return self;
 	}
 	
-	static onInitWidget  = undefined;
-	static getEditWidget = function() {
+	static onInitWidget    = undefined;
+	static onGetEditWidget = undefined;
+	static getEditWidget   = function() {
 		if(!editWidgetSetted) {
 			resetDisplay();
 			editWidgetSetted = true;
 		}
 		
+		if(onGetEditWidget) onGetEditWidget();
 		return editWidget;
 	}
 	
@@ -1235,6 +1237,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 						editWidget.unit = display_data[$ "unit"] ?? editWidget.unit;
 						
 						if(has(display_data, "front_button")) editWidget.setFrontButton(display_data.front_button);
+						if(type == VALUE_TYPE.integer)        editWidget.setSlideInt();
 						
 						_ext = "Node_Number";
 						break;
@@ -1261,8 +1264,8 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 						editWidget.per_line   = display_data[$ "per_line"]   ?? editWidget.per_line;
 						editWidget.draw_label = display_data[$ "draw_label"] ?? editWidget.draw_label;
 						
-						if(has(display_data, "drawType"))
-							editWidget.drawType = display_data.drawType;
+						if(has(display_data, "drawType")) editWidget.drawType = display_data.drawType;
+						if(type == VALUE_TYPE.integer)    editWidget.setSlideInt();
 						
 						switch(len) {
 							case 2 : _ext = [ "Node_Vector2", "Node_Path" ]; break;

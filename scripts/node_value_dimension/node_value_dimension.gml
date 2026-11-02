@@ -66,6 +66,7 @@ function __NodeValue_Dimension(_node, value, _name = "Dimension") : __NodeValue_
 		
 		editWidget.setSideButton(editProjDim); 
 		editWidget.setSuffix(attributes.use_project_dimension? "x" : "");
+		editWidget.setSlideInt(!attributes.use_project_dimension);
 	}
 	
 	////- GET
@@ -75,7 +76,10 @@ function __NodeValue_Dimension(_node, value, _name = "Dimension") : __NodeValue_
 		
 		unitTooltip.index = attributes.use_project_dimension;
 		if(editProjDim) editProjDim.icon_index = attributes.use_project_dimension;
-		if(editWidget)  editWidget.setSuffix(attributes.use_project_dimension? "x" : "");
+		if(editWidget) {
+			editWidget.setSuffix(attributes.use_project_dimension? "x" : "");
+			editWidget.setSlideInt(!attributes.use_project_dimension);
+		}
 		
 		getValueRecursive(self.__curr_get_val, _time);
 		

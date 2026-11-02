@@ -1022,6 +1022,37 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 			
 			var _mx = _m[0];
 			var _my = _m[1];
+			
+			draw_set_text(font, fa_left, fa_top);
+			var txt  = _input_text;
+			var tw   = string_width(txt);
+			var th   = string_height(txt == ""? "l" : txt);
+			
+			var p_w  = string_width(prefix);
+			var cs   = string_copy(txt, 1, cursor);
+			var c_w  = string_width(cs);
+			var c_y0 = _y + _h / 2 - th / 2;
+			var c_y1 = _y + _h / 2 + th / 2;
+			
+			switch(align) {
+				case fa_left   : 
+					disp_x_min = -max(0, tw - _w + ui(16 + 8));
+					disp_x_max = 0;
+					break;
+					
+				case fa_center : 
+					disp_x_min = -max(0, tw - _w + ui(16 + 8)) / 2;
+					disp_x_max =  max(0, tw - _w + ui(16 + 8)) / 2;
+					tx -= tw / 2;	
+					break;
+					
+				case fa_right  :
+					disp_x_min = 0;
+					disp_x_max = max(0, tw - _w + ui(16 + 8));
+					tx -= tw;		
+					break;
+					
+			}
 					
 			if(sliding != 2) {
 				editText();
@@ -1067,35 +1098,6 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 				
 				#region draw
 					draw_set_text(font, fa_left, fa_top);
-					var txt  = _input_text;
-					var tw   = string_width(txt);
-					var th   = string_height(txt == ""? "l" : txt);
-					
-					var p_w  = string_width(prefix);
-					var cs   = string_copy(txt, 1, cursor);
-					var c_w  = string_width(cs);
-					var c_y0 = _y + _h / 2 - th / 2;
-					var c_y1 = _y + _h / 2 + th / 2;
-					
-					switch(align) {
-						case fa_left   :
-							disp_x_min = -max(0, tw - _w + ui(16 + 8));
-							disp_x_max = 0;
-							break;
-							
-						case fa_center : 
-							disp_x_min = -max(0, tw - _w + ui(16 + 8)) / 2;
-							disp_x_max =  max(0, tw - _w + ui(16 + 8)) / 2;
-							tx -= tw / 2;	
-							break;
-							
-						case fa_right  :
-							disp_x_min = 0;
-							disp_x_max = max(0, tw - _w + ui(16 + 8));
-							tx -= tw;		
-							break;
-							
-					}
 					
 					cursor_pos_to = disp_x + tx + c_w + p_w;
 					if(cursor_pos_to < _x) 
@@ -1127,7 +1129,11 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 					var _display_text = string_real(txt);
 					SURFACE_PREDRAW
 					surface_set_shader(text_surface, noone, true, BLEND.add);
-						display_text(tx - tb_surf_x, _h / 2 - th / 2, _display_text, _w - ui(4), _mx - tb_surf_x);
+					
+					var dtx = tx - tb_surf_x;
+					var dty = _h / 2 - th / 2;
+					display_text(dtx, dty, _display_text, _w - ui(4), _mx - tb_surf_x);
+					
 					surface_reset_shader();
 					gpu_set_scissor(_scis);
 					SURFACE_POSTDRAW
@@ -1155,7 +1161,11 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 				
 				SURFACE_PREDRAW
 				surface_set_shader(text_surface, noone, true, BLEND.add);
-					display_text(tx - tb_surf_x, _h / 2 - th / 2, _display_text, _w - ui(4), _mx - tb_surf_x);
+				
+				var dtx = tx - tb_surf_x;
+				var dty = _h / 2 - th / 2;
+				display_text(dtx, dty, _display_text, _w - ui(4), _mx - tb_surf_x);
+				
 				surface_reset_shader();
 				gpu_set_scissor(_scis);
 				SURFACE_POSTDRAW

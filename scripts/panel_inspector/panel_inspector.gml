@@ -585,11 +585,6 @@ function Panel_Inspector() : PanelContent() constructor {
     	draw_clear_alpha(COLORS.panel_bg_clear, 1);
         draw_sprite_stretched(THEME.ui_panel_bg, 1, pad, top_bar_h, w - pad * 2, h - top_bar_h - pad);
         
-     //   if(inspecting) { // 
-	    // 	var _colr = inspecting.getColor();
-	    // 	COLORS._main_accent = _colr == -1 || _colr == c_white? COLOR_ACCENT : _colr;
-    	// } else COLORS._main_accent = COLOR_ACCENT;
-    	
         if(inspecting && !inspecting.active) clearInspecting();
         var mse = [mx,my];
         var pd = ui(8);
@@ -2261,8 +2256,9 @@ function Panel_Inspector() : PanelContent() constructor {
         
         var hh  = ui(40);
         var yy  = _y + hh;
-        var rx  = x + ui(16);
-        var ry  = y + top_bar_h;
+        var rx  = x + contentPane.x;
+        var ry  = y + contentPane.y;
+        
         var _cAll = 0;
         
         var fnt   = spac? f_p1 : f_p3;

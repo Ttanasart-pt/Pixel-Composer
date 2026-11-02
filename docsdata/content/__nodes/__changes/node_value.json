@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.22.2.002",
+    "changes": [
+      {
+        "date": "2026-11-02T05:46:20.393Z",
+        "node": "",
+        "commit": "Fix text shifted when sliding."
+      }
+    ]
+  },
+  {
     "version": "1.22.2.001",
     "changes": [
       {
