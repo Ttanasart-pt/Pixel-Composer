@@ -3052,8 +3052,8 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			inputs[i].value_from.node.drawBranch(_depth + 1);
 		}
 	}
-	static drawActive  = function(ind = 0) {
-		active_draw_index = max(active_draw_index, ind);
+	static drawActive  = function(_ind   = 0) {
+		active_draw_index = max(active_draw_index, _ind);
 		if(project.graphDisplay.highlight) drawBranch();
 	}
 	

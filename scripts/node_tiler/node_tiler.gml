@@ -91,7 +91,7 @@ function Node_Tile_Drawer(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	
 	#region ++++ tools ++++
 		tool_attribute.size = 1;
-		tool_size_edit = textBox_Number(function(val) /*=>*/ { tool_attribute.size = max(1, round(val)); }).setSlideType(true)
+		tool_size_edit = textBox_Number(function(val) /*=>*/ { tool_attribute.size = max(1, round(val)); }).setSlideInt()
 			.setFont(f_p3)
 			.setSideButton(button(function() /*=>*/ { 
 				var an = { anchor: ANCHOR.top | ANCHOR.left };

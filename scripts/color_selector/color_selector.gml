@@ -120,7 +120,7 @@ function colorSelector(_onModify = noone) constructor {
 		
 		tbs = [ tb_hue, tb_sat, tb_val, tb_red, tb_grn, tb_blu, tb_alp ];
 		for( var i = 0, n = array_length(tbs); i < n; i++ )
-			tbs[i].setFont(f_p3).setSlideType(1);
+			tbs[i].setFont(f_p3).setSlideInt();
 	#endregion
 	
 	function resetHSV(_apply = true) {

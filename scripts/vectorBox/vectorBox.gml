@@ -81,12 +81,13 @@ function vectorBox(_size, _onModify, _unit = noone) : widget() constructor {
 	
 	////- Setters
 	
-	static setLink     = function(  ) /*=>*/ { linked = true;                                    return self; }
-	static setLinkable = function(_l) /*=>*/ { linkable = _l;                                    return self; }
-	static setSuffix   = function(_v) /*=>*/ { for(var i = 0; i < 4; i++) tb[i].setSuffix(_v);   return self; }
-	static setBoxColor = function(_v) /*=>*/ { for(var i = 0; i < 4; i++) tb[i].setBoxColor(_v); return self; }
-	static setFont     = function(_f) /*=>*/ { for(var i = 0; i < 4; i++) tb[i].setFont(_f);     return self; }
-	static setLinkInactiveColor = function(_c) /*=>*/ { link_inactive_color = _c;                return self; }
+	static setSlideInt = function(_v=1) /*=>*/ { for(var i = 0; i < 4; i++) tb[i].setSlideInt(_v); return self; }
+	static setLink     = function(  )   /*=>*/ { linked = true;                                    return self; }
+	static setLinkable = function(_l)   /*=>*/ { linkable = _l;                                    return self; }
+	static setSuffix   = function(_v)   /*=>*/ { for(var i = 0; i < 4; i++) tb[i].setSuffix(_v);   return self; }
+	static setBoxColor = function(_v)   /*=>*/ { for(var i = 0; i < 4; i++) tb[i].setBoxColor(_v); return self; }
+	static setFont     = function(_f)   /*=>*/ { for(var i = 0; i < 4; i++) tb[i].setFont(_f);     return self; }
+	static setLinkInactiveColor = function(_c) /*=>*/ { link_inactive_color = _c;                  return self; }
 	
 	static toggleLink = function() /*=>*/ {
 		if(display_data == noone) return;

@@ -1461,7 +1461,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 						
 				}
 				
-				if(editWidget && has(editWidget, "setSlideType")) editWidget.setSlideType(type == VALUE_TYPE.integer);
+				if(editWidget && has(editWidget, "setSlideInt")) editWidget.setSlideInt(type == VALUE_TYPE.integer);
 				break;
 				
 			case VALUE_TYPE.boolean :	

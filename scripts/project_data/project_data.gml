@@ -303,12 +303,12 @@ function Project() constructor {
 			attributeEditor = [
 				[ "Dimension", "surface_dimension", new vectorBox(2, 
 					function(val, index) /*=>*/ { 
-						attributes.surface_dimension[index] = val; 
+						attributes.surface_dimension[index] = round(val); 
 						PROJECT_ATTRIBUTES.surface_dimension = array_clone(attributes.surface_dimension);
 						RenderAll(); 
 						return true; 
 						
-					}).setLink(), 
+					}).setSlideInt().setLink(), 
 					
 					function(junc) /*=>*/ {
 						if(!is(junc, NodeValue)) return;

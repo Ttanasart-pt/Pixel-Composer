@@ -3428,7 +3428,7 @@ function Panel_Animation_Dopesheet() {
 	                    keyframe_dragging = noone;
 	                    
 	                    for( var i = 0, n = array_length(keyframe_selecting); i < n; i++ ) {
-	                        var k  = keyframe_selecting[i];
+	                        var k = keyframe_selecting[i];
 	                        k.anim.setKeyTime(k, k.time, true, true);
 	                    }
 	                    

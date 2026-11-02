@@ -20,7 +20,7 @@ function Panel_Animation_Region_Settings(_region) : Panel_Linear_Setting() const
 		
 		new __Panel_Linear_Setting_Item(
 			__txt("Frame Start"),
-			textBox_Number(function(t) /*=>*/ { region.frameStart = round(t); }).setSlideType(1)
+			textBox_Number(function(t) /*=>*/ { region.frameStart = round(t); }).setSlideInt()
 				.setDeactivate(function() /*=>*/ {return PROJECT.regionUpdate()}),
 			function( ) /*=>*/   {return region.frameStart},
 			function(v) /*=>*/ { region.frameStart = v; PROJECT.regionUpdate(); },
@@ -28,7 +28,7 @@ function Panel_Animation_Region_Settings(_region) : Panel_Linear_Setting() const
 		
 		new __Panel_Linear_Setting_Item(
 			__txt("Frame End"),
-			textBox_Number(function(t) /*=>*/ { region.frameEnd = round(t); }).setSlideType(1)
+			textBox_Number(function(t) /*=>*/ { region.frameEnd = round(t); }).setSlideInt()
 				.setDeactivate(function() /*=>*/ {return PROJECT.regionUpdate()}),
 			function( ) /*=>*/   {return region.frameEnd},
 			function(v) /*=>*/ { region.frameEnd = v; PROJECT.regionUpdate(); },
