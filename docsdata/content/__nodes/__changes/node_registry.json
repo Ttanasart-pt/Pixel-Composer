@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.22.2.002",
+    "changes": [
+      {
+        "date": "2026-11-02T05:13:53.392Z",
+        "node": "",
+        "commit": "Fix connection breaks when redoing node clone actions."
+      }
+    ]
+  },
+  {
     "version": "1.22.1.0",
     "changes": [
       {

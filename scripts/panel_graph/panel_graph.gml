@@ -5025,9 +5025,9 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
         }
         
         var x0 = infinity, y0 = infinity;
+        
         for(var i = 0, n = array_length(APPEND_LIST); i < n; i++) {
             var _node = APPEND_LIST[i];
-            
             x0 = min(x0, _node.x);
             y0 = min(y0, _node.y);
         }
@@ -5036,7 +5036,6 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
         node_drag_mx  = x0; node_drag_my  = y0;
         node_drag_sx  = x0; node_drag_sy  = y0;
         node_drag_ox  = x0; node_drag_oy  = y0;
-        
         nodes_selecting = APPEND_LIST;
     }
 

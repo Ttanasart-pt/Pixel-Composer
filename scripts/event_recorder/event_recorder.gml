@@ -154,8 +154,12 @@ function Action(_type, _object, _data) constructor {
 				break;
 				
 			case ACTION_TYPE.collection_loaded :
+				var _deleteGroup = {};
 				for( var i = 0, n = array_length(obj); i < n; i++ ) 
-					obj[i].destroy();
+					_deleteGroup[$ obj[i].node_id] = 1;
+				
+				for( var i = 0, n = array_length(obj); i < n; i++ ) 
+					obj[i].destroy(false, true, _deleteGroup);
 				break;
 				
 			case ACTION_TYPE.struct_modify : 
@@ -289,10 +293,7 @@ function Action(_type, _object, _data) constructor {
 		return "";
 	}
 	
-	static destroy = function() {
-		if(clear_action == noone) return;
-		clear_action(data);
-	}
+	static destroy = function() { if(clear_action != noone) clear_action(data); }
 }
 
 function recordAction(_type, _object, _data = -1) {

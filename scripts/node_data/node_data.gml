@@ -3917,7 +3917,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	static disable = function() { INLINE active = false; timeline_item.active = false; }
 	
 	static onDestroy = undefined
-	static destroy   = function(_merge = false, record = true) {
+	static destroy   = function(_merge = false, record = true, _deleteGroup = {}) {
 		if(!active) return;
 		disable();
 		
@@ -3929,7 +3929,6 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		array_remove(PANEL_GRAPH.nodes_selecting, self);
 		
 		if(PANEL_INSPECTOR.inspecting == self) PANEL_INSPECTOR.clearInspecting();
-		
 		PANEL_PREVIEW.removeNodePreview(self);
 		
 		var val_from_map = {};
@@ -3959,10 +3958,12 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 				if(_vt.value_from == noone || _vt.value_from.node != self) 
 					continue;
 				
+				if(has(_deleteGroup, _vt.node.node_id))
+					continue;
+				
 				if(_merge && has(val_from_map, _vt.type))
-					_vt.setFrom(val_from_map[$ _vt.type]);
-				else
-					_vt.removeFrom(false);
+					 _vt.setFrom(val_from_map[$ _vt.type]);
+				else _vt.removeFrom(false);
 			}
 			
 			jun.value_to = [];
