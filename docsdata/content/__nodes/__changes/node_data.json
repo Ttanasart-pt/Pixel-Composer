@@ -6,6 +6,11 @@
         "date": "2026-11-02T03:26:23.728Z",
         "node": "Graph Panel",
         "commit": "**Graph Panel**: Remove dimension display for a non-surface output (e.g. 3d mesh)."
+      },
+      {
+        "date": "2026-11-02T03:55:10.592Z",
+        "node": "Graph Panel",
+        "commit": "**Graph Panel**: Single channel output will display as greyscale instead of single red channel."
       }
     ]
   },

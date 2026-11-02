@@ -2766,7 +2766,9 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		var  aa = 1;
 		if(FILTER_ANIMATION && !isAnimated()) aa = .5;
 		
+		__channel_pre(preview_surface);
 		draw_surface_ext(preview_surface, bbox.xc - _sw * _ss / 2, bbox.yc - _sh * _ss / 2, _ss, _ss, 0, c_white, aa);
+		__channel_pos(preview_surface);
 	}
 	
 	static getNodeDimension = function() { 
