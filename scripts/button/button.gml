@@ -112,6 +112,7 @@ function buttonClass(_onClick, _icon = noone) : widget() constructor {
 		
 		if(hovering) {
 			if(spr) draw_sprite_stretched_ext(spr, toggled? 2 : 1, _x, _y, _w, _h, b, 1);
+			CURSOR = cr_handpoint;
 			
 			if(!activate_on_press && pressed && mouse_lrelease(active))
 				trigger();
@@ -222,7 +223,8 @@ function buttonInstant(spr, _x, _y, _w, _h, _m, _hvr, _act, _tip = "",
 	if(_hvr && point_in_rectangle(_m[0], _m[1], _x, _y, _x + _w, _y + _h)) {
 		if(is_array(_icon_blend)) cc = _icon_blend[1];
 		if(is_array(_icon_index)) ii = _icon_index[1];
-			
+		CURSOR = cr_handpoint;
+		
 		res = 1;
 		if(spr) draw_sprite_stretched_ext(spr, 1, _x, _y, _w, _h, _button_blend);
 		if(_tip != "") setTOOLTIP(_tip);
@@ -258,13 +260,13 @@ function buttonInstant_Pad(spr, _x, _y, _w, _h, _m, _hvr, _act, _tip = "",
 	var cc  = is_array(_icon_blend)? _icon_blend[0] : _icon_blend;
 	
 	if(_hvr && point_in_rectangle(_m[0], _m[1], _x, _y, _x + _w, _y + _h)) {
-		if(is_array(_icon_blend))
-			cc = _icon_blend[1];
-			
+		if(is_array(_icon_blend)) cc = _icon_blend[1];
+		CURSOR = cr_handpoint;
+		
 		res = 1;
 		if(spr) draw_sprite_stretched_ext(spr, 1, _x, _y, _w, _h, _button_blend);
 		if(_tip != "") setTOOLTIP(_tip);
-			
+		
 		if(mouse_lpress(_act))		res = 2;
 		if(mouse_rpress(_act))		res = 3;
 			
@@ -306,7 +308,8 @@ function buttonInstant_Icon(_cx, _cy, _s, _m, _hvr, _act, _tip = "",
 	
 	if(_hvr && point_in_circle(_m[0], _m[1], _cx, _cy, _s)) {
 		cc = _icon_blend_hover;
-			
+		CURSOR = cr_handpoint;
+		
 		res = 1;
 		if(_tip != "") setTOOLTIP(_tip);
 		
@@ -369,11 +372,12 @@ function buttonInstantGlass(hover, focus, mx, my, bx, by, bw, bh, txt = "", aa =
 	var _res = _hov;
 	var _clk = false;
 	
-	if(mouse_lclick(focus && _hov))
-		_clk = true; 
-	
-	if(mouse_lpress(focus && _hov))
-		_res = 2;
+	if(_hov) {
+		CURSOR = cr_handpoint;
+		
+		if(mouse_lclick(focus)) _clk = true; 
+		if(mouse_lpress(focus)) _res = 2;
+	}
 	
 	draw_sprite_stretched_ext(THEME.ui_panel, 0,           bx, by, bw, bh, _col, aa     + _hov * .10);
 	draw_sprite_stretched_ext(THEME.ui_panel, _clk? 0 : 1, bx, by, bw, bh, _col, aa * 2 + _hov * .25);

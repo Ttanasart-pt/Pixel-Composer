@@ -307,16 +307,17 @@ function recordAction(_type, _object, _data = -1) {
 	
 	while(!ds_stack_empty(REDO_STACK)) {
 		var actions = ds_stack_pop(REDO_STACK);
-		array_foreach(actions, function(a) /*=>*/ {return a.destroy()});
+		array_foreach(actions, function(a,_) /*=>*/ { a.destroy(); return true; });
 	}
 	
 	PANEL_MENU.undoUpdate();
 	return act;
 }
 
-function recordAction_variable_change(object, variable_name, variable_old_value, undo_label = "") {
-	return recordAction( ACTION_TYPE.var_modify, object, 
-	                     undo_label == ""? [ variable_old_value, variable_name ] : [ variable_old_value, variable_name, undo_label ]);
+function recordAction_variable_change(object, variable_name, variable_old_value = undefined, undo_label = "") {
+	var vnam = variable_name;
+	var vold = variable_old_value != undefined? variable_clone(variable_old_value) : variable_clone(object[$ variable_name]);
+	return recordAction( ACTION_TYPE.var_modify, object, undo_label == ""? [ vold, vnam ] : [ vold, vnam, undo_label ]);
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

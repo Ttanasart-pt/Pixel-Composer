@@ -901,6 +901,9 @@ function Panel_Animation_Dopesheet() {
     	
     	for( var i = 0, n = array_length(transform_keys); i < n; i++ ) {
     		var k = transform_keys[i];
+    		recordAction_variable_change( k, "ease_in"  );
+    		recordAction_variable_change( k, "ease_out" );
+    		
     		array_push(transform_anim, k.anim)
     		transform_key_time[i] = _reset? [0,0] : [k.ease_in[0],k.ease_out[0]];
     	}
@@ -2226,6 +2229,9 @@ function Panel_Animation_Dopesheet() {
                     	if(keyframe.driverObject != undefined)
                     		dialogPanelCall(new Panel_Keyframe_Driver().setKeyLock(keyframe));
                     	
+                    	recordAction_variable_change( keyframe, "ease_in"  );
+    					recordAction_variable_change( keyframe, "ease_out" );
+                    	
                     } else if(mouse_lpress()) {
                         if(key_mod_check(MOD_KEY.ctrl)) {
                             editKeyFrame(keyframe);
@@ -3519,9 +3525,6 @@ function Panel_Animation_Dopesheet() {
                     keyframe_dragging_mx = mx;
                     
 	                if(mouse_lrelease()) {
-	                    recordAction(ACTION_TYPE.var_modify, keyframe_dragging, [_in, "ease_in"]);
-	                    recordAction(ACTION_TYPE.var_modify, keyframe_dragging, [_ot, "ease_out"]);
-	                            
 	                    keyframe_dragging = noone;
 	                    UNDO_HOLDING      = false;
 	                }

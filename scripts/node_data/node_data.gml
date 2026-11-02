@@ -2756,8 +2756,6 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		if(!surface_exists(preview_surface)) return;
 		
 		var bbox = draw_bbox;
-		var aa   = .5 + .5 * renderActive;
-		if(!isHighlightingInGraph()) aa *= 0.25;
 		
 		var _sw = __preview_sw;
 		var _sh = __preview_sh;

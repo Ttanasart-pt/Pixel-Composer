@@ -11,6 +11,11 @@
         "date": "2026-11-02T03:55:10.592Z",
         "node": "Graph Panel",
         "commit": "**Graph Panel**: Single channel output will display as greyscale instead of single red channel."
+      },
+      {
+        "date": "2026-11-02T04:26:12.580Z",
+        "node": "Animation Dopesheet",
+        "commit": "**Animation Dopesheet**: Add undo point for easing adjustment."
       }
     ]
   },
