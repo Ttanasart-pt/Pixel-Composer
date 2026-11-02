@@ -49,26 +49,6 @@ function Panel_Inspector_View_Settings() : Panel_Linear_Setting() constructor {
 			"widget_draw_order",
 		),
 		
-		// new __Panel_Linear_Setting_Item(
-		// 	__txt("Reset Button"),
-		// 	new checkBox(() => { PREFERENCES.widget_draw_reset = !PREFERENCES.widget_draw_reset; }),
-		// 	( ) =>   PREFERENCES.widget_draw_reset,
-		// 	(v) => { PREFERENCES.widget_draw_reset = v; },
-		// 	PREFERENCES.widget_draw_reset,
-		// 	noone,
-		// 	"widget_draw_reset",
-		// ),
-		
-		// new __Panel_Linear_Setting_Item(
-		// 	__txt("Default Button"),
-		// 	new checkBox(() => { PREFERENCES.widget_draw_default = !PREFERENCES.widget_draw_default; }),
-		// 	( ) =>   PREFERENCES.widget_draw_default,
-		// 	(v) => { PREFERENCES.widget_draw_default = v; },
-		// 	PREFERENCES.widget_draw_default,
-		// 	noone,
-		// 	"widget_draw_default",
-		// ),
-		
 	];
 	
 	setHeight();

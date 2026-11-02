@@ -550,13 +550,6 @@ function Panel_Preference() : PanelContent() constructor {
     		
     		if(OS == os_windows) 
     		ds_list_add(pref_appr, new __Panel_Linear_Setting_Item_Preference(
-    			__txt("pref_ui_multi_window", "Multi windows") + "*",
-    			"window_multi",
-    			new checkBox(function() /*=>*/ {return prefToggle("window_multi", false, true)})
-    		));
-    		
-    		if(OS == os_windows) 
-    		ds_list_add(pref_appr, new __Panel_Linear_Setting_Item_Preference(
     			__txt("pref_ui_native_file_selector", "Use native file selector"),
     			"use_native_file_browser",
     			new checkBox(function() /*=>*/ {return prefToggle("use_native_file_browser")})
@@ -571,6 +564,13 @@ function Panel_Preference() : PanelContent() constructor {
     	
     	ds_list_add(pref_appr, __txt("Window")); // Window
     	
+    		if(OS == os_windows) 
+    		ds_list_add(pref_appr, new __Panel_Linear_Setting_Item_Preference(
+    			__txt("pref_ui_multi_window", "Multi windows") + "*",
+    			"window_multi",
+    			new checkBox(function() /*=>*/ {return prefToggle("window_multi", false, true)})
+    		));
+    		
     		ds_list_add(pref_appr, new __Panel_Linear_Setting_Item_Preference(
     			__txt("pref_ui_fix_window_size", "Fix Window size on start"),
     			"window_fix",

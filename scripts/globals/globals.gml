@@ -12,7 +12,8 @@ gml_pragma("UnityBuild", "true");
 #region //// MAIN ////
 	globalvar OS; OS = os_type;
 	#macro MAC (OS == os_macosx)
-	if(OS == os_windows) window_set_showborder(false);
+	// if(OS == os_windows) window_set_showborder(false);
+	if(OS == os_windows) winman_set_borderless_minimizable(window_handle());
 	
 	globalvar YYC; YYC      = code_is_compiled();
 	

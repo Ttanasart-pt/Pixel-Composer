@@ -43,6 +43,7 @@
         {"$GMExtensionFunction":"","%Name":"global_mouse_middle_is_pressed","argCount":0,"args":[],"documentation":"","externalName":"global_mouse_middle_is_pressed","help":"","hidden":false,"kind":1,"name":"global_mouse_middle_is_pressed","resourceType":"GMExtensionFunction","resourceVersion":"2.0","returnType":2,},
         {"$GMExtensionFunction":"","%Name":"global_mouse_middle_is_pressing","argCount":0,"args":[],"documentation":"","externalName":"global_mouse_middle_is_pressing","help":"","hidden":false,"kind":1,"name":"global_mouse_middle_is_pressing","resourceType":"GMExtensionFunction","resourceVersion":"2.0","returnType":2,},
         {"$GMExtensionFunction":"","%Name":"global_mouse_middle_is_released","argCount":0,"args":[],"documentation":"","externalName":"global_mouse_middle_is_released","help":"","hidden":false,"kind":1,"name":"global_mouse_middle_is_released","resourceType":"GMExtensionFunction","resourceVersion":"2.0","returnType":2,},
+        {"$GMExtensionFunction":"","%Name":"winman_set_borderless_minimizable","argCount":0,"args":[1,],"documentation":"","externalName":"winman_set_borderless_minimizable","help":"","hidden":false,"kind":1,"name":"winman_set_borderless_minimizable","resourceType":"GMExtensionFunction","resourceVersion":"2.0","returnType":2,},
       ],"init":"","kind":1,"name":"","origname":"","ProxyFiles":[],"resourceType":"GMExtensionFile","resourceVersion":"2.0","uncompress":false,"usesRunnerInterface":false,},
   ],
   "gradleinject":null,

@@ -283,9 +283,12 @@ function scrollBox(_data, _onModify, _update_hover = true) : widget() constructo
 		}
 		
 		if(useScissor) gpu_set_scissor(_sci);
-		draw_sprite_stretched_ext(THEME.scrollbox, 2, x, y, w, h, c_white, .9);
 		
-		if(hide == 0 && type == 0 && _hovering) draw_sprite_stretched_add(THEME.scrollbox, 1, x, y, w, h, COLORS._main_icon, .1);
+		if(hide == 0 && type == 0) {
+			draw_sprite_stretched_ext(THEME.scrollbox, 2, x, y, w, h, c_white, .9);
+			if(_hovering)
+				draw_sprite_stretched_add(THEME.scrollbox, 1, x, y, w, h, COLORS._main_icon, .1);
+		}
 		
 		if(WIDGET_CURRENT == self)
 			draw_sprite_stretched_ext(THEME.widget_selecting, 0, _x - ui(3), _y - ui(3), _w + ui(6), h + ui(6), COLORS._main_accent, 1);	
@@ -412,8 +415,11 @@ function scrollBoxFn(_fn, _onModify, _update_hover = true) : widget() constructo
 		
 		gpu_set_scissor(_sci);
 		
-		draw_sprite_stretched_ext(THEME.scrollbox, 2, _x, _y, w, h, c_white, .9);
-		if(hide == 0 && _hovering) draw_sprite_stretched_add(THEME.scrollbox, 1, _x, _y, w, h, COLORS._main_icon, .1);
+		if(hide == 0) {
+			draw_sprite_stretched_ext(THEME.scrollbox, 2, _x, _y, w, h, c_white, .9);
+			if(_hovering)
+				draw_sprite_stretched_add(THEME.scrollbox, 1, _x, _y, w, h, COLORS._main_icon, .1);
+		}
 		
 		if(WIDGET_CURRENT == self)
 			draw_sprite_stretched_ext(THEME.widget_selecting, 0, _x - ui(3), _y - ui(3), _w + ui(6), h + ui(6), COLORS._main_accent, 1);	

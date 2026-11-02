@@ -26,7 +26,7 @@ function textArrayBox(_arraySet, _data, _onModify = noone) : widget() constructo
 		w = _w;
 		if(getArray != noone) arraySet = getArray();
 		
-		draw_sprite_stretched_ext(THEME.textbox, 3, _x, _y, _w, h, boxColor);
+		draw_sprite_stretched_ext(THEME.textbox, 3, _x, _y, _w, h);
 		var _hoverEmpty = false;
 		
 		if(open) { 
@@ -72,11 +72,12 @@ function textArrayBox(_arraySet, _data, _onModify = noone) : widget() constructo
 				th += hh + ui(2);
 			}
 			
-			var tc = ty + hh / 2;
-			
+			var  tc  = ty + hh / 2;
 			var _hov = hover && point_in_rectangle(_m[0], _m[1], tx, ty, tx + ww, ty + hh);
 			
-			draw_sprite_stretched_ext(THEME.box_r5_clr, _hov, tx, ty, ww, hh, COLORS._main_icon, 1);
+			draw_sprite_stretched_ext(THEME.box_r5_clr, 0, tx, ty, ww, hh, c_white, 1);
+			if(_hov) draw_sprite_stretched_ext(THEME.box_r5_clr, 1, tx, ty, ww, hh, c_white, 1);
+			
 			draw_set_color(dragging == i? COLORS._main_text_accent : COLORS._main_text);
 			
 			switch(mode) {
