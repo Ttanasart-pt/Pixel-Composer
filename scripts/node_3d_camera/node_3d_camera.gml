@@ -458,6 +458,19 @@ function Node_3D_Camera(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _group)
 	
 	static getPreviewObjectOutline = function() { return isUsingTool("Move Target")? [ lookat ] : [ object ]; }
 	
+	static getGraphPreviewSurface = function() { 
+		var _node = array_safe_get(outputs, max(0, preview_channel_temp ?? preview_channel));
+		if(!is(_node, NodeValue)) return noone;
+		
+		switch(_node.type) {
+			case VALUE_TYPE.surface :
+			case VALUE_TYPE.dynaSurface :
+				return _node.showValue();
+		}
+		
+		return noone;
+	}
+	
 	////- Serialize
 	
 	static doSerialize = function(_map) {

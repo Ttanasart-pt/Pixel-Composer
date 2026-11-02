@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.22.2.001",
+    "changes": [
+      {
+        "date": "2026-11-02T03:29:26.690Z",
+        "node": "3D Camera",
+        "commit": "**3D Camera**: Fix dimension display show 3d preview dimension not the output surface dimension."
+      }
+    ]
+  },
+  {
     "version": "1.21.9.104",
     "changes": [
       {
