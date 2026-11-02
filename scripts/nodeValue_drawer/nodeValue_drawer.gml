@@ -508,6 +508,25 @@ function drawWidget(xx, yy, ww, _m, _jun, global_var = true, _hover = false, _fo
 								jun.node.refreshNodeDisplay();
 							}
 							break;
+							
+						case "Favourite" : 
+							var ic_b = jun.favorited? COLORS._main_accent : c_white;
+							var t  = __txt("Favourite");
+							
+							bx  -= bs; 
+							b    = buttonInstant(bb, bx, by, bs, bs, _m, hv, fc, t, THEME.favorite, jun.favorited, ic_b, .8, ics); 
+							bx  -= ui(4);
+							cHov = cHov || b;
+							
+							if(b == 2) {
+								jun.favorited = !jun.favorited;
+								var proj = jun.node.project;
+								if(jun.favorited) 
+									 array_push_unique(proj.favoritedValues, jun);
+								else array_remove(proj.favoritedValues, jun);
+							}
+							break;
+							
 					}
 				}
 				
