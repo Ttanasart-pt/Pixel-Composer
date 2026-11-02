@@ -1,5 +1,4 @@
 #pragma use(gradient)
-
 #region -- gradient -- [1789802993.4377005]
 	#ifdef _YY_HLSL11_ 
         #define GRADIENT_LIMIT 128
@@ -175,8 +174,17 @@
 varying vec2 v_vTexcoord;
 varying vec4 v_vColour;
 
+uniform int capStart;
+uniform int capEnd;
+
 void main() {
-	float y = v_vTexcoord.y;
+	vec2 tx = v_vTexcoord;
+	     
+	float vSt = 0. - .5 * float(capStart);
+	float vEd = 1. + .5 * float(capEnd);
 	
-	gl_FragColor = v_vColour * gradientEval(y) * texture2D(gm_BaseTexture, v_vTexcoord);
+	tx.y = (tx.y - vSt) / (vEd - vSt);
+	tx = fract(fract(tx) + 1.);
+	
+	gl_FragColor = v_vColour * gradientEval(tx.y) * texture2D(gm_BaseTexture, tx);
 }

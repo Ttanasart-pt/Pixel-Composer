@@ -1,0 +1,9 @@
+Deflate BW surface by curving straight edge toward solid pixel.
+
+## Properties
+
+[proptable]
+Deflate
+Radius|Scanning radius.
+Intensity|Deflate amount.
+[/proptable]

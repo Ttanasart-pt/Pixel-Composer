@@ -74,25 +74,27 @@ function armatureBox(_junction) : widget() constructor {
 			draw_sprite_stretched_ext(THEME.ui_panel_bg, 1, tx, ty, tw, expanded_h, COLORS.node_composite_bg_blend, 1);
 			ty += ui(6);
 			
+			var scs = gpu_get_scissor();
+			
 			for( var i = 0, n = array_length(bone_array); i < n; i++ ) {
 				var bone = bone_array[i];
 				if(bone.is_main) continue;
 				
-				var bnx  = tx + bone.arrayDepth * ui(8);
-				var bnw  = tw - bone.arrayDepth * ui(8);
-				
-				var bne_c = COLORS._main_icon;
+				var bnx  = tx + (bone.arrayDepth - 1) * ui(8);
+				var bnw  = tw - (bone.arrayDepth - 1) * ui(8);
+				var bcol = COLORS._main_icon;
 				
 				////- =Data
 				
-				draw_sprite_ui(THEME.bone, bone.getSpriteIndex(), bnx + ui(12), ty + _hh / 2, .8, .8, 0, bne_c);
+				draw_sprite_ui(THEME.bone, bone.getSpriteIndex(), bnx + ui(12), ty + _hh / 2, .8, .8, 0, bcol);
 				
-				draw_set_font(f_p2);
 				var tbx = bnx + ui(24);
 				var tby = ty + _hh / 2;
 				
-				draw_set_text(f_p4, fa_left, fa_center, COLORS._main_text);
+				gpu_set_scissor(tbx, ty, tw - tbx - ui(4), ty + _hh);
+				draw_set_text(f_p3, fa_left, fa_center, COLORS._main_text);
 				draw_text_add(tbx, tby, bone.name);
+				gpu_set_scissor(scs);
 				
 				ty += _hh;
 			}

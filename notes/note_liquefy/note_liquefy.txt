@@ -1,1 +1,63 @@
 Melt and bend surface using several liquefy tools.
+
+## Properties
+
+### Push
+
+<img Liquefy_Push>
+
+[proptable]
+Region
+Position|Starting position
+Position 2|End position
+Push Path|Push along custom path.
+Push Resolution|Path sampling.
+Radius|Push effect radius.
+Falloff|Falloff distance.
+
+Effect
+Intensity|Amount of shifting along path.
+Push|Push pixel in/out of the path terminals.
+[/proptable]
+
+### Twirl
+
+<img Liquefy_Twirl>
+
+[proptable]
+Region
+Position|Twirl center.
+Radius|Twirl radius.
+Falloff|Falloff distance.
+
+Effect
+Intensity|Twirl angle
+[/proptable]
+
+### Pinch
+
+<img Liquefy_Pinch>
+
+[proptable]
+Region
+Position|Pinch center.
+Radius|Pinch radius.
+Falloff|Falloff distance.
+
+Effect
+Intensity|Pinch amount
+[/proptable]
+
+### Bloat
+
+<img Liquefy_Bloat>
+
+[proptable]
+Region
+Position|Bloat center.
+Radius|Bloat radius.
+Falloff|Falloff distance.
+
+Effect
+Intensity|Bloat amount
+[/proptable]

@@ -38,7 +38,7 @@ function Node_Array(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		var _inp  = newInput(index, nodeValue("Input", self, CONNECT_TYPE.input, _typ, -1 )).setVisible(true, true);
 		
 		array_push(input_display_list, index);
-		postCreateNewInput(index);
+		// postCreateNewInput(index);
 		return _inp;
 	} setDynamicInput(1);
 	
@@ -66,6 +66,7 @@ function Node_Array(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 			if(i < input_fix_len + amo || _inp.hasJunctionFrom())
 				array_push(_l, _inp);
 		}
+		
 		
 		var _add = amo - getInputAmount();
 		repeat(_add) array_push(_l, createNewInput());

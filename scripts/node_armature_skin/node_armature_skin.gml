@@ -21,12 +21,17 @@ function Node_Armature_Skin(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	
 	function createNewInput(index = array_length(inputs)) {
 		var inAmo = array_length(inputs);
+		var bInd  = (inAmo - input_fix_len) / data_length;
 		
 		newInput(index+3, nodeValue_Bool(     "Draw",    true     ));
 		
-		var inp = newInput(index+0, nodeValue_Range(    "Radius", [1,1]     ));
-		newInput(index+4, nodeValue_Bool(     "Inherit Scale",     true     ));
+		////- /Skin
+		var inp = newInput(index+0, nodeValue_Range(    "Radius", [1,1] ));
+		newInput(index+4, nodeValue_Bool(    "Inherit Scale",      true ));
+		newInput(index+5, nodeValue_Toggle(  "Cap",                0b11, [ "Start", "End" ] ));
 		
+		////- /Rendering
+		newInput(index+6, nodeValue_Int(      "Depth",  bInd      ));
 		newInput(index+1, nodeValue_Gradient( "Color",  gra_white ));
 		newInput(index+2, nodeValue_Surface(  "Texture"           )).setVisible(true, false);
 		
@@ -34,7 +39,7 @@ function Node_Armature_Skin(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		return inp;
 	} 
 	
-	setDynamicInput( 5, false );
+	setDynamicInput( 7, false );
 	
 	////- Bone
 	
@@ -67,7 +72,10 @@ function Node_Armature_Skin(_x, _y, _group = noone) : Node(_x, _y, _group) const
 			boneMap[$ bone.ID] = _ind;
 			
 			array_push(_input_display_list, [ bone.name, false, _ind+3 ]);
-			array_append(_input_display_list, [ _ind+0, _ind+4, _ind+1, _ind+2 ]);
+			array_append(_input_display_list, [ 
+				[ "/Skin",      false ], _ind+0, _ind+4, _ind+5, 
+				[ "/Rendering", false ], _ind+6, _ind+1, _ind+2, 
+			]);
 			
 			for( var j = 0; j < data_length; j++ ) {
 				var ind = _ind + j;
@@ -150,12 +158,36 @@ function Node_Armature_Skin(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		
 		for( var i = 0, n = array_length(bone_array); i < n; i++ )
 			bone_array[i].__drawThickness = 1;
+			
+		var _drawOrder = [];
+		
+		#region depth sorting
+			var _renderPR    = ds_priority_create();
+			for( var i = 0, n = array_length(bone_array); i < n; i++ ) {
+				var _bone  = bone_array[i];
+				
+				if(_bone.is_main || _bone.control) continue;
+				if(!has(boneMap, _bone.ID)) continue;
+				
+				var binps  = boneMap[$ _bone.ID];
+				var _dep   = getInputData(binps + 6);
+				
+				ds_priority_add(_renderPR, i, _dep);
+			}
+			
+			attributes.layer_order = [];
+			while(!ds_priority_empty(_renderPR)) 
+				array_push(attributes.layer_order, ds_priority_delete_max(_renderPR))
+			ds_priority_destroy(_renderPR);
+			
+		#endregion
 		
 		_outSurf = surface_verify(_outSurf, _dim[0], _dim[1]);
 		surface_set_shader(_outSurf, sh_armature_skin_render);
-			
-			for( var i = 0, n = array_length(bone_array); i < n; i++ ) {
-				var _bone = bone_array[i];
+			// for( var i = 0, n = array_length(bone_array); i < n; i++ ) {
+			for( var i = 0, n = array_length(attributes.layer_order); i < n; i++ ) {
+				var _indx = attributes.layer_order[i];
+				var _bone = bone_array[_indx];
 				
 				if(_bone.is_main || _bone.control) continue;
 				if(!has(boneMap, _bone.ID)) continue;
@@ -167,11 +199,15 @@ function Node_Armature_Skin(_x, _y, _group = noone) : Node(_x, _y, _group) const
 				
 				var bthk   = getInputData(binps + 0);
 				var thkInh = getInputData(binps + 4);
+				var bCap   = getInputData(binps + 5);
 				
 				var bcol   = getInputData(binps + 1);
 				var btex   = getInputData(binps + 2);
 				
 				if(!bdrw) continue;
+				
+				shader_set_i( "capStart", bool(bCap & 0b01) );
+				shader_set_i( "capEnd",   bool(bCap & 0b10) );
 				
 				var useTex = is_surface(btex);
 				
@@ -216,48 +252,53 @@ function Node_Armature_Skin(_x, _y, _group = noone) : Node(_x, _y, _group) const
 				draw_vertex_texture_color(v3x, v3y, 1, 1, c1, 1);
 				
 				var _capRes = 8;
-				for( var j = 0; j < _capRes; j++ ) {
-					var a0 = dir + 90 + (j+0) / _capRes * 180;
-					var a1 = dir + 90 + (j+1) / _capRes * 180;
-				
-					var x00 = x0 + lengthdir_x(th0, a0);
-					var y00 = y0 + lengthdir_y(th0, a0);
-				
-					var x01 = x0 + lengthdir_x(th0, a1);
-					var y01 = y0 + lengthdir_y(th0, a1);
-				
-					var u0 = .5 + lengthdir_x(.5, a0 - dir + 90);
-					var v0 = .5 + lengthdir_y(.5, a0 - dir + 90);
+				if(bCap & 0b01) {
+					for( var j = 0; j < _capRes; j++ ) {
+						var a0 = dir + 90 + (j+0) / _capRes * 180;
+						var a1 = dir + 90 + (j+1) / _capRes * 180;
 					
-					var u1 = .5 + lengthdir_x(.5, a1 - dir + 90);
-					var v1 = .5 + lengthdir_y(.5, a1 - dir + 90);
+						var x00 = x0 + lengthdir_x(th0, a0);
+						var y00 = y0 + lengthdir_y(th0, a0);
 					
-					draw_vertex_texture_color(x0, y0, .5, .5, c0, 1);
-					draw_vertex_texture_color(x00, y00, u0, v0, c0, 1);
-					draw_vertex_texture_color(x01, y01, u1, v1, c0, 1);
+						var x01 = x0 + lengthdir_x(th0, a1);
+						var y01 = y0 + lengthdir_y(th0, a1);
+					
+						var u0 = .5 + lengthdir_x(.5, a0 - dir + 90);
+						var v0 =  0 - lengthdir_y(.5, a0 - dir + 90);
+						
+						var u1 = .5 + lengthdir_x(.5, a1 - dir + 90);
+						var v1 =  0 - lengthdir_y(.5, a1 - dir + 90);
+						
+						draw_vertex_texture_color(x0,  y0,  .5,  0, c0, 1);
+						draw_vertex_texture_color(x00, y00, u0, v0, c0, 1);
+						draw_vertex_texture_color(x01, y01, u1, v1, c0, 1);
+						
+					}
 				}
 				
-				for( var j = 0; j < _capRes; j++ ) {
-					var a0 = dir + 90 - (j+0) / _capRes * 180;
-					var a1 = dir + 90 - (j+1) / _capRes * 180;
+				if(bCap & 0b10) {
+					for( var j = 0; j < _capRes; j++ ) {
+						var a0 = dir + 90 - (j+0) / _capRes * 180;
+						var a1 = dir + 90 - (j+1) / _capRes * 180;
+						
+						var x10 = x1 + lengthdir_x(th1, a0);
+						var y10 = y1 + lengthdir_y(th1, a0);
 					
-					var x10 = x1 + lengthdir_x(th1, a0);
-					var y10 = y1 + lengthdir_y(th1, a0);
-				
-					var x11 = x1 + lengthdir_x(th1, a1);
-					var y11 = y1 + lengthdir_y(th1, a1);
-				
-					var u0 = .5 + lengthdir_x(.5, a0 - dir + 90);
-					var v0 = .5 + lengthdir_y(.5, a0 - dir + 90);
+						var x11 = x1 + lengthdir_x(th1, a1);
+						var y11 = y1 + lengthdir_y(th1, a1);
 					
-					var u1 = .5 + lengthdir_x(.5, a1 - dir + 90);
-					var v1 = .5 + lengthdir_y(.5, a1 - dir + 90);
-					
-					draw_vertex_texture_color(x1, y1, .5, .5, c1, 1);
-					draw_vertex_texture_color(x10, y10, u0, v0, c1, 1);
-					draw_vertex_texture_color(x11, y11, u1, v1, c1, 1);
+						var u0 = .5 + lengthdir_x(.5, a0 - dir + 90);
+						var v0 =  1 - lengthdir_y(.5, a0 - dir + 90);
+						
+						var u1 = .5 + lengthdir_x(.5, a1 - dir + 90);
+						var v1 =  1 - lengthdir_y(.5, a1 - dir + 90);
+						
+						draw_vertex_texture_color(x1,  y1,  .5,  1, c1, 1);
+						draw_vertex_texture_color(x10, y10, u0, v0, c1, 1);
+						draw_vertex_texture_color(x11, y11, u1, v1, c1, 1);
+					}
 				}
-			
+				
 				draw_primitive_end();
 			}
 		surface_reset_shader();

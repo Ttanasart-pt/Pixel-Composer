@@ -1047,6 +1047,22 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
 	    	}, THEME.icon_preview_export_node)
 	    		.setColorGet(function() /*=>*/ {return array_safe_get_fast(nodes_selecting, 0, noone) == noone? COLORS._main_icon : COLORS._main_accent}));
 	    	
+	    	array_insert(global.menuItems_graph_toolbars_general, 0, new MenuItem("Export Selecting...", function() /*=>*/ {
+	    		var _n = array_safe_get_fast(nodes_selecting, 0, noone);
+	    		if(_n == noone) return;
+	    		
+	    		var nodeBase = string_lower(instanceof(_n));
+	    		var dir = $"D:/Project/MakhamDev/LTS-PixelComposer/PixelComposer/docsdata/src/images/etc";
+	    		fileNameCall(dir, "", function(f) /*=>*/ {
+	    			var fpath = filename_ext_verify(f, ".png");
+	    			var surface = graph_export_image(nodes_list, nodes_list, new graph_export_settings());
+		    		surface_save(surface, fpath);
+		    		surface_free(surface);
+	    		});
+	    		
+	    	}, THEME.icon_preview_export_node)
+	    		.setColorGet(function() /*=>*/ {return array_safe_get_fast(nodes_selecting, 0, noone) == noone? COLORS._main_icon : COLORS._main_accent}));
+	    	
     	}
     	
         function topbar_toggle() { project.graphDisplay.show_topbar = !project.graphDisplay.show_topbar; }

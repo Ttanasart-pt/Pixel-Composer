@@ -11,6 +11,7 @@ function Node_Array_Add(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	
 	input_display_list = [ 
 		[ "Array", false ],  0,  1,
+		[ "Add",   false ],  
 	];
 	
 	function createNewInput(index = array_length(inputs)) {

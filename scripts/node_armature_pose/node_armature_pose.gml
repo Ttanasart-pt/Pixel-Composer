@@ -458,16 +458,16 @@ function Node_Armature_Pose(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		var inAmo = array_length(inputs);
 		var _name = bone != noone? bone.name : "bone";
 		
-		// print("createNewInput", index, bone == noone? bone : bone.ID);
 		newInput(index, nodeValue_Transform(_name));
-		inputs[index].attributes.bone_id = bone != noone? bone.ID : noone;
 		
+		inputs[index].attributes.bone_id = bone != noone? bone.ID : noone;
 		if(bone != noone) boneMap[$ bone.ID] = inputs[index];
 		
 		array_push(input_display_list, inAmo);
 		postCreateNewInput(index);
 		return inputs[index];
 	} 
+	
 	setDynamicInput(1, false);
 	
 	////- Bone
@@ -635,15 +635,12 @@ function Node_Armature_Pose(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		var mx = (_mx - _x) / _s;
 		var my = (_my - _y) / _s;
 		
-		var smx = PANEL_PREVIEW.snapX(mx);
-		var smy = PANEL_PREVIEW.snapY(my);
-		
 		if(posing_bone) {
 			_HIGHLIGHT_PROP = posing_input;
 			var val = array_clone(posing_input.getValue());
 			
-			var dx = smx - posing_mx;
-			var dy = smy - posing_my;
+			var dx = mx - posing_mx;
+			var dy = my - posing_my;
 				
 			if(key_mod_press(SHIFT)) {
 				draw_set_color(COLORS._main_accent);
@@ -659,8 +656,8 @@ function Node_Armature_Pose(_x, _y, _group = noone) : Node(_x, _y, _group) const
 				var ang = posing_bone.pose_local_rotate; 
 				
 				var pp  = point_rotate(dx, dy, 0, 0, -ang);
-				var bx  = posing_sx + pp[0];
-				var by  = posing_sy + pp[1];
+				var bx  = PANEL_PREVIEW.snapX(posing_sx + pp[0]);
+				var by  = PANEL_PREVIEW.snapY(posing_sy + pp[1]);
 				
 				val[TRANSFORM.pos_x] = bx;
 				val[TRANSFORM.pos_y] = by;
@@ -730,27 +727,6 @@ function Node_Armature_Pose(_x, _y, _group = noone) : Node(_x, _y, _group) const
 				var _ry = _y + _s * orig.y;
 				draw_sprite_ui(THEME.bone_rotate, 0, _rx, _ry, 1, 1, posing_bone.pose_angle, COLORS._main_value_positive, 1); 
 				
-			} else if(posing_type == 3) { //scale
-				// var ps = val[TRANSFORM.sca_x];
-				// var ss = point_distance(posing_mx, posing_my, smx, smy) / posing_sx;
-				// var ds = ss / ps;
-				// val[TRANSFORM.sca_x] = ss;
-				
-				// if(pose_child_lock && ds != 1 && ds != 0)
-				// for( var i = 0, n = array_length(posing_bone.childs); i < n; i++ ) {
-				// 	var _child = posing_bone.childs[i];
-				// 	if(!_child.apply_scale) continue;
-					
-				// 	var _input = boneMap[$ _child.ID];
-				// 	var _val   = array_clone(_input.getValue());
-				// 	    _val[TRANSFORM.sca_x] /= ds;
-				// 	_input.setValue(_val);
-				// }
-				
-				// orig = posing_bone.getPoint(0.8);
-				// var _rx = _x + _s * orig.x;
-				// var _ry = _y + _s * orig.y;
-				// draw_sprite_ui(THEME.bone_scale,  0, _rx, _ry, 1, 1, posing_bone.pose_angle, COLORS._main_value_positive, 1);
 			} 
 			
 			gpu_set_texfilter(false);
@@ -844,14 +820,17 @@ function Node_Armature_Pose(_x, _y, _group = noone) : Node(_x, _y, _group) const
 					posing_sx = val[TRANSFORM.pos_x];
 					posing_sy = val[TRANSFORM.pos_y];
 					
-					posing_mx = _p.x;
-					posing_my = _p.y;
+					posing_mx = mx;
+					posing_my = my;
 					
 				} else if(_typ == 1) { // free move
 					var orig  = _bne.getHead();
 					
 					posing_sx = orig.x;
 					posing_sy = orig.y;
+					
+					posing_mx = mx;
+					posing_my = my;
 					
 				} else if(_typ == 2) { // rotate
 					var orig  = _bne.getHead();

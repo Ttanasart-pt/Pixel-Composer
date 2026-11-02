@@ -16,6 +16,11 @@
         "date": "2026-11-02T00:58:30.390Z",
         "node": "",
         "commit": "**Armature Box**: Now expandable to show bone hierarchy."
+      },
+      {
+        "date": "2026-11-02T03:19:25.703Z",
+        "node": "",
+        "commit": "**Array**: Fix connecting value to dummy input not adding value to array."
       }
     ]
   },
