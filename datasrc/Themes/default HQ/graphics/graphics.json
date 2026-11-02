@@ -688,6 +688,7 @@
     "checkbox_active":                    { "path": "./widget/s_checkbox_active.png",                       "s": 2, "x":  0, "y":  0, "slice": 15 },
     "checkbox_def":                       { "path": "./widget/s_checkbox.png",                              "s": 4, "x":  0, "y":  0, "slice":  7 },
     "progress_bar":                       { "path": "./widget/s_progress_bar.png",                          "s": 2, "x":  0, "y":  0, "slice":  5 },
+    "scrollbox":                          { "path": "./widget/s_scrollbox.png",                             "s": 3, "x":  0, "y":  0, "slice":  7 },
     "textbox_code":                       { "path": "./widget/s_textbox_code_line.png",                     "s": 1, "x":  0, "y":  0, "slice":  5 },
     "textbox_header":                     { "path": "./widget/s_text_box_header.png",                       "s": 1, "x":  0, "y":  0, "slice":  5 },
     "textbox":                            { "path": "./widget/s_textbox.png",                               "s": 6, "x":  0, "y":  0, "slice":  5 },

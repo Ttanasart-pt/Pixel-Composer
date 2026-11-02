@@ -166,7 +166,7 @@ function scrollBox(_data, _onModify, _update_hover = true) : widget() constructo
 		if(type == 1) _w = _txw + padding * 2 + ui(24);
 		
 		var bs = min(h, ui(32));
-		if(type == 0 && hide == 0) draw_sprite_stretched(THEME.textbox, 3, _x, _y, w, h);
+		if(type == 0 && hide == 0) draw_sprite_stretched(THEME.scrollbox, 0, _x, _y, w, h);
 		
 		var _arr = h > ui(16);
 		var _sps =  1;
@@ -278,19 +278,14 @@ function scrollBox(_data, _onModify, _update_hover = true) : widget() constructo
 			var cc = _hovering? COLORS._main_icon_light : COLORS._main_icon;
 			var aa = .4 + .4 * interactable;
 			
-			if(type == 0) {
-				if(hide == 0) draw_sprite_stretched_ext(THEME.textbox, 3, _x1, _y, _arw, h, CDEF.main_mdwhite, 1);
-				draw_sprite_ui_uniform(arrow_spr, arrow_ind, _x1 + _arw / 2, _yc, _ars, cc, aa);
-			}
-			
-			if(type == 1) {
-				// if(hide == 0) draw_sprite_stretched_ext(THEME.textbox, 3, _tx1, _y, ui(32), h, CDEF.main_mdwhite, 1);
-				draw_sprite_ui_uniform(arrow_spr, arrow_ind, _tx1 + ui(16),  _yc, _ars, cc, aa);
-			}
+			if(type == 0) draw_sprite_ui_uniform(arrow_spr, arrow_ind, _x1 + _arw / 2, _yc, _ars, cc, aa);
+			if(type == 1) draw_sprite_ui_uniform(arrow_spr, arrow_ind, _tx1 + ui(16),  _yc, _ars, cc, aa);
 		}
 		
 		if(useScissor) gpu_set_scissor(_sci);
-		if(hide == 0 && type == 0) draw_sprite_stretched_ext(THEME.textbox, _hovering, x, y, w, h, boxColor, .5 + .5 * interactable);
+		draw_sprite_stretched_ext(THEME.scrollbox, 2, x, y, w, h, c_white, .9);
+		
+		if(hide == 0 && type == 0 && _hovering) draw_sprite_stretched_add(THEME.scrollbox, 1, x, y, w, h, COLORS._main_icon, .1);
 		
 		if(WIDGET_CURRENT == self)
 			draw_sprite_stretched_ext(THEME.widget_selecting, 0, _x - ui(3), _y - ui(3), _w + ui(6), h + ui(6), COLORS._main_accent, 1);	
@@ -363,7 +358,7 @@ function scrollBoxFn(_fn, _onModify, _update_hover = true) : widget() constructo
 		var _txw = string_width(_val);
 		
 		var bs = min(h, ui(32));
-		if(hide == 0) draw_sprite_stretched(THEME.textbox, 3, _x, _y, w, h);
+		if(hide == 0) draw_sprite_stretched(THEME.scrollbox, 3, _x, _y, w, h);
 		
 		var _arr = h > ui(16);
 		var _sps = min(1, (h - ui(4)) / line_get_height(font));
@@ -412,12 +407,13 @@ function scrollBoxFn(_fn, _onModify, _update_hover = true) : widget() constructo
 			var cc = _hovering? COLORS._main_icon_light : COLORS._main_icon;
 			var aa = .4 + .4 * interactable;
 			
-			if(hide == 0) draw_sprite_stretched_ext(THEME.textbox, 3, _x1, _y, _arw, h, CDEF.main_mdwhite, 1);
 			draw_sprite_ui_uniform(THEME.scroll_box_arrow, 0, _x1 + _arw / 2, _yc, _ars, cc, aa);
 		}
 		
 		gpu_set_scissor(_sci);
-		if(hide == 0) draw_sprite_stretched_ext(THEME.textbox, _hovering, _x, _y, w, h, boxColor, .5 + .5 * interactable);
+		
+		draw_sprite_stretched_ext(THEME.scrollbox, 2, _x, _y, w, h, c_white, .9);
+		if(hide == 0 && _hovering) draw_sprite_stretched_add(THEME.scrollbox, 1, _x, _y, w, h, COLORS._main_icon, .1);
 		
 		if(WIDGET_CURRENT == self)
 			draw_sprite_stretched_ext(THEME.widget_selecting, 0, _x - ui(3), _y - ui(3), _w + ui(6), h + ui(6), COLORS._main_accent, 1);	

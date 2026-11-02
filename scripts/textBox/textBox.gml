@@ -1025,9 +1025,10 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 			
 			draw_set_text(font, fa_left, fa_top);
 			var txt  = _input_text;
+			var _display_text = string_real(txt);
+			
 			var tw   = string_width(txt);
 			var th   = string_height(txt == ""? "l" : txt);
-			
 			var p_w  = string_width(prefix);
 			var cs   = string_copy(txt, 1, cursor);
 			var c_w  = string_width(cs);
@@ -1126,7 +1127,6 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 						gpu_set_scissor(scis);
 					}
 					
-					var _display_text = string_real(txt);
 					SURFACE_PREDRAW
 					surface_set_shader(text_surface, noone, true, BLEND.add);
 					
@@ -1153,12 +1153,6 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 				#endregion
 				
 			} else {
-				var txt  = _input_text;
-				var tw   = string_width(txt);
-				var th   = string_height(txt == ""? "l" : txt);
-					
-				var _display_text = string_real(txt);
-				
 				SURFACE_PREDRAW
 				surface_set_shader(text_surface, noone, true, BLEND.add);
 				

@@ -145,7 +145,6 @@ function rangeBox(_onModify) : widget() constructor {
 		_w -= bs;
 		
 		if(hide == 0) draw_sprite_stretched_ext(THEME.textbox, 0, x, y, w, h, boxColor, .5 + .5 * interactable);
-		disp_w = linked? _w : _w / 2;
 		
 		var ps = h / 2;
 		var px = _x + _w / 2;
@@ -176,11 +175,14 @@ function rangeBox(_onModify) : widget() constructor {
 		}
 		
 		if(linked) {
+			disp_w = _w;
 			tb[0].setFocusHover(active, hover);
 			tb[0].draw(_x, _y, disp_w, _h, _data[0], _m);
 			tb[0].setLabel("value");
 			
 		} else if(array_safe_length(_data) >= 2) {
+			disp_w = _w / 2;
+			
 			var bxHover = hover && point_in_rectangle(_m[0], _m[1], x, y, x + w, y + h);
 			var tbHover = bxHover;
 			
