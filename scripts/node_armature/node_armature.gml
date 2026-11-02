@@ -1162,7 +1162,9 @@ function Node_Armature(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 						}
 						
 						if(_reach) {
-							var  p0 = anc.getHead();
+							var par = anc.parent? anc.parent : anc;
+							
+							var  p0 = par.getHead();
 							var p0t = bne.getHead();
 							var _px = _x + p0t.x * _s;
 							var _py = _y + p0t.y * _s;
@@ -1175,10 +1177,8 @@ function Node_Armature(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 								
 								recordAction(ACTION_TYPE.struct_modify, bones).setName("Adjust bone IK").setRef(self);
 								
-								print(anc);
-								
-								var IKbone = new __Bone(anc, _len, _ang, ik_dragging.angle + 90, 0, self);
-								anc.addChild(IKbone);
+								var IKbone = new __Bone(par, _len, _ang, ik_dragging.angle + 90, 0, self);
+								par.addChild(IKbone);
 								
 								IKbone.direction  = _ang;
 								IKbone.distance   = _len;
@@ -1189,6 +1189,7 @@ function Node_Armature(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 								IKbone.name = $"IK handle {anc.name}-{ik_dragging.name}";
 								IKbone.parent_anchor = false;
 								
+								IKbone.connect();
 								bones.setPosition();
 							}
 						}

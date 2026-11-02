@@ -36,6 +36,7 @@ function __Bone(_parent = noone, _distance = 0, _direction = 0, _angle = 0, _len
 	IKlength   = 0;
 	IKTargetID = "";
 	IKTarget   = noone;
+	IKSource   = noone;
 	
 	constrains = [];
 	control_x0 = 0; control_y0 = 0; control_i0 = 0;
@@ -170,10 +171,21 @@ function __Bone(_parent = noone, _distance = 0, _direction = 0, _angle = 0, _len
 			draw_set_color_alpha(c_white);
 			
 			if(attributes.display_control) {
-				if(!parent_anchor && parent != noone) {
+				var _px = undefined;
+				var _py = undefined;
+				
+				if(IKSource) {
+					var _p  = IKSource.getHead();
+					_px = _x + _p.x * _s;
+					_py = _y + _p.y * _s;
+					
+				} else if(!parent_anchor && parent != noone) {
 					var _p  = parent.getHead();
-					var _px = _x + _p.x * _s;
-					var _py = _y + _p.y * _s;
+					_px = _x + _p.x * _s;
+					_py = _y + _p.y * _s;
+				}
+				
+				if(_px != undefined) {
 					draw_set_alpha(.3);
 					draw_line_dashed(_px, _py, p0x, p0y, 1);
 					draw_set_alpha(1);
@@ -193,12 +205,23 @@ function __Bone(_parent = noone, _distance = 0, _direction = 0, _angle = 0, _len
 				draw_line_width(p0x, p0y, nx, ny, 2);
 			}
 			
-			if(!parent_anchor && parent.parent != noone) {
+			var _px = undefined;
+			var _py = undefined;
+			
+			if(IKSource) {
+				var _p  = IKSource.getHead();
+				_px = _x + _p.x * _s;
+				_py = _y + _p.y * _s;
+				
+			} else if(!parent_anchor && parent.parent != noone) {
 				var _p  = parent.getTail();
-				var _px = _x + _p.x * _s;
-				var _py = _y + _p.y * _s;
+				_px = _x + _p.x * _s;
+				_py = _y + _p.y * _s;
+			}
+			
+			if(_px != undefined) {
 				draw_set_alpha(.3);
-				draw_line_dashed(_px, _py, p0x, p0y, 2, 8);
+				draw_line_dashed(_px, _py, p0x, p0y, 1);
 				draw_set_alpha(1);
 			}
 			
@@ -298,13 +321,24 @@ function __Bone(_parent = noone, _distance = 0, _direction = 0, _angle = 0, _len
 		if(control) {
 			var cc = draw_get_color();
 			draw_set_color(c_white);
-			if(!parent_anchor && parent.parent != noone) {
+			
+			var _px = undefined;
+			var _py = undefined;
+			
+			if(IKSource) {
+				var _p  = IKSource.getHead();
+				_px = _x + _p.x * _s;
+				_py = _y + _p.y * _s;
+				
+			} else if(!parent_anchor && parent.parent != noone) {
 				var _p  = parent.getTail();
-				var _px = _x + _p.x * _s;
-				var _py = _y + _p.y * _s;
-				draw_line_dashed(_px, _py, p0x, p0y, 1);
+				_px = _x + _p.x * _s;
+				_py = _y + _p.y * _s;
 			}
 			
+			if(_px != undefined) 
+				draw_line_dashed(_px, _py, p0x, p0y, 1);
+				
 			draw_sprite_ui(THEME.preview_bone_IK, 0, p0x, p0y,,,, cc, draw_get_alpha());
 			
 		} else {
@@ -315,13 +349,23 @@ function __Bone(_parent = noone, _distance = 0, _direction = 0, _angle = 0, _len
 				draw_line_width(p0x, p0y, nx, ny, 2);
 			}
 			
-			if(!parent_anchor && parent.parent != noone) {
+			var _px = undefined;
+			var _py = undefined;
+			
+			if(IKSource) {
+				var _p  = IKSource.getHead();
+				_px = _x + _p.x * _s;
+				_py = _y + _p.y * _s;
+				
+			} else if(!parent_anchor && parent.parent != noone) {
 				var _p  = parent.getTail();
-				var _px = _x + _p.x * _s;
-				var _py = _y + _p.y * _s;
-				draw_line_dashed(_px, _py, p0x, p0y, 2, 8);
+				_px = _x + _p.x * _s;
+				_py = _y + _p.y * _s;
 			}
 			
+			if(_px != undefined) 
+				draw_line_dashed(_px, _py, p0x, p0y, 2, 8);
+				
 			if(attributes.display_bone == 0) {
 				var _ppx = lerp(p0x, p1x, 0.2);
 				var _ppy = lerp(p0y, p1y, 0.2);
@@ -710,16 +754,16 @@ function __Bone(_parent = noone, _distance = 0, _direction = 0, _angle = 0, _len
 		is_main			= bone.is_main;
 		parent_anchor	= bone.parent_anchor;
 		
-		ID          = bone[$ "ID"]        ?? ID;
-		name        = bone[$ "name"]      ?? name;
-		distance    = bone[$ "distance"]  ?? distance;
-		direction   = bone[$ "direction"] ?? direction;
-		angle       = bone[$ "angle"]     ?? angle;
-		length      = bone[$ "length"]    ?? length;
+		ID          = bone[$ "ID"]         ?? ID;
+		name        = bone[$ "name"]       ?? name;
+		distance    = bone[$ "distance"]   ?? distance;
+		direction   = bone[$ "direction"]  ?? direction;
+		angle       = bone[$ "angle"]      ?? angle;
+		length      = bone[$ "length"]     ?? length;
 		
-		control     = bone[$ "control"]   ?? control;
-		IKlength    = bone[$ "IKlength"]  ?? IKlength;
-		IKTargetID  = struct_try_get(bone, "IKTargetID", "");
+		control     = bone[$ "control"]    ?? control;
+		IKlength    = bone[$ "IKlength"]   ?? IKlength;
+		IKTargetID  = bone[$ "IKTargetID"] ?? "";
 		
 		apply_rotation	= bone.apply_rotation;
 		apply_scale		= bone.apply_scale;
@@ -738,8 +782,18 @@ function __Bone(_parent = noone, _distance = 0, _direction = 0, _angle = 0, _len
 	
 	static connect = function() {
 		IKTarget = noone;
+		IKSource = noone;
+		
 		if(parent != noone && IKTargetID != "") 
 			IKTarget = parent.findBone(IKTargetID);
+		
+		if(IKTarget) {
+			IKSource = IKTarget;
+			repeat(IKlength-1) {
+				if(IKSource.parent == noone) break;
+				IKSource = IKSource.parent;
+			}
+		}
 		
 		for( var i = 0, n = array_length(childs); i < n; i++ )
 			childs[i].connect();

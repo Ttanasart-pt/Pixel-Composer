@@ -14,9 +14,9 @@ function Node_Armature_Skin(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	newOutput(0, nodeValue_Output( "Surface Out", VALUE_TYPE.surface, noone));
 	
 	input_display_list = [ 
-		[ "Output",   false ], 1, 
-		[ "Armature", false ], 0, 
-		[ "Skin",     false ], 2, 
+		[ "Output",   false ],  1,
+		[ "Armature", false ],  0, 
+		[ "Skin",     false ],  2, 
 	]
 	
 	function createNewInput(index = array_length(inputs)) {
@@ -100,11 +100,11 @@ function Node_Armature_Skin(_x, _y, _group = noone) : Node(_x, _y, _group) const
 			
 			var _bhov = noone;
 			
-			var bhd = _bne.getHead();
-			var bx  = _x + bhd.x * _s;
-			var by  = _y + bhd.y * _s;
-			
 			if(has(boneMap, _bne.ID)) {
+				var bhd = _bne.getHead();
+				var bx  = _x + bhd.x * _s;
+				var by  = _y + bhd.y * _s;
+			
 				var _indx  = boneMap[$ _bne.ID];
 				var _inHov = false;
 				
@@ -113,7 +113,6 @@ function Node_Armature_Skin(_x, _y, _group = noone) : Node(_x, _y, _group) const
 					_inHov |= PANEL_INSPECTOR.prop_hover == inp || PANEL_ANIMATION.value_hovering == inp;
 				}
 				if(_inHov) _bhov = [ _bne, 2 ];
-				
 				
 				var _drw = inputs[_indx + 3].getValue();
 				
@@ -216,27 +215,49 @@ function Node_Armature_Skin(_x, _y, _group = noone) : Node(_x, _y, _group) const
 				draw_vertex_texture_color(v2x, v2y, 0, 1, c1, 1);
 				draw_vertex_texture_color(v3x, v3y, 1, 1, c1, 1);
 				
-				// if(!useTex) {
-					var _capRes = 8;
-					for( var j = 0; j < _capRes; j++ ) {
-						var a0 = dir + 90 + (j+0) / _capRes * 180;
-						var a1 = dir + 90 + (j+1) / _capRes * 180;
-					
-						draw_vertex_texture_color(x0, y0, 0, 0, c0, 1);
-						draw_vertex_texture_color(x0 + lengthdir_x(th0, a0), y0 + lengthdir_y(th0, a0), 0, 0, c0, 1);
-						draw_vertex_texture_color(x0 + lengthdir_x(th0, a1), y0 + lengthdir_y(th0, a1), 0, 0, c0, 1);
-					}
-					
-					for( var j = 0; j < _capRes; j++ ) {
-						var a0 = dir + 90 - (j+0) / _capRes * 180;
-						var a1 = dir + 90 - (j+1) / _capRes * 180;
-						
-						draw_vertex_texture_color(x1, y1, 0, 1, c1, 1);
-						draw_vertex_texture_color(x1 + lengthdir_x(th1, a0), y1 + lengthdir_y(th1, a0), 0, 1, c1, 1);
-						draw_vertex_texture_color(x1 + lengthdir_x(th1, a1), y1 + lengthdir_y(th1, a1), 0, 1, c1, 1);
-					}
-				// }
+				var _capRes = 8;
+				for( var j = 0; j < _capRes; j++ ) {
+					var a0 = dir + 90 + (j+0) / _capRes * 180;
+					var a1 = dir + 90 + (j+1) / _capRes * 180;
 				
+					var x00 = x0 + lengthdir_x(th0, a0);
+					var y00 = y0 + lengthdir_y(th0, a0);
+				
+					var x01 = x0 + lengthdir_x(th0, a1);
+					var y01 = y0 + lengthdir_y(th0, a1);
+				
+					var u0 = .5 + lengthdir_x(.5, a0 - dir + 90);
+					var v0 = .5 + lengthdir_y(.5, a0 - dir + 90);
+					
+					var u1 = .5 + lengthdir_x(.5, a1 - dir + 90);
+					var v1 = .5 + lengthdir_y(.5, a1 - dir + 90);
+					
+					draw_vertex_texture_color(x0, y0, .5, .5, c0, 1);
+					draw_vertex_texture_color(x00, y00, u0, v0, c0, 1);
+					draw_vertex_texture_color(x01, y01, u1, v1, c0, 1);
+				}
+				
+				for( var j = 0; j < _capRes; j++ ) {
+					var a0 = dir + 90 - (j+0) / _capRes * 180;
+					var a1 = dir + 90 - (j+1) / _capRes * 180;
+					
+					var x10 = x1 + lengthdir_x(th1, a0);
+					var y10 = y1 + lengthdir_y(th1, a0);
+				
+					var x11 = x1 + lengthdir_x(th1, a1);
+					var y11 = y1 + lengthdir_y(th1, a1);
+				
+					var u0 = .5 + lengthdir_x(.5, a0 - dir + 90);
+					var v0 = .5 + lengthdir_y(.5, a0 - dir + 90);
+					
+					var u1 = .5 + lengthdir_x(.5, a1 - dir + 90);
+					var v1 = .5 + lengthdir_y(.5, a1 - dir + 90);
+					
+					draw_vertex_texture_color(x1, y1, .5, .5, c1, 1);
+					draw_vertex_texture_color(x10, y10, u0, v0, c1, 1);
+					draw_vertex_texture_color(x11, y11, u1, v1, c1, 1);
+				}
+			
 				draw_primitive_end();
 			}
 		surface_reset_shader();

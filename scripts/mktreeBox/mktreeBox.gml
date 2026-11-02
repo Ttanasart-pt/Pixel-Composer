@@ -40,13 +40,6 @@ function mktreeBox() : widget() constructor {
     	_h += _hh;
     	_y += _hh;
     	
-        // for( var i = 0, n = array_length(_tree.children); i < n; i++ ) {
-        // 	var _brn = _tree.children[i];
-        // 	var _hh  = drawTree(_brn, _x + ui(16), _y, _w - ui(16));
-        // 	_h += _hh;
-        // 	_y += _hh;
-        // }
-		
 		return _h;
 	}
 	

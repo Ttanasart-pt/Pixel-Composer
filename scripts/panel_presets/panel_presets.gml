@@ -338,8 +338,8 @@ function Panel_Presets(_node) : PanelContent() constructor {
 			
 			var hov = pHOVER && point_in_rectangle(mx, my, bx, by, bx + bs, by + ah);
 			var cc  = hov? CDEF.cyan : COLORS._main_icon;
-			draw_sprite_stretched_ext(THEME.ui_panel, 0, bx, by, bs, ah, cc, .40 + hov * .10);
-			draw_sprite_stretched_ext(THEME.ui_panel, 1, bx, by, bs, ah, cc, .75 + hov * .25);
+			draw_sprite_stretched_ext(THEME.box_r5_clr, 0, bx, by, bs, ah, cc, .40 + hov * .10);
+			draw_sprite_stretched_ext(THEME.box_r5_clr, 1, bx, by, bs, ah, cc, .75 + hov * .25);
 			draw_sprite_ui(THEME.path_open, 0, bx + bs/2, by + ah/2, .75, .75, 0, cc);
 			
 			if(hov) {
@@ -349,11 +349,11 @@ function Panel_Presets(_node) : PanelContent() constructor {
 			
 			bx += bs + ui(4);
 			ww -= bs + ui(4);
-				
+			
 			if(file_exists_empty(valPath)) {
 				var hov = pHOVER && point_in_rectangle(mx, my, _bx, by, _bx + bs, by + ah);
-				draw_sprite_stretched_ext(THEME.ui_panel, 0, _bx, by, bs, ah, COLORS._main_value_negative, .40 + hov * .10);
-				draw_sprite_stretched_ext(THEME.ui_panel, 1, _bx, by, bs, ah, COLORS._main_value_negative, .75 + hov * .25);
+				draw_sprite_stretched_ext(THEME.box_r5_clr, 0, _bx, by, bs, ah, COLORS._main_value_negative, .40 + hov * .10);
+				draw_sprite_stretched_ext(THEME.box_r5_clr, 1, _bx, by, bs, ah, COLORS._main_value_negative, .75 + hov * .25);
 				draw_set_text(f_p2, fa_center, fa_center, hov? COLORS._main_value_positive : COLORS._main_icon);
 				draw_sprite_ui(THEME.icon_delete, 0, _bx + bs/2, by + ah/2, 1, 1, 0, COLORS._main_value_negative);
 				
@@ -366,7 +366,7 @@ function Panel_Presets(_node) : PanelContent() constructor {
 				}
 				
 			} else {
-				draw_sprite_stretched_ext(THEME.ui_panel, 0, _bx, by, bs, ah, COLORS._main_icon, .40);
+				draw_sprite_stretched_ext(THEME.box_r5_clr, 0, _bx, by, bs, ah, COLORS._main_icon, .40);
 				draw_set_text(f_p2, fa_center, fa_center, COLORS._main_icon);
 				draw_sprite_ui(THEME.icon_delete, 0, _bx + bs/2, by + ah/2, 1, 1, 0, COLORS._main_icon);
 			}
@@ -374,8 +374,8 @@ function Panel_Presets(_node) : PanelContent() constructor {
 			ww -= bs + ui(4);
 			
 			var hov = pHOVER && point_in_rectangle(mx, my, bx, by, bx + ww, by + ah);
-			draw_sprite_stretched_ext(THEME.ui_panel, 0, bx, by, ww, ah, hov? COLORS._main_value_positive : COLORS._main_icon, .3 + hov * .10);
-			draw_sprite_stretched_ext(THEME.ui_panel, 1, bx, by, ww, ah, hov? COLORS._main_value_positive : COLORS._main_icon, .6 + hov * .25);
+			draw_sprite_stretched_ext(THEME.box_r5_clr, 0, bx, by, ww, ah, hov? COLORS._main_value_positive : COLORS._main_icon, .3 + hov * .10);
+			draw_sprite_stretched_ext(THEME.box_r5_clr, 1, bx, by, ww, ah, hov? COLORS._main_value_positive : COLORS._main_icon, .6 + hov * .25);
 			draw_set_text(f_p2, fa_center, fa_center, hov? COLORS._main_value_positive : COLORS._main_icon_light);
 			draw_text_add(bx + ww / 2, by + ah / 2, __txt("New preset"));
 			

@@ -250,8 +250,8 @@ function Panel_History() : PanelContent() constructor {
 			var _hov = pHOVER && point_in_rectangle(mx, my, _bx, _by, _bx + bw, _by + bh);
 			var  cc  = _hov? COLORS._main_value_negative : COLORS._main_icon;
 			
-			draw_sprite_stretched_ext(THEME.ui_panel, 0, _bx, _by, bw, bh, cc, .3 + _hov * .1);
-			draw_sprite_stretched_ext(THEME.ui_panel, 1, _bx, _by, bw, bh, cc, .6 + _hov * .25);
+			draw_sprite_stretched_ext(THEME.box_r5_clr, 0, _bx, _by, bw, bh, cc, .3 + _hov * .1);
+			draw_sprite_stretched_ext(THEME.box_r5_clr, 1, _bx, _by, bw, bh, cc, .6 + _hov * .25);
 			
 			draw_set_text(f_p2, fa_center, fa_center, cc);
 			draw_text_add(_bx + bw / 2, _by + bh / 2, __txt("Clear History"));

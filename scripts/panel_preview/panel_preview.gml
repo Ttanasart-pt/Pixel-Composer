@@ -4198,6 +4198,8 @@ function Panel_Preview() : PanelContent() constructor {
         if(!minimap_show) return;
         
         var pd  = THEME_VALUE.panel_toolbar_padding;
+        var mrg = THEME_VALUE.panel_toolbar_merge;
+        
         var mx1 = w - ui(8);
         var my1 = h - (pd + toolbar_size) - ui(8);
         

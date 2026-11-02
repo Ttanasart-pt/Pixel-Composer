@@ -167,9 +167,9 @@ function Panel_Node_Custom_Import(_dirs) : PanelContent() constructor {
 		var _cc  = COLORS._main_value_positive;
 		
 		if(importing) {
-		    draw_sprite_stretched_ext(THEME.ui_panel, 0, bx, by, bw, bh, _cc, .4);
-		    draw_sprite_stretched_ext(THEME.ui_panel, 0, bx, by, bw * min(1, import_step / import_full), bh, _cc, .85);
-    		draw_sprite_stretched_ext(THEME.ui_panel, 1, bx, by, bw, bh, _cc, .85);
+		    draw_sprite_stretched_ext(THEME.box_r5_clr, 0, bx, by, bw, bh, _cc, .4);
+		    draw_sprite_stretched_ext(THEME.box_r5_clr, 0, bx, by, bw * min(1, import_step / import_full), bh, _cc, .85);
+    		draw_sprite_stretched_ext(THEME.box_r5_clr, 1, bx, by, bw, bh, _cc, .85);
     		draw_set_text(f_p2, fa_center, fa_center, COLORS._main_value_positive);
     		draw_text_add(bx + bw / 2, by + bh / 2, __txt("Importing"));
     		
@@ -187,8 +187,8 @@ function Panel_Node_Custom_Import(_dirs) : PanelContent() constructor {
 		var _hov = pHOVER && point_in_rectangle(mx, my, bx, by, bx + bw, by + bh);
 		var _cc  = _hov? COLORS._main_value_positive : COLORS._main_icon;
 		
-		draw_sprite_stretched_ext(THEME.ui_panel, 0, bx, by, bw, bh, _cc, .3 + _hov * .1);
-		draw_sprite_stretched_ext(THEME.ui_panel, 1, bx, by, bw, bh, _cc, .6 + _hov * .25);
+		draw_sprite_stretched_ext(THEME.box_r5_clr, 0, bx, by, bw, bh, _cc, .3 + _hov * .1);
+		draw_sprite_stretched_ext(THEME.box_r5_clr, 1, bx, by, bw, bh, _cc, .6 + _hov * .25);
 		draw_set_text(f_p2, fa_center, fa_center, _hov? COLORS._main_value_positive : COLORS._main_icon_light);
 		draw_text_add(bx + bw / 2, by + bh / 2, __txt("Import"));
 		

@@ -425,8 +425,8 @@ function Panel_Action_Manager() : PanelContent() constructor {
 		
 		if(creating) {
 			var cc = COLORS._main_value_positive;
-			draw_sprite_stretched_ext(THEME.ui_panel, 0, bx, by, bw, bh, cc, .4 + hv * .1);
-			draw_sprite_stretched_ext(THEME.ui_panel, 1, bx, by, bw, bh, cc, .75 + hv * .15);
+			draw_sprite_stretched_ext(THEME.box_r5_clr, 0, bx, by, bw, bh, cc, .4 + hv * .1);
+			draw_sprite_stretched_ext(THEME.box_r5_clr, 1, bx, by, bw, bh, cc, .75 + hv * .15);
 			draw_set_text(f_p2, fa_center, fa_center, COLORS._main_value_positive);
 			draw_text_add(bx + bw / 2, by + bh / 2, __txt("Create Action"));
 			
@@ -452,8 +452,8 @@ function Panel_Action_Manager() : PanelContent() constructor {
 			hv = pHOVER && point_in_rectangle(mx, my, bx, by, bx + bw, by + bh);
 			
 			var cc = hv? COLORS._main_value_negative : COLORS._main_icon;
-			draw_sprite_stretched_ext(THEME.ui_panel, 0, bx, by, bw, bh, cc, .3 + hv * .1);
-			draw_sprite_stretched_ext(THEME.ui_panel, 1, bx, by, bw, bh, cc, .75 + hv * .15);
+			draw_sprite_stretched_ext(THEME.box_r5_clr, 0, bx, by, bw, bh, cc, .3 + hv * .1);
+			draw_sprite_stretched_ext(THEME.box_r5_clr, 1, bx, by, bw, bh, cc, .75 + hv * .15);
 			draw_sprite_ui(THEME.cross, 0, bx + bw / 2, by + bh / 2, .75, .75, 0, cc);
 			
 			if(mouse_lpress(pFOCUS && hv)) {
@@ -463,8 +463,8 @@ function Panel_Action_Manager() : PanelContent() constructor {
 			
 		} else if(action_selecting != undefined) {
 			var cc = COLORS._main_value_positive;
-			draw_sprite_stretched_ext(THEME.ui_panel, 0, bx, by, bw, bh, cc, .4 + hv * .1);
-			draw_sprite_stretched_ext(THEME.ui_panel, 1, bx, by, bw, bh, cc, .75 + hv * .15);
+			draw_sprite_stretched_ext(THEME.box_r5_clr, 0, bx, by, bw, bh, cc, .4 + hv * .1);
+			draw_sprite_stretched_ext(THEME.box_r5_clr, 1, bx, by, bw, bh, cc, .75 + hv * .15);
 			draw_set_text(f_p2, fa_center, fa_center, cc);
 			draw_text_add(bx + bw / 2, by + bh / 2, __txt("Update"));
 			
@@ -479,8 +479,8 @@ function Panel_Action_Manager() : PanelContent() constructor {
 			hv = pHOVER && point_in_rectangle(mx, my, bx, by, bx + bw, by + bh);
 			
 			var cc = hv? COLORS._main_value_negative : COLORS._main_icon;
-			draw_sprite_stretched_ext(THEME.ui_panel, 0, bx, by, bw, bh, cc, .3 + hv * .1);
-			draw_sprite_stretched_ext(THEME.ui_panel, 1, bx, by, bw, bh, cc, .75 + hv * .15);
+			draw_sprite_stretched_ext(THEME.box_r5_clr, 0, bx, by, bw, bh, cc, .3 + hv * .1);
+			draw_sprite_stretched_ext(THEME.box_r5_clr, 1, bx, by, bw, bh, cc, .75 + hv * .15);
 			draw_sprite_ui(THEME.icon_delete_24, 0, bx + bw / 2, by + bh / 2, .75, .75, 0, cc);
 			
 			if(mouse_lpress(pFOCUS && hv)) {

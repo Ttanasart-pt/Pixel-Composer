@@ -6,6 +6,11 @@
         "date": "2026-11-01T23:51:20.749Z",
         "node": "Armature Create",
         "commit": "**Armature Create**: Adding new IK now use more detailed name."
+      },
+      {
+        "date": "2026-11-02T00:58:30.389Z",
+        "node": "Armature Box",
+        "commit": "**Armature Box**: Now expandable to show bone hierarchy."
       }
     ]
   },

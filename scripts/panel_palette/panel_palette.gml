@@ -152,8 +152,8 @@ function Panel_Palette() : PanelContent() constructor {
 			var _add_h = ui(28);
 			var _hov = pHOVER && point_in_rectangle(_m[0], _m[1], 0, yy, ww, yy + _add_h);
 			
-			draw_sprite_stretched_ext(THEME.ui_panel, 0, 0, yy, ww, _add_h, COLORS._main_value_positive, .4);
-			draw_sprite_stretched_ext(THEME.ui_panel, 1, 0, yy, ww, _add_h, COLORS._main_value_positive, .7 + _hov * .25);
+			draw_sprite_stretched_ext(THEME.box_r5_clr, 0, 0, yy, ww, _add_h, COLORS._main_value_positive, .4);
+			draw_sprite_stretched_ext(THEME.box_r5_clr, 1, 0, yy, ww, _add_h, COLORS._main_value_positive, .7 + _hov * .25);
 			draw_set_text(f_p2, fa_center, fa_center, COLORS._main_value_positive);
 			draw_text_add(ww / 2, yy + _add_h / 2, __txt("New palette"));
 			

@@ -125,8 +125,8 @@ function Panel_Graph_Node_Position(_project) : PanelContent() constructor {
 			
 		} else {
 			var hov = pHOVER && point_in_rectangle(mx, my, bx, by, bx + ww, by + ah);
-			draw_sprite_stretched_ext(THEME.ui_panel, 0, bx, by, ww, ah, hov? COLORS._main_value_positive : COLORS._main_icon, .3 + hov * .10);
-			draw_sprite_stretched_ext(THEME.ui_panel, 1, bx, by, ww, ah, hov? COLORS._main_value_positive : COLORS._main_icon, .6 + hov * .25);
+			draw_sprite_stretched_ext(THEME.box_r5_clr, 0, bx, by, ww, ah, hov? COLORS._main_value_positive : COLORS._main_icon, .3 + hov * .10);
+			draw_sprite_stretched_ext(THEME.box_r5_clr, 1, bx, by, ww, ah, hov? COLORS._main_value_positive : COLORS._main_icon, .6 + hov * .25);
 			draw_set_text(f_p2, fa_center, fa_center, hov? COLORS._main_value_positive : COLORS._main_icon_light);
 			draw_text_add(bx + ww / 2, by + ah / 2, __txt("Store Position"));
 			

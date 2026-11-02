@@ -3466,8 +3466,12 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
     
     function drawMinimap() { //
         if(!minimap_show) return;
+        
+        var pd  = THEME_VALUE.panel_toolbar_padding;
+        var mrg = THEME_VALUE.panel_toolbar_merge;
+        
         var mx1 = w - ui(8);
-        var my1 = h - toolbar_height - ui(8);
+        var my1 = h - (pd + toolbar_height) - ui(8);
         var mx0 = mx1 - minimap_w;
         var my0 = my1 - minimap_h;
         
