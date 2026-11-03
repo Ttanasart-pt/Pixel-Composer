@@ -177,6 +177,7 @@ function Panel_Inspector() : PanelContent() constructor {
     #region ---- Properties ----
         prop_hover          = noone;
         prop_selecting      = noone;
+        prop_selecting_show = false;
         prop_selecting_y    = 0;
         prop_selecting_y_to = 0;
         prop_selecting_h    = 0;
@@ -239,6 +240,7 @@ function Panel_Inspector() : PanelContent() constructor {
     
     #region ---- Metadata ----
         uploading_thumbnail = false;
+        metadata_section_h  = {};
         
         current_meta   = -1; 
         tb_meta_desc   = textArea_Text( function(s) /*=>*/ { current_meta.description = s; PROJECT.setModified(); } ).setVAlign(ui(4));
@@ -996,7 +998,9 @@ function Panel_Inspector() : PanelContent() constructor {
         var _colMap = _inspecting.inspector_collapse;
         var _edtMap = _inspecting.inspector_edited;
         var _aniMap = _inspecting.inspector_animated;
+        var _heiMap = _inspecting.inspector_section_h;
         var currSec = "";
+        var prevCol = false;
         var _cAll   = 0;
         
         var con_ww  = con_w - ui(12);
@@ -1005,11 +1009,13 @@ function Panel_Inspector() : PanelContent() constructor {
         var rry     = y + contentPane.y;
         
         var showAll = filtering || FILTER_ANIMATION;
-        var showHig = false;
+        var hiJunc  = undefined;
+        var hiHeig  = undefined;
         
         var secFnt = _viewSpac? f_p1 : f_p3;
         var segHei = _viewSpac? ui(26) : ui(22);
         var segPad = _viewSpac? ui(8) : ui(4);
+        var segExp = PREFERENCES.inspector_expand_section;
         
         var defPreset = PRESETS_MAP[$ nodeName];
         
@@ -1021,6 +1027,8 @@ function Panel_Inspector() : PanelContent() constructor {
         for(var i = 0; i < amo; i++) {
             var yy    = _y + hh;
             var _draw = yy + ui(8) < con_h && yy > -ui(8);
+            
+            if(i <= amoIn + amoAttr && currSec != "") _heiMap[$ currSec][1] = max(_heiMap[$ currSec][1], _y + hh + padd);
             
             if(i < amoIn) { // inputs
                 var _dsl = _inspecting.input_display_list;
@@ -1036,6 +1044,11 @@ function Panel_Inspector() : PanelContent() constructor {
             } else if(i == amoIn + amoAttr) { // output label
                 hh += ui(8 + 32 + 8);
                 
+                if(segExp && currSec != "" && !prevCol) { 
+                	yy += padd;
+                	hh += padd;
+                }
+            	
                 draw_sprite_stretched_ext(THEME.box_r5_clr, 0, 0, yy + ui(8), con_w, ui(32), COLORS.panel_inspector_output_label, 0.8);
                 draw_set_text(f_p0b, fa_center, fa_center, COLORS._main_text_sub);
                 draw_text_add(xc, yy + ui(8 + 16), __txt("Outputs"));
@@ -1197,33 +1210,80 @@ function Panel_Inspector() : PanelContent() constructor {
 	                var subk = string_starts_with(_key, "/");
 	                var name = __txt(subk? string_trim_start(_key, ["/"]) : _key);
 	                
-	                if(!subk) currSec = ikey;
-	                
+	                if(segExp && i > 0 && !subk && currSec != "" && !prevCol) { 
+	                	yy += padd * 2;
+	                	hh += padd * 2;
+	                }
+                	
 	                coll = _colMap[$ ikey] ?? array_safe_get_fast(jun, 1, false);
+	                
+	                if(!subk) {
+	                	currSec = ikey;
+	                	prevCol = coll;
+	                }
+	                
 	                var togl = array_safe_get_fast(jun, 2, noone);
 	                var righ = array_safe_get_fast(jun, 3, noone);
+	                var heig = _heiMap[$ ikey] ?? [0,segHei];
+	                
+	                var lbhh = heig[1] - heig[0];
+		                
+	                heig[0] = yy;
+	                heig[1] = yy + segHei;
+	                
+	                var hasTog = togl != noone;
+	                var hasRig = righ != noone;
 	                
 	                if(subk) {
-	                	var lbw = con_w  - ui(2) - (togl != noone) * (segHei) - (righ != noone) * ui(24);
-		                var lbx = _x     + ui(2) + (togl != noone) * (segHei);
+		                var lbx = _x     + ui(2) + hasTog * (segHei);
+	                	var lbw = con_w  - ui(2) - hasTog * (segHei) - hasRig * ui(24);
 		                var lbh = segHei - ui(6);
 		                
 	                } else {
-	                	var lbw = con_w - (togl != noone) * (segHei + segPad) - (righ != noone) * ui(32);
-		                var lbx = _x    + (togl != noone) * (segHei + segPad);
+		                var lbx = _x;
+	                	var lbw = con_w;
 		                var lbh = segHei;
-	                }
+		                var tbx, tbw;
 		                
+		                if(!segExp) {
+							lbx += hasTog * (segHei + segPad);
+		                	lbw -= hasTog * (segHei + segPad) + hasRig * ui(32);
+		                	
+			                tbx = _x    + hasTog * (segHei + segPad);
+			                tbw = con_w - hasTog * (segHei + segPad) - hasRig * ui(32);
+			                
+		                } else {
+			                tbx = _x    + hasTog * (segHei - ui(4));
+			                tbw = con_w - hasTog * (segHei - ui(4)) - hasRig * ui(32);
+			                
+		                }
+	                }
+	                    
 	                #region Draw Base 
-		                var hov = _hover && point_in_rectangle(_m[0], _m[1], lbx, yy, lbx + lbw, yy + lbh);
+		                var hov = _hover && point_in_rectangle(_m[0], _m[1], tbx, yy, tbx + tbw, yy + lbh);
 	                	var scw = con_w - lbx;
 		                
 		                if(!subk) {
-		                	var scc = hov? COLORS.section_hover : COLORS.section_bg;
+		                	var sgh = !coll && segExp? lbhh : lbh;
 		                	
-			                          draw_sprite_stretched_ext(THEME.section_separator, 0, lbx, yy, scw, lbh, colorMultiply(_blend, scc));
-			                if(!coll) draw_sprite_stretched_ext(THEME.section_separator, 2, lbx, yy, scw, lbh, colorMultiply(_blend, COLORS.section_selected));
-			                if(hov)   draw_sprite_stretched_ext(THEME.section_separator, 1, lbx, yy, scw, lbh, colorMultiply(_blend, COLORS.section_hover));
+		                	var secBgc = colorMultiply(_blend, COLORS.section_bg);
+		                	var secExc = colorMultiply(_blend, COLORS.section_selected);
+		                	var secHvc = colorMultiply(_blend, COLORS.section_hover);
+		                	
+		                	if(segExp) {
+		                		if(coll) draw_sprite_stretched_ext(THEME.section_separator, 0, lbx, yy, scw, sgh, secBgc);
+		                		else     draw_sprite_stretched_ext(THEME.box_r5, 0, lbx, yy, scw, sgh, COLORS.panel_bg_clear);	
+		                		
+		                	} else {
+			                	draw_sprite_stretched_ext(THEME.section_separator, 0, lbx, yy, scw, sgh, secBgc);
+				                if(!coll) draw_sprite_stretched_ext(THEME.section_separator, 2, lbx, yy, scw, sgh, secExc);
+		                	}
+		                	
+		                	if(hov) {
+			                	draw_sprite_stretched_ext(THEME.section_separator, 3, lbx, yy, scw, lbh, secHvc, .2);
+			                	draw_sprite_stretched_ext(THEME.section_separator, 1, lbx, yy, scw, sgh, secHvc);
+			                }
+			                
 		                }
 		                
 		                if(hov) {
@@ -1266,7 +1326,7 @@ function Panel_Inspector() : PanelContent() constructor {
 		                	var cc = !subk && _anim? COLORS._main_value_positive : COLORS._main_icon;
 		                	var ss = subk? .8 : 1;
 		                	
-		                	draw_sprite_ui(THEME.arrow, !coll * 3, lbx + ui(16 + subk * 2), yy + lbh / 2, ss, ss, 0, cc, 1);
+		                	draw_sprite_ui(THEME.arrow, !coll * 3, tbx + ui(16 + subk * 2), yy + lbh / 2, ss, ss, 0, cc, 1);
 		                }
 		                
 		                _colMap[$ ikey] = coll;
@@ -1274,7 +1334,7 @@ function Panel_Inspector() : PanelContent() constructor {
 	                
 	                #region Draw Right Buttons
 		                if(righ != noone) {
-		                    var _bx = lbx + lbw;
+		                    var _bx = tbx + tbw;
 		                    var _by = yy;
 		                    var _bw = ui(32);
 		                    var _bh = lbh;
@@ -1298,9 +1358,13 @@ function Panel_Inspector() : PanelContent() constructor {
 		                	var jun   = _inspecting.inputs[togl];
 		                	var tgHov = _hover && point_in_rectangle(_m[0], _m[1], tgx, tgy, tgx + lbh, tgy + lbh);
 		                	
-		                    draw_sprite_stretched_ext(THEME.section_separator, 0, tgx, tgy, lbh, lbh, hov? COLORS.section_hover : COLORS.section_bg);
+		                	if(!segExp)
+		                    	draw_sprite_stretched_ext(THEME.section_separator, 0, tgx, tgy, lbh, lbh, hov? COLORS.section_hover : COLORS.section_bg);
+		                    	
 		                    if(tgHov) {
-		                        draw_sprite_stretched_ext(THEME.section_separator, 1, tgx, tgy, lbh, lbh, COLORS.section_hover);
+		                    	if(!segExp)
+		                        	draw_sprite_stretched_ext(THEME.section_separator, 1, tgx, tgy, lbh, lbh, COLORS.section_hover);
+		                        	
 		                        contentPane.hover_content = true;
 		                    	hov = false;
 		                        
@@ -1308,19 +1372,19 @@ function Panel_Inspector() : PanelContent() constructor {
 		                        if(mouse_rpress(pFOCUS)) propRightClick(jun);
 		                    }
 		                    
-		                    cc = toging? COLORS._main_accent : COLORS.section_bg;
+		                    cc = toging? COLORS._main_accent : COLORS._main_icon;
 		                    aa = 0.5 + toging * 0.5;
 		                    
-		                               draw_sprite_stretched_ext(THEME.box_r2, 1, tgx + tgp, tgy + tgp, lbh - tgp*2, lbh - tgp*2, cc, 1);
 		                    if(toging) draw_sprite_stretched_ext(THEME.box_r2, 0, tgx + tgp, tgy + tgp, lbh - tgp*2, lbh - tgp*2, cc, 1);
+		                    draw_sprite_stretched_add(THEME.box_r2, 1 + tgHov, tgx + tgp, tgy + tgp, lbh - tgp*2, lbh - tgp*2, cc, 1);
 		                }
 		            #endregion
 		            
 		            #region Draw Name
-		                var ltx = lbx + ui(32);
+		                var ltx = tbx + ui(32);
 		                var txy = yy + lbh / 2;
 		                
-		                draw_set_text(secFnt, fa_left, fa_center, COLORS._main_text, aa * (subk? .8 : 1));
+		                draw_set_text(secFnt, fa_left, fa_center, hov? COLORS._main_text : COLORS._main_text_sub, aa * (subk? .8 : 1));
 		                draw_text_add(ltx, txy, name);
 		                draw_set_alpha(1);
 		                
@@ -1404,6 +1468,8 @@ function Panel_Inspector() : PanelContent() constructor {
 	                    _aniMap[$ currSec] = _ani;
                     }
                 } // Skip 
+                
+                _heiMap[$ ikey] = heig;
                 
                 if(_keyJunc) jun = kjun;
                 else continue;
@@ -1494,6 +1560,15 @@ function Panel_Inspector() : PanelContent() constructor {
             if(FILTER_ANIMATION && !jun.isAnimated()) continue;
             if(filtering && filter_text != "" && !string_match_lower(filter_text, jun.getName())) continue;
             
+            if(prop_selecting_show == jun) {
+            	var _px = _x;
+		        var _py = yy;
+		        var _pw = con_w;
+		        var _ph = prop_selecting_h;
+		        
+		        draw_sprite_stretched_ext(THEME.box_r2, 0, _px, _py-padd/2, _pw, _ph+padd, COLORS._main_icon, .1);
+            }
+            
             #region ++++ Draw Widget ++++
             	var _wdgt = jun.getEditWidget();
             	if(jun.latest_height != undefined)
@@ -1551,11 +1626,12 @@ function Panel_Inspector() : PanelContent() constructor {
             #endregion
             
             // Selection highlight
-            if(_wdgt && _wdgt.temp_hovering) {
-            	showHig = true;
-            	prop_selecting_y_to = yy - _y;
-            	prop_selecting_h_to = widH;
-            	_wdgt.temp_hovering = false;
+            var selyy = yy - _y;
+            var selhh = widH;
+            
+            if(_wdgt && _hover && _m[1] > yy - padd/2 && _m[1] < yy + selhh + padd) {
+            	hiJunc = jun;
+            	hiHeig = selhh;
             }
             
             // Mouse interaction
@@ -1591,10 +1667,6 @@ function Panel_Inspector() : PanelContent() constructor {
                     	}
                     }
                     
-                } else {
-                	showHig = true;
-                	prop_selecting_y_to = wdy - _y;
-                	prop_selecting_h_to = wdh;
                 }
                 
                 prop_hover = jun;
@@ -1607,9 +1679,8 @@ function Panel_Inspector() : PanelContent() constructor {
             } 
             
             if(HIGHLIGHT_PROP == jun) {
-            	showHig = true;
-            	prop_selecting_y_to = wdy - _y;
-            	prop_selecting_h_to = wdh;
+            	hiJunc = jun;
+            	hiHeig = wdh;
             }
             
             // Mini timeline
@@ -1720,20 +1791,9 @@ function Panel_Inspector() : PanelContent() constructor {
         
         _inspecting.inspector_draw_height = hh;
         
-    	if(showHig && prop_selecting_y_to != undefined) { // Selection highlight
-	        prop_selecting_y = lerp_float(prop_selecting_y, prop_selecting_y_to, 2);
-	        prop_selecting_h = lerp_float(prop_selecting_h, prop_selecting_h_to, 2);
-	        
-	        var _px = _x + ui(4);
-	        var _py = _y + prop_selecting_y;
-	        var _pw = con_w - ui(8);
-	        var _ph = prop_selecting_h;
-	        // if(pHOVER) 
-	        draw_sprite_stretched_ext(THEME.prop_selecting, 0, _px, _py, _pw, _ph, COLORS._main_accent, 1);
-    	}
-    	
-    	prop_selecting_y_to = undefined;
-    	
+        prop_selecting_show = hiJunc;
+        prop_selecting_h    = hiHeig;
+        
         return hh;
     }
     
@@ -2265,7 +2325,9 @@ function Panel_Inspector() : PanelContent() constructor {
         var _font = spac? f_p2 : f_p3;
         var lbh   = spac? ui(26) : ui(22);
         
-        var padd  = ui(THEME_VALUE.panel_inspector_prop_paddding);
+        var segExp  = PREFERENCES.inspector_expand_section;
+        var padd    = ui(THEME_VALUE.panel_inspector_prop_paddding);
+        var prevCol = false;
         
         attribute_hovering = noone;
         
@@ -2278,12 +2340,22 @@ function Panel_Inspector() : PanelContent() constructor {
             if(_tag == "group prop" && PANEL_GRAPH.getCurrentContext() == noone) continue;
             if(_tag == "layers" && !PROJECT.attributes.global_layer)             continue;
             
+            if(segExp && i > 0 && !prevCol) {
+            	// draw_set_color(c_red); draw_rectangle(8, yy, con_w - 16, yy + ui(4), true);
+            	yy += ui(4);
+            	hh += ui(4);
+            }
+            
+            prevCol = _col;
+            
             var _x1 = con_w;
             var _y1 = yy + ui(2);
             
             /// Buttons
-            
             var _butts = noone;
+        	var _bw = ui(28);
+            var _bh = lbh - ui(4);
+            
             switch(_tag) { // buttons
             	case "settings"  : _butts = variables_buttons;   break;
             	case "panels"    : _butts = customPanel_buttons; break;
@@ -2292,35 +2364,33 @@ function Panel_Inspector() : PanelContent() constructor {
                 case "globalvar" : _butts = global_drawer.editing? global_buttons_editing : global_buttons; break;
             }
             
-            if(is_array(_butts)) {
-            	var _bw = ui(28);
-                var _bh = lbh - ui(4);
-                
-                var _amo = array_length(_butts);
-                var _tw  = (_bw + ui(4)) * _amo;
-                draw_sprite_stretched_ext(THEME.section_separator, 0, con_w - _tw, yy, _tw, lbh, COLORS.section_bg);
-                
-                for (var j = 0, m = array_length(_butts); j < m; j++) {
-                    _x1 -= _bw + ui(4);
-                    
-                    var _b = _butts[j];
-                        _b.setFocusHover(pFOCUS, _hover);
-                        _b.draw(_x1 + ui(2), _y1, _bw, _bh, _m, THEME.button_hide_fill);
-                    if(_b.inBBOX(_m)) contentPane.hover_content = true;
-                }
-                
-                _x1 -= ui(4);
-            }
+            if(is_array(_butts))
+                _x1 = con_w - (_bw + ui(4)) * array_length(_butts) + ui(4);
             
             /// Section
-            
-            var hv = _hover && point_in_rectangle(_m[0], _m[1], 0, yy, _x1, yy + lbh);
-            draw_sprite_stretched_ext(THEME.section_separator, 0, 0, yy, _x1, lbh, hv? COLORS.section_hover : COLORS.section_bg);
-            if(!_col) draw_sprite_stretched_ext(THEME.section_separator, 2, 0, yy, _x1, lbh, COLORS.section_selected);
-            
-            if(hv) {
-                draw_sprite_stretched_ext(THEME.section_separator, 1, 0, yy, _x1, lbh, COLORS.section_hover);
-                
+            var lbhh = metadata_section_h[$ _txt] ?? lbh;
+            var sgh  = !_col && segExp? lbhh : lbh;
+        	var sgw  = segExp? con_w : _x1;
+        	
+        	var secBgc = COLORS.section_bg;
+        	var secExc = COLORS.section_selected;
+        	var secHvc = COLORS.section_hover;
+        	
+            var hv   = _hover && point_in_rectangle(_m[0], _m[1], 0, yy, _x1, yy + lbh);
+        	
+        	if(segExp) {
+        		if(_col) draw_sprite_stretched_ext(THEME.section_separator, 0, 0, yy, sgw, sgh, secBgc);
+        		else     draw_sprite_stretched_ext(THEME.box_r5, 0, 0, yy, sgw, sgh, COLORS.panel_bg_clear);	
+        		
+        	} else {
+            	draw_sprite_stretched_ext(THEME.section_separator, 0, 0, yy, sgw, sgh, secBgc);
+                if(!_col) draw_sprite_stretched_ext(THEME.section_separator, 2, 0, yy, sgw, sgh, secExc);
+        	}
+        	
+        	if(hv) {
+            	draw_sprite_stretched_ext(THEME.section_separator, 3, 0, yy, sgw, lbh, secHvc, .2);
+            	draw_sprite_stretched_ext(THEME.section_separator, 1, 0, yy, sgw, sgh, secHvc);
+            	
                 if(pFOCUS) {
                     	 if(DOUBLE_CLICK) _cAll = _meta[1]? -1 : 1;
                     else if(mouse_lpress()) _meta[1] = !_meta[1];
@@ -2328,14 +2398,13 @@ function Panel_Inspector() : PanelContent() constructor {
             }
             
             draw_sprite_ui(THEME.arrow, _col? 0 : 3, ui(16), yy + lbh / 2, 1, 1, 0, COLORS._main_icon, 1);    
-            draw_set_text(fnt, fa_left, fa_center, COLORS._main_text);
+            draw_set_text(fnt, fa_left, fa_center, hv? COLORS._main_text : COLORS._main_text_sub);
             
             var tx = ui(32);
             switch(_tag) {
             	case "favorites": 
-            		tx += ui(4);
-            		draw_sprite_ui(THEME.favorite, 1, tx, yy + lbh / 2, .75, .75, 0, CDEF.yellow);
-            		tx += ui(12);
+            		draw_sprite_ui(THEME.favorite, 1, tx + ui(4), yy + lbh / 2, .75, .75, 0, CDEF.yellow);
+            		tx += ui(16);
             		break;
             }
             
@@ -2388,6 +2457,29 @@ function Panel_Inspector() : PanelContent() constructor {
             		
             }
             
+            /// Buttons
+            var _x1 = con_w;
+            if(is_array(_butts)) {
+            	var _bw = ui(28);
+                var _bh = lbh - ui(4);
+                
+                var _amo = array_length(_butts);
+                var _tw  = (_bw + ui(4)) * _amo;
+                if(!segExp)
+                	draw_sprite_stretched_ext(THEME.section_separator, 0, con_w - _tw, yy, _tw, lbh, COLORS.section_bg);
+                
+                for (var j = 0, m = array_length(_butts); j < m; j++) {
+                    _x1 -= _bw + ui(4);
+                    
+                    var _b = _butts[j];
+                        _b.setFocusHover(pFOCUS, _hover);
+                        _b.draw(_x1 + ui(2), _y1, _bw, _bh, _m, THEME.button_hide_fill);
+                    if(_b.inBBOX(_m)) contentPane.hover_content = true;
+                }
+                
+                _x1 -= ui(4);
+            }
+            
             /// Content
             
             yy += lbh + padd;
@@ -2400,6 +2492,20 @@ function Panel_Inspector() : PanelContent() constructor {
                     var _edt = PROJECT.attributeEditor;
                     var _lh, wh;
                     
+			        #region selection highlight
+			        	if(prop_selecting_y_to != undefined) {
+					        prop_selecting_y = prop_selecting_y_to;
+					        prop_selecting_h = prop_selecting_h_to;
+			        		prop_selecting_y_to = undefined;
+					        
+					        var _px = ui(4);
+					        var _py = _y + prop_selecting_y;
+					        var _pw = con_w - ui(4);
+					        var _ph = prop_selecting_h;
+					        if(pHOVER) draw_sprite_stretched_ext(THEME.box_r2, 0, _px, _py-padd/2, _pw, _ph+padd, COLORS._main_icon, .1);
+			        	}
+			    	#endregion
+			        
                     for( var j = 0, mlen = array_length(_edt); j < mlen; j++ ) {
                     	var _edit = _edt[j];
                     	if(_edit == -1) {
@@ -2457,7 +2563,7 @@ function Panel_Inspector() : PanelContent() constructor {
                         var widh = spac? _lh + padd + wh + ui(4) : max(wh, _lh);
                         var drop = jun != noone && drpFn != noone;
                         
-                        var hov  = _hover && point_in_rectangle(_m[0], _m[1], widx, widy, widx + widw, widy + widh);
+                        var hov  = _hover && point_in_rectangle(_m[0], _m[1], widx, widy - padd/2, widx + widw, widy + widh + padd);
                         
                         if(hov) {
                         	if(drop) {
@@ -2474,21 +2580,6 @@ function Panel_Inspector() : PanelContent() constructor {
 			        	hh += _wdhh;
                     }
                     
-			        #region selection highlight
-			        	if(prop_selecting_y_to != undefined) {
-					        prop_selecting_y = lerp_float(prop_selecting_y, prop_selecting_y_to, 2);
-					        prop_selecting_h = lerp_float(prop_selecting_h, prop_selecting_h_to, 2);
-					        
-					        var _px = ui(4);
-					        var _py = _y + prop_selecting_y;
-					        var _pw = con_w - ui(4);
-					        var _ph = prop_selecting_h;
-					        if(pHOVER) draw_sprite_stretched_ext(THEME.prop_selecting, 0, _px, _py, _pw, _ph, COLORS._main_accent, 1);
-			        	}
-			        	
-			        	prop_selecting_y_to = undefined;
-			    	#endregion
-			        
                     break;
                     
                 case "layers" : 
@@ -2769,6 +2860,8 @@ function Panel_Inspector() : PanelContent() constructor {
                     hh += padd + ui(2);
             		break;
             }
+            
+            metadata_section_h[$ _txt] = yy - _y1;
             
             // yy += ui(2);
             // hh += ui(2);

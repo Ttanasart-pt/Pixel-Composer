@@ -90,7 +90,7 @@ function Panel_Linear_Setting() : PanelContent() constructor {
 		var lbh = ui(22);
 		
 		var _hov = false;
-		if(bg_y) draw_sprite_stretched_ext(THEME.prop_selecting, 0, ui(4), bg_y, w - ui(8), th, COLORS._main_accent);
+		if(bg_y) draw_sprite_stretched_ext(THEME.box_r2, 0, ui(4), bg_y, w - ui(8), th, COLORS._main_icon, .1);
 		
 		for( var i = 0, n = array_length(properties); i < n; i++ ) {
 			var _prop = properties[i];

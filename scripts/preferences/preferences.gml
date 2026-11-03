@@ -133,7 +133,7 @@
 			PREFERENCES.panel_preview_show_real_fps       = false;
 			PREFERENCES.panel_preview_show_tiles          = false;
 			PREFERENCES.panel_preview_toolbar_horizontal  = false;
-		
+			
 			PREFERENCES.panel_menu_draw_bg                = !MAC;
 			PREFERENCES.panel_menu_show_profile           = true;
 			PREFERENCES.panel_menu_show_addon             = true;
@@ -144,10 +144,12 @@
 			PREFERENCES.panel_menu_right_control          = os_type != os_macosx;
 			
 			PREFERENCES.panel_menu_palette_node_size      = 20;
-		
+			
+			PREFERENCES.inspector_draw_key                = false;
 			PREFERENCES.inspector_focus_on_double_click   = true;
 			PREFERENCES.inspector_view_default            = INSP_VIEW_MODE.compact;
 			PREFERENCES.inspector_show_node_chain         = false;
+			PREFERENCES.inspector_expand_section          = true;
 			
 			PREFERENCES.node_show_render_status           = false;
 			PREFERENCES.node_show_time                    = true;

@@ -180,7 +180,7 @@ function Panel_Keyframe_Driver() : PanelContent() constructor {
 		var _cc = [ COLORS._main_icon, COLORS._main_icon_light ];
 		
 		var _hov = false;
-		if(bg_y && _hover) draw_sprite_stretched_ext(THEME.prop_selecting, 0, ui(4), bg_y, _w - ui(8), th, COLORS._main_accent);
+		if(bg_y && _hover) draw_sprite_stretched_ext(THEME.box_r2, 0, ui(4), bg_y, _w - ui(8), th, COLORS._main_icon, .1);
 		
 		for( var i = 0, n = array_length(props); i < n; i++ ) {
 			var _prop = props[i];

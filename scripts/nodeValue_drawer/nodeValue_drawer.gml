@@ -90,6 +90,9 @@ function drawWidget(xx, yy, ww, _m, _jun, global_var = true, _hover = false, _fo
 		var lb_w  = ds_w + padx + ui(4);
 		var conn  = _input? jun.hasJunctionFrom() : jun.hasJunctionTo();
 		
+		var dKey = PREFERENCES.inspector_draw_key;
+		var aspr = dKey? THEME.timeline_keyframe : THEME.animate_clock;
+		
 		if(conn) { // Connected
 			var index = 2;
 			var cc    = COLORS._main_accent;
@@ -112,10 +115,10 @@ function drawWidget(xx, yy, ww, _m, _jun, global_var = true, _hover = false, _fo
 			
 		} else if(_input && jun.isAnimable() && !jun.expUse) { // Animation
 			var index = jun.is_anim;
-			var cc    = jun.is_anim? COLORS._main_value_positive : c_white;
+			var cc    = jun.is_anim? COLORS._main_value_positive : COLORS._main_icon;
 			var _hov  = _hover && point_in_circle(_m[0], _m[1], butx, lb_y, bs / 2);
 			
-			draw_sprite_ui_uniform(THEME.animate_clock, index, butx, lb_y, ics, cc, .8 + .2 * _hov);
+			draw_sprite_ui_uniform(aspr, dKey? 0:index, butx, lb_y, ics, cc, .8 + .2 * _hov);
 			
 			if(_hov) {
 				mbRight = false;
@@ -123,8 +126,8 @@ function drawWidget(xx, yy, ww, _m, _jun, global_var = true, _hover = false, _fo
 				
 				if(anim_hold != noone) 
 					jun.setAnim(anim_hold, true);
-					
-				draw_sprite_ui_uniform(THEME.animate_clock, index, butx, lb_y, ics, index == 2? COLORS._main_accent : c_white, 1);
+				
+				draw_sprite_ui_uniform(aspr, dKey? 0:index, butx, lb_y, ics, index == 2? COLORS._main_accent : c_white, 1);
 				setTOOLTIP(__txt("panel_inspector_toggle_anim", "Toggle Animation"));
 						
 				if(mouse_lpress(_focus)) {
@@ -137,7 +140,7 @@ function drawWidget(xx, yy, ww, _m, _jun, global_var = true, _hover = false, _fo
 			
 		} else { // Animation
 			var index = conn * 2;
-			draw_sprite_ui_uniform(THEME.animate_clock, index, butx, lb_y, ics, index == 2? COLORS._main_accent : COLORS._main_icon, .3);
+			draw_sprite_ui_uniform(aspr, dKey? 0:index, butx, lb_y, ics, conn? COLORS._main_accent : COLORS._main_icon, .3);
 		}
 		
 		lb_w += bs;
@@ -147,13 +150,34 @@ function drawWidget(xx, yy, ww, _m, _jun, global_var = true, _hover = false, _fo
 			lb_x += bs;
 			lb_w += bs;
 			var _visi = conn? 2 : jun.isVisible();
+			var  dKey = PREFERENCES.inspector_draw_key;
+			var  hov  = _hover && point_in_circle(_m[0], _m[1], butx, lb_y, bs / 2);
 			
-			var  aa = _visi? 1 : .8;
-			var  cc = _visi? jun.color_display : c_white;
+			var  aa = _visi || hov? 1 : .8;
+			var  cc = _visi? jun.color_display : COLORS._main_icon;
 			
-			draw_sprite_ui_uniform(THEME.junc_visible, _visi, butx, lb_y, ics, cc, aa);
+			if(dKey) {
+				var _bgS = THEME.node_junctions_bg;
+				var _fgS = THEME.node_junctions_outline;
+				
+				var _cbg = jun.draw_bg;
+				var _cfg = jun.custom_color ?? jun.draw_fg;
+				
+				if(_visi) {
+					draw_sprite_ui_uniform(_bgS, jun.type, butx, lb_y, ics*.7, _cbg, aa);
+					gpu_set_blendmode_ext_sepalpha(bm_src_alpha, bm_inv_src_alpha, bm_one, bm_one);
+					draw_sprite_ui_uniform(_fgS, jun.type, butx, lb_y, ics*.7, _cfg, aa);
+					gpu_set_blendmode(bm_normal);
+					
+				} else {
+					draw_sprite_ui_uniform(_bgS, jun.type, butx, lb_y, ics*.5, COLORS._main_icon, aa);
+				}
+				
+			} else {
+				draw_sprite_ui_uniform(THEME.junc_visible, _visi, butx, lb_y, ics, cc, aa);
+			}
 			
-			if(_hover && point_in_circle(_m[0], _m[1], butx, lb_y, bs / 2)) {
+			if(hov) {
 				mbRight = false;
 				cHov    = true;
 				
@@ -162,7 +186,11 @@ function drawWidget(xx, yy, ww, _m, _jun, global_var = true, _hover = false, _fo
 					jun.node.refreshNodeDisplay();
 				}
 				
-				draw_sprite_ui_uniform(THEME.junc_visible, _visi, butx, lb_y, ics, cc, 1);
+				if(dKey) {
+					
+					
+				} else 
+					draw_sprite_ui_uniform(THEME.junc_visible, _visi, butx, lb_y, ics, cc, 1);
 				setTOOLTIP(__txt("Visibility"));
 				
 				if(mouse_lpress(_focus)) {
@@ -176,10 +204,13 @@ function drawWidget(xx, yy, ww, _m, _jun, global_var = true, _hover = false, _fo
 				lb_x += bs;
 				lb_w += bs;
 				
-				var cc = jun.favorited? CDEF.yellow : c_white;
+				var dKey = PREFERENCES.inspector_draw_key;
+				var cc = jun.favorited? CDEF.yellow : COLORS._main_icon;
 				var aa = jun.favorited? 1 : .8;
+				var ii = dKey? 1 : jun.favorited;
+				var ss = dKey? ics * .9 : ics;
 				
-				draw_sprite_ui_uniform(THEME.favorite, jun.favorited, butx, lb_y, ics, cc, aa);
+				draw_sprite_ui_uniform(THEME.favorite, ii, butx, lb_y, ss, cc, aa);
 				if(_hover && point_in_circle(_m[0], _m[1], butx, lb_y, bs / 2)) {
 					mbRight = false;
 					cHov    = true;
@@ -193,7 +224,7 @@ function drawWidget(xx, yy, ww, _m, _jun, global_var = true, _hover = false, _fo
 						else array_remove(proj.favoritedValues, jun);
 					}
 					
-					draw_sprite_ui_uniform(THEME.favorite, jun.favorited, butx, lb_y, ics, cc, 1);
+					draw_sprite_ui_uniform(THEME.favorite, ii, butx, lb_y, ss, cc, 1);
 					setTOOLTIP(__txt("Favorite"));
 					
 					if(mouse_lpress(_focus)) {
@@ -510,7 +541,7 @@ function drawWidget(xx, yy, ww, _m, _jun, global_var = true, _hover = false, _fo
 							break;
 							
 						case "Favourite" : 
-							var ic_b = jun.favorited? COLORS._main_accent : c_white;
+							var ic_b = jun.favorited? CDEF.yellow : COLORS._main_icon;
 							var t  = __txt("Favourite");
 							
 							bx  -= bs; 

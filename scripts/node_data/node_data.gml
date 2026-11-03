@@ -391,11 +391,12 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		w_active    = false;
 		preview_overlay_inputs = [];
 		
-		inspector_scroll   = 0;
-		inspector_collapse = {};
-		inspector_edited   = {};
-		inspector_animated = {};
-		inspector_count    = {};
+		inspector_scroll     = 0;
+		inspector_collapse   = {};
+		inspector_edited     = {};
+		inspector_animated   = {};
+		inspector_count      = {};
+		inspector_section_h  = {};
 		
 		reactive_on_hover  = false;
 		

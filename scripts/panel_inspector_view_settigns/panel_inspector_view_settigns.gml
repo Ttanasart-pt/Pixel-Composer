@@ -16,6 +16,26 @@ function Panel_Inspector_View_Settings() : Panel_Linear_Setting() constructor {
 		),
 		
 		new __Panel_Linear_Setting_Item(
+			__txt("Expands Section"),
+			new checkBox(function() /*=>*/ { PREFERENCES.inspector_expand_section = !PREFERENCES.inspector_expand_section; }),
+			function( ) /*=>*/   {return PREFERENCES.inspector_expand_section},
+			function(v) /*=>*/ { PREFERENCES.inspector_expand_section = v; },
+			PREFERENCES.inspector_expand_section,
+			noone,
+			"inspector_expand_section",
+		),
+		
+		new __Panel_Linear_Setting_Item(
+			__txt("Simplified Icon"),
+			new checkBox(function() /*=>*/ { PREFERENCES.inspector_draw_key = !PREFERENCES.inspector_draw_key; }),
+			function( ) /*=>*/   {return PREFERENCES.inspector_draw_key},
+			function(v) /*=>*/ { PREFERENCES.inspector_draw_key = v; },
+			PREFERENCES.inspector_draw_key,
+			noone,
+			"inspector_draw_key",
+		),
+		
+		new __Panel_Linear_Setting_Item(
 			__txt("Node Chain"),
 			new checkBox(function() /*=>*/ { PREFERENCES.inspector_show_node_chain = !PREFERENCES.inspector_show_node_chain; }),
 			function( ) /*=>*/   {return PREFERENCES.inspector_show_node_chain},
