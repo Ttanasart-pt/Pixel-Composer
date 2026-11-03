@@ -18,7 +18,7 @@ function tilesetBox(_junction) : widget() constructor {
 	
 	////- =Draw
 	
-	static fetchHeight = function(params) { return is(_tileset, Node_Tile_Tileset)? fullHeight : TEXTBOX_HEIGHT; }
+	static fetchHeight = function(params) { return is(tileset, Node_Tile_Tileset)? fullHeight : TEXTBOX_HEIGHT; }
 	static drawParam   = function(params) {
 		setParam(params);
 		return draw(params.x, params.y, params.w, params.data, params.m);

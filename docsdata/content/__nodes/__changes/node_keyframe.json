@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.22.2.003",
+    "changes": [
+      {
+        "date": "2026-11-03T02:58:49.084Z",
+        "node": "Animation Dopesheet",
+        "commit": "**Animation Dopesheet**: Add default keyframe interpolation setting."
+      }
+    ]
+  },
+  {
     "version": "1.21.9.209",
     "changes": [
       {

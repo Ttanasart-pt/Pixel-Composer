@@ -46,6 +46,16 @@ function valueKey(_time, _value, _anim = noone, _in = 0, _ot = 0) constructor {
 		ease_out      = [_ot, 0];
 		
 		var _interpol = anim? anim.prop.key_inter : CURVE_TYPE.linear;
+		if(_interpol == CURVE_TYPE.linear && anim) {
+			var _inp  = anim.node.project.animationDisplay.default_interpolation;
+			_interpol = _inp;
+			
+			if(_inp == 1) { 
+				ease_in[0]  = 1; 
+				ease_out[0] = 1; 
+			}
+		}
+		
 		ease_in_type  = _interpol;
 		ease_out_type = _interpol;
 		dopesheet_x   = 0;

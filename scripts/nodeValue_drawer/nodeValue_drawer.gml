@@ -149,6 +149,7 @@ function drawWidget(xx, yy, ww, _m, _jun, global_var = true, _hover = false, _fo
 			butx += bs;
 			lb_x += bs;
 			lb_w += bs;
+			
 			var _visi = conn? 2 : jun.isVisible();
 			var  dKey = PREFERENCES.inspector_draw_key;
 			var  hov  = _hover && point_in_circle(_m[0], _m[1], butx, lb_y, bs / 2);

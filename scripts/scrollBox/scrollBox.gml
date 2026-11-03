@@ -286,8 +286,10 @@ function scrollBox(_data, _onModify, _update_hover = true) : widget() constructo
 		
 		if(hide == 0 && type == 0) {
 			draw_sprite_stretched_ext(THEME.scrollbox, 2, x, y, w, h, c_white, .9);
-			if(_hovering)
+			if(_hovering) {
 				draw_sprite_stretched_add(THEME.scrollbox, 1, x, y, w, h, COLORS._main_icon, .1);
+				draw_sprite_stretched_add(THEME.scrollbox, 2, x, y, w, h, COLORS._main_icon, .2);
+			}
 		}
 		
 		if(WIDGET_CURRENT == self)
@@ -417,8 +419,10 @@ function scrollBoxFn(_fn, _onModify, _update_hover = true) : widget() constructo
 		
 		if(hide == 0) {
 			draw_sprite_stretched_ext(THEME.scrollbox, 2, _x, _y, w, h, c_white, .9);
-			if(_hovering)
+			if(_hovering) {
 				draw_sprite_stretched_add(THEME.scrollbox, 1, _x, _y, w, h, COLORS._main_icon, .1);
+				draw_sprite_stretched_add(THEME.scrollbox, 2, _x, _y, w, h, COLORS._main_icon, .2);
+			}
 		}
 		
 		if(WIDGET_CURRENT == self)

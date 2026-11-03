@@ -371,6 +371,8 @@ function vectorBox(_size, _onModify, _unit = noone) : widget() constructor {
 			tb[i].labelColor = sep_axis? COLORS.axis[i] : COLORS._main_text_sub;
 			tb[i].setLabel(draw_label? axis[i] : "");
 			
+			tb[i].setColor(linked && i > 0? COLORS._main_text_sub : COLORS._main_text);
+			
 			if(drawType == "dash" && i % 2 == 0) {
 				draw_set_color_alpha(COLORS._main_icon, .5);
 				draw_line_width(bx, by + _h/2, bx + ww, by + _h/2, ui(4));

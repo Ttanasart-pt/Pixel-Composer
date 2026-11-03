@@ -1274,6 +1274,9 @@ function Panel_Inspector() : PanelContent() constructor {
 		                		if(coll) draw_sprite_stretched_ext(THEME.section_separator, 0, lbx, yy, scw, sgh, secBgc);
 		                		else     draw_sprite_stretched_ext(THEME.box_r5, 0, lbx, yy, scw, sgh, COLORS.panel_bg_clear);	
 		                		
+		                		var hovCnt = _hover && point_in_rectangle(_m[0], _m[1], lbx, yy, lbx + lbw, yy + sgh);
+		                		if(hovCnt) draw_sprite_stretched_add(THEME.section_separator, 1, lbx, yy, scw, sgh, secHvc, .35);
+		                		
 		                	} else {
 			                	draw_sprite_stretched_ext(THEME.section_separator, 0, lbx, yy, scw, sgh, secBgc);
 				                if(!coll) draw_sprite_stretched_ext(THEME.section_separator, 2, lbx, yy, scw, sgh, secExc);
@@ -1376,7 +1379,7 @@ function Panel_Inspector() : PanelContent() constructor {
 		                    aa = 0.5 + toging * 0.5;
 		                    
 		                    if(toging) draw_sprite_stretched_ext(THEME.box_r2, 0, tgx + tgp, tgy + tgp, lbh - tgp*2, lbh - tgp*2, cc, 1);
-		                    draw_sprite_stretched_add(THEME.box_r2, 1 + tgHov, tgx + tgp, tgy + tgp, lbh - tgp*2, lbh - tgp*2, cc, 1);
+		                    draw_sprite_stretched_add(THEME.box_r2, 1, tgx + tgp, tgy + tgp, lbh - tgp*2, lbh - tgp*2, cc, .5 + tgHov * .5);
 		                }
 		            #endregion
 		            
@@ -2510,6 +2513,7 @@ function Panel_Inspector() : PanelContent() constructor {
                     	var _edit = _edt[j];
                     	if(_edit == -1) {
                     		var hov  = _hover && point_in_rectangle(_m[0], _m[1], 0, yy, con_w, yy + ui(12));
+                    		if(hov) CURSOR = cr_handpoint;
                     		
                     		draw_set_text(f_p4, fa_center, fa_center, hov? COLORS._main_text : COLORS._main_text_sub);
                     		draw_text_add(con_w / 2, yy + ui(6), project_show_advance? __txt("Show Less...") : __txt("Show More..."));
