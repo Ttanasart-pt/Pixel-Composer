@@ -8,6 +8,8 @@ function drawWidgetInit() {
 	ins_hold      = noone;
 	reset_hold    = noone;
 	def_hold      = noone;
+	
+	juncHover     = undefined;
 	contentPane   = undefined;
 	segOffset     = false;
 	
@@ -92,6 +94,8 @@ function drawWidget(xx, yy, ww, _m, _jun, global_var = true, _hover = false, _fo
 		
 		var dKey = PREFERENCES.inspector_draw_key;
 		var aspr = dKey? THEME.timeline_keyframe : THEME.animate_clock;
+		var drawLeft = dKey? juncHover == _jun : true;
+		var cirAA    = .3;
 		
 		if(conn) { // Connected
 			var index = 2;
@@ -115,10 +119,13 @@ function drawWidget(xx, yy, ww, _m, _jun, global_var = true, _hover = false, _fo
 			
 		} else if(_input && jun.isAnimable() && !jun.expUse) { // Animation
 			var index = jun.is_anim;
-			var cc    = jun.is_anim? COLORS._main_value_positive : COLORS._main_icon;
+			var cc    = jun.is_anim? COLORS._main_value_positive : COLORS._main_icon_light;
 			var _hov  = _hover && point_in_circle(_m[0], _m[1], butx, lb_y, bs / 2);
 			
-			draw_sprite_ui_uniform(aspr, dKey? 0:index, butx, lb_y, ics, cc, .8 + .2 * _hov);
+			if(drawLeft || jun.is_anim)
+				draw_sprite_ui_uniform(aspr, dKey? 0:index, butx, lb_y, ics, cc, .8 + .2 * _hov);
+			else 
+				draw_sprite_ui_uniform(THEME.circle_16, 0, butx, lb_y, ics * .4, COLORS._main_icon, cirAA);
 			
 			if(_hov) {
 				mbRight = false;
@@ -138,10 +145,11 @@ function drawWidget(xx, yy, ww, _m, _jun, global_var = true, _hover = false, _fo
 				if(mouse_rpress(_focus)) jun.inspector_timeline = !jun.inspector_timeline;
 			}
 			
-		} else { // Animation
-			var index = conn * 2;
-			draw_sprite_ui_uniform(aspr, dKey? 0:index, butx, lb_y, ics, conn? COLORS._main_accent : COLORS._main_icon, .3);
-		}
+		} else if(drawLeft) { // Animation
+			draw_sprite_ui_uniform(aspr, dKey? 0:conn * 2, butx, lb_y, ics, conn? COLORS._main_accent : COLORS._main_icon_light, .3);
+			
+		} else 
+			draw_sprite_ui_uniform(THEME.circle_16, 0, butx, lb_y, ics * .4, COLORS._main_icon, cirAA);
 		
 		lb_w += bs;
 		
@@ -151,11 +159,10 @@ function drawWidget(xx, yy, ww, _m, _jun, global_var = true, _hover = false, _fo
 			lb_w += bs;
 			
 			var _visi = conn? 2 : jun.isVisible();
-			var  dKey = PREFERENCES.inspector_draw_key;
 			var  hov  = _hover && point_in_circle(_m[0], _m[1], butx, lb_y, bs / 2);
 			
 			var  aa = _visi || hov? 1 : .8;
-			var  cc = _visi? jun.color_display : COLORS._main_icon;
+			var  cc = _visi? jun.color_display : COLORS._main_icon_light;
 			
 			if(dKey) {
 				var _bgS = THEME.node_junctions_bg;
@@ -170,9 +177,10 @@ function drawWidget(xx, yy, ww, _m, _jun, global_var = true, _hover = false, _fo
 					draw_sprite_ui_uniform(_fgS, jun.type, butx, lb_y, ics*.7, _cfg, aa);
 					gpu_set_blendmode(bm_normal);
 					
-				} else {
-					draw_sprite_ui_uniform(_bgS, jun.type, butx, lb_y, ics*.5, COLORS._main_icon, aa);
-				}
+				} else if(drawLeft)
+					draw_sprite_ui_uniform(_bgS, jun.type, butx, lb_y, ics*.5, COLORS._main_icon_light, aa);
+				else 
+					draw_sprite_ui_uniform(THEME.circle_16, 0, butx, lb_y, ics * .4, COLORS._main_icon, cirAA);
 				
 			} else {
 				draw_sprite_ui_uniform(THEME.junc_visible, _visi, butx, lb_y, ics, cc, aa);
@@ -187,11 +195,7 @@ function drawWidget(xx, yy, ww, _m, _jun, global_var = true, _hover = false, _fo
 					jun.node.refreshNodeDisplay();
 				}
 				
-				if(dKey) {
-					
-					
-				} else 
-					draw_sprite_ui_uniform(THEME.junc_visible, _visi, butx, lb_y, ics, cc, 1);
+				if(!dKey) draw_sprite_ui_uniform(THEME.junc_visible, _visi, butx, lb_y, ics, cc, 1);
 				setTOOLTIP(__txt("Visibility"));
 				
 				if(mouse_lpress(_focus)) {
@@ -205,13 +209,16 @@ function drawWidget(xx, yy, ww, _m, _jun, global_var = true, _hover = false, _fo
 				lb_x += bs;
 				lb_w += bs;
 				
-				var dKey = PREFERENCES.inspector_draw_key;
-				var cc = jun.favorited? CDEF.yellow : COLORS._main_icon;
+				var cc = jun.favorited? CDEF.yellow : COLORS._main_icon_light;
 				var aa = jun.favorited? 1 : .8;
 				var ii = dKey? 1 : jun.favorited;
 				var ss = dKey? ics * .9 : ics;
 				
-				draw_sprite_ui_uniform(THEME.favorite, ii, butx, lb_y, ss, cc, aa);
+				if(drawLeft || jun.favorited)
+					draw_sprite_ui_uniform(THEME.favorite, ii, butx, lb_y, ss, cc, aa);
+				else 
+					draw_sprite_ui_uniform(THEME.circle_16, 0, butx, lb_y, ics * .4, COLORS._main_icon, cirAA);
+				
 				if(_hover && point_in_circle(_m[0], _m[1], butx, lb_y, bs / 2)) {
 					mbRight = false;
 					cHov    = true;
@@ -245,22 +252,27 @@ function drawWidget(xx, yy, ww, _m, _jun, global_var = true, _hover = false, _fo
 				lb_x += bs;
 				lb_w += bs;
 				
-				var cc  = _jun.attributes.override_instance? COLORS._main_accent : c_white;
-				var aa  = _jun.attributes.override_instance? 1 : .8;
-				var iss = _viewSpac? .75 : .5;
+				var over = _jun.attributes.override_instance;
+				var cc   = over? COLORS._main_accent : c_white;
+				var aa   = over? 1 : .8;
+				var iss  = _viewSpac? .75 : .5;
 				
-				draw_sprite_ui_uniform(THEME.instance_override, _jun.attributes.override_instance, butx, lb_y, iss, cc, aa);
+				if(drawLeft || over)
+					draw_sprite_ui_uniform(THEME.instance_override, over, butx, lb_y, iss, cc, aa);
+				else 
+					draw_sprite_ui_uniform(THEME.circle_16, 0, butx, lb_y, ics * .4, COLORS._main_icon, cirAA);
+					
 				if(_hover && point_in_circle(_m[0], _m[1], butx, lb_y, bs / 2)) {
 					mbRight = false;
 					cHov    = true;
 					
-					if(ins_hold != noone && _jun.attributes.override_instance != ins_hold) {
+					if(ins_hold != noone && over != ins_hold) {
 						_jun.attributes.override_instance = ins_hold;
 						_jun.node.triggerRender();
 						jun = _jun.useInstance()? _jun.getInstance() : _jun;
 					}
 					
-					draw_sprite_ui_uniform(THEME.instance_override, _jun.attributes.override_instance, butx, lb_y, iss, cc, 1);
+					draw_sprite_ui_uniform(THEME.instance_override, over, butx, lb_y, iss, cc, 1);
 					setTOOLTIP(__txt("Override"));
 					
 					if(mouse_lpress(_focus)) {
@@ -272,7 +284,6 @@ function drawWidget(xx, yy, ww, _m, _jun, global_var = true, _hover = false, _fo
 					}
 				}
 			}
-			
 		} // Visibility & Expression
 			
 		var cc = COLORS._main_text;
@@ -603,7 +614,7 @@ function drawWidget(xx, yy, ww, _m, _jun, global_var = true, _hover = false, _fo
 							var _ran  = _rand.hasValue(jun);
 							
 							var bt = _ran? __txt("Remove Randomizer") : __txt("Add to Randomizer");
-							var bc = _ran? COLORS._main_accent : COLORS._main_icon;
+							var bc = _ran? COLORS._main_accent : COLORS._main_icon_light;
 							
 							b = buttonInstant_Pad(bb, bx, by, bs, bs, _m, hv, fc, bt, THEME.icon_random, 0, bc, 1, ui(2)); 
 							cHov = cHov || b;
