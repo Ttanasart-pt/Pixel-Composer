@@ -22,6 +22,7 @@
     function panel_inspector_junction_bypass_toggle()    { CALL("inspector_junc_bypass");            PANEL_INSPECTOR.junction_bypass_toggle();         }
     function panel_inspector_visible_toggle()            { CALL("inspector_junc_visible");           PANEL_INSPECTOR.junction_visible_toggle();        }
     function panel_inspector_mini_timeline_toggle()      { CALL("inspector_mini_timeline");          PANEL_INSPECTOR.junction_mini_timeline_toggle();  }
+    function panel_inspector_favourite_toggle()          { CALL("inspector_favourite");              PANEL_INSPECTOR.junction_favourite_toggle();      }
     
     function panel_inspector_trigger_1()                 { CALL("inspector_trigger_1");              PANEL_INSPECTOR.triggerInspectingNode(1);        }
     function panel_inspector_trigger_2()                 { CALL("inspector_trigger_2");              PANEL_INSPECTOR.triggerInspectingNode(2);        }
@@ -57,13 +58,14 @@
         registerFunction(i, "Search Toggle",        "F",  c, panel_inspector_search_toggle          ).setMenu("inspector_search_toggle")
         registerFunction(i, "Reset",                 "",  n, panel_inspector_reset                  ).setMenu("inspector_reset")
         
-        registerFunction(i, "Toggle Animation",      "",  n, panel_inspector_animation_toggle       ).setMenu("inspector_animate_toggle"      ).setToggle(function() /*=>*/ { INSP_JUNCTION j.is_anim;            });
-        registerFunction(i, "Toggle Separate Axis",  "",  n, panel_inspector_axis_toggle            ).setMenu("inspector_axis_toggle"         ).setToggle(function() /*=>*/ { INSP_JUNCTION j.sep_axis;           });
-        registerFunction(i, "Toggle Expression",     "",  n, panel_inspector_expression_toggle      ).setMenu("inspector_expression_toggle"   ).setToggle(function() /*=>*/ { INSP_JUNCTION j.expUse;             });
-        registerFunction(i, "Toggle Array Process",  "",  n, panel_inspector_array_toggle           ).setMenu("inspector_toggle_array"        ).setToggle(function() /*=>*/ { INSP_JUNCTION j.ign_array;          });   
-        registerFunction(i, "Toggle Bypass",         "",  n, panel_inspector_junction_bypass_toggle ).setMenu("inspector_bypass_toggle"       ).setToggle(function() /*=>*/ { INSP_JUNCTION j.bypass_use;         });
-        registerFunction(i, "Toggle Visible",        "",  n, panel_inspector_visible_toggle         ).setMenu("inspector_visible_toggle"      ).setToggle(function() /*=>*/ { INSP_JUNCTION j.visible_manual;     });
-        registerFunction(i, "Toggle Mini Timeline",  "",  n, panel_inspector_mini_timeline_toggle   ).setMenu("inspector_mini_timeline_toggle").setToggle(function() /*=>*/ { INSP_JUNCTION j.inspector_timeline; });
+        registerFunction(i, "Toggle Animation",      "",  n, panel_inspector_animation_toggle       ).setMenu("inspector_animate_toggle"       ).setToggle(function() /*=>*/ { INSP_JUNCTION j.is_anim;            });
+        registerFunction(i, "Toggle Separate Axis",  "",  n, panel_inspector_axis_toggle            ).setMenu("inspector_axis_toggle"          ).setToggle(function() /*=>*/ { INSP_JUNCTION j.sep_axis;           });
+        registerFunction(i, "Toggle Expression",     "",  n, panel_inspector_expression_toggle      ).setMenu("inspector_expression_toggle"    ).setToggle(function() /*=>*/ { INSP_JUNCTION j.expUse;             });
+        registerFunction(i, "Toggle Array Process",  "",  n, panel_inspector_array_toggle           ).setMenu("inspector_toggle_array"         ).setToggle(function() /*=>*/ { INSP_JUNCTION j.ign_array;          });   
+        registerFunction(i, "Toggle Bypass",         "",  n, panel_inspector_junction_bypass_toggle ).setMenu("inspector_bypass_toggle"        ).setToggle(function() /*=>*/ { INSP_JUNCTION j.bypass_use;         });
+        registerFunction(i, "Toggle Visible",        "",  n, panel_inspector_visible_toggle         ).setMenu("inspector_visible_toggle"       ).setToggle(function() /*=>*/ { INSP_JUNCTION j.visible_manual;     });
+        registerFunction(i, "Toggle Mini Timeline",  "",  n, panel_inspector_mini_timeline_toggle   ).setMenu("inspector_mini_timeline_toggle" ).setToggle(function() /*=>*/ { INSP_JUNCTION j.inspector_timeline; });
+        registerFunction(i, "Toggle Favourite",      "",  n, panel_inspector_favourite_toggle       ).setMenu("inspector_favourite_toggle"     ).setToggle(function() /*=>*/ { INSP_JUNCTION j.favorited;          });
         registerFunction(i, "Extract to Globalvar",  "",  n, panel_inspector_extract_global         ).setMenu("inspector_extract_global")
         registerFunction(i, "Extract Value",         "",  n, panel_inspector_extract_single         ).setMenu("inspector_extract_value" )
         registerFunction("", "Primary Action",    vk_f2,  n, panel_inspector_trigger_1              ).setMenu("inspector_trigger_1"     )
@@ -204,9 +206,20 @@ function Panel_Inspector() : PanelContent() constructor {
     #endregion
     
     #region ---- Header Tabs ----
-        tb_node_name = textBox_Text(function(txt) /*=>*/ { if(inspecting) inspecting.setDisplayName(txt); })
-                             .setFont(f_h5).setHide(1).setAlign(fa_center);
+        tb_node_name = textBox_Text(function(txt) /*=>*/ { if(inspecting) inspecting.setDisplayName(txt); }).setFont(f_h5).setHide(1).setAlign(fa_center);
         tb_node_name.format = TEXT_AREA_FORMAT.node_title;
+        
+        tb_project_name = textBox_Text(function(t) /*=>*/ { 
+        	if(t == "" || t == filename_name_only(PROJECT.path)) return;
+    		
+    		var _opth = PROJECT.path;
+    		var _dir = filename_dir(PROJECT.path);
+    		var _pth = filename_ext_verify(filename_combine(_dir, t), ".pxc");
+    		
+    		SAVE_AT(PROJECT, _pth);
+    		PROJECT.path = _pth;
+        }).setFont(f_h5).setHide(1).setAlign(fa_center);
+        tb_project_name.format = TEXT_AREA_FORMAT.node_title;
         
         filter_text      = "";
         filtering        = false;
@@ -236,6 +249,8 @@ function Panel_Inspector() : PanelContent() constructor {
         tooltip_primary   = new tooltipHotkey("", "", "Primary Action");
         tooltip_secondary = new tooltipHotkey("", "", "Secondary Action");
         tooltip_cache     = new tooltipHotkey("", "", "Clear Cache");
+        
+        internal_name_copy = 0;
     #endregion
     
     #region ---- Metadata ----
@@ -399,6 +414,7 @@ function Panel_Inspector() : PanelContent() constructor {
         function junction_extract_single()       { var d = __dialog_junction; if(d == noone) return; d.extractNode();                       }
         function junction_visible_toggle()       { var d = __dialog_junction; if(d == noone) return; d.setVisibleManual(!d.visible_manual); }
         function junction_array_toggle()         { var d = __dialog_junction; if(d == noone) return; d.toggleArray();                       }
+        function junction_favourite_toggle()     { var d = __dialog_junction; if(d == noone) return; d.setFavourite(!d.favorited);          }
         function junction_mini_timeline_toggle() { var d = __dialog_junction; if(d == noone) return; d.inspector_timeline = !d.inspector_timeline; }
         
         function junction_bypass_toggle() { 
@@ -431,6 +447,7 @@ function Panel_Inspector() : PanelContent() constructor {
         	"inspector_visible_toggle",
         	"inspector_bypass_toggle",
         	"inspector_expression_toggle", 
+        	"inspector_favourite_toggle", 
         	"inspector_toggle_array", 
         	"inspector_mini_timeline_toggle", 
         	-1,
@@ -585,7 +602,7 @@ function Panel_Inspector() : PanelContent() constructor {
     function drawContent(panel) { 
     	var pad = ui(6);
     	draw_clear_alpha(COLORS.panel_bg_clear, 1);
-        draw_sprite_stretched(THEME.ui_panel_bg, 1, pad, top_bar_h, w - pad * 2, h - top_bar_h - pad);
+        draw_sprite_stretched_ext(THEME.ui_panel_bg, 1, pad, top_bar_h, w - pad * 2, h - top_bar_h - pad);
         
         if(inspecting && !inspecting.active) clearInspecting();
         var mse = [mx,my];
@@ -625,123 +642,8 @@ function Panel_Inspector() : PanelContent() constructor {
             
             drawHeader_Node();
             
-        } else {
-            title = __txt("Inspector");
-            
-            var txt = "Untitled";
-            var ctx = PANEL_GRAPH.getCurrentContext();
-            var sav = file_exists_empty(PROJECT.path);
-            
-            if(ctx == noone && sav) txt = filename_name_only(PROJECT.path);
-            else if(is(ctx, Node))  txt = ctx.getDisplayName();
-            
-            draw_set_text(f_sdf, fa_center, fa_center, COLORS._main_text);
-            var ww = w - ui(160);
-            var ss = clamp(ww / string_width(txt), .25, .5);
-            var tx = w / 2;
-            var ty = ui(30);
-            
-            var tw  = string_width(txt) / 2 * ss;
-            var sx0 = max(    ui(64), tx - tw - ui(20));
-            var sx1 = min(w - ui(64), tx + tw + ui(20));
-            
-            if(sav) {
-	            if(PROJECT.meta.file_id != 0) {
-	            	var _stxt = __txt("View on Workshop") + "...";
-	            	if(buttonInstant_Icon(sx0, ty, ui(10), mse, pHOVER, pFOCUS, _stxt, THEME.steam_invert_24, 0, .8) == 2)
-	                	dialogPanelCall(new Panel_Steam_Workshop().navigate({ type: "fileid", fileid: PROJECT.meta.file_id }));
-	            }
-	            
-	            if(buttonInstant_Icon(sx1, ty, ui(10), mse, pHOVER, pFOCUS, __txt("Rename"), THEME.rename, 0, .8) == 2) {
-	            	textboxCall(txt, function(t) /*=>*/ {
-	            		if(t == "") return;
-	            		
-	            		var _opth = PROJECT.path;
-	            		var _dir = filename_dir(PROJECT.path);
-	            		var _pth = filename_ext_verify(filename_combine(_dir, t), ".pxc");
-	            		
-	            		SAVE_AT(PROJECT, _pth);
-	            		PROJECT.path = _pth;
-	            		// file_delete_safe(_opth);
-	            	});
-	            }
-            }
-            
-            var _scis = gpu_get_scissor();
-            gpu_set_scissor(sx0 + ui(16), ty - ui(16), sx1 - sx0 - ui(32), ui(32));
-            draw_text_add(tx, ty, txt, ss);
-            gpu_set_scissor(_scis);
-            
-            var bb = THEME.button_hide_fill;
-            var bx = w - ui(44);
-            var by = ui(12);
-            var bs = ui(32);
-            var hov = pHOVER;
-            var foc = pFOCUS;
-            
-            by += ui(36);
-            if(STEAM_ENABLED && workshop_uploading == 0) {
-                if(!sav) { // unsaved project
-                	var _txt = __txt("panel_inspector_workshop_save", "Save file before upload");
-                    buttonInstant(noone, bx, by, bs, bs, mse, hov, foc, _txt, THEME.workshop_upload, 0, c_white);
-                    
-                } else if(PROJECT.meta.file_id == 0) { // project made locally
-                    var s = PANEL_PREVIEW.getNodePreviewSurface();
-                    if(!is_surface(s)) {
-                    	var _txt = __txt("panel_inspector_workshop_no_thumbnail", "Send node to preview to be use as project thumbnail before uploading.");
-                    	buttonInstant(bb, bx, by, bs, bs, mse, hov, foc, _txt, THEME.workshop_no_file, 0, c_white);
-                    	
-                    } else {
-	                	var _txt = __txt("panel_inspector_workshop_upload", "Upload to Steam Workshop");
-	                	var b = buttonInstant(bb, bx, by, bs, bs, mse, hov, foc, _txt, THEME.workshop_upload, 0, c_white);
-	                    if(b == 2) {
-                            steam_ugc_create_project();
-                            workshop_uploading = 2;
-                            
-                    	} else if(b == 3) {
-                    		menuCall("", [
-                    			menuItem("Upload to Steam Workshop",   function() /*=>*/ { 
-                    				steam_ugc_create_project(); 
-                    				workshop_uploading = 2; 
-                    			}),
-                    				
-                    			menuItem("Override Steam Workshop...", function() /*=>*/ { 
-                    				dialogPanelCall(new Panel_Steam_Workshop_Selector(function(_f) /*=>*/ {
-                    					workshop_uploading = 2; 
-                    					
-                    					var _fid = _f.file_id;
-                    					PROJECT.meta.file_id         = _fid;
-                    					PROJECT.meta.author_steam_id = STEAM_USER_ID;
-                    					
-                    					steam_ugc_update_project(false, "Overrided");
-                    				}));
-                				}),
-                			]);
-                    	}
-                    }
-                    
-                } else if(PROJECT.meta.author_steam_id == STEAM_USER_ID) { // user-owned steam project
-                	var _txt = __txt("panel_inspector_workshop_upload_new", "Upload as a new Steam Workshop submission");
-                    if(buttonInstant(bb, bx, by - ui(36), bs, bs, mse, hov, foc, _txt, THEME.workshop_add, 0, c_white) == 2) {
-                        steam_ugc_create_project();
-                        workshop_uploading = 1;
-                	}
-                	
-                	var _txt = __txt("panel_inspector_workshop_update",  "Update Steam Workshop content");
-                	if(buttonInstant(bb, bx, by, bs, bs, mse, hov, foc, _txt, THEME.workshop_update, 0, c_white) == 2) {
-                        var dia = dialogCall(o_dialog_steam_project_update, mouse_mx + 8, mouse_my + 8);
-                        if(dia) dia.activate("Update note");
-                	}
-                }
-            }
-            
-            if(workshop_uploading) {
-            	var _by = ui(12) + (workshop_uploading - 1) * ui(36);
-                draw_sprite_ui_uniform(THEME.loading_s, 0, bx + ui(16), _by + ui(16), 1, COLORS._main_icon, 1, current_time / 5);
-                if(STEAM_UGC_UPLOADING == false)
-                    workshop_uploading = 0;
-            }
-        }
+        } else
+        	drawHeader_Project();
         
         content_w = w - pad * 4;
         content_h = h - top_bar_h - pad * 3;
@@ -1137,6 +1039,9 @@ function Panel_Inspector() : PanelContent() constructor {
                     continue;
                 }
                 
+                if(prop_selecting_show == jun) 
+		    	    draw_sprite_stretched_ext(THEME.box_r2, 0, _x, yy-padd/2, con_w, prop_selecting_h+padd, COLORS._main_icon, .1);
+            
                 jun.step();
                 jun.fixHeight = -1;
                 jun.panel     = self;
@@ -1163,6 +1068,12 @@ function Panel_Inspector() : PanelContent() constructor {
                 jun.setFocusHover(_hover, pFOCUS);
                 
                 var _wdh = jun.draw(widX, widY, widW, _m, _hover, pFOCUS, self);
+                
+	            if(_hover && _m[1] > yy - padd/2 && _m[1] < yy + _wdh + padd) {
+	            	hiJunc = jun;
+	            	hiHeig = _wdh;
+	            }
+	            
                 if(_wdh > 0) _wdh += ui(8);
                 hh += _wdh;
                 continue;
@@ -1260,8 +1171,8 @@ function Panel_Inspector() : PanelContent() constructor {
 			                tbw = con_w - hasTog * (segHei + segPad) - hasRig * ui(32);
 			                
 		                } else {
-			                tbx = _x    + hasTog * (segHei - ui(4));
-			                tbw = con_w - hasTog * (segHei - ui(4)) - hasRig * ui(32);
+			                tbx = _x    + hasTog * (segHei);
+			                tbw = con_w - hasTog * (segHei) - hasRig * ui(32);
 			                
 		                }
 	                }
@@ -1282,7 +1193,7 @@ function Panel_Inspector() : PanelContent() constructor {
 		                		else     draw_sprite_stretched_add(THEME.box_r5, 0, lbx, yy, scw, sgh, COLORS.panel_bg_clear, .2);	
 		                		
 		                		var hovCnt = _hover && point_in_rectangle(_m[0], _m[1], lbx, yy, lbx + lbw, yy + sgh);
-		                		if(hovCnt) draw_sprite_stretched_add(THEME.section_separator, 1, lbx, yy, scw, sgh, secHvc, .35);
+		                		if(hovCnt) draw_sprite_stretched_add(THEME.section_separator, 1, lbx, yy, scw, sgh, secHvc, .4);
 		                		
 		                	} else {
 			                	draw_sprite_stretched_ext(THEME.section_separator, 0, lbx, yy, scw, sgh, secBgc);
@@ -1570,14 +1481,8 @@ function Panel_Inspector() : PanelContent() constructor {
             if(FILTER_ANIMATION && !jun.isAnimated()) continue;
             if(filtering && filter_text != "" && !string_match_lower(filter_text, jun.getName())) continue;
             
-            if(prop_selecting_show == jun) {
-            	var _px = _x;
-		        var _py = yy;
-		        var _pw = con_w;
-		        var _ph = prop_selecting_h;
-		        
-		        draw_sprite_stretched_ext(THEME.box_r2, 0, _px, _py-padd/2, _pw, _ph+padd, COLORS._main_icon, .1);
-            }
+            if(prop_selecting_show == jun) 
+		        draw_sprite_stretched_ext(THEME.box_r2, 0, _x, yy-padd/2, con_w, prop_selecting_h+padd, COLORS._main_icon, .1);
             
             #region ++++ Draw Widget ++++
             	var _wdgt = jun.getEditWidget();
@@ -2160,14 +2065,35 @@ function Panel_Inspector() : PanelContent() constructor {
             draw_text_add(w / 2, ui(56), inspecting.name);
         
             draw_set_text(f_p3, fa_center, fa_center, COLORS._main_text_sub);
-            draw_set_alpha(0.65);
-            draw_text_add(w / 2, ui(76), inspecting.internalName);
+        	var _txt_w  = string_width(inspecting.internalName);
+        	var _txt_x  = w / 2;
+        	var _txt_y  = ui(76);
+        	
+        	var _txt_x0 = _txt_x - _txt_w / 2;
+        	var _txt_x1 = _txt_x + _txt_w / 2;
+        	var _txt_y0 = _txt_y - ui(8);
+        	var _txt_y1 = _txt_y + ui(8);
+        	
+        	var _hov = hov && point_in_rectangle(mx, my, _txt_x0, _txt_y0, _txt_x1, _txt_y1);
+        	if(internal_name_copy > 0) {
+	        	internal_name_copy = lerp_float(internal_name_copy, 0, 5)
+	        	draw_set_color(merge_color(COLORS._main_text_sub, COLORS._main_value_positive, min(1, internal_name_copy)));
+        	}
+        	
+            draw_set_alpha(.65 + _hov * .35);
+            draw_text_add(_txt_x, _txt_y, inspecting.internalName);
             draw_set_alpha(1);
             
-            var _txt_w = string_width(inspecting.internalName);
+            if(_hov) {
+            	setTOOLTIP(__txt("Right-Click to copy node ID"));
+            	if(mouse_rpress(foc)) {
+            		clipboard_set_text(inspecting.internalName);
+            		internal_name_copy = 2;
+            	}
+            }
             
-	        var his_x = w / 2 - _txt_w / 2 - ui(16);
-	        var his_y = ui(68);
+	        var his_x = _txt_x0 - ui(16);
+	        var his_y = _txt_y0;
 	        
 	        var targ     = array_empty(inspect_history_undo)? noone : array_last(inspect_history_undo);
 	        var targName = targ == noone? "Project" : targ.getDisplayName();
@@ -2398,6 +2324,9 @@ function Panel_Inspector() : PanelContent() constructor {
         	if(segExp) {
         		if(_col) draw_sprite_stretched_ext(THEME.section_separator, 0, 0, yy, sgw, sgh, secBgc);
         		else     draw_sprite_stretched_ext(THEME.box_r5, 0, 0, yy, sgw, sgh, COLORS.panel_bg_clear);	
+        		
+        		var hovCnt = _hover && point_in_rectangle(_m[0], _m[1], 0, yy, 0 + sgw, yy + sgh);
+        		if(hovCnt) draw_sprite_stretched_add(THEME.section_separator, 1, 0, yy, sgw, sgh, secHvc, .4);
         		
         	} else {
             	draw_sprite_stretched_ext(THEME.section_separator, 0, 0, yy, sgw, sgh, secBgc);
@@ -2917,6 +2846,120 @@ function Panel_Inspector() : PanelContent() constructor {
         }
         
         return 0;
+    }
+    
+    static drawHeader_Project = function() {
+    	title = __txt("Inspector");
+    	
+        var txt = "Untitled";
+        var ctx = PANEL_GRAPH.getCurrentContext();
+        var sav = file_exists_empty(PROJECT.path);
+        
+        if(ctx == noone && sav) txt = filename_name_only(PROJECT.path);
+        else if(is(ctx, Node))  txt = ctx.getDisplayName();
+        
+        var tb_x = ui(64);
+        var tb_y = ui(14);
+        var tb_w = w - ui(128);
+        var tb_h = ui(32);
+        
+        var pd = ui(8);
+        var bs = ui(24);
+        var m   = [mx, my];
+        
+        var hov = pHOVER;
+        var foc = pFOCUS;
+        
+        draw_set_text(f_h5, fa_center, fa_center, COLORS._main_text);
+        var tx = tb_x + tb_w / 2;
+        var ty = tb_y + tb_h / 2;
+        
+        var tw  = string_width(txt) / 2;
+        var sx0 = max(    ui(64), tx - tw - ui(20));
+        var sx1 = min(w - ui(64), tx + tw + ui(20));
+        
+        if(sav) {
+            if(PROJECT.meta.file_id != 0) {
+            	var _stxt = __txt("View on Workshop") + "...";
+            	var b = buttonInstant_Icon(sx0, ty, ui(10), m, pHOVER, pFOCUS, _stxt, THEME.steam_invert_24, 0, .8);
+            	if(b) hov = false;
+            	if(b == 2) dialogPanelCall(new Panel_Steam_Workshop().navigate({ type: "fileid", fileid: PROJECT.meta.file_id }));
+            }
+        }
+        
+        tb_project_name.setInteract(sav);
+        tb_project_name.setFocusHover(foc, hov);
+        tb_project_name.draw(tb_x, tb_y, tb_w, tb_h, txt, m);
+        
+        var bb = THEME.button_hide_fill;
+        var bx = w - ui(44);
+        var by = ui(12);
+        var bs = ui(32);
+        var hov = pHOVER;
+        var foc = pFOCUS;
+        
+        by += ui(36);
+        if(STEAM_ENABLED && workshop_uploading == 0) {
+            if(!sav) { // unsaved project
+            	var _txt = __txt("panel_inspector_workshop_save", "Save file before upload");
+                buttonInstant(noone, bx, by, bs, bs, m, hov, foc, _txt, THEME.workshop_upload, 0, c_white);
+                
+            } else if(PROJECT.meta.file_id == 0) { // project made locally
+                var s = PANEL_PREVIEW.getNodePreviewSurface();
+                if(!is_surface(s)) {
+                	var _txt = __txt("panel_inspector_workshop_no_thumbnail", "Send node to preview to be use as project thumbnail before uploading.");
+                	buttonInstant(bb, bx, by, bs, bs, m, hov, foc, _txt, THEME.workshop_no_file, 0, c_white);
+                	
+                } else {
+                	var _txt = __txt("panel_inspector_workshop_upload", "Upload to Steam Workshop");
+                	var b = buttonInstant(bb, bx, by, bs, bs, m, hov, foc, _txt, THEME.workshop_upload, 0, c_white);
+                    if(b == 2) {
+                        steam_ugc_create_project();
+                        workshop_uploading = 2;
+                        
+                	} else if(b == 3) {
+                		menuCall("", [
+                			menuItem("Upload to Steam Workshop",   function() /*=>*/ { 
+                				steam_ugc_create_project(); 
+                				workshop_uploading = 2; 
+                			}),
+                				
+                			menuItem("Override Steam Workshop...", function() /*=>*/ { 
+                				dialogPanelCall(new Panel_Steam_Workshop_Selector(function(_f) /*=>*/ {
+                					workshop_uploading = 2; 
+                					
+                					var _fid = _f.file_id;
+                					PROJECT.meta.file_id         = _fid;
+                					PROJECT.meta.author_steam_id = STEAM_USER_ID;
+                					
+                					steam_ugc_update_project(false, "Overrided");
+                				}));
+            				}),
+            			]);
+                	}
+                }
+                
+            } else if(PROJECT.meta.author_steam_id == STEAM_USER_ID) { // user-owned steam project
+            	var _txt = __txt("panel_inspector_workshop_upload_new", "Upload as a new Steam Workshop submission");
+                if(buttonInstant(bb, bx, by - ui(36), bs, bs, m, hov, foc, _txt, THEME.workshop_add, 0, c_white) == 2) {
+                    steam_ugc_create_project();
+                    workshop_uploading = 1;
+            	}
+            	
+            	var _txt = __txt("panel_inspector_workshop_update",  "Update Steam Workshop content");
+            	if(buttonInstant(bb, bx, by, bs, bs, m, hov, foc, _txt, THEME.workshop_update, 0, c_white) == 2) {
+                    var dia = dialogCall(o_dialog_steam_project_update, mouse_mx + 8, mouse_my + 8);
+                    if(dia) dia.activate("Update note");
+            	}
+            }
+        }
+        
+        if(workshop_uploading) {
+        	var _by = ui(12) + (workshop_uploading - 1) * ui(36);
+            draw_sprite_ui_uniform(THEME.loading_s, 0, bx + ui(16), _by + ui(16), 1, COLORS._main_icon, 1, current_time / 5);
+            if(STEAM_UGC_UPLOADING == false)
+                workshop_uploading = 0;
+        }
     }
     
     ////- Serialize

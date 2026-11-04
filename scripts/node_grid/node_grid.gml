@@ -26,8 +26,8 @@ function Node_Grid(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	newInput(27, nodeValue_Bool(     "Diagonal",       false    )).setPieMenu();
 	
 	////- =Shift
-	newInput( 9, nodeValue_EButton(  "Shift Axis",       0, ["X", "Y"]        ));
-	newInput( 8, nodeValue_Slider(   "Shift",            0, [-0.5, 0.5, 0.01] )).setMappable(16);
+	newInput( 9, nodeValue_EButton(  "Shift Axis",       0, ["X", "Y"]   ));
+	newInput( 8, nodeValue_Slider(   "Shift",            0, [-.5,.5,.01] )).setMappable(16);
 	newInput(31, nodeValue_Slider(   "Random Shift",     0 ));
 	newInput(32, nodeValueSeedFloat( "Shift Seed"          ));
 	newInput(30, nodeValue_Slider(   "Secondary Shift",  0 ));

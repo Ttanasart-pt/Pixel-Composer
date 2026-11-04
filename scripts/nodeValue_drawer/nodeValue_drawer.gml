@@ -223,27 +223,14 @@ function drawWidget(xx, yy, ww, _m, _jun, global_var = true, _hover = false, _fo
 					mbRight = false;
 					cHov    = true;
 					
-					if(fav_hold != noone && jun.favorited != fav_hold) {
-						jun.favorited = fav_hold;
-						
-						var proj = jun.node.project;
-						if(jun.favorited) 
-							 array_push_unique(proj.favoritedValues, jun);
-						else array_remove(proj.favoritedValues, jun);
-					}
+					if(fav_hold != noone)
+						jun.setFavourite(fav_hold);
 					
 					draw_sprite_ui_uniform(THEME.favorite, ii, butx, lb_y, ss, cc, 1);
 					setTOOLTIP(__txt("Favorite"));
 					
-					if(mouse_lpress(_focus)) {
-						jun.favorited = !jun.favorited;
-						fav_hold = jun.favorited;
-						
-						var proj = jun.node.project;
-						if(jun.favorited) 
-							 array_push_unique(proj.favoritedValues, jun);
-						else array_remove(proj.favoritedValues, jun);
-					}
+					if(mouse_lpress(_focus))
+						jun.setFavourite(!jun.favorited);
 				}
 			}
 			

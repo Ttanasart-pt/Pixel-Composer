@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.22.2.004",
+    "changes": [
+      {
+        "date": "2026-11-04T01:20:38.807Z",
+        "node": "",
+        "commit": "**Pixel Connect**: Add dynamic inputs."
+      }
+    ]
+  },
+  {
     "version": "1.22.2.002",
     "changes": [
       {

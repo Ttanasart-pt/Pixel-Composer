@@ -57,13 +57,17 @@
     vec4 sampleTexture( sampler2D texture, vec2 pos) { return sampleTexture(texture, pos, 0.); }
 #endregion -- sampler_simple --
 
-
 varying vec2 v_vTexcoord;
 varying vec4 v_vColour;
 
 uniform vec2  dimension;
+
+uniform int   selfCon;
 uniform float maxDistance;
 uniform float angRes;
+
+uniform int       useSurface;
+uniform sampler2D connectSurf;
 
 uniform int   blendType;
 uniform int   blendMode;
@@ -77,7 +81,14 @@ void main() {
 	vec2 tx = 1. / dimension;
 	vec4 cc = v_vColour * texture2D(gm_BaseTexture, v_vTexcoord);
 	gl_FragColor = cc;
-	if(cc.a > 0.) return;
+	
+	if(selfCon == 0 && useSurface == 0) return;
+	if(useSurface == 1) {
+		vec4 cc = v_vColour * texture2D(connectSurf, v_vTexcoord);
+		if(cc.a > 0.) gl_FragColor = cc;
+	}
+	
+	if(gl_FragColor.a > 0.) return;
 	
 	float maxDist = maxDistance * dimension.x;
 	
@@ -92,15 +103,18 @@ void main() {
 	float pxDist = length(tx);
 	
 	for(float a = 0.; a < angRes; a++) {
-		float angle = PI * a / angRes;
+		float angle = PI * 2. * a / angRes;
 		vec2  dd    = vec2(cos(angle), sin(angle)) * tx;
 		
-		vec2 solPos0;
-		vec2 solPos1;
+		vec2  solPos0;
+		vec2  solPos1;
 		
 		vec4 solCol0;
 		vec4 solCol1;
-
+		
+		float solDis0;
+		float solDis1;
+		
 		int  solHas = 0;
 		
 		for(float d = 1.; d < maxDist; d++) {
@@ -109,6 +123,7 @@ void main() {
 			
 			if(col0.a > 0.) {
 				solHas++;
+				solDis0 = d;
 				solPos0 = sx0;
 				solCol0 = col0;
 				break;
@@ -117,21 +132,21 @@ void main() {
 		
 		if(solHas == 0) continue;
 		
-		for(float d = 1.; d < maxDist * 2.; d++) {
-			if(d >= dimension.x - 1.) break;
-			
+		for(float d = solDis0; d < maxDist * 2.; d++) {
 			vec2 sx0  = solPos0 - dd * d;
-			vec4 col0 = sampleTexture(gm_BaseTexture, sx0);
+			vec4 col0 = useSurface == 1? sampleTexture(connectSurf, sx0) : sampleTexture(gm_BaseTexture, sx0);
 			
 			if(col0.a > 0.) {
 				solHas++;
+				solDis1 = d;
 				solPos1 = sx0;
 				solCol1 = col0;
 				break;
 			} 
 		}
 		
-		if(solHas == 1) continue;
+		if(solDis0 > solDis1) continue;
+		if(solHas == 1)       continue;
 		
 		float solDist = distance(solPos0, solPos1);
 		if(solDist < minDist) {

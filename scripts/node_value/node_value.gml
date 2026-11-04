@@ -495,6 +495,16 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		return optionButton;
 	}
 	
+	static setFavourite = function(_fav) {
+		if(_fav == favorited) return;
+		favorited = _fav;
+		
+		var proj = node.project;
+		if(favorited) 
+			 array_push_unique(proj.favoritedValues, self);
+		else array_remove(proj.favoritedValues, self);
+	}
+	
 	static nonValidate = function() { validateValue = false; return self; }
 	
 	static nonForward = function() {
