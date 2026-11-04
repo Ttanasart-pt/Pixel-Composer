@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.22.2.004",
+    "changes": [
+      {
+        "date": "2026-11-04T05:26:02.502Z",
+        "node": "Scatter Sampler",
+        "commit": "**Scatter Sampler**: Add tiling mode (basically just round scale value, the node is already tilable)."
+      }
+    ]
+  },
+  {
     "version": "1.21.5.003",
     "changes": [
       {

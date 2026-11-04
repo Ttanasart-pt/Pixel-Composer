@@ -85,15 +85,17 @@ void main() {
 	if(selfCon == 0 && useSurface == 0) return;
 	if(useSurface == 1) {
 		vec4 cc = v_vColour * texture2D(connectSurf, v_vTexcoord);
-		if(cc.a > 0.) gl_FragColor = cc;
+		if(cc.a > 0.) {
+			gl_FragColor = cc;
+			return;
+		}
 	}
-	
-	if(gl_FragColor.a > 0.) return;
 	
 	float maxDist = maxDistance * dimension.x;
 	
 	bool  hasMin  = false;
 	float minDist = 999999.;
+	float minAng  = 999999.;
 	vec2  minSolPos0;
 	vec2  minSolPos1;
 	
@@ -101,13 +103,24 @@ void main() {
 	vec4  minSolCol1;
 	
 	float pxDist = length(tx);
-	
+	float base = 1.;
+	float top  = 0.;
+			
 	for(float a = 0.; a < angRes; a++) {
-		float angle = PI * 2. * a / angRes;
+		float angle = top / base * PI * 2.;
+		top += 2.;
+		if(top >= base) {
+			top   = 1.;
+			base *= 2.;
+		}
+		
 		vec2  dd    = vec2(cos(angle), sin(angle)) * tx;
 		
 		vec2  solPos0;
 		vec2  solPos1;
+		
+		vec2  conPos0;
+		vec2  conPos1;
 		
 		vec4 solCol0;
 		vec4 solCol1;
@@ -115,43 +128,72 @@ void main() {
 		float solDis0;
 		float solDis1;
 		
-		int  solHas = 0;
+		bool solFound0 = false;
+		bool empFound0 = false;
+		bool empFound1 = false;
+		
+		int  sol0Has = 0;
+		int  sol1Has = 0;
 		
 		for(float d = 1.; d < maxDist; d++) {
 			vec2 sx0  = v_vTexcoord + dd * d;
 			vec4 col0 = sampleTexture(gm_BaseTexture, sx0);
 			
 			if(col0.a > 0.) {
-				solHas++;
+				solFound0 = true;
+				
+				sol0Has++;
 				solDis0 = d;
 				solPos0 = sx0;
 				solCol0 = col0;
-				break;
-			} 
+				
+				if(selfCon == 1) break;
+				
+			} else {
+				if(solFound0) break;
+				
+			}
+			
 		}
 		
-		if(solHas == 0) continue;
+		if(sol0Has == 0) continue;
 		
-		for(float d = solDis0; d < maxDist * 2.; d++) {
+		for(float d = 1.; d < maxDist * 2.; d++) {
 			vec2 sx0  = solPos0 - dd * d;
-			vec4 col0 = useSurface == 1? sampleTexture(connectSurf, sx0) : sampleTexture(gm_BaseTexture, sx0);
+			vec4 col0 = sampleTexture(gm_BaseTexture, sx0);
+			
+			if(col0.a > 0. && !empFound0) conPos0   = sx0;
+			if(col0.a == 0.)              empFound0 = true;
+			
+			if(useSurface == 1) col0 = sampleTexture(connectSurf, sx0);
 			
 			if(col0.a > 0.) {
-				solHas++;
+				sol1Has++;
 				solDis1 = d;
 				solPos1 = sx0;
 				solCol1 = col0;
-				break;
-			} 
+				
+				if(solDis1 >= solDis0 && empFound1) break;
+				
+			} else {
+				empFound1 = true;
+			}
 		}
 		
-		if(solDis0 > solDis1) continue;
-		if(solHas == 1)       continue;
+		if(selfCon == 1) conPos0 = solPos0;
 		
-		float solDist = distance(solPos0, solPos1);
+		if(solDis0 > solDis1) continue;
+		if(sol1Has == 0)      continue;
+		
+		float solDist = distance(
+			floor(conPos0 * dimension), 
+			floor(solPos1 * dimension)
+		);
+		
 		if(solDist < minDist) {
 			hasMin     = true;
 			minDist    = solDist;
+			minAng     = a;
 			
 			minSolPos0 = solPos0;
 			minSolPos1 = solPos1;

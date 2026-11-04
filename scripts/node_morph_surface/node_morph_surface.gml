@@ -2,20 +2,23 @@ function Node_Morph_Surface(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	name = "Morph Surface";
 	
 	////- =Surfaces
-	newInput(0, nodeValue_Surface( "Surface from" ));
-	newInput(1, nodeValue_Surface( "Surface to"   ));
+	newInput( 0, nodeValue_Surface( "Surface from" ));
+	newInput( 1, nodeValue_Surface( "Surface to"   ));
 	
 	////- =Morph
-	newInput(2, nodeValue_Slider( "Morph Amount", 0 )).setHotkey("S").setPieMenu();
-	newInput(3, nodeValue_Slider( "Threshold",   .1 )).setHotkey("T").setPieMenu();
-	// input 4
+	newInput( 2, nodeValue_Slider( "Morph Amount", 0 )).setHotkey("S").setPieMenu();
+	newInput( 3, nodeValue_Slider( "Threshold",   .1 )).setHotkey("T").setPieMenu();
+	newInput( 4, nodeValue_Int(    "Resolution",  64 ));
+	// 5
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
 	input_display_list = [ 
-		["Surfaces", true],	0, 1,
-		["Morph",	false],	2, 3, 
+		[ "Surfaces", true ], 0,  1,
+		[ "Morph",   false ], 2,  3,  4, 
 	];
+	
+	////- Node
 	
 	attribute_surface_depth();
 	attribute_interpolation();
@@ -34,23 +37,29 @@ function Node_Morph_Surface(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	}
 	
 	static processData = function(_outSurf, _data, _array_index) {
-		var sFrom = _data[0];
-		var sTo   = _data[1];
-		var amo   = _data[2];
-		var thres = _data[3];
-		
-		if(!is_surface(sFrom)) return _outSurf;
-		if(!is_surface(sTo)) return _outSurf;
+		#region data
+			var sFrom = _data[ 0];
+			var sTo   = _data[ 1];
+			
+			var amo   = _data[ 2];
+			var thres = _data[ 3];
+			var reso  = _data[ 4];
+			
+			if(!is_surface(sFrom)) return _outSurf;
+			if(!is_surface(sTo))   return _outSurf;
+		#endregion
 		
 		var _dim = surface_get_dimension(sFrom);
 		
 		surface_set_shader(_outSurf, sh_morph_surface);
 			shader_set_interpolation(sFrom);
-			shader_set_s("sFrom",     sFrom );
-			shader_set_s("sTo",       sTo   );
-			shader_set_2("dimension", _dim  );
-			shader_set_f("amount",    amo   );
-			shader_set_f("threshold", thres );
+			shader_set_s( "sFrom",      sFrom );
+			shader_set_s( "sTo",        sTo   );
+			shader_set_2( "dimension",  _dim  );
+			shader_set_f( "resolution", reso  );
+			
+			shader_set_f( "amount",     amo   );
+			shader_set_f( "threshold",  thres );
 			
 			draw_empty();
 		surface_reset_shader();

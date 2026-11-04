@@ -13,7 +13,8 @@ function Node_Scatter_Sampler(_x, _y, _group = noone) : Node_Processor(_x, _y, _
 	newInput(12, nodeValue_Curve(   "Intensity", CURVE_DEF_01 ));
 	
 	////- =Transform
-	newInput( 4, nodeValue_Float( "Scale", 4 )).setMappable(14).setPieMenu();
+	newInput(17, nodeValue_Bool(  "Tile",  true ));
+	newInput( 4, nodeValue_Float( "Scale", 4    )).setMappable(14).setPieMenu();
 	
 	////- =Iteration
 	newInput( 6, nodeValue_Int(     "Iteration",       4 )).setPieMenu();
@@ -24,14 +25,14 @@ function Node_Scatter_Sampler(_x, _y, _group = noone) : Node_Processor(_x, _y, _
 	////- =Random
 	newInput( 0, nodeValueSeed());
 	newInput( 5, nodeValue_Slider( "Randomize", 1 ));
-	// inputs 13
+	// 18
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
 	input_display_list = [ 
 		[ "Output",    false ],  1, 11, 
 		[ "Inputs",    false ],  2,  3,  9, 13, 
-		[ "Transform", false ],  4, 14, 
+		[ "Transform", false ], 17,  4, 14, 
 		[ "Iteration", false ],  6,  7, 15,  8, 16, 10, 
 		[ "Random",    false ],  0,  5, 
 	];
@@ -50,6 +51,7 @@ function Node_Scatter_Sampler(_x, _y, _group = noone) : Node_Processor(_x, _y, _
 			var _radd = _data[ 9];
 			var _curv = _data[12];
 			
+			var _tile = _data[17];
 			var _scal = _data[ 4];
 			
 			var _iitr = _data[ 6];
@@ -68,20 +70,22 @@ function Node_Scatter_Sampler(_x, _y, _group = noone) : Node_Processor(_x, _y, _
 			shader_set_s( "mask",      _mask );
 			shader_set_i( "useMask",   is_surface(_mask) );
 			
+			shader_set_2( "dimension", _dim  );
 			shader_set_f( "seed",      _seed );
 			shader_set_f( "randomize", _rand );
 			
-			shader_set_i(     "type",      _type );
-			shader_set_s(     "surface",   _surf );
-			shader_set_f_map( "radius",    _radd, _data[13], inputs[9] );
-			shader_set_curve( "inten",     _curv );
+			shader_set_i( "type",      _type );
+			shader_set_s( "surface",   _surf );
+			shader_set_m( "radius",    _radd, _data[13], inputs[9] );
+			shader_set_cr("inten",     _curv );
 			
-			shader_set_f_map( "scale",     _scal, _data[14], inputs[4] );
+			shader_set_i( "tile",      _tile );
+			shader_set_m( "scale",     _scal, _data[14], inputs[4] );
 			
-			shader_set_i(     "iteration", _iitr );
-			shader_set_f_map( "itrScale",  _itrs, _data[15], inputs[7] );
-			shader_set_f_map( "itrAmpli",  _itra, _data[16], inputs[8] );
-			shader_set_i(     "itrBlend",  _blnd );
+			shader_set_i( "iteration", _iitr );
+			shader_set_m( "itrScale",  _itrs, _data[15], inputs[7] );
+			shader_set_m( "itrAmpli",  _itra, _data[16], inputs[8] );
+			shader_set_i( "itrBlend",  _blnd );
 			
 			draw_empty();
 		surface_reset_shader();

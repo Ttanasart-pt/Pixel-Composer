@@ -273,6 +273,8 @@
 varying vec2 v_vTexcoord;
 varying vec4 v_vColour;
 
+uniform vec2      dimension;
+
 uniform float     seed;
 uniform float     randomize;
 
@@ -282,6 +284,7 @@ uniform sampler2D mask;
 uniform float     inten_curve[CURVE_MAX];
 uniform int       inten_amount;
 
+uniform int       tile;
 uniform int       type;
 uniform sampler2D surface;
 
@@ -315,13 +318,12 @@ vec4 sample(vec2 px, float tile) {
 	
 	for(float i = -2.; i <= 2.; i++)
 	for(float j = -2.; j <= 2.; j++) {
-		
 		vec2 ofs = vec2(i, j);
 		vec2 _fl = fl + ofs;
 		vec2 _fr = fr - ofs;
-		vec2 cen = vec2(.5) + (random2(mod(_fl, tile), seed) - .5) * 2. * randomize;
 		
-		vec2 mx = (_fl + cen) / tile + .5;
+		vec2 cen = vec2(.5) + (random2(mod(_fl, tile), seed) - .5) * 2. * randomize;
+		vec2 mx  = (_fl + cen) / tile + .5;
 		
 		if(useMask == 1) {
 			vec4  msam = texture2D(mask, mx);
@@ -354,22 +356,29 @@ vec4 sample(vec2 px, float tile) {
 }
 
 void main() {
-	float isca = itrScale.x;
-	if(itrScaleUseSurf == 1) {
-		vec4 _vMap = texture2D( itrScaleSurf, v_vTexcoord );
-		isca = mix(itrScale.x, itrScale.y, (_vMap.r + _vMap.g + _vMap.b) / 3.);
-	}
+	#region data
+		float isca = itrScale.x;
+		if(itrScaleUseSurf == 1) {
+			vec4 _vMap = texture2D( itrScaleSurf, v_vTexcoord );
+			isca = mix(itrScale.x, itrScale.y, (_vMap.r + _vMap.g + _vMap.b) / 3.);
+		}
+		
+		float iamp = itrAmpli.x;
+		if(itrAmpliUseSurf == 1) {
+			vec4 _vMap = texture2D( itrAmpliSurf, v_vTexcoord );
+			iamp = mix(itrAmpli.x, itrAmpli.y, (_vMap.r + _vMap.g + _vMap.b) / 3.);
+		}
+		
+		float scl = scale.x;
+		if(scaleUseSurf == 1) {
+			vec4 _vMap = texture2D( scaleSurf, v_vTexcoord );
+			scl = mix(scale.x, scale.y, (_vMap.r + _vMap.g + _vMap.b) / 3.);
+		}
+	#endregion
 	
-	float iamp = itrAmpli.x;
-	if(itrAmpliUseSurf == 1) {
-		vec4 _vMap = texture2D( itrAmpliSurf, v_vTexcoord );
-		iamp = mix(itrAmpli.x, itrAmpli.y, (_vMap.r + _vMap.g + _vMap.b) / 3.);
-	}
-	
-	float scl = scale.x;
-	if(scaleUseSurf == 1) {
-		vec4 _vMap = texture2D( scaleSurf, v_vTexcoord );
-		scl = mix(scale.x, scale.y, (_vMap.r + _vMap.g + _vMap.b) / 3.);
+	if(tile == 1) {
+		isca = floor(isca + .5);
+		scl  = floor(scl  + .5);
 	}
 	
 	float wei = 0.;
@@ -378,9 +387,7 @@ void main() {
 	float sca = scl;
 	float amp = 1.;
 	
-	for(int i = 0; i < 16; i++) {
-		if(i >= iteration) break;
-		
+	for(int i = 0; i < iteration; i++) {
 		vec4 sam = sample(pos, sca);
 		sam.rgb *= amp;
 		
