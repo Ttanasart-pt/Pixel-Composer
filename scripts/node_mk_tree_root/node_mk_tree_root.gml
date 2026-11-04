@@ -69,11 +69,11 @@ function Node_MK_Tree_Root(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		
 		////- =/Base Color
 	newInput(12, nodeValue_Gradient( "Base Color",      gra_white   ));
-	newInput(24, nodeValue_EButton(  "Length Blending", 0           )).setChoices([ "None", "Override", "Multiply", "Screen" ]);
+	newInput(24, nodeValue_EButton(  "Length Blending", 2           )).setChoices([ "None", "Override", "Multiply", "Screen" ]);
 	newInput(25, nodeValue_Gradient( "Length Color",    gra_white   ));
 	
 		////- =/Edge Color
-	newInput(16, nodeValue_EButton(  "Edge Blending",   0           )).setChoices([ "None", "Override", "Multiply", "Screen" ]);
+	newInput(16, nodeValue_EButton(  "Edge Blending",   2           )).setChoices([ "None", "Override", "Multiply", "Screen" ]);
 	newInput(17, nodeValue_Gradient( "L Edge Color",    gra_white   ));
 	newInput(26, nodeValue_Gradient( "R Edge Color",    gra_white   ));
 	

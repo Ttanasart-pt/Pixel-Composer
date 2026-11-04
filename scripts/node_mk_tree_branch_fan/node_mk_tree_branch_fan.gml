@@ -59,11 +59,11 @@ function Node_MK_Tree_Branch_Fan(_x, _y, _group = noone) : Node(_x, _y, _group) 
 		////- =/Base Color
 	newInput(25, nodeValue_Slider(   "Inherit Parent Color", 0      ));
 	newInput(26, nodeValue_Gradient( "Base Color",      gra_white   ));
-	newInput(27, nodeValue_EButton(  "Length Blending", 0,          )).setChoices([ "None", "Override", "Multiply", "Screen" ]);
+	newInput(27, nodeValue_EButton(  "Length Blending", 2,          )).setChoices([ "None", "Override", "Multiply", "Screen" ]);
 	newInput(28, nodeValue_Gradient( "Length Color",    gra_white   ));
 	
 		////- =/Edge Color
-	newInput(29, nodeValue_EButton(  "Edge Blending",   0,          )).setChoices([ "None", "Override", "Multiply", "Screen" ]);
+	newInput(29, nodeValue_EButton(  "Edge Blending",   2,          )).setChoices([ "None", "Override", "Multiply", "Screen" ]);
 	newInput(30, nodeValue_Gradient( "L Edge Color",    gra_white   ));
 	newInput(31, nodeValue_Gradient( "R Edge Color",    gra_white   ));
 	
@@ -160,11 +160,11 @@ function Node_MK_Tree_Branch_Fan(_x, _y, _group = noone) : Node(_x, _y, _group) 
 			var _inhColor = getInputData(25);
 			var _baseGrad = getInputData(26);
 			var _lenc     = getInputData(27);
-			var _lencGrad = getInputData(28); inputs[28].setVisible(_lenc > 0);
+			var _lencGrad = getInputData(28); 
 			
 			var _edge     = getInputData(29);
-			var _edgeLGrd = getInputData(30); inputs[30].setVisible(_edge > 0);
-			var _edgeRGrd = getInputData(31); inputs[31].setVisible(_edge > 0);
+			var _edgeLGrd = getInputData(30); 
+			var _edgeRGrd = getInputData(31); 
 			
 			var _tex      = getInputData(32);
 			var _texArSel = getInputData(37);
@@ -173,11 +173,11 @@ function Node_MK_Tree_Branch_Fan(_x, _y, _group = noone) : Node(_x, _y, _group) 
 			var texArrLen = array_safe_length(_tex);
 			
 			inputs[27].setVisible(!_line);
-			inputs[28].setVisible(!_line);
+			inputs[28].setVisible(!_line && _lenc > 0);
 			
 			inputs[29].setVisible(!_line);
-			inputs[30].setVisible(!_line);
-			inputs[31].setVisible(!_line);
+			inputs[30].setVisible(!_line && _edge > 0);
+			inputs[31].setVisible(!_line && _edge > 0);
 			
 			inputs[32].setVisible(!_line);
 			inputs[37].setVisible(texArray);

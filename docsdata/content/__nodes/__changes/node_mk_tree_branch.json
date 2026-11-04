@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.22.2.004",
+    "changes": [
+      {
+        "date": "2026-11-04T06:02:12.558Z",
+        "node": "MK Tree Branch",
+        "commit": "**MK Tree Branch**: Fix edge, length gradient show up when blend mode set to none."
+      }
+    ]
+  },
+  {
     "version": "1.21.8.007",
     "changes": [
       {
