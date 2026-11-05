@@ -48,7 +48,9 @@ function Panel_Animation_Scaler() : Panel_Linear_Setting() constructor {
 	}
 	
 	function drawContent(panel) { 
-		drawSettings(panel); 
+		contentPane.verify(w, h);
+		contentPane.setFocusHover(pFOCUS, pHOVER);
+		contentPane.drawOffset(0, 0, mx, my);
 		
 		var bs = ui(28);
 		var bx = w - ui(8) - bs;

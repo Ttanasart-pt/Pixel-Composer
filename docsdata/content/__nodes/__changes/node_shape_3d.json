@@ -6,6 +6,11 @@
         "date": "2026-11-05T00:07:40.773Z",
         "node": "",
         "commit": "**Draw Shape 3D**: Add simple lighting."
+      },
+      {
+        "date": "2026-11-05T04:33:24.121Z",
+        "node": "",
+        "commit": "**Splice Sprite Sheet**: Fix extended pixel when sprite frame overflow from original surface."
       }
     ]
   },

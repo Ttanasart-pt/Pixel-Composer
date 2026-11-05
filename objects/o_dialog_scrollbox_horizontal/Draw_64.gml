@@ -26,12 +26,18 @@ DIALOG_WINDOW_START
 	sc_content.setFocusHover(sFOCUS, sHOVER);
 	sc_content.draw(diax + _tpad, diay + _tpad * 2 + tbh);
 	
-	draw_sprite_stretched(THEME.dialog_menu, 1, _dialog_x, diay, diaw, diah);
+	var bb = THEME.button_hide_fill;
+	var bx = _dialog_x + dialog_w - ui(8) - ui(24);
+	var by = tby;
+	var bs = ui(24);
+	var bspr = THEME.scrollbox_direction;
 	
 	if(search_string == "")
-	if(buttonInstant(THEME.button_hide_fill, _dialog_x + dialog_w - ui(8) - ui(24), _dialog_y + ui(8), ui(24), ui(24), mouse_ui, sHOVER, sFOCUS, "", THEME.scrollbox_direction, horizon) == 2) {
+	if(buttonInstant(bb, bx, by, bs, bs, mouse_ui, sHOVER, sFOCUS, "", bspr, horizon) == 2) {
 		horizon = !horizon;
 		setSize();
 	}
+	
+	draw_sprite_stretched(THEME.dialog_menu, 1, _dialog_x, _dialog_y, dialog_w, dialog_h);
 #endregion
 DIALOG_WINDOW_END

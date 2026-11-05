@@ -1155,8 +1155,8 @@ function Panel_Inspector() : PanelContent() constructor {
 	                	var lbw = con_w  - ui(2) - hasTog * (segHei) - hasRig * ui(24);
 		                var lbh = segHei - ui(6);
 		                
-		                tbx = lbx;
-		                tbw = lbw;
+		                tbx = _x     + ui(2) + hasTog * (segHei - ui(8));
+		                tbw = con_w  - ui(2) - hasTog * (segHei - ui(8)) - hasRig * ui(24);
 		                
 	                } else {
 		                var lbx = _x;
@@ -1206,7 +1206,57 @@ function Panel_Inspector() : PanelContent() constructor {
 			                }
 			                
 		                }
+		        	#endregion
+	                
+	                #region Draw Right Buttons
+		                if(righ != noone) {
+		                    var _bx = tbx + tbw;
+		                    var _by = yy;
+		                    var _bw = ui(32);
+		                    var _bh = lbh;
+		                    
+		                    righ.setFocusHover(pFOCUS, pHOVER);
+		                    righ.draw(_bx + ui(2), _by + ui(2), _bw - ui(4), _bh - ui(4), _m, THEME.button_hide_fill);
+		                }
+	                #endregion
+	                
+	                #region Draw Toggle button
+		                var cc, aa = 1;
 		                
+		                if(togl != noone) {
+			                var toging = togl != noone? _inspecting.getInputData(togl) : false;
+			                if(is_array(toging)) toging = false;
+		                
+		                	var tgx = _x + subk * ui(6);
+		                	var tgy = yy;
+		                	var tgp = subk? ui(2) : ui(4);
+		                
+		                	var jun   = _inspecting.inputs[togl];
+		                	var tgHov = _hover && point_in_rectangle(_m[0], _m[1], tgx, tgy, tgx + lbh, tgy + lbh);
+		                	
+		                	if(!segExp)
+		                    	draw_sprite_stretched_ext(THEME.section_separator, 0, tgx, tgy, lbh, lbh, hov? COLORS.section_hover : COLORS.section_bg);
+		                    	
+		                    if(tgHov) {
+		                    	if(!segExp)
+		                        	draw_sprite_stretched_ext(THEME.section_separator, 1, tgx, tgy, lbh, lbh, COLORS.section_hover);
+		                        	
+		                        contentPane.hover_content = true;
+		                    	hov = false;
+		                        
+		                        if(mouse_lpress(pFOCUS)) jun.setValue(!toging);
+		                        if(mouse_rpress(pFOCUS)) propRightClick(jun);
+		                    }
+		                    
+		                    cc = toging? COLORS._main_accent : COLORS._main_icon;
+		                    aa = 0.5 + toging * 0.5;
+		                    
+		                    if(toging) draw_sprite_stretched_ext(THEME.box_r2, 0, tgx + tgp, tgy + tgp, lbh - tgp*2, lbh - tgp*2, cc, 1);
+		                    draw_sprite_stretched_add(THEME.box_r2, 1, tgx + tgp, tgy + tgp, lbh - tgp*2, lbh - tgp*2, cc, .5 + tgHov * .5);
+		                }
+		            #endregion
+		            
+		            #region Interaction
 		                if(hov) {
 		                    contentPane.hover_content = true;
 		                	
@@ -1242,66 +1292,19 @@ function Panel_Inspector() : PanelContent() constructor {
 		                	}
 		                }
 		                
-		                if(!showAll) {
-		                	var _anim = _aniMap[$ currSec] ?? false;
-		                	var cc = !subk && _anim? COLORS._main_value_positive : COLORS._main_icon;
-		                	var ss = subk? .8 : 1;
-		                	
-		                	draw_sprite_ui(THEME.arrow, !coll * 3, tbx + ui(16 + subk * 2), yy + lbh / 2, ss, ss, 0, cc, 1);
-		                }
-		                
 		                _colMap[$ ikey] = coll;
-		        	#endregion
-	                
-	                #region Draw Right Buttons
-		                if(righ != noone) {
-		                    var _bx = tbx + tbw;
-		                    var _by = yy;
-		                    var _bw = ui(32);
-		                    var _bh = lbh;
-		                    
-		                    righ.setFocusHover(pFOCUS, pHOVER);
-		                    righ.draw(_bx + ui(2), _by + ui(2), _bw - ui(4), _bh - ui(4), _m, THEME.button_hide_fill);
-		                }
-	                #endregion
-	                
-	                #region Draw Toggle button
-		                var cc, aa = 1;
-		                
-		                if(togl != noone) {
-			                var toging = togl != noone? _inspecting.getInputData(togl) : false;
-			                if(is_array(toging)) toging = false;
-		                
-		                	var tgx = _x + subk * ui(6);
-		                	var tgy = yy;
-		                	var tgp = subk? ui(3) : ui(4);
-		                
-		                	var jun   = _inspecting.inputs[togl];
-		                	var tgHov = _hover && point_in_rectangle(_m[0], _m[1], tgx, tgy, tgx + lbh, tgy + lbh);
-		                	
-		                	if(!segExp)
-		                    	draw_sprite_stretched_ext(THEME.section_separator, 0, tgx, tgy, lbh, lbh, hov? COLORS.section_hover : COLORS.section_bg);
-		                    	
-		                    if(tgHov) {
-		                    	if(!segExp)
-		                        	draw_sprite_stretched_ext(THEME.section_separator, 1, tgx, tgy, lbh, lbh, COLORS.section_hover);
-		                        	
-		                        contentPane.hover_content = true;
-		                    	hov = false;
-		                        
-		                        if(mouse_lpress(pFOCUS)) jun.setValue(!toging);
-		                        if(mouse_rpress(pFOCUS)) propRightClick(jun);
-		                    }
-		                    
-		                    cc = toging? COLORS._main_accent : COLORS._main_icon;
-		                    aa = 0.5 + toging * 0.5;
-		                    
-		                    if(toging) draw_sprite_stretched_ext(THEME.box_r2, 0, tgx + tgp, tgy + tgp, lbh - tgp*2, lbh - tgp*2, cc, 1);
-		                    draw_sprite_stretched_add(THEME.box_r2, 1, tgx + tgp, tgy + tgp, lbh - tgp*2, lbh - tgp*2, cc, .5 + tgHov * .5);
-		                }
 		            #endregion
 		            
 		            #region Draw Name
+		                if(!showAll) {
+		                	var _anim = _aniMap[$ currSec] ?? false;
+		                	var cc    = !subk && _anim? COLORS._main_value_positive : COLORS._main_icon;
+		                	var ss    = subk? .8 : 1;
+		                	var arx   = tbx + ui(16 + subk * 2);
+		                	
+		                	draw_sprite_ui(THEME.arrow, !coll * 3, arx, yy + lbh / 2, ss, ss, 0, cc, 1);
+		                }
+		                
 		                var ltx = tbx + ui(32);
 		                var txy = yy + lbh / 2;
 		                

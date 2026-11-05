@@ -135,15 +135,16 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		newInput(index+12, nodeValue_Float(    "Select Falloff",   0    )).setCurvable(index+13, CURVE_DEF_10, "Curve");
 		
 		////- =Effects
-		newInput(index+ 0, nodeValue_EScroll(  "Animator type",     0, enum_type_list         ));
-		newInput(index+ 2, nodeValue_Vec2(     "Position",         [0,0]                      ));
-		newInput(index+ 3, nodeValue_Rotation( "Rotation",          0                         ));
-		newInput(index+ 4, nodeValue_Vec2(     "Scale",            [0,0]                      ));
-		newInput(index+ 5, nodeValue_EButton(  "Anchor type",       1, [ "Global", "Local" ]  ));
-		newInput(index+ 6, nodeValue_Vec2(     "Anchor Position", [.5,.5])).setTooltip("Anchor point for transformation, absolute value for global type, relative for local.");
-		newInput(index+ 7, nodeValue_Color(    "Color",             ca_white                  ));
-		newInput(index+ 8, nodeValue_Slider(   "Alpha",             0, [ -1, 1, 0.01 ]        ));
-		newInput(index+15, nodeValue_Slider(   "Strength",          0, [ -1, 1, 0.01 ]        ));
+		newInput(index+ 0, nodeValue_EScroll(  "Animator type",     0, enum_type_list      ));
+		newInput(index+ 2, nodeValue_Vec2(     "Position",         [0,0]                   ));
+		newInput(index+ 3, nodeValue_Rotation( "Rotation",          0                      ));
+		newInput(index+ 4, nodeValue_Vec2(     "Scale",            [0,0]                   ));
+		newInput(index+ 5, nodeValue_EButton(  "Anchor type",       1, [ "Global","Local"] ));
+		newInput(index+ 6, nodeValue_Vec2(     "Anchor Position", [.5,.5]                  ))
+			.setTooltip("Anchor point for transformation, absolute value for global type, relative for local.");
+		newInput(index+ 7, nodeValue_Color(    "Color",             ca_white               ));
+		newInput(index+ 8, nodeValue_Slider(   "Alpha",             0, [-1,1,.01 ]         ));
+		newInput(index+15, nodeValue_Slider(   "Strength",          0, [-1,1,.01 ]         ));
 		
 		refreshDynamicDisplay();
 		postCreateNewInput(index);

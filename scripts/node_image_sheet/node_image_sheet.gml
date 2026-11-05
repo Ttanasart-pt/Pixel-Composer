@@ -333,6 +333,9 @@ function Node_Image_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		
 		if(ww < 1 || hh < 1) return undefined;
 		
+		var surfw = surface_get_width(_surf);
+		var surfh = surface_get_height(_surf);
+		
 		var _sar = array_create(_total);
 		var _atl = array_create(_total);
 		var _arrAmo = 0, _s, _a;
@@ -352,8 +355,17 @@ function Node_Image_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 			
 			var _spr_pos = sprite_pos[i];
 			
+			var _sprx = _spr_pos[0];
+			var _spry = _spr_pos[1];
+			
+			var _sprw = min(_dim[0], surfw - _sprx);
+			var _sprh = min(_dim[1], surfh - _spry);
+			
+			var _drwx = _pad[2];
+			var _drwy = _pad[1];
+			
 			surface_set_shader(_s, noone, true, BLEND.over);
-				draw_surface_part(_surf, _spr_pos[0], _spr_pos[1], _dim[0], _dim[1], _pad[2], _pad[1]);
+				draw_surface_part(_surf, _sprx, _spry, _sprw, _sprh, _drwx, _drwy);
 			surface_reset_shader();
 			
 			_a.x = _spr_pos[0];

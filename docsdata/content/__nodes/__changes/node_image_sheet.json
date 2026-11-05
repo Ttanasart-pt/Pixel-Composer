@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.22.2.004",
+    "changes": [
+      {
+        "date": "2026-11-05T04:33:24.120Z",
+        "node": "Splice Sprite Sheet",
+        "commit": "**Splice Sprite Sheet**: Fix extended pixel when sprite frame overflow from original surface."
+      }
+    ]
+  },
+  {
     "version": "1.22.1.206",
     "changes": [
       {

@@ -82,7 +82,7 @@ function Node_Shape_3D(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	newInput(25, nodeValue_Rot(     "Light H Angle", 0        ));
 	newInput(26, nodeValue_Rot(     "Light V Angle", 30       ));
 	newInput(27, nodeValue_Color(   "Light Color",   ca_white ));
-	newInput(28, nodeValue_Color(   "Light Intensity", 1      ));
+	newInput(28, nodeValue_Slider(  "Light Intensity", 1      ));
 	
 	////- =Depth
 	newInput( 4, nodeValue_Range(   "View Range", [.0,.25]      ));
