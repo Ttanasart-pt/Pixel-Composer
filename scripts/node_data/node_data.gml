@@ -2802,7 +2802,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		}
 		
 		var otp = array_safe_get_fast(outputs, max(0, preview_channel));
-		if(otp.type != VALUE_TYPE.surface) {
+		if(!is(otp, NodeValue) || otp.type != VALUE_TYPE.surface) {
 			node_dimension_text = "";
 			return;
 		}
