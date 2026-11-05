@@ -2,6 +2,8 @@ function Node_Scatter_Sampler(_x, _y, _group = noone) : Node_Processor(_x, _y, _
 	name = "Scatter Sampler";
 	dimension_index = 1;
 	
+	newInput( 0, nodeValueSeed());
+	
 	////- =Surfaces
 	newInput( 1, nodeValue_Dimension());
 	newInput(11, nodeValue_Surface( "Mask" ));
@@ -13,8 +15,9 @@ function Node_Scatter_Sampler(_x, _y, _group = noone) : Node_Processor(_x, _y, _
 	newInput(12, nodeValue_Curve(   "Intensity", CURVE_DEF_01 ));
 	
 	////- =Transform
-	newInput(17, nodeValue_Bool(  "Tile",  true ));
-	newInput( 4, nodeValue_Float( "Scale", 4    )).setMappable(14).setPieMenu();
+	newInput(17, nodeValue_Bool(   "Tile",  true ));
+	newInput( 4, nodeValue_Float(  "Scale", 4    )).setMappable(14).setPieMenu();
+	newInput( 5, nodeValue_Slider( "Randomize", 1 ));
 	
 	////- =Iteration
 	newInput( 6, nodeValue_Int(     "Iteration",       4 )).setPieMenu();
@@ -22,19 +25,15 @@ function Node_Scatter_Sampler(_x, _y, _group = noone) : Node_Processor(_x, _y, _
 	newInput( 8, nodeValue_Float(   "Itr. Amplitude", .5 )).setMappable(16);
 	newInput(10, nodeValue_EScroll( "Blend Mode", 0, [ "Add", "Max" ] ));
 	
-	////- =Random
-	newInput( 0, nodeValueSeed());
-	newInput( 5, nodeValue_Slider( "Randomize", 1 ));
 	// 18
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
-	input_display_list = [ 
+	input_display_list = [  0,  
 		[ "Output",    false ],  1, 11, 
 		[ "Inputs",    false ],  2,  3,  9, 13, 
-		[ "Transform", false ], 17,  4, 14, 
+		[ "Transform", false ], 17,  4, 14,  5, 
 		[ "Iteration", false ],  6,  7, 15,  8, 16, 10, 
-		[ "Random",    false ],  0,  5, 
 	];
 	
 	////- Nodes

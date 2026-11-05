@@ -145,11 +145,10 @@ function drawWidget(xx, yy, ww, _m, _jun, global_var = true, _hover = false, _fo
 				if(mouse_rpress(_focus)) jun.inspector_timeline = !jun.inspector_timeline;
 			}
 			
-		} else if(drawLeft) { // Animation
-			draw_sprite_ui_uniform(aspr, dKey? 0:conn * 2, butx, lb_y, ics, conn? COLORS._main_accent : COLORS._main_icon_light, .3);
+		} else if(!dKey) {
+			draw_sprite_ui_uniform(aspr, conn * 2, butx, lb_y, ics, conn? COLORS._main_accent : COLORS._main_icon_light, .3);
 			
-		} else 
-			draw_sprite_ui_uniform(THEME.circle_16, 0, butx, lb_y, ics * .4, COLORS._main_icon, cirAA);
+		}
 		
 		lb_w += bs;
 		
@@ -283,9 +282,9 @@ function drawWidget(xx, yy, ww, _m, _jun, global_var = true, _hover = false, _fo
 		if(jun.hasJunctionFrom()) cc = COLORS._main_accent;
 		
 		if(jun.color != -1) {
-			draw_sprite_ui(THEME.timeline_color, 1, lb_x + ui(8), lb_y, 1, 1, 0, jun.color, 1);
-			lb_x += ui(24);
-			lb_w += ui(24);
+			lb_x += ui( 4); lb_w += ui( 4);
+			draw_sprite_ui_uniform(THEME.timeline_color, 1, lb_x, lb_y, .5, jun.color);
+			lb_x += ui(10); lb_w += ui(10);
 		}
 		
 		if(!jun.active) {

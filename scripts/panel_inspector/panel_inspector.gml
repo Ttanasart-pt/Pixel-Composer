@@ -1190,7 +1190,7 @@ function Panel_Inspector() : PanelContent() constructor {
 		                	
 		                	if(segExp) {
 		                		if(coll) draw_sprite_stretched_ext(THEME.section_separator, 0, lbx, yy, scw, sgh, secBgc);
-		                		else     draw_sprite_stretched_add(THEME.box_r5, 0, lbx, yy, scw, sgh, COLORS.panel_bg_clear, .2);	
+		                		else     draw_sprite_stretched_add(THEME.box_r5, 0, lbx, yy, scw, sgh, COLORS.panel_bg_clear, .2);
 		                		
 		                		var hovCnt = _hover && point_in_rectangle(_m[0], _m[1], lbx, yy, lbx + lbw, yy + sgh);
 		                		if(hovCnt) draw_sprite_stretched_add(THEME.section_separator, 1, lbx, yy, scw, sgh, secHvc, .4);

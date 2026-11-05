@@ -76,23 +76,32 @@ function Node_Shape_3D(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	newInput(17, nodeValue_Vec2(    "UV Position", [0,0]   ));
 	newInput(18, nodeValue_Vec2(    "UV Scale",    [1,1]   ));
 	
+	////- =Lighting
+	newInput(23, nodeValue_Bool(    "Use Light",     false    ));
+	newInput(24, nodeValue_Color(   "Ambient Color", ca_white ));
+	newInput(25, nodeValue_Rot(     "Light H Angle", 0        ));
+	newInput(26, nodeValue_Rot(     "Light V Angle", 30       ));
+	newInput(27, nodeValue_Color(   "Light Color",   ca_white ));
+	newInput(28, nodeValue_Color(   "Light Intensity", 1      ));
+	
 	////- =Depth
 	newInput( 4, nodeValue_Range(   "View Range", [.0,.25]      ));
 	newInput(19, nodeValue_Surface( "Displacement Map"          ));
 	newInput(20, nodeValue_Range(   "Displacement Range", [0,1] ));
-	// 23
+	// 29
 	
 	newOutput( 0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	newOutput( 1, nodeValue_Output("Depth",       VALUE_TYPE.surface, noone));
 	newOutput( 2, nodeValue_Output("Rim Normal",  VALUE_TYPE.surface, noone));
 	
 	input_display_list = [
-		[ "Output",    false ],  0, 16, 
-		[ "Transform", false ],  1, 21,  2,  3, 
-		[ "Shape",     false ],  7,  8,  9, 13, 12, 14, 15, 
-		[ "Texturing", false ],  5, 10, 11, 
-			[ "/UV",   false ], 22,  6, 17, 18, 
-		[ "Depth",     false ],  4, 
+		[ "Output",    false     ],  0, 16, 
+		[ "Transform", false     ],  1, 21,  2,  3, 
+		[ "Shape",     false     ],  7,  8,  9, 13, 12, 14, 15, 
+		[ "Texturing", false     ],  5, 10, 11, 
+			[ "/UV",   false     ], 22,  6, 17, 18, 
+		[ "Lighting",  false, 23 ], 24, 25, 26, 27, 28, 
+		[ "Depth",     false     ],  4, 
 	];
 	
 	////- Model
@@ -145,6 +154,13 @@ function Node_Shape_3D(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 			var _textr = _data[ 6];
 			var _uvPos = _data[17];
 			var _uvSca = _data[18];
+			
+			var _lgUse = _data[23];
+			var _lgAmb = _data[24];
+			var _lgHan = _data[25];
+			var _lgVan = _data[26];
+			var _lgCol = _data[27];
+			var _lgInt = _data[28];
 			
 			var _viewR = _data[ 4];
 			var _dpMap = _data[19];
@@ -335,13 +351,19 @@ function Node_Shape_3D(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	        
 			matrix_set(matrix_world, matrix_stack_top());
 			
-			shader_set_3("cameraPosition",  [0,0,1] );
-			shader_set_3("cameraDirection", [0,1,0] );
+			shader_set_3( "cameraPosition",  [0,0,1] );
+			shader_set_3( "cameraDirection", [0,1,0] );
 			
-			shader_set_2("viewRange",  _viewR );
+			shader_set_2( "viewRange",  _viewR );
 			
-			shader_set_2("uvPosition", _uvPos );
-			shader_set_2("uvScale",    _uvSca );
+			shader_set_2( "uvPosition", _uvPos );
+			shader_set_2( "uvScale",    _uvSca );
+			
+			shader_set_i( "useLight",       _lgUse           );
+			shader_set_c( "ambientColor",   _lgAmb           );
+			shader_set_2( "lightDir",       [_lgHan, _lgVan] );
+			shader_set_c( "lightColor",     _lgCol           );
+			shader_set_f( "lightIntensity", _lgInt           );
 			
 			var _clen = array_safe_length(_color);
 			var _tlen = array_safe_length(_textr);

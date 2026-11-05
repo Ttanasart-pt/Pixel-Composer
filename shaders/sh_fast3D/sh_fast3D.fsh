@@ -358,6 +358,14 @@ uniform vec2 viewRange;
 uniform vec2 uvPosition;
 uniform vec2 uvScale;
 
+uniform int   useLight;
+uniform vec4  ambientColor;
+uniform vec2  lightDir;
+uniform vec4  lightColor;
+uniform float lightIntensity;
+
+#define PI 3.14159265358979323846
+
 void main() {
 	vec2 uv = v_vTexcoord * uvScale + uvPosition;
 	     
@@ -365,11 +373,25 @@ void main() {
 	float rim  = abs(v_viewNormal.z);
 	float dep  = v_viewPosition.z;
 	
-	vec4  res = base * color;
-
+	vec4  res = base * color * v_vColour;
 	float z   = (dep - viewRange.x) / (viewRange.y - viewRange.x);
+
+	if(useLight == 1) {
+		vec3 norm = normalize(v_worldNormal);
+
+		float azi = radians(lightDir.x);
+		float ele = radians(lightDir.y);
+
+		vec3 lpos = vec3(
+			cos(azi) * cos(ele),
+			sin(ele),
+			sin(azi) * cos(ele)
+		);
+
+		res *= ambientColor + lightColor * max(dot(norm, lpos), 0.) * lightIntensity;
+	}
 	
-	gl_FragData[0] = res * v_vColour;
+	gl_FragData[0] = res;
 	gl_FragData[1] = vec4(vec3(z),   base.a);
 	gl_FragData[2] = vec4(vec3(rim), base.a);
 }

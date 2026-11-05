@@ -116,8 +116,8 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	newOutput( 0, nodeValue_Output( "Surface Out", VALUE_TYPE.surface, noone ));
 	newOutput( 1, nodeValue_Output( "Atlas Data",  VALUE_TYPE.atlas,   []    )).setVisible(false).rejectArrayProcess();
 	
-	typeList = [ "Linear Transform", "Blending" ];
 	enum_select_mode = __enum_array_gen( [ "Index", "Area", "Linear", "Surface" ], s_node_repeat_selection_types);
+	enum_type_list   = [ "Transform", "Blending" ];
 	
 	function createNewInput(index = array_length(inputs)) {
 		var inAmo = array_length(inputs);
@@ -132,12 +132,10 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		newInput(index+14, nodeValue_Surface(  "Select Surface"         ));
 		newInput(index+16, nodeValue_Vec2(     "Select Position", [0,0] )).setUnitSimple();
 		newInput(index+17, nodeValue_Rotation( "Select Rotation",  0    ));
-		
-		newInput(index+12, nodeValue_Float(    "Select Falloff", 0                   ));
-		newInput(index+13, nodeValue_Curve(    "Select Falloff Curve", CURVE_DEF_10  ));
+		newInput(index+12, nodeValue_Float(    "Select Falloff",   0    )).setCurvable(index+13, CURVE_DEF_10, "Curve");
 		
 		////- =Effects
-		newInput(index+ 0, nodeValue_EScroll(  "Animator type",     0, typeList               ));
+		newInput(index+ 0, nodeValue_EScroll(  "Animator type",     0, enum_type_list         ));
 		newInput(index+ 2, nodeValue_Vec2(     "Position",         [0,0]                      ));
 		newInput(index+ 3, nodeValue_Rotation( "Rotation",          0                         ));
 		newInput(index+ 4, nodeValue_Vec2(     "Scale",            [0,0]                      ));
@@ -153,30 +151,22 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	} 
 	
 	input_display_dynamic = [ 
-		[ "Selection", false ],  1,  9, 10, 11, 14, 16, 17, 12, 13, 
-		[ "Effects",   false ],  0,  2,  3,  4,  5,  6,  7,  8, 15, 
+		[ "/Selection", false ],  1,  9, 10, 11, 14, 16, 17, 12, 13, 
+		[ "/Effects",   false ],  0,  2,  3,  4,  5,  6,  7,  8, 15, 
 	];
 	
+	b_add_animator = button(function() /*=>*/ { createNewInput(); triggerRender(); })
+		.setIcon(THEME.add_16, 0, COLORS._main_value_positive).iconPad().setTooltip(__txt("Add Animator"));
+	
 	animator_renderer = new Inspector_Custom_Renderer(function(_x, _y, _w, _m, _hover, _focus) {
-		var bs = ui(24);
-		var bx = _x + ui(20);
-		var by = _y;
-		if(buttonInstant(THEME.button_hide_fill, bx, by, bs, bs, _m, _hover, _focus, "", THEME.add_16, 0, COLORS._main_value_positive) == 2) {
-			createNewInput();
-			triggerRender();
-		}
-		
-		draw_set_text(f_p1, fa_left, fa_center, COLORS._main_text_sub);
-		draw_text_add(bx + bx + ui(8), by + bs / 2, "Animators");
-		
 		var amo = getInputAmount();
 		var lh  = ui(28);
 		var _h  = ui(12) + lh * amo;
-		var yy  = _y + bs + ui(4);
+		var yy  = _y;
 		
 		var del_animator = -1;
 		draw_sprite_stretched_ext(THEME.ui_panel_bg, 1, _x, yy, _w, _h, COLORS.node_composite_bg_blend, 1);
-		if(array_length(current_data) != array_length(inputs)) return _h + ui(32);
+		if(array_length(current_data) != array_length(inputs)) return _h;
 		
 		for(var i = 0; i < amo; i++) {
 			var _x0 = _x + ui(24);
@@ -202,7 +192,7 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 			draw_sprite_ext(s_node_repeat_selection_types, _styp, _x0 + ui(8), _yy, 1, 1, 0, cc);
 			
 			draw_set_text(f_p2, fa_left, fa_center, tc);
-			draw_text_add(_x0 + ui(28), _yy, typeList[_dtyp]);
+			draw_text_add(_x0 + ui(28), _yy, enum_type_list[_dtyp]);
 			
 			var bs = ui(24);
 			var bx = _x1 - bs;
@@ -214,7 +204,7 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		if(del_animator > -1) 
 			deleteDynamicInput(del_animator);
 		
-		return _h + ui(32);
+		return _h;
 	});
 	
 	input_display_list = [ 17, 
@@ -231,8 +221,7 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		[ "Rendering",    false ], 34, 43, 46,  
 			[ "/Color",   false ], 48, [14, true], 30, 54, 47, [23, true], 53, -1, 
 			
-		new Inspector_Spacer(8, true),
-		new Inspector_Spacer(2, false, false),
+		[ "Animators",    false, noone, b_add_animator ], 
 		animator_renderer, 28, 
 	];
 	
@@ -514,7 +503,7 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 				inputs[_ind + 16].setVisible(_selc == 2);
 				inputs[_ind + 17].setVisible(_selc == 2);
 				inputs[_ind + 12].setVisible(_selc != 3);
-				inputs[_ind + 13].setVisible(_selc != 3);
+				inputs[_ind + 13].setVisible(_selc != 3 && inputs[_ind + 12].attributes.curved);
 				inputs[_ind + 14].setVisible(_selc == 3, _selc == 3);
 			}
 			

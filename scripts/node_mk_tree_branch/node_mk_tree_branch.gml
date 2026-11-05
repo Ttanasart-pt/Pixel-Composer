@@ -32,7 +32,7 @@ function Node_MK_Tree_Branch(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	newInput( 7, nodeValue_Range(  "Segments",   [4,8]     ));
 	
 	////- =Direction
-	newInput(31, nodeValue_EButton( "Direction Type",  0, [ "Random", "Uniform", "Spread" ] ));
+	newInput(31, nodeValue_EButton( "Direction Type",  2, [ "Random", "Uniform", "Spread" ] ));
 	newInput( 4, nodeValue_RotRand( "Direction",      [0,80,100,0,0] ));
 	newInput(40, nodeValue_Range(   "Spread",         [15,30]        ))
 		.setCurvable(41, CURVE_DEF_11, "Over Branch", "curved", THEME.mk_tree_curve_branch );

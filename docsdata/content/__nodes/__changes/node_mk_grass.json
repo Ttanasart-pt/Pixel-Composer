@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.22.2.004",
+    "changes": [
+      {
+        "date": "2026-11-05T00:07:40.771Z",
+        "node": "Draw Shape 3D",
+        "commit": "**Draw Shape 3D**: Add simple lighting."
+      }
+    ]
+  },
+  {
     "version": "1.22.1.202",
     "changes": [
       {

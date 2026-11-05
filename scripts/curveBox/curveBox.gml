@@ -587,7 +587,8 @@ function curveBox(_onModify) : widget() constructor {
 			}
 		#endregion
 		
-		draw_sprite_stretched_ext(THEME.box_r2, 1, _x, _y, cw, ch, COLORS.widget_curve_outline, 1);
+		draw_sprite_stretched_ext(THEME.box_r2, 0, _x, _y, cw, ch, COLORS.panel_bg_clear);
+		draw_sprite_stretched_ext(THEME.box_r2, 1, _x, _y, cw, ch, COLORS.widget_curve_outline);
 		draw_surface(curve_surface, _x, _y);
 		
 		////- =Interaction

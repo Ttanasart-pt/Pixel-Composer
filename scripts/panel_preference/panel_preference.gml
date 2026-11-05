@@ -1139,6 +1139,7 @@ function Panel_Preference() : PanelContent() constructor {
     		
     		var group_labels = [];
     		var sectH = ui(24);
+    		var lbh   = sectH + ui(8 + 4);
     		var sect  = [];
     		var psect = "";
     		
@@ -1314,11 +1315,9 @@ function Panel_Preference() : PanelContent() constructor {
     		
     		#region ------------ section label ------------
     			var len = array_length(group_labels);
-    			if(len && group_labels[0].y < 0) {
-    				gpu_set_blendmode(bm_subtract);
-    				draw_set_color(c_white);
-    				draw_rectangle(0, 0, ww, sectH + ui(8 + 4), false);
-    				gpu_set_blendmode(bm_normal);
+    			if(len) {
+    				draw_set_color(COLORS.panel_bg_clear_inner);
+    				draw_rectangle(0, 0, ww, lbh, false);
     			}
     			
     			var _cAll = 0;
@@ -2076,6 +2075,9 @@ function Panel_Preference() : PanelContent() constructor {
     
     #region Scrollpane
     	current_list = pref_global;
+    	section_list = [];
+    	
+    	prop_selecting_show = undefined;
     	
     	sp_pref = new scrollPane(panel_width, panel_height, function(_y, _m) {
     		draw_clear_alpha(COLORS.panel_bg_clear_inner, 1);
@@ -2095,7 +2097,7 @@ function Panel_Preference() : PanelContent() constructor {
     		var ry   = y + sp_pref.y;
     		
     		var _search_text = string_lower(search_text);
-    		for(var i = 0; i < ds_list_size(current_list); i++) {
+    		for(var i = 0, n = ds_list_size(current_list); i < n; i++) {
     			var _pref = current_list[| i];
     			if(is_string(_pref)) continue;
     			if(search_text != "" && string_pos(_search_text, string_lower(_pref.name)) == 0) continue;
@@ -2104,23 +2106,54 @@ function Panel_Preference() : PanelContent() constructor {
     		}
     		
     		var group_labels = [];
+    		var currSec      = undefined;
+    		
     		var sectH = ui(24);
+    		var lbh   = sectH + ui(8 + 4);
+    		
     		var sect  = [];
     		var psect = "";
-    		var lbh   = sectH + ui(8 + 4);
     		var wdh   = 0;
     		
     		var _focus = sp_pref.active;
     		var _hover = sp_pref.hover && _m[1] > lbh;
     		
+    		var _propHover = undefined;
+    		
+    		#region section bg
+    			var len = array_length(section_list);
+    			for( var i = 0, n = array_length(section_list); i < n; i++ ) {
+    				var lb = section_list[i];
+    				var _name = lb.text;
+    				var _key  = lb.key;
+    				var _lbh  = lb.y1 - lb.y;
+    				
+    				var _coll = struct_try_get(collapsed, _key, 0);
+    				
+    				var scx = padx;
+    				var scy = lb.y;
+    				var scw = ww - padx * 2;
+    				var sch = sectH;
+    				
+    				if(!_coll) draw_sprite_stretched_add(THEME.box_r5, 0, scx, scy, scw, _lbh, COLORS.panel_bg_clear, .2);
+    			}
+    		#endregion
+    		
     		for(var i = 0, n = ds_list_size(current_list); i < n; i++) {
     			var _pref = current_list[| i];
     			
     			if(is_string(_pref)) {
+    				if(currSec) { 
+    					var _coll = struct_try_get(collapsed, currSec.key, 0);
+    					if(!_coll) { yy += ui(6); hh += ui(6); }
+    					else       { yy += ui(2); hh += ui(2); }
+    				}
+    				
     				var _coll = struct_try_get(collapsed, _pref, 0);
+    				currSec   = { y: yy, text: _pref, key: _pref, y1: yy };
     				
     				array_push(sect, [ _pref, sp_pref, hh + ui(12), yy ]);
-    				array_push(group_labels, { y: yy, text: _pref, key: _pref });
+    				array_push(group_labels, currSec);
     				
 	    			if(goto_item == _pref) {
 	    				if(goto_item_highlight == 1) sp_pref.setScroll(-hh + sh/2);
@@ -2130,8 +2163,9 @@ function Panel_Preference() : PanelContent() constructor {
     				if(yy >= 0 && section_current == "") section_current = psect;
     				psect = _pref;
     				
-    				yy += sectH + ui(!_coll * 4 + 4);
-    				hh += sectH + ui(!_coll * 4 + 4);
+    				yy += sectH + ui(!_coll * 6 + 2);
+    				hh += sectH + ui(!_coll * 6 + 2);
+    				
     				ind = 0;
     				continue;
     			}
@@ -2148,7 +2182,10 @@ function Panel_Preference() : PanelContent() constructor {
 				
     			if(search_text != "" && string_pos(_search_text, string_lower(name)) == 0) continue;
     			
-    			if(ind % 2) draw_sprite_stretched_ext(THEME.ui_panel_bg, 0, _bbx, _bby, _bbw, _bbh, COLORS.dialog_preference_prop_bg, .75);
+    			if(prop_selecting_show == _pref) 
+    				draw_sprite_stretched_ext(THEME.box_r2, 0, _bbx + ui(4), _bby, _bbw - ui(8), _bbh, COLORS._main_icon, .1);
+    			if(_hover && point_in_rectangle(_m[0], _m[1], _bbx, _bby - ui(3), _bbx + _bbw, _bby + _bbh + ui(3)))
+    				_propHover = _pref;
     			
     			if(goto_item == _pref) {
     				if(goto_item_highlight == 1) sp_pref.setScroll(-hh + sh/2);
@@ -2213,7 +2250,9 @@ function Panel_Preference() : PanelContent() constructor {
     						_pref.onEdit(_defVal);
     				}
     			}
-    				
+    			
+    			if(currSec) currSec.y1 = max(currSec.y1, yy + wdh + pady + ui(6));
+    			
     			yy += wdh + pady + ui(6);
     			hh += wdh + pady + ui(6);
     			ind++;
@@ -2221,39 +2260,51 @@ function Panel_Preference() : PanelContent() constructor {
     		
     		#region section label
     			var len = array_length(group_labels);
-    			if(len && group_labels[0].y < 0) {
-    				gpu_set_blendmode(bm_subtract);
-    				draw_set_color(c_white);
+    			if(len) {
+    				draw_set_color(COLORS.panel_bg_clear_inner);
     				draw_rectangle(0, 0, ww, lbh, false);
-    				gpu_set_blendmode(bm_normal);
     			}
     			
     			var _cAll = 0;
+    			var scs = gpu_get_scissor();
     			
     			for( var i = 0; i < len; i++ ) {
     				var lb = group_labels[i];
     				var _name = lb.text;
     				var _key  = lb.key;
-    				var _coll = struct_try_get(collapsed, _key, 0);
     				
-    				var _yy = max(lb.y, i == len - 1? ui(8) : min(ui(8), group_labels[i + 1].y - ui(32)));
-    				var _hv = pHOVER && point_in_rectangle(_m[0], _m[1], 0, _yy, ww, _yy + sectH);
+    				var _coll = struct_try_get(collapsed, _key, 0);
+    				var _yy   = max(lb.y, i == len - 1? ui(8) : min(ui(8), group_labels[i + 1].y - ui(32)));
+    				var _hv   = pHOVER && point_in_rectangle(_m[0], _m[1], 0, _yy, ww, _yy + sectH);
+    				var _lbh  = lb.y1 - _yy;
     				
     				var scx = padx;
     				var scy = _yy;
     				var scw = ww - padx * 2;
     				var sch = sectH;
     				
-            		draw_sprite_stretched_ext(THEME.section_separator, 0, scx, scy, scw, sch, _hv? COLORS.section_hover : COLORS.section_bg);
-    				
+    				if(_coll) {
+    					draw_sprite_stretched_ext(THEME.section_separator, 0, scx, scy, scw, _coll? sch : _lbh, COLORS.section_bg);
+    				} else {
+    					gpu_set_scissor(scx, 0, scw, lbh+1);
+    					draw_sprite_stretched_add(THEME.box_r5, 0, scx, scy, scw, _lbh, COLORS.panel_bg_clear, .2);
+    					gpu_set_scissor(scs);
+	    				
+	            		var hovCnt = sp_pref.hover && point_in_rectangle(_m[0], _m[1], scx, scy, scx + scw, scy + _lbh);
+	            		if(hovCnt) draw_sprite_stretched_add(THEME.section_separator, 1, scx, scy, scw, _lbh, COLORS.section_hover, .4);
+    				}
+	            		
     				if(goto_item == _name) {
     					var _hga = sin(goto_item_highlight * pi * 4) * .5 + .5;
     					draw_sprite_stretched_add( THEME.section_separator, 0, scx, scy, scw, sch, COLORS._main_accent, _hga*.5 );
     					draw_sprite_stretched_add( THEME.section_separator, 1, scx, scy, scw, sch, COLORS._main_accent, _hga    );
     					
     				} else {
-	                	if(!_coll) draw_sprite_stretched_ext(THEME.section_separator, 2, scx, scy, scw, sch, COLORS.section_selected);
-	                	if(_hv)    draw_sprite_stretched_ext(THEME.section_separator, 1, scx, scy, scw, sch, COLORS.section_hover);
+	                	if(!_coll) draw_sprite_stretched_ext( THEME.section_separator, 2, scx, scy, scw, sch, COLORS.section_selected  );
+	                	if(_hv) {
+	                		draw_sprite_stretched_ext( THEME.section_separator, 3, scx, scy, scw,  sch, COLORS.section_hover, .2 );
+	                		draw_sprite_stretched_ext( THEME.section_separator, 1, scx, scy, scw, _lbh, COLORS.section_hover     );
+	                	}
     				}
                 	
     				if(_hv && pFOCUS) {
@@ -2268,7 +2319,7 @@ function Panel_Preference() : PanelContent() constructor {
                     
     				draw_sprite_ui(THEME.arrow, _coll? 0 : 3, padx + ui(16), _yy + sectH / 2, 1, 1, 0, COLORS._main_text_sub, 1);    
     				
-    				draw_set_text(f_p2, fa_left, fa_center, COLORS._main_text);
+    				draw_set_text(f_p2, fa_left, fa_center, _hv? COLORS._main_text : COLORS._main_text_sub);
     				draw_text_add(padx + ui(28), _yy + sectH / 2, _name);
     			}
     			
@@ -2278,9 +2329,11 @@ function Panel_Preference() : PanelContent() constructor {
     			sections[page_current] = sect;
     		#endregion
     		
+    		section_list        = group_labels;
+    		prop_selecting_show = _propHover;
     		goto_item_highlight = max(goto_item_highlight - DELTA_TIME, 0);
     		
-    		return hh;
+    		return hh + ui(8);
     	});
     #endregion
     

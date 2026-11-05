@@ -158,16 +158,15 @@ event_inherited();
 #endregion
 
 #region sample projects
-	meta_filter = [];
+	meta_filter  = [];
+	section_list = [];
 	
 	x0 = x1 + ui(16);
 	x1 = dialog_x + dialog_w - ui(16);
 	
 	sp_sample = new scrollPane(x1 - x0 - ui(12), y1 - y0 - 2, function(_y, _m) /*=>*/ {
-		draw_clear_alpha(COLORS.panel_bg_clear, 0);
+		draw_clear_alpha(COLORS.panel_bg_clear_inner, 1);
 		
-		var hover = sp_sample.hover;
-		var focus = sp_sample.active;
 		var page  = pages[PREFERENCES.splash_page];
 		
 		var _group_label = true;
@@ -229,17 +228,21 @@ event_inherited();
 		
 		var grid_width = ui(104);
 		var grid_padd  = ui(6);
-		var label_h    = ui(24);
 		
+		var sectH = ui(24);
+		var lbh   = sectH + ui(8 + 4);
+    	
 		var node_count = array_length(list);
 		var col = floor(ww / (grid_width + grid_padd));
 		var row = ceil(node_count / col);
 		
-		var grid_width = (ww - col * grid_padd) / col;
+		var grid_width = (ww - (col + 1) * grid_padd) / col;
 		var grid_heigh = page == "Getting Started"? grid_width * 2/3 : grid_width;
 		
 		var contentRow   = false;
 		var group_labels = [];
+		var currSec      = undefined;
+    		
 		var _curr_tag    = "";
 		var _curr_lab    = undefined;
 		var _cur_col     = 0;
@@ -247,7 +250,28 @@ event_inherited();
 		var _nx, _boxx;
 		var _meta;
 		var _scis = gpu_get_scissor();
+	
+		var hover = sp_sample.hover && _m[1] > lbh;
+		var focus = sp_sample.active;
 		
+		#region section bg
+			var pd  = grid_padd;
+			var len = array_length(section_list);
+			
+			for( var i = 0, n = array_length(section_list); i < n; i++ ) {
+				var  lb   = section_list[i];
+				var _lbh  = lb.y1 - lb.y;
+				var _coll = array_exists(PREFERENCES.welcome_file_closed, lb.text);
+				
+				var scx = 0;
+				var scy = lb.y;
+				var scw = ww;
+				var sch = sectH;
+				
+				if(!_coll) draw_sprite_stretched_add(THEME.box_r5, 0, scx, scy, scw, _lbh, COLORS.panel_bg_clear, .2);
+			}
+		#endregion
+    		
 		for(var i = 0; i < node_count; i++) {
 			var _project = list[i];
 			var _name    = _project.name;
@@ -260,20 +284,25 @@ event_inherited();
 				var _coll = welcome_editing || array_exists(PREFERENCES.welcome_file_closed, _project.tag);
 				
 				if(_curr_tag != _project.tag) {
+					if(i) {
+						yy += ui(4);
+						hh += ui(4);
+					}
+					
 					if(contentRow) {
 						var hght = grid_heigh + grid_padd;
 						hh += hght;
 						yy += hght;
 					}
 					
-					var _lab = { y: yy + ui(2), text: _project.tag, len: 0 }
-					array_push(group_labels, _lab);
-					hh += label_h + ui(4) + (!_coll) * ui(4);
-					yy += label_h + ui(4) + (!_coll) * ui(4);
+					currSec = { y: yy + ui(2), text: _project.tag, len: 0, y1: yy }
+					array_push(group_labels, currSec);
+					hh += sectH + ui(4 + (!_coll * 4));
+					yy += sectH + ui(4 + (!_coll * 4));
 					
 					_nx         = grid_padd;
 					_curr_tag   = _project.tag;
-					_curr_lab   = _lab;
+					_curr_lab   = currSec;
 					_cur_col    = 0;
 					contentRow  = false;
 				}
@@ -385,6 +414,8 @@ event_inherited();
 			draw_text_ext_add(round(tx), round(ty), _name, -1, grid_width - ui(8));
 			contentRow = true;
 			
+			if(currSec) currSec.y1 = max(currSec.y1, yy + grid_heigh + grid_padd);
+			
 			if(++_cur_col >= col) {
 				if(contentRow) {
 					var hght = grid_heigh + grid_padd;
@@ -395,7 +426,7 @@ event_inherited();
 				contentRow  = false;
 				_cur_col    = 0;
 			}
-			
+				
 		}
 		
 		if(contentRow) {
@@ -407,10 +438,8 @@ event_inherited();
 		if(_group_label) {
 			var len = array_length(group_labels);
 			if(len) {
-				gpu_set_blendmode(bm_subtract);
-				draw_set_color(c_white);
-				draw_rectangle(0, 0, ww, ui(36), false);
-				gpu_set_blendmode(bm_normal);
+				draw_set_color(COLORS.panel_bg_clear_inner);
+				draw_rectangle(0, 0, ww, lbh, false);
 			}
 			
 			var pd    = grid_padd;
@@ -419,22 +448,38 @@ event_inherited();
 			var bb = THEME.button_hide_fill;
 			var bp = ui(3);
 			var bw = ui(28);
-			var bh = label_h - bp * 2;
+			var bh = sectH - bp * 2;
 			var bx, by, bt, bc;
+			
+    		var scs = gpu_get_scissor();
 						
 			for( var i = 0; i < len; i++ ) {
 				var lb    = group_labels[i];
 				var title = string_titlecase(lb.text);
 				var clen  = string_titlecase(lb.len);
 				
-				var _yy   = max(lb.y, i == len - 1? ui(8) : min(ui(8), group_labels[i + 1].y - ui(32)));
 				var _coll = array_exists(PREFERENCES.welcome_file_closed, lb.text);
-				var  lx1  = pd + ww;
+				var _yy   = max(lb.y, i == len - 1? ui(8) : min(ui(8), group_labels[i + 1].y - ui(32)));
+				var _lbh  = lb.y1 - _yy;
+				var  lx1  = ww;
 				
-				var _hov = sHOVER && point_in_rectangle(_m[0], _m[1], pd, _yy, lx1, _yy + label_h);
-				draw_sprite_stretched_ext(THEME.section_separator, 0, pd, _yy, ww - pd, label_h, _hov? COLORS.section_hover : COLORS.section_bg);
-				if(!_coll) draw_sprite_stretched_ext(THEME.section_separator, 2, pd, _yy, ww - pd, label_h, COLORS.section_selected);
-				
+				var scx = 0;
+				var scy = _yy;
+				var scw = ww;
+				var sch = sectH;
+			
+				if(_coll) {
+					draw_sprite_stretched_ext(THEME.section_separator, 0, scx, scy, scw, _coll? sch : _lbh, COLORS.section_bg);
+					
+				} else {
+					gpu_set_scissor(scx, 0, scw, lbh+1);
+					draw_sprite_stretched_add(THEME.box_r5, 0, scx, scy, scw, _lbh, COLORS.panel_bg_clear, .2);
+					gpu_set_scissor(scs);
+    				
+            		var hovCnt = sHOVER && point_in_rectangle(_m[0], _m[1], scx, scy, scx + scw, scy + _lbh);
+            		if(hovCnt) draw_sprite_stretched_add(THEME.section_separator, 1, scx, scy, scw, _lbh, COLORS.section_hover, .4);
+				}
+            	
 				switch(title) {
 					case "Getting Started" :
 						bx =  ww - bp - bw;
@@ -452,9 +497,11 @@ event_inherited();
 						break;
 				}
 				
-				var _hov = sHOVER && point_in_rectangle(_m[0], _m[1], pd, _yy, lx1, _yy + label_h);
+				var _hov = sHOVER && point_in_rectangle(_m[0], _m[1], scx, scy, scx + scw, scy + sch);
 				if(_hov) {
-					draw_sprite_stretched_ext(THEME.section_separator, 1, pd, _yy, ww - pd, label_h, COLORS.section_hover);
+					draw_sprite_stretched_ext( THEME.section_separator, 3, scx, scy, scw,  sch, COLORS.section_hover, .2 );
+            		draw_sprite_stretched_ext( THEME.section_separator, 1, scx, scy, scw, _lbh, COLORS.section_hover     );
+	                		
 					sp_sample.hover_content = true;
 					
 					if(DOUBLE_CLICK) _cAll = _coll? -1 : 1;
@@ -465,15 +512,15 @@ event_inherited();
 				}
 				
 				if(!welcome_editing)
-					draw_sprite_ui(THEME.arrow, _coll? 0 : 3, pd + ui(16), _yy + label_h / 2, 1, 1, 0, COLORS._main_icon, 1);
+					draw_sprite_ui(THEME.arrow, _coll? 0 : 3, pd + ui(16), _yy + sectH / 2, 1, 1, 0, COLORS._main_icon, 1);
 				
-				draw_set_text(f_p2, fa_left, fa_bottom, COLORS._main_text);
-				draw_text_add(pd + ui(32), _yy + label_h - ui(4), title);
+				draw_set_text(f_p2, fa_left, fa_center, _hov? COLORS._main_text : COLORS._main_text_sub);
+				draw_text_add(pd + ui(32), scy + sectH / 2, title);
 				
 				if(clen) {
 					var lnx = pd + ui(32) + string_width(title) + ui(4);
-					draw_set_text(f_p3, fa_left, fa_bottom, COLORS._main_text_sub);
-					draw_text_add(lnx, _yy + label_h - ui(4), $"[{clen}]");
+					draw_set_text(f_p3, fa_left, fa_center, COLORS._main_text_sub);
+					draw_text_add(lnx, scy + sectH / 2, $"[{clen}]");
 				}
 			}
 			
@@ -484,6 +531,8 @@ event_inherited();
 			}
 		
 		}
+		
+		section_list = group_labels;
 			
 		return hh + ui(20);
 	});

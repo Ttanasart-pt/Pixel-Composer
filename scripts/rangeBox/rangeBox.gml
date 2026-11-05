@@ -178,7 +178,7 @@ function rangeBox(_onModify) : widget() constructor {
 			disp_w = _w;
 			tb[0].setFocusHover(active, hover);
 			tb[0].draw(_x, _y, disp_w, _h, _data[0], _m);
-			tb[0].setLabel("value");
+			tb[0].setLabel("");
 			
 		} else if(array_safe_length(_data) >= 2) {
 			disp_w = _w / 2;

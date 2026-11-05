@@ -501,7 +501,7 @@ function Panel_Nodes() : PanelContent() constructor {
 			.setFont(f_p3));
 		
 		py += th + ui(4);
-		ph += th + ui(4);
+		ph -= th + ui(4);
 		
 		draw_sprite_stretched(THEME.ui_panel_bg, 1, px - ui(8), py - ui(8), pw + ui(16), ph + ui(16));
 		

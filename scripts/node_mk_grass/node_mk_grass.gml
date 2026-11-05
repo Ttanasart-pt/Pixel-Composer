@@ -2,7 +2,7 @@ function Node_MK_Grass(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	name = "MK Grass";
 	
 	newInput(1, nodeValueSeed());
-	newInput(0, nodeValue_Surface("Surface In")).setRequired();
+	newInput(0, nodeValue_Surface("Surface In"));
 	
 	////- =Source
 	onSurfaceSize = function() /*=>*/ {return getDimension()};

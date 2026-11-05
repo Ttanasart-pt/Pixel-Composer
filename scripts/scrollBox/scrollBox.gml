@@ -6,7 +6,7 @@ function __enum_array_gen(arr, spr, col = COLORS._main_icon, ind = undefined) {
 	return array_map(arr, function(v,i) /*=>*/ {return new scrollItem(v, __spr, __i == undefined? i : __i[i]).setBlend(__c)}); 
 }
 
-function scrollItem(_name, _spr = noone, _spr_ind = 0, _spr_blend = COLORS._main_icon) constructor {
+function scrollItem(_name, _spr = noone, _spr_ind = 0, _spr_blend = COLORS._main_icon_light) constructor {
 	name = _name;
 	data = _name;
 	sub  = false;
