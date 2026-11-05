@@ -15,10 +15,26 @@ function Panel_Canvas_BG_Setting(_canvas) : Panel_Linear_Setting() constructor {
 		),
 		
 		new __Panel_Linear_Setting_Item(
+			__txt("Sync to Preview"),
+			new checkBox(function() /*=>*/ { canvas.sync_preview = !canvas.sync_preview; }),
+			function( ) /*=>*/   {return canvas.sync_preview},
+			function(v) /*=>*/ { canvas.sync_preview = v; }
+		),
+		
+		new __Panel_Linear_Setting_Item(
 			__txt("Alpha"),
 			slider(0, 1, .01, function(v) /*=>*/ { canvas.bg_alpha = v; }),
 			function( ) /*=>*/   {return canvas.bg_alpha},
 			function(v) /*=>*/ { canvas.bg_alpha = v; }
+		),
+		
+		-1, 
+		
+		new __Panel_Linear_Setting_Item(
+			__txt("Tool Outline"),
+			new checkBox(function() /*=>*/ { canvas.tool_outline = !canvas.tool_outline; }),
+			function( ) /*=>*/   {return canvas.tool_outline},
+			function(v) /*=>*/ { canvas.tool_outline = v; }
 		),
 		
 	];

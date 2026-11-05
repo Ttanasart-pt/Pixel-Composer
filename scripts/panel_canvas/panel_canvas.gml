@@ -107,14 +107,17 @@ function Panel_Canvas() : PanelContent() constructor {
 		
 		hover_content = false;
 		
-		bg_show  = true;
-		bg_alpha = 1;
+		bg_show       = true;
+		bg_alpha      = 1;
+		
+		sync_preview  = true;
 	#endregion
 	
 	#region Tool
 		tool_current   = undefined;
 		tool_color     = ca_white;    tool_color_set = function(c) /*=>*/ { tool_color = c; }
 		tool_color_sub = ca_black;
+		tool_outline   = true;
 		
 		tool_color_selecting = false;
 	#endregion
@@ -545,6 +548,8 @@ function Panel_Canvas() : PanelContent() constructor {
 	function drawContent(panel) {
 		if(!is(node, Node_Canvas_S)) return;
 		
+		bg_editor.editWidget.icon_blend = bg_show? COLORS._main_accent : c_white;
+		
 		var _hover_content = hover_content;
 		hover_content = pHOVER;
 		
@@ -613,8 +618,9 @@ function Panel_Canvas() : PanelContent() constructor {
 		#endregion
 		
 		#region preview
-			tool_surface    = surface_verify(tool_surface,    surf_w, surf_h);
-			preview_surface = surface_verify(preview_surface, surf_w, surf_h);
+			tool_surface          = surface_verify(tool_surface,    surf_w, surf_h);
+			preview_surface       = surface_verify(preview_surface, surf_w, surf_h);
+			brush_outline_surface = surface_verify(brush_outline_surface, w, h);
 			
 			if(tool_current && !tool_color_selecting) {
 				if(tool_current.preview_override) {
@@ -656,15 +662,38 @@ function Panel_Canvas() : PanelContent() constructor {
 				surface_reset_shader();
 			}
 			
+			if(bg_show && sync_preview) {
+				var _prevSurf = PANEL_PREVIEW.getNodePreviewSurface();
+				var _prevNode = PANEL_PREVIEW.getNodePreview();
+				
+				var _prevx = preview_x;
+				var _prevy = preview_y;
+				var _prevs = preview_s;
+				
+				if(is_surface(_prevSurf)) {
+					if(_prevNode != node && is(node, Node)) {
+						var _trans = _prevNode.drawOverlayChainTransform(node);
+						// print(_trans)
+						
+						_prevx -= round(_trans[0] / _trans[2]) / _trans[2] * _prevs;
+						_prevy -= round(_trans[1] / _trans[2]) / _trans[2] * _prevs;
+						_prevs /= _trans[2];
+					}
+		        	
+					draw_surface_ext( _prevSurf, _prevx, _prevy, _prevs, _prevs, 0, c_white, bg_alpha);
+				}
+			}
+			
 			surface_set_shader(preview_surface, sh_canvas_apply_background, true, BLEND.over);
-				shader_set_i( "bgUse",     bg_show && node.useBG   );
-				shader_set_s( "bgSurface", node.temp_surface[0]    );
+				shader_set_i( "bgUse",     bg_show && node.useBG );
+				shader_set_s( "bgSurface", node.temp_surface[0]  );
+				
 				shader_set_f( "bgAlpha",   bg_alpha * node.bgAlpha );
 				shader_set_s( "fgSurface", tool_surface            );
 				
 				draw_empty();
 			surface_reset_shader();
-		
+			
 			if(tile[0] && tile[1]) draw_surface_tiled_ext_safe( preview_surface, preview_x, preview_y, preview_s, preview_s, 0, c_white, 1);
 			else if(tile[0])       draw_surface_tiled_hori(     preview_surface, preview_x, preview_y, preview_s, preview_s, 0, c_white, 1);
 			else if(tile[1])       draw_surface_tiled_vert(     preview_surface, preview_x, preview_y, preview_s, preview_s, 0, c_white, 1);
@@ -672,8 +701,6 @@ function Panel_Canvas() : PanelContent() constructor {
 		#endregion
 		
 		#region overlay
-			brush_outline_surface = surface_verify(brush_outline_surface, w, h);
-			
 			if(selecting && !select_edit) {
 				surface_set_target(brush_outline_surface);
 					DRAW_CLEAR
@@ -691,6 +718,18 @@ function Panel_Canvas() : PanelContent() constructor {
 			}
 			
 			if(tool_current) {
+				if(tool_outline && is_surface(drawing_surface)) {
+					surface_set_target(brush_outline_surface);
+						DRAW_CLEAR
+						draw_surface_ext(drawing_surface, preview_x, preview_y, preview_s, preview_s, 0, c_white, 1);
+					surface_reset_target();
+					
+					shader_set(sh_canvas_preview_outline);
+					shader_set_2( "dimension", [w,h] );
+					draw_surface(brush_outline_surface, 0, 0);
+					shader_reset();
+				}
+				
 				surface_set_target(brush_outline_surface);
 					DRAW_CLEAR
 					tool_current.drawOutline(preview_x, preview_y, preview_s);

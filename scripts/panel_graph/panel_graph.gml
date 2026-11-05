@@ -2267,7 +2267,8 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
                     	}
                     	
                     } else if(DOUBLE_CLICK) { // Double Click on Node
-                        PANEL_PREVIEW.setNodePreview(node_hovering);
+                    	if(node_hovering.doubleClickPreview)
+                        	PANEL_PREVIEW.setNodePreview(node_hovering);
                         
                         if(PREFERENCES.inspector_focus_on_double_click) {
                             if(PANEL_INSPECTOR.panel && struct_has(PANEL_INSPECTOR.panel, "switchContent"))

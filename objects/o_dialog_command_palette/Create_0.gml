@@ -152,7 +152,7 @@ sc_content = new scrollPane(0, 0, function(_y, _m) {
 		var _mhover   = mouse_move && point_in_rectangle(_m[0], _m[1], 0, _ly, _dw, _ly + hght - 1); 
 		
 		if(selecting == i) {
-			draw_sprite_stretched_add(THEME.menubox, 0, 0, _ly, _dw, hght, COLORS.dialog_menubox_highlight, .1);
+			draw_sprite_stretched_ext(THEME.menubox, 0, 0, _ly, _dw, hght, COLORS.dialog_menubox_highlight, .3);
 			
 			if(sc_content.active) {
 				if((!keyboard_trigger && mouse_lpress()) || (hk_editing == noone && KEYBOARD_ENTER)) {

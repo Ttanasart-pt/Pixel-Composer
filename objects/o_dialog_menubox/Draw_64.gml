@@ -66,7 +66,7 @@ DIALOG_WINDOW_START
 			var _wh = _whg - ui(8);
 			
 			if(sHOVER && point_in_rectangle(mouse_mx, mouse_my, _dialog_x, yy + 1, _dialog_x + dialog_w, yy + _whg - 1)) {
-				draw_sprite_stretched_add(THEME.menubox, 0, xx, yy, ww, _whg, COLORS.dialog_menubox_highlight, .3);
+				draw_sprite_stretched_ext(THEME.menubox, 0, xx, yy, ww, _whg, COLORS.dialog_menubox_highlight, .3);
 				selecting = i;
 			}
 			
@@ -119,7 +119,7 @@ DIALOG_WINDOW_START
 		
 		if(selecting == i) {
 			if(_menuItem.active) 
-				draw_sprite_stretched_add(THEME.menubox, 0, floor(xx), floor(yy), floor(ww), floor(_h), COLORS.dialog_menubox_highlight, .3);
+				draw_sprite_stretched_ext(THEME.menubox, 0, floor(xx), floor(yy), floor(ww), floor(_h), COLORS.dialog_menubox_highlight, .3);
 			
 			if(_hovering_ch) {
 				if(_lclick && is(_menuItem, MenuItem) && _menuItem.active) {
@@ -241,9 +241,6 @@ DIALOG_WINDOW_START
 					_str = _sprs;
 					draw_set_text(font, fa_center, fa_center, COLORS._main_text);
 					
-					// _sw = string_width(_str) + ui(12);
-					// _sh = string_height(_str) + ui(8);
-					
 				} else {
 					if(is_array(_sprs)) {
 						_spr = _sprs[0];
@@ -252,8 +249,6 @@ DIALOG_WINDOW_START
 						
 					} else _spr = _sprs;
 					
-					// _sw = sprite_get_width(_spr);
-					// _sh = sprite_get_height(_spr);
 				}
 				
 				var _hv = _hovering_ch && point_in_rectangle(mouse_mx, mouse_my, _bx - _sw/2, _by - _sh/2, _bx + _sw/2, _by + _sh/2);
@@ -261,7 +256,6 @@ DIALOG_WINDOW_START
 				if(_hv) {
 					if(_tlp != "") setTOOLTIP(_tlp);
 					draw_sprite_stretched_ext(THEME.menubox, 0, _bx - _sw/2, _by - _sh/2, _sw, _sh, COLORS.dialog_menubox_highlight, .3);
-					draw_sprite_stretched_add(THEME.menubox, 1, _bx - _sw/2, _by - _sh/2, _sw, _sh, COLORS.dialog_menubox_highlight, .5);
 					
 					if(mouse_lpress(sFOCUS)) {
 						_submenu[1](_dat);

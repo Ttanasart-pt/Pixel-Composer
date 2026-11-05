@@ -6,6 +6,11 @@
         "date": "2026-11-05T04:59:19.275Z",
         "node": "Graph Panel",
         "commit": "**Graph Panel**: Fix error when rendering node with no output."
+      },
+      {
+        "date": "2026-11-05T09:33:28.377Z",
+        "node": "",
+        "commit": "**Canvas**: Add preview content sync, tool outline."
       }
     ]
   },

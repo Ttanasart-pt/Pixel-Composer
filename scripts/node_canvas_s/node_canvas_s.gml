@@ -8,6 +8,8 @@
 function Node_Canvas_S(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name  = "Canvas";
 	color = COLORS.node_blend_canvas;
+	
+	doubleClickPreview     = false;
 	preview_select_surface = false;
 	preview_select_boxable = false;
 	

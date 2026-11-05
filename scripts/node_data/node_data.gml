@@ -60,8 +60,10 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		inline_output  = true;
 		inline_context = noone;
 		
+		doubleClickPreview = true;
+		onDoubleClick      = -1;
+		
 		search_match   = -9999;
-		onDoubleClick  = -1;
 		is_controller  = false;
 		is_instancer   = false;
 		
