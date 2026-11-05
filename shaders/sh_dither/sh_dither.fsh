@@ -97,7 +97,7 @@ void main() {
 		con = mix(contrast.x, contrast.y, (_vMap.r + _vMap.g + _vMap.b) / 3.);
 	}
 	
-	vec2  pos = floor(v_vTexcoord * dimension / scale + .5) * scale / dimension;
+	vec2  pos = floor(v_vTexcoord * dimension / scale) * scale / dimension;
 	vec4 _col = texture2D( gm_BaseTexture, pos );
 	
 	bool exactColor = false;

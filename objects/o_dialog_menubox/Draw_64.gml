@@ -260,7 +260,7 @@ DIALOG_WINDOW_START
 				
 				if(_hv) {
 					if(_tlp != "") setTOOLTIP(_tlp);
-					draw_sprite_stretched_add(THEME.menubox, 0, _bx - _sw/2, _by - _sh/2, _sw, _sh, COLORS.dialog_menubox_highlight, .3);
+					draw_sprite_stretched_ext(THEME.menubox, 0, _bx - _sw/2, _by - _sh/2, _sw, _sh, COLORS.dialog_menubox_highlight, .3);
 					draw_sprite_stretched_add(THEME.menubox, 1, _bx - _sw/2, _by - _sh/2, _sw, _sh, COLORS.dialog_menubox_highlight, .5);
 					
 					if(mouse_lpress(sFOCUS)) {
