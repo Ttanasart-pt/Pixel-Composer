@@ -63,11 +63,11 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		doubleClickPreview = true;
 		onDoubleClick      = -1;
 		
-		search_match   = -9999;
-		is_controller  = false;
-		is_instancer   = false;
+		search_match       = -9999;
+		is_controller      = false;
+		is_instancer       = false;
 		
-		static setParam = function() /*=>*/ {return false};
+		static setParam    = function() /*=>*/ {return false};
 	#endregion
 	
 	#region ---- 3D ----

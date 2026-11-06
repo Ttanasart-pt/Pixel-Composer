@@ -106,18 +106,12 @@ function Panel_Canvas() : PanelContent() constructor {
 		view_drag_my  = 0;
 		
 		hover_content = false;
-		
-		bg_show       = true;
-		bg_alpha      = 1;
-		
-		sync_preview  = true;
 	#endregion
 	
 	#region Tool
 		tool_current   = undefined;
 		tool_color     = ca_white;    tool_color_set = function(c) /*=>*/ { tool_color = c; }
 		tool_color_sub = ca_black;
-		tool_outline   = true;
 		
 		tool_color_selecting = false;
 	#endregion
@@ -184,10 +178,6 @@ function Panel_Canvas() : PanelContent() constructor {
 		tile_edit   = new checkBoxGroup( THEME.canvas_tile, function(v,i) /*=>*/ { tile[i] = v; }).setTooltips( [ "Tile Vertical", "Tile Horizontal" ] );
 		tile_editor = new __Simple_Editor( "", tile_edit, function() /*=>*/ {return tile}, function(b) /*=>*/ { tile = b; } );
 		
-		grid_show   = false;
-		grid_pixel  = false;
-		grid_size   = 8;
-		grid_color  = cola(c_white, .2);
 		grid_editor = new __Simple_Editor( "", button(function() /*=>*/ {return dialogPanelCall(
 			new Panel_Canvas_Grid_Setting(self), mouse_mx - ui(8), mouse_my + ui(8), { anchor: ANCHOR.right | ANCHOR.top }
 		)}).setTooltip("Grid Settings...").setBaseSprite(THEME.button_hide_fill)
@@ -548,7 +538,10 @@ function Panel_Canvas() : PanelContent() constructor {
 	function drawContent(panel) {
 		if(!is(node, Node_Canvas_S)) return;
 		
-		bg_editor.editWidget.icon_blend = bg_show? COLORS._main_accent : c_white;
+		#region ui
+			bg_editor.editWidget.icon_blend   = node.attributes.bg_show?   COLORS._main_accent : c_white;
+			grid_editor.editWidget.icon_blend = node.attributes.grid_show? COLORS._main_accent : c_white;
+		#endregion
 		
 		var _hover_content = hover_content;
 		hover_content = pHOVER;
@@ -662,7 +655,10 @@ function Panel_Canvas() : PanelContent() constructor {
 				surface_reset_shader();
 			}
 			
-			if(bg_show && sync_preview) {
+			var _bgShow = node.attributes.bg_show;
+			var _bgAlph = node.attributes.bg_alpha;
+			
+			if(_bgShow && node.attributes.sync_preview) {
 				var _prevSurf = PANEL_PREVIEW.getNodePreviewSurface();
 				var _prevNode = PANEL_PREVIEW.getNodePreview();
 				
@@ -680,15 +676,15 @@ function Panel_Canvas() : PanelContent() constructor {
 						_prevs /= _trans[2];
 					}
 		        	
-					draw_surface_ext( _prevSurf, _prevx, _prevy, _prevs, _prevs, 0, c_white, bg_alpha);
+					draw_surface_ext( _prevSurf, _prevx, _prevy, _prevs, _prevs, 0, c_white, _bgAlph);
 				}
 			}
 			
 			surface_set_shader(preview_surface, sh_canvas_apply_background, true, BLEND.over);
-				shader_set_i( "bgUse",     bg_show && node.useBG );
-				shader_set_s( "bgSurface", node.temp_surface[0]  );
+				shader_set_i( "bgUse",     _bgShow && node.useBG   );
+				shader_set_s( "bgSurface", node.temp_surface[0]    );
 				
-				shader_set_f( "bgAlpha",   bg_alpha * node.bgAlpha );
+				shader_set_f( "bgAlpha",   _bgAlph * node.bgAlpha );
 				shader_set_s( "fgSurface", tool_surface            );
 				
 				draw_empty();
@@ -718,7 +714,7 @@ function Panel_Canvas() : PanelContent() constructor {
 			}
 			
 			if(tool_current) {
-				if(tool_outline && is_surface(drawing_surface)) {
+				if(node.attributes.tool_outline && is_surface(drawing_surface)) {
 					surface_set_target(brush_outline_surface);
 						DRAW_CLEAR
 						draw_surface_ext(drawing_surface, preview_x, preview_y, preview_s, preview_s, 0, c_white, 1);
@@ -984,8 +980,11 @@ function Panel_Canvas() : PanelContent() constructor {
 			var x1 = preview_x + surf_w * preview_s;
 			var y1 = preview_y + surf_h * preview_s;
 			
-			if(grid_pixel) {
-				draw_set_color_alpha(grid_color, _color_get_a(grid_color) * .5);
+			var gs = node.attributes.grid_size;
+			var gc = node.attributes.grid_color;
+			
+			if(node.attributes.grid_pixel) {
+				draw_set_color_alpha(gc, _color_get_a(gc) * .5);
 				for( var i = 0; i <= surf_w; i++ ) {
 					var gx = preview_x + i * preview_s;
 					draw_line(gx, y0, gx, y1);
@@ -998,14 +997,15 @@ function Panel_Canvas() : PanelContent() constructor {
 				
 				draw_set_alpha(1);
 			}
-			if(grid_show) {
-				draw_set_color_alpha(grid_color, _color_get_a(grid_color));
-				for( var i = 0; i <= surf_w; i += grid_size ) {
+			if(node.attributes.grid_show) {
+				draw_set_color_alpha(gc, _color_get_a(gc));
+				
+				for( var i = 0; i <= surf_w; i += gs ) {
 					var gx = preview_x + i * preview_s;
 					draw_line(gx, y0, gx, y1);
 				}
 				
-				for( var i = 0; i <= surf_h; i += grid_size ) {
+				for( var i = 0; i <= surf_h; i += gs ) {
 					var gy = preview_y + i * preview_s;
 					draw_line(x0, gy, x1, gy);
 				}

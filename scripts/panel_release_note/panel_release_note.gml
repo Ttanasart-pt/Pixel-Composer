@@ -64,15 +64,17 @@ function Panel_Release_Note() : PanelContent() constructor {
 			var fname  = "";
 			
 			if(is_array(dl)) {
-				verObj = dl[0];
-				link   = dl[1];
-				fname  = dl[2];
+				verObj = array_safe_get( dl, 0, undefined );
+				link   = array_safe_get( dl, 1, "" );
+				fname  = array_safe_get( dl, 2, "" );
 				
-			} else {
-				verObj = dl;
+			} else if(is_struct(dl))
 				link   = dl.link;
-				fname  = $"PixelComposer {verObj.version}.zip";
-			}
+			
+			if(!is_struct(verObj)) return;
+			
+			if(fname == "")
+				fname = $"PixelComposer {verObj.version}.zip";
 			
 			var _path = get_save_filename_ext("Any", fname, "", "Download location");
 			var _dir  = filename_dir(_path);
@@ -99,12 +101,16 @@ function Panel_Release_Note() : PanelContent() constructor {
 				var dl   = dls[i];
 				var vers = dl.version;
 				var type = dl.type;
+				
+				if(dl.status == 2 && !file_exists(dl.download_path))
+					dl.status = 0;
+				
 				var hh   = dl.status == 0? ui(28) : ui(48);
 				var hov  = pHOVER && point_in_rectangle(_m[0], _m[1], xx, yy, xx + ww, yy + hh);
-				var oss  = struct_has(dl, "links");
 				
-				var osL  = oss && struct_has(dl.links, "linux");
-				var osM  = oss && struct_has(dl.links, "mac");
+				var oss  = has(dl, "links");
+				var osL  = oss && has(dl.links, "linux");
+				var osM  = oss && has(dl.links, "mac");
 				
 				draw_sprite_stretched(THEME.ui_panel_bg, 0, xx, yy, ww, hh);
 				draw_sprite_stretched_ext(THEME.ui_panel, 1, xx, yy, ww, hh, COLORS.node_display_text_frame_outline, 1);
@@ -306,7 +312,7 @@ function Panel_Release_Note() : PanelContent() constructor {
 					var oss  = struct_has(d, "links");
 					if(oss) {
 						var _ls = d.links;
-						_menu = [ menuItem("Download for Windows", function(p) /*=>*/ {return toggleDownload(p)}).setParam([d, _ls.windows]) ];
+						_menu = [ menuItem("Download for Windows", function(p) /*=>*/ {return toggleDownload(p)}).setParam([d, _ls.windows, ""]) ];
 						if(struct_has(_ls, "linux")) 
 							array_push(_menu, menuItem("Download for Linux",  function(p) /*=>*/ {return toggleDownload(p)})
 								.setParam([d, _ls.linux, $"PixelComposer {_v}.AppImage"]));

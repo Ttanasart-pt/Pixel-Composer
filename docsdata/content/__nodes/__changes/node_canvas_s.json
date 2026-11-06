@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.22.2.005",
+    "changes": [
+      {
+        "date": "2026-11-06T00:57:50.490Z",
+        "node": "Release Note] Fix crash when downloading file from a context menu. - [Release Note",
+        "commit": "**Release Note] Fix crash when downloading file from a context menu. - [Release Note**: Now check for deleted file."
+      }
+    ]
+  },
+  {
     "version": "1.22.2.004",
     "changes": [
       {

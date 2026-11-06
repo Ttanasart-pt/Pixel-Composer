@@ -52,6 +52,16 @@ function Node_Canvas_S(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 	
 	attributes.dimension = [0,0];
 	
+	attributes.bg_show      = true;
+	attributes.bg_alpha     = 1;
+	attributes.sync_preview = true;
+	attributes.tool_outline = true;
+	
+	attributes.grid_show  = false;
+	attributes.grid_pixel = false;
+	attributes.grid_size  = 8;
+	attributes.grid_color = cola(c_white, .2);
+
 	pixel_data  = undefined;
 	editorPanel = undefined;
 	resources   = [];

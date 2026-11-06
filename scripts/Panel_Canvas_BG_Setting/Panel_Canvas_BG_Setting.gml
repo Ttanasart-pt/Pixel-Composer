@@ -9,32 +9,32 @@ function Panel_Canvas_BG_Setting(_canvas) : Panel_Linear_Setting() constructor {
 		
 		new __Panel_Linear_Setting_Item(
 			__txt("Visible"),
-			new checkBox(function() /*=>*/ { canvas.bg_show = !canvas.bg_show; }),
-			function( ) /*=>*/   {return canvas.bg_show},
-			function(v) /*=>*/ { canvas.bg_show = v; }
+			new checkBox(function() /*=>*/ { attributes.bg_show = !attributes.bg_show; }),
+			function( ) /*=>*/   {return attributes.bg_show},
+			function(v) /*=>*/ { attributes.bg_show = v; }
 		),
 		
 		new __Panel_Linear_Setting_Item(
 			__txt("Sync to Preview"),
-			new checkBox(function() /*=>*/ { canvas.sync_preview = !canvas.sync_preview; }),
-			function( ) /*=>*/   {return canvas.sync_preview},
-			function(v) /*=>*/ { canvas.sync_preview = v; }
+			new checkBox(function() /*=>*/ { attributes.sync_preview = !attributes.sync_preview; }),
+			function( ) /*=>*/   {return attributes.sync_preview},
+			function(v) /*=>*/ { attributes.sync_preview = v; }
 		),
 		
 		new __Panel_Linear_Setting_Item(
 			__txt("Alpha"),
-			slider(0, 1, .01, function(v) /*=>*/ { canvas.bg_alpha = v; }),
-			function( ) /*=>*/   {return canvas.bg_alpha},
-			function(v) /*=>*/ { canvas.bg_alpha = v; }
+			slider(0, 1, .01, function(v) /*=>*/ { attributes.bg_alpha = v; }),
+			function( ) /*=>*/   {return attributes.bg_alpha},
+			function(v) /*=>*/ { attributes.bg_alpha = v; }
 		),
 		
 		-1, 
 		
 		new __Panel_Linear_Setting_Item(
 			__txt("Tool Outline"),
-			new checkBox(function() /*=>*/ { canvas.tool_outline = !canvas.tool_outline; }),
-			function( ) /*=>*/   {return canvas.tool_outline},
-			function(v) /*=>*/ { canvas.tool_outline = v; }
+			new checkBox(function() /*=>*/ { attributes.tool_outline = !attributes.tool_outline; }),
+			function( ) /*=>*/   {return attributes.tool_outline},
+			function(v) /*=>*/ { attributes.tool_outline = v; }
 		),
 		
 	];
