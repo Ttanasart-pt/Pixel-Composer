@@ -79,6 +79,8 @@ function Node_Group(_x, _y, _group = noone) : Node_Collection(_x, _y, _group) co
 		// Add nodes missing from the main group
 		for( var i = 0, n = array_length(addList); i < n; i++ ) {
 			var _addNode = addList[i];
+			if(!is(_addNode, Node)) continue;
+			
 			var _newNode = _addNode.clone(self);
 			
 			_insMap[$ _addNode.node_id] = _newNode;

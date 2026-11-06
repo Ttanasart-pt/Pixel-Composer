@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.22.2.005",
+    "changes": [
+      {
+        "date": "2026-11-06T05:56:38.670Z",
+        "node": "",
+        "commit": "**Instance Group**: Fix crash when trying to clone non-existence node."
+      }
+    ]
+  },
+  {
     "version": "1.21.10.101",
     "changes": [
       {

@@ -4031,12 +4031,13 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		CLONING = true;
 		var _type = instanceof(self);
 		var _node = nodeBuild(_type, x, y, _group);
-		    _node.skipDefault();
 		CLONING = false;
 		
-		if(!_node) return undefined;
+		if(!is(_node, Node)) return undefined;
 		
+	    _node.skipDefault();
 		CLONING = true;
+		
 		var _nid = _node.node_id;
 		_node.deserialize(serialize());
 		_node.postDeserialize();

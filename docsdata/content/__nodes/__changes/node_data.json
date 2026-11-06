@@ -6,6 +6,11 @@
         "date": "2026-11-06T00:57:50.491Z",
         "node": "",
         "commit": "**Release Note] Fix crash when downloading file from a context menu. - [Release Note**: Now check for deleted file."
+      },
+      {
+        "date": "2026-11-06T05:56:38.669Z",
+        "node": "Instance Group",
+        "commit": "**Instance Group**: Fix crash when trying to clone non-existence node."
       }
     ]
   },
