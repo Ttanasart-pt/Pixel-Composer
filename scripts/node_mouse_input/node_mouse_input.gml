@@ -3,7 +3,7 @@ function Node_Mouse_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	setDimension(96, 48);
 	setDrawIcon();
 	
-	newInput( 0, nodeValue_EButton( "Update", 0, [ "Always", "On Event" ] ));
+	newInput( 0, nodeValue_EButton( "Update", 0, [ "Always", "On Event", "On Frame" ] ));
 	// 1
 	
 	newOutput( 0, nodeValue_Output( "Window Position",  VALUE_TYPE.float,   [0,0] )).setDisplay(VALUE_DISPLAY.vector);
@@ -16,7 +16,7 @@ function Node_Mouse_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	
 	////- Nodes
 	
-	live_update  = 0;
+	live_update  = false;
 	
 	mouse_left   = 0;
 	mouse_right  = 0;
@@ -32,8 +32,8 @@ function Node_Mouse_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	}
 	
 	static update = function() {
-		var _updt = inputs[ 0].getValue();
-		live_update = _updt;
+		live_update     = inputs[ 0].getValue();
+		update_on_frame = live_update == 2;
 		
 		var _mouse_lstat = 0;
 		var _mouse_rstat = 0;

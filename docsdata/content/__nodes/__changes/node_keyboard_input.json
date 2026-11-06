@@ -1,0 +1,12 @@
+[
+  {
+    "version": "1.22.2.005",
+    "changes": [
+      {
+        "date": "2026-11-06T02:25:52.479Z",
+        "node": "Mouse, Keyboard input",
+        "commit": "**Mouse, Keyboard input**: Add 'on frame' update mode."
+      }
+    ]
+  }
+]
