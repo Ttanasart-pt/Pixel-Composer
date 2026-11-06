@@ -55,6 +55,8 @@ function Node_Feedback_Inline(_x, _y, _group = noone) : Node(_x, _y, _group) con
 		return self;
 	}
 	
+	////- Node
+		
 	static update = function() {
 		if(input_node == noone || output_node == noone) {
 			if(input_node)  input_node.destroy();

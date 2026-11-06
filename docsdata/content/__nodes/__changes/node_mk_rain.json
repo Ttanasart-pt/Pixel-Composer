@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.22.2.005",
+    "changes": [
+      {
+        "date": "2026-11-06T05:24:49.480Z",
+        "node": "",
+        "commit": "**MK Rain**: Fix rain jumping when using tile in both axis (velocity will be rounded to int)"
+      }
+    ]
+  },
+  {
     "version": "1.21.10.001",
     "changes": [
       {

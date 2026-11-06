@@ -2,8 +2,8 @@ function Node_MK_Rain(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	name = "MK Rain";
 	update_on_frame = true;
 	
-	newInput(0, nodeValue_Surface("Surface In"));
 	newInput(8, nodeValueSeed());
+	newInput(0, nodeValue_Surface("Surface In"));
 	
 	////- =Shapes
 	newInput( 9, nodeValue_EScroll(  "Shape",            0, __enum_array_gen([ "Rain", "Snow", "Texture" ], s_node_mk_rain_type)));
@@ -43,7 +43,7 @@ function Node_MK_Rain(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	newInput(25, nodeValue_Slider( "Rip. Alpha",    1       ));
 	// 27
 		
-	input_display_list = [ s_MKFX, 0, 8, 
+	input_display_list = [ s_MKFX, 8, 0, 
 		[ "Shape",       false     ],  9,  3,  4, 10, 11, 
 		[ "Rain",        false     ],  2,  1,  7, 
 		[ "Render",      false     ], [5, true], 25, -1,  6, 17, 26, 
@@ -124,13 +124,15 @@ function Node_MK_Rain(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		var _tw  = surface_get_width_safe(_text);
 		var _th  = surface_get_height_safe(_text);
 		
-		var _surfDiag = sqrt(_sw * _sw + _sh * _sh) / 2;
+		var _cx  = _sw / 2;
+		var _cy  = _sh / 2;
+		
 		var _surfDiag = max(_sw, _sh);
-		var _rx  = _sw / 2;
-		var _ry  = _sh / 2;
+		var _surfDiag = rectangle_diagonal_length(_sw, _sh, _dirr);
 		
 		var _tr_span_x = lengthdir_x(1, _dirr);
 		var _tr_span_y = lengthdir_y(1, _dirr);
+		var _tr_span_w, _tr_span_h;
 		
 		var _in_span_x = lengthdir_x(1, _dirr + 90);
 		var _in_span_y = lengthdir_y(1, _dirr + 90);
@@ -145,10 +147,11 @@ function Node_MK_Rain(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		var _velRaw, _vel, _vex;
 		var _rrad, _r_shf, _y_shf;
 		
-		var _rmx, _rmy;
+		var _rcx, _rcy;
 		var _radH, _radHx, _radHy;
 		var _clife, _scaL, _aaL;
 		var _drpX, _drpY;
+		var _x0, _y0, _x1, _y1;
 		
 		var tileX = bool(_tile & 0b01);
 		var tileY = bool(_tile & 0b10);
@@ -166,31 +169,34 @@ function Node_MK_Rain(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 			repeat(_dens) {
 				random_set_seed(_seed); _seed += 100;
 				
-				_velRaw = random_range(_velo[0], _velo[1]);
-				_velRaw = max(1, _velRaw);
+				_velRaw = max(1, random_range(_velo[0], _velo[1]));
+				_vel    = floor(_velRaw);
+				_vex    = frac(_velRaw);
 				
-				_vel    = _velRaw < 1? _velRaw : floor(_velRaw);
-				_vex    = _velRaw < 1?       0 : frac(_velRaw);
+				if(tileX && tileY) _vex = 0;
 				
 				_rrad   = _surfDiag * (1 + _vex);
 				_r_shf  = random_range( -_surfDiag/2,  _surfDiag/2);
 				_y_shf  = random(1);
 				
 				switch(_shap) {
-					case 0 : _drpW = irandom_range(_rwid[0], _rwid[1]); _drpH = irandom_range(_rhei[0], _rhei[1]); break;
-					case 1 : _drpW =  random_range(_snws[0], _snws[1]); _drpH = _drpW;                             break;
-					case 2 : _drpW = _tw;                               _drpH = _th;                               break;
+					case 0 : _drpW = irandom_range(_rwid[0], _rwid[1]); _drpH = irandom_range(_rhei[0], _rhei[1])/2; break;
+					case 1 : _drpW =  random_range(_snws[0], _snws[1]); _drpH = _drpW;                               break;
+					case 2 : _drpW = _tw;                               _drpH = _th;                                 break;
 				}
 				
-				_rmx = _rx + _in_span_x * _r_shf;
-				_rmy = _ry + _in_span_y * _r_shf;
+				_rcx = _cx + _in_span_x * _r_shf;
+				_rcy = _cy + _in_span_y * _r_shf;
 				
-				_radH  = _rrad + _drpH;
+				_radH  = _rrad;
 				_radHx = _radH * _tr_span_x;
 				_radHy = _radH * _tr_span_y;
 				
+				_tr_span_w = _tr_span_x * _drpH; // rain drop x span
+				_tr_span_h = _tr_span_y * _drpH; // rain drop y span
+						
 				_prg = _y_shf + _vel * prg;
-				_prg = frac(_prg) - 0.5;    // -0.5 - 0.5
+				_prg = (frac(_prg) - .5) * 2; // -1 > 1
 				
 				if(!_1c) _lcc = _colr.eval(pfract(random(1) + _colrS));
 				_aa = random_range(_alph[0], _alph[1]);
@@ -206,11 +212,12 @@ function Node_MK_Rain(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 				
 				draw_set_color_alpha(_lcc, _aa * _aaL);
 				
-				_drpX  = _rmx - _prg * _radHx * 2;
-				_drpY  = _rmy - _prg * _radHy * 2;
+				_drpX  = _rcx - _prg * _radHx;
+				_drpY  = _rcy - _prg * _radHy;
 				
-				var _x0 = _drpX;
-				var _y0 = _drpY;
+				_x0 = _drpX;
+				_y0 = _drpY;
+				
 				var _isGround = false;
 				
 				if(_grdUse) {
@@ -246,106 +253,112 @@ function Node_MK_Rain(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 				
 				switch(_shap) {
 					case 0 : 						
-						var _tr_span_w = _tr_span_x * _drpH; // rain drop x span
-						var _tr_span_h = _tr_span_y * _drpH; // rain drop y span
-						
 						var _dx = (_tr_span_w * _scaL * 2);
 						var _dy = (_tr_span_h * _scaL * 2);
 						
-						var _x1 = _x0 + _dx;
-						var _y1 = _y0 + _dy;
-							
+						_x0 -= _tr_span_w;
+						_y0 -= _tr_span_h;
+						
+						_x1 = _x0 + _dx;
+						_y1 = _y0 + _dy;
+						
 						if(_grdUse) {
 							_x1 = _x0 + max(0, abs(_dx) - abs(_grdOx)) * sign(_dx); 
 							_y1 = _y0 + max(0, abs(_dy) - _grdO)  * sign(_dy);
 						} 
 						
 						draw_set_color_alpha(_lcc, _aa * _aaL);
-						if( _afad && _drpW == 1) {
-						   	draw_line_color( _x0, _y0, _x1, _y1, _lcc, c_black );
-						   	
-						   	if(tileX) {
-							   	draw_line_color( _x0-_sw, _y0, _x1-_sw, _y1, _lcc, c_black );
-							   	draw_line_color( _x0+_sw, _y0, _x1+_sw, _y1, _lcc, c_black );
-						   	}
-						   	
-						   	if(tileY) {
-							   	draw_line_color( _x0, _y0-_sh, _x1, _y1-_sh, _lcc, c_black );
-							   	draw_line_color( _x0, _y0+_sh, _x1, _y1+_sh, _lcc, c_black );
-						   	}
-						   	
-							if(tileX && tileY) {
-							   	draw_line_color( _x0-_sw, _y0-_sh, _x1-_sw, _y1-_sh, _lcc, c_black );
-							   	draw_line_color( _x0+_sw, _y0-_sh, _x1+_sw, _y1-_sh, _lcc, c_black );
+						if(_afad) { // alpha fading
+							if( _drpW == 1) {
+							   	draw_line_color( _x0, _y0, _x1, _y1, _lcc, c_black );
 							   	
-							   	draw_line_color( _x0-_sw, _y0+_sh, _x1-_sw, _y1+_sh, _lcc, c_black );
-							   	draw_line_color( _x0+_sw, _y0+_sh, _x1+_sw, _y1+_sh, _lcc, c_black );
-							}
+							   	if(tileX) {
+								   	draw_line_color( _x0-_sw, _y0, _x1-_sw, _y1, _lcc, c_black );
+								   	draw_line_color( _x0+_sw, _y0, _x1+_sw, _y1, _lcc, c_black );
+							   	}
+							   	
+							   	if(tileY) {
+								   	draw_line_color( _x0, _y0-_sh, _x1, _y1-_sh, _lcc, c_black );
+								   	draw_line_color( _x0, _y0+_sh, _x1, _y1+_sh, _lcc, c_black );
+							   	}
+							   	
+								if(tileX && tileY) {
+								   	draw_line_color( _x0-_sw, _y0-_sh, _x1-_sw, _y1-_sh, _lcc, c_black );
+								   	draw_line_color( _x0+_sw, _y0-_sh, _x1+_sw, _y1-_sh, _lcc, c_black );
+								   	
+								   	draw_line_color( _x0-_sw, _y0+_sh, _x1-_sw, _y1+_sh, _lcc, c_black );
+								   	draw_line_color( _x0+_sw, _y0+_sh, _x1+_sw, _y1+_sh, _lcc, c_black );
+								}
+									
+							} else if( _drpW >  1) {
+								draw_line_width_color( _x0, _y0, _x1, _y1, _drpW, _lcc, c_black ); 
 								
-						} else if( _afad && _drpW >  1) {
-							draw_line_width_color( _x0, _y0, _x1, _y1, _drpW, _lcc, c_black ); 
-							
-							if(tileX) {
-								draw_line_width_color( _x0-_sw, _y0, _x1-_sw, _y1, _drpW, _lcc, c_black ); 
-								draw_line_width_color( _x0+_sw, _y0, _x1+_sw, _y1, _drpW, _lcc, c_black ); 
-							}
-							
-							if(tileY) {
-								draw_line_width_color( _x0, _y0-_sh, _x1, _y1-_sh, _drpW, _lcc, c_black ); 
-								draw_line_width_color( _x0, _y0+_sh, _x1, _y1+_sh, _drpW, _lcc, c_black ); 
-							}
-							
-							if(tileX && tileY) {
-								draw_line_width_color( _x0-_sw, _y0-_sh, _x1-_sw, _y1-_sh, _drpW, _lcc, c_black ); 
-								draw_line_width_color( _x0+_sw, _y0-_sh, _x1+_sw, _y1-_sh, _drpW, _lcc, c_black ); 
+								if(tileX) {
+									draw_line_width_color( _x0-_sw, _y0, _x1-_sw, _y1, _drpW, _lcc, c_black ); 
+									draw_line_width_color( _x0+_sw, _y0, _x1+_sw, _y1, _drpW, _lcc, c_black ); 
+								}
 								
-								draw_line_width_color( _x0-_sw, _y0+_sh, _x1-_sw, _y1+_sh, _drpW, _lcc, c_black ); 
-								draw_line_width_color( _x0+_sw, _y0+_sh, _x1+_sw, _y1+_sh, _drpW, _lcc, c_black ); 
-							}
-							
-						} else if(!_afad && _drpW == 1) {
-							draw_line( _x0, _y0, _x1, _y1 );
-							
-							if(tileX) {
-								draw_line( _x0-_sw, _y0, _x1-_sw, _y1 );
-								draw_line( _x0+_sw, _y0, _x1+_sw, _y1 );
-							}
-							
-							if(tileY) {
-								draw_line( _x0, _y0-_sh, _x1, _y1-_sh );
-								draw_line( _x0, _y0+_sh, _x1, _y1+_sh );
-							}
-							
-							if(tileX && tileY) {
-								draw_line( _x0-_sw, _y0-_sh, _x1-_sw, _y1-_sh );
-								draw_line( _x0+_sw, _y0-_sh, _x1+_sw, _y1-_sh );
+								if(tileY) {
+									draw_line_width_color( _x0, _y0-_sh, _x1, _y1-_sh, _drpW, _lcc, c_black ); 
+									draw_line_width_color( _x0, _y0+_sh, _x1, _y1+_sh, _drpW, _lcc, c_black ); 
+								}
 								
-								draw_line( _x0-_sw, _y0+_sh, _x1-_sw, _y1+_sh );
-								draw_line( _x0+_sw, _y0+_sh, _x1+_sw, _y1+_sh );
-							}
-							
-						} else if(!_afad && _drpW >  1) {
-							draw_line_width( _x0, _y0, _x1, _y1, _drpW ); 
-							
-							if(tileX) {
-								draw_line_width( _x0-_sw, _y0, _x1-_sw, _y1, _drpW ); 
-								draw_line_width( _x0+_sw, _y0, _x1+_sw, _y1, _drpW ); 
-							}
-							
-							if(tileY) {
-								draw_line_width( _x0, _y0-_sh, _x1, _y1-_sh, _drpW ); 
-								draw_line_width( _x0, _y0+_sh, _x1, _y1+_sh, _drpW ); 
-							}
-							
-							if(tileX && tileY) {
-								draw_line_width( _x0-_sw, _y0-_sh, _x1-_sw, _y1-_sh, _drpW ); 
-								draw_line_width( _x0+_sw, _y0-_sh, _x1+_sw, _y1-_sh, _drpW ); 
+								if(tileX && tileY) {
+									draw_line_width_color( _x0-_sw, _y0-_sh, _x1-_sw, _y1-_sh, _drpW, _lcc, c_black ); 
+									draw_line_width_color( _x0+_sw, _y0-_sh, _x1+_sw, _y1-_sh, _drpW, _lcc, c_black ); 
+									
+									draw_line_width_color( _x0-_sw, _y0+_sh, _x1-_sw, _y1+_sh, _drpW, _lcc, c_black ); 
+									draw_line_width_color( _x0+_sw, _y0+_sh, _x1+_sw, _y1+_sh, _drpW, _lcc, c_black ); 
+								}
 								
-								draw_line_width( _x0-_sw, _y0+_sh, _x1-_sw, _y1+_sh, _drpW ); 
-								draw_line_width( _x0+_sw, _y0+_sh, _x1+_sw, _y1+_sh, _drpW ); 
+							} 
+							
+						} else { // solid line
+							if( _drpW == 1) {
+								if(tileX && tileY) {
+									for( var i = -2; i <= 2; i++ ) 
+									for( var j = -2; j <= 2; j++ ) 
+										draw_line( _x0 + _sw*i, _y0 + _sh*j, _x1 + _sw*i, _y1 + _sh*j );
+									
+								} else {
+									draw_line( _x0, _y0, _x1, _y1 );
+									
+									if(tileX) {
+										// draw_set_color(c_red);
+										draw_line( _x0 - _sw, _y0, _x1 - _sw, _y1 );
+										draw_line( _x0 + _sw, _y0, _x1 + _sw, _y1 );
+									}
+									
+									if(tileY) {
+										// draw_set_color(c_blue);
+										draw_line( _x0, _y0 - _sh, _x1, _y1 - _sh );
+										draw_line( _x0, _y0 + _sh, _x1, _y1 + _sh );
+									}
+									
+								}
+								
+							} else if( _drpW >  1) {
+								draw_line_width( _x0, _y0, _x1, _y1, _drpW ); 
+								
+								if(tileX) {
+									draw_line_width( _x0-_sw, _y0, _x1-_sw, _y1, _drpW ); 
+									draw_line_width( _x0+_sw, _y0, _x1+_sw, _y1, _drpW ); 
+								}
+								
+								if(tileY) {
+									draw_line_width( _x0, _y0-_sh, _x1, _y1-_sh, _drpW ); 
+									draw_line_width( _x0, _y0+_sh, _x1, _y1+_sh, _drpW ); 
+								}
+								
+								if(tileX && tileY) {
+									draw_line_width( _x0-_sw, _y0-_sh, _x1-_sw, _y1-_sh, _drpW ); 
+									draw_line_width( _x0+_sw, _y0-_sh, _x1+_sw, _y1-_sh, _drpW ); 
+									
+									draw_line_width( _x0-_sw, _y0+_sh, _x1-_sw, _y1+_sh, _drpW ); 
+									draw_line_width( _x0+_sw, _y0+_sh, _x1+_sw, _y1+_sh, _drpW ); 
+								}
 							}
 						}
-							
 						break;
 						
 					case 1 : 
@@ -409,4 +422,30 @@ function Node_MK_Rain(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		
 		return _outSurf;
 	}
+}
+
+function rectangle_diagonal_length(ww, hh, angle) {
+    var _w  = ww / 2;
+    var _h  = hh / 2;
+    var dia = sqrt(_w*_w + _h*_h);
+    var dir = (angle % 360 + 360) % 360;
+	
+    if(dir > 45 && dir < 135) {
+        var del = 180 - (dir - 45) - 45;
+        return dia * dsin(45) / dsin(del) * 2;
+
+    } else if(dir >= 135 && dir < 225) {
+        var del = 180 - (dir - 135) - 45;
+        return dia * dsin(45) / dsin(del) * 2;
+
+    } else if(dir >= 225 && dir < 315) {
+        var del = 180 - (dir - 225) - 45;
+        return dia * dsin(45) / dsin(del) * 2;
+
+    } else {
+        if(dir <= 45) dir += 360;
+        var del = 180 - (dir - 315) - 45;
+        
+        return dia * dsin(45) / dsin(del) * 2;
+    }
 }

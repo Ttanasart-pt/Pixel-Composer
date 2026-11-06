@@ -1,0 +1,7 @@
+Return current keyboard data. This node by default will toggle Live Update mode which causes some frame-based nodes to work incorrectly.
+
+## Properties
+
+[proptable]
+Update|Update mode.\n\t- **Always**: Live update (forve render every UI frame)\n\y- **On Event**: Only update on mouse press/release events.\n\t- **On Frame**: Update with animation.
+[/proptable]

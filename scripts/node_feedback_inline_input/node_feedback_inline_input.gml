@@ -12,10 +12,13 @@ function Node_Feedback_Inline_Input(_x, _y, _group = noone) : Node(_x, _y, _grou
 	inline_input         = false;
 	manual_ungroupable	 = false;
 	
-	newInput(0, nodeValue("Init Input", self, CONNECT_TYPE.input, VALUE_TYPE.any, 0 )).setVisible(true, true);
+	newInput( 0, nodeValue("Init Input", self, CONNECT_TYPE.input, VALUE_TYPE.any, 0 )).setVisible(true, true);
+	// 1
 	
 	newOutput(0, nodeValue_Output("Init value", VALUE_TYPE.any, 0 ));
 	
+	////- Node
+		
 	static update = function() {
 		var _vto  = outputs[0].getJunctionTo();
 		var _type = array_empty(_vto)? VALUE_TYPE.any : _vto[0].type;

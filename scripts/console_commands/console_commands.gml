@@ -60,6 +60,19 @@ function cmd_submit(command) {
 			log_console(_txt, true);
 			return _txt;
 		
+		case "get":
+			if(array_length(cmd) < 2) { cmd_error_param(cmd_type); break; }
+			var key = string_trim(cmd[1]);
+			var spl = string_split(key, ".");
+			var par = undefined;
+			
+			for( var i = 0, n = array_length(spl); i < n; i++ ) {
+				if(par == undefined)    par = variable_global_get(spl[i]);
+				else if(is_struct(par)) par = variable_struct_get(par, spl[i])
+			}
+			
+			return par;
+			
 		case "set":
 			if(array_length(cmd) < 3) { cmd_error_param(cmd_type); break; }
 			

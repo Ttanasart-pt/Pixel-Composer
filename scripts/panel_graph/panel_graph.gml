@@ -4297,10 +4297,16 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
 	    	
         if(LIVE_UPDATE) {
             draw_set_text(f_p0b, fa_right, fa_bottom, COLORS._main_value_negative);
-			var tx = w - ui(8);
-			var ty = h - pad - toolbar_height;
 			
-            draw_text(tx, ty, "Live Update");
+			var txt = __txt("Live Update");
+			var tx  = w - pad;
+			var ty  = h - pad - toolbar_height - (pad * !mrg);
+			var tw  = string_width(txt);
+			var th  = string_height(txt);
+			
+			if((current_time % 1000) > 500)
+				draw_sprite_ui_uniform(THEME.circle, 0, tx - tw - ui(12), ty - th / 2, 1, COLORS._main_value_negative);
+            draw_text(tx, ty, txt);
         }
         
         drawSlideShow();

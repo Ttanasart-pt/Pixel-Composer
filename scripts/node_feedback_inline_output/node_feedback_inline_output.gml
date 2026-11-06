@@ -11,9 +11,12 @@ function Node_Feedback_Inline_Output(_x, _y, _group = noone) : Node(_x, _y, _gro
 	inline_output        = false;
 	manual_ungroupable	 = false;
 	
-	newInput(0, nodeValue("Output", self, CONNECT_TYPE.input, VALUE_TYPE.any, 0 )).setVisible(true, true);
+	newInput( 0, nodeValue("Output", self, CONNECT_TYPE.input, VALUE_TYPE.any, 0 )).setVisible(true, true);
+	// 1
 	
 	newOutput(0, nodeValue_Output("Feedback Output", VALUE_TYPE.any, 0 ));
+	
+	////- Node
 	
 	static update = function(frame = CURRENT_FRAME) {
 		var _vfrom = inputs[0].value_from;
