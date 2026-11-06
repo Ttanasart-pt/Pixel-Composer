@@ -123,9 +123,9 @@ function Node_Image_mp4(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 			draw_text_add(bx + bw / 2, by + bh / 2, "More info...");
 			
 		} else {
-			var tt = $"Append {mp4libSub} to the end of the lib path."
+			var tt = $"Set FFmpeg path to {mp4libSub}."
 			if(buttonInstant(THEME.button_def, bx, by, bw, bh, _m, _hover, _focus, tt, noone, 0, 0, 1, 1, cc) == 2) {
-				PREFERENCES.ffmpeg_path = filename_combine(PREFERENCES.ffmpeg_path, mp4libSub);
+				PREFERENCES.ffmpeg_path = mp4libSub;
 				checkLib();
 			}
 			
@@ -166,8 +166,8 @@ function Node_Image_mp4(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 			ffmpeg   = ffmpeg[1];
 			
 			if(!MAC) {
-				if(filename_dir(ffmpeg) != ldir) {
-					mp4libSub = string_replace(filename_dir(ffmpeg), ldir, "");
+				if(ffmpeg != ldir && filename_dir(ffmpeg) != ldir) {
+					mp4libSub = ffmpeg;
 					array_insert_unique(input_display_list, 0, mp4libLabel);
 					
 				} else 

@@ -750,11 +750,15 @@
 		
 		if(_lib == "FFmpeg") {
 			switch(OS) {
-				case os_windows : _ldir  = filepath_resolve(PREFERENCES.ffmpeg_path);
-					              _lpath = directory_search_file(_ldir, "ffmpeg.exe", -1); break;
+				case os_windows : 
+					_ldir  = filepath_resolve(PREFERENCES.ffmpeg_path);
+					_lpath = file_exists(_ldir) && filename_name(_ldir) == "ffmpeg.exe"? _ldir : directory_search_file(_ldir, "ffmpeg.exe", -1); 
+					break;
 					
-				case os_linux   : _ldir  = string_lower(filepath_resolve(PREFERENCES.ffmpeg_path));
-					              _lpath = directory_search_file(_ldir, "ffmpeg",     -1); break;
+				case os_linux   : 
+					_ldir  = string_lower(filepath_resolve(PREFERENCES.ffmpeg_path));
+					_lpath = file_exists(_ldir) && filename_name(_ldir) == "ffmpeg"? _ldir : directory_search_file(_ldir, "ffmpeg",     -1); 
+					break;
 					
 				case os_macosx  : _lpath = "/opt/homebrew/bin/ffmpeg"; break;
 			}

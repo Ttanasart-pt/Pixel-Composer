@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.22.2.005",
+    "changes": [
+      {
+        "date": "2026-11-06T05:40:17.923Z",
+        "node": "",
+        "commit": "'Fix Path' feature in library checker now set path to the executable directly instead of trying to append subdirectory."
+      }
+    ]
+  },
+  {
     "version": "1.21.9.206",
     "changes": [
       {

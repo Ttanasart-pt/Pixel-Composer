@@ -6,6 +6,11 @@
         "date": "2026-11-06T05:24:49.472Z",
         "node": "MK Rain",
         "commit": "**MK Rain**: Fix rain jumping when using tile in both axis (velocity will be rounded to int)"
+      },
+      {
+        "date": "2026-11-06T05:40:17.916Z",
+        "node": "",
+        "commit": "'Fix Path' feature in library checker now set path to the executable directly instead of trying to append subdirectory."
       }
     ]
   },
