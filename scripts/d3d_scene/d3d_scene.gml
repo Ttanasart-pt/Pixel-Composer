@@ -218,7 +218,7 @@ function __3dScene(_camera, _name = "New scene") constructor {
 			shader_set_s( "vNormal",         _deferData.geometry_data[2] );
 			shader_set_f( "radius",          ssao_radius                 );
 			shader_set_f( "bias",            ssao_bias                   );
-			shader_set_f( "strength",        ssao_strength * 2           );
+			shader_set_f( "strength",        abs(ssao_strength) * 2      );
 			shader_set_f( "projMatrix",      camera.getCombinedMatrix()  );
 			shader_set_f( "cameraPosition",  camera.position.toArray()   );
 			

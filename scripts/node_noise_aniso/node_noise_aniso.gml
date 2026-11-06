@@ -8,6 +8,8 @@
 function Node_Noise_Aniso(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Anisotropic Noise";
 	
+	newInput(10, nodeValueSeed());
+	
 	////- =Output
 	newInput( 0, nodeValue_Dimension());
 	newInput(13, nodeValue_Surface( "UV Map"     ));
@@ -23,18 +25,17 @@ function Node_Noise_Aniso(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	newInput(12, nodeValue_Bool(  "Tile",      false ));
 	
 	////- =Rendering
+	newInput( 9, nodeValue_EScroll(  "Render Mode", 0, [ "Blend", "Waterfall" ] ));
 	newInput(15, nodeValue_SliRange( "Level In",   [0,1] ));
 	newInput(16, nodeValue_SliRange( "Level Out",  [0,1] ));
-	newInput( 9, nodeValue_EScroll(  "Render Mode", 0, [ "Blend", "Waterfall" ] ));
-	newInput(10, nodeValueSeed());
-	// input 17
+	// 17
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
-	input_display_list = [
+	input_display_list = [ 10, 
 		[ "Output",    false ],  0, 13, 14, 11, 
 		[ "Noise",     false ],  2,  1,  6,  5,  7,  3,  4,  8, 12, 
-		[ "Rendering", false ], 15, 16,  9, 10, 
+		[ "Rendering", false ],  9, 15, 16, 
 	];
 	
 	////- Node

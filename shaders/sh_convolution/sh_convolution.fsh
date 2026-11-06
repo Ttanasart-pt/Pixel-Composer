@@ -1,5 +1,4 @@
 #pragma use(sampler_simple)
-
 #region -- sampler_simple -- [1788846732.6884737]
     uniform int  sampleMode;
     
@@ -61,10 +60,13 @@
 varying vec2 v_vTexcoord;
 varying vec4 v_vColour;
 
-uniform int   size;
 uniform vec2  dimension;
+
+uniform int   size;
 uniform float kernel[256];
+
 uniform int   normalized;
+uniform float rotation;
 
 void main() {
 	vec2  tx  = 1. / dimension;
@@ -78,13 +80,20 @@ void main() {
 		if(sum == 0.) sum = 1.;
 	}
 	
+	float ang = radians(rotation);
+	mat2  rot =  mat2(cos(ang), -sin(ang), sin(ang), cos(ang));
+	
 	float st = -(float(size) - 1.) / 2.;
 	vec4  c  = vec4(0.);
 	
 	for(int i = 0; i < size; i++)
 	for(int j = 0; j < size; j++) {
 		int  index = i * size + j;
-		vec2 px    = v_vTexcoord + vec2((float(j) + st) * tx.x, (float(i) + st) * tx.y);
+		
+		vec2 of  = (vec2(float(j), float(i)) + st) * tx;
+		     of *= rot;
+		
+		vec2 px = v_vTexcoord + of;
 		
 		float w = kernel[index];
 		if(w == 0.) continue;

@@ -900,10 +900,12 @@ function Panel_Inspector() : PanelContent() constructor {
         
         var jun     = noone;
         
+        var _amoMap = _inspecting.inspector_count;
         var _colMap = _inspecting.inspector_collapse;
         var _edtMap = _inspecting.inspector_edited;
         var _aniMap = _inspecting.inspector_animated;
         var _heiMap = _inspecting.inspector_section_h;
+        
         var currSec = "";
         var prevCol = false;
         var _cAll   = 0;
@@ -926,6 +928,47 @@ function Panel_Inspector() : PanelContent() constructor {
         
         for( var i = 0, n = array_length(_inspecting.inputs); i < n; i++ ) 
         	_inspecting.inputs[i].visible_in_inspector = false;
+        
+        ////- =Section
+        
+        var _currSec = "";
+        var _currSub = "";
+        
+        for(var i = 0; i < amoIn; i++) {
+        	var _dsl = _inspecting.input_display_list;
+            var _dsp = array_safe_get_fast(_dsl, i);
+            
+                 if(!is_array(_dsl))            jun = array_safe_get_fast(_inspecting.inputs, i);
+            else if(is_real(_dsp) && _dsp >= 0) jun = array_safe_get_fast(_inspecting.inputs, _dsp);
+            else                                jun = _dsp;
+            
+            if(is_array(jun)) {
+            	var _key = array_safe_get_fast(jun, 0, "");
+            	if(is_real(_key)) continue;
+            	
+            	var ikey = _key + $"_{i}"
+            	var subk = string_starts_with(_key, "/");
+            	
+            	_amoMap[$ ikey] = 0;
+            	
+            	if(subk) {
+            		_currSub = ikey;
+            		
+            	} else {
+            		_currSec = ikey;
+            		_currSub = "";
+            	}
+            	
+            	continue;
+            }
+            
+            if(!is(jun, NodeValue))    continue;
+            if(!jun.show_in_inspector) continue;
+            
+        	if(_currSec != "") _amoMap[$ _currSec]++;
+        	if(_currSub != "") _amoMap[$ _currSub]++;
+            
+        }
         
         ////- =Draw Properties
         
@@ -1124,6 +1167,8 @@ function Panel_Inspector() : PanelContent() constructor {
 	                var ikey = _key + $"_{i}"
 	                var subk = string_starts_with(_key, "/");
 	                var name = __txt(subk? string_trim_start(_key, ["/"]) : _key);
+	                
+	                if(_amoMap[$ ikey] == 0) continue;
 	                
 	                if(segExp && i > 0 && !subk && currSec != "" && !prevCol) { 
 	                	yy += padd * 2;

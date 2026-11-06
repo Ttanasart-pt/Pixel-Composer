@@ -16,6 +16,8 @@ function Node_3D_Repeat(_x, _y, _group = noone) : Node_3D(_x, _y, _group) constr
 	newInput(14, nodeValue_IVec3(   "Grid",           [2,2,1] ));
 	newInput(17, nodeValue_Float(   "Radius",         1       ));
 	newInput(19, nodeValue_Slider(  "Look At Center", 0       ));
+	
+	////- =Path
 	newInput(18, nodeValue_Path(    "Shift Path"              )).setExtractNode("Node_Path_3D");
 	newInput(20, nodeValue_Slider(  "Follow Path",    0       ));
 	
@@ -40,7 +42,8 @@ function Node_3D_Repeat(_x, _y, _group = noone) : Node_3D(_x, _y, _group) constr
 	newInput(22, nodeValue_Vec3_Range( "Position Scatter", RANGE3_0 ));
 	newInput(23, nodeValue_Vec3_Range( "Rotation Scatter", RANGE3_0 ));
 	newInput(24, nodeValue_Vec3_Range( "Scale Scatter",    RANGE3_0 ));
-	// input 26
+	newInput(26, nodeValue_Range(      "Scale Varience",   [1,1]    ));
+	// 27
 	
 	newOutput(0, nodeValue_Output("Scene", VALUE_TYPE.d3Scene, noone));
 	
@@ -48,10 +51,11 @@ function Node_3D_Repeat(_x, _y, _group = noone) : Node_3D(_x, _y, _group) constr
 	
 	input_display_list = [ 21, 
 		[ "Objects",        false ],  0,  3,  4,  5, b_centeralize, 
-		[ "Repeat",         false ],  1, 13,  2, 14, 17, 19, 18, 20, 
+		[ "Repeat",         false ],  1, 13,  2, 14, 17, 19,
+		[ "Path",           false ], 18, 20, 
 		[ "Transforms Data", true ],  9, 10, 11, 
 		[ "Per Copy",       false ],  6, 15, 16,  7,  8, 25, 
-		[ "Scatter",        false ], 22, 23, 24, 
+		[ "Scatter",        false ], 22, 23, 24, 26, 
 	]
 	
 	////- Nodes
@@ -107,6 +111,8 @@ function Node_3D_Repeat(_x, _y, _group = noone) : Node_3D(_x, _y, _group) constr
 			var _posh   = _data[22];
 			var _roth   = _data[23];
 			var _scah   = _data[24];
+			var _scavar = _data[26];
+			
 			var _scauni = _data[25];
 			
 			inputs[ 2].setVisible(_patt != 1);
@@ -264,6 +270,12 @@ function Node_3D_Repeat(_x, _y, _group = noone) : Node_3D(_x, _y, _group) constr
 			var _sScaX = _Sscax + _Rscax * i + random_range(_SCscax0, _SCscax1);
 			var _sScaY = _Sscay + _Rscay * i + random_range(_SCscay0, _SCscay1);
 			var _sScaZ = _Sscaz + _Rscaz * i + random_range(_SCscaz0, _SCscaz1);
+			
+			var _sVar  = random_range(_scavar[0], _scavar[1]);
+			_sScaX *= _sVar;
+			_sScaY *= _sVar;
+			_sScaZ *= _sVar;
+			
 			if(_scauni) { _sScaY = _sScaX; _sScaZ = _sScaX; }
 			
 			//// Apply
