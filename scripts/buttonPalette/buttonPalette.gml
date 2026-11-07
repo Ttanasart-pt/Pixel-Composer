@@ -63,7 +63,7 @@ function buttonPalette(_onModify, dialog = noone) : widget() constructor {
 		if(_w - bs > ui(100) && side_button && instanceof(side_button) == "buttonClass") {
 			var bx = _x + _w - bs;
 			
-			draw_sprite_stretched_ext(THEME.textbox, 3, bx, _y, bs, _h, CDEF.main_mdwhite, 1);
+			draw_sprite_stretched_ext(THEME.button_def, 2, bx, _y, bs, _h, CDEF.main_mdwhite, 1);
 			side_button.setFocusHover(active, hover);
 			side_button.draw(bx, _y + _h / 2 - bs / 2, bs, bs, _m, THEME.button_hide_fill);
 			_w -= bs;
@@ -133,7 +133,7 @@ function buttonPalette(_onModify, dialog = noone) : widget() constructor {
 						expanded = !expanded;
 				}
 				
-				draw_sprite_stretched_ext(THEME.textbox, 3, _x, _y, _bbw, h, CDEF.main_mdwhite, 1);
+				draw_sprite_stretched_ext(THEME.button_def, 2, _x, _y, _bbw, h, CDEF.main_mdwhite, 1);
 				draw_sprite_ui(THEME.arrow, expanded? 3 : 0, _bbx, _bby + ui(expanded), 1, 1, 0, _bbc, _bba);
 			}
 			
@@ -199,7 +199,7 @@ function buttonPalette(_onModify, dialog = noone) : widget() constructor {
 		
 		if(hide == 0) {
 			if(hoverRect) draw_sprite_stretched_ext(THEME.button_def, 3, x, y, w, h, CDEF.main_grey);	
-			else draw_sprite_stretched_ext(THEME.textbox, 0, x, y, w, h, boxColor, .5 + .5 * interactable);
+			else          draw_sprite_stretched_ext(THEME.button_def, 3, x, y, w, h, CDEF.main_grey, .2 + .3 * interactable);
 			
 		}
 		

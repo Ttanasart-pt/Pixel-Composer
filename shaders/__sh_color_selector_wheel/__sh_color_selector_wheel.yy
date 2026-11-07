@@ -1,0 +1,12 @@
+{
+  "$GMShader":"",
+  "%Name":"__sh_color_selector_wheel",
+  "name":"__sh_color_selector_wheel",
+  "parent":{
+    "name":"button",
+    "path":"folders/widgets/button.yy",
+  },
+  "resourceType":"GMShader",
+  "resourceVersion":"2.0",
+  "type":1,
+}

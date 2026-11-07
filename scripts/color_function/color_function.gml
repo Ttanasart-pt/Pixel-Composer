@@ -33,9 +33,10 @@
 	function color_rgb(col)  { return [ color_get_red(col) / 255,             color_get_green(col) / 255,             color_get_blue(col) / 255 ];             }
 	function color_srgb(col) { return [ power(color_get_red(col) / 255, 2.2), power(color_get_green(col) / 255, 2.2), power(color_get_blue(col) / 255, 2.2) ]; }
 	
-	function _make_color_rgb(r, g, b)    { INLINE return make_color_rgb(r * 255, g * 255, b * 255); }
-	function make_color_rgba(r, g, b, a) { INLINE return int64(round(r) + (round(g) << 8) + (round(b) << 16) + (round(a) << 24)); }
-	function make_color_srgba(rgb, a) {
+	function _make_color_rgb( r,g,b)   { INLINE return make_color_rgb(r * 255, g * 255, b * 255); }
+	function _make_color_rgba(r,g,b,a) { INLINE return int64(round(r*255) + (round(g*255) << 8) + (round(b*255) << 16) + (round(a*255) << 24)); }
+	function make_color_rgba( r,g,b,a) { INLINE return int64(round(r) + (round(g) << 8) + (round(b) << 16) + (round(a) << 24)); }
+	function make_color_srgba(rgb, a)  {
 		INLINE 
 		var r = power(rgb[0], 1 / 2.2) * 255;
 		var g = power(rgb[1], 1 / 2.2) * 255;
@@ -115,6 +116,17 @@
 		var a   = arr? round(color[3] * 256) : color_get_alpha(color);
 		
 		return $"{number_to_hex(r)}{number_to_hex(g)}{number_to_hex(b)}{alpha && is_int64(color)? number_to_hex(a) : ""}";
+	}
+	
+	function color_from_hex(hex) {
+		if(string_char_at(hex, 1) == "#") hex = string_replace(hex, "#", "");
+		
+		var _r = string_hexadecimal(string_copy(hex, 1, 2));
+		var _g = string_hexadecimal(string_copy(hex, 3, 2));
+		var _b = string_hexadecimal(string_copy(hex, 5, 2));
+		var _a = string_length(hex) > 6? string_hexadecimal(string_copy(hex, 7, 2)) : 255;
+		
+		return make_color_rgba(_r, _g, _b, _a);
 	}
 #endregion
 
@@ -198,6 +210,55 @@
 		var v = color_get_v(c0);
 		
 		return make_color_hsv(h,s,v);
+	}
+#endregion
+
+#region HSL
+	function color_rgb_to_hsl_array(rgb) {
+		var r = _color_get_red(rgb);
+		var g = _color_get_green(rgb);
+		var b = _color_get_blue(rgb);
+
+		var cmax = max(r, g, b);
+		var cmin = min(r, g, b);
+
+		var delta = cmax - cmin;
+
+		var h = 0;
+		     if(delta == 0) h = 0;
+		else if(cmax == r)  h = 60 * (((g - b) / delta) % 6);
+		else if(cmax == g)  h = 60 * (((b - r) / delta) + 2);
+		else if(cmax == b)  h = 60 * (((r - g) / delta) + 4);
+		h /= 360;
+
+		var l = (cmax + cmin) / 2;
+		var s = delta == 0? 0 : delta / (1 - abs(2 * l - 1));
+		return [h,s,l];
+	}
+
+	function color_hsl_array_to_rgb(hsl, a = 1) {
+		var h = hsl[0];
+		var s = hsl[1];
+		var l = hsl[2];
+
+		var C = (1 - abs(2 * l - 1)) * s;
+		var X = C * (1 - abs((h * 6) % 2 - 1));
+		var m = l - C/2;
+
+		var hc = h * 360;
+
+		var r,g,b;
+
+		     if(hc <  60) { r = C; g = X; b = 0; }
+		else if(hc < 120) { r = X; g = C; b = 0; }
+		else if(hc < 180) { r = 0; g = C; b = X; }
+		else if(hc < 240) { r = 0; g = X; b = C; }
+		else if(hc < 300) { r = X; g = 0; b = C; }
+		else { r = C; g = 0; b = X; }
+
+		r += m; g += m; b += m;
+		return _make_color_rgba(r, g, b, a);
+
 	}
 #endregion
 

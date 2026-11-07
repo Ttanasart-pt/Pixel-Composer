@@ -107,14 +107,7 @@ function colorSelector(_onModify = noone) constructor {
 		
 		tb_hex = textBox_Text(function(str) /*=>*/ {
 			if(!interactable || str == "") return;
-			if(string_char_at(str, 1) == "#") str = string_replace(str, "#", "");
-			
-			var _r = string_hexadecimal(string_copy(str, 1, 2));
-			var _g = string_hexadecimal(string_copy(str, 3, 2));
-			var _b = string_hexadecimal(string_copy(str, 5, 2));
-			var _a = string_length(str) > 6? string_hexadecimal(string_copy(str, 7, 2)) : 255;
-			
-			current_color = make_color_rgba(_r, _g, _b, _a);
+			current_color = color_from_hex(str);
 			resetHSV();
 		});
 		

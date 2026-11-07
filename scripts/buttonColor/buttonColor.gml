@@ -6,11 +6,15 @@ function buttonColor(_onModify, dialog = noone) : widget() constructor {
 	simple        = false;
 	padding       = ui(2);
 	
-	hover_hex     = 0;
-	hover_wid     = ui(24);
-	
 	is_picking    = false;
 	current_color = c_black;
+	
+	expanded      = false;
+	expandHeight  = ui(200);
+	
+	editing_hue  = false;
+	editing_sat  = false;
+	edit_sat_hue = 0;
 	
 	b_picker      = button(function(ctx) /*=>*/ {
 		var _dia = colorSelectorCall(undefined, function(c) /*=>*/ {return onModify(c)});
@@ -24,6 +28,8 @@ function buttonColor(_onModify, dialog = noone) : widget() constructor {
 		array_insert(pick.palette, 0, current_color);
 		pick.onModify = onModify;
 	}).setIcon(THEME.color_wheel).iconPad(ui(6)).setActivatePress();
+	
+	tb_hex = textBox_Text(function(txt) /*=>*/ { onModify(color_from_hex(txt)); }).setFont(f_p4).setAlign(fa_right).setHide(1);
 	
 	static isSimple  = function() /*=>*/ { show_alpha = false; simple = true; return self; };
 	static hideAlpha = function() /*=>*/ { show_alpha = false;                return self; };
@@ -52,15 +58,18 @@ function buttonColor(_onModify, dialog = noone) : widget() constructor {
 			parentDialog.addChildren(dialog);
 	}
 	
-	static drawParam = function(params) { return draw(params.x, params.y, params.w, params.h, params.data, params.m); }
+	////- Draw
+	
+	static fetchHeight = function(params) { return expanded? expandHeight : params.h; }
+	static drawParam   = function(params) { return draw(params.x, params.y, params.w, params.h, params.data, params.m); }
 	
 	static draw = function(_x, _y, _w, _h, _color, _m) {
 		x = _x;
 		y = _y;
 		w = _w;
-		h = _h;
+		h = expanded? expandHeight : _h;
 		current_color = _color;
-		hovering      = hover && point_in_rectangle(_m[0], _m[1], _x, _y, _x + _w, _y + _h);
+		hovering      = hover && point_in_rectangle(_m[0], _m[1], _x, _y, _x + _w, _y + h);
 		
 		var _cw = _w;
 		var  bs = min(_h, ui(32));
@@ -71,7 +80,7 @@ function buttonColor(_onModify, dialog = noone) : widget() constructor {
 			var bx = _x + _cw - bs;
 			_cw -= bs;
 			
-			draw_sprite_stretched_ext(THEME.textbox, 3, bx - bs, _y, bs * 2, _h, CDEF.main_mdwhite, 1);
+			draw_sprite_stretched_ext(THEME.button_def, 2, bx - bs, _y, bs * 2, _h, CDEF.main_mdwhite, 1);
 			
 			b_quick_pick.setFocusHover(active, hover);
 			b_quick_pick.draw(bx, _y + _h / 2 - bs / 2, bs, bs, _m, THEME.button_hide_fill);
@@ -88,15 +97,13 @@ function buttonColor(_onModify, dialog = noone) : widget() constructor {
 			b_picker.draw(bx, _y + _h / 2 - bs / 2, bs, bs, _m, THEME.button_hide_fill);
 		}
 		
-		if(hide == 0) draw_sprite_stretched_ext(THEME.textbox, 0, x, y, w, h, boxColor, .5 + .5 * interactable);
-		
 		var _bx  = _x  + padding;
 		var _by  = _y  + padding;
 		var _bw  = _cw - padding * 2;
 		var _bh  = _h  - padding * 2;
-		var _bww = _bw - hover_hex * hover_wid;
 		
-		var hoverRect = ihover && point_in_rectangle(_m[0], _m[1], _x, _y, _x + _bww, _y + _h);
+		var hoverRect = ihover && point_in_rectangle(_m[0], _m[1], _x, _y, _x + _bw, _y + _h);
+		if(!simple && _m[0] < _x + _h && _m[1] < _y + _h) hoverRect = false;
 		
 		if(hoverRect) {
 			draw_sprite_stretched_ext(THEME.button_def, 3, x, y, w, h, CDEF.main_grey);	
@@ -115,64 +122,197 @@ function buttonColor(_onModify, dialog = noone) : widget() constructor {
 			drawPalette(current_color, _bx, _by, _bw, _bh);
 			
 		else if(is_numeric(current_color)) {
-			var _hvb  = ihover && point_in_rectangle(_m[0], _m[1], _x, _y, _x + _cw, _y + _h);
-			hover_hex = isSimple? 0 : lerp_float(hover_hex, _hvb, 4);
-			
-			var bs  = min(_bh, ui(24));
-			var _bcx = _bx + _bw - bs - ui(4);
-			var _bcy = _by + _bh / 2;
-			
-			var _baa = 0.5;
-			var _htg = ui(12);
-			var _bcc = COLORS._main_icon;
-			
-			if(hover_hex > 0) {
-				if(ihover && point_in_rectangle(_m[0], _m[1], _bx + _bw - ui(24), _y, _bx + _bw, _y + _h)) {
-					_htg = _bw - _bh;
-					_baa = 1.;
+			if(!simple) {
+				var _bs = _h;
+				_bx += _bs;
+				_bw -= _bs;
 				
-					if(mouse_lpress(iactive)) {
-						if(interactable && key_mod_press(SHIFT)) {
-							var _hx = clipboard_get_text();
-							var _cc = color_from_rgb(_hx);
-							if(_cc >= 0) onModify(_cc);
-						} else
-							clipboard_set_text(colorToHex(current_color));
-					}
+				var _bbx = _x + _bs / 2;
+				var _bby = _y + _bs / 2;
+				
+				var _bba = .4 + .4 * interactable;
+				var _bbc = COLORS._main_icon;
+				
+				if(hover && point_in_rectangle(_m[0], _m[1], _x, _y, _x + _bs, _y + _h)) {
+					_bbc = COLORS._main_icon_light;
 					
-					if(mouse_lclick(iactive))
-						_bcc = COLORS._main_icon_light;
+					if(mouse_lpress())
+						expanded = !expanded;
 				}
 				
-				var _scis = gpu_get_scissor();
-				draw_set_text(f_p1, fa_right, fa_center, COLORS._main_text_sub);
-				gpu_set_scissor(_bx, _by, _bw, _bh);
-				draw_text_add(_bcx - ui(4), _y + _h / 2 + ui(1), colorToHex(current_color));
-				gpu_set_scissor(_scis);
+				draw_sprite_stretched_ext(THEME.button_def, 0, _x, _y, _bs, h, CDEF.main_mdwhite, 1);
+				draw_sprite_ui(THEME.arrow, expanded? 3 : 0, _bbx, _bby, 1, 1, 0, _bbc, _bba);
 				
-				var _spr = interactable && key_mod_press(SHIFT)? THEME.paste_20 : THEME.copy_20;
-				draw_sprite_stretched_ext(_spr, 0, _bcx, _bcy - bs / 2, bs, bs, _bcc, _baa);
+				if(expanded) {
+					var _clx = _x + _bs + ui(2);
+					var _cly = _y + _h  + ui(2);
+					
+					var _clw = _w - _bs - ui(6);
+					var _clh =  h - _h  - ui(6);
+					
+					draw_sprite_stretched_ext(THEME.box_r2, 0, _clx, _cly, _clw, _clh, CDEF.main_mdblack, 1);
+					
+					_clh -= ui(24);
+					
+					var cx = _clx + _clw / 2;
+					var cy = _cly + _clh / 2;
+					
+					var _sls = min(_clw, _clh) - ui(8);
+					var _slx = cx - _sls / 2;
+					var _sly = cy - _sls / 2;
+					
+					var hrad = .45 * _sls;
+					var srad = .35 * _sls;
+					var stri = .4  * _sls;
+					var tri  = dsin(30) * stri;
+					var vtri = sqrt(stri * stri - tri * tri);
+					
+					var _hsl = color_rgb_to_hsl_array(current_color);
+					var H = _hsl[0], hAng = H * 360;
+					var S = _hsl[1];
+					var V = _hsl[2];
+					
+					#region editing
+						var hoverArea = 0;
+						var mouseDist = point_distance(cx, cy, _m[0], _m[1]) / _sls * 2.;
+						
+						if(hover && mouseDist > .8 && mouseDist < 1) { // ring
+							if(mouse_lpress(active)) editing_hue = true;
+							hoverArea = 1;
+						}
+						
+						if(editing_hue) {
+							hoverArea = 1;
+							var hh  = point_direction(cx, cy, _m[0], _m[1]) / 360;
+							_hsl[0] = hh;
+							
+							if(onModify(color_hsl_array_to_rgb(_hsl, _color_get_alpha(current_color))))
+								UNDO_HOLDING = true;
+								
+							if(mouse_lrelease()) {
+								editing_hue  = false;
+								UNDO_HOLDING = false;
+							}
+						}
+						
+						var tri_x0 = cx + lengthdir_x(stri, hAng +   0);
+						var tri_y0 = cy + lengthdir_y(stri, hAng +   0);
+						
+						var tri_x1 = cx + lengthdir_x(stri, hAng + 120);
+						var tri_y1 = cy + lengthdir_y(stri, hAng + 120);
+						
+						var tri_x2 = cx + lengthdir_x(stri, hAng + 240);
+						var tri_y2 = cy + lengthdir_y(stri, hAng + 240);
+						
+						if(hover && point_in_triangle(_m[0], _m[1], tri_x0, tri_y0, tri_x1, tri_y1, tri_x2, tri_y2)) {
+							if(mouse_lpress(active)) {
+								editing_sat  = true;
+								edit_sat_hue = H;
+							}
+							hoverArea = 2;
+						}
+						
+						if(editing_sat) {
+							hoverArea = 2;
+							_hsl[0] = edit_sat_hue;
+							H       = edit_sat_hue;
+							hAng    = edit_sat_hue * 360;
+							
+							var px = _m[0];
+							var py = _m[1];
+							
+							var _in = point_in_triangle(_m[0], _m[1], tri_x0, tri_y0, tri_x1, tri_y1, tri_x2, tri_y2);
+							if(!_in) {
+								var p01 = distance_to_line(_m[0], _m[1], tri_x0, tri_y0, tri_x1, tri_y1);
+								var p02 = distance_to_line(_m[0], _m[1], tri_x0, tri_y0, tri_x2, tri_y2);
+								var p12 = distance_to_line(_m[0], _m[1], tri_x1, tri_y1, tri_x2, tri_y2);
+								
+								var pMin = min(p01, p02, p12);
+								if(pMin == p01) pp = point_to_line(_m[0], _m[1], tri_x0, tri_y0, tri_x1, tri_y1);
+								if(pMin == p02) pp = point_to_line(_m[0], _m[1], tri_x0, tri_y0, tri_x2, tri_y2);
+								if(pMin == p12) pp = point_to_line(_m[0], _m[1], tri_x1, tri_y1, tri_x2, tri_y2);
+								
+								px = pp[0];
+								py = pp[1];
+							}
+							
+							var pp = point_rotate(px, py, cx, cy, -hAng);
+							px = pp[0];
+							py = pp[1];
+							
+							var vv  = (py - (cy - vtri)) / (vtri * 2);
+							_hsl[2] = 1 - clamp(vv, 0, 1);
+							
+							var ss  = (px - (cx - tri)) / (tri + stri);
+							_hsl[1] = clamp(ss, 0, 1);
+							
+							if(onModify(color_hsl_array_to_rgb(_hsl, _color_get_alpha(current_color))))
+								UNDO_HOLDING = true;
+								
+							if(mouse_lrelease()) {
+								editing_sat  = false;
+								UNDO_HOLDING = false;
+							}
+						}
+					#endregion
+					
+					shader_set(__sh_color_selector_wheel);
+						shader_set_2( "size",   [_sls,_sls] );
+						shader_set_f( "hue",    H           );
+						shader_set_f( "hover",  hoverArea   );
+						
+						draw_sprite_stretched(s_fx_pixel, 0, _slx, _sly, _sls, _sls);
+					shader_reset();
+					
+					var huex = cx + lengthdir_x(hrad, hAng);
+					var huey = cy + lengthdir_y(hrad, hAng);
+					
+					draw_set_circle_precision(32);
+					draw_set_color(c_white); draw_circle_border(huex, huey, _sls * .04, 3 );
+					draw_set_color(c_black); draw_circle_border(huex, huey, _sls * .04, 1 );
+					
+					var svx = lerp(cx -  tri, cx + srad, S);
+					    svx = V > .5? clamp(svx, cx - tri, cx - tri + (tri + srad) * (1-V) * 2 ) : 
+					                  clamp(svx, cx - tri, cx - tri + (tri + srad) *    V  * 2 );
+					var svy = lerp(cy + vtri, cy - vtri, V);
+					
+					var pp  = point_rotate(svx, svy, cx, cy, hAng);
+					
+					draw_set_circle_precision(32);
+					draw_set_color(c_white); draw_circle_border(pp[0], pp[1], _sls * .04, 3 );
+					draw_set_color(c_black); draw_circle_border(pp[0], pp[1], _sls * .04, 1 );
+					
+					var tbw = ui(68);
+					var tbh = ui(24);
+					var tbx = _x + _w - ui(4) - tbw;
+					var tby = _cly + _clh + ui(0);
+					
+					tb_hex.setFocusHover(active, hover);
+					tb_hex.draw(tbx, tby, tbw, tbh, color_get_hex(current_color), _m);
+				}
 			}
 			
-			hover_wid = lerp_float(hover_wid, _htg, 5);
-			
 			var _a = _color_get_alpha(current_color);
-			if(_a == 1 || !show_alpha) {
-				draw_sprite_stretched_ext(THEME.palette_mask, 1, _bx, _by, _bww, _bh, current_color, 1);
-			} else {
-				draw_sprite_stretched_ext(THEME.button_backdroup, 4, _bx, _by, _bww, _bh, boxColor, 1);
-				draw_sprite_stretched_ext(THEME.palette_mask,     4, _bx, _by, _bww, _bh - ui(8), current_color, 1);
 			
-				draw_sprite_stretched_ext(THEME.palette_mask, 5, _bx, _by + _bh - ui(6), _bww,      ui(6), c_black, 1);
-				draw_sprite_stretched_ext(THEME.palette_mask, 5, _bx, _by + _bh - ui(6), _bww * _a, ui(6), c_white, 1);
+			if(_a == 1 || !show_alpha) {
+				draw_sprite_stretched_ext(THEME.palette_mask, 1, _bx, _by, _bw, _bh, current_color, 1);
+			} else {
+				draw_sprite_stretched_ext(THEME.button_backdroup, 4, _bx, _by, _bw, _bh, boxColor, 1);
+				draw_sprite_stretched_ext(THEME.palette_mask,     4, _bx, _by, _bw, _bh - ui(8), current_color, 1);
+			
+				draw_sprite_stretched_ext(THEME.palette_mask, 5, _bx, _by + _bh - ui(6), _bw,      ui(6), c_black, 1);
+				draw_sprite_stretched_ext(THEME.palette_mask, 5, _bx, _by + _bh - ui(6), _bw * _a, ui(6), c_white, 1);
 			}
 		}	
 		
+		if(hoverRect) draw_sprite_stretched_ext(THEME.button_def, 3, x, y, w, h, CDEF.main_grey);	
+		else          draw_sprite_stretched_ext(THEME.button_def, 3, x, y, w, h, CDEF.main_grey, .2 + .3 * interactable);
+		
 		if(WIDGET_CURRENT == self || (instance_exists(o_dialog_color_selector) && o_dialog_color_selector.drop_target == self))
-			draw_sprite_stretched_ext(THEME.widget_selecting, 0, _x, _y, _cw, _h, COLORS._main_accent, 1);
+			draw_sprite_stretched_ext(THEME.widget_selecting, 0, x, y, w, h, COLORS._main_accent, 1);
 		
 		if(DRAGGING && DRAGGING.type == "Color" && hover && hoverRect) {
-			draw_sprite_stretched_ext(THEME.ui_panel, 1, _x, _y, _cw, _h, COLORS._main_value_positive, 1);	
+			draw_sprite_stretched_ext(THEME.ui_panel, 1, x, y, w, h, COLORS._main_value_positive, 1);	
 			if(mouse_lrelease())
 				onModify(DRAGGING.data);
 		}
