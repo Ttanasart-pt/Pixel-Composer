@@ -12,9 +12,10 @@ function buttonColor(_onModify, dialog = noone) : widget() constructor {
 	expanded      = false;
 	expandHeight  = ui(200);
 	
+	editing_hue_color = undefined;
 	editing_hue  = false;
 	editing_sat  = false;
-	edit_sat_hue = 0;
+	edit_sat_hue = undefined;
 	
 	b_picker      = button(function(ctx) /*=>*/ {
 		var _dia = colorSelectorCall(undefined, function(c) /*=>*/ {return onModify(c)});
@@ -140,14 +141,14 @@ function buttonColor(_onModify, dialog = noone) : widget() constructor {
 						expanded = !expanded;
 				}
 				
-				draw_sprite_stretched_ext(THEME.button_def, 0, _x, _y, _bs, h, CDEF.main_mdwhite, 1);
+				draw_sprite_stretched_ext(THEME.button_def, 0, _x, _y, _bs, _h, CDEF.main_mdwhite, 1);
 				draw_sprite_ui(THEME.arrow, expanded? 3 : 0, _bbx, _bby, 1, 1, 0, _bbc, _bba);
 				
 				if(expanded) {
-					var _clx = _x + _bs + ui(2);
+					var _clx = _x + ui(2);
 					var _cly = _y + _h  + ui(2);
 					
-					var _clw = _w - _bs - ui(6);
+					var _clw = _w - ui(4);
 					var _clh =  h - _h  - ui(6);
 					
 					draw_sprite_stretched_ext(THEME.box_r2, 0, _clx, _cly, _clw, _clh, CDEF.main_mdblack, 1);
@@ -167,10 +168,16 @@ function buttonColor(_onModify, dialog = noone) : widget() constructor {
 					var tri  = dsin(30) * stri;
 					var vtri = sqrt(stri * stri - tri * tri);
 					
+					if(editing_hue_color != current_color) edit_sat_hue = undefined;
+					
 					var _hsl = color_rgb_to_hsl_array(current_color);
-					var H = _hsl[0], hAng = H * 360;
+					if(edit_sat_hue != undefined)
+						_hsl[0] = edit_sat_hue;
+						
+					var H = _hsl[0];
 					var S = _hsl[1];
 					var V = _hsl[2];
+					var hAng = H * 360;
 					
 					#region editing
 						var hoverArea = 0;
@@ -185,8 +192,12 @@ function buttonColor(_onModify, dialog = noone) : widget() constructor {
 							hoverArea = 1;
 							var hh  = point_direction(cx, cy, _m[0], _m[1]) / 360;
 							_hsl[0] = hh;
+							edit_sat_hue = hh;
 							
-							if(onModify(color_hsl_array_to_rgb(_hsl, _color_get_alpha(current_color))))
+							var cc = color_hsl_array_to_rgb(_hsl, _color_get_alpha(current_color));
+							editing_hue_color = cc;
+							
+							if(onModify(cc))
 								UNDO_HOLDING = true;
 								
 							if(mouse_lrelease()) {
@@ -214,9 +225,6 @@ function buttonColor(_onModify, dialog = noone) : widget() constructor {
 						
 						if(editing_sat) {
 							hoverArea = 2;
-							_hsl[0] = edit_sat_hue;
-							H       = edit_sat_hue;
-							hAng    = edit_sat_hue * 360;
 							
 							var px = _m[0];
 							var py = _m[1];
@@ -246,7 +254,10 @@ function buttonColor(_onModify, dialog = noone) : widget() constructor {
 							var ss  = (px - (cx - tri)) / (tri + stri);
 							_hsl[1] = clamp(ss, 0, 1);
 							
-							if(onModify(color_hsl_array_to_rgb(_hsl, _color_get_alpha(current_color))))
+							var cc = color_hsl_array_to_rgb(_hsl, _color_get_alpha(current_color));
+							editing_hue_color = cc;
+							
+							if(onModify(cc))
 								UNDO_HOLDING = true;
 								
 							if(mouse_lrelease()) {
@@ -257,9 +268,9 @@ function buttonColor(_onModify, dialog = noone) : widget() constructor {
 					#endregion
 					
 					shader_set(__sh_color_selector_wheel);
-						shader_set_2( "size",   [_sls,_sls] );
-						shader_set_f( "hue",    H           );
-						shader_set_f( "hover",  hoverArea   );
+						shader_set_f( "size",   _sls );
+						shader_set_f( "hue",    H    );
+						shader_set_f( "hover",  hoverArea );
 						
 						draw_sprite_stretched(s_fx_pixel, 0, _slx, _sly, _sls, _sls);
 					shader_reset();

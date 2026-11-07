@@ -392,7 +392,8 @@ function Node_Rigid_Fracture(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 		var _sh = surface_get_height(_baseSurf);
 		
 		temp_surface[2] = surface_verify(temp_surface[2], _sw, _sh);
-		surface_set_shader(temp_surface[2]);
+		surface_set_shader(temp_surface[2], sh_rigid_fracture_multiply);
+			shader_set_s("baseSurface", _baseSurf);
 			draw_surface_stretched(_fracSurf, 0, 0, _sw, _sh);
 		surface_reset_shader();
 		
@@ -400,14 +401,18 @@ function Node_Rigid_Fracture(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 		for( var i = 0, n = array_length(_atlases); i < n; i++ ) {
 			var _atlas = _atlases[i];
 			var _mask  = _atlas.getSurface();
+			if(!is_surface(_mask)) continue;
 			
-			meshes[i] = {
-				mask: _mask,
-				texture: noone,
+			var _mesh  = generateMesh(_mask);
+			if(array_empty(_mesh)) continue;
+			
+			array_push(meshes, {
+				mask    : _mask,
+				texture : noone,
 				
-				points: generateMesh(_mask),
-				bbox: [ _atlas.x, _atlas.y ],
-			}
+				points : _mesh,
+				bbox   : [_atlas.x,_atlas.y],
+			});
 		}
 		
 	}

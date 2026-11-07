@@ -1,0 +1,12 @@
+{
+  "$GMShader":"",
+  "%Name":"sh_rigid_fracture_multiply",
+  "name":"sh_rigid_fracture_multiply",
+  "parent":{
+    "name":"rigid_fracture",
+    "path":"folders/nodes/data/simulation/rigidSim/objects/rigid_fracture.yy",
+  },
+  "resourceType":"GMShader",
+  "resourceVersion":"2.0",
+  "type":1,
+}

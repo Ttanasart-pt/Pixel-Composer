@@ -1,7 +1,7 @@
 varying vec2 v_vTexcoord;
 varying vec4 v_vColour;
 
-uniform vec2  size;
+uniform float size;
 uniform float hue;
 uniform float hover;
 
@@ -59,8 +59,7 @@ void main() {
 		ang = ang / PI / 2. + .5;
 		clr = hsv2rgb(vec3(ang, 1., 1.));
 		
-		a = 1.;
-		if(hover == 0. || hover == 1.) a = 1.;
+		a = smoothstep(0., 3. / size, .1 - abs(c - .9));
 	}
 	
 	if(c < .8) { // triangle
@@ -69,8 +68,7 @@ void main() {
 		if(tri < 0.) {
 			clr = vec3(1.);
 			
-			a = 1.;
-			if(hover == 0. || hover == 2.) a = 1.;
+			a = smoothstep(0., 1. / size, -tri);
 		
 			float ang = hue * PI * 2.;
 			vec2  txx = tx * mat2(cos(ang), -sin(ang), sin(ang), cos(ang));
