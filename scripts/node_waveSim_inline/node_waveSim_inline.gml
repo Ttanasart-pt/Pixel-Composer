@@ -39,9 +39,9 @@ function Node_WaveSim_Inline(_x, _y, _group = noone) : Node_Collection_Inline(_x
 	static getDimension = function() /*=>*/ { dimension = dimension ?? inputs[0].getValue(); return dimension; }
 	
 	static update = function() {
-		var _dim = inputs[0].getValue();
-		
-		domain = surface_verify(domain, _dim[0], _dim[1], surface_rgba32float);
+		var _dim  = inputs[0].getValue();
+		dimension = _dim;
+		domain    = surface_verify(domain, _dim[0], _dim[1], surface_rgba32float);
 		
 		if(IS_FIRST_FRAME) {
 			surface_set_target(domain);

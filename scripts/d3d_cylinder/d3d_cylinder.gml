@@ -14,7 +14,7 @@ function __3dCylinder(_radius = 0.5, _height = 1, _sides = 8, _smooth = false) :
 	uvScale_side = 1;
 	
 	static initModel = function() {
-		edges   = [];
+		var _edges = [];
 		var eid = 0;
 		
 		var v0 = array_create(3 * sides);
@@ -43,12 +43,12 @@ function __3dCylinder(_radius = 0.5, _height = 1, _sides = 8, _smooth = false) :
 			v0[i * 3 + 0] = new __vertex(       0,        0,  _h).setNormal(0, 0,  1).setUV(0.5,  0.5);
 			v0[i * 3 + 1] = new __vertex(x0 * _r0, y0 * _r0,  _h).setNormal(0, 0,  1).setUV(_u0,  _v0);
 			v0[i * 3 + 2] = new __vertex(x1 * _r0, y1 * _r0,  _h).setNormal(0, 0,  1).setUV(_u1,  _v1);
-			edges[eid++] = new __3dObject_Edge([x0 * _r0, y0 * _r0,  _h], [x1 * _r0, y1 * _r0,  _h]);
+			_edges[eid++] = new __3dObject_Edge([x0 * _r0, y0 * _r0,  _h], [x1 * _r0, y1 * _r0,  _h]);
 			
 			v1[i * 3 + 0] = new __vertex(       0,        0, -_h).setNormal(0, 0, -1).setUV(0.5,  0.5);
 			v1[i * 3 + 1] = new __vertex(x1 * _r1, y1 * _r1, -_h).setNormal(0, 0, -1).setUV(_u1,  _v1);
 			v1[i * 3 + 2] = new __vertex(x0 * _r1, y0 * _r1, -_h).setNormal(0, 0, -1).setUV(_u0,  _v0);
-			edges[eid++] = new __3dObject_Edge([x0 * _r1, y0 * _r1, -_h], [x1 * _r1, y1 * _r1, -_h]);
+			_edges[eid++] = new __3dObject_Edge([x0 * _r1, y0 * _r1, -_h], [x1 * _r1, y1 * _r1, -_h]);
 			
 		}
 		
@@ -123,12 +123,12 @@ function __3dCylinder(_radius = 0.5, _height = 1, _sides = 8, _smooth = false) :
 				vs[_ix++] = new __vertex(x1, y1, _h0).setNormal(nnx1, nny1, nnz0).setUV(ux1, _j0);
 				vs[_ix++] = new __vertex(x3, y3, _h1).setNormal(nnx1, nny1, nnz1).setUV(ux1, _j1);
 				
-				edges[eid++] = new __3dObject_Edge([x0, y0, _h0], [x2, y2, _h1]);
-				edges[eid++] = new __3dObject_Edge([x1, y1, _h0], [x3, y3, _h1]);
+				_edges[eid++] = new __3dObject_Edge([x0, y0, _h0], [x2, y2, _h1]);
+				_edges[eid++] = new __3dObject_Edge([x1, y1, _h0], [x3, y3, _h1]);
 			}
 		}
 		
-		edges  = [ edges ];
+		setEdgeData([_edges]);
 		vertex = caps? [ vs, v0, v1 ] : [ vs ];
 		object_counts = array_length(vertex);
 		VB = build();

@@ -163,7 +163,7 @@
 		return _txt;
 	}
 	
-	printDebug($"- Setup");
+	printDebug($"- Setup IS_CMD:{IS_CMD}");
 	PREF_INIT(); PREF_LOAD();             printDebug($"- init Preferences   | {__log_tr()}");
 	if(!IS_CMD) { __initLocale();         printDebug($"- init Locale        | {__log_tr()}"); }
 	if(!IS_CMD) { __initHotKey();         printDebug($"- init Hotkeys       | {__log_tr()}"); }

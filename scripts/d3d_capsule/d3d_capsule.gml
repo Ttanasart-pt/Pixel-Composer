@@ -13,7 +13,7 @@ function __3dCapsule(_radius = 0.5, _height = 1, _sides = 8, _smooth = false) : 
 	uvScale_side = 1;
 	
 	static initModel = function() {
-		edges   = [];
+		var _edges = [];
 		var eid = 0;
 		
 		var v0 = array_create(3 * sides);
@@ -208,12 +208,12 @@ function __3dCapsule(_radius = 0.5, _height = 1, _sides = 8, _smooth = false) : 
 				vs[_ix++] = new __vertex(x1, y1, _h0).setNormal(nnx1, nny1, nnz0).setUV(ux1, _j0);
 				vs[_ix++] = new __vertex(x3, y3, _h1).setNormal(nnx1, nny1, nnz1).setUV(ux1, _j1);
 				
-				edges[eid++] = new __3dObject_Edge([x0, y0, _h0], [x2, y2, _h1]);
-				edges[eid++] = new __3dObject_Edge([x1, y1, _h0], [x3, y3, _h1]);
+				_edges[eid++] = new __3dObject_Edge([x0, y0, _h0], [x2, y2, _h1]);
+				_edges[eid++] = new __3dObject_Edge([x1, y1, _h0], [x3, y3, _h1]);
 			}
 		}
 		
-		edges  = [ edges ];
+		setEdgeData([_edges]);
 		vertex = [ vs, v0, v1 ];
 		object_counts = array_length(vertex);
 		VB = build();

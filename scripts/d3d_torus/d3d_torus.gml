@@ -15,7 +15,7 @@ function __3dTorus(_radT = 1, _radP = .2, _sideT = 16, _sideP = 8, _smooth = fal
 	uvsca  = 1;
 		
 	static initModel = function() {
-		edges   = [];
+		var _edges = [];
 		var eid = 0;
 		var vs  = [];
 		var ix  = 0;
@@ -114,14 +114,14 @@ function __3dTorus(_radT = 1, _radP = .2, _sideT = 16, _sideP = 8, _smooth = fal
 				vs[ix++] = new __vertex(x3, y3, z3).setNormal(nx3, ny3, nz3).setUV(ux0, uy1);
 				vs[ix++] = new __vertex(x2, y2, z2).setNormal(nx2, ny2, nz2).setUV(ux1, uy1);
 				
-				edges[eid++] = new __3dObject_Edge([x0, y0, z0], [x1, y1, z1]);
-				edges[eid++] = new __3dObject_Edge([x1, y1, z1], [x2, y2, z2]);
-				edges[eid++] = new __3dObject_Edge([x2, y2, z2], [x3, y3, z3]);
-				edges[eid++] = new __3dObject_Edge([x3, y3, z3], [x0, y0, z0]);
+				_edges[eid++] = new __3dObject_Edge([x0, y0, z0], [x1, y1, z1]);
+				_edges[eid++] = new __3dObject_Edge([x1, y1, z1], [x2, y2, z2]);
+				_edges[eid++] = new __3dObject_Edge([x2, y2, z2], [x3, y3, z3]);
+				_edges[eid++] = new __3dObject_Edge([x3, y3, z3], [x0, y0, z0]);
 			}
 		}
 		
-		edges  = [ edges ];
+		setEdgeData([_edges]);
 		vertex = [ vs ];
 		VB = build();
 	} 

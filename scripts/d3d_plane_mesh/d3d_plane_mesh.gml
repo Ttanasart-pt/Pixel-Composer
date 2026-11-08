@@ -6,7 +6,7 @@ function __3dPlane(_normal = 0, _two_side = false) : __3dObject() constructor {
 	two_side = _two_side;
 	
 	static initModel = function() {
-		edges   = [];
+		var _edges = [];
 		var eid = 0;
 		
 		var _nor = [ 0, 0, 1 ];
@@ -25,10 +25,10 @@ function __3dPlane(_normal = 0, _two_side = false) : __3dObject() constructor {
 					new __vertex(0,  .5,  .5).setNormal(1, 0, 0).setUV(1, 0),
 				];
 				
-				edges[0] = new __3dObject_Edge([0, -.5, -.5], [0,  .5, -.5]);
-				edges[1] = new __3dObject_Edge([0,  .5, -.5], [0,  .5,  .5]);
-				edges[2] = new __3dObject_Edge([0,  .5,  .5], [0, -.5,  .5]);
-				edges[3] = new __3dObject_Edge([0, -.5,  .5], [0, -.5, -.5]);
+				_edges[0] = new __3dObject_Edge([0, -.5, -.5], [0,  .5, -.5]);
+				_edges[1] = new __3dObject_Edge([0,  .5, -.5], [0,  .5,  .5]);
+				_edges[2] = new __3dObject_Edge([0,  .5,  .5], [0, -.5,  .5]);
+				_edges[3] = new __3dObject_Edge([0, -.5,  .5], [0, -.5, -.5]);
 				break;	
 				
 			case 1 : 
@@ -42,10 +42,10 @@ function __3dPlane(_normal = 0, _two_side = false) : __3dObject() constructor {
 					new __vertex(-.5, 0,  .5).setNormal(0, 1, 0).setUV(1, 0),
 				];
 				
-				edges[0] = new __3dObject_Edge([-.5, 0, -.5], [ .5, 0, -.5]);
-				edges[1] = new __3dObject_Edge([ .5, 0, -.5], [ .5, 0,  .5]);
-				edges[2] = new __3dObject_Edge([ .5, 0,  .5], [-.5, 0,  .5]);
-				edges[3] = new __3dObject_Edge([-.5, 0,  .5], [-.5, 0, -.5]);
+				_edges[0] = new __3dObject_Edge([-.5, 0, -.5], [ .5, 0, -.5]);
+				_edges[1] = new __3dObject_Edge([ .5, 0, -.5], [ .5, 0,  .5]);
+				_edges[2] = new __3dObject_Edge([ .5, 0,  .5], [-.5, 0,  .5]);
+				_edges[3] = new __3dObject_Edge([-.5, 0,  .5], [-.5, 0, -.5]);
 				break;	
 				
 			case 2 : 
@@ -59,10 +59,10 @@ function __3dPlane(_normal = 0, _two_side = false) : __3dObject() constructor {
 					new __vertex( .5,  .5, 0).setNormal(0, 0, 1).setUV(1, 1),
 				];
 				
-				edges[0] = new __3dObject_Edge([-.5, -.5, 0], [ .5, -.5, 0]);
-				edges[1] = new __3dObject_Edge([ .5, -.5, 0], [ .5,  .5, 0]);
-				edges[2] = new __3dObject_Edge([ .5,  .5, 0], [-.5,  .5, 0]);
-				edges[3] = new __3dObject_Edge([-.5,  .5, 0], [-.5, -.5, 0]);
+				_edges[0] = new __3dObject_Edge([-.5, -.5, 0], [ .5, -.5, 0]);
+				_edges[1] = new __3dObject_Edge([ .5, -.5, 0], [ .5,  .5, 0]);
+				_edges[2] = new __3dObject_Edge([ .5,  .5, 0], [-.5,  .5, 0]);
+				_edges[3] = new __3dObject_Edge([-.5,  .5, 0], [-.5, -.5, 0]);
 				break;	
 		}
 		
@@ -76,7 +76,7 @@ function __3dPlane(_normal = 0, _two_side = false) : __3dObject() constructor {
 			}
 		}
 		
-		edges = [ edges ];
+		setEdgeData([_edges]);
 		VB = build();
 	} initModel();
 	

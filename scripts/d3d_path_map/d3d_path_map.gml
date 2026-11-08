@@ -94,8 +94,8 @@ function __3dPathMap() : __3dObject() constructor {
 		}
 		
 		vertex = [ _verts ];
-		edges  = [ _edges ];
 		VB     = build();
+		setEdgeData([_edges]);
 	} initModel();
 	
 	static onParameterUpdate = initModel;

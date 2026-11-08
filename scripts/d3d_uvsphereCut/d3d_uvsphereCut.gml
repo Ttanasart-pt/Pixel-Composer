@@ -23,8 +23,8 @@ function __3dUVSphereCut(_radius = 0.5, _hori = 16, _vert = 8, _smt = false) : _
 		var vc   = array_create(vert * 3); // cap
 		var topA = -90 + 180 * ratio;
 		
+		var _edges = [];
 		vertex  = [ vt, vc ];
-		edges   = [];
 		
 	    for (var i = 0; i < vert;    i++)
 	    for (var j = 0; j < capHori; j++) {
@@ -70,8 +70,8 @@ function __3dUVSphereCut(_radius = 0.5, _hori = 16, _vert = 8, _smt = false) : _
 			vt[ind + 4] = new __vertex(hx3, hy3, hz3);
 			vt[ind + 5] = new __vertex(hx2, hy2, hz2);
 			
-			edges[eid++] = new __3dObject_Edge([hx0, hy0, hz0], [hx1, hy1, hz1]);
-			edges[eid++] = new __3dObject_Edge([hx0, hy0, hz0], [hx2, hy2, hz2]);
+			_edges[eid++] = new __3dObject_Edge([hx0, hy0, hz0], [hx1, hy1, hz1]);
+			_edges[eid++] = new __3dObject_Edge([hx0, hy0, hz0], [hx2, hy2, hz2]);
 			
 			if(smooth) {
 				vt[ind + 0].setNormal(hx0, hy0, hz0);
@@ -146,7 +146,7 @@ function __3dUVSphereCut(_radius = 0.5, _hori = 16, _vert = 8, _smt = false) : _
 			vc[i*3+2].setUV(.5, .5);
 		}
 		
-		edges = [ edges ];
+		setEdgeData([_edges]);
 		VB = build();
 	} initModel();
 	

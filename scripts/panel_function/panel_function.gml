@@ -76,6 +76,7 @@ function panelObjectInit(_w = WIN_SW, _h = WIN_SH) {
 	PANEL_PREVIEW    = new Panel_Preview();
 	PANEL_GRAPH      = new Panel_Graph();
 	PANEL_COLLECTION = new Panel_Collection();
+	
 }
 
 	////- Setter

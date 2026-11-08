@@ -1,5 +1,5 @@
 function Node_3D_Mesh_Terrain(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, _group) constructor {
-	name     = "3D Terrain";
+	name = "3D Terrain";
 	
 	object_class = __3dTerrain;
 	var i = in_mesh;
@@ -24,19 +24,29 @@ function Node_3D_Mesh_Terrain(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, _gr
 	
 	////- Node
 	
+	temp_surface = [noone];
+	height_arr   = [];
+	
 	static processData = function(_output, _data, _array_index = 0, _frame = CURRENT_FRAME) {
-		var _mat = _data[in_mesh + 0];
-		var _inT = _data[in_mesh + 1];
-		var _sub = _data[in_mesh + 3];
-		var _his = _data[in_mesh + 2];
-		var _hia = _data[in_mesh + 4];
-		var _smt = _data[in_mesh + 5];
-		var _lvl = _data[in_mesh + 6];
+		#region data
+			var _sub = _data[in_mesh + 3];
+			var _inT = _data[in_mesh + 1];
+			var _his = _data[in_mesh + 2];
+			var _hia = _data[in_mesh + 4];
+			var _lvl = _data[in_mesh + 6];
+			
+			var _smt = _data[in_mesh + 5];
+			var _mat = _data[in_mesh + 0];
+			
+			inputs[in_mesh + 2].setVisible(_inT == 0, _inT == 0);
+			inputs[in_mesh + 4].setVisible(_inT == 1, _inT == 1);
+		#endregion
 		
-		inputs[in_mesh + 2].setVisible(_inT == 0, _inT == 0);
-		inputs[in_mesh + 4].setVisible(_inT == 1, _inT == 1);
+		var _sub1  = _sub + 1;
+		var _h = array_safe_get(height_arr, _array_index, []); 
+		    _h = array_verify(_h, _sub1 * _sub1);
+		height_arr[_array_index] = _h;
 		
-		var _h     = array_create((_sub + 1) * (_sub + 1));
 		var object = getObject(_array_index);
 		
 		var lv_min = _lvl[0];
@@ -44,21 +54,29 @@ function Node_3D_Mesh_Terrain(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, _gr
 		var lv_rng = lv_max - lv_min;
 		
 		if(_inT == 0 && is_surface(_his)) {
-			var _ind = 0;
 			var _sw  = surface_get_width(_his);
 			var _sh  = surface_get_height(_his);
+			var _fmt = surface_get_format(_his);
 			
-			var _pxw = _sw / (_sub + 1);
-			var _pxh = _sh / (_sub + 1);
-			var _bf  = buffer_from_surface(_his, false);
+			temp_surface[0] = surface_verify(temp_surface[0], _sub1, _sub1, surface_r16float);
 			
-			for( var i = 0; i < _sub + 1; i++ ) 
-			for( var j = 0; j < _sub + 1; j++ ) {
-				var ps   = clamp(round(i * _pxh), 0, _sh) * _sw + clamp(round(j * _pxw), 0, _sw);
-				buffer_seek(_bf, buffer_seek_start, ps * 4);
+			surface_set_shader(temp_surface[0], sh_d3d_terrain_greyscale);
+				shader_set_f( "lv_min", lv_min )
+				shader_set_f( "lv_rng", lv_rng )
 				
-				var cc   = buffer_read(_bf, buffer_u32);
-				_h[_ind] = lv_min + colorBrightness(cc) * lv_rng;
+				gpu_set_tex_filter(true);
+				draw_surface_stretched(_his, 0, 0, _sub1, _sub1);
+				gpu_set_tex_filter(false);
+			surface_reset_shader();
+			
+			var _pxw = _sw / _sub1;
+			var _pxh = _sh / _sub1;
+			var _bf  = buffer_from_surface(temp_surface[0], false);
+			buffer_to_start(_bf);
+			
+			var _ind = 0;
+			repeat( _sub1 * _sub1 )  {
+				_h[_ind] = buffer_read(_bf, buffer_f16);
 				_ind++;
 			}
 			

@@ -23,7 +23,7 @@ function __3dSurfaceExtrude(_surface = noone, _height = noone, _smooth = false) 
 	static initModel = function() { 
 		if(!is_surface(surface)) return;
 		
-		edges   = [];
+		var _edges = [];
 		var eid = 0;
 	    
 		var ww      = surface_get_width_safe(surface);
@@ -156,20 +156,20 @@ function __3dSurfaceExtrude(_surface = noone, _height = noone, _smooth = false) 
 			__vertex_buffer_add_pntc(_bF, i0, j1, k1, 0, 0,  1, tx0, ty1,,, 0, 255, 0);
 			__vertex_buffer_add_pntc(_bF, i0, j0, k1, 0, 0,  1, tx0, ty0,,, 0, 0, 255);
 			
-			edges[eid++] = new __3dObject_Edge([i0, j0, k0], [i0, j1, k0]);
-			edges[eid++] = new __3dObject_Edge([i0, j1, k0], [i1, j1, k0]);
-			edges[eid++] = new __3dObject_Edge([i1, j1, k0], [i1, j0, k0]);
-			edges[eid++] = new __3dObject_Edge([i1, j0, k0], [i0, j0, k0]);
+			_edges[eid++] = new __3dObject_Edge([i0, j0, k0], [i0, j1, k0]);
+			_edges[eid++] = new __3dObject_Edge([i0, j1, k0], [i1, j1, k0]);
+			_edges[eid++] = new __3dObject_Edge([i1, j1, k0], [i1, j0, k0]);
+			_edges[eid++] = new __3dObject_Edge([i1, j0, k0], [i0, j0, k0]);
 			
-			edges[eid++] = new __3dObject_Edge([i0, j0, k1], [i0, j1, k1]);
-			edges[eid++] = new __3dObject_Edge([i0, j1, k1], [i1, j1, k1]);
-			edges[eid++] = new __3dObject_Edge([i1, j1, k1], [i1, j0, k1]);
-			edges[eid++] = new __3dObject_Edge([i1, j0, k1], [i0, j0, k1]);
+			_edges[eid++] = new __3dObject_Edge([i0, j0, k1], [i0, j1, k1]);
+			_edges[eid++] = new __3dObject_Edge([i0, j1, k1], [i1, j1, k1]);
+			_edges[eid++] = new __3dObject_Edge([i1, j1, k1], [i1, j0, k1]);
+			_edges[eid++] = new __3dObject_Edge([i1, j0, k1], [i0, j0, k1]);
 			
-			edges[eid++] = new __3dObject_Edge([i0, j0, k0], [i0, j0, k1]);
-			edges[eid++] = new __3dObject_Edge([i0, j1, k0], [i0, j1, k1]);
-			edges[eid++] = new __3dObject_Edge([i1, j0, k0], [i1, j0, k1]);
-			edges[eid++] = new __3dObject_Edge([i1, j1, k0], [i1, j1, k1]);
+			_edges[eid++] = new __3dObject_Edge([i0, j0, k0], [i0, j0, k1]);
+			_edges[eid++] = new __3dObject_Edge([i0, j1, k0], [i0, j1, k1]);
+			_edges[eid++] = new __3dObject_Edge([i1, j0, k0], [i1, j0, k1]);
+			_edges[eid++] = new __3dObject_Edge([i1, j1, k0], [i1, j1, k1]);
 			
 			if(voxel_use) {
 				// -X
@@ -392,9 +392,7 @@ function __3dSurfaceExtrude(_surface = noone, _height = noone, _smooth = false) 
 		buffer_delete_safe(_bB);
 		buffer_delete_safe(_bS);
 		
-		edges = [ edges ];
-		buildEdge();
-		
+		setEdgeData([_edges]);
 	} initModel();
 	
 	static onParameterUpdate = initModel;

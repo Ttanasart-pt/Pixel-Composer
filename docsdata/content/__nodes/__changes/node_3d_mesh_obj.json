@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.22.2.007",
+    "changes": [
+      {
+        "date": "2026-11-08T01:50:15.200Z",
+        "node": "3D Terrain",
+        "commit": "**3D Terrain**: Improve performance."
+      }
+    ]
+  },
+  {
     "version": "1.22.1.202",
     "changes": [
       {

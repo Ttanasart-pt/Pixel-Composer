@@ -33,6 +33,8 @@ function Node_WaveSim_Render(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	
 	////- Nodes
 	
+	attribute_surface_depth();
+	
 	temp_surface = [noone, noone];
 	
 	static getDimension = function() /*=>*/ {return is(inline_context, Node_WaveSim_Inline)? inline_context.getDimension() : DEF_SURF};
@@ -90,7 +92,7 @@ function Node_WaveSim_Render(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 		}
 		
 		var _outSurf = outputs[0].getValue();
-		_outSurf = surface_verify(_outSurf, _dim[0], _dim[1]);
+		_outSurf = surface_verify(_outSurf, _dim[0], _dim[1], attrDepth());
 		outputs[0].setValue(_outSurf);
 		
 		surface_set_shader(_outSurf, sh_wavesim_render);

@@ -162,7 +162,6 @@ function Node_3D_Mesh_Obj(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, _group)
 		object_data.size          = obj_raw.model_size;
 		object_data.object_counts = obj_raw.object_counts;
 		object_data.edges         = [ obj_raw.edge_data ];
-		object_data.buildEdge();
 		
 		use_normal    = obj_raw.use_normal;
 		materialNames = [ "Material" ];

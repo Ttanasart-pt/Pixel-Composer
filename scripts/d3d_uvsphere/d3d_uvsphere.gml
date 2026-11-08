@@ -16,7 +16,7 @@ function __3dUVSphere(_radius = 0.5, _hori = 16, _vert = 8, _smt = false) : __3d
 		
 		var vt  = array_create(vert * hori * 2 * 3);
 		vertex  = [ vt ];
-		edges   = [];
+		var _edges = [];
 		
 	    for (var i = 0; i < vert; i++)
 	    for (var j = 0; j < hori; j++) {
@@ -61,8 +61,8 @@ function __3dUVSphere(_radius = 0.5, _hori = 16, _vert = 8, _smt = false) : __3d
 			vt[ind + 4] = new __vertex(hx3, hy3, hz3);
 			vt[ind + 5] = new __vertex(hx2, hy2, hz2);
 			
-			edges[eid++] = new __3dObject_Edge([hx0, hy0, hz0], [hx1, hy1, hz1]);
-			edges[eid++] = new __3dObject_Edge([hx0, hy0, hz0], [hx2, hy2, hz2]);
+			_edges[eid++] = new __3dObject_Edge([hx0, hy0, hz0], [hx1, hy1, hz1]);
+			_edges[eid++] = new __3dObject_Edge([hx0, hy0, hz0], [hx2, hy2, hz2]);
 			
 			if(smooth) {
 				vt[ind + 0].setNormal(hx0, hy0, hz0);
@@ -112,7 +112,7 @@ function __3dUVSphere(_radius = 0.5, _hori = 16, _vert = 8, _smt = false) : __3d
 			vt[ind + 5].setUV(u2, v2);
 	    }
 		
-		edges = [ edges ];
+		setEdgeData([_edges]);
 		VB = build();
 	} initModel();
 	

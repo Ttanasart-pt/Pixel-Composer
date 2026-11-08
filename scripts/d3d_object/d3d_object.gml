@@ -50,7 +50,7 @@ function __3dObject() : __3dInstance() constructor {
 	color  = ca_white;
 	
 	edges  = [];
-	EB     = [];
+	EB     = undefined;
 	
 	size        = new __vec3(1);
 	transparent = false;
@@ -162,10 +162,45 @@ function __3dObject() : __3dInstance() constructor {
 		return _buffer;
 	}
 	
+	static build = function(_buffer = VB, _vertex = vertex, counts = object_counts) {
+			 if(is_array(_buffer)) array_foreach(_buffer, function(b) /*=>*/ { if(b != noone) vertex_delete_buffer(b); });
+		else if(_buffer != noone)  vertex_delete_buffer(_buffer);
+		
+		if(array_empty(_vertex)) return noone;
+		
+		var _res = array_create(counts);
+		for( var i = 0; i < counts; i++ )
+			_res[i] = buildVertex(_vertex[i]);
+		
+		return _res;
+	}
+	
+	////- Edge
+	
+	static getEdgeData = function() {}
+	static setEdgeData = function(_edge = edges) {
+		edges = _edge;
+		
+		if(is_array(EB)) array_foreach(EB, function(b,_) /*=>*/ { 
+			if(b != noone) vertex_delete_buffer(b); 
+			return false; 
+		});
+		
+		EB = undefined;
+		return self;
+	}
+	
+	static getEdgeBuffer = function() {
+		if(EB != undefined) return EB;
+		
+		getEdgeData();
+		buildEdge();
+		return EB;
+	}
+	
 	static buildEdge = function() {
 		if(array_empty(edges)) return;
 		
-		array_foreach(EB, function(b) /*=>*/ { if(b != noone) vertex_delete_buffer(b); });
 		EB = [];
 		
 		for( var e = 0, m = array_length(edges); e < m; e++ ) {
@@ -187,20 +222,6 @@ function __3dObject() : __3dInstance() constructor {
 			vertex_end(_buffer);
 			EB[e] = _buffer;
 		}
-	}
-	
-	static build = function(_buffer = VB, _vertex = vertex, counts = object_counts) {
-			 if(is_array(_buffer)) array_foreach(_buffer, function(b) /*=>*/ { if(b != noone) vertex_delete_buffer(b); });
-		else if(_buffer != noone)  vertex_delete_buffer(_buffer);
-		
-		if(array_empty(_vertex)) return noone;
-		
-		var _res = array_create(counts);
-		for( var i = 0; i < counts; i++ )
-			_res[i] = buildVertex(_vertex[i]);
-		
-		buildEdge();
-		return _res;
 	}
 	
 	////- Material
@@ -316,6 +337,7 @@ function __3dObject() : __3dInstance() constructor {
 	}
 	
 	static submitEdge = function(_sc = noone, useDepth = false, depthType = 0) {
+		// getEdgeBuffer();
 		if(array_empty(EB)) return;
 		
 		shader_set(sh_d3d_wireframe);

@@ -5,8 +5,8 @@
   "isDnD":false,
   "name":"d3d_terrain",
   "parent":{
-    "name":"other",
-    "path":"folders/nodes/data/3D/d3d_mesh/other.yy",
+    "name":"terrain",
+    "path":"folders/nodes/data/3D/d3d_mesh/other/terrain.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

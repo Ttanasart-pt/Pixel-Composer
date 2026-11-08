@@ -27,8 +27,8 @@ function __3dConvexHull() : __3dObject() constructor {
 		}
 		
 		vertex = [ _vert ];
-		edges  = [ _edge ];
 		VB = build();
+		setEdgeData([_edge]);
 	} initModel();
 
 	onParameterUpdate = initModel;

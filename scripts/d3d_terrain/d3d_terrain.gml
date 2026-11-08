@@ -192,16 +192,16 @@ function __3dTerrain() : __3dObject() constructor {
 			}
 		}
 		
-		edges = [];
+		var _edges = [];
 		for( var i = 0, n = array_length(edgesMap); i < n; i++ ) {
 			var _ei = edgesMap[i];
 			var _e0 = _vt[_ei[0]].toArrayPos();
 			var _e1 = _vt[_ei[1]].toArrayPos();
-			edges[i] = new __3dObject_Edge(_e0, _e1);
+			_edges[i] = new __3dObject_Edge(_e0, _e1);
 		}
 		
 		vertex = [ _vt ];
-		edges  = [ edges ];
+		setEdgeData([_edges]);
 		VB = build();
 	} initModel();
 	
@@ -443,17 +443,24 @@ function __3dTerrain() : __3dObject() constructor {
 		}
 		
 		vertex_end(VB[0]);
-		
-		edges = [];
+	}
+	
+	static getEdgeData   = function() {
+		var _vt    = vertex[0];
+		var _edges = edges[0];
 		for( var i = 0, n = array_length(edgesMap); i < n; i++ ) {
 			var _ei = edgesMap[i];
-			var _e0 = _vt[_ei[0]].toArrayPos();
-			var _e1 = _vt[_ei[1]].toArrayPos();
-			edges[i] = new __3dObject_Edge(_e0, _e1);
+			
+			_edges[i].p0[0] = _vt[_ei[0]].x;
+			_edges[i].p0[1] = _vt[_ei[0]].y;
+			_edges[i].p0[2] = _vt[_ei[0]].z;
+			
+			_edges[i].p1[0] = _vt[_ei[1]].x;
+			_edges[i].p1[1] = _vt[_ei[1]].y;
+			_edges[i].p1[2] = _vt[_ei[1]].z;
 		}
 		
-		edges = [ edges ];
-		buildEdge();
+		setEdgeData();
 	}
 	
 	onParameterUpdate = initModel;

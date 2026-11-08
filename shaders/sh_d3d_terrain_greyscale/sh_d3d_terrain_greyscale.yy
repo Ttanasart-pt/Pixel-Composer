@@ -1,0 +1,12 @@
+{
+  "$GMShader":"",
+  "%Name":"sh_d3d_terrain_greyscale",
+  "name":"sh_d3d_terrain_greyscale",
+  "parent":{
+    "name":"terrain",
+    "path":"folders/nodes/data/3D/d3d_mesh/other/terrain.yy",
+  },
+  "resourceType":"GMShader",
+  "resourceVersion":"2.0",
+  "type":1,
+}

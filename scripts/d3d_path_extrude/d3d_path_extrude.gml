@@ -117,7 +117,7 @@ function __3dPathExtrude(_radius = 0.5, _sides = 8, _smooth = false) : __3dObjec
 				vertex_caps[_in0++] = new __vertex(cx0, cy0, cz0, _cc).setNormal(-v.x, -v.y, -v.z).setUV(__u0, __v0);
 				vertex_caps[_in0++] = new __vertex(cx1, cy1, cz1, _cc).setNormal(-v.x, -v.y, -v.z).setUV(__u1, __v1);
 				
-				edges[eid++] = new __3dObject_Edge([cx0, cy0, cz0], [cx1, cy1, cz1]);
+				_edges[eid++] = new __3dObject_Edge([cx0, cy0, cz0], [cx1, cy1, cz1]);
 		    }
 		    
 		    for (var j = 0, m = array_length(prevn); j < m; j++)
@@ -223,10 +223,10 @@ function __3dPathExtrude(_radius = 0.5, _sides = 8, _smooth = false) : __3dObjec
 						vertex_side[_ind++] = new __vertex(x3, y3, z3, c1).setNormal(_n3.x, _n3.y, _n3.z).setUV(__v1 * _vs, 1 - __u1 * _us);
 					}
 					
-					edges[eid++] = new __3dObject_Edge([x0, y0, z0], [x1, y1, z1]);
-					edges[eid++] = new __3dObject_Edge([x1, y1, z1], [x3, y3, z3]);
-					edges[eid++] = new __3dObject_Edge([x3, y3, z3], [x2, y2, z2]);
-					edges[eid++] = new __3dObject_Edge([x2, y2, z2], [x0, y0, z0]);
+					_edges[eid++] = new __3dObject_Edge([x0, y0, z0], [x1, y1, z1]);
+					_edges[eid++] = new __3dObject_Edge([x1, y1, z1], [x3, y3, z3]);
+					_edges[eid++] = new __3dObject_Edge([x3, y3, z3], [x2, y2, z2]);
+					_edges[eid++] = new __3dObject_Edge([x2, y2, z2], [x0, y0, z0]);
 				
 				}
 		    }
@@ -263,7 +263,7 @@ function __3dPathExtrude(_radius = 0.5, _sides = 8, _smooth = false) : __3dObjec
 				vertex_cape[_in1++] = new __vertex(cx1, cy1, cz1, _cc).setNormal(-v.x, -v.y, -v.z).setUV(__u1, __v1);
 				vertex_cape[_in1++] = new __vertex(cx0, cy0, cz0, _cc).setNormal(-v.x, -v.y, -v.z).setUV(__u0, __v0);
 				
-				edges[eid++] = new __3dObject_Edge([cx0, cy0, cz0], [cx1, cy1, cz1]);
+				_edges[eid++] = new __3dObject_Edge([cx0, cy0, cz0], [cx1, cy1, cz1]);
 		    }
 	    #endregion
 			    
@@ -273,7 +273,7 @@ function __3dPathExtrude(_radius = 0.5, _sides = 8, _smooth = false) : __3dObjec
 		vertex_side = [];
 		vertex_caps = [];
 		vertex_cape = [];
-		edges       = [];
+		_edges      = [];
 		
 		_ind = 0;
 		_in0 = 0;
@@ -282,7 +282,7 @@ function __3dPathExtrude(_radius = 0.5, _sides = 8, _smooth = false) : __3dObjec
 		for( var i = 0; i < pathAmount; i++ )
 			extrudePath(i);
 		
-		edges          = [ edges ];
+		setEdgeData([_edges]);
 		vertex         = endCap? [ vertex_side, vertex_caps, vertex_cape ] : [ vertex_side ];
 		material_index = endCap? [  0,  1,  1 ] : [  0 ];
 		object_counts  = array_length(vertex);

@@ -55,7 +55,7 @@ function __3dICOSphere(radius = 0.5, level = 2, smt = false) : __3dObject() cons
 		var a = 1.0;
 		var b = 1.0 / phi;
 		
-		edges   = [];
+		var _edges = [];
 		var eid = 0;
 	
 		icoverts = [
@@ -146,9 +146,9 @@ function __3dICOSphere(radius = 0.5, level = 2, smt = false) : __3dObject() cons
 				ds_list_add(_normals, _n, _n, _n);
 			}
 			
-			edges[eid++] = new __3dObject_Edge([_v0.x, _v0.y, _v0.z], [_v1.x, _v1.y, _v1.z]);
-			edges[eid++] = new __3dObject_Edge([_v0.x, _v0.y, _v0.z], [_v2.x, _v2.y, _v2.z]);
-			edges[eid++] = new __3dObject_Edge([_v2.x, _v2.y, _v2.z], [_v1.x, _v1.y, _v1.z]);
+			_edges[eid++] = new __3dObject_Edge([_v0.x, _v0.y, _v0.z], [_v1.x, _v1.y, _v1.z]);
+			_edges[eid++] = new __3dObject_Edge([_v0.x, _v0.y, _v0.z], [_v2.x, _v2.y, _v2.z]);
+			_edges[eid++] = new __3dObject_Edge([_v2.x, _v2.y, _v2.z], [_v1.x, _v1.y, _v1.z]);
 		}
 		
 		var vt = array_create(ds_list_size(_vertices));
@@ -168,7 +168,7 @@ function __3dICOSphere(radius = 0.5, level = 2, smt = false) : __3dObject() cons
 		ds_list_destroy(_vertices);
 		ds_list_destroy(_normals);
 		
-		edges = [ edges ];
+		setEdgeData([_edges]);
 		VB = build();
 	} initModel();
 	

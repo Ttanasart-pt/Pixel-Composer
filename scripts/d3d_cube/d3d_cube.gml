@@ -64,25 +64,25 @@ function __3dCube(_sep = false) : __3dObject() constructor {
 		}
 		
 		#region edges
-			edges   = [];
+			var _edges = [];
 			var eid = 0;
 			
-			edges[eid++] = new __3dObject_Edge(p[0], p[1]);
-			edges[eid++] = new __3dObject_Edge(p[1], p[3]);
-			edges[eid++] = new __3dObject_Edge(p[3], p[2]);
-			edges[eid++] = new __3dObject_Edge(p[2], p[0]);
+			_edges[eid++] = new __3dObject_Edge(p[0], p[1]);
+			_edges[eid++] = new __3dObject_Edge(p[1], p[3]);
+			_edges[eid++] = new __3dObject_Edge(p[3], p[2]);
+			_edges[eid++] = new __3dObject_Edge(p[2], p[0]);
 			
-			edges[eid++] = new __3dObject_Edge(p[4], p[5]);
-			edges[eid++] = new __3dObject_Edge(p[5], p[7]);
-			edges[eid++] = new __3dObject_Edge(p[7], p[6]);
-			edges[eid++] = new __3dObject_Edge(p[6], p[4]);
+			_edges[eid++] = new __3dObject_Edge(p[4], p[5]);
+			_edges[eid++] = new __3dObject_Edge(p[5], p[7]);
+			_edges[eid++] = new __3dObject_Edge(p[7], p[6]);
+			_edges[eid++] = new __3dObject_Edge(p[6], p[4]);
 			
-			edges[eid++] = new __3dObject_Edge(p[0], p[4]);
-			edges[eid++] = new __3dObject_Edge(p[1], p[5]);
-			edges[eid++] = new __3dObject_Edge(p[2], p[6]);
-			edges[eid++] = new __3dObject_Edge(p[3], p[7]);
+			_edges[eid++] = new __3dObject_Edge(p[0], p[4]);
+			_edges[eid++] = new __3dObject_Edge(p[1], p[5]);
+			_edges[eid++] = new __3dObject_Edge(p[2], p[6]);
+			_edges[eid++] = new __3dObject_Edge(p[3], p[7]);
 			
-			edges = [ edges ];
+			setEdgeData([_edges]);
 		#endregion
 		
 		#region 
