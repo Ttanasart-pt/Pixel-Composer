@@ -37,7 +37,9 @@ function Node_Array_Range(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 				inputs[0].setName("Start");
 				inputs[2].setName("Step");
 				
+				if(stp == 0) return [];
 				if(st == ed) return array_create(abs(stp), st);
+				
 				stp = abs(stp) * sign(ed - st);
 				
 				var amo  = floor(abs((ed - st + inE) / stp));

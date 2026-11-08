@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.22.2.007",
+    "changes": [
+      {
+        "date": "2026-11-08T03:02:05.675Z",
+        "node": "",
+        "commit": "**Array Range**: Fix freeze when set step to 0."
+      }
+    ]
+  },
+  {
     "version": "1.21.8.007",
     "changes": [
       {

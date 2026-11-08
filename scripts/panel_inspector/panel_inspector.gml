@@ -962,12 +962,16 @@ function Panel_Inspector() : PanelContent() constructor {
             	continue;
             }
             
-            if(!is(jun, NodeValue))    continue;
-            if(!jun.show_in_inspector) continue;
+            var _disp = false;
             
-        	if(_currSec != "") _amoMap[$ _currSec]++;
-        	if(_currSub != "") _amoMap[$ _currSub]++;
+            if(is(jun, Inspector_Custom_Renderer)) _disp = jun.visible;
+            if(is(jun, Inspector_Label))           _disp = jun.visible;
+            if(is(jun, NodeValue))                 _disp = jun.show_in_inspector;
             
+            if(_disp) {
+	        	if(_currSec != "") _amoMap[$ _currSec]++;
+	        	if(_currSub != "") _amoMap[$ _currSub]++;
+            }
         }
         
         ////- =Draw Properties
@@ -1060,11 +1064,14 @@ function Panel_Inspector() : PanelContent() constructor {
                 var _txt = jun.text;
                 if(_txt == "") continue;
                 
-                draw_set_text(jun.font, fa_left, fa_top, jun.color);
-                var _sh = string_height_ext(_txt, -1, con_w - ui(16)) + ui(16);
-                draw_sprite_stretched_ext(THEME.ui_panel_bg, 1, 0, yy, con_w, _sh, jun.boxColor);
+                var lbx = _x    + ui(8);
+                var lbw = con_w - ui(16);
                 
-                draw_text_ext_add(ui(8), yy + ui(8), _txt, -1, con_w - ui(16));
+                draw_set_text(jun.font, fa_left, fa_top, jun.color);
+                var _sh = string_height_ext(_txt, -1, lbw - ui(16)) + ui(16);
+                draw_sprite_stretched_ext(THEME.ui_panel_bg, 1, lbx, yy, lbw, _sh, jun.boxColor);
+                
+                draw_text_ext_add(lbx + ui(8), yy + ui(8), _txt, -1, lbw - ui(16));
                 
                 hh += _sh + padd;
                 continue;
@@ -1092,9 +1099,9 @@ function Panel_Inspector() : PanelContent() constructor {
                 jun.ry        = top_bar_h + y;
                 jun.register(contentPane);
                 
-                var widX = ui(6);
+                var widX = _x + ui(8);
                 var widY = yy;
-                var widW = con_w - ui(12);
+                var widW = con_w - ui(16);
                 
                 if(jun.padName && widgPrevX && widgPrevW) {
                 	widX = widgPrevX;

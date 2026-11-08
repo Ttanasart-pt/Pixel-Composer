@@ -132,11 +132,13 @@ function Node_Lua_Compute(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	}
 	
 	static update = function(frame = CURRENT_FRAME) {
-		var _stat = getInputData( 3);
-		var _exec = getInputData( 4);
-		
-		var _func = getInputData( 0);
-		var _dimm = getInputData( 1);
+		#region data
+			var _stat = getInputData( 3);
+			var _exec = getInputData( 4);
+			
+			var _func = getInputData( 0);
+			var _dimm = getInputData( 1);
+		#endregion
 		
 		update_on_frame   = _exec;
 		

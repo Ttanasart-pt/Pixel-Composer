@@ -66,7 +66,7 @@ function Panel_Code_Reference(_data) : PanelContent() constructor {
 		}
 		
 		return _h;
-	});
+	}).setScrollHide();
 	
 	sp_note = new scrollPane(0, 0, function(_y, _m) /*=>*/ {
 		draw_clear_alpha(c_white, 0);

@@ -75,10 +75,11 @@ function scrollPane(_w, _h, ondraw) : widget() constructor {
 		return self; 
 	}
 		
+	static setScrollHide    = function(  ) /*=>*/ { show_scroll  = false; return self; }
 	static setScrollUnclamp = function(  ) /*=>*/ { scroll_clamp = false; return self; }
 	static setScroll        = function(_s) /*=>*/ { scroll_y_to  = _s;    return self; }
 	static setUseDepth      = function(  ) /*=>*/ { use_depth    = true;  return self; }
-	static scrollReset      = function(  ) /*=>*/ { scroll_y_to = clamp(scroll_y_to, -content_h, 0); return self; }
+	static scrollReset      = function(  ) /*=>*/ { scroll_y_to  = clamp(scroll_y_to, -content_h, 0); return self; }
 	
 	////- Draw
 	

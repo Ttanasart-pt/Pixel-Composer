@@ -373,6 +373,7 @@ function drawWidget(xx, yy, ww, _m, _jun, global_var = true, _hover = false, _fo
 				
 				if(!is_string(_tip)) {
 					cc = COLORS._main_accent;
+					CURSOR = cr_handpoint;
 					
 					if(mouse_lpress(_focus)) {
 						if(is_callable(_tip)) _tip();
