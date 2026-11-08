@@ -1,0 +1,12 @@
+{
+  "$GMShader":"",
+  "%Name":"sh_filter_direction",
+  "name":"sh_filter_direction",
+  "parent":{
+    "name":"effects",
+    "path":"folders/nodes/data/filter/effects.yy",
+  },
+  "resourceType":"GMShader",
+  "resourceVersion":"2.0",
+  "type":1,
+}

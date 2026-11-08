@@ -1,5 +1,5 @@
 function Node_Strand_Move(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
-	name  = "Strand Move";
+	name  = "Strand Transform";
 	color = COLORS.node_blend_strand;
 	icon  = THEME.strandSim;
 	setDimension(96, 48);
@@ -10,25 +10,27 @@ function Node_Strand_Move(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	
 	newInput( 0, nodeValue_Strand());
 	
-	////- =Move
+	////- =Transform
 	newInput( 1, nodeValue_Vec2( "Position", [0,0]   )).setUnitSimple();
 	newInput( 2, nodeValue_Vec2( "Anchor",   [.5,.5] )).setUnitSimple();
+	newInput( 4, nodeValue_Rot(  "Rotation",  0      ));
 	
 	////- =Physics
-	newInput( 3, nodeValue_Bool( "Jump",      true   ));
+	newInput( 3, nodeValue_Bool( "Jump First Frame", true ));
 	// 4
 	
 	newOutput(0, nodeValue_Output("Strands", VALUE_TYPE.strands, noone));
 	
 	input_display_list = [ 0, 
-		[ "Move",    false ],  1,  2, 
-		[ "Physics", false ],  3,
+		[ "Transform", false ],  1,  2,  4, 
+		[ "Physics",   false ],  3,
 	];
 	
 	////- Node
 	
 	px = 0;
 	py = 0;
+	pa = 0;
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _params) { 
 		var _anc = getInputData( 2);
@@ -44,6 +46,7 @@ function Node_Strand_Move(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 			
 			var _pos  = getInputData( 1);
 			var _anc  = getInputData( 2);
+			var _rot  = getInputData( 4);
 			
 			var _jump = getInputData( 3);
 			
@@ -56,16 +59,22 @@ function Node_Strand_Move(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		var _setp = false;
 		if(!is_array(_str)) __str = [ _str ];
 		
+		var ax = _anc[0] + _pos[0];
+		var ay = _anc[1] + _pos[1];
+		
 		if(IS_FIRST_FRAME) {
-			var dx = _pos[0]// - _anc[0];
-			var dy = _pos[1]// - _anc[1];
+			var dx = _pos[0];
+			var dy = _pos[1];
 			
-			if(_jump)
-				_setp = true;
+			var da = 0;
+			
+			if(_jump) _setp = true;
 			
 		} else {
 			var dx = _pos[0] - px;
 			var dy = _pos[1] - py;
+			
+			var da = _rot - pa;
 		}
 		
 		for( var k = 0; k < array_length(__str); k++ )
@@ -92,11 +101,18 @@ function Node_Strand_Move(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 				p.x += dx;
 				p.y += dy;
 				
+				if(da != 0) {
+					var pp = point_rotate(p.x, p.y, ax, ay, da);
+					p.x = pp[0];
+					p.y = pp[1];
+				}
+				
 			}
 		}
 		
 		px = _pos[0];
 		py = _pos[1];
+		pa = _rot;
 
 	}
 	

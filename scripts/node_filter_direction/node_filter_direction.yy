@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"node_filter_direction",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"node_filter_direction",
+  "parent":{
+    "name":"effects",
+    "path":"folders/nodes/data/filter/effects.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

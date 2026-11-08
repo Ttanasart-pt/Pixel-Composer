@@ -1,0 +1,13 @@
+Transform strands from the root.
+
+## Properties
+
+[proptable]
+Transform
+Position|Strand position.
+Anchor|Rotation anchor and position offset in the preview panel.
+Rotation|Strand rotation
+
+Physics
+Jump First Frame|Move the whole strands in the first frame to remove jumping.
+[/proptable]

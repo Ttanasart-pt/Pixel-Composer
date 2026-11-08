@@ -1,0 +1,8 @@
+Extract corner from a surface using Harris corner detector algorithm.
+
+## Properties
+
+[proptable]
+Detection
+Radius|Scan radius.
+[/proptable]
