@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.22.2.007",
+    "changes": [
+      {
+        "date": "2026-11-08T02:38:03.618Z",
+        "node": "",
+        "commit": "**Path**: Fix error when editing last line in loop mode."
+      }
+    ]
+  },
+  {
     "version": "1.22.1.204",
     "changes": [
       {

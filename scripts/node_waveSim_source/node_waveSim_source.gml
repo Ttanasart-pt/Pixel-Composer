@@ -76,8 +76,9 @@ function Node_WaveSim_Source(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 		if(_wave) {
 			var _wav = dsin(CURRENT_FRAME / _freq * 360 + _phas);
 			_wav  = lerp(_rng[0], _rng[1], _wav * .5 + .5);
-			_wav *= _intn;
 		}
+		
+		_wav *= _intn;
 		
 		surface_set_shader(temp_surface[0], sh_wavesim_source_add);
 			shader_set_s( "domain",    domain );

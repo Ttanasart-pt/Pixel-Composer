@@ -15,7 +15,7 @@ function Node_WaveSim_Render(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	newInput( 2, nodeValue_Slider(  "Damping",   .5    ));
 	
 	////- =/Boundary
-	newInput( 5, nodeValue_EButton( "Boundary",   0, [ "Free", "Wall" ] ));
+	newInput( 5, nodeValue_EButton( "Boundary",   0, [ "Free", "Wall", "Wrap" ] ));
 	newInput( 8, nodeValue_Vec2(    "Edge Absorption", [.1,.2] ));
 	
 	////- =Rendering

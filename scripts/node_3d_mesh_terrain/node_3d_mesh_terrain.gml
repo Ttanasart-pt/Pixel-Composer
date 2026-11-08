@@ -5,21 +5,21 @@ function Node_3D_Mesh_Terrain(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, _gr
 	var i = in_mesh;
 	
 	////- =Mesh
-	newInput(i+3, nodeValue_Int(          "Subdivision",   4 ));
+	newInput(i+3, nodeValue_Int(      "Subdivision",   4 ));
 	newInput(i+1, nodeValue_EButton(  "Input type",    0 , [ "Surface", "Array" ] ));
-	newInput(i+2, nodeValue_Surface(      "Height map" ));
-	newInput(i+4, nodeValue_Float(        "Height array",       []       )).setArrayDepth(2);
-	newInput(i+6, nodeValue_Slider_Range( "Front Height Level", [ 0, 1 ] ));
+	newInput(i+2, nodeValue_Surface(  "Height Map"          ));
+	newInput(i+4, nodeValue_Float(    "Height Array", []    )).setArrayDepth(2);
+	newInput(i+6, nodeValue_SliRange( "Height Level", [0,1] ));
 	
 	////- =Material
-	newInput(i+5, nodeValue_Bool(       "Smooth", false ));
-	newInput(i+0, nodeValue_D3Material( "Material", new __d3dMaterial() )).setVisible(true, true);
+	newInput(i+5, nodeValue_Bool(  "Smooth",   false ));
+	newInput(i+0, nodeValue_3DMat( "Material", new __d3dMaterial() )).setVisible(true, true);
 	// input i=7
 	
 	input_display_list = [
 		__d3d_input_list_transform,
-		["Mesh",		false], i+3, i+1, i+2, i+4, i+6, 
-		["Material",	false], i+5, i+0, 
+		[ "Mesh",     false ], i+3, i+1, i+2, i+4, i+6, 
+		[ "Material", false ], i+5, i+0, 
 	];
 	
 	////- Node

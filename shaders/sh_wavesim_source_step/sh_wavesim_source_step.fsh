@@ -18,6 +18,9 @@ float sampleHeight(vec2 pos, float h) {
 		
 		else if(boundary == 1) // wall
 			return h;
+			
+		else if(boundary == 2) // wrap
+			pos = fract(pos);
 	}
 	
 	vec4 s = texture2D(domain, pos);

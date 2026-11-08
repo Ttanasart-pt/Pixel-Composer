@@ -1043,7 +1043,9 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 			}
 		
 		} else if(line_editing != undefined) {
-			if(input_fix_len + line_editing + 1 >= array_length(inputs)) {
+			var _loop = getInputData(1);
+			
+			if(input_fix_len + line_editing + !_loop >= array_length(inputs)) {
 				line_editing = undefined;
 				UNDO_HOLDING = false;
 				
@@ -1051,11 +1053,16 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 				var dx = (_mx - line_edit_mx) / _s;
 				var dy = (_my - line_edit_my) / _s;
 				
-				var i0 = inputs[input_fix_len + line_editing    ];
-				var i1 = inputs[input_fix_len + line_editing + 1];
+				var ai0 = line_editing;
+				var ai1 = line_editing + 1;
 				
-				var a0/*:_ANCHOR*/ = line_edit_data[line_editing    ];
-				var a1/*:_ANCHOR*/ = line_edit_data[line_editing + 1];
+				if(_loop) ai1 = ai1 % ansize;
+				
+				var i0 = inputs[input_fix_len + ai0];
+				var i1 = inputs[input_fix_len + ai1];
+				
+				var a0/*:_ANCHOR*/ = line_edit_data[ai0];
+				var a1/*:_ANCHOR*/ = line_edit_data[ai1];
 				
 				var n0 = [ a0[_ANCHOR.x], a0[_ANCHOR.y], a0[_ANCHOR.c1x], a0[_ANCHOR.c1y], a0[_ANCHOR.c2x], a0[_ANCHOR.c2y], a0[_ANCHOR.ind] ];
 				var n1 = [ a1[_ANCHOR.x], a1[_ANCHOR.y], a1[_ANCHOR.c1x], a1[_ANCHOR.c1y], a1[_ANCHOR.c2x], a1[_ANCHOR.c2y], a1[_ANCHOR.ind] ];
