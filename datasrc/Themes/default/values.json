@@ -99,6 +99,7 @@
         "node_blend_collection": "yellow",
         "node_blend_simulation": "cyan",
         "node_blend_fluid": "blue",
+        "node_blend_ripple": "blue",
         "node_blend_smoke": "smoke",
         "node_blend_canvas": ["white", "orange", 0.5],
         "node_blend_strand": "orange",

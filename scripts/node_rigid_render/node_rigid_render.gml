@@ -43,6 +43,7 @@ function Node_Rigid_Render(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	////- Node
 	
 	attribute_surface_depth();
+	attribute_interpolation();
 	
 	attributes.show_debug = false;
 	array_push(attributeEditors, "Display");
@@ -98,6 +99,8 @@ function Node_Rigid_Render(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 			var _outAtlas   = outputs[1].getValue();
 		#endregion
 		
+		if(!IS_PLAYING) return;
+		
 		if(_simula && IS_PLAYING) {
 			gmlBox2D_World_Step(worldIndex, _timStp / 1000, _subStp);
 			gmlBox2D_World_Step_Joint(worldIndex);
@@ -105,6 +108,8 @@ function Node_Rigid_Render(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		
 		surface_set_target(_outSurf);
 		DRAW_CLEAR
+		var intp = getAttribute("interpolate");
+		gpu_set_tex_filter(intp != 1 && intp != 6);
 		
 		var _p = [0,0];
 		var _l =  0;
@@ -129,6 +134,7 @@ function Node_Rigid_Render(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 				
 				var xx = gmlBox2D_Object_Get_X(_objId) * worldScale;
 				var yy = gmlBox2D_Object_Get_Y(_objId) * worldScale;
+				
 				var rr = gmlBox2D_Object_Get_Rotation(_objId);
 				    rr = -radtodeg(rr);
 				
@@ -182,6 +188,7 @@ function Node_Rigid_Render(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 			}
 		}
 		
+		gpu_set_tex_filter(false);
 		surface_reset_target();
 		
 		array_resize(_outAtlas, _l);

@@ -331,6 +331,18 @@
         "color": "node_blend_fluid"
     }, //FLIP
     {
+        "name": "Wave", "nodes": [
+            { "label": "Wave" },
+            { "label": "/Object" },
+            "Node_WaveSim_Source",
+            "Node_WaveSim_Solid",
+            { "label": "/Render" },
+            "Node_WaveSim_Render",
+        ],
+        "context": ["Node_WaveSim_Inline"],
+        "color": "node_blend_fluid"
+    }, //FLIP
+    {
         "name": "StrandSim", "nodes": [
             { "label": "Strand" },
             { "label": "/Strand" },
@@ -1051,6 +1063,7 @@
             "Node_VFX_Group_Inline",
             "Node_Rigid_Group_Inline",
             "Node_FLIP_Group_Inline",
+            "Node_WaveSim_Inline",
             "Node_Smoke_Group_Inline",
             "Node_Strand_Group_Inline",
             "Node_VerletSim_Inline",

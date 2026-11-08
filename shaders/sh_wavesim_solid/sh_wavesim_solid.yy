@@ -1,0 +1,12 @@
+{
+  "$GMShader":"",
+  "%Name":"sh_wavesim_solid",
+  "name":"sh_wavesim_solid",
+  "parent":{
+    "name":"waveSim",
+    "path":"folders/nodes/data/simulation/waveSim.yy",
+  },
+  "resourceType":"GMShader",
+  "resourceVersion":"2.0",
+  "type":1,
+}

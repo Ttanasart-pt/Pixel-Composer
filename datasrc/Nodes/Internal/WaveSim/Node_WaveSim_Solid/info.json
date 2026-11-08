@@ -1,0 +1,6 @@
+{
+    "name":          "Solid",
+    "spr":           "s_node_wavesim_solid",
+    "baseNode":      "Node_WaveSim_Solid",
+    "pxc_version":    122020,
+}

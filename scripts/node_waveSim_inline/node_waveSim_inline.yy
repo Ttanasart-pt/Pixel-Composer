@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"node_waveSim_inline",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"node_waveSim_inline",
+  "parent":{
+    "name":"waveSim",
+    "path":"folders/nodes/data/simulation/waveSim.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

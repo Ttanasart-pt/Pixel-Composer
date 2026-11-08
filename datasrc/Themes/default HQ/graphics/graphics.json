@@ -339,6 +339,7 @@
     "vote_down":                          { "path": "./icon/s_vote_down.png",                               "s": 1, "x": 16, "y": 16 },
     "vote_up":                            { "path": "./icon/s_vote_up.png",                                 "s": 1, "x": 16, "y": 16 },
     "visible":                            { "path": "./icon/s_visible.png",                                 "s": 2, "x": 12, "y": 12 },
+    "wavesim":                            { "path": "./icon/s_icon_wavesim.png",                            "s": 1, "x":  8, "y":  8 },
     "weight":                             { "path": "./icon/s_weight.png",                                  "s": 1, "x": 12, "y": 12 },
     "wiki":                               { "path": "./icon/s_wiki.png",                                    "s": 1, "x": 12, "y": 12 },
     "window_exit_icon":                   { "path": "./icon/s_window_exit.png",                             "s": 1, "x":  8, "y":  8 },
@@ -423,6 +424,7 @@
     "node_junction_surface_uv":           { "path": "./node/s_node_junction_surface_uv.png",                "s": 2, "x": 12, "y": 12 },
     "node_junction_surface_map":          { "path": "./node/s_node_junction_surface_map.png",               "s": 2, "x": 12, "y": 12 },
     "node_junction_verlet":               { "path": "./node/s_node_junction_verlet.png",                    "s": 2, "x": 12, "y": 12 },
+    "node_junction_ripple":               { "path": "./node/s_node_junction_ripple.png",                    "s": 2, "x": 12, "y": 12 },
     "node_junction_grain":                { "path": "./node/s_node_junction_grain.png",                     "s": 2, "x": 12, "y": 12 },
 
     "node_junctions_single":              { "path": "./node/s_node_junctions_single.png",                   "s": 38, "x": 12, "y": 12 },

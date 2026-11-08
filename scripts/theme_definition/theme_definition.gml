@@ -101,7 +101,8 @@ function ThemeColor() constructor {
     node_blend_feedback                 = CDEF.pink;
     node_blend_collection               = CDEF.yellow;
     node_blend_simulation               = CDEF.cyan;
-    node_blend_fluid                    = CDEF.main_dark;
+    node_blend_fluid                    = CDEF.blue;
+    node_blend_ripple                   = CDEF.blue;
     node_blend_smoke                    = CDEF.smoke;
     node_blend_canvas                   = merge_color(CDEF.white, CDEF.orange, 0.5);
     node_blend_strand                   = CDEF.orange;

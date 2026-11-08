@@ -83,7 +83,10 @@ function Node_Rigid_Fracture(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 			}
 		}
 		
-		if(cmA == 0) return [];
+		if(cmA == 0) {
+			buffer_delete(surface_buffer);
+			return [];
+		}
 		
 		cmX /= cmA;
 		cmY /= cmA;
@@ -410,8 +413,8 @@ function Node_Rigid_Fracture(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 				mask    : _mask,
 				texture : noone,
 				
-				points : _mesh,
-				bbox   : [_atlas.x,_atlas.y],
+				points  : _mesh,
+				bbox    : [_atlas.x,_atlas.y],
 			});
 		}
 		
@@ -420,7 +423,6 @@ function Node_Rigid_Fracture(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	////- Rigidbody
 	
 	static spawn = function() {
-		objects = [];
 		if(array_empty(meshes)) return;
 		
 		var _baseSurf = getInputData( 0);
@@ -482,12 +484,12 @@ function Node_Rigid_Fracture(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 			var boxObj = new __Box2DObject(objId, _mesh.texture);
 			
 			// gmlBox2D_Object_Set_Body_Type(  objId, 0);
-			gmlBox2D_Object_Set_Enable(        objId, _activate);
-			gmlBox2D_Object_Set_Density(       objId, _dens);
-			gmlBox2D_Object_Set_Damping(       objId, _air_res, _rot_frc);
-			gmlBox2D_Object_Set_Gravity_Scale( objId, _gravSca);
-			gmlBox2D_Shape_Set_Friction(       objId, _cnt_frc);
-			gmlBox2D_Shape_Set_Restitution(    objId, _bouncy);
+			gmlBox2D_Object_Set_Enable(        objId, _activate          );
+			gmlBox2D_Object_Set_Density(       objId, _dens              );
+			gmlBox2D_Object_Set_Damping(       objId, _air_res, _rot_frc );
+			gmlBox2D_Object_Set_Gravity_Scale( objId, _gravSca           );
+			gmlBox2D_Shape_Set_Friction(       objId, _cnt_frc           );
+			gmlBox2D_Shape_Set_Restitution(    objId, _bouncy            );
 			
 			boxObj.px = px * worldScale;
 			boxObj.py = py * worldScale;
@@ -588,6 +590,8 @@ function Node_Rigid_Fracture(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 		}
 		
 		if(IS_FIRST_FRAME) {
+			objects = [];
+			
 			fracture();
 			spawn();
 		}

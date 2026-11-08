@@ -1,0 +1,6 @@
+{
+    "name":          "Source",
+    "spr":           "s_node_wavesim_source",
+    "baseNode":      "Node_WaveSim_Source",
+    "pxc_version":    122020,
+}
