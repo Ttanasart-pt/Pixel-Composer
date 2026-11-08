@@ -1,0 +1,12 @@
+[
+  {
+    "version": "1.22.2.007",
+    "changes": [
+      {
+        "date": "2026-11-08T03:14:40.961Z",
+        "node": "AreaBox",
+        "commit": "**AreaBox**: Fix crash when displaying array of area data."
+      }
+    ]
+  }
+]

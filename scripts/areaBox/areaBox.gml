@@ -246,6 +246,7 @@ function areaBox(_onModify, _unit = noone) : widget() constructor {
 		w = _w;
 		h = _h * 2;
 		mode = array_safe_get_fast(_data, 5);
+		var drawMode = is_real(mode);
 		
 		onSurfaceSize = struct_try_get(_display_data, "onSurfaceSize", -1);
 		useShape      = struct_try_get(_display_data, "useShape", true);
@@ -278,14 +279,16 @@ function areaBox(_onModify, _unit = noone) : widget() constructor {
 		_bx -= _bs;
 		_w  -= _bs;
 		
-		tooltip.index = mode;
-		var _by = _y + _h / 2 - _bs / 2;
-		var b = buttonInstant_Pad(THEME.button_hide_fill, _bx, _by, _bs, _bs, _m, hover, active, tooltip, THEME.inspector_area_type, mode);
-		if(b == 1) {
-			if(key_mod_press(SHIFT) && MOUSE_WHEEL > 0) mode = setMode(_data, (mode - 1 + 3) % 3);
-			if(key_mod_press(SHIFT) && MOUSE_WHEEL < 0) mode = setMode(_data, (mode + 1)     % 3);
+		if(drawMode) {
+			tooltip.index = mode;
+			var _by = _y + _h / 2 - _bs / 2;
+			var b = buttonInstant_Pad(THEME.button_hide_fill, _bx, _by, _bs, _bs, _m, hover, active, tooltip, THEME.inspector_area_type, mode);
+			if(b == 1) {
+				if(key_mod_press(SHIFT) && MOUSE_WHEEL > 0) mode = setMode(_data, (mode - 1 + 3) % 3);
+				if(key_mod_press(SHIFT) && MOUSE_WHEEL < 0) mode = setMode(_data, (mode + 1)     % 3);
+			}
+			if(b == 2) mode = setMode(_data, (mode + 1) % 3);
 		}
-		if(b == 2) mode = setMode(_data, (mode + 1) % 3);
 		
 		if(onSurfaceSize != -1) {
 			var _by   = _y + _h + _h / 2 - _bs / 2;
@@ -496,13 +499,6 @@ function areaBox(_onModify, _unit = noone) : widget() constructor {
 	
 	////- Action
 	
-	static clone = function() { 
-		var cln = new areaBox(onModify, unit);
-		
-		return cln;
-	} 
-
-	static free = function() {
-		for( var i = 0, n = array_length(tb); i < n; i++ ) tb[i].free();
-	}
+	static clone = function() { return new areaBox(onModify, unit); }
+	static free  = function() { for( var i = 0, n = array_length(tb); i < n; i++ ) tb[i].free(); }
 }
