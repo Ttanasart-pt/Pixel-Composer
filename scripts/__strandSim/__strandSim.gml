@@ -429,12 +429,7 @@ function StrandMesh() constructor {
 		array_foreach(hairs, function(h,i) /*=>*/ {return h.draw(__x, __y, __s, __d, __b)});
 	}
 	
-	static store = function() { array_foreach(hairs, function(h,i) /*=>*/ {return h.store()}); }
-	
-	static freeze = function(fixLength = false) {
-		__fixLength = fixLength;
-		array_foreach(hairs, function(h,i) /*=>*/ {return h.freeze(__fixLength)});
-	}
+	////- Get
 	
 	static getPointRatio = function(rat, ind = 0) {
 		if(array_length(hairs) == 0) return new __vec2();
@@ -451,18 +446,7 @@ function StrandMesh() constructor {
 	
 	static getLineCount = function() { return array_length(hairs); }
 	
-	static set = function() { array_foreach(hairs, function(h,i) /*=>*/ {return h.set()}); return self; }
-	
-	static clone = function() {
-		var s = new StrandMesh();
-		
-		s.loop = loop;
-		s.mesh = mesh;
-		for( var i = 0, n = array_length(hairs); i < n; i++ )
-			s.hairs[i] = hairs[i].clone();
-		
-		return s;
-	}
+	////- Serialize
 	
 	static serialize = function()  { 
 		var _h = [];
@@ -478,4 +462,27 @@ function StrandMesh() constructor {
 			hairs[i] = new Strand().deserialize(j[i]);
 		return self;
 	}
+	
+	////- Action
+	
+	static store = function() { array_foreach(hairs, function(h,i) /*=>*/ {return h.store()}); }
+	
+	static freeze = function(fixLength = false) {
+		__fixLength = fixLength;
+		array_foreach(hairs, function(h,i) /*=>*/ {return h.freeze(__fixLength)});
+	}
+	
+	static set = function() { array_foreach(hairs, function(h,i) /*=>*/ {return h.set()}); return self; }
+	
+	static clone = function() {
+		var s = new StrandMesh();
+		
+		s.loop = loop;
+		s.mesh = mesh;
+		for( var i = 0, n = array_length(hairs); i < n; i++ )
+			s.hairs[i] = hairs[i].clone();
+		
+		return s;
+	}
+	
 }

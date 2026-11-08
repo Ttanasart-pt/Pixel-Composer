@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"node_strand_move",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"node_strand_move",
+  "parent":{
+    "name":"affectors",
+    "path":"folders/nodes/data/simulation/strandSim/affectors.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

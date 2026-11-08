@@ -97,57 +97,59 @@ function drawWidget(xx, yy, ww, _m, _jun, global_var = true, _hover = false, _fo
 		var drawLeft = dKey? juncHover == _jun : true;
 		var cirAA    = .3;
 		
-		if(conn) { // Connected
-			var index = 2;
-			var cc    = COLORS._main_accent;
-			var _hov  = _hover && point_in_circle(_m[0], _m[1], butx, lb_y, bs / 2);
-			
-			draw_sprite_ui_uniform(THEME.animate_clock, index, butx, lb_y, ics, cc, .8 + .2 * _hov);
-			
-			if(_hov) {
-				mbRight = false;
-				cHov    = true;
+		if(_input) {
+			if(conn) { // Connected
+				var index = 2;
+				var cc    = COLORS._main_accent;
+				var _hov  = _hover && point_in_circle(_m[0], _m[1], butx, lb_y, bs / 2);
 				
-				draw_sprite_ui_uniform(THEME.animate_clock, index, butx, lb_y, ics, index == 2? COLORS._main_accent : c_white, 1);
+				draw_sprite_ui_uniform(THEME.animate_clock, index, butx, lb_y, ics, cc, .8 + .2 * _hov);
 				
-				if(_input) {
-					setTOOLTIP(__txt("panel_inspector_link", "Connected"));
-					if(mouse_rpress(_focus))
-						jun.removeFrom();
-				}
-			}
-			
-		} else if(_input && jun.isAnimable() && !jun.expUse) { // Animation
-			var index = jun.is_anim;
-			var cc    = jun.is_anim? COLORS._main_value_positive : COLORS._main_icon_light;
-			var _hov  = _hover && point_in_circle(_m[0], _m[1], butx, lb_y, bs / 2);
-			
-			if(drawLeft || jun.is_anim)
-				draw_sprite_ui_uniform(aspr, dKey? 0:index, butx, lb_y, ics, cc, .8 + .2 * _hov);
-			else 
-				draw_sprite_ui_uniform(THEME.circle_16, 0, butx, lb_y, ics * .4, COLORS._main_icon, cirAA);
-			
-			if(_hov) {
-				mbRight = false;
-				cHov    = true;
-				
-				if(anim_hold != noone) 
-					jun.setAnim(anim_hold, true);
-				
-				draw_sprite_ui_uniform(aspr, dKey? 0:index, butx, lb_y, ics, index == 2? COLORS._main_accent : c_white, 1);
-				setTOOLTIP(__txt("panel_inspector_toggle_anim", "Toggle Animation"));
-						
-				if(mouse_lpress(_focus)) {
-					jun.setAnim(!jun.is_anim, true);
-					anim_hold = jun.is_anim;
+				if(_hov) {
+					mbRight = false;
+					cHov    = true;
+					
+					draw_sprite_ui_uniform(THEME.animate_clock, index, butx, lb_y, ics, index == 2? COLORS._main_accent : c_white, 1);
+					
+					if(_input) {
+						setTOOLTIP(__txt("panel_inspector_link", "Connected"));
+						if(mouse_rpress(_focus))
+							jun.removeFrom();
+					}
 				}
 				
-				if(mouse_rpress(_focus)) jun.inspector_timeline = !jun.inspector_timeline;
+			} else if(jun.isAnimable() && !jun.expUse) { // Animation
+				var index = jun.is_anim;
+				var cc    = jun.is_anim? COLORS._main_value_positive : COLORS._main_icon_light;
+				var _hov  = _hover && point_in_circle(_m[0], _m[1], butx, lb_y, bs / 2);
+				
+				if(drawLeft || jun.is_anim)
+					draw_sprite_ui_uniform(aspr, dKey? 0:index, butx, lb_y, ics, cc, .8 + .2 * _hov);
+				else 
+					draw_sprite_ui_uniform(THEME.circle_16, 0, butx, lb_y, ics * .4, COLORS._main_icon, cirAA);
+				
+				if(_hov) {
+					mbRight = false;
+					cHov    = true;
+					
+					if(anim_hold != noone) 
+						jun.setAnim(anim_hold, true);
+					
+					draw_sprite_ui_uniform(aspr, dKey? 0:index, butx, lb_y, ics, index == 2? COLORS._main_accent : c_white, 1);
+					setTOOLTIP(__txt("panel_inspector_toggle_anim", "Toggle Animation"));
+							
+					if(mouse_lpress(_focus)) {
+						jun.setAnim(!jun.is_anim, true);
+						anim_hold = jun.is_anim;
+					}
+					
+					if(mouse_rpress(_focus)) jun.inspector_timeline = !jun.inspector_timeline;
+				}
+				
+			} else if(!dKey) {
+				draw_sprite_ui_uniform(aspr, conn * 2, butx, lb_y, ics, conn? COLORS._main_accent : COLORS._main_icon_light, .3);
+				
 			}
-			
-		} else if(!dKey) {
-			draw_sprite_ui_uniform(aspr, conn * 2, butx, lb_y, ics, conn? COLORS._main_accent : COLORS._main_icon_light, .3);
-			
 		}
 		
 		lb_w += bs;

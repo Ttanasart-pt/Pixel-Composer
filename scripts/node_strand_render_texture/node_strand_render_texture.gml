@@ -13,6 +13,11 @@ function Node_Strand_Render_Texture(_x, _y, _group = noone) : Node(_x, _y, _grou
 	////- =Output
 	newInput( 0, nodeValue_Dimension());
 	
+	////- =Render
+	newInput( 7, nodeValue_Bool( "Render", true ))
+	newInput( 8, nodeValue_Int(  "Step",      4 ))
+	newInput( 9, nodeValue_Int(  "Iteration", 8 ))
+	
 	////- =Strand
 	newInput( 1, nodeValue_Strand());
 	newInput( 2, nodeValue_Range("Thickness", [ 8, 8 ], { linked : true }));
@@ -25,9 +30,10 @@ function Node_Strand_Render_Texture(_x, _y, _group = noone) : Node(_x, _y, _grou
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
 	input_display_list = [ 5, 
-		[ "Output",  false ], 0,
-		[ "Strand",  false ], 1, 2,  
-		[ "Texture", false ], 4, [3, true], 6, -1, 
+		[ "Output",  false    ],  0,
+		[ "Render",  false, 7 ],  8,  9, 
+		[ "Strand",  false    ],  1,  2,  
+		[ "Texture", false    ],  4, [3, true],  6, -1, 
 	];
 	
 	////- Node
@@ -50,6 +56,10 @@ function Node_Strand_Render_Texture(_x, _y, _group = noone) : Node(_x, _y, _grou
 			var _bld = getInputData( 3);
 			var _shf = getInputData( 6);
 			
+			var _ren = getInputData( 7);
+			var _stp = getInputData( 8);
+			var _itr = getInputData( 9);
+			
 			var _tex = getInputData( 4);
 			var _sed = getInputData( 5);
 			
@@ -63,6 +73,24 @@ function Node_Strand_Render_Texture(_x, _y, _group = noone) : Node(_x, _y, _grou
 		if(!is_array(_tex)) _tex = [ _tex ];
 		
 		if(array_empty(_tex)) return;
+		
+		if(_ren) {
+			if(!is(inline_context, Node_Strand_Group_Inline)) return;
+			
+			for( var k = 0; k < array_length(_str); k++ )
+			for( var i = 0, n = array_length(_str[k].hairs); i < n; i++ ) {
+				var h = _str[k].hairs[i];
+				
+				for( var j = h.free? 0 : 1, m = array_length(h.points); j < m; j++ ) {
+					var p = h.points[j];
+					p.x += inline_context.gravity_x;
+					p.y += inline_context.gravity_y;
+				}
+			}
+			
+			for( var i = 0, n = array_length(_str); i < n; i++ ) 
+				_str[i].step(_stp, _itr);
+		}
 		
 		random_set_seed(_sed);
 		var _sedIndex = 0;

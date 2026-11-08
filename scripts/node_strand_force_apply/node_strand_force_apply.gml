@@ -23,6 +23,8 @@ function Node_Strand_Force_Apply(_x, _y, _group = noone) : _Node_Strand_Affector
 		[ "Turbulence", false ], i+1, i+3, i+4, 
 	]);
 	
+	////- Node
+	
 	static update = function(frame = CURRENT_FRAME) {
 		#region data
 			var i = input_fix_len;

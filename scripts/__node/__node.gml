@@ -38,7 +38,7 @@ function __Node_Base(_x, _y) constructor {
 			color : -1,
 		};
 		
-		attributes_properties = [["Attributes", true]];
+		attributes_properties = [];
 		attributeEditors      = [];
 	#endregion
 	

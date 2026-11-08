@@ -349,8 +349,8 @@
             "Node_Strand_Create",
             "Node_Strand_Update",
             
-            { "label": "Affector" },
             { "label": "/Forces" },
+            "Node_Strand_Move",
             "Node_Strand_Gravity",
             "Node_Strand_Force_Apply",
             { "label": "/Other" },

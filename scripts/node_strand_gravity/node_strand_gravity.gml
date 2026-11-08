@@ -10,8 +10,9 @@ function Node_Strand_Gravity(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	newInput( 0, nodeValue_Strand());
 	
 	////- =Gravity
-	newInput( 1, nodeValue_Float(    "Gravity",    1  ));
+	newInput( 1, nodeValue_Float(    "Strength",   1  ));
 	newInput( 2, nodeValue_Rotation( "Direction", -90 ));
+	// 3
 	
 	newOutput(0, nodeValue_Output("Strands", VALUE_TYPE.strands, noone));
 	
@@ -23,12 +24,14 @@ function Node_Strand_Gravity(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	
 	static update = function(frame = CURRENT_FRAME) {
 		#region data
-			var _str = getInputData(0);
-			var _gra = getInputData(1);
-			var _dir = getInputData(2);
+			var _str = getInputData( 0);
+			
+			var _gra = getInputData( 1);
+			var _dir = getInputData( 2);
+			
+			if(_str == noone) return;
 		#endregion
 		
-		if(_str == noone) return;
 		var __str = _str;
 		if(!is_array(_str)) __str = [ _str ];
 		
@@ -41,9 +44,6 @@ function Node_Strand_Gravity(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 			
 			for( var j = h.free? 0 : 1, m = array_length(h.points); j < m; j++ ) {
 				var p = h.points[j];
-				p.x += p.dx;
-				p.y += p.dy;
-				
 				p.x += gx;
 				p.y += gy;
 			}

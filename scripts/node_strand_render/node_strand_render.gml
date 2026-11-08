@@ -13,6 +13,11 @@ function Node_Strand_Render(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	////- =Output
 	newInput( 0, nodeValue_Dimension());
 	
+	////- =Render
+	newInput(13, nodeValue_Bool( "Render", true ))
+	newInput(14, nodeValue_Int(  "Step",      4 ))
+	newInput(15, nodeValue_Int(  "Iteration", 8 ))
+	
 	////- =Strand
 	newInput( 1, nodeValue_Strand());
 	newInput( 2, nodeValue_Range( "Thickness", [1,1], { linked : true } )).setCurvable(3, CURVE_DEF_11, "over length");
@@ -25,12 +30,13 @@ function Node_Strand_Render(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	////- =Color
 	newInput( 4, nodeValue_Gradient( "Random color",      gra_white )).addShift(11);
 	newInput( 5, nodeValue_Gradient( "Color over length", gra_white )).setHotkeyAuto("C").addShift(12);
-	// 13
+	// 16
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
-	input_display_list = [  6,  8, 
+	input_display_list = [  6,
 		[ "Output",   false    ],  0,
+		[ "Render",   false,13 ], 14, 15, 
 		[ "Strand",   false    ],  1,  2,  3, 
 		[ "Scatter",  false, 9 ],  7, 10, 
 		[ "Color",    false    ], [4, true], 11, [5, true], 11, 
@@ -64,13 +70,16 @@ function Node_Strand_Render(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	static update = function(frame = CURRENT_FRAME) {
 		#region data
 			var _seed       = getInputData(6);
-			var _renderStep = getInputData(8);
 			
-			var _dim   = getInputData(0);
+			var _dim   = getInputData( 0);
 			
-			var _strd  = getInputData(1);
-			var _tbas  = getInputData(2);
-			var _tlen  = getInputData(3), len_curve = inputs[2].attributes.curved;
+			var _strd  = getInputData( 1);
+			var _tbas  = getInputData( 2);
+			var _tlen  = getInputData( 3), len_curve = inputs[2].attributes.curved;
+			
+			var _ren   = getInputData(13);
+			var _stp   = getInputData(14);
+			var _itr   = getInputData(15);
 			
 			var _chUse = getInputData( 9);
 			var _chid  = getInputData( 7);
@@ -90,6 +99,24 @@ function Node_Strand_Render(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		if(_strd == noone) return;
 		if(!is_array(_strd)) _strd = [ _strd ];
 		
+		if(_ren) {
+			if(!is(inline_context, Node_Strand_Group_Inline)) return;
+			
+			for( var k = 0; k < array_length(_strd); k++ )
+			for( var i = 0, n = array_length(_strd[k].hairs); i < n; i++ ) {
+				var h = _strd[k].hairs[i];
+				
+				for( var j = h.free? 0 : 1, m = array_length(h.points); j < m; j++ ) {
+					var p  = h.points[j];
+					p.x += inline_context.gravity_x;
+					p.y += inline_context.gravity_y;
+				}
+			}
+			
+			for( var i = 0, n = array_length(_strd); i < n; i++ ) 
+				_strd[i].step(_stp, _itr);
+		}
+		
 		random_set_seed(_seed);
 		var _sedIndex = 0;
 		var _rndWidth = _tbas[0] != _tbas[1];
@@ -108,8 +135,6 @@ function Node_Strand_Render(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		for( var h = 0, m = array_length(_strd); h < m; h++ ) {
 			var _strand = _strd[h];
 			var hairs   = _strand.hairs;
-			
-			if(_renderStep) _strand.step(_renderStep);
 			
 			for( var i = 0, n = array_length(hairs); i < n; i++ ) {
 				var hair = hairs[i];

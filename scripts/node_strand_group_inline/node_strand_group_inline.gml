@@ -15,4 +15,26 @@ function Node_Strand_Group_Inline(_x, _y, _group = noone) : Node_Collection_Inli
 		addNode(_create);
 		addNode(_render);
 	}
+	
+	////- =Gravity
+	newInput( 0, nodeValue_Float(    "Strength",   1  ));
+	newInput( 1, nodeValue_Rotation( "Direction", -90 ));
+	
+	input_display_list = [ 
+		[ "Gravity", false ], 0, 1, 
+	];
+	
+	gravity_x = 0;
+	gravity_y = 0;
+	
+	static update = function(frame = CURRENT_FRAME) {
+		#region data
+			var _gra = getInputData(0);
+			var _dir = getInputData(1);
+		#endregion
+	
+		gravity_x = lengthdir_x(_gra, _dir);
+		gravity_y = lengthdir_y(_gra, _dir);
+		
+	}
 }

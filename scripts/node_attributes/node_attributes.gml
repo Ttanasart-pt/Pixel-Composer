@@ -139,6 +139,7 @@
 		if(label) array_push(attributeEditors, "Surface");
 		array_push(attributeEditors, color_depth_editor);
 		
+		if(array_empty(attributes_properties)) array_push(attributes_properties, ["Attributes", true]);
 		array_push(attributes_properties, new attribute_property("color_depth", color_depth_editor));
 	}
 	
@@ -161,6 +162,8 @@
 		
 		if(label) array_push(attributeEditors, "Surface");
 		array_push(attributeEditors, interpolate_editor);
+		
+		if(array_empty(attributes_properties)) array_push(attributes_properties, ["Attributes", true]);
 		array_push(attributes_properties, new attribute_property("interpolate", interpolate_editor));
 	}
 	
@@ -182,6 +185,8 @@
 		
 		if(label) array_push(attributeEditors, "Surface");
 		array_push(attributeEditors, oversample_editor);
+		
+		if(array_empty(attributes_properties)) array_push(attributes_properties, ["Attributes", true]);
 		array_push(attributes_properties, new attribute_property("oversample", oversample_editor));
 	}
 	

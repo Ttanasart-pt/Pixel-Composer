@@ -1,0 +1,6 @@
+{
+    "name":          "Strand Move",
+    "spr":           "s_node_strand_move",
+    "baseNode":      "Node_Strand_Move",
+    "pxc_version":    122020,
+}

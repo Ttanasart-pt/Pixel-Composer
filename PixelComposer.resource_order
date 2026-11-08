@@ -2664,6 +2664,7 @@
     {"name":"node_strand_group_inline","order":3,"path":"scripts/node_strand_group_inline/node_strand_group_inline.yy",},
     {"name":"node_strand_group","order":2,"path":"scripts/node_strand_group/node_strand_group.yy",},
     {"name":"node_strand_length_adjust","order":9,"path":"scripts/node_strand_length_adjust/node_strand_length_adjust.yy",},
+    {"name":"node_strand_move","order":11,"path":"scripts/node_strand_move/node_strand_move.yy",},
     {"name":"node_strand_render_texture","order":11,"path":"scripts/node_strand_render_texture/node_strand_render_texture.yy",},
     {"name":"node_strand_render","order":9,"path":"scripts/node_strand_render/node_strand_render.yy",},
     {"name":"node_strand_update","order":7,"path":"scripts/node_strand_update/node_strand_update.yy",},

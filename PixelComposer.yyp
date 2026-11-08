@@ -3062,6 +3062,7 @@
     {"id":{"name":"node_strand_group_inline","path":"scripts/node_strand_group_inline/node_strand_group_inline.yy",},},
     {"id":{"name":"node_strand_group","path":"scripts/node_strand_group/node_strand_group.yy",},},
     {"id":{"name":"node_strand_length_adjust","path":"scripts/node_strand_length_adjust/node_strand_length_adjust.yy",},},
+    {"id":{"name":"node_strand_move","path":"scripts/node_strand_move/node_strand_move.yy",},},
     {"id":{"name":"node_strand_render_texture","path":"scripts/node_strand_render_texture/node_strand_render_texture.yy",},},
     {"id":{"name":"node_strand_render","path":"scripts/node_strand_render/node_strand_render.yy",},},
     {"id":{"name":"node_strand_update","path":"scripts/node_strand_update/node_strand_update.yy",},},

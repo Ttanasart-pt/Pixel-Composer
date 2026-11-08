@@ -130,43 +130,52 @@ function Node_Strand_Create(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	#endregion
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _params) { 
-		var _typ = getInputData(0);
+		var _typ = getInputData( 0);
+		var _pos = getInputData( 6);
 		var _pre = getInputData(16);
+		
+		var px = _x + _pos[0] * _s;
+		var py = _y + _pos[1] * _s;
+		
 		var hovering = false;
 		if(!attributes.use_groom && attributes.show_strand) strands.draw(_x, _y, _s, _pre);
 		
 		var _currTool = PANEL_PREVIEW.tool_current;
 		tools = attributes.use_groom? groomTools : ungroomTools;
 		
-		if(_typ == 0) {
-			if(tool_dragging == noone) drawOverlayInput(inputs[6].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my));
-			
-		} else if(_typ == 1) {
-			var _pth = getInputData(5);
-			var _sid = getInputData(7);
-			
-			if(!is_path(_pth)) return;
-			var lines = struct_has(_pth, "getLineCount")? _pth.getLineCount() : 1;
-			
-			draw_set_color(COLORS._main_accent);
-			var ox, oy, nx, ny;
-			for( var l = 0; l < lines; l++ )
-			for( var i = 0; i < 32; i++ ) {
-				var _p = _pth.getPointRatio(i / 32, l);
-				nx = _x + _p.x * _s;
-				ny = _y + _p.y * _s;
+		if(tool_dragging == noone) drawOverlayInput(inputs[6].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my));
+		
+		switch(_typ) {
+			case 1 :
+				var _pth = getInputData(5);
+				var _sid = getInputData(7);
 				
-				if(i) draw_line(ox, oy, nx, ny);
+				if(!is_path(_pth)) return;
+				var lines = struct_has(_pth, "getLineCount")? _pth.getLineCount() : 1;
 				
-				ox = nx;
-				oy = ny;
-			}
-		} else if(_typ == 2) {
-			var _msh = getInputData(13);
-			if(_msh == noone) return;
+				draw_set_color(COLORS._main_accent);
+				var ox, oy, nx, ny;
+				for( var l = 0; l < lines; l++ )
+				for( var i = 0; i < 32; i++ ) {
+					var _p = _pth.getPointRatio(i / 32, l);
+					nx = px + _p.x * _s;
+					ny = py + _p.y * _s;
+					
+					if(i) draw_line(ox, oy, nx, ny);
+					
+					ox = nx;
+					oy = ny;
+				}
+			break;
 			
-			draw_set_color(COLORS._main_accent);
-			_msh.draw(_x, _y, _s);
+			case 2 :
+				var _msh = getInputData(13);
+				if(_msh == noone) return;
+				
+				draw_set_color(COLORS._main_accent);
+				_msh.draw(px, py, _s);
+			break;
+			
 		}
 		
 		if(!attributes.use_groom) return hovering;
@@ -655,7 +664,8 @@ function Node_Strand_Create(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	}
 	
 	static update = function(frame = CURRENT_FRAME) {
-		strandUpdate(IS_FIRST_FRAME);
+		if(IS_FIRST_FRAME)
+			strandUpdate(IS_FIRST_FRAME);
 	}
 	
 	////- Serialize

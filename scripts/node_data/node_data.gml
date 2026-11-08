@@ -174,6 +174,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		use_display_list		= true;
 		input_display_list		= -1;
 		input_display_deco      = undefined;
+		output_display_section  = ["Output", false];
 		output_display_list		= -1;
 		inspector_display_list	= -1;
 		is_dynamic_output		= false;
@@ -3124,7 +3125,6 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		
 		var val = outputs[preview_channel].getValue();
 		if(is(val, dynaSurf)) val = array_safe_get_fast(val.surfaces, 0, noone);
-		
 		return val;
 	}
 	

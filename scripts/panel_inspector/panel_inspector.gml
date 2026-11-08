@@ -980,7 +980,7 @@ function Panel_Inspector() : PanelContent() constructor {
             var yy    = _y + hh;
             var _draw = yy + ui(8) < con_h && yy > -ui(8);
             
-            if(i <= amoIn + amoAttr && currSec != "") _heiMap[$ currSec][1] = max(_heiMap[$ currSec][1], _y + hh + padd);
+            if(currSec != "") _heiMap[$ currSec][1] = max(_heiMap[$ currSec][1], _y + hh + padd);
             
             if(i < amoIn) { // inputs
                 var _dsl = _inspecting.input_display_list;
@@ -994,18 +994,29 @@ function Panel_Inspector() : PanelContent() constructor {
             	jun = _inspecting.attributes_properties[i - amoIn];
             	
             } else if(i == amoIn + amoAttr) { // output label
-                hh += ui(8 + 32 + 8);
-                
-                if(segExp && currSec != "" && !prevCol) { 
-                	yy += padd;
-                	hh += padd;
+            	if(currSec != "" && !prevCol) { 
+                	yy += padd + ui(8);
+                	hh += padd + ui(8);
+                	
+                } else {
+                	yy += ui(2);
+                	hh += ui(2);
+                	
                 }
-            	
-                currSec = "";
-                draw_sprite_stretched_ext(THEME.box_r5_clr, 0, 0, yy + ui(8), con_w, ui(32), COLORS.panel_inspector_output_label, 0.8);
-                draw_set_text(f_p0b, fa_center, fa_center, COLORS._main_text_sub);
-                draw_text_add(xc, yy + ui(8 + 16), __txt("Outputs"));
-                continue;
+                
+                draw_set_color(COLORS.panel_frame);
+                draw_line_round(_x + ui(16), yy, _x + _w - ui(16), yy, ui(2));
+                
+                if(currSec == "" || prevCol) { 
+                	yy += ui(10);
+                	hh += ui(10);
+                	
+                } else {
+                	yy -= ui(2);
+                	hh -= ui(2);
+                }
+                
+                jun = _inspecting.output_display_section;
             
             } else if(i <  amoIn + amoAttr + 1 + amoOut) { // outputs
                 var _oi = i - (amoIn + amoAttr + 1);
@@ -1392,7 +1403,10 @@ function Panel_Inspector() : PanelContent() constructor {
                 	segOffset = false;
                 	var _section_st = 0;
                 	
-                    if(i == amoIn) { // Skip attribute
+                    if(i >= amoIn + amoAttr) { // Skip output
+                    	i = amo;
+                    	
+                    } else if(i == amoIn) { // Skip attribute
                     	i = amoIn + amoAttr - 1;
                     	
                     } else {
