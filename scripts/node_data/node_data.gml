@@ -352,6 +352,8 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	#endregion
 	
 	#region ---- Preview ----
+		PREVIEW_OVERRIDE       = false;
+		
 		show_input_name        = false;
 		show_output_name       = false;
 		
@@ -3114,6 +3116,8 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	static drawProcessShort       = undefined; // function(cx, cy, cw, ch, _prog) {}
 	
 	////- PREVIEW
+	
+	PREVIEW_OVERRIDE_FN = undefined;
 	
 	static getPreviewValues = function() {
 		if(preview_channel < 0) return array_safe_get(temp_surface, -preview_channel-1, noone);

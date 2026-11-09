@@ -5383,7 +5383,9 @@ function Panel_Preview() : PanelContent() constructor {
     		if(pHOVER && pFOCUS && mouse_lpress()) __temp_preview = undefined; 
     		return; 
     	}
-		
+    	
+    	previewing_node = getNodePreview();
+    	
 		var pd = THEME_VALUE.panel_toolbar_padding;
     	 mouse_on_preview = pHOVER && point_in_rectangle(mx, my, 0, pd + toolbar_size, w, h - (toolbar_size + pd)) && _mouse_on_preview;
         _mouse_on_preview = true;
@@ -5391,7 +5393,6 @@ function Panel_Preview() : PanelContent() constructor {
         if(do_fullView) fullView();
         do_fullView = false;
         
-        previewing_node = getNodePreview();
         if(previewing_node && previewing_node.is_3D) {
         	preview_lock = previewing_node.lock_3D;
         	d3_active    = preview_mode || preview_lock? previewing_node.is_3D : NODE_3D.none;

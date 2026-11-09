@@ -313,17 +313,20 @@ function NodeObject(_name, _node, _tooltip = "") constructor {
 		
 		var _name  = getName();
 		var _range = struct_try_get(_param, "range", 0);
-		var _pKey  = noone;
+		var _pKey  = undefined;
 		
 		if(struct_try_get(_query, "type") == "preset") {
 			var _preset = _query.data;
 			if(_preset.content[$ "asNode"]) 
 				 _name = _query[$ "value"];
 			else _pKey = _query[$ "value"];
-		} else 
-			_pKey = struct_try_get(_query, "value", noone);
+			
+		} else if(has(_query, "value"))
+			_pKey = _query[$ "value"];
 		
-		if(_pKey != noone) {
+		if(_pKey != undefined) {
+			_pKey = string_trim_start(_pKey, ["-4|"]);
+			
 			draw_set_text(f_p2, fa_left, fa_center, COLORS._main_text_sub);
 			draw_text_add(tx, ty, _name);
 			tx += string_width(_name);

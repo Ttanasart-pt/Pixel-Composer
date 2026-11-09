@@ -48,7 +48,7 @@ function NewCanvasPanel(node) {
 		_layout = json_load_struct(_lpath);
 	
 	editorPanel = dialogPanelCall(_layout);
-	if(!editorPanel) return;
+	if(!editorPanel) return undefined;
 	
 	editorPanel.title  = "Canvas";
 	var _canvas   = editorPanel.content;
@@ -57,6 +57,8 @@ function NewCanvasPanel(node) {
 	var _conten = editorPanel.panel.getAllContent();
 	for( var i = 0, n = array_length(_conten); i < n; i++ ) 
 		_conten[i].canvas = _canvas;
+		
+	return editorPanel;
 }
 
 function Panel_Canvas() : PanelContent() constructor {

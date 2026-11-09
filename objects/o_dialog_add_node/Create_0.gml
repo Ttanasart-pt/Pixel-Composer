@@ -1548,17 +1548,19 @@ event_inherited();
 				var _nmy  = yy + grid_size + 4, _nmh = 0;
 				var _drw  = _nmy > -grid_size && _nmy < search_pane.h;
 				
-				var _pKey  = noone;
+				var _pKey  = undefined;
 				if(struct_try_get(_query, "type") == "preset") {
 					var _preset = _query.data;
 					if(_preset.content[$ "asNode"]) 
 						 _name = _query[$ "value"];
 					else _pKey = _query[$ "value"];
-				} else 
-					_pKey = struct_try_get(_query, "value", noone);
+					
+				} else if(has(_query, "value"))
+					_pKey = _query[$ "value"];
 				
-				if(_pKey != noone) {
+				if(_pKey != undefined) {
 					draw_set_font(f_p3);
+					_pKey = string_trim_start(_pKey, ["-4|"]);
 					_pKey = string_title(_pKey);
 					
 					draw_set_text(f_p3, fa_center, fa_top, COLORS._main_text_sub);
