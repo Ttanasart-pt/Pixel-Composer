@@ -63,8 +63,8 @@ function Node_Move_Point(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 		_pnt[0]  = _anc[0] + (_pnt[0] - _anc[0]) * _sca[0];
 		_pnt[1]  = _anc[1] + (_pnt[1] - _anc[1]) * _sca[1];
 		
-		_pnt[0] += random_range(_pos[0], _pos[2]);
-		_pnt[1] += random_range(_pos[1], _pos[3]);
+		_pnt[0] += random_range(_pos[0], _pos[1]);
+		_pnt[1] += random_range(_pos[2], _pos[3]);
 		
 		outputs[0].setTypeSignature(array_create(array_length(_pnt), VALUE_TYPE.float));
 		

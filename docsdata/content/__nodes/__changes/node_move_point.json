@@ -6,6 +6,11 @@
         "date": "2026-11-09T04:27:51.552Z",
         "node": "",
         "commit": "**Inspector Panel**: Fix crash when using edit as text."
+      },
+      {
+        "date": "2026-11-09T04:48:50.709Z",
+        "node": "Path Builder",
+        "commit": "**Path Builder**: Fix freeze when inputting multiple point arrays."
       }
     ]
   },

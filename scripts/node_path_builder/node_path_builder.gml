@@ -73,24 +73,26 @@ function Node_Path_Builder(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 				var _a0 = _anchor[(i + 0) % ansize];
 				var _a1 = _anchor[(i + 1) % ansize];
 				
-				var l = 0, _ox = 0, _oy = 0, _nx = 0, _ny = 0, p = 0;
+				var len = 0, _ox = 0, _oy = 0, _nx = 0, _ny = 0;
 				var sg = array_create((sample + 1) * 2);
 				
 				for(var j = 0; j <= sample; j++) {
+					var rat = j / sample;
 					
 					if(_a0[4] == 0 && _a0[5] == 0 && _a1[2] == 0 && _a1[3] == 0) {
-						_nx = lerp(_a0[0], _a1[0], j / sample);
-						_ny = lerp(_a0[1], _a1[1], j / sample);
+						_nx = lerp(_a0[0], _a1[0], rat);
+						_ny = lerp(_a0[1], _a1[1], rat);
+						
 					} else {
-						_nx = eval_bezier_x(j / sample, _a0[0],  _a0[1], _a1[0],  _a1[1], _a0[0] + _a0[4], _a0[1] + _a0[5], _a1[0] + _a1[2], _a1[1] + _a1[3]);
-						_ny = eval_bezier_y(j / sample, _a0[0],  _a0[1], _a1[0],  _a1[1], _a0[0] + _a0[4], _a0[1] + _a0[5], _a1[0] + _a1[2], _a1[1] + _a1[3]);
+						_nx = eval_bezier_x(rat, _a0[0],  _a0[1], _a1[0],  _a1[1], _a0[0] + _a0[4], _a0[1] + _a0[5], _a1[0] + _a1[2], _a1[1] + _a1[3]);
+						_ny = eval_bezier_y(rat, _a0[0],  _a0[1], _a1[0],  _a1[1], _a0[0] + _a0[4], _a0[1] + _a0[5], _a1[0] + _a1[2], _a1[1] + _a1[3]);
 					}
 					
 					sg[j * 2 + 0] = _nx;
 					sg[j * 2 + 1] = _ny;
 					
 					_bb.addPoint(_nx, _ny);
-					if(j) l += point_distance(_nx, _ny, _ox, _oy);	
+					if(j) len += point_distance(_nx, _ny, _ox, _oy);	
 					
 					_ox = _nx;
 					_oy = _ny;
@@ -98,8 +100,8 @@ function Node_Path_Builder(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 				
 				boundary[p]      = _bb;
 				segments[p][i]   = sg;
-				lengths[p][i]    = l;
-				lengthTotal[p]  += l;
+				lengths[p][i]    = len;
+				lengthTotal[p]  += len;
 				lengthAccs[p][i] = lengthTotal[p];
 			}
 		}
@@ -166,7 +168,7 @@ function Node_Path_Builder(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		for(var p = 0; p < path_amount; p++)
 		for( var i = 0, n = array_length(segments[p]); i < n; i++ ) { 
 			var _seg = segments[p][i];
-			var _ox  = 0, _oy = 0, _nx = 0, _ny = 0, p = 0;
+			var _ox  = 0, _oy = 0, _nx = 0, _ny = 0;
 				
 			for( var j = 0, m = array_length(_seg); j < m; j += 2 ) {
 				_nx = _x + _seg[j + 0] * _s;
@@ -296,12 +298,8 @@ function Node_Path_Builder(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		for (var i = 0, n = path_amount; i < n; i++) {
 			var _anchors = _anc[i];
 			
-			for (var j = 0, m = array_length(_anchors); j < m; j++) {
-				var _a = _anchors[j]; 
-				
-				for (var k = 0; k < 7; k++) 
-					anchors[i][j][k] = array_safe_get(_a, k, 0);
-			}
+			for (var j = 0, m = array_length(_anchors); j < m; j++)
+				anchors[i][j] = array_verify(_anchors[j], 7);
 		}
 		
 		updateLength();
