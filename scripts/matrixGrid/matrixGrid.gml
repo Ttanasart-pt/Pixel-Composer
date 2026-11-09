@@ -117,6 +117,7 @@ function matrixGrid(_type, _onModify, _unit = noone) : widget() constructor {
 		var resize = _display_data[$ "resizeable"] ?? true;
 		    resize = resize && interactable;
 		current_data = _data;
+		for( var i = 0, n = array_length(tb); i < n; i++ ) tb[i].junction = junction;
 		
 		x = _x;
 		y = _y;

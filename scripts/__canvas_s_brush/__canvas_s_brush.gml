@@ -29,6 +29,7 @@ function canvas_s_brush() constructor {
 	shape_array = [ s_node_shape_circle, s_node_shape_rectangle, THEME.panel_preview_icon ];
 	size_editor = textBox_Number(function(s) /*=>*/ { _size = round(s) })
 		.setMinWidth(ui(80))
+		.setSlideInt()
 		.setSideButton(button(function() /*=>*/ { 
 			dialogPanelCall(new Panel_Canvas_Brush_Pressure(self), mouse_mx, mouse_my, { anchor: ANCHOR.top | ANCHOR.left })
 		}).setIcon(THEME.pen_pressure, 0, function() /*=>*/ {return pressureUse? COLORS._main_accent : COLORS._main_icon})

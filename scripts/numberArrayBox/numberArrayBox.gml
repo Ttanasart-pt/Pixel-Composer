@@ -39,6 +39,7 @@ function numberArrayBox(_onModify) : widget() constructor {
 		w = _w;
 		h = _h;
 		
+		tb.junction   = junction; 
 		current_value = _data;
 		var _amo = array_length(_data);
 		var _tx  = _x;

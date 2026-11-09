@@ -166,6 +166,7 @@ function vectorBox(_size, _onModify, _unit = noone) : widget() constructor {
 		array_editing = false;
 		display_data  = _display_data;
 		
+		for( var i = 0, n = array_length(tb); i < n; i++ ) tb[i].junction = junction; 
 		var d = array_get_depth(_data);
 		
 		if(d == 2) {

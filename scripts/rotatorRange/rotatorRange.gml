@@ -158,10 +158,12 @@ function rotatorRange(_onModify) : widget() constructor {
 			if(pHover) tbHover = false;
 		}
 		
+		tb_min.junction = junction; 
 		tb_min.setFocusHover(active, tbHover);
 		tb_min.draw(_tx, _y, _tw - 1, _h, _data[0], _m);
 		tbHover &= !tb_min.isHovering();
 		
+		tb_max.junction = junction; 
 		tb_max.setFocusHover(active, tbHover);
 		tb_max.draw(_tx + _tw, _y, _tw, _h, _data[1], _m);
 		tbHover &= !tb_max.isHovering();

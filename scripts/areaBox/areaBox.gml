@@ -248,6 +248,7 @@ function areaBox(_onModify, _unit = noone) : widget() constructor {
 		mode = array_safe_get_fast(_data, 5);
 		var drawMode = is_real(mode);
 		
+		for( var i = 0, n = array_length(tb); i < n; i++ ) tb[i].junction = junction;
 		onSurfaceSize = struct_try_get(_display_data, "onSurfaceSize", -1);
 		useShape      = struct_try_get(_display_data, "useShape", true);
 		

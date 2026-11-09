@@ -341,7 +341,7 @@ function drawWidget(xx, yy, ww, _m, _jun, global_var = true, _hover = false, _fo
 		var lbHov = _hover && point_in_rectangle(_m[0], _m[1], lb_x - padx / 2, yy, lb_x + ds_w + padx, yy + lb_h);
 		if(lbHov) {
 			if(_reqfail) setTOOLTIP(__txt("Required"));
-			draw_sprite_stretched_ext(THEME.box_r2, 0, lb_x - padx / 2, yy, ds_w + padx, lb_h, COLORS._main_icon, .25);
+			draw_sprite_stretched_ext(THEME.box_r2, 0, lb_x - padx / 2, yy, ds_w + padx, lb_h, COLORS._main_icon_dark, .5);
 		}
         
         widgNameX = lb_x;
@@ -569,6 +569,13 @@ function drawWidget(xx, yy, ww, _m, _jun, global_var = true, _hover = false, _fo
 						bx  -= bs; b  = buttonInstant(bb, bx, by, bs, bs, _m, hv, fc, bt, THEME.node_dropper, 0, cc, .8, ics); bx -= ui(4);
 						cHov = cHov || b;
 						if(b == 2) NODE_DROPPER_TARGET = NODE_DROPPER_TARGET == jun? noone : jun;
+						
+						var cc = c_white;
+						var bt = __txt("Disable Expression");
+						bx  -= bs; b  = buttonInstant(bb, bx, by, bs, bs, _m, hv, fc, bt, THEME.node_use_expression, 1, cc, .8, ics); bx -= ui(4);
+						cHov = cHov || b;
+						if(b == 2) jun.setUseExpression(false);
+						
 					}
 					
 					if(jun.expUse || is(wid, textArea)) {
@@ -625,15 +632,16 @@ function drawWidget(xx, yy, ww, _m, _jun, global_var = true, _hover = false, _fo
 	if(!is(wid, widget)) return [ lb_h, mbRight, cHov, lbHov, lb_x, lb_w ];
 	
 	#region draw widget
+		wid.junction = jun;
+		
 		var labelWidth = max(lb_w, min(ww * .4, ui(200)));
-		// var labelWidth = min(ww * 0.4, ui(200));
 		
 		var editBoxX = xx	+ !breakLine * labelWidth;
 		var editBoxY =  breakLine? yy + lb_h + ui(4) : yy;
 		var editBoxW = (breakLine? xx + ww : bx) - editBoxX;
 		var editBoxH =  breakLine? TEXTBOX_HEIGHT : lb_h;
 		
-		var _widH	   = breakLine? editBoxH : 0;
+		var _widH    = breakLine? editBoxH : 0;
 		
 		if(jun.expUse) {
 			var expValid = jun.expTree != noone && jun.expTree.validate();

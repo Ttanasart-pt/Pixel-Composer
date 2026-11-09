@@ -299,11 +299,15 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 	
 	static apply = function(release = false) {
 		var _val  = _input_text;
-		// disp_x_to = 0;
 		
 		if(input == TEXTBOX_INPUT.number) {
+			if(is(junction, NodeValue) && string_starts_with(_input_text, "#")) {
+				junction.setExpression(string_trim_start(_input_text, ["#"]));
+				return false;
+			}
+			
 			_val = evaluateFunction(_input_text);
-			if(is_string(_val)) _val = 0;
+			if(!is_numeric(_val)) _val = 0;
 		}
 		
 		if(no_empty && _val == "") 

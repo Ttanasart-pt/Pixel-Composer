@@ -106,6 +106,7 @@ function vectorRangeBox(_size, _type, _onModify, _unit = noone) : widget() const
 		w = _w;
 		
 		_data = array_verify(_data, size);
+		for( var i = 0, n = array_length(tb); i < n; i++ ) tb[i].junction = junction; 
 		
 		if(has(_display_data, "linked")) linked = _display_data.linked;
 		if(has(_display_data, "ranged")) ranged = _display_data.ranged;

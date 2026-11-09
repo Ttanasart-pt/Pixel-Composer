@@ -132,7 +132,7 @@ function Panel_Preference() : PanelContent() constructor {
     	
     	ds_list_add(pref_global, __txt("Inputs"));
     	
-    		ds_list_add(pref_global, new __Panel_Linear_Setting_Item_Preference(
+    		ds_list_add(pref_global, new __Panel_Linear_Setting_Item_Preference( 
     			__txt("pref_double_click_delay", "Double click delay"), 
     			"double_click_delay",
     			slider(0, 1, 0.01, function(val) /*=>*/ {return prefSet("double_click_delay", val)})

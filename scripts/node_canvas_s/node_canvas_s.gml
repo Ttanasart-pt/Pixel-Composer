@@ -63,8 +63,10 @@ function Node_Canvas_S(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 	attributes.grid_color = cola(c_white, .2);
 
 	pixel_data  = undefined;
-	editorPanel = undefined;
 	resources   = [];
+	
+	editorPanel = undefined;
+	toolPanel   = undefined;
 	
 	useBG       = false;
 	bgAlpha     = 1;
@@ -156,9 +158,7 @@ function Node_Canvas_S(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 		outputs[1].setValue(_drwSurf);
 	}
 	
-	function onDoubleClick(panel) {
-		NewCanvasPanel(self);
-	}
+	function onDoubleClick(panel) { NewCanvasPanel(self); }
 	
 	////- Actions
 	

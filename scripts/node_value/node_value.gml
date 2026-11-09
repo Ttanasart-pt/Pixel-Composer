@@ -2185,28 +2185,9 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 				if(_node == node) res = r;
 			}
 			
-		} else {
-			var _time = time;
-			
-			// if(is_anim && keyboard_check(vk_enter) && key_mod_press(SHIFT)) {
-			// 	var _cKey = undefined;
-			// 	var _cDis = infinity;
-				
-			// 	for( var i = 0, n = array_length(animator.values); i < n; i++ ) {
-			// 		var v = animator.values[i];
-			// 		var d = abs(v.time - _time);
-			// 		if(d < _cDis) {
-			// 			_cDis = d;
-			// 			_cKey = v;
-			// 		}
-			// 	}
-				
-			// 	if(_cKey) _time = _cKey.time;
-			// }
-			
-			res = setValueDirect(_val, _index, true, _time);
-		}
-			
+		} else
+			res = setValueDirect(_val, _index, true, time);
+		
 		if(onSetValue != undefined) onSetValue(_val);
 		
 		return res;

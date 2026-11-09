@@ -70,6 +70,7 @@ function pathAnchorBox(_onModify) : widget() constructor {
 		
 		var tbHover = hover;
 		
+		for( var i = 0, n = array_length(tb); i < n; i++ ) tb[i].junction = junction; 
 		
 		if(animated) {
 			draw_sprite_stretched(THEME.textbox, 3, _x, _y, _w, _h);

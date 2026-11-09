@@ -169,6 +169,11 @@ function rotatorRandom(_onModify) : widget() constructor {
 		var ps = _h / 2;
 		var px = _tx + _tw;
 				
+		tb_min_0.junction = junction; 
+		tb_max_0.junction = junction; 
+		tb_min_1.junction = junction; 
+		tb_max_1.junction = junction; 
+		
 		switch(mode) {
 			case ROTATOR_RANDOM_TYPE.range : 
 				var py = _ty + _h / 2;

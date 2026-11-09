@@ -91,6 +91,7 @@ function paddingBox(_onModify, _unit = noone) : widget() constructor {
 		
 		var _bs = min(_h, ui(32));
 		if(hide == 0) draw_sprite_stretched_ext(THEME.textbox, 3, x, y, w, h, boxColor, 1);
+		for( var i = 0, n = array_length(tb); i < n; i++ ) tb[i].junction = junction; 
 		
 		b_link.setFocusHover(active, hover);
 		b_link.icon_index = linked;

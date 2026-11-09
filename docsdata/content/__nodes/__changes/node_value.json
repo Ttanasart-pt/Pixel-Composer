@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.22.2.008",
+    "changes": [
+      {
+        "date": "2026-11-09T07:58:28.191Z",
+        "node": "",
+        "commit": "**Widget**: When editing numerical value, start the first letter with \"#\" will convert the rest of the string into expression."
+      }
+    ]
+  },
+  {
     "version": "1.22.2.004",
     "changes": [
       {

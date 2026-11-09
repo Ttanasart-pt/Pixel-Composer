@@ -93,6 +93,7 @@ function quarternionBox(_junc, _onModify) : widget() constructor {
 		if(array_empty(_data)) return 0;
 		if(is_array(_data[0])) return 0;
 		
+		for( var i = 0, n = array_length(tb); i < n; i++ ) tb[i].junction = junction;
 		var _attr = junction.attributes;
 		var _disp = struct_try_get(_attr, "angle_display");
 		

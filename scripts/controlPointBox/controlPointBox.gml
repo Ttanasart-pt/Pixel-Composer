@@ -71,6 +71,8 @@ function controlPointBox(_onModify) : widget() constructor {
 		
 		var tbHover = hover;
 		
+		for( var i = 0, n = widgetLen; i < n; i++ ) widgets[i].junction = junction;
+		
 		scMode.setFocusHover(active, tbHover);
 		scMode.draw(_x, yy, w2 - ui(2), _h, sMode[_mode], _m, _rx, _ry);
 		tbHover &= !scMode.isHovering();
@@ -145,7 +147,6 @@ function controlPointBox(_onModify) : widget() constructor {
 	static clone = function() { return new controlPointBox(onModify); }
 
 	static free = function() {
-		for( var i = 0, n = widgetLen; i < n; i++ ) 
-			widgets[i].free();
+		for( var i = 0, n = widgetLen; i < n; i++ ) widgets[i].free();
 	}
 }

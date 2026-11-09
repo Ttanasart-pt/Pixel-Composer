@@ -78,12 +78,14 @@ function sliderRange(_step, _int, _range, _onModify) : widget() constructor {
 		
 		tb_value_min.curr_range[0] = curr_range[0];
 		tb_value_min.curr_range[1] = curr_range[1];
+		tb_value_min.junction = junction; 
 		
 		tb_value_min.setFocusHover(active, hover);
 		tb_value_min.draw(_x, _y, tb_w, _h, _data[0], _m);
 		
 		tb_value_max.curr_range[0] = curr_range[0];
 		tb_value_max.curr_range[1] = curr_range[1];
+		tb_value_max.junction = junction; 
 		
 		tb_value_max.setFocusHover(active, hover);
 		tb_value_max.draw(_x + tb_w, _y, tb_w, _h, _data[1], _m);

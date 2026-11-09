@@ -53,10 +53,12 @@ function gridAnchorBox(_onModify, _unit) : widget() constructor {
 		
 		var tbHover = hover;
 		
+		tbx.junction = junction; 
 		tbx.setFocusHover(active, tbHover);
 		tbx.draw(_x,      by, w2, _h, _cx, _m);
 		tbHover &= !tbx.isHovering();
 		
+		tby.junction = junction; 
 		tby.setFocusHover(active, tbHover);
 		tby.draw(_x + w2, by, w2, _h, _cy, _m);
 		tbHover &= !tby.isHovering();

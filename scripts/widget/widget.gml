@@ -25,8 +25,7 @@ function widget() constructor {
 	keyframe = noone;
 	interactable = true;
 	
-	hover_content = false;
-	
+	hover_content     = false;
 	right_click_block = true;
 	
 	always_break_line  = false;
@@ -37,7 +36,8 @@ function widget() constructor {
 	front_button  = noone;
 	front_button2 = noone;
 	
-	hide = false;
+	hide     = false;
+	junction = undefined;
 	
 	lua_thread     = noone;
 	lua_thread_key = "";

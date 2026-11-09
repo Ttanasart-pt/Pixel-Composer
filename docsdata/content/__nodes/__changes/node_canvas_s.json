@@ -11,6 +11,11 @@
         "date": "2026-11-09T04:27:51.512Z",
         "node": "",
         "commit": "**Inspector Panel**: Fix crash when using edit as text."
+      },
+      {
+        "date": "2026-11-09T07:58:28.184Z",
+        "node": "Widget",
+        "commit": "**Widget**: When editing numerical value, start the first letter with \"#\" will convert the rest of the string into expression."
       }
     ]
   },

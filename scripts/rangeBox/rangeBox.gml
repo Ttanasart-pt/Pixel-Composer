@@ -95,6 +95,7 @@ function rangeBox(_onModify) : widget() constructor {
 		
 		if(array_invalid(_data)) return h;
 		
+		for( var i = 0, n = array_length(tb); i < n; i++ ) tb[i].junction = junction;
 		linked = _display_data[$ "linked"] ?? linked;
 		tooltip.index = linked;
 		

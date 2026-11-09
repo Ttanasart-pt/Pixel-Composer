@@ -38,6 +38,8 @@ function rotator(_onModify, _step = -1) : widget() constructor {
 		
 		if(!is_real(_data)) {
 			tb_value.setFocusHover(active, hover);
+			
+			tb_value.junction = junction;
 			tb_value.draw(_x, _y, _w, _h, _data, _m);
 			return h;
 		}
@@ -132,6 +134,7 @@ function rotator(_onModify, _step = -1) : widget() constructor {
 			shader_reset();
 		}
 		
+		tb_value.junction = junction;
 		tb_value.setFocusHover(active, hover);
 		tb_value.draw(_tx, _y, _tw, _h, _data, _m);
 		

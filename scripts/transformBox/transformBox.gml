@@ -77,6 +77,7 @@ function transformBox(_onModify) : widget() constructor {
 		if(is_array(_data[0])) return 0;
 		
 		hovering = point_in_rectangle(_m[0], _m[1], _x, _y, _x + _w, _y + _h);
+		for( var i = 0, n = array_length(tb); i < n; i++ ) tb[i].junction = junction;
 		
 		var tbHover = hover;
 		for(var i = 0; i < array_length(_data); i++) tb[i].hide = true;
