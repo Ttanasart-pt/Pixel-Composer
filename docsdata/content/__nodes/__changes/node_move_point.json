@@ -16,6 +16,11 @@
         "date": "2026-11-09T04:52:24.750Z",
         "node": "Sample Path",
         "commit": "**Sample Path**: Add multiple sampling mode."
+      },
+      {
+        "date": "2026-11-09T06:42:24.188Z",
+        "node": "",
+        "commit": "Add preference option to change autosave folder."
       }
     ]
   },

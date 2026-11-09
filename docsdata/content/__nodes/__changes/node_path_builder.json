@@ -6,6 +6,11 @@
         "date": "2026-11-09T04:48:50.716Z",
         "node": "",
         "commit": "**Path Builder**: Fix freeze when inputting multiple point arrays."
+      },
+      {
+        "date": "2026-11-09T06:42:24.189Z",
+        "node": "",
+        "commit": "Add preference option to change autosave folder."
       }
     ]
   },

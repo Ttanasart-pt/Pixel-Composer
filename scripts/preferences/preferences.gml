@@ -49,8 +49,10 @@
 			PREFERENCES.show_crash_dialog				= false;
 			
 			PREFERENCES.test_mode						= false;
-			PREFERENCES.auto_save_time					= 300;
 			PREFERENCES.use_legacy_exception			= false;
+			
+			PREFERENCES.auto_save_time					= 300;
+			PREFERENCES.auto_save_location              = "%DIR%/Autosave";
 		
 			PREFERENCES.caret_blink						= 0.75;
 		

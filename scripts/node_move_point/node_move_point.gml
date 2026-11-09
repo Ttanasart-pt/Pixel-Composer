@@ -11,13 +11,13 @@ function Node_Move_Point(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	newInput( 1, nodeValue_Vec2( "Anchor", [.5,.5] )).setUnitSimple();
 	
 	////- =Position
-	newInput( 2, nodeValue_Range2( "Position", [0,0,0,0], true )).setUnitSimple(false).setHotkey("G");
+	newInput( 2, nodeValue_Range2(  "Position", [0,0,0,0], true )).setUnitSimple(false);
 	
 	////- =Rotation
-	newInput( 3, nodeValue_Rot(  "Rotation",  0    )).setHotkey("R");
+	newInput( 3, nodeValue_RotRand( "Rotation",  ROTRAN_DEF_0   ));
 	
 	////- =Scale
-	newInput( 4, nodeValue_Vec2( "Scale",    [1,1] ));
+	newInput( 4, nodeValue_Range2(  "Scale",    [1,1,1,1], true ));
 	// 6
 	
 	newOutput(0, nodeValue_Output("Result", VALUE_TYPE.float, [ 0, 0 ])).setDisplay(VALUE_DISPLAY.vector);
@@ -59,12 +59,20 @@ function Node_Move_Point(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 		
 		random_set_seed(_seed + _array_index);
 		
-		point_rotate_array(_pnt, _anc, _rot);
-		_pnt[0]  = _anc[0] + (_pnt[0] - _anc[0]) * _sca[0];
-		_pnt[1]  = _anc[1] + (_pnt[1] - _anc[1]) * _sca[1];
+		var _psx = random_range(_pos[0], _pos[1]);
+		var _psy = random_range(_pos[2], _pos[3]);
 		
-		_pnt[0] += random_range(_pos[0], _pos[1]);
-		_pnt[1] += random_range(_pos[2], _pos[3]);
+		var _ang = rotation_random_eval(_rot);
+		
+		var _scx = random_range(_sca[0], _sca[1]);
+		var _scy = random_range(_sca[2], _sca[3]);
+		
+		point_rotate_array(_pnt, _anc, _ang);
+		_pnt[0]  = _anc[0] + (_pnt[0] - _anc[0]) * _scx;
+		_pnt[1]  = _anc[1] + (_pnt[1] - _anc[1]) * _scy;
+		
+		_pnt[0] += _psx;
+		_pnt[1] += _psy;
 		
 		outputs[0].setTypeSignature(array_create(array_length(_pnt), VALUE_TYPE.float));
 		

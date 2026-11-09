@@ -1,6 +1,7 @@
 #macro ROTRAN_LENGTH 6
 #macro ROTRAN_DEF_0   [ 0, 0,   0, 0, 0, 0 ]
 #macro ROTRAN_DEF_360 [ 0, 0, 360, 0, 0, 0 ]
+// rotation_random_eval
 
 #macro nodeValue_RotRand nodeValue_Rotation_Random
 function nodeValue_Rotation_Random(_name, _value, _tooltip = "") { return new __NodeValue_Rotation_Random(_name, self, _value, _tooltip); }
@@ -46,5 +47,3 @@ function __NodeValue_Rotation_Random(_name, _node, _value, _tooltip = "") : __No
 	}
 	
 }
-
-// rotation_random_eval

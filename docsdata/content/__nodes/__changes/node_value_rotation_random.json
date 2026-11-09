@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.22.2.008",
+    "changes": [
+      {
+        "date": "2026-11-09T06:42:24.196Z",
+        "node": "",
+        "commit": "Add preference option to change autosave folder."
+      }
+    ]
+  },
+  {
     "version": "1.21.7.106",
     "changes": [
       {

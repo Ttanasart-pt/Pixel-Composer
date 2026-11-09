@@ -4,14 +4,19 @@ function Node_Path_Builder(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	setDimension(96, 48);
 	setDrawIcon();
 	
-	newInput( 0, nodeValue_Float( "Point array", [] )).setVisible(true, true).setArrayDepth(2);
+	////- =Path
 	newInput( 1, nodeValue_Bool(  "Loop",     false ));
-	// 2
+	newInput( 2, nodeValue_Bool(  "Curved",    true ));
+	
+	////- =Points
+	newInput( 0, nodeValue_Float( "Point array", [] )).setVisible(true, true).setArrayDepth(2);
+	// 3
 	
 	newOutput(0, nodeValue_Output("Path", VALUE_TYPE.pathnode, self));
 	
-	input_display_list = [  1, 
-		[ "Points", false ], 0, 
+	input_display_list = [   
+		[ "Path",   false ],  1,  2, 
+		[ "Points", false ],  0, 
 	]
 	
 	function createNewInput(index = array_length(inputs)) {
@@ -39,6 +44,8 @@ function Node_Path_Builder(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	#region ---- path ----
 		path_loop    = false;
 		path_amount  = 0;
+		
+		bezier       = false;
 		anchors		 = [];
 		segments     = [];
 		lengths		 = [];
@@ -79,7 +86,7 @@ function Node_Path_Builder(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 				for(var j = 0; j <= sample; j++) {
 					var rat = j / sample;
 					
-					if(_a0[4] == 0 && _a0[5] == 0 && _a1[2] == 0 && _a1[3] == 0) {
+					if(!bezier || (_a0[4] == 0 && _a0[5] == 0 && _a1[2] == 0 && _a1[3] == 0)) {
 						_nx = lerp(_a0[0], _a1[0], rat);
 						_ny = lerp(_a0[1], _a1[1], rat);
 						
@@ -141,9 +148,10 @@ function Node_Path_Builder(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 			
 			var _t = _dist / _len[i];
 			
-			if(_a0[4] == 0 && _a0[5] == 0 && _a1[2] == 0 && _a1[3] == 0) {
+			if(!bezier || (_a0[4] == 0 && _a0[5] == 0 && _a1[2] == 0 && _a1[3] == 0)) {
 				out.x = lerp(_a0[0], _a1[0], _t);
 				out.y = lerp(_a0[1], _a1[1], _t);
+				
 			} else {
 				out.x = eval_bezier_x(_t, _a0[0], _a0[1], _a1[0], _a1[1], _a0[0] + _a0[4], _a0[1] + _a0[5], _a1[0] + _a1[2], _a1[1] + _a1[3]);
 				out.y = eval_bezier_y(_t, _a0[0], _a0[1], _a1[0], _a1[1], _a0[0] + _a0[4], _a0[1] + _a0[5], _a1[0] + _a1[2], _a1[1] + _a1[3]);
@@ -256,10 +264,14 @@ function Node_Path_Builder(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	}
 	
 	static update = function() {
-		ds_map_clear(cached_pos);
+		#region data
+			path_loop   = getInputData( 1);
+			bezier      = getInputData( 2);
+			
+			var _anc    = getInputData( 0);
+		#endregion
 		
-		var _anc    = getInputData(0);
-		path_loop   = getInputData(1);
+		ds_map_clear(cached_pos);
 		path_amount = 0;
 		
 		outputs[0].setValue(noone);
@@ -295,11 +307,19 @@ function Node_Path_Builder(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		path_amount = array_length(_anc);
 		anchors     = array_create(path_amount);
 		
-		for (var i = 0, n = path_amount; i < n; i++) {
-			var _anchors = _anc[i];
+		if(bezier) {
+			for (var i = 0, n = path_amount; i < n; i++) {
+				var _anchors = _anc[i];
+				for (var j = 0, m = array_length(_anchors); j < m; j++)
+					anchors[i][j] = array_verify(_anchors[j], 7);
+			}
 			
-			for (var j = 0, m = array_length(_anchors); j < m; j++)
-				anchors[i][j] = array_verify(_anchors[j], 7);
+		} else {
+			for (var i = 0, n = path_amount; i < n; i++) {
+				var _anchors = _anc[i];
+				for (var j = 0, m = array_length(_anchors); j < m; j++)
+					anchors[i][j] = array_verify(_anchors[j], 2);
+			}
 		}
 		
 		updateLength();

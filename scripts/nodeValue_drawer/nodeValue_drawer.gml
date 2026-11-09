@@ -341,7 +341,7 @@ function drawWidget(xx, yy, ww, _m, _jun, global_var = true, _hover = false, _fo
 		var lbHov = _hover && point_in_rectangle(_m[0], _m[1], lb_x - padx / 2, yy, lb_x + ds_w + padx, yy + lb_h);
 		if(lbHov) {
 			if(_reqfail) setTOOLTIP(__txt("Required"));
-			draw_sprite_stretched_ext(THEME.box_r2_clr, 0, lb_x - padx / 2, yy, ds_w + padx, lb_h, c_white, 1);
+			draw_sprite_stretched_ext(THEME.box_r2, 0, lb_x - padx / 2, yy, ds_w + padx, lb_h, COLORS._main_icon, .25);
 		}
         
         widgNameX = lb_x;

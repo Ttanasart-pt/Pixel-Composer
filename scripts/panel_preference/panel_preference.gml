@@ -222,6 +222,14 @@ function Panel_Preference() : PanelContent() constructor {
     		));
     		
     		ds_list_add(pref_global, new __Panel_Linear_Setting_Item_Preference(
+    			__txt("pref_directory_autosave", "Autosave Folder*"),
+    			"auto_save_location",
+    			textBox_Text(function(txt) /*=>*/ {return prefSet("auto_save_location", txt)})
+    				.setSideButton(button(function() /*=>*/ {return prefSet("auto_save_location", get_open_directory_compat(PREFERENCES.auto_save_location))}, THEME.button_path_icon))
+    				.setFont(f_p2).setEmpty(),
+    		));
+    	
+    		ds_list_add(pref_global, new __Panel_Linear_Setting_Item_Preference(
     			__txt("pref_save_layout", "Save layout"),
     			"save_layout",
     			new checkBox(function() /*=>*/ {return prefToggle("save_layout")})
@@ -313,7 +321,7 @@ function Panel_Preference() : PanelContent() constructor {
     		
     		ds_list_add(pref_global, new __Panel_Linear_Setting_Item(
     			__txt("pref_directory", "Main directory path*"),
-    			new textBox(TEXTBOX_INPUT.text, function(txt) /*=>*/ { PRESIST_PREF.path = txt; json_save_struct(APP_DIRECTORY + "persistPreference.json", PRESIST_PREF); })
+    			textBox_Text(function(txt) /*=>*/ { PRESIST_PREF.path = txt; json_save_struct(APP_DIRECTORY + "persistPreference.json", PRESIST_PREF); })
     				.setSideButton(button(function() /*=>*/ { 
     					PRESIST_PREF.path = get_open_directory_compat(struct_try_get(PRESIST_PREF, "path", ""));
     					json_save_struct(APP_DIRECTORY + "persistPreference.json", PRESIST_PREF);
@@ -327,7 +335,7 @@ function Panel_Preference() : PanelContent() constructor {
     		ds_list_add(pref_global, new __Panel_Linear_Setting_Item_Preference(
     			__txt("pref_directory_temp", "Temp directory path*"),
     			"temp_path",
-    			new textBox(TEXTBOX_INPUT.text, function(txt) /*=>*/ {return prefSet("temp_path", txt)})
+    			textBox_Text(function(txt) /*=>*/ {return prefSet("temp_path", txt)})
     				.setSideButton(button(function() /*=>*/ { PREFERENCES.temp_path = get_open_directory_compat(PREFERENCES.temp_path); PREF_SAVE(); }, THEME.button_path_icon))
     				.setFont(f_p2).setEmpty(),
     		));
@@ -543,7 +551,7 @@ function Panel_Preference() : PanelContent() constructor {
     		ds_list_add(pref_appr, new __Panel_Linear_Setting_Item_Preference(
     			__txt("pref_ui_font", "Overwrite UI font") + "*",
     			"font_overwrite",
-    			new textBox(TEXTBOX_INPUT.text, function(txt) /*=>*/ {return prefSet("font_overwrite", txt, true)})
+    			textBox_Text(function(txt) /*=>*/ {return prefSet("font_overwrite", txt, true)})
     				.setSideButton(button(function() /*=>*/ { PREFERENCES.font_overwrite = get_open_filename_compat("Font Files (.ttf, .otf)|*.ttf;*.otf", ""); PREF_SAVE(); }, THEME.button_path_icon))
     				.setFont(f_p2).setEmpty()
     		));
@@ -1105,7 +1113,7 @@ function Panel_Preference() : PanelContent() constructor {
     	color_selector_key = noone;
     	
     	color_selector_edit = noone;
-    	tb_color_key_edit   = new textBox(TEXTBOX_INPUT.text, function(t) /*=>*/ {
+    	tb_color_key_edit   = textBox_Text(function(t) /*=>*/ {
     		if(color_selector_edit == noone) return;
     		
     		var _v = _loadColorStringParse(t);

@@ -190,7 +190,7 @@ function SAVE_AT(project = PROJECT, path = "", _param = new save_param()) {
 }
 
 function SAVE_AUTO(_project = PROJECT) {
-	var loc = DIRECTORY + "Autosave/";
+	var loc = filepath_resolve(PREFERENCES.auto_save_location);
 	directory_verify(loc);
 	
 	var fname = $"{filename_name_only(_project.path)}_autosave"

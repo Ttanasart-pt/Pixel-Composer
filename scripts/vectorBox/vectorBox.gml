@@ -40,7 +40,7 @@ function vectorBox(_size, _onModify, _unit = noone) : widget() constructor {
 	#endregion
 	
 	#region array
-		array_expanding   = true;
+		array_expanding   = false;
 		array_expand_h    = ui(16);
 		array_display_max = 16;
 		array_editing     = false;
