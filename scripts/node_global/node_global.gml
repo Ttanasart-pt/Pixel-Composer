@@ -16,7 +16,7 @@ function Node_Global(_x = 0, _y = 0) : __Node_Base(_x, _y) constructor {
 	
 	////- NAME
 	
-	static getMetaSpr = function() /*=>*/ {return THEME.globe};
+	static getMetaSpr = function() /*=>*/ {return s_node_globalvar};
 	
 	static getFullName       = function() /*=>*/ {return name};
 	static getDisplayName    = function() /*=>*/ {return name};

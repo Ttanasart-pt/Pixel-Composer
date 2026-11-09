@@ -6,6 +6,11 @@
         "date": "2026-11-09T08:11:57.524Z",
         "node": "",
         "commit": "**Randomizer**: Fix random button not work with globalvar."
+      },
+      {
+        "date": "2026-11-09T10:00:31.669Z",
+        "node": "Randomizer Panel",
+        "commit": "**Randomizer Panel**: Add section, reordering."
       }
     ]
   },
