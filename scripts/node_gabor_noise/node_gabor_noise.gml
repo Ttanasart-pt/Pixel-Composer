@@ -2,7 +2,7 @@ function Node_Gabor_Noise(_x, _y, _group = noone) : Node_Shader_Generator(_x, _y
 	name   = "Gabor Noise";
 	shader = sh_noise_gabor;
 	
-	newInput( 3, nodeValueSeed()).setShaderProp("seed");
+	newInput( 3, nodeValue_Seed()).setShaderProp("seed");
 	
 	newInput(14, nodeValue_Surface( "UV Map"     ));
 	newInput(15, nodeValue_Slider(  "UV Mix", 1  ));

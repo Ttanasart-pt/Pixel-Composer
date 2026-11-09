@@ -9,7 +9,7 @@ function Node_Path_Wave(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	setDimension(96, 48);
 	setDrawIcon();
 	
-	newInput(5, nodeValueSeed());
+	newInput(5, nodeValue_Seed());
 	
 	////- =Path
 	newInput( 0, nodeValue_Path(    "Path"               ));

@@ -6,7 +6,7 @@ function Node_MK_Blast_Align(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	setDrawIcon();
 	setDimension(96, 48);
 	
-	newInput( 1, nodeValueSeed());
+	newInput( 1, nodeValue_Seed());
 	
 	////- =Blast
 	newInput( 0, nodeValue_Struct( "Blast" )).setCustomData(global.MKBLAST_JUNC).setVisible(true, true);

@@ -28,7 +28,7 @@ function Node_Path_L_System(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	////- =Properties
 	newInput(0, nodeValue_Float(     "Length",  8  ));
 	newInput(1, nodeValue_Rotation(  "Angle",   45 ));
-	newInput(7, nodeValueSeed());
+	newInput(7, nodeValue_Seed());
 		
 	////- =3D
 	newInput( 8, nodeValue_Bool(     "3D",       false ));

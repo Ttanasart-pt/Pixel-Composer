@@ -1,7 +1,7 @@
 function Node_Repeat_Path(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Chain";
 	
-	newInput(17, nodeValueSeed());
+	newInput(17, nodeValue_Seed());
 	
 	////- =Output
 	newInput( 2, nodeValue_Dimension());

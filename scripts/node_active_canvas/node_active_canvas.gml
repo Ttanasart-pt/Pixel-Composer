@@ -2,7 +2,7 @@ function Node_Active_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	name = "Active Canvas";
 	
 	newInput( 0, nodeValue_Dimension());
-	newInput(12, nodeValueSeed());
+	newInput(12, nodeValue_Seed());
 	
 	////- =Brush
 	newActiveInput(7);

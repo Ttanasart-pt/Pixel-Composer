@@ -8,7 +8,7 @@ function Node_Repeat_Texture(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 	name = "Repeat Texture";
 	dimension_index = 1;
 	
-	newInput( 3, nodeValueSeed());
+	newInput( 3, nodeValue_Seed());
 	
 	////- =Surfaces
 	newInput( 0, nodeValue_Surface( "Surface In" )).setRequired();

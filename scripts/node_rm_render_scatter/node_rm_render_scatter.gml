@@ -2,7 +2,7 @@ function Node_RM_Render_Scatter(_x, _y, _group = noone) : Node_RM(_x, _y, _group
 	name  = "RM Render Scatter";
 	
 	newInput( 0, nodeValue_Dimension());
-	newInput(18, nodeValueSeed());
+	newInput(18, nodeValue_Seed());
 	
 	////- =Object
 	newInput(13, nodeValue_SDF( "SDF Object" )).setVisible(true, true);

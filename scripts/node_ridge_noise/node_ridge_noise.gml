@@ -17,7 +17,7 @@ function Node_Ridge_Noise(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	newInput( 7, nodeValue_Surface(  "Mask"       ));
 	
 	////- =Noise
-	newInput( 5, nodeValueSeed()).setPieMenu();
+	newInput( 5, nodeValue_Seed()).setPieMenu();
 	newInput(10, nodeValue_Surface(  "Heightmap"         ));
 	newInput( 4, nodeValue_EButton(  "Mode",           0, [ "Sine", "Sharp" ]));
 	newInput(13, nodeValue_Float(    "Cell Scale",     4  )).setPieMenu();

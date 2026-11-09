@@ -14,7 +14,7 @@ function Node_Noise_Simplex(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	newInput(13, nodeValue_Surface( "Mask"       ));
 	
 	////- =Noise
-	newInput(14, nodeValueSeed()).setPieMenu();
+	newInput(14, nodeValue_Seed()).setPieMenu();
 	newInput( 3, nodeValue_ISlider( "Iteration",   1, [1, 16, 0.1] )).setMappable(9).setPieMenu();
 	newInput(17, nodeValue_Bool(    "Tile",     true )).setPieMenu();
 	

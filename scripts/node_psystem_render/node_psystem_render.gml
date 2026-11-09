@@ -5,7 +5,7 @@ function Node_pSystem_Render(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	parameters.inline_draw_output = true;
 	setCacheAuto();
 	
-	newInput( 2, nodeValueSeed());
+	newInput( 2, nodeValue_Seed());
 	
 	////- =Particles
 	newInput( 0, nodeValue_Particle( "Particles" ));

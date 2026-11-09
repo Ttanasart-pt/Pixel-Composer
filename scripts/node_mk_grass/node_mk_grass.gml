@@ -1,7 +1,7 @@
 function Node_MK_Grass(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "MK Grass";
 	
-	newInput(1, nodeValueSeed());
+	newInput(1, nodeValue_Seed());
 	newInput(0, nodeValue_Surface("Surface In"));
 	
 	////- =Source

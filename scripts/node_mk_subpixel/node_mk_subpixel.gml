@@ -14,7 +14,7 @@ function Node_MK_Subpixel(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	////- =Effect
 	newInput( 3, nodeValue_Slider( "Size", .6 ));
 	newInput( 4, nodeValue_Slider( "Blur", .1 ));
-	newInput( 8, nodeValueSeed());
+	newInput( 8, nodeValue_Seed());
 	
 	////- =Ridge
 	newInput(11, nodeValue_Bool(   "Ridge",           false ));

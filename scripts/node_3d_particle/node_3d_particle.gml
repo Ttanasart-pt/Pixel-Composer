@@ -14,7 +14,7 @@ function Node_3D_Particle(_x, _y, _group = noone) : Node_3D(_x, _y, _group) cons
 	spawn_gizmo_sphere = new __3dGizmoSphere(  1, c_white, .75 );
 	spawn_gizmo_circle = new __3dGizmoCircleZ( 1, c_white, .75 );
 	
-	newInput( 1, nodeValueSeed());
+	newInput( 1, nodeValue_Seed());
 	
 	////- =Object
 	newInput( 0, nodeValue_D3Mesh( "Mesh" ));

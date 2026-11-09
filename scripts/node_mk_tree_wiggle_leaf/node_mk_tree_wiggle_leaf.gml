@@ -6,7 +6,7 @@ function Node_MK_Tree_Wiggle_Leaf(_x, _y, _group = noone) : Node(_x, _y, _group)
 	setDrawIcon();
 	setDimension(96, 48);
 	
-	newInput( 1, nodeValueSeed());
+	newInput( 1, nodeValue_Seed());
 	newInput( 0, nodeValue_Struct( "Leaves", noone)).setVisible(true, true).setCustomData(global.MKTREE_LEAVES_JUNC);
 	
 	////- =Selection

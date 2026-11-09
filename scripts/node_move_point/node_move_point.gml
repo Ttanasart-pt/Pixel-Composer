@@ -4,24 +4,25 @@ function Node_Move_Point(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	setDrawIcon();
 	setDimension(96, 48);
 	
+	newInput( 5, nodeValue_Seed());
+	
 	////- =Points
-	newInput( 0, nodeValue_Vec2( "Point",        [ 0, 0] )).setVisible(true, true);
-	newInput( 1, nodeValue_Vec2( "Anchor Point", [.5,.5] )).setUnitSimple();
+	newInput( 0, nodeValue_Vec2( "Point",  [ 0, 0] )).setVisible(true, true);
+	newInput( 1, nodeValue_Vec2( "Anchor", [.5,.5] )).setUnitSimple();
 	
 	////- =Position
-	newInput( 2, nodeValue_Vec2( "Position", [0,0] )).setHotkey("G");
+	newInput( 2, nodeValue_Range2( "Position", [0,0,0,0], true )).setUnitSimple(false).setHotkey("G");
 	
 	////- =Rotation
 	newInput( 3, nodeValue_Rot(  "Rotation",  0    )).setHotkey("R");
 	
 	////- =Scale
 	newInput( 4, nodeValue_Vec2( "Scale",    [1,1] ));
-	// 5
+	// 6
 	
-	newOutput(0, nodeValue_Output("Result", VALUE_TYPE.float, [ 0, 0 ]))
-		.setDisplay(VALUE_DISPLAY.vector);
+	newOutput(0, nodeValue_Output("Result", VALUE_TYPE.float, [ 0, 0 ])).setDisplay(VALUE_DISPLAY.vector);
 	
-	input_display_list = [ 
+	input_display_list = [ 5, 
 		[ "Points",   false ],  0,  1, 
 		[ "Position", false ],  2, 
 		[ "Rotation", false ],  3, 
@@ -42,20 +43,28 @@ function Node_Move_Point(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 		return w_hovering;
 	}
 	
-	static processData = function(_output, _data, _array_index = 0, _frame = CURRENT_FRAME) {  
-		var _pnt = [ _data[0][0], _data[0][1] ];
-		var _anc = _data[1];
+	static processData = function(_output, _data, _array_index = 0, _frame = CURRENT_FRAME) {
+		#region data
+			var _seed = _data[ 5];
+			
+			var _pnt  = [ _data[0][0], _data[0][1] ];
+			var _anc  = _data[ 1];
+			
+			var _pos  = _data[ 2];
+			
+			var _rot  = _data[ 3];
+			
+			var _sca  = _data[ 4];
+		#endregion
 		
-		var _pos = _data[2];
-		var _rot = _data[3];
-		var _sca = _data[4];
+		random_set_seed(_seed);
 		
 		point_rotate_array(_pnt, _anc, _rot);
 		_pnt[0]  = _anc[0] + (_pnt[0] - _anc[0]) * _sca[0];
 		_pnt[1]  = _anc[1] + (_pnt[1] - _anc[1]) * _sca[1];
 		
-		_pnt[0] += _pos[0];
-		_pnt[1] += _pos[1];
+		_pnt[0] += random_range(_pos[0], _pos[2]);
+		_pnt[1] += random_range(_pos[1], _pos[3]);
 		
 		outputs[0].setTypeSignature(array_create(array_length(_pnt), VALUE_TYPE.float));
 		

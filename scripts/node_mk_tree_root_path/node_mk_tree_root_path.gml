@@ -6,7 +6,7 @@ function Node_MK_Tree_Path_Root(_x, _y, _group = noone) : Node(_x, _y, _group) c
 	setDrawIcon();
 	setDimension(96, 48);
 	
-	newInput( 0, nodeValueSeed());
+	newInput( 0, nodeValue_Seed());
 	
 	////- =Path
 	newInput( 1, nodeValue_Path( "Path",   noone ));

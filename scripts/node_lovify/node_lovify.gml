@@ -4,7 +4,7 @@ function Node_Lovify(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	
 	newInput(0, nodeValue_Surface("Surface In")).setRequired();
 	
-	newInput(1, nodeValueSeed());
+	newInput(1, nodeValue_Seed());
 	
 	newInput(2, nodeValue_Slider("Density", 0.5 ));
 	

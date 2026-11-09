@@ -3,7 +3,7 @@ function Node_3D_Set_Material(_x, _y, _group = noone) : Node_3D_Modifier(_x, _y,
 	
 	var i = in_mesh;
 	
-	newInput( i+4, nodeValueSeed());
+	newInput( i+4, nodeValue_Seed());
 	
 	////- =Material
 	newInput( i+0, nodeValue_3DMat( "Materials" )).setVisible(true, true).setArrayDepth(1);

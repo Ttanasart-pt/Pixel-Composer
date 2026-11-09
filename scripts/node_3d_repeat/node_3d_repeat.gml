@@ -1,7 +1,7 @@
 function Node_3D_Repeat(_x, _y, _group = noone) : Node_3D(_x, _y, _group) constructor {
 	name  = "3D Repeat";
 		
-	newInput(21, nodeValueSeed());
+	newInput(21, nodeValue_Seed());
 	
 	////- =Objects
 	newInput( 0, nodeValue_D3Mesh( "Objects" )).setArrayDepth(1);

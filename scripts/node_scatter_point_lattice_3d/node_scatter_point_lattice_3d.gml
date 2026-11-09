@@ -12,7 +12,7 @@ function Node_Scatter_Point_Lattice_3D(_x, _y, _group = noone) : Node_Processor(
 	setDimension(96, 48);
 	
 	////- =Base
-	newInput(0, nodeValueSeed()).rejectArray();
+	newInput(0, nodeValue_Seed()).rejectArray();
 	
 	////- =Lattice
 	onSurfaceSize = function() /*=>*/ {return PROJ_SURF}; 

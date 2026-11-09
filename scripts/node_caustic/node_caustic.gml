@@ -8,7 +8,7 @@ function Node_Caustic(_x, _y, _group = noone) : Node_Shader_Generator(_x, _y, _g
 	newInput( 7, nodeValue_Surface( "Mask"       ));
 	
 	////- =Noise
-	newInput( 3, nodeValueSeed()).setShaderProp("seed");
+	newInput( 3, nodeValue_Seed()).setShaderProp("seed");
 	newInput( 6, nodeValue_Slider( "Intensity", 1, [0,4,.01] )).setShaderProp("intensity").setMappable(10).setPieMenu();
 	newInput( 4, nodeValue_Float(  "Progress",  0            )).setShaderProp("progress" ).setMappable(11).setPieMenu();
 	newInput( 5, nodeValue_Int(    "Detail",    1            )).setShaderProp("detail"   ).setPieMenu();

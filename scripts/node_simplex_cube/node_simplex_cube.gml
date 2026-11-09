@@ -2,7 +2,7 @@ function Node_Simplex_Cube(_x, _y, _group = noone) : Node_Shader_Generator(_x, _
 	name   = "Simplex Cube";
 	shader = sh_simplex_cube;
 	
-	newInput( 7, nodeValueSeed()).setShaderProp("seed");
+	newInput( 7, nodeValue_Seed()).setShaderProp("seed");
 	
 	////- =Shape
 	newInput( 1, nodeValue_EButton( "Shape",     0, [ "Cube", "Sphere" ] )).setShaderProp("shape");

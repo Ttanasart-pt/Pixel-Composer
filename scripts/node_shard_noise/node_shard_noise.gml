@@ -2,7 +2,7 @@ function Node_Shard_Noise(_x, _y, _group = noone) : Node_Shader_Generator(_x, _y
 	name   = "Shard Noise";
 	shader = sh_noise_shard;
 	
-	newInput( 3, nodeValueSeed()).setShaderProp("seed");
+	newInput( 3, nodeValue_Seed()).setShaderProp("seed");
 	
 	////- =Output
 	newInput(11, nodeValue_Surface( "UV Map"     ));

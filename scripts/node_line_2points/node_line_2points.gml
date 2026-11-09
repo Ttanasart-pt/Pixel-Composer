@@ -11,7 +11,7 @@
 function Node_Line_2Points(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name = "Draw Line 2 Points";
 	
-	newInput( 1, nodeValueSeed());
+	newInput( 1, nodeValue_Seed());
 	
 	////- =Output
 	newInput( 0, nodeValue_Dimension());

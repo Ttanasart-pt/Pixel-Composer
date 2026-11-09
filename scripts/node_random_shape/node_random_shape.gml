@@ -1,7 +1,7 @@
 function Node_Random_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Draw Random Shape";
 	
-	newInput(1, nodeValueSeed(VALUE_TYPE.integer));
+	newInput(1, nodeValue_Seed(VALUE_TYPE.integer));
 	
 	////- =Output
 	newInput( 0, nodeValue_Dimension());

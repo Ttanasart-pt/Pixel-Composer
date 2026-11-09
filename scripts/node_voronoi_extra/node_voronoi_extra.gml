@@ -8,7 +8,7 @@ function Node_Voronoi_Extra(_x, _y, _group = noone) : Node_Shader_Generator(_x, 
 	newInput( 8, nodeValue_Surface( "Mask"       ));
 	
 	////- =Noise
-	newInput( 3, nodeValueSeed()).setShaderProp("seed").setPieMenu();
+	newInput( 3, nodeValue_Seed()).setShaderProp("seed").setPieMenu();
 	newInput( 5, nodeValue_EScroll( "Mode",         0, [ "Block", "Triangle" ])).setShaderProp("mode").setPieMenu();
 	newInput( 4, nodeValue_Float(   "Progress",     0 )).setShaderProp("progress");
 	newInput( 6, nodeValue_Slider(  "Parameter A",  0, [ -1, 1, 0.01 ])).setShaderProp("paramA");

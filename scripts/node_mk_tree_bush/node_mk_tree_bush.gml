@@ -6,7 +6,7 @@ function Node_MK_Tree_Bush(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	setDrawIcon();
 	setDimension(96, 48);
 	
-	newInput( 1, nodeValueSeed());
+	newInput( 1, nodeValue_Seed());
 	
 	////- =Spawning
 	newInput( 0, nodeValue_Area( "Area", DEF_AREA_REF, false )).setUnitSimple();

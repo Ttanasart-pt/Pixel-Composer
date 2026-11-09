@@ -8,7 +8,7 @@ function Node_MK_Blinker(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	newInput( 1, nodeValue_Surface( "Mask"       ));
 	
 	////- =Blink
-	newInput( 2, nodeValueSeed());
+	newInput( 2, nodeValue_Seed());
 	newInput( 3, nodeValue_Slider(  "Amount",         .5        ));
 	newInput( 4, nodeValue_Palette( "Target Colors", [ca_black] ));
 	newInput( 5, nodeValue_Palette( "Light Colors",  [ca_white] ));

@@ -2,7 +2,7 @@ function Node_3D_Instancer(_x, _y, _group = noone) : Node_3D(_x, _y, _group) con
 	name   = "3D Instancer";
 	object = undefined;
 	
-	newInput( 9, nodeValueSeed());
+	newInput( 9, nodeValue_Seed());
 	
 	////- =Object
 	newInput( 0, nodeValue_D3Mesh( "Mesh" ));

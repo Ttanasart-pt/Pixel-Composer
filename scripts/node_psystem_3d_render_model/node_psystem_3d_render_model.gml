@@ -5,7 +5,7 @@ function Node_pSystem_3D_Render_Model(_x, _y, _group = noone) : Node_3D(_x, _y, 
 	parameters.inline_draw_output = true;
 	// update_on_frame = true;
 	
-	newInput(2, nodeValueSeed());
+	newInput(2, nodeValue_Seed());
 	
 	////- =Particles
 	newInput( 0, nodeValue_Particle( "Particles" ));

@@ -6,7 +6,7 @@ function Node_MK_Tree_Grow(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	setDrawIcon();
 	setDimension(96, 48);
 	
-	newInput( 1, nodeValueSeed());
+	newInput( 1, nodeValue_Seed());
 	newInput( 0, nodeValue_Struct( "Tree",     noone )).setVisible(true, true).setCustomData(global.MKTREE_JUNC);
 	newInput( 2, nodeValue_Slider( "Progress", 1.5, [-1, 4, .001] ));
 	

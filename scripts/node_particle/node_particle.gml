@@ -4,7 +4,7 @@ function Node_Particle(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 	use_cache = CACHE_USE.manual;
 	// setCacheAuto();
 	
-	newInput(32, nodeValueSeed());
+	newInput(32, nodeValue_Seed());
 	
 	////- =Output
 	newInput(71, nodeValue_Dimension());

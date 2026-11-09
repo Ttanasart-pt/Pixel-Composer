@@ -2,7 +2,7 @@ function Node_Kisrhombille(_x, _y, _group = noone) : Node_Shader_Generator(_x, _
 	name   = "Kisrhombille";
 	shader = sh_kisrhombille;
 	
-	newInput(12, nodeValueSeed()).setShaderProp("seed");
+	newInput(12, nodeValue_Seed()).setShaderProp("seed");
 	
 	////- =Output
 	newInput( 1, nodeValue_Surface( "UV Map"     ));

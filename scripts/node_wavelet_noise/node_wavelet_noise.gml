@@ -8,7 +8,7 @@ function Node_Wavelet_Noise(_x, _y, _group = noone) : Node_Shader_Generator(_x, 
 	newInput(10, nodeValue_Surface( "Mask"       ));
 	
 	////- =Noise
-	newInput( 3, nodeValueSeed()).setShaderProp("seed").setPieMenu();
+	newInput( 3, nodeValue_Seed()).setShaderProp("seed").setPieMenu();
 	newInput( 4, nodeValue_Float(  "Progress",   0 )).setShaderProp("progress").setMappable(7).setPieMenu();
 	newInput( 5, nodeValue_Slider( "Detail",     1.24, [ 0, 2, 0.01 ])).setShaderProp("detail").setMappable(8).setPieMenu();
 	

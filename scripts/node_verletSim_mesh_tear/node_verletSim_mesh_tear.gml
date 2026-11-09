@@ -6,7 +6,7 @@ function Node_VerletSim_Mesh_Tear(_x, _y, _group = noone) : Node(_x, _y, _group)
 	setDimension(96, 48);
 	
 	newActiveInput(4);
-	newInput( 7, nodeValueSeed());
+	newInput( 7, nodeValue_Seed());
 	
 	////- =Mesh
 	newInput(0, nodeValue_Mesh( "Mesh" )).setCustomData(global.VERLET_MESH_JUNC).setVisible(true, true);

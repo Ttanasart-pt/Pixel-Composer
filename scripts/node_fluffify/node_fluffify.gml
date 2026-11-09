@@ -2,7 +2,7 @@ function Node_Fluffify(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	name = "Fluffify";
 	
 	newActiveInput(5);
-	newInput( 7, nodeValueSeed());
+	newInput( 7, nodeValue_Seed());
 	
 	////- =Surfaces
 	newInput( 0, nodeValue_Surface("Surface In")).setRequired();

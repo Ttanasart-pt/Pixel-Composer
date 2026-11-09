@@ -14,7 +14,7 @@
 	newInput( 7, nodeValue_Surface( "Mask"       ));
 	
 	////- =Noise
-	newInput( 5, nodeValueSeed()).setShaderProp("seed").setPieMenu();
+	newInput( 5, nodeValue_Seed()).setShaderProp("seed").setPieMenu();
 	newInput( 4, nodeValue_EButton(  "Mode",       0, [ "Hexagon", "Star" ])).setShaderProp("mode").setPieMenu();
 	newInput( 6, nodeValue_Int(      "Iteration",  1)).setShaderProp("iteration").setPieMenu();
 	

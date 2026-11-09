@@ -8,7 +8,7 @@ function Node_FLIP_Fill(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	manual_ungroupable = false;
 	
 	newInput( 0, nodeValue_Fdomain( "Domain" )).setVisible(true, true);
-	newInput( 5, nodeValueSeed());
+	newInput( 5, nodeValue_Seed());
 	
 	////- =Fill
 	spawner_shapes = [ new scrollItem( "Rectangle", s_node_shape_rectangle, 0 ), "Surface" ];

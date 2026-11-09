@@ -21,7 +21,7 @@ function Node_Random_Tile(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	
 	////- =Render
 	newInput( 7, nodeValue_EScroll( "Render Type",  0, ["Colored tile", "Height map", "Texture grid"]));
-	newInput( 8, nodeValueSeed());
+	newInput( 8, nodeValue_Seed());
 	newInput( 5, nodeValue_Gradient( "Tile Color", gra_white)).setMappable(17).addShift(26);
 	newInput( 6, nodeValue_Color(    "Gap Color",  ca_black ));
 	newInput( 9, nodeValue_Surface(  "Texture"              ));

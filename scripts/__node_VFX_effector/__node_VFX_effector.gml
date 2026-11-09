@@ -16,7 +16,7 @@ function Node_VFX_effector(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	newInput(3, nodeValue_Float( "Falloff distance", 4            ));
 	
 	////- =Effect
-	newInput(8, nodeValueSeed());
+	newInput(8, nodeValue_Seed());
 	newInput(4, nodeValue_Vec2(           "Effect Vector",    [-1,0] ));
 	newInput(5, nodeValue_Float(          "Strength",           1    ));
 	newInput(6, nodeValue_Rotation_Range( "Rotate particle",   [0,0] ));

@@ -2,7 +2,7 @@ function Node_MK_GridBalls(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	name = "MK GridBalls";
 	dimension_index = 1;
 	
-	newInput( 5, nodeValueSeed());
+	newInput( 5, nodeValue_Seed());
 	newInput( 1, nodeValue_Dimension());
 	
 	////- =Surface

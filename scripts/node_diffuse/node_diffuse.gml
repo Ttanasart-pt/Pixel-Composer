@@ -2,7 +2,7 @@ function Node_Diffuse(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 	name = "Diffuse";
 	
 	newInput( 0, nodeValue_Surface( "Density Field" ));
-	newInput( 6, nodeValueSeed());
+	newInput( 6, nodeValue_Seed());
 	
 	////- =Diffuse
 	newInput( 1, nodeValue_Slider( "Dissipation", .05, [-.2,.2,.001] )).setMappable(12);

@@ -2,7 +2,7 @@ function Node_Noise_Scratch(_x, _y, _group = noone) : Node_Shader_Generator(_x, 
 	name   = "Scratch Noise";
 	shader = sh_noise_scratch;
 	
-	newInput( 4, nodeValueSeed()).setShaderProp("seed");
+	newInput( 4, nodeValue_Seed()).setShaderProp("seed");
 	
 	////- =Output
 	newInput( 1, nodeValue_Surface( "UV Map"     ));

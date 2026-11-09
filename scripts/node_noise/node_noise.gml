@@ -14,7 +14,7 @@ function Node_Noise(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	newInput( 6, nodeValue_Surface( "Mask"       ));
 	
 	////- =Moise
-	newInput( 1, nodeValueSeed());
+	newInput( 1, nodeValue_Seed());
 	
 	////- =Rendering
 	newInput( 9, nodeValue_SliRange( "Level In",      [0,1] ));

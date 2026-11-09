@@ -6,8 +6,6 @@
 #endregion 
 
 function Node_Canvas_S(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
-	PREVIEW_OVERRIDE = true;
-	
 	name  = "Canvas";
 	color = COLORS.node_blend_canvas;
 	

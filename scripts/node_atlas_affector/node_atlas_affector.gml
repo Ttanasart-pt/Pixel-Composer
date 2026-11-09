@@ -2,7 +2,7 @@ function Node_Atlas_Affector(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 	name = "Atlas Affector";
 	
 	newInput( 0, nodeValue_Atlas("Atlas In")).setArrayDepth(1).setVisible(true, true);
-	newInput(34, nodeValueSeed());
+	newInput(34, nodeValue_Seed());
 	
 	////- =Output
 	newInput(25, nodeValue_Bool(    "Use Base Dimension", true     )).rejectArray();

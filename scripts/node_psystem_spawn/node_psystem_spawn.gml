@@ -9,7 +9,7 @@ function Node_pSystem_Spawn(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	setDimension(96, 0);
 	update_on_frame = true;
 	
-	newInput(13, nodeValueSeed());
+	newInput(13, nodeValue_Seed());
 	
 	////- =Spawn
 	newInput( 0, nodeValue_EScroll( "Spawn Type", 0, [ "Stream", "Burst", "Trigger" ] ));

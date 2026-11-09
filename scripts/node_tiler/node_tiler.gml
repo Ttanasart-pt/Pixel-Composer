@@ -16,7 +16,7 @@ function Node_Tile_Drawer(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
     name = "Tile Drawer";
     // bypass_grid = true;
     
-    newInput( 3, nodeValueSeed());
+    newInput( 3, nodeValue_Seed());
     
     ////- =Tilemap
     newInput( 1, nodeValue_IVec2( "Map size", [ 16, 16 ] ));

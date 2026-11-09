@@ -3,7 +3,7 @@ function Node_MK_Brownian(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	update_on_frame = true;
 	dimension_index = 12;
 	
-	newInput( 8, nodeValueSeed());
+	newInput( 8, nodeValue_Seed());
 	
 	////- =Dimension
 	newInput(12, nodeValue_Dimension());

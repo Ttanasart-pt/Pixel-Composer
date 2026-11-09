@@ -21,7 +21,7 @@ function Node_MK_Delay_Machine(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	////- =Delay
 	newInput( 3, nodeValue_Palette( "Blend over Delay", [ca_white] ));
 	newInput( 5, nodeValue_EScroll( "Palette Select",    0, [ "Loop", "Pingpong", "Random", "Hold", "Stretch" ] ));
-	newInput( 6, nodeValueSeed());
+	newInput( 6, nodeValue_Seed());
 	newInput( 4, nodeValue_Curve(   "Alpha over Delay", CURVE_DEF_11 ));
 	newInput( 8, nodeValue_EScroll( "Blend Mode",       0, [ "Normal", "Alpha", "Additive", "Maximum" ] ));
 	// 13

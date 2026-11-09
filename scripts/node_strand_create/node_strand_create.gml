@@ -18,7 +18,7 @@ function Node_Strand_Create(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	update_on_frame      = true;
 	manual_ungroupable	 = false;
 	
-	newInput(10, nodeValueSeed());
+	newInput(10, nodeValue_Seed());
 	
 	////- =Generation
 	newInput( 0, nodeValue_EScroll( "Source",       0, [ "Point", "Path", "Mesh" ]  ));

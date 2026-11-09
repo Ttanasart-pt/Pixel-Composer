@@ -7,7 +7,7 @@ function Node_MK_Tree_Leaf_Particle(_x, _y, _group = noone) : Node(_x, _y, _grou
 	setDimension(96, 48);
 	
 	newInput(18, nodeValue_Bool( "Active", true ));
-	newInput( 1, nodeValueSeed());
+	newInput( 1, nodeValue_Seed());
 	
 	////- =Leaves
 	newInput( 0, nodeValue_Struct( "Leaves" )).setVisible(true, true).setCustomData(global.MKTREE_LEAVES_JUNC);

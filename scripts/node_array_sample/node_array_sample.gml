@@ -4,7 +4,7 @@ function Node_Array_Sample(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	setDrawIcon();
 	
 	newInput( 0, nodeValue_Any( "Array" )).setVisible(true, true);
-	newInput( 4, nodeValueSeed());
+	newInput( 4, nodeValue_Seed());
 	
 	////- =Sampling
 	newInput( 2, nodeValue_EScroll( "Mode",      0, [ "Uniform", "Random" ] ));

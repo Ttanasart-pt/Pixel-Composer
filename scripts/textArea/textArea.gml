@@ -99,9 +99,10 @@ function textArea(_input, _onModify) : textInput(_input, _onModify) constructor 
 	
 	////- Get Set
 	
-	static setVAlign    = function(_v) /*=>*/ { padding_v  = _v; return self; }
-	static setFixHeight = function(_h) /*=>*/ { fix_height = _h; return self; }
-	static setResizable = function(_h) /*=>*/ { resizable  = _h; return self; }
+	static setVAlign    = function(_v) /*=>*/ { padding_v  = _v;    return self; }
+	static setFixHeight = function(_h) /*=>*/ { fix_height = _h;    return self; }
+	static setResizable = function(_h) /*=>*/ { resizable  = _h;    return self; }
+	static setEmpty     = function(  ) /*=>*/ { no_empty   = false; return self; }
 	
 	static isCodeFormat = function() { INLINE return format == TEXT_AREA_FORMAT.codeLUA || format == TEXT_AREA_FORMAT.codeHLSL; }
 	

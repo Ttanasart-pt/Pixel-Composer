@@ -15,7 +15,7 @@ function Node_Grid_Noise(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	newInput(11, nodeValue_Surface( "Mask"       ));
 	
 	////- =Noise
-	newInput( 3, nodeValueSeed()).setPieMenu();
+	newInput( 3, nodeValue_Seed()).setPieMenu();
 	newInput( 1, nodeValue_Vec2(        "Position",   [0,0] )).setHotkey("G").setUnitSimple().setPieMenu();
 	newInput( 2, nodeValue_Vec2(        "Scale",      [8,8] )).setHotkey("S").setPieMenu();
 	newInput( 6, nodeValue_EButton( "Shift Axis",  0, ["X", "Y"]        )).setPieMenu();

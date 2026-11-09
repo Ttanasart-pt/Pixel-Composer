@@ -1,7 +1,7 @@
 function Node_MK_Rock(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "MK Rock";
 	
-	newInput( 1, nodeValueSeed());
+	newInput( 1, nodeValue_Seed());
 	
 	////- =Output
 	newInput( 0, nodeValue_Dimension());
@@ -29,14 +29,14 @@ function Node_MK_Rock(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	newInput(34, nodeValue_Range(    "Shear",       [0,0]       )).setCurvable(35, CURVE_DEF_11);
 	
 		////- =Cut
-	newInput(60, nodeValueSeed());
+	newInput(60, nodeValue_Seed());
 	newInput(38, nodeValue_Slider(   "Chance",   0          )).setCurvable(42, CURVE_DEF_11);
 	newInput(59, nodeValue_EScroll(  "Shape",    0, [ "Ellipse", "Rectangle" ] ));
 	newInput(39, nodeValue_Range(    "Scale",   [0,1]       ));
 	
 	////- =Nugget
 	newInput(20, nodeValue_Bool(     "Nugget",      false       ));
-	newInput(61, nodeValueSeed());
+	newInput(61, nodeValue_Seed());
 	newInput(24, nodeValue_Slider(   "Chance",       .5         ));
 	newInput(63, nodeValue_EScroll(  "Shape",         0, [ "Ellipse", "Rectangle" ] ));
 	newInput(64, nodeValue_Slider(   "Span",         .5         ));

@@ -7,7 +7,7 @@ function Node_FLIP_Spawner(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	
 	manual_ungroupable = false;
 	
-	newInput( 9, nodeValueSeed());
+	newInput( 9, nodeValue_Seed());
 	newInput( 0, nodeValue_Fdomain( "Domain" )).setVisible(true, true);
 	
 	////- =Spawner

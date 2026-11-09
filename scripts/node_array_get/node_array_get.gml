@@ -10,7 +10,7 @@ function Node_Array_Get(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	newInput( 3, nodeValue_EScroll( "Mode",     0, [ "Index", "Random" ]            ));
 	newInput( 1, nodeValue_Int(     "Index",    0                                   ));
 	newInput( 2, nodeValue_EScroll( "Overflow", 0, [ "Clamp", "Loop", "Ping Pong" ] )).rejectArray();
-	newInput( 4, nodeValueSeed());
+	newInput( 4, nodeValue_Seed());
 	// 5
 	
 	newOutput(0, nodeValue_Output("Value", VALUE_TYPE.any, 0));

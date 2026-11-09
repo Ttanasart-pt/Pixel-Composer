@@ -10,7 +10,7 @@ function Node_Strand_Force_Apply(_x, _y, _group = noone) : _Node_Strand_Affector
 	
 	////- =Force
 	newInput(i+0, nodeValue_Slider( "Strength", 1, [ 0, 5, 0.01 ] ));
-	newInput(i+2, nodeValueSeed());
+	newInput(i+2, nodeValue_Seed());
 	
 	////- =Turbulence
 	newInput(i+1, nodeValue_Float( "Strength",   0 ));

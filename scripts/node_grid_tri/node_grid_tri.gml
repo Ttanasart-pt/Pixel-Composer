@@ -7,7 +7,7 @@
 function Node_Grid_Tri(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Triangle Grid";
 	
-	newInput( 9, nodeValueSeed());
+	newInput( 9, nodeValue_Seed());
 	
 	////- =Output
 	newInput( 0, nodeValue_Dimension());
@@ -24,13 +24,13 @@ function Node_Grid_Tri(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	////- =Shift
 	newInput(29, nodeValue_Slider(   "Shift",            0, [-1,1,.01] ));
 	newInput(31, nodeValue_Slider(   "Random Shift",     0             ));
-	newInput(32, nodeValueSeedFloat( "Shift Seed"                      ));
+	newInput(32, nodeValue_SeedFloat( "Shift Seed"                      ));
 	newInput(30, nodeValue_Slider(   "Secondary Shift",  0             ));
 	
 	////- =Render
 	newInput( 8, nodeValue_EScroll(  "Render Type",  0, ["Colored tile", "Height map", "Texture grid", "Texture sample"]));
 	newInput( 5, nodeValue_Gradient( "Tile Color", gra_white        )).setMappable(17).addShift(27);
-	newInput(28, nodeValueSeedFloat( "Color Seed"                   ));
+	newInput(28, nodeValue_SeedFloat( "Color Seed"                   ));
 	newInput( 6, nodeValue_Color(    "Gap Color",  ca_black         ));
 	
 	newInput( 7, nodeValue_Surface(  "Texture"                      ));

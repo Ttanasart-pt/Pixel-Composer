@@ -944,12 +944,17 @@ function Panel_Inspector() : PanelContent() constructor {
             
             if(is_array(jun)) {
             	var _key = array_safe_get_fast(jun, 0, "");
+            	var togl = array_safe_get_fast(jun, 2, noone);
+                var righ = array_safe_get_fast(jun, 3, noone);
             	if(is_real(_key)) continue;
-            	
+	            
             	var ikey = _key + $"_{i}"
             	var subk = string_starts_with(_key, "/");
             	
             	_amoMap[$ ikey] = 0;
+            	
+            	if(togl != noone || righ != noone)
+            		_amoMap[$ ikey]++;
             	
             	if(subk) {
             		_currSub = ikey;

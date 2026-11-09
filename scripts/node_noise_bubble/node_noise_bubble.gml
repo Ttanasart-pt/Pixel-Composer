@@ -15,7 +15,7 @@ function Node_Noise_Bubble(_x, _y, _group = noone) : Node_Shader_Generator(_x, _
 	newInput( 8, nodeValue_Surface( "Mask"       ));
 	
 	////- =Noise
-	newInput( 2, nodeValueSeed()).setShaderProp("seed").setPieMenu();
+	newInput( 2, nodeValue_Seed()).setShaderProp("seed").setPieMenu();
 	newInput( 1, nodeValue_Slider(   "Density",   .5     )).setShaderProp("density").setPieMenu();
 	newInput( 3, nodeValue_SliRange( "Scale",    [.5,.8] )).setShaderProp("scale").setPieMenu();
 	

@@ -7,7 +7,7 @@ function Node_pSystem_3D_Transform(_x, _y, _group = noone) : Node_3D(_x, _y, _gr
 	setDimension(96, 0);
 	update_on_frame = true;
 	
-	newInput( 2, nodeValueSeed());
+	newInput( 2, nodeValue_Seed());
 	
 	////- =Particles
 	newInput( 0, nodeValue_Particle( "Particles" ));

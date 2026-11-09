@@ -2,7 +2,7 @@ function Node_Weave(_x, _y, _group = noone) : Node_Shader_Generator(_x, _y, _gro
 	name   = "Weave";
 	shader = sh_weave;
 	
-	newInput(9, nodeValueSeed()).setShaderProp("seed");
+	newInput(9, nodeValue_Seed()).setShaderProp("seed");
 	
 	////- =Output
 	newInput( 1, nodeValue_Surface( "UV Map"     ));

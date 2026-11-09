@@ -8,7 +8,7 @@ function Node_Strand_Render_Texture(_x, _y, _group = noone) : Node(_x, _y, _grou
 	inline_output        = false;
 	manual_ungroupable	 = false;
 	
-	newInput(5, nodeValueSeed());
+	newInput(5, nodeValue_Seed());
 	
 	////- =Output
 	newInput( 0, nodeValue_Dimension());

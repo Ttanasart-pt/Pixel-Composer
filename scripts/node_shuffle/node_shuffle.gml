@@ -9,7 +9,7 @@ function Node_Shuffle(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	name = "Shuffle";
 	
 	newInput(0, nodeValue_Surface("Surface"));
-	newInput(2, nodeValueSeed());
+	newInput(2, nodeValue_Seed());
 	
 	////- =Shuffle
 	newInput(1, nodeValue_EScroll( "Type",         0, [ "Pixel", "Block" ]                 ));

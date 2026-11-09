@@ -8,7 +8,7 @@ function Node_MK_Dialog(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	update_on_frame = true;
 	setAlwaysTimeline(new timelineItemNode_MKDialog(self));
 	
-	newInput(26, nodeValueSeed());
+	newInput(26, nodeValue_Seed());
 	
 	////- =Text
 	newInput( 1, nodeValue_Text(    "Dialogs", [] )).setArrayDepth(1).setVisible(true, true);

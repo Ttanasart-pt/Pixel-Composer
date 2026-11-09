@@ -2,7 +2,7 @@ function Node_Noise_Blue(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	name = "Blue Noise";
 	manual_render_time = true;
 	
-	newInput( 1, nodeValueSeed()).setPieMenu();
+	newInput( 1, nodeValue_Seed()).setPieMenu();
 	
 	////- =Output
 	newInput( 0, nodeValue_Dimension());

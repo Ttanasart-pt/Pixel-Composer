@@ -21,7 +21,7 @@ function Node_Grid_Pentagonal(_x, _y, _group = noone) : Node_Processor(_x, _y, _
 	
 	////- =Render
 	newInput( 8, nodeValue_EScroll(  "Render Type",  0, ["Colored tile", "Height map", "Texture grid"] ));
-	newInput( 9, nodeValueSeed());
+	newInput( 9, nodeValue_Seed());
 	newInput( 5, nodeValue_Gradient( "Tile Color", gra_white )).setMappable(14).addShift(21);
 	newInput( 6, nodeValue_Color(    "Gap Color",  ca_black  ));
 	newInput( 7, nodeValue_Surface(  "Texture"               ));

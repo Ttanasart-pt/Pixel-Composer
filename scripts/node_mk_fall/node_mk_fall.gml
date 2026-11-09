@@ -8,7 +8,7 @@ function Node_MK_Fall(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 	name = "MK Fall";
 	update_on_frame = true;
 	
-	newInput(2, nodeValueSeed());
+	newInput(2, nodeValue_Seed());
 	
 	////- =Dimension
 	newInput(0, nodeValue_Surface("Background"));

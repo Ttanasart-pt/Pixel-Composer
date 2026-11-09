@@ -3,7 +3,7 @@ function Node_Path_Orbital(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	setDrawIcon();
 	setDimension(96, 48);
 	
-	newInput( 0, nodeValueSeed());
+	newInput( 0, nodeValue_Seed());
 	
 	////- =Object
 	newInput( 1, nodeValue_Vec2(  "Origin",           [.25,.25] )).setUnitSimple();

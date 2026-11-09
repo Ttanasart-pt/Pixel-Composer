@@ -15,7 +15,7 @@ function Node_Scatter_Points(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 	dimension_index = -1;
 	
 	////- =Base
-	newInput( 5, nodeValueSeed());
+	newInput( 5, nodeValue_Seed());
 	newInput( 6, nodeValue_Bool( "Fixed Position",      false, "Fix point position, and only select point in the area."));
 	newInput( 7, nodeValue_Vec2( "Reference Dimension", PROJ_SURF ));
 	

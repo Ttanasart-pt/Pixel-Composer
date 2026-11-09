@@ -7,7 +7,7 @@ function Node_pSystem_Boids(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	setDimension(96, 0);
 	update_on_frame = true;
 	
-	newInput( 2, nodeValueSeed());
+	newInput( 2, nodeValue_Seed());
 	
 	////- =Particles
 	newInput( 0, nodeValue_Particle( "Particles" ));

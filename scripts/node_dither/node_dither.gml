@@ -26,7 +26,7 @@ function Node_Dither(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	
 	newActiveInput(9);
 	newInput(10, nodeValue_Toggle( "Channel", 0b1111, { data: array_create(4, THEME.inspector_channel) }));
-	newInput(13, nodeValueSeed());
+	newInput(13, nodeValue_Seed());
 	
 	////- =Surfaces
 	newInput( 0, nodeValue_Surface( "Surface In" )).setRequired();

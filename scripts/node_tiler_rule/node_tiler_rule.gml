@@ -1,7 +1,7 @@
 function Node_Tile_Rule(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
     name  = "Tileset Rule";
     
-    newInput( 2, nodeValueSeed());
+    newInput( 2, nodeValue_Seed());
     
     ////- =Tile data
     newInput( 0, nodeValue_Tileset()).setVisible(true, true);

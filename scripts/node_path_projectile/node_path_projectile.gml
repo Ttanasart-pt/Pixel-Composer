@@ -3,7 +3,7 @@ function Node_Path_Projectile(_x, _y, _group = noone) : Node(_x, _y, _group) con
 	setDimension(96, 48);
 	setDrawIcon();
 	
-	newInput( 4, nodeValueSeed());
+	newInput( 4, nodeValue_Seed());
 	
 	////- =Path
 	newInput( 0, nodeValue_Int(   "Amount",   6     ));

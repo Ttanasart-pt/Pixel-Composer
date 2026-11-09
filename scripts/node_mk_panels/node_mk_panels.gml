@@ -3,7 +3,7 @@ function Node_MK_Panels(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	dimension_index = 1;
 	
 	newInput( 1, nodeValue_Dimension());
-	newInput( 2, nodeValueSeed());
+	newInput( 2, nodeValue_Seed());
 	
 	////- =Panels
 	newInput( 0, nodeValue_Area(    "Area",         DEF_AREA_REF, { useShape : false } )).setUnitSimple();
@@ -26,7 +26,7 @@ function Node_MK_Panels(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	newInput(19, nodeValue_Slider(  "Split Length",    .75       ));
 	
 	////- =Shapes
-	newInput(30, nodeValueSeed(,   "Shape Seed"));
+	newInput(30, nodeValue_Seed(,   "Shape Seed"));
 	newInput( 7, nodeValue_Text(   "Shape Pattern", "rsrd-"      )).setDisplay(VALUE_DISPLAY.text_box)
 		.setSideButton(button(function() /*=>*/ {return randomShape()}).setIcon(THEME.icon_random, 0, COLORS._main_icon).iconPad());
 	newInput( 9, nodeValue_Corner( "Corner",        [.25,0,0,0]  ));
@@ -36,7 +36,7 @@ function Node_MK_Panels(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	newInput(43, nodeValue_Slider( "Corner Deco",    0           ));
 	
 	////- =Slot
-	newInput(15, nodeValueSeed(,   "Slot Seed"));
+	newInput(15, nodeValue_Seed(,   "Slot Seed"));
 	newInput(11, nodeValue_Range(  "Slot Size",    [.2,.2], true ));
 	newInput(14, nodeValue_Range(  "Slot Width",   [.5,.5], true ));
 	newInput(13, nodeValue_Range(  "Slot Count",   [3,8]         ));

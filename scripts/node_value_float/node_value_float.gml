@@ -88,9 +88,9 @@ function __NodeValue_Float_Simple(_name, _node, _value, _tooltip = "") : NodeVal
 	
 }
 
-function nodeValueSeedFloat( _name = "Seed" ) { return nodeValueSeed(VALUE_TYPE.float,   _name); }
-function nodeValueSeedInt(   _name = "Seed" ) { return nodeValueSeed(VALUE_TYPE.integer, _name); }
-function nodeValueSeed(_type = VALUE_TYPE.float, _name = "Seed") { 
+function nodeValue_SeedFloat( _name = "Seed" ) { return nodeValue_Seed(VALUE_TYPE.float,   _name); }
+function nodeValue_SeedInt(   _name = "Seed" ) { return nodeValue_Seed(VALUE_TYPE.integer, _name); }
+function nodeValue_Seed(_type = VALUE_TYPE.float, _name = "Seed") { 
 	var _val  = new NodeValue(_name, self, CONNECT_TYPE.input, _type, seed_random(6), "");
 	
 	self.input_seed  = _val;

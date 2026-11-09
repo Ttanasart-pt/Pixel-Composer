@@ -10,7 +10,7 @@ function Node_MK_Tree_Root(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	/* UNUSED */ newInput( 2, nodeValue_Vec4(  "Origin Wiggle", [0,0,0,0]   )).setUnitSimple();
 	/* UNUSED */ newInput(13, nodeValue_Curve( "Length Curve", CURVE_DEF_11 ));
 	
-	newInput(14, nodeValueSeed());
+	newInput(14, nodeValue_Seed());
 	newInput( 0, nodeValue_Struct( "Tree", noone)).setVisible(true, true).setCustomData(global.MKTREE_JUNC);
 	
 	////- =Spawning

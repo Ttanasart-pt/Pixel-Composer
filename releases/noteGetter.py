@@ -52,6 +52,12 @@ for note in notes:
 
     trgFile = os.path.join(trgDir, f"{v}.md")
     
+    note_mtime = os.path.getmtime(note)
+    targ_mtime = os.path.getmtime(trgFile) if os.path.exists(trgFile) else 0
+
+    if note_mtime <= targ_mtime:
+        continue
+    
     with open(note, "r", encoding="utf-8") as src:
         content = src.read()
     

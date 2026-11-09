@@ -8,7 +8,7 @@ function Node_MK_Tree_Branch(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	/* UNUSED */ newInput( 1, nodeValue_Vec2(       "Origin Position", [.5,1]    ));
 	/* UNUSED */ newInput( 2, nodeValue_Vec2_Range( "Origin Wiggle",   [0,0,0,0] ));
 	
-	newInput(14, nodeValueSeed());
+	newInput(14, nodeValue_Seed());
 	newInput( 0, nodeValue_Struct( "Tree", noone)).setVisible(true, true).setCustomData(global.MKTREE_JUNC);
 	
 	////- =Output

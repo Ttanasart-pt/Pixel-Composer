@@ -21,7 +21,7 @@ function Node_pSystem_3D_Spawn(_x, _y, _group = noone) : Node_3D(_x, _y, _group)
 	spawn_gizmo_sphere = new __3dGizmoSphere(  1, c_white, .75 );
 	spawn_gizmo_circle = new __3dGizmoCircleZ( 1, c_white, .75 );
 	
-	newInput(6, nodeValueSeed());
+	newInput(6, nodeValue_Seed());
 	
 	////- =Spawn
 	newInput( 0, nodeValue_EScroll( "Spawn Type", 0, [ "Stream", "Burst", "Trigger" ] ));

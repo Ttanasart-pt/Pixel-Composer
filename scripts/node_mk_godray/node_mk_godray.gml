@@ -2,7 +2,7 @@ function Node_MK_GodRay(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	name = "MK GodRay";
 	
 	newActiveInput( 2);
-	newInput(16, nodeValueSeed());
+	newInput(16, nodeValue_Seed());
 	
 	////- =Surfaces
 	newInput( 0, nodeValue_Surface( "Background" ));

@@ -2,7 +2,7 @@ function Node_MK_Cloud(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	name = "MK Cloud";
 	
 	////- =Seed
-	newInput( 1, nodeValueSeed());
+	newInput( 1, nodeValue_Seed());
 	newInput(57, nodeValue_Bool(   "Positional",     false      ));
 	
 	////- =Output

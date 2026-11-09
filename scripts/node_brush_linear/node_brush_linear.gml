@@ -11,7 +11,7 @@ function Node_Brush_Linear(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	__init_mask_modifier(7, 10); // inputs 10, 11
 	
 	////- =Effect
-	newInput(3, nodeValueSeed());
+	newInput(3, nodeValue_Seed());
 	newInput(2, nodeValue_Int(    "Iteration",    10 )).setHotkey("I").setValidator(VV_min(1)).setPieMenu();
 	newInput(4, nodeValue_Float(  "Length",       10 )).setMappable(12).setHotkey("L").setPieMenu();
 	newInput(5, nodeValue_Slider( "Attenuation", .99 )).setMappable(13).setCurvable(15).setPieMenu();

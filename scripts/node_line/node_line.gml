@@ -22,7 +22,7 @@
 function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {	
 	name = "Draw Line";
 	
-	newInput(39, nodeValueSeed());
+	newInput(39, nodeValue_Seed());
 	
 	////- =Output
 	newInput( 0, nodeValue_Dimension());
@@ -73,7 +73,7 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	
 	////- =Wiggle
 	newInput(47, nodeValue_Bool(    "Use Wiggle",  false         ));
-	newInput( 5, nodeValueSeed(,    "Wiggle Seed"                ));
+	newInput( 5, nodeValue_Seed(,    "Wiggle Seed"                ));
 	newInput( 4, nodeValue_Range(   "Amplitude",   [4,4], true   )).setInternalName("wig_amplitude").setCurvable(53, CURVE_DEF_11);
 	newInput(51, nodeValue_Slider(  "Frequency",   8, [0,32,.01] )).setInternalName("wig_frequency").setCurvable(54, CURVE_DEF_11);
 	newInput(52, nodeValue_ISlider( "Detail",      4, [0,8,1]    )).setInternalName("wig_detail");

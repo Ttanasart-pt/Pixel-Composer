@@ -3,7 +3,7 @@ function Node_Path_Bridge(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	setDrawIcon();
 	setDimension(96, 48);
 	
-	newInput( 4, nodeValueSeed());
+	newInput( 4, nodeValue_Seed());
 	
 	////- =Bridge
 	newInput( 3, nodeValue_EScroll( "Distribution", 0, [ "Uniform", "Random" ] ));

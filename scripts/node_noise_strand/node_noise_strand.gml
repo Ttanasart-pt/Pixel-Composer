@@ -15,7 +15,7 @@ function Node_Noise_Strand(_x, _y, _group = noone) : Node_Shader_Generator(_x, _
 	newInput(12, nodeValue_Surface( "Mask"       ));
 	
 	////- =Noise
-	newInput( 3, nodeValueSeed()).setShaderProp("seed").setPieMenu();
+	newInput( 3, nodeValue_Seed()).setShaderProp("seed").setPieMenu();
 	newInput( 9, nodeValue_EButton(  "Axis",     0, [ "X", "Y" ] )).setShaderProp("axis").setPieMenu();
 	newInput( 2, nodeValue_Slider(   "Density", .5 )).setShaderProp("density").setPieMenu();
 	newInput( 4, nodeValue_Slider(   "Slope",   .5 )).setShaderProp("slope").setPieMenu();

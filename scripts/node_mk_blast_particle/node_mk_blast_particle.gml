@@ -6,7 +6,7 @@ function Node_MK_Blast_Particle(_x, _y, _group = noone) : Node(_x, _y, _group) c
 	setDrawIcon();
 	setDimension(96, 48);
 	
-	newInput( 0, nodeValueSeed());
+	newInput( 0, nodeValue_Seed());
 	
 	////- =Settings
 	newInput( 1, nodeValue_Curve( "Layer Interpolation", CURVE_DEF_01 ));

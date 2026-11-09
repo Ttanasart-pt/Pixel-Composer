@@ -5,7 +5,7 @@ function Node_MK_Tree_Repulse(_x, _y, _group = noone) : Node(_x, _y, _group) con
 	setDrawIcon();
 	setDimension(96, 48);
 	
-	newInput( 1, nodeValueSeed());
+	newInput( 1, nodeValue_Seed());
 	newInput( 0, nodeValue_Struct("Tree", noone)).setVisible(true, true).setCustomData(global.MKTREE_JUNC);
 	
 	////- =Attractor

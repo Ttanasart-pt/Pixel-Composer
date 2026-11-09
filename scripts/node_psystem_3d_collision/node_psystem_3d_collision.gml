@@ -13,7 +13,7 @@ function Node_pSystem_3D_Collision(_x, _y, _group = noone) : Node_3D_Object(_x, 
 	
 	var i = in_d3d;
 	
-	newInput(i+ 2, nodeValueSeed());
+	newInput(i+ 2, nodeValue_Seed());
 	
 	////- =Particles
 	newInput(i+ 0, nodeValue_Particle( "Particles" ));

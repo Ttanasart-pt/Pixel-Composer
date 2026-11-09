@@ -1,7 +1,7 @@
 #region global
 	#macro SHOW_PARAM (attributes.show_preview && attributes.show_parameter)
 	
-	enum NODE_3D   { none, polygon, sdf, custom }
+	enum NODE_3D { none, polygon, sdf, custom }
 	
 	enum DYNA_INPUT_COND {
 		none       = 0, 
@@ -352,7 +352,8 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	#endregion
 	
 	#region ---- Preview ----
-		PREVIEW_OVERRIDE       = false;
+		inspecting = false;
+		previewing = 0;
 		
 		show_input_name        = false;
 		show_output_name       = false;
@@ -361,23 +362,19 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		show_output_name_force = false;
 		
 		draw_preview_junction  = true;
+		node_dimension_text    = "";
 		
-		inspecting	     = false;
-		previewing	     = 0;
+		preview_surface	       = noone;
+		preview_amount         = 0;
+		preview_draw           = true;
+		preview_index	       = 0;
+		preview_alpha	       = 1;
+		preview_channel        = 0; 
+		preview_channel_temp   = undefined; _preview_channel_temp = undefined;
 		
-		node_dimension_text = "";
-		
-		preview_surface	 = noone;
-		preview_amount   = 0;
-		preview_draw     = true;
-		preview_index	 = 0;
-		preview_alpha	 = 1;
-		preview_channel  = 0; 
-		preview_channel_temp = undefined; _preview_channel_temp = undefined;
-		
-		preview_is_surface = false;
-		__preview_sw       = noone;
-		__preview_sh       = noone;
+		preview_is_surface     = false;
+		__preview_sw           = noone;
+		__preview_sh           = noone;
 		
 		preview_surface_sample = true;
 		preview_select_surface = true;
@@ -3116,8 +3113,6 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	static drawProcessShort       = undefined; // function(cx, cy, cw, ch, _prog) {}
 	
 	////- PREVIEW
-	
-	PREVIEW_OVERRIDE_FN = undefined;
 	
 	static getPreviewValues = function() {
 		if(preview_channel < 0) return array_safe_get(temp_surface, -preview_channel-1, noone);

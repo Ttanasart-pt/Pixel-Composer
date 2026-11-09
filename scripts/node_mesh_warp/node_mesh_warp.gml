@@ -195,7 +195,7 @@ function Node_Mesh_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	name = "Mesh Warp";
 	
 	newActiveInput(5);
-	newInput(9, nodeValueSeed());
+	newInput(9, nodeValue_Seed());
 	
 	////- =Mesh
 	newInput( 0, nodeValue_Surface( "Surface In" )).setRequired();

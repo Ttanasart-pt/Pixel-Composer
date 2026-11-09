@@ -8,7 +8,7 @@
 function Node_Noise_Aniso(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Anisotropic Noise";
 	
-	newInput(10, nodeValueSeed());
+	newInput(10, nodeValue_Seed());
 	
 	////- =Output
 	newInput( 0, nodeValue_Dimension());
@@ -17,7 +17,7 @@ function Node_Noise_Aniso(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	newInput(11, nodeValue_Surface( "Mask"       ));
 	
 	////- =Noise
-	newInput( 2, nodeValueSeed()).setPieMenu();
+	newInput( 2, nodeValue_Seed()).setPieMenu();
 	newInput( 1, nodeValue_Float( "X Amount",  2     )).setMappable(6).setPieMenu();
 	newInput( 5, nodeValue_Float( "Y Amount",  16    )).setMappable(7).setPieMenu();
 	newInput( 3, nodeValue_Vec2(  "Position", [0,0]  )).setHotkey("G").setUnitSimple().setPieMenu();

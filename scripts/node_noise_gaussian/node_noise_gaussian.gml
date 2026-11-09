@@ -2,7 +2,7 @@ function Node_Noise_Gaussian(_x, _y, _group = noone) : Node_Shader_Generator(_x,
 	name   = "Gaussian Noise";
 	shader = sh_noise_gaussian;
 	
-	newInput( 1, nodeValueSeed()).setShaderProp("seed");
+	newInput( 1, nodeValue_Seed()).setShaderProp("seed");
 	
 	////- =Noise
 	newInput( 2, nodeValue_Vec2(    "Position", [0,0] )).setShaderProp("position");

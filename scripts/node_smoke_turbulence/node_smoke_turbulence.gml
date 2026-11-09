@@ -10,7 +10,7 @@ function Node_Smoke_Turbulence(_x, _y, _group = noone) : Node_Smoke(_x, _y, _gro
 	////- =Turbulence
 	newInput( 1, nodeValue_Area(   "Effect area", DEF_AREA_REF, { useShape : false } )).setUnitSimple().setHotkey("A");
 	newInput( 2, nodeValue_Slider( "Strength",    .10, [-1, 1, 0.01] ));
-	newInput( 4, nodeValueSeed());
+	newInput( 4, nodeValue_Seed());
 	newInput( 3, nodeValue_Slider( "Scale",         4, [1, 16, 0.01] ));
 	// 5
 	

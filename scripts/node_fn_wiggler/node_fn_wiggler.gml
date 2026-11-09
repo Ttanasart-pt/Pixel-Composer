@@ -1,7 +1,7 @@
 function Node_Wiggler(_x, _y, _group = noone) : Node_Fn(_x, _y, _group) constructor {
 	name = "Wiggler";
 	
-	newInput(inl+2, nodeValueSeed());
+	newInput(inl+2, nodeValue_Seed());
 	newInput(inl+0, nodeValue_Vec2(   "Range",     [0,1]          ));
 	newInput(inl+1, nodeValue_Slider( "Frequency",  4, [1,16,.01] ));
 	newInput(inl+3, nodeValue_Toggle( "Clip",       0b11, { data : [ "Start", "End" ] }));

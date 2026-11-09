@@ -7,7 +7,7 @@
 function Node_Grid(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Grid";
 	
-	newInput(11, nodeValueSeed());
+	newInput(11, nodeValue_Seed());
 	
 	////- =Output
 	newInput( 0, nodeValue_Dimension());
@@ -29,19 +29,19 @@ function Node_Grid(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	newInput( 9, nodeValue_EButton(  "Shift Axis",       0, ["X", "Y"]   ));
 	newInput( 8, nodeValue_Slider(   "Shift",            0, [-.5,.5,.01] )).setMappable(16);
 	newInput(31, nodeValue_Slider(   "Random Shift",     0 ));
-	newInput(32, nodeValueSeedFloat( "Shift Seed"          ));
+	newInput(32, nodeValue_SeedFloat( "Shift Seed"          ));
 	newInput(30, nodeValue_Slider(   "Secondary Shift",  0 ));
 	
 	////- =Scale
 	newInput(33, nodeValue_Slider(   "Random Scale",     0 ));
-	newInput(34, nodeValueSeedFloat( "Scale Seed"          ));
+	newInput(34, nodeValue_SeedFloat( "Scale Seed"          ));
 	newInput(29, nodeValue_Float(    "Secondary Scale",  0 ));
 	newInput(41, nodeValue_Slider(   "Secondary Ratio", .5 ));
 	
 	////- =Render
 	newInput(10, nodeValue_EScroll(  "Render Type",  0, ["Colored tile", "Colored tile (Accurate)", "Height map", "Texture grid", "Texture sample"]));
 	newInput( 5, nodeValue_Gradient( "Tile Color",            gra_white )).setMappable(20).addShift(42);
-	newInput(43, nodeValueSeedFloat( "Color Seed"                       ));
+	newInput(43, nodeValue_SeedFloat( "Color Seed"                       ));
 	newInput( 6, nodeValue_Color(    "Gap Color",             ca_black  ));
 	
 	newInput( 7, nodeValue_Surface(  "Texture"                          ));
@@ -52,7 +52,7 @@ function Node_Grid(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	
 	////- =/Texture Transform
 	newInput(17, nodeValue_Bool(       "Truchet",         false           ));
-	newInput(18, nodeValueSeedFloat(   "Texture Seed"                     ));
+	newInput(18, nodeValue_SeedFloat(   "Texture Seed"                     ));
 	newInput(39, nodeValue_Vec2_Range( "Random Position", [0,0,0,0]       ));
 	newInput(23, nodeValue_RotRange(   "Random Angle",    [0,0]           ));
 	newInput(40, nodeValue_Vec2_Range( "Random Scale",    [1,1,1,1], true ));

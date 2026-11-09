@@ -6,6 +6,11 @@
         "date": "2026-11-09T03:06:54.052Z",
         "node": "",
         "commit": "**Add Node**: Fix tunnel shortcut not showing the name of the targeted tunnel key."
+      },
+      {
+        "date": "2026-11-09T04:27:51.515Z",
+        "node": "",
+        "commit": "**Inspector Panel**: Fix crash when using edit as text."
       }
     ]
   },

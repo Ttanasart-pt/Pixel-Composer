@@ -16,7 +16,7 @@ function Node_pSystem_3D_Attract(_x, _y, _group = noone) : Node_3D(_x, _y, _grou
 	
 	target_gizmo = new __3dGizmoAxis(.5, c_white, .75 );
 	
-	newInput( 2, nodeValueSeed());
+	newInput( 2, nodeValue_Seed());
 	
 	////- =Particles
 	newInput( 0, nodeValue_Particle( "Particles" ));

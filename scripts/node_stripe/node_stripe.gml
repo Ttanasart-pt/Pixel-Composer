@@ -10,7 +10,7 @@
 function Node_Stripe(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Stripe";
 	
-	newInput(19, nodeValueSeed());
+	newInput(19, nodeValue_Seed());
 	
 	////- =Output
 	newInput( 0, nodeValue_Dimension());

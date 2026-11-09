@@ -5,11 +5,12 @@
 		
 		var quer = _param[$ "query"]; var query = (is_struct(quer) && quer[$ "type"] == "alias"? quer[$ "value"] : "") ?? "";
 		
-		print(query)
 		switch(query) {
 			case "select colors" : 
-				node.inputs[4].setValue(true);
+				node.inputs[1].setValue([ca_white]);
 				node.inputs[2].setValue([ca_white]);
+				
+				node.inputs[4].setValue(true);
 				break;
 		}
 		
@@ -40,7 +41,7 @@ function Node_Color_replace(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	newInput( 5, nodeValue_Bool(   "Multiply alpha", true ));
 	
 	////- =Randomize
-	newInput(14, nodeValueSeed());
+	newInput(14, nodeValue_Seed());
 	newInput(16, nodeValue_Slider( "Hue Randomize", 0, [-2,2,.01] ));
 	newInput(17, nodeValue_Slider( "Sat Randomize", 0, [-2,2,.01] ));
 	newInput(18, nodeValue_Slider( "Val Randomize", 0, [-2,2,.01] ));

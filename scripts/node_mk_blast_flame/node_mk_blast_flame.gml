@@ -7,7 +7,7 @@ function Node_MK_Blast_Flame(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	setDrawIcon();
 	setDimension(96, 48);
 	
-	newInput( 0, nodeValueSeed());
+	newInput( 0, nodeValue_Seed());
 	
 	////- =Settings
 	newInput(19, nodeValue_Curve( "Layer Interpolation", CURVE_DEF_01 ));

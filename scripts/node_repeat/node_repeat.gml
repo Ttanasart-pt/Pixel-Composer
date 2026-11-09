@@ -28,7 +28,7 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	name = "Repeat";
 	dimension_index = 1;
 	
-	newInput(17, nodeValueSeed());
+	newInput(17, nodeValue_Seed());
 	
 	////- =Output
 	newInput(35, nodeValue_EScroll(  "Output Dimension Type", OUTPUT_SCALING.constant, [

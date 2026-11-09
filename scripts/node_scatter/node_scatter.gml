@@ -20,7 +20,7 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	use_depth = true;
 	dimension_index = 1;
 	
-	newInput(10, nodeValueSeed());
+	newInput(10, nodeValue_Seed());
 	
 	////- =Output
 	newInput( 1, nodeValue_Dimension());

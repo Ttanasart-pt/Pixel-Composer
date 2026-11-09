@@ -28,7 +28,7 @@ function Node_Surface_Project_3D(_x, _y, _group = noone) : Node_Processor(_x, _y
 	
 		////- =/Noise
 	newInput(18, nodeValue_Bool(   "Use Noise",  false ));
-	newInput(19, nodeValueSeed(,   "Noise Seed"        ));
+	newInput(19, nodeValue_Seed(,   "Noise Seed"        ));
 	newInput(20, nodeValue_Slider( "Threshold",  .5    ));
 	
 	////- =Rendering

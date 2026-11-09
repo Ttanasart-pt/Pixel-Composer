@@ -17,7 +17,7 @@ function Node_MK_Tree_Leaf_Hull(_x, _y, _group = noone) : Node(_x, _y, _group) c
 	setDrawIcon();
 	setDimension(96, 48);
 	
-	newInput( 1, nodeValueSeed());
+	newInput( 1, nodeValue_Seed());
 	newInput( 0, nodeValue_Struct( "Branches", noone )).setVisible(true, true).setCustomData(global.MKTREE_JUNC);
 	
 	////- =Spawning

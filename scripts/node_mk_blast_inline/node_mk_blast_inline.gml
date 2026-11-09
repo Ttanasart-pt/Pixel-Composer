@@ -30,7 +30,7 @@ function Node_MK_Blast_Inline(_x, _y, _group = noone) : Node_Collection_Inline(_
 	
 	////- =Inputs
 	
-	newInput(0, nodeValueSeed( VALUE_TYPE.integer  ));
+	newInput(0, nodeValue_Seed( VALUE_TYPE.integer  ));
 	newInput(1, nodeValue_Rotation( "Gravity", -90 ));
 	newInput(2, nodeValue_Dimension());
 	
