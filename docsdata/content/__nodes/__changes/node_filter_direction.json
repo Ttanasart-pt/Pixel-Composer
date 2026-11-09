@@ -1,0 +1,12 @@
+[
+  {
+    "version": "1.22.2.008",
+    "changes": [
+      {
+        "date": "2026-11-09T00:57:35.361Z",
+        "node": "Weight Adjust] Add curvature mode. - [Draw Line",
+        "commit": "**Weight Adjust] Add curvature mode. - [Draw Line**: Add option to disable weight normalization."
+      }
+    ]
+  }
+]

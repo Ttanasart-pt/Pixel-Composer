@@ -57,6 +57,7 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	
 		////- =/Weight
 	newInput(36, nodeValue_Bool(  "Apply Weight",     false ));
+	newInput(70, nodeValue_Bool(  "Normalize Weight",  true ));
 	newInput(62, nodeValue_Range( "Normalized Range", [0,1] )).setCurvable(63, CURVE_DEF_01);
 	
 	////- =Line Settings
@@ -115,7 +116,7 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	
 	////- =Render
 	newInput(34, nodeValue_EScroll( "SSAA", 0, [ "None", "2x", "4x", "8x" ] ));
-	// 70
+	// 71
 	
 	input_display_list = [ 39, 
 		[ "Output",         true     ],  0, 30, 31, 16, 58, 
@@ -123,7 +124,7 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		[ "Line Data",     false     ], 27,  6,  7, 28, 32, 33, 35, 19,  2, 20, 
 		
 		[ "Width",         false     ], 17,  3, 11, 12, 
-			[ "/Weight",    true, 36 ], 62, 63, 
+			[ "/Weight",    true, 36 ], 70, 62, 63, 
 			
 		[ "Line Settings", false     ],  8, 25,  9, 26, 
 		[ "Dash",           true, 46 ], 44, 45, 
@@ -222,6 +223,7 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 			var _widap    = _data[12];
 			
 			var _wg2wid   = _data[36];
+			var _wgNorm   = _data[70];
 			var _wgRange  = _data[62];
 			var _wgCuvdat = _data[63], _wgCurve = inputs[62].attributes.curved? new curveMap(_wgCuvdat) : undefined;
 			
@@ -950,7 +952,7 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 						_nw *= widthMap[? widProg];
 					}
 					
-					var _ww = lerp_invert(p0.w, wmin, wmax);
+					var _ww = _wgNorm? lerp_invert(p0.w, wmin, wmax) : p0.w;
 					if(is_nan(_ww)) _ww = 1;
 					if(_wg2wid) _nw = _nw * lerp(_wgRange[0], _wgRange[1], _wgCurve? _wgCurve.get(_ww) : _ww);
 					

@@ -1,5 +1,4 @@
 #pragma use(curve)
-
 #region -- curve -- [1786510425.6316042]
 
     #ifdef _YY_HLSL11_ 
