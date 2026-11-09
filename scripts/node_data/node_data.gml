@@ -23,10 +23,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			return node_database;
 		}
 		
-		static getMetaSpr = function() /*=>*/ {
-			var _meta = getMeta();
-			return _meta? _meta.getSpr() : noone;
-		}
+		static getMetaSpr = function() /*=>*/ { var _meta = getMeta(); return _meta? _meta.getSpr() : noone; }
 	#endregion
 	
 	#region ---- Main & Active ----

@@ -601,10 +601,10 @@ function drawWidget(xx, yy, ww, _m, _jun, global_var = true, _hover = false, _fo
 				
 				if(RANDOMIZER_ACTIVE) {
 					bx  -= bs; 
+					
 					switch(jun.type) {
 						case VALUE_TYPE.float : 
 						case VALUE_TYPE.integer : 
-						
 						case VALUE_TYPE.color : 
 							var _rand = PROJECT.randomizer;
 							var _ran  = _rand.hasValue(jun);

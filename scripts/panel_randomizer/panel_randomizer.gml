@@ -22,7 +22,8 @@
 		
 		static getNode = function() /*=>*/ {
 			if(node != undefined) return node;
-			node = PROJECT.nodeMap[? node_id];
+			if(node_id == 0) node = PROJECT.globalNode;
+			else             node = PROJECT.nodeMap[? node_id];
 			return node;
 		}
 		
@@ -179,7 +180,7 @@
 		seed   = seed_random(6);
 		values = [];
 		
-		static addTrack = function(t) /*=>*/ {return array_push(values, t)};
+		static addTrack = function(t) /*=>*/ { array_push(values, t); }
 		
 		static removeValue = function(v) /*=>*/ {
 			for( var i = array_length(values) - 1; i >= 0; i-- )
@@ -249,6 +250,7 @@ function Panel_Randomizer() : PanelContent() constructor {
 			var _trk = _trks[i];
 			var _nod = _trk.getNode();
 			var _val = _trk.getValue();
+			
 			if(!is(_val, NodeValue)) continue;
 			
 			var _nnam = _nod.getDisplayName();
