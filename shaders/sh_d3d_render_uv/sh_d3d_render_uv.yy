@@ -1,0 +1,12 @@
+{
+  "$GMShader":"",
+  "%Name":"sh_d3d_render_uv",
+  "name":"sh_d3d_render_uv",
+  "parent":{
+    "name":"d3d_modifier",
+    "path":"folders/nodes/data/3D/d3d_modifier.yy",
+  },
+  "resourceType":"GMShader",
+  "resourceVersion":"2.0",
+  "type":1,
+}

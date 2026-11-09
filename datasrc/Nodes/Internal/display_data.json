@@ -892,6 +892,7 @@
             "Node_3D_Mesh_Json",
             { "label": "/Exporter" },
             "Node_3D_Mesh_Export",
+            "Node_3D_Render_UV",
             "Node_3D_Mesh_Stack_Slice",
             "Node_3D_Mesh_Vertex_Points",
             
