@@ -15,13 +15,17 @@ function Node_Path_Weight_Adjust(_x, _y, _group = noone) : Node(_x, _y, _group) 
 	newInput( 6, nodeValue_Rot(     "Direction Shift", 0            ));
 	newInput( 5, nodeValue_Vec2(    "Value Range",    [0,1]         ));
 	newInput( 3, nodeValue_Curve(   "Curve",           CURVE_DEF_01 ));
-	// 8
+	
+	////- =Algorithm
+	newInput( 8, nodeValue_Float(   "Span", .01 ));
+	// 9
 	
 	newOutput(0, nodeValue_Output("Path", VALUE_TYPE.pathnode, self));
 	
 	input_display_list = [ 
 		[ "Path",       false ],  0,  7, 
 	    [ "Adjustment", false ],  1, -2,  4,  2,  6,  5,  3, 
+		[ "Algorithm",  false ],  8, 
     ];
     
     ////- Node
@@ -38,6 +42,8 @@ function Node_Path_Weight_Adjust(_x, _y, _group = noone) : Node(_x, _y, _group) 
 		curr_curve  = noone;
 		curr_val_st = 0;
 		curr_val_ed = 1;
+		
+		curr_t      = 1;
 		
 		temp_p = new PathPoint();
 		
@@ -60,14 +66,13 @@ function Node_Path_Weight_Adjust(_x, _y, _group = noone) : Node(_x, _y, _group) 
 			out.apply(temp_p);
 			
 			var _v = curr_value;
+			var  t = curr_t;
 			
 			switch(curr_type) {
 				case 0 : _v = curr_value; break;
 				case 1 : _v = lerp(curr_val_st, curr_val_ed, curr_curve.get(_rat)); break;
 				
 				case 2 : // direction
-					var t = .01;
-					
 					if(curr_loop) temp_p = curr_path.getPointRatio(pfract(_rat - t), ind, temp_p);
 					else          temp_p = curr_path.getPointRatio(clamp(_rat - t, 0, 1-t), ind, temp_p);
 					var x0 = temp_p.x;
@@ -85,8 +90,6 @@ function Node_Path_Weight_Adjust(_x, _y, _group = noone) : Node(_x, _y, _group) 
 					break;
 					
 				case 3 : // curvature
-					var t = .01;
-					
 					if(curr_loop) temp_p = curr_path.getPointRatio(pfract(_rat - t), ind, temp_p);
 					else          temp_p = curr_path.getPointRatio(clamp(_rat - t, 0, 1-t), ind, temp_p);
 					var x0 = temp_p.x;
@@ -140,6 +143,8 @@ function Node_Path_Weight_Adjust(_x, _y, _group = noone) : Node(_x, _y, _group) 
 		    curr_dirr  = getInputData( 6);
 		    var _curvr = getInputData( 5);
 		    var _curve = getInputData( 3);
+		    
+		    curr_t     = getInputData( 8);
 		    
 			inputs[ 2].setVisible(curr_type == 0);
 			inputs[ 6].setVisible(curr_type == 2);

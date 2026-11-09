@@ -6,6 +6,11 @@
         "date": "2026-11-09T00:57:35.363Z",
         "node": "",
         "commit": "**Weight Adjust] Add curvature mode. - [Draw Line**: Add option to disable weight normalization."
+      },
+      {
+        "date": "2026-11-09T01:27:10.533Z",
+        "node": "",
+        "commit": "**Scatter**: Add path weight effect controls."
       }
     ]
   },

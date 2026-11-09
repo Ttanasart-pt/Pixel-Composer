@@ -62,13 +62,18 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	newInput(44, nodeValue_Float(    "Distance",        8      )).setValidator(VV_min(0));
 	newInput(46, nodeValue_Int(      "Attempt",         8      ));
 	
-		////- =/Path
+	////- =Path
 	newInput(19, nodeValue_Path(     "Path"                    ));
 	newInput(38, nodeValue_EButton(  "Spacing",           0, [ "After", "Between", "Around" ] ));
 	newInput(20, nodeValue_Bool(     "Rotate Along Path", true ));
 	newInput(45, nodeValue_Range(    "Path Range",       [0,1] ));
 	newInput(21, nodeValue_Slider(   "Path Shift",        0    ));
 	newInput(22, nodeValue_Float(    "Scatter Distance",  0    ));
+	
+		////- =/Weight
+	newInput(62, nodeValue_Range(    "Weight Range",   [0,1]     ));
+	newInput(60, nodeValue_Range(    "Scale Weight",   [1,1]     ));
+	newInput(61, nodeValue_Gradient( "Blend Weight",   gra_white ));
 	
 	////- =Position
 	newInput(40, nodeValue_Anchor());
@@ -86,7 +91,7 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	newInput(32, nodeValue_Rotation( "Rotate per Radius",  0           ));
 	
 	////- =Scale
-	newInput( 3, nodeValue_Range2(  "Scale",             [1,1,1,1], { linked : true } )).setMappableConst(43);
+	newInput( 3, nodeValue_Range2(  "Scale",             [1,1,1,1], true )).setMappableConst(43);
 	newInput(54, nodeValue_Range2(  "Offset Scale",      [0,0,0,0] )).setMappableConst(55);
 	newInput(57, nodeValue_Range(   "Scale Random",      [1,1]     )).setTooltip("Random scale while maintaining aspect ratio.");
 	newInput( 8, nodeValue_Bool(    "Uniform Scaling",    true     ));
@@ -106,7 +111,7 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	newInput(18, nodeValue_EScroll( "Blend Mode", 0, [ "Normal", "Add", "Max" ] ));
 	newInput(23, nodeValue_Bool(    "Sort Y",     false ));
 	newInput(56, nodeValue_Toggle(  "Tile",       0, [ "X", "Y" ] ))
-	// 60
+	// 63
 	
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	 
@@ -123,9 +128,11 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		[ "Surfaces",      true ],  0, 15, 24, 25, 26, 27, 
 		[ "Scatter",      false, noone, b_scatter_manual ], 
 		                            6,  5, 13, 14, 17,  9, 35,
-		                            
 			[ "/Amount",  false ], 31,  2, 30, 44, 46, 
-			[ "/Path",     true ], 19, 38, 20, 45, 21, 22, 
+			
+		[ "Path",          true ], 19, 38, 20, 45, 21, 22, 
+			[ "/Weight",   true ], 62, 60, 61, 
+			
 		[ "Position",     false ], 40, 33, 50, 51, 36, 49,  39, 37, 
 		[ "Rotation",     false ], 48, 59,  7,  4, 52, 53, 32, 
 		[ "Scale",        false ],  3, 43, 54, 57, 55,  8, 34, 
@@ -512,6 +519,10 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 			var pathShf    = _data[21];
 			var pathDis    = _data[22];
 			
+			var pweiRng    = _data[62];
+			var pweiSca    = _data[60];
+			var pweiGra    = _data[61];
+			
 			var anchor     = _data[40];
 			var posWig     = _data[33];
 			var posShf     = _data[36];
@@ -677,11 +688,12 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 					if(!is_path(path)) return _outData;
 				
 					var _pathProgress = 0;
-					var path_amount   = struct_has(path, "getLineCount")? path.getLineCount() : 1;
+					var path_amount   = has(path, "getLineCount")? path.getLineCount() : 1;
 					var _pre_amount   = _amount;
 					_amount *= path_amount;
-				
+					
 					var path_line_index = 0;
+					pweiGra.cache();
 					break;
 					
 				case NODE_SCATTER_DIST.tile : 
@@ -763,6 +775,8 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 			
 			var scaleX = _scaUniX? _scale[0] : undefined;
 			var scaleY = _scaUniY? _scale[2] : undefined;
+			
+			var blnd   = ca_white;
 			
 			repeat(_amount) {
 				i++;
@@ -882,6 +896,14 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 						_y = pp.y + random_range_seed(-pathDis, pathDis, _csed++);
 						_v = [0, 0, pp.w];
 						
+						var weiNor = (pp.w - pweiRng[0]) / (pweiRng[1] - pweiRng[0]);
+						
+						var weiSca = lerp(pweiSca[0], pweiSca[1], weiNor);
+						_scx *= weiSca;
+						_scy *= weiSca;
+						
+						var weiClr = pweiGra.evalFast(clamp(weiNor, 0, 1));
+						blnd = weiClr;
 						break;
 						
 					case NODE_SCATTER_DIST.tile : 
@@ -1064,6 +1086,9 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 					clr =  colorMultiply(clr, _samC);
 					alp *= _color_get_alpha(_samC);
 				}
+				
+				if(blnd != ca_white)
+					clr =  colorMultiply(clr, blnd);
 				
 				if(iAlp > 1 && _v != noone) 
 					alp += array_safe_get_fast(_v, iAlp, 0);
