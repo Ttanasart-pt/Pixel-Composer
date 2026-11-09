@@ -57,7 +57,7 @@ function Node_Move_Point(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 			var _sca  = _data[ 4];
 		#endregion
 		
-		random_set_seed(_seed);
+		random_set_seed(_seed + _array_index);
 		
 		point_rotate_array(_pnt, _anc, _rot);
 		_pnt[0]  = _anc[0] + (_pnt[0] - _anc[0]) * _sca[0];
