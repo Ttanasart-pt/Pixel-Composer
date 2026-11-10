@@ -76,8 +76,8 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	inputs[2].getEditWidget().format		 = TEXT_AREA_FORMAT.path_template;
 	inputs[2].getEditWidget().auto_update = true;
 	
-	newInput(16, nodeValue_Bool(    "Export on Save",   false )).setTooltip("Automatically export when saving project.");
-	newInput(22, nodeValue_Bool(    "Export on Update", false ));
+	newInput(16, nodeValue_Bool(    "Export on Save",   false )).setTooltip("Automatically export when saving project. Won't work with animation.");
+	newInput(22, nodeValue_Bool(    "Export on Update", false )).setTooltip("Automatically export on graph update. Won't work with animation.");
 	
 	////- =Format
 	newInput( 3, nodeValue_EScroll( "Type",   0, { data: format_single, update_hover: false } )).rejectArray();

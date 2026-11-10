@@ -2565,6 +2565,7 @@
     {"name":"node_random_shape","order":7,"path":"scripts/node_random_shape/node_random_shape.yy",},
     {"name":"node_random_tile","order":24,"path":"scripts/node_random_tile/node_random_tile.yy",},
     {"name":"node_random","order":12,"path":"scripts/node_random/node_random.yy",},
+    {"name":"node_randomizer_varient","order":15,"path":"scripts/node_randomizer_varient/node_randomizer_varient.yy",},
     {"name":"node_rate_remap","order":5,"path":"scripts/node_rate_remap/node_rate_remap.yy",},
     {"name":"node_raymarching","order":3,"path":"scripts/node_raymarching/node_raymarching.yy",},
     {"name":"node_rd","order":18,"path":"scripts/node_rd/node_rd.yy",},

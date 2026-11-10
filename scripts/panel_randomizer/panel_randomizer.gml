@@ -1,14 +1,101 @@
 #region global
 	globalvar RANDOMIZER_ACTIVE; RANDOMIZER_ACTIVE = false;
-
-	function Project_Randomizer_Section(_name = "") constructor {
+	
+	function Project_Randomizer_Track() constructor {
+		name = "";
+		bindNode = undefined;
+		
+		varients = [];
+		varIndex = -1;
+		
+		varEdit    = false;
+		varRand    = false;
+		varAmo     = 4;
+		varAmoEdit = undefined;
+		
+		////- =Random
+		
+		static getVarEdit = function() {
+			if(varAmoEdit) return varAmoEdit;
+			varAmoEdit = textBox_Number(function(i) /*=>*/ { varAmo = i; return false; });
+			return varAmoEdit;
+		}
+		
+		static generateVarients = function( ) /*=>*/ {}
+		static setVarients      = function(i) /*=>*/ { varIndex = i; }
+		
+		////- =Serialize
+		
+		static deserialize = function(_data) {
+			var _type = _data[$ "data"] ?? "random";
+			
+			switch(_type) {
+				case "random" :  return new Project_Randomizer_Value().deserialize(_data);
+				case "section" : return new Project_Randomizer_Section().deserialize(_data);
+			}
+			
+			return undefined;	
+		}
+	}
+	
+	function Project_Randomizer_Section(_name = "") : Project_Randomizer_Track() constructor {
 		name = _name;
 		coll = false;
 		indx = 0;
 		
+		contents = [];
+		
 		y  = 0;
 		y1 = 0;
 		h  = 0;
+		
+		////- =Random
+		
+		function cartesian_product(ranges) {
+		    var result = [[]];
+		    
+		    for (var i = 0; i < array_length(ranges); i++) {
+		        var new_result = [];
+		        
+		        for (var j = 0; j < array_length(result); j++) {
+		            for (var v = 0; v < ranges[i]; v++)
+		                array_push(new_result, array_concat(result[j], [v]));
+		        }
+		        result = new_result;
+		    }
+		    
+		    return result;
+		}
+		
+		static generateVarients = function() {
+			varients = [];
+			
+			var _rngs = [];
+			
+			for( var i = 0, n = array_length(contents); i < n; i++ ) {
+				var _trk = contents[i];
+				var vamo = array_length(_trk.varients);
+				array_push(_rngs, vamo)
+			}
+			
+			if(array_empty(_rngs)) return;
+			varients = cartesian_product(_rngs);
+		}
+		
+		static setVarients = function(_i) { 
+			varIndex = _i; 
+			
+    		var _ind = array_safe_get(varients, _i, []);
+    		var _amo = min(array_length(contents), array_length(_ind));
+    		
+    		for( var i = 0; i < _amo; i++ ) {
+    			var _tr = contents[i];
+    			var _in = _ind[i];
+    			_tr.setVarients(_in);
+    		}
+    		
+    		if(bindNode) bindNode.triggerRender();
+		}
 		
 		////- =Serialize
 		
@@ -17,26 +104,36 @@
 			
 			_m.data = "section";
 			
+			_m.varients = array_clone(varients);
+			_m.varIndex = varIndex;
+			
 			_m.name = name;
 			_m.coll = coll;
+			
 			return _m;
 		}
 		
 		static deserialize = function(_m) {
+			varients = array_clone(_m[$ "varients"] ?? varients);
+			varIndex = _m[$ "varIndex"] ?? varIndex;
+			
 			name = _m[$ "name"] ?? name;
 			coll = _m[$ "coll"] ?? coll;
 			return self;
 		}
 	}
 	
-	function Project_Randomizer_Value(_val = undefined) constructor {
+	function Project_Randomizer_Value(_val = undefined) : Project_Randomizer_Track() constructor {
 		value   = undefined;
 		node    = undefined;
 		node_id = "";
 		inindex = 0;
 		
+		h = 0;
+		
 		type       = 0;
 		typeWidget = undefined;
+		varHigh    = undefined;
 		
 		gradient = gra_black_white;
 		palette  = array_clone(DEF_PALETTE);
@@ -124,22 +221,85 @@
 		} 
 		
 		static setInput = function(inp) /*=>*/ {
+			name = "";
+			
 			node_id = inp.node.node_id;
 		    inindex = inp.index;
 		    
 		    min_val = inp.getValue();
 		    max_val = inp.getValue();
 			
-			getValue();
+			var n = getNode();
+			var v = getValue();
+			
+			if(v) name = $"{n.node_id}.{v.internalName}";
 			return self;
 			
 		} if(_val) setInput(_val);
 		
-		static Random = function() /*=>*/ {
-			randomize();
+		////- =Random
+		
+		static generateVarients = function() {
+			varients = array_verify(varients, varAmo);
+			varIndex = -1;
 			
 			var _v = getValue();
-			if(!is(_v, NodeValue)) return;
+			if(!is(_v, NodeValue)) return 0;
+			
+			for( var i = 0; i < varAmo; i++ ) {
+				var _val = undefined;
+				if(varRand) {
+					varients[i] = Random();
+					continue;
+				}
+					
+				var _val = undefined;
+				var _rat = i / max(1, varAmo - 1);
+				
+				switch(_v.type) {
+					case VALUE_TYPE.color : 
+						if(type == 0 && is(gradient, gradientObject)) // gradient
+							_val = gradient.eval(_rat);
+							
+						else if(type == 1 && !array_empty(palette)) // palette
+							_val = array_safe_get(palette, round((array_length(palette) - 1) * _rat));
+						
+						break;
+						
+					default : 
+						if(is_numeric(min_val)) {
+							_val = lerp(min_val, max_val, _rat);
+							if(_v.type == VALUE_TYPE.integer)
+								 _val = round(_val);
+							
+						} else if(is_array(min_val)) {
+							_val = array_create(array_length(min_val));
+							for( var j = 0, m = array_length(min_val); j < m; j++ )
+								_val[j] = lerp(min_val[j], max_val[j], _rat);
+						}		
+				}
+				
+				varients[i] = _val;
+			}
+		}
+		
+		static setVarients = function(_i) { 
+			var _v = getValue();
+			if(!is(_v, NodeValue)) return 0;
+			
+			varIndex = _i; 
+			var _val = varients[varIndex];
+			if(_val != undefined) _v.setValue(_val);
+			
+			if(bindNode) bindNode.triggerRender();
+		}
+		
+		static Random = function() /*=>*/ {
+			randomize();
+			varIndex = -1;
+			
+			var _v = getValue();
+			if(!is(_v, NodeValue)) return 0;
 			
 			var _val = undefined;
 			
@@ -168,6 +328,7 @@
 			}
 			
 			if(_val != undefined) _v.setValue(_val);
+			return _val;
 		}
 		
 		////- =Serialize
@@ -177,9 +338,13 @@
 			
 			_m.data    = "random";
 			
+			_m.varients = array_clone(varients);
+			_m.varIndex = varIndex;
+			
 			_m.node_id = node_id;
 			_m.inindex = inindex;
 			
+			_m.name    = name;
 			_m.type    = type;
 			
 			_m.palt    = palette;
@@ -192,10 +357,14 @@
 		}
 		
 		static deserialize = function(_m) {
+			varients = array_clone(_m[$ "varients"] ?? varients);
+			varIndex = _m[$ "varIndex"] ?? varIndex;
+			
 			node_id = _m[$ "node_id"] ?? node_id;
 			inindex = _m[$ "inindex"] ?? inindex;
 			
-			type     = _m[$ "type"]   ?? type;
+			name    = _m[$ "name"] ?? name;
+			type    = _m[$ "type"] ?? type;
 			
 			palette  = _m[$ "palt"]   ?? palette;
 			gradient = _m[$ "grad"]   ?? gradient;
@@ -206,17 +375,6 @@
 			
 			return self;
 		}
-	}
-	
-	function Randomizer_Track_Deserialize(_data) {
-		var _type = _data[$ "data"] ?? "random";
-		
-		switch(_type) {
-			case "random" :  return new Project_Randomizer_Value().deserialize(_data);
-			case "section" : return new Project_Randomizer_Section().deserialize(_data);
-		}
-		
-		return undefined;
 	}
 	
 	function Project_Randomizer() constructor {
@@ -248,16 +406,35 @@
 			}
 		}
 		
+		static refreshContent = function() {
+			var _currSec = undefined;
+			
+			for( var i = 0, n = array_length(values); i < n; i++ ) {
+				var _trk = values[i];
+				
+				if(is(_trk, Project_Randomizer_Section)) {
+					_currSec = _trk;
+					_currSec.contents = [];
+				}
+				
+				if(is(_trk, Project_Randomizer_Value)) {
+					if(_currSec) array_push(_currSec.contents, _trk);
+				}
+			}
+			
+		}
+		
+		////- Serialize
+		
 		static serialize = function() {
 			var _m = {};
 			_m.values = array_map(values, function(t,i) /*=>*/ {return t.serialize()} );
 			return _m;
 		}
 		
-		static deserialize = function(_m) {
-			values = array_create(array_length(_m.values));
-			for( var i = 0, n = array_length(_m.values); i < n; i++ )
-				values[i] = Randomizer_Track_Deserialize(_m.values[i]);
+		static deserialize = function(_data) {
+			values = array_map(_data.values, function(v,i) /*=>*/ {return new Project_Randomizer_Track().deserialize(v)});
+			refreshContent();
 			return self;
 		}
 	}
@@ -268,21 +445,29 @@ function Panel_Randomizer() : PanelContent() constructor {
 	w = ui(640);
 	h = ui(320);
 	
+	curr_project = undefined;
+	curr_amo     = 0;
+	
+	toRefresh    = true;
+	
 	auto_pin   = true;
 	editing    = false;
 	randActive = false;
 	
 	section_list = [];
+	section_var_setting = undefined;
 	
 	dragging       = false;
 	dragging_track = undefined;
 	
-	section_editing = undefined;
-	section_editor  = textBox_Text(function(txt) /*=>*/ {
-		if(section_editing == undefined) return;
-		section_editing.name = txt;
-		section_editing = undefined;
+	name_editing = undefined;
+	name_editor  = textBox_Text(function(txt) /*=>*/ {
+		if(name_editing == undefined) return;
+		name_editing.name = txt;
+		name_editing = undefined;
 	})
+	
+	////- Random
 	
 	sc_randomize = new scrollPane(1, 1, function(_y, _m) /*=>*/ {
 		draw_clear_alpha(COLORS.panel_bg_clear_inner, 1);
@@ -296,17 +481,14 @@ function Panel_Randomizer() : PanelContent() constructor {
 		var currSec      = undefined;
 		
 		var sectColl = false;
-		var sectH    = ui(20);
-		var lbh      = sectH;
 		
 		var pd = ui(6);
-		
 		var hg = ui(24);
 		var xx = 0;
 		var x1 = ww - pd;
 		var yy = _y + ui(8);
 		
-		var bs = sectH;
+		var bs = hg;
 		var bc = [COLORS._main_icon, COLORS._main_icon_light];
 		
 		var rx = x + sc_randomize.x;
@@ -315,12 +497,21 @@ function Panel_Randomizer() : PanelContent() constructor {
 		var eh = hg - ui(4);
 		var _del = undefined;
 	
-		var hov = sc_randomize.hover && _m[1] > lbh;
+		var hov = sc_randomize.hover;
 		var foc = sc_randomize.active;
 		
-		var drag_hover_index = 0;
+		var drag_hover_index       = 0;
+		var _section_var_hover     = undefined;
+		var _section_var_hover_ind = undefined;	
 		
 		#region section bg
+			var len = array_length(section_list);
+			if(len && section_list[0].y < hg) {
+				draw_set_color(COLORS.panel_bg_clear_inner);
+				if(_m[1] >= section_list[0].y && _m[1] <= section_list[0].y + hg + ui(4))
+					hov = false;
+			}
+			
 			var len = array_length(section_list);
 			for( var i = 0, n = array_length(section_list); i < n; i++ ) {
 				var lb = section_list[i];
@@ -332,7 +523,7 @@ function Panel_Randomizer() : PanelContent() constructor {
 				var scx = 0;
 				var scy = lb.y;
 				var scw = ww;
-				var sch = sectH;
+				var sch = hg;
 				
 				if(!_coll) draw_sprite_stretched_add(THEME.box_r5, 0, scx, scy, scw, max(sch, _lbh), COLORS.panel_bg_clear, .2);
 			}
@@ -360,7 +551,7 @@ function Panel_Randomizer() : PanelContent() constructor {
 				
 				array_push(group_labels, currSec);
 				
-				yy += sectH;
+				yy += hg;
 				continue;
 			}
 		
@@ -374,118 +565,251 @@ function Panel_Randomizer() : PanelContent() constructor {
 			if(!is(_val, NodeValue)) continue;
 			
 			var _nnam = _nod.getDisplayName();
-			var _vnam = _val.getName();
+			var _vnam = _trk.name == ""? _val.getName() : _trk.name;
 			
 			var hgh = hg;
 			var tx  = pd;
-			var hv  = hov && point_in_rectangle(_m[0], _m[1], 0, yy, ww, yy+hg);
+			var thh = _trk.h;
+			
+			var hv  = hov && point_in_rectangle(_m[0], _m[1], 0, yy, ww, yy + thh - 1);
+			var by  = yy + hg / 2 - bs / 2;
+			
+			if(hv) {
+				draw_sprite_stretched_ext(THEME.box_r2, 0, ui(4), yy, ww - ui(8), thh, COLORS._main_icon, .1);
+			
+        		if(mouse_rpress(foc)) {
+        			menuCall("", [
+        				menuItem(__txt("Create Node"), function(_trk) /*=>*/ { 
+        					var _node = nodeBuild("Node_Randomizer_Varient", 0, 0);
+        					_node.skipDefault();
+        					_node.inputs[0].setValue(_trk.name);
+        				}).setParam(_trk)
+    				]);
+        		}
+			}
 			
 			if(editing) {
 				var bx = tx;
-				var by = yy + hg / 2 - bs / 2;
 				var bc = COLORS._main_icon;
-				if(buttonInstant_Pad(noone, bx, by, bs, bs, _m, hov, foc, "", THEME.hamburger_s, 0, bc, 1, ui(6)) == 2) {
+				if(buttonInstant_Pad(noone, bx, by, bs, bs, _m, hov, foc, "", THEME.hamburger_s, 0, bc, 1, ui(10)) == 2) {
 					dragging       = true;
 					dragging_track = _trk;
 				}
 				
 				tx += bs;
-			}
+				
+			} else 
+				tx += ui(4);
 			
 			var spr = _nod.getMetaSpr();
 			if(spr) {
-				draw_sprite_ui(spr, 0, tx + ui(16), yy + hg / 2, .3, .3);
-				tx += ui(32);
+				var ss = (hgh - ui(8)) / sprite_get_height(spr);
+				draw_sprite_ext(spr, 0, tx + hgh / 2, yy + hg / 2, ss, ss);
 			}
 			
-			draw_set_text(f_p4, fa_left, fa_center);
-			draw_set_color(COLORS._main_text_sub);
-			draw_text_add(tx, yy + hg / 2, _nnam);
-			tx += string_width(_nnam) + ui(4)
+			tx += hgh + ui(4);
+			
+			draw_set_text(f_p3, fa_left, fa_center);
+			if(!editing) {
+				draw_set_color(COLORS._main_text_sub);
+				draw_text_add(tx, yy + hg / 2, _nnam);
+				tx += string_width(_nnam) + ui(4)
+			}
 			
 			draw_set_color(COLORS._main_text);
 			draw_text_add(tx, yy + hg / 2, _vnam);
-				
-			if(editing) {
-				var bx = x1 - bs;
-				var by = yy + hg / 2 - bs / 2;
-				var bc = COLORS._main_value_negative;
-				if(buttonInstant_Pad(noone, bx, by, bs, bs, _m, hov, foc, __txt("Delete"), THEME.cross_16, 0, bc, 1, ui(6)) == 2)
-					_del = i;
-				bx -= ui(4);
-					
-				if(currSec) currSec.y1 = max(currSec.y1, yy + hgh + ui(2));
-				yy += hgh;
-				continue;
-			}
 			
 			var bx = x1 - bs;
-			var by = yy + hg / 2 - bs / 2;
-			if(buttonInstant_Pad(noone, bx, by, bs, bs, _m, hov, foc, __txt("Randomize"), THEME.icon_random, 0, bc) == 2)
-				_trk.Random();
-			bx -= ui(4);
+			var _vars = _trk.varients;
+			var _vind = _trk.varIndex;
 			
-			var _typeWidget = _trk.typeWidget;
-			var _editWidget = _trk.getEditWidget();
-			
-			var edw = x1 * .4;
-			
-			if(_typeWidget) {
-				var ew = x1 * .2;
-				var ex = bx - edw - ui(4) - ew;
-				var ey = yy + hg / 2 - eh / 2;
+			if(!editing) {
+				if(buttonInstant_Pad(noone, bx, by, bs, bs, _m, hov, foc, __txt("Randomize"), THEME.icon_random, 0, bc, 1, ui(6)) == 2)
+					_trk.Random();
+				bx -= ui(4);
 				
-				var dp = new widgetParam(ex, ey, ew, eh, _trk.type, undefined, _m, rx, ry).setFont(f_p4);
+				var vs = ui(10);
+				var vx = bx - ui(4) - vs;
+				var vy = yy + hg / 2 - vs / 2;
 				
-				_typeWidget.register(sc_randomize);
-				_typeWidget.setFocusHover(foc, hov);
-				var wh = _typeWidget.drawParam(dp);
-				hgh = max(hg, wh);
+				var vpd = ui(1);
+				
+				for( var j = 0, m = array_length(_vars); j < m; j++ ) {
+					var v  = m-1-j;
+					var vh = hov && point_in_rectangle(_m[0], _m[1], vx - vpd, vy - vpd, vx + vs + vpd, vy + vs + vpd);
+					if(section_var_setting == _trk)  vh = hov && _m[0] > vx - vpd && _m[0] <= vx + vs + vpd;
+					
+					if(v == _vind)
+						draw_sprite_stretched_ext(THEME.palette_mask, 1, vx, vy, vs, vs, COLORS._main_icon, 1);
+						
+					draw_sprite_stretched_ext(THEME.palette_mask_outline, 1, vx, vy, vs, vs, COLORS._main_icon, .75);
+					if(vh) {
+						setTOOLTIP(string(_vars[j]));
+						draw_sprite_stretched_add(THEME.palette_mask_outline, 1, vx, vy, vs, vs, COLORS._main_icon, 1);
+						
+						if(mouse_lpress(foc)) section_var_setting = _trk;
+						if(section_var_setting == _trk) _trk.setVarients(v);
+					}
+					
+					if(v == _trk.varHigh)
+						draw_sprite_stretched_ext(THEME.palette_mask, 1, vx, vy, vs, vs, COLORS._main_accent, 1);
+						
+					vx -= vs + vpd*2 + 1;
+				}
+				
+				_trk.varHigh = undefined;
+				
+			} else {
+				var bc = [COLORS._main_icon, COLORS._main_value_negative];
+				if(buttonInstant_Pad(noone, bx, by, bs, bs, _m, hov, foc, __txt("Delete"), THEME.cross_16, 0, bc, 1, ui(6)) == 2)
+					_del = i;
+				bx -= bs + ui(2);
+				
+				var bc = _trk.varEdit? COLORS._main_accent : [COLORS._main_icon, COLORS._main_icon_light];
+				if(buttonInstant_Pad(noone, bx, by, bs, bs, _m, hov, foc, __txt("Variant"), THEME.icon_random_varient, 0, bc, 1, ui(8)) == 2)
+					_trk.varEdit = !_trk.varEdit;
+				bx -= ui(4);
+				
+				var _typeWidget = _trk.typeWidget;
+				var _editWidget = _trk.getEditWidget();
+				
+				var edw = x1 * .5;
+			
+				if(_typeWidget) {
+					var ew = x1 * .2;
+					var ex = bx - edw - ui(4) - ew;
+					var ey = yy + hg / 2 - eh / 2;
+					
+					var dp = new widgetParam(ex, ey, ew, eh, _trk.type, undefined, _m, rx, ry).setFont(f_p4);
+					
+					_typeWidget.register(sc_randomize);
+					_typeWidget.setFocusHover(foc, hov);
+					var wh = _typeWidget.drawParam(dp);
+					hgh = max(hg, wh);
+					
+				}
+				
+				if(is(_editWidget, widget)) {
+					var ew = edw;
+					var ex = bx - ew;
+					var ey = yy + hg / 2 - eh / 2;
+					
+					var _edt = _editWidget;
+					if(is(_edt, widget)) {
+						var dp = new widgetParam(ex, ey, ew, eh, _trk.getDisplayVal(), undefined, _m, rx, ry).setFont(f_p3);
+						
+						_edt.register(sc_randomize);
+						_edt.setFocusHover(foc, hov);
+						var wh = _edt.drawParam(dp);
+						hgh = max(hg, wh);
+					}
+					
+					
+				} else if(is_array(_editWidget)) {
+					var ew = (edw - ui(4)) / 2;
+					var ex = bx - ew;
+					var ey = yy + hg / 2 - eh / 2;
+					
+					var _edt = _editWidget[0];
+					if(is(_edt, widget)) {
+						var dp = new widgetParam(ex, ey, ew, eh, _trk.max_val, undefined, _m, rx, ry).setFont(f_p3);
+						
+						_edt.register(sc_randomize);
+						_edt.setFocusHover(foc, hov);
+						var wh = _edt.drawParam(dp);
+						hgh = max(hg, wh);
+					}
+					
+					ex -= ew + ui(4);
+					var _edt = _editWidget[1];
+					if(is(_edt, widget)) {
+						var dp = new widgetParam(ex, ey, ew, eh, _trk.min_val, undefined, _m, rx, ry).setFont(f_p3);
+						
+						_edt.register(sc_randomize);
+						_edt.setFocusHover(foc, hov);
+						var wh = _edt.drawParam(dp);
+						hgh = max(hg, wh);
+					}
+				}
+				
+				if(_trk.varEdit) {
+					var vs = ui(10);
+					var vx = tx;
+					var vy = yy + hg + hg / 2 - vs / 2;
+					
+					var vpd = ui(1);
+					
+					for( var j = 0, m = array_length(_vars); j < m; j++ ) {
+						var v  = m-1-j;
+						var vh = hov && point_in_rectangle(_m[0], _m[1], vx - vpd, vy - vpd, vx + vs + vpd, vy + vs + vpd);
+						
+						if(v == _vind)
+							draw_sprite_stretched_ext(THEME.palette_mask, 1, vx, vy, vs, vs, COLORS._main_icon, 1);
+							
+						draw_sprite_stretched_ext(THEME.palette_mask_outline, 1, vx, vy, vs, vs, COLORS._main_icon, .75);
+						if(vh) {
+							setTOOLTIP(string(_vars[j]));
+							draw_sprite_stretched_add(THEME.palette_mask_outline, 1, vx, vy, vs, vs, COLORS._main_icon, 1);
+							if(mouse_lclick(foc)) _trk.setVarients(v);
+						}
+						
+						vx += vs + vpd*2 + 1;
+					}
+					
+					var vew = edw;
+					var veh = hg;
+					
+					var vex = bx - vew;
+					var vey = yy + veh + ui(2);
+					
+					var vx0 = vex;
+					var vx1 = vex + vew;
+					
+					by = vey;
+					bs = veh;
+					
+					bx = vex;
+					bc = _trk.varRand? COLORS._main_accent : COLORS._main_icon;
+					if(buttonInstant_Pad(noone, bx, by, bs, bs, _m, hov, foc, __txt("Random"), THEME.icon_random, 0, bc, 1, ui(6)) == 2) 
+						_trk.varRand = !_trk.varRand;
+					bx += bs + ui(2);
+					vx0 = bx;
+					
+					bx = vx1;
+					bc = COLORS._main_value_positive;
+					
+					bx -= bs;
+					var bc = [COLORS._main_icon, COLORS._main_value_negative];
+					if(buttonInstant_Pad(noone, bx, by, bs, bs, _m, hov, foc, __txt("Clear"), THEME.cross_16, 0, bc, 1, ui(6)) == 2)
+						_trk.varients = [];
+					bx -= ui(2);
+					
+					bx -= bs;
+					var bc = [COLORS._main_icon, COLORS._main_value_positive];
+					if(buttonInstant_Pad(noone, bx, by, bs, bs, _m, hov, foc, __txt("Generate"), THEME.accept_16, 0, bc, 1, ui(6)) == 2)
+						_trk.generateVarients();
+					bx -= ui(2);
+					vx1 = bx;
+					
+					var edt = _trk.getVarEdit();
+					var edx = vx0;
+					var edy = vey + hg / 2 - eh / 2;
+					var edw = vx1 - vx0;
+					var edh = eh;
+					
+					var bw  = edw - bs - ui(2);
+					var dp  = new widgetParam(edx, edy, edw, edh, _trk.varAmo, undefined, _m, rx, ry).setFont(f_p3);
+					
+					edt.register(sc_randomize);
+					edt.setFocusHover(foc, hov);
+					edt.drawParam(dp);
+					
+					hgh += veh + ui(4);
+				}
 				
 			}
 			
-			if(is(_editWidget, widget)) {
-				var ew = edw;
-				var ex = bx - ew;
-				var ey = yy + hg / 2 - eh / 2;
-				
-				var _edt = _editWidget;
-				if(is(_edt, widget)) {
-					var dp = new widgetParam(ex, ey, ew, eh, _trk.getDisplayVal(), undefined, _m, rx, ry).setFont(f_p3);
-					
-					_edt.register(sc_randomize);
-					_edt.setFocusHover(foc, hov);
-					var wh = _edt.drawParam(dp);
-					hgh = max(hg, wh);
-				}
-				
-				
-			} else if(is_array(_editWidget)) {
-				var ew = edw / 2;
-				var ex = bx - ew;
-				var ey = yy + hg / 2 - eh / 2;
-				
-				var _edt = _editWidget[0];
-				if(is(_edt, widget)) {
-					var dp = new widgetParam(ex, ey, ew, eh, _trk.max_val, undefined, _m, rx, ry).setFont(f_p3);
-					
-					_edt.register(sc_randomize);
-					_edt.setFocusHover(foc, hov);
-					var wh = _edt.drawParam(dp);
-					hgh = max(hg, wh);
-				}
-				
-				ex -= ew + ui(4);
-				var _edt = _editWidget[1];
-				if(is(_edt, widget)) {
-					var dp = new widgetParam(ex, ey, ew, eh, _trk.min_val, undefined, _m, rx, ry).setFont(f_p3);
-					
-					_edt.register(sc_randomize);
-					_edt.setFocusHover(foc, hov);
-					var wh = _edt.drawParam(dp);
-					hgh = max(hg, wh);
-				}
-			}
+			_trk.h = hgh;
 			
 			if(currSec) currSec.y1 = max(currSec.y1, yy + hgh + ui(2));
 			yy += hgh;
@@ -495,13 +819,14 @@ function Panel_Randomizer() : PanelContent() constructor {
 		
 		#region section label
 			var len = array_length(group_labels);
-			if(len && group_labels[0].y < lbh) {
+			if(len && group_labels[0].y < hg) {
 				draw_set_color(COLORS.panel_bg_clear_inner);
-				draw_rectangle(0, group_labels[0].y, ww, lbh, false);
+				draw_rectangle(0, group_labels[0].y, ww, hg, false);
 			}
 			
 			var _cAll = 0;
 			var scs = gpu_get_scissor();
+			var hov = sc_randomize.hover;
 			
 			for( var i = 0; i < len; i++ ) {
 				var lb = group_labels[i];
@@ -509,18 +834,19 @@ function Panel_Randomizer() : PanelContent() constructor {
 				var _coll = lb.coll && !editing;
 				
 				var _yy   = max(lb.y, i == len - 1? ui(2) : min(ui(2), group_labels[i + 1].y - ui(32)));
-				var _hv   = pHOVER && point_in_rectangle(_m[0], _m[1], 0, _yy, ww, _yy + sectH);
+				var _hv   = pHOVER && point_in_rectangle(_m[0], _m[1], 0, _yy, ww, _yy + hg);
 				var _lbh  = lb.y1 - _yy;
 				
 				var scx = 0;
 				var scy = _yy;
 				var scw = ww;
-				var sch = sectH;
+				var sch = hg;
 				
 				if(_coll) {
 					draw_sprite_stretched_ext(THEME.section_separator, 0, scx, scy, scw, _coll? sch : _lbh, COLORS.section_bg);
+					
 				} else {
-					gpu_set_scissor(scx, 0, scw, lbh+1);
+					gpu_set_scissor(scx, 0, scw, hg+1);
 					draw_sprite_stretched_add(THEME.box_r5, 0, scx, scy, scw, _lbh, COLORS.panel_bg_clear, .2);
 					gpu_set_scissor(scs);
     				
@@ -532,8 +858,21 @@ function Panel_Randomizer() : PanelContent() constructor {
             	if(_hv) {
             		draw_sprite_stretched_ext( THEME.section_separator, 3, scx, scy, scw,  sch, COLORS.section_hover, .2 );
             		draw_sprite_stretched_ext( THEME.section_separator, 1, scx, scy, scw, _lbh, COLORS.section_hover     );
+            		
+            		if(mouse_rpress(foc)) {
+            			menuCall("", [
+            				menuItem(__txt("Create Node"), function(_trk) /*=>*/ { 
+            					var _node = nodeBuild("Node_Randomizer_Varient", 0, 0);
+            					_node.skipDefault();
+            					_node.inputs[0].setValue(_trk.name);
+            				}).setParam(lb)
+        				]);
+            		}
             	}
 				
+				var _vars = lb.varients;
+				var _vind = lb.varIndex;
+			
 				if(!editing) {
 					var bx = x1 - bs;
 					var by = scy + sch / 2 - bs / 2;
@@ -542,9 +881,38 @@ function Panel_Randomizer() : PanelContent() constructor {
 					var bt = __txt("Randomize Section");
 					var bb = buttonInstant_Pad(noone, bx, by, bs, bs, _m, hov, foc, bt, THEME.icon_random, 0, bc, 1, ui(6));
 					if(bb) _hv = false;
-					if(bb == 2) randomizeSection(lb.indx);
+					if(bb == 2) randomizeSection(lb);
 					bx -= ui(4);
 					
+					var vs = ui(10);
+					var vx = bx - ui(4) - vs;
+					var vy = scy + sch / 2 - vs / 2;
+					
+					var vpd = ui(1);
+					
+					for( var j = 0, m = array_length(_vars); j < m; j++ ) {
+						var v  = m-1-j;
+						var vh = hov && point_in_rectangle(_m[0], _m[1], vx - vpd, vy - vpd, vx + vs + vpd, vy + vs + vpd);
+						if(section_var_setting == lb) vh = hov && _m[0] > vx - vpd && _m[0] <= vx + vs + vpd;
+						
+						if(v == _vind)
+							draw_sprite_stretched_ext(THEME.palette_mask, 1, vx, vy, vs, vs, COLORS._main_icon, 1);
+							
+						draw_sprite_stretched_ext(THEME.palette_mask_outline, 1, vx, vy, vs, vs, COLORS._main_icon, .75);
+						if(vh) {
+							_hv = false;
+							_section_var_hover     = lb;
+							_section_var_hover_ind = _vars[v];
+							
+							draw_sprite_stretched_add(THEME.palette_mask_outline, 1, vx, vy, vs, vs, COLORS._main_icon, 1);
+							
+							if(mouse_lpress(foc)) section_var_setting = lb;
+							if(section_var_setting == lb) lb.setVarients(v);
+						}
+						
+						vx -= vs + vpd*2 + 1;
+					}
+				
 					if(_hv && pFOCUS) {
 	                	if(DOUBLE_CLICK) 
 	                		_cAll = _coll? -1 : 1;
@@ -559,20 +927,26 @@ function Panel_Randomizer() : PanelContent() constructor {
 					
 					var bx = pd;
 					var bc = COLORS._main_icon;
-					if(buttonInstant_Pad(noone, bx, by, bs, bs, _m, hov, foc, "", THEME.hamburger_s, 0, bc, 1, ui(6)) == 2) {
+					if(buttonInstant_Pad(noone, bx, by, bs, bs, _m, hov, foc, "", THEME.hamburger_s, 0, bc, 1, ui(10)) == 2) {
 						dragging       = true;
 						dragging_track = lb;
 					} tx += bs;
 					
 					var bx = x1 - bs;
-					var bc = COLORS._main_value_negative;
+					var bc = [COLORS._main_icon, COLORS._main_value_negative];
 					if(buttonInstant_Pad(noone, bx, by, bs, bs, _m, hov, foc, __txt("Delete"), THEME.cross_16, 0, bc, 1, ui(6)) == 2)
 						_del = lb.indx;
+					bx -= bs + ui(2);
+					
+					var bc = [COLORS._main_icon, COLORS._main_icon_light];
+					var bt = __txt("Generate Varients");
+					if(buttonInstant_Pad(noone, bx, by, bs, bs, _m, hov, foc, bt, THEME.icon_random_varient, 0, bc, 1, ui(8)) == 2)
+						lb.generateVarients();
 					bx -= ui(4);
 					
-					draw_set_text(f_p4, fa_left, fa_center, _hv? COLORS._main_text : COLORS._main_text_sub);
+					draw_set_text(f_p3, fa_left, fa_center, _hv? COLORS._main_text : COLORS._main_text_sub);
 					var tx = pd + bs + ui(4);
-					var ty = _yy + sectH / 2
+					var ty = _yy + hg / 2
 					
 					var tw = string_width(_name)  + ui(4);
 					var th = string_height(_name) + ui(4);
@@ -582,9 +956,9 @@ function Panel_Randomizer() : PanelContent() constructor {
 					var ty0 = ty  - th / 2;
 					var ty1 = ty  + th / 2;
 					
-					if(section_editing == lb) {
-						section_editor.setFocusHover(pFOCUS, pHOVER);
-						section_editor.drawParam(new widgetParam(tx0, ty0, bx - tx0 - ui(8), th, _name, undefined, _m).setFont(f_p4));
+					if(name_editing == lb) {
+						name_editor.setFocusHover(pFOCUS, pHOVER);
+						name_editor.drawParam(new widgetParam(tx0, ty0, bx - tx0 - ui(8), th, _name, undefined, _m).setFont(f_p3));
 						
 					} else {
 						draw_text_add(tx, ty, _name);
@@ -592,17 +966,17 @@ function Panel_Randomizer() : PanelContent() constructor {
 						if(pHOVER && point_in_rectangle(_m[0], _m[1], tx0, ty0, tx1, ty1)) {
 							draw_sprite_stretched_ext(THEME.box_r2_clr, 1, tx0, ty0, tx1 - tx0, ty1 - ty0);
 							if(mouse_lpress(pFOCUS)) {
-								section_editing = lb;
-								section_editor.activate(_name);
+								name_editing = lb;
+								name_editor.activate(_name);
 							}
 						}
 					}
 					
 				} else {
-					draw_sprite_ui(THEME.arrow, _coll? 0 : 3, ui(16), _yy + sectH / 2, 1, 1, 0, COLORS._main_text_sub, 1);    
+					draw_sprite_ui(THEME.arrow, _coll? 0 : 3, ui(16), _yy + hg / 2, 1, 1, 0, COLORS._main_text_sub, 1);    
 				
-					draw_set_text(f_p4, fa_left, fa_center, _hv? COLORS._main_text : COLORS._main_text_sub);
-					draw_text_add(ui(28), _yy + sectH / 2, _name);
+					draw_set_text(f_p3, fa_left, fa_center, _hv? COLORS._main_text : COLORS._main_text_sub);
+					draw_text_add(ui(28), _yy + hg / 2, _name);
 				}
 			}
 			
@@ -611,12 +985,28 @@ function Panel_Randomizer() : PanelContent() constructor {
 			
 			section_list = group_labels;
 		#endregion
+    	
+    	if(_section_var_hover) {
+    		var _cnt = _section_var_hover.contents;
+    		var _ind = _section_var_hover_ind;
+    		var _amo = min(array_length(_cnt), array_length(_ind));
     		
+    		for( var i = 0; i < _amo; i++ ) {
+    			var _tr = _cnt[i];
+    			var _in = _ind[i];
+    			
+    			_tr.varHigh = _in;
+    		}
+    	}
+    	
+		if(section_var_setting && mouse_lrelease()) section_var_setting = undefined;
+		
 		if(_del != undefined) array_delete(_trks, _del, 1);
 		
 		if(dragging) {
 			array_remove(_trks, dragging_track);
 			array_insert(_trks, drag_hover_index, dragging_track);
+			toRefresh = true;
 			
 			if(mouse_lrelease()) dragging = false;
 		}
@@ -636,24 +1026,34 @@ function Panel_Randomizer() : PanelContent() constructor {
 		})
 	}
 	
-	static randomizeSection = function(_index) {
-		var _rnd  = PROJECT.randomizer;
-		var _trks = _rnd.values;
-		
-		for( var i = _index+1, n = array_length(_trks); i < n; i++ ) {
-			var _trk = _trks[i];
-			if(is(_trk, Project_Randomizer_Section)) break;
-			_trk.Random();
-		}
+	static randomizeSection = function(_sect) {
+		_sect.varIndex = -1;
+		for( var i = 0, n = array_length(_sect.contents); i < n; i++ )
+			_sect.contents[i].Random();
 	}
+	
+	////- Step
 	
 	static stepBegin = function() {
 		RANDOMIZER_ACTIVE = randActive;
 		randActive = false;
 	}
 	
+	////- Draw
+	
 	function drawContent(panel) {
 		randActive = true;
+		
+		if(curr_project != PROJECT || curr_amo != array_length(PROJECT.randomizer.values)) {
+			curr_project = PROJECT;
+			curr_amo     = array_length(PROJECT.randomizer.values);
+			toRefresh    = true;
+		}
+		
+		if(toRefresh) {
+			curr_project.randomizer.refreshContent();
+			toRefresh = false;
+		}
 		
 		draw_clear_alpha(COLORS.panel_bg_clear, 1);
 		var _rnd = PROJECT.randomizer;
@@ -664,25 +1064,30 @@ function Panel_Randomizer() : PanelContent() constructor {
 		var foc = pFOCUS;
 		
 		var bb = THEME.button_hide;
-		var bx = ui(8);
-		var by = ui(8);
 		var bc = COLORS._main_accent;
+		var by = ui(8);
 		
+		var bx = w - ui(8) - bs;
 		var bt = __txt("Randomize All");
 		if(buttonInstant_Pad(bb, bx, by, bs, bs, m, hov, foc, bt, THEME.icon_random, 0, bc) == 2)
 			_rnd.Random();
-		bx += bs + ui(4);
+		bx -= bs + ui(4);
 		
 		var bt = __txt("Randomize Selected nodes seed");
 		var bc = COLORS._main_icon;
 		var ac = !array_empty(PANEL_GRAPH.nodes_selecting);
 		if(buttonInstant_Pad(bb, bx, by, bs, bs, m, ac && hov, foc, bt, THEME.icon_random_seed, 0, bc, .5 + ac*.5) == 2)
 			randomSeed();
-		bx += bs + ui(4);
+		bx -= bs + ui(4);
 		
 		var n = PANEL_INSPECTOR.getInspecting();
+		var bx = ui(8);
 		
-		bx = w - ui(8) - bs;
+		bc = editing? COLORS._main_value_positive : COLORS._main_icon;
+		if(buttonInstant_Pad(bb, bx, by, bs, bs, m, hov, foc, __txt("Edit"), THEME.gear_16, 0, bc) == 2)
+			editing = !editing;
+		bx += bs + ui(4);
+		
 		bc = n == noone? COLORS._main_icon_dark : [COLORS._main_icon, COLORS._main_value_positive];
 		if(buttonInstant_Pad(bb, bx, by, bs, bs, m, hov, foc, __txt("Add Value"), THEME.add_16, 0, bc) == 2) {
 			if(n != noone) {
@@ -710,10 +1115,11 @@ function Panel_Randomizer() : PanelContent() constructor {
 					switch(_inp.type) {
 						case VALUE_TYPE.float : 
 						case VALUE_TYPE.integer : 
-						
 						case VALUE_TYPE.color : 
-							array_push(menu, menuItem(_inp.getName(), function(v) /*=>*/ {return PROJECT.randomizer.addTrack(new Project_Randomizer_Value(v))})
-								.setParam(_inp));
+							array_push(menu, menuItem(_inp.getName(), function(v) /*=>*/ {
+								PROJECT.randomizer.addTrack(new Project_Randomizer_Value(v))
+								toRefresh = true;
+							}).setParam(_inp));
 							break;
 					}
 					
@@ -722,17 +1128,16 @@ function Panel_Randomizer() : PanelContent() constructor {
 				if(array_last(menu) == -1) array_delete(menu, array_length(menu) - 1, 1);
 				if(!array_empty(menu)) menuCall("", menu);
 			}
-		} bx -= bs + ui(4);
+		} bx += bs + ui(4);
 		
-		bc = [COLORS._main_icon, COLORS._main_value_positive];
-		if(buttonInstant_Pad(bb, bx, by, bs, bs, m, hov, foc, __txt("Add Section"), THEME.tag, 0, bc, 1, ui(8)) == 2)
-			PROJECT.randomizer.addTrack(new Project_Randomizer_Section("New Section"))
-		bx -= bs + ui(4);
-		
-		bc = editing? COLORS._main_value_positive : COLORS._main_icon;
-		if(buttonInstant_Pad(bb, bx, by, bs, bs, m, hov, foc, __txt("Edit"), THEME.gear_16, 0, bc) == 2)
-			editing = !editing;
-		bx -= bs + ui(4);
+		if(editing) {
+			bc = [COLORS._main_icon, COLORS._main_value_positive];
+			if(buttonInstant_Pad(bb, bx, by, bs, bs, m, hov, foc, __txt("Add Section"), THEME.tag, 0, bc, 1, ui(8)) == 2) {
+				PROJECT.randomizer.addTrack(new Project_Randomizer_Section("New Section"))
+				toRefresh = true;
+			}
+			bx += bs + ui(4);
+		}
 		
 		var px = ui(6);
 		var py = ui(8) + bs + ui(4);

@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.22.2.009",
+    "changes": [
+      {
+        "date": "2026-11-10T04:25:43.095Z",
+        "node": "",
+        "commit": "-- Project Variant system"
+      }
+    ]
+  },
+  {
     "version": "1.22.2.008",
     "changes": [
       {

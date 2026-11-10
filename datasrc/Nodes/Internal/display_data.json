@@ -1633,6 +1633,7 @@
             "Node_Project_Layer",
             "Node_Layer_Output", 
             "Node_Project_Output",
+            "Node_Randomizer_Varient",
             
             { "label": "System" },
             "Node_Argument",
