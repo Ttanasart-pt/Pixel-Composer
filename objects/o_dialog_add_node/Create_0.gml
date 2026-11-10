@@ -1153,6 +1153,8 @@ event_inherited();
 		search_list = [];
 		var pr_list = ds_priority_create();
 		
+		var t = get_timer();
+		
 		var search_lower = string_lower(search_string);
 		var search_map	 = ds_map_create();
 		
@@ -1209,6 +1211,9 @@ event_inherited();
 					
 					var _name  = string_lower(_node.getName());
 					var _match = string_partial_match_res(_name, search_lower);
+					var _param = "";
+					
+					var _matchNode = _match[0] > -9999;
 					
 					var _path = {
 						node       : _node, 
@@ -1219,15 +1224,7 @@ event_inherited();
 						subgroup   : curr_subgroup, 
 					};
 					
-					// Tooltip
-					var _tooltip = string_lower(_node.getTooltip());
-					var  mat     = string_partial_match_res(_tooltip, search_lower);
-					     mat[0] -= 50;
-					if(mat[0] > _match[0])
-						_match = mat;
-					
 					// Alias
-					var _param = "";
 					for( var k = 0, p = array_length(_node.tags); k < p; k++ ) {
 						var mat = string_partial_match_res(_node.tags[k], search_lower);
 						mat[0] -= 50;
@@ -1240,7 +1237,6 @@ event_inherited();
 							};
 						}
 					}
-					
 					var _matchNode = _match[0] > -9999;
 					
 					/// Preset
@@ -1382,7 +1378,7 @@ event_inherited();
 			var _data = ds_priority_delete_max(pr_list);
 			var _wigh = _data.weight;
 			
-			if(_curr_weight != _wigh) {
+			if(_curr_weight != _wigh) { // group node with the same weight and sort alphanumerically
 				if(!array_empty(_curr_arr)) {
 					array_sort(_curr_arr, function(a,b) /*=>*/ {return string_compare(a.name, b.name)});
 					array_append(search_list, _curr_arr);
@@ -1402,6 +1398,8 @@ event_inherited();
 		}
 		
 		ds_priority_destroy(pr_list);
+		
+		// print($"search for '{search_lower}' completed in {(get_timer() - t) / 1000}ms");
 	}
 	
 	search_pane = new scrollPane(dialog_w - ui(36), dialog_h - ui(66), function(_y, _m) {

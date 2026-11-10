@@ -175,50 +175,74 @@ function string_partial_match_res(str, key, _arr = [0,0]) {
 		return _arr; // ++ Perfect match
 	}
 	
-	var lenn = string_length(str);
-	var lenm = string_length(key);
-	var runm = 1;
+	static strArray = array_create(1000);
+    static keyArray = array_create(1000);
+    
+	var lenBase = string_length(str);
+	var lenKey  = string_length(key);
 	
-	var _matchw = -lenn * lenm;
-	var _matRng = array_create(string_length(str) + 1, 0);
-	var _mated  = array_create(string_length(str) + 1, 0);
-	var  runn   = 1;
-	var  runC   = 0;
-	
-	repeat(lenm) {
-		var m = string_char_at(key, runm);
-		
-		var matc = -1;
-		var matW =  0;
-		var on = " ";
-		
-		repeat(lenn) {
-			var n = string_char_at(str, runn);
-			if(_mated[runn] == 0 && m == n) {
-				 matc    = runn;
-				_matchw += lenn - matW           // ++ Match near the beginning (key** > **key)
-					    + (matW == 0) * runC * 5 // ++ Longer consecutive match at the beginnning (key** > k*e*y)
-					    + (on == " ") * 10;      // ++ Match word beginning (** key* > ** *key)
-				    
-				_mated[runn]  = 1;
-				_matRng[runn] = 1;
-				
-				runC = matW == 0? runC + 1 : 0;
-				if(++runn > lenn) runn = 1;
-				on = n;
-				break;
-			}
-			
-			matW++;
-			if(++runn > lenn) runn = 1;
-			on = n;
-		}
-		
-		if(matc == -1) { _matchw = -9999; break; }
-		runm++
+	if(lenBase == 0 || lenKey == 0) {
+		_arr[0] = -9999;
+		return _arr;
 	}
 	
-	if(_matchw > -9999) _matchw -= lenn - runn; // ++ Panalty for leftover unmatched string
+	var _matRng = array_create(lenBase + 1, 0);
+	var _matCrr = array_create(lenBase + 1, 0);
+	var _matchw = -9999;
+	
+    for(var i = 0; i < lenBase; i++) strArray[i] = string_char_at(str, i + 1);
+    for(var i = 0; i < lenKey; i++)  keyArray[i] = string_char_at(key, i + 1);
+    
+	for( var i = 0; i < lenBase; i++ ) {
+		var keyInd = 0;
+		var keyChr = keyArray[keyInd];
+		
+		var weight = 0;
+		
+		var wordStart = i == 0 || strArray[i-1] == " ";
+		var matchPrev = false;
+		var matchCons = 0;
+		var foundAll  = false;
+		
+		for( var j = 0; j <= lenBase; j++ ) _matCrr[j] = 0;
+			
+		for( var j = 0; j < lenBase && keyInd < lenKey; j++ ) {
+			var ind = (i + j) % lenBase;
+			var baseChr = strArray[ind];
+			
+			if(baseChr == keyChr) {
+				if(matchPrev) {
+					matchCons++;
+					weight += ((lenBase - ind) / lenBase) * 20 + matchCons * 10 + wordStart * 10;
+				}
+				
+				matchPrev = true;
+				_matCrr[ind+1] = 1;
+				
+				keyInd++;
+				if(keyInd >= lenKey) {
+					foundAll = true;
+					break;
+				}
+				
+				keyChr = keyArray[keyInd];
+				
+			} else {
+				_matCrr[ind+1] = 0;
+				matchCons      = 0;
+				matchPrev      = false;
+			}
+			
+			wordStart = baseChr == " ";
+		}
+		
+		if(!foundAll) continue;
+		
+		if(weight > _matchw) {
+			_matchw = weight;
+			array_copy(_matRng, 0, _matCrr, 0, lenBase + 1);
+		}
+	}
 	
 	_arr[0] = _matchw;
 	_arr[1] = _matRng;
