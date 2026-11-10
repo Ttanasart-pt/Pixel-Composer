@@ -80,24 +80,25 @@ function Node_Array_Get(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		if(_typ == 0) {
 			if(is_array(_ind)) {
 				res = array_create(array_length(_ind));
+				
 				for( var i = 0, n = array_length(_ind); i < n; i++ ) {
-					var i = getArray(_arr, _ind[i], _ovf);
-					res[i] = array_safe_get_fast(_arr, i);
-					sig[i] = array_safe_get_fast(isig, i);
+					var r = getArray(_arr, _ind[i], _ovf);
+					res[i] = array_safe_get_fast(_arr, r);
+					sig[i] = array_safe_get_fast(isig, r);
 				}
 				
 			} else {
-				var i = getArray(_arr, _ind, _ovf);
-				res = array_safe_get_fast(_arr, i);
-				sig = array_safe_get_fast(isig, i);
+				var r = getArray(_arr, _ind, _ovf);
+				res = array_safe_get_fast(_arr, r);
+				sig = array_safe_get_fast(isig, r);
 			}
 				
 		} else if(_typ == 1) {
 			random_set_seed(_sed);
-			var i = array_safe_get_random_index(_arr);
+			var r = array_safe_get_random_index(_arr);
 			
-			sig = isig[i];
-			res = _arr[i];
+			sig = isig[r];
+			res = _arr[r];
 		}
 		
 		outputs[0].setTypeSignature(sig);
