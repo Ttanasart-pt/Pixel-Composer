@@ -3665,14 +3665,17 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 				var _colr = _selc? 1 : _fade;
 				
 				c0 = merge_color(bg, from.custom_color ?? from.color_display, _colr);
-				c1 = merge_color(bg,   to.custom_color ??   to.color_display, _colr);
+				// c1 = merge_color(bg,   to.custom_color ??   to.color_display, _colr);
+				c1 = c0;
 				
 				to.draw_blend_color = bg;
 				to.draw_blend       = _colr;
 				from.draw_blend     = max(from.draw_blend, _colr);
+				
 			} else {
 				c0 = from.custom_color ?? from.color_display;
-				c1 =   to.custom_color ??   to.color_display;
+				// c1 =   to.custom_color ??   to.color_display;
+				c1 = c0;
 				
 				to.draw_blend_color = bg;
 				to.draw_blend       = -1;

@@ -1,14 +1,32 @@
 #region global
-	globalvar RANDOMIZER_ACTIVE; RANDOMIZER_ACTIVE = false;
+	globalvar  RANDOMIZER_ACTIVE;  RANDOMIZER_ACTIVE = false;
+	globalvar  RANDOMIZER_HOVER;  RANDOMIZER_HOVER  = {};
+	globalvar _RANDOMIZER_HOVER; _RANDOMIZER_HOVER  = {};
+	
+	function cartesian_product(ranges) {
+	    var result = [[]];
+	    
+	    for (var i = 0; i < array_length(ranges); i++) {
+	        var new_result = [];
+	        
+	        for (var j = 0; j < array_length(result); j++) {
+	            for (var v = 0; v < ranges[i]; v++)
+	                array_push(new_result, array_concat(result[j], [v]));
+	        }
+	        result = new_result;
+	    }
+	    
+	    return result;
+	}
 	
 	function Project_Randomizer_Track() constructor {
 		name = "";
 		bindNode = undefined;
 		
 		varients = [];
+		varUse   = false;
 		varIndex = -1;
 		
-		varEdit    = false;
 		varRand    = false;
 		varAmo     = 4;
 		varAmoEdit = undefined;
@@ -17,7 +35,12 @@
 		
 		static getVarEdit = function() {
 			if(varAmoEdit) return varAmoEdit;
-			varAmoEdit = textBox_Number(function(i) /*=>*/ { varAmo = i; return false; });
+			varAmoEdit = textBox_Number(function(i) /*=>*/ { 
+				varAmo = i; 
+				generateVarients(); 
+				return false; 
+			}).setTooltip(__txt("Variant Amount"));
+			
 			return varAmoEdit;
 		}
 		
@@ -36,6 +59,8 @@
 			
 			return undefined;	
 		}
+		
+		static toString = function() /*=>*/ {return $"Randomizer: {name}"};
 	}
 	
 	function Project_Randomizer_Section(_name = "") : Project_Randomizer_Track() constructor {
@@ -49,23 +74,9 @@
 		y1 = 0;
 		h  = 0;
 		
-		////- =Random
+		preview_index = undefined;
 		
-		function cartesian_product(ranges) {
-		    var result = [[]];
-		    
-		    for (var i = 0; i < array_length(ranges); i++) {
-		        var new_result = [];
-		        
-		        for (var j = 0; j < array_length(result); j++) {
-		            for (var v = 0; v < ranges[i]; v++)
-		                array_push(new_result, array_concat(result[j], [v]));
-		        }
-		        result = new_result;
-		    }
-		    
-		    return result;
-		}
+		////- =Random
 		
 		static generateVarients = function() {
 			varients = [];
@@ -74,7 +85,7 @@
 			
 			for( var i = 0, n = array_length(contents); i < n; i++ ) {
 				var _trk = contents[i];
-				var vamo = array_length(_trk.varients);
+				var vamo = _trk.varUse? array_length(_trk.varients) : 1;
 				array_push(_rngs, vamo)
 			}
 			
@@ -106,6 +117,9 @@
 			
 			_m.varients = array_clone(varients);
 			_m.varIndex = varIndex;
+			_m.varUse   = varUse;
+			_m.varRand  = varRand;
+			_m.varAmo   = varAmo;
 			
 			_m.name = name;
 			_m.coll = coll;
@@ -116,6 +130,9 @@
 		static deserialize = function(_m) {
 			varients = array_clone(_m[$ "varients"] ?? varients);
 			varIndex = _m[$ "varIndex"] ?? varIndex;
+			varUse   = _m[$ "varUse"]   ?? varUse;
+			varRand  = _m[$ "varRand"]  ?? varRand;
+			varAmo   = _m[$ "varAmo"]   ?? varAmo;
 			
 			name = _m[$ "name"] ?? name;
 			coll = _m[$ "coll"] ?? coll;
@@ -232,7 +249,7 @@
 			var n = getNode();
 			var v = getValue();
 			
-			if(v) name = $"{n.node_id}.{v.internalName}";
+			if(v) name = v.getName();
 			return self;
 			
 		} if(_val) setInput(_val);
@@ -340,6 +357,9 @@
 			
 			_m.varients = array_clone(varients);
 			_m.varIndex = varIndex;
+			_m.varUse   = varUse;
+			_m.varRand  = varRand;
+			_m.varAmo   = varAmo;
 			
 			_m.node_id = node_id;
 			_m.inindex = inindex;
@@ -359,6 +379,9 @@
 		static deserialize = function(_m) {
 			varients = array_clone(_m[$ "varients"] ?? varients);
 			varIndex = _m[$ "varIndex"] ?? varIndex;
+			varUse   = _m[$ "varUse"]   ?? varUse;
+			varRand  = _m[$ "varRand"]  ?? varRand;
+			varAmo   = _m[$ "varAmo"]   ?? varAmo;
 			
 			node_id = _m[$ "node_id"] ?? node_id;
 			inindex = _m[$ "inindex"] ?? inindex;
@@ -576,16 +599,6 @@ function Panel_Randomizer() : PanelContent() constructor {
 			
 			if(hv) {
 				draw_sprite_stretched_ext(THEME.box_r2, 0, ui(4), yy, ww - ui(8), thh, COLORS._main_icon, .1);
-			
-        		if(mouse_rpress(foc)) {
-        			menuCall("", [
-        				menuItem(__txt("Create Node"), function(_trk) /*=>*/ { 
-        					var _node = nodeBuild("Node_Randomizer_Varient", 0, 0);
-        					_node.skipDefault();
-        					_node.inputs[0].setValue(_trk.name);
-        				}).setParam(_trk)
-    				]);
-        		}
 			}
 			
 			if(editing) {
@@ -628,33 +641,35 @@ function Panel_Randomizer() : PanelContent() constructor {
 					_trk.Random();
 				bx -= ui(4);
 				
-				var vs = ui(10);
-				var vx = bx - ui(4) - vs;
-				var vy = yy + hg / 2 - vs / 2;
+				var vs  = ui(10);
+				var vx  = bx - ui(4) - vs;
+				var vy  = yy + hg / 2 - vs / 2;
 				
 				var vpd = ui(1);
 				
-				for( var j = 0, m = array_length(_vars); j < m; j++ ) {
-					var v  = m-1-j;
-					var vh = hov && point_in_rectangle(_m[0], _m[1], vx - vpd, vy - vpd, vx + vs + vpd, vy + vs + vpd);
-					if(section_var_setting == _trk)  vh = hov && _m[0] > vx - vpd && _m[0] <= vx + vs + vpd;
-					
-					if(v == _vind)
-						draw_sprite_stretched_ext(THEME.palette_mask, 1, vx, vy, vs, vs, COLORS._main_icon, 1);
+				if(_trk.varUse) {
+					for( var j = 0, m = array_length(_vars); j < m; j++ ) {
+						var v  = m-1-j;
+						var vh = hov && point_in_rectangle(_m[0], _m[1], vx - vpd, vy - vpd, vx + vs + vpd, vy + vs + vpd);
+						if(section_var_setting == _trk)  vh = hov && _m[0] >= vx - vpd && _m[0] <= vx + vs + vpd;
 						
-					draw_sprite_stretched_ext(THEME.palette_mask_outline, 1, vx, vy, vs, vs, COLORS._main_icon, .75);
-					if(vh) {
-						setTOOLTIP(string(_vars[j]));
-						draw_sprite_stretched_add(THEME.palette_mask_outline, 1, vx, vy, vs, vs, COLORS._main_icon, 1);
+						if(v == _vind)
+							draw_sprite_stretched_ext(THEME.palette_mask, 1, vx, vy, vs, vs, COLORS._main_icon, 1);
+							
+						draw_sprite_stretched_ext(THEME.palette_mask_outline, 1, vx, vy, vs, vs, COLORS._main_icon, .75);
+						if(vh) {
+							setTOOLTIP([string(_vars[v]), _val.type]);
+							draw_sprite_stretched_add(THEME.palette_mask_outline, 1, vx, vy, vs, vs, COLORS._main_icon, 1);
+							
+							if(mouse_lpress(foc)) section_var_setting = _trk;
+							if(section_var_setting == _trk) _trk.setVarients(v);
+						}
 						
-						if(mouse_lpress(foc)) section_var_setting = _trk;
-						if(section_var_setting == _trk) _trk.setVarients(v);
+						if(v == _trk.varHigh)
+							draw_sprite_stretched_ext(THEME.palette_mask, 1, vx, vy, vs, vs, COLORS._main_accent, 1);
+							
+						vx -= vs + vpd*2 + 1;
 					}
-					
-					if(v == _trk.varHigh)
-						draw_sprite_stretched_ext(THEME.palette_mask, 1, vx, vy, vs, vs, COLORS._main_accent, 1);
-						
-					vx -= vs + vpd*2 + 1;
 				}
 				
 				_trk.varHigh = undefined;
@@ -665,15 +680,17 @@ function Panel_Randomizer() : PanelContent() constructor {
 					_del = i;
 				bx -= bs + ui(2);
 				
-				var bc = _trk.varEdit? COLORS._main_accent : [COLORS._main_icon, COLORS._main_icon_light];
-				if(buttonInstant_Pad(noone, bx, by, bs, bs, _m, hov, foc, __txt("Variant"), THEME.icon_random_varient, 0, bc, 1, ui(8)) == 2)
-					_trk.varEdit = !_trk.varEdit;
+				var bc = _trk.varUse? COLORS._main_accent : [COLORS._main_icon, COLORS._main_icon_light];
+				if(buttonInstant_Pad(noone, bx, by, bs, bs, _m, hov, foc, __txt("Variant"), THEME.icon_random_varient, 0, bc, 1, ui(8)) == 2) {
+					_trk.varUse = !_trk.varUse;
+					if(_trk.varUse) _trk.generateVarients();
+				}
 				bx -= ui(4);
 				
 				var _typeWidget = _trk.typeWidget;
 				var _editWidget = _trk.getEditWidget();
 				
-				var edw = x1 * .5;
+				var edw = x1 * .4;
 			
 				if(_typeWidget) {
 					var ew = x1 * .2;
@@ -732,7 +749,7 @@ function Panel_Randomizer() : PanelContent() constructor {
 					}
 				}
 				
-				if(_trk.varEdit) {
+				if(_trk.varUse) {
 					var vs = ui(10);
 					var vx = tx;
 					var vy = yy + hg + hg / 2 - vs / 2;
@@ -740,7 +757,7 @@ function Panel_Randomizer() : PanelContent() constructor {
 					var vpd = ui(1);
 					
 					for( var j = 0, m = array_length(_vars); j < m; j++ ) {
-						var v  = m-1-j;
+						var v  = j;
 						var vh = hov && point_in_rectangle(_m[0], _m[1], vx - vpd, vy - vpd, vx + vs + vpd, vy + vs + vpd);
 						
 						if(v == _vind)
@@ -748,7 +765,7 @@ function Panel_Randomizer() : PanelContent() constructor {
 							
 						draw_sprite_stretched_ext(THEME.palette_mask_outline, 1, vx, vy, vs, vs, COLORS._main_icon, .75);
 						if(vh) {
-							setTOOLTIP(string(_vars[j]));
+							setTOOLTIP([string(_vars[v]), _val.type]);
 							draw_sprite_stretched_add(THEME.palette_mask_outline, 1, vx, vy, vs, vs, COLORS._main_icon, 1);
 							if(mouse_lclick(foc)) _trk.setVarients(v);
 						}
@@ -770,8 +787,10 @@ function Panel_Randomizer() : PanelContent() constructor {
 					
 					bx = vex;
 					bc = _trk.varRand? COLORS._main_accent : COLORS._main_icon;
-					if(buttonInstant_Pad(noone, bx, by, bs, bs, _m, hov, foc, __txt("Random"), THEME.icon_random, 0, bc, 1, ui(6)) == 2) 
+					if(buttonInstant_Pad(noone, bx, by, bs, bs, _m, hov, foc, __txt("Random"), THEME.icon_random, 0, bc, 1, ui(6)) == 2) {
 						_trk.varRand = !_trk.varRand;
+						_trk.generateVarients();
+					}
 					bx += bs + ui(2);
 					vx0 = bx;
 					
@@ -779,14 +798,8 @@ function Panel_Randomizer() : PanelContent() constructor {
 					bc = COLORS._main_value_positive;
 					
 					bx -= bs;
-					var bc = [COLORS._main_icon, COLORS._main_value_negative];
-					if(buttonInstant_Pad(noone, bx, by, bs, bs, _m, hov, foc, __txt("Clear"), THEME.cross_16, 0, bc, 1, ui(6)) == 2)
-						_trk.varients = [];
-					bx -= ui(2);
-					
-					bx -= bs;
 					var bc = [COLORS._main_icon, COLORS._main_value_positive];
-					if(buttonInstant_Pad(noone, bx, by, bs, bs, _m, hov, foc, __txt("Generate"), THEME.accept_16, 0, bc, 1, ui(6)) == 2)
+					if(buttonInstant_Pad(noone, bx, by, bs, bs, _m, hov, foc, __txt("Regenerate"), THEME.refresh_16, 0, bc, 1, ui(6)) == 2)
 						_trk.generateVarients();
 					bx -= ui(2);
 					vx1 = bx;
@@ -862,7 +875,7 @@ function Panel_Randomizer() : PanelContent() constructor {
             		if(mouse_rpress(foc)) {
             			menuCall("", [
             				menuItem(__txt("Create Node"), function(_trk) /*=>*/ { 
-            					var _node = nodeBuild("Node_Randomizer_Varient", 0, 0);
+            					var _node = nodeBuild("Node_Randomizer_Varient", PANEL_GRAPH.graph_cx, PANEL_GRAPH.graph_cy);
             					_node.skipDefault();
             					_node.inputs[0].setValue(_trk.name);
             				}).setParam(lb)
@@ -884,16 +897,18 @@ function Panel_Randomizer() : PanelContent() constructor {
 					if(bb == 2) randomizeSection(lb);
 					bx -= ui(4);
 					
-					var vs = ui(10);
-					var vx = bx - ui(4) - vs;
-					var vy = scy + sch / 2 - vs / 2;
+					var edw = x1 * .4;
+					var vs  = ui(10);
+					var vx  = bx - ui(4) - vs;
+					var vy  = scy + sch / 2 - vs / 2;
+					var vx0 = pd + edw;
 					
 					var vpd = ui(1);
 					
 					for( var j = 0, m = array_length(_vars); j < m; j++ ) {
 						var v  = m-1-j;
 						var vh = hov && point_in_rectangle(_m[0], _m[1], vx - vpd, vy - vpd, vx + vs + vpd, vy + vs + vpd);
-						if(section_var_setting == lb) vh = hov && _m[0] > vx - vpd && _m[0] <= vx + vs + vpd;
+						if(section_var_setting == lb) vh = hov && _m[0] >= vx - vpd && _m[0] <= vx + vs + vpd;
 						
 						if(v == _vind)
 							draw_sprite_stretched_ext(THEME.palette_mask, 1, vx, vy, vs, vs, COLORS._main_icon, 1);
@@ -911,6 +926,12 @@ function Panel_Randomizer() : PanelContent() constructor {
 						}
 						
 						vx -= vs + vpd*2 + 1;
+						
+						if(vx < vx0) {
+							draw_set_text(f_p4, fa_right, fa_center, COLORS._main_text_sub);
+							draw_text_add(vx + vs - ui(2), vy + vs / 2 - ui(1), $"+{m-j}");
+							break;
+						}
 					}
 				
 					if(_hv && pFOCUS) {
@@ -938,9 +959,9 @@ function Panel_Randomizer() : PanelContent() constructor {
 						_del = lb.indx;
 					bx -= bs + ui(2);
 					
-					var bc = [COLORS._main_icon, COLORS._main_icon_light];
-					var bt = __txt("Generate Varients");
-					if(buttonInstant_Pad(noone, bx, by, bs, bs, _m, hov, foc, bt, THEME.icon_random_varient, 0, bc, 1, ui(8)) == 2)
+					var bc = [COLORS._main_icon, COLORS._main_value_positive];
+					var bt = __txt("Generate Variants");
+					if(buttonInstant_Pad(noone, bx, by, bs, bs, _m, hov, foc, bt, THEME.icon_random_varient_refresh, 0, bc, 1, ui(8)) == 2)
 						lb.generateVarients();
 					bx -= ui(4);
 					
@@ -1088,9 +1109,9 @@ function Panel_Randomizer() : PanelContent() constructor {
 			editing = !editing;
 		bx += bs + ui(4);
 		
-		bc = n == noone? COLORS._main_icon_dark : [COLORS._main_icon, COLORS._main_value_positive];
-		if(buttonInstant_Pad(bb, bx, by, bs, bs, m, hov, foc, __txt("Add Value"), THEME.add_16, 0, bc) == 2) {
-			if(n != noone) {
+		if(n != noone) {
+			bc = [COLORS._main_icon, COLORS._main_value_positive];
+			if(buttonInstant_Pad(bb, bx, by, bs, bs, m, hov, foc, __txt("Add Value"), THEME.add_16, 0, bc) == 2) {
 				var dsp = is_array(n.input_display_list);
 				var amo = dsp? array_length(n.input_display_list) : array_length(n.inputs);
 				var menu = [];

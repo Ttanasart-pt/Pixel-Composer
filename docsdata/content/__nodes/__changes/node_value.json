@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.22.2.009",
+    "changes": [
+      {
+        "date": "2026-11-10T09:48:04.857Z",
+        "node": "",
+        "commit": "-- randomizer combinator"
+      }
+    ]
+  },
+  {
     "version": "1.22.2.008",
     "changes": [
       {
