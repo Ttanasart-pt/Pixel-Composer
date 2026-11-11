@@ -185,13 +185,13 @@ function Panel_Nodes() : PanelContent() constructor {
 		_item.x = _x0;
 		_item.y = _y;
 		
-		if(_bg) draw_sprite_stretched_ext(THEME.box_r5_clr, 0, _x0, _y, _w, bhg, COLORS.section_bg, 1);
+		if(_bg) draw_sprite_stretched_add(THEME.box_r5, 0, _x0, _y, _w, bhg, COLORS.panel_bg_clear, .2);
 		
 		if(hov) {
 			node_hovering = node;
 			
 			sc_nodes.hover_content = true;
-			draw_sprite_stretched_add(THEME.box_r5_clr, 0, _x0, _y, _w, hg, COLORS.section_hover, .4);
+			draw_sprite_stretched_add(THEME.box_r5_clr, 0, _x0, _y, _w, hg, COLORS.section_hover, .2);
 			hovEx = _m[0] < _x0 + hg + ui(4) + (_len > 1) * ui(16);
 			
 			if(focus) {
@@ -311,7 +311,7 @@ function Panel_Nodes() : PanelContent() constructor {
 			}
 			
 			if(_len > 1) {
-				var cc = merge_color(COLORS._main_icon, COLORS._main_icon_dark, .25);
+				var cc = merge_color(COLORS._main_icon, COLORS._main_icon_dark, .5);
 				
 				for( var i = 0; i < _len; i++ ) {
 					var _ind = inverse_order? _len - i - 1 : i;
@@ -327,7 +327,7 @@ function Panel_Nodes() : PanelContent() constructor {
 			}
 		}
 		
-		if(_bg) draw_sprite_stretched_add(THEME.box_r5, 1, _x0, _y0, _w, bhg, c_white, .1);
+		if(hov && _bg) draw_sprite_stretched_add(THEME.box_r5, 1, _x0, _y0, _w, bhg, c_white, .1);
 		
 		return _h;
 	}

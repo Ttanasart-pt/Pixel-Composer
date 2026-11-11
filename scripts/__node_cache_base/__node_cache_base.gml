@@ -14,7 +14,9 @@ function __Node_Cache(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 	
 	insp1button = button(function() /*=>*/ {
 		PANEL_GRAPH.cache_group_edit = PANEL_GRAPH.cache_group_edit == self? noone : self;
+		print(PANEL_GRAPH.cache_group_edit)
 		GraphRefresh();
+		
 	}).setTooltip(__txt("Edit Group"))
 		.setIcon(THEME.cache_group, 0, COLORS._main_value_positive).iconPad(ui(6)).setBaseSprite(THEME.button_hide_fill);
 	

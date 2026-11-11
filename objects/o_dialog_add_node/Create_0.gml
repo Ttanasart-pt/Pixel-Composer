@@ -1228,6 +1228,7 @@ event_inherited();
 				var _alia = _nodeData.aliasArray;
 				for( var k = 0, p = array_length(_alis); k < p; k++ ) {
 					var mat = string_partial_match_array(_alia[k], search_array);
+					mat[0]--;
 					if(mat[0] >= _match[0]) {
 						_match = mat;
 						_param = {

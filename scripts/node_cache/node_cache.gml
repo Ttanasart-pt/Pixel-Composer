@@ -4,8 +4,8 @@ function Node_Cache(_x, _y, _group = noone) : __Node_Cache(_x, _y, _group) const
 	setCacheAuto();
 	
 	////- =Surfaces
-	newInput( 0, nodeValue_Surface("Surface In")).setRequired();
-	newInput( 1, nodeValue_Bool("Animated", false));
+	newInput( 0, nodeValue_Surface( "Surface In"      )).setRequired();
+	newInput( 1, nodeValue_Bool(    "Animated", false ));
 	// 2
 	
 	newOutput(0, nodeValue_Output("Cache surface", VALUE_TYPE.surface, noone));
@@ -36,8 +36,12 @@ function Node_Cache(_x, _y, _group = noone) : __Node_Cache(_x, _y, _group) const
 		}
 	}
 	
+	static preUpdate = function() {
+		update_on_frame = inputs[ 1].getValue();
+		
+	}
+	
 	static update = function() {
-		update_on_frame = inputs[1].getValue();
 		
 		if(!IS_PLAYING) {
 			recoverCache();
