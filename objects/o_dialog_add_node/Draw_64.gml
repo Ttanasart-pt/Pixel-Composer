@@ -229,6 +229,8 @@ DIALOG_DRAW_BG
 			draw_sprite_ui_uniform(THEME.loading, 0, ix, iy, .35, COLORS._main_icon, 1, current_time / 3);
 		}
 		
+		if(NODE_SEARCH_INDEXED != search_index_stat) searchNodes(true);
+		
 	} else {
 		draw_sprite_stretched_ext(THEME.textbox, 5, tx, ty, tw, th);
 		draw_sprite_stretched_ext(THEME.textbox, 2, tx, ty, tw, th, COLORS._main_accent);

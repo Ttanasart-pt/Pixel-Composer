@@ -106,6 +106,8 @@ function Node_Tunnel_Out(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	
 	////- Draw
 	
+	static setRenderActive   = function() /*=>*/ { renderActive = true; return self; }
+	
 	static pointIn = function(_x, _y, _mx, _my, _s) {
 		var xx =  x      * _s + _x;
 		var yy = (y + 8) * _s + _y;

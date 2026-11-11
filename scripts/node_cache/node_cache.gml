@@ -38,7 +38,6 @@ function Node_Cache(_x, _y, _group = noone) : __Node_Cache(_x, _y, _group) const
 	
 	static preUpdate = function() {
 		update_on_frame = inputs[ 1].getValue();
-		
 	}
 	
 	static update = function() {

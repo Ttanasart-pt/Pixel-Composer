@@ -79,6 +79,7 @@ function Node_Processor(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	////- Process
 	
 	static setProcess = function(_process = attributes.process) {
+		_process = false;
 		attributes.process = _process;
 		icon = attributes.process? THEME.node_processor_icon : noone;
 		
@@ -347,9 +348,14 @@ function Node_Processor(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		var _outputs = undefined;
 		var os = array_length(outputs);
 		
+		var _dim = getDimension();
+		if(use_depth) surface_depth_disable(false);
+			
 		if(os == 1) {
 			_outputs = outputs[0].getValue(frame);
-			
+			if(outputs[0].type == VALUE_TYPE.surface)
+				_outputs = surface_verify(_outputs, _dim[0], _dim[1]);
+					
 			__process_signature = outputs[0].type;
 			var _res = processData(_outputs, inputs_data, 0, frame);
 			
@@ -357,9 +363,6 @@ function Node_Processor(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 			outputs[0].setValue(_res);
 			
 		} else {
-			var _dim = getDimension();
-			if(use_depth) surface_depth_disable(false);
-			
 			_outputs = [];
 			for( var i = 0, n = os; i < n; i++ ) {
 				var _out = outputs[i];
@@ -376,8 +379,9 @@ function Node_Processor(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 				outputs[i].setValue(_res[i]);
 			}
 				
-			if(use_depth) surface_depth_disable(true);
 		}
+		
+		if(use_depth) surface_depth_disable(true);
 		
 		if(processData_postbatch != undefined) processData_postbatch(frame);
 		if(postProcess           != undefined) postProcess(frame);

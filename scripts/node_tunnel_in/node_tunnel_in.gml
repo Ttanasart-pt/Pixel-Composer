@@ -89,6 +89,8 @@ function Node_Tunnel_In(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		.setIcon(THEME.tunnel, 0, c_white).iconPad(ui(6))
 		.setBaseSprite(THEME.button_hide_fill);
 	
+	static setRenderActive   = function() /*=>*/ { renderActive = true; return self; }
+	
 	static update = function(frame = CURRENT_FRAME) {
 		var _frm = inputs[1].value_from;
 		

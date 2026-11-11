@@ -1382,6 +1382,11 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	
 	////- UPDATE
 	
+	static setRenderActive = function(_ren) {
+		renderActive = _ren;
+		return self;
+	}
+	
 	static projectPreUpdate = function() {
 		cacheArrayCheck();
 	}
@@ -3607,8 +3612,8 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			
 			x = load_map[$ "x"] ?? 0;
 			y = load_map[$ "y"] ?? 0;
-			renderActive   = load_map[$ "render"]         ?? true;
-			load_igroup    = load_map[$ "ictx"]           ?? "";
+			setRenderActive(load_map[$ "render"] ?? true);
+			load_igroup   = load_map[$ "ictx"]   ?? "";
 			
 			attributes.show_preview   = load_map[$ "previewable"]    ?? attributes.show_preview;
 			attributes.show_parameter = load_map[$ "show_parameter"] ?? attributes.show_parameter;

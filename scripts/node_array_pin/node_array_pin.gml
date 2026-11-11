@@ -26,6 +26,8 @@ function Node_Array_Pin(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	
 	////- Nodes
 	
+	static setRenderActive   = function() /*=>*/ { renderActive = true; return self; }
+	
 	static update = function(frame = CURRENT_FRAME) {
 		var res  = [];
 		var ind  = 0;

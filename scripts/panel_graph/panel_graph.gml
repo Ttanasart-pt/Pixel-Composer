@@ -867,7 +867,8 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
         __temp_active = false;
         array_foreach(nodes_selecting, function(node, index) {
             if(index == 0) __temp_active = !node.renderActive;
-            node.renderActive = __temp_active;
+            node.setRenderActive(__temp_active);
+            return false;
         });
     }
 

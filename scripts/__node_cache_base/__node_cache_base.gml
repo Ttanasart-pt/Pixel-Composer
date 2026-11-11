@@ -14,11 +14,20 @@ function __Node_Cache(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 	
 	insp1button = button(function() /*=>*/ {
 		PANEL_GRAPH.cache_group_edit = PANEL_GRAPH.cache_group_edit == self? noone : self;
-		print(PANEL_GRAPH.cache_group_edit)
-		GraphRefresh();
-		
+		GraphRefresh(2);
 	}).setTooltip(__txt("Edit Group"))
 		.setIcon(THEME.cache_group, 0, COLORS._main_value_positive).iconPad(ui(6)).setBaseSprite(THEME.button_hide_fill);
+	
+	autoFetchButton = button(function() /*=>*/ {
+		attributes.cache_group = [];
+		cache_group_members    = [];
+		
+		var _nodes = getAllNodeFrom();
+		for( var i = 0, n = array_length(_nodes); i < n; i++ ) 
+			addNode(_nodes[i]);
+			
+	}).setTooltip(__txt("Auto Group"))
+		.setIcon(THEME.cache_group, 0, COLORS._main_icon).iconPad(ui(6)).setBaseSprite(THEME.button_hide_fill);
 	
 	////- Group
 	
@@ -33,7 +42,7 @@ function __Node_Cache(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 		array_remove(cache_group_members, _node);
 		
 		_node.cache_group  = noone;
-		_node.renderActive = true;
+		_node.setRenderActive(true);
 	}
 	
 	static addNode = function(_node) {
@@ -52,7 +61,7 @@ function __Node_Cache(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 		if(!attributes.serialize) return; 
 		
 		for( var i = 0, n = array_length(cache_group_members); i < n; i++ )
-			cache_group_members[i].renderActive = true;
+			cache_group_members[i].setRenderActive(true);
 		clearCache(true);
 	}
 	
@@ -62,7 +71,7 @@ function __Node_Cache(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 		
 		if(IS_PLAYING && IS_LAST_FRAME)
 		for( var i = 0, n = array_length(cache_group_members); i < n; i++ )
-			cache_group_members[i].renderActive = false;
+			cache_group_members[i].setRenderActive(false);
 	}
 	
 	static refreshCacheGroup = function() {
@@ -177,7 +186,10 @@ function __Node_Cache(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 	}
 	
 	static drawNodeBG = function(_x, _y, _mx, _my, _s) {
+		insp2button = undefined;
+		
 		if(PANEL_GRAPH.cache_group_edit == self) {
+			insp2button    = autoFetchButton;
 			draw_droppable = true;
 			for( var i = 0, n = array_length(cache_group_members); i < n; i++ )
 				cache_group_members[i].drawActive(2);

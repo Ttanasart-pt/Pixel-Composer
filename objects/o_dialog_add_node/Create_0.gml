@@ -1149,6 +1149,7 @@ event_inherited();
 	
 	search_start_time = 0;
 	searching_index   = 0;
+	search_index_stat = 0;
 	
 	search_lower  = "";
 	search_array  = [];
@@ -1161,14 +1162,15 @@ event_inherited();
 		.setAlign(fa_left).setAutoupdate().setHide(2);
 	tb_search.activate();
 	
-	function searchNodes() { 
-		if(search_string == "" || search_string == searching_str) return;
+	function searchNodes(_force = false) { 
+		if(search_string == "" || (search_string == searching_str && !_force)) return;
 		
 		// search_list = [];
 		ds_priority_clear(search_prlist);
 		
 		search_start_time = get_timer();
 		searching_index   = 0;
+		search_index_stat = NODE_SEARCH_INDEXED;
 		
 		searching_str = search_string;
 		search_lower  = string_lower(search_string);

@@ -12,9 +12,8 @@ function Node_Pin(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	
 	////- =Display
 	newInput(1, nodeValue_EButton( "Label Position", 0, [ "T", "B", "L", "R" ] )).rejectArray();
-	newInput(2, nodeValue_Float(       "Label Scale",    1 )).rejectArray();
-	newInput(3, nodeValue_Color(       "Label Color",    COLORS._main_text )).rejectArray();
-	
+	newInput(2, nodeValue_Float(   "Label Scale",    1 )).rejectArray();
+	newInput(3, nodeValue_Color(   "Label Color",    COLORS._main_text )).rejectArray();
 	// input 4
 	
 	newOutput(0, nodeValue_Output("Out", VALUE_TYPE.any, 0));
@@ -52,6 +51,8 @@ function Node_Pin(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	label_color = ca_white;
 	
 	////- Nodes
+	
+	static setRenderActive   = function() /*=>*/ { renderActive = true; return self; }
 	
 	static onValueFromUpdate = function() { onValueUpdate(); }
 	static onValueUpdate     = function() {
