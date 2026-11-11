@@ -1564,15 +1564,17 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		if(instanceBase)    return true;
 		
 		force_requeue = false;
+		
+		var _rs = animation_range_start;
+		var _re = animation_range_end;
+		if(animation_range_start != infinity && animation_range_start != animation_range_end) {
+			if(frame < animation_range_start || frame > animation_range_end) return false;
+		}
+		
 		__temp_frame  = frame;
 		if(array_any(inputs, function(inp,i) /*=>*/ {return inp.isActiveDynamic(__temp_frame)}))
 			return true;
 		
-		var _rs = animation_range_start;
-		var _re = animation_range_end;
-        if(animation_range_start != infinity && animation_range_start != animation_range_end)
-        	return frame >= animation_range_start && frame <= animation_range_end;
-        
         return false;
 	}
 	
