@@ -15,6 +15,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		index   = array_length(_connect == CONNECT_TYPE.input? node.inputs : node.outputs);
 		lIndex  = index;
 		type    = _type;
+		typeAny = type == VALUE_TYPE.any;
 		typeSig = undefined;
 		drawSig = undefined;
 		
@@ -2762,7 +2763,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 			
 			ghost_hover = noone;
 			
-		} else {
+		} else if(typeAny) {
 			var _sig = getDrawSignature();
 			
 			     if(is_undefined(_sig)) drawJunctionType(type, 0, 0, _s, _mx, _my, _aa);
@@ -2779,7 +2780,8 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 					_ox += jw;
 				}
 			}
-		}
+		} else 
+			drawJunctionType(type, 0, 0, _s, _mx, _my, _aa);
 		
 		graph_selecting = false;
 		
@@ -3643,7 +3645,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 			if((jx < params.minx && frx < params.minx) || (jx > params.maxx && frx > params.maxx) || 
 			   (jy < params.miny && fry < params.miny) || (jy > params.maxy && fry > params.maxy)) return noone;
 		}
-	
+		
 		var shx = to.draw_line_shift_x * _s;
 		var shy = to.draw_line_shift_y * _s;
 		var cx  = round((frx + jx) / 2 + shx);
@@ -3665,8 +3667,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 				var _colr = _selc? 1 : _fade;
 				
 				c0 = merge_color(bg, from.custom_color ?? from.color_display, _colr);
-				// c1 = merge_color(bg,   to.custom_color ??   to.color_display, _colr);
-				c1 = c0;
+				c1 = to.typeAny? c0 : merge_color(bg, to.custom_color ?? to.color_display, _colr);
 				
 				to.draw_blend_color = bg;
 				to.draw_blend       = _colr;
@@ -3674,8 +3675,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 				
 			} else {
 				c0 = from.custom_color ?? from.color_display;
-				// c1 =   to.custom_color ??   to.color_display;
-				c1 = c0;
+				c1 = to.typeAny? c0 : (to.custom_color ?? to.color_display);
 				
 				to.draw_blend_color = bg;
 				to.draw_blend       = -1;

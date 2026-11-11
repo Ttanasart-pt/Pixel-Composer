@@ -1228,8 +1228,6 @@ event_inherited();
 				var _alia = _nodeData.aliasArray;
 				for( var k = 0, p = array_length(_alis); k < p; k++ ) {
 					var mat = string_partial_match_array(_alia[k], search_array);
-					mat[0] -= 10;
-					
 					if(mat[0] >= _match[0]) {
 						_match = mat;
 						_param = {
@@ -1298,7 +1296,7 @@ event_inherited();
 				};
 				
 				ds_priority_add(search_prlist, searchData, _match[0]);
-				if(get_timer() - t > 20_000) {
+				if(get_timer() - t > 33_000) {
 					searching_index++;
 					return;
 				}

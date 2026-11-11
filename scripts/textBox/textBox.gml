@@ -307,7 +307,7 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 			}
 			
 			_val = evaluateFunction(_input_text);
-			if(!is_numeric(_val)) _val = 0;
+			if(is_string(_val)) _val = 0;
 		}
 		
 		if(no_empty && _val == "") 

@@ -286,13 +286,15 @@ function string_partial_match_array(strArray, keyArray, _arr = [0,[]]) {
 			
 			if(baseChr == keyChr) {
 				if(matchPrev) {
-					var textWrap = i > 0 && ind == 0;
 					matchCons++;
-					
-					weight += ((lenBase - ind) / lenBase) * lenKey;
-					weight += matchCons * 10 + wordStart * 10 + (ind == 0) * 10;
-					weight -= textWrap  * 10;
+					weight += matchCons * 10;
 				}
+				
+				weight += wordStart * 10 + (ind == 0) * 10;
+				weight += ((lenBase - ind) / lenBase) * lenKey;
+				
+				var textWrap = i > 0 && ind == 0;
+				weight -= textWrap  * 10;
 				
 				matchPrev = true;
 				matchAny  = true;

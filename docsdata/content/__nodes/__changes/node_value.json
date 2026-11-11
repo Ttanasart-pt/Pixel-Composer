@@ -1,5 +1,20 @@
 [
   {
+    "version": "1.22.2.010",
+    "changes": [
+      {
+        "date": "2026-11-11T03:56:07.695Z",
+        "node": "",
+        "commit": "**Sample Array**: Fix error on processing."
+      },
+      {
+        "date": "2026-11-11T03:56:10.786Z",
+        "node": "",
+        "commit": "**Sample Array**: Fix error on processing."
+      }
+    ]
+  },
+  {
     "version": "1.22.2.009",
     "changes": [
       {

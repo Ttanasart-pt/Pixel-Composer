@@ -119,11 +119,11 @@ function Node_Array_Sample(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 			inputs[3].setVisible(__mod == 0);
 			inputs[5].setVisible(__amoTyp == 1);
 			
-			var _d = array_get_depth(_arr);
+			var _d = array_get_depth(__arr);
 			if(_d == 0) return;
 		#endregion
 		
-		var _res = sampleArray(_arr, isig, _dim);
+		var _res = sampleArray(__arr, isig, __dim);
 		
 		outputs[0].setTypeSignature(_res[1]);
 		outputs[0].setValue(_res[0]);
