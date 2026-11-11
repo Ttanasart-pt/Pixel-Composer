@@ -1,5 +1,5 @@
 {
-    "name":          "Project Variant",
+    "name":          "Variant",
     "spr":           "s_node_randomizer_varient",
     "baseNode":      "Node_Randomizer_Varient",
     "pxc_version":    122020,

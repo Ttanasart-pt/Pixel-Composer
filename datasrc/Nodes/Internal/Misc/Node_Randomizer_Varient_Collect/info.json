@@ -1,0 +1,6 @@
+{
+    "name":          "Collect Variant",
+    "spr":           "s_node_randomizer_varient_collect",
+    "baseNode":      "Node_Randomizer_Varient_Collect",
+    "pxc_version":    122020,
+}

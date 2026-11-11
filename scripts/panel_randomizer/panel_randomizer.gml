@@ -3,6 +3,8 @@
 	globalvar  RANDOMIZER_HOVER;  RANDOMIZER_HOVER  = {};
 	globalvar _RANDOMIZER_HOVER; _RANDOMIZER_HOVER  = {};
 	
+	globalvar  RANDOMIZER_VARIANT_ITERATE_RESET;  RANDOMIZER_VARIANT_ITERATE_RESET = false;
+	
 	function cartesian_product(ranges) {
 	    var result = [[]];
 	    
@@ -74,7 +76,7 @@
 		y1 = 0;
 		h  = 0;
 		
-		preview_index = undefined;
+		varHigh = undefined;
 		
 		////- =Random
 		
@@ -461,6 +463,14 @@
 			return self;
 		}
 	}
+	
+	function Project_Randomizer_Varient_Reset(_project = PROJECT) {
+		var _nodes = _project.allNodes;
+		for( var i = 0, n = array_length(_nodes); i < n; i++ ) {
+			var node = _nodes[i];
+			if(is(node, Node_Randomizer_Varient_Collect)) node.resetArray();
+		}
+	}
 #endregion
 
 function Panel_Randomizer() : PanelContent() constructor {
@@ -511,6 +521,8 @@ function Panel_Randomizer() : PanelContent() constructor {
 		var x1 = ww - pd;
 		var yy = _y + ui(8);
 		
+		var edw = x1 * .4;
+			
 		var bs = hg;
 		var bc = [COLORS._main_icon, COLORS._main_icon_light];
 		
@@ -641,13 +653,14 @@ function Panel_Randomizer() : PanelContent() constructor {
 					_trk.Random();
 				bx -= ui(4);
 				
-				var vs  = ui(10);
-				var vx  = bx - ui(4) - vs;
-				var vy  = yy + hg / 2 - vs / 2;
-				
-				var vpd = ui(1);
-				
 				if(_trk.varUse) {
+					var vs  = ui(10);
+					var vx  = bx - ui(4) - vs;
+					var vy  = yy + hg / 2 - vs / 2;
+					
+					var vpd = ui(1);
+					var vx0 = pd + edw;
+				
 					for( var j = 0, m = array_length(_vars); j < m; j++ ) {
 						var v  = m-1-j;
 						var vh = hov && point_in_rectangle(_m[0], _m[1], vx - vpd, vy - vpd, vx + vs + vpd, vy + vs + vpd);
@@ -669,6 +682,12 @@ function Panel_Randomizer() : PanelContent() constructor {
 							draw_sprite_stretched_ext(THEME.palette_mask, 1, vx, vy, vs, vs, COLORS._main_accent, 1);
 							
 						vx -= vs + vpd*2 + 1;
+						
+						if(vx < vx0) {
+							draw_set_text(f_p4, fa_right, fa_center, COLORS._main_text_sub);
+							draw_text_add(vx + vs - ui(2), vy + vs / 2 - ui(1), $"+{m-j}");
+							break;
+						}
 					}
 				}
 				
@@ -690,8 +709,6 @@ function Panel_Randomizer() : PanelContent() constructor {
 				var _typeWidget = _trk.typeWidget;
 				var _editWidget = _trk.getEditWidget();
 				
-				var edw = x1 * .4;
-			
 				if(_typeWidget) {
 					var ew = x1 * .2;
 					var ex = bx - edw - ui(4) - ew;
@@ -755,6 +772,7 @@ function Panel_Randomizer() : PanelContent() constructor {
 					var vy = yy + hg + hg / 2 - vs / 2;
 					
 					var vpd = ui(1);
+					var vpx = edw - vs - ui(8);
 					
 					for( var j = 0, m = array_length(_vars); j < m; j++ ) {
 						var v  = j;
@@ -771,6 +789,12 @@ function Panel_Randomizer() : PanelContent() constructor {
 						}
 						
 						vx += vs + vpd*2 + 1;
+						
+						if(vx > vpx) {
+							draw_set_text(f_p4, fa_left, fa_center, COLORS._main_text_sub);
+							draw_text_add(vx + ui(2), vy + vs / 2 - ui(1), $"+{m-j}");
+							break;
+						}
 					}
 					
 					var vew = edw;
@@ -804,18 +828,18 @@ function Panel_Randomizer() : PanelContent() constructor {
 					bx -= ui(2);
 					vx1 = bx;
 					
-					var edt = _trk.getVarEdit();
-					var edx = vx0;
-					var edy = vey + hg / 2 - eh / 2;
-					var edw = vx1 - vx0;
-					var edh = eh;
+					var vedt = _trk.getVarEdit();
+					var vedx = vx0;
+					var vedy = vey + hg / 2 - eh / 2;
+					var vedw = vx1 - vx0;
+					var vedh = eh;
 					
-					var bw  = edw - bs - ui(2);
-					var dp  = new widgetParam(edx, edy, edw, edh, _trk.varAmo, undefined, _m, rx, ry).setFont(f_p3);
+					var bw   = vedw - bs - ui(2);
+					var dp   = new widgetParam(vedx, vedy, vedw, vedh, _trk.varAmo, undefined, _m, rx, ry).setFont(f_p3);
 					
-					edt.register(sc_randomize);
-					edt.setFocusHover(foc, hov);
-					edt.drawParam(dp);
+					vedt.register(sc_randomize);
+					vedt.setFocusHover(foc, hov);
+					vedt.drawParam(dp);
 					
 					hgh += veh + ui(4);
 				}
@@ -886,10 +910,10 @@ function Panel_Randomizer() : PanelContent() constructor {
 				var _vars = lb.varients;
 				var _vind = lb.varIndex;
 			
+				var bx = x1 - bs;
+				var by = scy + sch / 2 - bs / 2;
+				
 				if(!editing) {
-					var bx = x1 - bs;
-					var by = scy + sch / 2 - bs / 2;
-					
 					var bc = [COLORS._main_icon, COLORS._main_icon_light];
 					var bt = __txt("Randomize Section");
 					var bb = buttonInstant_Pad(noone, bx, by, bs, bs, _m, hov, foc, bt, THEME.icon_random, 0, bc, 1, ui(6));
@@ -897,55 +921,7 @@ function Panel_Randomizer() : PanelContent() constructor {
 					if(bb == 2) randomizeSection(lb);
 					bx -= ui(4);
 					
-					var edw = x1 * .4;
-					var vs  = ui(10);
-					var vx  = bx - ui(4) - vs;
-					var vy  = scy + sch / 2 - vs / 2;
-					var vx0 = pd + edw;
-					
-					var vpd = ui(1);
-					
-					for( var j = 0, m = array_length(_vars); j < m; j++ ) {
-						var v  = m-1-j;
-						var vh = hov && point_in_rectangle(_m[0], _m[1], vx - vpd, vy - vpd, vx + vs + vpd, vy + vs + vpd);
-						if(section_var_setting == lb) vh = hov && _m[0] >= vx - vpd && _m[0] <= vx + vs + vpd;
-						
-						if(v == _vind)
-							draw_sprite_stretched_ext(THEME.palette_mask, 1, vx, vy, vs, vs, COLORS._main_icon, 1);
-							
-						draw_sprite_stretched_ext(THEME.palette_mask_outline, 1, vx, vy, vs, vs, COLORS._main_icon, .75);
-						if(vh) {
-							_hv = false;
-							_section_var_hover     = lb;
-							_section_var_hover_ind = _vars[v];
-							
-							draw_sprite_stretched_add(THEME.palette_mask_outline, 1, vx, vy, vs, vs, COLORS._main_icon, 1);
-							
-							if(mouse_lpress(foc)) section_var_setting = lb;
-							if(section_var_setting == lb) lb.setVarients(v);
-						}
-						
-						vx -= vs + vpd*2 + 1;
-						
-						if(vx < vx0) {
-							draw_set_text(f_p4, fa_right, fa_center, COLORS._main_text_sub);
-							draw_text_add(vx + vs - ui(2), vy + vs / 2 - ui(1), $"+{m-j}");
-							break;
-						}
-					}
-				
-					if(_hv && pFOCUS) {
-	                	if(DOUBLE_CLICK) 
-	                		_cAll = _coll? -1 : 1;
-	                		
-	                	else if(mouse_lpress()) 
-	                    	lb.coll = !lb.coll;
-					}
-                }
-	                
-				if(editing) {
-					var by = scy + sch / 2 - bs / 2;
-					
+				} else {
 					var bx = pd;
 					var bc = COLORS._main_icon;
 					if(buttonInstant_Pad(noone, bx, by, bs, bs, _m, hov, foc, "", THEME.hamburger_s, 0, bc, 1, ui(10)) == 2) {
@@ -965,6 +941,56 @@ function Panel_Randomizer() : PanelContent() constructor {
 						lb.generateVarients();
 					bx -= ui(4);
 					
+				}
+				
+				var edw = x1 * .4;
+				var vs  = ui(10);
+				var vx  = bx - ui(4) - vs;
+				var vy  = scy + sch / 2 - vs / 2;
+				var vx0 = pd + edw;
+				
+				var vpd = ui(1);
+				
+				for( var j = 0, m = array_length(_vars); j < m; j++ ) {
+					var v  = m-1-j;
+					var vh = hov && point_in_rectangle(_m[0], _m[1], vx - vpd, vy - vpd, vx + vs + vpd, vy + vs + vpd);
+					if(section_var_setting == lb) vh = hov && _m[0] >= vx - vpd && _m[0] <= vx + vs + vpd;
+					
+					if(v == _vind)
+						draw_sprite_stretched_ext(THEME.palette_mask, 1, vx, vy, vs, vs, COLORS._main_icon, 1);
+						
+					draw_sprite_stretched_ext(THEME.palette_mask_outline, 1, vx, vy, vs, vs, COLORS._main_icon, .75);
+					if(vh) {
+						_hv = false;
+						_section_var_hover     = lb;
+						_section_var_hover_ind = _vars[v];
+						
+						draw_sprite_stretched_add(THEME.palette_mask_outline, 1, vx, vy, vs, vs, COLORS._main_icon, 1);
+						
+						if(mouse_lpress(foc)) section_var_setting = lb;
+						if(section_var_setting == lb) lb.setVarients(v);
+					}
+					
+					vx -= vs + vpd*2 + 1;
+					
+					if(vx < vx0) {
+						draw_set_text(f_p4, fa_right, fa_center, COLORS._main_text_sub);
+						draw_text_add(vx + vs - ui(2), vy + vs / 2 - ui(1), $"+{m-j}");
+						break;
+					}
+				}
+				
+				if(!editing) {
+					if(_hv && pFOCUS) {
+	                	if(DOUBLE_CLICK) 
+	                		_cAll = _coll? -1 : 1;
+	                		
+	                	else if(mouse_lpress()) 
+	                    	lb.coll = !lb.coll;
+					}
+                }
+	                
+				if(editing) {
 					draw_set_text(f_p3, fa_left, fa_center, _hv? COLORS._main_text : COLORS._main_text_sub);
 					var tx = pd + bs + ui(4);
 					var ty = _yy + hg / 2

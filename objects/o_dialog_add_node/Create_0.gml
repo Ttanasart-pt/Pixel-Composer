@@ -1139,26 +1139,51 @@ event_inherited();
 #endregion
 
 #region search
+	if(NODE_SEARCH_INDEXED == 0) nodeIndexStart();
+	
 	search_string = "";
+	searching_str = "";
+	searching     = false;
 	search_list   = [];
+	search_prlist = ds_priority_create();
+	
+	search_start_time = 0;
+	searching_index   = 0;
+	
+	search_lower  = "";
+	search_array  = [];
+	
 	search_steam  = true;
 	march_array   = [0,0];
-	KEYBOARD_RESET
 	
+	KEYBOARD_RESET
 	tb_search = textBox_Text(function(str) /*=>*/ { search_string = string(str); searchNodes(); })
 		.setAlign(fa_left).setAutoupdate().setHide(2);
 	tb_search.activate();
 	
 	function searchNodes() { 
-		search_list = [];
-		var pr_list = ds_priority_create();
+		if(search_string == "" || search_string == searching_str) return;
 		
+		// search_list = [];
+		ds_priority_clear(search_prlist);
+		
+		search_start_time = get_timer();
+		searching_index   = 0;
+		
+		searching_str = search_string;
+		search_lower  = string_lower(search_string);
+		search_array  = string_to_array(search_lower);
+		
+		searching    = true;
+		
+		// print($"\nSearch start {search_lower}")
+	}
+	
+	function searchingNodes() { 
 		var t = get_timer();
+		// print($"    > Searching {search_lower} [{searching_index}/{array_length(NODE_INDEX)}]")
 		
-		var search_lower = string_lower(search_string);
-		var search_map	 = ds_map_create();
-		
-		#region Nodes
+		#region Internal Add
 			if(has(ALL_NODES, search_string)) {
 				var _node = ALL_NODES[$ search_string];
 				var searchData = { 
@@ -1171,152 +1196,118 @@ event_inherited();
 					path   : undefined, 
 				};
 				
-				ds_priority_add(pr_list, searchData, 99999);
+				ds_priority_add(search_prlist, searchData, 99999);
 			}
+		#endregion
+		
+		#region Nodes Index
+			var ctxStr   = instanceof(context);
 			
-			var curr_group    = "";
-			var curr_groupi   = 0;
-			var curr_subgroup = "";
-			
-			for( var i = 0, n = array_length(category); i < n; i++ ) {
-				var cat = category[i];
+			for(n = array_length(NODE_INDEX); searching_index < n; searching_index++ ) {
+				var _nodeData = NODE_INDEX[searching_index];
+				if(!_nodeData.visible) continue;
 				
-				curr_group    = "";
-				curr_groupi   = 0;
-				curr_subgroup = "";
-	
-				if(!has(cat, "list"))
+				var _node    = _nodeData.node;
+				
+				var _name    = _nodeData.name;
+				var _nameArr = _nodeData.nameArr;
+				
+				var _path    = _nodeData.path;
+				var _mtch    = _nodeData.matchRes;
+				
+				var _catFilter = _path.cateFilter;
+				if(_catFilter != undefined && !has(_catFilter, ctxStr)) 
 					continue;
 				
-				if(cat[$ "filter"] != undefined && !array_exists(cat.filter, instanceof(context)))
-					continue;
+				var _match     = string_partial_match_array(_nameArr, search_array, _mtch);
+				var _matchNode = _match[0] > -1000;
+				var _param     = "";
 				
-				var _content = cat.list;
-				for( var j = 0, m = array_length(_content); j < m; j++ ) {
-					var _node = _content[j];
+				// Alias
+				var _alis = _nodeData.alias;
+				var _alia = _nodeData.aliasArray;
+				for( var k = 0, p = array_length(_alis); k < p; k++ ) {
+					var mat = string_partial_match_array(_alia[k], search_array);
+					mat[0] -= 10;
 					
-					if(is_string(_node)) {
-						if(string_starts_with(_node, "/")) 
-							curr_subgroup = _node;
-						else {
-							curr_group    = _node;
-							curr_subgroup = "";
-							curr_groupi++;
-						}
-						continue;
+					if(mat[0] >= _match[0]) {
+						_match = mat;
+						_param = {
+							type  : "alias",
+							value : _node.tags[k]
+						};
 					}
-					
-					if(ds_map_exists(search_map, _node)) continue;
-					search_map[? _node] = 1;
-					
-					var _name  = string_lower(_node.getName());
-					var _match = string_partial_match_res(_name, search_lower);
-					var _param = "";
-					
-					var _matchNode = _match[0] > -9999;
-					
-					var _path = {
-						node       : _node, 
-						category   : cat,
-						categoryId : i, 
-						group      : curr_group, 
-						groupId    : curr_groupi - 1, 
-						subgroup   : curr_subgroup, 
-					};
-					
-					// Alias
-					for( var k = 0, p = array_length(_node.tags); k < p; k++ ) {
-						var mat = string_partial_match_res(_node.tags[k], search_lower);
-						mat[0] -= 50;
-						
-						if(mat[0] >= _match[0]) {
-							_match = mat;
-							_param = {
-								type  : "alias",
-								value : _node.tags[k]
-							};
-						}
-					}
-					var _matchNode = _match[0] > -9999;
-					
-					/// Preset
-					if(is(_node, NodeObject) && has(PRESETS_MAP, _node.nodeName)) {
-						var pres = PRESETS_MAP[$ _node.nodeName];
-						var keys = struct_get_names(pres);
-						
-						for( var k = 0, p = array_length(keys); k < p; k++ ) {
-							var key = keys[k];
-							if(key == "_default" || key == "_values") continue;
-							
-							var preset = pres[$ key];
-							if(preset.content == undefined) 
-								preset.content = json_load_struct(preset.path);
+				}
+				var _matchNode = _match[0] > -1000;
 				
-							var isNode = preset.content[$ "asNode"] ?? false;
-							if(!isNode && !_matchNode) continue;
+				// Preset
+				var _pres = _nodeData.preset;
+				for( var p = 0, m = array_length(_pres); p < m; p++ ) {
+					var _presetData = _pres[p];
+					var pname = _presetData.name;
+					var pnode = _presetData.isNode;
+					if(!pnode && !_matchNode) continue;
+					
+					var mat = string_partial_match_res(pname, search_lower);
+					if(!pnode) mat[0] -= 10;
+					
+					if(mat[0] > 0) {
+						if(!pnode) mat[1] = array_copy_trim_start(mat[1], string_length(_name) + 1);
+						
+						var searchData = { 
+							search : true, 
+							name   : _node.name, 
+							node   : _node, 
+							param  : {
+								type  : "preset",
+								value : _presetData.key,
+								data  : _presetData.preset, 
+							}, 
 							
-							var _fname = isNode? string_lower(key) : $"{_name} {string_lower(key)}";
-							var mat = string_partial_match_res(_fname, search_lower);
-							if(!isNode) mat[0] -= 10;
-							
-							if(mat[0] > -9999) {
-								if(!isNode) mat[1] = array_copy_trim_start(mat[1], string_length(_name) + 1);
-								
-								var searchData = { 
-									search : true, 
-									name   : _node.name, 
-									node   : _node, 
-									param  : {
-										type  : "preset",
-										value : key,
-										data  : preset, 
-									}, 
-									
-									match  : mat, 
-									weight : mat[0], 
-									path   : _path, 
-								};
-								
-								ds_priority_add(pr_list, searchData, mat[0]);
-							}
-						}
+							match  : mat, 
+							weight : mat[0], 
+							path   : _path, 
+						};
+						
+						ds_priority_add(search_prlist, searchData, mat[0]);
+					}
+				}
+				
+				if(!_matchNode) continue;
+				
+				// Fav
+				if(is(_node, NodeObject)) {
+					if(_match[0] > -1000 && PREFERENCES.dialog_add_node_search_fav && has(NODE_FAV_MAP, _node.nodeName)) 
+						_match[0] += 10000;
+					
+					if(PREFERENCES.dialog_add_node_search_typ && is(junction_called, NodeValue)) {
+						var _b = junction_called.connect == CONNECT_TYPE.input? _node.output_type_mask : _node.input_type_mask;
+						_match[0] += bool(_b & value_bit(junction_called.type)) * 100;
 					}
 					
-					if(!_matchNode) continue;
-					
-					// Fav
-					if(is(_node, NodeObject)) {
-						if(!_node.isVisible()) continue;
-						
-						if(_match[0] > -9000 && PREFERENCES.dialog_add_node_search_fav && struct_exists(NODE_FAV_MAP, _node.nodeName)) 
-							_match[0] += 10000;
-						
-						if(PREFERENCES.dialog_add_node_search_typ && is(junction_called, NodeValue)) {
-							var _b = junction_called.connect == CONNECT_TYPE.input? _node.output_type_mask : _node.input_type_mask;
-							_match[0] += bool(_b & value_bit(junction_called.type)) * 100;
-						}
-						
-					}
-					
-					var searchData = { 
-						search : true, 
-						name   : _node.name, 
-						node   : _node, 
-						param  : _param, 
-						match  : _match, 
-						weight : _match[0], 
-						path   : _path, 
-					};
-					
-					ds_priority_add(pr_list, searchData, _match[0]);
+				}
+				
+				var searchData = { 
+					search : true, 
+					name   : _node.name, 
+					node   : _node, 
+					param  : _param, 
+					match  : _match, 
+					weight : _match[0], 
+					path   : _path, 
+				};
+				
+				ds_priority_add(search_prlist, searchData, _match[0]);
+				if(get_timer() - t > 20_000) {
+					searching_index++;
+					return;
 				}
 			}
-			ds_map_destroy(search_map);
 		#endregion
 		
 		#region Collection
 			if(PREFERENCES.dialog_add_node_collection)
-				searchCollectionData(pr_list, search_string, search_steam);
+				searchCollectionData(search_prlist, search_string, search_steam);
 		#endregion
 		
 		#region Tunnel
@@ -1343,7 +1334,7 @@ event_inherited();
 						path   : undefined, 
 					};
 					
-					ds_priority_add(pr_list, searchData, _match[0]);
+					ds_priority_add(search_prlist, searchData, _match[0]);
 				}
 				
 			} else {
@@ -1365,18 +1356,28 @@ event_inherited();
 						path   : undefined, 
 					};
 					
-					ds_priority_add(pr_list, searchData, _match[0]);
+					ds_priority_add(search_prlist, searchData, _match[0]);
 				}
 				
 			}
 		#endregion
 		
+		// print($"search for '{search_string}' completed in {(get_timer() - search_start_time) / 1000}ms");
+		searching = false;
+	}
+	
+	function searchNodeSort() {
 		var _curr_weight = undefined;
 		var _curr_arr    = [];
+		search_list      = [];
 		
-		repeat(ds_priority_size(pr_list)) {
-			var _data = ds_priority_delete_max(pr_list);
+		// print($"    > Search sort {search_lower} [{ds_priority_size(search_prlist)}]")
+		// print($"\n================== {ds_priority_size(search_prlist)}");
+		
+		repeat(ds_priority_size(search_prlist)) {
+			var _data = ds_priority_delete_max(search_prlist);
 			var _wigh = _data.weight;
+			// print(_data.name, _wigh)
 			
 			if(_curr_weight != _wigh) { // group node with the same weight and sort alphanumerically
 				if(!array_empty(_curr_arr)) {
@@ -1397,9 +1398,6 @@ event_inherited();
 			array_append(search_list, _curr_arr);
 		}
 		
-		ds_priority_destroy(pr_list);
-		
-		// print($"search for '{search_lower}' completed in {(get_timer() - t) / 1000}ms");
 	}
 	
 	search_pane = new scrollPane(dialog_w - ui(36), dialog_h - ui(66), function(_y, _m) {

@@ -213,6 +213,22 @@ DIALOG_DRAW_BG
 		tb_search.draw(tx, ty, tw, th, search_string, mouse_ui);
 		draw_sprite_stretched_ext(THEME.textbox, 2, tx, ty, tw, th, COLORS._main_icon, .5);
 		
+		if(NODE_SEARCH_INDEXED == 1) {
+			var ix = tx + th / 2 + ui(8);
+			var iy = ty + th / 2;
+			
+			draw_sprite_ui_uniform(THEME.loading, 0, ix, iy, .35, COLORS._main_icon, 1, current_time / 3);
+			draw_set_text(f_p3, fa_left, fa_center, COLORS._main_text_sub);
+			draw_text_add(ix + th / 2, iy, __txt("Indexing..."));
+		}
+		
+		if(searching) {
+			var ix = tx + tw - th / 2;
+			var iy = ty + th / 2;
+			
+			draw_sprite_ui_uniform(THEME.loading, 0, ix, iy, .35, COLORS._main_icon, 1, current_time / 3);
+		}
+		
 	} else {
 		draw_sprite_stretched_ext(THEME.textbox, 5, tx, ty, tw, th);
 		draw_sprite_stretched_ext(THEME.textbox, 2, tx, ty, tw, th, COLORS._main_accent);

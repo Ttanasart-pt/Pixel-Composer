@@ -168,7 +168,7 @@ function string_partial_match(str, key) {
 	return -9999;
 }
 
-function string_partial_match_res(str, key, _arr = [0,0]) {
+function string_partial_match_res(str, key, _arr = [0,[]]) {
 	if(str == key) {
 		_arr[0] = 9999;
 		_arr[1] = array_create(string_length(str) + 1, 1);
@@ -177,6 +177,7 @@ function string_partial_match_res(str, key, _arr = [0,0]) {
 	
 	static strArray = array_create(1000);
     static keyArray = array_create(1000);
+	static _matCrr  = array_create(1000);
     
 	var lenBase = string_length(str);
 	var lenKey  = string_length(key);
@@ -186,13 +187,12 @@ function string_partial_match_res(str, key, _arr = [0,0]) {
 		return _arr;
 	}
 	
-	var _matRng = array_create(lenBase + 1, 0);
-	var _matCrr = array_create(lenBase + 1, 0);
-	var _matchw = -9999;
-	
     for(var i = 0; i < lenBase; i++) strArray[i] = string_char_at(str, i + 1);
     for(var i = 0; i < lenKey; i++)  keyArray[i] = string_char_at(key, i + 1);
     
+	var _matRng = array_verify(_arr[1], lenBase + 1);
+	var _matchw = -9999;
+	
 	for( var i = 0; i < lenBase; i++ ) {
 		var keyInd = 0;
 		var keyChr = keyArray[keyInd];
@@ -213,7 +213,9 @@ function string_partial_match_res(str, key, _arr = [0,0]) {
 			if(baseChr == keyChr) {
 				if(matchPrev) {
 					matchCons++;
-					weight += ((lenBase - ind) / lenBase) * 20 + matchCons * 10 + wordStart * 10;
+					
+					weight += ((lenBase - ind) / lenBase) * lenKey;
+					weight += matchCons * 10 + wordStart * 10 + (ind == 0) * 10;
 				}
 				
 				matchPrev = true;
@@ -243,6 +245,95 @@ function string_partial_match_res(str, key, _arr = [0,0]) {
 			array_copy(_matRng, 0, _matCrr, 0, lenBase + 1);
 		}
 	}
+	
+	_matchw -= abs(lenBase - lenKey) * 1;
+	
+	_arr[0] = _matchw;
+	_arr[1] = _matRng;
+	return _arr;
+}
+
+function string_partial_match_array(strArray, keyArray, _arr = [0,[]]) {
+	static _matCrr  = array_create(1000);
+    
+	var lenBase = array_length(strArray);
+	var lenKey  = array_length(keyArray);
+	
+	if(lenBase == 0 || lenKey == 0) {
+		_arr[0] = -9999;
+		return _arr;
+	}
+	
+	var _matRng = array_verify(_arr[1], lenBase + 1);
+	var _matchw = -9999;
+	var a = 0;
+	
+	for( var i = 0; i < lenBase; i++ ) {
+		var keyInd = 0;
+		var keyChr = keyArray[keyInd];
+		var weight = 0;
+		
+		var wordStart = i == 0 || strArray[i-1] == " ";
+		var matchPrev = false;
+		var matchCons = 0;
+		var matchAll  = lenBase == lenKey;
+		var matchAny  = false;
+		var foundAll  = false;
+			
+		for( var j = 0; j < lenBase && keyInd < lenKey; j++ ) {
+			var ind = (i + j) % lenBase;
+			var baseChr  = strArray[ind];
+			
+			if(baseChr == keyChr) {
+				if(matchPrev) {
+					var textWrap = i > 0 && ind == 0;
+					matchCons++;
+					
+					weight += ((lenBase - ind) / lenBase) * lenKey;
+					weight += matchCons * 10 + wordStart * 10 + (ind == 0) * 10;
+					weight -= textWrap  * 10;
+				}
+				
+				matchPrev = true;
+				matchAny  = true;
+				
+				_matCrr[ind+1] = 1;
+				
+				keyInd++;
+				if(keyInd >= lenKey) {
+					foundAll = true;
+					break;
+				}
+				
+				keyChr = keyArray[keyInd];
+				
+			} else {
+				_matCrr[ind+1] = 0;
+				matchCons      = 0;
+				matchPrev      = false;
+				matchAll       = false;
+			}
+			
+			wordStart = baseChr == " ";
+		}
+		
+		if(!matchAny) continue;
+		weight -= abs(keyInd - lenKey) * 10;
+		
+		for(j+=2; j < lenBase; j++ ) {
+			var ind = (i + j) % lenBase;
+			_matCrr[ind] = 0;
+		}
+		
+		weight += matchAll * 100;
+		
+		if(weight > _matchw) {
+			_matchw = weight;
+			array_copy(_matRng, 0, _matCrr, 0, lenBase + 1);
+		}
+	}
+	
+	_matchw -= abs(lenBase - lenKey) * 1;
 	
 	_arr[0] = _matchw;
 	_arr[1] = _matRng;

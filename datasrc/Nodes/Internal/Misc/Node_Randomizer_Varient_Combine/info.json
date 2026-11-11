@@ -1,0 +1,6 @@
+{
+    "name":          "Compose Variant",
+    "spr":           "s_node_randomizer_varient_combine",
+    "baseNode":      "Node_Randomizer_Varient_Combine",
+    "pxc_version":    122020,
+}

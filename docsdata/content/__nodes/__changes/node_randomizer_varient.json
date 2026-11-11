@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.22.2.010",
+    "changes": [
+      {
+        "date": "2026-11-11T02:54:42.780Z",
+        "node": "Add Node",
+        "commit": "**Add Node**: Improve search speed."
+      }
+    ]
+  },
+  {
     "version": "1.22.2.009",
     "changes": [
       {

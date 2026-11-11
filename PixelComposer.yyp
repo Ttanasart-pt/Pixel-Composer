@@ -2949,6 +2949,8 @@
     {"id":{"name":"node_random_tile","path":"scripts/node_random_tile/node_random_tile.yy",},},
     {"id":{"name":"node_random","path":"scripts/node_random/node_random.yy",},},
     {"id":{"name":"node_randomizer_varient","path":"scripts/node_randomizer_varient/node_randomizer_varient.yy",},},
+    {"id":{"name":"node_randomizer_varient_collect","path":"scripts/node_randomizer_varient_collect/node_randomizer_varient_collect.yy",},},
+    {"id":{"name":"node_randomizer_varient_combine","path":"scripts/node_randomizer_varient_combine/node_randomizer_varient_combine.yy",},},
     {"id":{"name":"node_rate_remap","path":"scripts/node_rate_remap/node_rate_remap.yy",},},
     {"id":{"name":"node_raymarching","path":"scripts/node_raymarching/node_raymarching.yy",},},
     {"id":{"name":"node_rd","path":"scripts/node_rd/node_rd.yy",},},
