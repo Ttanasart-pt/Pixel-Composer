@@ -85,15 +85,12 @@ function Node_Armature_From_Path(_x, _y, _group = noone) : Node(_x, _y, _group) 
 		
 		bone.resetPose().setPosition();
 		bone_bbox = bone.bbox();
-		
 		outputs[0].setValue(bone);
 		
 	}
 	
 	
 	////- Draw
-	
-	static getPreviewBoundingBox = function() /*=>*/ {return new BBOX().fromPoints(bone_bbox[0], bone_bbox[1], bone_bbox[2], bone_bbox[3])};
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
 		var bbox = draw_bbox;

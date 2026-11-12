@@ -489,43 +489,6 @@ function Node_Armature_Pose(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	attributes.highlight_animation = false;
 	array_push(attributeEditors, Node_Attribute("Highlight Animation", function() /*=>*/ {return attributes.highlight_animation}, function() /*=>*/ {return new checkBox(function() /*=>*/ {return toggleAttribute("highlight_animation")})}));
 	
-	static setBone = function() {
-		var _b = getInputData(0);
-		if(!is(_b, __Bone)) { boneHash = ""; return; }
-		
-		var _h = _b.getHash();
-		if(boneHash == _h) return;
-		
-		boneHash  = _h;
-		bonePose  = _b.clone().connect();
-		bone_array = bonePose.toArray();
-		
-		var _inputs = [];
-		for( var i = 0; i < input_fix_len; i++) _inputs[i] = inputs[i];
-		
-		var _input_display_list = array_clone(input_display_list_raw, 1);
-		
-		for( var i = 0, n = array_length(bone_array); i < n; i++ ) {
-			var bone = bone_array[i];
-			var _idx = array_length(_inputs);
-			var _inp;
-			
-			array_push(_input_display_list, _idx);
-			
-			if(has(boneMap, bone.ID)) {
-				_inp = boneMap[$ bone.ID];
-				_inp.index = _idx;
-				
-			} else
-				_inp = createNewInput(, bone);
-			
-			array_push(_inputs, _inp);
-		}
-		
-		inputs = _inputs;
-		input_display_list = _input_display_list;
-	}
-	
 	////- Tools
 	
 	tool_transform = new NodeTool( "Transform Mode", THEME.tools_2d_move );
@@ -918,19 +881,55 @@ function Node_Armature_Pose(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	
 	////- Update
 	
-	static update = function(frame = CURRENT_FRAME) {
-		setBone();
-		if(!is(bonePose, __Bone)) return;
+	static setBone = function() {
+		var _b = getInputData(0);
+		if(!is(_b, __Bone)) { boneHash = ""; return; }
 		
+		var _h = _b.getHash();
+		if(boneHash == _h) return;
+		
+		boneHash   = _h;
+		bonePose   = _b.clone().connect();
+		bone_array = bonePose.toArray();
+		bonePose.constrains = _b.constrains;
+		
+		var _inputs = [];
+		for( var i = 0; i < input_fix_len; i++) _inputs[i] = inputs[i];
+		
+		var _input_display_list = array_clone(input_display_list_raw, 1);
+		
+		for( var i = 0, n = array_length(bone_array); i < n; i++ ) {
+			var bone = bone_array[i];
+			var _idx = array_length(_inputs);
+			var _inp;
+			
+			array_push(_input_display_list, _idx);
+			
+			if(has(boneMap, bone.ID)) {
+				_inp = boneMap[$ bone.ID];
+				_inp.index = _idx;
+				
+			} else
+				_inp = createNewInput(, bone);
+			
+			array_push(_inputs, _inp);
+		}
+		
+		inputs = _inputs;
+		input_display_list = _input_display_list;
+	}
+	
+	static update = function(frame = CURRENT_FRAME) {
 		#region data
+			setBone();
+			if(!is(bonePose, __Bone)) return;
+			
 			var _b   = getInputData( 0);
 			var _pos = getInputData( 1);
 			var _rot = getInputData( 2);
 		#endregion
 		
 		bonePose.resetPose().setPosition();
-		bonePose.constrains = _b.constrains;
-		
 		outputs[0].setValue(bonePose);
 		
 		var bArrRaw = _b.toArray();
@@ -968,8 +967,6 @@ function Node_Armature_Pose(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	}
 	
 	////- Draw
-	
-	static getPreviewBoundingBox = function() { return new BBOX().fromPoints(bone_bbox[0], bone_bbox[1], bone_bbox[2], bone_bbox[3]); }
 	
 	static postApplyDeserialize = function() {
 		for( var i = input_fix_len; i < array_length(inputs); i += data_length ) {

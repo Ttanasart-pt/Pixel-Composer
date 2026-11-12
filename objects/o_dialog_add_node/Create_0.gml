@@ -574,6 +574,9 @@ event_inherited();
 			name = __txt(name);
 			draw_text_add(_tx, _ty, name);
 			
+			// if(NODE_SEARCH_INDEXED == 1 && NODE_INDEX_curr_cat == cat)
+			// 	draw_sprite_ui_uniform(THEME.circle_16, 0, ww - ui(8), _ty, .5, COLORS._main_icon, .5);
+			
 			if(_is_extra) {
 				var _cx = _tx + string_width(name) + ui(4);
 				var _cy = _ty - string_height(name) / 2 + ui(6);
@@ -1279,11 +1282,11 @@ event_inherited();
 				// Fav
 				if(is(_node, NodeObject)) {
 					if(_match[0] > -1000 && PREFERENCES.dialog_add_node_search_fav && has(NODE_FAV_MAP, _node.nodeName)) 
-						_match[0] += 10000;
+						_match[0] += 100;
 					
 					if(PREFERENCES.dialog_add_node_search_typ && is(junction_called, NodeValue)) {
 						var _b = junction_called.connect == CONNECT_TYPE.input? _node.output_type_mask : _node.input_type_mask;
-						_match[0] += bool(_b & value_bit(junction_called.type)) * 100;
+						_match[0] += bool(_b & value_bit(junction_called.type)) * 5;
 					}
 					
 				}
@@ -1299,10 +1302,7 @@ event_inherited();
 				};
 				
 				ds_priority_add(search_prlist, searchData, _match[0]);
-				if(get_timer() - t > 33_000) {
-					searching_index++;
-					return;
-				}
+				if(get_timer() - t > 50_000) { searching_index++; return; }
 			}
 		#endregion
 		

@@ -59,8 +59,7 @@ function __Bone(_parent = noone, _distance = 0, _direction = 0, _angle = 0, _len
 	}
 	
 	static findBoneByName = function(_name) {
-		if(string_trim(name) == string_trim(_name)) 
-			return self;
+		if(string_trim(name) == string_trim(_name)) return self;
 		
 		for( var i = 0, n = array_length(childs); i < n; i++ ) {
 			var b = childs[i].findBoneByName(_name);
@@ -804,29 +803,45 @@ function __Bone(_parent = noone, _distance = 0, _direction = 0, _angle = 0, _len
 	static clone = function() {
 		var _b = new __Bone(parent, distance, direction, angle, length);
 		
-		_b.angle     = angle;
-		_b.length    = length;
-		_b.distance  = distance;
-		_b.direction = direction;
+		_b.angle          = angle;
+		_b.length         = length;
+		_b.distance       = distance;
+		_b.direction      = direction;
 		
-		_b.ID		     = ID;
-		_b.name		     = name;
-		_b.is_main	     = is_main;
-		_b.parent_anchor = parent_anchor;
+		_b.ID             = ID;
+		_b.name           = name;
+		_b.is_main        = is_main;
+		_b.parent_anchor  = parent_anchor;
 		
-		_b.control       = control;
-		_b.IKlength		 = IKlength;
-		_b.IKTargetID	 = IKTargetID;
+		_b.control        = control;
+		_b.IKlength       = IKlength;
+		_b.IKTargetID     = IKTargetID;
 		
-		_b.apply_rotation	 = apply_rotation;
-		_b.apply_scale		 = apply_scale;
+		_b.apply_rotation = apply_rotation;
+		_b.apply_scale    = apply_scale;
 		
+		_b.pose_distance     = pose_distance;
+		_b.pose_direction    = pose_direction;
+		_b.pose_angle        = pose_angle;
+		_b.pose_length       = pose_length;
+		
+		_b.pose_posit        = [ pose_posit[0], pose_posit[1] ];
+		_b.pose_rotate       = pose_rotate;
+		_b.pose_scale        = pose_scale;
+		
+		_b.pose_local_posit  = [ pose_local_posit[0], pose_local_posit[1] ];
+		_b.pose_local_rotate = pose_local_rotate;
+		_b.pose_local_scale  = pose_local_scale;
+		
+		_b.pose_apply_posit  = [ pose_apply_posit[0], pose_apply_posit[1] ];
+		_b.pose_apply_rotate = pose_apply_rotate;
+		_b.pose_apply_scale  = pose_apply_scale;
 		
 		for( var i = 0, n = array_length(childs); i < n; i++ )
 			_b.addChild(childs[i].clone());
 			
 		__b = _b;
-		_b.constrains = array_map(constrains, function(c) /*=>*/ {return new __Bone_Constrain(__b).deserialize(c.serialize())});
+		_b.constrains = array_map(constrains, function(c,_) /*=>*/ {return new __Bone_Constrain(__b).deserialize(c.serialize())});
 		
 		return _b;
 	}
@@ -851,8 +866,13 @@ function __Bone(_parent = noone, _distance = 0, _direction = 0, _angle = 0, _len
 		for( var i = 0, n = array_length(childs); i < n; i++ )
 			childHash += childs[i].getHash() + ",";
 		
-		var h = $"{name} [{ID}] : {parent_anchor}, [{IKlength}, {IKTargetID}], [{apply_scale}, {apply_rotation}], [{childHash}]";
-	    return sha1_string_unicode(h);
+		var h  = $"{name}[{ID}]:{parent_anchor},";
+			h += $"[{distance},{direction},{length},{angle}],";
+		    h += $"[{IKlength},{IKTargetID}],";
+		    h += $"[{apply_scale},{apply_rotation}],";
+		    h += $"[{childHash}]";
+		
+	    return md5_string_utf8(h);
 	}
 	
 	static getSpriteIndex = function() {

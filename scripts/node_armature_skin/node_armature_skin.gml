@@ -54,10 +54,10 @@ function Node_Armature_Skin(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		if(!is(_b, __Bone)) { boneHash = ""; return; }
 		
 		var _h = _b.getHash();
-		if(boneHash == _h) return;
-		
-		boneHash   = _h;
 		bone_array = _b.toArray();
+		
+		if(boneHash == _h) return;
+		boneHash   = _h;
 		
 		var _inputs = [];
 		array_copy(_inputs, 0, inputs, 0, input_fix_len);
@@ -184,7 +184,6 @@ function Node_Armature_Skin(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		
 		_outSurf = surface_verify(_outSurf, _dim[0], _dim[1]);
 		surface_set_shader(_outSurf, sh_armature_skin_render);
-			// for( var i = 0, n = array_length(bone_array); i < n; i++ ) {
 			for( var i = 0, n = array_length(attributes.layer_order); i < n; i++ ) {
 				var _indx = attributes.layer_order[i];
 				var _bone = bone_array[_indx];

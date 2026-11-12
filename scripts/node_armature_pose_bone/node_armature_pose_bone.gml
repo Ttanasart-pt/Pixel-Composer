@@ -82,36 +82,53 @@ function Node_Armature_Pose_Bone(_x, _y, _group = noone) : Node(_x, _y, _group) 
 		var _h = _b.getHash();
 		if(boneHash == _h) return;
 		
-		boneHash  = _h;
-		bonePose  = _b.clone().connect();
+		boneHash   = _h;
+		bonePose   = _b.clone().connect();
 		bone_array = bonePose.toArray();
 		bonePose.constrains = _b.constrains;
 	}
 	
 	static update = function(frame = CURRENT_FRAME) {
-		setBone();
+		#region data
+			setBone();
+			if(!is(bonePose, __Bone)) return;
+			
+			var _b         = getInputData(0);
+			var _b_target  = getInputData(1);
+			
+			var _posi_mode = getInputData(5);
+			var _posi      = getInputData(2);
+			
+			var _rota_mode = getInputData(6);
+			var _rota      = getInputData(3);
+			
+			var _scal_mode = getInputData(7);
+			var _scal      = getInputData(4);
+			
+			bone_bbox = [ 0, 0, PROJ_SURF_W, PROJ_SURF_H, PROJ_SURF_W, PROJ_SURF_H ];
+			if(!is(_b, __Bone)) return;
+		#endregion
 		
-		var _b         = getInputData(0);
-		var _b_target  = getInputData(1);
-		
-		var _posi_mode = getInputData(5);
-		var _posi      = getInputData(2);
-		
-		var _rota_mode = getInputData(6);
-		var _rota      = getInputData(3);
-		
-		var _scal_mode = getInputData(7);
-		var _scal      = getInputData(4);
-		
-		bone_bbox = [ 0, 0, PROJ_SURF_W, PROJ_SURF_H, PROJ_SURF_W, PROJ_SURF_H ];
-		if(!is(_b, __Bone)) return;
-		
-		bonePose.resetPose().setPosition();
 		outputs[0].setValue(bonePose);
 		
 		var bRaw  = _b.findBoneByName(_b_target);
 		var bPose = bonePose.findBoneByName(_b_target);
+		
+		var bArrRaw = _b.toArray();
+		var bArrPos = bone_array;
+		for( var i = 0, n = array_length(bArrPos); i < n; i++ ) {
+			var _bRaw = bArrRaw[i];
+			var _bPos = bArrPos[i];
+			
+			_bPos.pose_posit[0] = _bRaw.pose_posit[0];
+			_bPos.pose_posit[1] = _bRaw.pose_posit[1];
+			_bPos.pose_rotate   = _bRaw.pose_rotate;
+			_bPos.pose_scale    = _bRaw.pose_scale;
+		}
+		
 		if(bPose == noone) return;
+		
+		bPose.resetPose().setPosition();
 		
 		if(_posi_mode == 0) {
 			var _h = bPose.getHead();
@@ -126,14 +143,11 @@ function Node_Armature_Pose_Bone(_x, _y, _group = noone) : Node(_x, _y, _group) 
 		
 		bPose.pose_rotate   = _rota_mode? bRaw.pose_rotate   + _rota    : _rota;
 		bPose.pose_scale    = _scal_mode? bRaw.pose_scale    * _scal    : _scal;
-		
 		bonePose.setPose();
 		bone_bbox = bonePose.bbox();
 	}
 	
 	////- Draw
-	
-	static getPreviewBoundingBox = function() /*=>*/ {return new BBOX().fromPoints(bone_bbox[0], bone_bbox[1], bone_bbox[2], bone_bbox[3])};
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
 		var bbox = draw_bbox;

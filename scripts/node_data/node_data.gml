@@ -1567,9 +1567,8 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		
 		var _rs = animation_range_start;
 		var _re = animation_range_end;
-		if(animation_range_start != infinity && animation_range_start != animation_range_end) {
+		if(animation_range_start != infinity && animation_range_start != animation_range_end)
 			if(frame < animation_range_start || frame > animation_range_end) return false;
-		}
 		
 		__temp_frame  = frame;
 		if(array_any(inputs, function(inp,i) /*=>*/ {return inp.isActiveDynamic(__temp_frame)}))
@@ -2923,11 +2922,14 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		var yy = y * _s + _y + 1;
 		var hh = h + showMeta() * 16;
 		
+		var _ww = w  * _s;
+		var _hh = hh * _s;
+		
 		preview_mx = _mx;
 		preview_my = _my;
 		
 		if(value_validation[VALIDATION.error])
-			draw_sprite_stretched_ext(THEME.node_glow_border, 0, xx - 9, yy - 9, w * _s + 18, hh * _s + 18, COLORS._main_value_negative, 1);
+			draw_sprite_stretched_ext(THEME.node_glow_border, 0, xx - 9, yy - 9, _ww + 18, _hh + 18, COLORS._main_value_negative, 1);
 		
 		drawNodeBase(xx, yy, _s);
 		draggable = true;
@@ -2971,23 +2973,22 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			BLEND_NORMAL
 		}
 		
-		if(THEME_VALUE.node_border) draw_sprite_stretched_ext(bg_spr, 1, xx, yy, w * _s, hh * _s, COLORS.node_border, 1);
-		if(bg_spr_add > 0) draw_sprite_stretched_add(bg_spr, 1, xx, yy, w * _s, hh * _s, getColor(), bg_spr_add);
+		if(THEME_VALUE.node_border) draw_sprite_stretched_ext(bg_spr, 1, xx, yy, _ww, _hh, COLORS.node_border, 1);
+		if(bg_spr_add > 0) draw_sprite_stretched_add(bg_spr, 1, xx, yy, _ww, _hh, getColor(), bg_spr_add);
 		
 		active_drawing = active_draw_index > -1;
 		if(active_draw_index > -1) {
-			var cc = COLORS._main_accent;
 			switch(active_draw_index) {
-				case 1 : cc = COLORS.node_border_context;   break;
-				case 2 : cc = COLORS.node_border_file_drop; break;
+				case 1 :  draw_sprite_stretched_ext(bg_spr, 2, xx, yy, _ww, _hh, COLORS.node_border_context, 1);   break;
+				case 2 :  draw_sprite_stretched_ext(bg_spr, 2, xx, yy, _ww, _hh, COLORS.node_border_file_drop, 1); break;
+				default : draw_sprite_stretched_ext(bg_spr, 2, xx, yy, _ww, _hh, COLORS._main_accent, 1);
 			}
 			
-			draw_sprite_stretched_ext(bg_spr, 2, xx, yy, w * _s, hh * _s, cc, 1);
-			if(active_draw_anchor) draw_sprite_stretched_add(bg_spr, 2, xx, yy, w * _s, hh * _s, COLORS._main_accent, .5);
+			if(active_draw_anchor) draw_sprite_stretched_add(bg_spr, 2, xx, yy, _ww, _hh, COLORS._main_accent, .5);
 			
 			if(_panel && _panel.pHOVER && key_mod_press(ALT)) { 
-				var x1 = xx +  w * _s;
-				var y1 = yy + hh * _s;
+				var x1 = xx + _ww;
+				var y1 = yy + _hh;
 				var hv = point_in_rectangle(_mx, _my, x1 - 24, y1 - 24, x1 + 24, y1 + 24) && 
 						!point_in_rectangle(_mx, _my, xx, yy, x1, y1);
 				var cc = hv? COLORS._main_accent : COLORS._main_icon;
@@ -3001,12 +3002,12 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		}
 		
 		if(draw_droppable) {
-			var _xx = xx - 2 * _s;
-			var _yy = yy - 2 * _s;
-			var _ww = ( w + 4) * _s;
-			var _hh = (hh + 4) * _s;
+			var _dx = xx - 2 * _s;
+			var _dy = yy - 2 * _s;
+			var _dw = _ww + 4 * _s;
+			var _dh = _hh + 4 * _s;
 			
-			draw_sprite_stretched_ext(THEME.color_picker_box, 0, _xx, _yy, _ww, _hh, COLORS._main_value_positive, 1);
+			draw_sprite_stretched_ext(THEME.color_picker_box, 0, _dx, _dy, _dw, _dh, COLORS._main_value_positive, 1);
 			draw_droppable = false;
 		}
 		

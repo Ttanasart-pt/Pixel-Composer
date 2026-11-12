@@ -622,6 +622,7 @@ function Node_Armature_Mesh_Rig(_x, _y, _group = noone) : Node(_x, _y, _group) c
         _meshRigged.boneMap  = _map;
         _meshRigged.surfaces = [_mesh.surface];
         
+        bone_bbox = _bones.bbox();
         outputs[0].setValue(_meshRigged);
     }
     

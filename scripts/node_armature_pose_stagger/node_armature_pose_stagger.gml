@@ -31,10 +31,10 @@ function Node_Armature_Pose_Stagger(_x, _y, _group = noone) : Node(_x, _y, _grou
 	
 	__node_bone_attributes();
 	
-	boneHash  = "";
-	bonePose  = new __Bone();
-	bone_bbox = [0, 0, 1, 1, 1, 1];
-	bone_array  = [];
+	boneHash   = "";
+	bonePose   = new __Bone();
+	bone_bbox  = [0, 0, 1, 1, 1, 1];
+	bone_array = [];
 	
 	anchor_selecting = noone;
 	bone_targeting   = false;
@@ -187,8 +187,6 @@ function Node_Armature_Pose_Stagger(_x, _y, _group = noone) : Node(_x, _y, _grou
 	}
 	
 	////- Draw
-	
-	static getPreviewBoundingBox = function() /*=>*/ {return new BBOX().fromPoints(bone_bbox[0], bone_bbox[1], bone_bbox[2], bone_bbox[3])};
 	
 	static postApplyDeserialize = function() {
 		setBone();

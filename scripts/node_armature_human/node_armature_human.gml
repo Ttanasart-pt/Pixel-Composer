@@ -2,15 +2,15 @@ function Node_Armature_Human(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	name = "Armature Humanoid";
 	
 	////- =Transform
-	newInput( 0, nodeValue_Vec2(  "Position", [.5,1] )).setUnitSimple();
-	newInput( 1, nodeValue_Float( "Height",     .75  )).setUnitSimple();
+	newInput( 0, nodeValue_Vec2(     "Position",   [.5,1]  )).setUnitSimple();
+	newInput( 1, nodeValue_Float(    "Height",      .75    )).setUnitSimple();
 	
 	////- =Head
-	newInput( 2, nodeValue_Slider(   "Size",  .2 )).setInternalName("head_size" );
-	newInput( 3, nodeValue_Rotation( "Angle", 90 )).setInternalName("head_angle");
+	newInput( 2, nodeValue_Slider(   "Size",        .2     )).setInternalName("head_size" );
+	newInput( 3, nodeValue_Rotation( "Angle",       90     )).setInternalName("head_angle");
 	
 	////- =Torso
-	newInput( 4, nodeValue_Slider(   "Length",     .4      )).setInternalName("torso_size"    );
+	newInput( 4, nodeValue_Slider(   "Length",     .25     )).setInternalName("torso_size"    );
 	newInput( 5, nodeValue_Int(      "Segment",     1      )).setInternalName("torso_segments").setCurvable( 6, CURVE_DEF_01, "Lengths");
 	
 	////- =Arms
@@ -19,8 +19,8 @@ function Node_Armature_Human(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	newInput(10, nodeValue_RotRange( "Rest Angle", [90,90] )).setInternalName("arms_angle"   ).setCurvable(11, CURVE_DEF_01, "Over Limb");
 	
 		////- =/IK
-	newInput(17, nodeValue_Bool( "Use IK",    false )).setInternalName("arms_ik_use");
-	newInput(18, nodeValue_Int(  "IK Length", 0     )).setInternalName("arms_ik_len");
+	newInput(17, nodeValue_Bool(     "Use IK",      false  )).setInternalName("arms_ik_use");
+	newInput(18, nodeValue_Int(      "IK Length",   0      )).setInternalName("arms_ik_len");
 	
 	////- =Legs
 	newInput(12, nodeValue_Slider(   "Length",     .4      )).setInternalName("legs_size"    );
@@ -28,9 +28,8 @@ function Node_Armature_Human(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	newInput(15, nodeValue_RotRange( "Rest Angle", [15,0]  )).setInternalName("legs_angle"   ).setCurvable(16, CURVE_DEF_01, "Over Limb");
 	
 		////- =/IK
-	newInput(19, nodeValue_Bool( "Use IK",    false )).setInternalName("legs_ik_use");
-	newInput(20, nodeValue_Int(  "IK Length", 0     )).setInternalName("legs_ik_len");
-	
+	newInput(19, nodeValue_Bool(     "Use IK",      false  )).setInternalName("legs_ik_use");
+	newInput(20, nodeValue_Int(      "IK Length",   0      )).setInternalName("legs_ik_len");
 	// 21
 	
 	newOutput(0, nodeValue_Output("Armature", VALUE_TYPE.armature, new __Bone()));
@@ -95,7 +94,6 @@ function Node_Armature_Human(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 			
 			var _legs_ik_use = inputs[19].getValue();
 			var _legs_ik_amo = inputs[20].getValue();
-			
 		#endregion
 		
 		#region positions
@@ -200,6 +198,8 @@ function Node_Armature_Human(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 			for( var i = 0, n = array_length(_arms_segs); i < n; i++ ) 
 				_arms_segs[i][1] -= _legs_height;
 		#endregion
+		
+		bone_bbox = [ 0, 0, PROJ_SURF_W, PROJ_SURF_H, PROJ_SURF_W, PROJ_SURF_H ];
 		
 		var _bone = new __Bone();
 		_bone.ID        = $"{node_id}_main";
@@ -538,14 +538,13 @@ function Node_Armature_Human(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 		
 		_bone.setIDFromName();
 		_bone.resetPose().setPosition();
+		_bone.setPose();
 		bone_bbox = _bone.bbox();
 		
 		outputs[ 0].setValue(_bone);
 	}
 	
 	////- Draw
-	
-	static getPreviewBoundingBox = function() /*=>*/ {return new BBOX().fromPoints(bone_bbox[0], bone_bbox[1], bone_bbox[2], bone_bbox[3])};
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
 		var bbox = draw_bbox;

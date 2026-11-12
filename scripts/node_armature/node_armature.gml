@@ -1467,7 +1467,6 @@ function Node_Armature(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 		bones.resetPose().setPosition();
 		outputs[0].setValue(bones);
 		
-		bone_bbox   = bones.bbox();
 		bone_array  = bones.toArray();
 		bone_points = bones.toPoints();
 	} 

@@ -537,8 +537,11 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		var _cc  = _complete? COLORS._main_value_positive : COLORS._main_value_negative;
 		var noti = log_message("EXPORT", _txt, _spr, _cc, false)
 		
-		if(_path != "")
-			noti.setOnClick(function(p) /*=>*/ {return shellOpenExplorer(p)}, "Open in explorer", THEME.explorer, filename_dir(_path));
+		if(_path != "") {
+			var _t = __txt("Open in explorer");
+			var _d = filename_dir(_path);
+			noti.setOnClick(function(p) /*=>*/ {return shellOpenExplorer(p)}, _t, THEME.explorer, _d);
+		}
 			
 		PANEL_MENU.setNotiIcon(_spr);
 	}

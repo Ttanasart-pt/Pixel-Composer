@@ -52,6 +52,8 @@ function Panel_Nodes() : PanelContent() constructor {
 		_item_hovering  = noone;
 		
 		node_label_color_width = max(ui(6), sprite_get_width(THEME.box_r2));
+		
+		sec_color = merge_color(COLORS._main_icon, COLORS._main_icon_dark, .5);
 	#endregion
 	
 	#region Sidebar
@@ -185,8 +187,8 @@ function Panel_Nodes() : PanelContent() constructor {
 		_item.x = _x0;
 		_item.y = _y;
 		
-		if(_bg) draw_sprite_stretched_add(THEME.box_r5, 0, _x0, _y, _w, bhg, COLORS.panel_bg_clear, .2);
-		
+		// if(_bg) draw_sprite_stretched_add(THEME.box_r5, 0, _x0, _y, _w, bhg, COLORS.panel_bg_clear, .2);
+			
 		if(hov) {
 			node_hovering = node;
 			
@@ -311,8 +313,6 @@ function Panel_Nodes() : PanelContent() constructor {
 			}
 			
 			if(_len > 1) {
-				var cc = merge_color(COLORS._main_icon, COLORS._main_icon_dark, .5);
-				
 				for( var i = 0; i < _len; i++ ) {
 					var _ind = inverse_order? _len - i - 1 : i;
 					var _chd = _item.children[_ind];
@@ -321,7 +321,7 @@ function Panel_Nodes() : PanelContent() constructor {
 					var _cx1 = _chd.x;
 					var _cy1 = _chd.y + hg / 2;
 					
-					draw_sprite_stretched_ext(THEME.corner_r4, 0, _cx0, _cy0, _cx1 - _cx0, _cy1 - _cy0, cc);
+					draw_sprite_stretched_ext(THEME.corner_r4, 0, _cx0, _cy0, _cx1 - _cx0, _cy1 - _cy0, sec_color);
 				}
 				
 			}

@@ -724,146 +724,152 @@ function __initNodes(unzip = true) {
 	globalvar NODE_INDEX_I; NODE_INDEX_I        = 0;
 	globalvar NODE_INDEX_J; NODE_INDEX_J        = 0;
 	
+	globalvar NODE_INDEX_curr_cat;
 	globalvar NODE_INDEX_curr_group;
 	globalvar NODE_INDEX_curr_groupi;
 	globalvar NODE_INDEX_curr_subgroup;
 	
 	globalvar NODE_INDEX_index_map;
+#endregion
 	
-	function nodeIndexStart() {
-		NODE_SEARCH_INDEXED = 1;
-		NODE_INDEX          = [];
+function nodeIndexStart() {
+	NODE_SEARCH_INDEXED = 1;
+	NODE_INDEX          = [];
+
+	NODE_INDEX_curr_cat        = undefined;
+	NODE_INDEX_curr_group      = "";
+	NODE_INDEX_curr_groupi     = 0;
+	NODE_INDEX_curr_subgroup   = "";
 	
-		NODE_INDEX_curr_group      = "";
-		NODE_INDEX_curr_groupi     = 0;
-		NODE_INDEX_curr_subgroup   = "";
-		
-		NODE_INDEX_index_map = {};
-		
-		NODE_INDEX_I = 0;
-		NODE_INDEX_J = 0;
-	}
+	NODE_INDEX_index_map = {};
 	
-	function nodeIndexStep() {
-		var catAmo = array_length(NODE_CATEGORY);
-		var cat    = NODE_CATEGORY[NODE_INDEX_I];
-		
-		if(!has(cat, "list")) {
-			NODE_INDEX_J = 0;
-			NODE_INDEX_I++;
-			return;
-		}
-		
-		// var t = get_timer();
-		
-		NODE_INDEX_curr_group    = "";
-		NODE_INDEX_curr_groupi   = 0;
-		NODE_INDEX_curr_subgroup = "";
-		
-		var curr_filter = undefined;
-		if(has(cat, "filter") && array_safe_length(cat.filter) > 0) {
-			var _filter = false;
-			curr_filter = {};
-			for( var j = 0, m = array_length(cat.filter); j < m; j++ ) {
-				if(cat.filter[j] == "") continue;
-				curr_filter[$ cat.filter[j]] = 1;
-				_filter = true;
-			}
-			
-			if(!_filter) curr_filter = undefined;
-		}
-		
-		var _content = cat.list;
-		for( var m = array_length(_content); NODE_INDEX_J < m; NODE_INDEX_J++ ) {
-			var _node = _content[NODE_INDEX_J];
-			
-			if(is_string(_node)) {
-				if(string_starts_with(_node, "/")) 
-					NODE_INDEX_curr_subgroup = _node;
-					
-				else {
-					NODE_INDEX_curr_group    = _node;
-					NODE_INDEX_curr_subgroup = "";
-					NODE_INDEX_curr_groupi++;
-				}
-				continue;
-			}
-			
-			if(has(NODE_INDEX_index_map, _node)) continue;
-			NODE_INDEX_index_map[$ _node] = 1;
-			
-			var indexData = {};
-			array_push(NODE_INDEX, indexData);
-			
-			indexData.node    = _node;
-			indexData.visible = is(_node, NodeObject)? _node.isVisible() : true;
-			
-			var _name    = string_lower(_node.getName());
-			var _nameArr = string_to_array(_name);
-			
-			indexData.name    = _name;
-			indexData.nameArr = _nameArr;
-			
-			indexData.path = {
-				node       : _node,
-				
-				category   : cat,
-				categoryId : NODE_INDEX_I, 
-				cateFilter : curr_filter,
-				
-				group      : NODE_INDEX_curr_group, 
-				groupId    : NODE_INDEX_curr_groupi - 1, 
-				subgroup   : NODE_INDEX_curr_subgroup, 
-			};
-			
-			indexData.matchRes = [0,[]];
-			
-			indexData.alias      = [];
-			indexData.aliasArray = [];
-			
-			for( var k = 0, p = array_length(_node.tags); k < p; k++ ) {
-				indexData.alias[k]      = _node.tags[k];
-				indexData.aliasArray[k] = string_to_array(_node.tags[k]);
-			}
-			
-			// Preset
-			indexData.preset   = [];
-			if(is(_node, NodeObject) && has(PRESETS_MAP, _node.nodeName)) {
-				var pres = PRESETS_MAP[$ _node.nodeName];
-				var keys = struct_get_names(pres);
-				
-				for( var k = 0, p = array_length(keys); k < p; k++ ) {
-					var key = keys[k];
-					if(key == "_default" || key == "_values") continue;
-					
-					var preset = pres[$ key];
-					if(preset.content == undefined) 
-						preset.content = json_load_struct(preset.path);
-					
-					var isNode = preset.content[$ "asNode"] ?? false;
-					var _fname = isNode? string_lower(key) : $"{indexData.name} {string_lower(key)}";
-					
-					var _presetData = {
-						name   : _fname,
-						key    : key, 
-						preset : preset, 
-						isNode : isNode,
-					}
-					
-					array_push(indexData.preset, _presetData);
-				}
-			}
-		}
-		
-		// print($"nodeIndexStep '{cat.name}' [{m}] completed in {(get_timer() - t) / 1000}ms");
-		
+	NODE_INDEX_I = 0;
+	NODE_INDEX_J = 0;
+}
+
+function nodeIndexStep() {
+	var catAmo = array_length(NODE_CATEGORY);
+	var cat    = NODE_CATEGORY[NODE_INDEX_I];
+	var t      = get_timer();
+	
+	if(!has(cat, "list")) {
 		NODE_INDEX_J = 0;
 		NODE_INDEX_I++;
-		
-		if(NODE_INDEX_I >= catAmo)
-			NODE_SEARCH_INDEXED = 2;
+		return;
 	}
-#endregion
+	
+	NODE_INDEX_curr_cat      = cat;
+	NODE_INDEX_curr_group    = "";
+	NODE_INDEX_curr_groupi   = 0;
+	NODE_INDEX_curr_subgroup = "";
+	
+	var curr_filter = undefined;
+	if(has(cat, "filter") && array_safe_length(cat.filter) > 0) {
+		var _filter = false;
+		curr_filter = {};
+		for( var j = 0, m = array_length(cat.filter); j < m; j++ ) {
+			if(cat.filter[j] == "") continue;
+			curr_filter[$ cat.filter[j]] = 1;
+			_filter = true;
+		}
+		
+		if(!_filter) curr_filter = undefined;
+	}
+	
+	var _content = cat.list;
+	for( var m = array_length(_content); NODE_INDEX_J < m; NODE_INDEX_J++ ) {
+		var _node = _content[NODE_INDEX_J];
+		
+		if(is_string(_node)) {
+			if(string_starts_with(_node, "/")) 
+				NODE_INDEX_curr_subgroup = _node;
+				
+			else {
+				NODE_INDEX_curr_group    = _node;
+				NODE_INDEX_curr_subgroup = "";
+				NODE_INDEX_curr_groupi++;
+			}
+			continue;
+		}
+		
+		if(has(NODE_INDEX_index_map, _node)) continue;
+		NODE_INDEX_index_map[$ _node] = 1;
+		
+		var indexData = {};
+		array_push(NODE_INDEX, indexData);
+		
+		indexData.node    = _node;
+		indexData.visible = is(_node, NodeObject)? _node.isVisible() : true;
+		
+		var _name    = string_lower(_node.getName());
+		var _nameArr = string_to_array(_name);
+		
+		indexData.name    = _name;
+		indexData.nameArr = _nameArr;
+		
+		indexData.path = {
+			node       : _node,
+			
+			category   : cat,
+			categoryId : NODE_INDEX_I, 
+			cateFilter : curr_filter,
+			
+			group      : NODE_INDEX_curr_group, 
+			groupId    : NODE_INDEX_curr_groupi - 1, 
+			subgroup   : NODE_INDEX_curr_subgroup, 
+		};
+		
+		indexData.matchRes = [0,[]];
+		
+		indexData.alias      = [];
+		indexData.aliasArray = [];
+		
+		for( var k = 0, p = array_length(_node.tags); k < p; k++ ) {
+			indexData.alias[k]      = _node.tags[k];
+			indexData.aliasArray[k] = string_to_array(_node.tags[k]);
+		}
+		
+		// Preset
+		indexData.preset   = [];
+		if(is(_node, NodeObject) && has(PRESETS_MAP, _node.nodeName)) {
+			var pres = PRESETS_MAP[$ _node.nodeName];
+			var keys = struct_get_names(pres);
+			
+			for( var k = 0, p = array_length(keys); k < p; k++ ) {
+				var key = keys[k];
+				if(key == "_default" || key == "_values") continue;
+				
+				var preset = pres[$ key];
+				if(preset.content == undefined) 
+					preset.content = json_load_struct(preset.path);
+				
+				var isNode = preset.content[$ "asNode"] ?? false;
+				var _fname = isNode? string_lower(key) : $"{indexData.name} {string_lower(key)}";
+				
+				var _presetData = {
+					name   : _fname,
+					key    : key, 
+					preset : preset, 
+					isNode : isNode,
+				}
+				
+				array_push(indexData.preset, _presetData);
+			}
+		}
+		
+		if(get_timer() - t > 20_000) { NODE_INDEX_J++; return; }
+	}
+	
+	NODE_INDEX_J = 0;
+	NODE_INDEX_I++;
+	
+	if(NODE_INDEX_I >= catAmo)
+		NODE_SEARCH_INDEXED = 2;
+}
+
+function nodeIndexComplete() {
+	
+}
 
 	////- Actions
 	
