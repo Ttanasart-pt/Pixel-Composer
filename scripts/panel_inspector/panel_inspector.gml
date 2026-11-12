@@ -1299,7 +1299,7 @@ function Panel_Inspector() : PanelContent() constructor {
 		                	var tgy = yy;
 		                	var tgp = subk? ui(2) : ui(4);
 		                
-		                	var jun   = _inspecting.inputs[togl];
+		                	var tgJun = _inspecting.inputs[togl];
 		                	var tgHov = _hover && point_in_rectangle(_m[0], _m[1], tgx, tgy, tgx + lbh, tgy + lbh);
 		                	
 		                	if(!segExp)
@@ -1312,8 +1312,8 @@ function Panel_Inspector() : PanelContent() constructor {
 		                        contentPane.hover_content = true;
 		                    	hov = false;
 		                        
-		                        if(mouse_lpress(pFOCUS)) jun.setValue(!toging);
-		                        if(mouse_rpress(pFOCUS)) propRightClick(jun);
+		                        if(mouse_lpress(pFOCUS)) tgJun.setValue(!toging);
+		                        if(mouse_rpress(pFOCUS)) propRightClick(tgJun);
 		                    }
 		                    
 		                    cc = toging? COLORS._main_accent : COLORS._main_icon;

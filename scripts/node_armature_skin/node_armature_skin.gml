@@ -95,6 +95,8 @@ function Node_Armature_Skin(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	
 	////- Node
 	
+	boneScale = {};
+	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _params) { 
 		var _b = inputs[ 0].getValue();
 		var _t = inputs[ 2].getValue();
@@ -128,7 +130,7 @@ function Node_Armature_Skin(_x, _y, _group = noone) : Node(_x, _y, _group) const
 				var _inh = inputs[_indx + 4].getValue();
 				
 				var _par = _bne.parent;
-				var _bsc = _par.is_main || !_inh? 1 : (_par[$ "__drawThickness"] ?? 1);
+				var _bsc = _par.is_main || !_inh? 1 : (boneScale[$ _par.ID] ?? 1);
 				
 				if(_drw) {
 					var _rs  = _rad[0] * _bsc * _t * _s;
@@ -155,9 +157,8 @@ function Node_Armature_Skin(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		
 		setBone();
 		_bone.setPose();
-		
-		for( var i = 0, n = array_length(bone_array); i < n; i++ )
-			bone_array[i].__drawThickness = 1;
+		boneScale = {};
+		boneThick = {};
 			
 		var _drawOrder = [];
 		
@@ -182,16 +183,37 @@ function Node_Armature_Skin(_x, _y, _group = noone) : Node(_x, _y, _group) const
 			
 		#endregion
 		
+		for( var i = 0, n = array_length(bone_array); i < n; i++ ) {
+			var _bone = bone_array[i];
+			var _bpar = _bone.parent;
+			
+			if(_bone.is_main || _bone.control) continue;
+			if(!has(boneMap, _bone.ID)) continue;
+			
+			var binps  = boneMap[$ _bone.ID];
+			var bthk   = getInputData(binps + 0);
+			var thkInh = getInputData(binps + 4);
+			
+			var _parSca = _bpar.is_main || !thkInh? 1 : (boneScale[$ _bpar.ID] ?? 1);
+			boneScale[$ _bone.ID] = _parSca * bthk[1];
+			boneThick[$ _bone.ID] = [
+				_parSca * bthk[0] * _thck, 
+				_parSca * bthk[1] * _thck
+			];
+			
+		}
+		
 		_outSurf = surface_verify(_outSurf, _dim[0], _dim[1]);
 		surface_set_shader(_outSurf, sh_armature_skin_render);
 			for( var i = 0, n = array_length(attributes.layer_order); i < n; i++ ) {
 				var _indx = attributes.layer_order[i];
+				
 				var _bone = bone_array[_indx];
+				var _bpar = _bone.parent;
 				
 				if(_bone.is_main || _bone.control) continue;
 				if(!has(boneMap, _bone.ID)) continue;
 				
-				var _par   = _bone.parent;
 				var binps  = boneMap[$ _bone.ID];
 				
 				var bdrw   = getInputData(binps + 3);
@@ -219,16 +241,14 @@ function Node_Armature_Skin(_x, _y, _group = noone) : Node(_x, _y, _group) const
 				var dis = point_distance( x0, y0, x1, y1);
 				var dir = point_direction(x0, y0, x1, y1);
 				
-				var _parSca = _par.is_main || !thkInh? 1 : _par.__drawThickness;
-				_bone.__drawThickness = _parSca * bthk[1];
-				
 				shader_set_gradient(bcol);
 				
 				var c0 = c_white;
 				var c1 = c_white;
 				
-				var th0 = _parSca * bthk[0] * _thck;
-				var th1 = _parSca * bthk[1] * _thck;
+				var thks = boneThick[$ _bone.ID];
+				var th0  = thks[0];
+				var th1  = thks[1];
 				
 				var px0 = lengthdir_x(th0, dir + 90);
 				var py0 = lengthdir_y(th0, dir + 90);

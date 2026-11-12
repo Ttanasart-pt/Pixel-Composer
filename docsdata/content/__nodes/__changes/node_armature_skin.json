@@ -6,6 +6,11 @@
         "date": "2026-11-12T02:24:00.189Z",
         "node": "",
         "commit": "**Armature Pose Bone**: Fix node reset all unselected bones."
+      },
+      {
+        "date": "2026-11-12T02:49:09.274Z",
+        "node": "skin",
+        "commit": "**skin**: fix depth ordering affect scale inheritance."
       }
     ]
   },
