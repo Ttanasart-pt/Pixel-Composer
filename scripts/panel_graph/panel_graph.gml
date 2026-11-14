@@ -91,7 +91,8 @@
     function panel_graph_doPasteProp()             { CALL("graph_doPasteProp");         PANEL_GRAPH.doPasteProp();                            }
     function panel_graph_createTunnel()            { CALL("graph_createTunnel");        PANEL_GRAPH.createTunnel();                           }
     
-    function panel_graph_grid_snap()               { CALL("graph_grid_snap");           PANEL_GRAPH_PROJECT_CHECK PANEL_GRAPH.project.graphGrid.snap = !PANEL_GRAPH.project.graphGrid.snap;               }
+    function panel_graph_node_snap()               { CALL("graph_node_snap");           PANEL_GRAPH_PROJECT_CHECK PANEL_GRAPH.project.graphGrid.snap_node   = !PANEL_GRAPH.project.graphGrid.snap_node;   }
+    function panel_graph_grid_snap()               { CALL("graph_grid_snap");           PANEL_GRAPH_PROJECT_CHECK PANEL_GRAPH.project.graphGrid.snap        = !PANEL_GRAPH.project.graphGrid.snap;        }
     function panel_graph_show_origin()             { CALL("graph_grid_show_origin");    PANEL_GRAPH_PROJECT_CHECK PANEL_GRAPH.project.graphGrid.show_origin = !PANEL_GRAPH.project.graphGrid.show_origin; }
     function panel_graph_searchWiki()              { CALL("graph_searchWiki");          PANEL_GRAPH.searchWiki();                               }
     function panel_graph_viewSource()              { CALL("graph_viewSource");          PANEL_GRAPH.viewSource();                               }
@@ -274,6 +275,7 @@
         registerFunction(g, "Create Tunnel",         "",  n, panel_graph_createTunnel        ).setMenu("graph_create_tunnel")
         
         registerFunction(g, "Toggle Grid Snap",      "",  n, panel_graph_grid_snap           ).setMenu("graph_grid_snap")
+        registerFunction(g, "Toggle Node Snap",      "",  n, panel_graph_node_snap           ).setMenu("graph_node_snap")
         registerFunction(g, "Toggle Show Origin",    "",  n, panel_graph_show_origin         ).setMenu("graph_show_origin")
         registerFunction(g, "Search Wiki",         vk_f1, n, panel_graph_searchWiki          ).setMenu("graph_search_wiki")
         registerFunction(g, "View Source",        vk_f12, c, panel_graph_viewSource          ).setMenu("graph_view_source")
@@ -602,16 +604,18 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
         node_context         = [];
         nodes_list           = [];
         
+        node_drag_anchor_x   = [];
+        node_drag_anchor_y   = [];
+        node_drag_anchor_gx  = 0;
+        node_drag_anchor_gy  = 0;
+        node_drag_anchor_gs  = 0;
+        
         node_dragging        = noone;
         node_drag_type       = 0;
         node_drag_mx         = 0;
         node_drag_my         = 0;
-        node_drag_sx         = 0;
-        node_drag_sy         = 0;
         node_drag_sw         = 0;
 		node_drag_sh         = 0;
-        node_drag_ox         = 0;
-        node_drag_oy         = 0;
         node_drag_add        = false;
         
     	node_wran_connect      = noone;
@@ -626,6 +630,7 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
     	node_drag_clone      = false;
 		node_drag_nx         = undefined;
 		node_drag_ny         = undefined;
+		node_drag_bbox       = [0,0,1,1];
 
     	node_resize          = noone;
     	node_resize_mx       = 0;
@@ -1696,7 +1701,72 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
         }
     }
     
-    ////- Draw
+    ////- Drag
+    
+    function dragNodeStart(dragNode) {
+    	node_dragging = dragNode;
+        node_drag_mx  = mouse_graph_x;
+        node_drag_my  = mouse_graph_y;
+        
+        node_drag_bbox     = [infinity,infinity,-infinity,-infinity];
+        
+        for( var i = 0, n = array_length(nodes_selecting); i < n; i++ ) {
+            var _node = nodes_selecting[i];
+            if(!is(_node, Node)) continue;
+            
+            _node.__drag_sx = _node.x;
+            _node.__drag_sy = _node.y;
+            
+            node_drag_bbox[0] = min(node_drag_bbox[0], _node.x);
+            node_drag_bbox[1] = min(node_drag_bbox[1], _node.y);
+            
+            node_drag_bbox[2] = max(node_drag_bbox[2], _node.x + _node.w);
+            node_drag_bbox[3] = max(node_drag_bbox[3], _node.y + _node.h + _node.showMeta() * 16);
+        }
+        
+        dragNodeAnchor();
+    }
+    
+    function dragNodeAnchor() {
+        node_drag_anchor_x = [];
+        node_drag_anchor_y = [];
+        
+        node_drag_anchor_gx = graph_x;
+		node_drag_anchor_gy = graph_y;
+		node_drag_anchor_gs = graph_s;
+
+    	var _node_select_map = {};
+    	for( var i = 0, n = array_length(nodes_selecting); i < n; i++ ) 
+    		_node_select_map[$ nodes_selecting[i].node_id] = 1;
+    	
+    	for( var i = 0, n = array_length(nodes_list); i < n; i++ ) {
+        	var _node = nodes_list[i];
+        	if(has(_node_select_map, _node.node_id)) continue;
+        	
+            var nw  = _node.w;
+            var nh  = _node.h + _node.showMeta() * 16;
+            
+            var nx0 = _node.x;
+            var ny0 = _node.y;
+            
+            var nx1 = nx0 + nw;
+            var ny1 = ny0 + nh;
+            
+            var sx0 = (graph_x + nx0) * graph_s;
+            var sy0 = (graph_y + ny0) * graph_s;
+            
+            var sx1 = (graph_x + nx1) * graph_s;
+            var sy1 = (graph_y + ny1) * graph_s;
+            
+            if(sx0 > w || sy0 > h || sx1 < 0 || sy1 < 0) continue;
+            
+            array_push(node_drag_anchor_x, nx0, nx1);
+            array_push(node_drag_anchor_y, ny0, ny1);
+        }
+        
+        node_drag_anchor_x = array_unique(node_drag_anchor_x);
+        node_drag_anchor_y = array_unique(node_drag_anchor_y);
+    }
     
     function dragNodes() {
     	var _focus = pFOCUS && !view_hovering;
@@ -1738,6 +1808,9 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
             _node.moved = false;
         }
         
+        if(node_drag_anchor_gx != graph_x || node_drag_anchor_gy != graph_y || node_drag_anchor_gs != graph_s)
+        	dragNodeAnchor();
+        
         var _mgx = mouse_graph_x;
         var _mgy = mouse_graph_y;
         var _grd = project.graphGrid.size;
@@ -1748,43 +1821,141 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
 	            addKeyOverlay("Dragging node(s)", [[ "Ctrl", "Disable snapping" ]]);
 	            refreshDraw(2);
         		
-	            var  nx  = node_drag_sx + (_mgx - node_drag_mx);
-	            var  ny  = node_drag_sy + (_mgy - node_drag_my);
-	            var  sn  = !key_mod_press(KCONTROL) && project.graphGrid.snap;
-	            if(sn) { nx = value_snap(nx, _grd); ny = value_snap(ny, _grd); }
+                var dx = _mgx - node_drag_mx;
+                var dy = _mgy - node_drag_my;
+                
+	            var snGrid = !key_mod_press(KCONTROL) && project.graphGrid.snap;
+	            var snNode = project.graphGrid.snap_node;
 	            
-	            if(node_drag_ox == -1 || node_drag_oy == -1) {
-	                node_drag_ox = nx;
-	                node_drag_oy = ny;
-	                
-	            } else if(nx != node_drag_ox || ny != node_drag_oy) {
-	                var dx = nx - node_drag_ox;
-	                var dy = ny - node_drag_oy;
-	                
+	            if(key_mod_press(SHIFT)) {
+	            	if(abs(dx) > abs(dy)) dy = 0;
+	            	else                  dx = 0;
+	            }
+	            
+                if(snNode) {
+                	var snapTarget_x = [node_drag_bbox[0], node_drag_bbox[2]];
+                	var snapTarget_y = [node_drag_bbox[1], node_drag_bbox[3]];
+                	var snapLine_x   = [];
+                	var snapLine_y   = [];
+                	
+                	var minDx = project.graphGrid.snap_dist;
+                	var minDy = project.graphGrid.snap_dist;
+                	
+                	var snpx  = 0;
+                	var snpy  = 0;
+                	
+                	var snapX = false;
+                	var snapY = false;
+                	
 	                for( var i = 0, n = array_length(nodes_selecting); i < n; i++ ) {
 	                    var _node = nodes_selecting[i];
 	                    if(!is(_node, Node)) continue;
-	                    
-	                    var _nx   = _node.x + dx;
-	                    var _ny   = _node.y + dy;
-	                    
-	                    if(sn) {
-			                _nx = value_snap(_nx, _grd);
-			                _ny = value_snap(_ny, _grd);
-			            }
-	                    
-	                    if(!_node.moved) _node.move(_nx, _ny);
+				        
+			            var nw  = _node.w;
+			            var nh  = _node.h + _node.showMeta() * 16;
+			            
+			            var nx0 = _node.__drag_sx;
+			            var ny0 = _node.__drag_sy;
+			            
+			            var nx1 = nx0 + nw;
+			            var ny1 = ny0 + nh;
+			            
+	                    array_push(snapTarget_x, nx0, nx1);
+	                    array_push(snapTarget_y, ny0, ny1);
 	                }
-	                   
-	                node_drag_ox = nx;
-	                node_drag_oy = ny;
-	            }
+	                
+                	for( var i = 0, n = array_length(node_drag_anchor_x); i < n; i++ ) {
+                		var _ax = node_drag_anchor_x[i];
+                		
+                		for( var j = 0, m = array_length(snapTarget_x); j < m; j++ ) {
+                			var _stx = snapTarget_x[j];
+                			
+	                		var _dx = abs(_stx + dx - _ax);
+	                		if(_dx <= minDx) {
+	                			if(_dx < minDx) snapLine_x = [];
+	                			
+	                			minDx = _dx;
+	                			snpx  = _ax - _stx;
+	                			snapX = true;
+	                			
+	                			array_push(snapLine_x, _ax);
+	                		}
+                		}
+                	}
+		                	
+                	for( var i = 0, n = array_length(node_drag_anchor_y); i < n; i++ ) {
+                		var _ay = node_drag_anchor_y[i];
+                		
+                		for( var j = 0, m = array_length(snapTarget_y); j < m; j++ ) {
+                			var _sty = snapTarget_y[j];
+                				
+	                		var _dy = abs(_sty + dy - _ay);
+	                		if(_dy <= minDy) {
+	                			if(_dy < minDy) snapLine_y = [];
+	                			
+	                			minDy = _dy;
+	                			snpy  = _ay - _sty;
+	                			snapY = true;
+	                			
+	                			array_push(snapLine_y, _ay);
+	                		}
+	                		
+                		}
+                	}
+                	
+                	if(snapX) dx = snpx;
+                	if(snapY) dy = snpy;
+                	
+                	snapLine_x = array_unique(snapLine_x);
+                	snapLine_y = array_unique(snapLine_y);
+                	
+                	draw_set_color_alpha(COLORS._main_icon, .35);
+                	for( var i = 0, n = array_length(snapLine_x); i < n; i++ ) {
+                		var _line = snapLine_x[i];
+            			var lx = (graph_x + _line) * graph_s;
+            			draw_line(lx, 0, lx, h);
+                	}
+                	
+                	for( var i = 0, n = array_length(snapLine_y); i < n; i++ ) {
+                		var _line = snapLine_y[i];
+            			var ly = (graph_y + _line) * graph_s;
+            			draw_line(0, ly, w, ly);
+                	}
+                	draw_set_alpha(1);
+                	
+                	// draw_set_color(c_yellow);
+                	// for( var i = 0, n = array_length(node_drag_anchor_x); i < n; i++ ) {
+                	// 	var _ax = (graph_x + node_drag_anchor_x[i]) * graph_s;
+                	// 	draw_line(_ax, 0, _ax, h);
+                	// }
+                	
+                	// for( var i = 0, n = array_length(node_drag_anchor_y); i < n; i++ ) {
+                	// 	var _ay = (graph_y + node_drag_anchor_y[i]) * graph_s;
+                	// 	draw_line(0, _ay, w, _ay);
+                	// }
+                	
+                }
+                
+                for( var i = 0, n = array_length(nodes_selecting); i < n; i++ ) {
+                    var _node = nodes_selecting[i];
+                    if(!is(_node, Node)) continue;
+                    
+                    var _nx = _node.__drag_sx + dx;
+                    var _ny = _node.__drag_sy + dy;
+                    
+                    if(snGrid) {
+		                _nx = value_snap(_nx, _grd);
+		                _ny = value_snap(_ny, _grd);
+		            }
+                    
+                    if(!_node.moved) _node.move(_nx, _ny);
+                }
+                
+	            if(!key_mod_press(SHIFT)) array_foreach(frame_draggings, function(f,_) /*=>*/ {return f.reFrame()});
 	            
-	            if(!key_mod_press(SHIFT)) array_foreach(frame_draggings, function(f) /*=>*/ {return f.reFrame()});
-	            
-	            if(mouse_lrelease() && (nx != node_drag_sx || ny != node_drag_sy)) {
-	                var shfx = node_drag_sx - nx;
-	                var shfy = node_drag_sy - ny;
+	            if(mouse_lrelease() && (dx != 0 || dy != 0)) {
+	                var shfx = dx;
+	                var shfy = dy;
 	                
 	                UNDO_HOLDING = false;    
 	                for( var i = 0, n = array_length(nodes_selecting); i < n; i++ ) {
@@ -1825,7 +1996,7 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
     			break;
     	}
         
-        ////- Start Drag
+        ////- =Start Drag
         
 		if(!_focus || !mouse_on_graph)                  return;
 		if(cache_group_edit != noone)                   return;
@@ -1836,22 +2007,17 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
 		if(!is(_node, Node) || !_node.draggable) return;
         
         if(mouse_lpress()) {
-        	node_drag_type = node_hover_type;
-        	
-        	node_dragging = _node;
-            node_drag_mx  = mouse_graph_x;
-            node_drag_my  = mouse_graph_y;
-            node_drag_sx  = _node.x;
-            node_drag_sy  = _node.y;
-            node_drag_sw  = _node.w;
-            node_drag_sh  = _node.h;
-            
-            node_drag_ox  = -1;
-            node_drag_oy  = -1;
-            
+        	node_drag_type  = node_hover_type;
             frame_draggings = frame_hoverings;
+            
+	        node_drag_sw  = _node.w;
+	        node_drag_sh  = _node.h;
+	        
+        	dragNodeStart(_node);
         }
     }
+    
+    ////- Draw
     
     function drawBGBase() { //
     	draw_clear(bg_color);
@@ -4437,12 +4603,7 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
 			nodes_selecting[i].y += dy;
     	}
     		
-        node_drag_mx = mouse_graph_x;
-        node_drag_my = mouse_graph_y;
-        node_drag_sx = tx;
-        node_drag_sy = ty;
-        node_drag_ox = -1;
-        node_drag_oy = -1;
+		dragNodeStart(node_dragging);
         
         node_drag_add      = _add;
         node_focus_context = instanceof(node_dragging);
@@ -5040,11 +5201,11 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
             y0 = min(y0, _node.y);
         }
     	
-        node_dragging = APPEND_LIST[0];
-        node_drag_mx  = x0; node_drag_my  = y0;
-        node_drag_sx  = x0; node_drag_sy  = y0;
-        node_drag_ox  = x0; node_drag_oy  = y0;
         nodes_selecting = APPEND_LIST;
+        dragNodeStart(APPEND_LIST[0]);
+        
+        node_drag_mx  = x0; 
+        node_drag_my  = y0;
     }
 
     function doInstance() {
@@ -5056,10 +5217,10 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
         	.setInstance(node);
     	
         nodes_selecting = [_nodeNew];
-        node_dragging = _nodeNew;
-        node_drag_mx  = _nodeNew.x; node_drag_my  = _nodeNew.y;
-        node_drag_sx  = _nodeNew.x; node_drag_sy  = _nodeNew.y;
-        node_drag_ox  = _nodeNew.x; node_drag_oy  = _nodeNew.y;
+        dragNodeStart(_nodeNew);
+        
+        node_drag_mx  = _nodeNew.x; 
+        node_drag_my  = _nodeNew.y;
         
     }
 
@@ -5124,12 +5285,12 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
             y0 = min(y0, _node.y);
         }
 		
-        node_dragging = _app[0];
-        node_drag_mx  = x0; node_drag_my  = y0;
-        node_drag_sx  = x0; node_drag_sy  = y0;
-        node_drag_ox  = x0; node_drag_oy  = y0;
-    
         nodes_selecting = _app;
+        dragNodeStart(_app[0]);
+        
+        node_drag_mx  = x0; 
+        node_drag_my  = y0;
+        
     }
     
     function doPaste() {

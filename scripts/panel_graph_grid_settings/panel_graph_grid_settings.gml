@@ -4,6 +4,29 @@ function Panel_Graph_Grid_Setting() : Panel_Linear_Setting() constructor {
 	graphGrid = project.graphGrid;
 	
 	properties = [
+		
+		new __Panel_Linear_Setting_Item(
+			__txt("node_snap", "Snap to node"),
+			new checkBox(function() /*=>*/ { graphGrid.snap_node = !graphGrid.snap_node; }),
+			function( ) /*=>*/   {return graphGrid.snap_node},
+			function(v) /*=>*/ { graphGrid.snap_node = v; },
+			PREFERENCES.project_graphGrid.snap_node,
+			["Graph", "Toggle Node Snap"],
+			"project_graphGrid.snap_node",
+		),
+		
+		new __Panel_Linear_Setting_Item(
+			__txt("node_snap_distance", "Snap node distance"),
+			textBox_Number(function(str) /*=>*/ { graphGrid.snap_dist = max(1, real(str)); }),
+			function( ) /*=>*/   {return graphGrid.snap_dist},
+			function(v) /*=>*/ { graphGrid.snap_dist = v; },
+			PREFERENCES.project_graphGrid.snap_dist,
+			noone,
+			"project_graphGrid.snap_dist",
+		),
+		
+		-1,
+		
 		new __Panel_Linear_Setting_Item(
 			__txt("grid_snap", "Snap to grid"),
 			new checkBox(function() /*=>*/ { graphGrid.snap = !graphGrid.snap; }),
@@ -16,7 +39,7 @@ function Panel_Graph_Grid_Setting() : Panel_Linear_Setting() constructor {
 		
 		new __Panel_Linear_Setting_Item(
 			__txt("grid_size", "Grid size"),
-			new textBox(TEXTBOX_INPUT.number, function(str) /*=>*/ { graphGrid.size = max(1, real(str)); }),
+			textBox_Number(function(str) /*=>*/ { graphGrid.size = max(1, real(str)); }),
 			function( ) /*=>*/   {return graphGrid.size},
 			function(v) /*=>*/ { graphGrid.size = v; },
 			PREFERENCES.project_graphGrid.size,

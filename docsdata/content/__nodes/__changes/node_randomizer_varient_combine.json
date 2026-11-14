@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.22.3.101",
+    "changes": [
+      {
+        "date": "2026-11-14T11:27:39.504Z",
+        "node": "Graph Panel",
+        "commit": "**Graph Panel**: Add node snapping."
+      }
+    ]
+  },
+  {
     "version": "1.22.3.001",
     "changes": [
       {

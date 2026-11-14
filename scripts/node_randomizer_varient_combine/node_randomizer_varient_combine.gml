@@ -5,7 +5,7 @@ function Node_Randomizer_Varient_Combine(_x, _y, _group = noone) : Node(_x, _y, 
 	setDimension(96, 48);
 	
 	////- =Track
-	newInput( 0, nodeValue_Int(  "Index",       0 ));
+	newInput( 0, nodeValue_Int(  "Index", 0 ));
 	// 2
 	
 	newOutput( 0, nodeValue_Output( "Variant Index",  VALUE_TYPE.integer, 0  ));

@@ -320,9 +320,13 @@
 			}
 			
 			PREFERENCES.project_graphGrid = {
+				snap_node   : false,
+				snap_dist   : 16,
+				
 				show	    : true,
 				show_origin : false,
 				snap	    : true,
+				
 				size	    : 16,
 				color       : ca_white,
 				opacity     : 0.05,

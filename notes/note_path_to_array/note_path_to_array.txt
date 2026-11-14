@@ -1,0 +1,8 @@
+Convert compounded path to array of single paths.
+
+## Properties
+
+[proptable]
+Path
+Path|The Original Path
+[/proptable]

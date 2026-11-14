@@ -2,8 +2,11 @@
 This node is part of the <a href="https://docs.pixel-composer.com/variant">Variant</a> system.
 [/banner]
 
+Connect to a variant section.
+
 ## Properties
 
 [proptable]
-
+Section
+Section Name|Name of the section.
 [/proptable]

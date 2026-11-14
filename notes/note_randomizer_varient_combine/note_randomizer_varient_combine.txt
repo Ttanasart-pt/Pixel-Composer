@@ -1,0 +1,11 @@
+[banner][color=#505066]
+This node is part of the <a href="https://docs.pixel-composer.com/variant">Variant</a> system.
+[/banner]
+
+Combines multiple sections. Multiply all possible combination in each section.
+
+## Properties
+
+[proptable]
+
+[/proptable]
