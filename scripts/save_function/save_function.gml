@@ -202,7 +202,9 @@ function SAVE_AUTO(_project = PROJECT) {
 		+ string_lead_zero(current_second, 2) 
 		+ ".pxc";
 	
-	try		 { SAVE_AT(_project, loc + fname, new save_param(false, "Autosaved", true, true, false)); }
+	var fpath = filename_combine(loc, fname);
+	
+	try		 { SAVE_AT(_project, fpath, new save_param(false, "Autosaved", true, true, false)); }
 	catch(e) { print(exception_print(e)); }
 }
 
