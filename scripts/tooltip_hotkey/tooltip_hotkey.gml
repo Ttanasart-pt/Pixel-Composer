@@ -168,10 +168,11 @@ function tooltipHotkey_multiple(_keys, _cmod) constructor {
 		
 		TOOLTIP_SURFACE = surface_verify(TOOLTIP_SURFACE, tww, thh);
 		surface_set_shader(TOOLTIP_SURFACE, noone);
-			draw_sprite_stretched(THEME.textbox, 3, 0, 0, tw, th);
-			draw_sprite_stretched(THEME.textbox, 0, 0, 0, tw, th);
+			draw_sprite_stretched(THEME.textbox, 3, 0, 0, tww, thh);
+			draw_sprite_stretched(THEME.textbox, 0, 0, 0, tww, thh);
+			
 				var tx = ui(8);
-				var hx = tw - ui(8);
+				var hx = tww - ui(8);
 				var ty = ui(8);
 				
 				for( var i = 0, n = array_length(list); i < n; i++ ) {

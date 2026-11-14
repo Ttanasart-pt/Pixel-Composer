@@ -2762,7 +2762,7 @@ function Panel_Preference() : PanelContent() constructor {
         			    var _modKeys = _keyUsing[$ _vk];
         			    for( var j = 0, m = array_length(_mod_arr); j < m; j++ ) {
         			        var _md = _mod_arr[j];
-        			        if(!struct_has(_modKeys, _md)) continue;
+        			        if(!has(_modKeys, _md)) continue;
         			        
         			        var _mspr = _mod_clr[j];
         			        for( var k = 0, p = array_length(_mspr); k < p; k++ )
@@ -2770,7 +2770,7 @@ function Panel_Preference() : PanelContent() constructor {
         			        _mkx += ui(5);
         			    }
         			}
-        			
+    				
         			draw_sprite_stretched_add(THEME.ui_panel, 1, _kx, _ky, _kw, _kh, c_white, 0.1 + _hov * 0.2);
         			
         			if(is_string(_key.key)) {
