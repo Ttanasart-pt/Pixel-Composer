@@ -105,7 +105,11 @@ function Hotkey(_context, _name, _key = "", _mod = MOD_KEY.none, _action = noone
 	static isModified  = function() /*=>*/ {return !key.isEqual(dkey) || keys != undefined};
 	static isEqual     = function(k) /*=>*/ {return key.isEqual(k.key)};
 	
-	static reset  = function(r=0) /*=>*/ { key.setKey(dkey); if(r) PREF_SAVE(); }
+	static reset  = function(r=0) /*=>*/ { 
+		key.setKey(dkey); 
+		keys = undefined;
+		if(r) PREF_SAVE(); 
+	}
 	
 	static toString = function() /*=>*/ {return $"{getNameFull()}: {getKeyName()}"};
 	

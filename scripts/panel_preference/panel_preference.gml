@@ -1616,25 +1616,38 @@ function Panel_Preference() : PanelContent() constructor {
 			array_push(hotkeyNames,   _names);
 			array_push(hotkeyKeyName, []);
     		
+    		var _graph_list = [];
+    		
 	    	for( var i = 0, n = array_length(HOTKEY_CONTEXT); i < n; i++ ) {
 	    		var ctx  = HOTKEY_CONTEXT[i];
 	    		if(ctx == "_") continue;
 	    		
 	    		var _title = ctx == 0? "Global" : ctx;
 	    		    _title = string_replace_all(_title, "_", " ");
+	    		    
 			    if(string_starts_with(_title, "Node")) {
 			    	array_push(key_node_index, ctx);
 			    	continue;
 			    }
 			    
-	    		var _lst = [];
-	    		var ll   = HOTKEYS[$ ctx];
-	    		for( var j = 0, m = array_length(ll); j < m; j++ ) 
-	    			_lst[j] = ll[j];
+	    		var ll = HOTKEYS[$ ctx];
+	    		
+	    		if(_title == "GraphNode") {
+	    			for( var j = 0, m = array_length(ll); j < m; j++ ) 
+		    			array_push(_graph_list, ll[j]);
+	    			
+	    		} else {
+		    		var _lst = [];
+		    		for( var j = 0, m = array_length(ll); j < m; j++ ) 
+		    			_lst[j] = ll[j];
+		    		
+		    		if(ctx == "Graph") _graph_list = _lst;
+		    		
+		    		array_push(hotkeyContext, { context: ctx, list: _lst });
+		    		array_push(hotkeyArray, _title);
+	    		}
 	    		
 	    		array_sort(_lst, function(s1, s2) /*=>*/ {return string_compare(s1.name, s2.name)});
-	    		array_push(hotkeyContext, { context: ctx, list: _lst });
-	    		array_push(hotkeyArray, _title);
 	    		
 	    		if(_title == "Graph") {
 	    			array_push(hotkeyContext, { list: GRAPH_ADD_NODE_KEYS });
