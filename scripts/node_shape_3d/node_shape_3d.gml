@@ -61,7 +61,7 @@ function Node_Shape_3D(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	newInput( 8, nodeValue_Int(    "Side",      8      ));
 	newInput( 9, nodeValue_Bool(   "Caps",   true      ));
 	newInput(13, nodeValue_Vec2(   "Radius", [.75,.25] ));
-	newInput(12, nodeValue_IVec2(  "Side",   [16,8]    ));
+	newInput(12, nodeValue_IVec2(  "Side",   [8,16]    ));
 	newInput(14, nodeValue_Slider( "Ratio",    .5      ));
 	newInput(15, nodeValue_Float(  "Height",   .5      ));
 	
@@ -78,7 +78,7 @@ function Node_Shape_3D(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	
 	////- =Lighting
 	newInput(23, nodeValue_Bool(    "Use Light",     false    ));
-	newInput(24, nodeValue_Color(   "Ambient Color", ca_white ));
+	newInput(24, nodeValue_Color(   "Ambient Color", ca_black ));
 	newInput(25, nodeValue_Rot(     "Light H Angle", 0        ));
 	newInput(26, nodeValue_Rot(     "Light V Angle", 30       ));
 	newInput(27, nodeValue_Color(   "Light Color",   ca_white ));

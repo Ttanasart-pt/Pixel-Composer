@@ -79,7 +79,6 @@ function Node_Processor(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	////- Process
 	
 	static setProcess = function(_process = attributes.process) {
-		_process = false;
 		attributes.process = _process;
 		icon = attributes.process? THEME.node_processor_icon : noone;
 		
@@ -350,7 +349,8 @@ function Node_Processor(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		
 		var _dim = getDimension();
 		if(use_depth) surface_depth_disable(false);
-			
+		current_data = inputs_data;
+		
 		if(os == 1) {
 			_outputs = outputs[0].getValue(frame);
 			if(outputs[0].type == VALUE_TYPE.surface)

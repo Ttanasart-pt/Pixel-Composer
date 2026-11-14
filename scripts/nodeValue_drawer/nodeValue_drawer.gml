@@ -321,7 +321,7 @@ function drawWidget(xx, yy, ww, _m, _jun, global_var = true, _hover = false, _fo
 			var hv = _hover && point_in_rectangle(_m[0], _m[1], cx - cs/2, yy, cx + cs/2, yy + lb_h);
 			var sc = hv? COLORS._main_icon_light : COLORS._main_icon;
 			
-			draw_sprite_ui(THEME.arrow, (!coll) * 3, cx, cy + (!coll) * ui(2), 1, 1, 0, sc);
+			draw_sprite_ui(THEME.arrow, (!coll) * 3, cx, cy, 1, 1, 0, sc);
 			if(hv && mouse_lpress(_focus)) 
 				jun.sectionCollapse = !jun.sectionCollapse;
 				
@@ -602,24 +602,20 @@ function drawWidget(xx, yy, ww, _m, _jun, global_var = true, _hover = false, _fo
 				if(RANDOMIZER_ACTIVE) {
 					bx  -= bs; 
 					
-					switch(jun.type) {
-						case VALUE_TYPE.float : 
-						case VALUE_TYPE.integer : 
-						case VALUE_TYPE.color : 
-							var _rand = PROJECT.randomizer;
-							var _ran  = _rand.hasValue(jun);
-							
-							var bt = _ran? __txt("Remove Randomizer") : __txt("Add to Randomizer");
-							var bc = _ran? COLORS._main_accent : COLORS._main_icon_light;
-							
-							b = buttonInstant_Pad(bb, bx, by, bs, bs, _m, hv, fc, bt, THEME.icon_random, 0, bc, 1, ui(2)); 
-							cHov = cHov || b;
-							
-							if(b == 2) {
-								if(_ran) _rand.removeValue(jun);
-								else     _rand.addTrack(new Project_Randomizer_Value(jun));
-							}
-							break;
+					if(jun.randomizable) {
+						var _rand = PROJECT.randomizer;
+						var _ran  = _rand.hasValue(jun);
+						
+						var bt = _ran? __txt("Remove Randomizer") : __txt("Add to Randomizer");
+						var bc = _ran? COLORS._main_accent : COLORS._main_icon_light;
+						
+						b = buttonInstant_Pad(bb, bx, by, bs, bs, _m, hv, fc, bt, THEME.icon_random, 0, bc, 1, ui(2)); 
+						cHov = cHov || b;
+						
+						if(b == 2) {
+							if(_ran) _rand.removeValue(jun);
+							else     _rand.addTrack(new Project_Randomizer_Value(jun));
+						}
 					}
 					
 					bx -= ui(4);

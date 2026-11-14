@@ -64,8 +64,10 @@ uniform vec2  dimension;
 
 uniform int   size;
 uniform float kernel[256];
+uniform float intensity;
 
 uniform int   normalized;
+uniform int   absolute;
 uniform float rotation;
 
 void main() {
@@ -101,5 +103,7 @@ void main() {
 		c += w * sampleTexture( gm_BaseTexture, px) / sum;
 	}
 	
-    gl_FragColor = c * v_vColour;
+	if(absolute == 1) c = abs(c);
+	
+    gl_FragColor = c * v_vColour * intensity;
 }

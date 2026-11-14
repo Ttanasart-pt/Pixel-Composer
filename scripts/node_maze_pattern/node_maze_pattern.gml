@@ -18,7 +18,7 @@ function Node_Maze_Pattern(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	newInput( 6, nodeValue_Color(    "BG Color",       ca_black  ));
 	newInput( 7, nodeValue_Gradient( "Path Color",     gra_white )).addShift(11);
 	newInput( 8, nodeValue_Int(      "Path Iteration", 100       ));
-	// input 12
+	// 12
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
@@ -93,7 +93,7 @@ function Node_Maze_Pattern(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 						}
 					}
 					
-					draw_set_color(_cwal.caches[frac(_cshf + _p / _psca) * _cwal.cacheRes]);
+					draw_set_color(_cwal.evalFast(pfract(_cshf + _p / _psca)));
 					
 					switch(_d) {
 						case 0 : draw_point(_x, _y + 1); break;
@@ -181,7 +181,7 @@ function Node_Maze_Pattern(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 						}
 					}
 					
-					draw_set_color(_cwal.caches[frac(_cshf + _p / _psca) * _cwal.cacheRes]);
+					draw_set_color(_cwal.evalFast(pfract(_cshf + _p / _psca)));
 					
 					switch(_d) {
 						case 0 : draw_point(_x, _y + 1); break;

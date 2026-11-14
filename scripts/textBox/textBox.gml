@@ -21,6 +21,7 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 		format      = TEXT_AREA_FORMAT._default;
 		precision   = 5;
 		padding     = ui(8);
+		increment   = true;
 		
 		unit        = noone;
 		prefix      = "";
@@ -172,6 +173,7 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 	static setVAlign     = function(_v) /*=>*/ { yalign      = _v;    return self; }
 	static setFont       = function(_v) /*=>*/ { font        = _v;    return self; }
 	static setPlaceHold  = function(_v) /*=>*/ { placeHolder = _v;    return self; }
+	static setIncrement  = function(_v) /*=>*/ { increment   = _v;    return self; }
 	
 	static setLabelAlign = function(_v) /*=>*/ { labelAlign  = _v;    return self; }
 	static setLabelExt   = function(l,s)/*=>*/ { label = l; labelSpr = s; return self; }
@@ -696,7 +698,7 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 		var sbw = _bs * (sb1 + sb2 + unt);
 		var _drawInc = false;
 		
-		if(interactable && input == TEXTBOX_INPUT.number)
+		if(interactable && increment && input == TEXTBOX_INPUT.number)
 			_drawInc = PREFERENCES.textbox_incremental && _w - sbw > ui(80) + _bs * 2;
 		
 		if(hide <= 0) {

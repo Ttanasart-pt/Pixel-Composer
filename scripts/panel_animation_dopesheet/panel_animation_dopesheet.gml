@@ -39,6 +39,10 @@
     
     function panel_animation_group_rename()            { CALL("animation_rename_group");            PANEL_ANIMATION.group_rename();          }
     function panel_animation_group_remove()            { CALL("animation_remove_group");            PANEL_ANIMATION.group_remove();          }
+    
+    function panel_animation_toggle_anim()             { CALL("animation_toggle_anim");             PANEL_ANIMATION.toggle_anim();           }
+    function panel_animation_remove_anim()             { CALL("animation_remove_anim");             PANEL_ANIMATION.remove_anim();           }
+    
     function panel_animation_toggle_axis()             { CALL("animation_toggle_axis");             PANEL_ANIMATION.toggle_axis();           }
     function panel_animation_separate_axis()           { CALL("animation_separate_axis");           PANEL_ANIMATION.separate_axis();         }
     function panel_animation_combine_axis()            { CALL("animation_combine_axis");            PANEL_ANIMATION.combine_axis();          }
@@ -101,6 +105,8 @@
         
         registerFunction(an, "Rename Group",          "", n, panel_animation_group_rename         ).setMenu("animation_rename_group",        )
         registerFunction(an, "Remove Group",          "", n, panel_animation_group_remove         ).setMenu("animation_remove_group",        THEME.cross)
+        registerFunction(an, "Toggle Animation",      "", n, panel_animation_toggle_anim          ).setMenu("animation_toggle_anim",         )
+        registerFunction(an, "Remove Animation",      "", n, panel_animation_remove_anim          ).setMenu("animation_remove_anim",         )
         registerFunction(an, "Separate/Combine Axis", "", n, panel_animation_toggle_axis          ).setMenu("animation_toggle_axis",         )
         registerFunction(an, "Separate Axis",         "", n, panel_animation_separate_axis        ).setMenu("animation_separate_axis",       )
         registerFunction(an, "Combine Axis",          "", n, panel_animation_combine_axis         ).setMenu("animation_combine_axis",        )
@@ -450,6 +456,9 @@ function Panel_Animation_Dopesheet() {
         function group_rename()  { run_in(1, function() /*=>*/ { context_selecting_item.item.rename(); }); }
         function group_remove()  { context_selecting_item.item.destroy();                      }
         
+        function toggle_anim()   { context_selecting_prop.setAnim(!context_selecting_prop.is_anim); }
+        function remove_anim()   { context_selecting_prop.setAnim(false); }
+        
         function toggle_axis()   { context_selecting_prop.toggleAxisSeparation(); }
         function separate_axis() { context_selecting_prop.separateAxis();         }
         function combine_axis()  { context_selecting_prop.combineAxis();          }
@@ -511,10 +520,6 @@ function Panel_Animation_Dopesheet() {
 			"animation_region_clear",
 	    ];
 	    
-	    // global.menuItems_animation_region = [
-	    //     "animation_region_curve",
-	    // ];
-	    
 	    global.menuItems_animation_name_empty = [
 	        "animation_new_folder",
 	        "animation_new_folder_select",
@@ -545,7 +550,19 @@ function Panel_Animation_Dopesheet() {
 			"animation_dopesheet_collapse", 
 	    ];
 	    
+	    global.menuItems_animation_name_prop = [
+	        "animation_remove_anim",
+	        -1,
+	        
+	        "animation_new_folder",
+	        "animation_new_folder_select",
+	        -1,
+	        "animation_dopesheet_expand", 
+			"animation_dopesheet_collapse", 
+	    ];
+	    
 	    global.menuItems_animation_name_prop_axis = [
+	    	"animation_remove_anim",
 	        "animation_toggle_axis",
 	    ];
 	    
@@ -2363,10 +2380,8 @@ function Panel_Animation_Dopesheet() {
 	        var _gx = ui(8);
 	        var _gy = ty - ui(9);
 	        var  bc = [COLORS._main_icon, COLORS._main_icon_on_inner];
-	        if(buttonInstant(noone, _gx, _gy, tw, th, m, hov, foc, __txt("Go to Property"), THEME.animate_prop_go, 0, bc, .75) == 2) {
-	            graphFocusNode(_node);
-	            PANEL_INSPECTOR.highlightProp(prop);
-	        }
+	        if(buttonInstant(noone, _gx, _gy, tw, th, m, hov, foc, __txt("Go to Property"), THEME.animate_prop_go, 0, bc, .75) == 2)
+	            inspectorFocusProp(prop);
 	        _gx += tw + 1;
 	        
 	        var ii = prop.attributes.timeline_hide;
@@ -3945,8 +3960,9 @@ function Panel_Animation_Dopesheet() {
             } else if(point_in_rectangle(mx, my, pd, pd + topbar_height, pd + tool_width, pd + dopesheet_h)) {
                 if(context_selecting_prop != noone) {
                     if(context_selecting_prop.sepable) menuCallGen("animation_name_prop_axis");
-                    else                               menuCallGen("animation_name_empty");
+                    else                               menuCallGen("animation_name_prop");
                 }
+                
                 else if(context_selecting_item == noone)                    menuCallGen("animation_name_empty");
                 else if(is(context_selecting_item.item, timelineItemNode))  menuCallGen("animation_name_item");
                 else if(is(context_selecting_item.item, timelineItemGroup)) menuCallGen("animation_name_group");

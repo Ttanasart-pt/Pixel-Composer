@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"node_randomizer_varient_selector",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"node_randomizer_varient_selector",
+  "parent":{
+    "name":"project",
+    "path":"folders/nodes/data/misc/project.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

@@ -30,7 +30,11 @@ function buttonColor(_onModify, dialog = noone) : widget() constructor {
 		pick.onModify = onModify;
 	}).setIcon(THEME.color_wheel).iconPad(ui(6)).setActivatePress();
 	
-	tb_hex = textBox_Text(function(txt) /*=>*/ { onModify(color_from_hex(txt)); }).setFont(f_p4).setAlign(fa_right).setHide(1);
+	tb_hex   = textBox_Text(function(txt) /*=>*/ {return onModify(color_from_hex(txt))}).setFont(f_p4).setAlign(fa_right).setHide(1);
+	tb_alpha = slider(0, 1, .01, function(a) /*=>*/ { 
+		current_color = cola(current_color, clamp(a,0,1));
+		onModify(current_color);
+	}).setFont(f_p4).setAlign(fa_center).setIncrement(false);
 	
 	static isSimple  = function() /*=>*/ { show_alpha = false; simple = true; return self; };
 	static hideAlpha = function() /*=>*/ { show_alpha = false;                return self; };
@@ -133,12 +137,15 @@ function buttonColor(_onModify, dialog = noone) : widget() constructor {
 				
 				var _bba = .4 + .4 * interactable;
 				var _bbc = COLORS._main_icon;
+				var _foc = active;
 				
 				if(hover && point_in_rectangle(_m[0], _m[1], _x, _y, _x + _bs, _y + _h)) {
 					_bbc = COLORS._main_icon_light;
 					
-					if(mouse_lpress())
+					if(mouse_lpress()) {
 						expanded = !expanded;
+						_foc = false;
+					}
 				}
 				
 				draw_sprite_stretched_ext(THEME.button_def, 0, _x, _y, _bs, _h, CDEF.main_mdwhite, 1);
@@ -293,13 +300,22 @@ function buttonColor(_onModify, dialog = noone) : widget() constructor {
 					draw_set_color(c_white); draw_circle_border(pp[0], pp[1], _sls * .04, 3 );
 					draw_set_color(c_black); draw_circle_border(pp[0], pp[1], _sls * .04, 1 );
 					
+					var tbp = ui(4 + 2);
 					var tbw = ui(68);
-					var tbh = ui(24);
-					var tbx = _x + _w - ui(4) - tbw;
-					var tby = _cly + _clh + ui(0);
+					var tbh = ui(24 - 4);
+					var tbx = _x + _w - tbp - tbw;
+					var tby = _cly + _clh + ui(2);
 					
-					tb_hex.setFocusHover(active, hover);
+					tb_hex.setFocusHover(_foc, hover);
 					tb_hex.draw(tbx, tby, tbw, tbh, color_get_hex(current_color), _m);
+					
+					if(show_alpha) {
+						tbw = _w - tbw - tbp * 2 - ui(4);
+						tbx = _x + tbp;
+						
+						tb_alpha.setFocusHover(_foc, hover);
+						tb_alpha.draw(tbx, tby, tbw, tbh, _color_get_a(current_color), _m);
+					}
 				}
 			}
 			

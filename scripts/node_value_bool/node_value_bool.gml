@@ -4,7 +4,7 @@ function __NodeValue_Bool(_name, _node, _value, _tooltip = "") : NodeValue(_name
 		[ "False till Now", [[ 0, false ], [ noone, true  ]] ], 
 		[ "True till Now",  [[ 0, true  ], [ noone, false ]] ], 
 	];
-	
+
 	////- GET
 	
 	function toBool(a) { return is_array(a)? array_map(a, function(v,i) /*=>*/ {return toBool(v)}) : bool(a) };

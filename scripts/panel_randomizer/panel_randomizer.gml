@@ -87,6 +87,9 @@
 			
 			for( var i = 0, n = array_length(contents); i < n; i++ ) {
 				var _trk = contents[i];
+				var _nod = _trk.getNode();
+				if(!_nod.active) continue;
+				
 				var vamo = _trk.varUse? array_length(_trk.varients) : 1;
 				array_push(_rngs, vamo)
 			}
@@ -102,9 +105,12 @@
     		var _amo = min(array_length(contents), array_length(_ind));
     		
     		for( var i = 0; i < _amo; i++ ) {
-    			var _tr = contents[i];
-    			var _in = _ind[i];
-    			_tr.setVarients(_in);
+    			var _trk = contents[i];
+    			var _nod = _trk.getNode();
+				if(!_nod.active) continue;
+				
+    			var _in  = _ind[i];
+    			_trk.setVarients(_in);
     		}
     		
     		if(bindNode) bindNode.triggerRender();
@@ -154,10 +160,11 @@
 		typeWidget = undefined;
 		varHigh    = undefined;
 		
-		gradient = gra_black_white;
-		palette  = array_clone(DEF_PALETTE);
-		min_val  = 0;
-		max_val  = 0;
+		gradient  = gra_black_white;
+		palette   = array_clone(DEF_PALETTE);
+		min_val   = 0;
+		max_val   = 0;
+		round_val = false;
 		
 		editWidgetGradient  = undefined;
 		editWidgetPalette   = undefined;
@@ -207,6 +214,19 @@
 						editWmin.onModify = function(v,i) /*=>*/ { min_val[i] = v; };
 						editWmax.onModify = function(v,i) /*=>*/ { max_val[i] = v; };
 					}
+					
+					editWmin.unit = noone;
+					editWmax.unit = noone;
+					
+					editWmin.side_button   = noone;
+					editWmin.side_button2  = noone;
+					editWmin.front_button  = noone;
+					editWmin.front_button2 = noone;
+					
+					editWmax.side_button   = noone;
+					editWmax.side_button2  = noone;
+					editWmax.front_button  = noone;
+					editWmax.front_button2 = noone;
 					break;
 			}
 			
@@ -245,13 +265,79 @@
 			node_id = inp.node.node_id;
 		    inindex = inp.index;
 		    
-		    min_val = inp.getValue();
-		    max_val = inp.getValue();
+		    var baseVal = inp.getValue();
+		    min_val = baseVal;
+		    max_val = baseVal;
+			varAmo  = 4;
 			
 			var n = getNode();
 			var v = getValue();
 			
-			if(v) name = v.getName();
+			if(!is(v, NodeValue)) return self;
+			
+			name = v.getName();
+			
+			var rangeMin = baseVal;
+			var rangeMax = baseVal;
+			round_val = v.type == VALUE_TYPE.integer;
+			
+			switch(v.type) {
+				case VALUE_TYPE.float   : 
+				case VALUE_TYPE.integer : 
+					if(v.display_type == VALUE_DISPLAY.enum_button || v.display_type == VALUE_DISPLAY.enum_scroll) {
+						var _chs = v.getChoices();
+						rangeMin = 0;
+						rangeMax = max(0, array_length(_chs) - 1);
+					
+					} else if(v.display_type == VALUE_DISPLAY.rotation) {
+						rangeMin = 0;
+						rangeMax = 360;
+							
+					} else {
+						var wdgt = v.getEditWidget();
+						
+						if(is(wdgt, textBox) && wdgt.slide_range != noone) {
+							rangeMin = wdgt.curr_range[0];
+							rangeMax = wdgt.curr_range[1];
+							
+						} else if(is_real(baseVal)) {
+							var dig = floor(logn(10, abs(baseVal)));
+							rangeMin = power(10, dig);
+							rangeMax = max(1, power(10, dig+1) - 1);
+							
+						} else if(is_array(baseVal)) {
+							var vamo = array_length(baseVal);
+							rangeMin = array_create(vamo);
+							rangeMax = array_create(vamo);
+							
+							for( var i = 0; i < vamo; i++ ) {
+								var dig = floor(logn(10, abs(baseVal[i])));
+								rangeMin[i] = power(10, dig);
+								rangeMax[i] = max(1, power(10, dig+1) - 1);
+							}
+						}
+					}
+					break;
+					
+				case VALUE_TYPE.text : 
+					if(v.display_type == VALUE_DISPLAY.enum_string) {
+						var _chs  = v.getChoices();
+						rangeMin  = 0;
+						rangeMax  = max(0, array_length(_chs) - 1);
+						round_val = true;
+					}
+					break;
+					
+				case VALUE_TYPE.boolean : 
+					rangeMin = 0;
+					rangeMax = 1;
+					varAmo   = 2;
+					break;
+			}
+			
+			min_val = rangeMin;
+		    max_val = rangeMax;
+		    
 			return self;
 			
 		} if(_val) setInput(_val);
@@ -262,8 +348,8 @@
 			varients = array_verify(varients, varAmo);
 			varIndex = -1;
 			
-			var _v = getValue();
-			if(!is(_v, NodeValue)) return 0;
+			var v = getValue();
+			if(!is(v, NodeValue)) return 0;
 			
 			for( var i = 0; i < varAmo; i++ ) {
 				var _val = undefined;
@@ -275,7 +361,7 @@
 				var _val = undefined;
 				var _rat = i / max(1, varAmo - 1);
 				
-				switch(_v.type) {
+				switch(v.type) {
 					case VALUE_TYPE.color : 
 						if(type == 0 && is(gradient, gradientObject)) // gradient
 							_val = gradient.eval(_rat);
@@ -285,11 +371,22 @@
 						
 						break;
 						
+					case VALUE_TYPE.boolean : 
+						_val = _rat > .5;
+						break;
+					
+					case VALUE_TYPE.text : 
+						if(v.display_type == VALUE_DISPLAY.enum_string) {
+							var _chs = v.getChoices();
+							var  ind = round(_rat * max(0, array_length(_chs) - 1));
+							_val = array_safe_get_fast(_chs, ind);
+						}
+						break;
+						
 					default : 
 						if(is_numeric(min_val)) {
 							_val = lerp(min_val, max_val, _rat);
-							if(_v.type == VALUE_TYPE.integer)
-								 _val = round(_val);
+							if(round_val) _val = round(_val);
 							
 						} else if(is_array(min_val)) {
 							_val = array_create(array_length(min_val));
@@ -317,26 +414,35 @@
 			randomize();
 			varIndex = -1;
 			
-			var _v = getValue();
-			if(!is(_v, NodeValue)) return 0;
+			var v = getValue();
+			if(!is(v, NodeValue)) return 0;
 			
 			var _val = undefined;
 			
-			switch(_v.type) {
+			switch(v.type) {
 				case VALUE_TYPE.color : 
 					if(type == 0 && is(gradient, gradientObject)) // gradient
 						_val = gradient.eval(random(1));
 						
 					else if(type == 1 && !array_empty(palette)) // palette
 						_val = array_safe_get(palette, irandom(array_length(palette) - 1));
-					
+					break;
+				
+				case VALUE_TYPE.boolean : 
+					_val = choose(0,1);
+					break;
+				
+				case VALUE_TYPE.text : 
+					if(v.display_type == VALUE_DISPLAY.enum_string) {
+						var _chs = v.getChoices();
+						_val = array_get_random(_chs);
+					}
 					break;
 					
 				default : 
 					if(is_numeric(min_val)) {
-						if(_v.type == VALUE_TYPE.integer)
-							 _val = irandom_range(min_val, max_val);
-						else _val =  random_range(min_val, max_val);
+						_val = random_range(min_val, max_val);
+						if(round_val) _val = round(_val);
 						
 					} else if(is_array(min_val)) {
 						_val = array_create(array_length(min_val));
@@ -346,7 +452,7 @@
 					}		
 			}
 			
-			if(_val != undefined) _v.setValue(_val);
+			if(_val != undefined) v.setValue(_val);
 			return _val;
 		}
 		
@@ -443,6 +549,9 @@
 				}
 				
 				if(is(_trk, Project_Randomizer_Value)) {
+					var _nod = _trk.getNode();
+					if(!is(_nod, Node) || !_nod.active) continue;
+					
 					if(_currSec) array_push(_currSec.contents, _trk);
 				}
 			}
@@ -453,13 +562,24 @@
 		
 		static serialize = function() {
 			var _m = {};
-			_m.values = array_map(values, function(t,i) /*=>*/ {return t.serialize()} );
+			
+			_m.values = [];
+			for( var i = 0, n = array_length(values); i < n; i++ ) {
+				var _trk = values[i];
+				
+				if(is(_trk, Project_Randomizer_Value)) {	
+					var _nod = _trk.getNode();
+					if(!is(_nod, Node) || !_nod.active) continue;
+				}
+				
+				array_push(_m.values, _trk.serialize() );
+			}
 			return _m;
 		}
 		
 		static deserialize = function(_data) {
 			values = array_map(_data.values, function(v,i) /*=>*/ {return new Project_Randomizer_Track().deserialize(v)});
-			refreshContent();
+			run_in(2, function() /*=>*/ {return refreshContent()});
 			return self;
 		}
 	}
@@ -595,8 +715,9 @@ function Panel_Randomizer() : PanelContent() constructor {
 			if(!is(_trk, Project_Randomizer_Value)) continue;
 			
 			var _nod = _trk.getNode();
-			var _val = _trk.getValue();
+			if(!is(_nod, Node) || !_nod.active) continue;
 			
+			var _val = _trk.getValue();
 			if(!is(_val, NodeValue)) continue;
 			
 			var _nnam = _nod.getDisplayName();
@@ -611,6 +732,7 @@ function Panel_Randomizer() : PanelContent() constructor {
 			
 			if(hv) {
 				draw_sprite_stretched_ext(THEME.box_r2, 0, ui(4), yy, ww - ui(8), thh, COLORS._main_icon, .1);
+				if(_m[0] < edw && foc && DOUBLE_CLICK) inspectorFocusProp(_val);
 			}
 			
 			if(editing) {
@@ -620,7 +742,6 @@ function Panel_Randomizer() : PanelContent() constructor {
 					dragging       = true;
 					dragging_track = _trk;
 				}
-				
 				tx += bs;
 				
 			} else 
@@ -1134,48 +1255,6 @@ function Panel_Randomizer() : PanelContent() constructor {
 		if(buttonInstant_Pad(bb, bx, by, bs, bs, m, hov, foc, __txt("Edit"), THEME.gear_16, 0, bc) == 2)
 			editing = !editing;
 		bx += bs + ui(4);
-		
-		if(n != noone) {
-			bc = [COLORS._main_icon, COLORS._main_value_positive];
-			if(buttonInstant_Pad(bb, bx, by, bs, bs, m, hov, foc, __txt("Add Value"), THEME.add_16, 0, bc) == 2) {
-				var dsp = is_array(n.input_display_list);
-				var amo = dsp? array_length(n.input_display_list) : array_length(n.inputs);
-				var menu = [];
-				var _inp, _ind;
-				
-				for( var i = 0; i < amo; i++ ) {
-					if(!dsp) {
-						_ind = i;
-						_inp = n.inputs[i];
-						
-					} else {
-						_ind = n.input_display_list[i];
-						if(!is_numeric(_ind)) {
-							if(!array_empty(menu) && array_last(menu) != -1) array_push(menu, -1);
-							continue
-						}
-						_inp = n.inputs[_ind];
-					}
-					
-					if(!is(_inp, NodeValue) || (!_inp.show_in_inspector)) continue;
-					
-					switch(_inp.type) {
-						case VALUE_TYPE.float : 
-						case VALUE_TYPE.integer : 
-						case VALUE_TYPE.color : 
-							array_push(menu, menuItem(_inp.getName(), function(v) /*=>*/ {
-								PROJECT.randomizer.addTrack(new Project_Randomizer_Value(v))
-								toRefresh = true;
-							}).setParam(_inp));
-							break;
-					}
-					
-				}
-				
-				if(array_last(menu) == -1) array_delete(menu, array_length(menu) - 1, 1);
-				if(!array_empty(menu)) menuCall("", menu);
-			}
-		} bx += bs + ui(4);
 		
 		if(editing) {
 			bc = [COLORS._main_icon, COLORS._main_value_positive];

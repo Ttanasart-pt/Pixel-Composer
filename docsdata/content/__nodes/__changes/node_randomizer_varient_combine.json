@@ -1,0 +1,12 @@
+[
+  {
+    "version": "1.22.3.001",
+    "changes": [
+      {
+        "date": "2026-11-14T02:06:21.098Z",
+        "node": "",
+        "commit": "**Maze Pattern**: Fix error when using negative gradient shift."
+      }
+    ]
+  }
+]

@@ -11,6 +11,7 @@ function __NodeValue_Enum_String(_name, _node, _value, _data) : NodeValue(_name,
 	
 	////- SET 
 	
+	static getChoices = function() { return display_data.data; }
 	static setChoices = function(_ch) { setDisplay(VALUE_DISPLAY.enum_string, _ch); return self; }
 	
 	////- CONNECT 

@@ -1,9 +1,15 @@
 function Node_Switch(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name = "Switch";
+	reactive_on_hover = true;
 	setDimension(96, 48);
 	
-	newInput(0, nodeValue_Text( "Index" )).setVisible(true, true).rejectArray();
-	newInput(1, nodeValue( "Default value", self, CONNECT_TYPE.input, VALUE_TYPE.any, 0 )).setVisible(false, true);
+	////- =Switch
+	newInput( 2, nodeValue_EButton( "Selector Type", 1, [ "Number", "Text" ] )).rejectArray();
+	newInput( 3, nodeValue_Float( "Index" )).setVisible(true, true).rejectArray();
+	newInput( 0, nodeValue_Text(  "Index" )).setVisible(true, true).rejectArray();
+	
+	newInput( 1, nodeValue( "Default value", self, CONNECT_TYPE.input, VALUE_TYPE.any, 0 )).setVisible(false, true);
+	// 4
 	
 	size_adjust_tool = new Inspector_Custom_Renderer(function(_x, _y, _w, _m, _hover, _focus) {
 		var _h = ui(48);
@@ -31,8 +37,9 @@ function Node_Switch(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	
 	newOutput(0, nodeValue_Output("Result", VALUE_TYPE.any, 0));
 	
-	input_display_list = [ 0, 1, 
-		["Cases",  false], size_adjust_tool
+	input_display_list = [ 
+		[ "Switch", false ],  2,  3,  0,  1, 
+		[ "Cases",  false ], size_adjust_tool
 	]
 	
 	input_selecting = noone;
@@ -40,8 +47,7 @@ function Node_Switch(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	////- Dynamic IO
 
 	function createNewInput(index = array_length(inputs)) {
-		var bDel = button(function() /*=>*/ {return node.deleteInput(index)})
-		            .setIcon(THEME.minus_16, 0, COLORS._main_icon);
+		var bDel = button(function() /*=>*/ {return node.deleteInput(index)}).setIcon(THEME.minus_16, 0, COLORS._main_icon);
 		
 		inputs[index + 0] = nodeValue_Text("Case").setDisplay(VALUE_DISPLAY.text_box, { side_button : bDel }).setAnimable(false);
 		bDel.setContext(inputs[index + 0]);
@@ -153,9 +159,23 @@ function Node_Switch(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	}
 	
 	static update = function(frame = CURRENT_FRAME) {
-		var _sel = getInputData(0);
-		var _res = getInputData(1);
-		var _typ = inputs[1].value_from? inputs[1].value_from.type : VALUE_TYPE.any;
+		#region data
+			var _sType = getInputData( 2);
+			var _sNum  = getInputData( 3);
+			var _sTxt  = getInputData( 0);
+			var _res   = getInputData( 1);
+			
+			var _typ = inputs[1].value_from? inputs[1].value_from.type : VALUE_TYPE.any;
+			
+			inputs[ 3].setVisible(_sType == 0, _sType == 0);
+			inputs[ 0].setVisible(_sType == 1, _sType == 1);
+		#endregion
+		
+		var _sel = _sTxt; 
+		switch(_sType) {
+			case 0 : _sel = _sNum; break;
+			case 1 : _sel = _sTxt; break;
+		}
 		
 		input_selecting = inputs[1];
 		
@@ -176,9 +196,6 @@ function Node_Switch(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	}
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
-		
-		var _sel = getInputData(0);
-		var _res = getInputData(1);
 		var _frm = input_selecting;
 		if(!is(_frm, NodeValue)) return;
 		
@@ -197,9 +214,9 @@ function Node_Switch(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		var _sh = junction_draw_hei_y * _s;
 		var selAble = inputs[0].value_from == noone;
 		
-		for( var i = 1; i < array_length(inputs); i += data_length ) {
-			var val = i == 1? "" : getInputData(i - 1);
-			var str = i == 1? "default" : string(getInputData(i - 1, ""));
+		for( var i = input_fix_len; i < array_length(inputs); i += data_length ) {
+			var val = getInputData(i);
+			var str = string(val);
 			if(str == "") continue;
 			
 			var ss = min(_s * 0.4 / UI_SCALE, string_scale(str, _sw, _sh));
@@ -207,7 +224,7 @@ function Node_Switch(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			var sh = string_height(str) * ss;
 			
 			var sx = bbox.x0 + 8 * _s;
-			var sy = inputs[i].y;
+			var sy = inputs[i+1].y;
 			
 			if(selAble) {
 				var lw = bbox.w - 8 * _s;
@@ -220,7 +237,12 @@ function Node_Switch(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 				
 				if(hv) {
 					draw_sprite_stretched_ext(THEME.box_r5_clr, 0, lx, ly, lw, lh, COLORS._main_icon, 1);
-					if(mouse_lpress(_focus)) inputs[0].setValue(val);
+					if(mouse_lpress(_focus)) {
+						var _sType = getInputData( 2);
+						
+						     if(_sType == 0) inputs[3].setValue(toNumber(val));
+						else if(_sType == 1) inputs[0].setValue(val);
+					}
 				}
 				
 			}

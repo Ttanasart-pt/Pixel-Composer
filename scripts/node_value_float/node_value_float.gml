@@ -1,4 +1,4 @@
-function nodeValue_Float(_name, _value, _tooltip = "") { return new __NodeValue_Float(_name, self, _value, _tooltip); }
+function nodeValue_Float(_name, _value = 0, _tooltip = "") { return new __NodeValue_Float(_name, self, _value, _tooltip); }
 function __NodeValue_Float(_name, _node, _value, _tooltip = "") : __NodeValue_Number(_name, _node, VALUE_TYPE.float, _value, _tooltip) constructor {
 	anim_presets = [
 		[ "0, 1",  [[ 0, 0 ], [ 1, 1 ]], THEME.apreset_01 ], 
@@ -101,10 +101,15 @@ function nodeValue_Seed(_type = VALUE_TYPE.float, _name = "Seed") {
 		side_button : button(_val.doRandomize).setTooltip(__txt("Randomize"))
 			.setIcon(THEME.icon_random, 0, COLORS._main_icon).iconPad() 
 	});
-		
+	
 	return _val; 
 }
 
 function nodeValue_Slider(_name, _value, _data = {}) { 
-	return new __NodeValue_Float(_name, self, _value).setDisplay(VALUE_DISPLAY.slider, is_array(_data)? { range: _data } : _data);
+	if(is_array(_data)) _data = { range: _data };
+	
+	var _val = new __NodeValue_Float(_name, self, _value)
+		.setDisplay(VALUE_DISPLAY.slider, _data);
+	
+	return _val;
 }

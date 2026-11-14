@@ -384,8 +384,8 @@ void main() {
 
 		vec3 lpos = vec3(
 			cos(azi) * cos(ele),
-			sin(ele),
-			sin(azi) * cos(ele)
+			sin(azi) * cos(ele),
+			sin(ele)
 		);
 
 		res *= ambientColor + lightColor * max(dot(norm, lpos), 0.) * lightIntensity;

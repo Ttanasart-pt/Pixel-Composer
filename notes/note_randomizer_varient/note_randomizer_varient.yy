@@ -1,0 +1,11 @@
+{
+  "$GMNotes":"v1",
+  "%Name":"note_randomizer_varient",
+  "name":"note_randomizer_varient",
+  "parent":{
+    "name":"project",
+    "path":"folders/nodes/data/misc/project.yy",
+  },
+  "resourceType":"GMNotes",
+  "resourceVersion":"1.1",
+}

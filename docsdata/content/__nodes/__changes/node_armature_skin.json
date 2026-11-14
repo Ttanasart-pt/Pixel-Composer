@@ -11,6 +11,11 @@
         "date": "2026-11-12T02:49:09.274Z",
         "node": "skin",
         "commit": "**skin**: fix depth ordering affect scale inheritance."
+      },
+      {
+        "date": "2026-11-12T02:52:40.584Z",
+        "node": "Convolution",
+        "commit": "**Convolution**: Add absolute result option."
       }
     ]
   },

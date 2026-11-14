@@ -11,6 +11,7 @@ function __NodeValue_Enum_Button(_name, _node, _value, _data) : NodeValue(_name,
 	
 	////- Display
 	
+	static getChoices = function() { return display_data.data; }
 	static setChoices = function(_ch) { 
 		if(is(editWidget, buttonGroup)) {
 			display_data.data	 = _ch;

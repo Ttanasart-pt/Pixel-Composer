@@ -125,6 +125,8 @@ function Node_Randomizer_Varient_Combine(_x, _y, _group = noone) : Node(_x, _y, 
 	
 	////- Draw
 	
+	var_index_hover = undefined;
+	
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
 		var bbox = draw_bbox;
 		var pad  = 10;
@@ -138,6 +140,8 @@ function Node_Randomizer_Varient_Combine(_x, _y, _group = noone) : Node(_x, _y, 
 			
 		var _xc  = xx + w / 2 * _s;
 		var  y0  = yy + (name_height + pad * 1.5) * _s;
+		
+		var _var_index_hover = undefined;
 		
 		draw_set_color(COLORS._main_icon_dark);
 		draw_sprite_stretched_ext(THEME.ui_panel_bg, 1, bbox.x0, bbox.y0, bbox.x1 - bbox.x0, bbox.y1 - bbox.y0, COLORS._main_icon);
@@ -166,6 +170,7 @@ function Node_Randomizer_Varient_Combine(_x, _y, _group = noone) : Node(_x, _y, 
 					var vx = rxc - bs / 2;
 					var vy = ryc - bs / 2;
 					var vh = _hover && point_in_rectangle(_mx, _my, vx, vy, vx + bs, vy + bs);
+					if(vh) _var_index_hover = v;
 					
 					var vss = bs - 4*_s;
 					var vx0 = vx + 2*_s;
@@ -176,7 +181,7 @@ function Node_Randomizer_Varient_Combine(_x, _y, _group = noone) : Node(_x, _y, 
 						
 					draw_sprite_stretched_ext(THEME.palette_mask_outline, 1, vx0, vy0, vss, vss, cc, .75);
 					
-					if(vh) {
+					if(var_index_hover == v) {
 						draggable = false;
 						
 						var varr = varient_array[v];
@@ -195,6 +200,7 @@ function Node_Randomizer_Varient_Combine(_x, _y, _group = noone) : Node(_x, _y, 
 			hh += row * vs;
 		}
 		
+		var_index_hover = _var_index_hover;
 		h = max(48, hh);
 	}
 }

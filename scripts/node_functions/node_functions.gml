@@ -211,6 +211,7 @@
 	
 	function inspectorFocusProp(prop) {
 		if(!is(prop, NodeValue)) return;
+		
 		graphFocusNode(prop.node);
 		PANEL_INSPECTOR.highlightProp(prop);
 	}

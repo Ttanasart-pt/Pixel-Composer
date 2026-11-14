@@ -429,6 +429,10 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		}
 	#endregion
 	
+	#region ---- Randomizer ----
+		randomizable    = false;
+	#endregion
+	
 	////- META
 	
 	static setDummy = function(get_node, _dummy_undo = -1, _dummy_redo = -1) {
@@ -528,14 +532,25 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	////- VALUE
 	
 	static setType = function(_type) {
+		randomizable = false;
+		switch(_type) {
+			case VALUE_TYPE.float   : 
+			case VALUE_TYPE.integer : 
+			case VALUE_TYPE.boolean : 
+			
+			case VALUE_TYPE.color   : 
+				randomizable = true;
+				break;
+		}
+		
 		if(type == _type) return false;
 		
 		type = _type;
 		updateColor();
-		
 		if(bypass_use) getBypassJunc().setType(_type);
+		
 		return true;
-	}
+	} setType(_type);
 	
 	static setTypeSignature = function(_sig) /*=>*/ {
 		if(!is_array(_sig) || array_empty(_sig)) {
@@ -1197,6 +1212,12 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		type_array   = typeArray(self);
 		editWidgetSetted = false;
 		setDropKey();
+		
+		switch(display_type) {
+			case VALUE_DISPLAY.enum_string : 
+				randomizable = true;
+				break;
+		}
 		
 		return self;
 	}

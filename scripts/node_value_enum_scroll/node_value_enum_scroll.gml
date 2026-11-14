@@ -13,6 +13,7 @@ function __NodeValue_Enum_Scroll(_name, _node, _value, _data) : NodeValue(_name,
 	
 	////- SET
 	
+	static getChoices = function() { return display_data.data; }
 	static setChoices = function(_ch) { 
 		if(is(editWidget, scrollBox)) {
 			display_data.data	 = _ch;
