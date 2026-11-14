@@ -1393,6 +1393,7 @@
             "Node_Path_Remap",
             "Node_Path_Redistribute",
             "Node_Path_3D_Transform",
+            "Node_Path_to_Array",
             { "label": "/Combine" },
             "Node_Path_Array",
             "Node_Path_Repeat",

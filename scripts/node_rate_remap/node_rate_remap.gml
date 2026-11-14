@@ -5,22 +5,31 @@ function Node_Rate_Remap(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	newActiveInput(2);
 	
 	////- =Remap
-	newInput( 0, nodeValue_Surface( "Surface" ));
-	newInput( 1, nodeValue_Float(   "Framerate", 10 )).setValidator(VV_min(1)).setPieMenu();
-	// 3
+	newInput( 0, nodeValue_Surface( "Surface"          ));
+	newInput( 1, nodeValue_Float(   "Framerate", 10    )).setValidator(VV_min(1)).setPieMenu();
+	newInput( 3, nodeValue_Float(   "Offset",    0     )).setPieMenu();
+	newInput( 4, nodeValue_Bool(    "Loop",      true  ));
+	// 5
 	
 	newOutput(0, nodeValue_Output("Surface", VALUE_TYPE.surface, noone));
 	
-	input_display_list = [ 2,
-		[ "Remap", false ], 0, 1
+	input_display_list = [  2,
+		[ "Remap", false ],  0,  1,  3,  4, 
 	];
 	
 	////- Node
 	
 	static processData = function(_output, _data, _array_index = 0, _frame = CURRENT_FRAME) {  
-		var _surf = _data[0];
-		var _rate = _data[1];
-		var _time = CURRENT_FRAME;
+		#region
+			var _surf = _data[ 0];
+			var _rate = _data[ 1];
+			var _offs = _data[ 3];
+			var _loop = _data[ 4];
+		#endregion
+			
+		var _time = CURRENT_FRAME - _offs;
+		if(_loop) _time = pmod(_time, TOTAL_FRAMES);
+		
 		var _step = PROJECT.animator.framerate / _rate;
 		var _targ = floor(_time / _step) * _step;
 		

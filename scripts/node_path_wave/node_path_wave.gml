@@ -50,7 +50,7 @@ function Node_Path_Wave(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	
 	input_display_list = [ 5, 
 		[ "Path",       true     ],  0, 11, 12, 18,  
-		[ "Wave",      false     ],  1,  [2, true],  9, 17, -1,  3, 22, 23, 24, 25,  
+		[ "Wave",      false     ],  1,  [2, false], 9, 17, -1,  3, 22, 23, 24, 25,  
 			[ "/Shape",false     ],  4, 10, 
 		[ "Iterative", false     ], 13, 14, 15, 16, 
 		[ "Wiggle",     true,  6 ],  7,  8, 

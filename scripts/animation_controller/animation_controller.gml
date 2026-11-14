@@ -184,7 +184,7 @@ function AnimationManager(_project = PROJECT) constructor {
 		
 		if(!is_playing) return;
 		
-		var _frTime = is_rendering? 0 : 1 / framerate;
+		var _frTime = PREFERENCES.export_max_speed && is_rendering? 0 : 1 / framerate;
 		last_time += DELTA_TIME * play_speed;
 		real_time += delta_time * play_speed;
 		

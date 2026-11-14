@@ -765,6 +765,12 @@ function Panel_Preference() : PanelContent() constructor {
 				"render_max_time",
 				textBox_Number(function(val) /*=>*/ {return prefSet("render_max_time", val)})
 			));
+			
+			ds_list_add(pref_node, new __Panel_Linear_Setting_Item_Preference(
+				__txt("pref_export_max_sped", "Ignore framerate when exporting."),
+				"export_max_speed",
+				new checkBox(function() /*=>*/ {return prefToggle("export_max_speed")})
+			));
 				
 		ds_list_add(pref_node, __txt("Defaults"));
 			ds_list_add(pref_node, new __Panel_Linear_Setting_Item_Preference(

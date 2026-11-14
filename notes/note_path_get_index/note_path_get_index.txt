@@ -1,0 +1,12 @@
+Select a single path segment from a compound path.
+
+## Properties
+
+[proptable]
+Path
+Path|The Original Path
+
+Index
+Index|Segment index.
+Overflow|Whether to loop the overflow index or clamp to the curent segment amount.
+[/proptable]

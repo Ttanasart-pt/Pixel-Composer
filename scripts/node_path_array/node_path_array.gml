@@ -24,73 +24,60 @@ function Node_Path_Array(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		var l = 0;
 		for( var i = 0; i < curr_path_amo; i++ )
 			l += curr_path[i].getLineCount(); 
-		
 		return l; 
 	}
 	
 	static getSegmentCount = function(ind = 0) {
 		for( var i = 0; i < curr_path_amo; i++ ) {
-			var lc = curr_path[i].getLineCount() 
-			
+			var lc = curr_path[i].getLineCount();
 			if(ind < lc) return curr_path[i].getSegmentCount(ind);
 			ind -= lc;
 		}
-		
 		return 0;
 	}
 	
 	static getLength = function(ind = 0) {
 		for( var i = 0; i < curr_path_amo; i++ ) {
 			var lc = curr_path[i].getLineCount(); 
-			
 			if(ind < lc) return curr_path[i].getLength(ind);
 			ind -= lc;
 		}
-		
 		return 0;
 	}
 	
 	static getAccuLength = function(ind = 0) {
 		for( var i = 0; i < curr_path_amo; i++ ) {
 			var lc = curr_path[i].getLineCount(); 
-			
 			if(ind < lc) return curr_path[i].getAccuLength(ind);
 			ind -= lc;
 		}
-		
 		return 0;
 	}
 	
 	static getPointRatio = function(_rat, ind = 0, out = undefined) {
 		for( var i = 0; i < curr_path_amo; i++ ) {
 			var lc = curr_path[i].getLineCount(); 
-			
 			if(ind < lc) return curr_path[i].getPointRatio(_rat, ind, out);
 			ind -= lc;
 		}
-		
 		return new PathPoint();
 	}
 	
 	static getPointDistance = function(_dist, ind = 0, out = undefined) {
 		for( var i = 0; i < curr_path_amo; i++ ) {
 			var lc = curr_path[i].getLineCount(); 
-			
 			if(ind < lc) return curr_path[i].getPointDistance(_dist, ind, out);
 			ind -= lc;
 		}
-		
 		return new PathPoint();
 	}
 	
 	static getBoundary = function(ind = 0) {
 		for( var i = 0; i < curr_path_amo; i++ ) {
 			var lc = curr_path[i].getLineCount(); 
-			
 			if(ind < lc) return curr_path[i].getBoundary(ind);
 			ind -= lc;
 		}
-		
 		return new BoundingBox();
 	}
 	

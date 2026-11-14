@@ -232,6 +232,8 @@
 		
 			PREFERENCES.save_preview_settings           = true;
 			PREFERENCES.save_graph_settings             = true;
+			
+			PREFERENCES.export_max_speed                = true;
 		#endregion
 		
 		#region MISC
