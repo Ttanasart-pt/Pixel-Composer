@@ -15,7 +15,7 @@ function Node_Rate_Remap(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	
 	input_display_list = [  2,
 		[ "Remap", false ],  0,  1,  3,  4, 
-	];
+	]; 
 	
 	////- Node
 	

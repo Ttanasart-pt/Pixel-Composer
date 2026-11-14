@@ -6,6 +6,11 @@
         "date": "2026-11-14T08:14:42.259Z",
         "node": "",
         "commit": "Introduced"
+      },
+      {
+        "date": "2026-11-14T08:14:55.894Z",
+        "node": "Rate Remap",
+        "commit": "**Rate Remap**: Add offset property."
       }
     ]
   },
