@@ -16,6 +16,11 @@
         "date": "2026-11-14T03:06:06.638Z",
         "node": "",
         "commit": "**Array Zip**: Fix node initialize with 'int' type instead of 'any'."
+      },
+      {
+        "date": "2026-11-14T03:11:33.569Z",
+        "node": "Export",
+        "commit": "**Export**: Exporting animation now done at maximum speed instead of frame speed."
       }
     ]
   },
