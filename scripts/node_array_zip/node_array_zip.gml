@@ -6,7 +6,7 @@ function Node_Array_Zip(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	newInput( 0, nodeValue_Bool( "Spread Content", false ));
 	// 1
 	
-	newOutput(0, nodeValue_Output("Output", VALUE_TYPE.integer, 0));
+	newOutput(0, nodeValue_Output( "Output", VALUE_TYPE.any, 0 ));
 	
 	function createNewInput(index = array_length(inputs)) {
 		var inAmo = array_length(inputs);

@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.22.3.001",
+    "changes": [
+      {
+        "date": "2026-11-14T03:06:06.637Z",
+        "node": "Array Zip",
+        "commit": "**Array Zip**: Fix node initialize with 'int' type instead of 'any'."
+      }
+    ]
+  },
+  {
     "version": "1.22.1.206",
     "changes": [
       {

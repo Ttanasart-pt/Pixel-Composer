@@ -11,6 +11,11 @@
         "date": "2026-11-14T02:37:15.556Z",
         "node": "",
         "commit": "Fix node that use custom building function ignore default values."
+      },
+      {
+        "date": "2026-11-14T03:06:06.638Z",
+        "node": "",
+        "commit": "**Array Zip**: Fix node initialize with 'int' type instead of 'any'."
       }
     ]
   },
