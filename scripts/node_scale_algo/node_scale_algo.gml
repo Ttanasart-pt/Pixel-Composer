@@ -2,7 +2,6 @@
 	function Node_create_Scale_Algo(_x, _y, _group = noone, _param = {}) {
 		var quer = _param[$ "query"]; var query = (is_struct(quer) && quer[$ "type"] == "alias"? quer[$ "value"] : "") ?? "";
 		var node  = new Node_Scale_Algo(_x, _y, _group);
-		node.skipDefault();
 		
 		switch(query) {
 			case "scale2x" :   node.inputs[1].skipDefault().setValue(0); break;

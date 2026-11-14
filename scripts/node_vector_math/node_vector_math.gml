@@ -24,7 +24,6 @@
 	function Node_create_Vector_Math(_x, _y, _group = noone, _param = {}) {
 		var quer = _param[$ "query"]; var query = (is_struct(quer) && quer[$ "type"] == "alias"? quer[$ "value"] : "") ?? "";
 		var node  = new Node_Vector_Math(_x, _y, _group);
-		    node.skipDefault();
 		
 		var ind = array_find(global.node_vmath_keys, query);
 		if(ind != -1) node.inputs[0].skipDefault().setValue(global.node_vmath_keys_map[ind]);

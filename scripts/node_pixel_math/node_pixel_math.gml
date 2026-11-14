@@ -10,10 +10,9 @@
 
 	function Node_create_Pixel_Math(_x, _y, _group = noone, _param = {}) {
 		var quer = _param[$ "query"]; var query = (is_struct(quer) && quer[$ "type"] == "alias"? quer[$ "value"] : "") ?? "";
-		var node  = new Node_Pixel_Math(_x, _y, _group);
-		node.skipDefault();
-	
-		var ind = array_find(global.node_math_keys, query);
+		var node = new Node_Pixel_Math(_x, _y, _group);
+		
+		var ind  = array_find(global.node_math_keys, query);
 		if(ind != -1) node.inputs[7].skipDefault().setValue(global.node_math_keys_map[ind]);
 	
 		return node;

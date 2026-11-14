@@ -12,10 +12,8 @@
 	
 	function Node_create_Statistic(_x, _y, _group = noone, _param = {}) {
 		var quer = _param[$ "query"]; var query = (is_struct(quer) && quer[$ "type"] == "alias"? quer[$ "value"] : "") ?? "";
-		var node  = new Node_Statistic(_x, _y, _group);
-		node.skipDefault();
-		
-		var ind   = -1;
+		var node = new Node_Statistic(_x, _y, _group);
+		var ind  = -1;
 		
 		switch(query) {
 			default : ind = array_find(global.node_statistic_keys, query);

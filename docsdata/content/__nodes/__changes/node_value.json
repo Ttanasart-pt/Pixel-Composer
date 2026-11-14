@@ -6,6 +6,11 @@
         "date": "2026-11-14T02:06:21.100Z",
         "node": "",
         "commit": "**Maze Pattern**: Fix error when using negative gradient shift."
+      },
+      {
+        "date": "2026-11-14T02:37:15.556Z",
+        "node": "",
+        "commit": "Fix node that use custom building function ignore default values."
       }
     ]
   },

@@ -13,7 +13,6 @@
 	function Node_create_RM_Primitive(_x, _y, _group = noone, _param = {}) {
 		var quer = _param[$ "query"]; var query = (is_struct(quer) && quer[$ "type"] == "alias"? quer[$ "value"] : "") ?? "";
 		var node  = new Node_RM_Primitive(_x, _y, _group);
-		node.skipDefault();
 		
 		switch(query) {
 			case "cube" : ind = array_find_string(node.shape_types, "box");	break;

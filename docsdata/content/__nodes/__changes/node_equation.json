@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.22.3.001",
+    "changes": [
+      {
+        "date": "2026-11-14T02:37:15.552Z",
+        "node": "",
+        "commit": "Fix node that use custom building function ignore default values."
+      }
+    ]
+  },
+  {
     "version": "1.21.8.003",
     "changes": [
       {

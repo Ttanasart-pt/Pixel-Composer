@@ -1,11 +1,9 @@
 #region
 	function Node_create_Color_Math(_x, _y, _group = noone, _param = {}) {
-		var node  = new Node_Color_Math(_x, _y, _group);
-		    node.skipDefault();
-		    
+		var node = new Node_Color_Math(_x, _y, _group);
 		var quer = _param[$ "query"]; var query = (is_struct(quer) && quer[$ "type"] == "alias"? quer[$ "value"] : "") ?? "";
-		var ind   = array_find(global.node_blend_keys, query);
 		
+		var ind  = array_find(global.node_blend_keys, query);
 		if(ind >= 0) node.inputs[0].skipDefault().setValue(ind);
 		return node;
 	}

@@ -1,8 +1,6 @@
 #region Global
 	function Node_create_Color_replace(_x, _y, _group = noone, _param = {}) {
 		var node = new Node_Color_replace(_x, _y, _group);
-		node.skipDefault();
-		
 		var quer = _param[$ "query"]; var query = (is_struct(quer) && quer[$ "type"] == "alias"? quer[$ "value"] : "") ?? "";
 		
 		switch(query) {

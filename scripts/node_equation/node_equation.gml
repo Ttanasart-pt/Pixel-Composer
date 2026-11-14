@@ -2,7 +2,6 @@ function Node_create_Equation(_x, _y, _group = noone, _param = {}) {
 	var quer  = _param[$ "query"]; 
 	var query = (is_struct(quer) && quer[$ "type"] == "alias"? quer[$ "value"] : "") ?? "";
 	var node  = new Node_Equation(_x, _y, _group);
-	node.skipDefault();
 	
 	if(query == "") return node;
 	

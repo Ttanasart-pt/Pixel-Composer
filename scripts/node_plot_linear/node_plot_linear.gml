@@ -2,9 +2,7 @@
 	global.node_plot_linear_keys = [ "plot", "bar chart", "graph", "waveform" ];
 	
 	function Node_create_Plot_Linear(_x, _y, _group = noone, _param = {}) {
-		var node  = new Node_Plot_Linear(_x, _y, _group);
-		node.skipDefault();
-	
+		var node = new Node_Plot_Linear(_x, _y, _group);
 		var quer = _param[$ "query"]; var query = (is_struct(quer) && quer[$ "type"] == "alias"? quer[$ "value"] : "") ?? "";
 		
 		switch(query) {

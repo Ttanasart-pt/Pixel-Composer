@@ -2171,6 +2171,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	
 	static onSetValue = undefined;
 	static setValue = function(val = 0, record = true, time = NODE_CURRENT_FRAME, _update = true) { //// Set value
+		set_default = false;
 		val = unit.invApply(val);
 		var _set = setValueDirect(val, noone, record, time, _update);
 		
