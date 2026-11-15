@@ -618,8 +618,6 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	set_default = true;
 	static skipDefault = function() /*=>*/ { set_default = false; return self; }
 	static resetValue  = function() /*=>*/ {
-		if(!set_default) return;
-		
 		var _hasDefault = struct_has_ext(PRESETS_MAP, instanceof(node), "_values", "content", internalName);
 		if(_hasDefault) {
 			var _map = PRESETS_MAP[$ instanceof(node)][$ "_values"][$ "content"][$ internalName];

@@ -1199,7 +1199,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		var _defPreset = setPreset("_default");
 		if(_defPreset) return;
 		
-		array_foreach(inputs, function(i,_) /*=>*/ {return i.resetValue()});
+		array_foreach(inputs, function(i,_) /*=>*/ { if(i.set_default) i.resetValue(); return true; });
 	} 
 	
 	static setAllDefault = function() {

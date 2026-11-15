@@ -70,7 +70,9 @@ event_inherited();
 	function searchMenu(_force = false) {
 		var hght = line_get_height(f_p2, item_pad);
 		if(search_string == "") { 
+			searching_str = "";
 			data = [];
+			
 			for( var i = 0, n = array_length(RECENT_COMMANDS); i < n; i++ ) {
 				var cmd = RECENT_COMMANDS[i];
 				if(is_struct(FUNCTIONS[$ cmd])) array_push(data, FUNCTIONS[$ cmd]);
@@ -116,11 +118,11 @@ event_inherited();
 				var _name  = _menu[$ "comName"] ?? _menu.name;
 				var _fname = _cnxt == "_"? string_lower(_name) : $"{string_lower(_cnxt)} {string_lower(_name)}"
 				
-				var match = string_partial_match_res(_fname, search_lower)[0];
-				if(match < 0) continue;
+				var match = string_partial_match_array(string_to_array(_fname), search_array)[0];
+				if(match < -1000) continue;
 				
 				ds_priority_add(search_prlist, _menu, match);
-				if(get_timer() - t > 33_000) { searching_index++; return; }
+				if(get_timer() - t > 50_000) { searching_index++; return; }
 			}
 			
 			searching_index = 0;
@@ -129,10 +131,10 @@ event_inherited();
 		} else if(searching_step == 1) {
 			for(var n = array_length(PROJECT.allNodes); searching_index < n; searching_index++ ) {
 				var _node  = PROJECT.allNodes[searching_index];
-				var _fname = _node.getDisplayName();
+				var _fname = string_lower(_node.getDisplayName());
 				
-				var match = string_partial_match_res(string_lower(_fname), search_lower)[0];
-				if(match < 0) continue;
+				var match = string_partial_match_array(string_to_array(_fname), search_array)[0];
+				if(match < -1000) continue;
 				
 				var _menu = {
 					context : "Select Node", 
@@ -144,7 +146,7 @@ event_inherited();
 				}
 				
 				ds_priority_add(search_prlist, _menu, match);
-				if(get_timer() - t > 33_000) { searching_index++; return; }
+				if(get_timer() - t > 50_000) { searching_index++; return; }
 			}
 			
 			searching = false;
