@@ -1,9 +1,4 @@
-enum PADDING {
-	right,
-	top,
-	left,
-	bottom
-}
+enum PADDING { right, top, left, bottom }
 
 function paddingBox(_onModify, _unit = noone) : widget() constructor {
 	#region data
@@ -61,10 +56,10 @@ function paddingBox(_onModify, _unit = noone) : widget() constructor {
 		
 		if(unit != noone && unit.reference != noone)
 			unit.triggerButton.register(parent);
-			
+		
+		tb[1].register(parent);
 		tb[2].register(parent);
 		tb[0].register(parent);
-		tb[1].register(parent);
 		tb[3].register(parent);
 	} 
 	
@@ -75,11 +70,10 @@ function paddingBox(_onModify, _unit = noone) : widget() constructor {
 	
 	////- Draw
 	
-	static fetchHeight = function(params) { return params.h * 2; }
+	static fetchHeight = function(params) { return params.h * 3; }
 	static drawParam   = function(params) { 
 		setParam(params);
 		for(var i = 0; i < 4; i++) tb[i].setParam(params);
-		
 		return draw(params.x, params.y, params.w, params.h, params.data, params.m); 
 	}
 	
@@ -87,7 +81,7 @@ function paddingBox(_onModify, _unit = noone) : widget() constructor {
 		x = _x;
 		y = _y;
 		w = _w;
-		h = _h * 2;
+		h = _h * 3;
 		
 		var _bs = min(_h, ui(32));
 		if(hide == 0) draw_sprite_stretched_ext(THEME.textbox, 3, x, y, w, h, boxColor, 1);
@@ -118,33 +112,33 @@ function paddingBox(_onModify, _unit = noone) : widget() constructor {
 		var tb_h = _h;
 		
 		var tb_lx = _x;
-		var tb_ly = _y;
+		var tb_ly = _y + _h;
 			
 		var tb_rx = _x + tb_w;
-		var tb_ry = _y;
+		var tb_ry = _y + _h;
 			
-		var tb_tx = _x;
-		var tb_ty = _y + _h;
+		var tb_tx = _x + tb_w / 2;
+		var tb_ty = _y;
 			
-		var tb_bx = _x + tb_w;
-		var tb_by = _y + _h;
+		var tb_bx = _x + tb_w / 2;
+		var tb_by = _y + _h + _h;
 		
 		var tbHover = hover;
 		
 		tb[2].setFocusHover(active, tbHover);
-		tb[2].draw(tb_lx, tb_ly, tb_w-1, tb_h-1, array_safe_get_fast(_data, 2), _m);
+		tb[2].draw(tb_lx, tb_ly, tb_w, tb_h, array_safe_get_fast(_data, 2), _m);
 		tbHover &= !tb[2].isHovering();
 		
 		tb[0].setFocusHover(active, tbHover);
-		tb[0].draw(tb_rx, tb_ry, tb_w,   tb_h-1, array_safe_get_fast(_data, 0), _m);
+		tb[0].draw(tb_rx, tb_ry, tb_w, tb_h, array_safe_get_fast(_data, 0), _m);
 		tbHover &= !tb[0].isHovering();
 		
 		tb[1].setFocusHover(active, tbHover);
-		tb[1].draw(tb_tx, tb_ty, tb_w-1, tb_h,   array_safe_get_fast(_data, 1), _m);
+		tb[1].draw(tb_tx, tb_ty, tb_w, tb_h, array_safe_get_fast(_data, 1), _m);
 		tbHover &= !tb[1].isHovering();
 		
 		tb[3].setFocusHover(active, tbHover);
-		tb[3].draw(tb_bx, tb_by, tb_w,   tb_h,   array_safe_get_fast(_data, 3), _m);
+		tb[3].draw(tb_bx, tb_by, tb_w, tb_h, array_safe_get_fast(_data, 3), _m);
 		tbHover &= !tb[3].isHovering();
 			
 		resetFocus();
