@@ -5,7 +5,6 @@ panel.preDraw();
 var _cnt = panel.getContent();
 
 #region dialog	
-	// DIALOG_DRAW_BG
 	DIALOG_WINDOW_START
 	
 	if(!auto_hide || sFOCUS) {
@@ -26,8 +25,11 @@ var _cnt = panel.getContent();
 	var cnw =  dialog_w -  padding * 2;
 	var cnh =  dialog_h - (padding * 2 + title_height);
 	
+	var panelSingle = panel.getContent() != noone;
+	
 	panel.x = cnx;
 	panel.y = cny;
+	panel.draw_outline = !panelSingle;
 	
 	if(_dialog_w != dialog_w || _dialog_h != dialog_h) {
 		_dialog_w = dialog_w;
@@ -52,8 +54,6 @@ var _cnt = panel.getContent();
 	panel.drawFrame(true);
 	
 	panel.drawGUI();
-	
-	// draw_set_color(sHOVER? c_lime : c_red); draw_rectangle(cnx, cny, cnx + cnw, cny + cnh, true);
 #endregion
 
 #region header
@@ -130,9 +130,11 @@ var _cnt = panel.getContent();
 	}
 #endregion
 
-if(!auto_hide || sFOCUS) {
-	DIALOG_DRAW_FOCUS_UNEND
-}
+var cc  = PREFERENCES.panel_outline_accent? COLORS._main_accent : COLORS.panel_select_border;
+if(sFOCUS || (panelSingle && FOCUS == panel.getContent()))
+	 draw_sprite_stretched_ext( THEME.dialog, 1, _dialog_x, _dialog_y, dialog_w, dialog_h, cc, 1 );
+else draw_sprite_stretched_ext( THEME.dialog, 1, _dialog_x, _dialog_y, dialog_w, dialog_h, COLORS.panel_frame, 1 );
+drawResize();
 
 if(sFOCUS && !m_in && m_ot) {
 	draw_sprite_stretched_ext(THEME.dialog, 1, _dialog_x, _dialog_y, dialog_w, dialog_h, c_white, .4);

@@ -56,6 +56,7 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 	tab_holding_sx = 0;
 	tab_holding_sy = 0;
 	
+	draw_outline   = true;
 	draw_droppable = false;
 	
 	border_rb_close = menuItem(__txt("Close"), function() /*=>*/ { var con = getContent(); if(con == noone) return; con.close(); }, THEME.cross);
@@ -1237,15 +1238,19 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 		
 		draw_set_color(COLORS.panel_frame);
 		
-		if(split == "h") {
-			var _x = childs[0].x < childs[1].x? childs[0].x + childs[0].w : childs[1].x + childs[1].w;
-			draw_line(_x, y, _x, y + h);
-			
-		} else {
-			var _y = childs[0].y < childs[1].y? childs[0].y + childs[0].h : childs[1].y + childs[1].h;
-			draw_line(x, _y, x + w, _y);
-			
+		if(draw_outline) {
+			if(split == "h") {
+				var _x = childs[0].x < childs[1].x? childs[0].x + childs[0].w : childs[1].x + childs[1].w;
+				draw_line(_x, y, _x, y + h);
+				
+			} else {
+				var _y = childs[0].y < childs[1].y? childs[0].y + childs[0].h : childs[1].y + childs[1].h;
+				draw_line(x, _y, x + w, _y);
+				
+			}
 		}
+		
+		draw_outline = true;
 		
 		for(var i = 0, n = array_length(childs); i < n; i++) {
 			var _panel = array_safe_get(childs, i, 0);
@@ -1280,13 +1285,17 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 		var m_in = point_in_rectangle(_mx, _my, tx + p, ty + p, tx + tw - p, ty + th - p);
 		var m_ot = point_in_rectangle(_mx, _my, tx, ty, tx + tw, ty + th);
 		
-		if(THEME_VALUE.panel_separation_type == "frame" && !_dialog)
-			if(dFrame) draw_sprite_stretched_ext(THEME.ui_panel, 1, _tx, _ty, _tw, _th, COLORS.panel_frame);
-		
-		if(focusing || focusDialog || (instance_exists(o_dialog_menubox) && o_dialog_menubox.getContextPanel() == self)) {
-			var _color = PREFERENCES.panel_outline_accent? COLORS._main_accent : COLORS.panel_select_border;
-			if(dFrame) draw_sprite_stretched_ext(THEME.ui_panel, 1, _tx, _ty, _tw, _th, _color, 1);
+		if(draw_outline) {
+			if(THEME_VALUE.panel_separation_type == "frame" && !_dialog)
+				if(dFrame) draw_sprite_stretched_ext(THEME.ui_panel, 1, _tx, _ty, _tw, _th, COLORS.panel_frame);
+			
+			if(focusing || focusDialog || (instance_exists(o_dialog_menubox) && o_dialog_menubox.getContextPanel() == self)) {
+				var _color = PREFERENCES.panel_outline_accent? COLORS._main_accent : COLORS.panel_select_border;
+				if(dFrame) draw_sprite_stretched_ext(THEME.ui_panel, 1, _tx, _ty, _tw, _th, _color, 1);
+			}
 		}
+		
+		draw_outline = true;
 		
 		if(!PREFERENCES.panel_lock) {
 			if(focusing && parent != noone && !m_in && m_ot && contentResizable()) {
