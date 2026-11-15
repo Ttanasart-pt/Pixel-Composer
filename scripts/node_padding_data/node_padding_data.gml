@@ -54,23 +54,19 @@ function Node_Padding_Data(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 		var _b = 1;
 
 		switch(_mod) {
-			case 0 :
-				_l = _sl;
-				_r = _sr;
-				_t = _st;
-				_b = _sb;
-				break;
+			case 0 : _l = _sl;
+				     _r = _sr;
+				     _t = _st;
+				     _b = _sb;
+				     break;
 				
-			case 1 : 
-				_l = _vec[0];
-				_r = _vec[1];
-				
-				_t = _vec[2];
-				_b = _vec[3];
-				break;
-				
+			case 1 : _l = _vec[0];
+				     _r = _vec[1];
+				     _t = _vec[2];
+				     _b = _vec[3];
+				     break;
 		}
-
+		
 		if(_ref) {
 			_l *= _sw;
 			_r *= _sw;
