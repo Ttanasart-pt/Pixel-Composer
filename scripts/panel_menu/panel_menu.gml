@@ -526,7 +526,7 @@ function Panel_Menu() : PanelContent() constructor {
         	
             if(hori) {
                 var bx  = _right? xx : w - ui(24);
-        		var ics = min(1, (h - _padd * 2) * (MAC? .9 : .75) / sprite_get_height(THEME.icon_24));
+        		var ics = min(1, min(ui(28), max(ceil(h * .75), h - _padd * 2)) / sprite_get_height(THEME.icon_24));
                 
                 if(pHOVER && point_in_rectangle(mx, my, bx - ui(16), 0, bx + ui(16), ui(32))) {
                     draw_sprite_ext(THEME.icon_24, 0, bx, h/2, ics, ics);
@@ -844,7 +844,7 @@ function Panel_Menu() : PanelContent() constructor {
         	var aSpc   = ui(THEME_VALUE.panel_menu_action_spacing);
             var bRight = _right && (hori || w >= vertical_break);
         	
-        	var bh = hori? h - _padd * 2 : ui(28);
+        	var bh = hori? min(ui(28), h - _padd * 2) : ui(28);
         	var bw = bh;
         	if(!hori && w < vertical_break)
         		bw = (w - _padd * 2 - aSpc * (bamo - 1)) / bamo;
@@ -861,7 +861,7 @@ function Panel_Menu() : PanelContent() constructor {
                     if(MAC && action == WINDOW_ACTION.Fullscreen) continue;
                     
                     var bx = x1 - bw;
-                    var by = _padd;
+                    var by = hori? h / 2 - bh / 2 : _padd;
                     
                     switch(action) {
                         case WINDOW_ACTION.Exit:
@@ -966,7 +966,7 @@ function Panel_Menu() : PanelContent() constructor {
             
             if(profile) {
                 if(hori) {
-                    var _sts = max(ceil(h * .75), h - uPad * 2);
+                    var _sts = min(ui(28), max(ceil(h * .75), h - uPad * 2));
                     var _stx = x1 - _sts;
                     var _sty = (h - _sts) / 2;
                     
