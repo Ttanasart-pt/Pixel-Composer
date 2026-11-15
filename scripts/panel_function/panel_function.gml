@@ -210,6 +210,21 @@ function PANEL_DRAW() {
 		PANEL_DRAW_DRAG();
 	
 	if(PANEL_DRAGGING) {
+		setTOOLTIP(__txt("Ctrl to create new pop-up"));
+		
+		if(key_mod_press(KCONTROL)) {
+			var w = WIN_W;
+			var h = WIN_H;
+			
+			PANEL_DRAW_X0 = w * 1 / 3;
+			PANEL_DRAW_Y0 = h * 1 / 3;
+			PANEL_DRAW_X1 = w * 2 / 3;
+			PANEL_DRAW_Y1 = h * 2 / 3;
+			
+			PANEL_DRAW_SPLIT = 4;
+			PANEL_HOVERING   = PANEL_MAIN;
+		}
+		
 		draw_surface_ext_safe(PANEL_DRAGGING.dragSurface, mouse_mx + 8, mouse_my + 8, 0.5, 0.5, 0, c_white, 0.5);
 		if((PANEL_DRAG_MOUSE == 0 && mouse_lrelease()) || (PANEL_DRAG_MOUSE == 1 && mouse_lpress())) {
 			var p = [];
@@ -276,6 +291,7 @@ function PANEL_DRAW() {
 
 function PANEL_DRAW_DRAG() {
 	var _rr = THEME_VALUE.panel_corner_radius;
+	
 	if(PANEL_DRAW_X0 != noone) {
 		draw_set_color(COLORS._main_accent);
 		

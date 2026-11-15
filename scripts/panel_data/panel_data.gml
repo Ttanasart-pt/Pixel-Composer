@@ -1422,8 +1422,6 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 		var dy = (_my - y) / h;
 		var p  = ui(8);
 		
-		// print(x, y, w, h, _mx, _my, dx, dy)
-			
 		draw_set_color(COLORS._main_accent);
 		PANEL_HOVERING = self;
 		
