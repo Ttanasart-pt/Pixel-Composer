@@ -547,7 +547,6 @@ function Panel_Menu() : PanelContent() constructor {
                     
                 } else 
                     draw_sprite_ui_uniform(THEME.icon_24_grey, 0, bx, by);
-                    
             }
             
             gpu_set_tex_filter(false);

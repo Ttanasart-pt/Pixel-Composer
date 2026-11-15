@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.22.3.1",
+    "changes": [
+      {
+        "date": "2026-11-15T07:37:34.351Z",
+        "node": "Wav File In",
+        "commit": "**Wav File In**: Add starting frame, looping controls."
+      }
+    ]
+  },
+  {
     "version": "1.22.2.005",
     "changes": [
       {

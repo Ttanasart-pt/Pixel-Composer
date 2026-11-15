@@ -227,7 +227,7 @@ function timelineItemNode(_node) : timelineItem() constructor {
 	static serialize   = function() {
 		var _map = {};
 		
-		_map.type    = "Node";
+		_map.type    = instanceof(self);
 		_map.show    = show;
 		_map.node_id = is_struct(node)? node.node_id : -4;
 		onSerialize(_map);
@@ -243,6 +243,7 @@ function timelineItemNode(_node) : timelineItem() constructor {
 		if(_node_id == 0) {
 			node = PROJECT.globalNode;
 			node.timeline_item = self;
+			
 		} else if(ds_map_exists(PROJECT.nodeMap, _node_id)) {
 			node = PROJECT.nodeMap[? _node_id];
 			node.timeline_item = self;

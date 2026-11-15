@@ -405,6 +405,8 @@ function Node_Image_mp4(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 			sprite_delete_safe(sprs[i]);
 	}
 	
+	////- Timeline
+	
 	timeline_content_dragging  = false;
 	timeline_content_drag_type = 0;
 	timeline_content_drag_sx   = 0;

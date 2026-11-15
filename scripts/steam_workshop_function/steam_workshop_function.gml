@@ -44,7 +44,6 @@
 		
 		for( var i = 0, n = array_length(_names); i < n; i++ ) {
 			var _n = _names[i];
-			// if(has(PATREON_PROJECTS, _n)) continue;
 			
 			var _d = debug_promofiles[$ _n];
 			var _j = json_stringify(_d);

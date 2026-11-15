@@ -57,7 +57,6 @@ function UserAccount() constructor {
 	
 	static update = function() {
 		var _sdata = serialize();
-			
 		asyncCallGroup("social", FirebaseFirestore($"steam/{steamid}").Update(_sdata), function(_params, _data) /*=>*/ {
 			var _type = _data[? "type"];
 		    if (_data[? "status"] != 200) { print($"update user data error {_data[? "errorMessage"]}"); return; }

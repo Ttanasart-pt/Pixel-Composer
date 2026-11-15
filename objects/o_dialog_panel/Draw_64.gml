@@ -110,7 +110,7 @@ var _cnt = panel.getContent();
 			if(!MAC) bx = _dialog_x + ui(6);
 			
 			var txt = "";//destroy_on_click_out? __txt("Pin") : __txt("Unpin");
-			var bc  = [ COLORS._main_icon, COLORS._main_icon_light ];
+			var bc  = destroy_on_click_out? [ COLORS._main_icon, COLORS._main_icon_light ] : c_white;
 			var ind = !destroy_on_click_out;
 			
 			var b  = buttonInstant(bb, bx, by, bs, bs, mouse_ui, hov, foc, txt, THEME.window_pin_icon, ind, bc, 1, .75);
