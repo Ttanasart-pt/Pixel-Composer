@@ -8,5 +8,5 @@ if(NODE_SEARCH_INDEXED == 1) {
 
 if(searching) {
 	searchingNodes();
-	if(!searching) searchNodeSort();
+	searchNodeSort();
 }

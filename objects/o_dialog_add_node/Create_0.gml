@@ -1168,7 +1168,6 @@ event_inherited();
 	function searchNodes(_force = false) { 
 		if(search_string == "" || (search_string == searching_str && !_force)) return;
 		
-		// search_list = [];
 		ds_priority_clear(search_prlist);
 		
 		search_start_time = get_timer();
@@ -1180,8 +1179,6 @@ event_inherited();
 		search_array  = string_to_array(search_lower);
 		
 		searching    = true;
-		
-		// print($"\nSearch start {search_lower}")
 	}
 	
 	function searchingNodes() { 
@@ -1368,17 +1365,16 @@ event_inherited();
 	}
 	
 	function searchNodeSort() {
+		var dspr = ds_priority_create();
+		ds_priority_copy(dspr, search_prlist);
+		
 		var _curr_weight = undefined;
 		var _curr_arr    = [];
 		search_list      = [];
 		
-		// print($"    > Search sort {search_lower} [{ds_priority_size(search_prlist)}]")
-		// print($"\n================== {ds_priority_size(search_prlist)}");
-		
-		repeat(ds_priority_size(search_prlist)) {
-			var _data = ds_priority_delete_max(search_prlist);
+		repeat(ds_priority_size(dspr)) {
+			var _data = ds_priority_delete_max(dspr);
 			var _wigh = _data.weight;
-			// print(_data.name, _wigh)
 			
 			if(_curr_weight != _wigh) { // group node with the same weight and sort alphanumerically
 				if(!array_empty(_curr_arr)) {
@@ -1393,6 +1389,8 @@ event_inherited();
 				array_push(_curr_arr, _data);
 				
 		}
+		
+		ds_priority_destroy(dspr);
 		
 		if(!array_empty(_curr_arr)) {
 			array_sort(_curr_arr, function(a,b) /*=>*/ {return string_compare(a.name, b.name)});

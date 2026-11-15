@@ -199,10 +199,11 @@ function string_partial_match_res(str, key, _arr = [0,[]]) {
 		
 		var weight = 0;
 		
-		var wordStart = i == 0 || strArray[i-1] == " ";
-		var matchPrev = false;
-		var matchCons = 0;
-		var foundAll  = false;
+		var wordStart  = i == 0 || strArray[i-1] == " ";
+		var matchPrev  = false;
+		var matchBreak = false;
+		var matchCons  = 0;
+		var foundAll   = false;
 		
 		for( var j = 0; j <= lenBase; j++ ) _matCrr[j] = 0;
 			
@@ -210,7 +211,14 @@ function string_partial_match_res(str, key, _arr = [0,[]]) {
 			var ind = (i + j) % lenBase;
 			var baseChr = strArray[ind];
 			
+			matchBreak = i != 0 && ind == 0;
+			
 			if(baseChr == keyChr) {
+				if(matchBreak) {
+					matchCons = 0;
+					matchPrev = false;
+				}
+				
 				if(matchPrev) {
 					matchCons++;
 					

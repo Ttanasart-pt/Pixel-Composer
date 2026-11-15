@@ -1,8 +1,6 @@
 /// @description init
 event_inherited();
 
-// print("Init command Palette");
-
 #region init functions
 	if(!PREFERENCE_FUNCTION_INIT) {
 		PREFERENCE_FUNCTION_INIT = true;
@@ -40,20 +38,37 @@ event_inherited();
 	edit_block = 0;
 	
 	selecting_hotkey = noone;
-	search_string	 = "";
 	KEYBOARD_RESET
-	
-	tb_search = textBox_Text(function(str) /*=>*/ { search_string = string(str); searchMenu(); })
-		.setHide(2).setFont(f_p2).setAlign(fa_left).setAutoupdate().activate("");
 	
 	_prex = mouse_mx;
 	_prey = mouse_my;
 	
 	keyboard_trigger = false;
 	
-	function searchMenu() {
-		var hght = line_get_height(f_p2, item_pad);
+	function resetPosition() {
+		if(!active) return;
 		
+		dialog_x = xstart - dialog_w / 2;
+		dialog_y = ystart - ui(480) / 2;
+	}
+#endregion
+
+#region search
+	tb_search = textBox_Text(function(str) /*=>*/ { search_string = string(str); searchMenu(); })
+		.setHide(2).setFont(f_p2).setAlign(fa_left).setAutoupdate().activate("");
+	
+	search_string = "";
+	search_lower  = "";
+	searching_str = "";
+	searching     = false;
+	search_prlist = ds_priority_create();
+	
+	search_start_time = 0;
+	searching_index   = 0;
+	searching_step    = 0;
+	
+	function searchMenu(_force = false) {
+		var hght = line_get_height(f_p2, item_pad);
 		if(search_string == "") { 
 			data = [];
 			for( var i = 0, n = array_length(RECENT_COMMANDS); i < n; i++ ) {
@@ -65,64 +80,89 @@ event_inherited();
 			return; 
 		}
 		
-		data = [];
-		var pr_list      = ds_priority_create();
-		var search_lower = string_lower(search_string);
+		if(search_string == "" || (search_string == searching_str && !_force)) return;
 		
-		for (var i = 0, n = array_length(keys); i < n; i++) {
-			var k     = keys[i];
-			var _menu = FUNCTIONS[$ k];
-			
-			var _cnxt = _menu.context;
-			if(_cnxt == "_") { // fitler node context
-				var _nname = _menu.name;
-				if(has(ALL_NODES, _nname)) {
-					var _ndat = ALL_NODES[$ _nname];
-					if(!_ndat.show_in_recent) continue;
+		ds_priority_clear(search_prlist);
+		
+		search_start_time = get_timer();
+		searching_index   = 0;
+		searching_step    = 0;
+		
+		searching_str     = search_string;
+		search_lower      = string_lower(search_string);
+		search_array      = string_to_array(search_lower);
+		
+		searching         = true;
+		
+	}
+	
+	function searchingMenu() {
+		var t = get_timer();
+		
+		if(searching_step == 0) { 
+			for (var n = array_length(keys); searching_index < n; searching_index++) {
+				var k     = keys[searching_index];
+				var _menu = FUNCTIONS[$ k];
+				
+				var _cnxt = _menu.context;
+				if(_cnxt == "_") { // fitler node context
+					var _nname = _menu.name;
+					if(has(ALL_NODES, _nname)) {
+						var _ndat = ALL_NODES[$ _nname];
+						if(!_ndat.show_in_recent) continue;
+					}
 				}
+				
+				var _name  = _menu[$ "comName"] ?? _menu.name;
+				var _fname = _cnxt == "_"? string_lower(_name) : $"{string_lower(_cnxt)} {string_lower(_name)}"
+				
+				var match = string_partial_match_res(_fname, search_lower)[0];
+				if(match < 0) continue;
+				
+				ds_priority_add(search_prlist, _menu, match);
+				if(get_timer() - t > 33_000) { searching_index++; return; }
 			}
 			
-			var _name  = _menu[$ "comName"] ?? _menu.name;
-			var _fname = _cnxt == "_"? string_lower(_name) : $"{string_lower(_cnxt)} {string_lower(_name)}"
+			searching_index = 0;
+			searching_step  = 1;
 			
-			var match = string_partial_match_res(_fname, search_lower)[0];
-			if(match == -9999) continue;
-			
-			ds_priority_add(pr_list, _menu, match);
-		}
-		
-		for( var i = 0, n = array_length(PROJECT.allNodes); i < n; i++ ) {
-			var _node  = PROJECT.allNodes[i];
-			var _fname = _node.getDisplayName();
-			
-			var match = string_partial_match_res(string_lower(_fname), search_lower)[0];
-			if(match == -9999) continue;
-			
-			var _menu = {
-				context : "Select Node", 
-				name    : _node.getFullName(),
-				spr     : noone,
-				menu    : noone,
-				node    : _node,
-				action  : function(n) /*=>*/ {return panelFocusNode(n)},
+		} else if(searching_step == 1) {
+			for(var n = array_length(PROJECT.allNodes); searching_index < n; searching_index++ ) {
+				var _node  = PROJECT.allNodes[searching_index];
+				var _fname = _node.getDisplayName();
+				
+				var match = string_partial_match_res(string_lower(_fname), search_lower)[0];
+				if(match < 0) continue;
+				
+				var _menu = {
+					context : "Select Node", 
+					name    : _node.getFullName(),
+					spr     : noone,
+					menu    : noone,
+					node    : _node,
+					action  : function(n) /*=>*/ {return panelFocusNode(n)},
+				}
+				
+				ds_priority_add(search_prlist, _menu, match);
+				if(get_timer() - t > 33_000) { searching_index++; return; }
 			}
 			
-			ds_priority_add(pr_list, _menu, match + 100);
+			searching = false;
 		}
+	} 
+	
+	function searchingSort() {
+		var hght = line_get_height(f_p2, item_pad);
+		var dspr = ds_priority_create();
+		ds_priority_copy(dspr, search_prlist);
 		
-		repeat(ds_priority_size(pr_list))
-			array_push(data, ds_priority_delete_max(pr_list));
-		ds_priority_destroy(pr_list);
+		data = [];
+		repeat(ds_priority_size(dspr))
+			array_push(data, ds_priority_delete_max(dspr));
+		ds_priority_destroy(dspr);
 		
 		var _hh  = min(ui(32) + max(1, array_length(data)) * hght, ui(400))
 		dialog_h = _hh;
-	} 
-	
-	function resetPosition() {
-		if(!active) return;
-		
-		dialog_x = xstart - dialog_w / 2;
-		dialog_y = ystart - ui(480) / 2;
 	}
 #endregion
 
@@ -295,5 +335,3 @@ sc_content = new scrollPane(0, 0, function(_y, _m) {
 
 	return _h;
 });
-
-// print("Init command Palette complete");
