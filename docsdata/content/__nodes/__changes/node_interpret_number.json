@@ -6,6 +6,11 @@
         "date": "2026-11-15T04:21:53.954Z",
         "node": "",
         "commit": "**Interpret Number**: Add auto-range button to match range value with input range."
+      },
+      {
+        "date": "2026-11-15T04:39:52.175Z",
+        "node": "",
+        "commit": "Add default dither map assets (bayer 2/4/8)."
       }
     ]
   },

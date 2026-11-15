@@ -174,18 +174,24 @@
 varying vec2 v_vTexcoord;
 varying vec4 v_vColour;
 
-#define BATCH_SIZE 128
+#ifdef _YY_HLSL11_ 
+	#define BATCH_SIZE 1024 
+	#define PALETTE_LIMIT 1024 
+#else 
+	#define BATCH_SIZE 256 
+	#define PALETTE_LIMIT 256 
+#endif
+
+uniform vec2  dimension;
 
 uniform int   mode;
+uniform int   pattern;
 uniform vec2  range;
+
+uniform int   amount;
 uniform float number[BATCH_SIZE];
 uniform float gradient_shift;
 
-#ifdef _YY_HLSL11_ 
-	#define PALETTE_LIMIT 1024 
-#else 
-	#define PALETTE_LIMIT 256 
-#endif
 uniform vec4  palette[PALETTE_LIMIT];
 uniform float paletteAmount;
 
@@ -193,15 +199,19 @@ float pfract(in float f) { return fract(fract(f) + 1.); }
 int imod(int a, int b) { return a - (a/b) * b; }
 
 void main() {
-	vec2 px = v_vTexcoord;
-	px.x *= float(BATCH_SIZE);
-	float value = number[int(px.x)];
-	float grey  = (value - range[0]) / (range[1] - range[0]);
+	vec2 px  = floor(v_vTexcoord * dimension);
+	int  ind = 0;
+	
+	     if(pattern == 0) ind = int(px.x);
+	else if(pattern == 1) ind = int(px.y * dimension.x) + int(px.x);
 	
 	gl_FragColor = vec4(0.);
+	if(ind >= amount) return;
+	
+	float value = number[ind];
+	float grey  = (value - range[0]) / (range[1] - range[0]);
 	
 	     if(mode == 0) gl_FragColor = vec4(vec3(grey), 1.);
 	else if(mode == 1) gl_FragColor = palette[imod(int(value), int(paletteAmount))];
 	else if(mode == 2) gl_FragColor = gradientEval(pfract(grey + gradient_shift)) * v_vColour;
-	
 }

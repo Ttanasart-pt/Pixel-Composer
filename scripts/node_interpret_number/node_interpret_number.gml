@@ -10,13 +10,18 @@ function Node_Interpret_Number(_x, _y, _group = noone) : Node_Processor(_x, _y, 
 	
 	newInput(0, nodeValue_Float( "Number", [] )).setVisible(true, true).setArrayDepth(1);
 	
-	////- =Interpret
+	////- =Values
 	newInput( 1, nodeValue_EButton(  "Mode",      0, [ "Greyscale", "Palette", "Gradient" ] ));
 	newInput( 2, nodeValue_Range(    "Range",    [0,1]     ));
 	
 	newInput( 6, nodeValue_Palette(  "Palette"             ));
 	newInput( 3, nodeValue_Gradient( "Gradient", gra_white )).setMappable(4).addShift(7);
-	// 8
+	
+	////- =Output
+	newInput( 8, nodeValue_EScroll( "Shape",  0, [ "Linear", "Grid" ] ));
+	newInput( 9, nodeValue_Int(     "Column", 4 ));
+	newInput(10, nodeValue_Int(     "Scale",  1 ));
+	// 11
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
@@ -26,7 +31,6 @@ function Node_Interpret_Number(_x, _y, _group = noone) : Node_Processor(_x, _y, 
 		
 		var vmin =  infinity;
 		var vmax = -infinity;
-		
 		for( var i = 0, n = array_length(vals); i < n; i++ ) {
 			var v = vals[i];
 			vmin = min(vmin, v);
@@ -34,11 +38,11 @@ function Node_Interpret_Number(_x, _y, _group = noone) : Node_Processor(_x, _y, 
 		}
 		
 		inputs[2].setValue([vmin, vmax]);
-		
 	}).setText(__txt("Auto-Range"));
 	
 	input_display_list = [  0,
-		[ "Interpret", false ],  1,  2,  6, [3, false],  4,  7, -1, 
+		[ "Interpret", false ],  1,  2,  6, [3, false],  4,  7, -1, b_auto_range, 
+		[ "Output",    false ],  8,  9, 10, 
 	];
 	
 	////- Node
@@ -52,15 +56,21 @@ function Node_Interpret_Number(_x, _y, _group = noone) : Node_Processor(_x, _y, 
 	
 	static processData = function(_outSurf, _data, _array_index) {
 		#region data
-			static BATCH_SIZE = 128;
+			var BATCH_SIZE = OS == os_windows? 1024 : 256;
 			
 			var _val = _data[ 0];
 			var _mod = _data[ 1];
 			var _ran = _data[ 2];
 			var _pal = _data[ 6];
 			
+			var _pat = _data[ 8];
+			var _col = _data[ 9];
+			var _sca = _data[10];
+			
 			inputs[ 6].setVisible(_mod == 1);
 			inputs[ 3].setVisible(_mod == 2);
+			
+			inputs[ 9].setVisible(_pat == 1);
 		#endregion
 		
 		if(is_array(_val) && array_empty(_val)) return _outSurf;
@@ -68,24 +78,30 @@ function Node_Interpret_Number(_x, _y, _group = noone) : Node_Processor(_x, _y, 
 		var _num = array_spread(_val);
 		var _amo = array_length(_num);
 		
-		_outSurf = surface_verify(_outSurf, _amo, 1, attrDepth());
+		var sw = 1;
+		var sh = 1;
+		
+		switch(_pat) {
+			case 0 : sw = _amo; sh = 1;                 break;
+			case 1 : sw = _col; sh = ceil(_amo / _col); break;
+		}
+		
+		_outSurf = surface_verify(_outSurf, sw, sh, attrDepth());
 		if(_amo == 0) return _outSurf;
 		
 		surface_set_shader(_outSurf, sh_interpret_number);
-			shader_set_i( "mode",  _mod );
-			shader_set_f( "range", _ran );
+			shader_set_2( "dimension", [sw,sh] );
+			shader_set_i( "mode",      _mod    );
+			shader_set_i( "pattern",   _pat    );
+			shader_set_i( "amount",    _amo    );
+			shader_set_f( "range",     _ran    );
 			shader_set_palette(_pal);
 			
 			shader_set_f( "gradient_shift", _data[7] );
 			shader_set_gradient(_data[3], _data[4], _data[5], inputs[3]);
 			
-			for(var i = 0; i < _amo; i += BATCH_SIZE) {
-				var _arr = [];
-				array_copy(_arr, 0, _num, i, BATCH_SIZE);
-				shader_set_f("number", _arr);
-				
-				draw_sprite_stretched(s_fx_pixel, 0, i, 0, BATCH_SIZE, 1);
-			}
+			shader_set_f("number", _num);
+			draw_empty();
 		surface_reset_shader();
 		
 		return _outSurf;
