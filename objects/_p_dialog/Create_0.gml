@@ -29,13 +29,14 @@
 
 #macro DIALOG_WINDOW_START                      \
 	if(is_winwin(window)) winwin_start(window); \
+	var dpd = THEME_VALUE.dialog_padding;       \
 	var _dialog_x = window? 0 : dialog_x;       \ 
 	var _dialog_y = window? 0 : dialog_y;
 
 #macro DIALOG_WINDOW_END                        \
 	if(is_winwin(window)) winwin_end();
 
-#region data
+#region Display
 	on_top    = false;
 
 	with(_p_dialog)  { if(!on_top) other.depth = min(depth - 1, other.depth); }
@@ -55,6 +56,11 @@
 	dialog_y  = 0;
 	anchor    = ANCHOR.none;
 	
+	display_a    = 1;
+	display_a_to = 1;
+#endregion
+
+#region Data
 	title          = "dialog";
 	context_str    = "Dialog";
 	window_drawing = false;
@@ -76,7 +82,7 @@
 	init_rclick   = mouse_rclick();
 #endregion
 
- ////- Window manipulations
+#region Window manipulations
 	
 	windowConfig = new winwin_config();
 	window       = undefined;
@@ -276,8 +282,9 @@
 		return self;
 	}
 	
- ////- Focus
-		
+#endregion
+	
+#region Focus
 	function point_in(mx, my) {
 		var diax = dialog_x; 
 		var diay = dialog_y;
@@ -403,9 +410,11 @@
 		
 	function onDestroy() {}
 
- ////- Children
-		
+#endregion
+
+#region Children
 	function addChildren(object) {
 			object.parent = self;
 			array_push_unique(children, object.id);
 		}
+#endregion

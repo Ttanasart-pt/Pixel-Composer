@@ -1,19 +1,9 @@
 {
-  "tooltip":"Plot graph or bar chart from array of number.",
-  "alias":[
-    "plot",
-    "bar chart",
-    "graph",
-    "waveform"
-  ],
-  "spr":"s_node_plot_linear",
-  "pxc_version":1144.0,
-  "baseNode":"Node_Plot_Linear",
-  "io":[
-    "surface",
-    "surface",
-    "float"
-  ],
-  "build":"Node_create_Plot_Linear",
-  "name":"Draw Bar \/ Graph"
+    "name":          "Draw Bar / Graph",
+    "tooltip":       "Plot graph or bar chart from array of number.",
+    "spr":           "s_node_plot_linear",
+    "baseNode":      "Node_Plot_Linear",
+    "pxc_version":    1144,
+    "alias":          ["plot","bar chart","graph","waveform","pie chart"],
+    "io":             ["surface","surface","float"],
 }

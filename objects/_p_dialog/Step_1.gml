@@ -5,6 +5,10 @@ if(init_pressing && mouse_lrelease())
 if !ready  exit;
 if !active exit;
 
+#region display
+	display_a = lerp_float(display_a, display_a_to, 2);
+#endregion
+
 #region window control
 	if(sFOCUS && keyboard_check_direct(vk_escape)) {
 		if(PREFERENCES.panel_force_on_escape || (destroy_on_escape && checkClosable()))

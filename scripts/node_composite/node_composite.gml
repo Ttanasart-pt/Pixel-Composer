@@ -1139,6 +1139,7 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	surf_dragging     = noone;
 	surface_selecting = [];
 	surface_predrag   = [];
+	surface_hover     = 0;
 	select_freeze     = 0;
 	selection_bbox    = [0, 0, 1, 1, 0, 0];
 	
@@ -1586,11 +1587,18 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 				
 				if(HIGHLIGHT_PROP && HIGHLIGHT_PROP.node == self && HIGHLIGHT_PROP.index >= index && HIGHLIGHT_PROP.index < index + data_length) {
 					if(!attributes.select_object) {
-						draw_set_color(COLORS._main_icon);
-						draw_rectangle_border_points(_d0[0], _d0[1], _d1[0], _d1[1], _d2[0], _d2[1], _d3[0], _d3[1], 3);
+						if(surface_hover == i) {
+							draw_set_color(COLORS._main_icon);
+							draw_rectangle_border_points(_d0[0], _d0[1], _d1[0], _d1[1], _d2[0], _d2[1], _d3[0], _d3[1], 3);
 						
-						draw_set_color(COLORS.node_composite_overlay_border);
-						draw_rectangle_border_points(_d0[0], _d0[1], _d1[0], _d1[1], _d2[0], _d2[1], _d3[0], _d3[1]);
+							draw_set_color(COLORS.node_composite_overlay_border);
+							draw_rectangle_border_points(_d0[0], _d0[1], _d1[0], _d1[1], _d2[0], _d2[1], _d3[0], _d3[1]);
+							
+						} else {
+							draw_set_color(COLORS._main_icon);
+							draw_rectangle_dashed_points(_d0[0], _d0[1], _d1[0], _d1[1], _d2[0], _d2[1], _d3[0], _d3[1], 1);
+							
+						}
 					}
 					
 				}
@@ -1850,10 +1858,6 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 				
 				draw_line_width(_selx1, _sely1, _selx1 + 16, _sely1 + 16,  ui(1));
 				draw_anchor(_si, _selx1 + 16, _sely1 + 16,  ui(8), 1);
-				// draw_anchor(_bi == 0, _selx0, _sely0, ui(8), 2);
-				// draw_anchor(_bi == 1, _selx1, _sely0, ui(8), 2);
-				// draw_anchor(_bi == 2, _selx0, _sely1, ui(8), 2);
-				// draw_anchor(_bi == 3, _selx1, _sely1, ui(8), 2);
 				
 			}
 		} // Draw Gizmo for Multiple Selections
@@ -1962,6 +1966,8 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 				}
 			}
 		} // Start Transform Action
+		
+		surface_hover = hovering;
 		
 		return w_hover || hovering != noone;
 	}

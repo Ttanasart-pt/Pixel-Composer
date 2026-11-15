@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.22.3.1",
+    "changes": [
+      {
+        "date": "2026-11-15T04:21:53.954Z",
+        "node": "",
+        "commit": "**Interpret Number**: Add auto-range button to match range value with input range."
+      }
+    ]
+  },
+  {
     "version": "1.21.7.104",
     "changes": [
       {

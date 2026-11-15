@@ -49,3 +49,11 @@ function draw_rectangle_border_points(x0, y0, x1, y1, x2, y2, x3, y3, thick = 1)
 	draw_line_width(x3, y3, x2, y2, thick);
 	draw_line_width(x2, y2, x0, y0, thick);
 }
+
+function draw_rectangle_dashed_points(x0, y0, x1, y1, x2, y2, x3, y3, thick = 1) {
+	INLINE
+	draw_line_dashed(x0, y0, x1, y1, thick);
+	draw_line_dashed(x1, y1, x3, y3, thick);
+	draw_line_dashed(x3, y3, x2, y2, thick);
+	draw_line_dashed(x2, y2, x0, y0, thick);
+}

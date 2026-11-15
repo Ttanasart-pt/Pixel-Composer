@@ -13,6 +13,7 @@ function scrollPane(_w, _h, ondraw) : widget() constructor {
 	tool_h      = 0;
 	
 	drawFunc    = ondraw;
+	draw_alpha  = 1;
 	
 	content_h     = 0;
 	is_scroll	  = true;
@@ -141,8 +142,7 @@ function scrollPane(_w, _h, ondraw) : widget() constructor {
 			scroll_y	 = round(scroll_y_raw);
 		}
 		
-		draw_surface_safe(surface, x, y);
-		// draw_set_color(c_blue); draw_rectangle(x, y, x+surface_w, y+surface_h, true);
+		draw_surface_ext(surface, x, y, 1, 1, 0, c_white, draw_alpha);
 		
 		if(tool_w) draw_sprite_stretched(THEME.ui_panel_tool, 0, tolx, toly, tool_w, tool_h);
 		

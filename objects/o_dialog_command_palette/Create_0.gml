@@ -15,6 +15,7 @@ event_inherited();
 	destroy_on_click_out = true;
 	destroy_on_escape    = false;
 	
+	display_a = 0;
 	draggable = false;
 	selecting = 0;
 	
