@@ -1,4 +1,7 @@
 function audioObject(_sample = 8, _channel = 2) constructor {
+	path       = "";
+	gain       = 1;
+	
 	sound      = [];
 	soundMono  = [];
 	sample     = _sample;
@@ -11,6 +14,9 @@ function audioObject(_sample = 8, _channel = 2) constructor {
 	bit_sample = 16;
 	bit_range  = 1;
 	
+	playback_loop  = false;
+	playback_start = 0;
+
 	preview_surface = noone;
 	
 	static checkPreview = function(w, h, force = false) {	

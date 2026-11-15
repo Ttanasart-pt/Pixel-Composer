@@ -106,12 +106,15 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	newInput(14, nodeValue_Int(     "Frame step",        1 ));
 	newInput(21, nodeValue_Int(     "Batch gif",         0 )).setTooltip("Batch animations to reduce memory footprint. Set to zero to export all at once.");
 	
+	////- =Audio
+	newInput(28, nodeValue_AudioBit( "Audio" )).setArrayDepth(1);
+	
 	////- =Regions
 	newInput(24, nodeValue_Bool(    "Render Region",  false ));
 	newInput(25, nodeValue_Text(    "Export Regions", []    ).setDisplay(VALUE_DISPLAY.text_array, { 
 		data: function() /*=>*/ {return array_create_ext(array_length(PROJECT.animationRegions), function(i) /*=>*/ {return PROJECT.animationRegions[i].label})}
 	}));
-	// inputs 28
+	// 29
 	
 	newOutput(0, nodeValue_Output("Preview", VALUE_TYPE.surface, noone));
 	
@@ -213,6 +216,7 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		[ "Format",       false     ],  3,  9, 17, 18,  6,  7, 10, 13, 23, 
 		[ "Post-Process", false     ], 19, export_scale_label, 
 		[ "Animation",    false     ], 26,  8, 27, export_speed_label,  5, 11, 14, 21, 
+		[ "Audio",        false     ], 28, 
 		[ "Custom Range",  true, 15 ], 12, 
 		[ "Regions",       true, 24 ], 25, 
 	];
@@ -648,7 +652,8 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	static renderMp4 = function(temp_path, target_path) {
 		var qual = getInputData(10); qual = clamp(qual, 0, 51);
 		
-		var fType = getInputData(26);
+		var fType  = getInputData(26);
+		var fAudio = getInputData(28);
 		var framerate;
 		
 		if(fType == 0) {
@@ -672,7 +677,46 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		temp_path   = string_trim(temp_path, ["*.png"]) + "%05d.png";
 		target_path = string_replace_all(target_path, "/", "\\");
 		
-		var	shell_cmd  = $"-hide_banner -loglevel quiet -framerate {framerate} -y -i \"{temp_path}\" -c:v libx264 -pix_fmt yuv420p -crf {qual} {string_quote(target_path)}";
+		// -hide_banner -loglevel quiet -framerate 30 -y -i ".\%05d.png" -i "./beep_boop.wav" 
+		// -c:v libx264 -pix_fmt yuv420p -crf 23 -af "adelay=500|500,volume=0.5" -shortest -map 0:v:0 -map 1:a:0 ".\videoaudio.mp4"
+		
+		var	shell_cmd     = $"-hide_banner -loglevel quiet -framerate {framerate} -y -i \"{temp_path}\" ";
+		var shell_filters = "";
+		var audio_count   = 0;
+		
+		if(fAudio != noone) {
+		    if(!is_array(fAudio)) fAudio = [fAudio];
+		    
+		    for( var i = 0, n = array_length(fAudio); i < n; i++ ) {
+		        var aud = fAudio[i];
+		        if(!is(aud, audioObject)) continue;
+		        
+		        var _apth = string_quote(aud.path);
+		        var _aoff = (aud.playback_start - 1) / project.animator.framerate;
+		        var _alop = aud.playback_loop;
+		        var _agra = aud.gain;
+		        
+		        var _loop_str = _alop ? "-stream_loop -1" : "";
+		        shell_cmd += $"{_loop_str} -i {_apth} ";
+		        
+		        var _filt  = $"[{audio_count+1}:a:0]adelay={_aoff * 1000}|{_aoff * 1000},volume={string_format(_agra, 0, 1)}[a{audio_count}];";
+		        shell_filters += _filt;
+		        audio_count++;
+		    }
+		}
+		
+		if(audio_count > 0) {
+		    var _filter_output = "";
+		    for(var i = 0; i < audio_count; i++)
+		        _filter_output += $"[a{i}]";
+		    
+		    shell_filters += $"{_filter_output}amix=inputs={audio_count}:duration=longest[a]";
+		    shell_cmd     += $"-filter_complex \"{shell_filters}\" -map 0:v:0 -map \"[a]\" -c:a aac ";
+		    
+		} 
+		
+	    shell_cmd += $"-c:v libx264 -pix_fmt yuv420p -crf {qual} ";
+		shell_cmd += $"{string_quote(target_path)}";
 		
 		array_push(render_process_id, shell_execute_async(ffmpeg, shell_cmd, self));
 		render_type       = "mp4";
@@ -1223,6 +1267,8 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			inputs[11].setVisible(anim == 1);
 			inputs[14].setVisible(anim >  0);
 			
+			inputs[28].setVisible(false);
+			
 			if(anim == NODE_EXPORT_FORMAT.animation) {
 				var _enc = getInputData(17);
 				var _fmt = array_safe_get_fast(format_animation, extn);
@@ -1246,6 +1292,8 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 				inputs[27].setVisible(fType == 1);
 				inputs[ 5].setVisible(_fmt == ".gif");
 				inputs[21].setVisible(true);
+				
+				inputs[28].setVisible(_fmt == ".mp4", _fmt == ".mp4");
 				
 				if(_fmt == ".mp4") {
 					inputs[10].setName("CRF value");

@@ -81,8 +81,6 @@ function Node_WAV_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	wav_file_lim = 1;
 	wav_duration = 1;
 	
-	playback_start    = 1;
-	playback_loop     = false;
 	playback_progress = 0;
 	
 	#region attribute
@@ -121,7 +119,8 @@ function Node_WAV_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		printIf(global.FLAG.wav_import, "-- Reading file...");
 		
 		content = file_read_wav(path);
-		wav_duration = content[$ "duration"] ?? 1;
+		content.path = path;
+
 		logNode($"Loaded file: {path}", false);
 		
 		return true;
@@ -132,6 +131,8 @@ function Node_WAV_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		outputs[2].setValue(content.sample);
 		outputs[3].setValue(content.channels);
 		outputs[4].setValue(wav_duration);
+		
+		wav_duration = content[$ "duration"] ?? 1;
 		
 		printIf(global.FLAG.wav_import, "-- Creating preview buffer...");
 		
@@ -209,20 +210,20 @@ function Node_WAV_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		#region data
 			var path = path_get(getInputData(0));
 			var mono = getInputData(2);
-			
-			playback_loop  = getInputData(3);
-			playback_start = getInputData(4);
 		#endregion
-			
-		playback_progress = (CURRENT_FRAME - playback_start + 1) / project.animator.framerate - attributes.preview_shift;
-		// print(CURRENT_FRAME, playback_start, playback_progress, pmod(playback_progress, wav_duration))
-		if(playback_loop) playback_progress = pmod(playback_progress, wav_duration);
-		
-		if(IS_PLAYING && !audio_is_playing(preview_audio) && playback_progress >= 0 && playback_progress < wav_duration)
-			preview_id = audio_play_sound(preview_audio, 1, false, attributes.preview_gain, playback_progress); 
 		
 		if(path_current != path) updatePaths(path);
 		if(!is(content, audioObject)) return;
+			
+		content.playback_loop  = getInputData(3);
+		content.playback_start = getInputData(4);
+		content.gain           = attributes.preview_gain;
+		
+		playback_progress = (CURRENT_FRAME - content.playback_start + 1) / project.animator.framerate - attributes.preview_shift;
+		if(content.playback_loop) playback_progress = playback_progress % wav_duration;
+		
+		if(IS_PLAYING && !audio_is_playing(preview_audio) && playback_progress >= 0 && playback_progress < wav_duration)
+			preview_id = audio_play_sound(preview_audio, 1, false, attributes.preview_gain, playback_progress); 
 		
 		content.mono = mono;
 	}
@@ -281,8 +282,8 @@ function Node_WAV_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		var _lens = wav_duration;
 		var _lenf = ceil(_lens * project.animator.framerate);
 		
-		var _strt = playback_start;
-		var _loop = playback_loop;
+		var _strt = content.playback_start;
+		var _loop = content.playback_loop;
 		
 		var _ex0 = _x   + _strt * _s;
     	var _ex1 = _ex0 + _lenf * _s;

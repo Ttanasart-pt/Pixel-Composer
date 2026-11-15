@@ -953,8 +953,13 @@ function Panel_Inspector() : PanelContent() constructor {
             	
             	_amoMap[$ ikey] = 0;
             	
-            	if(togl != noone || righ != noone)
+            	if(righ != noone)
             		_amoMap[$ ikey]++;
+            	else if(togl != noone) {
+            		var tgJun = _inspecting.inputs[togl];
+            		if(tgJun.show_in_inspector)
+            			_amoMap[$ ikey]++;
+            	}
             	
             	if(subk) {
             		_currSub = ikey;

@@ -6,6 +6,11 @@
         "date": "2026-11-15T07:37:34.352Z",
         "node": "",
         "commit": "**Wav File In**: Add starting frame, looping controls."
+      },
+      {
+        "date": "2026-11-15T08:24:48.293Z",
+        "node": "",
+        "commit": "**Export > mp4**: Add audio export."
       }
     ]
   },

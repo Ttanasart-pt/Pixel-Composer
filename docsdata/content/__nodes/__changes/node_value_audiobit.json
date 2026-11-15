@@ -1,0 +1,12 @@
+[
+  {
+    "version": "1.22.3.1",
+    "changes": [
+      {
+        "date": "2026-11-15T08:24:48.292Z",
+        "node": "",
+        "commit": "**Export > mp4**: Add audio export."
+      }
+    ]
+  }
+]
