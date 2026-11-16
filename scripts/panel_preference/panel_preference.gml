@@ -42,6 +42,44 @@ function Panel_Preference() : PanelContent() constructor {
     	PREF_SAVE();
     }
     
+    #region preset
+    	prefDir    = $"{DIRECTORY}Preferences/";
+    	presetList = [];
+    	
+    	sc_preset = new scrollBoxFn(function() /*=>*/ {
+	    	presetList = directory_listdir(prefDir, fa_directory, false);
+	    	return presetList;
+	    	
+    	}, function(p) /*=>*/ {return setPreset(array_safe_get_fast(presetList, p, ""))}, false)
+    		.setAddable(__txt("Add Preset..."), function(t) /*=>*/ {return newPreset(t)})
+    		.setTooltip(__txt("Tooltip")).setScrollAnchor(ANCHOR.bottom);
+    	
+    	function setPreset(pres) {
+    		var _dir = $"{DIRECTORY}Preferences/{pres}/";
+    		if(!directory_exists(_dir)) return;
+    		
+    		PREF_VERSION    = pres;
+    		PREFERENCES_DIR = $"{DIRECTORY}Preferences/{PREF_VERSION}/";
+    		PRESIST_PREF[$ "preset"] = pres;
+    		PREF_PERSIST_SAVE();
+    		o_main.INIT_DATA();
+    		setPanel(); 
+    		PREF_LOAD();
+    		
+    		dialogPanelCall(new Panel_Preference());
+    		close();
+    	}
+    	
+    	function newPreset(name) {
+    		if(name == "") return;
+    		
+    		var _dir = $"{DIRECTORY}Preferences/{name}/";
+    		if(directory_exists(_dir)) return;
+    		directory_create(_dir);
+    		setPreset(name);
+    	}
+    #endregion
+    
     ////- Preferences
     
     #region Pages
@@ -321,14 +359,14 @@ function Panel_Preference() : PanelContent() constructor {
     		
     		ds_list_add(pref_global, new __Panel_Linear_Setting_Item(
     			__txt("pref_directory", "Main directory path*"),
-    			textBox_Text(function(txt) /*=>*/ { PRESIST_PREF.path = txt; json_save_struct(APP_DIRECTORY + "persistPreference.json", PRESIST_PREF); })
+    			textBox_Text(function(txt) /*=>*/ { PRESIST_PREF.path = txt; PREF_PERSIST_SAVE(); })
     				.setSideButton(button(function() /*=>*/ { 
     					PRESIST_PREF.path = get_open_directory_compat(struct_try_get(PRESIST_PREF, "path", ""));
-    					json_save_struct(APP_DIRECTORY + "persistPreference.json", PRESIST_PREF);
+    					PREF_PERSIST_SAVE();
     				}, THEME.button_path_icon)).setFont(f_p2).setEmpty(),
     			
     			function(   ) /*=>*/ {return struct_try_get(PRESIST_PREF, "path", "")},
-    			function(val) /*=>*/ { PRESIST_PREF.path = val; json_save_struct(APP_DIRECTORY + "persistPreference.json", PRESIST_PREF); },
+    			function(val) /*=>*/ { PRESIST_PREF.path = val; PREF_PERSIST_SAVE(); },
     			APP_DIRECTORY,
     		).setKey("main_dir_path"));
     		
@@ -1578,27 +1616,32 @@ function Panel_Preference() : PanelContent() constructor {
 					if(hotkey_play.getKeyName()   == "Space") return 0;
 					if(hotkey_resume.getKeyName() == "Space") return 1;
 					return 2;
-				} 
+				},
+				0,
 			], 
 			
 			[ __txt("Force Close on Escape"), 
 				new checkBox(function() /*=>*/ {return prefToggle("panel_force_on_escape")}), 
-				function() /*=>*/ {return PREFERENCES.panel_force_on_escape}
+				function() /*=>*/ {return PREFERENCES.panel_force_on_escape},
+				false,
 			],
 			
 			[ __txt("panel_graph_group_require_shift", "Hold Shift to enter group"),
 				new checkBox(function() /*=>*/ {return prefToggle("panel_graph_group_require_shift")}), 
-				function() /*=>*/ {return PREFERENCES.panel_graph_group_require_shift}
+				function() /*=>*/ {return PREFERENCES.panel_graph_group_require_shift},
+				true,
 			],
 			
 			[ __txt("pref_use_alt", "Use ALT for"),
 				new buttonGroup(__txts([ "Pan", "Color Picker" ]), function(val) /*=>*/ {return prefSet("alt_picker", val)}),
-				function() /*=>*/ {return PREFERENCES.alt_picker}
+				function() /*=>*/ {return PREFERENCES.alt_picker},
+				1,
 			],
 			
 			[ __txt("pref_pan_key", "Panning key"),
 				new scrollBox([ "Middle Mouse", "Mouse 4", "Mouse 5" ], function(val) /*=>*/ {return prefSet("pan_mouse_key", val + 3)}),
     			function() /*=>*/ {return PREFERENCES.pan_mouse_key - 3},
+    			0,
 			],
 			
 		];
@@ -1657,7 +1700,7 @@ function Panel_Preference() : PanelContent() constructor {
 	    		
 	    		if(_title == "Graph") {
 	    			array_push(hotkeyContext, { list: GRAPH_ADD_NODE_KEYS });
-	    			array_push(hotkeyArray, "Add Node");
+	    			array_push(hotkeyArray, "-Add Node");
 	    		}
 	    	}
 	    	
@@ -1738,6 +1781,40 @@ function Panel_Preference() : PanelContent() constructor {
 	    	hk_page = 0;
     	}
     	
+    	function hotkey_reset_cat(_ctxObj = hotkeyContext[hk_page], _save = true) {
+    		var _list = _ctxObj.list;
+    		
+    		for (var i = 0, n = array_length(_list); i < n; i++) {
+    			var hotkey = _list[i];
+    			if(!is(hotkey, Hotkey)) continue;
+    			
+    			if(hotkey.isModified())
+    				hotkey.reset();
+    		}
+    		
+    		if(_save) PREF_SAVE();
+    	}
+    	
+    	function hotkey_reset_all() {
+    		for( var i = 0, n = array_length(hk_general_list); i < n; i++ ) {
+    			var _l = hk_general_list[i];
+    			var _wdgt = _l[1];
+    			var _deff = _l[3];
+    			
+    			if(is(_wdgt, widget) && is_callable(_wdgt.onModify))
+    				_wdgt.onModify(_deff);
+    		}
+    		
+    		for( var i = 0, n = array_length(hotkeyContext); i < n; i++ ) {
+    			var hks = hotkeyContext[i];
+    			if(hks == -1) continue;
+    			
+    			hotkey_reset_cat(hks, false);
+    		}
+    		
+    		PREF_SAVE();
+    	}
+    	
     	sp_hotkey_menu = new scrollPane(0, 0, function(_y, _m) {
     		draw_clear_alpha(COLORS.panel_bg_clear_inner, 1);
     		
@@ -1766,6 +1843,9 @@ function Panel_Preference() : PanelContent() constructor {
 	    			hh += ui(8);
     				continue;
     			}
+    			
+    			var _sub = string_starts_with(_title, "-");
+    			var _txt = string_trim(_title, ["-"]);
     			
     			var _draw = yy > -hg && yy < sh;
     			if(!_draw) {
@@ -1807,7 +1887,7 @@ function Panel_Preference() : PanelContent() constructor {
     			}
     			
     			draw_set_text(font, fa_left, fa_center, cc, aa);
-    			draw_text_add(ui(8), yy + hg / 2, _title);
+    			draw_text_add(ui(8 + _sub * 8), yy + hg / 2, _txt);
     			draw_set_alpha(1);
     			
     			yy += hg;
@@ -1832,6 +1912,7 @@ function Panel_Preference() : PanelContent() constructor {
     		var hh = 0;
     		var x1 = _ww - ui(32);
     		var hg = line_get_height(f_p2, 6);
+    		var bs = ui(24);
     		
     		var _search = string_lower(search_text);
     		
@@ -1841,6 +1922,7 @@ function Panel_Preference() : PanelContent() constructor {
     			var _name = _l[0];
     			var _wdgt = _l[1];
     			var _gett = _l[2];
+    			var _deff = _l[3];
     			
     			if(_search != "" && search_type == "") {
                  	var _filtered = string_pos(_search, string_lower(_name)) == 0;
@@ -1861,6 +1943,16 @@ function Panel_Preference() : PanelContent() constructor {
     				.setFont(f_p3).setFocusHover(focus, hover);
     			if(is(_wdgt, checkBox)) par.setHalign(fa_center);
     			_wdgt.drawParam(par);
+    			
+				var key_x1 = _ww - ui(8);
+				key_x1 -= bs;
+				
+    			if(val != _deff) {
+    				var bx = key_x1;
+    				var by = yy + hg / 2 - bs / 2;
+    				var b  = buttonInstant(THEME.button_hide_fill, bx, by, bs, bs, _m, hover, focus, __txt("Reset"), THEME.refresh_16);
+    				if(b == 2) _wdgt.onModify(_deff);
+    			}
     			
     			yy += hg + pd;
     			hh += hg + pd;
@@ -1970,16 +2062,15 @@ function Panel_Preference() : PanelContent() constructor {
 	    			draw_set_text(f_p2, fa_left, fa_top, COLORS._main_text);
 	    			draw_text_add(ui(24), _yy, name);
     			}
-    			    			
-				var key_x1 = _ww - ui(8);
+    			
     			var bs = ui(24);
-				key_x1 -= bs;
-							
+				var key_x1 = _ww - ui(8) - bs;
+				
     			if(hotkey.isModified()) {
     				modified = true;
     				
     				var bx = key_x1;
-    				var by = _yy + th / 2 - ui(12);
+    				var by = _yy + th / 2 - bs / 2;
     				var b  = buttonInstant(THEME.button_hide_fill, bx, by, bs, bs, _m, hover, focus, __txt("Reset"), THEME.refresh_16);
     				
     				if(b) sp_hotkey.hover_content = true;
@@ -2413,6 +2504,8 @@ function Panel_Preference() : PanelContent() constructor {
     	}
     #endregion
 	
+	prefListCommon = [pref_global, pref_appr, pref_node];
+	
 	////- Dialog
 	
 	function onResize() {
@@ -2443,11 +2536,12 @@ function Panel_Preference() : PanelContent() constructor {
 	    	var bh = ui(24);
 	    	var bx = padding;
 	    	var by = page_y1 - bh;
+	    	var m  = [mx,my];
 	    	
 	    	draw_set_font(f_p3);
 	    	if(pref_resetting) {
 	    		var bc = COLORS._main_value_negative;
-	    		if(buttonTextInstant(true, THEME.button_def, bx, by, page_w, bh, [mx,my], pHOVER, pFOCUS, "", "Confirm Reset", bc) == 2) {
+	    		if(buttonTextInstant(true, THEME.button_def, bx, by, page_w, bh, m, pHOVER, pFOCUS, "", "Confirm Reset", bc) == 2) {
 		    		directory_clear($"{DIRECTORY}Preferences");
 	    			PREF_LOAD();
 	    			should_restart = true;
@@ -2458,15 +2552,14 @@ function Panel_Preference() : PanelContent() constructor {
 		    		pref_resetting = false;
 		    	
 	    	} else {
-	    		if(buttonTextInstant(true, THEME.button_def, bx, by, page_w, bh, [mx,my], pHOVER, pFOCUS, "", "Reset Default") == 2)
+	    		if(buttonTextInstant(true, THEME.button_def, bx, by, page_w, bh, m, pHOVER, pFOCUS, "", "Reset Default") == 2)
 	    			pref_resetting = true;
 	    	}
 	    	
 	    	by -= bh + ui(4);
 	    	
-	    	if(buttonTextInstant(true, THEME.button_def, bx, by, bw, bh, [mx,my], pHOVER, pFOCUS, "", "Save") == 2) {
+	    	if(buttonTextInstant(true, THEME.button_def, bx, by, bw, bh, m, pHOVER, pFOCUS, "", "Save") == 2) {
 	    		var _path = get_save_filename_compat("zip file|.zip", "Preference-backup");
-    			
 	    		if(_path != "") {
 	    			PREF_SAVE();
 	    			
@@ -2476,9 +2569,7 @@ function Panel_Preference() : PanelContent() constructor {
 	    		}
 	    	}
 	    	
-	    	bx += bw + ui(4);
-	    	
-	    	if(buttonTextInstant(true, THEME.button_def, bx, by, bw, bh, [mx,my], pHOVER, pFOCUS, "", "Load") == 2) {
+	    	if(buttonTextInstant(true, THEME.button_def, bx + bw + ui(4), by, bw, bh, m, pHOVER, pFOCUS, "", "Load") == 2) {
 	    		var _path = get_open_filename_compat("Zip File (.zip)|.zip", "Preference-backup");
 	    		if(_path != "") {
 	    			directory_clear($"{DIRECTORY}Preferences");
@@ -2488,6 +2579,20 @@ function Panel_Preference() : PanelContent() constructor {
 	    			should_restart = true;
 	    		}
 	    	}
+	    	
+	    	by -= ui(8);
+	    	draw_set_color_alpha(COLORS._main_icon, .25);
+	    	draw_line_width(bx + ui(8), by, bx + page_w - ui(8), by, ui(1));
+	    	draw_set_alpha(1);
+	    	by -= bh + ui(6);
+	    	
+	    	sc_preset.setFocusHover(pFOCUS, pHOVER);
+	    	sc_preset.drawParam(new widgetParam(bx, by, page_w - bh - ui(4), bh, PREF_VERSION, undefined, m, x, y).setFont(f_p3));
+	    	
+	    	var bt = __txt("Open in Explorer");
+	    	var bc = COLORS._main_icon;
+	    	if(buttonInstant_Pad(THEME.button_hide, bx + page_w - bh, by, bh, bh, m, pHOVER, pFOCUS, bt, THEME.dPath_open, 0, bc, 1, ui(6)) == 2)
+	    		shellOpenExplorer($"{DIRECTORY}Preferences");
 	    	
 	    	page_y1 = by - ui(4);
 	    	
@@ -2549,271 +2654,283 @@ function Panel_Preference() : PanelContent() constructor {
     	
     	draw_sprite_stretched(THEME.ui_panel_bg, 1, px - ui(8), py - ui(8), pw + ui(16), ph + ui(16));
     	
-    	switch(page_current) {
-        	case 0 : //General
-        		current_list = pref_global;
-        		sp_pref.verify(panel_width, ph);
-        		sp_pref.setFocusHover(pFOCUS, pHOVER);
-        		sp_pref.drawOffset(px, py, mx, my);
-    		    break;
-    		    
-    	    case 1 : //Interface
-        		current_list = pref_appr;
-        		sp_pref.verify(panel_width, ph);
-        		sp_pref.setFocusHover(pFOCUS, pHOVER);
-        		sp_pref.drawOffset(px, py, mx, my);
-    		    break;
+        if(page_current < array_length(prefListCommon)) { // General
+    		current_list = prefListCommon[page_current];
+    		sp_pref.verify(panel_width, ph);
+    		sp_pref.setFocusHover(pFOCUS, pHOVER);
+    		sp_pref.drawOffset(px, py, mx, my);
     		
-    	    case 2 : //Nodes
-        		current_list = pref_node;
-        		sp_pref.verify(panel_width, ph);
-        		sp_pref.setFocusHover(pFOCUS, pHOVER);
-        		sp_pref.drawOffset(px, py, mx, my);
-    		    break;
+		} else if(page_current == 3) { // Theme
+    		var theme_meta_w = ui(320);
     		
-    	    case 3 : //Theme
-        		var theme_meta_w = ui(320);
-        		
-        		var x1 = px + theme_meta_w - ui(8);
-        		sp_theme.verify(theme_meta_w - ui(8), ph);
-        		sp_theme.setFocusHover(pFOCUS, pHOVER);
-        		sp_theme.drawOffset(px, py, mx, my);
-        		
-        		var _res_w = panel_width - theme_meta_w;
-        		
-        		var _tabh = ui(24);
-        		tab_resources.setFocusHover(pFOCUS, pHOVER);
-                tab_resources.draw(px + theme_meta_w + ui(32), py, _res_w - ui(64), _tabh, theme_page, [ mx, my ]);
-        		_tabh += ui(4);
-        		
-        		var sp = theme_pages[theme_page];
-        		sp.verify(_res_w, ph - _tabh);
-        		sp.setFocusHover(pFOCUS, pHOVER);
-        		sp.drawOffset(px + theme_meta_w, py + _tabh, mx, my);
-    		    break;
+    		var x1 = px + theme_meta_w - ui(8);
+    		sp_theme.verify(theme_meta_w - ui(8), ph);
+    		sp_theme.setFocusHover(pFOCUS, pHOVER);
+    		sp_theme.drawOffset(px, py, mx, my);
     		
-    	    case 4 : //Hotkeys
-    	    	if(!hk_init) initHK();
-    	    	
-        		var hk_w = panel_width;
-        		var hk_h = hotkey_cont_h - ui(16);
-        		var kdsp = keyboards_display;
-        		var keys = keyboards_display.keys;
+    		var _res_w = panel_width - theme_meta_w;
+    		
+    		var _tabh = ui(24);
+    		tab_resources.setFocusHover(pFOCUS, pHOVER);
+            tab_resources.draw(px + theme_meta_w + ui(32), py, _res_w - ui(64), _tabh, theme_page, [ mx, my ]);
+    		_tabh += ui(4);
+    		
+    		var sp = theme_pages[theme_page];
+    		sp.verify(_res_w, ph - _tabh);
+    		sp.setFocusHover(pFOCUS, pHOVER);
+    		sp.drawOffset(px + theme_meta_w, py + _tabh, mx, my);
+    		
+		} else if(page_current == 4) { // Hotkeys
+	    	if(!hk_init) initHK();
+	    	
+    		var hk_w = panel_width;
+    		var hk_h = hotkey_cont_h - ui(16);
+    		var kdsp = keyboards_display;
+    		var keys = keyboards_display.keys;
+    		
+    		var ks   = min(hk_w / kdsp.width, hk_h / kdsp.height);
+    		var _kww = ks * kdsp.width;
+    		var _khh = ks * kdsp.height;
+    		
+    		var _ksx = px + hk_w / 2 - _kww / 2;
+    		var _ksy = py + hk_h / 2 - _khh / 2;
+    		var _kp  = ui(2);
+    		
+    		var _keyUsing = {};
+    		var _ctxObj   = hotkeyContext[hk_page];
+    		var _list     = _ctxObj.list;
         		
-        		var ks   = min(hk_w / kdsp.width, hk_h / kdsp.height);
-        		var _kww = ks * kdsp.width;
-        		var _khh = ks * kdsp.height;
-        		
-        		var _ksx = px + hk_w / 2 - _kww / 2;
-        		var _ksy = py + hk_h / 2 - _khh / 2;
-        		var _kp  = ui(2);
-        		
-        		var _keyUsing = {};
-        		var _ctxObj   = hotkeyContext[hk_page];
-        		var _list     = _ctxObj.list;
-	        		
-        		if(hk_page)
-        		for (var j = 0, m = array_length(_list); j < m; j++) {
-        			var hotkey = _list[j];
-        			var klen   = hotkey.keys == undefined? 0 : array_length(hotkey.keys);
+    		if(hk_page)
+    		for (var j = 0, m = array_length(_list); j < m; j++) {
+    			var hotkey = _list[j];
+    			var klen   = hotkey.keys == undefined? 0 : array_length(hotkey.keys);
+    			
+				for( var k = -1; k < klen; k++ ) {
+					var _key = k < 0? hotkey.key : hotkey.keys[k];
+					if(!_key.hasKey()) continue;
+					
+        			var _kkey = _key._K;
+        			var _kmod = _key._M;
         			
-					for( var k = -1; k < klen; k++ ) {
-						var _key = k < 0? hotkey.key : hotkey.keys[k];
-						if(!_key.hasKey()) continue;
-						
-	        			var _kkey = _key._K;
-	        			var _kmod = _key._M;
-	        			
-	        			if(_kkey == KEY_GROUP.numeric) {
-	        				for( var k = 0; k <= 9; k++ ) {
-	        					var _numk = ord(k);
-	        					if(!has(_keyUsing, _numk)) 
-	        						_keyUsing[$ _numk] = {};
-			        			
-			        			var _kuse = _keyUsing[$ _numk];
-			        			if(!has(_kuse, _kmod))
-			        				_kuse[$ _kmod] = [];
-			        				
-			        			array_append(_kuse[$ _kmod], hotkey);
-	        				}
-	        				continue;
-	        			}
-	        			
-	        			if(!has(_keyUsing, _kkey))
-	        				_keyUsing[$ _kkey] = {};
-	        			
-	        			var _kuse = _keyUsing[$ _kkey];
-	        			if(!has(_kuse, _kmod))
-	        				_kuse[$ _kmod] = [];
-	        				
-	        			array_append(_kuse[$ _kmod], hotkey);
-	        			
-					}
-        		}
-        		
-        		var _mc = MOD_KEY.ctrl;
-        		var _ms = MOD_KEY.shift;
-        		var _ma = MOD_KEY.alt;
-        		
-        		var c_control = CDEF.orange, kc_control = colorMultiply(CDEF.main_dkgrey, c_control);
-        		var c_comm    = CDEF.yellow, kc_comm    = colorMultiply(CDEF.main_dkgrey, c_comm);
-        		var c_shift   = CDEF.blue,   kc_shift   = colorMultiply(CDEF.main_dkgrey, c_shift);
-        		var c_alt     = CDEF.lime,   kc_alt     = colorMultiply(CDEF.main_dkgrey, c_alt);
-        		var _sel      = true;
-        		
-        		var _mod_arr = [ _mc, _ms, _ma, _mc | _ms, _mc | _ma, _ms | _ma, _mc | _ms | _ma ];
-        		var _mod_clr = [ 
-        		    [ [ 0, c_control ]                               ], 
-        		    [ [ 0, c_shift   ]                               ], 
-        		    [ [ 0, c_alt     ]                               ], 
-        		    [ [ 1, c_control ], [ 2, c_shift ]               ], 
-        		    [ [ 1, c_control ], [ 2, c_alt   ]               ], 
-        		    [ [ 1, c_shift   ], [ 2, c_alt   ]               ], 
-        		    [ [ 3, c_control ], [ 4, c_shift ], [ 5, c_alt ] ], 
-    		    ];
-        		
-        		var _cur_mod  = MOD_KEY.ctrl  * key_mod_press(KCONTROL)
-        		              + MOD_KEY.shift * key_mod_press(SHIFT)
-        		              + MOD_KEY.alt   * key_mod_press(ALT)
-        		
-        		var _cmod = _cur_mod == MOD_KEY.none? hk_modifiers : _cur_mod;
-        		
-        		draw_set_text(f_hotkey, fa_center, fa_center);
-        		for (var i = 0, n = array_length(keys); i < n; i++) {
-        			var _key = keys[i];
-        			var _kx  = _ksx + _key.x * ks;
-        			var _ky  = _ksy + _key.y * ks;
-        			var _kw  = _key.w * ks;
-        			var _kh  = _key.h * ks;
-        			var _vk  = _key.vk;
-        			
-        			_kx += _kw / 2 - (_kw - _kp) / 2;
-        			_ky += _kh / 2 - (_kh - _kp) / 2;
-        			_kw -= _kp;
-        			_kh -= _kp;
-        			
-        			if(_vk == -1) {
-        				draw_sprite_stretched_ext(THEME.ui_panel, 0, _kx, _ky, _kw, _kh, CDEF.main_black, 0.3);
+        			if(_kkey == KEY_GROUP.numeric) {
+        				for( var k = 0; k <= 9; k++ ) {
+        					var _numk = ord(k);
+        					if(!has(_keyUsing, _numk)) 
+        						_keyUsing[$ _numk] = {};
+		        			
+		        			var _kuse = _keyUsing[$ _numk];
+		        			if(!has(_kuse, _kmod))
+		        				_kuse[$ _kmod] = [];
+		        				
+		        			array_append(_kuse[$ _kmod], hotkey);
+        				}
         				continue;
         			}
         			
-        			var _tc  = COLORS._main_text_sub;
-        			var _hov = pHOVER && point_in_rectangle(mx, my, _kx - _kp       + 1, _ky - _kp       + 1, 
-        			                                                _kx + _kp + _kw - 1, _ky + _kp + _kh - 1);
+        			if(!has(_keyUsing, _kkey))
+        				_keyUsing[$ _kkey] = {};
         			
-        			switch(_vk) {
-	        			case vk_control: 
-	        				_sel = bool(MOD_KEY.ctrl & _cmod);
+        			var _kuse = _keyUsing[$ _kkey];
+        			if(!has(_kuse, _kmod))
+        				_kuse[$ _kmod] = [];
+        				
+        			array_append(_kuse[$ _kmod], hotkey);
+        			
+				}
+    		}
+    		
+    		var _mc = MOD_KEY.ctrl;
+    		var _ms = MOD_KEY.shift;
+    		var _ma = MOD_KEY.alt;
+    		
+    		var c_control = CDEF.orange, kc_control = colorMultiply(CDEF.main_dkgrey, c_control);
+    		var c_comm    = CDEF.yellow, kc_comm    = colorMultiply(CDEF.main_dkgrey, c_comm);
+    		var c_shift   = CDEF.blue,   kc_shift   = colorMultiply(CDEF.main_dkgrey, c_shift);
+    		var c_alt     = CDEF.lime,   kc_alt     = colorMultiply(CDEF.main_dkgrey, c_alt);
+    		var _sel      = true;
+    		
+    		var _mod_arr = [ _mc, _ms, _ma, _mc | _ms, _mc | _ma, _ms | _ma, _mc | _ms | _ma ];
+    		var _mod_clr = [ 
+    		    [ [ 0, c_control ]                               ], 
+    		    [ [ 0, c_shift   ]                               ], 
+    		    [ [ 0, c_alt     ]                               ], 
+    		    [ [ 1, c_control ], [ 2, c_shift ]               ], 
+    		    [ [ 1, c_control ], [ 2, c_alt   ]               ], 
+    		    [ [ 1, c_shift   ], [ 2, c_alt   ]               ], 
+    		    [ [ 3, c_control ], [ 4, c_shift ], [ 5, c_alt ] ], 
+		    ];
+    		
+    		var _cur_mod  = MOD_KEY.ctrl  * key_mod_press(KCONTROL)
+    		              + MOD_KEY.shift * key_mod_press(SHIFT)
+    		              + MOD_KEY.alt   * key_mod_press(ALT)
+    		
+    		var _cmod = _cur_mod == MOD_KEY.none? hk_modifiers : _cur_mod;
+    		
+    		draw_set_text(f_hotkey, fa_center, fa_center);
+			gpu_set_tex_filter(true);
+			
+    		for (var i = 0, n = array_length(keys); i < n; i++) {
+    			var _key = keys[i];
+    			var _kx  = _ksx + _key.x * ks;
+    			var _ky  = _ksy + _key.y * ks;
+    			var _kw  = _key.w * ks;
+    			var _kh  = _key.h * ks;
+    			var _vk  = _key.vk;
+    			
+    			_kx += _kw / 2 - (_kw - _kp) / 2;
+    			_ky += _kh / 2 - (_kh - _kp) / 2;
+    			_kw -= _kp;
+    			_kh -= _kp;
+    			
+    			if(_vk == -1) {
+    				draw_sprite_stretched_ext(THEME.ui_panel, 0, _kx, _ky, _kw, _kh, CDEF.main_black, 0.3);
+    				continue;
+    			}
+    			
+    			var _tc  = COLORS._main_text_sub;
+    			var _hov = pHOVER && point_in_rectangle(mx, my, _kx - _kp       + 1, _ky - _kp       + 1, 
+    			                                                _kx + _kp + _kw - 1, _ky + _kp + _kh - 1);
+    			
+    			switch(_vk) {
+        			case vk_control: 
+        				_sel = bool(MOD_KEY.ctrl & _cmod);
+        				
+        				draw_sprite_stretched_ext(THEME.ui_panel, 0, _kx, _ky, _kw, _kh, _sel? c_control : kc_control);
+        				_tc = _sel? kc_control : c_control;
+        				
+        				if(mouse_lpress(pFOCUS && _hov)) hk_modifiers ^= MOD_KEY.ctrl;
+        				break;
+        				
+        			case vk_shift:
+        				_sel = bool(MOD_KEY.shift & _cmod);
+        				
+        				draw_sprite_stretched_ext(THEME.ui_panel, 0, _kx, _ky, _kw, _kh, _sel? c_shift : kc_shift);
+        				_tc = _sel? kc_shift : c_shift;
+        				
+        				if(mouse_lpress(pFOCUS && _hov)) hk_modifiers ^= MOD_KEY.shift;
+        				break;
+        					
+        			case vk_alt:
+        				_sel = bool(MOD_KEY.alt & _cmod);
+        				
+        				draw_sprite_stretched_ext(THEME.ui_panel, 0, _kx, _ky, _kw, _kh, _sel? c_alt : kc_alt);
+        				_tc = _sel? kc_alt : c_alt;
+        				
+        				if(mouse_lpress(pFOCUS && _hov)) hk_modifiers ^= MOD_KEY.alt;
+        				break;
+        					
+        			case vk_command:
+        				_sel = bool(MOD_KEY.comm & _cmod);
+        				
+        				draw_sprite_stretched_ext(THEME.ui_panel, 0, _kx, _ky, _kw, _kh, _sel? c_comm : kc_comm);
+        				_tc = _sel? kc_comm : c_comm;
+        				
+        				if(mouse_lpress(pFOCUS && _hov)) hk_modifiers ^= MOD_KEY.comm;
+        				break;
+        					
+        			default:
+	        			if(has(_keyUsing, _vk)) {
+	        				if(_hov) setTOOLTIP(new tooltipHotkey_multiple(_keyUsing[$ _vk], _cmod));
 	        				
-	        				draw_sprite_stretched_ext(THEME.ui_panel, 0, _kx, _ky, _kw, _kh, _sel? c_control : kc_control);
-	        				_tc = _sel? kc_control : c_control;
-	        				
-	        				if(mouse_lpress(pFOCUS && _hov)) hk_modifiers ^= MOD_KEY.ctrl;
-	        				break;
-	        				
-	        			case vk_shift:
-	        				_sel = bool(MOD_KEY.shift & _cmod);
-	        				
-	        				draw_sprite_stretched_ext(THEME.ui_panel, 0, _kx, _ky, _kw, _kh, _sel? c_shift : kc_shift);
-	        				_tc = _sel? kc_shift : c_shift;
-	        				
-	        				if(mouse_lpress(pFOCUS && _hov)) hk_modifiers ^= MOD_KEY.shift;
-	        				break;
-	        					
-	        			case vk_alt:
-	        				_sel = bool(MOD_KEY.alt & _cmod);
-	        				
-	        				draw_sprite_stretched_ext(THEME.ui_panel, 0, _kx, _ky, _kw, _kh, _sel? c_alt : kc_alt);
-	        				_tc = _sel? kc_alt : c_alt;
-	        				
-	        				if(mouse_lpress(pFOCUS && _hov)) hk_modifiers ^= MOD_KEY.alt;
-	        				break;
-	        					
-	        			case vk_command:
-	        				_sel = bool(MOD_KEY.comm & _cmod);
-	        				
-	        				draw_sprite_stretched_ext(THEME.ui_panel, 0, _kx, _ky, _kw, _kh, _sel? c_comm : kc_comm);
-	        				_tc = _sel? kc_comm : c_comm;
-	        				
-	        				if(mouse_lpress(pFOCUS && _hov)) hk_modifiers ^= MOD_KEY.comm;
-	        				break;
-	        					
-	        			default:
-		        			if(has(_keyUsing, _vk)) {
-		        				if(_hov) setTOOLTIP(new tooltipHotkey_multiple(_keyUsing[$ _vk], _cmod));
+	        				if(has(_keyUsing[$ _vk], _cmod)) {
+	        					draw_sprite_stretched_ext(THEME.ui_panel, 0, _kx, _ky, _kw, _kh, CDEF.main_ltgrey);
+	        					draw_sprite_stretched_add(THEME.ui_panel, 1, _kx, _ky, _kw, _kh, c_white, 0.1);
+	        					_tc = COLORS._main_text_on_accent;
 		        				
-		        				if(has(_keyUsing[$ _vk], _cmod)) {
-		        					draw_sprite_stretched_ext(THEME.ui_panel, 0, _kx, _ky, _kw, _kh, CDEF.main_ltgrey);
-		        					draw_sprite_stretched_add(THEME.ui_panel, 1, _kx, _ky, _kw, _kh, c_white, 0.1);
-		        					_tc = COLORS._main_text_on_accent;
-			        				
-			        				if(_hov) {
-			        					var _act = _keyUsing[$ _vk][$ _cmod];
-			        					
-			        					if(mouse_lpress(pFOCUS)) {
-			        						if(hotkey_focus_index >= array_length(_act))
-			        							hotkey_focus_index = 0;
-			        							
-			        						hotkey_focus           = _act[hotkey_focus_index];
-			        						hotkey_focus_highlight = _act[hotkey_focus_index];
-			        						hotkey_focus_high_bg   = 1;
-			        						
-			        						hotkey_focus_index++;
-			        					}
-			        				}
-		        				} else {
-		        					draw_sprite_stretched_ext(THEME.ui_panel, 0, _kx, _ky, _kw, _kh, CDEF.main_black);
-		        					_tc  = COLORS._main_text_sub;
+		        				if(_hov) {
+		        					var _act = _keyUsing[$ _vk][$ _cmod];
+		        					
+		        					if(mouse_lpress(pFOCUS)) {
+		        						if(hotkey_focus_index >= array_length(_act))
+		        							hotkey_focus_index = 0;
+		        							
+		        						hotkey_focus           = _act[hotkey_focus_index];
+		        						hotkey_focus_highlight = _act[hotkey_focus_index];
+		        						hotkey_focus_high_bg   = 1;
+		        						
+		        						hotkey_focus_index++;
+		        					}
 		        				}
-		        				
-		        			} else {
-		        				draw_sprite_stretched_ext(THEME.ui_panel, 0, _kx, _ky, _kw, _kh, CDEF.main_black);
-		        				_tc  = COLORS._main_text_sub;
-		        				
-		        				if(_hov) setTOOLTIP(new tooltipHotkey_assign(noone, key_get_name(_vk, _cmod)));
-		        			}
-        			}
-        			
-        			if(has(_keyUsing, _vk)) {
-        			    var _mkx = _kx + ui(6);
-        			    var _mky = _ky + ui(6);
-        			    
-        			    var _modKeys = _keyUsing[$ _vk];
-        			    for( var j = 0, m = array_length(_mod_arr); j < m; j++ ) {
-        			        var _md = _mod_arr[j];
-        			        if(!has(_modKeys, _md)) continue;
-        			        
-        			        var _mspr = _mod_clr[j];
-        			        for( var k = 0, p = array_length(_mspr); k < p; k++ )
-        			            draw_sprite_ui(THEME.circle_hotkey, _mspr[k][0], _mkx, _mky, 1, 1, 0, _mspr[k][1]);
-        			        _mkx += ui(5);
-        			    }
-        			}
-    				
-        			draw_sprite_stretched_add(THEME.ui_panel, 1, _kx, _ky, _kw, _kh, c_white, 0.1 + _hov * 0.2);
-        			
-        			if(is_string(_key.key)) {
-        				draw_set_text(f_hotkey, fa_center, fa_center, _tc, 1);
-        				draw_text(_kx + _kw / 2, _ky + _kh / 2, _key.key);
-        			}
-        			
-        		}
-        		
-        		var _ppy = py + hotkey_cont_h;
-        		
-        		hotkey_height = ph - hotkey_cont_h;
-        		
-        		var mWidth = ui(200);
-        		
-        		sp_hotkey_menu.verify(mWidth, hotkey_height);
-        		sp_hotkey_menu.setFocusHover(pFOCUS, pHOVER);
-        		sp_hotkey_menu.drawOffset(px, _ppy, mx, my);
-        		
-        		var _sp = hk_page == 0? sp_hotkey_general : sp_hotkey;
-        		_sp.verify(panel_width - (ui(6) + mWidth), hotkey_height);
-        		_sp.setFocusHover(pFOCUS, pHOVER);
-        		_sp.drawOffset(px + ui(6) + mWidth, _ppy, mx, my);
-    	    break;
+	        				} else {
+	        					draw_sprite_stretched_ext(THEME.ui_panel, 0, _kx, _ky, _kw, _kh, CDEF.main_black);
+	        					_tc  = COLORS._main_text_sub;
+	        				}
+	        				
+	        			} else {
+	        				draw_sprite_stretched_ext(THEME.ui_panel, 0, _kx, _ky, _kw, _kh, CDEF.main_black);
+	        				_tc  = COLORS._main_text_sub;
+	        				
+	        				if(_hov) setTOOLTIP(new tooltipHotkey_assign(noone, key_get_name(_vk, _cmod)));
+	        			}
+    			}
+    			
+    			if(has(_keyUsing, _vk)) {
+    			    var _mkx = _kx + ui(6);
+    			    var _mky = _ky + ui(6);
+    			    
+    			    var _modKeys = _keyUsing[$ _vk];
+    			    for( var j = 0, m = array_length(_mod_arr); j < m; j++ ) {
+    			        var _md = _mod_arr[j];
+    			        if(!has(_modKeys, _md)) continue;
+    			        
+    			        var _mspr = _mod_clr[j];
+    			        for( var k = 0, p = array_length(_mspr); k < p; k++ )
+    			            draw_sprite_ui(THEME.circle_hotkey, _mspr[k][0], _mkx, _mky, 1, 1, 0, _mspr[k][1]);
+    			        _mkx += ui(5);
+    			    }
+    			}
+				
+    			draw_sprite_stretched_add(THEME.ui_panel, 1, _kx, _ky, _kw, _kh, c_white, 0.1 + _hov * 0.2);
+    			
+    			if(is_string(_key.key)) {
+    				draw_set_text(f_hotkey, fa_center, fa_center, _tc, 1);
+    				draw_text_transform_add(_kx + _kw / 2, _ky + _kh / 2, _key.key, .8);
+    			}
+    		}
+    			
+			gpu_set_tex_filter(false);
+    		
+    		var catWidth = ui(200);
+    		
+    		var _ppx = px;
+    		var _ppy = py + hotkey_cont_h;
+    		var _ppw = catWidth;
+    		var _pph = ph - hotkey_cont_h;
+    		
+    		hotkey_height = _pph;
+    		sp_hotkey_menu.verify(_ppw, _pph);
+    		sp_hotkey_menu.setFocusHover(pFOCUS, pHOVER);
+    		sp_hotkey_menu.drawOffset(_ppx, _ppy, mx, my);
+    		
+    		_ppx += catWidth + ui(6);
+    		_ppw  = panel_width - (ui(6) + catWidth);
+    		
+    		var bw = ui(96);
+    		var bh = ui(24);
+    		var bx = _ppx + _ppw - bw;
+    		var by = _ppy;
+    		
+    		var bt = __txt("Reset All");
+    		draw_set_text(f_p4, fa_center, fa_center, COLORS._main_text_sub);
+    		if(buttonTextInstant(true, THEME.button_def, bx, by, bw, bh, [mx,my], pHOVER, pFOCUS, "", bt) == 2)
+    			hotkey_reset_all();
+    		
+    		bx -= bw + ui(4);
+    		if(hk_page > 0) {
+	    		var bt = __txt("Reset Group");
+	    		draw_set_text(f_p4, fa_center, fa_center, COLORS._main_text_sub);
+	    		if(buttonTextInstant(true, THEME.button_def, bx, by, bw, bh, [mx,my], pHOVER, pFOCUS, "", bt) == 2)
+	    			hotkey_reset_cat();
+	    		
+    		}
+    		
+    		_ppy += bh + ui(4);
+    		_pph -= bh + ui(4);
+    		
+    		var _sp = hk_page == 0? sp_hotkey_general : sp_hotkey;
+    		_sp.verify(_ppw, _pph);
+    		_sp.setFocusHover(pFOCUS, pHOVER);
+    		_sp.drawOffset(_ppx, _ppy, mx, my);
     	}
     	
     	if(key_press(ord("F"), MOD_KEY.ctrl))

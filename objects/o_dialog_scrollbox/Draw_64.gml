@@ -9,7 +9,6 @@ DIALOG_WINDOW_START
 	var diaw =  dialog_w - padding * 2;
 	var diah =  dialog_h - padding * 2;
 	
-	tb_search.activate();
 	tb_search.setFocusHover(true, true);
 	tb_search.draw(diax + ui(8), diay + ui(8), diaw - ui(16), ui(24), search_string);
 	tb_search.sprite_index = 0;

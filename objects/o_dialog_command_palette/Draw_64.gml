@@ -20,7 +20,6 @@ draw_sprite_stretched_ext(THEME.dialog, 0, _dialog_x, _dialog_y, dialog_w, dialo
 	if(searching) {
 		var ix = tx + tw - th / 2;
 		var iy = ty + th / 2;
-		
 		draw_sprite_ui_uniform(THEME.loading, 0, ix, iy, .35, COLORS._main_icon, 1, current_time / 3);
 	}
 	

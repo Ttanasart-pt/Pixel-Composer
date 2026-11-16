@@ -20,7 +20,12 @@ doRefocus();
 	data		  = [];
 	initVal		  = 0;
 	update_hover  = true;
-
+	
+	adding  = false;
+	addTb   = textBox_Text(function(t) /*=>*/ { instance_destroy(); onAdd(t); });
+	addItem = undefined;
+	onAdd   = undefined;
+	
 	if(preFocus && typeof(preFocus) == "ref" && instance_exists(preFocus) && preFocus.object_index == o_pie_menu)
 		preFocus = preFocus.preFocus;
 #endregion
@@ -102,12 +107,29 @@ doRefocus();
 		var _hover  = sc_content.hover;
 		var _active = sc_content.active;
 		
+		var rx = x + sc_content.x;
+		var ry = y + sc_content.y;
+		
 		if(MOUSE_MOVED) selecting = noone;
 		
 		for( var i = 0, n = array_length(data); i < n; i++ ) {
 			var _val = data[i];
 			if(has(displayStr, _val))
 				_val = displayStr[$ _val];
+			
+			if(_val == addItem && adding) {
+				var tx = ui(4);
+				var ty = _ly;
+				var tw = _dw - ui(8);
+				var th = hght;
+				
+				addTb.setFocusHover(sFOCUS, sHOVER);
+				addTb.drawParam(new widgetParam(tx, ty, tw, th, "", undefined, _m, rx, ry));
+				
+				_ly += hght;
+				_h  += hght;
+				continue;
+			}
 			
 			var _txt = _val;
 			var _tol = false;
@@ -153,8 +175,14 @@ doRefocus();
 					draw_sprite_stretched_ext(THEME.menubox, 0, 0, _ly, _dw, hght, COLORS.dialog_menubox_highlight, .3);
 					
 					if(_active && (mouse_lpress() || KEYBOARD_ENTER)) {
-						initVal = searchIndex == undefined? i : array_safe_get_fast(searchIndex, i, 0);
-						instance_destroy();
+						if(_val == addItem) {
+							adding = true;
+							addTb.activate();
+							
+						} else {
+							initVal = searchIndex == undefined? i : array_safe_get_fast(searchIndex, i, 0);
+							instance_destroy();
+						}
 					}
 				}
 			}

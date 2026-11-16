@@ -27,7 +27,7 @@ function Node_Padding(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	////- =Filling
 	newInput( 2, nodeValue_EScroll(  "Fill Method", 0, [ "Empty", "Solid", "Pixel Expand" ] )).setPieMenu();
 	newInput( 3, nodeValue_Color(    "Fill Color",  ca_black )).setPieMenu();
-	// input 9
+	// 9
 		
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	

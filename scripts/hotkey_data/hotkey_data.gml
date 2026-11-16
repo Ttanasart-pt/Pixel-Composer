@@ -289,6 +289,8 @@ function hotkey_deserialize() {
 	HOTKEYS_DATA = {};
 	
 	var path = PREFERENCES_DIR + "hotkeys.json";
+	print($"Loading hotkey data from {path}")
+	
 	if(!file_exists(path)) return;
 	
 	var map = json_load_struct(path);

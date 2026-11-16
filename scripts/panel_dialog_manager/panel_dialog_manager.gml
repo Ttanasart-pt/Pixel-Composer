@@ -74,6 +74,10 @@ function Panel_Dialog_Manager() : PanelContent() constructor {
 					draw_set_text(f_p4, fa_left, fa_center, COLORS._main_text_sub);
 					draw_text_add(ui(32), yy + ui(16) / 2, _pan.title);
 					
+					draw_set_text(f_p4, fa_right, fa_center, COLORS._main_text_sub, .5);
+					draw_text_add(ww - ui(8), yy + hg / 2, instanceof(_pan));
+					draw_set_alpha(1);
+					
 					yy += ui(16);
 					_h += ui(16);
 					

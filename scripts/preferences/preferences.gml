@@ -696,6 +696,11 @@
 		
 		if(PREFERENCES.check_update) checkVersion();
 	}
+	
+	function PREF_PERSIST_SAVE() {
+		var perstPath = APP_DIRECTORY + "persistPreference.json";
+		json_save_struct(perstPath, PRESIST_PREF);
+	}
 #endregion
 
 #region get set

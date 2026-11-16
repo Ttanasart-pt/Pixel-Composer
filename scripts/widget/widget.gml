@@ -49,6 +49,8 @@ function widget() constructor {
 	color    = c_white;
 	boxColor = c_white;
 	
+	tooltip  = "";
+	
 	context_menu = [];
 	
 	#region setters
@@ -82,6 +84,7 @@ function widget() constructor {
 		static setFont       = function(v) /*=>*/ { font     = v; return self; }
 		static setMinWidth   = function(v) /*=>*/ { minWidth = v; return self; }
 		static setVisible    = function(v) /*=>*/ { visible  = v; return self; }
+		static setTooltip    = function(v) /*=>*/ { tooltip  = v; return self; }
 		
 		static setColor      = function(v) /*=>*/ { color    = v; return self; }
 		static setBoxColor   = function(v) /*=>*/ { boxColor = v; return self; }

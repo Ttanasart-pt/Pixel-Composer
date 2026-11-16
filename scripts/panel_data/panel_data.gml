@@ -850,11 +850,6 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 					draw_sprite_stretched_ext(THEME.ui_panel_tab, 1, _tbx, _tby, _tbw, _tbh, COLORS.panel_tab);
 					foc = focus || (instance_exists(o_dialog_menubox) && o_dialog_menubox.getContextPanel() == self);
 					
-					// if(foc) {
-					// 	var cc = PREFERENCES.panel_outline_accent? COLORS._main_accent : COLORS.panel_select_border;
-					// 	draw_sprite_stretched_ext(THEME.ui_panel_tab, 2, _tbx, _tby, _tbw, _tbh, cc);
-					// }
-					
 				} else {
 					var cc = COLORS.panel_tab_inactive;
 					if(hover && _hov)

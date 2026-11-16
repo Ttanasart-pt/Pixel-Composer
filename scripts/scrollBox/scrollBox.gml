@@ -52,6 +52,8 @@ function scrollBox(_data, _onModify, _update_hover = true) : widget() constructo
 	filter         = true;
 	
 	align          = fa_center;
+	scrollAnchor   = ANCHOR.top;
+	
 	horizontal     = false;
 	padding        = ui(8);
 	padding_scroll = ui(8);
@@ -70,6 +72,7 @@ function scrollBox(_data, _onModify, _update_hover = true) : widget() constructo
 	
 	static setStruct        = function(l) /*=>*/ { displayStr     = l; return self; }
 	static setType          = function(l) /*=>*/ { type           = l; return self; }
+	static setScrollAnchor  = function(l) /*=>*/ { scrollAnchor   = l; return self; }
 	
 	static setHorizontal    = function(l) /*=>*/ { horizontal     = l; return self; }
 	static setAlign         = function(l) /*=>*/ { align          = l; return self; }
@@ -110,8 +113,11 @@ function scrollBox(_data, _onModify, _update_hover = true) : widget() constructo
 		
 		var rx = x + open_rx;
 		var ry = y + open_ry;
+		if(scrollAnchor & ANCHOR.bottom)
+			ry += h;
 		
-		scrollDialog = dialogCall(_object, rx, ry);
+		scrollDialog = dialogCall(_object, rx, ry, { anchor: scrollAnchor });
+		
 		if(scrollDialog) {
 			scrollDialog.initScroll(self, ind);
 			open = true;
@@ -203,6 +209,8 @@ function scrollBox(_data, _onModify, _update_hover = true) : widget() constructo
 		var _hovering = hover && point_in_rectangle(_m[0], _m[1], _x, _y, _x + _w, _y + h);
 		if(_hovering) {
 			CURSOR = cr_handpoint;
+			if(tooltip != "") setTOOLTIP(tooltip);
+			
 			if(mouse_lpress(active))
 				trigger();
 				
@@ -315,7 +323,9 @@ function scrollBoxFn(_fn, _onModify, _update_hover = true) : widget() constructo
 	open_ry   = 0;
 	filter    = true;
 	
-	align     = fa_center;
+	align        = fa_center;
+	scrollAnchor = ANCHOR.top;
+	
 	text_pad  = ui(8);
 	item_pad  = ui(8);
 
@@ -327,18 +337,40 @@ function scrollBoxFn(_fn, _onModify, _update_hover = true) : widget() constructo
 	show_icon      = true;
 	displayStr     = undefined;
 	
-	minWidth = 0;
-	hide     = 0;
+	minWidth       = 0;
+	hide           = 0;
 	
-	static setUpdateHover   = function(l) /*=>*/ { update_hover   = l; return self; }
-	static setMinWidth      = function(l) /*=>*/ { minWidth       = l; return self; }
+	addItem        = undefined;
+	onAdd          = undefined;
+	
+	static setUpdateHover   = function(l) /*=>*/ { update_hover = l; return self; }
+	static setMinWidth      = function(l) /*=>*/ { minWidth     = l; return self; }
+	static setScrollAnchor  = function(l) /*=>*/ { scrollAnchor = l; return self; }
+	
+	static setAddable       = function(t="Add",o=undefined) /*=>*/ { 
+		addItem = new scrollItem(t, THEME.add_16, 0, COLORS._main_value_positive); 
+		onAdd   = o;
+		return self; 
+	}
 	
 	static trigger = function() {
 		data = data_getter();
-		FOCUS_BEFORE = FOCUS;
+		if(!is_array(data)) return;
 		
-		scrollDialog = dialogCall(o_dialog_scrollbox, x + open_rx, y + open_ry);
+		if(addItem != undefined) 
+			array_push(data, addItem);
+			
+		FOCUS_BEFORE = FOCUS;
+		var rx = x + open_rx;
+		var ry = y + open_ry;
+		if(scrollAnchor & ANCHOR.bottom)
+			ry += h;
+		
+		scrollDialog = dialogCall(o_dialog_scrollbox, rx, ry, { anchor: scrollAnchor });
 		if(scrollDialog) {
+			scrollDialog.addItem = addItem;
+			scrollDialog.onAdd   = onAdd;
+			
 			scrollDialog.initScroll(self, -1);
 			open = true;
 		}
@@ -393,6 +425,8 @@ function scrollBoxFn(_fn, _onModify, _update_hover = true) : widget() constructo
 		
 		var _hovering = hover && point_in_rectangle(_m[0], _m[1], _x, _y, _x + _w, _y + h);
 		if(_hovering) {
+			if(tooltip != "") setTOOLTIP(tooltip);
+			
 			CURSOR = cr_handpoint;
 			if(mouse_lpress(active))
 				trigger();

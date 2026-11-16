@@ -8,13 +8,21 @@
 	globalvar ROAMING_DIRECTORY; ROAMING_DIRECTORY = "";
 	globalvar DIRECTORY; DIRECTORY         = "";
 	globalvar FS_PATH; FS_PATH           = "";
-	globalvar PRESIST_PREF; PRESIST_PREF      = { path: "" };
+	globalvar PRESIST_PREF; PRESIST_PREF      = {};
 	
 	if(OS == os_linux) {
 		APP_DIRECTORY = working_directory;
 		DIRECTORY     = working_directory;
 	    APP_LOCATION  = working_directory;
 	    
+		var perstPath = APP_DIRECTORY + "persistPreference.json"; 
+		if(file_exists_empty(perstPath) && !PROGRAM_ARGUMENTS._nodir) {
+			struct_override(PRESIST_PREF, json_load_struct(perstPath));
+			PREF_VERSION = PRESIST_PREF[$ "preset"] ?? PREF_VERSION;
+		}
+		
+		show_debug_message($"Preference Preset: {PREF_VERSION}");
+		
 	    var _user = string_trim(shell_execute("", "whoami"));
 		DIRECTORY = $"/home/{_user}/PixelComposer/";
 	    
@@ -73,6 +81,14 @@
 	    APP_LOCATION  = working_directory;
 		DIRECTORY     = string_replace(game_save_id, "com.yoyogames.macyoyorunner", "com.MakhamDev.PixelComposer");
 	    
+		var perstPath = APP_DIRECTORY + "persistPreference.json"; 
+		if(file_exists_empty(perstPath) && !PROGRAM_ARGUMENTS._nodir) {
+			struct_override(PRESIST_PREF, json_load_struct(perstPath));
+			PREF_VERSION = PRESIST_PREF[$ "preset"] ?? PREF_VERSION;
+		}
+		
+		show_debug_message($"Preference Preset: {PREF_VERSION}");
+		
 		PREFERENCES_DIR = $"{DIRECTORY}Preferences/{PREF_VERSION}/";
 		
 		directory_verify($"{DIRECTORY}Cache");
@@ -89,10 +105,12 @@
 		var perstPath = APP_DIRECTORY + "persistPreference.json"; 
 		if(file_exists_empty(perstPath) && !PROGRAM_ARGUMENTS._nodir) {
 			struct_override(PRESIST_PREF, json_load_struct(perstPath));
-			DIRECTORY = struct_has(PRESIST_PREF, "path")? PRESIST_PREF.path : "";
+			DIRECTORY    = PRESIST_PREF[$ "path"]   ?? "";
+			PREF_VERSION = PRESIST_PREF[$ "preset"] ?? PREF_VERSION;
 		}
 		
 		show_debug_message($"Persisted directory: {perstPath}");
+		show_debug_message($"Preference Preset: {PREF_VERSION}");
 		
 		if(DIRECTORY != "") {
 			var _ch = string_char_last(DIRECTORY);
@@ -148,6 +166,7 @@
     directory_verify(PREFERENCES_DIR);
 #endregion
 
+function INIT_DATA() {
 	pid = ProcIdFromSelf();
 	
 	__t = get_timer();
@@ -206,7 +225,10 @@
 		
 	printDebug($"-- Initialization complete in {(get_timer()-t0)/1000}ms [{string_byte_format(getMemoryUsage(pid) - _r0)}]");
 	display_set_timing_method(tm_countvsyncs);
-	
+}
+
+INIT_DATA();
+
 #region post init
 	directory_set_current_working(DIRECTORY);
 	

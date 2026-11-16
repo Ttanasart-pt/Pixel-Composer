@@ -163,9 +163,8 @@ DIALOG_DRAW_BG
 			draw_sprite_stretched_ext(THEME.ui_panel_tab, 1, bx, tabY, tabW, tabH, COLORS.panel_tab, 1);
 			
 		} else if(point_in_rectangle(mouse_mx, mouse_my, bx, tabY, bx + tabW, y0)) {
-			
-			draw_sprite_stretched_ext(THEME.ui_panel_tab, 0, bx, tabY, tabW, tabH, COLORS.panel_tab_hover, 1);
-			draw_sprite_stretched_add(THEME.ui_panel_tab, 0, bx, tabY, tabW, tabH, COLORS.panel_tab_hover, 0.1);
+			draw_sprite_stretched_ext(THEME.ui_panel_tab, 0, bx, tabY, tabW, tabH, COLORS.panel_tab_hover,  1);
+			draw_sprite_stretched_add(THEME.ui_panel_tab, 2, bx, tabY, tabW, tabH, COLORS.panel_tab_hover, .2);
 			
 			if(mouse_lpress(sFOCUS)) {
 				PREFERENCES.splash_page = i;
@@ -176,6 +175,7 @@ DIALOG_DRAW_BG
 					expandAction = true;
 				}
 			}
+			
 		} else
 			draw_sprite_stretched_ext(THEME.ui_panel_tab, 0, bx, tabY, tabW, tabH, COLORS.panel_tab_inactive, 1);
 		

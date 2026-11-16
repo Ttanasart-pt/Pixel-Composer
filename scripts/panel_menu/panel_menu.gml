@@ -338,27 +338,8 @@ function Panel_Menu() : PanelContent() constructor {
             }),
             -1,
             
-            MENU_ITEMS.collections_panel,
-            MENU_ITEMS.graph_panel,
-            
-            menuItemShelf(__txt("Preview"), function(_dat) /*=>*/ {return submenuCall(_dat, [
-                MENU_ITEMS.preview_panel,
-                MENU_ITEMS.preview_histogram,
-            ])}),
-            
-            MENU_ITEMS.inspector_panel,
-            MENU_ITEMS.workspace_panel,
             MENU_ITEMS.animation_panel,
-            MENU_ITEMS.notification_panel,
-            MENU_ITEMS.globalvar_panel,
-            MENU_ITEMS.file_explorer_panel,
-            
-            menuItemShelf(__txt("Nodes"), function(_dat) /*=>*/ {return submenuCall(_dat, [
-                MENU_ITEMS.randomizer_panel,
-                MENU_ITEMS.align_panel,
-                MENU_ITEMS.nodes_panel,
-                MENU_ITEMS.tunnels_panel,
-            ])}),
+            MENU_ITEMS.collections_panel,
             
             menuItemShelf(__txt("Color"), function(_dat) /*=>*/ {return submenuCall(_dat, [
                 MENU_ITEMS.color_panel,
@@ -367,6 +348,27 @@ function Panel_Menu() : PanelContent() constructor {
                 -1,
                 MENU_ITEMS.palettes_mixer_panel,
             ])}),
+            
+            MENU_ITEMS.file_explorer_panel,
+            MENU_ITEMS.globalvar_panel,
+            MENU_ITEMS.graph_panel,
+            MENU_ITEMS.inspector_panel,
+            
+            menuItemShelf(__txt("Nodes"), function(_dat) /*=>*/ {return submenuCall(_dat, [
+                MENU_ITEMS.align_panel,
+                MENU_ITEMS.nodes_panel,
+                MENU_ITEMS.randomizer_panel,
+                MENU_ITEMS.tunnels_panel,
+            ])}),
+            
+            MENU_ITEMS.notification_panel,
+            
+            menuItemShelf(__txt("Preview"), function(_dat) /*=>*/ {return submenuCall(_dat, [
+                MENU_ITEMS.preview_histogram,
+                MENU_ITEMS.preview_panel,
+            ])}),
+            
+            MENU_ITEMS.workspace_panel,
             
             -1, 
             MENU_ITEMS.toolbar_panel,
