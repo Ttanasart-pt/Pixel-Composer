@@ -5708,7 +5708,9 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
     }
     
     function swapConnection() { 
-    	if(array_length(nodes_selecting) == 1) {
+    	var alen = array_length(nodes_selecting);
+    	
+    	if(alen == 1) {
     		var _n = nodes_selecting[0];
     		
     		if(array_length(_n.inputs) >= 2 && _n.inputs[0].type == _n.inputs[1].type) {
@@ -5719,20 +5721,67 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
 	    		_n.inputs[1].setFrom(_f0);
 	    	}
 	    	
-    	} else if(array_length(nodes_selecting) == 2) {
-    		
+	    	return;
+    	} 
+    	
+    	if(alen == 2) {
 	    	var _n0 = nodes_selecting[0];
 			var _n1 = nodes_selecting[1];
 	    	
+	    	var x0 = _n0.x, y0 = _n0.y;
+	    	var x1 = _n1.x, y1 = _n1.y;
+	    	
 	    	var _o0 = _n0.getOutput();
 			var _o1 = _n1.getOutput();
+			
+	    	var _i0 = _n0.getInput(0, noone, 0, true);
+			var _i1 = _n1.getInput(0, noone, 0, true);
+			
 			if(_o0 == noone || _o1 == noone) return;
+			if(_i0 == noone || _i1 == noone) return;
+			
+			var _f0 = _i0.value_from;
+			var _f1 = _i1.value_from;
 			
 			var _t0 = _o0.getJunctionTo();
 			var _t1 = _o1.getJunctionTo();
 			
-			for( var i = 0, n = array_length(_t0); i < n; i++ ) _t0[i].setFrom(_o1);
-			for( var i = 0, n = array_length(_t1); i < n; i++ ) _t1[i].setFrom(_o0);
+			var conType = 0;
+			
+			for( var i = 0, n = array_length(_t0); i < n; i++ ) 
+				if(_t0[i].node == _n1) conType = 1;
+			
+			for( var i = 0, n = array_length(_t1); i < n; i++ ) 
+				if(_t1[i].node == _n0) conType = -1;
+			
+			// print(conType)
+			
+			switch(conType) {
+				case 0 :
+					for( var i = 0, n = array_length(_t0); i < n; i++ ) _t0[i].setFrom(_o1);
+					for( var i = 0, n = array_length(_t1); i < n; i++ ) _t1[i].setFrom(_o0);
+					break;
+					
+				case 1 : // _n0 - _n1
+					_i1.setFrom(_f0);
+					_i0.setFrom(_o1);
+					
+					for( var i = 0, n = array_length(_t1); i < n; i++ ) _t1[i].setFrom(_o0);
+					break;
+					
+				case -1 : // _n1 - _n0
+					_i0.setFrom(_f1);
+					_i1.setFrom(_o0);
+					
+					for( var i = 0, n = array_length(_t0); i < n; i++ ) _t0[i].setFrom(_o1);
+					break;
+					
+			}
+			
+			_n0.x = x1; _n0.y = y1;
+			_n1.x = x0; _n1.y = y0;
+			
+	    	return;
     	}
     }
     
