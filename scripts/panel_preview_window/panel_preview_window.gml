@@ -189,14 +189,22 @@ function Panel_Preview_Window() : PanelContent() constructor {
 		if(!node_lock) {
 			var _node = PANEL_PREVIEW.getNodePreview();
 			if(_node != node_target) setPreview(_node);
+			
+			if(!_node.active) return;
 		}
 		
 		if(node_target == noone) { 
 			title = __txt("Preview window");
 			if(mouse_rclick(pFOCUS)) 
 				menuCallGen("preview_window");
-		} else 
+		} else {
+			if(!node_target.active) {
+				node_target = noone;
+				return;
+			}
+			
 			drawSurface();
+		}
 		
 		var bs = ui(24);
 		var bx = w - ui(4) - bs;
