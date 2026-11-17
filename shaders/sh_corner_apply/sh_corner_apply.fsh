@@ -1,5 +1,4 @@
 #pragma use(sampler_simple)
-
 #region -- sampler_simple -- [1788846732.6884737]
     uniform int  sampleMode;
     

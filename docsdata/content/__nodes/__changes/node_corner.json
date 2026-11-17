@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.22.3.102",
+    "changes": [
+      {
+        "date": "2026-11-17T10:04:50.460Z",
+        "node": "Round Corner",
+        "commit": "**Round Corner**: Fix oversample not applying."
+      }
+    ]
+  },
+  {
     "version": "1.21.7.110",
     "changes": [
       {

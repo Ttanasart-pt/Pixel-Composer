@@ -79,20 +79,21 @@ function Node_Corner(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		
 		repeat(_itr) {
 			surface_set_shader(temp_surface[_bg], sh_corner_iterate);
+				shader_set_i( "sampleMode", getAttribute("oversample"));
+			
 				shader_set_2("dimension", _dim);
 				draw_surface_safe(temp_surface[!_bg]);
 			surface_reset_shader();
 			_bg = !_bg;
 		}
 		
-		var _sam = getAttribute("oversample");
-		
 		surface_set_shader(_outSurf, sh_corner_apply);
+			shader_set_i( "sampleMode", getAttribute("oversample"));
+			
 			shader_set_2( "dimension",    _dim  );
 			shader_set_m( "radius",       _rad, _data[ 9], inputs[1] );
 			shader_set_m( "threshold",    _thr, _data[10], inputs[8] );
 			shader_set_s( "original",     _surf );
-			shader_set_i( "sampleMode",   _sam  );
 			shader_set_i( "transparent",  _alph );
 			
 			draw_surface_safe(temp_surface[!_bg]);
