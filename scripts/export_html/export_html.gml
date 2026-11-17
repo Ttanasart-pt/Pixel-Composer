@@ -282,8 +282,5 @@ function __EXPORT_SHOWCASE(project = PROJECT) {
 	print("Export folder complete.");
 	print($"{_rName} #PixelComposer\n\n{_url}");
 	
-	// ProcessExecuteAsync("python \"D:/Project/MakhamDev/LTS-PixelComposer/PROMOTIONAL MATERIALS/site/gen.py\"");
-	// print("Push to Github complete");
-	
 	return true;
 }

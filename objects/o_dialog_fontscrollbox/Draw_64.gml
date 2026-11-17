@@ -1,13 +1,5 @@
 /// @description init
 DIALOG_WINDOW_START
-#region pos
-	var hght = line_get_height(f_p0, 8);
-	var hh   = array_length(curr_data) * hght + ui(40);
-	if(search_string != "") hh += ui(24);
-	
-	 dialog_h = min(max_h, hh);
-	_dialog_y = min(_dialog_y, WIN_H - dialog_h - ui(8));
-#endregion
 
 #region draw
 	draw_sprite_stretched(THEME.textbox, 3, _dialog_x, _dialog_y, dialog_w, dialog_h);

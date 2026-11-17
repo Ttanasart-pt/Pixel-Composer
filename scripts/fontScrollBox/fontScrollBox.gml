@@ -9,8 +9,7 @@ function fontScrollBox(_onModify) : widget() constructor {
 						.setTooltip(__txt("widget_font_open_folder", "Open font folder"))
 						.setIcon(THEME.folder_content, 0, COLORS._main_icon).iconPad());
 	
-	refresh_button = button(function() /*=>*/ {return __initFontFolder(true)})
-						.setTooltip(__txt("Refresh"))
+	refresh_button = button(function() /*=>*/ {return __initFontFolder(true)}).setTooltip(__txt("Refresh"))
 						.setIcon(THEME.refresh_icon, 0, COLORS._main_icon).iconPad();
 	
 	static trigger = function() {
@@ -22,6 +21,8 @@ function fontScrollBox(_onModify) : widget() constructor {
 		interactable = i;
 		side_button.interactable = i;
 	}
+	
+	////- Draw
 	
 	static drawParam = function(params) {
 		setParam(params);

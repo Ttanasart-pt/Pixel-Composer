@@ -14,6 +14,12 @@ event_inherited();
 	
 	font = f_p2;
 	
+	var hght = line_get_height(font, 8);
+	var hh   = array_length(FONT_INTERNAL) * hght + ui(40) + ui(24);
+	
+	dialog_h = min(max_h, hh);
+	dialog_y = min(dialog_y, WIN_H - dialog_h - ui(8));
+	
 	setScrollBox = function(_box) /*=>*/ { scrollbox = _box; return self; }
 	
 	sc_content = new scrollPane(0, 0, function(_y, _m) {
@@ -36,17 +42,24 @@ event_inherited();
 			var _ly = _y + i * hght;	
 			var fullpath = data[i];
 			
-			if(hover && point_in_rectangle(_m[0], _m[1], 0, _ly + 1, _dw, _ly + hght - 1))
+			if(hover && point_in_rectangle(_m[0], _m[1], 0, _ly + 1, _dw, _ly + hght - 1)) {
 				selecting = i;
-			
-			if(selecting == i) {
-				draw_sprite_stretched_ext(THEME.textbox, 3, 0, _ly, _dw, hght, COLORS.dialog_menubox_highlight, 1);
 				
-				if(focus && (mouse_lpress() || KEYBOARD_ENTER)) {
+				if(mouse_lpress(focus)) {
 					scrollbox.onModify(fullpath);
 					instance_destroy();
 				}
 			}
+			
+			if(selecting == i) {
+				draw_sprite_stretched_ext(THEME.textbox, 3, 0, _ly, _dw, hght, COLORS.dialog_menubox_highlight, 1);
+				
+				if(focus && KEYBOARD_ENTER) {
+					scrollbox.onModify(fullpath);
+					instance_destroy();
+				}
+			}
+			
 			
 			if(_ly + hght < 0 || _ly > _dh) continue;
 					
