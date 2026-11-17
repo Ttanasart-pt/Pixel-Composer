@@ -395,7 +395,15 @@ float sdDonut(vec2 p, float s) {
 
 float ndot(vec2 a, vec2 b ) { return a.x*b.x - a.y*b.y; }
 float sdRhombus( in vec2 p, in vec2 b )  {
-    p = floor(abs(p) * 1000000.) / 1000000.; // fix weird glitch at 30x30px
+	// RE: weird behaviour at some dimension with repeated decimal (3, 7, 14, 30, 42, ....)
+	// Probably truncation error? when use abs(p) the negative side can be asymmetric to the positive side.
+	// Right now the solution is to align with some interger (floor(i)/i)
+	// What interger (i)? idk.
+	
+    vec2 dim = dimension / scale;
+    p = floor(p * dim + .5) / dim; // fix weird glitch at some random dimension.
+    p = abs(p);
+    p = floor(p * 1000000.) / 1000000.; // fix weird glitch at 30x30px
     
     float h = clamp( ndot(b - 2. * p, b) / dot(b, b), -1., 1. );
     float d = length( p - .5 * b * vec2(1. - h, 1. + h));
@@ -657,11 +665,13 @@ void main() {
 		d = sdQuadrilateral(coord, pt0, pt1, pt2, pt3) - corner;
 	}
 	
-	float cc = d < 0.? 1. : 0.;
+	// gl_FragData[0] = vec4(d,d,d,1.); return;
+	
+	float ap = 1. / max(dimension.x, dimension.y);
+	float cc = d < ap? 1. : 0.;
 	
 	if(aa == 1) {
-		float _aa = 1. / max(dimension.x, dimension.y);
-		cc = smoothstep(_aa, -_aa, d);
+		cc = smoothstep(ap, -ap, d);
 	}
 	
 	float intensity = cc;
