@@ -317,15 +317,6 @@ function vectorRangeBox(_size, _type, _onModify, _unit = noone) : widget() const
 	
 	////- Action
 	
-	static clone = function() {
-		var cln = new vectorRangeBox(size, type, onModify, unit);
-		
-		cln.axis   = axis;
-		cln.extras = extras;
-		
-		return cln;
-	}
-	
 	static free = function() {
 		for( var i = 0, n = array_length(tb); i < n; i++ ) tb[i].free();
 	}

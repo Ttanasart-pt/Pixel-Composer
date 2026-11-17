@@ -140,12 +140,6 @@ function cornerBox(_onModify, _unit = noone) : widget() constructor {
 	
 	////- Actions
 	
-	static clone = function() {
-		var cln = new cornerBox(onModify, unit);
-		
-		return cln;
-	}
-
 	static free = function() {
 		for( var i = 0, n = array_length(tb); i < n; i++ ) tb[i].free();
 	}

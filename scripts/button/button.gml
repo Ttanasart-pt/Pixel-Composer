@@ -197,20 +197,6 @@ function buttonClass(_onClick, _icon = noone) : widget() constructor {
 		
 		return _h;
 	}
-		
-	static clone = function() {
-		var cln = new buttonClass(onClick);
-		
-		cln.icon	   = icon;
-		cln.icon_blend = icon_blend;
-		cln.icon_index = icon_index;
-		
-		cln.text	= text;
-		cln.tooltip = tooltip;
-		cln.blend   = blend;
-		
-		return cln;
-	}
 }
 
 function buttonInstant(spr, _x, _y, _w, _h, _m, _hvr, _act, _tip = "", 

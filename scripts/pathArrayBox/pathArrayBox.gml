@@ -94,7 +94,4 @@ function pathArrayBox(_target, _data, _onClick) : widget() constructor {
 		return h;
 	}
 	
-	////- Action
-	
-	static clone = function() { return new pathArrayBox(target, data, onClick); }
 }

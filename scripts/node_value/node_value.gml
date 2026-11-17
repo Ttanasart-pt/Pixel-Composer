@@ -423,6 +423,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		static getTopbarWidget = function() /*=>*/ {
 			if(topbar_editWidget != undefined) return topbar_editWidget;
 			topbar_editWidget = getEditWidget().clone();
+			
 			if(topbar_editWidget && topbar_editWidget_width != undefined) 
 				topbar_editWidget.setMinWidth(topbar_editWidget_width);
 			return topbar_editWidget;

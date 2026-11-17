@@ -162,5 +162,4 @@ function textArrayBox(_arraySet, _data, _onModify = noone) : widget() constructo
 		return th;
 	}
 	
-	static clone = function() /*=>*/ {return new textArrayBox(getArray, data, onModify)};
 }

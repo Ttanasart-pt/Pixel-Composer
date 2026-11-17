@@ -31,5 +31,4 @@ function meshBox(_junction) : widget() constructor {
 		return h;
 	}
 	
-	static clone = function() { return new meshBox(); }
 }

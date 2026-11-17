@@ -121,5 +121,4 @@ function materialBox(_onModify) : widget() constructor {
 		return h;
 	}
 	
-	static clone = function() { return new materialBox(onModify); }
 }

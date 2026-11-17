@@ -217,10 +217,6 @@ function buttonPalette(_onModify, dialog = noone) : widget() constructor {
 		return h;
 	}
 	
-	static clone = function() {
-		var cln = new buttonPalette(onModify, parentDialog);
-		return cln;
-	}
 }
 
 function drawPaletteBBOX(_pal, _bbox, _a = 1) { drawPalette(_pal, _bbox.x0, _bbox.y0, _bbox.w, _bbox.h, _a); }

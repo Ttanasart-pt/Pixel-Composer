@@ -237,5 +237,4 @@ function pbBoxBox(_junction = undefined) : widget() constructor {
 		return h + ui(16);
 	}
 	
-	static clone = function() { return new meshBox(); }
 }

@@ -3965,7 +3965,7 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
     		var _title = _over[j];
         	var _keys  = tooltip_overlay[$ _title];
         	
-        	draw_set_text(f_p2b, fa_left, fa_bottom, COLORS._main_text, .75);
+        	draw_set_text(f_p3, fa_left, fa_bottom, COLORS._main_text, .75);
 			var _tw = 0;
 			
 			for( var i = 0, n = array_length(_keys); i < n; i++ ) 
@@ -3980,11 +3980,11 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
 				
 				// draw_sprite_stretched_ext(THEME.box_r2, 0, _tx - pd, _ty - keyh, keyw + pd*2, keyh, COLORS._main_icon_dark);
 				
-				draw_set_font(f_p2b);
+				draw_set_font(f_p3);
 				draw_set_color(COLORS._main_text_inner);
 				draw_text_add(_tx, _ty, _key);
 				
-				draw_set_font(f_p2);
+				draw_set_font(f_p3);
 				draw_set_color(COLORS._main_text);
 				draw_text_add(_ttx, _ty, _keys[i][1]);
 				
@@ -3992,7 +3992,7 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
 			}
 			
 			_ty -= ui(4);
-			draw_set_text(f_p1b, fa_left, fa_bottom, COLORS._main_text, .75);
+			draw_set_text(f_p2b, fa_left, fa_bottom, COLORS._main_text, .75);
 			draw_text_add(_tx, _ty, _title);
 			
 			_ty -= line_get_height() + ui(8);
@@ -4002,7 +4002,7 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
     		var _list = HOTKEYS[$ FOCUS_STR];
     		var _node = ALL_NODES[$ FOCUS_STR];
     		
-    		draw_set_text(f_hotkey, fa_left, fa_bottom, COLORS._main_text, .75);
+    		draw_set_text(f_p3, fa_left, fa_bottom, COLORS._main_text, .75);
 			var _tw = 0;
 			for( var i = 0, n = array_length(_list); i < n; i++ ) 
 				_tw = max(_tw, string_width(_list[i].getKeyName()));
@@ -4017,13 +4017,11 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
 				var keyw = string_width(_key);
 				var keyh = string_height(_key);
 				
-				// draw_sprite_stretched_ext(THEME.box_r2, 0, _tx - pd, _ty - keyh, keyw + pd*2, keyh, COLORS._main_icon_dark);
-				
-				draw_set_font(f_hotkey);
+				draw_set_font(f_p3);
 				draw_set_color(COLORS._main_text_inner);
 				draw_text_add(_tx, _ty, _key);
 				
-				draw_set_font(f_p2);
+				draw_set_font(f_p3);
 				var _ttxx = _ttx;
 				if(string_pos(">", _title)) {
     				var _sp = string_split(_title, ">");
@@ -4046,7 +4044,7 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
 			}
 			
 			_ty -= ui(4);
-			draw_set_text(f_p1b, fa_left, fa_bottom, COLORS._main_text, .75);
+			draw_set_text(f_p2b, fa_left, fa_bottom, COLORS._main_text, .75);
 			draw_text_add(_tx, _ty, _node? _node.name : string_replace_all(FOCUS_STR, "_", " "));
 			
 			_ty -= line_get_height() + ui(8);
@@ -4356,7 +4354,7 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
 			var _x0 = _x1 - _w;
 			var _y0 = _y1 - _h;
 			
-			draw_sprite_stretched(THEME.ui_panel_bg,  3, _x0, _y0, _w, _h);
+			draw_sprite_stretched_ext(THEME.ui_panel_bg,  3, _x0, _y0, _w, _h, c_white, .8);
 			draw_sprite_stretched_add(THEME.ui_panel, 1, _x0, _y0, _w, _h, c_white, .1);
 			
 			var txc = _x0 + _w / 2;

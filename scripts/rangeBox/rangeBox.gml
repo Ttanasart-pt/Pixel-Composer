@@ -221,10 +221,6 @@ function rangeBox(_onModify) : widget() constructor {
 	
 	////- Action
 	
-	static clone = function() { 
-		return new rangeBox(onModify);
-	} 
-
 	static free = function() {
 		for( var i = 0, n = array_length(tb); i < n; i++ ) tb[i].free();
 	}

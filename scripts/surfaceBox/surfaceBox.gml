@@ -222,5 +222,4 @@ function surfaceBox(_onModify, _def_path = "") : widget() constructor {
 		return h;
 	}
 	
-	static clone = function() /*=>*/ {return new surfaceBox(onModify, def_path)};
 }

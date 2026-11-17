@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.22.3.102",
+    "changes": [
+      {
+        "date": "2026-11-17T00:21:54.833Z",
+        "node": "",
+        "commit": "Fix some widget show up differently in topbar, parameter view and inspector."
+      }
+    ]
+  },
+  {
     "version": "1.21.7.105",
     "changes": [
       {

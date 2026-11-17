@@ -1234,6 +1234,5 @@ function textArea(_input, _onModify) : textInput(_input, _onModify) constructor 
 		UNDO_HOLDING = true;
 	}
 	
-	static clone = function() { return new textArea(input, onModify); }
 	static free  = function() { surface_free_safe(text_surface); }
 }

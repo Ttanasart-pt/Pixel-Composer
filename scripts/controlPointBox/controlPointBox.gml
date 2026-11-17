@@ -144,8 +144,6 @@ function controlPointBox(_onModify) : widget() constructor {
 		return h;
 	}
 	
-	static clone = function() { return new controlPointBox(onModify); }
-
 	static free = function() {
 		for( var i = 0, n = widgetLen; i < n; i++ ) widgets[i].free();
 	}

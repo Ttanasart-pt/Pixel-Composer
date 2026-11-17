@@ -95,5 +95,4 @@ function fontScrollBox(_onModify) : widget() constructor {
 		return h;
 	}
 	
-	static clone = function() { return new fontScrollBox(onModify); }
 }

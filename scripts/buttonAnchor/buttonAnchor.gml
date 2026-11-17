@@ -78,6 +78,4 @@ function buttonAnchor(_input = noone, _onModify = noone) : widget() constructor 
 		
 		return _h;
 	}
-	
-	static clone = function() /*=>*/ {return new buttonAnchor(input, onModify)}
 }

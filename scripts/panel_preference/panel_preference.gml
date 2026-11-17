@@ -62,8 +62,7 @@ function Panel_Preference() : PanelContent() constructor {
     		PREFERENCES_DIR = $"{DIRECTORY}Preferences/{PREF_VERSION}/";
     		PRESIST_PREF[$ "preset"] = pres;
     		PREF_PERSIST_SAVE();
-    		o_main.INIT_DATA();
-    		setPanel(); 
+    		o_main.INIT_PREF();
     		PREF_LOAD();
     		
     		dialogPanelCall(new Panel_Preference());
@@ -2698,6 +2697,7 @@ function Panel_Preference() : PanelContent() constructor {
     		
     		var _keyUsing = {};
     		var _ctxObj   = hotkeyContext[hk_page];
+    		var _title    = hotkeyArray[hk_page];
     		var _list     = _ctxObj.list;
         		
     		if(hk_page)
@@ -2904,6 +2904,11 @@ function Panel_Preference() : PanelContent() constructor {
     		
     		_ppx += catWidth + ui(6);
     		_ppw  = panel_width - (ui(6) + catWidth);
+    		
+    		if(_title == "-Add Node") {
+    			draw_set_text(f_p3, fa_left, fa_center, COLORS._main_text_sub);
+    			draw_text_add(_ppx + ui(16), _ppy + ui(12), __txt("Add/Edit node hotkey in the add node dialog."));
+    		}
     		
     		var bw = ui(96);
     		var bh = ui(24);

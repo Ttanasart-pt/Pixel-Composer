@@ -58,5 +58,4 @@ function checkBoxGroup(_sprs, _onClick) : widget() constructor {
 		return h;
 	}
 	
-	static clone = function() /*=>*/ {return new checkBoxGroup(sprs, onClick)};
 }

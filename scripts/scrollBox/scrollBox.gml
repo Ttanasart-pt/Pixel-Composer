@@ -308,8 +308,6 @@ function scrollBox(_data, _onModify, _update_hover = true) : widget() constructo
 		
 		return h;
 	}
-	
-	static clone = function() /*=>*/ {return new scrollBox(data, onModify, update_hover)};
 }
 
 function scrollBoxFn(_fn, _onModify, _update_hover = true) : widget() constructor {
@@ -469,5 +467,4 @@ function scrollBoxFn(_fn, _onModify, _update_hover = true) : widget() constructo
 		return h;
 	}
 	
-	static clone = function() { return new scrollBoxFn(data_getter, onModify, update_hover); }
 }

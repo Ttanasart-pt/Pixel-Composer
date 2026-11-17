@@ -348,10 +348,6 @@ function buttonColor(_onModify, dialog = noone) : widget() constructor {
 		return h;
 	}
 	
-	static clone = function() {
-		var cln = new buttonColor(onModify, parentDialog);
-		return cln;
-	}
 }
 
 function drawColorBBOX(_color, _bbox, _alp = true, _ind = 1) { drawColor(_color, _bbox.x0, _bbox.y0, _bbox.w, _bbox.h, _alp, _ind); }

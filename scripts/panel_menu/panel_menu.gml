@@ -492,6 +492,7 @@ function Panel_Menu() : PanelContent() constructor {
         var font  = f_p3;
         var m     = [mx, my];
         var _padd = MAC? 2 : ui(THEME_VALUE.panel_menu_padding);
+        var bh;
         
         var profile = PREFERENCES.panel_menu_show_profile && os_is_network_connected() && OS != os_macosx;
         
@@ -501,9 +502,12 @@ function Panel_Menu() : PanelContent() constructor {
         
         	if(hori) {
         		xx = ui(24);
+        		bh = min(ui(28), h - _padd * 2);
         		
                 if(!_right) {
-                	xx = profile? ui(48): ui(4);
+                	xx = ui(4);
+                	if(profile)
+                		xx += bh + ui(12);
                 	
                 	if(MAC) {
                 		if(!window_get_fullscreen()) {
@@ -511,7 +515,9 @@ function Panel_Menu() : PanelContent() constructor {
                 			draw_set_color(COLORS._main_icon_dark);
                     		draw_line_round(xx, ui(8), xx, h - ui(8), ui(1));
                 		}
-                	}
+                		
+                	} else
+                		xx += bh * 4;
                 	
                     if(profile && _sepFrame) {
                     	draw_set_color(COLORS._main_icon_dark);

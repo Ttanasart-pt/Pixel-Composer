@@ -8,12 +8,14 @@
 		PREFERENCES.panel_layout_file = _l;
 		PREF_SAVE();
 		setPanel();
+		PANEL_MODIFIED = false;
 	}
 	
 	function workspace_replace(_l) { 
 		if(_l == "") return;
 		var cont = panelSerialize();
 		json_save_struct(DIRECTORY + "layouts/" + _l + ".json", cont);
+		PANEL_MODIFIED = false;
 	}
 	
 	function workspace_delete(_l) { 

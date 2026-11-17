@@ -95,12 +95,6 @@ function sliderRange(_step, _int, _range, _onModify) : widget() constructor {
 		
 	////- Action
 	
-	static clone = function() {
-		var cln = new sliderRange(stepSize, isInt, slide_range, onModify);
-		
-		return cln;
-	}
-
 	static free = function() {
 		tb_value_min.free();
 		tb_value_max.free();

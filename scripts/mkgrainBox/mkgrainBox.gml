@@ -45,5 +45,4 @@ function mkgrainBox() : widget() constructor {
 		return h;
 	}
 	
-	static clone = function() { return new mkblastBox(); }
 }

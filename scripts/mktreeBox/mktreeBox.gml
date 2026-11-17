@@ -102,5 +102,4 @@ function mktreeBox() : widget() constructor {
 		return h;
 	}
 	
-	static clone = function() { return new mktreeBox(); }
 }

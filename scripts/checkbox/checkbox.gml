@@ -98,5 +98,4 @@ function checkBox(_onClick) : widget() constructor {
 		return h;
 	}
 	
-	static clone = function() { return new checkBox(onClick); }
 }

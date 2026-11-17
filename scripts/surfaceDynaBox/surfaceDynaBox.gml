@@ -45,7 +45,4 @@ function surfaceDynaBox() : widget() constructor {
 		return h;
 	}
 	
-	static clone = function() {
-		return new surfaceDynaBox();
-	}
 }

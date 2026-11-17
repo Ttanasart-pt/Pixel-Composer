@@ -167,6 +167,7 @@ function Panel_Animation() : PanelContent() constructor {
 	    
 	    timeline_w = w - tool_width - ui(68);
 	    timeline_h = ui(THEME_VALUE.panel_animation_min_h);
+	    timeline_h_dope = ui(28);
 	    
 	    bar_x = 0;
 	    bar_y = 0;
@@ -494,11 +495,11 @@ function Panel_Animation() : PanelContent() constructor {
         bar_w      = timeline_w;
         
         dopesheet_w    = timeline_w;
-        dopesheet_h    = h - pPad * 2 - ui(28) - animPad;
-        dopesheet_show = dopesheet_h > ui(24);
+        dopesheet_h    = h - pPad * 2 - timeline_h_dope - animPad;
+        dopesheet_show = dopesheet_h > timeline_h_dope - ui(4);
         
         if(dopesheet_show) {
-        	timeline_h = ui(28);
+        	timeline_h = timeline_h_dope;
 	        bar_y      = h - pPad - timeline_h;
 	        bar_h      = timeline_h;
 	        

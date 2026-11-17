@@ -148,6 +148,5 @@ function rotator(_onModify, _step = -1) : widget() constructor {
 	
 	////- Actions
 	
-	static clone = function() /*=>*/ {return new rotator(onModify, valStep)};
 	static free  = function() /*=>*/ { tb_value.free(); }
 }

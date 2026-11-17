@@ -309,5 +309,4 @@ function buttonGradient(_onModify, dialog = noone) : widget() constructor {
 		return h;
 	}
 	
-	static clone = function() { return new buttonGradient(onModify, parentDialog); }
 }

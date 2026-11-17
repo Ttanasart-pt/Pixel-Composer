@@ -898,7 +898,5 @@ function curveBox(_onModify) : widget() constructor {
 	
 	////- Action
 	
-	static clone = function() /*=>*/ {return new curveBox(onModify)};
-
 	static free = function() { surface_free_safe(curve_surface); }
 }

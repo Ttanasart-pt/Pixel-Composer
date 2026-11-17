@@ -156,8 +156,6 @@ function quarternionBox(_junc, _onModify) : widget() constructor {
 	
 	////- Actions
 	
-	static clone = function() /*=>*/ {return new quarternionBox(junction, onModify)};
-	
 	static free = function() {
 		for( var i = 0, n = array_length(tb); i < n; i++ ) tb[i].free();
 	}

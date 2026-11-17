@@ -131,12 +131,6 @@ function folderArrayBox(_arr, _onModify) : widget() constructor {
 	
 	////- Actions
 	
-	static clone = function() {
-		var cln = new pathArrayBox(target, data, onClick);
-		
-		return cln;
-	}
-
 	static free = function() {
 		tb_edit.free();
 	}

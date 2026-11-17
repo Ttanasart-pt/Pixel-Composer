@@ -168,7 +168,7 @@ function widget() constructor {
 	}
 	
 	static inBBOX    = function(_m) /*=>*/ {return point_in_rectangle(_m[0], _m[1], x, y, x + w, y + h)};
-	static clone     = function(  ) /*=>*/ {return variable_clone(self)};
+	static clone     = function(  ) /*=>*/ {return variable_clone(self,1)};
 	
 	static fetchHeight = function(params) { return params.h; }
 	static drawParam   = function(params) {}

@@ -1295,8 +1295,6 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 	
 	////- Actions
 	
-	static clone = function() { return new textBox(input, onModify); }
-	
 	static free = function() {
 		surface_free_safe(text_surface);
 	}

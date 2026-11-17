@@ -91,5 +91,4 @@ function toggleGroup(_data, _onClick) : widget() constructor {
 		return h;
 	}
 	
-	static clone = function() /*=>*/ {return new toggleGroup(data, onClick)};
 }

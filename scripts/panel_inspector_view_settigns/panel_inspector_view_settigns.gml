@@ -61,7 +61,7 @@ function Panel_Inspector_View_Settings() : Panel_Linear_Setting() constructor {
 		
 		new __Panel_Linear_Setting_Item(
 			__txt("Right Button"),
-			new textArrayBox(function() /*=>*/ {return PREFERENCES.widget_draw_order}, [ "Reset", "Set Default", "Expression", "Bypass", "Favourite" ]),
+			new textArrayBox(function() /*=>*/ {return PREFERENCES.widget_draw_order}, [ "Reset", "Set Default", "Expression", "Bypass", "Favourite" ], function() /*=>*/ {return PREF_SAVE()}),
 			function( ) /*=>*/   {return PREFERENCES.widget_draw_order},
 			function(v) /*=>*/ { PREFERENCES.widget_draw_order = array_clone(v); },
 			PREFERENCES.widget_draw_order,

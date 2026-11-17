@@ -106,5 +106,4 @@ function textArrayCustom(_onModify = noone) : widget() constructor {
 		return hh;
 	}
 	
-	static clone = function() /*=>*/ {return new textArrayCustom(onModify)};
 }

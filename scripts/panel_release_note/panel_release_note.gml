@@ -162,8 +162,8 @@ function Panel_Release_Note() : PanelContent() constructor {
 					var hov  = _hover && point_in_rectangle(_m[0], _m[1], xx, yy, xx + ww, yy + hh);
 					
 					var oss  = has(dl, "links");
-					var osL  = oss && has(dl.links, "linux");
-					var osM  = oss && has(dl.links, "mac");
+					var osL  = oss && (dl.links[$ "linux"] ?? "") != "";
+					var osM  = oss && (dl.links[$ "mac"]   ?? "") != "";
 					
 					var hv_os   = 0;
 					var hv_link = dl.link;

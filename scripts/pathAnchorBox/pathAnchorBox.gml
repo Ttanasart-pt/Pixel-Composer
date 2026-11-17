@@ -247,11 +247,5 @@ function pathAnchorBox(_onModify) : widget() constructor {
 	
 	////- Action
 	
-	static clone = function() { 
-		var _n = new pathAnchorBox(onModify, unit); 
-		    _n.animated = animated;
-		return _n; 
-	}
-	
 	static free  = function() { array_foreach(tb, function(t,i) /*=>*/ {return t.free()}); }
 }

@@ -245,9 +245,9 @@ function Panel_Linear_Setting() : PanelContent() constructor {
 				if(_prop.prefKey != noone) {
 					_bx -= ui(24);
 					
-					var _prefVal = getPreference(_prop.prefKey, PREFERENCES);
+					var _defVal = getPreference(_prop.prefKey, PREFERENCES);
 					
-					if(isEqual(_data, _prefVal))
+					if(isEqual(_data, _defVal))
 						draw_sprite_ui(THEME.icon_default, 0, _bx + ui(24) / 2, _by + _bs / 2, 1, 1, 0, COLORS._main_icon_dark);
 						
 					else {
@@ -256,7 +256,7 @@ function Panel_Linear_Setting() : PanelContent() constructor {
 						var b  = buttonInstant(noone, _bx, _by, ui(24), _bs, _m, pHOVER, pFOCUS, bt, bs, 0, _cc, .75);
 						
 						if(b == 2) button_pref_set = true;
-						if(b == 1 && button_pref_set) setPreference(_prop.prefKey, _data);
+						if(b == 1 && button_pref_set) setPreference(_prop.prefKey, _defVal);
 					}
 					
 					_bx -= ui(2);

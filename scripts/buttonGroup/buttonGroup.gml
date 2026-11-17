@@ -188,7 +188,4 @@ function buttonGroup(_data, _onModify) : widget() constructor {
 		return h;
 	}
 	
-	////- Action
-	
-	static clone = function() { return new buttonGroup(data, onModify); }
 }

@@ -166,21 +166,49 @@
     directory_verify(PREFERENCES_DIR);
 #endregion
 
+function __log_tr() {
+	var _t = get_timer();
+	var _r = getMemoryUsage(pid); 
+	var _txt = $"complete in {(_t-__t)/1000}ms [{string_byte_format(_r-__r)}]";
+	
+	__t = _t;
+	__r = _r; 
+	return _txt;
+}
+
+function INIT_PREF() {
+	__t = get_timer();
+	__r = getMemoryUsage(pid); 
+	_r0 = __r;
+	
+	printDebug($"- Setup IS_CMD:{IS_CMD}");
+	PREF_INIT(); PREF_LOAD();             printDebug($"- init Preferences   | {__log_tr()}");
+	if(!IS_CMD) { __initLocale();         printDebug($"- init Locale        | {__log_tr()}"); }
+	if(!IS_CMD) { __initHotKey();         printDebug($"- init Hotkeys       | {__log_tr()}"); }
+	
+	printDebug("Begin");
+	PREF_APPLY();
+	
+	var t0   = get_timer();
+	var t    = get_timer();
+	var _lua = !IS_CMD || PROGRAM_ARGUMENTS._lua;
+	__r = getMemoryUsage(pid); 
+	 
+	if(!IS_CMD)   __initTheme(); else __initThemeEmpty(); printDebug($"- init Theme         | {__log_tr()}");
+	if(!IS_CMD) { loadFonts();            printDebug($"- init Font          | {__log_tr()}"); }
+	if(!IS_CMD) { __fnInit();             printDebug($"- init Functions     | {__log_tr()}"); }
+	
+	if(!IS_CMD) __initPanel(true);
+	
+	printDebug($"-- Initialization complete in {(get_timer()-t0)/1000}ms [{string_byte_format(getMemoryUsage(pid) - _r0)}]");
+}
+
 function INIT_DATA() {
 	pid = ProcIdFromSelf();
 	
 	__t = get_timer();
 	__r = getMemoryUsage(pid); 
 	_r0 = __r;
-	function __log_tr() {
-		var _t = get_timer();
-		var _r = getMemoryUsage(pid); 
-		var _txt = $"complete in {(_t-__t)/1000}ms [{string_byte_format(_r-__r)}]";
-		
-		__t = _t;
-		__r = _r; 
-		return _txt;
-	}
 	
 	printDebug($"- Setup IS_CMD:{IS_CMD}");
 	PREF_INIT(); PREF_LOAD();             printDebug($"- init Preferences   | {__log_tr()}");

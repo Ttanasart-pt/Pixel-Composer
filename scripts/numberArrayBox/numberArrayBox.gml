@@ -107,7 +107,5 @@ function numberArrayBox(_onModify) : widget() constructor {
 	
 	////- Actions
 	
-	static clone = function() /*=>*/ {return new numberArrayBox(onModify)};
-
 	static free = function() { tb.free(); }
 }

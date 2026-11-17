@@ -69,7 +69,6 @@ function outputBox() : widget() constructor {
 		return _hh;
 	}
 	
-	static clone = function() { return new outputBox(); }
 }
 
 function outputStructBox() : widget() constructor {
@@ -124,5 +123,4 @@ function outputStructBox() : widget() constructor {
 		return _hh;
 	}
 	
-	static clone = function() { return new outputBox(); }
 }

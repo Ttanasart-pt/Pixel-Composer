@@ -429,15 +429,6 @@ function vectorBox(_size, _onModify, _unit = noone) : widget() constructor {
 	
 	////- Actions
 	
-	static clone = function() {
-		var cln = new vectorBox(size, onModify, unit);
-		
-		cln.linkable = linkable;
-		cln.per_line = per_line;
-		
-		return cln;
-	}
-
 	static free = function() {
 		for( var i = 0, n = array_length(tb); i < n; i++ ) tb[i].free();
 	}

@@ -142,12 +142,6 @@ function transformBox(_onModify) : widget() constructor {
 	
 	////- Action
 	
-	static clone = function() {
-		var cln = new transformBox(onModify);
-		
-		return cln;
-	}
-	
 	static free = function() {
 		for( var i = 0, n = array_length(tb); i < n; i++ ) tb[i].free();
 	}
