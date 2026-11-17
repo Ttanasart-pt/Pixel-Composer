@@ -53,6 +53,10 @@ function Node_Region_Fill(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 		[ "Rendering",      false     ],  7, 17, 
 	];
 	
+	////- Nodes
+	
+	attribute_oversample();
+	
 	temp_surface = array_create(3);
 		
 	static processData = function(_outSurf, _data, _array_index) {
@@ -109,10 +113,10 @@ function Node_Region_Fill(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 		var cmap = temp_surface[0];
 		
 		if(_fclr) { // filter color
-			
 			surface_set_shader(temp_surface[1], sh_region_fill_init);
-				shader_set_color("targetColor", _targ);
-				shader_set_f("threshold",   _thr);
+				shader_set_i( "sampleMode", getAttribute("oversample"));
+				shader_set_c( "targetColor", _targ );
+				shader_set_f( "threshold",   _thr  );
 				
 				draw_surface_safe(_surf);
 			surface_reset_shader();
@@ -149,12 +153,21 @@ function Node_Region_Fill(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 				
 				base = !base;
 				var amo = _sw + _sh;
-			
+				
+				shader_set(sh_region_fill_coordinate);
+					shader_set_i( "sampleMode", getAttribute("oversample"));
+					shader_set_f( "dimension",  _sw, _sh  );
+					shader_set_s( "base", temp_surface[2] );
+				shader_reset();
+				
+				shader_set(sh_region_fill_border);
+					shader_set_i( "sampleMode", getAttribute("oversample"));
+					shader_set_f( "dimension",  _sw, _sh  );
+					shader_set_s( "original",   _surf     );
+				shader_reset();
+				
 				repeat(amo) {
 					surface_set_shader(temp_surface[base], sh_region_fill_coordinate);
-						shader_set_f("dimension",   _sw, _sh);
-						shader_set_s("base",	temp_surface[2]);
-						
 						draw_surface_safe(temp_surface[!base]);
 					surface_reset_shader();
 				
@@ -163,9 +176,6 @@ function Node_Region_Fill(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 				
 				repeat(_expn) {
 					surface_set_shader(temp_surface[base], sh_region_fill_border);
-						shader_set_f("dimension", _sw, _sh);
-						shader_set_s("original",  _surf);
-					
 						draw_surface_safe(temp_surface[!base]);
 					surface_reset_shader();
 					
@@ -183,12 +193,15 @@ function Node_Region_Fill(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 			base = !base;
 			var amo = _sw + _sh;
 			
+			shader_set(sh_region_fill_coordinate_all);
+				shader_set_i( "sampleMode", getAttribute("oversample"));
+				shader_set_f( "dimension",  _sw, _sh  );
+				shader_set_f( "threshold",  _thr      );
+				shader_set_s( "base",       _surf     );
+			shader_reset();
+			
 			repeat( amo ) {
 				surface_set_shader(temp_surface[base], sh_region_fill_coordinate_all);
-					shader_set_f("dimension",   _sw, _sh);
-					shader_set_f("threshold",   _thr);
-					shader_set_s("base",	_surf);
-					
 					draw_surface_safe(temp_surface[!base]);
 				surface_reset_shader();
 				
