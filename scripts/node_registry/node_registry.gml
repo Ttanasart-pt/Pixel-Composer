@@ -792,10 +792,15 @@ function nodeIndexStep() {
 			continue;
 		}
 		
-		if(has(NODE_INDEX_index_map, _node)) continue;
-		NODE_INDEX_index_map[$ _node] = 1;
+		if(has(NODE_INDEX_index_map, _node)) {
+			if(curr_filter == undefined)
+				NODE_INDEX_index_map[$ _node].cateFilter = curr_filter;
+			continue;
+		}
 		
 		var indexData = {};
+		
+		NODE_INDEX_index_map[$ _node] = indexData;
 		array_push(NODE_INDEX, indexData);
 		
 		indexData.node    = _node;

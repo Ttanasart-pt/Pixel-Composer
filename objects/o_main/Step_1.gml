@@ -168,6 +168,7 @@ if(os_is_paused()) OS_PAUSED = true;
 	
 	HOVER = noone;
 	DIALOG_DEPTH_HOVER = 0;
+	RANDOMIZER_ACTIVE  = undefined;
 	
 	if(PANEL_MAIN)   PANEL_MAIN.checkMouse();
 	with(_p_dialog)  checkMouse();

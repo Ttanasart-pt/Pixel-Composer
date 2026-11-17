@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.22.3.102",
+    "changes": [
+      {
+        "date": "2026-11-17T01:27:42.529Z",
+        "node": "Randomizer",
+        "commit": "**Randomizer**: Adding track will automatically set the panel to edit mode."
+      }
+    ]
+  },
+  {
     "version": "1.22.3",
     "changes": [
       {

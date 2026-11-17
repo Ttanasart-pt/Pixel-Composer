@@ -1,5 +1,5 @@
 #region global
-	globalvar  RANDOMIZER_ACTIVE;  RANDOMIZER_ACTIVE = false;
+	globalvar  RANDOMIZER_ACTIVE;  RANDOMIZER_ACTIVE = undefined;
 	globalvar  RANDOMIZER_HOVER;  RANDOMIZER_HOVER  = {};
 	globalvar _RANDOMIZER_HOVER; _RANDOMIZER_HOVER  = {};
 	
@@ -1203,7 +1203,7 @@ function Panel_Randomizer() : PanelContent() constructor {
 	////- Step
 	
 	static stepBegin = function() {
-		RANDOMIZER_ACTIVE = randActive;
+		if(randActive) RANDOMIZER_ACTIVE = self;
 		randActive = false;
 	}
 	

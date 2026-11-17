@@ -599,9 +599,8 @@ function drawWidget(xx, yy, ww, _m, _jun, global_var = true, _hover = false, _fo
 					
 				}
 				
-				if(RANDOMIZER_ACTIVE) {
-					bx  -= bs; 
-					
+				if(RANDOMIZER_ACTIVE != undefined) {
+					bx  -= bs;
 					if(jun.randomizable) {
 						var _rand = PROJECT.randomizer;
 						var _ran  = _rand.hasValue(jun);
@@ -614,10 +613,12 @@ function drawWidget(xx, yy, ww, _m, _jun, global_var = true, _hover = false, _fo
 						
 						if(b == 2) {
 							if(_ran) _rand.removeValue(jun);
-							else     _rand.addTrack(new Project_Randomizer_Value(jun));
+							else {
+								_rand.addTrack(new Project_Randomizer_Value(jun));
+								RANDOMIZER_ACTIVE.editing = true;
+							}
 						}
 					}
-					
 					bx -= ui(4);
 				}
 			}

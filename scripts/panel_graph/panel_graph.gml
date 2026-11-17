@@ -5754,8 +5754,6 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
 			for( var i = 0, n = array_length(_t1); i < n; i++ ) 
 				if(_t1[i].node == _n0) conType = -1;
 			
-			// print(conType)
-			
 			switch(conType) {
 				case 0 :
 					for( var i = 0, n = array_length(_t0); i < n; i++ ) _t0[i].setFrom(_o1);
