@@ -48,6 +48,7 @@ function Node_Blend(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	preview_select_surface = false;
 	
 	newActiveInput(8);
+	newInput(16, nodeValue_Toggle("Channel", 0b1111, { data: array_create(4, THEME.inspector_channel) }));
 	
 	////- =Surfaces
 	newInput( 0, nodeValue_Surface( "Background"                       )).setRequired();
@@ -70,11 +71,11 @@ function Node_Blend(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	newInput(14, nodeValue_Vec2(    "Position",        [.5,.5] )).setUnitSimple();
 	newInput(10, nodeValue_EButton( "Horizontal Align",  0, array_create(3, THEME.inspector_surface_halign) ));
 	newInput(11, nodeValue_EButton( "Vertical Align",    0, array_create(3, THEME.inspector_surface_valign) ));
-	// 16
+	// 17
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
-	input_display_list = [ 8, 
+	input_display_list = [ 8, 16, 
 		[ "Surfaces",   true ],  0,  1,  4, 15, 12, 13,  6,  7,
 		[ "Blend",     false ],  2,  3,  9,
 		[ "Transform", false ],  5, 14, 
@@ -107,6 +108,7 @@ function Node_Blend(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	
 	temp_surface	   = [ noone, noone ];
 	blend_temp_surface = temp_surface[1];
+	__mask_surface     = noone;
 	
 	dragging = false;
 	drag_sx  = 0;
@@ -357,6 +359,7 @@ function Node_Blend(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 		
 		if(_oatl) _outSurf.setSurface(_output);
 		else      _outSurf = _output;
+		_outSurf = channel_apply(_back, _outSurf, _data[16]);
 		
 		return _outSurf;
 	}
