@@ -137,14 +137,13 @@ uniform float contrast;
 
 uniform int   invert;
 uniform float modulate_curve[CURVE_MAX];
-uniform int   modulate_curve_use;
 uniform int   modulate_amount;
 
 void main() {
     vec4 col = v_vColour * texture2D( gm_BaseTexture, v_vTexcoord );
     float a  = col.a;
     
-    if(modulate_curve_use == 1) a = curveEval(modulate_curve, modulate_amount, a);
+    a = curveEval(modulate_curve, modulate_amount, a);
     if(invert == 1) a = 1. - a;
     
 	gl_FragColor = vec4(vec3(a), 1.);

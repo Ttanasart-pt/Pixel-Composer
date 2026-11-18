@@ -24,15 +24,15 @@ function Node_Alpha_Grey(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	
 	static processData = function(_outSurf, _data, _array_index) {
 		#region data
-			var _surf   = _data[0];
+			var _surf   = _data[ 0];
 			
-			var _curv   = _data[0];
-			var _invert = _data[3];
+			var _curv   = _data[ 2];
+			var _invert = _data[ 3];
 		#endregion
 		
 		surface_set_shader(_outSurf, sh_alpha_grey);
-			shader_set_curve( "modulate", _curv );
-			shader_set_i( "invert",     _invert );
+			shader_set_cr( "modulate", _curv   );
+			shader_set_i(  "invert",   _invert );
 			
 			draw_surface_safe(_surf);
 		surface_reset_shader();
