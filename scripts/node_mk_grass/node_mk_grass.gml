@@ -57,7 +57,10 @@ function Node_MK_Grass(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	
 	////- Nodes
 	
-	sizeSampler = new Surface_Sampler_Grey();
+	attribute_oversample();
+	
+	sizeSampler  = new Surface_Sampler_Grey();
+	outputBuffer = undefined;
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _params) { 
 		var _src = getInputSingle(2);
@@ -206,19 +209,19 @@ function Node_MK_Grass(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 		
 		#region Noise
 			surface_set_shader(temp_surface[2], sh_mk_grass_noise);
-				shader_set_f("seed",        _seed);
-				shader_set_2("dimension",    _dim);
+				shader_set_f( "seed",         _seed               );
+				shader_set_2( "dimension",    _dim                );
 				
-				shader_set_3("position",     [0, 0, _seed]);
-				shader_set_f("rotation",     0);
-				shader_set_2("scale",        [_sizeSca, _sizeSca]);
-				shader_set_f("iteration",    _sizeItr);
-				shader_set_f("phase",        0);
-				shader_set_f("itrScaling",   2);
-				shader_set_f("itrAmplitude",.5);
+				shader_set_3( "position",     [0,0,_seed]         );
+				shader_set_f( "rotation",     0                   );
+				shader_set_2( "scale",        [_sizeSca,_sizeSca] );
+				shader_set_f( "iteration",    _sizeItr            );
+				shader_set_f( "phase",        0                   );
+				shader_set_f( "itrScaling",   2                   );
+				shader_set_f( "itrAmplitude",.5                   );
 				
-				shader_set_f("density",     _dens);
-				shader_set_f("sharpness",   _noi_shp);
+				shader_set_f( "density",     _dens                );
+				shader_set_f( "sharpness",   _noi_shp             );
 				
 				draw_surface_safe(temp_surface[_gMaskIndex]);
 			surface_reset_shader();
@@ -235,21 +238,23 @@ function Node_MK_Grass(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 			
 			if(sh != noone) {
 				surface_set_shader(_outSurf, sh);
-				shader_set_surface("grassMask", temp_surface[2]);
-				shader_set_f("seed",          _seed);
-				shader_set_2("dimension",     _dim);
-				shader_set_2("grassSize",     _size);
-				shader_set_f("density",       _dens);
-				shader_set_f("distribution",  _dist);
-				shader_set_f("expand",        _expand);
+				shader_set_i( "sampleMode", getAttribute("oversample") );
 				
-				shader_set_i("renderType",    _rtype);
-				shader_set_i("drawBG",        _drawBg);
-				shader_set_i("groundFill",    _gnd_fil);
-				shader_set_c("groundColor",   _gnd_clr);
+				shader_set_s( "grassMask", temp_surface[2] );
+				shader_set_f( "seed",          _seed       );
+				shader_set_2( "dimension",     _dim        );
+				shader_set_2( "grassSize",     _size       );
+				shader_set_f( "density",       _dens       );
+				shader_set_f( "distribution",  _dist       );
+				shader_set_f( "expand",        _expand     );
 				
-				shader_set_f("colorVariance",  _color_vr);
-				shader_set_f("gradient_shift", _color_sh);
+				shader_set_i( "renderType",    _rtype      );
+				shader_set_i( "drawBG",        _drawBg     );
+				shader_set_i( "groundFill",    _gnd_fil    );
+				shader_set_c( "groundColor",   _gnd_clr    );
+				
+				shader_set_f( "colorVariance",  _color_vr  );
+				shader_set_f( "gradient_shift", _color_sh  );
 				_color.shader_submit();
 				
 				if(useSurf) draw_surface_safe(_surf); 
@@ -269,13 +274,18 @@ function Node_MK_Grass(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 				var _sw   = surface_get_width(_gSrf);
 				var _sh   = surface_get_height(_gSrf);
 				var _sBuf = buffer_from_surface(_gSrf, false);
-				var _sOut = buffer_create(_sw * _sh * (8*7), buffer_fixed, 1);
+				outputBuffer = buffer_verify(outputBuffer, _sw * _sh * (8*7) * 4, buffer_fixed, 1);
+				var _sOut = outputBuffer;
+				
+				var _over = getAttribute("oversample");
+				var _tile = _over >= 2;
 				
 				mk_grass_set_buffer(buffer_get_address(_sBuf), buffer_get_address(_sOut));
 				mk_grass_set_dimension(_sw, _sh);
 				mk_grass_set_seed(_seed);
 				mk_grass_set_size(_size[0], _size[1]);
 				mk_grass_set_sway(_swayx[0], _swayx[1]);
+				mk_grass_set_tile(_tile, _sw, _sh);
 				
 				var _amo  = mk_grass_get_data();
 				buffer_delete(_sBuf);
@@ -349,7 +359,6 @@ function Node_MK_Grass(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 						break;
 				}
 				surface_reset_shader();
-				buffer_delete(_sOut);
 				
 				surface_set_shader(_outSurf, sh_mk_grass_grow_apply);
 					shader_set_s( "grassMask",     temp_surface[2] );
@@ -385,6 +394,7 @@ function Node_MK_Grass(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 
 /*[cpp]
 #include <cstdint>
+#include <cstdlib>
 #include <stdlib.h>
 
 struct pixel {
@@ -418,6 +428,10 @@ double size_max;
 double sway_min;
 double sway_max;
 
+double tile;
+double tile_w;
+double tile_h;
+
 double random_range(double min, double max) {
 	return min + (static_cast<double>(rand()) / RAND_MAX) * (max - min);
 }
@@ -447,11 +461,17 @@ cfunction double mk_grass_set_sway(double _min, double _max) {
 	return 0.; 
 }
 
-cfunction double mk_grass_get_data() {
-	size_t size = width * height;
-	
-    int amount = 0;
+cfunction double mk_grass_set_tile(double _tile, double _tile_w, double _tile_h) { 
+	tile   = _tile;
+	tile_w = _tile_w;
+	tile_h = _tile_h;
+	return 0.; 
+}
 
+cfunction double mk_grass_get_data() {
+    int amount = 0;
+	
+	size_t size = width * height;
 	for (size_t i = 0; i < size; ++i) {
 		if (pixelArray[i].a == 0) continue;
 
@@ -459,20 +479,109 @@ cfunction double mk_grass_get_data() {
 
 		uint16_t x = (uint16_t)(i % width);
 		uint16_t y = (uint16_t)(i / width);
-
+		
 		srand((uint32_t)(seed + i * 100));
 		
-		outputArray[amount].x  = x;
-		outputArray[amount].y  = y;
-		outputArray[amount].gx = random_range(sway_min, sway_max) * g;
-		outputArray[amount].gy = random_range(size_min, size_max) * g;
+		double gx = random_range(sway_min, sway_max) * g;
+		double gy = random_range(size_min, size_max) * g;
 
-		outputArray[amount].r = (double)pixelArray[i].r / 255.0;
-		outputArray[amount].g = (double)pixelArray[i].g / 255.0;
-		outputArray[amount].b = (double)pixelArray[i].b / 255.0;
+		double rr = (double)pixelArray[i].r / 255.0;
+		double gg = (double)pixelArray[i].g / 255.0;
+		double bb = (double)pixelArray[i].b / 255.0;
 		
+		outputArray[amount].x  = x;  outputArray[amount].y  = y;
+		outputArray[amount].gx = gx; outputArray[amount].gy = gy;
+		outputArray[amount].r  = rr; outputArray[amount].g  = gg; outputArray[amount].b = bb;
 	    amount++;
+	    
+	    if(tile == 0) continue;
+	    
+	    if(x - std::abs(gx) < 0) {
+			outputArray[amount].x  = x + tile_w; outputArray[amount].y  = y;
+			outputArray[amount].gx = gx;         outputArray[amount].gy = gy;
+			outputArray[amount].r  = rr;         outputArray[amount].g  = gg; outputArray[amount].b = bb;
+		    amount++;
+	    }
+	    
+	    if(x + std::abs(gx) > tile_w) {
+			outputArray[amount].x  = x - tile_w; outputArray[amount].y  = y;
+			outputArray[amount].gx = gx;         outputArray[amount].gy = gy;
+			outputArray[amount].r  = rr;         outputArray[amount].g  = gg; outputArray[amount].b = bb;
+		    amount++;
+	    }
+
+		if(y - std::abs(gy) < 0) {
+			outputArray[amount].x  = x;  outputArray[amount].y  = y + tile_h;
+			outputArray[amount].gx = gx; outputArray[amount].gy = gy;
+			outputArray[amount].r  = rr; outputArray[amount].g  = gg; outputArray[amount].b = bb;
+		    amount++;
+		}
+	    
+		if(y + std::abs(gy) > tile_h) {
+			outputArray[amount].x  = x;  outputArray[amount].y  = y - tile_h;
+			outputArray[amount].gx = gx; outputArray[amount].gy = gy;
+			outputArray[amount].r  = rr; outputArray[amount].g  = gg; outputArray[amount].b = bb;
+		    amount++;
+		}
     }
+	
+	if(tile > 0) {
+		for (uint16_t x = 0; x < width; ++x) {
+			uint16_t i = (uint16_t)((height - 1) * width) + x;
+			if (pixelArray[i].a == 0) continue;
+			
+			for (uint16_t j = 0; j < size_max; ++j) {
+				uint16_t y = height;
+				
+				double g = (double)pixelArray[i].g / 255.0;
+		
+				srand((uint32_t)(seed + i * 100));
+				
+				double gx = random_range(sway_min, sway_max) * g;
+				double gy = random_range(size_min, size_max) * g;
+		
+				double rr = (double)pixelArray[i].r / 255.0;
+				double gg = (double)pixelArray[i].g / 255.0;
+				double bb = (double)pixelArray[i].b / 255.0;
+				
+				outputArray[amount].x  = x;  outputArray[amount].y  = y;
+				outputArray[amount].gx = gx; outputArray[amount].gy = gy;
+				outputArray[amount].r  = rr; outputArray[amount].g  = gg; outputArray[amount].b = bb;
+			    amount++;
+			    
+			    if(tile == 0) continue;
+			    
+			    if(x - std::abs(gx) < 0) {
+					outputArray[amount].x  = x + tile_w; outputArray[amount].y  = y;
+					outputArray[amount].gx = gx;         outputArray[amount].gy = gy;
+					outputArray[amount].r  = rr;         outputArray[amount].g  = gg; outputArray[amount].b = bb;
+				    amount++;
+			    }
+			    
+			    if(x + std::abs(gx) > tile_w) {
+					outputArray[amount].x  = x - tile_w; outputArray[amount].y  = y;
+					outputArray[amount].gx = gx;         outputArray[amount].gy = gy;
+					outputArray[amount].r  = rr;         outputArray[amount].g  = gg; outputArray[amount].b = bb;
+				    amount++;
+			    }
+		
+				if(y - std::abs(gy) < 0) {
+					outputArray[amount].x  = x;  outputArray[amount].y  = y + tile_h;
+					outputArray[amount].gx = gx; outputArray[amount].gy = gy;
+					outputArray[amount].r  = rr; outputArray[amount].g  = gg; outputArray[amount].b = bb;
+				    amount++;
+				}
+			    
+				if(y + std::abs(gy) > tile_h) {
+					outputArray[amount].x  = x;  outputArray[amount].y  = y - tile_h;
+					outputArray[amount].gx = gx; outputArray[amount].gy = gy;
+					outputArray[amount].r  = rr; outputArray[amount].g  = gg; outputArray[amount].b = bb;
+				    amount++;
+				}
+				
+			}
+		}
+	}
 	
     return amount;
 }

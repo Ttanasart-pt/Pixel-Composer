@@ -27,10 +27,13 @@ uniform float itrAmplitude;
 uniform float density;
 uniform float sharpness;
 
+uniform int  sampleMode;
+
 vec3 mod289(vec3 x) { return x - floor(x * (1.0 / 289.0)) * 289.0; }
 vec4 mod289(vec4 x) { return x - floor(x * (1.0 / 289.0)) * 289.0; }
 vec4 permute(vec4 x) { return mod289(((x * 34.0) + 10.0) * x); }
 vec4 taylorInvSqrt(vec4 r) { return 1.79284291400159 - 0.85373472095314 * r; }
+float random (in vec2 st, float seed) { return fract(sin(dot(st.xy + mod(seed, 100000.) / 10., vec2(1892.9898, 78.23453))) * 437.54123); }
 
 vec3 hsv2rgb(vec3 c) {
     vec4 K = vec4(1.0, 2.0 / 3.0, 1.0 / 3.0, 3.0);
@@ -135,19 +138,43 @@ float simplex(in vec2 ntx, in float Z) {
 	return n;
 }
 
-float random (in vec2 st, float seed) { return fract(sin(dot(st.xy + mod(seed, 100000.) / 10., vec2(1892.9898, 78.23453))) * 437.54123); }
+float simplexTiled(float Z, vec2 pos, float ang, vec2 sca, vec2 ntx) { // That's... not how it works.
+	mat2 rot = mat2(cos(ang), -sin(ang), sin(ang), cos(ang));
+	vec2 ptx = ntx - pos;
+	
+	vec2  st00 = (ptx + vec2(0., 0.)) * rot * sca;
+	float s00  = simplex(st00, Z);
+	
+	vec2  st01 = (ptx + vec2(0., 1.)) * rot * sca;
+	float s01  = simplex(st01, Z);
+	
+	vec2  st10 = (ptx + vec2(1., 0.)) * rot * sca;
+	float s10  = simplex(st10, Z);
+	
+	vec2  st11 = (ptx + vec2(1., 1.)) * rot * sca;
+	float s11  = simplex(st11, Z);
+	
+	float res  = mix(mix(s00, s10, 1. - ntx.x), mix(s01, s11, 1. - ntx.x), 1. - ntx.y);
+	      
+	return res;
+}
 
 void main() {
 	gl_FragColor = vec4(0.);
 	
 	vec4  baseCol = texture2D(gm_BaseTexture, v_vTexcoord);
 	
-	float grass = simplex(v_vTexcoord, position.z + 16.1285);
+	vec2  pos = position.xy / dimension;
+	float ang = 0.;
+	vec2  sca = vec2(1.);
+	vec2  ntx = v_vTexcoord * vec2(1., dimension.y / dimension.x);
+	
+	float grass = simplexTiled(position.z + 16.1285, pos, ang, sca, ntx);
 	      grass = smoothstep((1. - density) - (1. - sharpness), (1. - density) + (1. - sharpness), grass);
 	
-	baseCol.r *= simplex(v_vTexcoord, position.z);
+	baseCol.r *= simplexTiled(position.z, pos, ang, sca, ntx);
 	baseCol.g *= grass;
-	baseCol.b  = simplex(v_vTexcoord, position.z + 89.6482);
+	baseCol.b  = simplexTiled(position.z + 89.6482, pos, ang, sca, ntx);
 	
 	gl_FragColor = baseCol * v_vColour;
 }

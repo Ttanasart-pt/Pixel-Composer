@@ -1730,6 +1730,21 @@
 },
 {
     "$GMExtensionFunction":"",
+    "%Name":"mk_grass_set_tile",
+    "argCount":3,
+    "args":[2,2,2],
+    "documentation":"",
+    "externalName":"mk_grass_set_tile",
+    "help":"",
+    "hidden":false,
+    "kind":1,
+    "name":"mk_grass_set_tile",
+    "resourceType":"GMExtensionFunction",
+    "resourceVersion":"2.0",
+    "returnType":2
+},
+{
+    "$GMExtensionFunction":"",
     "%Name":"mk_grass_get_data",
     "argCount":0,
     "args":[],
