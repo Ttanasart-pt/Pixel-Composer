@@ -6,6 +6,11 @@
         "date": "2026-11-18T05:41:43.258Z",
         "node": "Graph Panel",
         "commit": "**Graph Panel**: Dragging .bbmodel file now create 3D Json node."
+      },
+      {
+        "date": "2026-11-18T05:42:05.636Z",
+        "node": "3D Json",
+        "commit": "**3D Json**: Add base64 texture support."
       }
     ]
   },

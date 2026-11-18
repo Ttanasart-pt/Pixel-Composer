@@ -452,10 +452,6 @@ function Node_3D_Mesh_Json(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, _group
 		for( var i = 0, n = array_length(material_arr); i < n; i++ )
 			materials[i] = use_texture? struct_try_get(materialMap, material_arr[i], noone) : baseTex;
 		
-		print("materials",    materials);
-		print("materialMap",  materialMap);
-		print("material_arr", material_arr);
-		
 		object.materials	= materials;
 		object.texture_flip = _flip;
 		setTransform(object, _data);
