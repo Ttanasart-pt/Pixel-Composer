@@ -11,6 +11,11 @@
         "date": "2026-11-18T05:42:05.636Z",
         "node": "3D Json",
         "commit": "**3D Json**: Add base64 texture support."
+      },
+      {
+        "date": "2026-11-18T07:37:21.320Z",
+        "node": "3D Json",
+        "commit": "**3D Json**: Add bbox outline view, element visibility control."
       }
     ]
   },
