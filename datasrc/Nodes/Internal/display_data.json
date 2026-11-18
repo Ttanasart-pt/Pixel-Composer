@@ -566,6 +566,7 @@
             "Node_Image_Sequence",
             "Node_Image_Animated",
             "Node_Image_mp4",
+            "Node_Image_Base64",
             "Node_SVG",
             { "label": "/Converter" },
             "Node_Image_Sheet",

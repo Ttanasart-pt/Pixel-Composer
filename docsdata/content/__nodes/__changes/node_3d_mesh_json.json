@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.22.3.103",
+    "changes": [
+      {
+        "date": "2026-11-18T05:41:43.258Z",
+        "node": "Graph Panel",
+        "commit": "**Graph Panel**: Dragging .bbmodel file now create 3D Json node."
+      }
+    ]
+  },
+  {
     "version": "1.22.1.202",
     "changes": [
       {
