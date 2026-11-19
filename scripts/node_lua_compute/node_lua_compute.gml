@@ -7,7 +7,7 @@ function Node_Lua_Compute(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	newInput(4, nodeValue_Bool( "Execute on Frame", true ));
 	
 	////- =Function
-	newInput(0, nodeValue_Text(    "Function Name", $"render{irandom_range(100000, 999999)}" ));
+	newInput(0, nodeValue_Text(    "Function Name", $"render{seed_random(6)}" ));
 	newInput(1, nodeValue_EScroll( "Return Type",  0, { data: [ "Number", "String", "Struct" ], update_hover: false } ));
 	
 	////- =Script
@@ -25,29 +25,26 @@ function Node_Lua_Compute(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	
 	input_display_list = [ 3, 4, 
 		[ "Function",  false ], 0, 1,
-		[ "Arguments", false ], argument_renderer,
+		[ "Arguments", false, noone, b_argAdd ], argument_renderer,
 		[ "Script",    false ], lb_pre, 2, lb_pos,
 		[ "Inputs",     true ], 
 	];
-
+	
 	lua_dtype = [ "Number", "String", "Surface", "Struct" ];
 	
 	function createNewInput(index = array_length(inputs)) {
 		var inAmo = array_length(inputs);
 		
-		newInput(index + 0, nodeValue_Text(    "Argument name")).setDisplay(VALUE_DISPLAY.text_box);
-		newInput(index + 1, nodeValue_EScroll( "Argument type", 0, { data: lua_dtype, update_hover: false }));
-		newInput(index + 2, nodeValue(         "Argument value", self, CONNECT_TYPE.input, VALUE_TYPE.float, 0 )).setVisible(true, true);
-		
-		inputs[index + 1].getEditWidget().interactable = false;
-		inputs[index + 2].getEditWidget().interactable = false;
+		newInput(index + 0, nodeValue_Text(    "Argument name" )).setDisplay(VALUE_DISPLAY.text_box);
+		newInput(index + 1, nodeValue_EScroll( "Argument type",  0, { data: lua_dtype, update_hover: false }));
+		newInput(index + 2, nodeValue_Any(     "Argument value", 0 )).setVisible(true, true);
 		
 		array_push(input_display_list, inAmo, inAmo + 1, inAmo + 2);
 		postCreateNewInput(index);
 		return inputs[index + 0];
 	} 
 	
-	setDynamicInput(3, false);
+	setDynamicInput(3, false, VALUE_TYPE.any, DYNA_INPUT_COND.all);
 	if(!LOADING && !APPENDING) createNewInput();
 	
 	////- Nodes
@@ -58,86 +55,36 @@ function Node_Lua_Compute(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	
 	static getState = function() /*=>*/ {return lua_state_current};
 	
-	static refreshDynamicInput = function() {
-		var _in = [];
-		
-		for( var i = 0; i < input_fix_len; i++ )
-			array_push(_in, inputs[i]);
-		
-		array_resize(input_display_list, input_display_len);
-		
-		for( var i = input_fix_len; i < array_length(inputs); i += data_length ) {
-			if(inputs[i].getValue() != "") {
-				array_push(_in, inputs[i + 0]);
-				array_push(_in, inputs[i + 1]);
-				array_push(_in, inputs[i + 2]);
-				
-				inputs[i + 1].getEditWidget().interactable = true;
-				if(inputs[i + 2].getEditWidget() != noone)
-					inputs[i + 2].getEditWidget().interactable = true;
-				
-				array_push(input_display_list, i + 2);
-			} else {
-				delete inputs[i + 0];
-				delete inputs[i + 1];
-				delete inputs[i + 2];
-			}
-		}
-		
-		for( var i = 0; i < array_length(_in); i++ )
-			_in[i].index = i;
-		
-		inputs = _in;
-		
-		refreshInputType();
-		createNewInput();
-		refreshNodeDisplay();
-	}
-	
-	static refreshInputType = function() {
-		for( var i = input_fix_len; i < array_length(inputs); i += data_length ) {
-			var type = getInputData(i + 1);
-			switch(type) {
-				case 0 : inputs[i + 2].setType(VALUE_TYPE.float);	break;
-				case 1 : inputs[i + 2].setType(VALUE_TYPE.text);	break;
-				case 2 : inputs[i + 2].setType(VALUE_TYPE.surface);	break;
-				case 3 : inputs[i + 2].setType(VALUE_TYPE.struct);	break;
-			}
-				
-			inputs[i + 2].setDisplay(VALUE_DISPLAY._default);
-		}
-	}
-	
-	static onValueUpdate = function(index = 0) {
-		if(LOADING || APPENDING) return;
-		
-		var _ind = (index - input_fix_len) % data_length;
-		
-			 if(_ind == 0) refreshDynamicInput();
-		else if(_ind == 1) refreshInputType();
-	}
-	
-	static step = function() {
-		var _type = getInputData(1);
-		switch(_type) {
-			case 0 : outputs[1].setType(VALUE_TYPE.float);  break;
-			case 1 : outputs[1].setType(VALUE_TYPE.text);   break;
-			case 2 : outputs[1].setType(VALUE_TYPE.struct); break;
-		}
-		
-		for( var i = input_fix_len; i < array_length(inputs) - data_length; i += data_length ) {
-			var name = getInputData(i + 0);
-			inputs[i + 2].name = name;
-		}
-	}
-	
 	static update = function(frame = CURRENT_FRAME) {
 		#region data
 			var _stat = getInputData( 3);
 			var _exec = getInputData( 4);
 			
 			var _func = getInputData( 0);
-			var _dimm = getInputData( 1);
+			var _rtyp = getInputData( 1);
+		#endregion
+		
+		#region inputs
+			switch(_rtyp) {
+				case 0 : outputs[1].setType(VALUE_TYPE.float);  break;
+				case 1 : outputs[1].setType(VALUE_TYPE.text);   break;
+				case 2 : outputs[1].setType(VALUE_TYPE.struct); break;
+			}
+			
+			for( var i = input_fix_len, n = array_length(inputs); i < n; i += data_length ) {
+				var name = getInputData(i + 0);
+				var type = getInputData(i + 1);
+			
+				switch(type) {
+					case 0 : inputs[i + 2].setType(VALUE_TYPE.float);	break;
+					case 1 : inputs[i + 2].setType(VALUE_TYPE.text);	break;
+					case 2 : inputs[i + 2].setType(VALUE_TYPE.surface);	break;
+					case 3 : inputs[i + 2].setType(VALUE_TYPE.struct);	break;
+				}
+					
+				inputs[i + 2].name = name;
+				inputs[i + 2].setDisplay(VALUE_DISPLAY._default);
+			}
 		#endregion
 		
 		update_on_frame   = _exec;
@@ -152,7 +99,7 @@ function Node_Lua_Compute(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		}
 		
 		argument_val = [];
-		for( var i = input_fix_len; i < array_length(inputs) - data_length; i += data_length )
+		for( var i = input_fix_len, n = array_length(inputs); i < n; i += data_length )
 			array_push(argument_val, getInputData(i + 2));
 		
 		lua_projectData(_stat);
@@ -172,7 +119,7 @@ function Node_Lua_Compute(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		var _code = getInputData(2);
 		argument_name = [];
 		
-		for( var i = input_fix_len; i < array_length(inputs) - data_length; i += data_length )
+		for( var i = input_fix_len, n = array_length(inputs); i < n; i += data_length )
 			if(getInputData(i) != "") array_push(argument_name, getInputData(i));
 		
 		var lua_code = $"function {_func}(";
@@ -189,26 +136,7 @@ function Node_Lua_Compute(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		lua_add_code(getState(), lua_code);
 	}
 	
-	static postApplyDeserialize = function() {
-		refreshDynamicInput();
-		
-		for( var i = input_fix_len; i < array_length(inputs) - data_length; i += data_length ) {
-			var name = getInputData(i + 0);
-			var type = getInputData(i + 1);
-			
-			inputs[i + 2].name = name;
-			
-			switch(type) {
-				case 0 : inputs[i + 2].setType(VALUE_TYPE.float);	break;
-				case 1 : inputs[i + 2].setType(VALUE_TYPE.text);	break;
-				case 2 : inputs[i + 2].setType(VALUE_TYPE.surface);	break;
-				case 3 : inputs[i + 2].setType(VALUE_TYPE.struct);	break;
-			}
-			
-			inputs[i + 2].setDisplay(VALUE_DISPLAY._default);
-		}
-		
-	}
+	////- Action
 	
 	static onDestroy = function() /*=>*/ { lua_state_destroy(lua_state); }
 	static onRestore = function() /*=>*/ { lua_state = lua_create(); inputs[3].setValue(lua_state); }

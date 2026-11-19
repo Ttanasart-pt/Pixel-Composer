@@ -6,6 +6,11 @@
         "date": "2026-11-19T03:41:10.532Z",
         "node": "",
         "commit": "**3D Json**: Add support for Blockbench (.bbmodel) file.  - Outline view, group, element visibility control. - Embedded texture. - Basic Animation (Geckolib not supported)."
+      },
+      {
+        "date": "2026-11-19T04:34:12.072Z",
+        "node": "Lua Compute, Lua Surface] Fix freeze when setting default values. - [Lua Compute, Lua Surface",
+        "commit": "**Lua Compute, Lua Surface] Fix freeze when setting default values. - [Lua Compute, Lua Surface**: Arguments now require manual manipulation."
       }
     ]
   },

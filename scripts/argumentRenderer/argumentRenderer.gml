@@ -17,13 +17,22 @@ function argumentRenderer(_typeArray = []) {
 		var  w1 = ui(128), wh = 0;
 		var _tv = __txt("Value");
 		
-		for( var i = input_fix_len; i < array_length(inputs); i += data_length ) {
+		var bs = _th;
+		var bc = [COLORS._main_icon, COLORS._main_value_negative];
+		
+		var toDel = undefined;
+		
+		for( var i = input_fix_len, n = array_length(inputs); i < n; i += data_length ) {
 			var _jNam = inputs[i + 0];
 			var _jTyp = inputs[i + 1];
 			var _jVal = inputs[i + 2];
 			
+			var _vNam = _jNam.showValue();
+			
 			var _wNam = has(_jNam, "__inspWidget")? _jNam.__inspWidget : _jNam.getEditWidget().clone(); _jNam.__inspWidget = _wNam;
 			var _wTyp = has(_jTyp, "__inspWidget")? _jTyp.__inspWidget : _jTyp.getEditWidget().clone(); _jTyp.__inspWidget = _wTyp;
+			
+			_wNam.boxColor = _vNam == ""? COLORS._main_value_negative : c_white;
 			
 			_wTyp.setFocusHover(_focus, _hover);
 			_wNam.setFocusHover(_focus, _hover);
@@ -31,10 +40,22 @@ function argumentRenderer(_typeArray = []) {
 			_wTyp.setFont(_fn);
 			_wNam.setFont(_fn);
 			
-			var ts = _jTyp.display_data.data[_jTyp.showValue()];
-			var wh = _wNam.draw(tx + w1 + ui(4), ty, _w - w1 - ui(4), _th, _jNam.showValue(), _m, _jNam.display_type);
-			_wTyp.draw(tx, ty, w1, wh, ts, _m, argument_renderer.rx, argument_renderer.ry);
+			var ts  = _jTyp.display_data.data[_jTyp.showValue()];
+			var wh0 = _wNam.draw(tx + w1 + ui(4), ty, _w - w1 - ui(4 + 4) - bs, _th, _vNam, _m, _jNam.display_type);
+			var wh1 = _wTyp.draw(tx, ty, w1, wh0, ts, _m, argument_renderer.rx, argument_renderer.ry);
 			
+			////////////////////////////
+			
+			var bb = THEME.button_hide_fill;
+			var bx = _x + _w - bs;
+			var by = ty;
+			
+			if(buttonInstant_Pad(bb, bx, by, bs, bs, _m, _hover, _focus, "", THEME.minus_16, 0, bc, 1, ui(6)) == 2)
+				toDel = (i - input_fix_len) / data_length;
+			 
+			////////////////////////////
+			
+			var wh = max(wh0, wh1);
 			var _h = max(wh, _th) + ui(4);
 			hh += _h;
 			ty += _h;
@@ -64,6 +85,8 @@ function argumentRenderer(_typeArray = []) {
 			ty += ui(8);
 		}
 		
+		if(toDel != undefined) deleteArgument(toDel);
+		
 		argument_renderer.h = hh;
 		return hh;
 	});
@@ -78,4 +101,16 @@ function argumentRenderer(_typeArray = []) {
 	}
 	
 	argument_renderer.showValue = true;
+	
+	function deleteArgument(ind) {
+		var _ind = input_fix_len + ind * data_length;
+		array_delete(inputs, _ind, data_length);
+		
+		refreshDynamicInput();
+		refreshNodeDisplay();
+		triggerRender();
+	}
+	
+	b_argAdd = button(function() /*=>*/ {return createNewInput()}).setIcon(THEME.add_16, 0, COLORS._main_value_positive).setTooltip(__txt("Add argument"));
+	
 }

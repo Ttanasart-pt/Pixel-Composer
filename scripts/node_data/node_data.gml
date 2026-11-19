@@ -7,6 +7,7 @@
 		none       = 0, 
 		connection = 1 << 0,
 		zero       = 1 << 1,
+		all        = 1 << 2,
 	}
 	
 	function getNodeID(node) { return is(node, Node)? node.node_id : -4; }
@@ -726,7 +727,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		var _input_display_list = array_clone(input_display_list_raw, 1);
 		var sep = false;
 		
-		for( var i = input_fix_len; i < array_length(inputs); i += data_length ) {
+		for( var i = input_fix_len, n = array_length(inputs); i < n; i += data_length ) {
 			var _active = false;
 			var _inp    = inputs[i + dyna_input_check_shift];
 			
@@ -737,6 +738,9 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 				var _val = _inp.getValue();
 				_active = _active || _val != 0 || _val != "";
 			}
+			
+			if(dynamic_input_cond & DYNA_INPUT_COND.all)
+				_active = true;
 			
 			if(_active) {
 				if(sep && data_length > 1) array_push(_input_display_list, new Inspector_Spacer(20, true));
