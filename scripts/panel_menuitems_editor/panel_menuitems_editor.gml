@@ -100,10 +100,13 @@ function Panel_MenuItems_Editor(_menuId, _pie = false) : PanelContent() construc
 			
 			for( var i = 0, n = array_length(all_menu); i < n; i++ ) {
 				var _a    = all_menu[i];
-				var _mObj = MENU_ITEMS[$ _a];
+				var _mObj = show_type == 0? MENU_ITEMS[$ _a] : MENUITEM_CONDITIONS[$ _a];
+				if(_mObj == undefined) continue;
 				
-				var _match = bool( string_pos(_s, string_lower(_a))         ) 
-				          || bool( string_pos(_s, string_lower(_mObj.name)) );
+				var _mName = _mObj[$ "name"] ?? _a;
+				
+				var _match = bool( string_pos(_s, string_lower(_a))     ) 
+				          || bool( string_pos(_s, string_lower(_mName)) );
 				
 				if(_inv) _match = !_match;
 				if(_match) array_push(_filt, _a);
@@ -509,16 +512,16 @@ function Panel_MenuItems_Editor(_menuId, _pie = false) : PanelContent() construc
 		}
 		tx += th + ui(4); tw -= th + ui(4);
 		
-		var bc = show_type? COLORS._main_accent : COLORS._main_icon;
-		if(buttonInstant(THEME.button_hide, tx, ty, th, th, [mx,my], pHOVER, pFOCUS, "Show Condition", THEME.arrow, 0, bc) == 2) 
-			setShowType(!show_type);
-		tx += th + ui(4); tw -= th + ui(4);
-		
 		var bc = COLORS._main_icon;
 		if(buttonInstant(THEME.button_hide, tx, ty, th, th, [mx,my], pHOVER, pFOCUS, "Submenu", THEME.view_group, 2, bc, 1, .8) == 2) {
 			dragging  = "submenu";
 			drag_type = 1;
 		}
+		tx += th + ui(4); tw -= th + ui(4);
+		
+		var bc = show_type? COLORS._main_value_positive : COLORS._main_value_positive;
+		if(buttonInstant(THEME.button_hide, tx, ty, th, th, [mx,my], pHOVER, pFOCUS, "Show Condition", THEME.arrow, 0, bc) == 2) 
+			setShowType(!show_type);
 		tx += th + ui(4); tw -= th + ui(4);
 		
 		var bx = tx + tw - th;

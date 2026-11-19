@@ -93,10 +93,13 @@ function argumentRenderer(_typeArray = []) {
 	
 	argument_renderer.register = function(parent = noone) {
 		for( var i = input_fix_len; i < array_length(inputs); i += data_length ) {
-			inputs[i + 1].getEditWidget().register(parent);
-			inputs[i + 0].getEditWidget().register(parent);
-			if(inputs[i + 2].getEditWidget() != noone)
-				inputs[i + 2].getEditWidget().register(parent);
+			var edt0 = inputs[i + 0].getEditWidget();
+			var edt1 = inputs[i + 1].getEditWidget();
+			var edt2 = inputs[i + 2].getEditWidget();
+			
+			edt1.register(parent);
+			edt0.register(parent);
+			if(edt2 != noone) edt2.register(parent);
 		}
 	}
 	
