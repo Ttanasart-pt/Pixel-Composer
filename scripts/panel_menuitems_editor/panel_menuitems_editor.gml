@@ -22,8 +22,9 @@ function Panel_MenuItems_Editor(_menuId, _pie = false) : PanelContent() construc
 	dragging  = "";
 	drag_type = 0;
 	
-	to_add = undefined;
-	to_del = undefined;
+	to_add     = undefined;
+	to_del     = undefined;
+	to_del_par = undefined;
 	
 	#region categories
 		category_page = 0;
@@ -200,6 +201,7 @@ function Panel_MenuItems_Editor(_menuId, _pie = false) : PanelContent() construc
 		var _hov = _m == infinity || (hover && point_in_rectangle(_m[0], _m[1], xx, yy - ui(2), xx + ww, yy + hg + ui(2) - 1));
 		
 		if(_hov) {
+			_hov = 1;
 			draw_sprite_stretched(THEME.box_r2_clr, 0, xx, yy, ww, hg);
 			draw_sprite_stretched(THEME.box_r2_clr, 1, xx, yy, ww, hg);
 			
@@ -209,14 +211,9 @@ function Panel_MenuItems_Editor(_menuId, _pie = false) : PanelContent() construc
 				var spr = _input? THEME.add_16 : THEME.icon_delete;
 				
 				if(point_in_rectangle(_m[0], _m[1], xx + ww - hg, yy, xx + ww, yy + hg)) {
-					_hov = false;
+					_hov = 2;
 					cc = _input? COLORS._main_value_positive : COLORS._main_value_negative;
 					aa = 1;
-					
-					if(mouse_lpress(focus)) {
-						if(_input) to_add = _menu;
-						else       to_del = _menu;
-					}
 				}
 				
 				draw_sprite_ui(spr, 0, xx + ww - hg / 2, yy + hg / 2, 1, 1, 0, cc, aa);
@@ -291,7 +288,6 @@ function Panel_MenuItems_Editor(_menuId, _pie = false) : PanelContent() construc
 		
 		var hoverX = 0;
 		var hoverY = _y + ui(2);
-		var delI   = noone;
 		
 		if(_m[0] > 0 && _m[0] < sw) {
 			hoverI = 0;
@@ -310,9 +306,17 @@ function Panel_MenuItems_Editor(_menuId, _pie = false) : PanelContent() construc
 					hoverY = _m[1] > yy + hg / 2? yy + hg + ui(2) : yy - ui(2);
 					
 					if(mouse_lpress(focus)) {
-						dragging  = _menu;
-						drag_type = 0;
-						delI = i;
+						if(_hov == 2) {
+							to_del     = i;
+							to_del_par = undefined;
+							
+						} else {
+							dragging  = _menu;
+							drag_type = 0;
+							
+							to_del     = i;
+							to_del_par = undefined;
+						}
 					}
 				}
 				
@@ -357,7 +361,9 @@ function Panel_MenuItems_Editor(_menuId, _pie = false) : PanelContent() construc
 					hoverC    = noone;
 					dragging  = _menu;
 					drag_type = 1;
-					delI      = i;
+					
+					to_del     = i;
+					to_del_par = undefined;
 				}
 			}
 			
@@ -366,7 +372,9 @@ function Panel_MenuItems_Editor(_menuId, _pie = false) : PanelContent() construc
 			var by = yy;
 			if(buttonInstant(noone, bx, by, bs, hg, _m, hover, focus, "", THEME.cross_12, 0, COLORS._main_value_negative, .75) == 2) {
 				hoverC = noone;
-				delI   = i;
+				
+				to_del     = i;
+				to_del_par = undefined;
 			} bx -= bs+1;
 			
 			if(has(_menu, "name")) {
@@ -398,9 +406,17 @@ function Panel_MenuItems_Editor(_menuId, _pie = false) : PanelContent() construc
 					}
 					
 					if(mouse_lpress(focus)) {
-						dragging  = _subMenu;
-						drag_type = 0;
-						delI = j;
+						if(_hov == 2) {
+							to_del     = j;
+							to_del_par = _menu;
+							
+						} else {
+							dragging  = _subMenu;
+							drag_type = 0;
+							
+							to_del     = j;
+							to_del_par = _menu;
+						}
 					}
 				}
 				
@@ -417,12 +433,6 @@ function Panel_MenuItems_Editor(_menuId, _pie = false) : PanelContent() construc
 			hoverI = menuAmo;
 			hoverX = 0;
 			hoverY = yy - ui(2);
-		}
-		
-		if(delI != noone) {
-			if(hoverC == noone) array_delete(menu, delI, 1);
-			else array_delete(hoverC.items, delI, 1);
-			PREF_SAVE();
 		}
 		
 		if(dragging != "") { 
@@ -484,7 +494,7 @@ function Panel_MenuItems_Editor(_menuId, _pie = false) : PanelContent() construc
 			     _hov = drawMenu(  hover, focus, _menu, xx, yy, sw, _m, 1 );
 			else _hov = drawText( hover, focus, _menu, xx, yy, sw, _m );
 			
-			if(_hov && mouse_lpress(focus)) {
+			if(_hov == 1 && mouse_lpress(focus)) {
 				dragging  = _menu;
 				drag_type = show_type;
 			}	
@@ -560,8 +570,20 @@ function Panel_MenuItems_Editor(_menuId, _pie = false) : PanelContent() construc
 		tb_search.setFocusHover(pFOCUS, pHOVER);
 		tb_search.draw(tx, ty, tw, th, search_string, [mx,my]);
 		
-		if(to_add != undefined) { array_push(menu, to_add);   to_add = undefined; }
-		if(to_del != undefined) { array_remove(menu, to_del); to_del = undefined; }
+		if(to_add != undefined) { 
+			array_push(menu, to_add);
+			to_add = undefined; 
+		}
+		
+		if(to_del != undefined) { 
+			if(to_del_par == undefined) array_delete(menu, to_del, 1); 
+			else array_delete(to_del_par.items, to_del, 1); 
+			
+			to_del     = undefined; 
+			to_del_par = undefined; 
+			
+			PREF_SAVE();
+		}
 	}
 	
 	function drawGUI() {
