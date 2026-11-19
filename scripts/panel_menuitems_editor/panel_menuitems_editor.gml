@@ -254,6 +254,22 @@ function Panel_MenuItems_Editor(_menuId, _pie = false) : PanelContent() construc
 		return _hov;
 	}
 	
+	function drawText(hover, focus, _menu, xx, yy, ww, _m) {
+		var _cat_h = hg + ui(4);
+		
+		var _cond = is_string(_menu)? _menu : _menu.cond;
+		var _hov  = _m == infinity || (hover && point_in_rectangle(_m[0], _m[1], xx, yy - ui(2), xx + ww, yy + hg + ui(2) - 1));
+		
+		var _cc = COLORS._main_text;
+		draw_sprite_stretched_ext(THEME.box_r2_clr, 0, xx, yy, ww, hg, _cc, 1);
+		draw_set_text(f_p3, fa_left, fa_center, _cc);
+		draw_text_add(xx + ui(8), yy + hg / 2, _menu);
+		
+		if(_hov) draw_sprite_stretched_ext(THEME.box_r2, 1, xx, yy, ww, hg, _cc, .5);
+		
+		return _hov;
+	}
+	
 	////- Content
 	
 	sp_current_list = new scrollPane(list_w, h - padding * 2, function(_y, _m) {
@@ -403,6 +419,7 @@ function Panel_MenuItems_Editor(_menuId, _pie = false) : PanelContent() construc
 		if(delI != noone) {
 			if(hoverC == noone) array_delete(menu, delI, 1);
 			else array_delete(hoverC.items, delI, 1);
+			PREF_SAVE();
 		}
 		
 		if(dragging != "") { 
@@ -462,7 +479,7 @@ function Panel_MenuItems_Editor(_menuId, _pie = false) : PanelContent() construc
 			
 			if(show_type == 0) 
 			     _hov = drawMenu(  hover, focus, _menu, xx, yy, sw, _m, 1 );
-			else _hov = drawGroup( hover, focus, _menu, xx, yy, sw, _m );
+			else _hov = drawText( hover, focus, _menu, xx, yy, sw, _m );
 			
 			if(_hov && mouse_lpress(focus)) {
 				dragging  = _menu;
@@ -545,10 +562,7 @@ function Panel_MenuItems_Editor(_menuId, _pie = false) : PanelContent() construc
 	}
 	
 	function drawGUI() {
-		if(dragging != "") {
-			     if(drag_type == 0) drawMenu(  false, false, dragging, mouse_mx, mouse_my, sp_current_list.surface_w, infinity );
-			else if(drag_type == 1) drawGroup( false, false, dragging, mouse_mx, mouse_my, sp_current_list.surface_w, infinity );
-		}
+		if(dragging != "") drawText( false, false, dragging, mouse_mx, mouse_my, sp_current_list.surface_w, infinity );
 	}
 	
 	////- Action
