@@ -3,6 +3,8 @@ function Node_Color_HSV(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	setDimension(96, 48);
 	
 	newInput( 3, nodeValue_Bool(   "Normalized", 1 ));
+	
+	////- =Values
 	newInput( 0, nodeValue_Slider( "Hue",        1 )).setVisible(true, true);
 	newInput( 1, nodeValue_Slider( "Saturation", 1 )).setVisible(true, true);
 	newInput( 2, nodeValue_Slider( "Value",      1 )).setVisible(true, true);

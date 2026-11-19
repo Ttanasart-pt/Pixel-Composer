@@ -6,6 +6,11 @@
         "date": "2026-11-19T05:19:42.957Z",
         "node": "HSV Color",
         "commit": "**HSV Color**: Fix non-normalize mode output wrong color."
+      },
+      {
+        "date": "2026-11-19T05:25:57.347Z",
+        "node": "MenuItem Editor",
+        "commit": "**MenuItem Editor**: Fix crash when editing separator."
       }
     ]
   },

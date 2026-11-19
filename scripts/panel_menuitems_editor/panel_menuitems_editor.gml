@@ -256,14 +256,17 @@ function Panel_MenuItems_Editor(_menuId, _pie = false) : PanelContent() construc
 	
 	function drawText(hover, focus, _menu, xx, yy, ww, _m) {
 		var _cat_h = hg + ui(4);
+		var _hov   = _m == infinity || (hover && point_in_rectangle(_m[0], _m[1], xx, yy - ui(2), xx + ww, yy + hg + ui(2) - 1));
+		var _name  = _menu;
 		
-		var _cond = is_string(_menu)? _menu : _menu.cond;
-		var _hov  = _m == infinity || (hover && point_in_rectangle(_m[0], _m[1], xx, yy - ui(2), xx + ww, yy + hg + ui(2) - 1));
+		     if(_menu == "-1") _name = "Separator";
+		else if(is_struct(_menu) && has(_menu, "cond")) _name = _menu.cond;
+		else if(is_struct(_menu) && has(_menu, "name")) _name = _menu.name;
 		
 		var _cc = COLORS._main_text;
 		draw_sprite_stretched_ext(THEME.box_r2_clr, 0, xx, yy, ww, hg, _cc, 1);
 		draw_set_text(f_p3, fa_left, fa_center, _cc);
-		draw_text_add(xx + ui(8), yy + hg / 2, _menu);
+		draw_text_add(xx + ui(8), yy + hg / 2, _name);
 		
 		if(_hov) draw_sprite_stretched_ext(THEME.box_r2, 1, xx, yy, ww, hg, _cc, .5);
 		
