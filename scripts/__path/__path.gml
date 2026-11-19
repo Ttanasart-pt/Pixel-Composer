@@ -6,8 +6,10 @@ function PathPoint(_x=0, _y=0, _z=0, _w=0) constructor {
 	
 	static reset = function( ) /*=>*/ { x =   0; y =   0; z =   0; w =   0; return self; }
 	static apply = function(b) /*=>*/ { x = b.x; y = b.y; z = b.z; w = b.w; return self; }
-	static clone = function( ) /*=>*/ {return new PathPoint(x, y, z, w)};
 	
+	static equal = function(b) /*=>*/ { return x == b.x && y == b.y && z == b.z && w == b.w; }
+	
+	static clone = function( ) /*=>*/ {return new PathPoint(x, y, z, w)};
 	static toArray = function(d3d=false) /*=>*/ {return d3d? [x,y,z] : [x,y]};
 }
 

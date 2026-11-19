@@ -3,4 +3,6 @@
     "spr":           "s_node_mesh_fill",
     "baseNode":      "Node_Mesh_Fill",
     "pxc_version":    122031,
+    "alias":          ["draw mesh"],
+    "deprecated":     false,
 }

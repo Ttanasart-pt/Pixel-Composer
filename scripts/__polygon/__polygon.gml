@@ -45,7 +45,6 @@ function polygon_point_get_convex_hull(_points, _expands = 0) {
 }
 
 function polygon_simplify(points, tolerance = 4) {
-	
 	// Delete duplicated points
 	for( var i = array_length(points) - 1; i >= 1; i-- ) {
 		if(points[i].equal(points[i - 1]))
