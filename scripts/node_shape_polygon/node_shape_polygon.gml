@@ -62,15 +62,14 @@ function Node_Shape_Polygon(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	newInput(19, nodeValue_Color(    "Vertex Color 1",  ca_white));
 	newInput(20, nodeValue_Color(    "Vertex Color 2",  ca_white));
 	newInput(21, nodeValue_Color(    "Vertex Color 3",  ca_white));
-	newInput(24, nodeValue_EScroll("SSAA", 0, [ "None", "2x", "4x", "8x" ]));
-	
+	newInput(24, nodeValue_EScroll(  "SSAA", 0, [ "None", "2x", "4x", "8x" ]));
 	// inputs 30
 	
-	newOutput(0, nodeValue_Output( "Surface Out", VALUE_TYPE.surface,  noone));
-	newOutput(1, nodeValue_Output( "Mesh",        VALUE_TYPE.mesh,     noone));
-	newOutput(2, nodeValue_Output( "Path",        VALUE_TYPE.pathnode, noone));
+	newOutput( 0, nodeValue_Output( "Surface Out", VALUE_TYPE.surface,  noone));
+	newOutput( 1, nodeValue_Output( "Mesh",        VALUE_TYPE.mesh,     noone));
+	newOutput( 2, nodeValue_Output( "Path",        VALUE_TYPE.pathnode, noone));
 	
-	input_display_list = [ 16, 
+	input_display_list = [ 
 		["Output",     false], 0, 
 		["Background",  true], 1, 2, 28, 29, 
 		["Transform",  false], 5, 6, 7, 
@@ -112,8 +111,6 @@ function Node_Shape_Polygon(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	
 	static processData = function(_outData, _data, _array_index) {
 		#region data
-			var _mesh = _data[16];
-			
 			var _dim  = _data[ 0];
 			
 			var _pos  = _data[ 5];
@@ -136,8 +133,6 @@ function Node_Shape_Polygon(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 			inputs[ 2].setVisible(_bg == 1);
 			inputs[28].setVisible(_bg == 2);
 			inputs[29].setVisible(_bg == 2);
-			
-			outputs[2].setVisible(!is(_mesh, Mesh));
 			
 			var data = {
 				scale:    _data[ 7],
@@ -202,98 +197,85 @@ function Node_Shape_Polygon(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 			DRAW_CLEAR
 			draw_primitive_begin(pr_trianglelist);
 			
-			if(is(_mesh, Mesh)) {
-				for( var j = 0, n = array_length(_mesh.triangles); j < n; j++ ) {
-					var tri = _mesh.triangles[j];
-					var p0  = _mesh.points[tri[0]];
-					var p1  = _mesh.points[tri[1]];
-					var p2  = _mesh.points[tri[2]];
-					
-					draw_vertex(p0.x * _aa, p0.y * _aa);
-					draw_vertex(p1.x * _aa, p1.y * _aa);
-					draw_vertex(p2.x * _aa, p2.y * _aa);
-				}
+			if(_shapeFn == noone) {
+				draw_primitive_end();
+				draw_set_alpha(1);
 				
-			} else {
-				if(_shapeFn == noone) {
-					draw_primitive_end();
-					draw_set_alpha(1);
-					
-					surface_reset_target();
-					return [ _outSurf, mesh, path ];
-				}
-				
-				shapeData = _shapeFn(data);
-				objects   = shapeData[0];
-				segment   = shapeData[1];
-				
-				if(_prot != 0 || _psca != 1)
-				for( var i = 0, n = array_length(objects); i < n; i++ ) {
-					var _tri = objects[i].triangles;
-					for( var j = 0; j < array_length(_tri); j++ ) {
-						var tri = _tri[j];
-						var t0  = tri[0];
-						var t1  = tri[1];
-						var t2  = tri[2];
-						
-						var cx  = (t0.x + t1.x + t2.x) / 3;
-						var cy  = (t0.y + t1.y + t2.y) / 3;
-						
-						var p = point_rotate(t0.x - cx, t0.y - cy, 0, 0, _prot);
-						t0.x = cx + _psca * p[0];
-						t0.y = cy + _psca * p[1];
-						
-						var p = point_rotate(t1.x - cx, t1.y - cy, 0, 0, _prot);
-						t1.x = cx + _psca * p[0];
-						t1.y = cy + _psca * p[1];
-						
-						var p = point_rotate(t2.x - cx, t2.y - cy, 0, 0, _prot);
-						t2.x = cx + _psca * p[0];
-						t2.y = cy + _psca * p[1];
-						
-					}
-				}
-				
-				for( var i = 0, n = array_length(segment); i < n; i++ ) {
-					var _p = segment[i];
-					var p = point_rotate(_p.x, _p.y, 0, 0, _rot);
-					_p.x = _pos[0] + p[0];
-					_p.y = _pos[1] + p[1];
-				}
-				path.setSegment(segment);
-				
-				var shapes = array_create_ext(array_length(objects), function(i) /*=>*/ {return objects[i].triangles});
-				var _plen  = array_length(_pall);
-				
-				var mpoints    = [];
-				var mtriangles = [];
-				
-				for( var i = 0, n = array_length(shapes); i < n; i++ ) {
-					var triangles = shapes[i];
-					var shapetyp  = objects[i].type;
-					
-					for( var j = 0; j < array_length(triangles); j++ ) {
-						var tri = triangles[j];
-						
-						var shapeind = shapetyp == SHAPE_TYPE.rectangle? floor(j / 2) : j;
-						var trc = array_safe_get(_pall, shapeind % _plen, c_white)
-						
-						vertex_apply(tri[0], _pos, _rot, colorMultiply(trc, tri0), 1, _aa);
-						vertex_apply(tri[1], _pos, _rot, colorMultiply(trc, tri1), 1, _aa);
-						vertex_apply(tri[2], _pos, _rot, colorMultiply(trc, tri2), 1, _aa);
-						
-						var p0 = array_length(mpoints); array_push(mpoints, tri[0]);
-						var p1 = array_length(mpoints); array_push(mpoints, tri[1]);
-						var p2 = array_length(mpoints); array_push(mpoints, tri[2]);
-						
-						array_push( mtriangles, [p0, p1, p2] );
-					}
-				}
-				
-				mesh.points    = mpoints;
-				mesh.triangles = mtriangles;
-				mesh.calcCoM();
+				surface_reset_target();
+				return [ _outSurf, mesh, path ];
 			}
+			
+			shapeData = _shapeFn(data);
+			objects   = shapeData[0];
+			segment   = shapeData[1];
+			
+			if(_prot != 0 || _psca != 1)
+			for( var i = 0, n = array_length(objects); i < n; i++ ) {
+				var _tri = objects[i].triangles;
+				for( var j = 0; j < array_length(_tri); j++ ) {
+					var tri = _tri[j];
+					var t0  = tri[0];
+					var t1  = tri[1];
+					var t2  = tri[2];
+					
+					var cx  = (t0.x + t1.x + t2.x) / 3;
+					var cy  = (t0.y + t1.y + t2.y) / 3;
+					
+					var p = point_rotate(t0.x - cx, t0.y - cy, 0, 0, _prot);
+					t0.x = cx + _psca * p[0];
+					t0.y = cy + _psca * p[1];
+					
+					var p = point_rotate(t1.x - cx, t1.y - cy, 0, 0, _prot);
+					t1.x = cx + _psca * p[0];
+					t1.y = cy + _psca * p[1];
+					
+					var p = point_rotate(t2.x - cx, t2.y - cy, 0, 0, _prot);
+					t2.x = cx + _psca * p[0];
+					t2.y = cy + _psca * p[1];
+					
+				}
+			}
+			
+			for( var i = 0, n = array_length(segment); i < n; i++ ) {
+				var _p = segment[i];
+				var p = point_rotate(_p.x, _p.y, 0, 0, _rot);
+				_p.x = _pos[0] + p[0];
+				_p.y = _pos[1] + p[1];
+			}
+			path.setSegment(segment);
+			
+			var shapes = array_create_ext(array_length(objects), function(i) /*=>*/ {return objects[i].triangles});
+			var _plen  = array_length(_pall);
+			
+			var mpoints    = [];
+			var mtriangles = [];
+			
+			for( var i = 0, n = array_length(shapes); i < n; i++ ) {
+				var triangles = shapes[i];
+				var shapetyp  = objects[i].type;
+				
+				for( var j = 0; j < array_length(triangles); j++ ) {
+					var tri = triangles[j];
+					
+					var shapeind = shapetyp == SHAPE_TYPE.rectangle? floor(j / 2) : j;
+					var trc = array_safe_get(_pall, shapeind % _plen, c_white)
+					
+					vertex_apply(tri[0], _pos, _rot, colorMultiply(trc, tri0), 1, _aa);
+					vertex_apply(tri[1], _pos, _rot, colorMultiply(trc, tri1), 1, _aa);
+					vertex_apply(tri[2], _pos, _rot, colorMultiply(trc, tri2), 1, _aa);
+					
+					var p0 = array_length(mpoints); array_push(mpoints, tri[0]);
+					var p1 = array_length(mpoints); array_push(mpoints, tri[1]);
+					var p2 = array_length(mpoints); array_push(mpoints, tri[2]);
+					
+					array_push( mtriangles, [p0, p1, p2] );
+				}
+			}
+			
+			mesh.points    = mpoints;
+			mesh.triangles = mtriangles;
+			mesh.calcCoM();
+			
 			draw_primitive_end();
 			draw_set_alpha(1);
 		surface_reset_target();

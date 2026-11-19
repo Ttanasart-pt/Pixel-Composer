@@ -974,6 +974,8 @@
             "Node_Shape_Fast",
             "Node_Shape_Polygon",
             "Node_Random_Shape",
+            "Node_Path_Fill",
+            "Node_Mesh_Fill",
             { "label": "/Simple Shape" },
             "Node_Shape_Rectangle", 
             "Node_Shape_Ellipse", 
@@ -1440,6 +1442,7 @@
             "Node_Mesh_Create_Points",
             "Node_Mesh_Create_Lattice",
             "Node_Mesh_Transform",
+            "Node_Mesh_Fill",
             
             { "label": "Atlas" },
             "Node_Atlas_Draw",

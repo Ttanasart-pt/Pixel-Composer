@@ -2306,6 +2306,7 @@
     {"name":"node_maze_pattern","order":41,"path":"scripts/node_maze_pattern/node_maze_pattern.yy",},
     {"name":"node_mesh_create_path","order":3,"path":"scripts/node_mesh_create_path/node_mesh_create_path.yy",},
     {"name":"node_mesh_create_points","order":5,"path":"scripts/node_mesh_create_points/node_mesh_create_points.yy",},
+    {"name":"node_mesh_fill","order":27,"path":"scripts/node_mesh_fill/node_mesh_fill.yy",},
     {"name":"node_mesh_to_path","order":9,"path":"scripts/node_mesh_to_path/node_mesh_to_path.yy",},
     {"name":"node_mesh_transform","order":7,"path":"scripts/node_mesh_transform/node_mesh_transform.yy",},
     {"name":"node_mesh_warp","order":24,"path":"scripts/node_mesh_warp/node_mesh_warp.yy",},
