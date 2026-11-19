@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.22.3.103",
+    "changes": [
+      {
+        "date": "2026-11-19T05:19:42.957Z",
+        "node": "HSV Color",
+        "commit": "**HSV Color**: Fix non-normalize mode output wrong color."
+      }
+    ]
+  },
+  {
     "version": "1.21.8.009",
     "changes": [
       {

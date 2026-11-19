@@ -11,16 +11,18 @@ function Node_Color_HSV(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	
 	newOutput(0, nodeValue_Output("Color", VALUE_TYPE.color, c_white));
 	
-	input_display_list = [ 3, 0, 1, 2, 4 ];
+	input_display_list = [ 3, 
+		[ "Values", false ], 0, 1, 2, 4 
+	];
 	
 	static processData = function(_outSurf, _data, _array_index) {
 		var nor = _data[3];
 		
 		return make_color_hsva(
-				nor? clamp(_data[0], 0, 1) * 255 : clamp(_data[0], 0, 1),
-				nor? clamp(_data[1], 0, 1) * 255 : clamp(_data[1], 0, 1),
-				nor? clamp(_data[2], 0, 1) * 255 : clamp(_data[2], 0, 1),
-				nor? clamp(_data[4], 0, 1) * 255 : clamp(_data[4], 0, 1),
+				nor? clamp(_data[0], 0, 1) * 255 : clamp(_data[0], 0, 255),
+				nor? clamp(_data[1], 0, 1) * 255 : clamp(_data[1], 0, 255),
+				nor? clamp(_data[2], 0, 1) * 255 : clamp(_data[2], 0, 255),
+				nor? clamp(_data[4], 0, 1) * 255 : clamp(_data[4], 0, 255),
 			);
 	}
 	
