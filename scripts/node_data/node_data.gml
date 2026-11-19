@@ -3528,7 +3528,6 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 				struct_remove(attri, "preview_size");
 				struct_remove(attri, "process");
 				struct_remove(attri, "timeline_hide");
-				struct_remove(attri, "timeline_override");
 				struct_remove(attri, "cache");
 				struct_remove(attri, "color_depth");
 				struct_remove(attri, "interpolate");

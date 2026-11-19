@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.22.3.103",
+    "changes": [
+      {
+        "date": "2026-11-19T03:41:10.523Z",
+        "node": "3D Json",
+        "commit": "**3D Json**: Add support for Blockbench (.bbmodel) file.  - Outline view, group, element visibility control. - Embedded texture. - Basic Animation (Geckolib not supported)."
+      }
+    ]
+  },
+  {
     "version": "1.21.10.001",
     "changes": [
       {

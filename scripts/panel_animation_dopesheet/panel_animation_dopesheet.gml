@@ -3165,7 +3165,7 @@ function Panel_Animation_Dopesheet() {
                 	timeline_snap_points[i].points = [];
                 }
                 
-                if(_node.attributes.timeline_override) {
+                if(_node.parameters.timeline_override) {
                 	var _x = timeline_shift;
                 	var _y = _cont.y;
                 	var _s = timeline_scale;

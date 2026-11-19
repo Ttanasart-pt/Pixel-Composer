@@ -83,7 +83,7 @@ function Node_3D_Material(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 		_mat.metalic    = _metl;
 		_mat.reflective = _refl;
 		
-		_mat.normal     = _nor;
+		_mat.setNormal(_nor);
 		_mat.normalStr  = _norS;
 		
 		#region pbr map

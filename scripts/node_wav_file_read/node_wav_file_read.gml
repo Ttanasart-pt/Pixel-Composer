@@ -29,7 +29,7 @@ function Node_WAV_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	name  = "WAV File In";
 	color = COLORS.node_blend_input;
 	update_on_frame = true;
-	attributes.timeline_override = true;
+	parameters.timeline_override = true;
 	setAlwaysTimeline(new timelineItemNode_Wav(self));
 	
 	////- =File
@@ -409,7 +409,6 @@ function Node_WAV_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 function timelineItemNode_Wav(_node) : timelineItemNode(_node) constructor {
-	
 	static drawDopesheetOver = function(_x, _y, _s, _msx, _msy, _hover, _focus) {
 		return;
 	}

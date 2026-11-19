@@ -141,7 +141,8 @@ function Node_PXC(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	project_surface_dimension    = undefined;
 	project_global_data          = undefined;
 	
-	attributes.timeline_override = true;
+	parameters.timeline_override = true;
+	
 	attributes.file_checker      = true;
 	attributes.project_length    = 0;
 	array_push(attributeEditors, Node_Attribute("File Watcher", function() /*=>*/ {return attributes.file_checker}, function() /*=>*/ {return new checkBox(function() /*=>*/ {return toggleAttribute("file_checker")})}));

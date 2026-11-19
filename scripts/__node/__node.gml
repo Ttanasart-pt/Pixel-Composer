@@ -27,13 +27,15 @@ function __Node_Base(_x, _y) constructor {
 	#endregion
 	
 	#region ---- Attributes ----
-		parameters = {};
+		parameters = {
+			timeline_override :   false, 
+		};
+		
 		attributes = {
 			update_graph :         true,
 			show_update_trigger : false,
 			show_timeline :       false,
 			timeline_hide :       false, 
-			timeline_override :   false, 
 			
 			color : -1,
 		};

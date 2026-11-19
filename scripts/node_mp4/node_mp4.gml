@@ -311,7 +311,7 @@ function Node_Image_mp4(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 			inputs[6].setVisible( _cus);
 			inputs[7].setVisible(!_cus);
 			
-			attributes.timeline_override = _edit;
+			parameters.timeline_override = _edit;
 		#endregion
 		
 		if(array_empty(sprs)) return;

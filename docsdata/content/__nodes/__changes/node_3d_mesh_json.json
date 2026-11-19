@@ -16,6 +16,11 @@
         "date": "2026-11-18T07:37:21.320Z",
         "node": "3D Json",
         "commit": "**3D Json**: Add bbox outline view, element visibility control."
+      },
+      {
+        "date": "2026-11-19T03:41:10.531Z",
+        "node": "",
+        "commit": "**3D Json**: Add support for Blockbench (.bbmodel) file.  - Outline view, group, element visibility control. - Embedded texture. - Basic Animation (Geckolib not supported)."
       }
     ]
   },

@@ -33,7 +33,7 @@
 
 function __3dObject_Edge(_ind0, _ind1) constructor { p0 = _ind0; p1 = _ind1; }
 
-function __3dInstance() constructor {
+function __3dInstance() constructor { 
 	transform = new __transform();
 }
 
@@ -251,6 +251,9 @@ function __3dObject() : __3dInstance() constructor {
 	}
 	
 	static submitVertex = function(_sc = noone, _sh = noone, _selection = false) {
+		var mlen = array_length(materials);
+		if(mlen == 0) return;
+		
 		#region shader
 			var _shader;
 			switch(VF) {
@@ -271,41 +274,96 @@ function __3dObject() : __3dInstance() constructor {
 		matrix_set(matrix_world, matrix_stack_top());
 		draw_set_color_alpha(c_white, 1);
 		
+		var u_mat_flip       = shader_get_uniform( _shader, "mat_flip"       );
+		
+		var u_use_normal     = shader_get_uniform( _shader, "use_normal"     );
+		var u_mat_texScale   = shader_get_uniform( _shader, "mat_texScale"   );
+		
+		var u_mat_diffuse    = shader_get_uniform( _shader, "mat_diffuse"    );
+		var u_mat_specular   = shader_get_uniform( _shader, "mat_specular"   );
+		var u_mat_shine      = shader_get_uniform( _shader, "mat_shine"      );
+		var u_mat_metalic    = shader_get_uniform( _shader, "mat_metalic"    );
+		var u_mat_reflective = shader_get_uniform( _shader, "mat_reflective" );
+		var u_mat_texScale   = shader_get_uniform( _shader, "mat_texScale"   );
+		
+		var u_obj_color      = shader_get_uniform( _shader, "obj_color"      );
+		
+		var cArray = colaToVec4(color);
+		
 		gpu_set_tex_repeat(true);
-		for( var i = 0, n = array_length(VB); i < n; i++ ) {
-			if(VB[i] == noone) continue;
-			
-			var _mat  = array_safe_get_fast(materials, material_index == undefined? i : material_index[i], noone);
+		
+		if(mlen == 1) {
+			var _mat  = materials[0];
 			var _uMat = is(_mat, __d3dMaterial);
+			var _tex  = _uMat? _mat.getTexture() : -1;
 			
-			shader_set_i("mat_flip", texture_flip);
-			var _tex = _uMat? _mat.getTexture() : -1;
+			shader_set_uniform_i(u_mat_flip, texture_flip);
 			
 			if(_shader == sh_d3d_geometry) {
 				if(_uMat) _mat.submitGeometry();
 				else {
-					shader_set_i("use_normal",    0    );
-					shader_set_f("mat_texScale", [1,1] );
+					shader_set_uniform_i( u_use_normal,   0   );
+					shader_set_uniform_f( u_mat_texScale, 1,1 );
 				}
 				
 			} else {
 				if(_uMat) _mat.submitShader();
 				else {
-					shader_set_f("mat_diffuse",     1    );
-					shader_set_f("mat_specular",    0    );
-					shader_set_f("mat_shine",       1    );
-					shader_set_i("mat_metalic",     0    );
-					shader_set_f("mat_reflective",  0    );
-					shader_set_f("mat_texScale",   [1,1] );
+					shader_set_uniform_f( u_mat_diffuse,     1   );
+					shader_set_uniform_f( u_mat_specular,    0   );
+					shader_set_uniform_f( u_mat_shine,       1   );
+					shader_set_uniform_i( u_mat_metalic,     0   );
+					shader_set_uniform_f( u_mat_reflective,  0   );
+					shader_set_uniform_f( u_mat_texScale,    1,1 );
 				}
 			}
 			
-			shader_set_c("obj_color", color );
+			shader_set_uniform_f_array( u_obj_color, cArray );
 			
-			var _mat = array_safe_get_fast(VBM, i, undefined);
-			if(is_array(_mat)) { matrix_stack_push(_mat); matrix_set(matrix_world, matrix_stack_top()); }
-			vertex_submit(VB[i], render_type, _tex);
-			if(is_array(_mat)) { matrix_stack_pop();      matrix_set(matrix_world, matrix_stack_top()); }
+			for( var i = 0, n = array_length(VB); i < n; i++ ) {
+				if(VB[i] == noone) continue;
+				var _matrix = array_safe_get_fast(VBM, i, undefined);
+				if(is_array(_matrix)) { matrix_stack_push(_matrix); matrix_set(matrix_world, matrix_stack_top()); }
+				vertex_submit(VB[i], render_type, _tex);
+				if(is_array(_matrix)) { matrix_stack_pop();         matrix_set(matrix_world, matrix_stack_top()); }
+			}
+			
+		} else {
+			shader_set_uniform_i(u_mat_flip, texture_flip);
+			
+			for( var i = 0, n = array_length(VB); i < n; i++ ) {
+				if(VB[i] == noone) continue;
+				
+				var _mat  = materials[material_index == undefined? i % mlen : material_index[i]];
+				var _uMat = is(_mat, __d3dMaterial);
+				var _tex  = _uMat? _mat.getTexture() : -1;
+				
+				if(_shader == sh_d3d_geometry) {
+					if(_uMat) _mat.submitGeometry();
+					else {
+						shader_set_uniform_i( u_use_normal,   0   );
+						shader_set_uniform_f( u_mat_texScale, 1,1 );
+					}
+					
+				} else {
+					if(_uMat) _mat.submitShader();
+					else {
+						shader_set_uniform_f( u_mat_diffuse,     1   );
+						shader_set_uniform_f( u_mat_specular,    0   );
+						shader_set_uniform_f( u_mat_shine,       1   );
+						shader_set_uniform_i( u_mat_metalic,     0   );
+						shader_set_uniform_f( u_mat_reflective,  0   );
+						shader_set_uniform_f( u_mat_texScale,    1,1 );
+					}
+				}
+				
+				shader_set_uniform_f_array( u_obj_color, cArray );
+				
+				var _matrix = array_safe_get_fast(VBM, i, undefined);
+				if(is_array(_matrix)) { matrix_stack_push(_matrix); matrix_set(matrix_world, matrix_stack_top()); }
+				vertex_submit(VB[i], render_type, _tex);
+				if(is_array(_matrix)) { matrix_stack_pop();         matrix_set(matrix_world, matrix_stack_top()); }
+			}
 		}
 		
 		gpu_set_tex_filter(false);

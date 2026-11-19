@@ -174,7 +174,7 @@ function Node_Image_Animated(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 			var _cusfr = getInputData( 7);
 			
 			var _edit = getInputData(11);
-			attributes.timeline_override = _edit;
+			parameters.timeline_override = _edit;
 			
 			inputs[2].setVisible(!_cusor);
 			inputs[3].setVisible(!_cusor && !_stret);

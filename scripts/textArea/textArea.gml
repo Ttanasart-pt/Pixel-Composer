@@ -18,6 +18,9 @@ function textArea(_input, _onModify) : textInput(_input, _onModify) constructor 
 	always_break_line  = true;
 	display_h = 0;
 	
+	pw = w;
+	ph = h;
+	
 	_input_text_line       = [];
 	_input_text_line_index = [];
 	
@@ -30,6 +33,7 @@ function textArea(_input, _onModify) : textInput(_input, _onModify) constructor 
 	
 	min_lines  = 0;
 	line_width = 1000;
+	max_height = 1000;
 	
 	fix_height = -1;
 	
@@ -73,7 +77,8 @@ function textArea(_input, _onModify) : textInput(_input, _onModify) constructor 
 	resize_sy   = 0;
 	resize_my   = 0;
 	
-	mouse_lhold = false;
+	mouse_lhold  = false;
+	refresh_text = false;
 	
 	border_heightlight_color = COLORS._main_accent;
 	
@@ -800,11 +805,13 @@ function textArea(_input, _onModify) : textInput(_input, _onModify) constructor 
 	}
 	
 	static fetchHeight = function(params) { 
+		if(fix_height) return fix_height;
+		
 		var _h = params.h;
 		var _l = max(min_lines, array_length(_input_text_line));
 		
 		_h = max(_h, padding_v * 2 + line_get_height() * _l);
-		if(fix_height) _h = fix_height;
+		_h = min(_h, max_height);
 		
 		return _h; 
 	}
@@ -847,6 +854,12 @@ function textArea(_input, _onModify) : textInput(_input, _onModify) constructor 
 		var _drawF = is(front_button, buttonClass) && _w - bs > ui(100);
 		_w -= bs * (_drawB + _drawF);
 		
+		var _update = bool(refresh_text);
+		if(refresh_text > 0) refresh_text--;
+		
+		if(pw != w) { _update = true; pw = w; }
+		if(ph != h) { _update = true; ph = h; }
+	
 		var tx = ui(8);
 		var hh = _h;
 		var pl = line_width;
@@ -863,8 +876,9 @@ function textArea(_input, _onModify) : textInput(_input, _onModify) constructor 
 		cursor_tx = tx;
 		
 		var line_count = max(min_lines, array_length(_input_text_line));
+		var content_h  = max(_h, padding_v * 2 + c_h * line_count);
 		
-		hh = max(_h, padding_v * 2 + c_h * line_count);
+		hh = min(content_h, max_height);
 		
 		if(fix_height) hh = fix_height;
 		
@@ -899,29 +913,30 @@ function textArea(_input, _onModify) : textInput(_input, _onModify) constructor 
 		////- Draw
 		
 		var hoverRect = point_in_rectangle(_m[0], _m[1], _x, _y, _x + _hw, _y + hh);
-		var tsw       = _w;
-		var tsh       = hh;
-		var _update   = !surface_valid(text_surface, tsw, tsh);
-		if(_update) text_surface = surface_verify(text_surface, tsw, tsh);
-		
 		var _scis = gpu_get_scissor();
+		var tsw   = _w;
+		var tsh   = hh;
+		_update |= !surface_valid(text_surface, tsw, tsh);
 		
-		SURFACE_PREDRAW
-		surface_set_shader(text_surface, noone, true, BLEND.add);
-			if(isCodeFormat() && show_line_number) {
-				draw_sprite_stretched_ext(THEME.textbox_code, 0, 0, 0, ui(code_line_width), hh, boxColor, 1);
-				draw_set_text(f_code, fa_right, fa_top, COLORS._main_text_sub);
-			
-				var lx = ui(code_line_width - 8);
+		if(_update || selecting) {
+			text_surface = surface_verify(text_surface, tsw, tsh);
+			SURFACE_PREDRAW
+			surface_set_shader(text_surface, noone, true, BLEND.add);
+				if(isCodeFormat() && show_line_number) {
+					draw_sprite_stretched_ext(THEME.textbox_code, 0, 0, 0, ui(code_line_width), hh, boxColor, 1);
+					draw_set_text(f_code, fa_right, fa_top, COLORS._main_text_sub);
 				
-				for( var i = 0, n = array_length(_input_text_line_index); i < n; i++ ) {
-					var ly = text_y + padding_v + i * c_h;
-					draw_text_add(lx, ly, _input_text_line_index[i]);
+					var lx = ui(code_line_width - 8);
+					
+					for( var i = 0, n = array_length(_input_text_line_index); i < n; i++ ) {
+						var ly = text_y + padding_v + i * c_h;
+						draw_text_add(lx, ly, _input_text_line_index[i]);
+					}
 				}
-			}
-		surface_reset_shader();
-		SURFACE_POSTDRAW
-		gpu_set_scissor(_scis);
+			surface_reset_shader();
+			SURFACE_POSTDRAW
+			gpu_set_scissor(_scis);
+		}
 		
 		////- Resizing
 		
@@ -1104,12 +1119,14 @@ function textArea(_input, _onModify) : textInput(_input, _onModify) constructor 
 			if(mouse_lrelease()) mouse_lhold = false;
 				
 		} else {
-			SURFACE_PREDRAW
-			surface_set_shader(text_surface, noone, false, BLEND.add);
-				display_text(tx, text_y + padding_v, _text);
-			surface_reset_shader();
-			gpu_set_scissor(_scis);
-			SURFACE_POSTDRAW
+			if(_update) {
+				SURFACE_PREDRAW
+				surface_set_shader(text_surface, noone, false, BLEND.add);
+					display_text(tx, text_y + padding_v, _text);
+				surface_reset_shader();
+				gpu_set_scissor(_scis);
+				SURFACE_POSTDRAW
+			}
 			
 			BLEND_ALPHA
 				draw_surface(text_surface, _x, _y);
@@ -1134,7 +1151,7 @@ function textArea(_input, _onModify) : textInput(_input, _onModify) constructor 
 		
 		////- Text height
 		
-		if(fix_height) { 
+		if(fix_height || content_h > hh) { 
 			var total_h = text_y_max;
 			text_y_max  = max(0, total_h - hh + 16);
 			text_y      = lerp_float(text_y, text_y_to, 5);
@@ -1199,6 +1216,7 @@ function textArea(_input, _onModify) : textInput(_input, _onModify) constructor 
 		
 		cursor_pos_x = 0;
 		cursor_pos_y = 0;
+		refresh_text = 2;
 		
 		if(select_on_click) {
 			cursor        = string_length(_current_text);
@@ -1225,6 +1243,7 @@ function textArea(_input, _onModify) : textInput(_input, _onModify) constructor 
 		apply();
 		WIDGET_CURRENT = undefined;
 		UNDO_HOLDING   = false;
+		refresh_text   = 2;
 		
 		if(PEN_USE) keyboard_virtual_hide();
 	}

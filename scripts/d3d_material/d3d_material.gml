@@ -1,6 +1,13 @@
-function __d3dMaterial(s = noone) constructor {
-	surface   = s;
+#region uniform
+	global.d3d_u_geo_use_normal  = shader_get_uniform( sh_d3d_geometry, "use_normal"       );
 	
+	global.d3d_u_normal_map      = shader_get_sampler_index( sh_d3d_geometry, "normal_map" );
+	global.d3d_u_normal_strength = shader_get_uniform( sh_d3d_geometry, "normal_strength"  );
+	global.d3d_u_mat_texScale    = shader_get_uniform( sh_d3d_geometry, "mat_texScale"     );
+	global.d3d_u_mat_texShift    = shader_get_uniform( sh_d3d_geometry, "mat_texShift"     );
+#endregion
+
+function __d3dMaterial(s = noone) constructor {
 	texScale  = [ 1, 1 ];
 	texShift  = [ 0, 0 ];
 	texFilter = 0;
@@ -16,24 +23,40 @@ function __d3dMaterial(s = noone) constructor {
 	pbr_properties_map = undefined;
 	
 	normal    = noone;
+	normalUse = false;
+	normalTex = -1;
 	normalStr = 1;
 	
 	static getSurface = function() /*=>*/ {return surface};
-	static getTexture = function() /*=>*/ {return is_surface(surface)? surface_get_texture(surface) : -1};
+	static getTexture = function() /*=>*/ {return surfaceTex};
 	
-	static setSurface = function(s) /*=>*/ { surface = s; return self; }
+	static setSurface = function(s) /*=>*/ { 
+		surface    = s; 
+		surfaceDim = surface_get_dimension(s);
+		surfaceTex = surface_get_texture_safe(s);
+		return self;
+	} setSurface(s);
+	
+	static setNormal  = function(s) /*=>*/ { 
+		normal    = s; 
+		normalUse = is_surface(normal);
+		normalTex = normalUse? surface_get_texture(normal) : -1;
+		return self; 
+	}
+	
+	////- Submit
 	
 	static submitGeometry = function() {
-		shader_set_i("use_normal", is_surface(normal));
+		shader_set_uniform_i(       global.d3d_u_geo_use_normal,  normalUse );
 		
-		shader_set_s("normal_map",       normal    );
-		shader_set_f("normal_strength",  normalStr );
-		shader_set_f("mat_texScale",     texScale  );
-		shader_set_f("mat_texShift",     texShift  );
+		texture_set_stage(          global.d3d_u_normal_map,      normalTex );
+		shader_set_uniform_f(       global.d3d_u_normal_strength, normalStr );
+		shader_set_uniform_f_array( global.d3d_u_mat_texScale,    texScale  );
+		shader_set_uniform_f_array( global.d3d_u_mat_texShift,    texShift  );
 	}
 	
 	static submitShader = function() {
-		shader_set_2("mat_texDimension",   surface_get_dimension(surface) );
+		shader_set_2("mat_texDimension",   surfaceDim );
 		shader_set_i("mat_texInterpolate", texFilter  );
 		shader_set_f("mat_texScale",       texScale   );
 		shader_set_f("mat_texShift",       texShift   );
@@ -58,7 +81,7 @@ function __d3dMaterial(s = noone) constructor {
 	
 	static clone = function(_surf = surface) { 
 		var mat = variable_clone(self, 1); 
-		mat.surface = _surf;
+		mat.setSurface(_surf);
 		
 		return mat;
 	}
