@@ -12,27 +12,6 @@ function __NodeValue_Vec2_Path(_name, _node, _value) : __NodeValue_Vec2(_name, _
 		editWidget.animated = true;
 	}
 	
-	static __getAnimValue = function(_time = NODE_CURRENT_FRAME) {
-		var _keys = animator.getInterpolateKeys(_time);
-		
-		var _kfr = _keys[0];
-		var _kto = _keys[1];
-		var _rat = _keys[2];
-		
-		var _vfr = _kfr.value;
-		if(_kto == undefined) return [ _vfr[0], _vfr[1] ];
-		
-		var _vto = _kto.value;
-		if(_rat == 0) return [ _vfr[0], _vfr[1] ];
-		if(_rat == 1) return [ _vto[0], _vto[1] ];
-		
-		var _val = [0,0];
-		_val[0]  = lerp(_vfr[0], _vto[0], _rat);
-		_val[1]  = lerp(_vfr[1], _vto[1], _rat);
-		
-		return _val;
-	}
-
 	////- DRAW
 	
 	path_point_drag = undefined;

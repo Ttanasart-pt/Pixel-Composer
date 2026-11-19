@@ -3,11 +3,20 @@ function Node_Mesh_Create_Path(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	setDimension(96, 48);
 	setDrawIcon();
 	
-	newInput(0, nodeValue_Path(    "Path"         ));
-	newInput(1, nodeValue_Int(     "Sample",    8 ));
-	newInput(2, nodeValue_EScroll( "Algorithm", 0, [ "Ear Clipping", "Convex Fan", "Delaunay" ] ));
+	////- =Path
+	newInput( 0, nodeValue_Path(    "Path"      ));
+	newInput( 1, nodeValue_Float(   "Sample", 8 ));
+	
+	////- =Mesh
+	newInput( 2, nodeValue_EScroll( "Algorithm", 0, [ "Ear Clipping", "Convex Fan", "Delaunay" ] ));
+	// 3
 	
 	newOutput(0, nodeValue_Output("Mesh", VALUE_TYPE.mesh, noone));
+	
+	input_display_list = [
+		[ "Path", false ],  0,  1, 
+		[ "Mesh", false ],  2, 
+	]
 	
 	////- Nodes
 	
@@ -24,21 +33,26 @@ function Node_Mesh_Create_Path(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	}
 	
 	static update = function() {  
-		var _pth  = getInputData(0);
-		var _sam  = getInputData(1);
-		var _algo = getInputData(2);
+		#region data 
+			var _pth  = getInputData(0);
+			
+			var _sam  = getInputData(1);
+			var _algo = getInputData(2);
+		#endregion
+			
 		var mesh  = new Mesh();
 		
 		if(_pth == noone) return;
-		_sam = max(_sam, 1);
 		
 		var points	 = [];
 		var segCount = _pth.getSegmentCount();
 		if(segCount < 1) return;
 		
 		var quality  = _sam;
-		var sample   = quality * segCount;
+		var sample   = round(quality * segCount);
 		var polygon  = [];
+		
+		if(sample < 1) return;
 		
 		for( var i = 0; i < sample; i++ ) {
 			var t   = i / sample;

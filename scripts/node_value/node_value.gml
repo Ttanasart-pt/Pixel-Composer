@@ -2151,6 +2151,10 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		return _anim.getValue(_time);
 	}
 	
+	static lerpAnimSmooth = function(keys, rat) {
+		return lerpAnimKeys(keys[1], keys[2], rat);
+	}
+	
 	static lerpAnimKeys = function(from, to, rat) {
 		__f = from.value;
 		__t = to.value;
