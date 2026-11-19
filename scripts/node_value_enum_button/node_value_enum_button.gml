@@ -51,7 +51,10 @@ function __NodeValue_Enum_Button(_name, _node, _value, _data) : NodeValue(_name,
 	
 	////- ANIMATOR
 	
-	static lerpAnimKeys = function(from, to, rat) {
+	static lerpAnimSmooth = function(keys, rat) { 
+		var from = keys[1];
+		var to   = keys[2];
+		
 		__f = from.value;
 		__t = to.value;
 		__i = KeyframeInterpolate(from, to, rat);

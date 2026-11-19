@@ -36,7 +36,25 @@ function __NodeValue_Quaternion(_name, _node, _value, _tooltip = "") : __NodeVal
 		return val;
 	}
 	
-	static lerpAnimKeys = function(from, to, rat) {
+	static lerpAnimSmooth = function(keys, rat) { 
+		var from = keys[1];
+		var to   = keys[2];
+		
+		if(to.ease_in_type == CURVE_TYPE.catmulrom || from.ease_out_type == CURVE_TYPE.catmulrom) {
+			return attributes.angle_display == QUARTERNION_DISPLAY.euler? 
+			[ 
+				KeyframeInterpolateAuto(keys[0].value[0], keys[1].value[0], keys[2].value[0], keys[3].value[0], rat),
+				KeyframeInterpolateAuto(keys[0].value[1], keys[1].value[1], keys[2].value[1], keys[3].value[1], rat),
+				KeyframeInterpolateAuto(keys[0].value[2], keys[1].value[2], keys[2].value[2], keys[3].value[2], rat),
+			] : 
+			[ 
+				KeyframeInterpolateAuto(keys[0].value[0], keys[1].value[0], keys[2].value[0], keys[3].value[0], rat),
+				KeyframeInterpolateAuto(keys[0].value[1], keys[1].value[1], keys[2].value[1], keys[3].value[1], rat),
+				KeyframeInterpolateAuto(keys[0].value[2], keys[1].value[2], keys[2].value[2], keys[3].value[2], rat),
+				KeyframeInterpolateAuto(keys[0].value[3], keys[1].value[3], keys[2].value[3], keys[3].value[3], rat),
+			];
+		}
+		
 		__f = from.value;
 		__t = to.value;
 		__i = KeyframeInterpolate(from, to, rat);

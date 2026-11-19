@@ -376,7 +376,7 @@
 				ease_draw_scale     : 2,  
 				keyframe_draw_scale : 1, 
 				
-				default_interpolation : CURVE_TYPE.linear, 
+				default_interpolation : 0, 
 			}
 		#endregion
 		

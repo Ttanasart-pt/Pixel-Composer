@@ -26,6 +26,18 @@ enum DRIVER_TYPE { none, linear, wiggle, sine }
 	    
 		return eval_curve_segment_x(0, eox, eoy, 1 - eix, eiy, 1, rat);
 	}
+	
+	function KeyframeInterpolateAuto(v0, v1, v2, v3, rat) {
+	    var t = rat;
+		
+	    var a =  -v0 + 3*v1 - 3*v2 + v3;
+	    var b = 2*v0 - 5*v1 + 4*v2 - v3;
+	    var c =  -v0        +   v2;
+	    var d =        2*v1;
+		
+	    var xt = .5 * (a*t*t*t + b*t*t + c*t + d);
+		return xt;
+	}
 #endregion
 
 function valueKey(_time, _value, _anim = noone, _in = 0, _ot = 0) constructor {
@@ -46,13 +58,18 @@ function valueKey(_time, _value, _anim = noone, _in = 0, _ot = 0) constructor {
 		
 		var _interpol = anim? anim.prop.key_inter : CURVE_TYPE.linear;
 		if(_interpol == CURVE_TYPE.linear && anim) {
-			var _inp  = anim.node.project.animationDisplay.default_interpolation;
-			_interpol = _inp;
-			
-			if(_inp == 1) { 
-				ease_in[0]  = 1; 
-				ease_out[0] = 1; 
+			switch(anim.node.project.animationDisplay.default_interpolation) { // "Linear", "Ease", "Smooth", "Hold"
+				case 0 : _interpol = CURVE_TYPE.linear;    break;
+				case 1 : _interpol = CURVE_TYPE.bezier; 
+					ease_in[0]  = 1; 
+					ease_out[0] = 1; 
+					break;
+					
+				case 2 : _interpol = CURVE_TYPE.catmulrom; break;
+				case 3 : _interpol = CURVE_TYPE.cut;       break;
+					
 			}
+			
 		}
 		
 		ease_in_type  = _interpol;
@@ -121,6 +138,7 @@ function valueKey(_time, _value, _anim = noone, _in = 0, _ot = 0) constructor {
 		if(anim.prop.type == VALUE_TYPE.trigger) return 1;
 		if(driverObject != undefined)            return 2;
 		if(ease_in_type == CURVE_TYPE.cut)       return 1;
+		if(ease_in_type == CURVE_TYPE.catmulrom || ease_out_type == CURVE_TYPE.catmulrom) return 3;
 		
 		return 0;
 	}
@@ -239,12 +257,12 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 					values[pmod(length - 2, length)],
 					values[pmod(length - 1, length)],
 					values[0],
-					values[1 % length],
+					values[1],
 				];
 				
 				if(from.driverObject) 
-					return from.driverObject.apply(_time, from, to, prop.lerpAnimKeys(from, to, rat), rat, self);
-				return prop.lerpAnimKeys(from, to, rat);
+					return from.driverObject.apply(_time, from, to, prop.lerpAnimSmooth(_keys, rat), rat, self);
+				return prop.lerpAnimSmooth(_keys, rat);
 			}
 			
 			return values[0].value; // First Frame
@@ -265,9 +283,16 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 				if(to.ease_in_type    == CURVE_TYPE.cut) return from.value;
 				if(from.ease_out_type == CURVE_TYPE.cut) return to.value;
 				
+				var _keys = [
+					values[pmod(length - 2, length)],
+					values[pmod(length - 1, length)],
+					values[0],
+					values[1],
+				];
+				
 				if(from.driverObject)
-					return from.driverObject.apply(_time, from, to, prop.lerpAnimKeys(from, to, rat), rat, self);
-				return prop.lerpAnimKeys(from, to, rat);
+					return from.driverObject.apply(_time, from, to, prop.lerpAnimSmooth(_keys, rat), rat, self);
+				return prop.lerpAnimSmooth(_keys, rat);
 			}
 			
 			if(_lstKey.driverObject)
@@ -285,10 +310,28 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 		if(to.ease_in_type    == CURVE_TYPE.cut) return from.value;
 		if(from.ease_out_type == CURVE_TYPE.cut) return to.value;
 		
-		if(from.driverObject)
-			return from.driverObject.apply(_time, from, to, prop.lerpAnimKeys(from, to, rat), rat, self);
+		if(prop.on_end == KEYFRAME_END.wrap) {
+			var _keys = [
+				values[pmod(_keyIndex - 1, length)],
+				values[_keyIndex],
+				values[_keyIndex + 1],
+				values[(_keyIndex + 2) % length],
+			];
 			
-		return prop.lerpAnimKeys(from, to, rat);
+		} else {
+			var _keys = [
+				values[max(_keyIndex - 1, 0)],
+				values[_keyIndex],
+				values[_keyIndex + 1],
+				values[min(_keyIndex + 2, length - 1)],
+			];
+			
+		}
+		
+		if(from.driverObject)
+			return from.driverObject.apply(_time, from, to, prop.lerpAnimSmooth(_keys, rat), rat, self);
+			
+		return prop.lerpAnimSmooth(_keys, rat);
 	}
 	
 	static onUndo = function() /*=>*/ { updateKeyMap(); prop.triggerSetFrom(); };

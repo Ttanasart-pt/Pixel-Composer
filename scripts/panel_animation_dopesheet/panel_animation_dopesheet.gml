@@ -64,6 +64,7 @@
     function panel_animation_keys_ease_both()          { CALL("animation_keys_ease_both");          PANEL_ANIMATION.transformKeys_Ease(0b11); }
     function panel_animation_keys_ease_start()         { CALL("animation_keys_ease_start");         PANEL_ANIMATION.transformKeys_Ease(0b10); }
     function panel_animation_keys_ease_end()           { CALL("animation_keys_ease_end");           PANEL_ANIMATION.transformKeys_Ease(0b01); }
+    function panel_animation_keys_ease_toggle()        { CALL("animation_keys_ease_toggle");        PANEL_ANIMATION.transformKeys_Toggle();   }
     
     function panel_animation_transfer_ease()           { CALL("animation_transfer_ease");           PANEL_ANIMATION.transferEase();  }
     
@@ -116,15 +117,16 @@
         registerFunction(an, "Expand All",                "", n, panel_animation_dopesheet_expand        ).setMenu("animation_dopesheet_expand"   )
         registerFunction(an, "Collapse All",              "", n, panel_animation_dopesheet_collapse      ).setMenu("animation_dopesheet_collapse" )
         
-        registerFunction(an, "Move Keys",            "G", n, panel_animation_keys_move            ).setMenu("animation_keys_move"       )
-        registerFunction(an, "Scale Keys",           "S", n, panel_animation_keys_scale           ).setMenu("animation_keys_scale"      )
-        registerFunction(an, "Ease Keys",            "E", n, panel_animation_keys_ease_both       ).setMenu("animation_keys_ease"       )
-        registerFunction(an, "Ease Keys Start",      "[", n, panel_animation_keys_ease_start      ).setMenu("animation_keys_ease_start" )
-        registerFunction(an, "Ease Keys End",        "]", n, panel_animation_keys_ease_end        ).setMenu("animation_keys_ease_end"   )
-        registerFunction(an, "Transfer Easing",      "",  n, panel_animation_transfer_ease        ).setMenu("animation_transfer_ease"   )
+        registerFunction(an, "Move Keys",            "G", n, panel_animation_keys_move            ).setMenu("animation_keys_move"        )
+        registerFunction(an, "Scale Keys",           "S", n, panel_animation_keys_scale           ).setMenu("animation_keys_scale"       )
+        registerFunction(an, "Ease Keys",            "E", n, panel_animation_keys_ease_both       ).setMenu("animation_keys_ease"        )
+        registerFunction(an, "Ease Keys Start",      "[", n, panel_animation_keys_ease_start      ).setMenu("animation_keys_ease_start"  )
+        registerFunction(an, "Ease Keys End",        "]", n, panel_animation_keys_ease_end        ).setMenu("animation_keys_ease_end"    )
+        registerFunction(an, "Interpolation Toggle", "E", s, panel_animation_keys_ease_toggle     ).setMenu("animation_keys_ease_toggle" )
+        registerFunction(an, "Transfer Easing",      "",  n, panel_animation_transfer_ease        ).setMenu("animation_transfer_ease"    )
         
-        registerFunction(an, "Create Region",        "",  n, panel_animation_region_create        ).setMenu("animation_region_create"   )
-        registerFunction(an, "Remove All Regions",   "",  n, panel_animation_region_clear         ).setMenu("animation_region_clear"   )
+        registerFunction(an, "Create Region",        "",  n, panel_animation_region_create        ).setMenu("animation_region_create"    )
+        registerFunction(an, "Remove All Regions",   "",  n, panel_animation_region_clear         ).setMenu("animation_region_clear"     )
         
         registerFunction(an, "View Settings...",     "",  n, function() /*=>*/ {return dialogPanelCall(new Panel_Animation_View_Setting())}).setMenu("animation_view_settings", THEME.icon_visible_setting)
         
@@ -929,6 +931,44 @@ function Panel_Animation_Dopesheet() {
     	KEYBOARD_RESET
     }
     
+    function transformKeys_Toggle() {
+    	if(array_empty(keyframe_selecting)) return;
+    	
+    	var _k = keyframe_selecting[0];
+    	var _y = _k.ease_in_type;
+    	
+    	switch(_y) {
+    		case CURVE_TYPE.linear : 
+    			array_foreach(keyframe_selecting, function(k,i) /*=>*/ { 
+    				k.ease_in_type  = CURVE_TYPE.bezier; k.ease_in  = [1,1]; 
+    				k.ease_out_type = CURVE_TYPE.bezier; k.ease_out = [1,0]; 
+    			});
+    			break;
+			
+			case CURVE_TYPE.bezier : 
+    			array_foreach(keyframe_selecting, function(k,i) /*=>*/ { 
+    				k.ease_in_type  = CURVE_TYPE.catmulrom;
+    				k.ease_out_type = CURVE_TYPE.catmulrom;
+    			});
+    			break;
+			
+			case CURVE_TYPE.catmulrom : 
+    			array_foreach(keyframe_selecting, function(k,i) /*=>*/ { 
+    				k.ease_in_type  = CURVE_TYPE.cut;
+    				k.ease_out_type = CURVE_TYPE.cut;
+    			});
+    			break;
+			
+			case CURVE_TYPE.cut : 
+    			array_foreach(keyframe_selecting, function(k,i) /*=>*/ { 
+    				k.ease_in_type  = CURVE_TYPE.linear; k.ease_in  = [0,1]; 
+    				k.ease_out_type = CURVE_TYPE.linear; k.ease_out = [0,0]; 
+    			});
+    			break;
+			
+    	}
+    }
+    
     function transformKeys() {
     	if(transform_modes == noone) return;
     	
@@ -1141,7 +1181,9 @@ function Panel_Animation_Dopesheet() {
         var _gh  = ui(prop.attributes.graph_h - 16);
         var _gy0 = ui(8);
         var _gy1 = _gy0 + _gh;
-        var kamo = array_length(animator.values);
+        
+        var vals = animator.values;
+        var kamo = array_length(vals);
         var aa   = 1;
         
         var mmx = msx;
@@ -1150,19 +1192,21 @@ function Panel_Animation_Dopesheet() {
         var _gy_val_min = prop.attributes.graph_range[0];
 		var _gy_val_max = prop.attributes.graph_range[1];
         var _range      = prop.prev_graph_range;
-            
+        var _onEnd      = prop.on_end;
+		    
         prop.graph_draw_y[0] = _gy0 + (key_y + ui(8));
         prop.graph_draw_y[1] = _gy1 + (key_y + ui(8));
         
         var val_rng  = (_gy_val_max - _gy_val_min) / (_gy1 - _gy0);
-        var valArray = is_array(animator.values[0].value);
+        var valArray = is_array(vals[0].value);
         var ox  = 0;
         var nx  = 0;
         var ny  = noone;
+        var _keys;
         var _kv, _kn, sy;
         
         var baseC = CDEF.main_white;
-        var _oy   = animator.values[0].value;
+        var _oy   = vals[0].value;
         if(!valArray) _oy = [ _oy ];
         
         var ss = array_length(_oy);
@@ -1170,8 +1214,8 @@ function Panel_Animation_Dopesheet() {
         for( var ki = 0; ki < ss; ki++ ) oy[ki] = value_map(_oy[ki], _gy_val_min, _gy_val_max, _gy1, _gy0);
         
         for(var k = 0; k < kamo - 1; k++) { // draw line in between
-            var key      = animator.values[k];
-            var key_next = animator.values[k + 1];
+            var key      = vals[k];
+            var key_next = vals[k + 1];
             
             var t  = key.dopesheet_x;
             var dx = key_next.time - key.time;
@@ -1179,10 +1223,14 @@ function Panel_Animation_Dopesheet() {
             if(key.driverObject != undefined) { // driver
                 nx = (key.time + 1) * timeline_scale + timeline_shift;
                     
+                if(_onEnd == KEYFRAME_END.wrap)
+					 _keys = [ vals[pmod(k-1, kamo)], vals[k], vals[k+1], vals[(k+2) % kamo] ];
+				else _keys = [ vals[max(k-1, 0)], vals[k], vals[k+1], vals[min(k+2, kamo-1)] ];
+					
                 for( var _time = key.time; _time <= key_next.time; _time++ ) {
                     var rat = (_time - key.time) / (key_next.time - key.time);
                     
-                    _kv = key.driverObject.apply(_time, key, key_next, prop.lerpAnimKeys(key, key_next, rat), rat, animator);
+                    _kv = key.driverObject.apply(_time, key, key_next, prop.lerpAnimSmooth(_keys, rat), rat, animator);
                     
                     if(!valArray) _kv = [ _kv ];
                         
@@ -1287,19 +1335,25 @@ function Panel_Animation_Dopesheet() {
                 ox = nx;
                 draw_set_alpha(1);
                 
-            } else { //bezier easing
-                var _step = 1 / dx;
+            } else { // Bezier easing
+                var _step   = 1 / dx;
+                var _catmul = key.ease_out_type == CURVE_TYPE.catmulrom || key_next.ease_in_type == CURVE_TYPE.catmulrom;
+                
+                if(_onEnd == KEYFRAME_END.wrap)
+					 _keys = [ vals[pmod(k-1, kamo)], vals[k], vals[k+1], vals[(k+2) % kamo] ];
+				else _keys = [ vals[max(k-1, 0)], vals[k], vals[k+1], vals[min(k+2, kamo-1)] ];
+				
                 for( var _r = 0; _r <= 1; _r += _step ) {
                     nx  = t + _r * dx * timeline_scale;
                     
                     _kv = key.value;
                     _kn = key_next.value;
-                
-                    if(!valArray) {
-                        _kv = [ _kv ];
-                        _kn = [ _kn ];
-                    }
-                	
+            		
+            		if(!valArray) {
+            			_kv = [_kv];
+						_kn = [_kn];
+            		}
+            		
                 	var kn = min(array_length(_kv), array_length(_kn));
                     for( var ki = 0; ki < kn; ki++ ) {
                         var cc = COLORS.panel_animation_graph_line;
@@ -1310,8 +1364,21 @@ function Panel_Animation_Dopesheet() {
                         draw_set_color(cc);
                         draw_set_alpha(aa);
                         
-                        var __i = KeyframeInterpolate(key, key_next, _r);
-                        ny[ki] = value_map(lerp(_kv[ki], _kn[ki], __i), _gy_val_min, _gy_val_max, _gy1, _gy0);
+                        if(_catmul) {
+							if(valArray) {
+	                    		var __v = KeyframeInterpolateAuto(_keys[0].value[ki], _keys[1].value[ki], 
+	                    		                                  _keys[2].value[ki], _keys[3].value[ki], _r);
+							} else {
+								var __v = KeyframeInterpolateAuto(_keys[0].value, _keys[1].value, 
+	                    		                                  _keys[2].value, _keys[3].value, _r);
+							}
+                        	
+                        } else {
+	                        var __i = KeyframeInterpolate(key, key_next, _r);
+	                        var __v = lerp(_kv[ki], _kn[ki], __i);
+                        }
+                        
+                        ny[ki] = value_map(__v, _gy_val_min, _gy_val_max, _gy1, _gy0);
                         if(array_length(oy) > ki) draw_line(ox, oy[ki], nx, ny[ki]);
                             
                         oy[ki] = ny[ki];
@@ -1511,8 +1578,9 @@ function Panel_Animation_Dopesheet() {
             var _gy0 = key_y - ui(4);
             var _gy1 = key_y + ui(4);
             
-            var amo = array_length(prop.animator.values);
-            var _prevKey = prop.animator.values[0];
+            var val = prop.animator.values;
+            var amo = array_length(val);
+            var _prevKey = val[0];
             
             draw_set_color(_prevKey.value);
             draw_rectangle(0, _gy0, _prevKey.dopesheet_x, _gy1, 0);
@@ -1520,8 +1588,8 @@ function Panel_Animation_Dopesheet() {
             var ox, nx, oc, nc;
             
             for(var k = 0; k < amo - 1; k++) {
-                var key      = prop.animator.values[k];
-                var key_next = prop.animator.values[k + 1];
+                var key      = val[k];
+                var key_next = val[k + 1];
                 var dx         = key_next.time - key.time;
                 var _step     = 1 / dx;
                 
@@ -1537,7 +1605,7 @@ function Panel_Animation_Dopesheet() {
                 }
             }
             
-            key_next = array_last(prop.animator.values);
+            key_next = array_last(val);
             if(key_next.time < GLOBAL_TOTAL_FRAMES) {
                 draw_set_color(key_next.value);
                 draw_rectangle(key_next.dopesheet_x, _gy0, bar_total_shift, _gy1, 0);
@@ -1706,6 +1774,7 @@ function Panel_Animation_Dopesheet() {
         
         var rr = ui(8);
         
+        // loop range
         if((animator.prop.on_end == KEYFRAME_END.loop || animator.prop.on_end == KEYFRAME_END.ping) && array_length(key_list) > 1) {
             var keyframe_s = animator.prop.loop_range == -1? key_list[0].time : key_list[array_length(key_list) - 1 - animator.prop.loop_range].time;
             var keyframe_e = array_last(key_list).time;

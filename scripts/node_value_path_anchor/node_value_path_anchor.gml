@@ -50,7 +50,25 @@ function __NodeValue_Path_Anchor(_name, _node, _value, _tooltip = "") : NodeValu
 	
 	////- ANIMATOR
 	
-	static lerpAnimKeys = function(from, to, rat) {
+	static lerpAnimSmooth = function(keys, rat) { 
+		var from = keys[1];
+		var to   = keys[2];
+		
+		if(to.ease_in_type == CURVE_TYPE.catmulrom || from.ease_out_type == CURVE_TYPE.catmulrom) {
+			return sep_axis? KeyframeInterpolateAuto(keys[0].value, keys[1].value, keys[2].value, keys[3].value, rat) : [
+				KeyframeInterpolateAuto(keys[0].value[0], keys[1].value[0], keys[2].value[0], keys[3].value[0], rat),
+				KeyframeInterpolateAuto(keys[0].value[1], keys[1].value[1], keys[2].value[1], keys[3].value[1], rat),
+				
+				KeyframeInterpolateAuto(keys[0].value[2], keys[1].value[2], keys[2].value[2], keys[3].value[2], rat),
+				KeyframeInterpolateAuto(keys[0].value[3], keys[1].value[3], keys[2].value[3], keys[3].value[3], rat),
+				
+				KeyframeInterpolateAuto(keys[0].value[4], keys[1].value[4], keys[2].value[4], keys[3].value[4], rat),
+				KeyframeInterpolateAuto(keys[0].value[5], keys[1].value[5], keys[2].value[5], keys[3].value[5], rat),
+				
+				KeyframeInterpolateAuto(keys[0].value[6], keys[1].value[6], keys[2].value[6], keys[3].value[6], rat),
+			];
+		}
+		
 		__f = from.value;
 		__t = to.value;
 		__i = KeyframeInterpolate(from, to, rat);
@@ -77,7 +95,28 @@ function __NodeValue_Path_Anchor_3D(_name, _node, _value, _tooltip = "") : __Nod
 	
 	////- ANIMATOR
 	
-	static lerpAnimKeys = function(from, to, rat) {
+	static lerpAnimSmooth = function(keys, rat) { 
+		var from = keys[1];
+		var to   = keys[2];
+		
+		if(to.ease_in_type == CURVE_TYPE.catmulrom || from.ease_out_type == CURVE_TYPE.catmulrom) {
+			return sep_axis? KeyframeInterpolateAuto(keys[0].value, keys[1].value, keys[2].value, keys[3].value, rat) : [
+				KeyframeInterpolateAuto(keys[0].value[0], keys[1].value[0], keys[2].value[0], keys[3].value[0], rat),
+				KeyframeInterpolateAuto(keys[0].value[1], keys[1].value[1], keys[2].value[1], keys[3].value[1], rat),
+				KeyframeInterpolateAuto(keys[0].value[2], keys[1].value[2], keys[2].value[2], keys[3].value[2], rat),
+				
+				KeyframeInterpolateAuto(keys[0].value[3], keys[1].value[3], keys[2].value[3], keys[3].value[3], rat),
+				KeyframeInterpolateAuto(keys[0].value[4], keys[1].value[4], keys[2].value[4], keys[3].value[4], rat),
+				KeyframeInterpolateAuto(keys[0].value[5], keys[1].value[5], keys[2].value[5], keys[3].value[5], rat),
+				
+				KeyframeInterpolateAuto(keys[0].value[6], keys[1].value[6], keys[2].value[6], keys[3].value[6], rat),
+				KeyframeInterpolateAuto(keys[0].value[7], keys[1].value[7], keys[2].value[7], keys[3].value[7], rat),
+				KeyframeInterpolateAuto(keys[0].value[8], keys[1].value[8], keys[2].value[8], keys[3].value[8], rat),
+				
+				KeyframeInterpolateAuto(keys[0].value[9], keys[1].value[9], keys[2].value[9], keys[3].value[9], rat),
+			];
+		}
+		
 		__f = from.value;
 		__t = to.value;
 		__i = KeyframeInterpolate(from, to, rat);

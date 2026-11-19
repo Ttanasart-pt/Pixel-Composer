@@ -2151,16 +2151,25 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		return _anim.getValue(_time);
 	}
 	
-	static lerpAnimSmooth = function(keys, rat) {
-		return lerpAnimKeys(keys[1], keys[2], rat);
-	}
-	
-	static lerpAnimKeys = function(from, to, rat) {
+	static lerpAnimSmooth = function(keys, rat) { 
+		var from = keys[1];
+		var to   = keys[2];
+		
 		__f = from.value;
 		__t = to.value;
-		__i = KeyframeInterpolate(from, to, rat);
 		var _af = array_safe_length(__f, -1);
 		var _at = array_safe_length(__t, -1);
+		
+		if(to.ease_in_type == CURVE_TYPE.catmulrom || from.ease_out_type == CURVE_TYPE.catmulrom) {
+			__k = keys;
+			__i = rat;
+			
+			return array_create_ext(min(_af, _at), function(i) /*=>*/ 
+				{return KeyframeInterpolateAuto(__k[0].value[i], __k[1].value[i], __k[2].value[i], __k[3].value[i], __i)}
+			);
+		}
+		
+		__i = KeyframeInterpolate(from, to, rat);
 		
 		if(_af ==  0 || _at ==  0) return 0;
 		if(_af == -1 || _at == -1) return lerp(__f, __t, __i);

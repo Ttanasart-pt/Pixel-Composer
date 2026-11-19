@@ -6,6 +6,11 @@
         "date": "2026-11-19T09:13:43.965Z",
         "node": "",
         "commit": "--prep for keyframe change"
+      },
+      {
+        "date": "2026-11-19T11:10:45.398Z",
+        "node": "",
+        "commit": "**Animation**: Add smooth (Catmull-rom) interpolation."
       }
     ]
   },

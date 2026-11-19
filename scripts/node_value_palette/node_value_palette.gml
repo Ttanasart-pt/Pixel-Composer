@@ -22,7 +22,10 @@ function __NodeValue_Palette(_name, _node, _value, _tooltip = "") : NodeValue(_n
 		return array_empty(_anim.values)? 0 : _anim.values[0].value;
 	}
 	
-	static lerpAnimKeys = function(from, to, rat) {
+	static lerpAnimSmooth = function(keys, rat) { 
+		var from = keys[1];
+		var to   = keys[2];
+		
 		__f = from.value;
 		__t = to.value;
 		__i = KeyframeInterpolate(from, to, rat);

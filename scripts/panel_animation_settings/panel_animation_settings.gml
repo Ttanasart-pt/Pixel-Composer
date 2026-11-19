@@ -18,7 +18,7 @@ function Panel_Animation_Setting() : Panel_Linear_Setting() constructor {
 	properties = [
 		new __Panel_Linear_Setting_Item(
 			__txt("Default Interpolation"),
-			new buttonGroup(__txts([ "Linear", "Curved", "Hold"]), function(b) /*=>*/ { PROJECT.animationDisplay.default_interpolation = b; }),
+			new buttonGroup(__txts([ "Linear", "Ease", "Smooth", "Hold" ]), function(b) /*=>*/ { PROJECT.animationDisplay.default_interpolation = b; }),
 			function( ) /*=>*/   {return PROJECT.animationDisplay.default_interpolation},
 			function(v) /*=>*/ { PROJECT.animationDisplay.default_interpolation = v; },
 		),

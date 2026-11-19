@@ -1,0 +1,12 @@
+[
+  {
+    "version": "1.22.3.103",
+    "changes": [
+      {
+        "date": "2026-11-19T11:10:45.401Z",
+        "node": "",
+        "commit": "**Animation**: Add smooth (Catmull-rom) interpolation."
+      }
+    ]
+  }
+]
