@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.22.3.104",
+    "changes": [
+      {
+        "date": "2026-11-20T03:36:36.251Z",
+        "node": "Animation Panel",
+        "commit": "**Animation Panel**: Graph view now draw looping correctly."
+      }
+    ]
+  },
+  {
     "version": "1.22.3.103",
     "changes": [
       {

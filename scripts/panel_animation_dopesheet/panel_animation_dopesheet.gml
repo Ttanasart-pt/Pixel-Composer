@@ -20,6 +20,7 @@
     function panel_animation_show_nodes()              { CALL("animation_toggle_nodes");            PROJECT.animationDisplay.show_nodes  = !PROJECT.animationDisplay.show_nodes;                                           }
     function panel_animation_collapseToggle()          { CALL("animation_collapse_toggle");         PANEL_ANIMATION.collapseToggle();                                                                    }
     function panel_animation_show_hidden()             { CALL("animation_toggle_hidden");           PANEL_ANIMATION.show_hidden = !PANEL_ANIMATION.show_hidden;                                          }
+    function panel_animation_toggle_default_interp()   { CALL("animation_toggle_def_intp");         PROJECT.animationDisplay.default_interpolation = (PROJECT.animationDisplay.default_interpolation + 1) % 4; }
     function panel_animation_quantize()                { CALL("animation_quantize");                PANEL_ANIMATION.doQuantize();                                                                        }
     
     function panel_animation_select_all()              { CALL("animation_select_all");              PANEL_ANIMATION.selectAllKeys();         }
@@ -129,6 +130,10 @@
         registerFunction(an, "Remove All Regions",   "",  n, panel_animation_region_clear         ).setMenu("animation_region_clear"     )
         
         registerFunction(an, "View Settings...",     "",  n, function() /*=>*/ {return dialogPanelCall(new Panel_Animation_View_Setting())}).setMenu("animation_view_settings", THEME.icon_visible_setting)
+        
+        registerFunction(an, "Toggle Default Interpolation", "", n, panel_animation_toggle_default_interp )
+        	.setMenu("animation_toggle_default_intp", THEME.keyframe_def_intp).setSpriteInd(function() /*=>*/ {return PROJECT.animationDisplay.default_interpolation} )
+        	.setTooltip(new tooltipSelector("Default Interpolation", [ "Linear", "Ease", "Smooth", "Hold" ])).setScroll()
         
         registerFunction(an, "Toggle Hidden",      "S", s,  panel_animation_show_hidden    )
         	.setMenu("animation_toggle_hidden", THEME.timeline_hide_24).setSpriteInd(function() /*=>*/ {return PANEL_ANIMATION.show_hidden} )
@@ -489,8 +494,26 @@ function Panel_Animation_Dopesheet() {
     	
     #endregion
     
+    #region ++++ Sidebar ++++
+    	global.menuItems_animation_sidebar = [
+    		"animation_toggle_default_intp", 
+    		{ cond: "graph_select_node",     items: [ "animation_new_folder_select" ], items_inv: [ "animation_new_folder" ] },
+			"animation_toggle_ViewContext",
+			"animation_toggle_NodeNameType",
+			"animation_toggle_NodeLabel",
+			"animation_toggle_KeyframeOverride",
+			"animation_toggle_OnionSkin",
+			"animation_view_settings",
+		];
+		
+    	global.menuItems_animation_sidebar_context = [
+    		"animation_edit_sidebar", 
+    		"animation_reset_sidebar", 
+		];
+    #endregion
+    
     #region ++++ Context Menu ++++
-	    global.menuItems_animation_keyframe = [
+    	global.menuItems_animation_keyframe = [
 	    	"animation_keyframe_color",
 	    	-1,
 	        "animation_edit_keyframe_value",
@@ -1176,309 +1199,679 @@ function Panel_Animation_Dopesheet() {
     function drawDopesheet_Graph_Line(animator, key_y, msx, msy) { 
     	if(modulate_animator != noone && modulate_animator != animator) return noone;
         var hovering = noone;
+        prop = animator.prop;
         
-        var prop = animator.prop;
-        var _gh  = ui(prop.attributes.graph_h - 16);
-        var _gy0 = ui(8);
-        var _gy1 = _gy0 + _gh;
+        _gh  = ui(prop.attributes.graph_h - 16);
+        _gy0 = ui(8);
+        _gy1 = _gy0 + _gh;
         
-        var vals = animator.values;
-        var kamo = array_length(vals);
-        var aa   = 1;
+        mmx  = msx;
+        mmy  = msy - (key_y + ui(6));
         
-        var mmx = msx;
-        var mmy = msy - (key_y + ui(6));
+        vals     = animator.values;
+        kamo     = array_length(vals);
+        valArray = is_array(vals[0].value);
         
-        var _gy_val_min = prop.attributes.graph_range[0];
-		var _gy_val_max = prop.attributes.graph_range[1];
-        var _range      = prop.prev_graph_range;
-        var _onEnd      = prop.on_end;
+        _gy_val_min = prop.attributes.graph_range[0];
+		_gy_val_max = prop.attributes.graph_range[1];
+        _range      = prop.prev_graph_range;
+        _onEnd      = prop.on_end;
 		    
         prop.graph_draw_y[0] = _gy0 + (key_y + ui(8));
         prop.graph_draw_y[1] = _gy1 + (key_y + ui(8));
         
-        var val_rng  = (_gy_val_max - _gy_val_min) / (_gy1 - _gy0);
-        var valArray = is_array(vals[0].value);
-        var ox  = 0;
-        var nx  = 0;
-        var ny  = noone;
-        var _keys;
-        var _kv, _kn, sy;
+        val_rng  = (_gy_val_max - _gy_val_min) / (_gy1 - _gy0);
+        val_irng = (_gy0 - _gy1) / (_gy_val_max - _gy_val_min);
         
-        var baseC = CDEF.main_white;
-        var _oy   = vals[0].value;
-        if(!valArray) _oy = [ _oy ];
+        ox = 0;
+        nx = 0;
+        ny = noone;
         
-        var ss = array_length(_oy);
-        var oy = array_create(ss);
-        for( var ki = 0; ki < ss; ki++ ) oy[ki] = value_map(_oy[ki], _gy_val_min, _gy_val_max, _gy1, _gy0);
+        baseC = c_white;
+        _oy   = vals[0].value;
         
-        for(var k = 0; k < kamo - 1; k++) { // draw line in between
-            var key      = vals[k];
-            var key_next = vals[k + 1];
-            
-            var t  = key.dopesheet_x;
-            var dx = key_next.time - key.time;
-            
-            if(key.driverObject != undefined) { // driver
-                nx = (key.time + 1) * timeline_scale + timeline_shift;
-                    
-                if(_onEnd == KEYFRAME_END.wrap)
-					 _keys = [ vals[pmod(k-1, kamo)], vals[k], vals[k+1], vals[(k+2) % kamo] ];
-				else _keys = [ vals[max(k-1, 0)], vals[k], vals[k+1], vals[min(k+2, kamo-1)] ];
+        var scis = gpu_get_scissor();
+        
+        var sx0 = max(0, timeline_shift);
+        var sy0 = 0;
+        var sx1 = min(w, timeline_shift + GLOBAL_TOTAL_FRAMES * timeline_scale);
+        var sy1 = h;
+        gpu_set_scissor(sx0, sy0, sx1 - sx0, sy1 - sy0);
+        
+        #region Draw line in between
+	        if(!valArray) _oy = [ _oy ];
+        	
+	        ss = array_length(_oy);
+	        oy = array_create(ss);
+	        for( var ki = 0; ki < ss; ki++ ) oy[ki] = _gy1 + (_oy[ki] - _gy_val_min) * val_irng;
+        	
+	        function drawGraphKey(k, tOff = 0, color = baseC, k1 = k+1) {
+	        	var _kv, _kn, sy;
+	        	var _keys;
+	        	
+	        	var key_curr = vals[k];
+	            var key_next = vals[k1];
+	            var reverse  = k1 < k;
+	            var key_prev, key_aftr;
+	            
+	            if(k1 > k) {
+	                if(_onEnd == KEYFRAME_END.wrap) {
+						key_prev = vals[pmod(k-1, kamo)];
+						key_aftr = vals[(k1+1) % kamo];
+						
+	                } else {
+	                	key_prev = vals[max(k-1, 0)];
+	                	key_aftr = vals[min(k1+1, kamo-1)];
+	                	
+	                }
 					
-                for( var _time = key.time; _time <= key_next.time; _time++ ) {
-                    var rat = (_time - key.time) / (key_next.time - key.time);
-                    
-                    _kv = key.driverObject.apply(_time, key, key_next, prop.lerpAnimSmooth(_keys, rat), rat, animator);
-                    
-                    if(!valArray) _kv = [ _kv ];
-                        
-                    for( var ki = 0; ki < array_length(_kv); ki++ ) {
-                        var cc = COLORS.panel_animation_graph_line;
-                        if(valArray)           cc = array_safe_get(COLORS.axis, ki, cc);
-                        else if(prop.sep_axis) cc = array_safe_get(COLORS.axis, animator.index, cc);
-                        
-                        cc = colorMultiplyRGB(cc, baseC); 
-                        draw_set_color(cc);
-                        draw_set_alpha(aa);
-                        
-                        ny[ki] = value_map(_kv[ki], _gy_val_min, _gy_val_max, _gy1, _gy0);
-                        
-                        if(_time == key.time) draw_line(nx, oy[ki], nx, ny[ki]);
-                        else                  draw_line(ox, oy[ki], nx, ny[ki]);
-                            
-                        oy[ki] = ny[ki];
-                        
-	                    _range[0] = min(_range[0], _kv[ki]);
-	                    _range[1] = max(_range[1], _kv[ki]);
-                    }
-                    
-                    ox  = nx;
-                    nx += timeline_scale;
-                }
-                
-                draw_set_alpha(1);
-                
-            } else if(key_next.ease_in_type == CURVE_TYPE.cut) { // hold draw
-            	nx  = (key_next.time + 1) * timeline_scale + timeline_shift;
-                
-                _kv = key.value;
-                _kn = key_next.value;
-                
-                if(!valArray) {
-                    _kv = [ _kv ];
-                    _kn = [ _kn ];
-                }
-                
-                var kn = min(array_length(_kv), array_length(_kn));
-                for( var ki = 0; ki < kn; ki++ ) {
-                    var cc = COLORS.panel_animation_graph_line;
-                    if(valArray)           cc = array_safe_get(COLORS.axis, ki, cc);
-                    else if(prop.sep_axis) cc = array_safe_get(COLORS.axis, animator.index, cc);
-                    
-                    cc = colorMultiplyRGB(cc, baseC); 
-                    draw_set_color(cc);
-                    draw_set_alpha(aa);
-                    
-                    ny[ki] = value_map(_kv[ki], _gy_val_min, _gy_val_max, _gy1, _gy0);
-                    
-                    if(array_length(oy) > ki) draw_line(t, oy[ki], t, ny[ki]);
-                    oy[ki] = ny[ki];
-                    
-                    ny[ki] = value_map(_kn[ki], _gy_val_min, _gy_val_max, _gy1, _gy0);
-                    draw_line( t, oy[ki], nx, oy[ki]);
-                    draw_line(nx, oy[ki], nx, ny[ki]);
-                    oy[ki] = ny[ki];
-                    
-                    _range[0] = min(_range[0], _kv[ki], _kn[ki]);
-                    _range[1] = max(_range[1], _kv[ki], _kn[ki]);
-                }
-                
-                ox = nx;
-             //   draw_set_alpha(1);
-                
-            } else if(key.ease_out_type == CURVE_TYPE.linear && key_next.ease_in_type == CURVE_TYPE.linear) { // linear draw
-                nx  = (key_next.time + 1) * timeline_scale + timeline_shift;
-                
-                _kv = key.value;
-                _kn = key_next.value;
-                
-                if(!valArray) {
-                    _kv = [ _kv ];
-                    _kn = [ _kn ];
-                }
-                
-                var kn = min(array_length(_kv), array_length(_kn));
-                for( var ki = 0; ki < kn; ki++ ) {
-                    var cc = COLORS.panel_animation_graph_line;
-                    if(valArray)           cc = array_safe_get(COLORS.axis, ki, cc);
-                    else if(prop.sep_axis) cc = array_safe_get(COLORS.axis, animator.index, cc);
-                    
-                    cc = colorMultiplyRGB(cc, baseC); 
-                    draw_set_color(cc);
-                    draw_set_alpha(aa);
-                    
-                    ny[ki] = value_map(_kv[ki], _gy_val_min, _gy_val_max, _gy1, _gy0);
-                    
-                    if(array_length(oy) > ki) draw_line(t, oy[ki], t, ny[ki]);
-                    oy[ki] = ny[ki];
-                    
-                    ny[ki] = value_map(_kn[ki], _gy_val_min, _gy_val_max, _gy1, _gy0);
-                    draw_line(t, oy[ki], nx, ny[ki]);
-                    oy[ki] = ny[ki];
-                    
-                    _range[0] = min(_range[0], _kv[ki], _kn[ki]);
-                    _range[1] = max(_range[1], _kv[ki], _kn[ki]);
-                }
-                
-                ox = nx;
-                draw_set_alpha(1);
-                
-            } else { // Bezier easing
-                var _step   = 1 / dx;
-                var _catmul = key.ease_out_type == CURVE_TYPE.catmulrom || key_next.ease_in_type == CURVE_TYPE.catmulrom;
-                
-                if(_onEnd == KEYFRAME_END.wrap)
-					 _keys = [ vals[pmod(k-1, kamo)], vals[k], vals[k+1], vals[(k+2) % kamo] ];
-				else _keys = [ vals[max(k-1, 0)], vals[k], vals[k+1], vals[min(k+2, kamo-1)] ];
-				
-                for( var _r = 0; _r <= 1; _r += _step ) {
-                    nx  = t + _r * dx * timeline_scale;
-                    
-                    _kv = key.value;
-                    _kn = key_next.value;
-            		
-            		if(!valArray) {
-            			_kv = [_kv];
-						_kn = [_kn];
-            		}
-            		
-                	var kn = min(array_length(_kv), array_length(_kn));
-                    for( var ki = 0; ki < kn; ki++ ) {
-                        var cc = COLORS.panel_animation_graph_line;
-                        if(valArray)           cc = array_safe_get(COLORS.axis, ki, cc);
-                        else if(prop.sep_axis) cc = array_safe_get(COLORS.axis, animator.index, cc);
-                        
-                        cc = colorMultiplyRGB(cc, baseC); 
-                        draw_set_color(cc);
-                        draw_set_alpha(aa);
-                        
-                        if(_catmul) {
-							if(valArray) {
-	                    		var __v = KeyframeInterpolateAuto(_keys[0].value[ki], _keys[1].value[ki], 
-	                    		                                  _keys[2].value[ki], _keys[3].value[ki], _r);
-							} else {
-								var __v = KeyframeInterpolateAuto(_keys[0].value, _keys[1].value, 
-	                    		                                  _keys[2].value, _keys[3].value, _r);
-							}
-                        	
-                        } else {
-	                        var __i = KeyframeInterpolate(key, key_next, _r);
-	                        var __v = lerp(_kv[ki], _kn[ki], __i);
-                        }
-                        
-                        ny[ki] = value_map(__v, _gy_val_min, _gy_val_max, _gy1, _gy0);
-                        if(array_length(oy) > ki) draw_line(ox, oy[ki], nx, ny[ki]);
-                            
-                        oy[ki] = ny[ki];
-                        
-	                    _range[0] = min(_range[0], _kv[ki], _kn[ki]);
-	                    _range[1] = max(_range[1], _kv[ki], _kn[ki]);
-                    }
-                    
-                    ox = nx;
-                    draw_set_alpha(1);
-                    
-                }
-            }
-        } // draw line in between
-        
-        if(prop.attributes.show_graph && array_length(animator.values) > 0) { // draw line outside keyframe range
-            var key_first = animator.values[0];
-            var t_first  = (key_first.time + 1) * timeline_scale + timeline_shift;
-            
-            _kv = key_first.value;
-            if(!valArray) _kv = [ _kv ];
-            
-            for( var ki = 0, kn = array_length(_kv); ki < kn; ki++ ) {
-                var cc = COLORS.panel_animation_graph_line;
-                if(valArray)           cc = array_safe_get(COLORS.axis, ki, cc);
-                else if(prop.sep_axis) cc = array_safe_get(COLORS.axis, animator.index, cc);
-                    
-                cc = colorMultiplyRGB(cc, baseC); 
-                draw_set_color(cc);
-                draw_set_alpha(aa);
-                
-                sy = value_map(_kv[ki], _gy_val_min, _gy_val_max, _gy1, _gy0);
-                draw_line(0, sy, t_first, sy);
-                    
-                if(array_length(animator.values) == 1) oy[ki] = sy;
-            }
-            
-            draw_set_alpha(1);
-                
-            var key_last = array_last(animator.values);
-            var t_last = (key_last.time + 1) * timeline_scale + timeline_shift;
-                
-            if(key_last.time < GLOBAL_TOTAL_FRAMES) {
-                if(key_last.driverObject != undefined) {
-                    nx = t_last;
-                    
-                    for( var _time = key_last.time; _time < GLOBAL_TOTAL_FRAMES; _time++ ) {
-                        _kv = key_last.driverObject.apply(_time, key_last);
-                        if(!valArray) _kv = [ _kv ];
-                        
-                        for( var ki = 0, kn = array_length(_kv); ki < kn; ki++ ) {
-                            var cc = COLORS.panel_animation_graph_line;
-                            if(valArray)                    cc = array_safe_get(COLORS.axis, ki, cc);
-                            else if(prop.sep_axis) cc = array_safe_get(COLORS.axis, animator.index, cc);
-                            
-                            cc = colorMultiplyRGB(cc, baseC);
-                            draw_set_color(cc);
-                            draw_set_alpha(aa);
-                            
-                            ny[ki] = value_map(_kv[ki], _gy_val_min, _gy_val_max, _gy1, _gy0);
-                            if(_time == key_last.time)
-                                draw_line(t_last, oy[ki], t_last, ny[ki]);
-                            else 
-                                draw_line(ox, oy[ki], nx, ny[ki]);
-                            
-                            oy[ki] = ny[ki];
-                            
+	            } else {
+	            	if(_onEnd == KEYFRAME_END.wrap) {
+						key_prev = vals[pmod(k1-1, kamo)];
+						key_aftr = vals[(k+1) % kamo];
+						
+	                } else {
+	                	key_prev = vals[max(k1-1, 0)];
+	                	key_aftr = vals[min(k+1, kamo-1)];
+	                	
+	                }
+					
+	            }
+	            
+	            var tCurr = key_curr.time + tOff;
+	            var tNext = key_next.time + tOff;
+	            
+	            var t  = key_curr.dopesheet_x + tOff * timeline_scale;
+	            var dx = tNext - tCurr;
+	            if(dx == 0) return;
+	            
+	            if(key_curr.driverObject != undefined) { // driver
+	                nx    = (tCurr + 1) * timeline_scale + timeline_shift;
+	                _keys = [ key_prev, key_curr, key_next, key_aftr ];
+						
+	                for( var _time = tCurr; _time <= tNext; _time++ ) {
+	                    var rat = (_time - tCurr) / (tNext - tCurr);
+	                    
+	                    _kv = key_curr.driverObject.apply(_time, key_curr, key_next, prop.lerpAnimSmooth(_keys, rat), rat, animator);
+	                    if(!valArray) _kv = [ _kv ];
+	                    
+	                    for( var ki = 0; ki < array_length(_kv); ki++ ) {
+	                        var cc = COLORS.panel_animation_graph_line;
+	                        if(valArray)           cc = array_safe_get(COLORS.axis, ki, cc);
+	                        else if(prop.sep_axis) cc = array_safe_get(COLORS.axis, animator.index, cc);
+	                        
+	                        cc = colorMultiplyRGB(cc, color); 
+	                        draw_set_color(cc);
+	                        
+	                        ny[ki] = _gy1 + (_kv[ki] - _gy_val_min) * val_irng;
+	                        
+	                        if(_time == tCurr) draw_line(nx, oy[ki], nx, ny[ki]);
+	                        else               draw_line(ox, oy[ki], nx, ny[ki]);
+	                            
+	                        oy[ki] = ny[ki];
+	                        
 		                    _range[0] = min(_range[0], _kv[ki]);
 		                    _range[1] = max(_range[1], _kv[ki]);
-                        }
-                        
-                        ox  = nx;
-                        nx += timeline_scale;
-                    }
-                } else {
-                    _kv = key_last.value;
-                    if(!valArray) _kv = [ _kv ];
-                    
-                    for( var ki = 0, kn = array_length(_kv); ki < kn; ki++ ) {
-                        var cc = COLORS.panel_animation_graph_line;
-                        if(valArray)           cc = array_safe_get(COLORS.axis, ki, cc);
-                        else if(prop.sep_axis) cc = array_safe_get(COLORS.axis, animator.index, cc);
-                        
-                        cc = colorMultiplyRGB(cc, baseC); 
-                        draw_set_color(cc);
-                        draw_set_alpha(aa);
-                        
-                        ny[ki] = value_map(_kv[ki], _gy_val_min, _gy_val_max, _gy1, _gy0);
-                        draw_line(t_last, oy[ki], t_last, ny[ki]);
-                        draw_line(t_last, ny[ki], bar_total_shift, ny[ki]);
-                        
-	                    _range[0] = min(_range[0], _kv[ki]);
-	                    _range[1] = max(_range[1], _kv[ki]);
-                    }
-                }
-            }
-        } // draw line outside keyframe range
+	                    }
+	                    
+	                    ox  = nx;
+	                    nx += timeline_scale;
+	                }
+	                
+	            } else if(key_next.ease_in_type == CURVE_TYPE.cut) { // hold draw
+	            	nx  = (tNext + 1) * timeline_scale + timeline_shift;
+	                
+	                _kv = key_curr.value;
+	                _kn = key_next.value;
+	                
+	                if(!valArray) { _kv = [ _kv ]; _kn = [ _kn ]; }
+	                
+	                var kn = min(array_length(_kv), array_length(_kn));
+	                for( var ki = 0; ki < kn; ki++ ) {
+	                    var cc = COLORS.panel_animation_graph_line;
+	                    if(valArray)           cc = array_safe_get(COLORS.axis, ki, cc);
+	                    else if(prop.sep_axis) cc = array_safe_get(COLORS.axis, animator.index, cc);
+	                    
+	                    cc = colorMultiplyRGB(cc, color); 
+	                    draw_set_color(cc);
+	                    
+	                    ny[ki] = _gy1 + (_kv[ki] - _gy_val_min) * val_irng;
+	                    
+	                    if(array_length(oy) > ki) draw_line(t, oy[ki], t, ny[ki]);
+	                    oy[ki] = ny[ki];
+	                    
+	                    ny[ki] = _gy1 + (_kn[ki] - _gy_val_min) * val_irng;
+	                    
+	                    draw_line( t, oy[ki], nx, oy[ki]);
+	                    draw_line(nx, oy[ki], nx, ny[ki]);
+	                    oy[ki] = ny[ki];
+	                    
+	                    _range[0] = min(_range[0], _kv[ki], _kn[ki]);
+	                    _range[1] = max(_range[1], _kv[ki], _kn[ki]);
+	                }
+	                
+	                ox = nx;
+	                
+	            } else if(key_curr.ease_out_type == CURVE_TYPE.linear && key_next.ease_in_type == CURVE_TYPE.linear) { // linear draw
+	                nx  = (tNext + 1) * timeline_scale + timeline_shift;
+	                
+	                _kv = key_curr.value;
+	                _kn = key_next.value;
+	                
+	                if(!valArray) { _kv = [ _kv ]; _kn = [ _kn ]; }
+	                
+	                var kn = min(array_length(_kv), array_length(_kn));
+	                for( var ki = 0; ki < kn; ki++ ) {
+	                    var cc = COLORS.panel_animation_graph_line;
+	                         if(valArray)      cc = array_safe_get(COLORS.axis, ki, cc);
+	                    else if(prop.sep_axis) cc = array_safe_get(COLORS.axis, animator.index, cc);
+	                    
+	                    cc = colorMultiplyRGB(cc, color);
+	                    draw_set_color(cc);
+	                    
+	                    ny[ki] = _gy1 + (_kv[ki] - _gy_val_min) * val_irng;
+	                    
+	                    if(array_length(oy) > ki) draw_line(t, oy[ki], t, ny[ki]);
+	                    oy[ki] = ny[ki];
+	                    
+	                    ny[ki] = _gy1 + (_kn[ki] - _gy_val_min) * val_irng;
+	                    
+	                    var x0 = min(t, nx);
+	                    var x1 = max(t, nx);
+	                    
+	                    draw_line(x0, oy[ki], x1, ny[ki]);
+	                    oy[ki] = ny[ki];
+	                    
+	                    _range[0] = min(_range[0], _kv[ki], _kn[ki]);
+	                    _range[1] = max(_range[1], _kv[ki], _kn[ki]);
+	                }
+	                
+	                ox = nx;
+	                
+	            } else { // Bezier easing
+	                var _step   = abs(1 / dx);
+	                var _catmul = key_curr.ease_out_type == CURVE_TYPE.catmulrom || key_next.ease_in_type == CURVE_TYPE.catmulrom;
+	                var __v = 0, __i = 0;
+	                
+	                _keys = [ key_prev, key_curr, key_next, key_aftr ];
+					
+	                for( var _r = 0; _r <= 1; _r += _step ) {
+	                	rr  = reverse? 1 - _r : _r;
+	                    nx  = t + _r * dx * timeline_scale;
+	                    
+	                    _kv = key_curr.value;
+	                    _kn = key_next.value;
+	            		
+	            		if(!valArray) { _kv = [_kv]; _kn = [_kn]; }
+	            		
+	                	var kn = min(array_length(_kv), array_length(_kn));
+	                    for( var ki = 0; ki < kn; ki++ ) {
+	                        var cc = COLORS.panel_animation_graph_line;
+	                        if(valArray)           cc = array_safe_get(COLORS.axis, ki, cc);
+	                        else if(prop.sep_axis) cc = array_safe_get(COLORS.axis, animator.index, cc);
+	                        
+	                        cc = colorMultiplyRGB(cc, color); 
+	                        draw_set_color(cc);
+	                        
+	                        if(_catmul) {
+								if(valArray) __v = KeyframeInterpolateAuto(key_prev.value[ki], key_curr.value[ki], key_next.value[ki], key_aftr.value[ki], rr);
+								else         __v = KeyframeInterpolateAuto(key_prev.value,     key_curr.value,     key_next.value,     key_aftr.value,     rr);
+								
+	                        } else {
+		                        __i = KeyframeInterpolate(key_curr, key_next, rr);
+		                        __v = lerp(_kv[ki], _kn[ki], __i);
+	                        }
+	                        
+	                        ny[ki] = _gy1 + (__v - _gy_val_min) * val_irng;
+	                        
+	                        if(_r > 0) draw_line(ox, oy[ki], nx, ny[ki]);
+	                        
+	                        oy[ki] = ny[ki];
+	                        
+		                    _range[0] = min(_range[0], _kv[ki], _kn[ki]);
+		                    _range[1] = max(_range[1], _kv[ki], _kn[ki]);
+	                    }
+	                    
+	                    ox = nx;
+	                    
+	                }
+	            }
+	        }
+	        
+	        for(var k = 0; k < kamo - 1; k++)
+	            drawGraphKey(k);
+        #endregion
         
-        draw_set_alpha(1);
-        
+        #region Draw line outside animation range
+        if(kamo > 0) {
+        	switch(_onEnd) {
+        		case KEYFRAME_END.hold :
+        		case KEYFRAME_END.loop : 
+				case KEYFRAME_END.ping : 
+					/// Line before first frame
+		            var key_first = animator.values[0];
+		            var t_first  = (key_first.time + 1) * timeline_scale + timeline_shift;
+		            
+		            _kv = key_first.value;
+		            if(!valArray) _kv = [ _kv ];
+		            
+		            for( var ki = 0, kn = array_length(_kv); ki < kn; ki++ ) {
+		                var cc = COLORS.panel_animation_graph_line;
+		                if(valArray)           cc = array_safe_get(COLORS.axis, ki, cc);
+		                else if(prop.sep_axis) cc = array_safe_get(COLORS.axis, animator.index, cc);
+		                    
+		                cc = colorMultiplyRGB(cc, COLORS._main_icon); 
+		                draw_set_color(cc);
+		                
+		                sy = _gy1 + (_kv[ki] - _gy_val_min) * val_irng;
+		                draw_line(0, sy, t_first, sy);
+		                    
+		                if(array_length(animator.values) == 1) oy[ki] = sy;
+		            }
+					break;
+    		}
+        	
+    		/// Line after last frame
+        	if(_onEnd == KEYFRAME_END.hold || kamo == 1) {
+	            var key_last = array_last(animator.values);
+	            var t_last = (key_last.time + 1) * timeline_scale + timeline_shift;
+	                
+	            if(key_last.time < GLOBAL_TOTAL_FRAMES) {
+	                if(key_last.driverObject != undefined) {
+	                    nx = t_last;
+	                    
+	                    for( var _time = key_last.time; _time < GLOBAL_TOTAL_FRAMES; _time++ ) {
+	                        _kv = key_last.driverObject.apply(_time, key_last);
+	                        if(!valArray) _kv = [ _kv ];
+	                        
+	                        for( var ki = 0, kn = array_length(_kv); ki < kn; ki++ ) {
+	                            var cc = COLORS.panel_animation_graph_line;
+	                            
+	                                 if(valArray)      cc = array_safe_get(COLORS.axis, ki, cc);
+	                            else if(prop.sep_axis) cc = array_safe_get(COLORS.axis, animator.index, cc);
+	                            
+	                            cc = colorMultiplyRGB(cc, COLORS._main_icon);
+	                            draw_set_color(cc);
+	                            
+	                            ny[ki] = _gy1 + (_kv[ki] - _gy_val_min) * val_irng;
+	                            
+	                            if(_time == key_last.time)
+	                                draw_line(t_last, oy[ki], t_last, ny[ki]);
+	                            else 
+	                                draw_line(ox, oy[ki], nx, ny[ki]);
+	                            
+	                            oy[ki] = ny[ki];
+	                            
+			                    _range[0] = min(_range[0], _kv[ki]);
+			                    _range[1] = max(_range[1], _kv[ki]);
+	                        }
+	                        
+	                        ox  = nx;
+	                        nx += timeline_scale;
+	                    }
+	                    
+	                } else {
+	                    _kv = key_last.value;
+	                    if(!valArray) _kv = [ _kv ];
+	                    
+	                    for( var ki = 0, kn = array_length(_kv); ki < kn; ki++ ) {
+	                        var cc = COLORS.panel_animation_graph_line;
+	                        
+	                             if(valArray)      cc = array_safe_get(COLORS.axis, ki, cc);
+	                        else if(prop.sep_axis) cc = array_safe_get(COLORS.axis, animator.index, cc);
+	                        
+	                        cc = colorMultiplyRGB(cc, COLORS._main_icon); 
+	                        draw_set_color(cc);
+	                        
+	                        ny[ki] = _gy1 + (_kv[ki] - _gy_val_min) * val_irng;
+	                        
+	                        draw_line(t_last, oy[ki], t_last, ny[ki]);
+	                        draw_line(t_last, ny[ki], bar_total_shift, ny[ki]);
+	                        
+		                    _range[0] = min(_range[0], _kv[ki]);
+		                    _range[1] = max(_range[1], _kv[ki]);
+	                    }
+	                }
+	            }
+        	}
+        	
+        	if(kamo > 1)
+	        switch(_onEnd) {
+	        	case KEYFRAME_END.loop : 
+	        		var _loopRng = prop.loop_range;
+	        		
+	        		var _lKidSt = _loopRng == -1? 0 : kamo - 1 - _loopRng;
+	        		var _lKidEd = kamo - 1;
+	        		
+	        		var _lKeySt = vals[_lKidSt];
+	        		var _lKeyEd = vals[_lKidEd];
+	        		
+	        		var _loopTim = _lKeyEd.time - _lKeySt.time;
+	        		if(_loopTim < 1) break;
+	        		
+	        		var _prjTime = GLOBAL_TOTAL_FRAMES - _lKeyEd.time;
+	        		var _loopAmo = ceil(_prjTime / _loopTim);
+	        		
+	        		for( var i = 0; i < _loopAmo; i++ ) {
+	        			var offs = _lKeyEd.time - _lKeySt.time + i * _loopTim;
+	        			for( var k = _lKidSt; k < _lKidEd; k++ )
+	        				drawGraphKey(k, offs, COLORS._main_icon);
+	        		}
+	        		break;
+	        	
+	        	case KEYFRAME_END.ping : 
+	        		var _loopRng = prop.loop_range;
+	        		
+	        		var _lKidSt = _loopRng == -1? 0 : kamo - 1 - _loopRng;
+	        		var _lKidEd = kamo - 1;
+	        		
+	        		var _lKeySt = vals[_lKidSt];
+	        		var _lKeyEd = vals[_lKidEd];
+	        		
+	        		var _loopTim = _lKeyEd.time - _lKeySt.time;
+	        		var _pingTim = _loopTim * 2;
+	        		
+	        		if(_loopTim < 1) break;
+	        		
+	        		var _prjTime = GLOBAL_TOTAL_FRAMES - _lKeyEd.time;
+	        		var _loopAmo = ceil(_prjTime / _pingTim);
+	        		
+	        		for( var i = 0; i < _loopAmo; i++ ) {
+        				var offs = _lKeyEd.time - _lKeySt.time + i * _pingTim;
+	        			
+	        			for( var k = _lKidEd; k > _lKidSt; k-- ) {
+	        				oy = [];
+	        				var _off = offs + (_lKeyEd.time - vals[k-1].time) * 2 - (vals[k].time - vals[k-1].time) - _loopTim;
+	        				drawGraphKey(k, _off, COLORS._main_icon, k-1);
+	        			}
+	        			
+	        			offs += _loopTim;
+	        			for( var k = _lKidSt; k < _lKidEd; k++ ) {
+	        				oy = [];
+	        				drawGraphKey(k, offs, COLORS._main_icon);
+	        			}
+	        				
+	        		}
+	        		break;
+	        		
+	        	case KEYFRAME_END.wrap :
+	        		#region draw before
+		        		var _kv, _kn, sy;
+			        	var _keys;
+			        	
+			        	var key_curr = vals[kamo-1];
+			            var key_next = vals[0];
+						var key_prev = vals[kamo-2];
+						var key_aftr = vals[1];
+						
+			            var tCurr = key_curr.time - GLOBAL_TOTAL_FRAMES;
+			            var tNext = key_next.time;
+			            
+			            var t  = key_curr.dopesheet_x - GLOBAL_TOTAL_FRAMES * timeline_scale;
+			            var dx = tNext - tCurr;
+			            
+			            if(key_next.ease_in_type == CURVE_TYPE.cut) { // hold draw
+			            	nx  = (tNext + 1) * timeline_scale + timeline_shift;
+			                
+			                _kv = key_curr.value;
+			                _kn = key_next.value;
+			                
+			                if(!valArray) { _kv = [ _kv ]; _kn = [ _kn ]; }
+			                
+			                var kn = min(array_length(_kv), array_length(_kn));
+			                for( var ki = 0; ki < kn; ki++ ) {
+			                    var cc = COLORS.panel_animation_graph_line;
+			                    if(valArray)           cc = array_safe_get(COLORS.axis, ki, cc);
+			                    else if(prop.sep_axis) cc = array_safe_get(COLORS.axis, animator.index, cc);
+			                    
+			                    cc = colorMultiplyRGB(cc, COLORS._main_icon); 
+			                    draw_set_color(cc);
+			                    
+			                    ny[ki] = _gy1 + (_kv[ki] - _gy_val_min) * val_irng;
+			                    
+			                    if(array_length(oy) > ki) draw_line(t, oy[ki], t, ny[ki]);
+			                    oy[ki] = ny[ki];
+			                    
+			                    ny[ki] = _gy1 + (_kn[ki] - _gy_val_min) * val_irng;
+			                    
+			                    draw_line( t, oy[ki], nx, oy[ki]);
+			                    draw_line(nx, oy[ki], nx, ny[ki]);
+			                    oy[ki] = ny[ki];
+			                    
+			                    _range[0] = min(_range[0], _kv[ki], _kn[ki]);
+			                    _range[1] = max(_range[1], _kv[ki], _kn[ki]);
+			                }
+			                
+			                ox = nx;
+			                
+			            } else if(key_curr.ease_out_type == CURVE_TYPE.linear && key_next.ease_in_type == CURVE_TYPE.linear) { // linear draw
+			                nx  = (tNext + 1) * timeline_scale + timeline_shift;
+			                
+			                _kv = key_curr.value;
+			                _kn = key_next.value;
+			                
+			                if(!valArray) { _kv = [ _kv ]; _kn = [ _kn ]; }
+			                
+			                var kn = min(array_length(_kv), array_length(_kn));
+			                for( var ki = 0; ki < kn; ki++ ) {
+			                    var cc = COLORS.panel_animation_graph_line;
+			                         if(valArray)      cc = array_safe_get(COLORS.axis, ki, cc);
+			                    else if(prop.sep_axis) cc = array_safe_get(COLORS.axis, animator.index, cc);
+			                    
+			                    cc = colorMultiplyRGB(cc, COLORS._main_icon);
+			                    draw_set_color(cc);
+			                    
+			                    ny[ki] = _gy1 + (_kv[ki] - _gy_val_min) * val_irng;
+			                    
+			                    if(array_length(oy) > ki) draw_line(t, oy[ki], t, ny[ki]);
+			                    oy[ki] = ny[ki];
+			                    
+			                    ny[ki] = _gy1 + (_kn[ki] - _gy_val_min) * val_irng;
+			                    
+			                    var x0 = min(t, nx);
+			                    var x1 = max(t, nx);
+			                    
+			                    draw_line(x0, oy[ki], x1, ny[ki]);
+			                    oy[ki] = ny[ki];
+			                    
+			                    _range[0] = min(_range[0], _kv[ki], _kn[ki]);
+			                    _range[1] = max(_range[1], _kv[ki], _kn[ki]);
+			                }
+			                
+			                ox = nx;
+			                
+			            } else { // Bezier easing
+			                var _step   = abs(1 / dx);
+			                var _catmul = key_curr.ease_out_type == CURVE_TYPE.catmulrom || key_next.ease_in_type == CURVE_TYPE.catmulrom;
+			                var __v = 0, __i = 0;
+			                
+			                _keys = [ key_prev, key_curr, key_next, key_aftr ];
+							
+			                for( var _r = 0; _r <= 1; _r += _step ) {
+			                	rr  = _r;
+			                    nx  = t + _r * dx * timeline_scale;
+			                    
+			                    _kv = key_curr.value;
+			                    _kn = key_next.value;
+			            		
+			            		if(!valArray) { _kv = [_kv]; _kn = [_kn]; }
+			            		
+			                	var kn = min(array_length(_kv), array_length(_kn));
+			                    for( var ki = 0; ki < kn; ki++ ) {
+			                        var cc = COLORS.panel_animation_graph_line;
+			                        if(valArray)           cc = array_safe_get(COLORS.axis, ki, cc);
+			                        else if(prop.sep_axis) cc = array_safe_get(COLORS.axis, animator.index, cc);
+			                        
+			                        cc = colorMultiplyRGB(cc, COLORS._main_icon); 
+			                        draw_set_color(cc);
+			                        
+			                        if(_catmul) {
+										if(valArray) __v = KeyframeInterpolateAuto(key_prev.value[ki], key_curr.value[ki], key_next.value[ki], key_aftr.value[ki], rr);
+										else         __v = KeyframeInterpolateAuto(key_prev.value,     key_curr.value,     key_next.value,     key_aftr.value,     rr);
+										
+			                        } else {
+				                        __i = KeyframeInterpolate(key_curr, key_next, rr);
+				                        __v = lerp(_kv[ki], _kn[ki], __i);
+			                        }
+			                        
+			                        ny[ki] = _gy1 + (__v - _gy_val_min) * val_irng;
+			                        
+			                        if(_r > 0) draw_line(ox, oy[ki], nx, ny[ki]);
+			                        
+			                        oy[ki] = ny[ki];
+			                        
+				                    _range[0] = min(_range[0], _kv[ki], _kn[ki]);
+				                    _range[1] = max(_range[1], _kv[ki], _kn[ki]);
+			                    }
+			                    
+			                    ox = nx;
+			                    
+			                }
+			            }
+	        		#endregion
+	        		
+	        		#region draw after
+		        		var _kv, _kn, sy;
+			        	var _keys;
+			        	
+			        	var key_curr = vals[kamo-1];
+			            var key_next = vals[0];
+						var key_prev = vals[kamo-2];
+						var key_aftr = vals[1];
+						
+			            var tCurr = key_curr.time;
+			            var tNext = key_next.time + GLOBAL_TOTAL_FRAMES;
+			            
+			            var t  = key_curr.dopesheet_x;
+			            var dx = tNext - tCurr;
+			            
+			            if(key_next.ease_in_type == CURVE_TYPE.cut) { // hold draw
+			            	nx  = (tNext + 1) * timeline_scale + timeline_shift;
+			                
+			                _kv = key_curr.value;
+			                _kn = key_next.value;
+			                
+			                if(!valArray) { _kv = [ _kv ]; _kn = [ _kn ]; }
+			                
+			                var kn = min(array_length(_kv), array_length(_kn));
+			                for( var ki = 0; ki < kn; ki++ ) {
+			                    var cc = COLORS.panel_animation_graph_line;
+			                    if(valArray)           cc = array_safe_get(COLORS.axis, ki, cc);
+			                    else if(prop.sep_axis) cc = array_safe_get(COLORS.axis, animator.index, cc);
+			                    
+			                    cc = colorMultiplyRGB(cc, COLORS._main_icon); 
+			                    draw_set_color(cc);
+			                    
+			                    ny[ki] = _gy1 + (_kv[ki] - _gy_val_min) * val_irng;
+			                    
+			                    if(array_length(oy) > ki) draw_line(t, oy[ki], t, ny[ki]);
+			                    oy[ki] = ny[ki];
+			                    
+			                    ny[ki] = _gy1 + (_kn[ki] - _gy_val_min) * val_irng;
+			                    
+			                    draw_line( t, oy[ki], nx, oy[ki]);
+			                    draw_line(nx, oy[ki], nx, ny[ki]);
+			                    oy[ki] = ny[ki];
+			                    
+			                    _range[0] = min(_range[0], _kv[ki], _kn[ki]);
+			                    _range[1] = max(_range[1], _kv[ki], _kn[ki]);
+			                }
+			                
+			                ox = nx;
+			                
+			            } else if(key_curr.ease_out_type == CURVE_TYPE.linear && key_next.ease_in_type == CURVE_TYPE.linear) { // linear draw
+			                nx  = (tNext + 1) * timeline_scale + timeline_shift;
+			                
+			                _kv = key_curr.value;
+			                _kn = key_next.value;
+			                
+			                if(!valArray) { _kv = [ _kv ]; _kn = [ _kn ]; }
+			                
+			                var kn = min(array_length(_kv), array_length(_kn));
+			                for( var ki = 0; ki < kn; ki++ ) {
+			                    var cc = COLORS.panel_animation_graph_line;
+			                         if(valArray)      cc = array_safe_get(COLORS.axis, ki, cc);
+			                    else if(prop.sep_axis) cc = array_safe_get(COLORS.axis, animator.index, cc);
+			                    
+			                    cc = colorMultiplyRGB(cc, COLORS._main_icon);
+			                    draw_set_color(cc);
+			                    
+			                    ny[ki] = _gy1 + (_kv[ki] - _gy_val_min) * val_irng;
+			                    
+			                    if(array_length(oy) > ki) draw_line(t, oy[ki], t, ny[ki]);
+			                    oy[ki] = ny[ki];
+			                    
+			                    ny[ki] = _gy1 + (_kn[ki] - _gy_val_min) * val_irng;
+			                    
+			                    var x0 = min(t, nx);
+			                    var x1 = max(t, nx);
+			                    
+			                    draw_line(x0, oy[ki], x1, ny[ki]);
+			                    oy[ki] = ny[ki];
+			                    
+			                    _range[0] = min(_range[0], _kv[ki], _kn[ki]);
+			                    _range[1] = max(_range[1], _kv[ki], _kn[ki]);
+			                }
+			                
+			                ox = nx;
+			                
+			            } else { // Bezier easing
+			                var _step   = abs(1 / dx);
+			                var _catmul = key_curr.ease_out_type == CURVE_TYPE.catmulrom || key_next.ease_in_type == CURVE_TYPE.catmulrom;
+			                var __v = 0, __i = 0;
+			                
+			                _keys = [ key_prev, key_curr, key_next, key_aftr ];
+							
+			                for( var _r = 0; _r <= 1; _r += _step ) {
+			                	rr  = _r;
+			                    nx  = t + _r * dx * timeline_scale;
+			                    
+			                    _kv = key_curr.value;
+			                    _kn = key_next.value;
+			            		
+			            		if(!valArray) { _kv = [_kv]; _kn = [_kn]; }
+			            		
+			                	var kn = min(array_length(_kv), array_length(_kn));
+			                    for( var ki = 0; ki < kn; ki++ ) {
+			                        var cc = COLORS.panel_animation_graph_line;
+			                        if(valArray)           cc = array_safe_get(COLORS.axis, ki, cc);
+			                        else if(prop.sep_axis) cc = array_safe_get(COLORS.axis, animator.index, cc);
+			                        
+			                        cc = colorMultiplyRGB(cc, COLORS._main_icon); 
+			                        draw_set_color(cc);
+			                        
+			                        if(_catmul) {
+										if(valArray) __v = KeyframeInterpolateAuto(key_prev.value[ki], key_curr.value[ki], key_next.value[ki], key_aftr.value[ki], rr);
+										else         __v = KeyframeInterpolateAuto(key_prev.value,     key_curr.value,     key_next.value,     key_aftr.value,     rr);
+										
+			                        } else {
+				                        __i = KeyframeInterpolate(key_curr, key_next, rr);
+				                        __v = lerp(_kv[ki], _kn[ki], __i);
+			                        }
+			                        
+			                        ny[ki] = _gy1 + (__v - _gy_val_min) * val_irng;
+			                        
+			                        if(_r > 0) draw_line(ox, oy[ki], nx, ny[ki]);
+			                        
+			                        oy[ki] = ny[ki];
+			                        
+				                    _range[0] = min(_range[0], _kv[ki], _kn[ki]);
+				                    _range[1] = max(_range[1], _kv[ki], _kn[ki]);
+			                    }
+			                    
+			                    ox = nx;
+			                    
+			                }
+			            }
+	        		#endregion
+	        		
+	        		break;
+	        }
+        }
+		#endregion
+		
+		gpu_set_scissor(scis);
+		
         var rr = ui(8);
         
         if(modulate_animator == noone)
@@ -1493,13 +1886,14 @@ function Panel_Animation_Dopesheet() {
             var spBef = /*i > 0?        key.time - animator.values[i-1].time : */2;
             var spAft = /*i < kamo - 1? animator.values[i+1].time - key.time : */2;
             
-            var ix  = px - ei[0] * timeline_scale * spBef;
-            var ox  = px + eo[0] * timeline_scale * spAft;
+            ix  = px - ei[0] * timeline_scale * spBef;
+            ox  = px + eo[0] * timeline_scale * spAft;
             
             for (var j = 0, m = array_length(v); j < m; j++) {
-                var py = value_map(v[j], _gy_val_min, _gy_val_max, _gy1, _gy0);
-                var iy = py + (1 - ei[1]) / val_rng;
-                var oy = py - (    eo[1]) / val_rng;
+                py = _gy1 + (v[j] - _gy_val_min) * val_irng;
+                
+                iy = py + (1 - ei[1]) / val_rng;
+                oy = py - (    eo[1]) / val_rng;
                 
                 var cc = COLORS.panel_animation_keyease_unselected;
                 
@@ -1508,9 +1902,8 @@ function Panel_Animation_Dopesheet() {
                               (graph_key_drag  == key && ( graph_key_drag_index  == KEYFRAME_DRAG_TYPE.ease_in || graph_key_drag_index  == KEYFRAME_DRAG_TYPE.ease_both));
                     
                     draw_set_color(_hv? COLORS._main_accent : cc);
-                    draw_set_alpha(aa);
                     draw_line(ix, iy, px, py);
-                    draw_sprite_ui_uniform(THEME.circle, 0, ix, iy, .75, _hv? COLORS._main_accent : cc, aa);
+                    draw_sprite_ui_uniform(THEME.circle, 0, ix, iy, .75, _hv? COLORS._main_accent : cc);
                     
                     if(point_in_circle(mmx, mmy, ix, iy, rr)) {
                         _graph_key_hover       = key;
@@ -1527,9 +1920,8 @@ function Panel_Animation_Dopesheet() {
                               (graph_key_drag  == key && (graph_key_drag_index  == KEYFRAME_DRAG_TYPE.ease_out || graph_key_drag_index  == KEYFRAME_DRAG_TYPE.ease_both));
                     
                     draw_set_color(_hv? COLORS._main_accent : cc);
-                    draw_set_alpha(aa);
                     draw_line(px, py, ox, oy);
-                    draw_sprite_ui_uniform(THEME.circle, 0, ox, oy, .75, _hv? COLORS._main_accent : cc, aa);
+                    draw_sprite_ui_uniform(THEME.circle, 0, ox, oy, .75, _hv? COLORS._main_accent : cc);
                     
                     if(point_in_circle(mmx, mmy, ox, oy, rr)) {
                         _graph_key_hover       = key;
@@ -1548,7 +1940,7 @@ function Panel_Animation_Dopesheet() {
                 if(valArray)           cc = array_safe_get(COLORS.axis, j, cc);
                 else if(prop.sep_axis) cc = array_safe_get(COLORS.axis, animator.index, cc);
                 
-                draw_sprite_ui_uniform(THEME.timeline_keyframe, 0, px, py, 1, _hv? COLORS._main_accent : cc, aa);
+                draw_sprite_ui_uniform(THEME.timeline_keyframe, 0, px, py, 1, _hv? COLORS._main_accent : cc);
                 
                 if(point_in_circle(mmx, mmy, px, py, ui(10))) {
                 	setTOOLTIP(v[j]);
@@ -1563,12 +1955,6 @@ function Panel_Animation_Dopesheet() {
                 }
             }
         } // draw key
-        
-        draw_set_alpha(1);
-        
-        // draw_set_color(c_red);
-        // draw_line(mmx - 8, mmy, mmx + 8, mmy)
-        // draw_line(mmx, mmy - 8, mmx, mmy + 8)
         
         if(modulate_animator == animator) drawDopesheet_Graph_Line_Modulate(mmx, mmy, _gy0, _gy1);
     }
@@ -2402,11 +2788,13 @@ function Panel_Animation_Dopesheet() {
                 var box_x1 = max(keyframe_box_sx, msx);
                 var box_y0 = min(keyframe_box_sy, msy);
                 var box_y1 = max(keyframe_box_sy, msy);
-                                    
-                if(!point_in_rectangle(t, prop_y, box_x0, box_y0, box_x1, box_y1) && array_exists(keyframe_selecting, keyframe))
+                
+                var sel = rectangle_in_circle(box_x0, box_y0, box_x1, box_y1, t, prop_y, ui(5));
+                
+                if(!sel && array_exists(keyframe_selecting, keyframe))
                     array_remove(keyframe_selecting, keyframe);
                     
-                if(point_in_rectangle(t, prop_y, box_x0, box_y0, box_x1, box_y1) && !array_exists(keyframe_selecting, keyframe))
+                if(sel && !array_exists(keyframe_selecting, keyframe))
                     array_push(keyframe_selecting, keyframe);
             }
             

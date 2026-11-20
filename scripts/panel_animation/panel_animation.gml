@@ -257,21 +257,6 @@ function Panel_Animation() : PanelContent() constructor {
 			"animation_marker_remove",
 			"animation_marker_clear",
 		];
-    	
-    	global.menuItems_animation_sidebar = [
-    		{ cond: "graph_select_node",     items: [ "animation_new_folder_select" ], items_inv: [ "animation_new_folder" ] },
-			"animation_toggle_ViewContext",
-			"animation_toggle_NodeNameType",
-			"animation_toggle_NodeLabel",
-			"animation_toggle_KeyframeOverride",
-			"animation_toggle_OnionSkin",
-			"animation_view_settings",
-		];
-		
-    	global.menuItems_animation_sidebar_context = [
-    		"animation_edit_sidebar", 
-    		"animation_reset_sidebar", 
-		];
     #endregion
     
     function onFocusBegin() { PANEL_ANIMATION = self; }

@@ -216,15 +216,14 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 		if(_time > _time_last) {
 			switch(prop.on_end) {
 				case KEYFRAME_END.loop : 
-					_time = _time_first + safe_mod(_time - _time_last, _time_dura + 1);
+					_time = _time_first + safe_mod(_time - _time_last, _time_dura);
 					break;
 					
 				case KEYFRAME_END.ping :
 					var time_in_loop = safe_mod(_time - _time_first, _time_dura * 2);
 					if(time_in_loop < _time_dura) 
-						_time = _time_first + time_in_loop;
-					else
-						_time = _time_first + _time_dura * 2 - time_in_loop;
+						 _time = _time_first + time_in_loop;
+					else _time = _time_first + _time_dura * 2 - time_in_loop;
 					break;
 			}
 		}
