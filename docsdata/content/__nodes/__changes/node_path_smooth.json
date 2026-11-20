@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.22.3.104",
+    "changes": [
+      {
+        "date": "2026-11-20T04:06:25.863Z",
+        "node": "Smooth Path",
+        "commit": "**Smooth Path**: Add Catmull-Rom smoothing algorithm."
+      }
+    ]
+  },
+  {
     "version": "1.22.1.203",
     "changes": [
       {

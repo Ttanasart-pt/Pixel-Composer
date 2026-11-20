@@ -10,21 +10,22 @@ function Node_Path_Smooth(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	setDimension(96, 48);
 	
 	////- =Path
-	newInput( 0, nodeValue_Bool(   "Loop",         false )).rejectArray();
-	newInput( 1, nodeValue_Bool(   "Round Anchor", false )).rejectArray();
-	newInput( 2, nodeValue_Slider( "Smoothness",   3, [ 1, 5, 0.01 ] ));
+	newInput( 6, nodeValue_EScroll( "Algorithm",    0, [ "Bezier", "Catmull-rom" ] ));
+	newInput( 0, nodeValue_Bool(    "Loop",         false )).rejectArray();
+	newInput( 1, nodeValue_Bool(    "Round Anchor", false )).rejectArray();
+	newInput( 2, nodeValue_Slider(  "Smoothness",   3, [ 1, 5, 0.01 ] ));
 	
 	////- =Sampling
 	newInput( 5, nodeValue_Bool(    "Normalized Length", true )).rejectArray();
 	newInput( 3, nodeValue_Slider(  "Sample Path", 0 )).setTooltip("Sample position from path.");
 	newInput( 4, nodeValue_EScroll( "Sample Mode", 0, ["Entire line", "Segment"])).rejectArray();
-	// 6
+	// 7
 	
 	newOutput( 0, nodeValue_Output( "Path data", VALUE_TYPE.pathnode, self  ));
 	newOutput( 1, nodeValue_Output( "Position out", VALUE_TYPE.float, [0,0] )).setVisible(false).setDisplay(VALUE_DISPLAY.vector);
 	
 	input_display_list = [
-		[ "Path",     false ],  0,  1,  2, 
+		[ "Path",     false ],  6,  0,  1,  2, 
 		[ "Sampling", false ],  5,  3,  4, 
 		[ "Anchors",  false ], 
 	];
@@ -82,6 +83,8 @@ function Node_Path_Smooth(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	
 	////- Path
 	
+	algorithm = 0;
+	
 	static updateLength = function() {
 		segments    = [];
 		lengths	    = [];
@@ -94,39 +97,72 @@ function Node_Path_Smooth(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		
 		var con = loop? anchorSize : anchorSize - 1;
 		
-		for(var i = 0; i < con; i++) {
-			var _a0 = anchors[ (i + 0) % anchorSize];
-			var _a1 = anchors[ (i + 1) % anchorSize];
-			var _c0 = controls[(i + 0) % anchorSize];
-			var _c1 = controls[(i + 1) % anchorSize];
-			
-			var l = 0, _ox = 0, _oy = 0, _nx = 0, _ny = 0, p = 0;
-			var sg = array_create(sample * 2);
-			
-			for(var j = 0; j < sample; j++) {
+		if(algorithm == 1) {
+			for(var i = 0; i < con; i++) {
+				var _a0 = anchors[(i - 1 + anchorSize) % anchorSize];
+				var _a1 = anchors[(i + 0) % anchorSize];
+				var _a2 = anchors[(i + 1) % anchorSize];
+				var _a3 = anchors[(i + 2) % anchorSize];
 				
-				if(_c0[2] == 0 && _c0[3] == 0 && _c1[0] == 0 && _c1[1] == 0) {
-					_nx = lerp(_a0[0], _a1[0], j / sample);
-					_ny = lerp(_a0[1], _a1[1], j / sample);
-				} else {
-					_nx = eval_bezier_x(j / sample, _a0[0],  _a0[1], _a1[0],  _a1[1], _a0[0] + _c0[2], _a0[1] + _c0[3], _a1[0] + _c1[0], _a1[1] + _c1[1]);
-					_ny = eval_bezier_y(j / sample, _a0[0],  _a0[1], _a1[0],  _a1[1], _a0[0] + _c0[2], _a0[1] + _c0[3], _a1[0] + _c1[0], _a1[1] + _c1[1]);
+				var l = 0, _ox = 0, _oy = 0, _nx = 0, _ny = 0, p = 0;
+				var sg = array_create(sample * 2);
+				
+				for(var j = 0; j < sample; j++) {
+					var _rat = j / sample;
+					_nx = KeyframeInterpolateAuto(_a0[0], _a1[0], _a2[0], _a3[0], _rat);
+					_ny = KeyframeInterpolateAuto(_a0[1], _a1[1], _a2[1], _a3[1], _rat);
+					
+					sg[j * 2 + 0] = _nx;
+					sg[j * 2 + 1] = _ny;
+					
+					boundary.addPoint(_nx, _ny);
+					if(j) l += point_distance(_nx, _ny, _ox, _oy);	
+					
+					_ox = _nx;
+					_oy = _ny;
 				}
 				
-				sg[j * 2 + 0] = _nx;
-				sg[j * 2 + 1] = _ny;
-				
-				boundary.addPoint(_nx, _ny);
-				if(j) l += point_distance(_nx, _ny, _ox, _oy);	
-				
-				_ox = _nx;
-				_oy = _ny;
+				segments[i]   = sg;
+				lengths[i]    = l;
+				lengthTotal  += l;
+				lengthAccs[i] = lengthTotal;
 			}
 			
-			segments[i]   = sg;
-			lengths[i]    = l;
-			lengthTotal  += l;
-			lengthAccs[i] = lengthTotal;
+		} else {
+			for(var i = 0; i < con; i++) {
+				var _a0 = anchors[ (i + 0) % anchorSize];
+				var _a1 = anchors[ (i + 1) % anchorSize];
+				var _c0 = controls[(i + 0) % anchorSize];
+				var _c1 = controls[(i + 1) % anchorSize];
+				
+				var l = 0, _ox = 0, _oy = 0, _nx = 0, _ny = 0, p = 0;
+				var sg = array_create(sample * 2);
+				
+				for(var j = 0; j < sample; j++) {
+					
+					if(_c0[2] == 0 && _c0[3] == 0 && _c1[0] == 0 && _c1[1] == 0) {
+						_nx = lerp(_a0[0], _a1[0], j / sample);
+						_ny = lerp(_a0[1], _a1[1], j / sample);
+					} else {
+						_nx = eval_bezier_x(j / sample, _a0[0],  _a0[1], _a1[0],  _a1[1], _a0[0] + _c0[2], _a0[1] + _c0[3], _a1[0] + _c1[0], _a1[1] + _c1[1]);
+						_ny = eval_bezier_y(j / sample, _a0[0],  _a0[1], _a1[0],  _a1[1], _a0[0] + _c0[2], _a0[1] + _c0[3], _a1[0] + _c1[0], _a1[1] + _c1[1]);
+					}
+					
+					sg[j * 2 + 0] = _nx;
+					sg[j * 2 + 1] = _ny;
+					
+					boundary.addPoint(_nx, _ny);
+					if(j) l += point_distance(_nx, _ny, _ox, _oy);	
+					
+					_ox = _nx;
+					_oy = _ny;
+				}
+				
+				segments[i]   = sg;
+				lengths[i]    = l;
+				lengthTotal  += l;
+				lengthAccs[i] = lengthTotal;
+			}
 		}
 		
 	}
@@ -142,6 +178,7 @@ function Node_Path_Smooth(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	static getPointDistance = function(_dist, _ind = 0, out = undefined) {
 		if(!is(out, PathPoint)) out = new PathPoint(); else out.reset();
 		if(array_empty(lengths)) return out;
+		if(anchorSize == 0) return out;
 		
 		var _cKey = _dist;
 		if(ds_map_exists(cached_pos, _cKey))
@@ -150,16 +187,32 @@ function Node_Path_Smooth(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		if(loop) _dist = safe_mod(_dist, lengthTotal, true);
 		else     _dist = clamp(_dist, 0, lengthTotal);
 		
-		if(anchorSize == 0) return out;
-		
-		if(lengthNorm) {
+		if(algorithm == 1) {
 			for(var i = 0; i < anchorSize; i++) {
+				if(_dist > lengths[i]) { _dist -= lengths[i]; continue; }
+				
+				var _a0 = anchors[(i - 1 + anchorSize) % anchorSize];
+				var _a1 = anchors[(i + 0) % anchorSize];
+				var _a2 = anchors[(i + 1) % anchorSize];
+				var _a3 = anchors[(i + 2) % anchorSize];
+				
+				var _t = _dist / lengths[i];
+				
+				out.x = KeyframeInterpolateAuto(_a0[0], _a1[0], _a2[0], _a3[0], _t);
+				out.y = KeyframeInterpolateAuto(_a0[1], _a1[1], _a2[1], _a3[1], _t);
+				
+				cached_pos[? _cKey] = out.clone();
+				return out;
+			}
+			
+		} else if(lengthNorm) {
+			for(var i = 0; i < anchorSize; i++) {
+				if(_dist > lengths[i]) { _dist -= lengths[i]; continue; }
+				
 				var _a0 = anchors[ (i + 0) % anchorSize];
 				var _a1 = anchors[ (i + 1) % anchorSize];
 				var _c0 = controls[(i + 0) % anchorSize];
 				var _c1 = controls[(i + 1) % anchorSize];
-				
-				if(_dist > lengths[i]) { _dist -= lengths[i]; continue; }
 				
 				var _t = _dist / lengths[i];
 				
@@ -293,13 +346,19 @@ function Node_Path_Smooth(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	
 	static update = function(frame = CURRENT_FRAME) {
 		#region data
-			    loop = getInputData( 0);
-			var rond = getInputData( 1);
-			var smot = getInputData( 2);
+			    loop   = getInputData( 0);
+			var rond   = getInputData( 1);
+			algorithm  = getInputData( 6);
+			var smot   = getInputData( 2);
 			
 			lengthNorm = getInputData( 5);
 			var samPos = getInputData( 3);
 			var samTyp = getInputData( 4);
+			
+			inputs[ 2].setVisible(algorithm == 0);
+			
+			inputs[ 5].setVisible(algorithm == 0);
+			inputs[ 4].setVisible(algorithm == 0);
 			
 			ds_map_clear(cached_pos);
 		#endregion
@@ -357,7 +416,11 @@ function Node_Path_Smooth(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		
 		if(anchorSize <= 0) return;
 		
-		if(samTyp == 0) {
+		if(algorithm == 1) {
+			var p = getPointRatio(samPos);
+			outputs[1].setValue([p.x, p.y]);
+			
+		} else if(samTyp == 0) {
 			var p = getPointRatio(samPos);
 			outputs[1].setValue([p.x, p.y]);
 			
@@ -378,14 +441,14 @@ function Node_Path_Smooth(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 				
 			} else {
 				out[0] = eval_bezier_x(_t, _a0[0],          _a0[1], 
-				                          _a1[0],          _a1[1], 
-				                          _a0[0] + _c0[2], _a0[1] + _c0[3], 
-				                          _a1[0] + _c1[0], _a1[1] + _c1[1]);
+				                           _a1[0],          _a1[1], 
+				                           _a0[0] + _c0[2], _a0[1] + _c0[3], 
+				                           _a1[0] + _c1[0], _a1[1] + _c1[1]);
 				                          
 				out[1] = eval_bezier_y(_t, _a0[0],          _a0[1], 
-				                          _a1[0],          _a1[1], 
-				                          _a0[0] + _c0[2], _a0[1] + _c0[3], 
-				                          _a1[0] + _c1[0], _a1[1] + _c1[1]);
+				                           _a1[0],          _a1[1], 
+				                           _a0[0] + _c0[2], _a0[1] + _c0[3], 
+				                           _a1[0] + _c1[0], _a1[1] + _c1[1]);
 			}
 			
 			outputs[1].setValue(out);
