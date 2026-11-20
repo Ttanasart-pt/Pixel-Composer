@@ -1,0 +1,12 @@
+[
+  {
+    "version": "1.22.3.104",
+    "changes": [
+      {
+        "date": "2026-11-20T03:54:28.021Z",
+        "node": "Swizzle",
+        "commit": "**Swizzle**: Now treat scalar value as vec1."
+      }
+    ]
+  }
+]
