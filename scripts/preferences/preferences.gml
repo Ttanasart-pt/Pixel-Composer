@@ -183,13 +183,15 @@
 			
 			PREFERENCES.widget_draw_favourite             = true;
 			
+			PREFERENCES.WIDGET_RIGHT_BUTTONS              = [ "Reset", "Set Default", "Expression", "Bypass", "Favourite" ];
+			PREFERENCES.WIDGET_RIGHT_ANIM_BUTTONS         = [ "Loop", "Driver", "Previous Key", "Toggle Key", "Next Key" ];
+
 			PREFERENCES.widget_draw_order                 = [ "Reset", "Set Default" ];
 			PREFERENCES.widget_draw_order_anim            = [ "Driver", "Toggle Key" ];
+			
+			PREFERENCES.widget_exp_draw_order             = [ "Reset", "Set Default" ];
 			PREFERENCES.widget_exp_draw_order_anim        = [ "Loop", "Driver", "Previous Key", "Toggle Key", "Next Key" ];
 			
-			PREFERENCES.WIDGET_RIGHT_BUTTONS              = [ "Reset", "Set Default", "Expression", "Bypass", "Favourite" ];
-			PREFERENCES.WIDGET_RIGHT_ANIM_BUTTONS         = [ "Next Key", "Toggle Key", "Previous Key", "Loop", "Driver" ];
-
 			PREFERENCES.widget_draw_reset                 = true;
 			PREFERENCES.widget_draw_default               = true;
 			

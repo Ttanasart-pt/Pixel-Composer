@@ -401,7 +401,6 @@ function drawWidget(xx, yy, ww, _m, _jun, global_var = true, _hover = false, _fo
 		if(_input) { 
 			if(jun.is_anim) { // Keyframe
 				var buttons = breakLine? PREFERENCES.widget_exp_draw_order_anim : PREFERENCES.widget_draw_order_anim;
-				
 				var kfCurr  = jun.animationCurrentKey();
 				var kfFocus = kfCurr != undefined;
 				
@@ -465,10 +464,11 @@ function drawWidget(xx, yy, ww, _m, _jun, global_var = true, _hover = false, _fo
 				}
 				
 			} else {
+				var buttons = breakLine? PREFERENCES.widget_exp_draw_order : PREFERENCES.widget_draw_order;
 				_boxColr = jun.widgetBoxColor ?? c_white;
 				
-				for( var i = array_length(PREFERENCES.widget_draw_order) - 1; i >= 0; i--) {
-					var _widgetButton = PREFERENCES.widget_draw_order[i];
+				for( var i = array_length(buttons) - 1; i >= 0; i--) {
+					var _widgetButton = buttons[i];
 					
 					switch(_widgetButton) {
 						case "Set Default" :

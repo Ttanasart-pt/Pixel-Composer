@@ -59,22 +59,26 @@ function Panel_Inspector_View_Settings() : Panel_Linear_Setting() constructor {
 		
 		-1, 
 		
-		new __Panel_Linear_Setting_Item(
-			__txt("Right Button"),
-			new toggleGroupOrder(PREFERENCES.widget_draw_order, PREFERENCES.WIDGET_RIGHT_BUTTONS, function(a) /*=>*/ {return setPreference("widget_draw_order", a)}),
-			function( ) /*=>*/   {return PREFERENCES.widget_draw_order},
-			function(v) /*=>*/ { PREFERENCES.widget_draw_order = array_clone(v); },
-			PREFERENCES.widget_draw_order,
-			noone,
-			"widget_draw_order",
-		),
-		
 	];
 	
 	prop_exp = [
 		new __Panel_Linear_Setting_Item(
+			__txt("Right Button"),
+			new toggleGroupOrder(function() /*=>*/ {return PREFERENCES.WIDGET_RIGHT_BUTTONS}, 
+				function(a,d) /*=>*/ { setPreference("widget_exp_draw_order", a); setPreference("WIDGET_RIGHT_BUTTONS", d); }
+			),
+			function( ) /*=>*/   {return PREFERENCES.widget_exp_draw_order},
+			function(v) /*=>*/ { PREFERENCES.widget_exp_draw_order = array_clone(v); },
+			PREFERENCES.widget_exp_draw_order,
+			noone,
+			"widget_exp_draw_order",
+		),
+		
+		new __Panel_Linear_Setting_Item(
 			__txt("Right Button (anim)"),
-			new toggleGroupOrder(PREFERENCES.widget_exp_draw_order_anim, PREFERENCES.WIDGET_RIGHT_ANIM_BUTTONS, function(a) /*=>*/ {return setPreference("widget_exp_draw_order_anim", a)}),
+			new toggleGroupOrder(function() /*=>*/ {return PREFERENCES.WIDGET_RIGHT_ANIM_BUTTONS}, 
+				function(a,d) /*=>*/ { setPreference("widget_exp_draw_order_anim", a); setPreference("WIDGET_RIGHT_ANIM_BUTTONS", d); }
+			),
 			function( ) /*=>*/   {return PREFERENCES.widget_exp_draw_order_anim},
 			function(v) /*=>*/ { PREFERENCES.widget_exp_draw_order_anim = array_clone(v); },
 			PREFERENCES.widget_exp_draw_order_anim,
@@ -85,8 +89,22 @@ function Panel_Inspector_View_Settings() : Panel_Linear_Setting() constructor {
 	
 	prop_com = [
 		new __Panel_Linear_Setting_Item(
+			__txt("Right Button"),
+			new toggleGroupOrder(function() /*=>*/ {return PREFERENCES.WIDGET_RIGHT_BUTTONS}, 
+				function(a,d) /*=>*/ { setPreference("widget_draw_order", a); setPreference("WIDGET_RIGHT_BUTTONS", d); }
+			),
+			function( ) /*=>*/   {return PREFERENCES.widget_draw_order},
+			function(v) /*=>*/ { PREFERENCES.widget_draw_order = array_clone(v); },
+			PREFERENCES.widget_draw_order,
+			noone,
+			"widget_draw_order",
+		),
+		
+		new __Panel_Linear_Setting_Item(
 			__txt("Right Button (anim)"),
-			new toggleGroupOrder(PREFERENCES.widget_draw_order_anim, PREFERENCES.WIDGET_RIGHT_ANIM_BUTTONS, function(a) /*=>*/ {return setPreference("widget_draw_order_anim", a)}),
+			new toggleGroupOrder(function() /*=>*/ {return PREFERENCES.WIDGET_RIGHT_ANIM_BUTTONS}, 
+				function(a,d) /*=>*/ { setPreference("widget_draw_order_anim", a); setPreference("WIDGET_RIGHT_ANIM_BUTTONS", d); }
+			),
 			function( ) /*=>*/   {return PREFERENCES.widget_draw_order_anim},
 			function(v) /*=>*/ { PREFERENCES.widget_draw_order_anim = array_clone(v); },
 			PREFERENCES.widget_draw_order_anim,
