@@ -1493,6 +1493,7 @@
             "Node_Palette_Sort",
             "Node_Palette_Shrink",
             "Node_Palette_Replace",
+            "Node_Palette_Multiply_Alpha",
             
             { "label": "Gradient" },
             { "label": "/Creator" },

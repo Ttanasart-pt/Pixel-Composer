@@ -2411,6 +2411,7 @@
     {"name":"node_padding_data","order":21,"path":"scripts/node_padding_data/node_padding_data.yy",},
     {"name":"node_padding","order":29,"path":"scripts/node_padding/node_padding.yy",},
     {"name":"node_palette_extract","order":24,"path":"scripts/node_palette_extract/node_palette_extract.yy",},
+    {"name":"node_palette_multiply_alpha","order":8,"path":"scripts/node_palette_multiply_alpha/node_palette_multiply_alpha.yy",},
     {"name":"node_palette_shift","order":47,"path":"scripts/node_palette_shift/node_palette_shift.yy",},
     {"name":"node_palette_shrink","order":6,"path":"scripts/node_palette_shrink/node_palette_shrink.yy",},
     {"name":"node_palette_sort","order":4,"path":"scripts/node_palette_sort/node_palette_sort.yy",},

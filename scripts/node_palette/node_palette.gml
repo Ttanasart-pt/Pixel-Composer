@@ -1,15 +1,17 @@
 function Node_Palette(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Palette";
-	always_pad = true;
 	setDimension(96, 48);
 	
-	newInput(0, nodeValue_Palette(      "Palette"           ));
-	newInput(1, nodeValue_Slider_Range( "Trim range", [0,1] ));
+	newInput( 0, nodeValue_Palette(      "Palette"           ));
+	
+	////- =Triming
+	newInput( 1, nodeValue_Slider_Range( "Trim range", [0,1] ));
+	// 2
 	
 	newOutput(0, nodeValue_Output("Palette", VALUE_TYPE.color, [])).setDisplay(VALUE_DISPLAY.palette);
 	
-	input_display_list = [0, 
-		["Trim",	true],	1
+	input_display_list = [ 0, 
+		[ "Triming", true ],  1, 
 	];
 	
 	////- Nodes

@@ -2,26 +2,29 @@ function Node_Palette_Sort(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	name = "Sort Palette";	
 	setDimension(96);
 	
-	newInput(0, nodeValue_Palette("Palette in" ))
-		.setVisible(true, true);
+	////- =Palette
+	newInput( 0, nodeValue_Palette( "Palette In" )).setVisible(true, true);
 	
-	newInput(1, nodeValue_EButton("Order",  0, [ "Brightness", -1, "Hue (HSV)", "Saturation (SHV)", "Value (VHS)", -1, "Red (RGB)", "Green (GBR)", "Blue (BRG)", -1, "Custom" ]))
+	////- =Sorting
+	newInput( 1, nodeValue_EButton( "Order",  0, [ "Brightness", -1, "Hue (HSV)", "Saturation (SHV)", "Value (VHS)", -1, "Red (RGB)", "Green (GBR)", "Blue (BRG)", -1, "Custom" ]))
 		.rejectArray();
-	
-	newInput(2, nodeValue_Bool("Reverse", false));
-	
-	newInput(3, nodeValue_Text("Sort Order", "RGB", @"Compose sorting algorithm using string.
+	newInput( 2, nodeValue_Bool("Reverse", false));
+	newInput( 3, nodeValue_Text("Sort Order", "RGB", @"Compose sorting algorithm using string.
     - RGB: Red/Green/Blur channel
     - HSV: Hue/Saturation/Value
     - L:   Brightness
     - Use small letter for ascending, capital letter for descending order."));
+	// 4
 	
 	newOutput(0, nodeValue_Output("Sorted palette", VALUE_TYPE.color, []))
 		.setDisplay(VALUE_DISPLAY.palette);
 	
 	input_display_list = [
-		0, 1, 3, 2, 
+		[ "Palette", false ],  0, 
+		[ "Sorting", false ],  1,  3,  2, 
 	];
+	
+	////- Node
 	
 	static processData_prebatch = function() {
 		setDimension(96, process_length[0] * 32);

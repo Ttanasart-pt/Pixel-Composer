@@ -2,7 +2,7 @@ function Node_Palette_Replace(_x, _y, _group = noone) : Node_Processor(_x, _y, _
 	name = "Palette Replace";
 	setDimension(96);
 	
-	newInput(0, nodeValue_Palette( "Palette in" )).setVisible(true, true);
+	newInput(0, nodeValue_Palette( "Palette In" )).setVisible(true, true);
 	newInput(1, nodeValue_Palette( "Palette from" ));
 	newInput(2, nodeValue_Palette( "Palette to" ));
 	newInput(3, nodeValue_Slider(  "Threshold",     .1));

@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"node_palette_multiply_alpha",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"node_palette_multiply_alpha",
+  "parent":{
+    "name":"palette",
+    "path":"folders/nodes/data/value/palette.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}
