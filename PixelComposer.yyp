@@ -4076,6 +4076,7 @@
     {"id":{"name":"sh_outline_only","path":"shaders/sh_outline_only/sh_outline_only.yy",},},
     {"id":{"name":"sh_outline","path":"shaders/sh_outline/sh_outline.yy",},},
     {"id":{"name":"sh_override_channel","path":"shaders/sh_override_channel/sh_override_channel.yy",},},
+    {"id":{"name":"sh_palette_extract_prepare","path":"shaders/sh_palette_extract_prepare/sh_palette_extract_prepare.yy",},},
     {"id":{"name":"sh_palette_mixer_atlas_expand_apply","path":"shaders/sh_palette_mixer_atlas_expand_apply/sh_palette_mixer_atlas_expand_apply.yy",},},
     {"id":{"name":"sh_palette_mixer_atlas_expand_coord","path":"shaders/sh_palette_mixer_atlas_expand_coord/sh_palette_mixer_atlas_expand_coord.yy",},},
     {"id":{"name":"sh_palette_mixer_atlas_expand_iterate","path":"shaders/sh_palette_mixer_atlas_expand_iterate/sh_palette_mixer_atlas_expand_iterate.yy",},},

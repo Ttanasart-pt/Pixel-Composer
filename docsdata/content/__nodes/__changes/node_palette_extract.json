@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.22.3.104",
+    "changes": [
+      {
+        "date": "2026-11-20T04:29:49.724Z",
+        "node": "Palette Extract",
+        "commit": "**Palette Extract**: Add multiply alpha option."
+      }
+    ]
+  },
+  {
     "version": "1.22.2.008",
     "changes": [
       {

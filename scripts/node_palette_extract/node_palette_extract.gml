@@ -10,34 +10,35 @@ function Node_Palette_Extract(_x, _y, _group = noone) : Node_Processor(_x, _y, _
 	setDimension(96, 48);
 	
 	////- =Surfaces
-	newInput(0, nodeValue_Surface( "Surface In" )).setRequired();
-	newInput(5, nodeValue_Surface( "Mask" ));
+	newInput( 0, nodeValue_Surface( "Surface In" )).setRequired();
+	newInput( 5, nodeValue_Surface( "Mask"       ));
+	newInput( 7, nodeValue_Bool(    "Multiply Alpha", false ));
 	
 	////- =Palette
-	newInput(3, nodeValue_EScroll( "Algorithm",   0, { data: [ "K-mean", "Frequency", "All Colors" ], update_hover: false } ));
-	newInput(4, nodeValue_EScroll( "Color Space", 1, { data: [ "RGB", "HSV" ], update_hover: false } ));
-	newInput(1, nodeValue_Int(     "Max Colors",  5, "Amount of color in a palette." ));
-	newInput(2, nodeValue_Seed());
-	newInput(6, nodeValue_Slider(  "Radius",    .25 ));
-	// 7
+	newInput( 3, nodeValue_EScroll( "Algorithm",   0, { data: [ "K-mean", "Frequency", "All Colors" ], update_hover: false } ));
+	newInput( 4, nodeValue_EScroll( "Color Space", 1, { data: [ "RGB", "HSV" ], update_hover: false } ));
+	newInput( 1, nodeValue_Int(     "Max Colors",  5, "Amount of color in a palette." ));
+	newInput( 2, nodeValue_Seed());
+	newInput( 6, nodeValue_Slider(  "Radius",        .25    ));
+	// 8
 	
-	newOutput(0, nodeValue_Output("Palette", VALUE_TYPE.color, [] )).setDisplay(VALUE_DISPLAY.palette);
+	newOutput( 0, nodeValue_Output("Palette", VALUE_TYPE.color, [] )).setDisplay(VALUE_DISPLAY.palette);
 	
-	array_foreach(inputs, function(i) /*=>*/ {return i.rejectArray()}, 1);
+	array_foreach(inputs, function(i,_) /*=>*/ {return i.rejectArray()}, 1);
 	
 	input_display_list = [
-		[ "Surfaces", true ], 0, 5, 
-		[ "Palette", false ], 3, 4, 1, 2, 6, 
+		[ "Surfaces", false ],  0,  5,  7, 
+		[ "Palette",  false ],  3,  4,  1,  2,  6, 
 	];
 	
 	////- Node
 	
 	attribute_surface_depth();
 	
-	temp_surface    = [ noone, noone ];
+	temp_surface       = [ noone, noone ];
 	
-	current_palette = [];
-	current_color   = 0;
+	current_palette    = [];
+	current_color      = 0;
 	
 	extraction_step    = 0;
 	extraction_total   = 0;
@@ -378,12 +379,13 @@ function Node_Palette_Extract(_x, _y, _group = noone) : Node_Processor(_x, _y, _
 	
 	static processData = function(_outSurf, _data, _array_index) {
 		#region data
-			var _surf = _data[0];
-			var _mask = _data[5];
+			var _surf = _data[ 0];
+			var _mask = _data[ 5];
+			var _mula = _data[ 7];
 			
-			var _algo = _data[3];
-			var _size = _data[1];
-			var _seed = _data[2];
+			var _algo = _data[ 3];
+			var _size = _data[ 1];
+			var _seed = _data[ 2];
 			
 			inputs[1].setVisible(_algo <  2);
 			inputs[2].setVisible(_algo == 0);
@@ -392,21 +394,18 @@ function Node_Palette_Extract(_x, _y, _group = noone) : Node_Processor(_x, _y, _
 		#endregion
 		
 		if(!is_surface(_surf)) return;
-		if(!is_surface(_mask)) return extractPalette(_surf, _algo, _size, _seed);
-			
+		
 		var _dim = surface_get_dimension(_surf);
 		temp_surface[0] = surface_verify(temp_surface[0], _dim[0], _dim[1]);
 		
-		surface_set_target(temp_surface[0]);
-			DRAW_CLEAR
-			BLEND_OVERRIDE
+		surface_set_shader(temp_surface[0], sh_palette_extract_prepare);
+			shader_set_s( "mask",    _mask );
+			shader_set_i( "useMask", is_surface(_mask) );
+			
+			shader_set_i( "multiplyAlpha", _mula );
+			
 			draw_surface(_surf, 0, 0);
-			
-			BLEND_MULTIPLY
-			draw_surface(_mask, 0, 0);
-			
-			BLEND_NORMAL
-		surface_reset_target();
+		surface_reset_shader();
 		
 		return extractPalette(temp_surface[0], _algo, _size, _seed);
 	}

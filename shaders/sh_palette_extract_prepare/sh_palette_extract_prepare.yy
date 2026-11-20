@@ -1,0 +1,12 @@
+{
+  "$GMShader":"",
+  "%Name":"sh_palette_extract_prepare",
+  "name":"sh_palette_extract_prepare",
+  "parent":{
+    "name":"effects",
+    "path":"folders/nodes/data/filter/effects.yy",
+  },
+  "resourceType":"GMShader",
+  "resourceVersion":"2.0",
+  "type":1,
+}
