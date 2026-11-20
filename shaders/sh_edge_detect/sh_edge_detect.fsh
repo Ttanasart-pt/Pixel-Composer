@@ -1,5 +1,4 @@
 #pragma use(sampler_simple)
-
 #region -- sampler_simple -- [1794912035.362913]
     uniform int  sampleMode;
     
@@ -88,6 +87,7 @@ varying vec4 v_vColour;
 
 uniform vec2 dimension;
 uniform int  filter;
+uniform int  edge;
 uniform int  sides[9];
 
 uniform int  colorMode;
@@ -176,15 +176,17 @@ void main() {
 			int  jj  = int(1. + j);
 			vec4 sam = sampleTexture( gm_BaseTexture, pxs );
 			
-			if(sides[0] == 1) hColor0 += sam * laplac_r0[jj][ii];
-			if(sides[1] == 1) hColor1 += sam * laplac_r1[jj][ii];
-			if(sides[2] == 1) hColor2 += sam * laplac_r2[jj][ii];
-			if(sides[3] == 1) hColor3 += sam * laplac_r3[jj][ii];
+			bool cnt = edge == 1 || (edge == 0 && sam.a > 0.);
 			
-			if(sides[5] == 1) hColor5 += sam * laplac_r5[jj][ii];
-			if(sides[6] == 1) hColor6 += sam * laplac_r6[jj][ii];
-			if(sides[7] == 1) hColor7 += sam * laplac_r7[jj][ii];
-			if(sides[8] == 1) hColor8 += sam * laplac_r8[jj][ii];
+			if(sides[0] == 1 && cnt) hColor0 += sam * laplac_r0[jj][ii];
+			if(sides[1] == 1 && cnt) hColor1 += sam * laplac_r1[jj][ii];
+			if(sides[2] == 1 && cnt) hColor2 += sam * laplac_r2[jj][ii];
+			if(sides[3] == 1 && cnt) hColor3 += sam * laplac_r3[jj][ii];
+			
+			if(sides[5] == 1 && cnt) hColor5 += sam * laplac_r5[jj][ii];
+			if(sides[6] == 1 && cnt) hColor6 += sam * laplac_r6[jj][ii];
+			if(sides[7] == 1 && cnt) hColor7 += sam * laplac_r7[jj][ii];
+			if(sides[8] == 1 && cnt) hColor8 += sam * laplac_r8[jj][ii];
 		}
 		
 		hColor = max(hColor, abs(hColor0));
@@ -198,24 +200,31 @@ void main() {
 		hColor = max(hColor, abs(hColor8));
 		
 	} else {
+		vec4 sam;
+		bool cnt;
+		
 		for(float i = -1.; i <= 1.; i++) 
 		for(float j = -1.; j <= 1.; j++) {
 			vec2 pxs = v_vTexcoord + vec2(texel.x * i, texel.y * j);
 			pxs = clamp(pxs, vec2(0.), vec2(1.));
 			
+			sam = sampleTexture( gm_BaseTexture, pxs );
+			cnt = edge == 1 || (edge == 0 && sam.a > 0.);
+			if(!cnt) continue;
+			
 			int ii = int(1. + i);
 			int jj = int(1. + j);
 			
 			if(filter == 0) {
-				hColor += sampleTexture( gm_BaseTexture, pxs ) * sobel[jj][ii];
-				vColor += sampleTexture( gm_BaseTexture, pxs ) * sobel[ii][jj];
+				hColor += sam * sobel[jj][ii];
+				vColor += sam * sobel[ii][jj];
 				
 			} else if(filter == 1) {
-				hColor += sampleTexture( gm_BaseTexture, pxs ) * prewit[jj][ii];
-				vColor += sampleTexture( gm_BaseTexture, pxs ) * prewit[ii][jj];	
+				hColor += sam * prewit[jj][ii];
+				vColor += sam * prewit[ii][jj];	
 				
 			} else if(filter == 2) {
-				hColor += sampleTexture( gm_BaseTexture, pxs ) * laplac[jj][ii];
+				hColor += sam * laplac[jj][ii];
 			}
 		}
 	}

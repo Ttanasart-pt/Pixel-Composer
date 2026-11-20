@@ -18,19 +18,20 @@ function Node_Edge_Detect(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	newInput( 2, nodeValue_EScroll( "Oversample mode", 0, [ "Empty", "Clamp", "Repeat" ]));
 		
 	////- =Edge
-	newInput( 1, nodeValue_EScroll( "Algorithm", 0, ["Sobel", "Prewitt", "Laplacian", "Neighbor max diff"] )).setPieMenu();
+	newInput( 1, nodeValue_EScroll( "Algorithm",  0, ["Sobel", "Prewitt", "Laplacian", "Neighbor max diff"] )).setPieMenu();
+	newInput(12, nodeValue_Bool(    "Shape Edge", true ));
 	
 	////- =Rendering
 	newInput( 9, nodeValue_EScroll(  "Color", 0, [ "Color", "Greyscale", "BW" ] ));
 	newInput(10, nodeValue_Range(    "Level In",  [0,1] ));
 	newInput(11, nodeValue_Range(    "Level Out", [0,1] ));
-	// 12
+	// 13
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
 	input_display_list = [ 5, 6, 
 		[ "Surfaces",     true ],  0,  3,  4,  7,  8, 
-		[ "Edge detect", false ],  1, 
+		[ "Edge detect", false ],  1, 12, 
 		[ "Rendering",   false ],  9, 10, 11, 
 	];
 	
@@ -53,7 +54,9 @@ function Node_Edge_Detect(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	static processData = function(_outSurf, _data, _array_index) {
 		#region data
 			var surf  = _data[ 0];
+			
 			var filt  = _data[ 1];
+			var edge  = _data[12];
 			
 			var colr  = _data[ 9];
 			var levl  = _data[10];
@@ -70,10 +73,11 @@ function Node_Edge_Detect(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 			shader_set_i(   "filter",      filt );
 			shader_set_i(   "sampleMode",  over );
 			
-			shader_set_i(   "colorMode",  colr );
-			shader_set_2(   "levelIn",    levl );
-			shader_set_2(   "levelOut",   levo );
+			shader_set_i(   "colorMode",   colr );
+			shader_set_2(   "levelIn",     levl );
+			shader_set_2(   "levelOut",    levo );
 			
+			shader_set_i(   "edge",        edge );
 			shader_set_i(   "sides",       attributes.filter );
 			
 			draw_surface_safe(surf);

@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.22.3.104",
+    "changes": [
+      {
+        "date": "2026-11-20T09:26:01.964Z",
+        "node": "",
+        "commit": "**Round Corner**: Add color-based region selection."
+      }
+    ]
+  },
+  {
     "version": "1.21.9.209",
     "changes": [
       {

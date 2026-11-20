@@ -16,18 +16,23 @@ function Node_Corner(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	newInput( 3, nodeValue_Slider(  "Mix",     1 ));
 	__init_mask_modifier(2, 6); // inputs 6, 7
 	
+	////- =Region
+	newInput(12, nodeValue_EScroll( "Region Type", 0, [ "BW Island", "Color" ] ));
+	newInput(13, nodeValue_Slider(  "Threshold",  .1 ));
+	
 	////- =Corner
 	newInput( 1, nodeValue_ISlider( "Radius",     2, [1, 16, 0.1] )).setMappable(9).setPieMenu();
 	newInput( 8, nodeValue_Slider(  "Threshold", .5 )).setHotkey("T").setMappable(10).setPieMenu();
 	
 	////- =Render
 	newInput(11, nodeValue_Bool(  "Transparent", false ));
-	// 12
+	// 14
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
 	input_display_list = [  4,  5, 
 		[ "Surfaces", true ],  0,  2,  3,  6,  7, 
+		[ "Region",	 false ], 12, 13, 
 		[ "Corner",	 false ],  1,  9,  8, 10, 
 		[ "Render",	 false ], 11, 
 	]
@@ -55,10 +60,16 @@ function Node_Corner(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	static processData = function(_outSurf, _data, _array_index) {
 		#region data
 			var _surf = _data[ 0];
+			
+			var _reg  = _data[12];
+			var _cthr = _data[13];
+			
 			var _rad  = _data[ 1];
 			var _thr  = _data[ 8];
 			
 			var _alph = _data[11];
+			
+			inputs[13].setVisible(_reg == 1);
 		#endregion
 		
 		var _sw = surface_get_width_safe(_surf);
@@ -77,11 +88,18 @@ function Node_Corner(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		var _itr = max(_sw, _sh) / 4;
 		var _bg  = 1;
 		
+		shader_set(sh_corner_iterate);
+			shader_set_i( "sampleMode", getAttribute("oversample"));
+			shader_set_2( "dimension",    _dim  );
+		
+			shader_set_i( "regionType",   _reg  );
+			shader_set_f( "threshold",    _cthr );
+			
+			shader_set_s( "baseSurface",  _surf );
+		shader_reset();		
+		
 		repeat(_itr) {
 			surface_set_shader(temp_surface[_bg], sh_corner_iterate);
-				shader_set_i( "sampleMode", getAttribute("oversample"));
-			
-				shader_set_2("dimension", _dim);
 				draw_surface_safe(temp_surface[!_bg]);
 			surface_reset_shader();
 			_bg = !_bg;

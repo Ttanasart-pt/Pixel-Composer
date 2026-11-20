@@ -240,7 +240,6 @@ function __NodeValue_Vec2(_name, _node, _value, _data = {}) : NodeValue(_name, _
 			}
 			return false;
 		}
-			
 		
 		var _hovering = preview_hotkey_active;
 		
@@ -303,7 +302,8 @@ function __NodeValue_Vec2(_name, _node, _value, _data = {}) : NodeValue(_name, _
 				
 			} else {
 				for( var i = 0, n = array_length(animator.values); i < n; i++ ) {
-					var _v = animator.values[i].value;
+					var _k = animator.values[i];
+					var _v = _k.value;
 					    _v = unit.apply(_v, node.preview_index);
 					
 					nx = _x + _v[0] * _s;

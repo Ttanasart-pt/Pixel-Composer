@@ -89,11 +89,17 @@ varying vec4 v_vColour;
 
 uniform vec2 dimension;
 
+uniform int   regionType;
+uniform float threshold;
+
+uniform sampler2D baseSurface;
+
 vec2 min2(vec2 a, vec2 b) { return a.y < b.y? a : (a.x < b.x? a : b); }
 
 void main() {
-	vec2  tx = 1. / dimension;
-	vec4  cc = texture2D( gm_BaseTexture, v_vTexcoord );
+	vec2 tx = 1. / dimension;
+	vec4 cc    = texture2D( gm_BaseTexture, v_vTexcoord );
+	vec4 baseC = texture2D( baseSurface, v_vTexcoord );
 	
 	gl_FragColor = vec4(0.);
 	if(cc.a == 0.) return;
@@ -105,12 +111,24 @@ void main() {
 		ss = sampleTexture( gm_BaseTexture, v_vTexcoord + vec2(i * tx.x, 0.) );
 		if(ss.a == 0.) break;
 		
+		if(regionType == 1) {
+			vec4 scs = sampleTexture( baseSurface, ss.xy );
+			if(length(baseC.rgb - scs.rgb) > threshold)
+				break;
+		}
+		
 		cx = min(cx, ss.xy);
 	}
 	
 	for(float i = 1.; i <= SPAN; i++) {
 		ss = sampleTexture( gm_BaseTexture, v_vTexcoord - vec2(i * tx.x, 0.) );
 		if(ss.a == 0.) break;
+		
+		if(regionType == 1) {
+			vec4 scs = sampleTexture( baseSurface, ss.xy );
+			if(length(baseC.rgb - scs.rgb) > threshold)
+				break;
+		}
 		
 		cx = min(cx, ss.xy);
 	}
@@ -119,12 +137,24 @@ void main() {
 		ss = sampleTexture( gm_BaseTexture, v_vTexcoord + vec2(0., i * tx.y) );
 		if(ss.a == 0.) break;
 		
+		if(regionType == 1) {
+			vec4 scs = sampleTexture( baseSurface, ss.xy );
+			if(length(baseC.rgb - scs.rgb) > threshold)
+				break;
+		}
+		
 		cx = min(cx, ss.xy);
 	}
 	
 	for(float i = 1.; i <= SPAN; i++) {
 		ss = sampleTexture( gm_BaseTexture, v_vTexcoord - vec2(0., i * tx.y) );
 		if(ss.a == 0.) break;
+		
+		if(regionType == 1) {
+			vec4 scs = sampleTexture( baseSurface, ss.xy );
+			if(length(baseC.rgb - scs.rgb) > threshold)
+				break;
+		}
 		
 		cx = min(cx, ss.xy);
 	}
