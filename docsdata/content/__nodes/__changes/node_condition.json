@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.22.3.104",
+    "changes": [
+      {
+        "date": "2026-11-20T03:51:25.184Z",
+        "node": "",
+        "commit": "**Condition**: Change to array processor"
+      }
+    ]
+  },
+  {
     "version": "1.21.8.009",
     "changes": [
       {

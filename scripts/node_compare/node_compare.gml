@@ -30,23 +30,29 @@
 function Node_Compare(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name  = "Compare";
 	color = COLORS.node_blend_number;
-	
 	setDimension(96, 48);
 	
-	newInput(0, nodeValue_EScroll("Type",  0, [ new scrollItem("Equal",            s_node_condition_type, 0), 
-												          new scrollItem("Not equal",        s_node_condition_type, 1), 
-												          new scrollItem("Greater ",         s_node_condition_type, 4), 
-												          new scrollItem("Greater or equal", s_node_condition_type, 5), 
-												          new scrollItem("Lesser",           s_node_condition_type, 2), 
-												          new scrollItem("Lesser or equal",  s_node_condition_type, 3), ]));
+	////- =Compare
+	newInput( 0, nodeValue_EScroll( "Type", 0, [ 
+		new scrollItem("Equal",            s_node_condition_type, 0), 
+		new scrollItem("Not equal",        s_node_condition_type, 1), 
+		new scrollItem("Greater ",         s_node_condition_type, 4), 
+		new scrollItem("Greater or equal", s_node_condition_type, 5), 
+		new scrollItem("Lesser",           s_node_condition_type, 2), 
+		new scrollItem("Lesser or equal",  s_node_condition_type, 3), 
+	]));
 	
-	newInput(1, nodeValue_Float("a", 0))
-		.setVisible(true, true);
-		
-	newInput(2, nodeValue_Float("b", 0))
-		.setVisible(true, true);
+	newInput( 1, nodeValue_Float( "a", 0 )).setVisible(true, true);
+	newInput( 2, nodeValue_Float( "b", 0 )).setVisible(true, true);
+	// 3
 	
 	newOutput(0, nodeValue_Output("Result", VALUE_TYPE.boolean, false));
+	
+	input_display_list = [
+		[ "Compare", false ], 0, 1, 2, 
+	]
+	
+	////- Node
 	
 	static _compare = function(mode, a, b) {
 		switch(mode) {
