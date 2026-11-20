@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"toggleGroupOrder",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"toggleGroupOrder",
+  "parent":{
+    "name":"check",
+    "path":"folders/widgets/check.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

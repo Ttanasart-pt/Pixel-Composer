@@ -15,7 +15,8 @@ function textArrayBox(_arraySet, _data, _onModify = noone) : widget() constructo
 	
 	static setAddable = function(a=true) /*=>*/ { addable = a; return self; }
 	
-	static drawParam = function(params) {
+	static fetchHeight = function(params) { return params.h; }
+	static drawParam   = function(params) {
 		setParam(params);
 		return draw(params.x, params.y, params.w, params.h, params.m, params.rx, params.ry);
 	}

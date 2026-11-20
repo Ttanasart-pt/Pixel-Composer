@@ -54,12 +54,38 @@ function Panel_Linear_Setting() : PanelContent() constructor {
 		h = ui(16) + hpad; 
 		h = 0; 
 		
+		var padd = ui(THEME_VALUE.panel_inspector_prop_paddding + 2);
+		
+		var sw = w;
+		var ww = max(wdgw, sw * 0.5); 
+		var wh = prop_height - ui(6);
+		
+		var th = prop_height;
+		
 		for( var i = 0, n = array_length(properties); i < n; i++ ) {
 			var _prop = properties[i];
 			
-			if(_prop == -1) h += ui(8)
-			else            h += prop_height;
+			if(_prop == -1) {     h += ui( 8); continue; }
+			if(is_array(_prop)) { h += ui(22); continue; }
+			if(is(_prop, __Panel_Linear_Setting_Label)) { h += prop_height; continue; }
+			
+			if(is(_prop, __Panel_Linear_Setting_Item)) {
+				var _widg = _prop.editWidget;
+				var _data = _prop.data;
+				if(is_callable(_data)) _data = _data();
+				
+				var _x1  = sw - ui(4);
+				var _wdw = ww - ui(4);
+				
+				var params = new widgetParam(_x1 - ww, 0, _wdw, wh, _data, undefined, [0,0], x, y).setFont(font);
+				var wdh    = _widg.fetchHeight(params) + padd; 
+				
+				h += max(wdh, th);
+				continue;
+			}
 		}
+		
+		h = min(h, WIN_H - ui(32));
 		
 	}
 	
@@ -165,8 +191,8 @@ function Panel_Linear_Setting() : PanelContent() constructor {
 			if(is(_prop, __Panel_Linear_Setting_Item)) {
 				var _actv = _prop.active;
 				var _text = _prop.name;
-				var _data = _prop.data;
 				var _widg = _prop.editWidget;
+				var _data = _prop.data;
 				if(is_callable(_data)) _data = _data();
 				
 				_widg.setInteract(_actv);

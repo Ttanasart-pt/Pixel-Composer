@@ -5,8 +5,8 @@
   "isDnD":false,
   "name":"toggleGroup",
   "parent":{
-    "name":"widgets",
-    "path":"folders/widgets.yy",
+    "name":"check",
+    "path":"folders/widgets/check.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

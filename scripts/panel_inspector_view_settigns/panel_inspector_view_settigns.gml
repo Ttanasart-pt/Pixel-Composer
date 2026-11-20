@@ -61,7 +61,7 @@ function Panel_Inspector_View_Settings() : Panel_Linear_Setting() constructor {
 		
 		new __Panel_Linear_Setting_Item(
 			__txt("Right Button"),
-			new textArrayBox(function() /*=>*/ {return PREFERENCES.widget_draw_order}, WIDGET_RIGHT_BUTTONS, function() /*=>*/ {return PREF_SAVE()}),
+			new toggleGroupOrder(PREFERENCES.widget_draw_order, PREFERENCES.WIDGET_RIGHT_BUTTONS, function(a) /*=>*/ {return setPreference("widget_draw_order", a)}),
 			function( ) /*=>*/   {return PREFERENCES.widget_draw_order},
 			function(v) /*=>*/ { PREFERENCES.widget_draw_order = array_clone(v); },
 			PREFERENCES.widget_draw_order,
@@ -74,7 +74,7 @@ function Panel_Inspector_View_Settings() : Panel_Linear_Setting() constructor {
 	prop_exp = [
 		new __Panel_Linear_Setting_Item(
 			__txt("Right Button (anim)"),
-			new textArrayBox(function() /*=>*/ {return PREFERENCES.widget_exp_draw_order_anim}, WIDGET_RIGHT_ANIM_BUTTONS, function() /*=>*/ {return PREF_SAVE()}),
+			new toggleGroupOrder(PREFERENCES.widget_exp_draw_order_anim, PREFERENCES.WIDGET_RIGHT_ANIM_BUTTONS, function(a) /*=>*/ {return setPreference("widget_exp_draw_order_anim", a)}),
 			function( ) /*=>*/   {return PREFERENCES.widget_exp_draw_order_anim},
 			function(v) /*=>*/ { PREFERENCES.widget_exp_draw_order_anim = array_clone(v); },
 			PREFERENCES.widget_exp_draw_order_anim,
@@ -86,7 +86,7 @@ function Panel_Inspector_View_Settings() : Panel_Linear_Setting() constructor {
 	prop_com = [
 		new __Panel_Linear_Setting_Item(
 			__txt("Right Button (anim)"),
-			new textArrayBox(function() /*=>*/ {return PREFERENCES.widget_draw_order_anim}, WIDGET_RIGHT_ANIM_BUTTONS, function() /*=>*/ {return PREF_SAVE()}),
+			new toggleGroupOrder(PREFERENCES.widget_draw_order_anim, PREFERENCES.WIDGET_RIGHT_ANIM_BUTTONS, function(a) /*=>*/ {return setPreference("widget_draw_order_anim", a)}),
 			function( ) /*=>*/   {return PREFERENCES.widget_draw_order_anim},
 			function(v) /*=>*/ { PREFERENCES.widget_draw_order_anim = array_clone(v); },
 			PREFERENCES.widget_draw_order_anim,
