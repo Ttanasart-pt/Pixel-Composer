@@ -19,6 +19,11 @@ function __NodeValue_Vec2(_name, _node, _value, _data = {}) : NodeValue(_name, _
 		[ "Current to One ", [noone, [1,[1,1]]] ], 
 	];
 	
+	////- Path
+	
+	attributes.usePath = false;
+	attributes.path    = [];
+	
 	////- GET
 	
 	__temp_path_sampler = new PathPoint();
@@ -104,9 +109,9 @@ function __NodeValue_Vec2(_name, _node, _value, _data = {}) : NodeValue(_name, _
 		var to   = keys[2];
 		
 		if(to.ease_in_type == CURVE_TYPE.catmulrom || from.ease_out_type == CURVE_TYPE.catmulrom) {
-			return sep_axis? KeyframeInterpolateAuto(keys[0].value, keys[1].value, keys[2].value, keys[3].value, rat) : [
-				KeyframeInterpolateAuto(keys[0].value[0], keys[1].value[0], keys[2].value[0], keys[3].value[0], rat),
-				KeyframeInterpolateAuto(keys[0].value[1], keys[1].value[1], keys[2].value[1], keys[3].value[1], rat),
+			return sep_axis? lerp_catmul(keys[0].value, keys[1].value, keys[2].value, keys[3].value, rat) : [
+				lerp_catmul(keys[0].value[0], keys[1].value[0], keys[2].value[0], keys[3].value[0], rat),
+				lerp_catmul(keys[0].value[1], keys[1].value[1], keys[2].value[1], keys[3].value[1], rat),
 			];
 		}
 		

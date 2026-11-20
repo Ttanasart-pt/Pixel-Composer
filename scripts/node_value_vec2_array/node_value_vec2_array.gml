@@ -34,12 +34,12 @@ function __NodeValue_Vec2Arr(_name, _node, _value, _data = {}) : NodeValue(_name
 		var _as = min(_af, _at);
 		
 		if(to.ease_in_type == CURVE_TYPE.catmulrom || from.ease_out_type == CURVE_TYPE.catmulrom) {
-			if(sep_axis) return KeyframeInterpolateAuto(keys[0].value, keys[1].value, keys[2].value, keys[3].value, rat);
+			if(sep_axis) return lerp_catmul(keys[0].value, keys[1].value, keys[2].value, keys[3].value, rat);
 			
 			var _res = array_create(_as);
 			for( var i = 0; i < _as; i++ )
-				_res[i] = [ KeyframeInterpolateAuto(keys[0].value[i][0], keys[1].value[i][0], keys[2].value[i][0], keys[3].value[i][0], rat),
-					        KeyframeInterpolateAuto(keys[0].value[i][1], keys[1].value[i][1], keys[2].value[i][1], keys[3].value[i][1], rat) ];
+				_res[i] = [ lerp_catmul(keys[0].value[i][0], keys[1].value[i][0], keys[2].value[i][0], keys[3].value[i][0], rat),
+					        lerp_catmul(keys[0].value[i][1], keys[1].value[i][1], keys[2].value[i][1], keys[3].value[i][1], rat) ];
 			return _res;
 		}
 		

@@ -400,56 +400,68 @@ function drawWidget(xx, yy, ww, _m, _jun, global_var = true, _hover = false, _fo
 		
 		if(_input) { 
 			if(jun.is_anim) { // Keyframe
-				var _anim = jun.animator;
-				if(breakLine) {
-					bx  -= bs; b = buttonInstant_Pad(bb, bx, by, bs, bs, _m, hv, fc, "", THEME.prop_keyframe, 2); bx -= ui(4);
-					cHov = cHov || b;
-					if(b == 2) jun.animationGotoAfter();
-				}
+				var buttons = breakLine? PREFERENCES.widget_exp_draw_order_anim : PREFERENCES.widget_draw_order_anim;
 				
 				var kfCurr  = jun.animationCurrentKey();
 				var kfFocus = kfCurr != undefined;
 				
-				_boxColr = kfFocus? COLORS._main_value_positive : (jun.widgetBoxColor ?? c_white);
-				var  cc  = kfFocus? COLORS._main_value_positive : COLORS._main_icon;
-				var _tlp = kfFocus? __txt("panel_inspector_remove_key", "Remove keyframe") : __txt("panel_inspector_add_key", "Add keyframe");
-				bx  -= bs; b = buttonInstant_Pad(bb, bx, by, bs, bs, _m, hv, fc, _tlp, THEME.prop_keyframe, 1, cc); bx -= ui(4);
-				cHov = cHov || b;
-				if(b == 2) jun.animationToggleKey();
-				
-				if(breakLine) {
-					bx  -= bs; b = buttonInstant_Pad(bb, bx, by, bs, bs, _m, hv, fc, "", THEME.prop_keyframe, 0); bx -= ui(4);
-					cHov = cHov || b;
-					if(b == 2) jun.animationGotoBefore();
+				for( var i = array_length(buttons) - 1; i >= 0; i--) {
+					var _widgetButton = buttons[i];
 					
-					draw_set_color(COLORS.panel_inspector_key_separator);
-					draw_line(bx + ui(2), by, bx + ui(2), by + bs);
-					
-					tooltip_loop_type.index = jun.on_end;
-					
-					_tlp = tooltip_loop_type;
-					bx  -= bs; b = buttonInstant_Pad(bb, bx, by, bs, bs, _m, hv, fc, _tlp, THEME.prop_on_end, jun.on_end); bx -= ui(4);
-					cHov = cHov || b;
-					
-					var p = sprite_get_number(THEME.prop_on_end);
-					if(b == 1 && key_mod_press(SHIFT) && MOUSE_WHEEL != 0)   
-						jun.on_end = (jun.on_end + sign(MOUSE_WHEEL) + p) % p;
-					if(b == 2) mod_inc_mf0 jun.on_end mod_inc_mf1 jun.on_end mod_inc_mf2  p mod_inc_mf3;
-				}
-				
-				var bt = __txt("Driver");
-				var bh = kfFocus && _hover;
-				var ba = .25 + kfFocus * .55;
-				var cc = kfFocus? (kfCurr.driverObject != undefined? COLORS._main_accent : COLORS._main_icon_light) : COLORS._main_icon;
-				bx  -= bs; 
-				b    = buttonInstant(bb, bx, by, bs, bs, _m, bh, _focus, bt, THEME.driver, 0, cc, ba, ics * .7); 
-				bx  -= ui(4);
-				cHov = cHov || b;
-				
-				if(b == 2) {
-					var dia = new Panel_Keyframe_Driver().setKeyLock(kfCurr);
-					dia.auto_pin = false;
-					dialogPanelCall(dia, rx + bx + ui(4) + bs, ry + by + bs, { anchor: ANCHOR.right | ANCHOR.top });
+					switch(_widgetButton) {
+						case "Next Key" :
+							bx  -= bs; b = buttonInstant_Pad(bb, bx, by, bs, bs, _m, hv, fc, "", THEME.prop_keyframe, 2); bx -= ui(4);
+							cHov = cHov || b;
+							if(b == 2) jun.animationGotoAfter();
+							break;
+							
+						case "Toggle Key" :
+							_boxColr = kfFocus? COLORS._main_value_positive : (jun.widgetBoxColor ?? c_white);
+							var  cc  = kfFocus? COLORS._main_value_positive : COLORS._main_icon;
+							var _tlp = kfFocus? __txt("panel_inspector_remove_key", "Remove keyframe") : 
+							                    __txt("panel_inspector_add_key", "Add keyframe");
+							bx  -= bs; b = buttonInstant_Pad(bb, bx, by, bs, bs, _m, hv, fc, _tlp, THEME.prop_keyframe, 1, cc); bx -= ui(4);
+							cHov = cHov || b;
+							if(b == 2) jun.animationToggleKey();
+							break;
+							
+						case "Previous Key" :
+							bx  -= bs; b = buttonInstant_Pad(bb, bx, by, bs, bs, _m, hv, fc, "", THEME.prop_keyframe, 0); bx -= ui(4);
+							cHov = cHov || b;
+							if(b == 2) jun.animationGotoBefore();
+							break;
+							
+						case "Loop" :
+							tooltip_loop_type.index = jun.on_end;
+						
+							_tlp = tooltip_loop_type;
+							bx  -= bs; b = buttonInstant_Pad(bb, bx, by, bs, bs, _m, hv, fc, _tlp, THEME.prop_on_end, jun.on_end); bx -= ui(4);
+							cHov = cHov || b;
+							
+							var p = sprite_get_number(THEME.prop_on_end);
+							if(b == 1 && key_mod_press(SHIFT) && MOUSE_WHEEL != 0)   
+								jun.on_end = (jun.on_end + sign(MOUSE_WHEEL) + p) % p;
+							if(b == 2) mod_inc_mf0 jun.on_end mod_inc_mf1 jun.on_end mod_inc_mf2  p mod_inc_mf3;
+							break;
+							
+						case "Driver" :
+							var bt = __txt("Driver");
+							var bh = kfFocus && _hover;
+							var ba = .25 + kfFocus * .55;
+							var cc = kfFocus? (kfCurr.driverObject != undefined? COLORS._main_accent : COLORS._main_icon_light) : COLORS._main_icon;
+							bx  -= bs; 
+							b    = buttonInstant(bb, bx, by, bs, bs, _m, bh, _focus, bt, THEME.driver, 0, cc, ba, ics * .7); 
+							bx  -= ui(4);
+							cHov = cHov || b;
+							
+							if(b == 2) {
+								var dia = new Panel_Keyframe_Driver().setKeyLock(kfCurr);
+								dia.auto_pin = false;
+								dialogPanelCall(dia, rx + bx + ui(4) + bs, ry + by + bs, { anchor: ANCHOR.right | ANCHOR.top });
+							}
+							
+							break;
+					}
 				}
 				
 			} else {

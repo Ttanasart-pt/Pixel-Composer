@@ -2165,7 +2165,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 			__i = rat;
 			
 			return array_create_ext(min(_af, _at), function(i) /*=>*/ 
-				{return KeyframeInterpolateAuto(__k[0].value[i], __k[1].value[i], __k[2].value[i], __k[3].value[i], __i)}
+				{return lerp_catmul(__k[0].value[i], __k[1].value[i], __k[2].value[i], __k[3].value[i], __i)}
 			);
 		}
 		

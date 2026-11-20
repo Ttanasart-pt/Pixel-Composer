@@ -6,6 +6,11 @@
         "date": "2026-11-20T04:29:49.724Z",
         "node": "Palette Extract",
         "commit": "**Palette Extract**: Add multiply alpha option."
+      },
+      {
+        "date": "2026-11-20T06:26:56.196Z",
+        "node": "Inspector Panel",
+        "commit": "**Inspector Panel**: Add control for right buttons in animating property."
       }
     ]
   },

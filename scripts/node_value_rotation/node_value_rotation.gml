@@ -46,7 +46,7 @@ function __NodeValue_Rotation(_name, _node, _value, _tooltip = "") : NodeValue(_
 		var to   = keys[2];
 		
 		if(to.ease_in_type == CURVE_TYPE.catmulrom || from.ease_out_type == CURVE_TYPE.catmulrom) {
-			return KeyframeInterpolateAuto(keys[0].value, keys[1].value, keys[2].value, keys[3].value, rat);
+			return lerp_catmul(keys[0].value, keys[1].value, keys[2].value, keys[3].value, rat);
 		}
 		
 		__f = from.value;

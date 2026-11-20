@@ -26,18 +26,6 @@ enum DRIVER_TYPE { none, linear, wiggle, sine }
 	    
 		return eval_curve_segment_x(0, eox, eoy, 1 - eix, eiy, 1, rat);
 	}
-	
-	function KeyframeInterpolateAuto(v0, v1, v2, v3, rat) {
-	    var t = rat;
-		
-	    var a =  -v0 + 3*v1 - 3*v2 + v3;
-	    var b = 2*v0 - 5*v1 + 4*v2 - v3;
-	    var c =  -v0        +   v2;
-	    var d =        2*v1;
-		
-	    var xt = .5 * (a*t*t*t + b*t*t + c*t + d);
-		return xt;
-	}
 #endregion
 
 function valueKey(_time, _value, _anim = noone, _in = 0, _ot = 0) constructor {

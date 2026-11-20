@@ -1414,8 +1414,8 @@ function Panel_Animation_Dopesheet() {
 	                        draw_set_color(cc);
 	                        
 	                        if(_catmul) {
-								if(valArray) __v = KeyframeInterpolateAuto(key_prev.value[ki], key_curr.value[ki], key_next.value[ki], key_aftr.value[ki], rr);
-								else         __v = KeyframeInterpolateAuto(key_prev.value,     key_curr.value,     key_next.value,     key_aftr.value,     rr);
+								if(valArray) __v = lerp_catmul(key_prev.value[ki], key_curr.value[ki], key_next.value[ki], key_aftr.value[ki], rr);
+								else         __v = lerp_catmul(key_prev.value,     key_curr.value,     key_next.value,     key_aftr.value,     rr);
 								
 	                        } else {
 		                        __i = KeyframeInterpolate(key_curr, key_next, rr);
@@ -1706,8 +1706,8 @@ function Panel_Animation_Dopesheet() {
 			                        draw_set_color(cc);
 			                        
 			                        if(_catmul) {
-										if(valArray) __v = KeyframeInterpolateAuto(key_prev.value[ki], key_curr.value[ki], key_next.value[ki], key_aftr.value[ki], rr);
-										else         __v = KeyframeInterpolateAuto(key_prev.value,     key_curr.value,     key_next.value,     key_aftr.value,     rr);
+										if(valArray) __v = lerp_catmul(key_prev.value[ki], key_curr.value[ki], key_next.value[ki], key_aftr.value[ki], rr);
+										else         __v = lerp_catmul(key_prev.value,     key_curr.value,     key_next.value,     key_aftr.value,     rr);
 										
 			                        } else {
 				                        __i = KeyframeInterpolate(key_curr, key_next, rr);
@@ -1841,8 +1841,8 @@ function Panel_Animation_Dopesheet() {
 			                        draw_set_color(cc);
 			                        
 			                        if(_catmul) {
-										if(valArray) __v = KeyframeInterpolateAuto(key_prev.value[ki], key_curr.value[ki], key_next.value[ki], key_aftr.value[ki], rr);
-										else         __v = KeyframeInterpolateAuto(key_prev.value,     key_curr.value,     key_next.value,     key_aftr.value,     rr);
+										if(valArray) __v = lerp_catmul(key_prev.value[ki], key_curr.value[ki], key_next.value[ki], key_aftr.value[ki], rr);
+										else         __v = lerp_catmul(key_prev.value,     key_curr.value,     key_next.value,     key_aftr.value,     rr);
 										
 			                        } else {
 				                        __i = KeyframeInterpolate(key_curr, key_next, rr);

@@ -7,13 +7,13 @@ function __NodeValue_Number(_name, _node, _type, _value, _tooltip = "") : NodeVa
 		var to   = keys[2];
 		
 		if(to.ease_in_type == CURVE_TYPE.catmulrom || from.ease_out_type == CURVE_TYPE.catmulrom) {
-			if(!is_array(from.value)) return KeyframeInterpolateAuto(keys[0].value, keys[1].value, keys[2].value, keys[3].value, rat);
+			if(!is_array(from.value)) return lerp_catmul(keys[0].value, keys[1].value, keys[2].value, keys[3].value, rat);
 			
 			__k = keys;
 			__i = rat;
 			
 			return array_create_ext(min(_af, _at), function(i) /*=>*/ 
-				{return KeyframeInterpolateAuto(__k[0].value[i], __k[1].value[i], __k[2].value[i], __k[3].value[i], __i)}
+				{return lerp_catmul(__k[0].value[i], __k[1].value[i], __k[2].value[i], __k[3].value[i], __i)}
 			);
 		}
 		

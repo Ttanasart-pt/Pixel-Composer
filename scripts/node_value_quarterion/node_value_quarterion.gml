@@ -43,15 +43,15 @@ function __NodeValue_Quaternion(_name, _node, _value, _tooltip = "") : __NodeVal
 		if(to.ease_in_type == CURVE_TYPE.catmulrom || from.ease_out_type == CURVE_TYPE.catmulrom) {
 			return attributes.angle_display == QUARTERNION_DISPLAY.euler? 
 			[ 
-				KeyframeInterpolateAuto(keys[0].value[0], keys[1].value[0], keys[2].value[0], keys[3].value[0], rat),
-				KeyframeInterpolateAuto(keys[0].value[1], keys[1].value[1], keys[2].value[1], keys[3].value[1], rat),
-				KeyframeInterpolateAuto(keys[0].value[2], keys[1].value[2], keys[2].value[2], keys[3].value[2], rat),
+				lerp_catmul(keys[0].value[0], keys[1].value[0], keys[2].value[0], keys[3].value[0], rat),
+				lerp_catmul(keys[0].value[1], keys[1].value[1], keys[2].value[1], keys[3].value[1], rat),
+				lerp_catmul(keys[0].value[2], keys[1].value[2], keys[2].value[2], keys[3].value[2], rat),
 			] : 
 			[ 
-				KeyframeInterpolateAuto(keys[0].value[0], keys[1].value[0], keys[2].value[0], keys[3].value[0], rat),
-				KeyframeInterpolateAuto(keys[0].value[1], keys[1].value[1], keys[2].value[1], keys[3].value[1], rat),
-				KeyframeInterpolateAuto(keys[0].value[2], keys[1].value[2], keys[2].value[2], keys[3].value[2], rat),
-				KeyframeInterpolateAuto(keys[0].value[3], keys[1].value[3], keys[2].value[3], keys[3].value[3], rat),
+				lerp_catmul(keys[0].value[0], keys[1].value[0], keys[2].value[0], keys[3].value[0], rat),
+				lerp_catmul(keys[0].value[1], keys[1].value[1], keys[2].value[1], keys[3].value[1], rat),
+				lerp_catmul(keys[0].value[2], keys[1].value[2], keys[2].value[2], keys[3].value[2], rat),
+				lerp_catmul(keys[0].value[3], keys[1].value[3], keys[2].value[3], keys[3].value[3], rat),
 			];
 		}
 		

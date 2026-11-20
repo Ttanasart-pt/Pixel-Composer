@@ -1,67 +1,84 @@
-function lerp_float(from, to, speed, pre = 0.01) {
-	if(fps < 15) return to;
 
-    if(abs(from - to) < pre) return to;
-    
-    var _rat = 1 - power(1 - 1 / speed, delta_time / 10_000);
-    return lerp(from, to, _rat);
-}
-
-function lerp_float_step(from, to, speed, pre = 0.01) {
-	if(abs(from - to) < pre) return to;
-    return lerp(from, to, 1 / speed);
-}
-
-function lerp_linear(from, to, speed) {
-    if(abs(from - to) < speed) return to;
-    return from + sign(to - from) * speed;
-}
-
-function lerp_linear_ui(from, to, speed) {
-    if(abs(from - to) < speed * DELTA_TIME) return to;
-    return from + sign(to - from) * speed * DELTA_TIME;
-}
-
-function lerp_angle_direct(from, to, speed) {
-	return from + angle_difference(to, from) * speed;
-}
-
-function lerp_angle(from, to, speed) {
-	if(fps < 15) return to;
+	////- Lerp
 	
-	var _rat = 1 - power(1 - 1 / speed, delta_time / 10000);
-	return from + angle_difference(to, from) * _rat;
-}
-
-function lerp_angle_linear(from, to, speed) {
-	if(abs(angle_difference(to, from)) < speed) return to;
+	function lerp_float(from, to, speed, pre = 0.01) {
+		if(fps < 15) return to;
 	
-	return from + sign(angle_difference(to, from)) * speed;
-}
+	    if(abs(from - to) < pre) return to;
+	    
+	    var _rat = 1 - power(1 - 1 / speed, delta_time / 10_000);
+	    return lerp(from, to, _rat);
+	}
+	
+	function lerp_float_step(from, to, speed, pre = 0.01) {
+		if(abs(from - to) < pre) return to;
+	    return lerp(from, to, 1 / speed);
+	}
+	
+	function lerp_linear(from, to, speed) {
+	    if(abs(from - to) < speed) return to;
+	    return from + sign(to - from) * speed;
+	}
+	
+	function lerp_linear_ui(from, to, speed) {
+	    if(abs(from - to) < speed * DELTA_TIME) return to;
+	    return from + sign(to - from) * speed * DELTA_TIME;
+	}
+	
+	function lerp_invert(val, from, to) { return (val - from) / (to - from); }
+	
+	function lerp_smooth(_x) { return _x * _x * (3.0 - 2.0 * _x) }
+	
+	function lerp_d3(_a, _b, _l, _p) {
+		_p[0] = lerp(_a[0], _b[0], _l);
+		_p[1] = lerp(_a[1], _b[1], _l);
+		_p[2] = lerp(_a[2], _b[2], _l);
+		return _p;
+	}
+	
+	function lerp_catmul(v0, v1, v2, v3, t) {
+	    var a =  -v0 + 3*v1 - 3*v2 + v3;
+	    var b = 2*v0 - 5*v1 + 4*v2 - v3;
+	    var c =  -v0        +   v2;
+	    var d =        2*v1;
+		
+	    var xt = .5 * (a*t*t*t + b*t*t + c*t + d);
+		return xt;
+	}
 
-function lerp_color(from, to, ratio) {
+	////- Angle
+	
+	function lerp_angle_direct(from, to, speed) {
+		return from + angle_difference(to, from) * speed;
+	}
+	
+	function lerp_angle(from, to, speed) {
+		if(fps < 15) return to;
+		
+		var _rat = 1 - power(1 - 1 / speed, delta_time / 10000);
+		return from + angle_difference(to, from) * _rat;
+	}
+	
+	function lerp_angle_linear(from, to, speed) {
+		if(abs(angle_difference(to, from)) < speed) return to;
+		
+		return from + sign(angle_difference(to, from)) * speed;
+	}
+	
+	function clamp_angle(a, amin, amax) {
+		var ang = (a % 360 + 360) % 360;
+	
+		if(a >= amin && a <= amax) return a;
+	
+		var dmin = angle_difference(amin, ang);
+		var dmax = angle_difference(amax, ang);
+		
+		return abs(dmin) < abs(dmax)? a + dmin : a + dmax;
+	}
+
+	////- Color
+
+	function lerp_color(from, to, ratio) {
 	if(abs(from - to) < 1) return to;
 	return merge_color(from, to, ratio);
-}
-
-function lerp_invert(val, from, to) { return (val - from) / (to - from); }
-
-function lerp_smooth(_x) { return _x * _x * (3.0 - 2.0 * _x) }
-
-function lerp_d3(_a, _b, _l, _p) {
-	_p[0] = lerp(_a[0], _b[0], _l);
-	_p[1] = lerp(_a[1], _b[1], _l);
-	_p[2] = lerp(_a[2], _b[2], _l);
-	return _p;
-}
-
-function clamp_angle(a, amin, amax) {
-	var ang = (a % 360 + 360) % 360;
-
-	if(a >= amin && a <= amax) return a;
-
-	var dmin = angle_difference(amin, ang);
-	var dmax = angle_difference(amax, ang);
-	
-	return abs(dmin) < abs(dmax)? a + dmin : a + dmax;
 }

@@ -15,14 +15,14 @@ function __NodeValue_Vec3_Range(_name, _node, _value, _data = {}) : __NodeValue_
 		var to   = keys[2];
 		
 		if(to.ease_in_type == CURVE_TYPE.catmulrom || from.ease_out_type == CURVE_TYPE.catmulrom) {
-			return sep_axis? KeyframeInterpolateAuto(keys[0].value, keys[1].value, keys[2].value, keys[3].value, rat) : [
-				KeyframeInterpolateAuto(keys[0].value[0], keys[1].value[0], keys[2].value[0], keys[3].value[0], rat),
-				KeyframeInterpolateAuto(keys[0].value[1], keys[1].value[1], keys[2].value[1], keys[3].value[1], rat),
-				KeyframeInterpolateAuto(keys[0].value[2], keys[1].value[2], keys[2].value[2], keys[3].value[2], rat),
+			return sep_axis? lerp_catmul(keys[0].value, keys[1].value, keys[2].value, keys[3].value, rat) : [
+				lerp_catmul(keys[0].value[0], keys[1].value[0], keys[2].value[0], keys[3].value[0], rat),
+				lerp_catmul(keys[0].value[1], keys[1].value[1], keys[2].value[1], keys[3].value[1], rat),
+				lerp_catmul(keys[0].value[2], keys[1].value[2], keys[2].value[2], keys[3].value[2], rat),
 				
-				KeyframeInterpolateAuto(keys[0].value[3], keys[1].value[3], keys[2].value[3], keys[3].value[3], rat),
-				KeyframeInterpolateAuto(keys[0].value[4], keys[1].value[4], keys[2].value[4], keys[3].value[4], rat),
-				KeyframeInterpolateAuto(keys[0].value[5], keys[1].value[5], keys[2].value[5], keys[3].value[5], rat),
+				lerp_catmul(keys[0].value[3], keys[1].value[3], keys[2].value[3], keys[3].value[3], rat),
+				lerp_catmul(keys[0].value[4], keys[1].value[4], keys[2].value[4], keys[3].value[4], rat),
+				lerp_catmul(keys[0].value[5], keys[1].value[5], keys[2].value[5], keys[3].value[5], rat),
 			];
 		}
 		

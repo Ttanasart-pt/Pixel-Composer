@@ -109,8 +109,8 @@ function Node_Path_Smooth(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 				
 				for(var j = 0; j < sample; j++) {
 					var _rat = j / sample;
-					_nx = KeyframeInterpolateAuto(_a0[0], _a1[0], _a2[0], _a3[0], _rat);
-					_ny = KeyframeInterpolateAuto(_a0[1], _a1[1], _a2[1], _a3[1], _rat);
+					_nx = lerp_catmul(_a0[0], _a1[0], _a2[0], _a3[0], _rat);
+					_ny = lerp_catmul(_a0[1], _a1[1], _a2[1], _a3[1], _rat);
 					
 					sg[j * 2 + 0] = _nx;
 					sg[j * 2 + 1] = _ny;
@@ -198,8 +198,8 @@ function Node_Path_Smooth(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 				
 				var _t = _dist / lengths[i];
 				
-				out.x = KeyframeInterpolateAuto(_a0[0], _a1[0], _a2[0], _a3[0], _t);
-				out.y = KeyframeInterpolateAuto(_a0[1], _a1[1], _a2[1], _a3[1], _t);
+				out.x = lerp_catmul(_a0[0], _a1[0], _a2[0], _a3[0], _t);
+				out.y = lerp_catmul(_a0[1], _a1[1], _a2[1], _a3[1], _t);
 				
 				cached_pos[? _cKey] = out.clone();
 				return out;

@@ -1,7 +1,7 @@
 function Panel_Inspector_View_Settings() : Panel_Linear_Setting() constructor {
 	title = __txt("inspector_view_settings", "View Settings");
 	
-	properties = [
+	prop_general = [
 		new __Panel_Linear_Setting_Item(
 			__txt("Type"), 
 			new buttonGroup([ "Compact", "Spacious" ], function(val) /*=>*/ { 
@@ -61,7 +61,7 @@ function Panel_Inspector_View_Settings() : Panel_Linear_Setting() constructor {
 		
 		new __Panel_Linear_Setting_Item(
 			__txt("Right Button"),
-			new textArrayBox(function() /*=>*/ {return PREFERENCES.widget_draw_order}, [ "Reset", "Set Default", "Expression", "Bypass", "Favourite" ], function() /*=>*/ {return PREF_SAVE()}),
+			new textArrayBox(function() /*=>*/ {return PREFERENCES.widget_draw_order}, WIDGET_RIGHT_BUTTONS, function() /*=>*/ {return PREF_SAVE()}),
 			function( ) /*=>*/   {return PREFERENCES.widget_draw_order},
 			function(v) /*=>*/ { PREFERENCES.widget_draw_order = array_clone(v); },
 			PREFERENCES.widget_draw_order,
@@ -71,5 +71,41 @@ function Panel_Inspector_View_Settings() : Panel_Linear_Setting() constructor {
 		
 	];
 	
+	prop_exp = [
+		new __Panel_Linear_Setting_Item(
+			__txt("Right Button (anim)"),
+			new textArrayBox(function() /*=>*/ {return PREFERENCES.widget_exp_draw_order_anim}, WIDGET_RIGHT_ANIM_BUTTONS, function() /*=>*/ {return PREF_SAVE()}),
+			function( ) /*=>*/   {return PREFERENCES.widget_exp_draw_order_anim},
+			function(v) /*=>*/ { PREFERENCES.widget_exp_draw_order_anim = array_clone(v); },
+			PREFERENCES.widget_exp_draw_order_anim,
+			noone,
+			"widget_exp_draw_order_anim",
+		),
+	];
+	
+	prop_com = [
+		new __Panel_Linear_Setting_Item(
+			__txt("Right Button (anim)"),
+			new textArrayBox(function() /*=>*/ {return PREFERENCES.widget_draw_order_anim}, WIDGET_RIGHT_ANIM_BUTTONS, function() /*=>*/ {return PREF_SAVE()}),
+			function( ) /*=>*/   {return PREFERENCES.widget_draw_order_anim},
+			function(v) /*=>*/ { PREFERENCES.widget_draw_order_anim = array_clone(v); },
+			PREFERENCES.widget_draw_order_anim,
+			noone,
+			"widget_draw_order_anim",
+		),
+	];
+	
+	properties = array_merge(prop_general, PANEL_INSPECTOR.viewMode? prop_exp : prop_com);
+	_viewMode = PANEL_INSPECTOR.viewMode;
+	
 	setHeight();
+	
+	static onDraw = function() {
+		if(_viewMode != PANEL_INSPECTOR.viewMode) {
+			properties = array_merge(prop_general, PANEL_INSPECTOR.viewMode? prop_exp : prop_com);
+			setHeight();
+			_viewMode = PANEL_INSPECTOR.viewMode;
+		}
+	}
+	
 }
