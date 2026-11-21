@@ -9,7 +9,7 @@ function Node_VerletSim_Mesh_Bridge(_x, _y, _group = noone) : Node(_x, _y, _grou
 	
 	////- =Mesh
 	newInput( 0, nodeValue_IVec2(  "Subdivision", [4,4] ));
-	newInput( 1, nodeValue_Bool(   "Quad",        false ));
+	newInput( 1, nodeValue_Bool(   "Quad Faces",  false )).setTooltip("Group pair of triangles to create quad face.");
 	
 	////- =Verlet
 	newInput( 2, nodeValue_Slider( "Tension",     .5    ));
@@ -70,7 +70,7 @@ function Node_VerletSim_Mesh_Bridge(_x, _y, _group = noone) : Node(_x, _y, _grou
 		
 		#region data
 			var _subd = getInputData( 0);
-			var _quad = getInputData( 1);
+			var _face = getInputData( 1);
 			
 			var _ten  = getInputData( 2), _tens = 1 - _ten;
 			var _drag = getInputData( 3);
@@ -226,12 +226,12 @@ function Node_VerletSim_Mesh_Bridge(_x, _y, _group = noone) : Node(_x, _y, _grou
 			}
 		}
 		
-		if(_quad) {
+		if(_face) {
 			var _q = [];
 			for( var i = 0, n = array_length(vtris); i < n; i += 2 ) 
 				_q[i] = [i, i+1];
 			
-			mesh.quads = _q;
+			mesh.faces = _q;
 		}
 		
 		mesh.points     = points;

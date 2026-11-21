@@ -1,5 +1,5 @@
 function Node_Quarternion_From_Euler(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
-	name = "Quaternion From Euler";
+	name = "Euler to Quaternion";
 	setDrawIcon();
 	setDimension(96, 48);
 	

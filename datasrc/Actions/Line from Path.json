@@ -1,5 +1,6 @@
 {
     "name": "Line from Path",
+    "display": "Path to Line",
     "tags": [],
     "tooltip": "",
     "location": ["Generate", "Drawer"],

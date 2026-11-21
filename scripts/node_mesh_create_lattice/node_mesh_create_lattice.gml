@@ -8,8 +8,8 @@ function Node_Mesh_Create_Lattice(_x, _y, _group = noone) : Node(_x, _y, _group)
 	newInput( 0, nodeValue_Area(  "Area", DEF_AREA_REF, { useShape : false } )).setUnitSimple();
 	
 	////- =Mesh
-	newInput( 1, nodeValue_IVec2( "Sample", [8,8] ));
-	newInput( 2, nodeValue_Bool(  "Quad",   false ));
+	newInput( 1, nodeValue_IVec2( "Sample",     [8,8] ));
+	newInput( 2, nodeValue_Bool(  "Quad Faces", false )).setTooltip("Group pair of triangles to create quad face.");
 	// 3
 	
 	newOutput(0, nodeValue_Output("Mesh", VALUE_TYPE.mesh, noone ));
@@ -37,7 +37,7 @@ function Node_Mesh_Create_Lattice(_x, _y, _group = noone) : Node(_x, _y, _group)
 	static update = function() {  
 		var _area = getInputData(0);
 		var _samp = getInputData(1);
-		var _quad = getInputData(2);
+		var _face = getInputData(2);
 		var  mesh = new Mesh();
 		
 		var x0 = _area[0] - _area[2];
@@ -92,14 +92,14 @@ function Node_Mesh_Create_Lattice(_x, _y, _group = noone) : Node(_x, _y, _group)
 			edges[_i++] = [ p0, p1 ];
 		}
 		
-		if(_quad) {
+		if(_face) {
 			var _qamo = gw * gh;
 			var _q = array_create(_qamo);
 			
 			for( var i = 0; i < _qamo; i++ )
 				_q[i] = [i*2, i*2+1];
 			
-			mesh.quads = _q;
+			mesh.faces = _q;
 		}
 		
 		mesh.points    = points;

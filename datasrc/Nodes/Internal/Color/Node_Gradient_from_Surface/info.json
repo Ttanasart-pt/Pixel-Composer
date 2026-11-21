@@ -1,5 +1,5 @@
 {
-    "name":          "Gradient from Surface",
+    "name":          "Surface to Gradient",
     "spr":           "s_node_gradient_from_surface",
     "baseNode":      "Node_Gradient_from_Surface",
     "pxc_version":    122010,

@@ -10,7 +10,7 @@ function Node_VerletSim_Mesh_Grid(_x, _y, _group = noone) : Node(_x, _y, _group)
 	////- =Mesh
 	newInput( 0, nodeValue_Area(   "Area", DEF_AREA_REF, false )).setUnitSimple();
 	newInput( 1, nodeValue_IVec2(  "Subdivision", [4,4] ));
-	newInput( 4, nodeValue_Bool(   "Quad",        false ));
+	newInput( 4, nodeValue_Bool(   "Quad Faces",  false )).setTooltip("Group pair of triangles to create quad face.");
 	
 	////- =Verlet
 	newInput( 2, nodeValue_Slider( "Tension",     .5    ));
@@ -49,7 +49,7 @@ function Node_VerletSim_Mesh_Grid(_x, _y, _group = noone) : Node(_x, _y, _group)
 		#region data
 			var _area = getInputData(0);
 			var _subd = getInputData(1);
-			var _quad = getInputData(4);
+			var _face = getInputData(4);
 			
 			var _ten  = getInputData(2), _tens = 1 - _ten;
 			var _drag = getInputData(3);
@@ -147,14 +147,14 @@ function Node_VerletSim_Mesh_Grid(_x, _y, _group = noone) : Node(_x, _y, _group)
 		}
 		
 		_i = 0;
-		if(_quad) {
+		if(_face) {
 			var _qamo = gw * gh;
 			var _q = array_create(_qamo);
 			
 			for( var i = 0; i < _qamo; i++ )
 				_q[i] = [i*2, i*2+1];
 			
-			mesh.quads = _q;
+			mesh.faces = _q;
 		}
 		
 		mesh.points     = points;

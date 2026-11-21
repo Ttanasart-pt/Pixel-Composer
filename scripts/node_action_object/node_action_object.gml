@@ -1,7 +1,9 @@
 global.ACTIONS = [];
 
 function NodeAction() constructor {
-	name = "New Action";
+	name        = "New Action";
+	displayName = name;
+	
 	spr  = s_node_action_default;
 	node = noone;
 	tags = [];
@@ -20,7 +22,7 @@ function NodeAction() constructor {
 	filepath = "";
 	sprPath  = "";
 	
-	static getName       = function() /*=>*/ {return name};
+	static getName       = function() /*=>*/ {return displayName};
 	static getSpr        = function() /*=>*/ {return spr};
 	static getTooltip    = function() /*=>*/ {return tooltip};
 	static getTooltipSpr = function() /*=>*/ {return tooltip_spr};
@@ -139,16 +141,18 @@ function NodeAction() constructor {
 		filepath = path;
 		var map = json_load_struct(path);
 		
-		name		= struct_try_get(map, "name", "");
-		tags		= struct_try_get(map, "tags", []);
-		tooltip		= struct_try_get(map, "tooltip", "");
-		nodes		= struct_try_get(map, "nodes", []);
-		connections	= struct_try_get(map, "connections", []);
+		name        = map[$ "name"]        ?? "";
+		displayName = map[$ "display"]     ?? name;
 		
-		inputNode	= struct_try_get(map, "inputNode",  noone);
-		outputNode	= struct_try_get(map, "outputNode", noone);
+		tags        = map[$ "tags"]        ?? [];
+		tooltip     = map[$ "tooltip"]     ?? "";
+		nodes       = map[$ "nodes"]       ?? [];
+		connections = map[$ "connections"] ?? [];
 		
-		location	= struct_try_get(map, "location", noone);
+		inputNode   = map[$ "inputNode"]   ?? noone;
+		outputNode  = map[$ "outputNode"]  ?? noone;
+		
+		location	= map[$ "location"]    ?? noone;
 		
 		if(has(map, "sprPath")) {
 			var _path = string_replace(map.sprPath, "./", filename_dir(path) + "/");

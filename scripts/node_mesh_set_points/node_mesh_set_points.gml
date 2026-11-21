@@ -40,10 +40,11 @@ function Node_Mesh_Set_Points(_x, _y, _group = noone) : Node(_x, _y, _group) con
 		outputs[0].setValue(mesh);
 		
 		mesh.edges     = _mesh.edges;
+		mesh.triangles = _mesh.triangles;
+		mesh.faces     = _mesh.faces;
+		mesh.faceEdge  = _mesh.faceEdge;
 		
 		mesh.useShape  = _mesh.useShape;
-		mesh.triangles = _mesh.triangles;
-		mesh.quads     = _mesh.quads;
 		
 		var pamo   = array_length(_pnts);
 		var points = array_create(pamo);

@@ -139,7 +139,7 @@ function Node_Path_Orbital(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		
 		var _path = outputs[0].getValue();
 		if(!is(_path, PathSegment)) 
-			_path = new PathSegment();
+			_path = new PathSegment(self);
 		
 		random_set_seed(_seed);
 		var segment = [];

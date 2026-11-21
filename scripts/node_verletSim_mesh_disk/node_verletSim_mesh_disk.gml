@@ -10,7 +10,7 @@ function Node_VerletSim_Mesh_Disk(_x, _y, _group = noone) : Node(_x, _y, _group)
 	////- =Mesh
 	newInput( 0, nodeValue_Area(   "Area", DEF_AREA_REF, false )).setUnitSimple();
 	newInput( 1, nodeValue_IVec2(  "Subdivision", [12,4] ));
-	newInput( 4, nodeValue_Bool(   "Quad",        false  ));
+	newInput( 4, nodeValue_Bool(   "Quad Faces",  false  )).setTooltip("Group pair of triangles to create quad face.");
 	
 	////- =Verlet
 	newInput( 2, nodeValue_Slider( "Tension",     .5    ));
@@ -53,7 +53,7 @@ function Node_VerletSim_Mesh_Disk(_x, _y, _group = noone) : Node(_x, _y, _group)
 		#region data
 			var _area = getInputData( 0);
 			var _subd = getInputData( 1);
-			var _quad = getInputData( 4);
+			var _face = getInputData( 4);
 			
 			var _ten  = getInputData( 2), _tens = 1 - _ten;
 			var _drag = getInputData( 3);
@@ -170,12 +170,12 @@ function Node_VerletSim_Mesh_Disk(_x, _y, _group = noone) : Node(_x, _y, _group)
 			_i++;
 		}
 		
-		if(_quad) {
+		if(_face) {
 			var _q = [];
 			for( var i = 0, n = array_length(vtris); i < n; i += 2 ) 
 				_q[i] = [i, i+1];
 			
-			mesh.quads = _q;
+			mesh.faces = _q;
 		}
 		
 		mesh.points     = points;

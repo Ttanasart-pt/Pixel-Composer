@@ -1,5 +1,5 @@
 {
-    "name":          "Armature from Path",
+    "name":          "Path to Armature",
     "spr":           "s_node_armature_from_path",
     "baseNode":      "Node_Armature_From_Path",
     "pxc_version":    119043,

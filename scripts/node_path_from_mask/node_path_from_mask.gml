@@ -1,5 +1,5 @@
 function Node_Path_From_Mask(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
-	name = "Path from Mask";
+	name = "Mask to Path";
 	
 	newInput( 0, nodeValue_Surface( "Mask" ));
 	

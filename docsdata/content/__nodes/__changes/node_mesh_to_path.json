@@ -1,5 +1,20 @@
 [
   {
+    "version": "1.22.3.105",
+    "changes": [
+      {
+        "date": "2026-11-21T09:25:51.618Z",
+        "node": "",
+        "commit": "**input]\" name to \"[input**: to [output**: \"."
+      },
+      {
+        "date": "2026-11-21T09:59:15.282Z",
+        "node": "",
+        "commit": "Introduced"
+      }
+    ]
+  },
+  {
     "version": "1.22.1.203",
     "changes": [
       {

@@ -77,7 +77,7 @@ function __verlet_triangle(_p0, _p1, _p2) constructor {
 	}
 }
 
-function __verlet_quad(_t0, _t1) constructor {
+function __verlet_face(_t0, _t1) constructor {
 	t0 = _t0;
 	t1 = _t1;
 	
@@ -106,7 +106,7 @@ function __verlet_quad(_t0, _t1) constructor {
 function __verlet_Mesh() : Mesh() constructor {
 	vedges     = [];
 	vtriangles = [];
-	vquads     = undefined;
+	vfaces     = undefined;
 	
 	////- Draw
 	

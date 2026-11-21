@@ -3,67 +3,43 @@ function Node_Mesh_To_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	setDrawIcon();
 	setDimension(96, 48);
 	
-	newInput(0, nodeValue("Mesh", self, CONNECT_TYPE.input, VALUE_TYPE.mesh, noone)).setVisible(true, true);
+	////- =Mesh
+	newInput( 0, nodeValue_Mesh( "Mesh" )).setVisible(true, true);
+	newInput( 1, nodeValue_Bool( "Faces", false )).setTooltip("Export each face edges as path segment.");
+	
+	////- =Path
+	// 1
 	
 	newOutput(0, nodeValue_Output("Path", VALUE_TYPE.pathnode, noone));
 	
-	segments = [];
-	length   = 0;
-	lengths  = [];
+	input_display_list = [
+		[ "Mesh", false ], 0, 1, 
+		[ "Path", false ], 
+	]
 	
-	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _params) { 
-		var mesh = getInputData(0);
-		if(mesh == noone) return;
-		
-		draw_set_color(c_grey);
-		mesh.draw(_x, _y, _s);
-		
-		draw_set_color(COLORS._main_icon);
-		var op, np;
-		
-		for( var i = 0, n = array_length(segments); i < n; i += 1 ) {
-			np = segments[i];
-			if(i) draw_line_round(_x + op.x * _s, _y + op.y * _s, _x + np.x * _s, _y + np.y * _s, ui(1));
-			op = np;
-		}
-	}
-	
-	static getLineCount = function() { return 1; }
-	
-	static getPointRatio = function(_rat) {
-		_rat = frac(_rat);
-		var l = _rat * length;
-		
-		for( var i = 1; i < array_length(lengths); i += 1 ) {
-			if(l <= lengths[i]) {
-				var rat = l / lengths[i];
-				var p   = segments[i - 1].lerpTo(segments[i], rat);
-				return new PathPoint(p.x, p.y);
-			}
-			
-			l -= lengths[i];
-		}
-		
-		return new PathPoint();
-	}
+	////- Node
 	
 	static update = function() {  
-		var _mesh = getInputData(0);	
-		outputs[0].setValue(self);
-		if(_mesh == noone) return;
+		#region data
+			var _mesh = getInputData( 0);
+			var _face = getInputData( 1);
+			
+		#endregion
 		
-		segments = _mesh.mergePath();
-		length   = 0;
-		lengths  = [];
+		if(!is(_mesh, Mesh)) return;
 		
-		var op, np;
-		for( var i = 0, n = array_length(segments); i < n; i += 1 ) {
-			np = segments[i];
-			if(i) {
-				lengths[i] = point_distance(op.x, op.y, np.x, np.y);
-				length += lengths[i];
-			}
-			op = np;
+		var _outPath = outputs[0].getValue();
+		if(!is(_outPath, PathSegment))
+			_outPath = new PathSegment(self);
+		outputs[0].setValue(_outPath);
+		
+		if(_face && _mesh.faces != undefined) {
+			var _edges = _mesh.getFaceData();
+			_outPath.setSegment(_edges);
+			
+		} else {
+			var _segs = _mesh.mergePath();
+			_outPath.setSegment(_segs);
 		}
 	}
 }

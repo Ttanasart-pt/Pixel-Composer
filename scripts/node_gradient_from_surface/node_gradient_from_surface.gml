@@ -1,5 +1,5 @@
 function Node_Gradient_from_Surface(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
-	name = "Gradient from Surface";
+	name = "Surface to Gradient";
 	draw_preview_junction = false;
 	setDimension(96, 48);
 	

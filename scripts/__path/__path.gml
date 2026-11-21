@@ -56,11 +56,11 @@ function Path(_node) constructor {
 	
 	static getLoop          = function() /*=>*/ {return loop};
 	
-	static getBoundary      = function() /*=>*/ {return boundary};
-	static getAccuLength    = function() /*=>*/ {return lengthAccs};
-	static getLength        = function() /*=>*/ {return lengthTotal};
-	static getSegmentCount  = function() /*=>*/ {return 1};
-	static getLineCount     = function() /*=>*/ {return 1};
+	static getBoundary      = function(i) /*=>*/ {return boundary};
+	static getAccuLength    = function(i) /*=>*/ {return lengthAccs};
+	static getLength        = function(i) /*=>*/ {return lengthTotal};
+	static getSegmentCount  = function(i) /*=>*/ {return 1};
+	static getLineCount     = function( ) /*=>*/ {return 1};
 	static getTangentRatio  = function(_rat) /*=>*/ {return 0};
 	
 	static getPointDistance = function(_dis, _ind = 0, out = undefined) { return new PathPoint(); }
@@ -83,84 +83,114 @@ function Path(_node) constructor {
 	}
 }
 
-function PathSegment() : Path() constructor {
-	segments = [];
+function PathSegment(_node) : Path(_node) constructor {
+	segments      = [];
+	segment_count = 0;
 	
-	static getBoundary      = function() /*=>*/ {return boundary};
-	static getSegmentCount  = function() /*=>*/ {return array_length(segments)};
-	static getLineCount		= function() /*=>*/ {return 1};
+	static getBoundary      = function(i) /*=>*/ {return boundary[i]};
+	static getAccuLength    = function(i) /*=>*/ {return lengthAccs[i]};
+	static getLength        = function(i) /*=>*/ {return lengthTotal[i]};
+	static getSegmentCount  = function(i) /*=>*/ {return array_length(segments[i])};
+	static getLineCount		= function( ) /*=>*/ {return segment_count};
 	
 	static setBoundary = function() {
-		boundary = new BoundingBox( 0, 0, 0, 0 );
-		if(getSegmentCount() == 0) return;
+		boundary = [];
+		if(getLineCount() == 0) return;
 		
-		var minx = segments[0].x, maxx = segments[0].x;
-		var miny = segments[0].y, maxy = segments[0].y;
-		
-		for( var i = 0, n = array_length(segments); i < n; i++ ) {
-			var s = segments[i];
-			minx = min(minx, s.x);
-			maxx = max(maxx, s.x);
-			miny = min(miny, s.y);
-			maxy = max(maxy, s.y);
-		}
-		
-		boundary = new BoundingBox( minx, miny, maxx, maxy ); 
-	}
-	static setSegment  = function(segment) {
-		self.segments = segment;
-		lengths		  = [];
-		lengthAccs    = [];
-		lengthTotal   = 0;
-		
-		var op, np;
-		for( var i = 0, n = array_length(segment); i < n; i++ ) {
-			np = segment[i];
-			if(i) {
-				lengths[i - 1]    = point_distance(op.x, op.y, np.x, np.y);
-				lengthTotal      += lengths[i - 1];
-				lengthAccs[i - 1] = lengthTotal;
+		for( var j = 0, m = array_length(segments); j < m; j++ ) {
+			var _seg = segments[j];
+			var minx = _seg[0].x, maxx = _seg[0].x;
+			var miny = _seg[0].y, maxy = _seg[0].y;
+			
+			for( var i = 1, n = array_length(_seg); i < n; i++ ) {
+				var s = _seg[i];
+				minx = min(minx, s.x);
+				maxx = max(maxx, s.x);
+				miny = min(miny, s.y);
+				maxy = max(maxy, s.y);
 			}
 			
-			op = np;
+			boundary[j] = new BoundingBox( minx, miny, maxx, maxy );
 		}
+	}
+	
+	static setSegment  = function(_segment) {
+		segments = array_get_depth(_segment) == 2? _segment : [_segment];
+		segment_count = array_length(segments);
+		
+		lengths		  = [];
+		lengthAccs    = [];
+		lengthTotal   = [];
+		
+		for( var j = 0, m = array_length(segments); j < m; j++ ) {
+			var _seg = segments[j];
+			var _lengths     = [];
+			var _lengthAccs  = [];
+			var _lengthTotal = 0;
+			
+			var op, np;
+			for( var i = 0, n = array_length(_seg); i < n; i++ ) {
+				np = _seg[i];
+				if(i) {
+					_lengths[i - 1]    = point_distance(op.x, op.y, np.x, np.y);
+					_lengthTotal      += _lengths[i - 1];
+					_lengthAccs[i - 1] = _lengthTotal;
+				}
+				
+				op = np;
+			}
+				
+			lengths[j]     = _lengths;
+			lengthAccs[j]  = _lengthAccs;
+			lengthTotal[j] = _lengthTotal;
+			
+		}
+			
+		setBoundary();
 	}
 	
 	static getPointDistance = function(_dist, _ind = 0, out = undefined) {
 		if(!is(out, PathPoint)) out = new PathPoint(); else { out.x = 0; out.y = 0; }
 		
-		for( var i = 0; i < array_length(lengths); i++ ) {
-			if(_dist <= lengths[i]) {
-				var rat = _dist / lengths[i];
+		var _seg = segments[_ind];
+		var _len = lengths[_ind];
+		
+		for( var i = 0; i < array_length(_len); i++ ) {
+			if(_dist <= _len[i]) {
+				var rat = _dist / _len[i];
 				
-				out.x = lerp(segments[i].x, segments[i + 1].x, rat);
-				out.y = lerp(segments[i].y, segments[i + 1].y, rat);
+				out.x = lerp(_seg[i].x, _seg[i + 1].x, rat);
+				out.y = lerp(_seg[i].y, _seg[i + 1].y, rat);
 				
 				return out;
 			}
 			
-			_dist -= lengths[i];
+			_dist -= _len[i];
 		}
 		
-		out.x = segments[i].x;
-		out.y = segments[i].y;
+		out.x = _seg[i].x;
+		out.y = _seg[i].y;
 		
 		return out;
 	}
 	
-	static getPointRatio = function(_rat, _ind = 0, out = undefined) { return getPointDistance(frac(_rat) * lengthTotal, _ind, out); }
+	static getPointRatio = function(_rat, _ind = 0, out = undefined) { return getPointDistance(frac(_rat) * lengthTotal[_ind], _ind, out); }
 		
-	static getTangentRatio = function(_rat) {
+	static getTangentRatio = function(_rat, _ind = 0) {
 		_rat = frac(_rat);
-		var l = _rat * lengthTotal;
 		
-		for( var i = 1; i < array_length(lengths); i += 1 ) {
-			if(l <= lengths[i]) {
-				var rat = l / lengths[i];
-				return segments[i - 1].directionTo(segments[i]);
+		var _seg = segments[_ind];
+		var _len = lengths[_ind];
+		
+		var l = _rat * lengthTotal[_ind];
+		
+		for( var i = 1; i < array_length(_len); i += 1 ) {
+			if(l <= _len[i]) {
+				var rat = l / _len[i];
+				return _seg[i-1].directionTo(_seg[i]);
 			}
 			
-			l -= lengths[i];
+			l -= _len[i];
 		}
 		
 		return 0;
@@ -169,14 +199,18 @@ function PathSegment() : Path() constructor {
 	static draw = function(_x, _y, _s) {
 		var ox, oy, nx, ny;
 		
-		for( var i = 0, n = array_length(segments); i < n; i++ ) {
-			nx = _x + segments[i].x * _s;
-			ny = _y + segments[i].y * _s;
+		for( var j = 0, m = array_length(segments); j < m; j++ ) {
+			var _segs = segments[j];
 			
-			if(i) draw_line(ox, oy, nx, ny);
-			
-			ox = nx;
-			oy = ny;
+			for( var i = 0, n = array_length(_segs); i < n; i++ ) {
+				nx = _x + _segs[i].x * _s;
+				ny = _y + _segs[i].y * _s;
+				
+				if(i) draw_line(ox, oy, nx, ny);
+				
+				ox = nx;
+				oy = ny;
+			}
 		}
 	}
 }

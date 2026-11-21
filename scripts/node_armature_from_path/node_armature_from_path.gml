@@ -1,5 +1,5 @@
 function Node_Armature_From_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
-	name = "Armature from Path";
+	name = "Path to Armature";
 	setDimension(96, 96);
 	draw_padding = 8;
 	

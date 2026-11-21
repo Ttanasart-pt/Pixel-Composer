@@ -2,9 +2,11 @@ function Mesh() constructor {
 	points    = [];
 	edges     = [];
 	
-	useShape  = false;
 	triangles = [];
-	quads     = undefined;
+	faces     = undefined;
+	faceEdge  = undefined;
+	
+	useShape  = false;
 	
 	center    = [ 0, 0 ];
 	bbox      = [ 0, 0, 1, 1 ];
@@ -137,14 +139,14 @@ function Mesh() constructor {
 		return _paths;
 	}
 	
-	static mergePath = function(_conn = true) {
-		if(array_length(triangles) == 0) return [];
+	static mergePath = function(_tri = triangles) {
+		if(array_length(_tri) == 0) return [];
 		
 		var segments	= [];
 		var pointsPairs = {};
 		
-		for( var i = 0, n = array_length(triangles); i < n; i++ ) {
-			var t = triangles[i];
+		for( var i = 0, n = array_length(_tri); i < n; i++ ) {
+			var t = _tri[i];
 			for( var j = 0; j < 3; j++ ) {
 				var p0 = points[t[(j + 0) % 3]];
 				var p1 = points[t[(j + 1) % 3]];
@@ -167,8 +169,6 @@ function Mesh() constructor {
 				else		array_push(segments, [ p0, p1 ]);
 			}
 		}
-		
-		if(!_conn) return segments;
 		
 		var _smap   = array_create(array_length(segments));
 		var _pntMap = {};
@@ -196,13 +196,40 @@ function Mesh() constructor {
 		var _spath = connect_index_pairs(_smap);
 		if(array_empty(_spath)) return [];
 		
-		if(_spath[0] == array_last(_spath)) array_pop(_spath);
+		// if(_spath[0] == array_last(_spath)) array_pop(_spath);
 		
 		var   path = array_create(array_length(_spath));
 		for( var i = 0, n = array_length(_spath); i < n; i++ )
 			path[i] = _pntMap[$ _spath[i]];
 		
 		return path;
+	}
+	
+	static getFaceData = function() {
+		if(faces == undefined) { faceEdge = undefined; return faceEdge; }
+		if(faceEdge != undefined) return faceEdge;
+		
+		var famo = array_length(faces);
+		faceEdge = array_verify(faceEdge, famo);
+		
+		for( var i = 0, n = famo; i < n; i++ ) {
+			var _face = faces[i];
+			if(array_empty(_face)) { 
+				faceEdge[i] = [];
+				continue;
+			}
+			
+			var _tris = [];
+			
+			for( var j = 0, m = array_length(_face); j < m; j++ ) {
+				var t = triangles[_face[j]];
+				array_push(_tris, t);
+			}
+			
+			faceEdge[i] = mergePath(_tris);
+		}
+		
+		return faceEdge;
 	}
 	
 	static calcCoM = function() {

@@ -8,7 +8,7 @@ function Node_Mesh_Fill(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	
 	////- =Mesh
 	newInput( 0, nodeValue_Mesh( "Mesh" )).setVisible(true, true).setRequired();
-	newInput(14, nodeValue_Bool( "Quad", false ));
+	newInput(14, nodeValue_Bool( "Faces", false ));
 	
 	////- =Rendering
 	
@@ -60,7 +60,7 @@ function Node_Mesh_Fill(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			var _dim   = _data[ 1];
 			
 			var _mesh  = _data[ 0];
-			var _quad  = _data[14];
+			var _face  = _data[14];
 			
 			var _filD  = _data[10];
 			var _colr  = _data[ 2];
@@ -85,7 +85,7 @@ function Node_Mesh_Fill(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		
 		var _pnt = _mesh.points;
 		var _tri = _mesh.triangles;
-		var _qud = _mesh.quads;
+		var _fac = _mesh.faces;
 		
 		var _alph = _color_get_a(_colr);
 		
@@ -95,71 +95,60 @@ function Node_Mesh_Fill(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		
 		if(_filD) {
 			draw_primitive_begin_texture(pr_trianglelist, surface_get_texture_safe(_text));
-			if(_quad && _qud != undefined) {
-				for( var i = 0, n = array_length(_qud); i < n; i++ ) {
+			if(_face && _fac != undefined) {
+				for( var i = 0, n = array_length(_fac); i < n; i++ ) {
 					var _grc = _grad.evalFast(pfract(random(1) + _grdSh));
 					var _col = colorMultiply(_colr, _grc);
+					var _fcc = _fac[i];
 					
-					var t0 = _tri[_qud[i][0]];
-					var p0 = _pnt[t0[0]];
-					var p1 = _pnt[t0[1]];
-					var p2 = _pnt[t0[2]];
+					var _flen = array_length(_fcc);
+					var _cx = 0, _cy = 0;
 					
-					var t1 = _tri[_qud[i][1]];
-					var q0 = _pnt[t1[0]];
-					var q1 = _pnt[t1[1]];
-					var q2 = _pnt[t1[2]];
-					
-					var cx = (p0.x + p1.x + p2.x + q0.x + q1.x + q2.x) / 6 / _dim[0];
-					var cy = (p0.y + p1.y + p2.y + q0.y + q1.y + q2.y) / 6 / _dim[1];
-							
-					switch(_txMap) {
-						case 0 : 
-							var u0 = p0.x / _dim[0], v0 = p0.y / _dim[1];
-							var u1 = p1.x / _dim[0], v1 = p1.y / _dim[1];
-							var u2 = p2.x / _dim[0], v2 = p2.y / _dim[1];
-							break;
+					if(_txMap == 1)
+					for( var j = 0, m = _flen; j < m; j++ ) {
+						var t0 = _tri[_fcc[j]];
+						var p0 = _pnt[t0[0]];
+						var p1 = _pnt[t0[1]];
+						var p2 = _pnt[t0[2]];
 						
-						case 1 : 
-							var u0 = cx, v0 = cy;
-							var u1 = cx, v1 = cy;
-							var u2 = cx, v2 = cy;
-							break;
-							
-						case 2 : 
-							var u0 = p0[$ "u"] ?? 0, v0 = p0[$ "v"] ?? 0;
-							var u1 = p1[$ "u"] ?? 0, v1 = p1[$ "v"] ?? 0;
-							var u2 = p2[$ "u"] ?? 0, v2 = p2[$ "v"] ?? 0;
-							break;
+						_cx += p0.x + p1.x + p2.x;
+						_cy += p0.y + p1.y + p2.y;
 					}
 					
-					draw_vertex_texture_color(p0.x, p0.y, u0, v0, _col, _alph);
-					draw_vertex_texture_color(p1.x, p1.y, u1, v1, _col, _alph);
-					draw_vertex_texture_color(p2.x, p2.y, u2, v2, _col, _alph);
+					_cx /= _flen * 3 * _dim[0];
+					_cy /= _flen * 3 * _dim[1];
 					
-					switch(_txMap) {
-						case 0 :
-							var u0 = q0.x / _dim[0], v0 = q0.y / _dim[1];
-							var u1 = q1.x / _dim[0], v1 = q1.y / _dim[1];
-							var u2 = q2.x / _dim[0], v2 = q2.y / _dim[1];
-							break;
+					for( var j = 0, m = _flen; j < m; j++ ) {
+						var t0 = _tri[_fcc[j]];
+						var p0 = _pnt[t0[0]];
+						var p1 = _pnt[t0[1]];
+						var p2 = _pnt[t0[2]];
 						
-						case 1 :
-							var u0 = cx, v0 = cy;
-							var u1 = cx, v1 = cy;
-							var u2 = cx, v2 = cy;
-							break;
+						switch(_txMap) {
+							case 0 : 
+								var u0 = p0.x / _dim[0], v0 = p0.y / _dim[1];
+								var u1 = p1.x / _dim[0], v1 = p1.y / _dim[1];
+								var u2 = p2.x / _dim[0], v2 = p2.y / _dim[1];
+								break;
+							
+							case 1 : 
+								var u0 = _cx, v0 = _cy;
+								var u1 = _cx, v1 = _cy;
+								var u2 = _cx, v2 = _cy;
+								break;
+								
+							case 2 : 
+								var u0 = p0[$ "u"] ?? 0, v0 = p0[$ "v"] ?? 0;
+								var u1 = p1[$ "u"] ?? 0, v1 = p1[$ "v"] ?? 0;
+								var u2 = p2[$ "u"] ?? 0, v2 = p2[$ "v"] ?? 0;
+								break;
+						}
+							
+						draw_vertex_texture_color(p0.x, p0.y, u0, v0, _col, _alph);
+						draw_vertex_texture_color(p1.x, p1.y, u1, v1, _col, _alph);
+						draw_vertex_texture_color(p2.x, p2.y, u2, v2, _col, _alph);
 						
-						case 2 : 
-							var u0 = q0[$ "u"] ?? 0, v0 = q0[$ "v"] ?? 0;
-							var u1 = q1[$ "u"] ?? 0, v1 = q1[$ "v"] ?? 0;
-							var u2 = q2[$ "u"] ?? 0, v2 = q2[$ "v"] ?? 0;
-							break;
 					}
-					
-					draw_vertex_texture_color(q0.x, q0.y, u0, v0, _col, _alph);
-					draw_vertex_texture_color(q1.x, q1.y, u1, v1, _col, _alph);
-					draw_vertex_texture_color(q2.x, q2.y, u2, v2, _col, _alph);
 				}
 				
 			} else {
@@ -207,60 +196,30 @@ function Node_Mesh_Fill(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			var _outA = _color_get_a(_outC);
 			
 			draw_set_color_alpha(_outC, _outA);
-			if(_quad && _qud != undefined) {
-				for( var i = 0, n = array_length(_qud); i < n; i++ ) {
-					var t0 = _tri[_qud[i][0]];
-					var t1 = _tri[_qud[i][1]];
+			if(_face && _fac != undefined) {
+				var faceEdge = _mesh.getFaceData();
+				
+				if(is_array(faceEdge))
+				for( var i = 0, n = array_length(faceEdge); i < n; i++ ) {
+					var _edge = faceEdge[i];
+					var ox, oy, nx, ny, sx, sy;
 					
-					var p0 = _pnt[t0[0]];
-					var p1 = _pnt[t0[1]];
-					var p2 = _pnt[t0[2]];
-					var p3;
+					var _eamo = array_length(_edge);
+					if(_eamo < 2) continue;
 					
-					var q0 = _pnt[t1[0]];
-					var q1 = _pnt[t1[1]];
-					var q2 = _pnt[t1[2]];
-					
-					var s0, s1, s2, s3;
-					
-					     if(!q0.equal(p0) && !q0.equal(p1) && !q0.equal(p2)) { s0 = p0; s1 = p1; s2 = p2; s3 = q0; }
-					else if(!q1.equal(p0) && !q1.equal(p1) && !q1.equal(p2)) { s0 = p0; s1 = p1; s2 = p2; s3 = q1; }
-					else if(!q2.equal(p0) && !q2.equal(p1) && !q2.equal(p2)) { s0 = p0; s1 = p1; s2 = p2; s3 = q2; }
-					
-					cx = (s0.x + s1.x + s2.x + s3.x) / 4;
-					cy = (s0.y + s1.y + s2.y + s3.y) / 4;
-					
-					var verts = [
-					    { x: s0.x, y: s0.y },
-					    { x: s1.x, y: s1.y },
-					    { x: s2.x, y: s2.y },
-					    { x: s3.x, y: s3.y }
-					];
-					
-					array_sort(verts, function(a, b) /*=>*/ {
-					    var angle_a = arctan2(a.y - cy, a.x - cx);
-					    var angle_b = arctan2(b.y - cy, b.x - cx);
-					    return angle_a - angle_b;
-					});
-
-					var v0 = verts[0];
-					var v1 = verts[1];
-					var v2 = verts[2];
-					var v3 = verts[3];
-
-					if(_outT == 1) {
-						draw_line(v0.x-1, v0.y-1, v1.x-1, v1.y-1);
-						draw_line(v1.x-1, v1.y-1, v2.x-1, v2.y-1);
-						draw_line(v2.x-1, v2.y-1, v3.x-1, v3.y-1);
-						draw_line(v3.x-1, v3.y-1, v0.x-1, v0.y-1);
+					for( var j = 0, m = _eamo; j < m; j++ ) {
+						nx = _edge[j].x;
+						ny = _edge[j].y;
 						
-					} else {
-						draw_line_round(v0.x-1, v0.y-1, v1.x-1, v1.y-1, _outT);
-						draw_line_round(v1.x-1, v1.y-1, v2.x-1, v2.y-1, _outT);
-						draw_line_round(v2.x-1, v2.y-1, v3.x-1, v3.y-1, _outT);
-						draw_line_round(v3.x-1, v3.y-1, v0.x-1, v0.y-1, _outT);
+						if(j) {
+							if(_outT == 1) draw_line(      ox-1, oy-1, nx-1, ny-1);
+							else           draw_line_round(ox-1, oy-1, nx-1, ny-1, _outT);
+						}
 						
+						ox = nx;
+						oy = ny;
 					}
+					
 				}
 				
 			} else {

@@ -89,7 +89,7 @@ function Node_VerletSim_Render(_x, _y, _group = noone) : Node(_x, _y, _group) co
 					draw_primitive_begin_texture(pr_trianglelist, _tex);
 					draw_set_color(c_white);
 					
-					if(_msh.vquads == undefined) {
+					if(_msh.vfaces == undefined) {
 						var _tamo = array_length(_msh.vtriangles);
 						var _lamo = _tamo * _trim;
 						
@@ -105,12 +105,12 @@ function Node_VerletSim_Render(_x, _y, _group = noone) : Node(_x, _y, _group) co
 						}
 						
 					} else {
-						var _tamo = array_length(_msh.vquads);
+						var _tamo = array_length(_msh.vfaces);
 						var _lamo = _tamo * _trim;
 						
 						for( var i = 0; i < _lamo; i++ ) {
 							var _ind = _inv? _tamo - 1 - i : i;
-							_msh.vquads[_ind].submitVertex();
+							_msh.vfaces[_ind].submitVertex();
 							
 							if(++_i >= 128) {
 								_i = 0;

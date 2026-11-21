@@ -124,16 +124,16 @@ function Node_VerletSim_Mesh(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 			mesh.vtriangles[i] = T;
 		}
 		
-		if(_msh.quads != undefined) {
-			var _amo    = array_length(_msh.quads);
-			mesh.vquads = array_create(_amo);
+		if(_msh.faces != undefined) {
+			var _amo    = array_length(_msh.faces);
+			mesh.vfaces = array_create(_amo);
 			
 			for( var i = 0; i < _amo; i++ ) {
-				var q  = _msh.quads[i];
+				var q  = _msh.faces[i];
 				var t0 = mesh.vtriangles[q[0]];
 				var t1 = mesh.vtriangles[q[1]];
 				
-				mesh.vquads[i] = new __verlet_quad(t0, t1);
+				mesh.vfaces[i] = new __verlet_face(t0, t1);
 			}
 		}
 		
