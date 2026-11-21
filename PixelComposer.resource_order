@@ -914,6 +914,7 @@
     {"name":"note_mesh_create_lattice","order":1,"path":"notes/note_mesh_create_lattice/note_mesh_create_lattice.yy",},
     {"name":"note_mesh_create_path","order":3,"path":"notes/note_mesh_create_path/note_mesh_create_path.yy",},
     {"name":"note_mesh_create_points","order":6,"path":"notes/note_mesh_create_points/note_mesh_create_points.yy",},
+    {"name":"note_mesh_set_points","order":11,"path":"notes/note_mesh_set_points/note_mesh_set_points.yy",},
     {"name":"note_mesh_to_path","order":9,"path":"notes/note_mesh_to_path/note_mesh_to_path.yy",},
     {"name":"note_mesh_transform","order":5,"path":"notes/note_mesh_transform/note_mesh_transform.yy",},
     {"name":"note_mesh_warp","order":25,"path":"notes/note_mesh_warp/note_mesh_warp.yy",},

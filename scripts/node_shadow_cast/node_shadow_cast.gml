@@ -130,7 +130,7 @@ function Node_Shadow_Cast(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 		[ "Light",             false     ],  2,  1, 
 			[ "/Attenuation",  false     ],  5, 13, 
 			[ "/Banding",      false     ],  6, 
-			[ "/Soft Light",   false,    ],  7,  8,  9, 
+			[ "/Soft Light",   false,  7 ],  8,  9, 
 		[ "Ambient Occlusion", false, 10 ], 11, 12, 
 	];
 	
@@ -238,9 +238,10 @@ function Node_Shadow_Cast(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 			surface_reset_shader();
 			
 			surface_set_shader(temp_surface[0], sh_sdf_tex);
+				shader_set_f( "threshold", .5 );
 				draw_surface(temp_surface[2],0,0);
 			surface_reset_shader();
-			
+				
 			repeat(_step) {
 				stepSize /= 2;
 				bg = !bg;

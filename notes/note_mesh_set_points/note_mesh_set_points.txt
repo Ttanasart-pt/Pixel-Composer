@@ -1,0 +1,11 @@
+Replace mesh point data with a new one while keeping edge and triangle data. Can be use for transforming preexisted mesh with a new tranlated points.
+
+## Properties
+
+[proptable]
+Mesh
+Mesh|Base mesh
+	
+Points
+Points|New point data.
+[/proptable]
