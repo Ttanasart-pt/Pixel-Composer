@@ -84,7 +84,7 @@ function Surface_Sampler_Grey(s = noone, _rng = undefined) constructor {
         
     static setSurface = function(s) {
         active  = is_surface(s);
-        if(!active) return;
+        if(!active) return undefined;
         
         sw   = surface_get_width(s);
         sh   = surface_get_height(s);
@@ -93,18 +93,14 @@ function Surface_Sampler_Grey(s = noone, _rng = undefined) constructor {
         surfaceBase = s;
         surface     = surface_verify(surface, sw, sh, surface_r16float);
         
-        surface_set_shader(surface, sh_greyscale);
-            shader_set_2("brightness",        [0,0]);
-            shader_set_i("brightnessUseSurf",  0);
-            
-            shader_set_2("contrast",          [1,1]);
-            shader_set_i("contrastUseSurf",    0);
-            
+        surface_set_shader(surface, sh_sampler_greyscale);
             draw_surface(s,0,0);
         surface_reset_shader();
         
-        buffer = buffer_verify(buffer, size, buffer_fixed, 2);
+        buffer = buffer_verify(buffer, size, buffer_fixed);
         buffer_get_surface(buffer, surface, 0);
+        
+        return self;
     }
     
     setSurface(s);

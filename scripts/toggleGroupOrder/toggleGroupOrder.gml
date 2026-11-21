@@ -3,6 +3,7 @@ function toggleGroupOrder(_data, _onModify = noone) : widget() constructor {
 	data     = [];
 	
 	onModify = _onModify;
+	padding  = ui(4);
 	
 	toggling = undefined;
 	
@@ -14,7 +15,7 @@ function toggleGroupOrder(_data, _onModify = noone) : widget() constructor {
 	static fetchHeight = function(params) { 
 		data = dataGet();
 		var hg = line_get_height(params.font, 4);
-		return hg * max(1, array_safe_length(data));
+		return hg * max(1, array_safe_length(data)) + padding * 2;
 	}
 		
 	static drawParam   = function(params) {
@@ -27,11 +28,13 @@ function toggleGroupOrder(_data, _onModify = noone) : widget() constructor {
 		y = _y;
 		w = _w;
 		
+		var pd = padding;
+		
 		var hg = line_get_height(font, 4);
-		h = hg * max(1, array_safe_length(data));
+		h = hg * max(1, array_safe_length(data)) + pd * 2;
 		data = dataGet();
 		
-		draw_sprite_stretched_ext(THEME.textbox, 3, _x, _y, _w, h, COLORS._main_icon);
+		draw_sprite_stretched_ext(THEME.textbox, 3, _x, _y, _w, h, COLORS._main_icon_light);
 		draw_sprite_stretched_ext(THEME.textbox, 1, _x, _y, _w, h, boxColor, .5);	
 		
 		if(hover && point_in_rectangle(_m[0], _m[1], _x, _y, _x + _w, _y + h))
@@ -44,17 +47,17 @@ function toggleGroupOrder(_data, _onModify = noone) : widget() constructor {
 		var bs = hg - ui(8);
 		updateList = false;
 		
-		var ty = _y;
+		var ty = _y + pd;
 		
-		var hovI = _m[1] > _y + h - hg / 2? array_length(data) : 0;
-    	var hovY = _m[1] > _y + h - hg / 2? _y + h : _y;
+		var hovI = _m[1] > _y + pd + h - hg / 2? array_length(data) : 0;
+    	var hovY = _m[1] > _y + pd + h - hg / 2? _y + h : _y;
     	
 		for( var i = 0, n = array_length(data); i < n; i++ ) {
 			var _dat = data[i];
 			var _tog = toggleMap[$ _dat] == 1;
 			
-			var tx = _x;
-			var tw = _w;
+			var tx = _x + pd;
+			var tw = _w - pd * 2;
 			var th = hg;
 			
 			var bx = tx + hg / 2 - bs / 2;

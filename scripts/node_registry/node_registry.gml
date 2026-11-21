@@ -265,6 +265,7 @@ function NodeObject(_name, _node, _tooltip = "") constructor {
 		var spr_y  = _y          + _h / 2;
 			
 		var _query = struct_try_get(_param, "query", {});
+		var _weigh = struct_try_get(_param, "weight", 1);
 		var _draw  = true;
 		
 		if(struct_try_get(_query, "type") == "preset") {

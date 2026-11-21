@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.22.3.105",
+    "changes": [
+      {
+        "date": "2026-11-21T04:04:37.519Z",
+        "node": "",
+        "commit": "Fix mappable constant output incorrect value."
+      }
+    ]
+  },
+  {
     "version": "1.22.3.102",
     "changes": [
       {

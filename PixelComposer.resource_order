@@ -3631,6 +3631,7 @@
     {"name":"sh_sample_shape","order":3,"path":"shaders/sh_sample_shape/sh_sample_shape.yy",},
     {"name":"sh_sample_tile","order":2,"path":"shaders/sh_sample_tile/sh_sample_tile.yy",},
     {"name":"sh_sample_transform","order":4,"path":"shaders/sh_sample_transform/sh_sample_transform.yy",},
+    {"name":"sh_sampler_greyscale","order":13,"path":"shaders/sh_sampler_greyscale/sh_sampler_greyscale.yy",},
     {"name":"sh_sao","order":4,"path":"shaders/sh_sao/sh_sao.yy",},
     {"name":"sh_scale_content_aware_grey","order":2,"path":"shaders/sh_scale_content_aware_grey/sh_scale_content_aware_grey.yy",},
     {"name":"sh_scale_content_aware_map","order":1,"path":"shaders/sh_scale_content_aware_map/sh_scale_content_aware_map.yy",},

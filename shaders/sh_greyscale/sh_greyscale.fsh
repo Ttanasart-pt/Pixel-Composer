@@ -27,6 +27,5 @@ void main() {
 	vec4 col_bc = vec4(col_b.rgb * con, col_b.a);
 	
 	col_bc.rgb = vec3(dot(col_bc.rgb, vec3(0.2126, 0.7152, 0.0722))) * col_bc.a;
-	
 	gl_FragColor = col_bc;
 }

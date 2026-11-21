@@ -1,4 +1,4 @@
-function Node_Move_Point(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
+function Node_Move_Point(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name  = "Transform Point";
 	color = COLORS.node_blend_number;
 	setDrawIcon();
@@ -11,28 +11,30 @@ function Node_Move_Point(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	newInput( 1, nodeValue_Vec2( "Anchor", [.5,.5] )).setUnitSimple();
 	
 	////- =Position
-	newInput( 2, nodeValue_Range2(  "Position", [0,0,0,0], true )).setUnitSimple(false);
+	newInput( 2, nodeValue_Range2(  "Position", [0,0,0,0], true )).setUnitSimple(false).setMappableConst(6);
 	
 	////- =Rotation
 	newInput( 3, nodeValue_RotRand( "Rotation",  ROTRAN_DEF_0   ));
 	
 	////- =Scale
 	newInput( 4, nodeValue_Range2(  "Scale",    [1,1,1,1], true ));
-	// 6
+	// 7
 	
 	newOutput(0, nodeValue_Output("Result", VALUE_TYPE.float, [ 0, 0 ])).setDisplay(VALUE_DISPLAY.vector);
 	
 	input_display_list = [ 5, 
 		[ "Points",   false ],  0,  1, 
-		[ "Position", false ],  2, 
+		[ "Position", false ],  2,  6, 
 		[ "Rotation", false ],  3, 
 		[ "Scale",    false ],  4, 
 	];
 	
 	////- Node
 	
+	sampPos = new Surface_Sampler_Grey();
+	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _params) { 
-		var _anc = getInputSingle(1);
+		var _anc = getInputData(1);
 		var _px  = _x + _anc[0] * _s;
 		var _py  = _y + _anc[1] * _s;
 		
@@ -43,39 +45,55 @@ function Node_Move_Point(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 		return w_hovering;
 	}
 	
-	static processData = function(_output, _data, _array_index = 0, _frame = CURRENT_FRAME) {
+	static update = function() {
 		#region data
-			var _seed = _data[ 5];
+			var _seed = getInputData( 5);
 			
-			var _pnt  = [ _data[0][0], _data[0][1] ];
-			var _anc  = _data[ 1];
+			var _pnts = getInputData( 0);
+			var _anc  = getInputData( 1);
 			
-			var _pos  = _data[ 2];
+			var _pos  = getInputData( 2);
+			var _posS = getInputData( 6), posSamp = inputs[ 2].attributes.mapped? sampPos.setSurface(_posS) : undefined;
 			
-			var _rot  = _data[ 3];
+			var _rot  = getInputData( 3);
 			
-			var _sca  = _data[ 4];
+			var _sca  = getInputData( 4);
 		#endregion
 		
-		random_set_seed(_seed + _array_index);
+		var _d = array_get_depth(_pnts);
+		if(_d != 2) return;
 		
-		var _psx = random_range(_pos[0], _pos[1]);
-		var _psy = random_range(_pos[2], _pos[3]);
+		var pAmo = array_length(_pnts);
+		var pOut = outputs[0].getValue();
+		    pOut = array_verify(pOut, pAmo);
 		
-		var _ang = rotation_random_eval(_rot);
+		outputs[0].setValue(pOut);
+		outputs[0].setTypeSignature(array_create(pAmo, VALUE_TYPE.float));
 		
-		var _scx = random_range(_sca[0], _sca[1]);
-		var _scy = random_range(_sca[2], _sca[3]);
+		random_set_seed(_seed);
+		for( var i = 0; i < pAmo; i++ ) {
+			var _px  = _pnts[i][0];
+			var _py  = _pnts[i][1];
+			var _pnt = [_px,_py];
+			pOut[i]  = _pnt;
+			
+			var _posFac = posSamp? posSamp.getPixelDirectClamp(round(_px), round(_py)) : 1;
+			
+			var _psx = random_range(_pos[0], _pos[1]) * _posFac;
+			var _psy = random_range(_pos[2], _pos[3]) * _posFac;
+			
+			var _ang = rotation_random_eval(_rot);
+			
+			var _scx = random_range(_sca[0], _sca[1]);
+			var _scy = random_range(_sca[2], _sca[3]);
+			
+			point_rotate_array(_pnt, _anc, _ang);
+			_pnt[0]  = _anc[0] + (_pnt[0] - _anc[0]) * _scx;
+			_pnt[1]  = _anc[1] + (_pnt[1] - _anc[1]) * _scy;
+			
+			_pnt[0] += _psx;
+			_pnt[1] += _psy;
+		}
 		
-		point_rotate_array(_pnt, _anc, _ang);
-		_pnt[0]  = _anc[0] + (_pnt[0] - _anc[0]) * _scx;
-		_pnt[1]  = _anc[1] + (_pnt[1] - _anc[1]) * _scy;
-		
-		_pnt[0] += _psx;
-		_pnt[1] += _psy;
-		
-		outputs[0].setTypeSignature(array_create(array_length(_pnt), VALUE_TYPE.float));
-		
-		return _pnt;
 	}
 }

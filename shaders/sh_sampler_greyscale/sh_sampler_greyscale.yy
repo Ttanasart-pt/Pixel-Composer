@@ -1,0 +1,12 @@
+{
+  "$GMShader":"",
+  "%Name":"sh_sampler_greyscale",
+  "name":"sh_sampler_greyscale",
+  "parent":{
+    "name":"surface",
+    "path":"folders/functions/surface.yy",
+  },
+  "resourceType":"GMShader",
+  "resourceVersion":"2.0",
+  "type":1,
+}

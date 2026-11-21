@@ -1630,8 +1630,9 @@ event_inherited();
 				
 				if(yy < -list_height || yy > search_pane.h) continue;
 				_param.search_string = highlight? search_string : 0;
-				_param.query = _query;
-				_param.range = _mrng;
+				_param.query  = _query;
+				_param.range  = _mrng;
+				_param.weight = _weig;
 				
 				if(i % 2) draw_sprite_stretched_add(THEME.node_bg, 0, pd, yy, list_width - pd * 2, list_height, COLORS.node_base_bg, 0.1);
 				
@@ -1658,6 +1659,8 @@ event_inherited();
 					
 					node_icon_x = search_pane.x + pd + list_height / 2 + ui(32);
 					node_icon_y = search_pane.y + yc;
+					
+					if(RUN_IDE) node_icon_x += ui(32);
 				}
 				
 				if(_minput && _mouseOn) {

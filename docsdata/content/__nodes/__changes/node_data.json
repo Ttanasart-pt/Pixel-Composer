@@ -6,6 +6,11 @@
         "date": "2026-11-21T03:09:34.658Z",
         "node": "Path Builder",
         "commit": "**Path Builder**: Remove warning when no input connected."
+      },
+      {
+        "date": "2026-11-21T04:04:28.631Z",
+        "node": "",
+        "commit": "Fix mappable constant output incorrect value."
       }
     ]
   },

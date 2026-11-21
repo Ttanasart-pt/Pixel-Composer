@@ -41,6 +41,7 @@ uniform vec2  scale;
 uniform vec2  alpha;
 uniform int   mode;
 uniform int   render;
+uniform int   tile;
 
 uniform float thickness;
 uniform vec2  levelIn, levelOut; float applyLevel(float v) { return mix(levelOut.x, levelOut.y, (v - levelIn.x) / (levelIn.y - levelIn.x)); }
@@ -65,17 +66,25 @@ void main() {
     for (int i = 0; i < amo; i++) {
 		float _x = random(vec2(float(i), 1.));
 		float _y = random(vec2(1., float(i)));
+		float _s, _a;
 		
-		float dxF = _x - pos.x;
-		if(abs(1. - abs(dxF)) < abs(dxF))
-			_x -= sign(dxF);
-		
-		float dyF = _y - pos.y;
-		if(abs(1. - abs(dyF)) < abs(dyF))
-			_y -= sign(dyF);
-		
-		float _s = mix( scale.x, scale.y, random(fract(vec2(_x, _y))) );
-    	float _a = mix( alpha.x, alpha.y, random(fract(vec2(_y, _x))) );
+		if(tile == 1) {
+			float dxF = _x - pos.x;
+			if(abs(1. - abs(dxF)) < abs(dxF))
+				_x -= sign(dxF);
+			
+			float dyF = _y - pos.y;
+			if(abs(1. - abs(dyF)) < abs(dyF))
+				_y -= sign(dyF);
+			
+			_s = mix( scale.x, scale.y, random(fract(vec2(_x, _y))) );
+	    	_a = mix( alpha.x, alpha.y, random(fract(vec2(_y, _x))) );
+	    	
+		} else {
+			_s = mix( scale.x, scale.y, random(vec2(_x, _y)) );
+	    	_a = mix( alpha.x, alpha.y, random(vec2(_y, _x)) );
+	    	
+		}
 		
 		float dst = 1. - distance(pos, vec2(_x, _y));
 		float st;

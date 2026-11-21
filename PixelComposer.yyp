@@ -4176,6 +4176,7 @@
     {"id":{"name":"sh_sample_tile","path":"shaders/sh_sample_tile/sh_sample_tile.yy",},},
     {"id":{"name":"sh_sample_transform","path":"shaders/sh_sample_transform/sh_sample_transform.yy",},},
     {"id":{"name":"sh_sample","path":"shaders/sh_sample/sh_sample.yy",},},
+    {"id":{"name":"sh_sampler_greyscale","path":"shaders/sh_sampler_greyscale/sh_sampler_greyscale.yy",},},
     {"id":{"name":"sh_sao","path":"shaders/sh_sao/sh_sao.yy",},},
     {"id":{"name":"sh_scale_cleanedge","path":"shaders/sh_scale_cleanedge/sh_scale_cleanedge.yy",},},
     {"id":{"name":"sh_scale_content_aware_coord","path":"shaders/sh_scale_content_aware_coord/sh_scale_content_aware_coord.yy",},},

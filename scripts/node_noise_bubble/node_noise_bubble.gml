@@ -18,6 +18,7 @@ function Node_Noise_Bubble(_x, _y, _group = noone) : Node_Shader_Generator(_x, _
 	newInput( 2, nodeValue_Seed()).setShaderProp("seed").setPieMenu();
 	newInput( 1, nodeValue_Slider(   "Density",   .5     )).setShaderProp("density").setPieMenu();
 	newInput( 3, nodeValue_SliRange( "Scale",    [.5,.8] )).setShaderProp("scale").setPieMenu();
+	newInput(13, nodeValue_Bool(     "Tile",     true    )).setShaderProp("tile");
 	
 	////- =Rendering
 	newInput(11, nodeValue_SliRange( "Level In",   [0,1] )).setShaderProp("levelIn");
@@ -26,11 +27,11 @@ function Node_Noise_Bubble(_x, _y, _group = noone) : Node_Shader_Generator(_x, _
 	newInput( 4, nodeValue_Slider(   "Thickness",   0                     )).setShaderProp("thickness").setPieMenu();
 	newInput( 6, nodeValue_SliRange( "Opacity",    [0,1]                  )).setShaderProp("alpha").setPieMenu();
 	newInput( 7, nodeValue_EScroll(  "Blend Mode",  0, [ "Max", "Add" ]   )).setShaderProp("render");
-	// input 13
+	// 14
 	
 	input_display_list = [ 
 		[ "Output",     true ],  0,  9, 10,  8, 
-		[ "Noise",     false ],  2,  1,  3, 
+		[ "Noise",     false ],  2,  1,  3, 13, 
 		[ "Rendering", false ], 11, 12,  5,  4,  6,  7, 
 	];
 }
