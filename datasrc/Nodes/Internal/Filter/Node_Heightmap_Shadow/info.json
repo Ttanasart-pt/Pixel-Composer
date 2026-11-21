@@ -1,0 +1,6 @@
+{
+    "name":          "Heightmap Shadow",
+    "spr":           "s_node_heightmap_shadow",
+    "baseNode":      "Node_Heightmap_Shadow",
+    "pxc_version":    122031,
+}

@@ -1,0 +1,19 @@
+Filter pixel that faces a certain direction. The node cast ray(s) in a set direction until if find an empty pixel, that distance then converted 
+to greyscale.
+
+## Properties
+
+[proptable]
+Direction
+Direction|Direction to filter.
+Range|Sweep angle (+- to <junc Direction>)
+
+Range
+Distance|Maximum scanning distance.
+
+Rendering
+Shaded|Whether to output distance in greyscale or solid black and white.
+Curve|Shading curve.
+Inverted|Invert output.
+Transparent|Output filtered pixel as tranparent pixel instead of solid black.
+[/proptable]
