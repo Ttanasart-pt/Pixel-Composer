@@ -1416,7 +1416,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	}
 	
 	static preUpdate = undefined
-	static update    = function() /*=>*/ {}
+	static update    = function() /*=>*/ {} 
 	
 	static checkRequirement = function() /*=>*/ {return array_all(inputs, function(inp,i) /*=>*/ {return !inp.required || inp.requirementPass()})};
 	
