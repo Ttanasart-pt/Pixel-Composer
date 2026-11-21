@@ -1,5 +1,5 @@
 function Node_Mesh_Create_Points(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
-	name = "Mesh from Points";
+	name = "Points to Mesh";
 	setDimension(96, 48);
 	setDrawIcon();
 	

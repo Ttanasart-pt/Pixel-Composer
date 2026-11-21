@@ -2650,6 +2650,7 @@
     {"id":{"name":"node_mesh_create_path","path":"scripts/node_mesh_create_path/node_mesh_create_path.yy",},},
     {"id":{"name":"node_mesh_create_points","path":"scripts/node_mesh_create_points/node_mesh_create_points.yy",},},
     {"id":{"name":"node_mesh_fill","path":"scripts/node_mesh_fill/node_mesh_fill.yy",},},
+    {"id":{"name":"node_mesh_set_points","path":"scripts/node_mesh_set_points/node_mesh_set_points.yy",},},
     {"id":{"name":"node_mesh_to_path","path":"scripts/node_mesh_to_path/node_mesh_to_path.yy",},},
     {"id":{"name":"node_mesh_transform","path":"scripts/node_mesh_transform/node_mesh_transform.yy",},},
     {"id":{"name":"node_mesh_warp","path":"scripts/node_mesh_warp/node_mesh_warp.yy",},},

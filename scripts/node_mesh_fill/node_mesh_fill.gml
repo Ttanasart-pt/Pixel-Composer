@@ -19,7 +19,7 @@ function Node_Mesh_Fill(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	
 		////- =/Texture
 	newInput( 5, nodeValue_Surface( "Texture" ));
-	newInput( 6, nodeValue_EButton( "Mapping", 0, [ "Direct", "Mesh UV" ] ));
+	newInput( 6, nodeValue_EButton( "Mapping", 0, [ "Direct", "Mid Point", "Mesh UV" ] ));
 	
 		////- =/Outline
 	newInput( 7, nodeValue_Bool(  "Draw Outline", false    ));
@@ -105,40 +105,61 @@ function Node_Mesh_Fill(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 					var p1 = _pnt[t0[1]];
 					var p2 = _pnt[t0[2]];
 					
-					if(_txMap == 0) {
-						var u0 = p0.x / _dim[0], v0 = p0.y / _dim[1];
-						var u1 = p1.x / _dim[0], v1 = p1.y / _dim[1];
-						var u2 = p2.x / _dim[0], v2 = p2.y / _dim[1];
-						
-					} else {
-						var u0 = p0[$ "u"] ?? 0, v0 = p0[$ "v"] ?? 0;
-						var u1 = p1[$ "u"] ?? 0, v1 = p1[$ "v"] ?? 0;
-						var u2 = p2[$ "u"] ?? 0, v2 = p2[$ "v"] ?? 0;
-					}
-					
-					draw_vertex_texture_color(p0.x, p0.y, u0, v0, _col, _alph);
-					draw_vertex_texture_color(p1.x, p1.y, u1, v1, _col, _alph);
-					draw_vertex_texture_color(p2.x, p2.y, u2, v2, _col, _alph);
-					
 					var t1 = _tri[_qud[i][1]];
-					var p0 = _pnt[t1[0]];
-					var p1 = _pnt[t1[1]];
-					var p2 = _pnt[t1[2]];
+					var q0 = _pnt[t1[0]];
+					var q1 = _pnt[t1[1]];
+					var q2 = _pnt[t1[2]];
 					
-					if(_txMap == 0) {
-						var u0 = p0.x / _dim[0], v0 = p0.y / _dim[1];
-						var u1 = p1.x / _dim[0], v1 = p1.y / _dim[1];
-						var u2 = p2.x / _dim[0], v2 = p2.y / _dim[1];
+					var cx = (p0.x + p1.x + p2.x + q0.x + q1.x + q2.x) / 6 / _dim[0];
+					var cy = (p0.y + p1.y + p2.y + q0.y + q1.y + q2.y) / 6 / _dim[1];
+							
+					switch(_txMap) {
+						case 0 : 
+							var u0 = p0.x / _dim[0], v0 = p0.y / _dim[1];
+							var u1 = p1.x / _dim[0], v1 = p1.y / _dim[1];
+							var u2 = p2.x / _dim[0], v2 = p2.y / _dim[1];
+							break;
 						
-					} else {
-						var u0 = p0[$ "u"] ?? 0, v0 = p0[$ "v"] ?? 0;
-						var u1 = p1[$ "u"] ?? 0, v1 = p1[$ "v"] ?? 0;
-						var u2 = p2[$ "u"] ?? 0, v2 = p2[$ "v"] ?? 0;
+						case 1 : 
+							var u0 = cx, v0 = cy;
+							var u1 = cx, v1 = cy;
+							var u2 = cx, v2 = cy;
+							break;
+							
+						case 2 : 
+							var u0 = p0[$ "u"] ?? 0, v0 = p0[$ "v"] ?? 0;
+							var u1 = p1[$ "u"] ?? 0, v1 = p1[$ "v"] ?? 0;
+							var u2 = p2[$ "u"] ?? 0, v2 = p2[$ "v"] ?? 0;
+							break;
 					}
 					
 					draw_vertex_texture_color(p0.x, p0.y, u0, v0, _col, _alph);
 					draw_vertex_texture_color(p1.x, p1.y, u1, v1, _col, _alph);
 					draw_vertex_texture_color(p2.x, p2.y, u2, v2, _col, _alph);
+					
+					switch(_txMap) {
+						case 0 :
+							var u0 = q0.x / _dim[0], v0 = q0.y / _dim[1];
+							var u1 = q1.x / _dim[0], v1 = q1.y / _dim[1];
+							var u2 = q2.x / _dim[0], v2 = q2.y / _dim[1];
+							break;
+						
+						case 1 :
+							var u0 = cx, v0 = cy;
+							var u1 = cx, v1 = cy;
+							var u2 = cx, v2 = cy;
+							break;
+						
+						case 2 : 
+							var u0 = q0[$ "u"] ?? 0, v0 = q0[$ "v"] ?? 0;
+							var u1 = q1[$ "u"] ?? 0, v1 = q1[$ "v"] ?? 0;
+							var u2 = q2[$ "u"] ?? 0, v2 = q2[$ "v"] ?? 0;
+							break;
+					}
+					
+					draw_vertex_texture_color(q0.x, q0.y, u0, v0, _col, _alph);
+					draw_vertex_texture_color(q1.x, q1.y, u1, v1, _col, _alph);
+					draw_vertex_texture_color(q2.x, q2.y, u2, v2, _col, _alph);
 				}
 				
 			} else {
@@ -148,15 +169,27 @@ function Node_Mesh_Fill(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 					var p1 = _pnt[t[1]];
 					var p2 = _pnt[t[2]];
 					
-					if(_txMap == 0) {
-						var u0 = p0.x / _dim[0], v0 = p0.y / _dim[1];
-						var u1 = p1.x / _dim[0], v1 = p1.y / _dim[1];
-						var u2 = p2.x / _dim[0], v2 = p2.y / _dim[1];
+					switch(_txMap) {
+						case 0 :
+							var u0 = p0.x / _dim[0], v0 = p0.y / _dim[1];
+							var u1 = p1.x / _dim[0], v1 = p1.y / _dim[1];
+							var u2 = p2.x / _dim[0], v2 = p2.y / _dim[1];
+							break;
 						
-					} else {
-						var u0 = p0[$ "u"] ?? 0, v0 = p0[$ "v"] ?? 0;
-						var u1 = p1[$ "u"] ?? 0, v1 = p1[$ "v"] ?? 0;
-						var u2 = p2[$ "u"] ?? 0, v2 = p2[$ "v"] ?? 0;
+						case 1 : 
+							var cx = (p0.x + p1.x + p2.x) / 3 / _dim[0];
+							var cy = (p0.y + p1.y + p2.y) / 3 / _dim[1];
+							
+							var u0 = cx, v0 = cy;
+							var u1 = cx, v1 = cy;
+							var u2 = cx, v2 = cy;
+							break;
+							
+						case 2 : 
+							var u0 = p0[$ "u"] ?? 0, v0 = p0[$ "v"] ?? 0;
+							var u1 = p1[$ "u"] ?? 0, v1 = p1[$ "v"] ?? 0;
+							var u2 = p2[$ "u"] ?? 0, v2 = p2[$ "v"] ?? 0;
+							break;
 					}
 					
 					var _grc = _grad.evalFast(pfract(random(1) + _grdSh));

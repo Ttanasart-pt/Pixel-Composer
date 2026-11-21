@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"node_mesh_set_points",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"node_mesh_set_points",
+  "parent":{
+    "name":"mesh",
+    "path":"folders/nodes/data/value/mesh.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

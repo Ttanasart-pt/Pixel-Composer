@@ -1,0 +1,6 @@
+{
+    "name":          "Mesh set Point",
+    "spr":           "s_node_mesh_set_points",
+    "baseNode":      "Node_Mesh_Set_Points",
+    "pxc_version":    122031,
+}
