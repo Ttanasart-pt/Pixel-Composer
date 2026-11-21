@@ -6,6 +6,11 @@
         "date": "2026-11-21T04:04:37.517Z",
         "node": "",
         "commit": "Fix mappable constant output incorrect value."
+      },
+      {
+        "date": "2026-11-21T04:26:53.538Z",
+        "node": "Transform Points] Add map for position, rotation, and scale.  - [Transform Points",
+        "commit": "**Transform Points] Add map for position, rotation, and scale.  - [Transform Points**: Add option to use initial position as anchor point."
       }
     ]
   },
