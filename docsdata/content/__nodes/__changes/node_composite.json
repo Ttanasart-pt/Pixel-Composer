@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.22.3.105",
+    "changes": [
+      {
+        "date": "2026-11-21T06:04:19.905Z",
+        "node": "Composite",
+        "commit": "**Composite**: mode update check after junction visibility."
+      }
+    ]
+  },
+  {
     "version": "1.22.3.1",
     "changes": [
       {

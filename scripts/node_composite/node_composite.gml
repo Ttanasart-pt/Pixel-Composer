@@ -2076,12 +2076,6 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		
 		#region data
 			var imageAmo  = getInputAmount();
-			if( imageAmo == 0) {
-				var _outSurf = _outData[0];
-				if(is_surface(_outSurf))
-					surface_clear(_outSurf);
-				return _outData;
-			}
 			
 			var _pad  = _data[ 0];
 			var _dimt = _data[ 1];
@@ -2089,24 +2083,30 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			
 			var _rond = _data[ 3];
 			
-			var base  = _data[ input_fix_len];
-			var cDep  = attrDepth();
-			
 			var _outSurf  = _outData[0];
 			
 			inputs[2].setVisible(_dimt == COMPOSE_OUTPUT_SCALING.constant);
-		
+			
+			if( imageAmo == 0) {
+				var _outSurf = _outData[0];
+				if(is_surface(_outSurf))
+					surface_clear(_outSurf);
+				return _outData;
+			}
+			
+			var base  = _data[ input_fix_len];
 			if(!is_surface(base)) return _outData;
-		
-			var _odim = getDimension(_array_index);
-			var  ww   = _odim[0];
-			var  hh   = _odim[1];
-			
-			for(var i = 0; i < 3; i++) temp_surface[i] = surface_clear(surface_verify(temp_surface[i], ww, hh, cDep));
-			
-			attributes.layer_visible    = array_verify(attributes.layer_visible,    imageAmo);
-			attributes.layer_selectable = array_verify(attributes.layer_selectable, imageAmo);
 		#endregion
+		
+		var cDep  = attrDepth();
+		var _odim = getDimension(_array_index);
+		var  ww   = _odim[0];
+		var  hh   = _odim[1];
+		
+		for(var i = 0; i < 3; i++) temp_surface[i] = surface_clear(surface_verify(temp_surface[i], ww, hh, cDep));
+		
+		attributes.layer_visible    = array_verify(attributes.layer_visible,    imageAmo);
+		attributes.layer_selectable = array_verify(attributes.layer_selectable, imageAmo);
 		
 		var res_index = 0;
 		var _vis      = attributes.layer_visible;
