@@ -106,13 +106,15 @@ void main() {
 	
 	vec4 ss;
 	vec2 cx = cc.xy;
+	vec2 sx;
 	
 	for(float i = 1.; i <= SPAN; i++) {
-		ss = sampleTexture( gm_BaseTexture, v_vTexcoord + vec2(i * tx.x, 0.) );
+		sx = v_vTexcoord + vec2(i * tx.x, 0.);
+		ss = sampleTexture( gm_BaseTexture, sx );
 		if(ss.a == 0.) break;
 		
 		if(regionType == 1) {
-			vec4 scs = sampleTexture( baseSurface, ss.xy );
+			vec4 scs = sampleTexture( baseSurface, sx );
 			if(length(baseC.rgb - scs.rgb) > threshold)
 				break;
 		}
@@ -121,11 +123,12 @@ void main() {
 	}
 	
 	for(float i = 1.; i <= SPAN; i++) {
-		ss = sampleTexture( gm_BaseTexture, v_vTexcoord - vec2(i * tx.x, 0.) );
+		sx = v_vTexcoord - vec2(i * tx.x, 0.);
+		ss = sampleTexture( gm_BaseTexture, sx );
 		if(ss.a == 0.) break;
 		
 		if(regionType == 1) {
-			vec4 scs = sampleTexture( baseSurface, ss.xy );
+			vec4 scs = sampleTexture( baseSurface, sx );
 			if(length(baseC.rgb - scs.rgb) > threshold)
 				break;
 		}
@@ -134,11 +137,12 @@ void main() {
 	}
 	
 	for(float i = 1.; i <= SPAN; i++) {
-		ss = sampleTexture( gm_BaseTexture, v_vTexcoord + vec2(0., i * tx.y) );
+		sx = v_vTexcoord + vec2(0., i * tx.y);
+		ss = sampleTexture( gm_BaseTexture, sx );
 		if(ss.a == 0.) break;
 		
 		if(regionType == 1) {
-			vec4 scs = sampleTexture( baseSurface, ss.xy );
+			vec4 scs = sampleTexture( baseSurface, sx );
 			if(length(baseC.rgb - scs.rgb) > threshold)
 				break;
 		}
@@ -147,11 +151,12 @@ void main() {
 	}
 	
 	for(float i = 1.; i <= SPAN; i++) {
-		ss = sampleTexture( gm_BaseTexture, v_vTexcoord - vec2(0., i * tx.y) );
+		sx = v_vTexcoord - vec2(0., i * tx.y);
+		ss = sampleTexture( gm_BaseTexture, sx );
 		if(ss.a == 0.) break;
 		
 		if(regionType == 1) {
-			vec4 scs = sampleTexture( baseSurface, ss.xy );
+			vec4 scs = sampleTexture( baseSurface, sx );
 			if(length(baseC.rgb - scs.rgb) > threshold)
 				break;
 		}

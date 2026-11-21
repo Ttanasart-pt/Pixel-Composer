@@ -154,6 +154,8 @@ function __NodeValue_Vec2(_name, _node, _value, _data = {}) : NodeValue(_name, _
 	}
 	
 	static drawPath = function(hover, active, _x, _y, _s, _mx, _my, _params) {
+		static DRAW_SAMPLE = 32;
+		
 		if(value_from != noone) {
 			var _val = value_from.node;
 			if(is(_val, Node_Path)) return _val.drawOverlay(hover, active, _x, _y, _s, _mx, _my, _params);
@@ -162,37 +164,48 @@ function __NodeValue_Vec2(_name, _node, _value, _data = {}) : NodeValue(_name, _
 		
 		if(!is_anim || sep_axis) return false;
 		
-		var allPos = animator.values;
 		var pointHover = undefined;
 		var pointPos   = undefined;
-		var ox, oy, nx, ny;
+		var sx, sy, ox, oy, nx, ny;
+		var samp = min(DRAW_SAMPLE, NODE_TOTAL_FRAMES);
+		var smtp = NODE_TOTAL_FRAMES / samp;
 		
+		draw_primitive_begin(pr_linestrip);
 		draw_set_color(COLORS._main_accent);
-		
-		for( var i = 0, n = array_length(allPos); i < n; i++ ) {
-			var val = allPos[i].value;
-			var pos = unit.apply(val);
+		draw_set_alpha(0.5);
+		for( var f = 0; f < samp; f++ ) {
+			var pos = getValue(f * smtp);
 			
 			nx = _x + pos[0] * _s;
 			ny = _y + pos[1] * _s;
+			if(f == 0) { sx = nx; sy = ny; }
+			draw_vertex(nx, ny);
+			
+			ox = nx;
+			oy = ny;
+		}
+		
+		if(on_end == KEYFRAME_END.wrap)
+			draw_vertex(sx, sy);
+		
+		draw_primitive_end();
+		draw_set_alpha(1);
+		
+		for( var i = 0, n = array_length(animator.values); i < n; i++ ) {
+			var val = animator.values[i].value;
+			var pos = unit.apply(val);
+			
+			var px = _x + pos[0] * _s;
+			var py = _y + pos[1] * _s;
 			
 			var hv = hover && point_in_circle(_mx, _my, nx, ny, ui(8));
-			draw_anchor(0, nx, ny, ui(8 + hv * 4), 1);
+			draw_anchor(0, px, py, ui(8 + hv * 4), 1 + hv);
 			
 			if(hv) {
 				pointHover = i;
 				pointPos   = pos;
 			}
-			
-			if(i) {
-				draw_set_alpha(0.5);
-				draw_line_dashed(ox, oy, nx, ny);
-			}
-		
-			ox = nx;
-			oy = ny;
 		}
-		draw_set_alpha(1);
 		
 		if(pointHover != undefined && mouse_lpress(active)) {
 			path_point_drag = pointHover;
@@ -207,7 +220,7 @@ function __NodeValue_Vec2(_name, _node, _value, _data = {}) : NodeValue(_name, _
 			var vx = path_point_sx + (_mx - path_point_mx) / _s;
 			var vy = path_point_sy + (_my - path_point_my) / _s;
 			
-			var key = allPos[path_point_drag];
+			var key = animator.values[path_point_drag];
 			var pos = unit.invApply([vx,vy]);
 			
 			key.value    = pos;
@@ -291,35 +304,6 @@ function __NodeValue_Vec2(_name, _node, _value, _data = {}) : NodeValue(_name, _
 			preview_hotkey_my = _my;
 			
 			KEYBOARD_STRING = "";
-		}
-		
-		if(getAnim()) {
-			var ox, oy, nx, ny;
-			draw_set_color(COLORS._main_accent);
-			
-			if(sep_axis) {
-				// TODO	
-				
-			} else {
-				for( var i = 0, n = array_length(animator.values); i < n; i++ ) {
-					var _k = animator.values[i];
-					var _v = _k.value;
-					    _v = unit.apply(_v, node.preview_index);
-					
-					nx = _x + _v[0] * _s;
-					ny = _y + _v[1] * _s;
-					
-					draw_circle_prec(nx, ny, 4, false);
-					if(i) {
-						draw_set_alpha(.5);
-						draw_line_dashed(ox, oy, nx, ny);
-						draw_set_alpha(1);
-					}
-					
-					ox = nx;
-					oy = ny;
-				}
-			}
 		}
 		
 		if(drag_type == 1) {

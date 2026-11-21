@@ -2,9 +2,11 @@ function sliderRange(_step, _int, _range, _onModify) : widget() constructor {
 	stepSize    = _step;
 	slide_range = _range;
 	isInt       = _int;
+	onModify    = _onModify;
 	curr_range  = [ _range[0], _range[1] ];
 	
-	onModify = _onModify;
+	linkable    = true;
+	linked      = false;
 	
 	tb_value_min = textBox_Number(function(val) /*=>*/ {return onModify(val, 0)}).setSlideInt(_int).setSlideStep(_step).setSlideRange(_range[0], _range[1]);
 	tb_value_max = textBox_Number(function(val) /*=>*/ {return onModify(val, 1)}).setSlideInt(_int).setSlideStep(_step).setSlideRange(_range[0], _range[1]);

@@ -1056,6 +1056,7 @@
     {"name":"note_path_map","order":3,"path":"notes/note_path_map/note_path_map.yy",},
     {"name":"note_path_morph","order":6,"path":"notes/note_path_morph/note_path_morph.yy",},
     {"name":"note_path_offset","order":19,"path":"notes/note_path_offset/note_path_offset.yy",},
+    {"name":"note_path_orbital","order":29,"path":"notes/note_path_orbital/note_path_orbital.yy",},
     {"name":"note_path_pathfind","order":14,"path":"notes/note_path_pathfind/note_path_pathfind.yy",},
     {"name":"note_path_plot","order":25,"path":"notes/note_path_plot/note_path_plot.yy",},
     {"name":"note_path_profile","order":22,"path":"notes/note_path_profile/note_path_profile.yy",},

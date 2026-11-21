@@ -1,0 +1,16 @@
+Create path simulating orbital trajectories.
+
+## Properties
+
+[proptable]
+Object
+Origin|Object/Path initial position.
+Initial Velocity|Starting velocity.
+Mass|Object mass.
+[/proptable]
+
+[proptable]
+Path
+Length|Step length.
+Resolution|Sample counts.
+[/proptable]

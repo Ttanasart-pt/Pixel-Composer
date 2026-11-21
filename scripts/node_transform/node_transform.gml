@@ -393,7 +393,7 @@ function Node_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	
 	static getToolNode = function() /*=>*/ {return inputs[2].isEditingPath() ?? self};
 	
-	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _params) { 
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _params) {
 		PROCESSOR_OVERLAY_CHECK
 		var hov = inputs[2].drawPath(hover, active, _x, _y, _s, _mx, _my, _params); 
 		hover &= !hov; w_hovering |= hov;

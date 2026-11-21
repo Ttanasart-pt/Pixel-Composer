@@ -190,7 +190,7 @@ function string_partial_match_array(strArray, keyArray, _arr = [0,[]]) {
 	for( var i = 0; i < lenBase; i++ ) {
 		var keyInd = 0;
 		var keyChr = keyArray[keyInd];
-		var weight = 0;
+		var weight = -i;
 		
 		var wordStart = i == 0 || strArray[i-1] == " ";
 		var matchPrev = false;
@@ -210,7 +210,6 @@ function string_partial_match_array(strArray, keyArray, _arr = [0,[]]) {
 				}
 				
 				weight += wordStart * 10 + (ind == 0) * 10;
-				weight += ((lenBase - ind) / lenBase) * lenKey;
 				
 				var textWrap = i > 0 && ind == 0;
 				weight -= textWrap  * 10;
@@ -232,34 +231,37 @@ function string_partial_match_array(strArray, keyArray, _arr = [0,[]]) {
 				_matCrr[ind+1] = 0;
 				matchCons      = 0;
 				matchPrev      = false;
-				matchAll       = false;
+				
+				if(baseChr != " ")
+					matchAll = false;
 			}
 			
 			wordStart = baseChr == " ";
 		}
 		
 		if(!matchAny) continue;
+		
 		weight -= abs(keyInd - lenKey) * 10;
-		
-		for(j+=2; j < lenBase; j++ ) {
-			var ind = (i + j) % lenBase;
-			_matCrr[ind] = 0;
-		}
-		
-		weight += matchAll * 100;
+		weight += (j >= lenBase - 1 && matchAll && foundAll) * 100;
 		
 		if(weight > _matchw) {
 			_matchw = weight;
+			for(j += 2; j < lenBase; j++ )
+				_matCrr[(i + j) % lenBase] = 0;
+			
 			array_copy(_matRng, 0, _matCrr, 0, lenBase + 1);
 		}
 	}
 	
-	_matchw -= abs(lenBase - lenKey);
+	_matchw -= abs(lenBase - lenKey) * 2;
 	
 	_arr[0] = _matchw;
 	_arr[1] = _matRng;
 	return _arr;
 }
+
+// print("\n\n========== Draw Line      =========="); print(string_partial_match_res("draw line",      "drawline"));
+// print("\n\n========== Draw Line Data =========="); print(string_partial_match_res("draw line data", "drawline"));
 
 function draw_text_match(_x, _y, _text, _search, _scale = 1) {
 	INLINE

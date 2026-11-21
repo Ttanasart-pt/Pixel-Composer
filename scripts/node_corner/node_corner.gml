@@ -114,6 +114,9 @@ function Node_Corner(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 			shader_set_s( "original",     _surf );
 			shader_set_i( "transparent",  _alph );
 			
+			shader_set_i( "regionType",   _reg  );
+			shader_set_f( "cthreshold",   _cthr );
+			
 			draw_surface_safe(temp_surface[!_bg]);
 		surface_reset_shader();
 		

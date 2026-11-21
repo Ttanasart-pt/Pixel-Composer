@@ -1612,6 +1612,7 @@ event_inherited();
 				
 				var _node  = s_res;
 				var _query = {};
+				var _weig  = 0;
 				var _mrng  = noone;
 				var _path  = undefined;
 				var _param = {};
@@ -1619,6 +1620,7 @@ event_inherited();
 				if(s_res[$ "search"]) {
 					_node  = s_res.node;
 					_query = s_res.param;
+					_weig  = s_res.match[0];
 					_mrng  = s_res.match[1];
 					_path  = s_res.path;
 				}
@@ -1678,7 +1680,15 @@ event_inherited();
 				var tx;
 				
 				if(is(_node, NodeObject)) {
-					var tx = _node.drawList(pd, yy, _m[0], _m[1], list_height, list_width - pd, _param);
+					var ttx = pd;
+					
+					if(RUN_IDE) {
+						draw_set_text(f_p4, fa_left, fa_center, COLORS._main_text_sub);
+						draw_text_add(ttx + ui(8), yy + list_height / 2, _weig);
+						ttx += ui(32);
+					}
+					
+					var tx = _node.drawList(ttx, yy, _m[0], _m[1], list_height, list_width - ttx, _param);
 					
 					var _hotkey = GRAPH_ADD_NODE_MAPS[$ _node.nodeName];
 					if(_hotkey != undefined) {

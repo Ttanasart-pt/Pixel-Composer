@@ -10,9 +10,10 @@ function vectorBox(_size, _onModify, _unit = noone) : widget() constructor {
 		unit	 = _unit;
 		
 		linkable      = true;
+		linked        = false;
+		
 		per_line      = false;
 		current_value = [];
-		linked        = false;
 		side_button   = noone;
 		display_data  = noone;
 		draw_label    = true;
@@ -115,7 +116,7 @@ function vectorBox(_size, _onModify, _unit = noone) : widget() constructor {
 		
 		if(side_button) 
 			side_button.interactable = _interactable;
-			
+		
 		for( var i = 0; i < size; i++ ) 
 			tb[i].interactable = _interactable;
 	}

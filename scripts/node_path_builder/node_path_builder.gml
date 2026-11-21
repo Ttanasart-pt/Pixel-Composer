@@ -12,7 +12,7 @@ function Node_Path_Builder(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	newInput( 0, nodeValue_Float( "Point array", [] )).setVisible(true, true).setArrayDepth(2);
 	// 3
 	
-	newOutput(0, nodeValue_Output("Path", VALUE_TYPE.pathnode, self));
+	newOutput(0, nodeValue_Output("Path", VALUE_TYPE.pathnode, undefined ));
 	
 	input_display_list = [   
 		[ "Path",   false ],  1,  2, 
@@ -41,141 +41,144 @@ function Node_Path_Builder(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	
 	////- Path
 	
-	#region ---- path ----
-		path_loop    = false;
-		path_amount  = 0;
-		
-		bezier       = false;
-		anchors		 = [];
-		segments     = [];
-		lengths		 = [];
-		lengthAccs	 = [];
-		lengthTotal	 = 0;
-		boundary     = new BoundingBox();
-	
-		cached_pos = ds_map_create();
-		
-		lines = [];
-		cached_pos = ds_map_create();
-	#endregion
-	
-	static updateLength = function() {
-		boundary    = array_create(path_amount);
-		segments    = array_create(path_amount);
-		lengths     = array_create(path_amount);
-		lengthAccs  = array_create(path_amount);
-		lengthTotal = array_create(path_amount);
-		
-		var sample  = PREFERENCES.path_resolution;
-		
-		for(var p = 0; p < path_amount; p++) {
-			var _anchor = anchors[p];
-			var ansize  = array_length(_anchor);
-			if(ansize < 2) continue;
+	function __path_builder_path(_node) : Path(_node) constructor {
+		#region ---- path ----
+			path_loop    = false;
+			path_amount  = 0;
 			
-			var con = path_loop? ansize : ansize - 1;
-			var _bb = new BoundingBox();
+			bezier       = false;
+			anchors		 = [];
+			segments     = [];
+			lengths		 = [];
+			lengthAccs	 = [];
+			lengthTotal	 = 0;
+			boundary     = new BoundingBox();
 			
-			for(var i = 0; i < con; i++) {
-				var _a0 = _anchor[(i + 0) % ansize];
-				var _a1 = _anchor[(i + 1) % ansize];
+			lines = [];
+			cached_pos = ds_map_create();
+		#endregion
+		
+		static updateLength = function() {
+			boundary    = array_create(path_amount);
+			segments    = array_create(path_amount);
+			lengths     = array_create(path_amount);
+			lengthAccs  = array_create(path_amount);
+			lengthTotal = array_create(path_amount);
+			
+			var sample  = PREFERENCES.path_resolution;
+			
+			for(var p = 0; p < path_amount; p++) {
+				var _anchor = anchors[p];
+				var ansize  = array_length(_anchor);
+				if(ansize < 2) continue;
 				
-				var len = 0, _ox = 0, _oy = 0, _nx = 0, _ny = 0;
-				var sg = array_create((sample + 1) * 2);
+				var con = path_loop? ansize : ansize - 1;
+				var _bb = new BoundingBox();
 				
-				for(var j = 0; j <= sample; j++) {
-					var rat = j / sample;
+				for(var i = 0; i < con; i++) {
+					var _a0 = _anchor[(i + 0) % ansize];
+					var _a1 = _anchor[(i + 1) % ansize];
 					
-					if(!bezier || (_a0[4] == 0 && _a0[5] == 0 && _a1[2] == 0 && _a1[3] == 0)) {
-						_nx = lerp(_a0[0], _a1[0], rat);
-						_ny = lerp(_a0[1], _a1[1], rat);
+					var len = 0, _ox = 0, _oy = 0, _nx = 0, _ny = 0;
+					var sg = array_create((sample + 1) * 2);
+					
+					for(var j = 0; j <= sample; j++) {
+						var rat = j / sample;
 						
-					} else {
-						_nx = eval_bezier_x(rat, _a0[0],  _a0[1], _a1[0],  _a1[1], _a0[0] + _a0[4], _a0[1] + _a0[5], _a1[0] + _a1[2], _a1[1] + _a1[3]);
-						_ny = eval_bezier_y(rat, _a0[0],  _a0[1], _a1[0],  _a1[1], _a0[0] + _a0[4], _a0[1] + _a0[5], _a1[0] + _a1[2], _a1[1] + _a1[3]);
+						if(!bezier || (_a0[4] == 0 && _a0[5] == 0 && _a1[2] == 0 && _a1[3] == 0)) {
+							_nx = lerp(_a0[0], _a1[0], rat);
+							_ny = lerp(_a0[1], _a1[1], rat);
+							
+						} else {
+							_nx = eval_bezier_x(rat, _a0[0],  _a0[1], _a1[0],  _a1[1], _a0[0] + _a0[4], _a0[1] + _a0[5], _a1[0] + _a1[2], _a1[1] + _a1[3]);
+							_ny = eval_bezier_y(rat, _a0[0],  _a0[1], _a1[0],  _a1[1], _a0[0] + _a0[4], _a0[1] + _a0[5], _a1[0] + _a1[2], _a1[1] + _a1[3]);
+						}
+						
+						sg[j * 2 + 0] = _nx;
+						sg[j * 2 + 1] = _ny;
+						
+						_bb.addPoint(_nx, _ny);
+						if(j) len += point_distance(_nx, _ny, _ox, _oy);	
+						
+						_ox = _nx;
+						_oy = _ny;
 					}
 					
-					sg[j * 2 + 0] = _nx;
-					sg[j * 2 + 1] = _ny;
-					
-					_bb.addPoint(_nx, _ny);
-					if(j) len += point_distance(_nx, _ny, _ox, _oy);	
-					
-					_ox = _nx;
-					_oy = _ny;
+					boundary[p]      = _bb;
+					segments[p][i]   = sg;
+					lengths[p][i]    = len;
+					lengthTotal[p]  += len;
+					lengthAccs[p][i] = lengthTotal[p];
 				}
-				
-				boundary[p]      = _bb;
-				segments[p][i]   = sg;
-				lengths[p][i]    = len;
-				lengthTotal[p]  += len;
-				lengthAccs[p][i] = lengthTotal[p];
 			}
 		}
-	}
-	
-	static getLineCount		= function()    /*=>*/ {return path_amount};
-	static getSegmentCount	= function(i=0) /*=>*/ {return array_length(lengths[i])};
-	static getBoundary		= function(i=0) /*=>*/ {return boundary[i]};
-	
-	static getLength		= function(i=0) /*=>*/ {return lengthTotal[i]};
-	static getAccuLength	= function(i=0) /*=>*/ {return lengthAccs[i]};
-	
-	static getPointDistance = function(_dist, ind = 0, out = undefined) {
-		if(!is(out, PathPoint)) out = new PathPoint(); else out.reset();
 		
-		var _cKey = $"{ind}, {string_format(_dist, 0, 6)}";
-		if(ds_map_exists(cached_pos, _cKey))
-			return out.apply(cached_pos[? _cKey]);
-			
-		if(path_loop) _dist = safe_mod(_dist, lengthTotal[ind], true);
+		static getLineCount		= function()    /*=>*/ {return path_amount};
+		static getSegmentCount	= function(i=0) /*=>*/ {return array_length(lengths[i])};
+		static getBoundary		= function(i=0) /*=>*/ {return boundary[i]};
 		
-		var _anchor = anchors[ind];
-		var ansize  = array_length(_anchor);
-		if(ansize == 0) return out;
+		static getLength		= function(i=0) /*=>*/ {return lengthTotal[i]};
+		static getAccuLength	= function(i=0) /*=>*/ {return lengthAccs[i]};
 		
-		var _a0, _a1;
-		var _len = lengths[ind];
-		
-		for(var i = 0; i < ansize; i++) {
-			_a0 = _anchor[(i + 0) % ansize];
-			_a1 = _anchor[(i + 1) % ansize];
+		static getPointDistance = function(_dist, ind = 0, out = undefined) {
+			if(!is(out, PathPoint)) out = new PathPoint(); else out.reset();
 			
-			if(_dist > _len[i]) {
-				_dist -= _len[i];
-				continue;
-			}
-			
-			var _t = _dist / _len[i];
-			
-			if(!bezier || (_a0[4] == 0 && _a0[5] == 0 && _a1[2] == 0 && _a1[3] == 0)) {
-				out.x = lerp(_a0[0], _a1[0], _t);
-				out.y = lerp(_a0[1], _a1[1], _t);
+			var _cKey = $"{ind}, {string_format(_dist, 0, 6)}";
+			if(ds_map_exists(cached_pos, _cKey))
+				return out.apply(cached_pos[? _cKey]);
 				
-			} else {
-				out.x = eval_bezier_x(_t, _a0[0], _a0[1], _a1[0], _a1[1], _a0[0] + _a0[4], _a0[1] + _a0[5], _a1[0] + _a1[2], _a1[1] + _a1[3]);
-				out.y = eval_bezier_y(_t, _a0[0], _a0[1], _a1[0], _a1[1], _a0[0] + _a0[4], _a0[1] + _a0[5], _a1[0] + _a1[2], _a1[1] + _a1[3]);
+			if(path_loop) _dist = safe_mod(_dist, lengthTotal[ind], true);
+			
+			var _anchor = anchors[ind];
+			var ansize  = array_length(_anchor);
+			if(ansize == 0) return out;
+			
+			var _a0, _a1;
+			var _len = lengths[ind];
+			
+			for(var i = 0; i < ansize; i++) {
+				_a0 = _anchor[(i + 0) % ansize];
+				_a1 = _anchor[(i + 1) % ansize];
+				
+				if(_dist > _len[i]) {
+					_dist -= _len[i];
+					continue;
+				}
+				
+				var _t = _dist / _len[i];
+				
+				if(!bezier || (_a0[4] == 0 && _a0[5] == 0 && _a1[2] == 0 && _a1[3] == 0)) {
+					out.x = lerp(_a0[0], _a1[0], _t);
+					out.y = lerp(_a0[1], _a1[1], _t);
+					
+				} else {
+					out.x = eval_bezier_x(_t, _a0[0], _a0[1], _a1[0], _a1[1], _a0[0] + _a0[4], _a0[1] + _a0[5], _a1[0] + _a1[2], _a1[1] + _a1[3]);
+					out.y = eval_bezier_y(_t, _a0[0], _a0[1], _a1[0], _a1[1], _a0[0] + _a0[4], _a0[1] + _a0[5], _a1[0] + _a1[2], _a1[1] + _a1[3]);
+				}
+				
+				cached_pos[? _cKey] = out.clone();
+				return out;
 			}
 			
-			cached_pos[? _cKey] = out.clone();
 			return out;
 		}
 		
-		return out;
-	}
-	
-	static getPointRatio = function(_rat, ind = 0, out = undefined) {
-		var pix = (path_loop? frac(_rat) : clamp(_rat, 0, 0.99)) * lengthTotal[ind];
-		return getPointDistance(pix, ind, out);
+		static getPointRatio = function(_rat, ind = 0, out = undefined) {
+			var pix = (path_loop? frac(_rat) : clamp(_rat, 0, 0.99)) * lengthTotal[ind];
+			return getPointDistance(pix, ind, out);
+		}
 	}
 	
 	////- Update
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _params) { 
+		var _outPath = outputs[0].getValue();
+		if(!is(_outPath, __path_builder_path)) return;
+		
 		draw_set_color(COLORS._main_accent);
-		for(var p = 0; p < path_amount; p++)
-		for( var i = 0, n = array_length(segments[p]); i < n; i++ ) { 
-			var _seg = segments[p][i];
+		for(var p = 0; p < _outPath.path_amount; p++)
+		for( var i = 0, n = array_length(_outPath.segments[p]); i < n; i++ ) { 
+			var _seg = _outPath.segments[p][i];
 			var _ox  = 0, _oy = 0, _nx = 0, _ny = 0;
 				
 			for( var j = 0, m = array_length(_seg); j < m; j += 2 ) {
@@ -192,8 +195,8 @@ function Node_Path_Builder(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		if(inputs[0].value_from != noone) return w_hovering;
 		
 		var _points = inputs[0].getValue();
-		// var _d = array_get_depth(_points);
-		// if(_d != 2) return;
+		var _d = array_get_depth(_points);
+		if(_d != 2) return;
 		
 		var msx = (_mx - _x) / _s;
 		var msy = (_my - _y) / _s;
@@ -271,11 +274,15 @@ function Node_Path_Builder(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 			var _anc    = getInputData( 0);
 		#endregion
 		
-		ds_map_clear(cached_pos);
-		path_amount = 0;
+		var _outPath = outputs[0].getValue();
+		if(!is(_outPath, __path_builder_path))
+			_outPath = new __path_builder_path(self);
+		outputs[0].setValue(_outPath);
 		
-		outputs[0].setValue(noone);
-		if(!is_array(_anc)) return;
+		ds_map_clear(_outPath.cached_pos);
+		_outPath.path_amount = 0;
+		
+		if(!is_array(_anc) || array_empty(_anc)) return;
 		
 		var _d = array_get_depth(_anc);
 		switch(_d) {
@@ -304,26 +311,24 @@ function Node_Path_Builder(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 			default : return;
 		}
 		
-		path_amount = array_length(_anc);
-		anchors     = array_create(path_amount);
+		_outPath.path_amount = array_length(_anc);
+		_outPath.anchors     = array_create(_outPath.path_amount);
 		
 		if(bezier) {
-			for (var i = 0, n = path_amount; i < n; i++) {
+			for (var i = 0, n = _outPath.path_amount; i < n; i++) {
 				var _anchors = _anc[i];
 				for (var j = 0, m = array_length(_anchors); j < m; j++)
-					anchors[i][j] = array_verify(_anchors[j], 7);
+					_outPath.anchors[i][j] = array_verify(_anchors[j], 7);
 			}
 			
 		} else {
-			for (var i = 0, n = path_amount; i < n; i++) {
+			for (var i = 0, n = _outPath.path_amount; i < n; i++) {
 				var _anchors = _anc[i];
 				for (var j = 0, m = array_length(_anchors); j < m; j++)
-					anchors[i][j] = array_verify(_anchors[j], 2);
+					_outPath.anchors[i][j] = array_verify(_anchors[j], 2);
 			}
 		}
 		
-		updateLength();
-		
-		outputs[0].setValue(self);
+		_outPath.updateLength();
 	}
 }

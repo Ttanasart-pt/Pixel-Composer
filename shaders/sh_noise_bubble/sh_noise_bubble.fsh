@@ -1,5 +1,4 @@
 #pragma use(uv)
-
 #region -- uv -- [1779523757.7465837]
     uniform sampler2D uvMap;
     uniform int   useUvMap;
@@ -46,7 +45,7 @@ uniform int   render;
 uniform float thickness;
 uniform vec2  levelIn, levelOut; float applyLevel(float v) { return mix(levelOut.x, levelOut.y, (v - levelIn.x) / (levelIn.y - levelIn.x)); }
 
-float random  (in vec2 st) { return fract(sin(dot(st.xy + vec2(1., 6.), vec2(2., 7.))) * (1. + mod(seed, 100000.) / 10.)); }
+float random  (in vec2 st) { return fract(sin(dot(st.xy + vec2(1., 6.), vec2(2., 7.))) * (1. + mod(seed, 10000.) / 10.)); }
 
 void main() {
 	float uva = 1.;
@@ -67,8 +66,16 @@ void main() {
 		float _x = random(vec2(float(i), 1.));
 		float _y = random(vec2(1., float(i)));
 		
-		float _s = mix(scale.x, scale.y, random(vec2(2., float(i))));
-    	float _a = mix(alpha.x, alpha.y, random(vec2(float(i), 2.)));
+		float dxF = _x - pos.x;
+		if(abs(1. - abs(dxF)) < abs(dxF))
+			_x -= sign(dxF);
+		
+		float dyF = _y - pos.y;
+		if(abs(1. - abs(dyF)) < abs(dyF))
+			_y -= sign(dyF);
+		
+		float _s = mix( scale.x, scale.y, random(fract(vec2(_x, _y))) );
+    	float _a = mix( alpha.x, alpha.y, random(fract(vec2(_y, _x))) );
 		
 		float dst = 1. - distance(pos, vec2(_x, _y));
 		float st;

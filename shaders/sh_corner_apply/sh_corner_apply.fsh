@@ -97,6 +97,9 @@ uniform vec2      threshold;
 uniform int       thresholdUseSurf;
 uniform sampler2D thresholdSurf;
 
+uniform int   regionType;
+uniform float cthreshold;
+
 void main() {
 	float rad = radius.x;
 	if(radiusUseSurf == 1) {
@@ -113,6 +116,7 @@ void main() {
 	gl_FragColor = vec4(0., 0., 0., transparent == 1? 0. : 1.);
 	
 	vec4 cc = texture2D(gm_BaseTexture, v_vTexcoord);
+	vec4 bc = texture2D(original, v_vTexcoord);
 	if(cc.a == 0.) return;
 	
 	vec2 tx = 1. / dimension;
@@ -127,6 +131,13 @@ void main() {
 		ksize++;
 		
 		if(samp.rg != cc.rg) continue;
+		
+		if(regionType == 1) {
+			vec4 orig = sampleTexture(original, v_vTexcoord + vec2(i, j) * tx);
+			if(length(bc.rgb - orig.rgb) > cthreshold)
+				continue;
+		}
+		
 		kfill += samp.a;
 	}
 	

@@ -400,8 +400,8 @@ float sdRhombus( in vec2 p, in vec2 b )  {
 	// Right now the solution is to align with some interger (floor(i)/i)
 	// What interger (i)? idk.
 	
-    vec2 dim = dimension / scale;
-    p = floor(p * dim + .5) / dim; // fix weird glitch at some random dimension.
+    vec2 dim = dimension / (scale * 2.);
+    // p = floor(p * dim + .5) / dim; // fix weird glitch at some random dimension.
     p = abs(p);
     p = floor(p * 1000000.) / 1000000.; // fix weird glitch at 30x30px
     

@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.22.3.105",
+    "changes": [
+      {
+        "date": "2026-11-21T03:08:47.777Z",
+        "node": "",
+        "commit": "**Bubble Noise**: Now tilable."
+      }
+    ]
+  },
+  {
     "version": "1.21.10.002",
     "changes": [
       {
