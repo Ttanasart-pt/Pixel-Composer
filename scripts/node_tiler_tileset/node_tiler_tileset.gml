@@ -419,7 +419,7 @@ function Node_Tile_Tileset(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 					if(is(object_selecting, tiler_brush_autoterrain)) {
 						var _size = object_selecting.size;
 						var _selx = object_select_id % _size[0];
-						var _sely = floor(object_select_id % _size[0]);
+						var _sely = floor(object_select_id / _size[0]);
 						
 						for( var i = _ts_sy; i <= _ts_ey; i++ ) 
 						for( var j = _ts_sx; j <= _ts_ex; j++ ) {

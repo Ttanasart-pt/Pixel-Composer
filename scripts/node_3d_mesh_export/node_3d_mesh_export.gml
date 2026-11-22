@@ -1,5 +1,5 @@
 function Node_3D_Mesh_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
-	name  = "Mesh Export";
+	name  = "Mesh Export 3D";
 	
 	newInput(0, nodeValue_D3Mesh( "Mesh"));
 	

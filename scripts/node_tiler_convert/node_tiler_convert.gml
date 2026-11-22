@@ -7,10 +7,11 @@ function Node_Tile_Convert(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
     name    = "Convert to Tilemap";
     tileset = noone;
     
+    ////- Tileset
     newInput( 1, nodeValue_Tileset()).setVisible(true, true);
     newInput( 0, nodeValue_Surface("Surface"));
     
-    ////- Tile Map
+    ////- Map
     newInput( 3, nodeValue_Seed());
     newInput( 2, nodeValue_Bool( "Animated", false ));
     // 4
@@ -111,9 +112,10 @@ function Node_Tile_Convert(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 		return hh;
 	});
 	
-	input_display_list  = [ 1, 0, 
-	    ["Tile Map",     false], 3, 2, 
-	    ["Tile Convert", false], tile_mapper, 
+	input_display_list  = [ 
+		[ "Tileset", false ],  1,  0, 
+	    [ "Map",     false ],  3,  2, 
+	    [ "Convert", false ], tile_mapper, 
     ];
 	
 	output_display_list = [ 2, 1, 0 ];
@@ -190,10 +192,9 @@ function Node_Tile_Convert(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	    if(!is_surface(_surf)) return _outData;
 	    
 		var _mapSize    = surface_get_dimension(_surf);
-		for( var i = 0, n = array_length(temp_surface); i < n; i++ ) {
-			temp_surface[i] = surface_verify(temp_surface[i], _mapSize[0], _mapSize[1], surface_rgba16float);
-			surface_clear(temp_surface[i]);
-		}
+		
+		temp_surface[0] = surface_verify(temp_surface[0], _mapSize[0], _mapSize[1], surface_rgba16float);
+		temp_surface[1] = surface_verify(temp_surface[1], _mapSize[0], _mapSize[1], surface_rgba16float);
 		
 		var _cmap = attributes.colorMap;
 		var _clrs = attributes.colorList;
@@ -201,7 +202,8 @@ function Node_Tile_Convert(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 		var _rpFr = [];
 		var _rpTo = [];
 		
-		surface_set_shader(temp_surface[!_bg], noone, true, BLEND.over);
+		surface_clear(temp_surface[0]);
+		surface_set_shader(temp_surface[1], noone, true, BLEND.over);
 		    draw_surface(_surf, 0, 0);
 		surface_reset_shader();
 		
@@ -223,41 +225,39 @@ function Node_Tile_Convert(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 			
 			var _prin = array_safe_get(_at.index, _at.prevInd, 0);
 			
-			surface_set_shader(temp_surface[_bg], sh_tiler_convert_mask, true, BLEND.over);
-			    shader_set_c("target",   cc);
-			    shader_set_f("replace", _prin + 1);
-			    
-			    draw_surface(temp_surface[!_bg], 0, 0);
+			surface_set_shader(temp_surface[0], sh_tiler_convert_mask, true, BLEND.over);
+			    shader_set_c( "target",   cc     );
+			    shader_set_f( "replace", _prin+1 );
+			    draw_surface(temp_surface[1], 0, 0);
 			surface_reset_shader();
 			
-    		surface_set_shader(temp_surface[!_bg], noone, true, BLEND.over);
-    		    draw_surface(temp_surface[_bg], 0, 0);
+    		surface_set_shader(temp_surface[1], noone, true, BLEND.over);
+    		    draw_surface(temp_surface[0], 0, 0);
     		surface_reset_shader();
 		    
-			_bg = !_bg;
-			
-			_at.drawing_start(temp_surface[_bg]);
-			    draw_surface(temp_surface[!_bg], 0, 0);
+			_at.drawing_start(temp_surface[1]);
+			    draw_surface(temp_surface[0], 0, 0);
 			_at.drawing_end();
-			
-			_bg = !_bg;
 		}
 		
 		if(!array_empty(_rpTo)) {
-			surface_set_shader(temp_surface[!_bg], sh_tiler_convert, true, BLEND.over);
+    		surface_set_shader(temp_surface[0], noone, true, BLEND.over);
+    		    draw_surface(temp_surface[1], 0, 0);
+    		surface_reset_shader();
+		    
+			surface_set_shader(temp_surface[1], sh_tiler_convert, true, BLEND.over);
 			    shader_set_palette(_rpFr, "colorFrom", "colorAmount");
 			    shader_set_f("colorTo", _rpTo);
-			    
-			    draw_surface(temp_surface[_bg], 0, 0);
+			    draw_surface(temp_surface[0], 0, 0);
 			surface_reset_shader();
-			_bg = !_bg;
+			
 		}
 		
 		var _tileSiz = tileset.tileSize;
 	    var _outDim  = [ _tileSiz[0] * _mapSize[0], _tileSiz[1] * _mapSize[1] ];
 	    var _tileOut = surface_verify(_outData[0], _outDim[0],  _outDim[1]);
 	    var _tileMap = surface_verify(_outData[1], _mapSize[0], _mapSize[1], surface_rgba16float);
-	    var _applied = tileset.rules.apply(temp_surface[!_bg], _seed);
+	    var _applied = tileset.rules.apply(temp_surface[1], _seed);
 	    
 	    surface_set_shader(_tileMap, sh_sample, true, BLEND.over);
 	        draw_surface(_applied, 0, 0);
@@ -269,7 +269,7 @@ function Node_Tile_Convert(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	        shader_set_s( "indexTexture",    _tileMap );
 	        shader_set_2( "indexTextureDim", _mapSize );
 	        
-			shader_set_f("frame", CURRENT_FRAME);
+			shader_set_f( "frame", CURRENT_FRAME );
 	        tileset.shader_submit();
 			
 	        draw_empty();

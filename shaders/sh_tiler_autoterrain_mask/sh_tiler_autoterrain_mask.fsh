@@ -24,7 +24,7 @@ void main() {
             res[0] = .5;
     }
     
-    res[0] = max(res[0], dd);
+    res[0] = max(res[0], min(dd, 1.));
     
     gl_FragColor = res;
 }

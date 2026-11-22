@@ -78,6 +78,9 @@ function textArea(_input, _onModify) : textInput(_input, _onModify) constructor 
 	mouse_lhold  = false;
 	refresh_text = false;
 	
+	collapsible  = false;
+	collapsed    = false;
+	
 	border_heightlight_color = COLORS._main_accent;
 	
 	_cl = -1;
@@ -102,10 +105,11 @@ function textArea(_input, _onModify) : textInput(_input, _onModify) constructor 
 	
 	////- Get Set
 	
-	static setVAlign    = function(_v) /*=>*/ { padding_v  = _v;    return self; }
-	static setFixHeight = function(_h) /*=>*/ { fix_height = _h;    return self; }
-	static setResizable = function(_h) /*=>*/ { resizable  = _h;    return self; }
-	static setEmpty     = function(  ) /*=>*/ { no_empty   = false; return self; }
+	static setVAlign      = function(_v) /*=>*/ { padding_v   = _v;    return self; }
+	static setFixHeight   = function(_h) /*=>*/ { fix_height  = _h;    return self; }
+	static setResizable   = function(_h) /*=>*/ { resizable   = _h;    return self; }
+	static setCollapsible = function(_h) /*=>*/ { collapsible = _h;    return self; }
+	static setEmpty       = function(  ) /*=>*/ { no_empty    = false; return self; }
 	
 	static isCodeFormat = function() { INLINE return format == TEXT_AREA_FORMAT.codeLUA || format == TEXT_AREA_FORMAT.codeHLSL; }
 	
@@ -824,14 +828,32 @@ function textArea(_input, _onModify) : textInput(_input, _onModify) constructor 
 	}
 	
 	static draw = function(_x, _y, _w, _h, _text, _m) {
+		var rh = ui(20);
 		_h = fix_height? fix_height : _h;
 		
 		////- Dimension
 		
-		x = _x; y = _y;
-		w = _w; h = _h;
-		
+		x = _x; 
+		y = _y;
+		w = _w; 
+		h = _h;
 		hovering = false;
+		
+		if(collapsible && collapsed) {
+			h = rh;
+			
+			var _exh = h;
+			var _hov = ihover && point_in_rectangle(_m[0], _m[1], _x, _y, _x + _w, _y + _exh);
+			draw_sprite_stretched_ext(THEME.button_def, _hov? 1 : 0, _x, _y, _w, _exh, boxColor, 1);
+			
+			draw_sprite_ui_uniform(THEME.arrow, !collapsed, _x + ui(12), _y + _exh / 2, .75, COLORS._main_icon);
+			draw_set_text(f_p4, fa_left, fa_center, COLORS._main_text_sub);
+			draw_text_add(_x + ui(24), _y + _exh / 2, __txt($"Text [{string_length(_text)}]"))
+			
+			if(_hov && mouse_lpress(iactive)) collapsed = !collapsed;
+			
+			return h;
+		}
 		
 		if(!interactable && string_length(_text) > 1000)
 			_text = string_copy(_text, 1, 1000) + "...";
@@ -877,7 +899,6 @@ function textArea(_input, _onModify) : textInput(_input, _onModify) constructor 
 		var content_h  = max(_h, padding_v * 2 + c_h * line_count);
 		
 		hh = min(content_h, max_height);
-		
 		if(fix_height) hh = fix_height;
 		
 		var _hw = _w;
@@ -885,6 +906,8 @@ function textArea(_input, _onModify) : textInput(_input, _onModify) constructor 
 			_hw        -= 16;
 			line_width -= 16;
 		}
+		
+		if(collapsible) hh += rh;
 		
 		draw_sprite_stretched_ext(THEME.textbox, 3, x, y, w, hh, boxColor, 1);
 		
@@ -909,6 +932,21 @@ function textArea(_input, _onModify) : textInput(_input, _onModify) constructor 
 		}
 		
 		////- Draw
+		
+		if(collapsible) {
+			var rss  = ui(32);
+			var _exh = rh;
+			var ly   = _y + hh - rh;
+			
+			var _hov = ihover && point_in_rectangle(_m[0], _m[1], _x, ly, _x + _w - resizable * rss, ly + rh);
+			draw_sprite_stretched_ext(THEME.button_def, _hov? 1 : 0, _x, ly, _w, _exh, boxColor, 1);
+			
+			draw_sprite_ui_uniform(THEME.arrow, !collapsed, _x + ui(12), ly + _exh / 2, .75, COLORS._main_icon);
+			draw_set_text(f_p4, fa_left, fa_center, COLORS._main_text_sub);
+			draw_text_add(_x + ui(24), ly + _exh / 2, __txt($"Collapse"))
+			
+			if(_hov && mouse_lpress(iactive)) collapsed = !collapsed;
+		}
 		
 		var hoverRect = point_in_rectangle(_m[0], _m[1], _x, _y, _x + _hw, _y + hh);
 		var _scis = gpu_get_scissor();

@@ -5,11 +5,11 @@ function Node_Heightmap_Shadow(_x, _y, _group = noone) : Node_Shader_Processor(_
 	var i = shader_index;
 	
 	////- =Heightmap
-	newInput(i+2, nodeValue_Float(    "Height", 1 )).setPieMenu().setUnitSimple().setShaderProp("height");
+	newInput(i+2, nodeValue_Float(    "Height", 1 )).setShaderProp("height").setPieMenu().setUnitSimple();
 	
 	////- =Cast
-	newInput(i+0, nodeValue_Rotation( "Direction",    315 )).setHotkey("R").setPieMenu().setShaderProp("direction");
-	newInput(i+1, nodeValue_Float(    "Max Distance", .5  )).setHotkey("S").setPieMenu().setUnitSimple().setShaderProp("maxDistance");
+	newInput(i+0, nodeValue_Rotation( "Direction",    315 )).setShaderProp("direction").setHotkey("R").setPieMenu();
+	newInput(i+1, nodeValue_Float(    "Max Distance", .5  )).setShaderProp("maxDistance").setHotkey("S").setPieMenu().setUnitSimple().hideLabel();
 	
 	////- =Rendering
 	newInput(i+3, nodeValue_Color(    "Shadow Color",   ca_black )).setShaderProp("shadowColor");

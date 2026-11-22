@@ -126,40 +126,49 @@ function tiler_brush_autoterrain() constructor {
     static drawing_end = function() {
         surface_reset_target();
         
+		// print("drawing_end");
+		// printSurface("draw_surface_mask", draw_surface_mask)
+		
         // autoterrain mask
         // #000000 : not part of autoterrain
         // #808080 : part of autoterrain, read only
         // #FFFFFF : part of autoterrain, writable
         
         surface_set_shader(mask_surface, sh_tiler_autoterrain_mask); 
-            shader_set_s("drawSurface", draw_surface_mask);
-            shader_set_i("indexes",     index);
-            shader_set_i("indexSize",   array_length(index));
+            shader_set_s( "drawSurface", draw_surface_mask   );
+            shader_set_i( "indexes",     index               );
+            shader_set_i( "indexSize",   array_length(index) );
             
             draw_surface(target_surface, 0, 0);
         surface_reset_shader();
         
+		// printSurface("mask_surface", mask_surface)
+		
         surface_set_shader(update_surface, sh_tiler_autoterrain_apply); 
-            shader_set_2("dimension",    surface_get_dimension(update_surface));
+            shader_set_2( "dimension",    surface_get_dimension(update_surface));
             
-            shader_set_s("maskSurface",   mask_surface);   
-            shader_set_i("bitmaskType",   type);
-            shader_set_i("indexMapper48", indexMap48);
+            shader_set_s( "maskSurface",   mask_surface        );   
+            shader_set_i( "bitmaskType",   type                );
+            shader_set_i( "indexMapper48", indexMap48          );
             
-            shader_set_i("indexes",   index);
-            shader_set_i("indexSize", array_length(index));
-            shader_set_i("erase",     eraseMode);
+            shader_set_i( "indexes",       index               );
+            shader_set_i( "indexSize",     array_length(index) );
+            shader_set_i( "erase",         eraseMode           );
             
             draw_surface(target_surface, 0, 0);
         surface_reset_shader();
         
+		// printSurface("update_surface", update_surface)
+		
         surface_set_target(target_surface);
             DRAW_CLEAR
-            
             BLEND_OVERRIDE
             draw_surface(update_surface, 0, 0);
             BLEND_NORMAL
         surface_reset_target();
+        
+		// printSurface("target_surface", target_surface)
+		
     }
     
     ////- Serialize

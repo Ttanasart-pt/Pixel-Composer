@@ -1630,7 +1630,10 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 			case VALUE_TYPE.text :		
 				switch(display_type) {
 					case VALUE_DISPLAY._default :
-						editWidget   = new textArea(TEXTBOX_INPUT.text, function(str) /*=>*/ {return setValueInspector(str)});
+						editWidget = textArea_Text(function(str) /*=>*/ {return setValueInspector(str)});
+						
+						if(has(display_data, "collapsible")) editWidget.collapsible = display_data.collapsible;
+						if(has(display_data, "collapsed"))   editWidget.collapsed   = display_data.collapsed;
 						break;
 						
 					case VALUE_DISPLAY.text_box :

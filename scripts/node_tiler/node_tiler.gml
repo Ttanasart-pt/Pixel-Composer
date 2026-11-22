@@ -402,12 +402,12 @@ function Node_Tile_Drawer(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	    var _frame = floor(CURRENT_FRAME * _animSped - _animOffs);
 	    
 	    surface_set_shader(_tileOut, sh_draw_tile_map, true, BLEND.over);
-	        shader_set_2("dimension", _outDim);
+	        shader_set_2( "dimension",    _outDim  );
 	        
-	        shader_set_surface("indexTexture", _tileMap);
-	        shader_set_2("indexTextureDim", surface_get_dimension(_tileMap));
+	        shader_set_s( "indexTexture", _tileMap );
+	        shader_set_2( "indexTextureDim", surface_get_dimension(_tileMap));
 	        
-			shader_set_f("frame", _frame);
+			shader_set_f(" frame", _frame );
 	        tileset.shader_submit();
 			
 	        draw_empty();

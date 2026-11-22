@@ -6,6 +6,11 @@
         "date": "2026-11-22T02:00:38.450Z",
         "node": "",
         "commit": "**3d json**: add support for mesh type.... probably"
+      },
+      {
+        "date": "2026-11-22T04:53:56.823Z",
+        "node": "",
+        "commit": "**Tileset**: Fix auto terrain setting the wrong tile."
       }
     ]
   }

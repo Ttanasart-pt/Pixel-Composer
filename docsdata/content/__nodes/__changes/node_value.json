@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.22.3.106",
+    "changes": [
+      {
+        "date": "2026-11-22T04:53:56.825Z",
+        "node": "",
+        "commit": "**Tileset**: Fix auto terrain setting the wrong tile."
+      }
+    ]
+  },
+  {
     "version": "1.22.3.103",
     "changes": [
       {
