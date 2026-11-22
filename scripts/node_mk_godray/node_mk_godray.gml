@@ -107,7 +107,7 @@ function Node_MK_GodRay(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			shader_set_i( "useMask",      is_surface(_mask) );
 			
 			shader_set_i( "type",         _type  );
-			shader_set_2( "origin",       _orig  );
+			shader_set_2( "origin",       [round(_orig[0]), round(_orig[1])] );
 			shader_set_m( "range",        _range, _data[18], inputs[ 5] );
 			shader_set_2( "level",        _level );
 			

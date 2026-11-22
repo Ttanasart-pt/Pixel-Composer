@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.22.3.106",
+    "changes": [
+      {
+        "date": "2026-11-22T05:40:20.311Z",
+        "node": "MK God ray",
+        "commit": "**MK God ray**: Fix ray disappear when origin is not an integer."
+      }
+    ]
+  },
+  {
     "version": "1.22.2.008",
     "changes": [
       {
