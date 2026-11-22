@@ -56,8 +56,7 @@ function Node_3D_Mesh_Json(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, _group
 		var hh = 0;
 		
 		var isGroup = is_struct(_out);
-		
-		var _uuid = isGroup? (_out[$ "uuid"] ?? "") : _out;
+		var _uuid   = isGroup? (_out[$ "uuid"] ?? "") : _out;
 		if(_uuid == "" || !has(idMap, _uuid)) return hh;
 		
 		var _ele = idMap[$ _uuid];
@@ -103,8 +102,15 @@ function Node_3D_Mesh_Json(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, _group
 		}
 		
 		if(!isGroup) {
+			var ss = THEME.cube_3d;
 			var cc = merge_color(_col, COLORS._main_icon_light, .5);
-			draw_sprite_ui_uniform(THEME.addon_icon, 0, tx + bs / 2, yc, .6, cc, .5);
+			
+			switch(_typ) {
+				case "cube": ss = THEME.cube_3d; break;
+				case "mesh": ss = THEME.mesh_3d; break;
+			}
+			
+			draw_sprite_ui_uniform(ss, 0, tx + bs / 2, yc, .6, cc, 1);
 			tx += bs;
 		}
 		
@@ -163,7 +169,7 @@ function Node_3D_Mesh_Json(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, _group
 				}
 				tx += bs;
 				
-				draw_sprite_ui_uniform(THEME.addon_icon, 0, tx + bs / 2, yc, .6, COLORS._main_icon);
+				draw_sprite_ui_uniform(THEME.cube_3d, 0, tx + bs / 2, yc, .6, COLORS._main_icon);
 				tx += bs;
 				
 				tx += ui(4);
@@ -309,295 +315,293 @@ function Node_3D_Mesh_Json(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, _group
 	
 	function setPath(path) { inputs[in_mesh + 0].setValue(path); }
 	
-	////- Util
-	
-	function interpolate_lin(a, b, t) {
-		return {
-			x: lerp(a.x, b.x, t),
-			y: lerp(a.y, b.y, t),
-			z: lerp(a.z, b.z, t)
-		}
-	}
-	
-	function interpolate_catmul(k0, k1, k2, k3, dt) {
-		var v0 = k0[$ "data_points"][0];
-		var t0 = k0[$ "time"];
-		
-		var v1 = k1[$ "data_points"][0];
-		var t1 = k1[$ "time"];
-		
-		var v2 = k2[$ "data_points"][0];
-		var t2 = k2[$ "time"];
-		
-		var v3 = k3[$ "data_points"][0];
-		var t3 = k3[$ "time"];
-		
-	    var t01 = t1 - t0;
-	    var t12 = t2 - t1;
-	    var t23 = t3 - t2;
-	
-	    var t = (dt  - t1) / t12;
-		
-	    var x0 = v0.x;
-	    var x1 = v1.x;
-	    var x2 = v2.x;
-	    var x3 = v3.x;
-		
-	    var a = -x0 + 3*x1 - 3*x2 + x3;
-	    var b = 2*x0 - 5*x1 + 4*x2 - x3;
-	    var c = -x0 + x2;
-	    var d = 2*x1;
-	
-	    var xt = .5 * (a*t*t*t + b*t*t + c*t + d);
-		
-	    var y0 = v0.y;
-	    var y1 = v1.y;
-	    var y2 = v2.y;
-	    var y3 = v3.y;
-	
-	    var a = -y0 + 3*y1 - 3*y2 + y3;
-	    var b = 2*y0 - 5*y1 + 4*y2 - y3;
-	    var c = -y0 + y2;
-	    var d = 2*y1;
-	
-	    var yt = .5 * (a*t*t*t + b*t*t + c*t + d);
-	
-	    var z0 = v0.z;
-	    var z1 = v1.z;
-	    var z2 = v2.z;
-	    var z3 = v3.z;
-	
-	    var a = -z0 + 3*z1 - 3*z2 + z3;
-	    var b = 2*z0 - 5*z1 + 4*z2 - z3;
-	    var c = -z0 + z2;
-	    var d = 2*z1;
-	    var zt = .5 * (a*t*t*t + b*t*t + c*t + d);
-	
-	    return {x: xt, y: yt, z: zt};
-	}
-
 	////- Update
 	
 	__edgeA = __3dObject_Edge;
 	
 	static readElement = function(_element, _matrix) {
-		if(has(_element, "rotation")) {
-			var _rr = _element[$ "rotation"] ?? [0,0,0];
-			var _rx = _rr[0];
-			var _ry = _rr[1];
-			var _rz = _rr[2];
+		var _type = _element[$ "type"] ?? "cube"; 
+		
+		#region transform
+			var _tMat = new BBMOD_Matrix();
 			
-		} else {
-			var _rx = _element[$ "rotationX"] ?? 0;
-			var _ry = _element[$ "rotationY"] ?? 0;
-			var _rz = _element[$ "rotationZ"] ?? 0;
-		}
-		
-		var _ro = [0,0,0];
-		     if(has(_element, "origin"))         _ro = _element[$ "origin"];
-		else if(has(_element, "rotationOrigin")) _ro = _element[$ "rotationOrigin"];
-		
-		var ox, oy, oz;
-		var fx, fy, fz;
-		
-		ox = _ro[0];
-		oy = _ro[1];
-		oz = _ro[2];
-		
-		if(!has(_element, "faces")) return;
-		
-		var _face = _element.faces; 
-		var _tMat = new BBMOD_Matrix();
-		
-		if(has(_element, "from")) {
-			var _from = _element.from;
-			fx = _from[0];
-			fy = _from[1];
-			fz = _from[2];
-			
-			_tMat = _tMat.Translate(fx, fy, fz);
-		}
-		
-		_tMat = _tMat.Translate(-ox, -oy, -oz);
-		_tMat = _tMat.RotateZ(-_rz);
-		_tMat = _tMat.RotateY(-_ry);
-		_tMat = _tMat.RotateX(-_rx);
-		_tMat = _tMat.Translate(ox, oy, oz);
-		
-		var _cMat = _tMat.Mul(_matrix);
-		var _tArr = _cMat.Mul(invertMatrix).ToArray();
-		
-		var fx = 0, fy = 0, fz = 0;
-		var tx = 0, ty = 0, tz = 0;
-		
-		if(has(_element, "from")) {
-			tx = _element.to[0] - _element.from[0];
-			ty = _element.to[1] - _element.from[1];
-			tz = _element.to[2] - _element.from[2];
-		}
-		
-		// elements
-		
-		var _mat = [];
-		var _vrt = [];
-		var _edg = [];
-		var _vbs = [];
-		
-		array_push(elements, _element);
-		_element.name      = _element[$ "name"] ?? $"cube {array_length(elements)}";
-		_element.type      = "element";
-		_element.visible   = true;
-		_element.material  = _mat;
-		_element.transform = undefined;
-		_element.matrix    = [_tArr];
-		_element.vertex    = [_vrt];
-		_element.edges     = [_edg];
-		_element.VB        = _vbs;
-		_element.uuid      = _element[$ "uuid"] ?? array_length(elements);
-		
-		var _uuid = _element.uuid;
-		if(!has(attributes.element_visible, _uuid))
-			attributes.element_visible[$ _uuid] = true;
-		idMap[$ _uuid] = _element;
-		
-		var _matt = undefined;
-		
-		if(has(_face, "up") && (_face.up[$ "enabled"] ?? true)) {
-			var _f  = _face.up;
-			var fu = _f.uv[0], fv = _f.uv[3];
-			var tu = _f.uv[2], tv = _f.uv[1];
-			
-			_matt = string_trim(_f[$ "texture"] ?? "", ["#"]);
-			
-			var _v = [ // -y
-				__vertexA( [ fx, ty, fz ] ).setNormal( 0, 1, 0 ).setUV(fu, fv),
-				__vertexA( [ tx, ty, tz ] ).setNormal( 0, 1, 0 ).setUV(tu, tv),
-				__vertexA( [ fx, ty, tz ] ).setNormal( 0, 1, 0 ).setUV(fu, tv),
+			if(has(_element, "rotation")) {
+				var _rr = _element[$ "rotation"] ?? [0,0,0];
+				var _rx = _rr[0];
+				var _ry = _rr[1];
+				var _rz = _rr[2];
 				
-				__vertexA( [ tx, ty, fz ] ).setNormal( 0, 1, 0 ).setUV(tu, fv),
-				__vertexA( [ tx, ty, tz ] ).setNormal( 0, 1, 0 ).setUV(tu, tv),
-				__vertexA( [ fx, ty, fz ] ).setNormal( 0, 1, 0 ).setUV(fu, fv),
-			];
+			} else {
+				var _rx = _element[$ "rotationX"] ?? 0;
+				var _ry = _element[$ "rotationY"] ?? 0;
+				var _rz = _element[$ "rotationZ"] ?? 0;
+			}
 			
-			array_append(_vrt, _v);
-			array_append(_edg, [ new __edgeA([fx, ty, fz], [fx, ty, tz]), new __edgeA([fx, ty, tz], [tx, ty, tz]), 
-			                     new __edgeA([tx, ty, tz], [tx, ty, fz]), new __edgeA([tx, ty, fz], [fx, ty, fz]) ]); 
-		}
-		
-		if(has(_face, "down") && (_face.down[$ "enabled"] ?? true)) {
-			var _f = _face.down;
-			var fu = _f.uv[0], fv = _f.uv[3];
-			var tu = _f.uv[2], tv = _f.uv[1];
+			var _ro = [0,0,0];
+			     if(has(_element, "origin"))         _ro = _element[$ "origin"];
+			else if(has(_element, "rotationOrigin")) _ro = _element[$ "rotationOrigin"];
 			
-			_matt = string_trim(_f[$ "texture"] ?? "", ["#"]);
+			var ox = _ro[0];
+			var oy = _ro[1];
+			var oz = _ro[2];
 			
-			var _v = [ // +y
-				__vertexA( [ fx, fy, fz ] ).setNormal( 0,-1, 0 ).setUV(fu, fv),
-				__vertexA( [ fx, fy, tz ] ).setNormal( 0,-1, 0 ).setUV(fu, tv),
-				__vertexA( [ tx, fy, tz ] ).setNormal( 0,-1, 0 ).setUV(tu, tv),
+			var fx = 0;
+			var fy = 0;
+			var fz = 0;
+			
+			if(has(_element, "from")) {
+				var _from = _element.from;
+				fx = _from[0];
+				fy = _from[1];
+				fz = _from[2];
 				
-				__vertexA( [ tx, fy, fz ] ).setNormal( 0,-1, 0 ).setUV(tu, fv),
-				__vertexA( [ fx, fy, fz ] ).setNormal( 0,-1, 0 ).setUV(fu, fv),
-				__vertexA( [ tx, fy, tz ] ).setNormal( 0,-1, 0 ).setUV(tu, tv),
-			];
+				_tMat = _tMat.Translate(fx, fy, fz);
+			}
 			
-			array_append(_vrt, _v);
-			array_append(_edg, [ new __edgeA([fx, fy, fz], [fx, fy, tz]), new __edgeA([fx, fy, tz], [tx, fy, tz]),
-			                     new __edgeA([tx, fy, tz], [tx, fy, fz]), new __edgeA([tx, fy, fz], [fx, fy, fz]) ]);
-		}
+			_tMat = _tMat.Translate(-ox, -oy, -oz);
+			_tMat = _tMat.RotateZ(-_rz);
+			_tMat = _tMat.RotateY(-_ry);
+			_tMat = _tMat.RotateX(-_rx);
+			_tMat = _tMat.Translate(ox, oy, oz);
+			
+			var _cMat = _tMat.Mul(_matrix);
+			var _tArr = _cMat.Mul(invertMatrix).ToArray();
+			
+			var fx = 0;
+			var fy = 0;
+			var fz = 0;
+			
+			var tx = 0;
+			var ty = 0;
+			var tz = 0;
+			
+			if(has(_element, "from") && has(_element, "to")) {
+				tx = _element.to[0] - _element.from[0];
+				ty = _element.to[1] - _element.from[1];
+				tz = _element.to[2] - _element.from[2];
+			}
+		#endregion
 		
-		if(has(_face, "east") && (_face.east[$ "enabled"] ?? true)) {
-			var _f = _face.east;
-			var fu = _f.uv[0], fv = _f.uv[3];
-			var tu = _f.uv[2], tv = _f.uv[1];
+		#region elements
+			var _mat  = [];
+			var _vrt  = [];
+			var _edg  = [];
+			var _vbs  = [];
+			var _matt = undefined;
 			
-			_matt = string_trim(_f[$ "texture"] ?? "", ["#"]);
+			array_push(elements, _element);
+			_element.name      = _element[$ "name"] ?? $"{_type} {array_length(elements)}";
+			_element.visible   = true;
+			_element.material  = _mat;
+			_element.transform = undefined;
+			_element.matrix    = [_tArr];
+			_element.vertex    = [_vrt];
+			_element.edges     = [_edg];
+			_element.VB        = _vbs;
+			_element.uuid      = _element[$ "uuid"] ?? array_length(elements);
 			
-			var _v = [ // +x
-				__vertexA( [ tx, fy, fz ] ).setNormal( 1, 0, 0 ).setUV(tu, fv),
-				__vertexA( [ tx, fy, tz ] ).setNormal( 1, 0, 0 ).setUV(fu, fv),
-				__vertexA( [ tx, ty, tz ] ).setNormal( 1, 0, 0 ).setUV(fu, tv),
+			var _uuid = _element.uuid;
+			if(!has(attributes.element_visible, _uuid))
+				attributes.element_visible[$ _uuid] = true;
+			idMap[$ _uuid] = _element;
+			
+		#endregion
+		
+		if(_type == "cube") {
+			var _face = _element.faces; 
+			
+			if(has(_face, "up") && (_face.up[$ "enabled"] ?? true)) {
+				var _f  = _face.up;
+				var fu = _f.uv[0], fv = _f.uv[3];
+				var tu = _f.uv[2], tv = _f.uv[1];
 				
-				__vertexA( [ tx, ty, fz ] ).setNormal( 1, 0, 0 ).setUV(tu, tv),
-				__vertexA( [ tx, fy, fz ] ).setNormal( 1, 0, 0 ).setUV(tu, fv),
-				__vertexA( [ tx, ty, tz ] ).setNormal( 1, 0, 0 ).setUV(fu, tv),
-			];
-			
-			array_append(_vrt, _v);
-			array_append(_edg, [ new __edgeA([tx, fy, fz], [tx, fy, tz]), new __edgeA([tx, fy, tz], [tx, ty, tz]), 
-			                     new __edgeA([tx, ty, tz], [tx, ty, fz]), new __edgeA([tx, ty, fz], [tx, fy, fz]) ]);
-		}
-		
-		if(has(_face, "west") && (_face.west[$ "enabled"] ?? true)) {
-			var _f = _face.west;
-			var fu = _f.uv[0], fv = _f.uv[3];
-			var tu = _f.uv[2], tv = _f.uv[1];
-			
-			_matt = string_trim(_f[$ "texture"] ?? "", ["#"]);
-			
-			var _v = [ // -x
-				__vertexA( [ fx, fy, fz ] ).setNormal(-1, 0, 0 ).setUV(fu, fv),
-				__vertexA( [ fx, ty, tz ] ).setNormal(-1, 0, 0 ).setUV(tu, tv),
-				__vertexA( [ fx, fy, tz ] ).setNormal(-1, 0, 0 ).setUV(tu, fv),
+				_matt = string_trim(_f[$ "texture"] ?? "", ["#"]);
 				
-				__vertexA( [ fx, ty, fz ] ).setNormal(-1, 0, 0 ).setUV(fu, tv),
-				__vertexA( [ fx, ty, tz ] ).setNormal(-1, 0, 0 ).setUV(tu, tv),
-				__vertexA( [ fx, fy, fz ] ).setNormal(-1, 0, 0 ).setUV(fu, fv),
-			];
-			
-			array_append(_vrt, _v);
-			array_append(_edg, [ new __edgeA([fx, fy, fz], [fx, fy, tz]), new __edgeA([fx, fy, tz], [fx, ty, tz]), 
-			                     new __edgeA([fx, ty, tz], [fx, ty, fz]), new __edgeA([fx, ty, fz], [fx, fy, fz]) ]);
-		}
-		
-		if(has(_face, "north") && (_face.north[$ "enabled"] ?? true)) {
-			var _f = _face.north;
-			var fu = _f.uv[0], fv = _f.uv[3];
-			var tu = _f.uv[2], tv = _f.uv[1];
-			
-			_matt = string_trim(_f[$ "texture"] ?? "", ["#"]);
-			
-			var _v = [ // -z
-				__vertexA( [ fx, fy, fz ] ).setNormal( 0, 0,-1 ).setUV(fu, fv),
-				__vertexA( [ tx, ty, fz ] ).setNormal( 0, 0,-1 ).setUV(tu, tv),
-				__vertexA( [ fx, ty, fz ] ).setNormal( 0, 0,-1 ).setUV(fu, tv),
+				var _v = [ // -y
+					__vertexA( [ fx, ty, fz ] ).setNormal( 0, 1, 0 ).setUV(fu, fv),
+					__vertexA( [ tx, ty, tz ] ).setNormal( 0, 1, 0 ).setUV(tu, tv),
+					__vertexA( [ fx, ty, tz ] ).setNormal( 0, 1, 0 ).setUV(fu, tv),
+					
+					__vertexA( [ tx, ty, fz ] ).setNormal( 0, 1, 0 ).setUV(tu, fv),
+					__vertexA( [ tx, ty, tz ] ).setNormal( 0, 1, 0 ).setUV(tu, tv),
+					__vertexA( [ fx, ty, fz ] ).setNormal( 0, 1, 0 ).setUV(fu, fv),
+				];
 				
-				__vertexA( [ tx, fy, fz ] ).setNormal( 0, 0,-1 ).setUV(tu, fv),
-				__vertexA( [ tx, ty, fz ] ).setNormal( 0, 0,-1 ).setUV(tu, tv),
-				__vertexA( [ fx, fy, fz ] ).setNormal( 0, 0,-1 ).setUV(fu, fv),
-			];
+				array_append(_vrt, _v);
+				array_append(_edg, [ new __edgeA([fx, ty, fz], [fx, ty, tz]), new __edgeA([fx, ty, tz], [tx, ty, tz]), 
+				                     new __edgeA([tx, ty, tz], [tx, ty, fz]), new __edgeA([tx, ty, fz], [fx, ty, fz]) ]); 
+			}
 			
-			array_append(_vrt, _v);
-			array_append(_edg, [ new __edgeA([fx, fy, fz], [fx, ty, fz]), new __edgeA([fx, ty, fz], [tx, ty, fz]), 
-			                     new __edgeA([tx, ty, fz], [tx, fy, fz]), new __edgeA([tx, fy, fz], [fx, fy, fz]) ]);
-			
-		}
-		
-		if(has(_face, "south") && (_face.south[$ "enabled"] ?? true)) {
-			var _f = _face.south;
-			var fu = _f.uv[0], fv = _f.uv[3];
-			var tu = _f.uv[2], tv = _f.uv[1];
-			
-			_matt = string_trim(_f[$ "texture"] ?? "", ["#"]);
-			
-			var _v = [ // +z
-				__vertexA( [ fx, fy, tz ] ).setNormal( 0, 0, 1 ).setUV(fu, fv),
-				__vertexA( [ fx, ty, tz ] ).setNormal( 0, 0, 1 ).setUV(fu, tv),
-				__vertexA( [ tx, ty, tz ] ).setNormal( 0, 0, 1 ).setUV(tu, tv),
+			if(has(_face, "down") && (_face.down[$ "enabled"] ?? true)) {
+				var _f = _face.down;
+				var fu = _f.uv[0], fv = _f.uv[3];
+				var tu = _f.uv[2], tv = _f.uv[1];
 				
-				__vertexA( [ tx, fy, tz ] ).setNormal( 0, 0, 1 ).setUV(tu, fv),
-				__vertexA( [ fx, fy, tz ] ).setNormal( 0, 0, 1 ).setUV(fu, fv),
-				__vertexA( [ tx, ty, tz ] ).setNormal( 0, 0, 1 ).setUV(tu, tv),
-			];
+				_matt = string_trim(_f[$ "texture"] ?? "", ["#"]);
+				
+				var _v = [ // +y
+					__vertexA( [ fx, fy, fz ] ).setNormal( 0,-1, 0 ).setUV(fu, fv),
+					__vertexA( [ fx, fy, tz ] ).setNormal( 0,-1, 0 ).setUV(fu, tv),
+					__vertexA( [ tx, fy, tz ] ).setNormal( 0,-1, 0 ).setUV(tu, tv),
+					
+					__vertexA( [ tx, fy, fz ] ).setNormal( 0,-1, 0 ).setUV(tu, fv),
+					__vertexA( [ fx, fy, fz ] ).setNormal( 0,-1, 0 ).setUV(fu, fv),
+					__vertexA( [ tx, fy, tz ] ).setNormal( 0,-1, 0 ).setUV(tu, tv),
+				];
+				
+				array_append(_vrt, _v);
+				array_append(_edg, [ new __edgeA([fx, fy, fz], [fx, fy, tz]), new __edgeA([fx, fy, tz], [tx, fy, tz]),
+				                     new __edgeA([tx, fy, tz], [tx, fy, fz]), new __edgeA([tx, fy, fz], [fx, fy, fz]) ]);
+			}
 			
-			array_append(_vrt, _v);
-			array_append(_edg, [ new __edgeA([fx, fy, tz], [fx, ty, tz]), new __edgeA([fx, ty, tz], [tx, ty, tz]), 
-			                     new __edgeA([tx, ty, tz], [tx, fy, tz]), new __edgeA([tx, fy, tz], [fx, fy, tz]) ]);
-			                     
+			if(has(_face, "east") && (_face.east[$ "enabled"] ?? true)) {
+				var _f = _face.east;
+				var fu = _f.uv[0], fv = _f.uv[3];
+				var tu = _f.uv[2], tv = _f.uv[1];
+				
+				_matt = string_trim(_f[$ "texture"] ?? "", ["#"]);
+				
+				var _v = [ // +x
+					__vertexA( [ tx, fy, fz ] ).setNormal( 1, 0, 0 ).setUV(tu, fv),
+					__vertexA( [ tx, fy, tz ] ).setNormal( 1, 0, 0 ).setUV(fu, fv),
+					__vertexA( [ tx, ty, tz ] ).setNormal( 1, 0, 0 ).setUV(fu, tv),
+					
+					__vertexA( [ tx, ty, fz ] ).setNormal( 1, 0, 0 ).setUV(tu, tv),
+					__vertexA( [ tx, fy, fz ] ).setNormal( 1, 0, 0 ).setUV(tu, fv),
+					__vertexA( [ tx, ty, tz ] ).setNormal( 1, 0, 0 ).setUV(fu, tv),
+				];
+				
+				array_append(_vrt, _v);
+				array_append(_edg, [ new __edgeA([tx, fy, fz], [tx, fy, tz]), new __edgeA([tx, fy, tz], [tx, ty, tz]), 
+				                     new __edgeA([tx, ty, tz], [tx, ty, fz]), new __edgeA([tx, ty, fz], [tx, fy, fz]) ]);
+			}
+			
+			if(has(_face, "west") && (_face.west[$ "enabled"] ?? true)) {
+				var _f = _face.west;
+				var fu = _f.uv[0], fv = _f.uv[3];
+				var tu = _f.uv[2], tv = _f.uv[1];
+				
+				_matt = string_trim(_f[$ "texture"] ?? "", ["#"]);
+				
+				var _v = [ // -x
+					__vertexA( [ fx, fy, fz ] ).setNormal(-1, 0, 0 ).setUV(fu, fv),
+					__vertexA( [ fx, ty, tz ] ).setNormal(-1, 0, 0 ).setUV(tu, tv),
+					__vertexA( [ fx, fy, tz ] ).setNormal(-1, 0, 0 ).setUV(tu, fv),
+					
+					__vertexA( [ fx, ty, fz ] ).setNormal(-1, 0, 0 ).setUV(fu, tv),
+					__vertexA( [ fx, ty, tz ] ).setNormal(-1, 0, 0 ).setUV(tu, tv),
+					__vertexA( [ fx, fy, fz ] ).setNormal(-1, 0, 0 ).setUV(fu, fv),
+				];
+				
+				array_append(_vrt, _v);
+				array_append(_edg, [ new __edgeA([fx, fy, fz], [fx, fy, tz]), new __edgeA([fx, fy, tz], [fx, ty, tz]), 
+				                     new __edgeA([fx, ty, tz], [fx, ty, fz]), new __edgeA([fx, ty, fz], [fx, fy, fz]) ]);
+			}
+			
+			if(has(_face, "north") && (_face.north[$ "enabled"] ?? true)) {
+				var _f = _face.north;
+				var fu = _f.uv[0], fv = _f.uv[3];
+				var tu = _f.uv[2], tv = _f.uv[1];
+				
+				_matt = string_trim(_f[$ "texture"] ?? "", ["#"]);
+				
+				var _v = [ // -z
+					__vertexA( [ fx, fy, fz ] ).setNormal( 0, 0,-1 ).setUV(fu, fv),
+					__vertexA( [ tx, ty, fz ] ).setNormal( 0, 0,-1 ).setUV(tu, tv),
+					__vertexA( [ fx, ty, fz ] ).setNormal( 0, 0,-1 ).setUV(fu, tv),
+					
+					__vertexA( [ tx, fy, fz ] ).setNormal( 0, 0,-1 ).setUV(tu, fv),
+					__vertexA( [ tx, ty, fz ] ).setNormal( 0, 0,-1 ).setUV(tu, tv),
+					__vertexA( [ fx, fy, fz ] ).setNormal( 0, 0,-1 ).setUV(fu, fv),
+				];
+				
+				array_append(_vrt, _v);
+				array_append(_edg, [ new __edgeA([fx, fy, fz], [fx, ty, fz]), new __edgeA([fx, ty, fz], [tx, ty, fz]), 
+				                     new __edgeA([tx, ty, fz], [tx, fy, fz]), new __edgeA([tx, fy, fz], [fx, fy, fz]) ]);
+				
+			}
+			
+			if(has(_face, "south") && (_face.south[$ "enabled"] ?? true)) {
+				var _f = _face.south;
+				var fu = _f.uv[0], fv = _f.uv[3];
+				var tu = _f.uv[2], tv = _f.uv[1];
+				
+				_matt = string_trim(_f[$ "texture"] ?? "", ["#"]);
+				
+				var _v = [ // +z
+					__vertexA( [ fx, fy, tz ] ).setNormal( 0, 0, 1 ).setUV(fu, fv),
+					__vertexA( [ fx, ty, tz ] ).setNormal( 0, 0, 1 ).setUV(fu, tv),
+					__vertexA( [ tx, ty, tz ] ).setNormal( 0, 0, 1 ).setUV(tu, tv),
+					
+					__vertexA( [ tx, fy, tz ] ).setNormal( 0, 0, 1 ).setUV(tu, fv),
+					__vertexA( [ fx, fy, tz ] ).setNormal( 0, 0, 1 ).setUV(fu, fv),
+					__vertexA( [ tx, ty, tz ] ).setNormal( 0, 0, 1 ).setUV(tu, tv),
+				];
+				
+				array_append(_vrt, _v);
+				array_append(_edg, [ new __edgeA([fx, fy, tz], [fx, ty, tz]), new __edgeA([fx, ty, tz], [tx, ty, tz]), 
+				                     new __edgeA([tx, ty, tz], [tx, fy, tz]), new __edgeA([tx, fy, tz], [fx, fy, tz]) ]);
+				                     
+			}
+			
+			array_push(_vbs, object.buildVertex(_vrt));
+			array_push(_mat, _matt);
+			
+		} else if(_type == "mesh") { // sfsadkljvjnsidflrtgbyv fdisuf
+			var _vert = _element.vertices;
+			var _varr = struct_get_names(_vert);
+			
+			var _face = _element.faces;
+			var _farr = struct_get_names(_face);
+			
+			for( var i = 0, n = array_length(_farr); i < n; i++ ) {
+				var fid = _farr[i];
+				var fac = _face[$ fid];
+				
+				var fuv = fac.uv;
+				var fvt = fac.vertices;
+				
+				_matt = string_trim(fac[$ "texture"] ?? "", ["#"]);
+				
+				var fverts = [];
+				
+				for( var j = 0, m = array_length(fvt); j < m; j++ ) {
+					var fvid = fvt[j];
+					var fvrt = _vert[$ fvid];
+					var fvuv = fuv[$ fvid];
+					
+					fverts[j] = __vertexA(fvrt).setUV(fvuv[0], fvuv[1]);
+				}
+				
+				var ftria = vertex_triangulate(fverts);
+				var ftris = ftria[0];
+				var fside = ftria[2];
+				
+				for( var j = 0, m = array_length(ftris); j < m; j++ ) {
+					var trif = ftris[j];
+					var v0   = trif[0];
+					var v1   = trif[1];
+					var v2   = trif[2];
+					
+					if(fside == 1) {
+						v1   = trif[2];
+						v2   = trif[1];
+					}
+					
+					var norm = cross_product_3d(v0.x, v0.y, v0.z, v1.x, v1.y, v1.z, v2.x, v2.y, v2.z);
+					v0.setNormal(-norm.x, -norm.y, -norm.z);
+					v1.setNormal(-norm.x, -norm.y, -norm.z);
+					v2.setNormal(-norm.x, -norm.y, -norm.z);
+					
+					array_append(_vrt, [v0, v1, v2]);
+				}
+				
+			}
+			
+			array_push(_vbs, object.buildVertex(_vrt));
+			array_push(_mat, _matt);
+			
 		}
-		
-		array_push(_vbs, object.buildVertex(_vrt));
-		array_push(_mat, _matt);
 		
 		if(has(_element, "children"))
 		for( var i = 0, n = array_length(_element.children); i < n; i++ )
@@ -683,11 +687,11 @@ function Node_3D_Mesh_Json(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, _group
 				for( var i = 0, n = array_length(_groups); i < n; i++ ) {
 					var _group  = _groups[i];
 					var _uuid   = _group.uuid;
-					_group.type = "group";
 					
 					if(!has(attributes.element_visible, _uuid))
 						attributes.element_visible[$ _uuid] = true;
 					
+					_group.type      = "group";
 					_group._position = _group[$ "position"] ?? [0,0,0];
 					_group._origin   = _group[$ "origin"]   ?? [0,0,0];
 					_group._rotation = _group[$ "rotation"] ?? [0,0,0];
@@ -1018,18 +1022,41 @@ function Node_3D_Mesh_Json(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, _group
 								break;
 								
 							} else if(currFrame >= _prevFrame && currFrame < _time) {
-								var d0 = _prevData[0];
-								var d1 = _datp[0];
+								var t  = (currFrame - _prevFrame) / (_time - _prevFrame);
 								
 								if(_intp == "catmullrom" || (_prevFrame && _prevFrame[$ "interpolation"] == "catmullrom")) {
 									var v0 = _keyframes[max(k-2,0  )];
 									var v1 = _keyframes[max(k-1,0  )];
 									var v2 = _keyframes[max(k      )];
 									var v3 = _keyframes[min(k+1,p-1)];
-									_val = interpolate_catmul(v0, v1, v2, v3, currFrame);
 									
-								} else 
-									_val = interpolate_lin(d0, d1, (currFrame - _prevFrame) / (_time - _prevFrame));
+									var p0 = v0.data_points[0];
+									var p1 = v1.data_points[0];
+									var p2 = v2.data_points[0];
+									var p3 = v3.data_points[0];
+									
+									var t1 = v1.time;
+									var t2 = v2.time;
+									
+									var t  = (currFrame - t1) / (t2 - t1);
+									
+									var xx = lerp_catmul(p0.x, p1.x, p2.x, p3.x, t);
+									var yy = lerp_catmul(p0.y, p1.y, p2.y, p3.y, t);
+									var zz = lerp_catmul(p0.z, p1.z, p2.z, p3.z, t);
+									
+									_val = {x:xx, y:yy, z:zz};
+									
+								} else {
+									var p0 = v0.data_points[0];
+									var p1 = v1.data_points[0];
+									
+									var xx = lerp(p0.x, p1.x, t);
+									var yy = lerp(p0.y, p1.y, t);
+									var zz = lerp(p0.z, p1.z, t);
+									
+									_val = {x:xx, y:yy, z:zz};
+									
+								}
 								break;
 							}
 							

@@ -1,0 +1,12 @@
+[
+  {
+    "version": "1.22.3.106",
+    "changes": [
+      {
+        "date": "2026-11-22T02:00:38.450Z",
+        "node": "",
+        "commit": "**3d json**: add support for mesh type.... probably"
+      }
+    ]
+  }
+]

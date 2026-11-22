@@ -1822,6 +1822,7 @@
     {"id":{"name":"__path","path":"scripts/__path/__path.yy",},},
     {"id":{"name":"__pbBox","path":"scripts/__pbBox/__pbBox.yy",},},
     {"id":{"name":"__polygon","path":"scripts/__polygon/__polygon.yy",},},
+    {"id":{"name":"__polygon_3d","path":"scripts/__polygon_3d/__polygon_3d.yy",},},
     {"id":{"name":"__psystem","path":"scripts/__psystem/__psystem.yy",},},
     {"id":{"name":"__raymarching","path":"scripts/__raymarching/__raymarching.yy",},},
     {"id":{"name":"__rectangle","path":"scripts/__rectangle/__rectangle.yy",},},

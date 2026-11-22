@@ -4,8 +4,10 @@ function Node_Image_Base64(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	newInput( 0, nodeValue_Text( "Base64 text" ));
 	// 1
 	
-	newOutput(0, nodeValue_Output( "Surface",   VALUE_TYPE.surface, noone));
-	newOutput(1, nodeValue_Output( "Dimension", VALUE_TYPE.integer, [1,1] )).setDisplay(VALUE_DISPLAY.vector);
+	newOutput( 0, nodeValue_Output( "Surface",   VALUE_TYPE.surface, noone));
+	newOutput( 1, nodeValue_Output( "Dimension", VALUE_TYPE.integer, [1,1] )).setDisplay(VALUE_DISPLAY.vector);
+	
+	////- Node
 	
 	spr    = undefined;
 	sprStr = "";

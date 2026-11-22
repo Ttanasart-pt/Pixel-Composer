@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"__polygon_3d",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"__polygon_3d",
+  "parent":{
+    "name":"geometry",
+    "path":"folders/functions/geometry.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

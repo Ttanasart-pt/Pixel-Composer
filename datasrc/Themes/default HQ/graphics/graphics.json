@@ -15,6 +15,8 @@
     "corner_r4":                          { "path": "./generic/s_corner_r4.png",                            "s": 1, "x":  0, "y":  0, "slice": [0, 1, 1, 0] },
     "tooltip":                            { "path": "./generic/s_tooltip.png",                              "s": 1, "x":  0, "y":  0, "slice":  5 },
 
+    "cube_3d":                            { "path": "./icon/s_3d_cube.png",                                 "s": 1, "x": 12, "y": 12 },
+    "mesh_3d":                            { "path": "./icon/s_3d_mesh.png",                                 "s": 1, "x": 12, "y": 12 },
     "ac_constant":                        { "path": "./icon/s_ac_constant.png",                             "s": 4, "x":  9, "y":  9 },
     "ac_function":                        { "path": "./icon/s_ac_function.png",                             "s": 1, "x":  9, "y":  9 },
     "ac_node":                            { "path": "./icon/s_ac_node.png",                                 "s": 2, "x":  9, "y":  9 },

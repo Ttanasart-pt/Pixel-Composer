@@ -258,7 +258,7 @@ if(DIALOG_SHOW_FOCUS) {
 
 #region tooltip
 	if(surface_exists(node_surface)) {
-		var _sx = node_icon_x;
+		var _sx = node_icon_x - ui(24);
 		var _sy = node_icon_y;
 		
 		var _sw = ui(64);
@@ -277,7 +277,7 @@ if(DIALOG_SHOW_FOCUS) {
 		gpu_set_tex_filter(false);
 		
 	} else if(sprite_exists(node_icon)) {
-		var _sx = node_icon_x;
+		var _sx = node_icon_x - ui(24);
 		var _sy = node_icon_y;
 		var _si = current_time * PREFERENCES.collection_preview_speed / 3000;
 		

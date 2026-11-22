@@ -24,35 +24,33 @@ function textArea(_input, _onModify) : textInput(_input, _onModify) constructor 
 	_input_text_line       = [];
 	_input_text_line_index = [];
 	
-	_current_text	= "";
-	_input_text		= "";
-	_prev_text		= "";
-	_last_value		= "";
-	_prev_width		= 0;
-	_stretch_width  = false;
+	_current_text    = "";
+	_input_text      = "";
+	_prev_text       = "";
+	_last_value      = "";
+	_prev_width      = 0;
+	_stretch_width   = false;
 	
-	min_lines  = 0;
-	line_width = 1000;
-	max_height = 1000;
+	min_lines        = 0;
+	line_width       = 1000;
+	max_height       = 1000;
 	
-	fix_height = -1;
+	fix_height       = -1;
 	
-	cursor			= 0;
-	cursor_tx		= 0;
-	cursor_pos_x	= 0;
-	cursor_pos_x_to	= 0;
-	cursor_pos_y	= 0;
-	cursor_pos_y_to	= 0;
-	cursor_line     = 0;
+	cursor           = 0;
+	cursor_tx        = 0;
+	cursor_pos_x     = 0;
+	cursor_pos_x_to  = 0;
+	cursor_pos_y     = 0;
+	cursor_pos_y_to  = 0;
+	cursor_line      = 0;
 	
-	char_run = 0
+	format           = TEXT_AREA_FORMAT._default;
+	cursor_select    = -1;
+	click_block      = 0;
 	
-	format         = TEXT_AREA_FORMAT._default;
-	cursor_select  = -1;
-	click_block    = 0;
-	
-	padding_v       = ui(7);
-	code_line_width = 48;
+	padding_v        = ui(7);
+	code_line_width  = 48;
 	
 	shift_new_line   = true;
 	show_line_number = true;
@@ -1005,7 +1003,7 @@ function textArea(_input, _onModify) : textInput(_input, _onModify) constructor 
 					var char_line  = 0;
 					var curs_found = false;
 				
-					char_run = 0;
+					var char_run = 0;
 				
 					if(cursor_select != -1) {
 						ch_sel_min = min(cursor_select, cursor);
