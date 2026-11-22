@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.22.3.106",
+    "changes": [
+      {
+        "date": "2026-11-22T09:10:05.267Z",
+        "node": "Draw Shape 3D",
+        "commit": "**Draw Shape 3D**: Add Equirectangular sphere projection."
+      }
+    ]
+  },
+  {
     "version": "1.22.1.202",
     "changes": [
       {

@@ -73,6 +73,7 @@ function Node_Shape_3D(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 		////- =/UV
 	newInput(22, nodeValue_Bool(    "Array Texture", false ));
 	newInput( 6, nodeValue_Surface( "Texture"              ));
+	newInput(29, nodeValue_EScroll( "Projection",   0, [ "Lambert", "Equirectangular" ] ));
 	newInput(17, nodeValue_Vec2(    "UV Position", [0,0]   ));
 	newInput(18, nodeValue_Vec2(    "UV Scale",    [1,1]   ));
 	
@@ -88,7 +89,7 @@ function Node_Shape_3D(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	newInput( 4, nodeValue_Range(   "View Range", [.0,.25]      ));
 	newInput(19, nodeValue_Surface( "Displacement Map"          ));
 	newInput(20, nodeValue_Range(   "Displacement Range", [0,1] ));
-	// 29
+	// 30
 	
 	newOutput( 0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	newOutput( 1, nodeValue_Output("Depth",       VALUE_TYPE.surface, noone));
@@ -99,7 +100,7 @@ function Node_Shape_3D(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 		[ "Transform", false     ],  1, 21,  2,  3, 
 		[ "Shape",     false     ],  7,  8,  9, 13, 12, 14, 15, 
 		[ "Texturing", false     ],  5, 10, 11, 
-			[ "/UV",   false     ], 22,  6, 17, 18, 
+			[ "/UV",   false     ], 22,  6, 29, 17, 18, 
 		[ "Lighting",  false, 23 ], 24, 25, 26, 27, 28, 
 		[ "Depth",     false     ],  4, 
 	];
@@ -152,6 +153,7 @@ function Node_Shape_3D(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 			
 			var _texta = _data[22];
 			var _textr = _data[ 6];
+			var _proj  = _data[29];
 			var _uvPos = _data[17];
 			var _uvSca = _data[18];
 			
@@ -172,6 +174,7 @@ function Node_Shape_3D(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 			inputs[12].setVisible(false);
 			inputs[14].setVisible(false);
 			inputs[15].setVisible(false);
+			inputs[29].setVisible(false);
 			
 			inputs[10].setVisible(false);
 			inputs[11].setVisible(false);
@@ -204,123 +207,124 @@ function Node_Shape_3D(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 			matrix_stack_push(matrix_build(  0,   0,   0, /**/  0,  0,  0, /**/ sx, sy, sz));
 		#endregion
 		  
-		#region shape
-			var vbObject = objectCache[$ _shape];
+		//// shape
+		var vbObject = objectCache[$ _shape];
+		switch(_shape) {
+			case "Plane"      : if(vbObject == undefined) vbObject = new __3dPlane(2); 
+				break;
+				
+			case "Cube"       : 
+				if(vbObject == undefined) {
+					vbObject = new __3dCube(true); 
+					var v = vbObject.VB;
+					vbObject.VB = [ v[1], v[3], v[5], v[0], v[2], v[4] ];
+				}
+				break;
 			
-			switch(_shape) {
-				case "Plane"    : if(vbObject == undefined) vbObject = new __3dPlane(2); 
-					break;
-					
-				case "Cube"     : 
-					if(vbObject == undefined) {
-						vbObject = new __3dCube(true); 
-						var v = vbObject.VB;
-						vbObject.VB = [ v[1], v[3], v[5], v[0], v[2], v[4] ];
-					}
-					break;
+			case "Octahedron" : if(vbObject == undefined) vbObject = new __3dOctahedron(true); 
+				break;
 				
-				case "Octahedron" : if(vbObject == undefined) vbObject = new __3dOctahedron(true); 
-					break;
-					
-				case "Cylinder" : if(vbObject == undefined) vbObject = new __3dCylinder(); 
-					inputs[ 8].setVisible(true);
-					inputs[ 9].setVisible(true);
-					
-					inputs[10].setVisible(true);
-					inputs[11].setVisible(true);
-					
-					vbObject.checkParameter({ 
-						sides : _side, 
-						caps  : _caps,
-						
-						uvScale_side : _uvsca, 
-						smooth       : _smt, 
-					});
-					break;
-					
-				case "Cone"     : if(vbObject == undefined) vbObject = new __3dCone(); 
-					inputs[ 8].setVisible(true);
-					inputs[ 9].setVisible(true);
-					
-					inputs[10].setVisible(true);
-					inputs[11].setVisible(true);
-					
-					vbObject.checkParameter({ 
-						sides : _side, 
-						caps  : _caps,
-						
-						uvScale_side : _uvsca, 
-						smooth       : _smt, 
-					});
-					break;
-					
-				case "Capsule" : if(vbObject == undefined) vbObject = new __3dCapsule(); 
-					inputs[ 8].setVisible(true);
-					
-					inputs[10].setVisible(true);
-					inputs[11].setVisible(true);
-					inputs[15].setVisible(true);
-					
-					vbObject.checkParameter({ 
-						sides        : _side,
-						height       : _heigh,
-						
-						uvScale_side : _uvsca, 
-						smooth       : _smt, 
-					});
-					break;
-					
-				case "Sphere"   : if(vbObject == undefined) vbObject = new __3dUVSphere(); 
-					inputs[12].setVisible(true);
+			case "Cylinder"   : if(vbObject == undefined) vbObject = new __3dCylinder(); 
+				inputs[ 8].setVisible(true);
+				inputs[ 9].setVisible(true);
 				
-					inputs[10].setVisible(true);
-					inputs[11].setVisible(true);
-					
-					vbObject.checkParameter({ 
-						hori  : _sside[0], 
-						vert  : _sside[1], 
-						uvsca : _uvsca, 
-						
-						smooth: _smt, 
-					});
-					break;
+				inputs[10].setVisible(true);
+				inputs[11].setVisible(true);
 				
-				case "Cut Sphere"   : if(vbObject == undefined) vbObject = new __3dUVSphereCut(); 
-					inputs[12].setVisible(true);
-					inputs[14].setVisible(true);
+				vbObject.checkParameter({ 
+					sides : _side, 
+					caps  : _caps,
 					
-					inputs[10].setVisible(true);
-					inputs[11].setVisible(true);
-					
-					vbObject.checkParameter({ 
-						hori  : _sside[0], 
-						vert  : _sside[1], 
-						ratio : _ratio,
-						uvsca : _uvsca, 
-						
-						smooth: _smt, 
-					});
-					break;
+					uvScale_side : _uvsca, 
+					smooth       : _smt, 
+				});
+				break;
 				
-				case "Torus"    : if(vbObject == undefined) vbObject = new __3dTorus(); 
-					inputs[13].setVisible(true);
-					inputs[12].setVisible(true);
+			case "Cone"       : if(vbObject == undefined) vbObject = new __3dCone(); 
+				inputs[ 8].setVisible(true);
+				inputs[ 9].setVisible(true);
 				
-					inputs[10].setVisible(true);
-					inputs[11].setVisible(true);
+				inputs[10].setVisible(true);
+				inputs[11].setVisible(true);
+				
+				vbObject.checkParameter({ 
+					sides : _side, 
+					caps  : _caps,
 					
-					vbObject.checkParameter({ 
-						hori  : _sside[0], 
-						vert  : _sside[1], 
-						radT  : _rrad[0],
-						radP  : _rrad[1],
-						
-						uvsca : _uvsca, 
-						smooth: _smt, 
-					});
-					break;
-			}
+					uvScale_side : _uvsca, 
+					smooth       : _smt, 
+				});
+				break;
+				
+			case "Capsule"    : if(vbObject == undefined) vbObject = new __3dCapsule(); 
+				inputs[ 8].setVisible(true);
+				
+				inputs[10].setVisible(true);
+				inputs[11].setVisible(true);
+				inputs[15].setVisible(true);
+				
+				vbObject.checkParameter({ 
+					sides        : _side,
+					height       : _heigh,
+					
+					uvScale_side : _uvsca, 
+					smooth       : _smt, 
+				});
+				break;
+				
+			case "Sphere"     : if(vbObject == undefined) vbObject = new __3dUVSphere(); 
+				inputs[12].setVisible(true);
+				inputs[29].setVisible(true);
+				
+				inputs[10].setVisible(true);
+				inputs[11].setVisible(true);
+				
+				vbObject.checkParameter({ 
+					hori  : _sside[0], 
+					vert  : _sside[1], 
+					uvsca : _uvsca, 
+					projection : _proj, 
+					
+					smooth: _smt, 
+				});
+				break;
 			
+			case "Cut Sphere" : if(vbObject == undefined) vbObject = new __3dUVSphereCut(); 
+				inputs[12].setVisible(true);
+				inputs[14].setVisible(true);
+				
+				inputs[10].setVisible(true);
+				inputs[11].setVisible(true);
+				
+				vbObject.checkParameter({ 
+					hori  : _sside[0], 
+					vert  : _sside[1], 
+					ratio : _ratio,
+					uvsca : _uvsca, 
+					
+					smooth: _smt, 
+				});
+				break;
+			
+			case "Torus"      : if(vbObject == undefined) vbObject = new __3dTorus(); 
+				inputs[13].setVisible(true);
+				inputs[12].setVisible(true);
+			
+				inputs[10].setVisible(true);
+				inputs[11].setVisible(true);
+				
+				vbObject.checkParameter({ 
+					hori  : _sside[0], 
+					vert  : _sside[1], 
+					radT  : _rrad[0],
+					radP  : _rrad[1],
+					
+					uvsca : _uvsca, 
+					smooth: _smt, 
+				});
+				break;
+		}
+		
 		#endregion
 		
 		if(vbObject == undefined) return _outData;
@@ -331,11 +335,10 @@ function Node_Shape_3D(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 		surface_depth_disable(false);
 		
 		var d = surface_has_depth(_outData[0])
-		if(!d) {
-			for( var i = 0, n = array_length(_outData); i < n; i++ ) {
-				surface_free(_outData[i]);
-				_outData[i] = surface_create(_dim[0], _dim[1], attrDepth());
-			}
+		if(!d)
+		for( var i = 0, n = array_length(_outData); i < n; i++ ) {
+			surface_free(_outData[i]);
+			_outData[i] = surface_create(_dim[0], _dim[1], attrDepth());
 		}
 		
 		surface_set_shader(_outData, sh_fast3D);

@@ -6,6 +6,11 @@
         "date": "2026-11-22T05:40:20.311Z",
         "node": "MK God ray",
         "commit": "**MK God ray**: Fix ray disappear when origin is not an integer."
+      },
+      {
+        "date": "2026-11-22T09:10:05.268Z",
+        "node": "",
+        "commit": "**Draw Shape 3D**: Add Equirectangular sphere projection."
       }
     ]
   },

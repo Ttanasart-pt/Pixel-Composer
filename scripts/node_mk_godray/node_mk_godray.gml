@@ -93,6 +93,7 @@ function Node_MK_GodRay(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		#endregion
 		
 		var _dim = surface_get_dimension(_surf);
+		_orig = [round(_orig[0]), round(_orig[1])];
 		
 		temp_surface[0] = surface_verify(temp_surface[0], _dim[0], _dim[1], attrDepth());
 		
@@ -107,7 +108,7 @@ function Node_MK_GodRay(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			shader_set_i( "useMask",      is_surface(_mask) );
 			
 			shader_set_i( "type",         _type  );
-			shader_set_2( "origin",       [round(_orig[0]), round(_orig[1])] );
+			shader_set_2( "origin",       _orig  );
 			shader_set_m( "range",        _range, _data[18], inputs[ 5] );
 			shader_set_2( "level",        _level );
 			
