@@ -5,6 +5,7 @@ function Node_3D_Mesh_Vertex_Points(_x, _y, _group = noone) : Node_Processor(_x,
 	setDrawIcon();
 	setDimension(96, 48);
 	
+	////- =Mesh
 	newInput(0, nodeValue_D3Mesh( "Mesh" ));
 	
 	////- =Processing
@@ -15,7 +16,8 @@ function Node_3D_Mesh_Vertex_Points(_x, _y, _group = noone) : Node_Processor(_x,
 	newOutput(0, nodeValue_Output( "Positions", VALUE_TYPE.float, [ 0, 0, 0 ])).setDisplay(VALUE_DISPLAY.vector).setArrayDepth(1);
 	newOutput(1, nodeValue_Output( "Normals",   VALUE_TYPE.float, [ 0, 0, 0 ])).setDisplay(VALUE_DISPLAY.vector).setArrayDepth(1);
 	
-	input_display_list = [ 0, 
+	input_display_list = [ 
+		[ "Mesh",       false ], 0, 
 		[ "Processing", false ], 2, 1, 
 	];
 	

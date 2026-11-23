@@ -3,6 +3,7 @@ function Node_3D_Mirror(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _group)
 	gizmo_object = [ new __3dGizmoPlane() ];
 	
 	var i = in_d3d;
+	////- =Mesh
 	newInput(i+0, nodeValue_D3Mesh(  "Mesh" ));
 	
 	////- =Plane
@@ -14,7 +15,8 @@ function Node_3D_Mirror(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _group)
 	
 	newOutput(0, nodeValue_Output("Mesh", VALUE_TYPE.d3Mesh, noone));
 	
-	input_display_list = [ i+0, 
+	input_display_list = [ 
+		[ "Mesh",   false ], i+0, 
 		[ "Plane",  false ], i+1, 0, 
 		[ "Mirror", false ], i+2
 	];

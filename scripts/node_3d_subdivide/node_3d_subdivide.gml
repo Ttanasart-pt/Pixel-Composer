@@ -2,13 +2,15 @@ function Node_3D_Subdivide(_x, _y, _group = noone) : Node_3D_Modifier(_x, _y, _g
 	name = "3D Subdivide";
 	
 	newInput(in_mesh + 0, nodeValue_Float("Subobjects", -1));
-	
 	newInput(in_mesh + 1, nodeValue_Int("Level", 1));
+	// in_mesh + 2
 	
 	input_display_list = [ 
-		["Mesh",      false], 0, in_mesh + 0, 
-		["Subdivide", false], in_mesh + 1, 
+		[ "Mesh",      false ], 0, in_mesh + 0, 
+		[ "Subdivide", false ], in_mesh + 1, 
 	];
+	
+	////- Node
 	
 	static processData = function(_output, _data, _array_index = 0, _frame = CURRENT_FRAME) { 
 		var _obj = _data[0];

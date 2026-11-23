@@ -6,6 +6,8 @@ function Node_3D_Affector(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _grou
 	gizmo_object = noone;
 	
 	var i = in_d3d;
+	
+	////- =Mesh
 	newInput(i+0, nodeValue_D3Scene("Scene")).setVisible(true, true);
 	
 	////- =Affectors
@@ -23,7 +25,8 @@ function Node_3D_Affector(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _grou
 	
 	newOutput(0, nodeValue_Output("Scene", VALUE_TYPE.d3Scene, noone));
 	
-	input_display_list = [ i+0, 
+	input_display_list = [ 
+		[ "Mesh",      false ], i+0, 
 		[ "Affectors", false ], i+1, 0, 1, 2, 
 		[ "Falloff",   false ], i+2, i+3, 
 		[ "Transform", false ], i+4, i+5, i+6, 

@@ -3,16 +3,19 @@ function Node_3D_Get_Data(_x, _y, _group = noone) : Node_3D(_x, _y, _group) cons
 	setDimension(96, 48);
 	setDrawIcon();
 	
-	newInput(0, nodeValue_D3Mesh("Mesh"));
+	newInput( 0, nodeValue_D3Mesh("Mesh"));
+	// 1
 	
 	newOutput(0, nodeValue_Output("Origin",   VALUE_TYPE.float, [0,0,0]   )).setDisplay(VALUE_DISPLAY.vector);
 	newOutput(1, nodeValue_Output("Position", VALUE_TYPE.float, [0,0,0]   )).setDisplay(VALUE_DISPLAY.vector);
 	newOutput(2, nodeValue_Output("Rotation", VALUE_TYPE.float, [0,0,0,1] )).setDisplay(VALUE_DISPLAY.d3quarternion);
 	newOutput(3, nodeValue_Output("Scale",    VALUE_TYPE.float, [0,0,0]   )).setDisplay(VALUE_DISPLAY.vector);
 	
-	input_display_list = [ 0, 
-		["Transform", false], 
+	input_display_list = [ 
+		[ "Mesh", false ], 0, 
 	];
+	
+	////- Node
 	
 	static processData = function(_output, _data, _array_index = 0, _frame = CURRENT_FRAME) {
 		var _mesh = _data[0];

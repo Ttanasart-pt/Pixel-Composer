@@ -6,7 +6,8 @@ function Node_3D_Transform(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _gro
 	
 	newOutput(0, nodeValue_Output( "Mesh", VALUE_TYPE.d3Mesh, noone ));
 	
-	input_display_list = [ in_d3d+0, 
+	input_display_list = [ 
+		[ "Mesh",      false ], in_d3d+0, 
 		[ "Transform", false ],  0,  1,  2,  3, 
 	];
 	

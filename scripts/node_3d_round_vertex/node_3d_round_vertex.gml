@@ -1,7 +1,17 @@
 function Node_3D_Round_Vertex(_x, _y, _group = noone) : Node_3D_Modifier(_x, _y, _group) constructor {
 	name = "Discretize vertex";
 	
-	newInput(in_mesh + 0, nodeValue_Float("Step", 0.1))
+	var i = in_mesh;
+	
+	newInput( i+0, nodeValue_Float("Step", 0.1))
+	// i+1
+	
+	input_display_list = [
+		[ "Mesh",       false ],   0, 
+		[ "Discretize", false ], i+0, 
+	];
+	
+	////- =Node
 	
 	static processData = function(_output, _data, _array_index = 0, _frame = CURRENT_FRAME) {
 		var _obj = _data[0];

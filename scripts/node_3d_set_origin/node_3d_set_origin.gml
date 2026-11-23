@@ -2,16 +2,19 @@ function Node_3D_Set_Origin(_x, _y, _group = noone) : Node_3D(_x, _y, _group) co
 	name  = "3D Set Origin";
 	gizmo = new __3dGizmoAxis(.2, COLORS._main_accent);
 	
-	newInput(0, nodeValue_D3Mesh( "Mesh" ));
+	////- =Mesh
+	newInput( 0, nodeValue_D3Mesh( "Mesh" ));
 	
 	////- =Origin
-	newInput(1, nodeValue_EScroll( "Type",  1, [ "Fixed World Point", "Mesh Center" ] ));
-	newInput(2, nodeValue_Vec3(    "Point", [0,0,0] ));
+	newInput( 1, nodeValue_EScroll( "Type",  1, [ "Fixed World Point", "Mesh Center" ] ));
+	newInput( 2, nodeValue_Vec3(    "Point", [0,0,0] ));
+	// 3
 	
 	newOutput( 0, nodeValue_Output( "Scene",  VALUE_TYPE.d3Mesh, noone ));
 	newOutput( 1, nodeValue_Output( "Origin", VALUE_TYPE.float,  [0,0,0] )).setDisplay(VALUE_DISPLAY.vector);
 	
-	input_display_list = [ 0, 
+	input_display_list = [ 
+		[ "Mesh",   false ], 0, 
 		[ "Origin", false ], 1, 2,  
 	]
 	

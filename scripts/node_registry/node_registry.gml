@@ -795,7 +795,7 @@ function nodeIndexStep() {
 		
 		if(has(NODE_INDEX_index_map, _node)) {
 			if(curr_filter == undefined)
-				NODE_INDEX_index_map[$ _node].cateFilter = curr_filter;
+				NODE_INDEX_index_map[$ _node].path.cateFilter = curr_filter;
 			continue;
 		}
 		

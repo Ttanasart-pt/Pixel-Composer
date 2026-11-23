@@ -14,7 +14,8 @@ function Node_3D_Set_Material(_x, _y, _group = noone) : Node_3D_Modifier(_x, _y,
 	newInput( i+2, nodeValue_EScroll( "Overflow", 0, ["Keep Original","Loop"] ));
 	// i+5
 	
-	input_display_list = [ i+4, 0, 
+	input_display_list = [ i+4, 
+		[ "Mesh",     false ],   0, 
 		[ "Material", false ], i+0, 
 		[ "Array",    false ], i+1, i+3, i+2, 
 	]

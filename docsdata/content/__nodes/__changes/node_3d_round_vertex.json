@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.22.3.107",
+    "changes": [
+      {
+        "date": "2026-11-23T08:24:49.515Z",
+        "node": "",
+        "commit": "**Set Material**: Fix error when inputting wrapper object."
+      }
+    ]
+  },
+  {
     "version": "1.21.0.2.007",
     "changes": [
       {

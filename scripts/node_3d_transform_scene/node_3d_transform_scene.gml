@@ -1,30 +1,29 @@
 function Node_3D_Transform_Scene(_x, _y, _group = noone) : Node_3D(_x, _y, _group) constructor {
 	name = "Transform Scene";
 	
-	newInput(0, nodeValue_D3Scene("Scene", noone))
-		.setVisible(true, true);
+	////- =Scene
+	newInput( 0, nodeValue_D3Scene("Scene", noone)).setVisible(true, true);
 	
-	newInput(1, nodeValue_Float("Position", []))
-		.setArrayDepth(2);
+	////- =Transform
+	newInput( 1, nodeValue_Float("Position", [])).setArrayDepth(2);
+	newInput( 2, nodeValue_Float("Rotation", [])).setArrayDepth(2);
+	newInput( 3, nodeValue_Float("Scale", [])).setArrayDepth(2);
 	
-	newInput(2, nodeValue_Float("Rotation", []))
-		.setArrayDepth(2);
-	
-	newInput(3, nodeValue_Float("Scale", []))
-		.setArrayDepth(2);
-		
-	newInput(4, nodeValue_EScroll("Positioning type", 0, [ "Additive", "Override" ]));
-		
-	newInput(5, nodeValue_EScroll("Rotating type", 0, [ "Additive", "Override" ]));
-	
-	newInput(6, nodeValue_EScroll("Scaling type", 0, [ "Additive", "Multiplicative", "Override" ]));
+	////- =Settings
+	newInput( 4, nodeValue_EScroll("Positioning type", 0, [ "Additive", "Override" ]));
+	newInput( 5, nodeValue_EScroll("Rotating type", 0, [ "Additive", "Override" ]));
+	newInput( 6, nodeValue_EScroll("Scaling type", 0, [ "Additive", "Multiplicative", "Override" ]));
+	// 7
 	
 	newOutput(0, nodeValue_Output("Scene", VALUE_TYPE.d3Scene, noone));
 	
-	input_display_list = [ 0,
-		["Transform", false], 1, 2, 3,
-		["Settings",   true], 4, 5, 6,
+	input_display_list = [ 
+		[ "Scene",     false ],  0,
+		[ "Transform", false ],  1,  2,  3,
+		[ "Settings",   true ],  4,  5,  6,
 	];
+	
+	////- =Node
 	
 	static processData = function(_output, _data, _array_index = 0, _frame = CURRENT_FRAME) {
 		var _scn = _data[0];

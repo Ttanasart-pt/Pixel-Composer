@@ -16,8 +16,8 @@ function Node_3D_Mesh_Stack_Slice(_x, _y, _group = noone) : Node(_x, _y, _group)
 	mesh_data = new Inspector_Label("", f_code);
 	
 	input_display_list = [ 
-		["Model",  false], 0, 4, mesh_data, 
-		["Slices", false], 1, 3, 
+		[ "Mesh",   false ],  0,  4, mesh_data, 
+		[ "Slices", false ],  1,  3, 
 	];
 	
 	////- Node
