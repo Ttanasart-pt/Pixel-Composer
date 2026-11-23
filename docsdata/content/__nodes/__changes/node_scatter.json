@@ -6,6 +6,11 @@
         "date": "2026-11-23T02:41:11.196Z",
         "node": "",
         "commit": "**Scatter**: Add option to force integer animation speed."
+      },
+      {
+        "date": "2026-11-23T02:47:04.193Z",
+        "node": "",
+        "commit": "**Scatter, Repeat**: Fix surface disappear when animation speed is zero."
       }
     ]
   },

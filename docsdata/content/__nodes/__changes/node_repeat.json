@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.22.3.107",
+    "changes": [
+      {
+        "date": "2026-11-23T02:47:04.192Z",
+        "node": "Scatter, Repeat",
+        "commit": "**Scatter, Repeat**: Fix surface disappear when animation speed is zero."
+      }
+    ]
+  },
+  {
     "version": "1.22.3.001",
     "changes": [
       {

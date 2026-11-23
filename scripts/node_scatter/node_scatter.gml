@@ -1021,10 +1021,11 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 							var _animInd     = ind + CURRENT_FRAME * _arrAnim_spd;
 							
 							switch(arrAnimEnd) {
-								case 0 : ind = safe_mod(_animInd, _arrLen); break;
+								case 0 : ind = pmod(_animInd, _arrLen); break;
 									
 								case 1 :
-									var pp = safe_mod(_animInd, _arrLen * 2 - 1);
+									if(_arrLen == 1) break;
+									var pp = pmod(_animInd, _arrLen * 2 - 1);
 									ind = pp < _arrLen? pp : _arrLen * 2 - pp;
 									break;
 									
