@@ -3,8 +3,8 @@
   "%Name":"note_mouse_input",
   "name":"note_mouse_input",
   "parent":{
-    "name":"io",
-    "path":"folders/nodes/data/io.yy",
+    "name":"device",
+    "path":"folders/nodes/data/io/device.yy",
   },
   "resourceType":"GMNotes",
   "resourceVersion":"1.1",

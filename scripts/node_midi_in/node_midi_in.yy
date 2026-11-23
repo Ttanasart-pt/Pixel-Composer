@@ -5,8 +5,8 @@
   "isDnD":false,
   "name":"node_midi_in",
   "parent":{
-    "name":"io",
-    "path":"folders/nodes/data/io.yy",
+    "name":"device",
+    "path":"folders/nodes/data/io/device.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

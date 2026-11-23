@@ -254,13 +254,20 @@ function DirectoryObject(_path) constructor {
 	}
 	
 	static draw = function(parent, _x, _y, _m, _w, _hover, _focus, _homedir, _params = {}) {
-		var font = _params[$ "font"] ?? f_p2;
-		var hg   = line_get_height(font, 5);
-		var hh   = 0;
+		var font = _params[$ "font"]    ?? f_p2;
+		var padd = _params[$ "padding"] ?? ui(3);
 		var empt = array_empty(subDir);
+		var hg   = line_get_height(font, padd);
+		var hh   = 0;
+		var bs   = ui(28);
 		
-		if(!empt && _hover && point_in_rectangle(_m[0], _m[1], _x, _y, _x + ui(32), _y + hg - 1)) {
-			draw_sprite_stretched_ext(THEME.button_hide_fill, 1, _x + ui(4), _y, ui(32 - 8), hg, CDEF.main_white, 1);
+		var hold = _params[$ "hold"] ?? false;
+		
+		var ctx  = _params[$ "context"] ?? parent.context;
+		var sett = _params[$ "ctxSetter"];
+		
+		if(!empt && _hover && point_in_rectangle(_m[0], _m[1], _x, _y, _x + bs, _y + hg - 1)) {
+			draw_sprite_stretched_ext(THEME.box_r5_clr, 0, _x + ui(4), _y, bs, hg, CDEF.main_ltgrey, 1);
 			
 			if(mouse_lpress(_focus)) {
 				open = !open;
@@ -268,11 +275,11 @@ function DirectoryObject(_path) constructor {
 			}
 		}
 		
-		var _bx = _x + ui(32);
-		var _bw = _w - ui(32);
+		var _bx = _x + bs;
+		var _bw = _w - bs;
 		
 		if(_hover && point_in_rectangle(_m[0], _m[1], _bx, _y, _bx + _bw, _y + hg - 1)) {
-			draw_sprite_stretched_ext(THEME.button_hide_fill, 1, _bx - ui(4), _y, _bw + ui(4), hg, COLORS._main_icon, 1);
+			draw_sprite_stretched_ext(THEME.box_r5_clr, 0, _bx - ui(4), _y, _bw + ui(4), hg, CDEF.main_ltgrey, 1);
 			
 			if(!triggered) {
 				if(mouse_lpress(_focus)) {
@@ -281,7 +288,8 @@ function DirectoryObject(_path) constructor {
 						MOUSE_BLOCK = true;
 					}
 					
-					parent.setContext(parent.context == self? _homedir : self);
+					if(sett != undefined) sett(ctx == self? _homedir : self);
+					else     parent.setContext(ctx == self? _homedir : self);
 					triggered = true;
 				}
 				
@@ -295,18 +303,23 @@ function DirectoryObject(_path) constructor {
 				}
 			}
 			
+			if(hold && mouse_lclick(_focus)) {
+				if(sett != undefined) sett(self);
+				else     parent.setContext(self);
+			}
+			
 		} else if(_hover)
 			triggered = false;
 			
 		if(triggered && mouse_release(mb_any)) triggered = false;
 		
 		gpu_set_texfilter(true);
-		var _spr_ind = empt? parent.context == self : open;
+		var _spr_ind = empt? ctx == self : open;
 		var _spr_bld = empt? COLORS.collection_folder_empty : COLORS.collection_folder_nonempty;
 		var _spr_aa  = empt? .9: 1;
 		
 		if(icon_blend != undefined) _spr_bld = icon_blend;
-		if(parent.context == self)  {
+		if(ctx == self)  {
 			_spr_bld = COLORS._main_accent;
 			_spr_aa  = 1;
 		}
@@ -321,7 +334,7 @@ function DirectoryObject(_path) constructor {
 		draw_sprite_ext(icon, _spr_ind, _x + ui(16), _y + hg / 2 - 1, _spr_sca, _spr_sca, 0, _spr_bld, _spr_aa);
 		gpu_set_texfilter(false);
 		
-		draw_set_text(font, fa_left, fa_center, path == parent.context.path? COLORS._main_text_accent : COLORS._main_text_inner);
+		draw_set_text(font, fa_left, fa_center, path == ctx.path? COLORS._main_text_accent : COLORS._main_text_inner);
 		draw_text_add(_x + ui(32), _y + hg / 2, name);
 		hh += hg;
 		_y += hg;

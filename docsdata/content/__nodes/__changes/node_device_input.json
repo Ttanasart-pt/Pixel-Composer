@@ -1,0 +1,12 @@
+[
+  {
+    "version": "1.22.3.107",
+    "changes": [
+      {
+        "date": "2026-11-23T05:04:27.006Z",
+        "node": "Add node",
+        "commit": "**Add node**: Add asset tab."
+      }
+    ]
+  }
+]

@@ -3,7 +3,7 @@ event_inherited();
 
 #region resize
 	dialog_resizable = true;
-	dialog_w_min = ui(320);
+	dialog_w_min = ui(480);
 	dialog_h_min = ui(320);
 	dialog_w_max = WIN_W - ui(32);
 	dialog_h_max = WIN_H - ui(32);
@@ -20,6 +20,12 @@ event_inherited();
 		dialog_w  = clamp(dialog_w, dialog_w_min, dialog_w_max);
 		dialog_h  = clamp(dialog_h, dialog_h_min, dialog_h_max);
 	}
+#endregion
+
+#region page
+	mode = 0;
+	
+	btg_mode = new buttonGroup(["Node","Asset"], function(i) /*=>*/ { mode = i; });
 #endregion
 
 #region data
@@ -121,7 +127,8 @@ event_inherited();
 			maxLen   = max(maxLen, string_width(name));
 		}
 		
-		category_width = maxLen + ui(32) + PREFERENCES.dialog_add_node_icon * ui(32);
+		node_category_width = maxLen + ui(32) + PREFERENCES.dialog_add_node_icon * ui(32);
+		category_width      = node_category_width;
 	#endregion
 	
 	function isTop() { return true; }
@@ -1832,4 +1839,157 @@ event_inherited();
 	function toggleSearchType()  { PREFERENCES.dialog_add_node_search_typ = !PREFERENCES.dialog_add_node_search_typ; }
 	function toggleSearchColl()  { PREFERENCES.dialog_add_node_collection = !PREFERENCES.dialog_add_node_collection; }
 	function toggleSearchSteam() { search_steam = !search_steam; }
+#endregion
+
+#region asset
+	dirContext = global.ASSETS;
+	
+	function gotoDir(dirName) {
+		for(var i = 0; i < array_length(global.ASSETS.subDir); i++) {
+			var d = global.ASSETS.subDir[i];
+			if(d.name != dirName) continue;
+			
+			d.open = true;
+			setContext(d);
+		}
+	}
+	
+	function setContext(cont) {
+		dirContext = cont;
+		asset_contentPane.scroll_y_raw = 0;
+		asset_contentPane.scroll_y_to	 = 0;
+	}
+
+	asset_folderPane = new scrollPane(0, 0, function(_y, _m) {
+		draw_clear_alpha(COLORS.panel_bg_clear, 1);
+		
+		var xx = ui(4);
+		var yy = _y;
+		var hh  = 0;
+		var ww  = asset_folderPane.surface_w - ui(16);
+		var hg;
+		
+		draw_set_text(f_p3, fa_left, fa_center, COLORS._main_text);
+		
+		var _setter = function(c) /*=>*/ {return setContext(c)};
+		var _params = {
+			font    : f_p2,
+			hold    : true,
+			padding : ui(2), 
+			
+			context   : dirContext, 
+			ctxSetter : _setter, 
+		}
+		
+		for(var i = 0, n = array_length(global.ASSETS.subDir); i < n; i++) {
+			hg = global.ASSETS.subDir[i].draw(self, xx, yy, _m, ww, sHOVER, sFOCUS, global.ASSETS, _params);
+			hh += hg;
+			yy += hg;
+		}
+		
+		asset_folderPane.hover_content = true;
+		return hh;
+	});
+	asset_folderPane.scroll_color_bg = CDEF.main_mdblack;
+	
+	asset_contentPane = new scrollPane(0, 0, function(_y, _m) {
+		draw_clear_alpha(c_white, 0);
+		
+		var contents = dirContext.content;
+		var amo   = array_length(contents);
+		var hh    = 0;
+		var surfh = asset_contentPane.surface_h + 4;
+		var frame = current_time * PREFERENCES.collection_preview_speed / 8000;
+		
+		var grid_size = ui(64);
+		var img_size  = grid_size - ui(16);
+		var grid_space = ui(12);
+		var col = max(1, floor(asset_contentPane.surface_w / (grid_size + grid_space)));
+		var row = ceil(amo / col);
+		var yy  = _y + grid_space;
+		var hght = grid_size + grid_space;
+		
+		hh += grid_space + hght * row;
+		
+		var _build = undefined;
+		
+		for(var i = 0; i < row; i++) {
+			if(yy + grid_size < -4) {
+				yy += hght;
+				continue;
+			}
+			
+			if(yy > surfh) break;
+			
+			for(var j = 0; j < col; j++) {
+				var index = i * col + j;
+				if(index >= amo) break;
+				
+				var content = contents[index];
+				var xx = grid_space + (grid_size + grid_space) * j;
+				
+				BLEND_OVERRIDE
+				draw_sprite_stretched_ext(THEME.node_bg, 0, xx, yy, grid_size, grid_size, COLORS.node_base_bg);
+				BLEND_NORMAL
+				
+				var spr = -1;
+				
+				spr = content.getSpr();
+				
+				if(sprite_exists(spr)) {
+					var sw = sprite_get_width(spr);
+					var sh = sprite_get_height(spr);
+					var ss = img_size / max(sw, sh);
+					var sx = xx + (grid_size - sw * ss) / 2;
+					var sy = yy + (grid_size - sh * ss) / 2;
+					var sn = sprite_get_number(spr);
+					
+					draw_sprite_ext(spr, frame, sx, sy, ss, ss, 0, c_white, 1);
+					
+					var _txt = $"{sw}x{sh}";
+					if(sn) _txt = $"[{sn}] " + _txt;
+					
+					draw_set_text(_f_p4, fa_right, fa_bottom, COLORS._main_text_inner);
+					var _tw = string_width(_txt) + ui(6);
+					var _th = 14;
+					var _nx = xx + grid_size - 1 - _tw;
+					var _ny = yy + grid_size - _th;
+					
+					draw_sprite_stretched_ext(THEME.ui_panel, 0, _nx, _ny, _tw, _th - 1, COLORS.panel_bg_clear_inner, 0.85);
+					draw_text_add(xx + grid_size - ui(3), yy + grid_size - ui(2), _txt);
+					
+				} else if(spr == -1) {
+					var _rr = lerp(.075, .2, abs(dsin(current_time / 2)));
+					draw_circle_ui(xx + grid_size / 2, yy + grid_size / 2, grid_size * .25, _rr, COLORS._main_icon, 1);
+				}
+				
+				var _hov = sHOVER && asset_contentPane.hover && point_in_rectangle(_m[0], _m[1], xx, yy, xx + grid_size, yy + grid_size);
+				if(_hov) {
+					asset_contentPane.hover_content = true;
+					setTOOLTIP([ spr, "sprite" ]);
+					
+					draw_sprite_stretched_ext(THEME.node_bg, 1, xx, yy, grid_size, grid_size, COLORS._main_accent, 1);
+					if(mouse_lpress(sFOCUS)) _build = content;
+				}
+			}
+			
+			yy += hght;
+		}
+		
+		if(_build != undefined) {
+			var nodex = node_target_x ?? PANEL_GRAPH.mouse_grid_x;
+			var nodey = node_target_y ?? PANEL_GRAPH.mouse_grid_y;
+			var _node = Node_create_Image_path(nodex, nodey, _build.path);
+			
+			if(PANEL_INSPECTOR) PANEL_INSPECTOR.setInspecting(_node);
+			
+			if(PANEL_GRAPH && PANEL_GRAPH == preFocus && PREFERENCES.node_add_select)
+				run_in(1, function(_n, _j) /*=>*/ {return PANEL_GRAPH.selectDragNode(_n, _j)}, [_node, junction_called == noone]);
+			
+			instance_destroy();
+			instance_destroy(o_dialog_menubox);
+		}
+		
+		return hh;
+	});
 #endregion

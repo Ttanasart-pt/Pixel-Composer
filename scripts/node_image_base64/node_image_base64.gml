@@ -1,5 +1,5 @@
 function Node_Image_Base64(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
-	name = "Image";
+	name = "Image Base64";
 	
 	newInput( 0, nodeValue_Text( "Base64 text", "" )).setDisplay(VALUE_DISPLAY._default, { collapsible : true, collapsed : true });
 	// 1

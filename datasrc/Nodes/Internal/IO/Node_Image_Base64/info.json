@@ -1,5 +1,5 @@
 {
-    "name":          "Image",
+    "name":          "Image Base64",
     "spr":           "s_node_image",
     "baseNode":      "Node_Image_Base64",
     "pxc_version":    122031,
