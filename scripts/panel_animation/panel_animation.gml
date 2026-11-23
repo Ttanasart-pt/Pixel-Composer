@@ -711,6 +711,21 @@ function Panel_Animation() : PanelContent() constructor {
         #endregion
 	        
     	#region Line
+    		draw_set_color_alpha(COLORS.panel_animation_frame_divider, .5);
+            
+            var _stW = 1 * timeline_scale;
+            if(_stW > 4) {
+	            var _st = ceil(-timeline_shift / _stW);
+	            var _fr = _st + ceil(bar_w / _stW);
+	            
+	            for(var i = _st; i <= _fr; i++) {
+	                var fx = i * timeline_scale + timeline_shift; 
+	            	draw_line(fx, ui(0), fx, bar_h);
+	            }
+            }
+            
+            draw_set_alpha(1);
+            
             var _stW = timeline_separate * timeline_scale;
             var _st  = ceil(-timeline_shift / _stW);
             var _fr  = _st + ceil(bar_w / _stW);
@@ -879,9 +894,6 @@ function Panel_Animation() : PanelContent() constructor {
 		    		draw_surface_fit(_surf, _x0 + _ww / 2, _y0 + _hh / 2, _ww - ui(4), _hh - ui(4));
 	    		}
 	    		
-	    		// if(fram != GLOBAL_CURRENT_FRAME) 
-	    		// 	draw_sprite_stretched_ext(THEME.ui_panel, ii, _x0, _y0, _ww, _hh, cc, .5);
-	    		
 	    		if(is(inspecting, Node) && inspecting.use_cache) { // cache
 	                var cachcol = inspecting.getAnimationCacheExist(fram)? COLORS._main_value_positive : COLORS._main_value_negative;
 	                draw_sprite_stretched_add(THEME.box_r2, ii, _x0, _y0, _ww, _hh, cachcol, .2);
@@ -889,8 +901,9 @@ function Panel_Animation() : PanelContent() constructor {
     		} 
     		
     		if(fram == GLOBAL_CURRENT_FRAME) 
-    			draw_sprite_stretched_ext(THEME.box_r2, ii, _x0, _y0, _ww, _hh, COLORS._main_accent, 1);
+    			    draw_sprite_stretched_ext(THEME.box_r2, ii, _x0, _y0, _ww, _hh, COLORS._main_accent, 1);
     		if(hov) draw_sprite_stretched_add(THEME.box_r2, ii, _x0, _y0, _ww, _hh, c_white, ta * .3);
+    		else    draw_sprite_stretched_add(THEME.box_r2,  1, _x0, _y0, _ww, _hh, c_white, .2);
     		
     		draw_set_text(f_p4, fa_right, fa_bottom, COLORS._main_text_sub, ta);
     		draw_text(_x1 - ui(3), _y1 - ui(2), fram + 1);
@@ -1193,9 +1206,9 @@ function Panel_Animation() : PanelContent() constructor {
     
     function newFolder() { PROJECT.timelines.addItem(new timelineItemGroup()); }
     
-    function toggleNodeNameType(_d=1) { PROJECT.animationDisplay.node_name_type = (PROJECT.animationDisplay.node_name_type + _d + 3) % 3; }
-    function toggleNodeLabel()        { PROJECT.animationDisplay.show_nodes     = !PROJECT.animationDisplay.show_nodes;                   }
-    function toggleViewContext()      { PROJECT.animationDisplay.view_context   = (PROJECT.animationDisplay.view_context + 1) % 4;        }
-    function toggleKeyframeOverride() { PREFERENCES.panel_animation_key_override = !PREFERENCES.panel_animation_key_override; }
-    function toggleOnionSkin()        { PROJECT.onion_skin.enabled = !PROJECT.onion_skin.enabled; }
+    function toggleNodeNameType(_d=1) { PROJECT.animationDisplay.node_name_type  = (PROJECT.animationDisplay.node_name_type + _d + 3) % 3; }
+    function toggleNodeLabel()        { PROJECT.animationDisplay.show_nodes      = !PROJECT.animationDisplay.show_nodes;                   }
+    function toggleViewContext()      { PROJECT.animationDisplay.view_context    = (PROJECT.animationDisplay.view_context + 1) % 4;        }
+    function toggleKeyframeOverride() { PREFERENCES.panel_animation_key_override = !PREFERENCES.panel_animation_key_override;              }
+    function toggleOnionSkin()        { PROJECT.onion_skin.enabled               = !PROJECT.onion_skin.enabled;                            }
 }

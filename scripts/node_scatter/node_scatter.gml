@@ -37,7 +37,8 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		
 	newInput(24, nodeValue_IArray(  "Array Indices" )).setArrayDepth(1);
 	newInput(25, nodeValue_Surface( "Array Texture" ));
-	newInput(26, nodeValue_Range(   "Animated",    [0,0], { linked : true } ));
+	newInput(26, nodeValue_Range(   "Animation Speed",  [0,0], { linked : true } ));
+	newInput(63, nodeValue_Bool(    "Integer Speed",    false ));
 	newInput(27, nodeValue_EScroll( "Animated End", 0, [ "Loop", "Ping Pong", "Hide", "Stop" ] ));
 	
 	////- =Scatter
@@ -111,7 +112,7 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	newInput(18, nodeValue_EScroll( "Blend Mode", 0, [ "Normal", "Add", "Max" ] ));
 	newInput(23, nodeValue_Bool(    "Sort Y",     false ));
 	newInput(56, nodeValue_Toggle(  "Tile",       0, [ "X", "Y" ] ))
-	// 63
+	// 64
 	
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	 
@@ -125,7 +126,7 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	
 	input_display_list = [ 10, 
 		[ "Output",       false ],  1, 
-		[ "Surfaces",      true ],  0, 15, 24, 25, 26, 27, 
+		[ "Surfaces",      true ],  0, 15, 24, 25, 26, 63, 27, 
 		[ "Scatter",      false, noone, b_scatter_manual ], 
 		                            6,  5, 13, 14, 17,  9, 35,
 			[ "/Amount",  false ], 31,  2, 30, 44, 46, 
@@ -497,6 +498,7 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 			var arrId      = _data[24];
 			var arrTex     = _data[25], useArrTex = is_surface(arrTex);
 			var arrAnim    = _data[26];
+			var arrAnimI   = _data[63];
 			var arrAnimEnd = _data[27];
 			
 			var _dist      = _data[ 6];
@@ -1014,6 +1016,8 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 						
 						if(arrAnim[0] != 0 || arrAnim[1] != 0) {
 							var _arrAnim_spd = random_range_seed(arrAnim[0], arrAnim[1], _csed++);
+							if(arrAnimI) _arrAnim_spd = round(_arrAnim_spd);
+							
 							var _animInd     = ind + CURRENT_FRAME * _arrAnim_spd;
 							
 							switch(arrAnimEnd) {

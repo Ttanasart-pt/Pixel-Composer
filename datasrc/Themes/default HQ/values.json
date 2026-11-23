@@ -123,7 +123,7 @@
         "section_selected": "main_white",
         "section_bg": ["main_white", "main_ltgrey", 0.5],
 
-        "panel_animation_frame_divider": "main_black",
+        "panel_animation_frame_divider": "main_grey",
         "panel_animation_keyframe_ease_line": "main_dkgrey",
         "panel_animation_loop_line": "lime",
         "panel_animation_key_tool_unselected": "main_grey",

@@ -850,7 +850,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		}
 		
 		return array_safe_get_fast(inputs, _ind, noone);
-	}
+	}	
 	
 	static getOutput = function(_y = 0, junc = noone) {
 		var _targ = noone;
