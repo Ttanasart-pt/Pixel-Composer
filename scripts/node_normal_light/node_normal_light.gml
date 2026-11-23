@@ -248,10 +248,12 @@ function Node_Normal_Light(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 			var _amb  = _data[3];
 			var _alph = _data[5];
 			var _dim  = is_surface(_surf)? surface_get_dimension(_surf) : surface_get_dimension(_norm);
+			
+			var lamo  = getInputAmount();
 		#endregion
 		
-		if(getInputAmount()) {
-			dynamic_input_inspecting = clamp(dynamic_input_inspecting, 0, getInputAmount() - 1);
+		if(lamo) {
+			dynamic_input_inspecting = clamp(dynamic_input_inspecting, 0, lamo - 1);
 			var _ind = input_fix_len + dynamic_input_inspecting * data_length;
 			
 			var _ltype = _data[_ind + 0];
@@ -278,7 +280,7 @@ function Node_Normal_Light(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 			draw_clear(c_black);
 		surface_reset_target();
 		
-		for( var i = 0; i < getInputAmount(); i++ ) {
+		for( var i = 0; i < lamo; i++ ) {
 			var _ind = input_fix_len + i * data_length;
 			applyLight(_data, _dim, _ind, _ligSurf);
 		}

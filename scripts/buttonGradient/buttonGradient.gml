@@ -45,7 +45,10 @@ function buttonGradient(_onModify, dialog = noone) : widget() constructor {
 	
 	static trigger = function() {
 		var pdia = parentDialog;
-		with(dialogCall(o_dialog_gradient)) {
+		var _dia = dialogCall(o_dialog_gradient);
+		if(!_dia) return;
+		
+		with(_dia) {
 			setDefault(other.current_gradient.clone());
 			onModify     = other.onModify;
 			interactable = other.interactable;
@@ -63,9 +66,10 @@ function buttonGradient(_onModify, dialog = noone) : widget() constructor {
 		var dialog = colorSelectorCall(_key.value, function(c) /*=>*/ { 
 			edit_gradient.keys[edit_color_index].value = c;
 			onModify(edit_gradient);
-			
-		}).setClose(function() /*=>*/ { edit_color_index = -1; })
+		});
 		
+		if(!dialog) return;
+		dialog.setClose(function() /*=>*/ { edit_color_index = -1; })
 		dialog.interactable = interactable;
 	}
 	

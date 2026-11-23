@@ -49,6 +49,7 @@ function buttonColor(_onModify, dialog = noone) : widget() constructor {
 		var colr   = is_array(current_color)? array_safe_get(current_color, 0, 0) : current_color;
 		var dialog = colorSelectorCall(colr, function(c) /*=>*/ {return onModify(c)});
 		
+		if(!dialog) return;
 		dialog.interactable     = interactable;
 		dialog.drop_target      = self;
 		

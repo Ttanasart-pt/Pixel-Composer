@@ -19,7 +19,10 @@ function buttonPalette(_onModify, dialog = noone) : widget() constructor {
 	
 	static trigger = function() {
 		var pdia = parentDialog;
-		with(dialogCall(o_dialog_palette)) {
+		var _dia = dialogCall(o_dialog_palette);
+		if(!_dia) return;
+		
+		with(_dia) {
 			setDefault(other.current_palette);
 			onModify     = other.onModify;
 			outputPreset = other.outputName;
@@ -40,8 +43,10 @@ function buttonPalette(_onModify, dialog = noone) : widget() constructor {
 			current_palette[edit_color_index] = c;
 			onModify(current_palette);
 			
-		}).setClose(function() /*=>*/ { edit_color_index = -1; })
+		});
 		
+		if(!dialog) return;
+		dialog.setClose(function() /*=>*/ { edit_color_index = -1; });
 		dialog.interactable = interactable;
 	}
 	

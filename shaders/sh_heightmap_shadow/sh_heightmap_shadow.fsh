@@ -101,20 +101,25 @@ float grey(vec4 clr) { return (clr.r + clr.g + clr.b) / 3. * clr.a; }
 
 void main() {
 	vec2 tx = 1. / dimension;
-	float maxD = maxDistance * tx.x;
+	float maxD = abs(maxDistance) * tx.x;
 	
 	vec4  baseC = v_vColour * texture2D(gm_BaseTexture, v_vTexcoord);
 	float baseG = grey(baseC);
 	gl_FragColor = baseC;
 	
-	float dir = radians(direction);
+	float dir = direction;
+	if(maxDistance < 0.) 
+		dir += 180.;
+    dir = radians(dir);
+    
 	vec2  ofs = tx * vec2(cos(dir), -sin(dir));
 	
 	bool  isShaded    = false;
 	float shadeDist   = 0.;
 	float shadeHeight = 0.;
+	float maxDist     = ceil(abs(maxDistance));
 	
-	for(float i = 1.; i < ceil(maxDistance); i++) {
+	for(float i = 1.; i < maxDist; i++) {
 		vec2  sx = v_vTexcoord - ofs * i;
 		vec4  sampC = sampleTexture(gm_BaseTexture, sx);
 		float sampG = grey(sampC);
@@ -133,7 +138,7 @@ void main() {
 	
 	float ints = shadowIntensity;
 	
-	ints = mix(ints, ints * clamp(1. - shadeDist / maxDistance, 0., 1.), shadowShade);
+	ints = mix(ints, ints * clamp(1. - shadeDist / abs(maxDistance), 0., 1.), shadowShade);
 	ints = mix(ints, ints * clamp(shadeHeight - baseG, 0., 1.), shadowHeightMod);
 	
 	vec4 shadC = mix(baseC, baseC * shadowColor, ints);
