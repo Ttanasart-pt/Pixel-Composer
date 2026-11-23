@@ -50,6 +50,7 @@ function Node_Image(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	spr       = noone;
 	edit_time = 0;
 	curr_path = "";
+	is_asset  = false;
 	
 	attributes.check_splice = true;
 	attributes.file_checker = true;
@@ -90,6 +91,8 @@ function Node_Image(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	insp1button = button(function() /*=>*/ { updatePaths(path_get(getInputData(0))); triggerRender(); }).setTooltip(__txt("Refresh"))
 		.setIcon(THEME.refresh_icon, 1, COLORS._main_value_positive).iconPad(ui(6)).setBaseSprite(THEME.button_hide_fill);
 	
+	////- Update
+	
 	static step = function() {
 		var path = path_get(getInputData(0));
 		
@@ -113,6 +116,10 @@ function Node_Image(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		
 		outputs[1].setValue(path);
 		updatePaths(path);
+		
+		var _root = string_replace_all(DIRECTORY + "Assets", "\\", "/");
+		var _path = string_replace_all(curr_path, "\\", "/");
+		is_asset = string_starts_with(_path, _root);
 		
 		var _spr = attributes.cache_use? cache_spr : spr;
 		if(!sprite_exists(_spr)) return;

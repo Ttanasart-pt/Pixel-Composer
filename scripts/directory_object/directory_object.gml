@@ -315,8 +315,8 @@ function DirectoryObject(_path) constructor {
 		
 		gpu_set_texfilter(true);
 		var _spr_ind = empt? ctx == self : open;
-		var _spr_bld = empt? COLORS.collection_folder_empty : COLORS.collection_folder_nonempty;
-		var _spr_aa  = empt? .9: 1;
+		var _spr_bld = COLORS.collection_folder_nonempty;
+		var _spr_aa  = 1;
 		
 		if(icon_blend != undefined) _spr_bld = icon_blend;
 		if(ctx == self)  {
@@ -328,9 +328,12 @@ function DirectoryObject(_path) constructor {
 			icon_custom = true;
 			var _icon_path = filename_combine(path, "__icon.png");
 			if(file_exists(_icon_path)) icon = sprite_add_center(_icon_path);
-		}
+			
+		} else
+			icon = empt? THEME.folder : THEME.folder_content;
 		
 		var _spr_sca = (hg - ui(5)) / sprite_get_height(icon);
+		
 		draw_sprite_ext(icon, _spr_ind, _x + ui(16), _y + hg / 2 - 1, _spr_sca, _spr_sca, 0, _spr_bld, _spr_aa);
 		gpu_set_texfilter(false);
 		
