@@ -41,7 +41,7 @@ function controlPointBox(_onModify) : widget() constructor {
 	static register    = function(p = noone) /*=>*/ {                   for( var i = 0; i < widgetLen; i++ ) widgets[i].register(p);    }
 	static isHovering  = function() /*=>*/ {return array_any(widgets, function(w,i) /*=>*/ {return w.isHovering()})};
 	
-	static fetchHeight = function(params) { return params.h + ui(4) + params.h * 2; }
+	static fetchHeight = function(params) { return params.h * 2 + ui(4); }
 	static drawParam   = function(params) {
 		setParam(params);
 		for( var i = 0; i < widgetLen; i++ ) widgets[i].setParam(params);
@@ -67,7 +67,7 @@ function controlPointBox(_onModify) : widget() constructor {
 		var w2 = _w / 2;
 		var ww = _w / 4;
 		var lh = _h;
-		h = _h + ui(4) + lh;
+		h = _h * 2 + ui(4);
 		
 		var tbHover = hover;
 		

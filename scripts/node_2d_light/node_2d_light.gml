@@ -56,8 +56,8 @@ function Node_2D_light(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 		newInput(index + 21, nodeValue_Float(    "Thickness",    2      )).hideLabel();
 		
 		////- =Light
-		newInput(index +  3, nodeValue_Slider(   "Intensity",    1, [0,4,.01] ));
-		newInput(index +  4, nodeValue_Color(    "Color",        ca_white     ));
+		newInput(index +  3, nodeValue_Float(    "Intensity",    1        ));
+		newInput(index +  4, nodeValue_Color(    "Color",        ca_white ));
 		
 			////- =/Attenuation
 		newInput(index + 10, nodeValue_EScroll( "Attenuation",   0, attnList  )).setTooltip("Control how light fade out over distance.");
@@ -506,14 +506,14 @@ function Node_2D_light(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 		
 		var _dim       = surface_get_dimension(_surf);
 		var _outSurf   = surface_verify(_outData[0], _dim[0], _dim[1]);
-		var _lightSurf = surface_verify(_outData[1], _dim[0], _dim[1]);
+		var _lightSurf = surface_verify(_outData[1], _dim[0], _dim[1], surface_rgba16float);
 		
 		var sw = _dim[0];
 		var sh = _dim[1];
 		
 		temp_surface[0] = surface_verify(temp_surface[0], _dim[0], _dim[1], surface_r32float);
-		temp_surface[1] = surface_verify(temp_surface[1], _dim[0], _dim[1]);
-		temp_surface[2] = surface_verify(temp_surface[2], _dim[0], _dim[1]);
+		temp_surface[1] = surface_verify(temp_surface[1], _dim[0], _dim[1], surface_rgba16float);
+		temp_surface[2] = surface_verify(temp_surface[2], _dim[0], _dim[1], surface_rgba16float);
 		
 		surface_set_target(_lightSurf);
 			draw_clear(c_black);

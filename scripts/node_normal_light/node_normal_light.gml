@@ -274,7 +274,7 @@ function Node_Normal_Light(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 		}
 		
 		var _outSurf = surface_verify(_outData[0], _dim[0], _dim[1]);
-		var _ligSurf = surface_verify(_outData[1], _dim[0], _dim[1]);
+		var _ligSurf = surface_verify(_outData[1], _dim[0], _dim[1], surface_rgba16float);
 		
 		surface_set_target(_ligSurf);
 			draw_clear(c_black);

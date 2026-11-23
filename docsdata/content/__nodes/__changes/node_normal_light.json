@@ -6,6 +6,11 @@
         "date": "2026-11-23T07:20:58.635Z",
         "node": "Button Color, Palette, Gradient",
         "commit": "**Button Color, Palette, Gradient**: Fix error when clicking on widget while color selector is opening."
+      },
+      {
+        "date": "2026-11-23T07:28:24.025Z",
+        "node": "",
+        "commit": "**Normal Light, 2D light**: Add support for negative light intensity."
       }
     ]
   },
