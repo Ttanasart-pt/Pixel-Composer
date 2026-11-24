@@ -68,6 +68,7 @@ function Panel_Keyframe_Driver() : PanelContent() constructor {
 		
 		var item = __Panel_Linear_Setting_Item;
 		var tNum = textBox_Number;
+		var chkB = checkBox;
 		
 		static setValue = function(k,v,it=false) /*=>*/ {
 			for( var i = 0, n = array_length(drivers); i < n; i++ ) {
@@ -89,6 +90,7 @@ function Panel_Keyframe_Driver() : PanelContent() constructor {
 		driverProp = {
 			KeyDriver_Linear : [
 				new item(  __txt("Speed"),    tNum(function(v) /*=>*/ {return setValue("speed", v)}), function() /*=>*/ {return driver.speed}, function(v) /*=>*/ {return setValue("speed", v)}, function() /*=>*/ {return 1} ),
+				new item(  __txt("Over Project"), new chkB(function() /*=>*/ {return setValue("overLen", !driver.overLen)}), function() /*=>*/ {return driver.overLen}, function(v) /*=>*/ {return setValue("overLen", v)}, function() /*=>*/ {return false} ),
 			],
 			
 			KeyDriver_Wiggle : [

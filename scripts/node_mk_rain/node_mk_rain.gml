@@ -19,8 +19,10 @@ function Node_MK_Rain(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	newInput(16, nodeValue_Curve(    "Alpha over Lifetime", CURVE_DEF_11 ));
 	
 	////- =Effect
+	tileDirr = [ 0, 45, 63.435, 90, 116.565, 135, 180 ];
 	newInput( 2, nodeValue_Float(    "Density",         5     ));
 	newInput( 1, nodeValue_Rotation( "Direction",       45    ));
+	newInput(27, nodeValue_EButton(  "Tiled Direction", 1, array_map(tileDirr, function(v,_) /*=>*/ {return string(v)}) ));
 	newInput( 7, nodeValue_Range(    "Velocity",        [1,2] ));
 	newInput(12, nodeValue_SliRange( "Track Extension", [0,0], { range: [ 0, 10, 0.01 ] }));
 	
@@ -45,7 +47,7 @@ function Node_MK_Rain(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		
 	input_display_list = [ s_MKFX, 8, 0, 
 		[ "Shape",       false     ],  9,  3,  4, 10, 11, 
-		[ "Rain",        false     ],  2,  1,  7, 
+		[ "Rain",        false     ],  2,  1, 27,  7, 
 		[ "Render",      false     ], [5, true], 25, -1,  6, 17, 26, 
 		[ "Lifespan",     true, 14 ], 15, 13, 16, 
 		[ "Ground",       true, 18 ], 19, 
@@ -90,7 +92,8 @@ function Node_MK_Rain(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 			var _alif = _data[16];
 			
 			var _dens = _data[ 2];
-			var _dirr = _data[ 1];
+			var _dirf = _data[ 1];
+			var _dirt = _data[27];
 			var _velo = _data[ 7];
 			var _trex = _data[12];
 			
@@ -109,6 +112,9 @@ function Node_MK_Rain(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 			var _ripDel = _data[24];
 			var _ripAlp = _data[25];
 			
+			inputs[ 1].setVisible(_tile != 0b11);
+			inputs[27].setVisible(_tile == 0b11);
+			
 			inputs[ 3].setVisible(_shap == 0);
 			inputs[ 4].setVisible(_shap == 0);
 			inputs[10].setVisible(_shap == 1);
@@ -117,6 +123,8 @@ function Node_MK_Rain(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 			
 			if(_shap == 2 && !is_surface(_text)) return _outSurf;
 		#endregion
+		
+		var _dirr = _tile == 0b11? tileDirr[_dirt] : _dirf;
 		
 		var isSurf = is_surface(_surf);
 		var _sw  = isSurf? surface_get_width_safe(_surf)  : DEF_SURF_W;

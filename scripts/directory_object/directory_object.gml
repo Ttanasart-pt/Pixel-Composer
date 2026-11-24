@@ -177,7 +177,7 @@ function DirectoryObject(_path) constructor {
 	name = filename_name_only(_path);
 	path = _path;
 	
-	icon = THEME.folder_content;
+	icon = undefined;
 	icon_custom = false;
 	icon_blend  = undefined;
 	
@@ -324,17 +324,22 @@ function DirectoryObject(_path) constructor {
 			_spr_aa  = 1;
 		}
 		
+		var icn = icon;
+		
 		if(icon_custom == false && path != "") {
 			icon_custom = true;
 			var _icon_path = filename_combine(path, "__icon.png");
-			if(file_exists(_icon_path)) icon = sprite_add_center(_icon_path);
+			if(file_exists(_icon_path)) 
+				icon = sprite_add_center(_icon_path);
 			
-		} else
-			icon = empt? THEME.folder : THEME.folder_content;
+		} 
 		
-		var _spr_sca = (hg - ui(5)) / sprite_get_height(icon);
+		if(!sprite_exists(icn))
+			icn = empt? THEME.folder : THEME.folder_content;
 		
-		draw_sprite_ext(icon, _spr_ind, _x + ui(16), _y + hg / 2 - 1, _spr_sca, _spr_sca, 0, _spr_bld, _spr_aa);
+		var _spr_sca = (hg - ui(5)) / sprite_get_height(icn);
+		
+		draw_sprite_ext(icn, _spr_ind, _x + ui(16), _y + hg / 2 - 1, _spr_sca, _spr_sca, 0, _spr_bld, _spr_aa);
 		gpu_set_texfilter(false);
 		
 		draw_set_text(font, fa_left, fa_center, path == ctx.path? COLORS._main_text_accent : COLORS._main_text_inner);

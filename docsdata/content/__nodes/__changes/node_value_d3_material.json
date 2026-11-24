@@ -6,6 +6,11 @@
         "date": "2026-11-24T00:25:18.165Z",
         "node": "",
         "commit": "**Strip**: Fix pixel artifact in palette, random coloring mode."
+      },
+      {
+        "date": "2026-11-24T01:47:05.080Z",
+        "node": "",
+        "commit": "**Linear Driver**: Add toggle to set speed over the whole project length instead of per frame."
       }
     ]
   },

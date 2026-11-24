@@ -293,8 +293,6 @@ void main() {
 	float ceiling = (slot + (random(vec2(slot + 1.)) * 2. - 1.) * rnd * 0.5 + 1.) * _a;
 	float _s      = fract((prog - ground) / (ceiling - ground) + progress);
 	
-	// gl_FragColor = vec4(_s, 0., 0., 1.); return;
-	
 	if(blend == 2) {
 		gl_FragColor = gradientEval(pfract(_s + gradient_shift));
 		

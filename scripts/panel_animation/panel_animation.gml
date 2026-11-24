@@ -870,14 +870,16 @@ function Panel_Animation() : PanelContent() constructor {
     	var fram = floor(-timeline_shift / size);
     	var kx   = (fram + .5) * timeline_scale + timeline_shift;
     	
-    	var pd  = ui(2)
-    	var _ww = size - pd * 2;
-    	var _hh = bar_h - pd * 2;
+    	var pdw = ui(1);
+    	var pdh = ui(2);
+    	
+    	var _ww = size  - pdw * 2;
+    	var _hh = bar_h - pdh * 2;
     	
     	repeat(amou) {
     		var _x0 = kx;
     		var _x1 = _x0 + _ww;
-    		var _y0 = pd;
+    		var _y0 = pdh;
     		var _y1 = _y0 + _hh;
     		var  ta = .5;
     		

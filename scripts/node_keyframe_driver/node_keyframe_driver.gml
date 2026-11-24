@@ -39,21 +39,25 @@ function KeyDriver() constructor {
 }
 
 function KeyDriver_Linear(_speed = 1) : KeyDriver() constructor {
-	index = 1;
-	speed = _speed;
+	index   = 1;
+	speed   = _speed;
+	overLen = false;
 	
 	static apply = function(_time, _key = undefined, _keyNext = undefined, _value = undefined, _ratio = .5, _anim = undefined) {
 		var _val = _value ?? _key.value;
 		var _res = _val;
 		
+		var spd  = speed;
+		if(overLen) spd /= _key.anim.node.project.animator.frames_total; // wtf
+		
 		if(is_array(_val)) {
 			_res = array_create(array_length(_val));
 			
 			for( var i = 0, n = array_length(_val); i < n; i++ )
-				_res[i] = _val[i] + _time * speed;
+				_res[i] = _val[i] + _time * spd;
 			
 		} else
-			_res = _val + _time * speed;
+			_res = _val + _time * spd;
 		
 		return _res;
 	}
@@ -62,12 +66,15 @@ function KeyDriver_Linear(_speed = 1) : KeyDriver() constructor {
 		var _m = {
 			typ : "linear",
 			spd : speed,
+			len : overLen, 
 		};
 		
 		return _m;
 	}
 	static deserialize = function(_m) /*=>*/ {
-		speed = _m.spd;
+		speed   = _m.spd;
+		overLen = _m[$ "len"] ?? overLen;
+		
 		return self;
 	}
 }

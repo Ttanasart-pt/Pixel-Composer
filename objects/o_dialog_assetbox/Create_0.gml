@@ -83,7 +83,6 @@ event_inherited();
 		
 		var contents = context.content;
 		var amo   = array_length(contents);
-		var hh    = 0;
 		var surfh = contentPane.surface_h + 4;
 		var frame = current_time * PREFERENCES.collection_preview_speed / 8000;
 		
@@ -92,89 +91,88 @@ event_inherited();
 		var grid_space = ui(12);
 		var col = max(1, floor(contentPane.surface_w / (grid_size + grid_space)));
 		var row = ceil(amo / col);
-		var yy  = _y + grid_space;
+		
+		var yy   = _y + grid_space;
 		var hght = grid_size + grid_space;
+		var hh   = grid_space + hght * row;
 		
-		hh += grid_space + hght * row;
+		var _ind = 0;
 		
-		for(var i = 0; i < row; i++) {
-			if(yy + grid_size < -4) {
-				yy += hght;
-				continue;
-			}
+		for( var i = 0; i < amo; i++ ) {
+			var content = contents[i];
+			if(content.name == "__icon") continue;
 			
+			var _r = floor(_ind / col);
+			var _c = _ind % col;
+			_ind++;
+			
+			var xx = grid_space + (grid_size + grid_space) * _c;
+			var yy = _y + grid_space + hght * _r;
+			
+			if(yy < -hght) continue;
 			if(yy > surfh) break;
 			
-			for(var j = 0; j < col; j++) {
-				var index = i * col + j;
-				if(index >= amo) break;
+			BLEND_OVERRIDE
+			draw_sprite_stretched_ext(THEME.node_bg, 0, xx, yy, grid_size, grid_size, COLORS.node_base_bg);
+			BLEND_NORMAL
+			
+			var spr = -1;
+			
+			if(is(content, dynaSurf)) {
+				var _sw = grid_size - ui(16);
+				var _sh = grid_size - ui(16);
 				
-				var content = contents[index];
-				var xx = grid_space + (grid_size + grid_space) * j;
+				var sx = xx + grid_size / 2;
+				var sy = yy + grid_size / 2;
+				content.draw(sx, sy, _sw, _sh);
+				draw_sprite_ui(THEME.dynadraw, 0, xx + grid_size - ui(14), yy + grid_size - ui(14));
 				
-				BLEND_OVERRIDE
-				draw_sprite_stretched_ext(THEME.node_bg, 0, xx, yy, grid_size, grid_size, COLORS.node_base_bg);
-				BLEND_NORMAL
+			} else {
+				spr = content.getSpr();
 				
-				var spr = -1;
-				
-				if(is(content, dynaSurf)) {
-					var _sw = grid_size - ui(16);
-					var _sh = grid_size - ui(16);
+				if(sprite_exists(spr)) {
+					var sw = sprite_get_width(spr);
+					var sh = sprite_get_height(spr);
+					var ss = img_size / max(sw, sh);
+					var sx = xx + (grid_size - sw * ss) / 2;
+					var sy = yy + (grid_size - sh * ss) / 2;
+					var sn = sprite_get_number(spr);
 					
-					var sx = xx + grid_size / 2;
-					var sy = yy + grid_size / 2;
-					content.draw(sx, sy, _sw, _sh);
-					draw_sprite_ui(THEME.dynadraw, 0, xx + grid_size - ui(14), yy + grid_size - ui(14));
+					draw_sprite_ext(spr, frame, sx, sy, ss, ss, 0, c_white, 1);
 					
-				} else {
-					spr = content.getSpr();
+					var _txt = $"{sw}x{sh}";
+					if(sn) _txt = $"[{sn}] " + _txt;
 					
-					if(sprite_exists(spr)) {
-						var sw = sprite_get_width(spr);
-						var sh = sprite_get_height(spr);
-						var ss = img_size / max(sw, sh);
-						var sx = xx + (grid_size - sw * ss) / 2;
-						var sy = yy + (grid_size - sh * ss) / 2;
-						var sn = sprite_get_number(spr);
-						
-						draw_sprite_ext(spr, frame, sx, sy, ss, ss, 0, c_white, 1);
-						
-						var _txt = $"{sw}x{sh}";
-						if(sn) _txt = $"[{sn}] " + _txt;
-						
-						draw_set_text(_f_p4, fa_right, fa_bottom, COLORS._main_text_inner);
-						var _tw = string_width(_txt) + ui(6);
-						var _th = 14;
-						var _nx = xx + grid_size - 1 - _tw;
-						var _ny = yy + grid_size - _th;
-						
-						draw_sprite_stretched_ext(THEME.ui_panel, 0, _nx, _ny, _tw, _th - 1, COLORS.panel_bg_clear_inner, 0.85);
-						draw_text_add(xx + grid_size - ui(3), yy + grid_size - ui(2), _txt);
-						
-					} else if(spr == -1) {
-						var _rr = lerp(.075, .2, abs(dsin(current_time / 2)));
-						draw_circle_ui(xx + grid_size / 2, yy + grid_size / 2, grid_size * .25, _rr, COLORS._main_icon, 1);
-					}
-				}
-				
-				if(sHOVER && contentPane.hover && point_in_rectangle(_m[0], _m[1], xx, yy, xx + grid_size, yy + grid_size)) {
-					contentPane.hover_content = true;
-					setTOOLTIP([ spr, "sprite" ]);
+					draw_set_text(_f_p4, fa_right, fa_bottom, COLORS._main_text_inner);
+					var _tw = string_width(_txt) + ui(6);
+					var _th = 14;
+					var _nx = xx + grid_size - 1 - _tw;
+					var _ny = yy + grid_size - _th;
 					
-					draw_sprite_stretched_ext(THEME.node_bg, 1, xx, yy, grid_size, grid_size, COLORS._main_accent, 1);
+					draw_sprite_stretched_ext(THEME.ui_panel, 0, _nx, _ny, _tw, _th - 1, COLORS.panel_bg_clear_inner, 0.85);
+					draw_text_add(xx + grid_size - ui(3), yy + grid_size - ui(2), _txt);
 					
-					if(mouse_lpress(sFOCUS)) {
-						if(is(content, dynaSurf))
-							target.onModify(content.clone());
-						else 
-							target.onModify(content.path);
-						instance_destroy();
-					}
+				} else if(spr == -1) {
+					var _rr = lerp(.075, .2, abs(dsin(current_time / 2)));
+					draw_circle_ui(xx + grid_size / 2, yy + grid_size / 2, grid_size * .25, _rr, COLORS._main_icon, 1);
 				}
 			}
 			
-			yy += hght;
+			if(sHOVER && contentPane.hover && point_in_rectangle(_m[0], _m[1], xx, yy, xx + grid_size, yy + grid_size)) {
+				contentPane.hover_content = true;
+				setTOOLTIP([ spr, "sprite" ]);
+				
+				draw_sprite_stretched_ext(THEME.node_bg, 1, xx, yy, grid_size, grid_size, COLORS._main_accent, 1);
+				
+				if(mouse_lpress(sFOCUS)) {
+					if(is(content, dynaSurf))
+						target.onModify(content.clone());
+					else 
+						target.onModify(content.path);
+					instance_destroy();
+				}
+			}
+			
 		}
 		
 		return hh;
