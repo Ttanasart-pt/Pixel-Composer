@@ -4,7 +4,7 @@ function materialBox(_onModify) : widget() constructor {
 	defMat   = new __d3dMaterial();
 	currMat  = defMat;
 	
-	sb_filtering = new scrollBox(["Pixel", "Bilinear"], function(val) { currMat.texFilter = val; onModify(currMat); })
+	sb_filtering = new scrollBox(["Pixel", "Bilinear", "CleanEdge"], function(val) /*=>*/ { currMat.texFilter = val; onModify(currMat); })
 	
 	tb[0] = textBox_Number(function(val) /*=>*/ { currMat.diffuse    = val; onModify(currMat); }).setLabel("diffuse");
 	tb[1] = textBox_Number(function(val) /*=>*/ { currMat.specular   = val; onModify(currMat); }).setLabel("specular");
@@ -18,8 +18,14 @@ function materialBox(_onModify) : widget() constructor {
 	
 	static register = function(parent = noone) {}
 	
+	////- Draw
+	
 	static drawParam = function(params) {
+		// sb_filtering.setParam(params);
+		// for( var i = 0, n = array_length(tb); i < n; i++ ) 
+		// 	tb[i].setParam(params);
 		setParam(params);
+		
 		return draw(params.x, params.y, params.w, params.h, params.data, params.display_data, params.m, params.rx, params.ry);
 	}
 	
@@ -28,16 +34,13 @@ function materialBox(_onModify) : widget() constructor {
 		y = _y;
 		w = _w;
 		h = _h;
-		//h = _h + (TEXTBOX_HEIGHT + ui(4)) * 4;
+		
 		open_rx = _rx;
 		open_ry = _ry;
-		
-		if(is_array(_surface) && array_empty(_surface)) return h;
 		
 		var yy = y;
 		
 		#region draw surface
-		
 			draw_sprite_stretched(THEME.textbox, 3, _x, _y, _w, _h);
 			draw_sprite_stretched_ext(THEME.textbox, 0, _x, _y, _w, _h, c_white, 0.5 + 0.5 * interactable);
 			
@@ -91,30 +94,30 @@ function materialBox(_onModify) : widget() constructor {
 			yy = sy1 + ui(10);
 		 #endregion
 		
-		//var tbw = _w / 2 - ui(2);
-		//var tbh = TEXTBOX_HEIGHT;
+		return h;
 		
-		//draw_set_text(font, fa_left, fa_center, COLORS._main_text_sub);
-		//var txt = "Interpolation";
-		//var lbw = string_width(txt) + ui(16);
-		//draw_text_add(_x, yy + tbh / 2, txt);
+		var tbw = _w / 2 - ui(2);
+		var tbh = line_get_height(font, 4);
+		h = _h + (tbh + ui(4)) * 4;
 		
-		//sb_filtering.setFocusHover(iactive, ihover);
-		//sb_filtering.draw(_x + lbw, yy, _w - lbw, tbh, currMat.texFilter,  _m, _rx, _ry);
-		//yy += TEXTBOX_HEIGHT + ui(4);
+		sb_filtering.setFocusHover(iactive, ihover);
+		sb_filtering.draw(_x, yy, _w, tbh, currMat.texFilter,  _m, _rx, _ry);
+		yy += tbh + ui(4);
 		
-		//for(var i = 0; i < array_length(tb); i++) 
-		//	tb[i].setFocusHover(iactive, ihover);
+		print(currMat.texFilter)
+		
+		for(var i = 0; i < array_length(tb); i++) 
+			tb[i].setFocusHover(iactive, ihover);
 			
-		//tb[0].draw(_x,               yy, tbw, tbh, currMat.diffuse,  _m);
-		//tb[1].draw(_x + tbw + ui(4), yy, tbw, tbh, currMat.specular, _m);
-		//yy += TEXTBOX_HEIGHT + ui(4);
+		tb[0].draw(_x,               yy, tbw, tbh, currMat.diffuse,  _m);
+		tb[1].draw(_x + tbw + ui(4), yy, tbw, tbh, currMat.specular, _m);
+		yy += tbh + ui(4);
 		
-		//tb[2].draw(_x,               yy, tbw, tbh, currMat.metalic,  _m);
-		//tb[3].draw(_x + tbw + ui(4), yy, tbw, tbh, currMat.shine,    _m);
-		//yy += TEXTBOX_HEIGHT + ui(4);
+		tb[2].draw(_x,               yy, tbw, tbh, currMat.metalic,  _m);
+		tb[3].draw(_x + tbw + ui(4), yy, tbw, tbh, currMat.shine,    _m);
+		yy += tbh + ui(4);
 		
-		//tb[4].draw(_x,               yy, _w, tbh, currMat.reflective,  _m);
+		tb[4].draw(_x,               yy, _w, tbh, currMat.reflective,  _m);
 		
 		resetFocus();
 		

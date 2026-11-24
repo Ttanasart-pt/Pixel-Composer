@@ -8,6 +8,10 @@ function __NodeValue_D3Material(_name, _node, _value, _tooltip = "") : NodeValue
 	
 	/////============== GET =============
 	
+	static onGetEditWidget = function() {
+		editWidget.currMat = defMat;
+	}
+	
 	static valueProcess = function(value, nodeFrom = undefined, applyUnit = true, arrIndex = 0) { return value; }
 	
 	static getValue = function(_time = NODE_CURRENT_FRAME, applyUnit = true, arrIndex = 0, useCache = false, log = false) { 

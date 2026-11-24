@@ -108,6 +108,7 @@ function Node_Stripe(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 			var _pal  = _data[18];
 			
 			inputs[ 1].setVisible(!_tile);
+			inputs[10].setVisible(_col == 0);
 			inputs[24].setVisible( _tile);
 			inputs[ 2].setVisible(!_tile);
 			

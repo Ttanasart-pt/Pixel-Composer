@@ -313,21 +313,22 @@ void main() {
 		}
 		
 	} else if(coloring == 1) {
-		int ind = int(mod(_s > rat? slot : slot + 1., float(paletteAmount)));
+		float pAmo = float(paletteAmount);
+		int   ind  = int(mod(slot, pAmo));
 		
-		if(blend == 0 || blend == 3)
+		if(blend == 0 || blend == 3) {
 			gl_FragColor = palette[ind];
 		
-		else if(blend == 1) { 
-			vec4  c0  = _s > rat? palette[ind] : palette[int(mod(float(ind - 1 + paletteAmount), float(paletteAmount)))];
-			vec4  c1  = _s > rat? palette[int(mod(float(ind + 1), float(paletteAmount)))] : palette[ind];
+		} else if(blend == 1) { 
+			vec4  c0  = _s > rat? palette[ind] : palette[int(mod(float(ind - 1 + paletteAmount), pAmo))];
+			vec4  c1  = _s > rat? palette[int(mod(float(ind + 1), pAmo))] : palette[ind];
 			
 			gl_FragColor = mix(c0, c1, _s > rat? _s - rat : _s + (1. - rat)) * v_vColour;
 			
 		}
 		
 	} else if(coloring == 2) {
-		gl_FragColor = gradientEval(pfract(random(vec2(_s > rat? slot : slot + 1.)) + gradient_shift));
+		gl_FragColor = gradientEval(pfract(random(vec2(slot)) + gradient_shift));
 	}
 	
 	gl_FragColor.a *= uva;
