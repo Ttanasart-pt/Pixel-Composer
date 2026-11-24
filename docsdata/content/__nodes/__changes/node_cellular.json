@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.22.3.107",
+    "changes": [
+      {
+        "date": "2026-11-24T05:49:32.433Z",
+        "node": "Cellular Noise",
+        "commit": "**Cellular Noise**: Add curve control."
+      }
+    ]
+  },
+  {
     "version": "1.22.2.008",
     "changes": [
       {
