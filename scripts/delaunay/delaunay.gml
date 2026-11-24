@@ -62,6 +62,8 @@ function delaunay_triangulation_c(points, polygons = noone, index = false) {
 	var _triangles      = array_create(_triangleAmount);
 	var i = 0;
 	
+	_triangleAmount = min(_triangleAmount, buffer_get_size(_resultBuffer) / 4 / 3);
+	
 	buffer_to_start(_resultBuffer);
 	repeat(_triangleAmount) {
 		var p1 = buffer_read(_resultBuffer, buffer_s32);
