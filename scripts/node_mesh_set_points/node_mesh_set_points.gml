@@ -46,10 +46,16 @@ function Node_Mesh_Set_Points(_x, _y, _group = noone) : Node(_x, _y, _group) con
 		
 		mesh.useShape  = _mesh.useShape;
 		
-		var pamo   = array_length(_pnts);
+		var pold   = _mesh.points;
+		var pamo   = min(array_length(pold), array_length(_pnts));
 		var points = array_create(pamo);
-		for( var i = 0; i < pamo; i++ ) 
+		
+		for( var i = 0; i < pamo; i++ ) {
+			var po = pold[i];
 			points[i] = new __vec2UV(_pnts[i][0], _pnts[i][1]);
+			points[i].u = po.u;
+			points[i].v = po.v;
+		}
 		
 		mesh.points    = points;
 	}

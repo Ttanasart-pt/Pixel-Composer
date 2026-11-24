@@ -5,11 +5,12 @@ function Node_Mesh_Create_Points(_x, _y, _group = noone) : Node(_x, _y, _group) 
 	
 	////- =Points
 	newInput( 0, nodeValue_Vec2( "Points", [] )).setVisible(true, true).setArrayDepth(1);
-	// 1
+	newInput( 1, nodeValue_Vec2( "UVs",    [] )).setArrayDepth(1);
+	// 2
 	
 	newOutput( 0, nodeValue_Output( "Mesh", VALUE_TYPE.mesh, noone));
 	
-	input_display_list = [ 0 ];
+	input_display_list = [ 0, 1 ];
 	
 	////- Nodes
 	
@@ -22,14 +23,26 @@ function Node_Mesh_Create_Points(_x, _y, _group = noone) : Node(_x, _y, _group) 
 	}
 	
 	static update = function() {
-		var _pnts = getInputData( 0);
-		if(array_get_depth(_pnts) != 2) return;
+		#region data
+			var _pnts = getInputData( 0);
+			var _uvs  = getInputData( 1);
+			
+			if(array_get_depth(_pnts) != 2) return;
+		#endregion
 		
 		var pamo = array_length(_pnts);
 		
 		var points = array_create(pamo);
 		for( var i = 0; i < pamo; i++ ) 
 			points[i] = new __vec2UV(_pnts[i][0], _pnts[i][1]);
+		
+		if(array_get_depth(_uvs) == 2) {
+			var uamo = array_length(_uvs);
+			for( var i = 0; i < min(pamo, uamo); i++ ) {
+				points[i].u = _uvs[i][0];
+				points[i].v = _uvs[i][1];
+			}
+		}
 		
 		var edges     = [];
 		var triangles = delaunay_triangulation_c(points, noone, true);

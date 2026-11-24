@@ -1,0 +1,1 @@
+{"project":"Ocean-wave","url":"https:\/\/pixel-composer.com\/projects\/Ocean%20wave","inputs":["Surface In",{"name":"Brightness","value":true},{"name":"Threshold","value":0.12130000000000001},{"name":"Smoothness","value":0.1709},{"name":"Algorithm","value":"Adaptive mean"},{"name":"Adaptive Radius","value":6},{"name":"Invert","value":true}]}

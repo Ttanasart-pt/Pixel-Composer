@@ -94,7 +94,10 @@ function Node_Mesh_Fill(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		else DRAW_CLEAR
 		
 		if(_filD) {
-			draw_primitive_begin_texture(pr_trianglelist, surface_get_texture_safe(_text));
+			var _tex = surface_get_texture_safe(_text);
+			var _tid = 0;
+			
+			draw_primitive_begin_texture(pr_trianglelist, _tex);
 			if(_face && _fac != undefined) {
 				for( var i = 0, n = array_length(_fac); i < n; i++ ) {
 					var _grc = _grad.evalFast(pfract(random(1) + _grdSh));
@@ -148,6 +151,12 @@ function Node_Mesh_Fill(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 						draw_vertex_texture_color(p1.x, p1.y, u1, v1, _col, _alph);
 						draw_vertex_texture_color(p2.x, p2.y, u2, v2, _col, _alph);
 						
+						if(_tid++ > 64) {
+							_tid = 0;
+							draw_primitive_end();
+							draw_primitive_begin_texture(pr_trianglelist, _tex);
+						}
+						
 					}
 				}
 				
@@ -187,6 +196,13 @@ function Node_Mesh_Fill(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 					draw_vertex_texture_color(p0.x, p0.y, u0, v0, _col, _alph);
 					draw_vertex_texture_color(p1.x, p1.y, u1, v1, _col, _alph);
 					draw_vertex_texture_color(p2.x, p2.y, u2, v2, _col, _alph);
+					
+					if(_tid++ > 64) {
+						_tid = 0;
+						draw_primitive_end();
+						draw_primitive_begin_texture(pr_trianglelist, _tex);
+					}
+					
 				}
 			}
 			draw_primitive_end();

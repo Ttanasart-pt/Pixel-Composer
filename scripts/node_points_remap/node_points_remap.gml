@@ -1,13 +1,3 @@
-/*
-#region
-	FN_NODE_CONTEXT_INVOKE {
-		addHotkey("", " > Set", KEY_GROUP.numeric, MOD_KEY.none, () => { GRAPH_FOCUS_NUMBER _n.inputs[1].setValue(KEYBOARD_NUMBER); });
-		addHotkey("", " > ", "", MOD_KEY.none, () => { GRAPH_FOCUS _n.inputs[1].setValue(); });
-		addHotkey("", " > Toggle", "", MOD_KEY.none, () => { GRAPH_FOCUS _n.inputs[1].setValue((_n.inputs[1].getValue() + 1) % 2); });
-	});
-#endregion
-*/
-
 function Node_Points_Remap(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name  = "Points Remap";
 	color = COLORS.node_blend_number;
@@ -15,44 +5,48 @@ function Node_Points_Remap(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	setDimension(96, 48);
 	
 	////- =Points
-	newInput( 0, nodeValue_Vec2(    "Points", [[0,0]])).setArrayDepth(1).setVisible(true, true);
+	newInput( 0, nodeValue_Vec2(    "Points", [[0,0]]  )).setArrayDepth(1).setVisible(true, true);
+	newInput( 5, nodeValue_Bool(    "Output UV", false ));
 	
 	////- =Mapping
 	newInput( 1, nodeValue_Surface( "UV Map"    ));
 	newInput( 2, nodeValue_Slider(  "Amount", 1 ));
-	// 3
+	newInput( 3, nodeValue_Bool(    "Use UV Dimension", true ));
+	newInput( 4, nodeValue_Dimension());
+	// 6
 	
-	newOutput(0, nodeValue_Output( "Points", VALUE_TYPE.float, [0,0] )).setDisplay(VALUE_DISPLAY.vector);
+	newOutput( 0, nodeValue_Output( "Points", VALUE_TYPE.float, [0,0] )).setDisplay(VALUE_DISPLAY.vector);
+	// newOutput( 1, nodeValue_Output( "UVs",    VALUE_TYPE.float, [0,0] )).setDisplay(VALUE_DISPLAY.vector);
 	
 	input_display_list = [ 
-		[ "Points",  false ], 0, 
-		[ "Mapping", false ], 1, 2, 
+		[ "Points",  false ],  0,  //5, 
+		[ "Mapping", false ],  1,  2,  3,  4, 
 	];
 	
 	////- Nodes
 	
 	uvSampler = new Surface_sampler();
 	
-	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _params) { 
-		
-	}
-	
 	static update = function() {
 		#region data
 			var _points = getInputData( 0);
+			var _outuv  = getInputData( 5);
 			
 			var _uvmap  = getInputData( 1);
 			var _uvamo  = getInputData( 2);
+			var _uvdim  = getInputData( 3);
+			var _csdim  = getInputData( 4);
 			
-			if(!is_surface(_uvmap)) return;
+			inputs[4].setVisible(!_uvdim);
 			
 			var _outData = outputs[0].getValue();
 		#endregion
 		
+		if(!is_surface(_uvmap)) return;
 		uvSampler.setSurface(_uvmap);
 		
-		var ww = surface_get_width(_uvmap);
-		var hh = surface_get_height(_uvmap);
+		var ww = _uvdim? surface_get_width(_uvmap)  : _csdim[0];
+		var hh = _uvdim? surface_get_height(_uvmap) : _csdim[1];
 		var vx, vy;
 		
 		var pamo = array_length(_points);
@@ -79,5 +73,6 @@ function Node_Points_Remap(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		}
 		
 		outputs[0].setTypeSignature(array_create(array_length(_outData), VALUE_TYPE.float));
+		
 	}
 }
