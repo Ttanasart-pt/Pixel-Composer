@@ -9,10 +9,14 @@ function Node_Gabor_Noise(_x, _y, _group = noone) : Node_Shader_Generator(_x, _y
 	newInput(13, nodeValue_Surface( "Mask"       ));
 	
 	////- =Noise
-	newInput( 4, nodeValue_Slider(   "Density",    2, [ 0, 4, 0.01 ] )).setShaderProp("alignment").setMappable(9).setPieMenu();
-	newInput( 7, nodeValue_Rotation( "Phase",      0                 )).setShaderProp("rotation").setMappable(11).setPieMenu();
-	newInput( 5, nodeValue_Slider(   "Sharpness",  4, [ 0, 5, 0.01 ] )).setShaderProp("sharpness").setMappable(10);
-	newInput( 6, nodeValue_Vec2(     "Augment",   [11,31]            )).setShaderProp("augment");
+	newInput( 4, nodeValue_Slider(   "Density",     2, [ 0, 4, 0.01 ] )).setShaderProp("alignment").setMappable(9).setPieMenu();
+	newInput( 7, nodeValue_Rotation( "Phase",       0                 )).setShaderProp("rotation").setMappable(11).setPieMenu();
+	newInput( 5, nodeValue_Slider(   "Sharpness",   4, [ 0, 5, 0.01 ] )).setShaderProp("sharpness").setMappable(10);
+	newInput( 6, nodeValue_Vec2(     "Augment",    [11,31]            )).setShaderProp("augment");
+	
+	////- =/Randomness
+	newInput(18, nodeValue_Slider(   "Cell Random", 1                 )).setShaderProp("randomCell");
+	newInput(19, nodeValue_Slider(   "Patt Random", 1                 )).setShaderProp("randomAng");
 	
 	////- =Transform
 	newInput( 1, nodeValue_Vec2(     "Position",  [0,0] )).setHotkey("G").setShaderProp("position").setUnitSimple().setPieMenu();
@@ -22,13 +26,15 @@ function Node_Gabor_Noise(_x, _y, _group = noone) : Node_Shader_Generator(_x, _y
 	////- =Rendering
 	newInput(16, nodeValue_SliRange( "Level In",   [0,1] )).setShaderProp("levelIn");
 	newInput(17, nodeValue_SliRange( "Level Out",  [0,1] )).setShaderProp("levelOut");
-	// input 18
+	// 20
 	
 	input_display_list = [ 3, 
-		[ "Output",     true ],  0, 14, 15, 13, 
-		[ "Noise",     false ],  4,  9,  7, 11,  5, 10, 
-		[ "Transform", false ],  1, 12,  2,  8, 
-		[ "Rendering", false ], 16, 17, 
+		[ "Output",           true ],  0, 14, 15, 13, 
+		[ "Noise",           false ],  4,  9,  7, 11,  5, 10,  6, 
+			[ "/Randomness", false ], 18, 19, 
+			
+		[ "Transform",       false ],  1, 12,  2,  8, 
+		[ "Rendering",       false ], 16, 17, 
 	];
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _params) {

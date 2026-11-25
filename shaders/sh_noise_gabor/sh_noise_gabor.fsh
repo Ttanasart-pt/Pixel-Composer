@@ -62,6 +62,9 @@ uniform vec2  dimension;
 uniform vec2  position;
 uniform float trRotation;
 
+uniform float randomCell;
+uniform float randomAng;
+
 uniform vec2  augment;
 uniform vec2  levelIn, levelOut; float applyLevel(float v) { return mix(levelOut.x, levelOut.y, (v - levelIn.x) / (levelIn.y - levelIn.x)); }
 
@@ -84,15 +87,16 @@ vec3 gabor_wave(in vec2 p) {
 	for( int j = -2; j <= 2; j++ )
     for( int i = -2; i <= 2; i++ ) {		
         vec2  o = vec2( i, j );
-        vec2  h = hash(ip + o);
+        vec2  h = hash(ip + o) * randomCell;
         vec2  r = fp - (o + h);
 
-        vec2  k = normalize(-1.0 + 2.0 * hash(ip + o + augment) );
+        vec2  k = normalize(-1.0 + 2.0 * hash(ip + o + augment) * randomAng);
 		
-        float d = dot(r, r);
-        float l = dot(r, k) + rt;
-        float w = exp(-fa * d);
-        vec2 cs = vec2( cos(fr * l + rt), sin(fr * l + rt) );
+        float d  = dot(r, r);
+        float l  = dot(r, k) + rt;
+        float w  = exp(-fa * d);
+        float rr = fr * l + rt;
+        vec2  cs = vec2( cos(rr), sin(rr) );
         
         av += w * vec3(cs.x, -2.0 * fa * r * cs.x - cs.y * fr * k );
         at += w * vec3(1.0,  -2.0 * fa * r);

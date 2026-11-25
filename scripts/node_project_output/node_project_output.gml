@@ -1,22 +1,26 @@
+#region global
+	FN_NODE_CONTEXT_INVOKE {
+		addHotkey("Node_Project_Output", "Animated > Toggle", "A", MOD_KEY.none, function() /*=>*/ { GRAPH_FOCUS _n.inputs[1].setValue(!_n.inputs[1].getValue()); });
+	});
+#endregion
+
 function Node_Project_Output(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name = "Project Output";
 	
 	newInput( 0, nodeValue_Surface( "Surface In" )).setRequired();
-	
-	newInput( 1, nodeValue_Bool( "Animated", false ));
+	newInput( 1, nodeValue_Bool(    "Animated", false ));
 	// 2
 	
 	newOutput( 0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
-	input_display_list = [ 0, 1, ]
+	input_display_list = [ 0, 1 ];
 	
 	////- Nodes
 	
 	project.outputNode = self;
 	outputSurface      = noone;
 	
-	animated = false;
-	
+	animated    = false;
 	rendering   = false;
 	render_path = undefined;
 	renderer    = undefined;
