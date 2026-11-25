@@ -90,7 +90,9 @@ uniform vec2 dimension;
 uniform float direction;
 uniform float maxDistance;
 
-uniform float height;
+uniform sampler2D heightmap;
+uniform int       useheightmap;
+uniform float     height;
 
 uniform vec4  shadowColor;
 uniform float shadowIntensity;
@@ -104,7 +106,8 @@ void main() {
 	float maxD = abs(maxDistance) * tx.x;
 	
 	vec4  baseC = v_vColour * texture2D(gm_BaseTexture, v_vTexcoord);
-	float baseG = grey(baseC);
+	vec4  baseH = useheightmap == 1? texture2D(heightmap, v_vTexcoord) : baseC;
+	float baseG = grey(baseH);
 	gl_FragColor = baseC;
 	
 	float dir = direction;
@@ -119,9 +122,9 @@ void main() {
 	float shadeHeight = 0.;
 	float maxDist     = ceil(abs(maxDistance));
 	
-	for(float i = 1.; i < maxDist; i++) {
+	for(float i = 1.; i < maxDist; i+=.5) {
 		vec2  sx = v_vTexcoord - ofs * i;
-		vec4  sampC = sampleTexture(gm_BaseTexture, sx);
+		vec4  sampC = useheightmap == 1? sampleTexture(heightmap, sx) : sampleTexture(gm_BaseTexture, sx);
 		float sampG = grey(sampC);
 		if(sampG <= baseG) continue;
 		

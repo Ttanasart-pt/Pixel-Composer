@@ -206,8 +206,6 @@ DIALOG_DRAW_BG
 			}
 		}
 		
-		tw -= ui(4);
-		
 	} else if(mode == 1) {
 		asset_folderPane.setFocusHover(sFOCUS, sHOVER);
 		asset_folderPane.verify(category_width, content_h);
@@ -232,10 +230,12 @@ DIALOG_DRAW_BG
 		
 		bx -= bs + sp;
 		var b  = buttonInstant_Pad(bb, bx, by, bs, bs, mm, sHOVER, sFOCUS, __txt("Open in Explorer"), THEME.dPath_open, 0, bc, 1, ui(8));
-		if(b == 2) shellOpenExplorer(DIRECTORY + "Assets");
+		if(b == 2) shellOpenExplorer(dirContext.path);
 		tw -= bs + sp;
 		
 	}
+	
+	tw -= ui(4);
 	
 	#region mode
 		var ttx = tx;
@@ -259,14 +259,16 @@ DIALOG_DRAW_BG
 	#endregion
 	
 	if(hk_editing == noone) {
-		draw_sprite_stretched_ext(THEME.textbox, 3, ttx, tty, ttw, tth, COLORS._main_icon_light);
 		if(mode == 0) {
+			draw_sprite_stretched_ext(THEME.textbox, 3, ttx, tty, ttw, tth, COLORS._main_icon_light);
 			tb_search.setFocusHover(sFOCUS, sHOVER);
 			tb_search.draw(ttx, tty, ttw, tth, search_string, mouse_ui);
 			draw_sprite_stretched_ext(THEME.textbox, 2, ttx, tty, ttw, tth, COLORS._main_icon, .5);
 			
-		} else 
-			draw_sprite_stretched_ext(THEME.textbox, 2, ttx, tty, ttw, tth, COLORS._main_icon, .2);
+		} else {
+			draw_sprite_stretched_ext(THEME.textbox, 3, ttx, tty, ttw, tth, COLORS._main_icon_light, .5);
+			draw_sprite_stretched_ext(THEME.textbox, 2, ttx, tty, ttw, tth, COLORS._main_icon,       .2);
+		}
 		
 		if(NODE_SEARCH_INDEXED == 1) {
 			var ix = ttx + tth / 2 + ui(8);

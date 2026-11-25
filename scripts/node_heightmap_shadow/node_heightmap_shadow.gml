@@ -5,6 +5,7 @@ function Node_Heightmap_Shadow(_x, _y, _group = noone) : Node_Shader_Processor(_
 	var i = shader_index;
 	
 	////- =Heightmap
+	newInput(i+7, nodeValue_Surface(  "Heightmap" )).setShaderProp("heightmap");
 	newInput(i+2, nodeValue_Float(    "Height", 1 )).setShaderProp("height").setPieMenu().setUnitSimple();
 	
 	////- =Cast
@@ -16,10 +17,10 @@ function Node_Heightmap_Shadow(_x, _y, _group = noone) : Node_Shader_Processor(_
 	newInput(i+4, nodeValue_Slider(   "Intensity",      .5       )).setShaderProp("shadowIntensity");
 	newInput(i+5, nodeValue_Slider(   "Shade",           0       )).setShaderProp("shadowShade");
 	newInput(i+6, nodeValue_Slider(   "Height Modulate", 0       )).setShaderProp("shadowHeightMod");
-	// i+5
+	// i+8
 	
 	array_append(input_display_list, [ 
-		[ "Heightmap", false ], i+2, 
+		[ "Heightmap", false ], i+7, i+2, 
 		[ "Cast",      false ], i+0, i+1,  
 		[ "Rendering", false ], i+3, i+4, i+5, i+6, 
 	]);

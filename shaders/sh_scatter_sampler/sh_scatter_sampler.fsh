@@ -310,7 +310,7 @@ uniform sampler2D radiusSurf;
 float random  (in vec2 st, float seed) { return fract(sin(dot(st.xy + mod(seed, 100000.) / 10., vec2(1892.9898, 78.23453))) * 437.54123); }
 vec2  random2 (in vec2 st, float seed) { return vec2(random(st, seed), random(st, seed + 56.5742)); }
 
-vec4 sample(vec2 px, float tile) {
+vec4 sample(vec2 px, float tile, vec2 offset, float seed) {
 	vec2 fr  = fract(px);
 	vec2 fl  = floor(px);
 	
@@ -322,8 +322,11 @@ vec4 sample(vec2 px, float tile) {
 		vec2 _fl = fl + ofs;
 		vec2 _fr = fr - ofs;
 		
-		vec2 cen = vec2(.5) + (random2(mod(_fl, tile), seed) - .5) * 2. * randomize;
-		vec2 mx  = (_fl + cen) / tile + .5;
+		vec2 flt = vec2(mod(_fl.x, tile), mod(_fl.y, tile)) / dimension;
+		vec2 flo = (random2(flt, seed) - .5) * 2.;
+		
+		vec2 cen = .5 + flo * randomize;
+		vec2 mx  = (_fl + cen + offset) / tile + .5;
 		
 		if(useMask == 1) {
 			vec4  msam = texture2D(mask, mx);
@@ -382,22 +385,34 @@ void main() {
 	}
 	
 	float wei = 0.;
-	vec4  res = vec4(0.,0.,0.,1.);
+	vec4  res = vec4(0.,0.,0.,1.), sam;
 	vec2  pos = (v_vTexcoord - .5) * scl;
+	vec2  off = vec2(0.);
+	
 	float sca = scl;
 	float amp = 1.;
+	float sed = seed;
+	
+	int density = 1;
 	
 	for(int i = 0; i < iteration; i++) {
-		vec4 sam = sample(pos, sca);
-		sam.rgb *= amp;
+		off = vec2(0.);
 		
-		if(itrBlend == 0) {
-			res += sam;
-			wei += amp;
+		for(int j = 0; j < density; j++) {
+			sam = sample(pos, sca, off, sed);
+			sam *= amp;
 			
-		} else if(itrBlend == 1) {
-			res = max(res, sam);
-			wei = 1.;
+			if(itrBlend == 0) {
+				res += sam;
+				wei += amp;
+				
+			} else if(itrBlend == 1) {
+				res = max(res, sam);
+				wei = 1.;
+			}
+			
+			sed++;
+			off += sca / float(density);
 		}
 		
 		pos *= isca;
@@ -405,7 +420,9 @@ void main() {
 		amp *= iamp;
 	}
 	
-	res.rgb /= wei;
+	res /= wei;
+	res *= v_vColour;
+	res.a = 1.;
 	
-	gl_FragColor = res * v_vColour;
+	gl_FragColor = res;
 }

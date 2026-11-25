@@ -20,6 +20,9 @@ uniform float threshold;
 uniform int   alpha;
 uniform int   multiplyOrig;
 
+uniform int   replaceOther;
+uniform vec4  replaceColor;
+
 void main() {
 	vec4 p = texture2D( gm_BaseTexture, v_vTexcoord );
 	gl_FragColor = p;
@@ -39,5 +42,7 @@ void main() {
 	
 	if(minDist <= threshold)
     	gl_FragColor = vec4(colorTo[index].rgb, (multiplyOrig == 1? p.a : 1.) * colorTo[index].a) * v_vColour;
+    else if(replaceOther == 1)
+    	gl_FragColor = replaceColor;
 	
 }

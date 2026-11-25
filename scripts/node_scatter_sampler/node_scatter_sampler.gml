@@ -15,9 +15,9 @@ function Node_Scatter_Sampler(_x, _y, _group = noone) : Node_Processor(_x, _y, _
 	newInput(12, nodeValue_Curve(   "Intensity", CURVE_DEF_01 ));
 	
 	////- =Transform
-	newInput(17, nodeValue_Bool(   "Tile",  true ));
-	newInput( 4, nodeValue_Float(  "Scale", 4    )).setMappable(14).setPieMenu();
-	newInput( 5, nodeValue_Slider( "Randomize", 1 ));
+	newInput(17, nodeValue_Bool(   "Tile",    true ));
+	newInput( 4, nodeValue_Float(  "Scale",   4    )).setMappable(14).setPieMenu();
+	newInput( 5, nodeValue_Slider( "Randomize", .5 ));
 	
 	////- =Iteration
 	newInput( 6, nodeValue_Int(     "Iteration",       4 )).setPieMenu();

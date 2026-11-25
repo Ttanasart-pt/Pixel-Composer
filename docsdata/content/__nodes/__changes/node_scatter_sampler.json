@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.22.3.108",
+    "changes": [
+      {
+        "date": "2026-11-25T01:45:15.526Z",
+        "node": "",
+        "commit": "**Replace Colors**: Add option to replace unmatched color with solid color."
+      }
+    ]
+  },
+  {
     "version": "1.22.2.008",
     "changes": [
       {

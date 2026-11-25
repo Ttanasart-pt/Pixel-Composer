@@ -1406,7 +1406,7 @@ event_inherited();
 	search_pane = new scrollPane(dialog_w - ui(36), dialog_h - ui(66), function(_y, _m) {
 		draw_clear_alpha(c_white, 0);
 		
-		var equation = string_char_at(search_string, 0) == "=";
+		var equation = hk_editing == noone && string_char_at(search_string, 0) == "=";
 		var amo		 = array_length(search_list);
 		var ww       = search_pane.surface_w;
 		var hh		 = 0;
@@ -1419,18 +1419,21 @@ event_inherited();
 		var highlight  = PREFERENCES.dialog_add_node_search_high;
 		
 		if(equation) {
-			var eq = string_replace(search_string, "=", "");
+			var eq  = string_replace(search_string, "=", "");
+			var tx  = search_pane.w / 2;
+			var cy  = search_pane.h / 2;
 			
 			draw_set_text(f_h5, fa_center, fa_bottom, COLORS._main_text_sub);
-			draw_text_line(search_pane.w / 2, search_pane.h / 2 - ui(8), 
-				__txt("add_node_create_equation", "Create equation") + ": " + eq, -1, search_pane.w - ui(32));
+			var ty  = cy - ui(8);
+			var txt = __txt("add_node_create_equation", "Create equation") + ": " + eq;
+			draw_text_line(tx, ty, txt, -1, search_pane.w - ui(32));
 			
 			draw_set_text(f_p0, fa_center, fa_top, COLORS._main_text_sub);
-			draw_text_add(round(search_pane.w / 2), round(search_pane.h / 2 - ui(4)), 
-				__txt("add_node_equation_enter", "Press Enter to create equation node."));
+			var ty  = cy - ui(4);
+			var txt = __txt("add_node_equation_enter", "Press Enter to create equation node.");
+			draw_text_add(tx, ty, txt);
 			
-			if(hk_editing == noone && KEYBOARD_ENTER)
-				buildNode(ALL_NODES[$ "Node_Equation"], { query: { type: "alias", value: eq } });
+			if(KEYBOARD_ENTER) buildNode(ALL_NODES[$ "Node_Equation"], { query: { type: "alias", value: eq } });
 			
 			return hh;
 		}

@@ -466,6 +466,8 @@ function Panel_Collection() : PanelContent() constructor {
 							var sh = sprite_get_height(spr);
 							var ss = (grid_size - ui(4)) * PREFERENCES.collection_scale / max(sw, sh);
 							
+							var sn = sprite_get_number(spr);
+							
 							var xo = (sprite_get_xoffset(spr) - sw / 2) * ss;
 							var yo = (sprite_get_yoffset(spr) - sh / 2) * ss;
 							
@@ -474,15 +476,29 @@ function Panel_Collection() : PanelContent() constructor {
 							
 							if(ss < 1) gpu_set_tex_filter(true);
 							BLEND_ALPHA_MULP
-							var _fr = anim? frame : floor((sprite_get_number(spr) - 1) / 2);
+							var _fr = anim? frame : floor((sn - 1) / 2);
 							draw_sprite_ext(spr, _fr, sx, sy, ss, ss, 0, c_white, 1);
 							BLEND_NORMAL
 							if(ss < 1) gpu_set_tex_filter(false);
 							
-							if(sprite_get_number(spr) > 1) { // Anim arrow
-								var _ax = _boxx + ui(4);
-								var _ay = yy + grid_size - ui(8);
-								draw_sprite_ui_uniform(THEME.arrow, 0, _ax, _ay, .75, COLORS._main_value_positive);
+							if(sn > 1) { // Anim arrow
+								var _ax = _nx + ui(8);
+								var _ay =  yy + grid_size - ui(8);
+								draw_sprite_ui_uniform(THEME.run, 0, _ax, _ay, .5, COLORS._main_value_positive);
+								
+								if(anim) {
+									var ax0 = _nx + ui(16);
+									var ax1 = _nx + grid_width - ui(16);
+									var ay  = _ay;
+									
+									var rat = (round(_fr) % sn) / (sn - 1);
+									
+									draw_set_color(COLORS._main_icon_dark);
+									draw_line_width(ax0, ay, ax1, ay, ui(2));
+									
+									draw_set_color(COLORS._main_icon_light);
+									draw_line_width(ax0, ay, ax0 + (ax1 - ax0) * rat, ay, ui(2));
+								}
 							}
 							
 						} else
@@ -1014,7 +1030,7 @@ function Panel_Collection() : PanelContent() constructor {
 			var bsp = _addable? bb : noone;
 			var cc  = _addable? COLORS._main_value_positive : COLORS._main_icon_dark;
 			var txt = _addable? __txt("panel_collection_add_node", "Add inspecting node as a collection") : "";
-			if(buttonInstant_Pad(bsp, bx, by, bs, bs, m, hov, foc, txt, THEME.add_20, 0, cc) == 2 && _addable) {
+			if(buttonInstant_Pad(bsp, bx, by, bs, bs, m, hov && _addable, foc, txt, THEME.add_20, 0, cc) == 2) {
 				data_path = context.path;
 				
 				var dia = dialogCall(o_dialog_file_name_collection, mouse_mx + ui(8), mouse_my + ui(8))

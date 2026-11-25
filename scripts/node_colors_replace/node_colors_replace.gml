@@ -17,7 +17,11 @@ function Node_Colors_Replace(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 	newInput( 3, nodeValue_Slider(  "Threshold",            0     ));
 	newInput( 9, nodeValue_Bool(    "Multiply Alpha",       true  ));
 	newInput(10, nodeValue_Bool(    "Apply Original Alpha", false ));
-	// 11
+	
+	////- =Unmatched
+	newInput(11, nodeValue_Bool(    "Replace Unmatched", false    ));
+	newInput(12, nodeValue_Bool(    "Unmatched Color",   ca_black ));
+	// 13
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
@@ -232,9 +236,10 @@ function Node_Colors_Replace(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 	});
 	
 	input_display_list = [  6, 
-		[ "Surfaces",  true ],  0,  4,  5,  7,  8, 
-		[ "Replace",  false ], render_palette, 
-		[ "Matching", false ],  3,  9, 10, 
+		[ "Surfaces",   true ],  0,  4,  5,  7,  8, 
+		[ "Replace",   false ], render_palette, 
+		[ "Matching",  false ],  3,  9, 10, 
+		[ "Unmatched", false ], 11, 12, 
 	];
 	
 	function createNewInput(index = array_length(inputs)) {
@@ -352,6 +357,9 @@ function Node_Colors_Replace(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 			var thr = _data[ 3];
 			var mul = _data[ 9];
 			var ori = _data[10];
+			
+			var rep    = _data[11];
+			var repCol = _data[12];
 		#endregion
 		
 		var amo = getInputAmount();
@@ -370,9 +378,12 @@ function Node_Colors_Replace(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 			shader_set_i( "useMask", is_surface(msk) );
 			shader_set_s( "mask",    msk );
 			
-			shader_set_f( "threshold",    thr );
-			shader_set_i( "alpha",        mul );
-			shader_set_i( "multiplyOrig", ori );
+			shader_set_f( "threshold",    thr    );
+			shader_set_i( "alpha",        mul    );
+			shader_set_i( "multiplyOrig", ori    );
+			
+			shader_set_i( "replaceOther", rep    );
+			shader_set_c( "replaceColor", repCol );
 			
 			draw_surface_safe(_data[0]);
 		surface_reset_shader();

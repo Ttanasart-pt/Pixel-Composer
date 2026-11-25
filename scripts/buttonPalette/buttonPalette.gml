@@ -138,8 +138,8 @@ function buttonPalette(_onModify, dialog = noone) : widget() constructor {
 						expanded = !expanded;
 				}
 				
-				draw_sprite_stretched_ext(THEME.button_def, 2, _x, _y, _bbw, h, CDEF.main_mdwhite, 1);
-				draw_sprite_ui(THEME.arrow, expanded? 3 : 0, _bbx, _bby + ui(expanded), 1, 1, 0, _bbc, _bba);
+				draw_sprite_stretched_ext(THEME.button_def, 0, _x, _y, _bbw, _h, CDEF.main_mdwhite, 1);
+				draw_sprite_ui(THEME.arrow, expanded? 3 : 0, _bbx, _bby, 1, 1, 0, _bbc, _bba);
 			}
 			
 			if(expanded) {

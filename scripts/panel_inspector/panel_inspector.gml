@@ -614,7 +614,7 @@ function Panel_Inspector() : PanelContent() constructor {
         view_mode_tooltip.index = viewMode;
         var bx = pd;
         var by = pd + (bs + ui(2)) * 2;
-        var b = buttonInstant_Pad(bb, bx, by, bs, bs, mse, pHOVER, pFOCUS, tt, THEME.inspector_view, viewMode,,, ui(6));
+        var b = buttonInstant_Pad(bb, bx, by, bs, bs, mse, pHOVER, pFOCUS, tt, THEME.gear, viewMode,,, ui(6));
         if(b == 2) dialogPanelCall(new Panel_Inspector_View_Settings(), x - ui(8), y, { anchor: ANCHOR.top | ANCHOR.right });
         if(b == 1 && key_mod_press(SHIFT) && MOUSE_WHEEL != 0) { 
         	viewMode = !viewMode; 
