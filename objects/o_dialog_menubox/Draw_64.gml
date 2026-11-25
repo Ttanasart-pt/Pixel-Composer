@@ -103,8 +103,7 @@ DIALOG_WINDOW_START
 		var _col  = _menuItem[$ "color"] ?? c_white;
 		var _key  = _menuItem.hoykeyObject;
 		
-		if(_col != c_white)
-			draw_sprite_stretched_ext(THEME.menubox, 0, floor(xx), floor(yy), floor(ww), floor(_h), _col, .3);
+		// if(_col != c_white) draw_sprite_stretched_ext(THEME.menubox, 0, floor(xx), floor(yy), floor(ww), floor(_h), _col, .1);
 		
 		if(_key == noone && _menuItem.hotkey != noone) {
 			_key = find_hotkey(_menuItem.hotkey[0], _menuItem.hotkey[1]);

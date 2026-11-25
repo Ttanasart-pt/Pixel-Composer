@@ -18,9 +18,9 @@ function Node_Colors_Replace(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 	newInput( 9, nodeValue_Bool(    "Multiply Alpha",       true  ));
 	newInput(10, nodeValue_Bool(    "Apply Original Alpha", false ));
 	
-	////- =Unmatched
+	////- =Replace Unmatched
 	newInput(11, nodeValue_Bool(    "Replace Unmatched", false    ));
-	newInput(12, nodeValue_Bool(    "Unmatched Color",   ca_black ));
+	newInput(12, nodeValue_Color(   "Unmatched Color",   ca_black ));
 	// 13
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
@@ -239,7 +239,7 @@ function Node_Colors_Replace(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 		[ "Surfaces",   true ],  0,  4,  5,  7,  8, 
 		[ "Replace",   false ], render_palette, 
 		[ "Matching",  false ],  3,  9, 10, 
-		[ "Unmatched", false ], 11, 12, 
+		[ "Replace Unmatched", false, 11 ], 12, 
 	];
 	
 	function createNewInput(index = array_length(inputs)) {

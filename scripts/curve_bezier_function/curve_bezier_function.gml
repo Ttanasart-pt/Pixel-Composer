@@ -240,6 +240,7 @@ function eval_curve_x(_bz, _x, _tolr = 0.0001) {
 		_maxy = 1;
 	
 	_x = _x / _scale - _shift;
+	if(_scale < 1) _x = pfract(_x);
 	_x = clamp(_x, 0, 1);
 	
 	if(array_equals_ext_fast(_bz, _CURVE_DEF_11, CURVE_PADD)) return lerp(_miny, _maxy, 1     );

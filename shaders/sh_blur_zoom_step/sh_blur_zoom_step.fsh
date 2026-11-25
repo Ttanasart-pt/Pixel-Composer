@@ -173,7 +173,7 @@
 #endregion -- gradient --
 #pragma use(curve)
 
-#region -- curve -- [1786510425.6316042]
+#region -- curve -- [1795578670.3667924]
 
     #ifdef _YY_HLSL11_ 
         #define CURVE_MAX  512
@@ -230,6 +230,7 @@
         float _type  = curve[2];
         
         _x = _x / _scale - _shift;
+        if(_scale < 1.) _x = fract(fract(_x) + 1.);
         _x = clamp(_x, 0., 1.);
         
         if(_x <= curve[curve_offset + 2]) return curve[curve_offset + 3];

@@ -34,9 +34,10 @@ function Node_Sky(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) const
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
 	input_display_list = [ 0, 
-		[ "Surface", true ], 11, 12, 10, 
-		[ "Sky",    false ],  3,  4, 13,  8, 
-		[ "Sun",    false ],  5,  6,  7, 14, 
+		[ "Surface",    true ], 11, 12, 10, 
+		[ "Transform", false ],  1,  2, 
+		[ "Sky",       false ],  3,  4, 13,  8, 
+		[ "Sun",       false ],  5,  6,  7, 14, 
 	];
 	
 	////- Nodes
@@ -50,17 +51,19 @@ function Node_Sky(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) const
 	
 	static processData = function(_outSurf, _data, _array_index) {
 		#region data
-			var _dim    = _data[0];
-			var _pos    = _data[1];
-			var _sca    = _data[2];
+			var _dim    = _data[ 0];
 			
-			var _mod    = _data[3];
-			var _tur    = _data[4];
-			var _sun    = _data[5];
-			var _sunRad = _data[6];
-			var _sunRdd = _data[7];
-			var _alb    = _data[8];
-			var _map    = _data[9];
+			var _pos    = _data[ 1];
+			var _sca    = _data[ 2];
+			
+			var _mod    = _data[ 3];
+			var _tur    = _data[ 4];
+			var _alb    = _data[ 8];
+			
+			var _sun    = _data[ 5];
+			var _sunRad = _data[ 6];
+			var _sunRdd = _data[ 7];
+			var _map    = _data[ 9];
 		#endregion
 		
 		if(_mod == 0) {
@@ -73,10 +76,11 @@ function Node_Sky(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) const
 	    		shader_set_uv(_data[11], _data[12]);
     			shader_set_i( "mapping",       _map );
     			shader_set_2( "dimension",     _dim );
+    			
     			shader_set_2( "position",      _pos );
     			shader_set_2( "scale",         _sca );
     			shader_set_2( "sunPosition",   _sun );
-    			shader_set_f_map( "turbidity", _tur, _data[13], inputs[4] );
+    			shader_set_m( "turbidity",     _tur, _data[13], inputs[4] );
     			
     			draw_empty();
     		surface_reset_shader();
@@ -91,11 +95,12 @@ function Node_Sky(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) const
 	    		shader_set_uv(_data[11], _data[12]);
     			shader_set_i( "mapping",     _map    );
     			shader_set_2( "dimension",   _dim    );
+    			
     			shader_set_2( "position",    _pos    );
     			shader_set_2( "scale",       _sca    );
     			shader_set_2( "sunPosition", _sun    );
     			shader_set_f( "sunRadius",   _sunRad );
-    			shader_set_f_map( "sunRadiance", _sunRdd, _data[14], inputs[7] );
+    			shader_set_m( "sunRadiance", _sunRdd, _data[14], inputs[7] );
     			
     			draw_empty();
     		surface_reset_shader();
@@ -110,10 +115,11 @@ function Node_Sky(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) const
 	    		shader_set_uv(_data[11], _data[12]);
     			shader_set_i( "mapping",       _map );
     			shader_set_2( "dimension",     _dim );
+    			
     			shader_set_2( "position",      _pos );
     			shader_set_2( "scale",         _sca );
     			shader_set_2( "sunPosition",   _sun );
-    			shader_set_f_map( "turbidity", _tur, _data[13], inputs[4] );
+    			shader_set_m( "turbidity",     _tur, _data[13], inputs[4] );
     			shader_set_f( "albedo", 1 );
     			
     			draw_empty();

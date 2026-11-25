@@ -6,6 +6,11 @@
         "date": "2026-11-25T01:45:15.525Z",
         "node": "Replace Colors",
         "commit": "**Replace Colors**: Add option to replace unmatched color with solid color."
+      },
+      {
+        "date": "2026-11-25T03:56:11.854Z",
+        "node": "",
+        "commit": "Setting curve scale to less than 1 now loop instead of clamp."
       }
     ]
   },

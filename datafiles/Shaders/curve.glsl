@@ -54,6 +54,7 @@
         float _type  = curve[2];
         
         _x = _x / _scale - _shift;
+        if(_scale < 1.) _x = fract(fract(_x) + 1.);
         _x = clamp(_x, 0., 1.);
         
         if(_x <= curve[curve_offset + 2]) return curve[curve_offset + 3];

@@ -30,7 +30,7 @@
 #endregion -- uv --
 
 #pragma use(curve)
-#region -- curve -- [1786510425.6316042]
+#region -- curve -- [1795578670.3667924]
 
     #ifdef _YY_HLSL11_ 
         #define CURVE_MAX  512
@@ -87,6 +87,7 @@
         float _type  = curve[2];
         
         _x = _x / _scale - _shift;
+        if(_scale < 1.) _x = fract(fract(_x) + 1.);
         _x = clamp(_x, 0., 1.);
         
         if(_x <= curve[curve_offset + 2]) return curve[curve_offset + 3];
@@ -668,11 +669,10 @@ void main() {
 	// gl_FragData[0] = vec4(d,d,d,1.); return;
 	
 	float ap = 1. / max(dimension.x, dimension.y);
-	float cc = d < ap? 1. : 0.;
+	float cc = d < 0.? 1. : 0.;
+	if(shape == 10) cc = d < ap? 1. : 0.;
 	
-	if(aa == 1) {
-		cc = smoothstep(ap, -ap, d);
-	}
+	if(aa == 1) cc = smoothstep(ap, -ap, d);
 	
 	float intensity = cc;
 	intensity  = -d;
